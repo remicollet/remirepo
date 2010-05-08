@@ -1,0 +1,73 @@
+diff -up mysql-workbench-oss-5.2.17/configure.in.cppconn mysql-workbench-oss-5.2.17/configure.in
+--- mysql-workbench-oss-5.2.17/configure.in.cppconn	2010-04-02 03:26:27.000000000 +0200
++++ mysql-workbench-oss-5.2.17/configure.in	2010-04-03 15:37:43.000000000 +0200
+@@ -459,8 +459,6 @@ res/mysql.profiles/Makefile
+ res/sqlidedata/Makefile
+ ext/Makefile
+ ext/scintilla/gtk/Makefile
+-ext/cppconn/Makefile
+-ext/cppconn/driver/Makefile
+ backend/Makefile
+ backend/wbpublic/Makefile
+ backend/wbprivate/Makefile
+diff -up mysql-workbench-oss-5.2.17/ext/Makefile.am.cppconn mysql-workbench-oss-5.2.17/ext/Makefile.am
+--- mysql-workbench-oss-5.2.17/ext/Makefile.am.cppconn	2010-04-02 03:26:17.000000000 +0200
++++ mysql-workbench-oss-5.2.17/ext/Makefile.am	2010-04-03 15:37:43.000000000 +0200
+@@ -1 +1 @@
+-SUBDIRS=ctemplate scintilla/gtk cppconn
++SUBDIRS=ctemplate scintilla/gtk
+diff -up mysql-workbench-oss-5.2.17/ext/Makefile.in.cppconn mysql-workbench-oss-5.2.17/ext/Makefile.in
+--- mysql-workbench-oss-5.2.17/ext/Makefile.in.cppconn	2010-04-02 03:26:32.000000000 +0200
++++ mysql-workbench-oss-5.2.17/ext/Makefile.in	2010-04-03 15:37:43.000000000 +0200
+@@ -213,7 +213,7 @@ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-SUBDIRS = ctemplate scintilla/gtk cppconn
++SUBDIRS = ctemplate scintilla/gtk
+ all: all-recursive
+ 
+ .SUFFIXES:
+diff -up mysql-workbench-oss-5.2.17/library/dbc/src/driver_manager.cpp.cppconn mysql-workbench-oss-5.2.17/library/dbc/src/driver_manager.cpp
+--- mysql-workbench-oss-5.2.17/library/dbc/src/driver_manager.cpp.cppconn	2010-04-03 15:38:46.000000000 +0200
++++ mysql-workbench-oss-5.2.17/library/dbc/src/driver_manager.cpp	2010-04-03 15:40:59.000000000 +0200
+@@ -139,6 +139,8 @@ TunnelConnection *DriverManager::getTunn
+ ConnectionWrapper DriverManager::getConnection(const db_mgmt_ConnectionRef &connectionProperties, ConnectionInitSlot connection_init_slot)
+ {
+   TunnelConnection* tunnel = NULL;
++  gchar *p = NULL;
++  GModule *gmodule = NULL;
+   // 0. determine correct driver filename
+   
+   db_mgmt_DriverRef drv = connectionProperties->driver();
+@@ -148,21 +150,21 @@ ConnectionWrapper DriverManager::getConn
+     library = drv->driverLibraryName();
+   else
+     throw SQLException("Invalid connection settings: undefined connection driver");
+-#ifdef _WIN32
+-  library.append(".dll");
+-#elif defined(__APPLE__)
+-  library.append(".dylib");
+-#else
+-  library.append(".so");
+-#endif
++
++  // Patch : use library in standard path
++  p = g_module_build_path (NULL, library.c_str());
+ 
+   // 1. find driver
+ 
+-  GModule *gmodule= g_module_open((_driver_path + "/" + library).c_str(), G_MODULE_BIND_LOCAL);
++  if (p) {
++    gmodule = g_module_open(std::string(p).append(".4").c_str(), G_MODULE_BIND_LOCAL);
++    g_free(p);
++  }
++
+   if (NULL == gmodule)
+   {
+     fprintf(stderr, "Error: %s", g_module_error());
+-    throw SQLException(std::string("Database driver: Failed to open library '").append(_driver_path + "/" + library).append("'. Check settings.").c_str());
++    throw SQLException(std::string("Database driver: Failed to open library '").append(library).append("'. Check settings.").c_str());
+   }
+   
+   Driver *(* get_driver_instance)()= NULL;

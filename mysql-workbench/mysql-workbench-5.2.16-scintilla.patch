@@ -1,0 +1,221 @@
+diff -up mysql-workbench-oss-5.2.16/configure.in.orig mysql-workbench-oss-5.2.16/configure.in
+--- mysql-workbench-oss-5.2.16/configure.in.orig	2010-02-17 18:07:16.000000000 +0100
++++ mysql-workbench-oss-5.2.16/configure.in	2010-02-17 18:07:28.000000000 +0100
+@@ -412,7 +412,6 @@ res/wbdata/Makefile
+ res/mysql.profiles/Makefile
+ res/sqlidedata/Makefile
+ ext/Makefile
+-ext/scintilla/gtk/Makefile
+ backend/Makefile
+ backend/wbpublic/Makefile
+ backend/wbprivate/Makefile
+diff -up mysql-workbench-oss-5.2.16/ext/Makefile.am.orig mysql-workbench-oss-5.2.16/ext/Makefile.am
+--- mysql-workbench-oss-5.2.16/ext/Makefile.am.orig	2010-02-17 18:03:58.000000000 +0100
++++ mysql-workbench-oss-5.2.16/ext/Makefile.am	2010-02-17 18:05:16.000000000 +0100
+@@ -1 +1 @@
+-SUBDIRS=ctemplate scintilla/gtk
++SUBDIRS=ctemplate
+diff -up mysql-workbench-oss-5.2.16/ext/Makefile.in.orig mysql-workbench-oss-5.2.16/ext/Makefile.in
+--- mysql-workbench-oss-5.2.16/ext/Makefile.in.orig	2010-02-17 18:04:03.000000000 +0100
++++ mysql-workbench-oss-5.2.16/ext/Makefile.in	2010-02-17 18:05:14.000000000 +0100
+@@ -213,7 +213,7 @@ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-SUBDIRS = ctemplate scintilla/gtk
++SUBDIRS = ctemplate
+ all: all-recursive
+ 
+ .SUFFIXES:
+diff -up mysql-workbench-oss-5.2.16/frontend/linux/linux_utilities/Makefile.am.orig mysql-workbench-oss-5.2.16/frontend/linux/linux_utilities/Makefile.am
+--- mysql-workbench-oss-5.2.16/frontend/linux/linux_utilities/Makefile.am.orig	2010-02-17 18:39:59.000000000 +0100
++++ mysql-workbench-oss-5.2.16/frontend/linux/linux_utilities/Makefile.am	2010-02-17 18:40:40.000000000 +0100
+@@ -4,14 +4,14 @@ AM_CXXFLAGS=-rdynamic
+ pkglib_LTLIBRARIES=liblinux_utilities.la
+ 
+ liblinux_utilities_la_LIBADD=$(top_srcdir)/frontend/linux/sqlide/libsqlide.la\
+-                             $(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la
++                             -lscintilla
+ 
+ INCLUDES=@GLIB_CFLAGS@ @SIGC_CFLAGS@ @GRT_CFLAGS@ @CAIRO_CFLAGS@ @GNOME_CFLAGS@\
+ 	-I$(top_srcdir)/library/grt/src -I$(top_srcdir)/library/base/src \
+ 	-I$(top_srcdir)/backend/wbpublic -I$(top_srcdir)/generated -I$(top_srcdir)/library/canvas/src\
+ 	-I$(top_srcdir)/frontend/linux/workbench\
+ 	-I$(top_srcdir)/frontend/linux/sqlide\
+-	-I$(top_srcdir)/ext/scintilla/include\
++	-I/usr/include/scintilla\
+ 	-I$(top_srcdir)/ext\
+ 	-I$(top_srcdir)/library/forms\
+ 	-I$(top_srcdir)/library/forms/gtk\
+diff -up mysql-workbench-oss-5.2.16/frontend/linux/linux_utilities/Makefile.in.orig mysql-workbench-oss-5.2.16/frontend/linux/linux_utilities/Makefile.in
+--- mysql-workbench-oss-5.2.16/frontend/linux/linux_utilities/Makefile.in.orig	2010-02-17 18:40:09.000000000 +0100
++++ mysql-workbench-oss-5.2.16/frontend/linux/linux_utilities/Makefile.in	2010-02-17 18:41:09.000000000 +0100
+@@ -51,8 +51,7 @@ am__installdirs = "$(DESTDIR)$(pkglibdir
+ pkglibLTLIBRARIES_INSTALL = $(INSTALL)
+ LTLIBRARIES = $(pkglib_LTLIBRARIES)
+ liblinux_utilities_la_DEPENDENCIES =  \
+-	$(top_srcdir)/frontend/linux/sqlide/libsqlide.la \
+-	$(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la
++	$(top_srcdir)/frontend/linux/sqlide/libsqlide.la
+ am_liblinux_utilities_la_OBJECTS = custom_renderers.lo \
+ 	listmodel_wrapper.lo treemodel_wrapper.lo \
+ 	plugin_editor_base.lo image_cache.lo gtk_helpers.lo \
+@@ -237,14 +236,14 @@ top_srcdir = @top_srcdir@
+ AM_CXXFLAGS = -rdynamic
+ pkglib_LTLIBRARIES = liblinux_utilities.la
+ liblinux_utilities_la_LIBADD = $(top_srcdir)/frontend/linux/sqlide/libsqlide.la\
+-                             $(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la
++                             -lscintilla
+ 
+ INCLUDES = @GLIB_CFLAGS@ @SIGC_CFLAGS@ @GRT_CFLAGS@ @CAIRO_CFLAGS@ @GNOME_CFLAGS@\
+ 	-I$(top_srcdir)/library/grt/src -I$(top_srcdir)/library/base/src \
+ 	-I$(top_srcdir)/backend/wbpublic -I$(top_srcdir)/generated -I$(top_srcdir)/library/canvas/src\
+ 	-I$(top_srcdir)/frontend/linux/workbench\
+ 	-I$(top_srcdir)/frontend/linux/sqlide\
+-	-I$(top_srcdir)/ext/scintilla/include\
++	-I/usr/include/scintilla\
+ 	-I$(top_srcdir)/ext\
+ 	-I$(top_srcdir)/library/forms\
+ 	-I$(top_srcdir)/library/forms/gtk\
+diff -up mysql-workbench-oss-5.2.16/frontend/linux/sqlide/Makefile.am.orig mysql-workbench-oss-5.2.16/frontend/linux/sqlide/Makefile.am
+--- mysql-workbench-oss-5.2.16/frontend/linux/sqlide/Makefile.am.orig	2010-02-17 18:36:21.000000000 +0100
++++ mysql-workbench-oss-5.2.16/frontend/linux/sqlide/Makefile.am	2010-02-17 18:38:36.000000000 +0100
+@@ -5,7 +5,7 @@ res/query_sidebar.glade
+ 
+ pkglib_LTLIBRARIES=libsqlide.la
+ 
+-libsqlide_la_LIBADD=$(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la
++libsqlide_la_LIBADD=-lscintilla
+ 
+ INCLUDES=\
+ -I$(top_srcdir)/frontend/linux\
+@@ -19,7 +19,7 @@ INCLUDES=\
+ -I$(top_srcdir)/library/dbc/src\
+ -I$(top_srcdir)/ext/cppconn\
+ -I$(top_srcdir)/library/vsqlite++/include\
+--I$(top_srcdir)/ext/scintilla/include\
++-I/usr/include/scintilla\
+ @GRT_CFLAGS@ @CAIRO_CFLAGS@ @GNOME_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ libsqlide_la_SOURCES=\
+diff -up mysql-workbench-oss-5.2.16/frontend/linux/sqlide/Makefile.in.orig mysql-workbench-oss-5.2.16/frontend/linux/sqlide/Makefile.in
+--- mysql-workbench-oss-5.2.16/frontend/linux/sqlide/Makefile.in.orig	2010-02-17 18:36:33.000000000 +0100
++++ mysql-workbench-oss-5.2.16/frontend/linux/sqlide/Makefile.in	2010-02-17 18:37:34.000000000 +0100
+@@ -51,8 +51,7 @@ am__strip_dir = `echo $$p | sed -e 's|^.
+ am__installdirs = "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(pkgdatadir)"
+ pkglibLTLIBRARIES_INSTALL = $(INSTALL)
+ LTLIBRARIES = $(pkglib_LTLIBRARIES)
+-libsqlide_la_DEPENDENCIES =  \
+-	$(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la
++libsqlide_la_DEPENDENCIES =
+ am_libsqlide_la_OBJECTS = sql_editor_fe.lo errors_list.lo \
+ 	grid_view_model.lo grid_view.lo recordset_view.lo \
+ 	sqlide_form.lo sql_snippets_view.lo query_sidebar.lo \
+@@ -241,7 +240,7 @@ res/db_sql_editor_view.glade\
+ res/query_sidebar.glade
+ 
+ pkglib_LTLIBRARIES = libsqlide.la
+-libsqlide_la_LIBADD = $(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la
++libsqlide_la_LIBADD = -lscintilla
+ INCLUDES = \
+ -I$(top_srcdir)/frontend/linux\
+ -I$(top_srcdir)/backend/wbpublic\
+@@ -254,7 +253,7 @@ INCLUDES = \
+ -I$(top_srcdir)/library/dbc/src\
+ -I$(top_srcdir)/ext/cppconn\
+ -I$(top_srcdir)/library/vsqlite++/include\
+--I$(top_srcdir)/ext/scintilla/include\
++-I/usr/include/scintilla\
+ @GRT_CFLAGS@ @CAIRO_CFLAGS@ @GNOME_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ libsqlide_la_SOURCES = \
+diff -up mysql-workbench-oss-5.2.16/modules/wb.model/Makefile.am.orig mysql-workbench-oss-5.2.16/modules/wb.model/Makefile.am
+--- mysql-workbench-oss-5.2.16/modules/wb.model/Makefile.am.orig	2010-02-17 18:08:14.000000000 +0100
++++ mysql-workbench-oss-5.2.16/modules/wb.model/Makefile.am	2010-02-17 18:34:14.000000000 +0100
+@@ -65,8 +65,7 @@ INCLUDES=-I$(top_srcdir)/generated\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+ 	-I$(top_srcdir)/ext/silvercity/src\
+ 	-I$(top_srcdir)/library/tinyxml\
+-	-I$(top_srcdir)/ext/scintilla/include\
+-	-I$(top_srcdir)/ext/scintilla/src\
++	-I/usr/include/scintilla\
+ 	-I$(top_srcdir)/ext\
+ 	-I$(top_srcdir)/modules/db.mysql.sqlide/src\
+ 	-I$(top_srcdir)/ext/ctemplate/ctemplate-src/src\
+@@ -74,7 +73,7 @@ INCLUDES=-I$(top_srcdir)/generated\
+ 
+ 
+ wb_model_grt_la_LDFLAGS=-module
+-#wb_model_grt_la_LIBADD=$(top_srcdir)/ext/ctemplate
++wb_model_grt_la_LIBADD=-lscintilla
+ 
+ wb_model_grt_la_SOURCES=src/graph_renderer.cpp \
+ 	src/reporting.cpp \
+diff -up mysql-workbench-oss-5.2.16/modules/wb.model/Makefile.in.orig mysql-workbench-oss-5.2.16/modules/wb.model/Makefile.in
+--- mysql-workbench-oss-5.2.16/modules/wb.model/Makefile.in.orig	2010-02-17 18:08:19.000000000 +0100
++++ mysql-workbench-oss-5.2.16/modules/wb.model/Makefile.in	2010-02-17 18:35:08.000000000 +0100
+@@ -306,15 +306,14 @@ INCLUDES = -I$(top_srcdir)/generated\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+ 	-I$(top_srcdir)/ext/silvercity/src\
+ 	-I$(top_srcdir)/library/tinyxml\
+-	-I$(top_srcdir)/ext/scintilla/include\
+-	-I$(top_srcdir)/ext/scintilla/src\
++	-I/usr/include/scintilla\
+ 	-I$(top_srcdir)/ext\
+ 	-I$(top_srcdir)/modules/db.mysql.sqlide/src\
+ 	-I$(top_srcdir)/ext/ctemplate/ctemplate-src/src\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ wb_model_grt_la_LDFLAGS = -module
+-#wb_model_grt_la_LIBADD=$(top_srcdir)/ext/ctemplate
++wb_model_grt_la_LIBADD=-lscintilla
+ wb_model_grt_la_SOURCES = src/graph_renderer.cpp \
+ 	src/reporting.cpp \
+ 	src/wb_model.cpp \
+diff -up mysql-workbench-oss-5.2.16/plugins/db.mysql.editors/linux/Makefile.am.orig mysql-workbench-oss-5.2.16/plugins/db.mysql.editors/linux/Makefile.am
+--- mysql-workbench-oss-5.2.16/plugins/db.mysql.editors/linux/Makefile.am.orig	2010-02-17 18:41:58.000000000 +0100
++++ mysql-workbench-oss-5.2.16/plugins/db.mysql.editors/linux/Makefile.am	2010-02-17 18:43:10.000000000 +0100
+@@ -28,13 +28,13 @@ INCLUDES=-I$(top_srcdir)/generated -I$(t
+                 -I$(top_srcdir)/frontend/linux/workbench\
+                 -I$(top_srcdir)/frontend/linux/linux_utilities\
+                 -I$(top_srcdir)/frontend/linux/sqlide\
+-                -I$(top_srcdir)/ext/scintilla/include\
++                -I/usr/include/scintilla\
+                 @GRT_CFLAGS@ @GLIB_CFLAGS@ @GNOME_CFLAGS@ @SIGC_CFLAGS@
+ 
+ 
+ db_mysql_editors_wbp_la_LDFLAGS=-module
+ db_mysql_editors_wbp_la_LIBADD=$(top_srcdir)/frontend/linux/linux_utilities/liblinux_utilities.la\
+-                               $(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la
++                               -lscintilla
+ 
+ db_mysql_editors_wbp_la_SOURCES=\
+ ../backend/mysql_relationship_editor.cpp\
+diff -up mysql-workbench-oss-5.2.16/plugins/db.mysql.editors/linux/Makefile.in.orig mysql-workbench-oss-5.2.16/plugins/db.mysql.editors/linux/Makefile.in
+--- mysql-workbench-oss-5.2.16/plugins/db.mysql.editors/linux/Makefile.in.orig	2010-02-17 18:42:08.000000000 +0100
++++ mysql-workbench-oss-5.2.16/plugins/db.mysql.editors/linux/Makefile.in	2010-02-17 18:42:42.000000000 +0100
+@@ -51,8 +51,7 @@ am__installdirs = "$(DESTDIR)$(pkglibdir
+ 	"$(DESTDIR)$(plugindatadir)"
+ pkglibLTLIBRARIES_INSTALL = $(INSTALL)
+ LTLIBRARIES = $(pkglib_LTLIBRARIES)
+-db_mysql_editors_wbp_la_DEPENDENCIES = $(top_srcdir)/frontend/linux/linux_utilities/liblinux_utilities.la \
+-	$(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la
++db_mysql_editors_wbp_la_DEPENDENCIES = $(top_srcdir)/frontend/linux/linux_utilities/liblinux_utilities.la
+ am_db_mysql_editors_wbp_la_OBJECTS = mysql_relationship_editor.lo \
+ 	mysql_routine_editor.lo mysql_routinegroup_editor.lo \
+ 	mysql_schema_editor.lo mysql_table_editor.lo \
+@@ -276,12 +275,12 @@ INCLUDES = -I$(top_srcdir)/generated -I$
+                 -I$(top_srcdir)/frontend/linux/workbench\
+                 -I$(top_srcdir)/frontend/linux/linux_utilities\
+                 -I$(top_srcdir)/frontend/linux/sqlide\
+-                -I$(top_srcdir)/ext/scintilla/include\
++                -I/usr/include/scintilla\
+                 @GRT_CFLAGS@ @GLIB_CFLAGS@ @GNOME_CFLAGS@ @SIGC_CFLAGS@
+ 
+ db_mysql_editors_wbp_la_LDFLAGS = -module
+ db_mysql_editors_wbp_la_LIBADD = $(top_srcdir)/frontend/linux/linux_utilities/liblinux_utilities.la\
+-                               $(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la
++                               -lscintilla
+ 
+ db_mysql_editors_wbp_la_SOURCES = \
+ ../backend/mysql_relationship_editor.cpp\
