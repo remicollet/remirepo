@@ -1,0 +1,17 @@
+[remi]
+name=Les RPM de remi pour Enterprise Linux VERSION - $basearch
+#baseurl=http://rpms.famillecollet.com/enterprise/VERSION/remi/$basearch/
+mirrorlist=http://rpms.famillecollet.com/enterprise/VERSION/remi/mirror
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
+failovermethod=priority
+
+[remi-test]
+name=Les RPM de remi en test pour Enterprise Linux VERSION - $basearch
+#baseurl=http://rpms.famillecollet.com/enterprise/VERSION/test/$basearch/
+mirrorlist=http://rpms.famillecollet.com/enterprise/VERSION/test/mirror
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
+

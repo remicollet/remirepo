@@ -1,0 +1,11 @@
+[remi]
+name=Les RPM de remi pour Fedora VERSION
+baseurl=http://remi.collet.free.fr/rpms/fcVERSION.ARCH/
+disabled=yes
+type=rpm-md
+
+[remi-test]
+name=Les RPM de remi en test pour Fedora VERSION
+baseurl=http://remi.collet.free.fr/rpms/test-fcVERSION.ARCH/
+disabled=yes
+type=rpm-md

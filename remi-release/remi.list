@@ -1,0 +1,11 @@
+# Remi repositories sources.list entries for apt-rpm with repomd support,
+# http://apt-rpm.laiskiainen.org/
+
+# Uncomment the repomd line to activate the repo
+
+# -- remi repository
+#repomd http://rpms.famillecollet.com/ fc$(VERSION).$(ARCH)
+
+# -- remi-test repository
+#repomd http://rpms.famillecollet.com/ test-fc$(VERSION).$(ARCH)
+
