@@ -1,0 +1,36 @@
+diff -up libraries/common.inc.php.vendor libraries/common.inc.php
+--- libraries/common.inc.php.vendor	2010-03-08 20:19:53.000000000 +0100
++++ libraries/common.inc.php	2010-03-08 20:21:04.000000000 +0100
+@@ -536,7 +536,7 @@ if (! function_exists('preg_replace')) {
+  * force reading of config file, because we removed sensitive values
+  * in the previous iteration
+  */
+-$_SESSION['PMA_Config'] = new PMA_Config('./config.inc.php');
++$_SESSION['PMA_Config'] = new PMA_Config(CONFIG_FILE);
+ 
+ if (!defined('PMA_MINIMUM_COMMON')) {
+     $_SESSION['PMA_Config']->checkPmaAbsoluteUri();
+@@ -586,7 +586,7 @@ require_once './libraries/select_lang.li
+ if ($_SESSION['PMA_Config']->error_config_file) {
+     $error = $strConfigFileError
+         . '<br /><br />'
+-        . ($_SESSION['PMA_Config']->getSource() == './config.inc.php' ?
++        . ($_SESSION['PMA_Config']->getSource() == CONFIG_FILE ?
+         '<a href="show_config_errors.php"'
+         .' target="_blank">' . $_SESSION['PMA_Config']->getSource() . '</a>'
+         :
+diff -up libraries/vendor_config.php.vendor libraries/vendor_config.php
+--- libraries/vendor_config.php.vendor	2010-03-08 20:20:02.000000000 +0100
++++ libraries/vendor_config.php	2010-03-08 20:20:43.000000000 +0100
+@@ -12,6 +12,11 @@
+  */
+ 
+ /**
++ * Path to Configuration file
++ */
++define('CONFIG_FILE', './config.inc.php');
++
++/**
+  * Path to changelog file, can be gzip compressed. Useful when you want to
+  * have documentation somewhere else, eg. /usr/share/doc.
+  */

@@ -1,0 +1,7 @@
+Diff from fedora packages
+
+- version 3.3.x
+- embeded themes
+- IPv6 loopback allowed
+- use libraries/vendor_config.php instead of link
+
