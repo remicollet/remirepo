@@ -1,0 +1,10 @@
+oracle
+------
+
+Spec file to build Oracle Instant Client
+
+RPM can't be published but are used to build php-oci8, tora, ...
+
+Download .zip files from:
+http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
+
