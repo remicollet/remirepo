@@ -1,0 +1,20 @@
+We can do without -L/usr/lib/, especially in 64-bit builds ...
+
+
+diff -Naur mysql-5.1.30.orig/config/ac-macros/ssl.m4 mysql-5.1.30/config/ac-macros/ssl.m4
+--- mysql-5.1.30.orig/config/ac-macros/ssl.m4	2008-11-14 11:34:23.000000000 -0500
++++ mysql-5.1.30/config/ac-macros/ssl.m4	2009-01-13 19:17:09.000000000 -0500
+@@ -102,7 +102,12 @@
+   #
+   # Try to link with openSSL libs in <location>
+   #
+-  openssl_libs="-L$location/lib/ -lssl -lcrypto"
++  if test "$location" != "/usr"
++  then
++    openssl_libs="-L$location/lib/ -lssl -lcrypto"
++  else
++    openssl_libs="-lssl -lcrypto"
++  fi
+   MYSQL_CHECK_SSL_DIR([$openssl_includes], [$openssl_libs])
+ 
+   if test "$mysql_ssl_found" == "no"
