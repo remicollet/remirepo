@@ -1,0 +1,16 @@
+ImageMagick2
+------------
+
+Backport of the latest fedora package to get
+all features in php-pecl-imagick extension.
+
+ImageMagick2 could be installed with ImageMagick
+
+ImageMagick: (in EL5)
+	libMagick.so.10
+	libWand.so.10
+
+ImageMagick2:
+	libMagickCore.so.2
+	libMagickWand.so.2
+
