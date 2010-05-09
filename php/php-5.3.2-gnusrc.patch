@@ -1,0 +1,115 @@
+diff -up php-5.3.2RC2/configure.in.gnusrc php-5.3.2RC2/configure.in
+--- php-5.3.2RC2/configure.in.gnusrc	2010-02-12 01:20:28.000000000 +0100
++++ php-5.3.2RC2/configure.in	2010-02-12 13:58:21.000000000 +0100
+@@ -58,6 +58,8 @@ AC_DEFUN([PHP_EXT_DIR],[ext/$1])dnl
+ AC_DEFUN([PHP_EXT_SRCDIR],[$abs_srcdir/ext/$1])dnl
+ AC_DEFUN([PHP_ALWAYS_SHARED],[])dnl
+ 
++AC_DEFINE([_GNU_SOURCE], 1, [Define to enable GNU C Library extensions])
++
+ dnl Setting up the PHP version based on the information above.
+ dnl -------------------------------------------------------------------------
+ 
+diff -up php-5.3.2RC2/ext/interbase/interbase.c.gnusrc php-5.3.2RC2/ext/interbase/interbase.c
+--- php-5.3.2RC2/ext/interbase/interbase.c.gnusrc	2010-01-03 10:23:27.000000000 +0100
++++ php-5.3.2RC2/ext/interbase/interbase.c	2010-02-12 13:58:21.000000000 +0100
+@@ -24,7 +24,6 @@
+ #include "config.h"
+ #endif
+ 
+-#define _GNU_SOURCE
+ 
+ #include "php.h"
+ 
+diff -up php-5.3.2RC2/ext/pdo_firebird/firebird_driver.c.gnusrc php-5.3.2RC2/ext/pdo_firebird/firebird_driver.c
+--- php-5.3.2RC2/ext/pdo_firebird/firebird_driver.c.gnusrc	2010-02-03 20:48:04.000000000 +0100
++++ php-5.3.2RC2/ext/pdo_firebird/firebird_driver.c	2010-02-12 13:58:21.000000000 +0100
+@@ -22,7 +22,6 @@
+ #include "config.h"
+ #endif
+ 
+-#define _GNU_SOURCE
+ 
+ #include "php.h"
+ #ifdef ZEND_ENGINE_2
+diff -up php-5.3.2RC2/ext/standard/file.c.gnusrc php-5.3.2RC2/ext/standard/file.c
+--- php-5.3.2RC2/ext/standard/file.c.gnusrc	2010-02-11 19:03:57.000000000 +0100
++++ php-5.3.2RC2/ext/standard/file.c	2010-02-12 13:58:21.000000000 +0100
+@@ -113,9 +113,6 @@ php_file_globals file_globals;
+ #endif
+ 
+ #if defined(HAVE_FNMATCH) && !defined(PHP_WIN32)
+-# ifndef _GNU_SOURCE
+-#  define _GNU_SOURCE
+-# endif
+ # include <fnmatch.h>
+ #endif
+ 
+diff -up php-5.3.2RC2/ext/zlib/zlib_fopen_wrapper.c.gnusrc php-5.3.2RC2/ext/zlib/zlib_fopen_wrapper.c
+--- php-5.3.2RC2/ext/zlib/zlib_fopen_wrapper.c.gnusrc	2010-01-03 10:23:27.000000000 +0100
++++ php-5.3.2RC2/ext/zlib/zlib_fopen_wrapper.c	2010-02-12 14:00:10.000000000 +0100
+@@ -19,8 +19,6 @@
+ 
+ /* $Id: zlib_fopen_wrapper.c 293036 2010-01-03 09:23:27Z sebastian $ */
+ 
+-#define _GNU_SOURCE
+-
+ #include "php.h"
+ #include "php_zlib.h"
+ #include "fopen_wrappers.h"
+diff -up php-5.3.2RC2/main/php.h.gnusrc php-5.3.2RC2/main/php.h
+--- php-5.3.2RC2/main/php.h.gnusrc	2010-02-04 11:13:54.000000000 +0100
++++ php-5.3.2RC2/main/php.h	2010-02-12 13:58:21.000000000 +0100
+@@ -30,6 +30,7 @@
+ #define PHP_HAVE_STREAMS
+ #define YYDEBUG 0
+ 
++#include "php_config.h"
+ #include "php_version.h"
+ #include "zend.h"
+ #include "zend_qsort.h"
+diff -up php-5.3.2RC2/main/streams/cast.c.gnusrc php-5.3.2RC2/main/streams/cast.c
+--- php-5.3.2RC2/main/streams/cast.c.gnusrc	2010-02-03 21:49:03.000000000 +0100
++++ php-5.3.2RC2/main/streams/cast.c	2010-02-12 14:01:02.000000000 +0100
+@@ -18,7 +18,6 @@
+ 
+ /* $Id: cast.c 294462 2010-02-03 20:49:03Z pajoye $ */
+ 
+-#define _GNU_SOURCE
+ #include "php.h"
+ #include "php_globals.h"
+ #include "php_network.h"
+diff -up php-5.3.2RC2/main/streams/memory.c.gnusrc php-5.3.2RC2/main/streams/memory.c
+--- php-5.3.2RC2/main/streams/memory.c.gnusrc	2010-01-03 10:23:27.000000000 +0100
++++ php-5.3.2RC2/main/streams/memory.c	2010-02-12 14:01:22.000000000 +0100
+@@ -18,7 +18,6 @@
+ 
+ /* $Id: memory.c 293036 2010-01-03 09:23:27Z sebastian $ */
+ 
+-#define _GNU_SOURCE
+ #include "php.h"
+ 
+ PHPAPI int php_url_decode(char *str, int len);
+diff -up php-5.3.2RC2/main/streams/streams.c.gnusrc php-5.3.2RC2/main/streams/streams.c
+--- php-5.3.2RC2/main/streams/streams.c.gnusrc	2010-02-05 01:39:31.000000000 +0100
++++ php-5.3.2RC2/main/streams/streams.c	2010-02-12 14:01:38.000000000 +0100
+@@ -21,7 +21,6 @@
+ 
+ /* $Id: streams.c 294550 2010-02-05 00:39:31Z pajoye $ */
+ 
+-#define _GNU_SOURCE
+ #include "php.h"
+ #include "php_globals.h"
+ #include "php_network.h"
+diff -up php-5.3.2RC2/Zend/zend_language_parser.c.gnusrc php-5.3.2RC2/Zend/zend_language_parser.c
+--- php-5.3.2RC2/Zend/zend_language_parser.c.gnusrc	2010-02-12 01:26:13.000000000 +0100
++++ php-5.3.2RC2/Zend/zend_language_parser.c	2010-02-12 13:58:21.000000000 +0100
+@@ -366,6 +366,8 @@
+ #include "zend_API.h"
+ #include "zend_constants.h"
+ 
++#include <string.h>
++
+ 
+ #define YYERROR_VERBOSE
+ #define YYSTYPE znode

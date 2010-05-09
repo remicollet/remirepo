@@ -1,0 +1,15 @@
+--- php-5.3.2RC1/ext/phar/Makefile.frag.orig	2009-12-26 13:02:41.000000000 +0100
++++ php-5.3.2RC1/ext/phar/Makefile.frag	2009-12-26 13:03:17.000000000 +0100
+@@ -19,11 +19,7 @@
+ 	else \
+ 		$(top_srcdir)/build/shtool echo -n -- "$(PHP_EXECUTABLE)"; \
+ 	fi;`
+-PHP_PHARCMD_BANG = `if test -x "$(PHP_EXECUTABLE)"; then \
+-		$(top_srcdir)/build/shtool echo -n -- "$(PHP_EXECUTABLE)"; \
+-	else \
+-		$(top_srcdir)/build/shtool echo -n -- "$(INSTALL_ROOT)$(bindir)/$(program_prefix)php$(program_suffix)$(EXEEXT)"; \
+-	fi; `
++PHP_PHARCMD_BANG = `$(top_srcdir)/build/shtool echo -n -- "$(INSTALL_ROOT)$(bindir)/$(program_prefix)php$(program_suffix)$(EXEEXT)";`
+ 
+ $(builddir)/phar/phar.inc: $(srcdir)/phar/phar.inc
+ 	-@test -d $(builddir)/phar || mkdir $(builddir)/phar

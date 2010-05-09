@@ -1,0 +1,82 @@
+
+Fix use of divert() to work with autoconf 2.6x.
+
+diff -up php-5.3.2/configure.in.aconf26x php-5.3.2/configure.in
+--- php-5.3.2/configure.in.aconf26x	2010-03-06 07:55:20.000000000 +0100
++++ php-5.3.2/configure.in	2010-03-06 07:57:57.000000000 +0100
+@@ -1,7 +1,7 @@
+ ## $Id: configure.in 295792 2010-03-03 16:36:07Z johannes $ -*- autoconf -*-
+ dnl ## Process this file with autoconf to produce a configure script.
+ 
+-divert(1)
++divert(1001)
+ 
+ dnl ## Diversion 1 is the autoconf + automake setup phase. We also
+ dnl ## set the PHP version, deal with platform-specific compile
+@@ -292,7 +292,7 @@ sinclude(TSRM/threads.m4)
+ sinclude(TSRM/tsrm.m4)
+ 
+ 
+-divert(2)
++divert(1002)
+ 
+ dnl ## Diversion 2 is where we set PHP-specific options and come up
+ dnl ## with reasonable default values for them. We check for pthreads here
+@@ -331,7 +331,7 @@ if test "$enable_maintainer_zts" = "yes"
+   PTHREADS_FLAGS
+ fi
+ 
+-divert(3)
++divert(1003)
+ 
+ dnl ## In diversion 3 we check for compile-time options to the PHP
+ dnl ## core and how to deal with different system dependencies. 
+@@ -677,7 +677,7 @@ if test "x$php_crypt_r" = "x1"; then
+   PHP_CRYPT_R_STYLE
+ fi
+ 
+-divert(4)
++divert(1004)
+ 
+ dnl ## In diversion 4 we check user-configurable general settings.
+ 
+@@ -918,7 +918,7 @@ else
+   AC_MSG_RESULT([using system default])
+ fi
+ 
+-divert(5)
++divert(1005)
+ 
+ dnl ## In diversion 5 we check which extensions should be compiled.
+ dnl ## All of these are normally in the extension directories.
+diff -up php-5.3.2/ext/standard/config.m4.aconf26x php-5.3.2/ext/standard/config.m4
+--- php-5.3.2/ext/standard/config.m4.aconf26x	2010-02-22 01:34:22.000000000 +0100
++++ php-5.3.2/ext/standard/config.m4	2010-03-06 07:58:47.000000000 +0100
+@@ -1,6 +1,6 @@
+ dnl $Id: config.m4 295350 2010-02-22 00:34:22Z pajoye $ -*- autoconf -*-
+ 
+-divert(3)dnl
++divert(1003)dnl
+ 
+ dnl
+ dnl Check if flush should be called explicitly after buffered io
+@@ -333,7 +333,7 @@ dnl
+ AC_CHECK_FUNCS(getcwd getwd asinh acosh atanh log1p hypot glob strfmon nice fpclass isinf isnan mempcpy strpncpy)
+ AC_FUNC_FNMATCH	
+ 
+-divert(5)dnl
++divert(1005)dnl
+ 
+ dnl
+ dnl Check if there is a support means of creating a new process
+diff -up php-5.3.2/scripts/phpize.m4.aconf26x php-5.3.2/scripts/phpize.m4
+--- php-5.3.2/scripts/phpize.m4.aconf26x	2009-12-02 18:42:58.000000000 +0100
++++ php-5.3.2/scripts/phpize.m4	2010-03-06 07:55:20.000000000 +0100
+@@ -1,6 +1,6 @@
+ dnl This file becomes configure.in for self-contained extensions.
+ 
+-divert(1)
++divert(1001)
+ 
+ AC_PREREQ(2.13)
+ AC_INIT(config.m4)

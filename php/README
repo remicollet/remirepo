@@ -1,0 +1,30 @@
+php
+---
+
+php.spec is stable version from http://www.php.net/downloads.php
+php-dev.spec is development version from http://snaps.php.net/
+
+
+Backport of latest fedora package 
+
+Diff:
+	More extensions enabled :
+
+	- oci8 (requires Oracle client)
+	- PDO_OCI
+	- SQLite (for compatibility, deprecated)
+
+	Extensions provided for php-zts
+
+
+Distro specific changes:
+
+	enchant not available on EL4
+	t1lib not available on EL4 (gd)
+	sqlite3 only in fedora >= 9
+
+	use system pcre only in fedora >=8
+	use system sqlite only in fedora >= 10
+	use system tzdata only in fedora >= 10
+
+
