@@ -8,8 +8,8 @@ SRCDEFINES := --define "dist .remi" \
               --define "_binary_filedigest_algorithm 1"
 
 clean:
-	echo Clean $(NAME) in $(SRCDIR)
-	@rm -fv *~
+	@echo Clean $(NAME) in $(SRCDIR)
+	@rm -rfv *~ noarch x86_64 *.src.rpm
 
 srpm:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME).spec
