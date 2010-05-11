@@ -16,15 +16,13 @@
 
 Summary:                Toolkit for Oracle
 Name:                   tora
-Version:                2.1.0
+Version:                2.1.2
 Release:                1%{?dist}
 URL:                    http://tora.sourceforge.net
 Group:                  Development/Databases
 License:                GPLv2
 
-Source:                 %{name}-%{version}.tar.gz
-
-Patch0:         %{name}-2.1.0.patch
+Source:                 %{name}-%{version}.tar.bz2
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -32,8 +30,10 @@ BuildRequires: desktop-file-utils
 BuildRequires: postgresql-devel
 BuildRequires: oracle-instantclient-devel = %{oraclever}
 BuildRequires: oracle-instantclient-sqlplus = %{oraclever}
-BuildRequires: qt-devel >= 4.3.0 qscintilla-devel
-BuildRequires: perl cmake openssl-devel glib2-devel
+BuildRequires: qt4-devel >= 4.3.0 
+BuildRequires: qscintilla-devel >= 2.0.0
+BuildRequires: cmake >= 2.4.0
+BuildRequires: perl openssl-devel glib2-devel
 
 Requires:  qt-mysql qt-postgresql
 
@@ -59,8 +59,6 @@ See the README file
 
 %prep
 %setup -q
-
-%patch0 -p0 -b .orig
 
 cat >%{name}.desktop <<EOF
 [Desktop Entry]
@@ -143,6 +141,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Tue May 10 2010 Remi Collet <RPMS@famillecollet.com> 2.1.2-1
+- update to 2.1.2
+
 * Fri Sep 25 2009 Remi Collet <RPMS@famillecollet.com> 2.1.0-1
 - Update
 
