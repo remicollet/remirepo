@@ -4,7 +4,7 @@
 
 Summary: A MySQL visual database modeling tool
 Name: mysql-workbench
-Version: 5.2.20
+Version: 5.2.21
 Release: 1%{?dist}
 Group: Applications/Databases
 License: GPLv2
@@ -51,7 +51,7 @@ BuildRequires:    desktop-file-utils
 Requires(post):   desktop-file-utils
 Requires(postun): desktop-file-utils
 
-Requires: python-paramiko pexpect
+Requires: python-paramiko pexpect python-sqlite2
 # requires mysql client pkg (for mysqldump and mysql cmdline client)
 Requires: mysql gnome-keyring
 Requires: mysql-connector-c++ >= %{cppconnver}
@@ -135,6 +135,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Wed May 12 2010 Remi Collet <RPMS@famillecollet.com> 5.2.21-1
+- update to 5.2.21 RC Community (OSS) Edition
+
 * Wed Apr 28 2010 Remi Collet <RPMS@famillecollet.com> 5.2.20-1.###.remi
 - update to 5.2.20 beta 10 Community (OSS) Edition
 
