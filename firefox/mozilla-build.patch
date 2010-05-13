@@ -1,0 +1,23 @@
+diff -up mozilla/security/manager/Makefile.in.old mozilla/security/manager/Makefile.in
+--- mozilla/security/manager/Makefile.in.old	2007-10-25 00:25:30.000000000 +0200
++++ mozilla/security/manager/Makefile.in	2007-11-06 10:57:39.000000000 +0100
+@@ -153,7 +153,6 @@ DEFAULT_GMAKE_FLAGS += NSPR_INCLUDE_DIR=
+ DEFAULT_GMAKE_FLAGS += NSPR_LIB_DIR=$(NSPR_LIB_DIR)
+ DEFAULT_GMAKE_FLAGS += MOZILLA_CLIENT=1
+ DEFAULT_GMAKE_FLAGS += NO_MDUPDATE=1
+-DEFAULT_GMAKE_FLAGS += NSS_ENABLE_ECC=1
+ ifdef NSS_DISABLE_DBM 
+ DEFAULT_GMAKE_FLAGS += NSS_DISABLE_DBM=1
+ endif
+diff -up mozilla/security/manager/ssl/src/Makefile.in.old mozilla/security/manager/ssl/src/Makefile.in
+--- mozilla/security/manager/ssl/src/Makefile.in.old	2007-10-19 21:16:36.000000000 +0200
++++ mozilla/security/manager/ssl/src/Makefile.in	2007-11-06 10:57:52.000000000 +0100
+@@ -134,8 +134,6 @@ REQUIRES	= nspr \
+ 
+ EXTRA_DEPS = $(NSS_DEP_LIBS)
+ 
+-DEFINES += -DNSS_ENABLE_ECC
+-
+ # Use local includes because they are inserted before INCLUDES
+ # so that Mozilla's nss.h is used, not glibc's
+ LOCAL_INCLUDES += $(NSS_CFLAGS)

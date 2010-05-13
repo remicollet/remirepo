@@ -1,0 +1,12 @@
+diff -up mozilla-1.9.1/toolkit/content/Makefile.in.about-firefox-version mozilla-1.9.1/toolkit/content/Makefile.in
+--- mozilla-1.9.1/toolkit/content/Makefile.in.about-firefox-version	2009-06-29 18:15:23.000000000 +0200
++++ mozilla-1.9.1/toolkit/content/Makefile.in	2009-07-07 13:43:54.000000000 +0200
+@@ -46,7 +46,7 @@ CHROME_DEPS = buildconfig.html
+ include $(DEPTH)/config/autoconf.mk
+ 
+ DEFINES += \
+-  -DMOZ_APP_VERSION=$(MOZ_APP_VERSION) \
++  -DMOZ_APP_VERSION=$(FIREFOX_VERSION) \
+   -Dtarget="$(target)" \
+   -Dac_configure_args="$(ac_configure_args)" \
+   -DCC="$(CC)" \

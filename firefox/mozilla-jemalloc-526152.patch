@@ -1,0 +1,19 @@
+--- mozilla-1.9.2/memory/jemalloc/jemalloc.c.orig	2009-12-17 21:56:35.000000000 +0100
++++ mozilla-1.9.2/memory/jemalloc/jemalloc.c	2009-12-17 21:57:32.000000000 +0100
+@@ -5822,14 +5822,14 @@
+ {
+ 	void *ret;
+ 
+-	assert(((alignment - 1) & alignment) == 0 && alignment >=
+-	    sizeof(void *));
++	assert(((alignment - 1) & alignment) == 0);
+ 
+ 	if (malloc_init()) {
+ 		ret = NULL;
+ 		goto RETURN;
+ 	}
+ 
++	alignment = alignment < sizeof(void*) ? sizeof(void*) : alignment;
+ 	ret = ipalloc(alignment, size);
+ 
+ RETURN:
