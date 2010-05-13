@@ -13,8 +13,7 @@
 
 %define mozappdir            %{_libdir}/firefox-%{internal_version}
 
-#define tarballdir mozilla-1.9.2
-%define tarballdir firefox-lorentz
+%define tarballdir mozilla-1.9.2
 
 %define official_branding    1
 %define build_langpacks      1
@@ -24,13 +23,13 @@
 %define nightly .cvs%{cvsdate}
 %endif
 
-%define relcan plugin1
+#define relcan plugin1
 %define firefox firefox
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        3.6.3
-Release:        2.plugin1%{?dist}
+Version:        3.6.4
+Release:        0.1.build3%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +42,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100410.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100513.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -62,13 +61,13 @@ Patch4:         mozilla-about-firefox-version.patch
 Patch5:         mozilla-jemalloc-526152.patch
 
 # Fedora specific patches
-Patch10:        mozilla-191-pkgconfig.patch
 
 # Upstream patches
 Patch100:       mozilla-ps-pdf-simplify-operators.patch
 
-# Remi
-Patch200:       xulrunner-remi.patch
+# Remi specific patches
+Patch200:       firefox-remi.patch
+
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -170,8 +169,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch4  -p1 -b .about-firefox-version
 %patch5  -p1 -b .jemalloc-526152
 
-#%patch10 -p1 -b .pk
-
 %patch100 -p1 -b .ps-pdf-simplify-operators
 
 %patch200 -p1 -b .remi
@@ -189,9 +186,7 @@ ac_add_options --libdir="\$LIBDIR"
 ac_add_options --enable-system-sqlite
 %endif
 %if %{fedora} >= 11
-%if "%{relcan}" != "plugin1"
-ac_add_options --with-system-nspr
-%endif
+## Not working since plugin version.... ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-cairo
@@ -356,11 +351,11 @@ ln -s %{default_bookmarks_file} $RPM_BUILD_ROOT/%{mozappdir}/defaults/profile/bo
 echo > ../%{name}.lang
 %if %{build_langpacks}
 # Install langpacks
-%{__mkdir_p} $RPM_BUILD_ROOT/%{mozappdir}/extensions
+%{__mkdir_p} $RPM_BUILD_ROOT/%{mozappdir}/langpacks
 %{__tar} xjf %{SOURCE2}
 for langpack in `ls firefox-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
-  extensiondir=$RPM_BUILD_ROOT/%{mozappdir}/extensions/langpack-$language@firefox.mozilla.org
+  extensiondir=$RPM_BUILD_ROOT/%{mozappdir}/langpacks/langpack-$language@firefox.mozilla.org
   %{__mkdir_p} $extensiondir
   unzip $langpack -d $extensiondir
   find $extensiondir -type f | xargs chmod 644
@@ -408,6 +403,10 @@ touch $RPM_BUILD_ROOT/%{mozappdir}/components/xpti.dat
 # jemalloc shows up sometimes, but it's not needed here, it's in XR
 #%{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/libjemalloc.so
 
+# Remi : this appears on Fedora <= 10
+%{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/*.chk
+
+
 #---------------------------------------------------------------------
 
 %clean
@@ -444,6 +443,7 @@ update-desktop-database &> /dev/null || :
 if [ $1 -eq 0 ]; then
   %{__rm} -rf %{mozappdir}/components
   %{__rm} -rf %{mozappdir}/extensions
+  %{__rm} -rf %{mozappdir}/langpacks
   %{__rm} -rf %{mozappdir}/plugins
 fi
 
@@ -475,6 +475,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/dictionaries
 %dir %{mozappdir}/extensions
 %{mozappdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
+%dir %{mozappdir}/langpacks
 %{mozappdir}/icons
 %{mozappdir}/searchplugins
 %{mozappdir}/firefox
@@ -483,9 +484,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/plugins
 %{mozappdir}/res
 %{mozappdir}/*.so
-%if "%{relcan}" == "plugin1"
-%{mozappdir}/mozilla-runtime
-%endif
+%{mozappdir}/plugin-container
 %{mozappdir}/mozilla-xremote-client
 %{mozappdir}/platform.ini
 %{mozappdir}/run-mozilla.sh
@@ -493,9 +492,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/.autoreg
 # XXX See if these are needed still
 %{mozappdir}/update*
-%if %{fedora} <= 10
-%{mozappdir}/*.chk
-%endif
 %exclude %{mozappdir}/removed-files
 %exclude %{_includedir}/firefox-%{internal_version}
 %exclude %{_libdir}/firefox-devel-%{internal_version}
@@ -510,6 +506,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu May 13 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.1.build3
+- update to Firefox 3.6.4 Beta (build3)
+
 * Sat Apr 10 2010 Remi Collet <rpms@famillecollet.com> - 3.6.3-2.plugin1
 - update to Firefox "lorentz" 3.6.3plugin1
 

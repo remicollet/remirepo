@@ -1,6 +1,14 @@
---- mozilla-1.9.2/memory/jemalloc/jemalloc.c.orig	2009-12-17 21:56:35.000000000 +0100
-+++ mozilla-1.9.2/memory/jemalloc/jemalloc.c	2009-12-17 21:57:32.000000000 +0100
-@@ -5822,14 +5822,14 @@
+From: David Mandelin <dmandelin@mozilla.com>
+
+diff --git a/memory/jemalloc/jemalloc.c b/memory/jemalloc/jemalloc.c
+--- a/memory/jemalloc/jemalloc.c
++++ b/memory/jemalloc/jemalloc.c
+@@ -5792,24 +5792,24 @@ __attribute__((noinline))
+ #else
+ inline
+ #endif
+ void *
+ memalign(size_t alignment, size_t size)
  {
  	void *ret;
  
@@ -17,3 +25,8 @@
  	ret = ipalloc(alignment, size);
  
  RETURN:
+ #ifdef MALLOC_XMALLOC
+ 	if (opt_xmalloc && ret == NULL) {
+ 		_malloc_message(_getprogname(),
+ 		": (malloc) Error in memalign(): out of memory\n", "", "");
+ 		abort();
