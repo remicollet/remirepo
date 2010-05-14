@@ -1,9 +1,9 @@
-%define php_name ZendFramework
+%global php_name ZendFramework
 #define posttag .PL1
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.10.2
+Version:         1.10.4
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -627,6 +627,13 @@ cd ..
 
 
 %changelog
+* Fri May 13 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.10.4-1
+- rebuild for remi repository
+
+* Thu May 13 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10.4-1
+- about 180 bugfixes since 1.10.2 (http://framework.zend.com/changelog/1.10.4)
+- fixes ZF2010-07: Potential Security Issues in Bundled Dojo Library
+
 * Thu Mar  5 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.10.2-1
 - rebuild for remi repository
 
