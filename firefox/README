@@ -1,0 +1,12 @@
+firefox
+-------
+
+Backport of latest Firefox for older Fedora Release
+
+FF 3.6.x only in Fedora >= 13
+Backport to Fedora 8-12
+
+Diff : 
+	use bundled xulrunner to avoid breaking other deps.
+
+
