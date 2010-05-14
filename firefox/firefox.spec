@@ -25,11 +25,12 @@
 
 #define relcan plugin1
 %define firefox firefox
+%define mycomment  Beta (build4)
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        3.6.4
-Release:        0.1.build3%{?dist}
+Release:        0.2.build4%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -42,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100513.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100514.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -270,7 +271,7 @@ DESTDIR=$RPM_BUILD_ROOT make install
 
 %{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
 
-sed -e "s/^Name=.*/Name=Firefox %{version}%{?relcan}/" \
+sed -e 's/^Name=.*/Name=Firefox %{version}%{?relcan} %{?mycomment}/' \
     -e "s/firefox/%{name}/" \
     %{SOURCE20} | tee %{name}.desktop
 
@@ -506,6 +507,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Fri May 14 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.2.build4
+- update to Firefox 3.6.4 Beta (build4)
+
 * Thu May 13 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.1.build3
 - update to Firefox 3.6.4 Beta (build3)
 
