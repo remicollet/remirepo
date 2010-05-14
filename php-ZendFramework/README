@@ -1,0 +1,11 @@
+php-ZendFramework
+-----------------
+
+Backport of fedora rawhide package
+
+Diff :
+
+	- enable Cache-Backend-Sqlite sub-package
+	- enable Db-Adapter-Oracle sub-package
+	- EL-4 fix (find command)
+
