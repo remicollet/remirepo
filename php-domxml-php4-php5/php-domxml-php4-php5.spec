@@ -2,12 +2,12 @@
 
 Name:           php-%{libname}
 Version:        1.21.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        XML transition from PHP4 domxml to PHP5 dom module
 Summary(fr):    Transition du XML de PHP4 domxml à PHP5 dom
 
 Group:          Development/Libraries
-License:        LGPLv3
+License:        LGPLv3+
 URL:            http://alexandre.alapetite.fr/doc-alex/domxml-php4-php5
 # wget -N http://alexandre.alapetite.fr/doc-alex/domxml-php4-php5/domxml-php4-to-php5.php.txt -O domxml-php4-to-php5.php
 # grep Version domxml-php4-to-php5.php
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 15 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.21.1-2
+- fix License (review #590777)
+
 * Sun Mar 14 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.21.1-1
 - rename to php-domxml-php4-php5
 
