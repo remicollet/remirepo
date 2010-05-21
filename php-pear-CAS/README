@@ -5,9 +5,3 @@ Review https://bugzilla.redhat.com/573345
 
 Package approved, look in rawhide for latest spec file
 
-
-Diff for remirepo
-
-	adapted php-pear-CAS-systemlibs.patch for old patch command in EL4
-
-

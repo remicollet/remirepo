@@ -5,8 +5,8 @@
 
 
 Name:           php-pear-CAS
-Version:        1.1.0
-Release:        %{?prever:0.}1%{?prever:.}%{?prever}%{?dist}.1
+Version:        1.1.1
+Release:        %{?prever:0.}1%{?prever:.}%{?prever}%{?dist}
 Summary:        Central Authentication Service client library in php
 
 Group:          Development/Libraries
@@ -95,8 +95,8 @@ fi
 
 
 %changelog
-* Thu May 20 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.1.0-1.1
-- fix pacth for EL4 (remi repo only)
+* Thu May 20 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.1.1-1
+- update to 1.1.1
 
 * Thu May 20 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.1.0-1
 - update to 1.1.0 finale

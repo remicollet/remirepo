@@ -1,32 +1,32 @@
-diff -up CAS-1.1.0/CAS.php.systemlib CAS-1.1.0/CAS.php
---- CAS-1.1.0/CAS.php.systemlib	2010-05-20 18:04:07.016204718 +0200
-+++ CAS-1.1.0/CAS.php	2010-05-20 18:04:04.037329508 +0200
-@@ -14,7 +14,7 @@ if (!$_SERVER['REQUEST_URI']) {
+diff -up CAS-1.1.1/CAS.php.systemlib CAS-1.1.1/CAS.php
+--- CAS-1.1.1/CAS.php.systemlib	2010-05-20 19:51:33.000000000 +0200
++++ CAS-1.1.1/CAS.php	2010-05-20 19:51:27.000000000 +0200
+@@ -40,7 +40,7 @@ if (!$_SERVER['REQUEST_URI']) {
  // another one by Vangelis Haniotakis also to make phpCAS work with PHP5
  //
- if (version_compare(PHP_VERSION,'5','>=')) {
--	require_once(dirname(__FILE__).'/CAS/domxml-php4-to-php5.php');
+ if (version_compare(PHP_VERSION, '5', '>=')) {
+-	require_once (dirname(__FILE__) . '/CAS/domxml-php4-to-php5.php');
 +	require_once('/usr/share/php/domxml-php4-php5/domxml-php4-to-php5.php');
  }
  
  /**
-diff -up CAS-1.1.0/php-pear-CAS.xml.systemlib CAS-1.1.0/php-pear-CAS.xml
---- CAS-1.1.0/php-pear-CAS.xml.systemlib	1970-01-01 10:13:08.000000000 +0100
-+++ CAS-1.1.0/php-pear-CAS.xml	2010-05-20 18:04:53.655954358 +0200
+diff -up CAS-1.1.1/php-pear-CAS.xml.systemlib CAS-1.1.1/php-pear-CAS.xml
+--- CAS-1.1.1/php-pear-CAS.xml.systemlib	1970-01-01 10:13:08.000000000 +0100
++++ CAS-1.1.1/php-pear-CAS.xml	2010-05-20 19:51:46.000000000 +0200
 @@ -51,7 +51,6 @@ see http://www.ja-sig.org/wiki/display/C
-    <file baseinstalldir="/" md5sum="f71651bcf7f38df0be9adcbbcc29d6de" name="CAS/PGTStorage/pgt-file.php" role="php" />
-    <file baseinstalldir="/" md5sum="16f3bbe28e42bda1aa564e3e4adbd16c" name="CAS/PGTStorage/pgt-main.php" role="php" />
-    <file baseinstalldir="/" md5sum="847a18ae84ab86a8b1d80298593e1b4b" name="CAS/client.php" role="php" />
+    <file baseinstalldir="/" md5sum="9162d942d32ac8bdc01d409c07f41a0f" name="CAS/PGTStorage/pgt-file.php" role="php" />
+    <file baseinstalldir="/" md5sum="4bd67b4d6d6021504c00eff90e577ac0" name="CAS/PGTStorage/pgt-main.php" role="php" />
+    <file baseinstalldir="/" md5sum="b9c07025eef0c13593773be0c4f48e21" name="CAS/client.php" role="php" />
 -   <file baseinstalldir="/" md5sum="e9ce7e11f871d8206b0abc2f608b0277" name="CAS/domxml-php4-to-php5.php" role="php" />
-    <file baseinstalldir="/" md5sum="b84b09fb9be8422318e35cccf6749308" name="docs/api/annotated.html" role="doc" />
-    <file baseinstalldir="/" md5sum="7694258cded297b9c94945c2d3dcd8a0" name="docs/api/CAS_8php.html" role="doc" />
-    <file baseinstalldir="/" md5sum="bbf786cc48739382c686c629b7910df3" name="docs/api/CAS_8php_source.html" role="doc" />
-@@ -191,7 +190,7 @@ see http://www.ja-sig.org/wiki/display/C
-    <file baseinstalldir="/" md5sum="1a784b7c0c46e6791ccf7b22a7e486c2" name="docs/ChangeLog" role="doc" />
+    <file baseinstalldir="/" md5sum="a8e731ea0f492255d0121047f88a66e8" name="docs/api/annotated.html" role="doc" />
+    <file baseinstalldir="/" md5sum="c6548ef25563a0be9a536cdfaa432114" name="docs/api/CAS_8php.html" role="doc" />
+    <file baseinstalldir="/" md5sum="36a457969af7c786fecf8cc6860edff8" name="docs/api/CAS_8php_source.html" role="doc" />
+@@ -192,7 +191,7 @@ see http://www.ja-sig.org/wiki/display/C
+    <file baseinstalldir="/" md5sum="e14db513fb966a6ac042001eb35a43c2" name="docs/ChangeLog" role="doc" />
     <file baseinstalldir="/" md5sum="8b55ff8b0efc4d70a30e3d282f4ef188" name="docs/index.html" role="doc" />
     <file baseinstalldir="/" md5sum="d153a0effa32fbccded9387ea5310df6" name="docs/README" role="doc" />
--   <file baseinstalldir="/" md5sum="d0a189aced5e0205942b304363a1a3d0" name="CAS.php" role="php" />
-+   <file baseinstalldir="/" md5sum="a7dc1646dbf3dff9a4ef434eed3b28a0" name="CAS.php" role="php" />
+-   <file baseinstalldir="/" md5sum="8de4941eed30099e1a867f8e05414f6e" name="CAS.php" role="php" />
++   <file baseinstalldir="/" md5sum="4dcda9e7e1019d1e1ba477e982e30e7e" name="CAS.php" role="php" />
    </dir>
   </contents>
   <dependencies>
