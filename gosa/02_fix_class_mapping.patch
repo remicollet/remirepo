@@ -1,0 +1,50 @@
+--- gosa-core~/include/functions.inc	2009-02-16 14:19:18.000000000 +0100
++++ gosa-core/include/functions.inc	2009-02-16 14:18:15.000000000 +0100
+@@ -73,7 +73,7 @@
+ $svn_revision = '$Revision: 13395 $';
+ 
+ /* Include required files */
+-require_once("class_location.inc");
++require_once("/var/cache/gosa/class.cache");
+ require_once ("functions_debug.inc");
+ require_once ("accept-to-gettext.inc");
+ 
+--- gosa-core~/update-gosa	2009-02-16 14:19:18.000000000 +0100
++++ gosa-core/update-gosa	2009-02-16 14:18:15.000000000 +0100
+@@ -21,7 +21,7 @@
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
+ 
+-define ("GOSA_HOME", dirname(__FILE__));
++define ("GOSA_HOME", "/usr/share/gosa");
+ define ("LOCALE_DIR", GOSA_HOME."/locale");
+ define ("PLUGSTATE_DIR", GOSA_HOME."/state");
+ 
+@@ -122,8 +122,8 @@
+ function rescan_classes()
+ {
+ 	echo "Updating class cache...\n";
+-	$class_mapping= get_classes();
+-	$filename= GOSA_HOME."/include/class_location.inc";
++	$class_mapping= get_classes("/usr/share/gosa");
++	$filename= "/var/cache/gosa/class.cache";
+ 
+ 	/* Sanity checks */
+ 	if (!file_exists($filename) || is_writable($filename)) {
+--- gosa-core~/include/class_config.inc	2009-02-16 14:19:18.000000000 +0100
++++ gosa-core/include/class_config.inc	2009-02-16 14:18:15.000000000 +0100
+@@ -76,12 +76,12 @@
+         if we have installed or removed plugins. 
+      */
+     if(session::global_is_set("class_location.inc:timestamp")){
+-      $tmp = stat("../include/class_location.inc");
++      $tmp = $tmp = stat("/var/cache/gosa/class.cache");
+       if($tmp['mtime'] != session::global_get("class_location.inc:timestamp")){
+         session::global_un_set("plist");
+       }
+     }
+-    $tmp = stat("../include/class_location.inc");
++    $tmp = stat("/var/cache/gosa/class.cache");
+     session::global_set("class_location.inc:timestamp",$tmp['mtime']);
+ 
+     if($this->filename != "" && filemtime($this->filename) != $this->last_modified){

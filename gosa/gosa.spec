@@ -1,54 +1,29 @@
-# Some sort of "detection" of suse
-%{?suse_version:%define suse 1}
-%{!?suse_version:%define suse 0}
+%global confdir  /etc/%{name}
+%global apacheuser apache 
+%global apachegroup apache 
+%global webconf /etc/httpd/conf.d/ 
+%global docdir /usr/share/doc/gosa-%{version}
 
-# Define Packagename, e.g.:
-# rpmbuild --rebuild --define 'sourcename gosa' gosa.srpm
-%{!?sourcename:%define sourcename %{name}-%{version}}
+Summary:   Web Based LDAP Administration Program 
+Name:      gosa
+Version:   2.6.10
+Release:   1
+License:   GPL
 
-#
-# Distribution
-#
-Summary: 		Web Based LDAP Administration Program 
-Name:			gosa
-Version: 		2.6.10
-Release:		1
-License: 		GPL
-Source: 		ftp://oss.GONICUS.de/pub/gosa/%{sourcename}.tar.bz2
-URL: 			https://oss.GONICUS.de/labs/gosa/
-Group: 			System/Administration
-Vendor:			GONICUS GmbH
-Packager:		Stefan Japes <japes@GONICUS.de>
-Buildarch: 		noarch
-Patch:			01_fix_template_location.patch
-Patch1:			02_fix_class_mapping.patch
-Patch2:			03_fix_locale_location.patch
-Patch3:			04_fix_online_help_location.patch
-%if %{suse}
-Requires:		apache2,apache2-mod_php5,php5,php5-gd,php5-ldap,php5-mcrypt,php5-mysql,php5-imap,php5-iconv,php5-hash,php5-posix,php5-mbstring,php5-gettext,ImageMagick,gettext-tools
-%else
-Requires: 		httpd,php,php-ldap,php-imap,php-snmp,php-mysql,php-mbstring,ImageMagick,perl-Crypt-SmbHash
-%endif
-BuildRoot: 		%{_tmppath}/%{name}-%{version}-root
-BuildArch:		noarch
+URL:       https://oss.GONICUS.de/labs/gosa/
+Source0:   http://oss.gonicus.de/pub/gosa/%{name}-combined-%{version}.tar.bz2
+Group:     System/Administration
 
-########################
+Patch0:    01_fix_template_location.patch
+Patch1:    02_fix_class_mapping.patch
+Patch2:    03_fix_locale_location.patch
+Patch3:    04_fix_online_help_location.patch
 
-%define confdir 	/etc/%{name}
+Buildarch: noarch
+Requires:  httpd,php,php-ldap,php-imap,php-snmp,php-mysql,php-mbstring,ImageMagick,perl-Crypt-SmbHash
+Obsoletes: gosa-ldap
 
-%if %{suse}
-	%{echo:Building SuSE rpm}
-	%define apacheuser wwwrun
-	%define apachegroup root
-	%define webconf	/etc/apache2/conf.d/
-	%define docdir /usr/share/doc/packages/gosa
-%else
-	%{echo:Building other rpm}
-	%define apacheuser apache 
-	%define apachegroup apache 
-	%define webconf	/etc/httpd/conf.d/	
-	%define docdir /usr/share/doc/gosa-%{version}
-%endif
+BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 %description
 GOsa is a combination of system-administrator and end-user web
@@ -57,113 +32,88 @@ Provided is access to posix, shadow, samba, proxy, fax, and kerberos
 accounts. It is able to manage the postfix/cyrus server combination
 and can write user adapted sieve scripts.
 
-########################
 
 %package dev
-Group:                  System/Administration
-Summary:                GOsa development utiles
-%if %{suse}
-Requires:               lyx
-%else
-Requires:               php-cli,latex2html,lyx
-%endif
-Obsoletes:              gosa-ldap
+Summary:   GOsa development utiles
+Group:     System/Administration
+Requires:  php-cli,latex2html,lyx
 
 %description dev
 This package contains a couple of tools to generate
 online help, extract localisations and aid developing.
 
-########################
 
 %package desktop
-Group:                  System/Administration
-Summary:                Desktop integration for GOsa
-%if %{suse}
-Requires:               firefox
-%else
-Requires:               firefox
-%endif
-Obsoletes:              gosa-ldap
+Summary:   Desktop integration for GOsa
+Group:     System/Administration
+Requires:  firefox
 
 %description desktop
 This package includes a menu definition for your
 desktop environment.
 
-########################
 
 %package schema
-Group: 			System/Administration
-Summary: 		Schema Definitions for the GOSA package
-%if %{suse}
-Requires:		gosa >= %{version}
-%else
-Requires:		gosa >= %{version}
-%endif
-Obsoletes:		gosa-ldap
+Summary:   Schema Definitions for the GOSA package
+Group:     System/Administration
+Requires:  gosa = %{version}-%{release}
 
 %description schema
 Contains the Schema definition files for the GOSA admin package.
 
-########################
 
 %package help-en
-Group: 			System/Administration
-Summary: 		English online manual for GOSA package
-Requires:		gosa >= %{version}
+Summary:   English online manual for GOSA package
+Group:     System/Administration
+Requires:  gosa = %{version}-%{release}
 
 %description help-en
 English online manual page for GOSA package
 
-########################
 
 %package help-de
-Group: 			System/Administration
-Summary: 		German localized online manual for GOSA package
-Requires:		gosa >= %{version}
+Summary:   German localized online manual for GOSA package
+Group:     System/Administration
+Requires:  gosa = %{version}-%{release}
 
 %description help-de
 German localized online manual page for GOSA package
 
-########################
 
 %package help-fr
-Group: 			System/Administration
-Summary: 		French localized online manual for GOSA package
-Requires:		gosa >= %{version}
+Summary:   French localized online manual for GOSA package
+Group:     System/Administration
+Requires:  gosa = %{version}-%{release}
 
 %description help-fr
 French localized online manual page for GOSA package
 
-########################
 
 %package help-nl
-Group: 			System/Administration
-Summary: 		Dutch localized online manual for GOSA package
-Requires:		gosa >= %{version}
+Summary:   Dutch localized online manual for GOSA package
+Group:    System/Administration
+Requires:  gosa = %{version}-%{release}
 
 %description help-nl
 Dutch localized online manual page for GOSA package
 
-########################
 
 %package help-es
-Group: 			System/Administration
-Summary: 		Spain localized online manual for GOSA package
-Requires:		gosa >= %{version}
+Summary:   Spain localized online manual for GOSA package
+Group:    System/Administration
+Requires:  gosa = %{version}-%{release}
 
 %description help-es
 Spain localized online manual page for GOSA package
 
-########################
 
 %prep
-%setup -q -n %{sourcename}
-%patch -p1
+%setup -q -n %{name}-combined-%{version}
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 
-find . -depth -name CVS -type d | xargs rm -rf
 
 ########################
 
@@ -195,13 +145,13 @@ mkdir -p %{buildroot}/usr/share/doc/gosa
 mkdir -p %{buildroot}%{webconf}
 
 touch %{buildroot}/etc/gosa/gosa.secrets
-mv contrib/gosa.conf		%{buildroot}/usr/share/doc/gosa
-mv update-gosa 			%{buildroot}/usr/sbin
-mv bin/gosa-encrypt-passwords 	%{buildroot}/usr/sbin
-mv debian/gosa-apache.conf 	%{buildroot}%{webconf}
-mv contrib/shells 		%{buildroot}/etc/gosa
-mv contrib/encodings 		%{buildroot}/etc/gosa
-mv contrib/openldap/slapd.conf 	%{buildroot}/usr/share/doc/gosa/slapd.conf-example
+mv contrib/gosa.conf  %{buildroot}/usr/share/doc/gosa
+mv update-gosa    %{buildroot}/usr/sbin
+mv bin/gosa-encrypt-passwords  %{buildroot}/usr/sbin
+mv debian/gosa-apache.conf  %{buildroot}%{webconf}
+mv contrib/shells   %{buildroot}/etc/gosa
+mv contrib/encodings   %{buildroot}/etc/gosa
+mv contrib/openldap/slapd.conf  %{buildroot}/usr/share/doc/gosa/slapd.conf-example
 mv -f doc manual
 
 # Cleanup manual dirs
@@ -245,38 +195,38 @@ mkdir -p %{buildroot}/usr/share/applications
 mkdir -p %{buildroot}/usr/share/man/man1/
 mkdir -p %{buildroot}/usr/share/man/man5/
 
-mv contrib/desktoprc 		%{buildroot}/etc/gosa
-mv contrib/gosa 		%{buildroot}/usr/bin
-mv debian/gosa.xpm 		%{buildroot}/usr/share/pixmaps
-mv debian/gosa-16.xpm 		%{buildroot}/usr/share/pixmaps
-mv debian/gosa-desktop.desktop 	%{buildroot}/usr/share/applications
+mv contrib/desktoprc   %{buildroot}/etc/gosa
+mv contrib/gosa   %{buildroot}/usr/bin
+mv debian/gosa.xpm   %{buildroot}/usr/share/pixmaps
+mv debian/gosa-16.xpm   %{buildroot}/usr/share/pixmaps
+mv debian/gosa-desktop.desktop  %{buildroot}/usr/share/applications
 
 # Gzip manpages from source
 for x in update-gosa.1 dh-make-gosa.1 update-locale.1 update-online-help.1 update-pdf-help.1 gosa-encrypt-passwords.1
 do
-	gzip $x
+ gzip $x
 done
 
-%if %{suse}
-	sed -i 's#/usr/bin/php#/usr/bin/php5#' %{buildroot}/usr/sbin/update-gosa
-	sed -i 's#/usr/bin/php#/usr/bin/php5#' %{buildroot}/usr/sbin/gosa-encrypt-passwords
-	cat <<-EOF >> %{buildroot}%{webconf}/gosa-apache.conf
-	
-	<Directory /usr/share/gosa/html>
-	    Options None
-	    AllowOverride None
-	    Order deny,allow
-	    Allow from all
-	</Directory>
-	EOF
-%endif
+#if %{suse}
+ sed -i 's#/usr/bin/php#/usr/bin/php5#' %{buildroot}/usr/sbin/update-gosa
+ sed -i 's#/usr/bin/php#/usr/bin/php5#' %{buildroot}/usr/sbin/gosa-encrypt-passwords
+ cat <<-EOF >> %{buildroot}%{webconf}/gosa-apache.conf
+ 
+ <Directory /usr/share/gosa/html>
+     Options None
+     AllowOverride None
+     Order deny,allow
+     Allow from all
+ </Directory>
+ EOF
+#endif
 
 # Copy manpages
-mv ./*.1.gz 			%{buildroot}/usr/share/man/man1/
+mv ./*.1.gz    %{buildroot}/usr/share/man/man1/
 gzip -c contrib/gosa.1 > contrib/gosa.1.gz
-mv contrib/gosa.1.gz 		%{buildroot}/usr/share/man/man1/
+mv contrib/gosa.1.gz   %{buildroot}/usr/share/man/man1/
 gzip -c contrib/gosa.conf.5 > contrib/gosa.conf.5.gz
-mv contrib/gosa.conf.5.gz 		%{buildroot}/usr/share/man/man5/
+mv contrib/gosa.conf.5.gz   %{buildroot}/usr/share/man/man5/
 
 mkdir -p %{buildroot}/usr/share/doc/gosa-%{version}
 rm -rf %{buildroot}/usr/share/gosa/contrib
@@ -392,8 +342,14 @@ rm -rf %{buildroot}
 ########################
 
 %changelog
-* Fri Nov 17 2008 Stefan Japes <japes@GONICUS.de>
-- First build of GOsa 2.6 as an RPM, should work on SuSE and RedHat
+* Sat May 23 2010 Remi Collet <Fedora@FamilleCollet.com> - 2.6.10-1
+- work on fedora spec
+
 * Thu May 14 2010 Olivier BONHOMME <obonhomme@nerim.net>
 - Corrected errors when building RPM and plugins where not on right
   place Closes #957 and #970
+
+* Fri Nov 17 2008 Stefan Japes <japes@GONICUS.de>
+- First build of GOsa 2.6 as an RPM, should work on SuSE and RedHat
+
+

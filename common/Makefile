@@ -20,6 +20,12 @@ devsrpm:
 build:
 	rpmbuild $(RPMDEFINES) -bb $(NAME).spec
 
+bp:
+	rpmbuild $(RPMDEFINES) -bp $(NAME).spec
+
+bc:
+	rpmbuild $(RPMDEFINES) -bc --short-circuit $(NAME).spec
+
 bi:
 	rpmbuild $(RPMDEFINES) -bi --short-circuit $(NAME).spec
 

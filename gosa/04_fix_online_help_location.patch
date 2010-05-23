@@ -1,0 +1,24 @@
+diff -urNad gosa-core~/html/helpviewer.php gosa-core/html/helpviewer.php
+--- gosa-core~/html/helpviewer.php	2008-04-12 19:58:14.000000000 +0200
++++ gosa-core/html/helpviewer.php	2008-04-14 17:25:10.000000000 +0200
+@@ -110,7 +110,7 @@
+ if(session::is_set('current_class_for_help')){
+ 
+   /* Create new XML parser with the path to the Xml file */
+-  $xml = new parseXml("../doc/guide.xml");
++  $xml = new parseXml("/etc/gosa/guide.xml");
+   
+   /* Generate help array */
+   $str = $xml->parse();
+diff -urNad gosa-core~/update-gosa gosa-core/update-gosa
+--- gosa-core~/update-gosa	2008-04-14 14:59:22.000000000 +0200
++++ gosa-core/update-gosa	2008-04-14 17:24:53.000000000 +0200
+@@ -193,7 +193,7 @@
+ 
+ function rescan_guide()
+ {
+-	$master_guide= "doc/guide.xml";
++	$master_guide= "/etc/gosa/guide.xml";
+ 	echo "Updating Online Help Index...\n";
+ 	$master_guide_content="<?xml version=\"1.0\"?>\n".
+ 		"<!--\n".

@@ -1,0 +1,12 @@
+diff -urNad gosa-core~/include/functions.inc gosa-core/include/functions.inc
+--- gosa-core~/include/functions.inc    2008-05-30 10:39:33.000000000 +0200
++++ gosa-core/include/functions.inc     2008-06-03 09:16:19.000000000 +0200
+@@ -40,7 +40,7 @@
+ }
+
+ /* Define common locatitions */
+-define ("CONFIG_TEMPLATE_DIR", "../contrib");
++define ("CONFIG_TEMPLATE_DIR", "/usr/share/doc/gosa");
+ define ("TEMP_DIR","/var/cache/gosa/tmp");
+
+ /* Define get_list flags */
