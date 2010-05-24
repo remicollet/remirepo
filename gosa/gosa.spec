@@ -11,7 +11,7 @@ Release:   1
 License:   GPLv2
 
 URL:       https://oss.GONICUS.de/labs/gosa/
-Source0:   http://oss.gonicus.de/pub/gosa/%{name}-combined-%{version}.tar.bz2
+Source0:   http://oss.gonicus.de/pub/gosa/%{name}-core-%{version}.tar.bz2
 Group:     System/Administration
 
 Patch0:    01_fix_template_location.patch
@@ -42,12 +42,12 @@ Il est egalement possible de gerer des serveurs Postfix/Cyrus et
 de produire des scripts bases sur Sieve.
 
 
-%package dev
+%package devel
 Summary:   GOsa development utiles
 Group:     System/Administration
 Requires:  php-cli,latex2html,lyx
 
-%description dev
+%description devel
 This package contains a couple of tools to generate
 online help, extract localisations and aid developing.
 
@@ -55,6 +55,7 @@ online help, extract localisations and aid developing.
 %package desktop
 Summary:   Desktop integration for GOsa
 Group:     System/Administration
+BuildRequires:  desktop-file-utils
 Requires:  firefox
 
 %description desktop
@@ -117,34 +118,31 @@ Spain localized online manual page for GOSA package
 
 
 %prep
-%setup -q -n %{name}-combined-%{version}
+%setup -q -n %{name}-core-%{version}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 
 
-########################
-
 %build
+# nothing to build
 
-########################
 
 %install
 # Create buildroot
 mkdir -p %{buildroot}%{_datadir}/gosa
 
 # Create files for temporary stuff
-for i in compile config cache; do \
-  mkdir -p %{buildroot}/var/spool/gosa/$i ; \
+for i in compile config cache; do
+  mkdir -p %{buildroot}/var/spool/gosa/$i
 done
 mkdir -p %{buildroot}/var/cache/gosa
 
 # Copy
 DIRS="doc ihtml plugins html include locale setup"
-echo `pwd`
 for i in $DIRS; do \
-  cp -ua $i %{buildroot}%{_datadir}/gosa/$i ; \
+  cp -a $i %{buildroot}%{_datadir}/gosa/$i ; \
 done
 
 # Copy files for gosa
@@ -154,14 +152,13 @@ mkdir -p %{buildroot}%{_datadir}/doc/gosa
 mkdir -p %{buildroot}%{webconf}
 
 touch %{buildroot}%{_sysconfdir}/gosa/gosa.secrets
-mv contrib/gosa.conf		%{buildroot}%{_datadir}/doc/gosa
-mv update-gosa 			%{buildroot}%{_sbindir}
-mv bin/gosa-encrypt-passwords 	%{buildroot}%{_sbindir}
-mv debian/gosa-apache.conf 	%{buildroot}%{webconf}
-mv contrib/shells 		%{buildroot}%{_sysconfdir}/gosa
-mv contrib/encodings 		%{buildroot}%{_sysconfdir}/gosa
-mv contrib/openldap/slapd.conf 	%{buildroot}%{_datadir}/doc/gosa/slapd.conf-example
-mv -f doc manual
+install -p contrib/gosa.conf		%{buildroot}%{_datadir}/doc/gosa
+install -p update-gosa 			%{buildroot}%{_sbindir}
+install -p bin/gosa-encrypt-passwords 	%{buildroot}%{_sbindir}
+install -p debian/gosa-apache.conf 	%{buildroot}%{webconf}
+install -p contrib/shells 		%{buildroot}%{_sysconfdir}/gosa
+install -p contrib/encodings 		%{buildroot}%{_sysconfdir}/gosa
+install -p contrib/openldap/slapd.conf 	%{buildroot}%{_datadir}/doc/gosa/slapd.conf-example
 
 # Cleanup manual dirs
 for i in admin ; do \
@@ -186,14 +183,14 @@ mkdir -p %{buildroot}%{webconf}
 # Copy file for gosa-schema
 mkdir -p %{buildroot}%{_sysconfdir}/openldap/schema/gosa
 
-mv contrib/openldap/*.schema %{buildroot}%{_sysconfdir}/openldap/schema/gosa
+install -p contrib/openldap/*.schema %{buildroot}%{_sysconfdir}/openldap/schema/gosa
 
 # Copy files for gosa-dev
 mkdir -p %{buildroot}/usr/bin
-mv update-locale %{buildroot}/usr/bin
-mv update-online-help %{buildroot}/usr/bin
-mv update-pdf-help %{buildroot}/usr/bin
-mv dh-make-gosa %{buildroot}/usr/bin
+install -p update-locale %{buildroot}/usr/bin
+install -p update-online-help %{buildroot}/usr/bin
+install -p update-pdf-help %{buildroot}/usr/bin
+install -p dh-make-gosa %{buildroot}/usr/bin
 
 # Copy files for desktop
 mkdir -p %{buildroot}%{_sysconfdir}/gosa
@@ -204,45 +201,39 @@ mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_mandir}/man1/
 mkdir -p %{buildroot}%{_mandir}/man5/
 
-mv contrib/desktoprc 		%{buildroot}%{_sysconfdir}/gosa
-mv contrib/gosa 		%{buildroot}/usr/bin
-mv debian/gosa.xpm 		%{buildroot}%{_datadir}/pixmaps
-mv debian/gosa-16.xpm 		%{buildroot}%{_datadir}/pixmaps
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications	desktop/gosa-desktop.desktop 
-
-# Gzip manpages from source
-for x in update-gosa.1 dh-make-gosa.1 update-locale.1 update-online-help.1 update-pdf-help.1 gosa-encrypt-passwords.1
-do
-	gzip $x
-done
+install -p contrib/desktoprc 		%{buildroot}%{_sysconfdir}/gosa
+install -p contrib/gosa 		%{buildroot}/usr/bin
+install -p debian/gosa.xpm 		%{buildroot}%{_datadir}/pixmaps
+install -p debian/gosa-16.xpm 		%{buildroot}%{_datadir}/pixmaps
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications	debian/gosa-desktop.desktop 
 
 # Copy manpages
-mv ./*.1.gz 			%{buildroot}%{_mandir}/man1/
-gzip -c contrib/gosa.1 > contrib/gosa.1.gz
-mv contrib/gosa.1.gz 		%{buildroot}%{_mandir}/man1/
-gzip -c contrib/gosa.conf.5 > contrib/gosa.conf.5.gz
-mv contrib/gosa.conf.5.gz 		%{buildroot}%{_mandir}/man5/
+for x in update-gosa.1 dh-make-gosa.1 update-locale.1 update-online-help.1 update-pdf-help.1 gosa-encrypt-passwords.1 contrib/gosa.1
+do
+   install -p $x %{buildroot}%{_mandir}/man1/
+done
+install -p contrib/gosa.conf.5 %{buildroot}%{_mandir}/man5/
 
-mkdir -p %{buildroot}%{_datadir}/doc/gosa-%{version}
-rm -rf %{buildroot}%{_datadir}/gosa/contrib
-
-########################
 
 %clean
 rm -rf %{buildroot}
 
-########################
-
-%post
-%{_sbindir}/update-gosa
-
-########################
 
 %pre
 # Cleanup compile dir on updates, always exit cleanly even on errors
 [ -d /var/spool/gosa ] && rm -rf /var/spool/gosa/* ; exit 0
 
-########################
+
+%post
+%{_sbindir}/update-gosa
+
+
+%post desktop
+update-desktop-database &> /dev/null || :
+
+
+%postun desktop 
+update-desktop-database &> /dev/null || :
 
 
 %files
@@ -273,7 +264,7 @@ rm -rf %{buildroot}
 
 ########################
 
-%files dev
+%files devel
 %defattr(-,root,root)
 /usr/bin
 %attr(755,root,root) %{_mandir}/man1/dh-make-gosa.1.gz
