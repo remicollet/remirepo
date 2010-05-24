@@ -1,0 +1,58 @@
+=====================================================================
+TIME END 2010-05-24 17:15:16
+
+=====================================================================
+TEST RESULT SUMMARY
+---------------------------------------------------------------------
+Exts skipped    :   52
+Exts tested     :   26
+---------------------------------------------------------------------
+
+Number of tests : 11143              6798
+Tests skipped   : 4345 ( 39.0%) --------
+Tests warned    :    0 (  0.0%) (  0.0%)
+Tests failed    :   34 (  0.3%) (  0.5%)
+Expected fail   :    7 (  0.1%) (  0.1%)
+Tests passed    : 6757 ( 60.6%) ( 99.4%)
+---------------------------------------------------------------------
+Time taken      :  278 seconds
+=====================================================================
+
+=====================================================================
+FAILED TEST SUMMARY
+Testing php_egg_logo_guid() function [tests/basic/php_egg_logo_guid.phpt]
+Class constant whose initial value refereces a non-existent class [tests/classes/constants_error_004.phpt]
+easter_date() [ext/calendar/tests/easter_date.phpt]
+unixtojd() [ext/calendar/tests/unixtojd.phpt]
+timezone_abbreviations_list() tests [ext/date/tests/010.phpt]
+Test DateTimeZone::listAbbreviations() function : basic functionality [ext/date/tests/DateTimeZone_listAbbreviations_basic1.phpt]
+Test DateTime::modify() function : usage variation - Passing unexpected values to first argument $modify. [ext/date/tests/DateTime_modify_variation1.phpt]
+Extensive test for date_diff(). [ext/date/tests/date_diff.phpt]
+Test date_modify() function : usage variation - Passing unexpected values to second argument $format. [ext/date/tests/date_modify_variation2.phpt]
+Test timezone_abbreviations_list() function : basic functionality [ext/date/tests/timezone_abbreviations_list_basic1.phpt]
+timezone_location_get: Test that timezone_location_get returns a correct array of information [ext/date/tests/timezone_location_get.phpt]
+gmp_gcdext() basic tests [ext/gmp/tests/022.phpt]
+gmp_nextprime() [ext/gmp/tests/gmp_nextprime.phpt]
+Bug #28382 (openssl_x509_parse extensions support) [ext/openssl/tests/bug28382.phpt]
+Bug #47828 (segfaults when a UTF-8 conversion fails openssl_x509_parse()) [ext/openssl/tests/bug47828.phpt]
+openssl_x509_parse() basic test [ext/openssl/tests/openssl_x509_parse_basic.phpt]
+Test session_module_name() function : variation [ext/session/tests/session_module_name_variation3.phpt]
+Test session_name() function : error functionality [ext/session/tests/session_name_basic.phpt]
+Test session_name() function : variation [ext/session/tests/session_name_variation1.phpt]
+Test session_save_path() function : error functionality [ext/session/tests/session_save_path_error.phpt]
+Test session_save_path() function : variation [ext/session/tests/session_save_path_variation1.phpt]
+Test session_set_save_handler() function : basic functionality [ext/session/tests/session_set_save_handler_basic.phpt]
+Test session_set_save_handler() function : using closures as callbacks [ext/session/tests/session_set_save_handler_closures.phpt]
+Test session_set_save_handler() function : error functionality [ext/session/tests/session_set_save_handler_error3.phpt]
+Test session_set_save_handler() function : variation [ext/session/tests/session_set_save_handler_variation4.phpt]
+SimpleXML: XPath [ext/simplexml/tests/008.phpt]
+Bug #51615 (PHP crash with wrong HTML in SimpleXML) [ext/simplexml/tests/bug51615.phpt]
+ext/sockets - socket_strerror - basic test [ext/sockets/tests/socket_strerror.phpt]
+Test fscanf() function: usage variations - unsigned int formats with integer values [ext/standard/tests/file/fscanf_variation39.phpt]
+Test fscanf() function: usage variations - tracking file pointer while reading [ext/standard/tests/file/fscanf_variation55.phpt]
+Bug #44394 (Last two bytes missing from output) with session.use_trans_id [ext/standard/tests/general_functions/bug44394_2.phpt]
+Test gethostbyaddr() function : basic functionality [ext/standard/tests/network/gethostbyaddr_basic1.phpt]
+htmlentities() / html_entity_decode() #8592 - #9002 table test [ext/standard/tests/strings/htmlentities17.phpt]
+Test sscanf() function : basic functionality - unsigned format [ext/standard/tests/strings/sscanf_basic6.phpt]
+=====================================================================
+

@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201005090630
+%global snapdate 201005241430
 %global phpversion 5.3.3-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -1098,6 +1098,9 @@ echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 %changelog
+* Mon May 24 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.1.201005241430
+- new snapshot
+
 * Sun May 09 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.1.201005090630.###.remi
 - new snapshot
 - systzdata-v7.patch
