@@ -20,9 +20,22 @@ Time taken      :  278 seconds
 
 =====================================================================
 FAILED TEST SUMMARY
-Testing php_egg_logo_guid() function [tests/basic/php_egg_logo_guid.phpt]
-Class constant whose initial value refereces a non-existent class [tests/classes/constants_error_004.phpt]
-easter_date() [ext/calendar/tests/easter_date.phpt]
+
+*** Testing php_egg_logo_guid() function [tests/basic/php_egg_logo_guid.phpt]
+	removed by fedora patch
+
+*** Class constant whose initial value refereces a non-existent class [tests/classes/constants_error_004.phpt]
+	http://bugs.php.net/51901 
+
+*** easter_date() [ext/calendar/tests/easter_date.phpt]
+	Strange running condition
+	$ php -r 'echo date("Y-m-d H:i:s"); date_default_timezone_set("UTC"); echo date("  Y-m-d H:i:s")."\n";'
+	2010-05-24 18:05:53  2010-05-24 16:05:53
+	$ php -r 'date_default_timezone_set("UTC"); echo date("Y-m-d H:i:s", easter_date(2010))."\n"; '
+	2010-04-03 22:00:00
+	$ php -r 'echo date("Y-m-d H:i:s", easter_date(2010))."\n"; '
+	2010-04-04 00:00:00
+
 unixtojd() [ext/calendar/tests/unixtojd.phpt]
 timezone_abbreviations_list() tests [ext/date/tests/010.phpt]
 Test DateTimeZone::listAbbreviations() function : basic functionality [ext/date/tests/DateTimeZone_listAbbreviations_basic1.phpt]

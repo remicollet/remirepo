@@ -75,6 +75,7 @@ Patch42: php-5.3.1-systzdata-v7.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
+Patch62: php-5.3.3-tests.patch
 
 # RC Patch
 Patch91: php-5.3.2-oci8conf.patch
@@ -517,6 +518,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 
 #%patch60 -p1 -b .tests-dashn
 %patch61 -p1 -b .tests-wddx
+%patch62 -p0 -b .tests
 
 %patch91 -p0 -b .remi-oci8
 
@@ -538,6 +540,9 @@ mkdir build-cgi build-apache build-embedded build-zts
 # Remove bogus test; position of read position after fopen(, "a+")
 # is not defined by C standard, so don't presume anything.
 rm -f ext/standard/tests/file/bug21131.phpt
+# php_egg_logo_guid() removed by patch
+rm -f tests/basic/php_egg_logo_guid.phpt
+
 
 # Tests that fail.
 rm -f ext/standard/tests/file/bug22414.phpt \
