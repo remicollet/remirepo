@@ -20,7 +20,7 @@ Patch2:    03_fix_locale_location.patch
 Patch3:    04_fix_online_help_location.patch
 
 Buildarch: noarch
-Requires:  httpd,php,php-ldap,php-imap,php-snmp,php-mysql,php-mbstring,ImageMagick,perl-Crypt-SmbHash
+Requires:  php,php-ldap,php-imap,php-snmp,php-mysql,php-mbstring,ImageMagick,perl-Crypt-SmbHash
 Obsoletes: gosa-ldap
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -152,13 +152,11 @@ mkdir -p %{buildroot}%{_datadir}/doc/gosa
 mkdir -p %{buildroot}%{webconf}
 
 touch %{buildroot}%{_sysconfdir}/gosa/gosa.secrets
-install -p contrib/gosa.conf		%{buildroot}%{_datadir}/doc/gosa
 install -p -m 755 update-gosa 			%{buildroot}%{_sbindir}
 install -p -m 755 bin/gosa-encrypt-passwords 	%{buildroot}%{_sbindir}
 install -p -m 644 debian/gosa-apache.conf 	%{buildroot}%{webconf}
 install -p -m 644 contrib/shells 	%{buildroot}%{_sysconfdir}/gosa
 install -p -m 644 contrib/encodings	%{buildroot}%{_sysconfdir}/gosa
-install -p contrib/openldap/slapd.conf 	%{buildroot}%{_datadir}/doc/gosa/slapd.conf-example
 
 # Cleanup manual dirs
 for i in admin ; do \
@@ -238,13 +236,12 @@ update-desktop-database &> /dev/null || :
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS README README.safemode Changelog COPYING INSTALL FAQ CODING
+%doc contrib/gosa.conf contrib/openldap/slapd.conf
 %dir %{_sysconfdir}/gosa
 %config(noreplace) %{_sysconfdir}/gosa/gosa.secrets
 %config(noreplace) %{_sysconfdir}/gosa/shells
 %config(noreplace) %{_sysconfdir}/gosa/encodings
-%{_datadir}/doc/gosa/gosa.conf
 %config(noreplace) %{webconf}/gosa-apache.conf
-%config %attr(-,root,root) %{_datadir}/doc/gosa/slapd.conf-example
 %{_sbindir}/update-gosa
 %{_sbindir}/gosa-encrypt-passwords
 %{_mandir}/man1/update-gosa.1*
