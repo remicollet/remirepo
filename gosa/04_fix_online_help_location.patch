@@ -1,8 +1,8 @@
-diff -urNad gosa-core~/html/helpviewer.php gosa-core/html/helpviewer.php
---- gosa-core~/html/helpviewer.php	2008-04-12 19:58:14.000000000 +0200
-+++ gosa-core/html/helpviewer.php	2008-04-14 17:25:10.000000000 +0200
-@@ -110,7 +110,7 @@
- if(session::is_set('current_class_for_help')){
+diff -up gosa-combined-2.6.10/html/helpviewer.php.04 gosa-combined-2.6.10/html/helpviewer.php
+--- gosa-combined-2.6.10/html/helpviewer.php.04	2010-01-26 09:27:39.000000000 +0100
++++ gosa-combined-2.6.10/html/helpviewer.php	2010-05-24 08:23:40.308670455 +0200
+@@ -104,7 +104,7 @@ $helpdir ="";
+ if(session::global_is_set('current_class_for_help')){
  
    /* Create new XML parser with the path to the Xml file */
 -  $xml = new parseXml("../doc/guide.xml");
@@ -10,10 +10,10 @@ diff -urNad gosa-core~/html/helpviewer.php gosa-core/html/helpviewer.php
    
    /* Generate help array */
    $str = $xml->parse();
-diff -urNad gosa-core~/update-gosa gosa-core/update-gosa
---- gosa-core~/update-gosa	2008-04-14 14:59:22.000000000 +0200
-+++ gosa-core/update-gosa	2008-04-14 17:24:53.000000000 +0200
-@@ -193,7 +193,7 @@
+diff -up gosa-combined-2.6.10/update-gosa.04 gosa-combined-2.6.10/update-gosa
+--- gosa-combined-2.6.10/update-gosa.04	2010-05-24 08:23:14.269545335 +0200
++++ gosa-combined-2.6.10/update-gosa	2010-05-24 08:23:40.308670455 +0200
+@@ -195,7 +195,7 @@ function rescan_i18n()
  
  function rescan_guide()
  {

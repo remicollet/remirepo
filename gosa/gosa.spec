@@ -1,14 +1,14 @@
-%global confdir  /etc/%{name}
+%global confdir  %{_sysconfdir}%{name}
 %global apacheuser apache 
 %global apachegroup apache 
-%global webconf /etc/httpd/conf.d/ 
-%global docdir /usr/share/doc/gosa-%{version}
+%global webconf %{_sysconfdir}/httpd/conf.d/ 
+%global docdir %{_datadir}/doc/gosa-%{version}
 
 Summary:   Web Based LDAP Administration Program 
 Name:      gosa
 Version:   2.6.10
 Release:   1
-License:   GPL
+License:   GPLv2
 
 URL:       https://oss.GONICUS.de/labs/gosa/
 Source0:   http://oss.gonicus.de/pub/gosa/%{name}-combined-%{version}.tar.bz2
@@ -31,6 +31,15 @@ interface, designed to handle LDAP based setups.
 Provided is access to posix, shadow, samba, proxy, fax, and kerberos
 accounts. It is able to manage the postfix/cyrus server combination
 and can write user adapted sieve scripts.
+
+%description -l fr
+GOsa est un ensemble d'outils WEB pour administrateurs systeme et
+utilisateurs finaux permettant de gerer des configurations basees sur
+un annuaire LDAP.
+GOsa permet de gerer des comptes de type Posix, Shadow, Samba, Proxy,
+Fax et Kerberos.
+Il est egalement possible de gerer des serveurs Postfix/Cyrus et 
+de produire des scripts bases sur Sieve.
 
 
 %package dev
@@ -56,7 +65,7 @@ desktop environment.
 %package schema
 Summary:   Schema Definitions for the GOSA package
 Group:     System/Administration
-Requires:  gosa = %{version}-%{release}
+Requires:  openldap-servers	
 
 %description schema
 Contains the Schema definition files for the GOSA admin package.
@@ -123,7 +132,7 @@ Spain localized online manual page for GOSA package
 
 %install
 # Create buildroot
-mkdir -p %{buildroot}/usr/share/gosa
+mkdir -p %{buildroot}%{_datadir}/gosa
 
 # Create files for temporary stuff
 for i in compile config cache; do \
@@ -135,49 +144,49 @@ mkdir -p %{buildroot}/var/cache/gosa
 DIRS="doc ihtml plugins html include locale setup"
 echo `pwd`
 for i in $DIRS; do \
-  cp -ua $i %{buildroot}/usr/share/gosa/$i ; \
+  cp -ua $i %{buildroot}%{_datadir}/gosa/$i ; \
 done
 
 # Copy files for gosa
-mkdir -p %{buildroot}/usr/sbin
-mkdir -p %{buildroot}/etc/gosa
-mkdir -p %{buildroot}/usr/share/doc/gosa
+mkdir -p %{buildroot}%{_sbindir}
+mkdir -p %{buildroot}%{_sysconfdir}/gosa
+mkdir -p %{buildroot}%{_datadir}/doc/gosa
 mkdir -p %{buildroot}%{webconf}
 
-touch %{buildroot}/etc/gosa/gosa.secrets
-mv contrib/gosa.conf  %{buildroot}/usr/share/doc/gosa
-mv update-gosa    %{buildroot}/usr/sbin
-mv bin/gosa-encrypt-passwords  %{buildroot}/usr/sbin
-mv debian/gosa-apache.conf  %{buildroot}%{webconf}
-mv contrib/shells   %{buildroot}/etc/gosa
-mv contrib/encodings   %{buildroot}/etc/gosa
-mv contrib/openldap/slapd.conf  %{buildroot}/usr/share/doc/gosa/slapd.conf-example
+touch %{buildroot}%{_sysconfdir}/gosa/gosa.secrets
+mv contrib/gosa.conf		%{buildroot}%{_datadir}/doc/gosa
+mv update-gosa 			%{buildroot}%{_sbindir}
+mv bin/gosa-encrypt-passwords 	%{buildroot}%{_sbindir}
+mv debian/gosa-apache.conf 	%{buildroot}%{webconf}
+mv contrib/shells 		%{buildroot}%{_sysconfdir}/gosa
+mv contrib/encodings 		%{buildroot}%{_sysconfdir}/gosa
+mv contrib/openldap/slapd.conf 	%{buildroot}%{_datadir}/doc/gosa/slapd.conf-example
 mv -f doc manual
 
 # Cleanup manual dirs
 for i in admin ; do \
-  rm -rf %{buildroot}/usr/share/gosa/doc/$i ; \
+  rm -rf %{buildroot}%{_datadir}/gosa/doc/$i ; \
 done
 
 # Remove (some) unneeded files
 for i in gen_locale.sh gen_online_help.sh gen_function_list.php update.sh; do \
- rm -rf %{buildroot}/usr/share/gosa/$i ; \
+ rm -rf %{buildroot}%{_datadir}/gosa/$i ; \
 done
 
 # Cleanup lyx warnings
-find %{buildroot}/usr/share/gosa -name WARNINGS |xargs rm
+find %{buildroot}%{_datadir}/gosa -name WARNINGS |xargs rm
 
 # Cleanup guide
-rm -rf %{buildroot}/usr/share/gosa/doc/guide/user/*/lyx-source
+rm -rf %{buildroot}%{_datadir}/gosa/doc/guide/user/*/lyx-source
 
 # Copy default config
 mkdir -p %{buildroot}%{confdir}
 mkdir -p %{buildroot}%{webconf}
 
 # Copy file for gosa-schema
-mkdir -p %{buildroot}/etc/openldap/schema/gosa
+mkdir -p %{buildroot}%{_sysconfdir}/openldap/schema/gosa
 
-mv contrib/openldap/*.schema %{buildroot}/etc/openldap/schema/gosa
+mv contrib/openldap/*.schema %{buildroot}%{_sysconfdir}/openldap/schema/gosa
 
 # Copy files for gosa-dev
 mkdir -p %{buildroot}/usr/bin
@@ -187,49 +196,35 @@ mv update-pdf-help %{buildroot}/usr/bin
 mv dh-make-gosa %{buildroot}/usr/bin
 
 # Copy files for desktop
-mkdir -p %{buildroot}/etc/gosa
+mkdir -p %{buildroot}%{_sysconfdir}/gosa
 mkdir -p %{buildroot}/usr/bin
-mkdir -p %{buildroot}/usr/sbin
-mkdir -p %{buildroot}/usr/share/pixmaps
-mkdir -p %{buildroot}/usr/share/applications
-mkdir -p %{buildroot}/usr/share/man/man1/
-mkdir -p %{buildroot}/usr/share/man/man5/
+mkdir -p %{buildroot}%{_sbindir}
+mkdir -p %{buildroot}%{_datadir}/pixmaps
+mkdir -p %{buildroot}%{_datadir}/applications
+mkdir -p %{buildroot}%{_mandir}/man1/
+mkdir -p %{buildroot}%{_mandir}/man5/
 
-mv contrib/desktoprc   %{buildroot}/etc/gosa
-mv contrib/gosa   %{buildroot}/usr/bin
-mv debian/gosa.xpm   %{buildroot}/usr/share/pixmaps
-mv debian/gosa-16.xpm   %{buildroot}/usr/share/pixmaps
-mv debian/gosa-desktop.desktop  %{buildroot}/usr/share/applications
+mv contrib/desktoprc 		%{buildroot}%{_sysconfdir}/gosa
+mv contrib/gosa 		%{buildroot}/usr/bin
+mv debian/gosa.xpm 		%{buildroot}%{_datadir}/pixmaps
+mv debian/gosa-16.xpm 		%{buildroot}%{_datadir}/pixmaps
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications	desktop/gosa-desktop.desktop 
 
 # Gzip manpages from source
 for x in update-gosa.1 dh-make-gosa.1 update-locale.1 update-online-help.1 update-pdf-help.1 gosa-encrypt-passwords.1
 do
- gzip $x
+	gzip $x
 done
 
-#if %{suse}
- sed -i 's#/usr/bin/php#/usr/bin/php5#' %{buildroot}/usr/sbin/update-gosa
- sed -i 's#/usr/bin/php#/usr/bin/php5#' %{buildroot}/usr/sbin/gosa-encrypt-passwords
- cat <<-EOF >> %{buildroot}%{webconf}/gosa-apache.conf
- 
- <Directory /usr/share/gosa/html>
-     Options None
-     AllowOverride None
-     Order deny,allow
-     Allow from all
- </Directory>
- EOF
-#endif
-
 # Copy manpages
-mv ./*.1.gz    %{buildroot}/usr/share/man/man1/
+mv ./*.1.gz 			%{buildroot}%{_mandir}/man1/
 gzip -c contrib/gosa.1 > contrib/gosa.1.gz
-mv contrib/gosa.1.gz   %{buildroot}/usr/share/man/man1/
+mv contrib/gosa.1.gz 		%{buildroot}%{_mandir}/man1/
 gzip -c contrib/gosa.conf.5 > contrib/gosa.conf.5.gz
-mv contrib/gosa.conf.5.gz   %{buildroot}/usr/share/man/man5/
+mv contrib/gosa.conf.5.gz 		%{buildroot}%{_mandir}/man5/
 
-mkdir -p %{buildroot}/usr/share/doc/gosa-%{version}
-rm -rf %{buildroot}/usr/share/gosa/contrib
+mkdir -p %{buildroot}%{_datadir}/doc/gosa-%{version}
+rm -rf %{buildroot}%{_datadir}/gosa/contrib
 
 ########################
 
@@ -239,7 +234,7 @@ rm -rf %{buildroot}
 ########################
 
 %post
-/usr/sbin/update-gosa
+%{_sbindir}/update-gosa
 
 ########################
 
@@ -249,95 +244,89 @@ rm -rf %{buildroot}
 
 ########################
 
-%postun
-# Remove temporary files, just to be sure
-[ -d /var/spool/gosa ] && rm -rf /var/spool/gosa ; exit 0
-[ -d /usr/share/gosa ] && rm -rf /usr/share/gosa ; exit 0
-
-########################
 
 %files
 %defattr(-,root,root)
 %doc %attr(-,root,root) AUTHORS README README.safemode Changelog COPYING INSTALL FAQ CODING
-%config %attr(-,root,root) /usr/share/doc/gosa/gosa.conf
+%config %attr(-,root,root) %{_datadir}/doc/gosa/gosa.conf
 #%attr(-,root,root) /contrib/openldap
-%config %attr(-,root,root) /usr/share/doc/gosa/slapd.conf-example
-%attr(755,root,root) /usr/sbin/update-gosa
-%attr(755,root,root) /usr/share/man/man1/gosa-encrypt-passwords.1.gz
-%attr(755,root,root) /usr/share/man/man1/update-gosa.1.gz
-%attr(755,root,root) /usr/share/man/man5/gosa.conf.5.gz
-%attr(644,root,root) /etc/gosa/shells
-%attr(644,root,root) /etc/gosa/encodings
-%attr(755,root,root) /usr/sbin/gosa-encrypt-passwords
+%config %attr(-,root,root) %{_datadir}/doc/gosa/slapd.conf-example
+%attr(755,root,root) %{_sbindir}/update-gosa
+%attr(755,root,root) %{_mandir}/man1/gosa-encrypt-passwords.1.gz
+%attr(755,root,root) %{_mandir}/man1/update-gosa.1.gz
+%attr(755,root,root) %{_mandir}/man5/gosa.conf.5.gz
+%attr(644,root,root) %{_sysconfdir}/gosa/shells
+%attr(644,root,root) %{_sysconfdir}/gosa/encodings
+%attr(755,root,root) %{_sbindir}/gosa-encrypt-passwords
 %config(noreplace) %attr(0644,root,root) %{webconf}/gosa-apache.conf
 %attr(0700, %{apacheuser}, %{apachegroup}) /var/spool/gosa
-%attr(0755, root,root) /usr/share/gosa
-#%attr(0755, root,root) /usr/share/gosa/html
-#%attr(0755, root,root) /usr/share/gosa/ihtml
-#%attr(0755, root,root) /usr/share/gosa/include
-#%attr(0755, root,root) /usr/share/gosa/locale
-#%attr(0755, root,root) /usr/share/gosa/plugins
-#%attr(0755, root,root) /usr/share/gosa/setup
-%attr(0755, root,root) /usr/share/gosa/doc/core/guide.xml
+%attr(0755, root,root) %{_datadir}/gosa
+#%attr(0755, root,root) %{_datadir}/gosa/html
+#%attr(0755, root,root) %{_datadir}/gosa/ihtml
+#%attr(0755, root,root) %{_datadir}/gosa/include
+#%attr(0755, root,root) %{_datadir}/gosa/locale
+#%attr(0755, root,root) %{_datadir}/gosa/plugins
+#%attr(0755, root,root) %{_datadir}/gosa/setup
+%attr(0755, root,root) %{_datadir}/gosa/doc/core/guide.xml
 %attr(0755, root,root) /var/cache/gosa
-%attr(0700, root,root) /etc/gosa/gosa.secrets
+%attr(0700, root,root) %{_sysconfdir}/gosa/gosa.secrets
 
 ########################
 
 %files dev
 %defattr(-,root,root)
 /usr/bin
-%attr(755,root,root) /usr/share/man/man1/dh-make-gosa.1.gz
-%attr(755,root,root) /usr/share/man/man1/update-locale.1.gz
-%attr(755,root,root) /usr/share/man/man1/update-online-help.1.gz
-%attr(755,root,root) /usr/share/man/man1/update-pdf-help.1.gz
+%attr(755,root,root) %{_mandir}/man1/dh-make-gosa.1.gz
+%attr(755,root,root) %{_mandir}/man1/update-locale.1.gz
+%attr(755,root,root) %{_mandir}/man1/update-online-help.1.gz
+%attr(755,root,root) %{_mandir}/man1/update-pdf-help.1.gz
 
 ########################
 
 %files desktop
 %defattr(-,root,root)
-/etc/gosa
+%{_sysconfdir}/gosa
 /usr/bin
-/usr/share/pixmaps
-/usr/share/applications
-%attr(755,root,root) /usr/share/man/man1/gosa.1.gz
+%{_datadir}/pixmaps
+%{_datadir}/applications
+%attr(755,root,root) %{_mandir}/man1/gosa.1.gz
 
 ########################
 
 %files schema
 %defattr(-,root,root)
 %doc COPYING AUTHORS README contrib/openldap
-/etc/openldap/schema/gosa
+%{_sysconfdir}/openldap/schema/gosa
 
 ########################
 
 %files help-en
 %defattr(-,root,root)
-/usr/share/gosa/doc/core/en
+%{_datadir}/gosa/doc/core/en
 
 ########################
 
 %files help-de
 %defattr(-,root,root)
-/usr/share/gosa/doc/core/de
+%{_datadir}/gosa/doc/core/de
 
 ########################
 
 %files help-fr
 %defattr(-,root,root)
-/usr/share/gosa/doc/core/fr
+%{_datadir}/gosa/doc/core/fr
 
 ########################
 
 %files help-nl
 %defattr(-,root,root)
-/usr/share/gosa/doc/core/nl
+%{_datadir}/gosa/doc/core/nl
 
 ########################
 
 %files help-es
 %defattr(-,root,root)
-/usr/share/gosa/doc/core/es
+%{_datadir}/gosa/doc/core/es
 
 ########################
 
