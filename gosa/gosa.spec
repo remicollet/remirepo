@@ -148,7 +148,6 @@ done
 # Copy files for gosa
 mkdir -p %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}%{_sysconfdir}/gosa
-mkdir -p %{buildroot}%{_datadir}/doc/gosa
 mkdir -p %{buildroot}%{webconf}
 
 touch %{buildroot}%{_sysconfdir}/gosa/gosa.secrets
@@ -259,9 +258,6 @@ update-desktop-database &> /dev/null || :
 %dir %{_datadir}/gosa/doc/core
 %exclude %{_datadir}/gosa/doc/guide.xml
 %{_datadir}/gosa/doc/core/guide.xml
-#%dir %{_datadir}/gosa/doc/plugins
-#%dir %{_datadir}/gosa/doc/plugins/*
-#%{_datadir}/gosa/doc/plugins/*/guide.xml
 /var/cache/gosa
 
 ########################
@@ -286,7 +282,7 @@ update-desktop-database &> /dev/null || :
 %{_bindir}/gosa
 %{_datadir}/pixmaps/gosa*
 %{_datadir}/applications/gosa*
-%attr(755,root,root) %{_mandir}/man1/gosa.1.gz
+%{_mandir}/man1/gosa.1*
 
 ########################
 
