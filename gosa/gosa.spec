@@ -12,7 +12,7 @@ License:   GPLv2
 
 URL:       https://oss.GONICUS.de/labs/gosa/
 Source0:   http://oss.gonicus.de/pub/gosa/%{name}-core-%{version}.tar.bz2
-Group:     System/Administration
+Group:     Applications/System
 
 Patch0:    01_fix_template_location.patch
 Patch1:    02_fix_class_mapping.patch
@@ -20,10 +20,13 @@ Patch2:    03_fix_locale_location.patch
 Patch3:    04_fix_online_help_location.patch
 
 Buildarch: noarch
-Requires:  php,php-ldap,php-imap,php-snmp,php-mysql,php-mbstring,ImageMagick,perl-Crypt-SmbHash
-Obsoletes: gosa-ldap
+Requires:  php >= 5.2.0
+Requires:  php-ldap php-imap php-snmp php-mysql php-mbstring
+Requires:  ImageMagick
+Requires:  perl(Crypt::SmbHash)
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+
 
 %description
 GOsa is a combination of system-administrator and end-user web
@@ -33,28 +36,28 @@ accounts. It is able to manage the postfix/cyrus server combination
 and can write user adapted sieve scripts.
 
 %description -l fr
-GOsa est un ensemble d'outils WEB pour administrateurs systeme et
-utilisateurs finaux permettant de gerer des configurations basees sur
+GOsa est un ensemble d'outils WEB pour administrateurs système et
+utilisateurs finaux permettant de gérer des configurations basées sur
 un annuaire LDAP.
-GOsa permet de gerer des comptes de type Posix, Shadow, Samba, Proxy,
+GOsa permet de gérer des comptes de type Posix, Shadow, Samba, Proxy,
 Fax et Kerberos.
-Il est egalement possible de gerer des serveurs Postfix/Cyrus et 
+Il est également possible de gérer des serveurs Postfix/Cyrus et 
 de produire des scripts bases sur Sieve.
 
 
 %package devel
 Summary:   GOsa development utiles
-Group:     System/Administration
+Group:     Applications/System
 Requires:  php-cli,latex2html,lyx
 
 %description devel
 This package contains a couple of tools to generate
-online help, extract localisations and aid developing.
+online help, extract localizations, and aid developing.
 
 
 %package desktop
 Summary:   Desktop integration for GOsa
-Group:     System/Administration
+Group:     Applications/System
 BuildRequires:  desktop-file-utils
 Requires:  firefox
 
@@ -65,8 +68,8 @@ desktop environment.
 
 %package schema
 Summary:   Schema Definitions for the GOSA package
-Group:     System/Administration
-Requires:  openldap-servers	
+Group:     Applications/System
+Requires:  openldap-servers 
 
 %description schema
 Contains the Schema definition files for the GOSA admin package.
@@ -74,7 +77,7 @@ Contains the Schema definition files for the GOSA admin package.
 
 %package help-en
 Summary:   English online manual for GOSA package
-Group:     System/Administration
+Group:     Applications/System
 Requires:  gosa = %{version}-%{release}
 
 %description help-en
@@ -83,7 +86,7 @@ English online manual page for GOSA package
 
 %package help-de
 Summary:   German localized online manual for GOSA package
-Group:     System/Administration
+Group:     Applications/System
 Requires:  gosa = %{version}-%{release}
 
 %description help-de
@@ -92,7 +95,7 @@ German localized online manual page for GOSA package
 
 %package help-fr
 Summary:   French localized online manual for GOSA package
-Group:     System/Administration
+Group:     Applications/System
 Requires:  gosa = %{version}-%{release}
 
 %description help-fr
@@ -101,7 +104,7 @@ French localized online manual page for GOSA package
 
 %package help-nl
 Summary:   Dutch localized online manual for GOSA package
-Group:    System/Administration
+Group:     Applications/System
 Requires:  gosa = %{version}-%{release}
 
 %description help-nl
@@ -110,7 +113,7 @@ Dutch localized online manual page for GOSA package
 
 %package help-es
 Summary:   Spain localized online manual for GOSA package
-Group:    System/Administration
+Group:     Applications/System
 Requires:  gosa = %{version}-%{release}
 
 %description help-es
@@ -151,11 +154,12 @@ mkdir -p %{buildroot}%{confdir}
 mkdir -p %{buildroot}%{webconf}
 
 touch %{buildroot}%{confdir}/gosa.secrets
-install -p -m 755 update-gosa 			%{buildroot}%{_sbindir}
-install -p -m 755 bin/gosa-encrypt-passwords 	%{buildroot}%{_sbindir}
-install -p -m 644 debian/gosa-apache.conf 	%{buildroot}%{webconf}
-install -p -m 644 contrib/shells 	%{buildroot}%{confdir}
-install -p -m 644 contrib/encodings	%{buildroot}%{confdir}
+install -p -m 755 update-gosa                 %{buildroot}%{_sbindir}
+install -p -m 755 bin/gosa-encrypt-passwords  %{buildroot}%{_sbindir}
+install -p -m 755 bin/mkntpasswd              %{buildroot}%{_sbindir}
+install -p -m 644 debian/gosa-apache.conf     %{buildroot}%{webconf}
+install -p -m 644 contrib/shells              %{buildroot}%{confdir}
+install -p -m 644 contrib/encodings           %{buildroot}%{confdir}
 
 # Cleanup manual dirs
 for i in admin ; do \
@@ -197,18 +201,20 @@ mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_mandir}/man1/
 mkdir -p %{buildroot}%{_mandir}/man5/
 
-install -p  -m 644 contrib/desktoprc	%{buildroot}%{confdir}
-install -p contrib/gosa 		%{buildroot}%{_bindir}
-install -p debian/gosa.xpm 		%{buildroot}%{_datadir}/pixmaps
-install -p debian/gosa-16.xpm 		%{buildroot}%{_datadir}/pixmaps
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications	debian/gosa-desktop.desktop 
+install -p -m 644 contrib/desktoprc  %{buildroot}%{confdir}
+install -p -m 755 contrib/gosa       %{buildroot}%{_bindir}
+install -p -m 644 debian/gosa.xpm    %{buildroot}%{_datadir}/pixmaps
+install -p -m 644 debian/gosa-16.xpm %{buildroot}%{_datadir}/pixmaps
+desktop-file-install \
+    --dir=%{buildroot}%{_datadir}/applications \
+    debian/gosa-desktop.desktop 
 
 # Copy manpages
 for x in update-gosa.1 dh-make-gosa.1 update-locale.1 update-online-help.1 update-pdf-help.1 gosa-encrypt-passwords.1 contrib/gosa.1
 do
-   install -p $x %{buildroot}%{_mandir}/man1/
+   install -p -m 644  $x %{buildroot}%{_mandir}/man1/
 done
-install -p contrib/gosa.conf.5 %{buildroot}%{_mandir}/man5/
+install -p -m 644 contrib/gosa.conf.5 %{buildroot}%{_mandir}/man5/
 
 
 %clean
@@ -243,6 +249,7 @@ update-desktop-database &> /dev/null || :
 %config(noreplace) %{webconf}/gosa-apache.conf
 %{_sbindir}/update-gosa
 %{_sbindir}/gosa-encrypt-passwords
+%{_sbindir}/mkntpasswd
 %{_mandir}/man1/update-gosa.1*
 %{_mandir}/man1/gosa-encrypt-passwords.1*
 %{_mandir}/man5/gosa.conf.5*
@@ -278,7 +285,7 @@ update-desktop-database &> /dev/null || :
 %files desktop
 %defattr(-,root,root)
 %dir %{confdir}
-%{confdir}/desktoprc
+%config(noreplace) %{confdir}/desktoprc
 %{_bindir}/gosa
 %{_datadir}/pixmaps/gosa*
 %{_datadir}/applications/gosa*
