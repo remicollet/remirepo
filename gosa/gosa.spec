@@ -1,4 +1,4 @@
-%global confdir  %{_sysconfdir}%{name}
+%global confdir  %{_sysconfdir}/%{name}
 %global apacheuser apache 
 %global apachegroup apache 
 %global webconf %{_sysconfdir}/httpd/conf.d/ 
@@ -147,15 +147,15 @@ done
 
 # Copy files for gosa
 mkdir -p %{buildroot}%{_sbindir}
-mkdir -p %{buildroot}%{_sysconfdir}/gosa
+mkdir -p %{buildroot}%{confdir}
 mkdir -p %{buildroot}%{webconf}
 
-touch %{buildroot}%{_sysconfdir}/gosa/gosa.secrets
+touch %{buildroot}%{confdir}/gosa.secrets
 install -p -m 755 update-gosa 			%{buildroot}%{_sbindir}
 install -p -m 755 bin/gosa-encrypt-passwords 	%{buildroot}%{_sbindir}
 install -p -m 644 debian/gosa-apache.conf 	%{buildroot}%{webconf}
-install -p -m 644 contrib/shells 	%{buildroot}%{_sysconfdir}/gosa
-install -p -m 644 contrib/encodings	%{buildroot}%{_sysconfdir}/gosa
+install -p -m 644 contrib/shells 	%{buildroot}%{confdir}
+install -p -m 644 contrib/encodings	%{buildroot}%{confdir}
 
 # Cleanup manual dirs
 for i in admin ; do \
@@ -190,14 +190,14 @@ install -p update-pdf-help %{buildroot}%{_bindir}
 install -p dh-make-gosa %{buildroot}%{_bindir}
 
 # Copy files for desktop
-mkdir -p %{buildroot}%{_sysconfdir}/gosa
+mkdir -p %{buildroot}%{confdir}
 mkdir -p %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}%{_datadir}/pixmaps
 mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_mandir}/man1/
 mkdir -p %{buildroot}%{_mandir}/man5/
 
-install -p  -m 644 contrib/desktoprc	%{buildroot}%{_sysconfdir}/gosa
+install -p  -m 644 contrib/desktoprc	%{buildroot}%{confdir}
 install -p contrib/gosa 		%{buildroot}%{_bindir}
 install -p debian/gosa.xpm 		%{buildroot}%{_datadir}/pixmaps
 install -p debian/gosa-16.xpm 		%{buildroot}%{_datadir}/pixmaps
@@ -236,10 +236,10 @@ update-desktop-database &> /dev/null || :
 %defattr(-,root,root,-)
 %doc AUTHORS README README.safemode Changelog COPYING INSTALL FAQ CODING
 %doc contrib/gosa.conf contrib/openldap/slapd.conf
-%dir %{_sysconfdir}/gosa
-%config(noreplace) %{_sysconfdir}/gosa/gosa.secrets
-%config(noreplace) %{_sysconfdir}/gosa/shells
-%config(noreplace) %{_sysconfdir}/gosa/encodings
+%dir %{confdir}
+%config(noreplace) %{confdir}/gosa.secrets
+%config(noreplace) %{confdir}/shells
+%config(noreplace) %{confdir}/encodings
 %config(noreplace) %{webconf}/gosa-apache.conf
 %{_sbindir}/update-gosa
 %{_sbindir}/gosa-encrypt-passwords
@@ -277,8 +277,8 @@ update-desktop-database &> /dev/null || :
 
 %files desktop
 %defattr(-,root,root)
-%dir %{_sysconfdir}/gosa
-%{_sysconfdir}/gosa/desktoprc
+%dir %{confdir}
+%{confdir}/desktoprc
 %{_bindir}/gosa
 %{_datadir}/pixmaps/gosa*
 %{_datadir}/applications/gosa*
