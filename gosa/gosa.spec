@@ -257,7 +257,7 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/gosa/setup
 %dir %{_datadir}/gosa/doc
 %dir %{_datadir}/gosa/doc/core
-%{_datadir}/gosa/doc/guide.xml
+%exclude %{_datadir}/gosa/doc/guide.xml
 %{_datadir}/gosa/doc/core/guide.xml
 #%dir %{_datadir}/gosa/doc/plugins
 #%dir %{_datadir}/gosa/doc/plugins/*
