@@ -25,12 +25,12 @@
 
 #define relcan plugin1
 %define firefox firefox
-%define mycomment  Beta (build4)
+%define mycomment  Beta (build6)
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        3.6.4
-Release:        0.2.build4%{?dist}
+Release:        0.3.build6%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100514.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100529.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -507,6 +507,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sat May 29 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.3.build6
+- update to Firefox 3.6.4 Beta (build6)
+
 * Fri May 14 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.2.build4
 - update to Firefox 3.6.4 Beta (build4)
 
