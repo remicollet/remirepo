@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# Startup script for the fedora.us Thunderbird RPM
+# (based on the Mozilla RPM launch script)
+#
+
+##
+## Variables
+##
+MOZ_ARCH=$(uname -m)
+case $MOZ_ARCH in
+        x86_64 | ia64 | s390 )
+                MOZ_LIB_DIR="/usr/lib64"
+                SECONDARY_LIB_DIR="/usr/lib"
+                ;;
+        * )
+                MOZ_LIB_DIR="/usr/lib"
+                SECONDARY_LIB_DIR="/usr/lib64"
+                ;;
+esac
+
+if [ ! -x $MOZ_LIB_DIR/thunderbird-TBIRD_VERSION/thunderbird ]; then
+    if [ ! -x $SECONDARY_LIB_DIR/thunderbird-TBIRD_VERSION/thunderbird ]; then
+        echo "Error: $MOZ_LIB_DIR/thunderbird-TBIRD_VERSION/thunderbird not found"
+        if [ -d $SECONDARY_LIB_DIR ]; then
+            echo "       $SECONDARY_LIB_DIR/thunderbird-TBIRD_VERSION/thunderbird not found"
+        fi
+        exit 1
+    fi
+    MOZ_LIB_DIR="$SECONDARY_LIB_DIR"
+fi
+
+MOZ_DIST_BIN="$MOZ_LIB_DIR/thunderbird-TBIRD_VERSION"
+MOZ_PROGRAM="$MOZ_DIST_BIN/thunderbird"
+
+##
+## Set MOZ_ENABLE_PANGO is no longer used because Pango is enabled by default
+## you may use MOZ_DISABLE_PANGO=1 to force disabling of pango
+##
+#MOZ_DISABLE_PANGO=1
+#export MOZ_DISABLE_PANGO
+
+##
+## Set MOZ_APP_LAUNCHER for gnome-session
+##
+export MOZ_APP_LAUNCHER="/usr/bin/thunderbird"
+
+##
+## Disable the GNOME crash dialog, Moz has it's own
+## 
+GNOME_DISABLE_CRASH_DIALOG=1
+export GNOME_DISABLE_CRASH_DIALOG
+
+exec $MOZ_PROGRAM "$@"

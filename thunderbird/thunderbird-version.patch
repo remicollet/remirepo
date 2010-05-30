@@ -1,0 +1,11 @@
+--- comm-1.9.1/mail/installer/Makefile.in.old	2010-01-20 14:27:43.000000000 +0100
++++ comm-1.9.1/mail/installer/Makefile.in	2010-01-20 14:29:21.000000000 +0100
+@@ -42,6 +42,8 @@ VPATH		= @srcdir@
+ 
+ include $(DEPTH)/config/autoconf.mk
+ 
++MOZ_APP_VERSION="__RPM_VERSION_INTERNAL__"
++
+ NO_PKG_FILES = \
+ 	thunderbird-bin.elf \
+ 	thunderbird-config \
