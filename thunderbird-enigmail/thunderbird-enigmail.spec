@@ -1,12 +1,15 @@
-%global nspr_version 4.8
-%global nss_version 3.12.3.99
-%global cairo_version 1.8.8
-%global freetype_version 2.1.9
-%global sqlite_version 3.6.14
-%global build_langpacks 1
-%global moz_objdir objdir-tb
+%define nspr_version 4.8
+%define nss_version 3.12.3.99
+%define cairo_version 1.8.8
+%define freetype_version 2.1.9
+%define sqlite_version 3.6.14
+%define libnotify_version 0.4
+%define build_langpacks 1
+%define moz_objdir objdir-tb
+%define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
 
-%global thunver 3.0.1
+%global thunver  3.1
+%global thunbeta rc1
 #global CVS     20091121
 #global prever  rc1
 
@@ -16,17 +19,17 @@
 # IMPORTANT: If there is no top level directory, this should be 
 # set to the cwd, ie: '.'
 #%define tarballdir .
-%global tarballdir comm-1.9.1
+%define tarballdir comm-1.9.2
 
-%global official_branding 1
+%define official_branding 1
 
-%global version_internal  3.0
-%global mozappdir         %{_libdir}/%{name}-%{version_internal}
+%define version_internal  3.1
+%define mozappdir         %{_libdir}/%{name}-%{version_internal}
 
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.0.1
+Version:        1.1
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
@@ -35,7 +38,7 @@ Release:        1%{?dist}
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
 Group:          Applications/Internet
-Source0:        thunderbird-%{thunver}.source.tar.bz2
+Source0:        thunderbird-%{thunver}%{?thunbeta}.source.tar.bz2
 #NoSource:       0
 
 Source10:       thunderbird-mozconfig
@@ -58,21 +61,20 @@ Source101: enigmail-fixlang.php
 # From sunbird.src.rpm
 Source102: mozilla-extension-update.sh
 
-# Build patches
+# Fix for version issues
+Patch0:         thunderbird-version.patch
+# Fix for jemalloc
 Patch1:         mozilla-jemalloc.patch
+# Fix for installation fail when building with dynamic linked libraries
 Patch2:         thunderbird-shared-error.patch
-Patch4:         thunderbird-clipboard-crash.patch
-
-Patch9:         thunderbird-3.0-ppc64.patch
-
+# Fixes gcc complain that nsFrame::delete is protected
+Patch4:         xulrunner-1.9.2.1-build.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
 
-
 %else
 # Not yet approved by Mozillla Corporation
-
 
 %endif
 
@@ -83,6 +85,9 @@ BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{fedora} >= 11
 BuildRequires:  cairo-devel >= %{cairo_version}
+%endif
+%if %{fedora} >= 10
+BuildRequires:  libnotify-devel >= %{libnotify_version}
 %endif
 BuildRequires:  libpng-devel
 BuildRequires:  libjpeg-devel
@@ -148,21 +153,19 @@ features provided by GnuPG
 %setup -q -c
 cd %{tarballdir}
 
+sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
+    > version.patch
+%{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
+
 %patch1 -p0 -b .jemalloc
 %patch2 -p1 -b .shared-error
-%if %{fedora} >= 9
-%patch4 -p1 -b .clipboard-crash
-%endif
-
-%patch9 -p0 -b .ppc64
+%patch4 -p1 -b .protected
 
 %if %{official_branding}
 # Required by Mozilla Corporation
 
-
 %else
 # Not yet approved by Mozillla Corporation
-
 
 %endif
 
@@ -181,6 +184,20 @@ cat %{SOURCE10} 		\
   | grep -v system-cairo 	\
 %endif
   | tee .mozconfig
+
+cat <<EOF | tee -a .mozconfig
+%if %{fedora} >= 10
+ac_add_options --enable-libnotify
+%else
+ac_add_options --disable-libnotify
+%endif
+%if %{fedora} >= 9
+ac_add_options --enable-system-lcms
+%endif
+%if %{fedora} >= 12
+ac_add_options --enable-system-sqlite
+%endif
+EOF
 
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
@@ -208,6 +225,9 @@ tar xzf %{SOURCE100} -C mailnews/extensions
 
 %build
 cd %{tarballdir}
+
+INTERNAL_GECKO=%{version_internal}
+MOZ_APP_DIR=%{mozappdir}
 
 # Build with -Os as it helps the browser; also, don't override mozilla's warning
 # level; they use -Wall but disable a few warnings that show up _everywhere_
@@ -306,6 +326,9 @@ fi
 #===============================================================================
 
 %changelog
+* Mon May 31 2010 Remi Collet <rpms@famillecollet.com> 1.1-1
+- Enigmail 1.1 (against thunderbird 3.1rc1)
+
 * Mon Feb 01 2010 Remi Collet <rpms@famillecollet.com> 1.0.1-1
 - Enigmail 1.0.1 (against thunderbird 3.0.1)
 
