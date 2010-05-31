@@ -11,5 +11,6 @@ diff -up comm-central/mail/installer/Makefile.in.shared-error comm-central/mail/
  endif
 +endif
  
- # On mozilla-central, packager.mk uses core_abspath to redefine DIST
- # As the comm-central config.mk doesn't set it, do it ourselves instead
+ include $(MOZILLA_SRCDIR)/toolkit/mozapps/installer/packager.mk
+ 
+

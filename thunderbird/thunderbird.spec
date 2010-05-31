@@ -3,6 +3,7 @@
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
 %define sqlite_version 3.6.14
+%define libnotify_version 0.4
 %define build_langpacks 1
 %define moz_objdir objdir-tb
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
@@ -13,31 +14,33 @@
 # IMPORTANT: If there is no top level directory, this should be 
 # set to the cwd, ie: '.'
 #%define tarballdir .
-%define tarballdir comm-1.9.1
+%define tarballdir comm-1.9.2
 
 %define official_branding 1
 %define include_debuginfo 0
 
-%define version_internal  3.0
+%define version_internal  3.1
 %define mozappdir         %{_libdir}/%{name}-%{version_internal}
+%define mycomment  RC1
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        3.0.4
-Release:        1%{?dist}
+Version:        3.1
+Release:        0.1.rc1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 %if %{official_branding}
-%define tarball thunderbird-%{version}.source.tar.bz2
+#%define tarball thunderbird-%{version}.source.tar.bz2
+%define tarball thunderbird-3.1rc1.source.tar.bz2
 %else
-%define tarball thunderbird-3.0b2-source.tar.bz2
+%define tarball thunderbird-3.1rc1.source.tar.bz2
 %endif
 Source0:        %{tarball}
 #NoSource:       0
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{version}-20100330.tar.bz2
+Source1:        thunderbird-langpacks-3.1rc1-20100531.tar.bz2
 %endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -62,9 +65,8 @@ Patch0:         thunderbird-version.patch
 Patch1:         mozilla-jemalloc.patch
 # Fix for installation fail when building with dynamic linked libraries
 Patch2:         thunderbird-shared-error.patch
-
-
-Patch9:         thunderbird-3.0-ppc64.patch
+# Fixes gcc complain that nsFrame::delete is protected
+Patch4:         xulrunner-1.9.2.1-build.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -81,6 +83,9 @@ BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{fedora} >= 11
 BuildRequires:  cairo-devel >= %{cairo_version}
+%endif
+%if %{fedora} >= 10
+BuildRequires:  libnotify-devel >= %{libnotify_version}
 %endif
 BuildRequires:  libpng-devel
 BuildRequires:  libjpeg-devel
@@ -143,9 +148,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 
 %patch1 -p0 -b .jemalloc
 %patch2 -p1 -b .shared-error
-
-
-%patch9 -p0 -b .ppc64
+%patch4 -p1 -b .protected
 
 
 %if %{official_branding}
@@ -172,6 +175,20 @@ cat %{SOURCE10} 		\
 %endif
   | tee .mozconfig
 
+cat <<EOF | tee -a .mozconfig
+%if %{fedora} >= 10
+ac_add_options --enable-libnotify
+%else
+ac_add_options --disable-libnotify
+%endif
+%if %{fedora} >= 9
+ac_add_options --enable-system-lcms
+%endif
+%if %{fedora} >= 12
+ac_add_options --enable-system-sqlite
+%endif
+EOF
+
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
 %endif
@@ -179,7 +196,7 @@ cat %{SOURCE10} 		\
 %{__cat} %{SOURCE13} >> .mozconfig
 %endif
 
-sed -e "s/^Name=.*/Name=Thunderbird %{version}/" \
+sed -e "s/^Name=.*/Name=Thunderbird %{version} %{?mycomment}/" \
     -e "s/thunderbird/%{name}/" \
     %{SOURCE20} | tee %{name}.desktop
 
@@ -290,19 +307,11 @@ install -Dm755 %{SOURCE30} $RPM_BUILD_ROOT/%{mozappdir}/open-browser.sh
 %{__rm} -f %{name}.lang # Delete for --short-circuit option
 touch %{name}.lang
 %if %{build_langpacks}
-%if 0%{?fedora} >= 13
 %{__mkdir_p} $RPM_BUILD_ROOT%{mozappdir}/langpacks
-%else
-%{__mkdir_p} $RPM_BUILD_ROOT%{mozappdir}/extensions
-%endif
 %{__tar} xjf %{SOURCE1}
 for langpack in `ls thunderbird-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
-%if 0%{?fedora} >= 13
   extensiondir=$RPM_BUILD_ROOT%{mozappdir}/langpacks/langpack-$language@thunderbird.mozilla.org
-%else
-  extensiondir=$RPM_BUILD_ROOT%{mozappdir}/extensions/langpack-$language@thunderbird.mozilla.org
-%endif
   %{__mkdir_p} $extensiondir
   unzip $langpack -d $extensiondir
   find $extensiondir -type f | xargs chmod 644
@@ -328,7 +337,6 @@ done
 %{__rm} -rf thunderbird-langpacks
 %endif # build_langpacks
 
-
 # Copy over the LICENSE
 cd mozilla
 install -c -m 644 LICENSE $RPM_BUILD_ROOT%{mozappdir}
@@ -344,6 +352,7 @@ ln -s %{_datadir}/myspell $RPM_BUILD_ROOT%{mozappdir}/dictionaries
 %{__mkdir_p} $RPM_BUILD_ROOT%{mozappdir}/components
 touch $RPM_BUILD_ROOT%{mozappdir}/components/compreg.dat
 touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
+
 
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{include_debuginfo}
@@ -363,6 +372,7 @@ cp %{moz_objdir}/mozilla/dist/thunderbird-%{version}.en-US.linux-i686.crashrepor
   install -m 644 mail/extensions/newsblog/rss.rdf   $RPM_BUILD_ROOT%{mozappdir}/isp/
 
 rm -rf $RPM_BUILD_ROOT%{mozappdir}/isp/en-US
+rm -rf $RPM_BUILD_ROOT%{mozappdir}/*.chk
 
 
 #===============================================================================
@@ -414,6 +424,7 @@ fi
 %dir %{mozappdir}/components
 %ghost %{mozappdir}/components/compreg.dat
 %ghost %{mozappdir}/components/xpti.dat
+%{mozappdir}/components/components.list
 %{mozappdir}/components/*.so
 %{mozappdir}/components/*.xpt
 %attr(644,root,root) %{mozappdir}/components/*.js
@@ -421,9 +432,7 @@ fi
 %{mozappdir}/dictionaries
 %dir %{mozappdir}/extensions
 %{mozappdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
-%if 0%{?fedora} >= 13
 %dir %{mozappdir}/langpacks
-%endif
 %{mozappdir}/greprefs
 %{mozappdir}/icons
 %{mozappdir}/isp
@@ -446,7 +455,6 @@ fi
 %{mozappdir}/platform.ini
 %{mozappdir}/updater.ini
 %{mozappdir}/application.ini
-%exclude %{mozappdir}/dependentlibs.list
 %exclude %{mozappdir}/removed-files
 %{mozappdir}/update.locale
 %{_datadir}/icons/hicolor/16x16/apps/thunderbird.png
@@ -460,13 +468,23 @@ fi
 %{mozappdir}/crashreporter.ini
 %{mozappdir}/Throbber-small.gif
 %endif
-%if %{fedora} <= 10
-%exclude %{mozappdir}/*.chk
-%endif
 
 #===============================================================================
 
 %changelog
+* Mon May 31 2010 Remi Collet <rpms@famillecollet.com> 3.1-0.1.rc1
+- update to 3.1rc1
+- sync with rawhide and backport to old fedora
+
+* Tue May 25 2010 Christopher Aillon <caillon@redhat.com> 3.1-0.1.rc1
+- Thunderbird 3.1 RC1
+
+* Fri Apr 30 2010 Jan Horak <jhorak@redhat.com> - 3.0.4-3
+- Fix for mozbz#550455
+
+* Tue Apr 13 2010 Martin Stransky <stransky@redhat.com> - 3.0.4-2
+- Fixed langpacks (#580444)
+
 * Tue Mar 30 2010 Remi Collet <rpms@famillecollet.com> 3.0.4-1.fc#.remi
 - update to 3.0.4
 - sync with F12 and backport to old fedora

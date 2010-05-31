@@ -1,0 +1,239 @@
+--- mozilla/toolkit/xre/nsAppRunner.h.old	2007-09-25 18:01:56.000000000 +0200
++++ mozilla/toolkit/xre/nsAppRunner.h	2007-09-25 18:02:23.000000000 +0200
+@@ -48,7 +48,8 @@
+ #elif defined(CCHMAXPATH)
+ #define MAXPATHLEN CCHMAXPATH
+ #else
+-#define MAXPATHLEN 1024
++#include <limits.h>
++#define MAXPATHLEN PATH_MAX
+ #endif
+ #endif
+ 
+diff -up mozilla/toolkit/mozapps/update/src/updater/updater.cpp.old mozilla/toolkit/mozapps/update/src/updater/updater.cpp
+--- mozilla/toolkit/mozapps/update/src/updater/updater.cpp.old	2007-09-25 18:00:26.000000000 +0200
++++ mozilla/toolkit/mozapps/update/src/updater/updater.cpp	2007-09-25 18:00:53.000000000 +0200
+@@ -107,7 +107,8 @@ void LaunchChild(int argc, char **argv);
+ # elif defined(CCHMAXPATH)
+ #  define MAXPATHLEN CCHMAXPATH
+ # else
+-#  define MAXPATHLEN 1024
++#  include <limits.h>
++#  define MAXPATHLEN PATH_MAX
+ # endif
+ #endif
+ 
+diff -up mozilla/mailnews/import/comm4x/src/nsComm4xProfile.cpp.old mozilla/mailnews/import/comm4x/src/nsComm4xProfile.cpp
+--- mozilla/mailnews/import/comm4x/src/nsComm4xProfile.cpp.old	2007-09-25 17:58:43.000000000 +0200
++++ mozilla/mailnews/import/comm4x/src/nsComm4xProfile.cpp	2007-09-25 17:59:22.000000000 +0200
+@@ -70,7 +70,8 @@
+ #elif defined(CCHMAXPATH)
+ #define MAXPATHLEN CCHMAXPATH
+ #else
+-#define MAXPATHLEN 1024
++#include <limits.h>
++#define MAXPATHLEN PATH_MAX
+ #endif
+ #endif
+ 
+diff -up mozilla/xpcom/io/SpecialSystemDirectory.cpp.old mozilla/xpcom/io/SpecialSystemDirectory.cpp
+--- mozilla/xpcom/io/SpecialSystemDirectory.cpp.old	2007-09-25 18:04:25.000000000 +0200
++++ mozilla/xpcom/io/SpecialSystemDirectory.cpp	2007-09-25 18:04:48.000000000 +0200
+@@ -109,7 +109,8 @@
+ #elif defined(CCHMAXPATH)
+ #define MAXPATHLEN CCHMAXPATH
+ #else
+-#define MAXPATHLEN 1024
++#include <limits.h>
++#define MAXPATHLEN PATH_MAX
+ #endif
+ #endif
+ 
+diff -up mozilla/xpcom/obsolete/nsFileSpecUnix.cpp.old mozilla/xpcom/obsolete/nsFileSpecUnix.cpp
+--- mozilla/xpcom/obsolete/nsFileSpecUnix.cpp.old	2006-11-28 01:18:37.000000000 +0100
++++ mozilla/xpcom/obsolete/nsFileSpecUnix.cpp	2007-09-25 18:05:49.000000000 +0200
+@@ -79,7 +79,8 @@
+ #endif
+ 
+ #ifndef MAXPATHLEN
+-#define MAXPATHLEN	1024  /* Guessing this is okay.  Works for SCO. */
++#include <limits.h>
++#define MAXPATHLEN	PATH_MAX  /* Guessing this is okay.  Works for SCO. */
+ #endif
+  
+ #if defined(__QNX__)
+diff -up mozilla/xpcom/build/nsXPCOMPrivate.h.old mozilla/xpcom/build/nsXPCOMPrivate.h
+--- mozilla/xpcom/build/nsXPCOMPrivate.h.old	2007-09-25 18:02:58.000000000 +0200
++++ mozilla/xpcom/build/nsXPCOMPrivate.h	2007-09-25 18:03:15.000000000 +0200
+@@ -252,7 +252,8 @@ NS_GetFrozenFunctions(XPCOMFunctions *en
+ #elif defined(CCHMAXPATH)
+ #define MAXPATHLEN CCHMAXPATH
+ #else
+-#define MAXPATHLEN 1024
++#include <limits.h>
++#define MAXPATHLEN PATH_MAX
+ #endif
+ #endif
+ 
+diff -up mozilla/dbm/include/mcom_db.h.old mozilla/dbm/include/mcom_db.h
+--- mozilla/dbm/include/mcom_db.h.old	2007-09-25 17:57:09.000000000 +0200
++++ mozilla/dbm/include/mcom_db.h	2007-09-25 17:57:49.000000000 +0200
+@@ -214,7 +214,8 @@
+ #endif  /* __DBINTERFACE_PRIVATE */
+ 
+ #ifdef SCO
+-#define MAXPATHLEN 	1024              
++#include <limits.h>
++#define MAXPATHLEN 	PATH_MAX     
+ #endif
+ 
+ #include <fcntl.h>
+diff -up mozilla/mail/components/migration/src/nsProfileMigrator.cpp.old mozilla/mail/components/migration/src/nsProfileMigrator.cpp
+--- mozilla/mail/components/migration/src/nsProfileMigrator.cpp.old	2007-09-25 17:55:11.000000000 +0200
++++ mozilla/mail/components/migration/src/nsProfileMigrator.cpp	2007-09-25 18:07:56.000000000 +0200
+@@ -73,7 +73,8 @@
+ #elif defined(CCHMAXPATH)
+ #define MAXPATHLEN CCHMAXPATH
+ #else
+-#define MAXPATHLEN 1024
++#include <limits.h>
++#define MAXPATHLEN PATH_MAX
+ #endif
+ #endif
+ 
+diff -up mozilla/nsprpub/config/nsinstall.c.old mozilla/nsprpub/config/nsinstall.c
+diff -up mozilla/js/src/jsfile.c.old mozilla/js/src/jsfile.c
+--- mozilla/js/src/jsfile.c.old	2006-07-26 20:55:08.000000000 +0200
++++ mozilla/js/src/jsfile.c	2007-09-25 18:22:52.000000000 +0200
+@@ -105,7 +105,8 @@
+ #define utfstring               "binary"
+ #define unicodestring           "unicode"
+ 
+-#define MAX_PATH_LENGTH         1024
++#include <limits.h>
++#define MAX_PATH_LENGTH         PATH_MAX
+ #define MODE_SIZE               256
+ #define NUMBER_SIZE             32
+ #define MAX_LINE_LENGTH         256
+diff -up mozilla/webshell/tests/viewer/nsViewerApp.cpp.old mozilla/webshell/tests/viewer/nsViewerApp.cpp
+--- mozilla/webshell/tests/viewer/nsViewerApp.cpp.old	2007-09-25 18:34:51.000000000 +0200
++++ mozilla/webshell/tests/viewer/nsViewerApp.cpp	2007-09-25 18:35:33.000000000 +0200
+@@ -692,7 +692,8 @@ nsViewerApp::OpenWindow(PRUint32 aNewChr
+ 
+ #if !defined(XP_WIN) && !defined(XP_OS2)
+ #ifndef XP_MAC
+-#define _MAX_PATH 512
++#include <limits.h>
++#define _MAX_PATH PATH_MAX
+ #endif
+ #endif
+ 
+diff -up mozilla/xpcom/typelib/xpidl/xpidl_java.c.old mozilla/xpcom/typelib/xpidl/xpidl_java.c
+--- mozilla/xpcom/typelib/xpidl/xpidl_java.c.old	2007-09-25 18:38:52.000000000 +0200
++++ mozilla/xpcom/typelib/xpidl/xpidl_java.c	2007-09-25 18:39:17.000000000 +0200
+@@ -44,6 +44,7 @@
+ #include "xpidl.h"
+ #include <ctype.h>
+ #include <glib.h>
++#include <limits.h>
+ 
+ #ifdef XP_WIN
+ #include <windef.h>
+diff -up mozilla/widget/src/xremoteclient/XRemoteClient.cpp.old mozilla/widget/src/xremoteclient/XRemoteClient.cpp
+--- mozilla/widget/src/xremoteclient/XRemoteClient.cpp.old	2007-09-25 18:14:08.000000000 +0200
++++ mozilla/widget/src/xremoteclient/XRemoteClient.cpp	2007-09-25 18:36:55.000000000 +0200
+@@ -76,7 +76,8 @@
+ #endif
+     
+ #ifndef MAX_PATH
+-#define MAX_PATH 1024
++#include <limits.h>
++#define MAX_PATH PATH_MAX
+ #endif
+ 
+ #define ARRAY_LENGTH(array_) (sizeof(array_)/sizeof(array_[0]))
+diff -up mozilla/modules/libreg/src/reg.c.old mozilla/modules/libreg/src/reg.c
+--- mozilla/modules/libreg/src/reg.c.old	2007-09-25 18:25:02.000000000 +0200
++++ mozilla/modules/libreg/src/reg.c	2007-09-25 18:27:46.000000000 +0200
+@@ -96,7 +96,8 @@
+ #define MAX_PATH PATH_MAX
+ #elif defined(XP_UNIX)
+ #ifndef MAX_PATH
+-#define MAX_PATH 1024
++#include <limits.h>
++#define MAX_PATH PATH_MAX
+ #endif
+ #elif defined(XP_OS2)
+ #ifndef MAX_PATH
+diff -up mozilla/directory/c-sdk/config/pathsub.h.old mozilla/directory/c-sdk/config/pathsub.h
+--- mozilla/directory/c-sdk/config/pathsub.h.old	2006-02-03 15:41:18.000000000 +0100
++++ mozilla/directory/c-sdk/config/pathsub.h	2007-09-25 18:48:58.000000000 +0200
+@@ -50,7 +50,7 @@
+ #endif
+ 
+ #ifndef PATH_MAX
+-#define PATH_MAX 1024
++#error  "PATH_MAX is not defined!"
+ #endif
+ 
+ /*
+diff -up mozilla/config/pathsub.h.old mozilla/config/pathsub.h
+--- mozilla/config/pathsub.h.old	2004-04-18 16:17:25.000000000 +0200
++++ mozilla/config/pathsub.h	2007-09-25 18:48:13.000000000 +0200
+@@ -46,7 +46,7 @@
+ #include <sys/types.h>
+ 
+ #ifndef PATH_MAX
+-#define PATH_MAX 1024
++#error  "PATH_MAX is not defined!"
+ #endif
+ 
+ /*
+diff -up mozilla/modules/libjar/nsZipArchive.cpp.old mozilla/modules/libjar/nsZipArchive.cpp
+--- mozilla/modules/libjar/nsZipArchive.cpp.old	2006-09-13 20:32:37.000000000 +0200
++++ mozilla/modules/libjar/nsZipArchive.cpp	2007-09-25 18:51:00.000000000 +0200
+@@ -121,7 +121,7 @@ char * strdup(const char *src)
+ #    define S_IFLNK  0120000
+ #  endif
+ #  ifndef PATH_MAX
+-#    define PATH_MAX 1024
++#    include <limits.h>
+ #  endif
+ #endif  /* XP_UNIX */
+ 
+diff -up mozilla/nsprpub/config/pathsub.h.old mozilla/nsprpub/config/pathsub.h
+--- mozilla/nsprpub/config/pathsub.h.old	2004-04-25 17:00:34.000000000 +0200
++++ mozilla/nsprpub/config/pathsub.h	2007-09-25 18:57:51.000000000 +0200
+@@ -50,7 +50,7 @@
+ #endif
+ 
+ #ifndef PATH_MAX
+-#define PATH_MAX 1024
++#error  "PATH_MAX is not defined!"
+ #endif
+ 
+ /*
+diff -up mozilla/gfx/src/gtk/nsPrintdGTK.h.old mozilla/gfx/src/gtk/nsPrintdGTK.h
+--- mozilla/gfx/src/gtk/nsPrintdGTK.h.old	2004-04-17 23:52:29.000000000 +0200
++++ mozilla/gfx/src/gtk/nsPrintdGTK.h	2007-09-25 18:56:48.000000000 +0200
+@@ -63,7 +63,7 @@ PR_BEGIN_EXTERN_C
+ #ifdef _POSIX_PATH_MAX
+ #define PATH_MAX	_POSIX_PATH_MAX
+ #else
+-#define PATH_MAX	256
++#error "PATH_MAX is not defined!"
+ #endif
+ #endif
+ 
+diff -up mozilla/security/coreconf/nsinstall/pathsub.h.old mozilla/security/coreconf/nsinstall/pathsub.h
+--- mozilla/security/coreconf/nsinstall/pathsub.h.old	2004-04-25 17:02:18.000000000 +0200
++++ mozilla/security/coreconf/nsinstall/pathsub.h	2007-09-25 19:00:35.000000000 +0200
+@@ -49,7 +49,7 @@
+ #endif
+ 
+ #ifndef PATH_MAX
+-#define PATH_MAX 1024
++#error  "PATH_MAX is not defined!"
+ #endif
+ 
+ /*

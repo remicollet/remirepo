@@ -27,6 +27,7 @@ ac_add_options --enable-svg
 ac_add_options --enable-canvas
 ac_add_options --enable-system-hunspell
 ac_add_options --disable-crashreporter
+ac_add_options --disable-necko-wifi
 
 export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1

@@ -1,11 +1,12 @@
---- comm-1.9.1/mail/installer/Makefile.in.old	2010-01-20 14:27:43.000000000 +0100
-+++ comm-1.9.1/mail/installer/Makefile.in	2010-01-20 14:29:21.000000000 +0100
-@@ -42,6 +42,8 @@ VPATH		= @srcdir@
+diff -up comm-1.9.2/mail/installer/Makefile.in.version comm-1.9.2/mail/installer/Makefile.in
+--- comm-1.9.2/mail/installer/Makefile.in.version	2010-05-21 11:42:45.000000000 -0700
++++ comm-1.9.2/mail/installer/Makefile.in	2010-05-25 15:16:18.446197181 -0700
+@@ -44,6 +44,8 @@ include $(DEPTH)/config/autoconf.mk
  
- include $(DEPTH)/config/autoconf.mk
+ include $(topsrcdir)/config/rules.mk
  
 +MOZ_APP_VERSION="__RPM_VERSION_INTERNAL__"
 +
- NO_PKG_FILES = \
- 	thunderbird-bin.elf \
- 	thunderbird-config \
+ MOZ_PKG_REMOVALS = $(srcdir)/removed-files.in
+ 
+ MOZ_PKG_MANIFEST_P = $(srcdir)/package-manifest.in

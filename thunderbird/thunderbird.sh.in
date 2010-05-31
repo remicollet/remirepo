@@ -9,7 +9,7 @@
 ##
 MOZ_ARCH=$(uname -m)
 case $MOZ_ARCH in
-        x86_64 | ia64 | s390 )
+        x86_64 | s390x | sparc64 )
                 MOZ_LIB_DIR="/usr/lib64"
                 SECONDARY_LIB_DIR="/usr/lib"
                 ;;
@@ -32,6 +32,8 @@ fi
 
 MOZ_DIST_BIN="$MOZ_LIB_DIR/thunderbird-TBIRD_VERSION"
 MOZ_PROGRAM="$MOZ_DIST_BIN/thunderbird"
+MOZ_LANGPACKS_DIR="$MOZ_DIST_BIN/langpacks"
+MOZ_EXTENSIONS_PROFILE_DIR="$HOME/.mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}"
 
 ##
 ## Set MOZ_ENABLE_PANGO is no longer used because Pango is enabled by default
@@ -50,5 +52,73 @@ export MOZ_APP_LAUNCHER="/usr/bin/thunderbird"
 ## 
 GNOME_DISABLE_CRASH_DIALOG=1
 export GNOME_DISABLE_CRASH_DIALOG
+
+##
+## To disable the use of Firefox localization, set MOZ_DISABLE_LANGPACKS=1
+## in your environment before launching Firefox.
+##
+#
+# MOZ_DISABLE_LANGPACKS=1
+# export MOZ_DISABLE_LANGPACKS
+#
+
+##
+## Automatically installed langpacks are tracked by .fedora-langpack-install
+## config file.
+##
+FEDORA_LANGPACK_CONFIG="$MOZ_EXTENSIONS_PROFILE_DIR/.fedora-langpack-install"
+
+# MOZ_DISABLE_LANGPACKS disables language packs completelly
+MOZILLA_DOWN=0
+if ! [ $MOZ_DISABLE_LANGPACKS ] || [ $MOZ_DISABLE_LANGPACKS -eq 0 ]; then
+    if [ -x $MOZ_DIST_BIN/mozilla-xremote-client ]; then
+        # Is thunderbird running?
+        $MOZ_DIST_BIN/mozilla-xremote-client -a thunderbird 'ping()' > /dev/null 2>&1
+        MOZILLA_DOWN=$?
+    fi
+fi
+
+# Modify language pack configuration only when thunderbird is not running 
+# and language packs are not disabled
+if [ $MOZILLA_DOWN -ne 0 ]; then
+
+    # Clear already installed langpacks
+    mkdir -p $MOZ_EXTENSIONS_PROFILE_DIR
+    if [ -f $FEDORA_LANGPACK_CONFIG ]; then
+        rm `cat $FEDORA_LANGPACK_CONFIG` > /dev/null 2>&1
+        rm $FEDORA_LANGPACK_CONFIG > /dev/null 2>&1
+    fi
+
+    # Get locale from system
+    CURRENT_LOCALE=$LC_ALL
+    CURRENT_LOCALE=${CURRENT_LOCALE:-$LC_MESSAGES}
+    CURRENT_LOCALE=${CURRENT_LOCALE:-$LANG}
+    
+    # Try without a local variant first, then with a local variant
+    # So that pt-BR doesn't try to use pt for example
+    SHORTMOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*||g"`
+    MOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*|-\1|g"`
+
+    # Try to link global langpacks to an extension directory
+    if [ -f $MOZ_LANGPACKS_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org/chrome/$SHORTMOZLOCALE.jar ]; then
+        if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org ]; then
+            rmdir "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org" > /dev/null 2>&1
+        fi 
+        if ! [ -e $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org ]; then
+            ln -s $MOZ_LANGPACKS_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org \
+                  $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org
+            echo "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org" > $FEDORA_LANGPACK_CONFIG
+        fi
+    elif [ -f $MOZ_LANGPACKS_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org/chrome/$MOZLOCALE.jar ]; then
+        if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org ]; then
+            rmdir "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org" > /dev/null 2>&1
+        fi 
+        if ! [ -e $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org ]; then
+            ln -s $MOZ_LANGPACKS_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org \
+                  $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org
+            echo "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org" > $FEDORA_LANGPACK_CONFIG
+        fi
+    fi
+fi
 
 exec $MOZ_PROGRAM "$@"

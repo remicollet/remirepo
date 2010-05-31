@@ -1,7 +1,6 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
-Name=Thunderbird Email
+Name=Thunderbird
 GenericName=Email
 Comment=Send and Receive Email
 Exec=thunderbird
