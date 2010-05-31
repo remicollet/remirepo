@@ -1,0 +1,116 @@
+diff -r 7f1f309a34f8 widget/src/gtk2/nsClipboard.cpp
+--- a/mozilla/widget/src/gtk2/nsClipboard.cpp	Thu Oct 22 12:45:52 2009 +0800
++++ b/mozilla/widget/src/gtk2/nsClipboard.cpp	Fri Nov 13 11:19:27 2009 +0100
+@@ -424,25 +424,25 @@ nsClipboard::HasDataMatchingFlavors(cons
+     for (PRUint32 i = 0; i < aLength && !*_retval; i++) {
+         // We special case text/unicode here.
+         if (!strcmp(aFlavorList[i], kUnicodeMime) && 
+             gtk_selection_data_targets_include_text(selection_data)) {
+             *_retval = PR_TRUE;
+             break;
+         }
+ 
+         for (PRInt32 j = 0; j < n_targets; j++) {
+             gchar *atom_name = gdk_atom_name(targets[j]);
+-            if (!strcmp(atom_name, aFlavorList[i]))
++            if (!g_strcmp0(atom_name, aFlavorList[i]))
+                 *_retval = PR_TRUE;
+ 
+             // X clipboard wants image/jpeg, not image/jpg
+-            if (!strcmp(aFlavorList[i], kJPEGImageMime) && !strcmp(atom_name, "image/jpeg"))
++            if (!g_strcmp0(aFlavorList[i], kJPEGImageMime) && !g_strcmp0(atom_name, "image/jpeg"))
+                 *_retval = PR_TRUE;
+ 
+             g_free(atom_name);
+ 
+             if (*_retval)
+                 break;
+         }
+     }
+     gtk_selection_data_free(selection_data);
+     g_free(targets);
+diff -r 7f1f309a34f8 widget/src/gtk2/nsDragService.cpp
+--- a/mozilla/widget/src/gtk2/nsDragService.cpp	Thu Oct 22 12:45:52 2009 +0800
++++ b/mozilla/widget/src/gtk2/nsDragService.cpp	Fri Nov 13 11:19:27 2009 +0100
+@@ -824,50 +824,47 @@ nsDragService::IsDataFlavorSupported(con
+ 
+     // check the target context vs. this flavor, one at a time
+     GList *tmp;
+     for (tmp = mTargetDragContext->targets; tmp; tmp = tmp->next) {
+         /* Bug 331198 */
+         GdkAtom atom = GDK_POINTER_TO_ATOM(tmp->data);
+         gchar *name = NULL;
+         name = gdk_atom_name(atom);
+         PR_LOG(sDragLm, PR_LOG_DEBUG,
+                ("checking %s against %s\n", name, aDataFlavor));
+-        if (name && (strcmp(name, aDataFlavor) == 0)) {
++        if (g_strcmp0(name, aDataFlavor) == 0) {
+             PR_LOG(sDragLm, PR_LOG_DEBUG, ("good!\n"));
+             *_retval = PR_TRUE;
+         }
+         // check for automatic text/uri-list -> text/x-moz-url mapping
+         if (*_retval == PR_FALSE && 
+-            name &&
+-            (strcmp(name, gTextUriListType) == 0) &&
+-            (strcmp(aDataFlavor, kURLMime) == 0)) {
++            (g_strcmp0(name, gTextUriListType) == 0) &&
++            (g_strcmp0(aDataFlavor, kURLMime) == 0)) {
+             PR_LOG(sDragLm, PR_LOG_DEBUG,
+                    ("good! ( it's text/uri-list and \
+                    we're checking against text/x-moz-url )\n"));
+             *_retval = PR_TRUE;
+         }
+         // check for automatic _NETSCAPE_URL -> text/x-moz-url mapping
+         if (*_retval == PR_FALSE && 
+-            name &&
+-            (strcmp(name, gMozUrlType) == 0) &&
+-            (strcmp(aDataFlavor, kURLMime) == 0)) {
++            (g_strcmp0(name, gMozUrlType) == 0) &&
++            (g_strcmp0(aDataFlavor, kURLMime) == 0)) {
+             PR_LOG(sDragLm, PR_LOG_DEBUG,
+                    ("good! ( it's _NETSCAPE_URL and \
+                    we're checking against text/x-moz-url )\n"));
+             *_retval = PR_TRUE;
+         }
+         // check for auto text/plain -> text/unicode mapping
+         if (*_retval == PR_FALSE && 
+-            name &&
+-            (strcmp(name, kTextMime) == 0) &&
+-            ((strcmp(aDataFlavor, kUnicodeMime) == 0) ||
+-             (strcmp(aDataFlavor, kFileMime) == 0))) {
++            (g_strcmp0(name, kTextMime) == 0) &&
++            ((g_strcmp0(aDataFlavor, kUnicodeMime) == 0) ||
++             (g_strcmp0(aDataFlavor, kFileMime) == 0))) {
+             PR_LOG(sDragLm, PR_LOG_DEBUG,
+                    ("good! ( it's text plain and we're checking \
+                    against text/unicode or application/x-moz-file)\n"));
+             *_retval = PR_TRUE;
+         }
+         g_free(name);
+     }
+     return NS_OK;
+ }
+ 
+@@ -974,21 +971,21 @@ nsDragService::IsTargetContextList(void)
+ 
+     GList *tmp;
+ 
+     // walk the list of context targets and see if one of them is a list
+     // of items.
+     for (tmp = mTargetDragContext->targets; tmp; tmp = tmp->next) {
+         /* Bug 331198 */
+         GdkAtom atom = GDK_POINTER_TO_ATOM(tmp->data);
+         gchar *name = NULL;
+         name = gdk_atom_name(atom);
+-        if (strcmp(name, gMimeListType) == 0)
++        if (g_strcmp0(name, gMimeListType) == 0)
+             retval = PR_TRUE;
+         g_free(name);
+         if (retval)
+             break;
+     }
+     return retval;
+ }
+ 
+ // Maximum time to wait for a "drag_received" arrived, in microseconds
+ #define NS_DND_TIMEOUT 500000
