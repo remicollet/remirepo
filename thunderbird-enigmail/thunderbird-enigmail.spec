@@ -2,7 +2,7 @@
 %define nss_version 3.12.3.99
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
-%define sqlite_version 3.6.14
+%define sqlite_version 3.6.22
 %define libnotify_version 0.4
 %define build_langpacks 1
 %define moz_objdir objdir-tb
@@ -107,7 +107,7 @@ BuildRequires:  libXrender-devel
 %if 0%{?fedora} >= 10
 BuildRequires:  hunspell-devel
 %endif
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 13
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
 BuildRequires:  startup-notification-devel
@@ -172,7 +172,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 
 %{__rm} -f .mozconfig
 cat %{SOURCE10} 		\
-%if %{fedora} < 11
+%if %{fedora} < 13
   | grep -v system-sqlite 	\
 %endif
 %if %{fedora} < 11
@@ -194,7 +194,7 @@ ac_add_options --disable-libnotify
 %if %{fedora} >= 9
 ac_add_options --enable-system-lcms
 %endif
-%if %{fedora} >= 12
+%if %{fedora} >= 13
 ac_add_options --enable-system-sqlite
 %endif
 EOF
