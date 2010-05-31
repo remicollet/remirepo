@@ -101,7 +101,7 @@ BuildRequires:  wireless-tools-devel
 %endif
 
 # BR from Xulrunner
-%if %{fedora} >= 12
+%if %{fedora} >= 11
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
 %if %{fedora} >= 11
@@ -183,7 +183,7 @@ cat <<EOF_MOZCONFIG | tee .mozconfig
 #ac_add_options --with-system-png
 ac_add_options --prefix="\$PREFIX"
 ac_add_options --libdir="\$LIBDIR"
-%if %{fedora} >= 12
+%if %{fedora} >= 11
 ac_add_options --enable-system-sqlite
 %endif
 %if %{fedora} >= 11
