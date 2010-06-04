@@ -1,10 +1,10 @@
 #global postver b
 
-%global cppconnver 1.1.0
+%global cppconnver 1.1.0-0.1.bzr819
 
 Summary: A MySQL visual database modeling tool
 Name: mysql-workbench
-Version: 5.2.21
+Version: 5.2.22
 Release: 1%{?dist}
 Group: Applications/Databases
 License: GPLv2
@@ -16,6 +16,7 @@ Source: %{name}-oss-%{version}%{?postver}.tar.gz
 # !!! This patch use versioned soname !!!
 Patch1: %{name}-5.2.17-cppconn.patch
 Patch2: %{name}-5.2.16-scintilla.patch
+Patch3: %{name}-5.2.22-python.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -72,6 +73,7 @@ tools environment for:
 
 %patch1 -p1 -b .cppconn
 #patch2 -p1 -b .scintilla
+%patch3 -p1 -b .fixindent
 
 # we use System provided libraries
 rm -rf ext/boost
@@ -135,6 +137,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Jun 04 2010 Remi Collet <RPMS@famillecollet.com> 5.2.22-1
+- update to 5.2.22 RC Community (OSS) Edition
+- build against mysql-connector-c++ 1.1.0 (bzr819)
+
 * Wed May 12 2010 Remi Collet <RPMS@famillecollet.com> 5.2.21-1
 - update to 5.2.21 RC Community (OSS) Edition
 

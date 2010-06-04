@@ -1,4 +1,4 @@
-%global bzr 818
+%global bzr 819
 
 
 Summary:    MySQL database connector for C++
@@ -12,9 +12,9 @@ License:    GPLv2 with exceptions
 URL:        http://forge.mysql.com/wiki/Connector_C++
 
 %if 0%{?bzr}
-# bzr branch -r 818 lp:~mysql/mysql-connector-cpp/trunk mysql-connector-c++-1.1.0
+# bzr branch -r 819 lp:~mysql/mysql-connector-cpp/trunk mysql-connector-c++-1.1.0
 # less mysql-connector-c++-1.1.0/driver/mysql_metadata.cpp => getDriverMajorVersion / getDriverMinorVersion / getDriverPatchVersion
-# tar czf mysql-connector-c++-bzr818.tgz --exclude .bzr mysql-connector-c++-1.1.0
+# tar czf mysql-connector-c++-bzr819.tgz --exclude .bzr mysql-connector-c++-1.1.0
 # rm -rf mysql-connector-c++-1.1.0
 Source0:    mysql-connector-c++-bzr%{bzr}.tgz
 %else
@@ -106,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 04 2010 Remi Collet <RPMS@famillecollet.com> 1.1.0-0.1.bzr819
+- update to 1.1.0 from bzr snapshot 819
+
 * Sat Apr 03 2010 Remi Collet <RPMS@famillecollet.com> 1.1.0-0.1.bzr818
 - update to 1.1.0 from bzr snapshot 818
 
