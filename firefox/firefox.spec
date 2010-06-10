@@ -3,7 +3,7 @@
 %define cairo_version 1.8.8
 %define lcms_version 1.18
 %define freetype_version 2.1.9
-%define sqlite_version 3.6.16
+%define sqlite_version 3.6.22
 
 %define homepage http://start.fedoraproject.org/
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
@@ -30,7 +30,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        3.6.4
-Release:        0.3.build6%{?dist}
+Release:        0.4.build6%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -101,7 +101,7 @@ BuildRequires:  wireless-tools-devel
 %endif
 
 # BR from Xulrunner
-%if %{fedora} >= 11
+%if %{fedora} >= 13
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
 %if %{fedora} >= 11
@@ -183,7 +183,7 @@ cat <<EOF_MOZCONFIG | tee .mozconfig
 #ac_add_options --with-system-png
 ac_add_options --prefix="\$PREFIX"
 ac_add_options --libdir="\$LIBDIR"
-%if %{fedora} >= 11
+%if %{fedora} >= 13
 ac_add_options --enable-system-sqlite
 %endif
 %if %{fedora} >= 11
@@ -507,6 +507,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Jun 29 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.4.build6
+- F12 build
+- fix sqlite dependency (3.6.22)
+- fix path for mozilla-xremote-client in launcher 
+
 * Sat May 29 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.3.build6
 - update to Firefox 3.6.4 Beta (build6)
 
