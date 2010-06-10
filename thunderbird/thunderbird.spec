@@ -21,26 +21,26 @@
 
 %define version_internal  3.1
 %define mozappdir         %{_libdir}/%{name}-%{version_internal}
-%define mycomment  RC1
+%define relcan  rc2
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
 Version:        3.1
-Release:        0.1.rc1%{?dist}
+Release:        0.2.rc2%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 %if %{official_branding}
 #%define tarball thunderbird-%{version}.source.tar.bz2
-%define tarball thunderbird-3.1rc1.source.tar.bz2
+%define tarball thunderbird-3.1%{?relcan}.source.tar.bz2
 %else
-%define tarball thunderbird-3.1rc1.source.tar.bz2
+%define tarball thunderbird-3.1%{?relcan}.source.tar.bz2
 %endif
 Source0:        %{tarball}
 #NoSource:       0
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-3.1rc1-20100531.tar.bz2
+Source1:        thunderbird-langpacks-3.1%{?relcan}-20100610.tar.bz2
 %endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -196,7 +196,7 @@ EOF
 %{__cat} %{SOURCE13} >> .mozconfig
 %endif
 
-sed -e "s/^Name=.*/Name=Thunderbird %{version} %{?mycomment}/" \
+sed -e "s/^Name=.*/Name=Thunderbird %{version} %{?relcan}/" \
     -e "s/thunderbird/%{name}/" \
     %{SOURCE20} | tee %{name}.desktop
 
@@ -472,6 +472,9 @@ fi
 #===============================================================================
 
 %changelog
+* Thu Jun 10 2010 Remi Collet <rpms@famillecollet.com> 3.1-0.2.rc2
+- update to 3.1rc2
+
 * Mon May 31 2010 Remi Collet <rpms@famillecollet.com> 3.1-0.1.rc1
 - update to 3.1rc1
 - sync with rawhide and backport to old fedora
