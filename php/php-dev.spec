@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201005301430
+%global snapdate 201006130830
 %global phpversion 5.3.3-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -66,7 +66,7 @@ Patch9: php-5.3.2-phar.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
-Patch21: php-5.2.3-macropen.patch
+Patch21: php-5.3.3-macropen.patch
 
 # Functional changes
 Patch40: php-5.0.4-dlopen.patch
@@ -1103,6 +1103,9 @@ echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 %changelog
+* Sun Jun 13 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.1.201006130830
+- new snapshot
+
 * Sun May 30 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.1.201005301430
 - new snapshot
 

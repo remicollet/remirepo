@@ -1,0 +1,39 @@
+diff -up php5.3-201006130830/ext/dba/dba.c.macropen php5.3-201006130830/ext/dba/dba.c
+--- php5.3-201006130830/ext/dba/dba.c.macropen	2010-03-03 02:35:57.000000000 +0100
++++ php5.3-201006130830/ext/dba/dba.c	2010-06-13 11:07:54.501185871 +0200
+@@ -912,7 +912,7 @@ static void php_dba_open(INTERNAL_FUNCTI
+ 		}
+ 	}
+ 
+-	if (error || hptr->open(info, &error TSRMLS_CC) != SUCCESS) {
++	if (error || (hptr->open)(info, &error TSRMLS_CC) != SUCCESS) {
+ 		dba_close(info TSRMLS_CC);
+ 		php_error_docref2(NULL TSRMLS_CC, Z_STRVAL_PP(args[0]), Z_STRVAL_PP(args[1]), E_WARNING, "Driver initialization failed for handler: %s%s%s", hptr->name, error?": ":"", error?error:"");
+ 		FREENOW;
+diff -up php5.3-201006130830/ext/dba/dba_db3.c.macropen php5.3-201006130830/ext/dba/dba_db3.c
+--- php5.3-201006130830/ext/dba/dba_db3.c.macropen	2010-01-03 10:36:52.000000000 +0100
++++ php5.3-201006130830/ext/dba/dba_db3.c	2010-06-13 11:07:54.501185871 +0200
+@@ -91,7 +91,7 @@ DBA_OPEN_FUNC(db3)
+ 
+ 	if ((err=db_create(&dbp, NULL, 0)) == 0) {
+ 	    dbp->set_errcall(dbp, php_dba_db3_errcall_fcn);
+-	    if ((err=dbp->open(dbp, info->path, NULL, type, gmode, filemode)) == 0) {
++	    if ((err=(dbp->open)(dbp, info->path, NULL, type, gmode, filemode)) == 0) {
+ 			dba_db3_data *data;
+ 
+ 			data = pemalloc(sizeof(*data), info->flags&DBA_PERSISTENT);
+diff -up php5.3-201006130830/ext/dba/dba_db4.c.macropen php5.3-201006130830/ext/dba/dba_db4.c
+--- php5.3-201006130830/ext/dba/dba_db4.c.macropen	2010-06-03 10:35:55.000000000 +0200
++++ php5.3-201006130830/ext/dba/dba_db4.c	2010-06-13 11:12:11.841435434 +0200
+@@ -125,9 +125,9 @@ DBA_OPEN_FUNC(db4)
+ 	    dbp->set_errcall(dbp, php_dba_db4_errcall_fcn);
+ 	    if (
+ #if (DB_VERSION_MAJOR > 4 || (DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR >= 1))
+-			(err=dbp->open(dbp, 0, info->path, NULL, type, gmode, filemode)) == 0) {
++			(err=(dbp->open)(dbp, 0, info->path, NULL, type, gmode, filemode)) == 0) {
+ #else
+-			(err=dbp->open(dbp, info->path, NULL, type, gmode, filemode)) == 0) {
++			(err=(dbp->open)(dbp, info->path, NULL, type, gmode, filemode)) == 0) {
+ #endif
+ 			dba_db4_data *data;
+ 
