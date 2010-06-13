@@ -32,27 +32,28 @@ fi
 
 RETVAL=0
 prog="memcached"
+pidfile=${PIDFILE-/var/run/memcached/memcached.pid}
+lockfile=${LOCKFILE-/var/lock/subsys/memcached}
 
 start () {
 	echo -n $"Starting $prog: "
-	# insure that /var/run/memcached has proper permissions
-    if [ "`stat -c %U /var/run/memcached`" != "$USER" ]; then
-        chown $USER /var/run/memcached
-    fi
+	# Ensure that /var/run/memcached has proper permissions
+	if [ "`stat -c %U /var/run/memcached`" != "$USER" ]; then
+		chown $USER /var/run/memcached
+	fi
 
-	daemon --pidfile /var/run/memcached/memcached.pid memcached -d -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN -P /var/run/memcached/memcached.pid $OPTIONS
+	daemon --pidfile ${pidfile} memcached -d -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN -P ${pidfile} $OPTIONS
 	RETVAL=$?
 	echo
-	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/memcached
+	[ $RETVAL -eq 0 ] && touch ${lockfile}
 }
 stop () {
 	echo -n $"Stopping $prog: "
-	killproc -p /var/run/memcached/memcached.pid /usr/bin/memcached
+	killproc -p ${pidfile} /usr/bin/memcached
 	RETVAL=$?
 	echo
 	if [ $RETVAL -eq 0 ] ; then
-	    rm -f /var/lock/subsys/memcached
-	    rm -f /var/run/memcached.pid
+		rm -f ${lockfile} ${pidfile}
 	fi
 }
 
@@ -71,17 +72,19 @@ case "$1" in
 	stop
 	;;
   status)
-	status memcached
+	status -p ${pidfile} memcached
+	RETVAL=$?
 	;;
   restart|reload|force-reload)
 	restart
 	;;
-  condrestart)
-	[ -f /var/lock/subsys/memcached ] && restart || :
+  condrestart|try-restart)
+	[ -f ${lockfile} ] && restart || :
 	;;
   *)
-	echo $"Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
-	exit 1
+	echo $"Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart|try-restart}"
+	RETVAL=2
+        ;;
 esac
 
-exit $?
+exit $RETVAL

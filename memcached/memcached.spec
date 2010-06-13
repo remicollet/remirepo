@@ -1,22 +1,9 @@
-%global selinux 0
-%if 0%{?rhel} == 5
-%global selinux 1
-%endif
-%if %{?fedora}%{!?fedora:99} < 13
-%global selinux 1
-%endif
-
-%if %{selinux}
-%define selinux_variants mls strict targeted 
-%endif
-%global modulename memcached
-
 %global username   memcached
 %global groupname  memcached
 
 Name:           memcached
 Version:        1.4.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:		0
 Summary:        High Performance, Distributed Memory Object Cache
 
@@ -28,11 +15,6 @@ Source0:        http://memcached.googlecode.com/files/%{name}-%{version}.tar.gz
 # custom init script
 Source1:        memcached.sysv
 Source2:        memcached.sysvel4
-
-# SELinux files
-Source10:       %{modulename}.te
-Source11:       %{modulename}.fc
-Source12:       %{modulename}.if
 
 # Fixes
 
@@ -48,30 +30,13 @@ Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): /sbin/service
 
-%if %{selinux} == 0
 # as of 3.5.5-4 selinux has memcache included
 Obsoletes: memcached-selinux
-%endif
 
 %description
 memcached is a high-performance, distributed memory object caching
 system, generic in nature, but intended for use in speeding up dynamic
 web applications by alleviating database load.
-
-
-%if %{selinux}
-%package selinux
-Summary:        SELinux policy module supporting memcached
-Group:          System Environment/Base
-BuildRequires:  checkpolicy, selinux-policy-devel, hardlink
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires(post):  policycoreutils
-Requires(postun): policycoreutils
-
-
-%description selinux
-SELinux policy module supporting memcached.
-%endif
 
 %package devel
 Summary:	Files needed for development using memcached protocol
@@ -85,31 +50,19 @@ memcached binary include files.
 %prep
 %setup -q
 
-%if %{selinux}
-mkdir SELinux
-cp -p %{SOURCE10} %{SOURCE11} %{SOURCE12} SELinux/
-%endif
-
 %build
 %configure
 
 make %{?_smp_mflags}
 
-%if %{selinux}
-pushd SELinux
-for selinuxvariant in %{selinux_variants}; do
-    make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile
-    mv %{modulename}.pp %{modulename}.pp.${selinuxvariant}
-    make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile clean
-done
-popd
-%endif
-
 %check
-# remove failing test that doesn't work in
-# build systems
-rm -f t/daemonize.t 
-make test
+# Parts of the test suite only succeed as non-root.
+if [ `id -u` -ne 0 ]; then
+  # remove failing test that doesn't work in
+  # build systems
+  rm -f t/daemonize.t 
+  make test
+fi
 
 %install
 rm -rf %{buildroot}
@@ -140,19 +93,8 @@ CACHESIZE="64"
 OPTIONS=""
 EOF
 
-%if %{selinux}
-# Install SELinux policy modules
-pushd SELinux
-for selinuxvariant in %{selinux_variants}; do
-    install -d %{buildroot}%{_datadir}/selinux/${selinuxvariant}
-    install -p -m 644 %{modulename}.pp.${selinuxvariant} \
-        %{buildroot}%{_datadir}/selinux/${selinuxvariant}/%{modulename}.pp
-done
-popd
-
-# Hardlink identical policy module packages together
-/usr/sbin/hardlink -cv %{buildroot}%{_datadir}/selinux
-%endif
+# Constant timestamp on the config file.
+touch -r %{SOURCE1} %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
 
 %clean
 rm -rf %{buildroot}
@@ -185,31 +127,6 @@ fi
 exit 0
 
 
-%if %{selinux}
-%post selinux
-# Install SELinux policy modules
-for selinuxvariant in %{selinux_variants}
-do
-  /usr/sbin/semodule -s ${selinuxvariant} -i \
-    %{_datadir}/selinux/${selinuxvariant}/%{modulename}.pp &> /dev/null || :
-done
-/usr/sbin/semanage port -a -t memcached_port_t -p tcp 11211 &> /dev/null || :
-/sbin/fixfiles -R %{name} restore || :
-
-
-%postun selinux
-# Clean up after package removal
-if [ $1 -eq 0 ]; then
-  /usr/sbin/semanage port -d -t memcached_port_t -p tcp 11211 &> /dev/null || :
-  # Remove SELinux policy modules
-  for selinuxvariant in %{selinux_variants}
-  do
-    /usr/sbin/semodule -s ${selinuxvariant} -r %{modulename} &> /dev/null || :
-  done
-  /sbin/fixfiles -R %{name} restore || :
-fi
-%endif
-
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README doc/CONTRIBUTORS doc/*.txt
@@ -223,18 +140,20 @@ fi
 %{_mandir}/man1/memcached.1*
 %{_initrddir}/memcached
 
-%if %{selinux}
-%files selinux
-%defattr(-,root,root,0755)
-%doc SELinux/*.te SELinux/*.fc SELinux/*.if
-%{_datadir}/selinux/*/%{modulename}.pp
-%endif
-
 %files devel
 %defattr(-,root,root,0755)
 %{_includedir}/memcached/*
 
 %changelog
+* Sun Jun 13 2010 Remi Collet <rpms@famillecollet.com> - 1.4.5-2
+- sync with rawhide rebuild for remi repository
+  EL-5.5 : rebuild against latest libevent
+
+* Wed May 26 2010 Joe Orton <jorton@redhat.com> - 0:1.4.5-2
+- LSB compliance fixes for init script
+- don't run the test suite as root
+- ensure a constant timestamp on the sysconfig file
+
 * Sun Apr  4 2010 Remi Collet <rpms@famillecollet.com> - 0:1.4.5-1
 - rebuild for remi repository
 
