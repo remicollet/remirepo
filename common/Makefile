@@ -7,6 +7,9 @@ SRCDEFINES := --define "dist .remi" \
               --define "_source_filedigest_algorithm 1" \
               --define "_binary_filedigest_algorithm 1"
 
+arch:
+	mv *.src.rpm /data/rpms/SRPMS.remi/ && echo done || echo Nothing to do
+
 clean:
 	@echo Clean $(NAME) in $(SRCDIR)
 	@rm -rfv *~ noarch x86_64 *.src.rpm
