@@ -86,7 +86,7 @@ techniciens grâce à une maintenance plus cohérente.
 rm -rf lib/cache_lite
 rm -rf lib/phpmailer
 rm -rf lib/phpcas
-rm -rf lib/ezpdf
+rm -rf lib/ezcomponents
 
 cp %{SOURCE2} config/config_path.php 
 
