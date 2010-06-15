@@ -4,7 +4,7 @@
 # description:	The memcached daemon is a network memory cache service.
 # processname: memcached
 # config: /etc/sysconfig/memcached
-# pidfile: /var/run/memcached.pid
+# pidfile: /var/run/memcached/memcached.pid
 
 # Standard LSB functions
 #. /lib/lsb/init-functions
@@ -32,11 +32,16 @@ fi
 
 RETVAL=0
 prog="memcached"
-pidfile=${PIDFILE-/var/run/memcached.pid}
+pidfile=${PIDFILE-/var/run/memcached/memcached.pid}
 lockfile=${LOCKFILE-/var/lock/subsys/memcached}
 
 start () {
 	echo -n $"Starting $prog: "
+	# Ensure that /var/run/memcached has proper permissions
+	if [ "`stat -c %U /var/run/memcached`" != "$USER" ]; then
+		chown $USER /var/run/memcached
+	fi
+
 	daemon memcached -d -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN -P ${pidfile} $OPTIONS
 	RETVAL=$?
 	echo

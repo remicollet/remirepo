@@ -3,7 +3,7 @@
 
 Name:           memcached
 Version:        1.4.5
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Epoch:		0
 Summary:        High Performance, Distributed Memory Object Cache
 
@@ -78,10 +78,10 @@ install -Dp -m0755 scripts/memcached-tool %{buildroot}%{_bindir}/memcached-tool
 install -Dp -m0755 %{SOURCE2} %{buildroot}%{_initrddir}/memcached
 %else
 install -Dp -m0755 %{SOURCE1} %{buildroot}%{_initrddir}/memcached
+%endif
 
 # pid directory
 mkdir -p %{buildroot}/%{_localstatedir}/run/memcached
-%endif
 
 # Default configs
 mkdir -p %{buildroot}/%{_sysconfdir}/sysconfig
@@ -131,10 +131,7 @@ exit 0
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README doc/CONTRIBUTORS doc/*.txt
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-
-%if %{?rhel}%{?fedora} > 4
 %dir %attr(755,%{username},%{groupname}) %{_localstatedir}/run/memcached
-%endif
 %{_bindir}/memcached-tool
 %{_bindir}/memcached
 %{_mandir}/man1/memcached.1*
@@ -145,6 +142,9 @@ exit 0
 %{_includedir}/memcached/*
 
 %changelog
+* Tue Jun 15 2010 Remi Collet <rpms@famillecollet.com> - 1.4.5-2.el4.1
+- also use /var/run/memcached/memcached.pid on EL-4
+
 * Sun Jun 13 2010 Remi Collet <rpms@famillecollet.com> - 1.4.5-2
 - sync with rawhide rebuild for remi repository
   EL-5.5 : rebuild against latest libevent
