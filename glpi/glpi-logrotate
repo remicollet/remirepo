@@ -1,0 +1,10 @@
+# Rotate GLPI logs daily, only if not empty
+# Save 14 days old logs under compressed mode
+/var/log/glpi/*.log {
+	daily
+	rotate 14
+	compress
+	notifempty
+	missingok
+	create 644 apache apache
+}
