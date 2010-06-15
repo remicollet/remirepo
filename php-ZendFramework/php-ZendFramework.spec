@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.10.4
+Version:         1.10.5
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -627,6 +627,12 @@ cd ..
 
 
 %changelog
+* Sun Jun 13 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.10.5-1
+- rebuild for remi repository
+
+* Sat Jun 12 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10.5-1
+- update to 1.10.5 which contains over 60 bugfixes
+
 * Fri May 13 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.10.4-1
 - rebuild for remi repository
 
