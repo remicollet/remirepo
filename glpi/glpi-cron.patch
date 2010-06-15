@@ -1,0 +1,25 @@
+diff -up install/mysql/glpi-0.78-empty.sql.cron install/mysql/glpi-0.78-empty.sql
+--- install/mysql/glpi-0.78-empty.sql.cron	2010-06-15 19:17:03.346550802 +0200
++++ install/mysql/glpi-0.78-empty.sql	2010-06-15 19:23:38.052892454 +0200
+@@ -910,6 +910,8 @@ INSERT INTO `glpi_crontasks` VALUES ('13
+ INSERT INTO `glpi_crontasks` VALUES ('14','ReservationItem','reservation','3600',NULL,'1','1','3','0','24','30',NULL,NULL,NULL);
+ INSERT INTO `glpi_crontasks` VALUES ('15','Ticket','closeticket','43200',NULL,'1','1','3','0','24','30',NULL,NULL,NULL);
+ INSERT INTO `glpi_crontasks` VALUES ('16','Ticket','alertnotclosed','43200',NULL,'1','1','3','0','24','30',NULL,NULL,NULL);
++### RPM provides a good system cron
++UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1;
+ 
+ ### Dump table glpi_devicecases
+ 
+diff -up install/update_0723_078.php.cron install/update_0723_078.php
+--- install/update_0723_078.php.cron	2010-06-15 19:21:06.749549193 +0200
++++ install/update_0723_078.php	2010-06-15 19:23:32.651892513 +0200
+@@ -2097,6 +2097,9 @@ function update0723to078($output='HTML')
+          ('Ticket','alertnotclosed','43200',NULL,'1','1','3','0','24','30',NULL,NULL,NULL)";
+       $DB->query($query) or die("0.78 populate glpi_crontasks" . $LANG['update'][90] . $DB->error());
+ 
++      // RPM provides a good system cron
++      $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1";
++      $DB->query($query) or die("0.78 update glpi_crontasks (for RPM)" . $LANG['update'][90] . $DB->error());
+    }
+    $ADDTODISPLAYPREF['Crontask']=array(8,3,4,7);
+ 
