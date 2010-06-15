@@ -4,13 +4,13 @@
 %global useselinux 0
 %endif
 
-%global tarballversion 0.72.4
-%global svnrelease 11497
+%global tarballversion 0.78
+%global svnrelease 11723
 
 Name:           glpi
-Version:        0.72.4
+Version:        0.78
 %if 0%{?svnrelease}
-Release:        3.svn%{svnrelease}%{?dist}
+Release:        0.1.svn%{svnrelease}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -18,16 +18,16 @@ Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
-License:        GPLv2+
+License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
 %if 0%{?svnrelease}
-# svn export -r 11497 https://forge.indepnet.net/svn/glpi/branches/0.72-bugfixes glpi
+# svn export -r 11723 https://forge.indepnet.net/svn/glpi/trunk glpi
 # rm -rf glpi/tools
-# mv glpi/install/mysql/glpi-0.72.3-empty.sql .
+# mv glpi/install/mysql/glpi-0.78-empty.sql .
 # rm -f glpi/install/mysql/*.sql
-# mv glpi-0.72.3-empty.sql glpi/install/mysql/
-# tar czf glpi-0.72.4-11497.tar.gz glpi
-Source0:        glpi-0.72.4-%{svnrelease}.tar.gz
+# mv glpi-0.78-empty.sql glpi/install/mysql/
+# tar czf glpi-0.78-11723.tar.gz glpi
+Source0:        glpi-0.78-%{svnrelease}.tar.gz
 %else
 Source0:        https://forge.indepnet.net/attachments/download/597/glpi-0.72.4.tar.gz
 %endif
@@ -36,6 +36,9 @@ Source1:        glpi-httpd.conf
 Source2:        glpi-config_path.php
 Source3:        glpi-logrotate
 
+# Switch all internal cron tasks to system
+Patch0:         glpi-cron.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -43,6 +46,8 @@ Requires:       php >= 5.0.0, php-mysql, httpd, php-gd, php-ldap, php-imap, php-
 Requires:       php-pear(Cache_Lite) >= 1.7.4
 Requires:       php-PHPMailer
 Requires:       php-pear-CAS >= 1.1.0
+Requires:       php-pear(components.ez.no/Graph) >= 1.5
+Requires:       gnu-free-sans-fonts
 Requires:       %{_sysconfdir}/logrotate.d
 Requires(postun): /sbin/service
 Requires(post): /sbin/service
@@ -75,16 +80,18 @@ techniciens grâce à une maintenance plus cohérente.
 %prep
 %setup -q -n glpi
 
+%patch0
+
 # Use system lib
 rm -rf lib/cache_lite
 rm -rf lib/phpmailer
 rm -rf lib/phpcas
+rm -rf lib/ezpdf
 
 cp %{SOURCE2} config/config_path.php 
 
 mv lib/tiny_mce/license.txt LICENSE.tiny_mce
-mv lib/extjs/license.txt    LICENSE.extjs
-rm lib/extjs/{CHANGES.html,INCLUDE_ORDER.txt}
+mv lib/extjs/gpl-3.0.txt    LICENSE.extjs
 mv lib/icalcreator/lgpl.txt LICENSE.icalcreator
 rm scripts/glpi_cron_*.sh
 
@@ -233,6 +240,11 @@ fi
 
 
 %changelog
+* Tue Jun 15 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11723
+- update to 0.78 RC (svn snapshot)
+- use system ezComponents
+- use system font
+
 * Thu May 20 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.72.4-3.svn11497
 - use system phpCAS instead of bundled copy
 - minor bug fixes from SVN
