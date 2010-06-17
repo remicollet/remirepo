@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.1.47
+Version: 5.1.48
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -41,7 +41,9 @@ Patch9: mysql-no-docs.patch
 Patch10: mysql-strmov.patch
 Patch12: mysql-cve-2008-7247.patch
 Patch13: mysql-expired-certs.patch
+Patch14: mysql-missing-string-code.patch
 Patch15: mysql-lowercase-bug.patch
+Patch16: mysql-chain-certs.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -182,7 +184,9 @@ the MySQL sources.
 %patch10 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 
 libtoolize --force
@@ -243,11 +247,6 @@ export CFLAGS CXXFLAGS
 	--without-example-storage-engine \
 	--without-plugin-daemon_example \
 	--without-plugin-ftexample \
-%ifarch ppc64
-%if 0%{?fedora} <= 10
-	--without-plugin-innodb_plugin \
-%endif
-%endif
 	--enable-local-infile \
 	--enable-largefile \
 	--enable-thread-safe-client \
@@ -386,15 +385,16 @@ echo -e "\nWARNING : This MySQL RPM is not an official Fedora build and it"
 echo -e "overrides the official one. Don't file bugs on Fedora Project."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 10
+%if %{?fedora}%{!?fedora:99} <= 11
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 
 %pre server
-/usr/sbin/useradd -M -o -r -d /var/lib/mysql -s /bin/bash \
-	-c "MySQL Server" -u 27 mysql > /dev/null 2>&1 || :
+/usr/sbin/groupadd -g 27 -o -r mysql >/dev/null 2>&1 || :
+/usr/sbin/useradd -M -N -g mysql -o -r -d /var/lib/mysql -s /bin/bash \
+	-c "MySQL Server" -u 27 mysql >/dev/null 2>&1 || :
 
 %post libs
 /sbin/ldconfig
@@ -606,6 +606,27 @@ fi
 
 
 %changelog
+* Thu Jun 17 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.48-1
+- sync with rawhide
+- Update to MySQL 5.1.48 Community Server GA
+
+* Fri Jun  4 2010 Tom Lane <tgl@redhat.com> 5.1.47-2
+- Add back "partition" storage engine
+Resolves: #597390
+- Fix broken "federated" storage engine plugin
+Related: #587170
+- Read all certificates in SSL certificate files, to support chained certs
+Related: #598656
+
+* Mon May 24 2010 Tom Lane <tgl@redhat.com> 5.1.47-1
+- Update to MySQL 5.1.47, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.1/en/news-5-1-47.html
+  including fixes for CVE-2010-1848, CVE-2010-1849, CVE-2010-1850
+Resolves: #592862
+Resolves: #583717
+- Create mysql group explicitly in pre-server script, to ensure correct GID
+Related: #594155
+
 * Fri May 21 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.47-1
 - Update to MySQL 5.1.47 Community Server GA
 

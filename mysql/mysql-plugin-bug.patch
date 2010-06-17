@@ -1,9 +1,21 @@
---- mysql-5.1.47/mysql-test/t/disabled.def.orig	2010-05-06 17:58:11.000000000 +0200
-+++ mysql-5.1.47/mysql-test/t/disabled.def	2010-05-21 07:12:00.270542964 +0200
-@@ -13,3 +13,6 @@
+The plugin_load test fails on PPC64 (maybe not always, but at least in the
+several tries I've made so far).  It doesn't fail on x86, x86_64, or ppc,
+at least not in a similarly small number of tries.  My best theory at the
+moment is that the test itself is wrong.  Reported upstream at
+http://bugs.mysql.com/bug.php?id=42144
+
+For the moment, just disable this test.
+
+Also, disable the outfile_loaddata test, which as of 5.1.38 is giving
+platform-dependent results, with the "expected" results being arguably the
+wrong ones.  This is upstream at http://bugs.mysql.com/bug.php?id=46895
+
+--- mysql-5.1.48/mysql-test/t/disabled.def.orig	2010-06-03 18:17:34.000000000 +0200
++++ mysql-5.1.48/mysql-test/t/disabled.def	2010-06-17 17:34:14.301366397 +0200
+@@ -12,3 +12,6 @@
+ kill                     : Bug#37780 2008-12-03 HHunger need some changes to be robust enough for pushbuild.
  query_cache_28249        : Bug#43861 2009-03-25 main.query_cache_28249 fails sporadically
  partition_innodb_plugin  : Bug#53307 2010-04-30 VasilDimov valgrind warnings
- ps_3innodb               : Bug#53309 2010-04-30 VasilDimov valgrind warnings
 +#
 +plugin_load         : gives wrong answer on PPC64
 +outfile_loaddata    : gives different results on different platforms
