@@ -1,17 +1,28 @@
 %global pluginname   massocsimport
 %global lockname     massocsimport.lock
+%global svnrelease   54
 
 Name:           glpi-mass-ocs-import
-Version:        1.3.0
-Release:        2%{?dist}
+Version:        1.4.0
+%if 0%{?svnrelease}
+Release:        0.1.svn%{svnrelease}%{?dist}
+%else
+Release:        1%{?dist}
+%endif
 Summary:        GLPI Plugin for OCS Massive import
 Summary(fr):    Extension GLPI d'import en masse OCS
 
 Group:          Applications/Internet
 License:        GPLv2+
-URL:            http://www.glpi-project.org/
+URL:            https://forge.indepnet.net/projects/massocsimport
 
-Source0:        http://www.glpi-project.org/IMG/gz/glpi-%{pluginname}-%{version}.tar.gz
+%if 0%{?svnrelease}
+# svn export -r 54 https://forge.indepnet.net/svn/massocsimport/trunk massocsimport
+# tar czf glpi-massocsimport-1.4.0-54.tar.gz massocsimport
+Source0:        glpi-massocsimport-1.4.0-%{svnrelease}.tar.gz
+%else
+Source0:        https://forge.indepnet.net/attachments/download/433/glpi-massocsimport-1.3.0.tar.gz
+%endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -128,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.4.0-0.1.svn54
+- update to 1.4.0 for glpi 0.78 RC (svn snapshot)
+
 * Fri May 21 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.3.0-2
 - spec cleanup
 
