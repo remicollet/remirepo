@@ -28,7 +28,7 @@ Source0:        https://forge.indepnet.net/attachments/download/433/glpi-massocs
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.72
+Requires:       glpi >= 0.78
 Requires:       php-cli
 Requires:       %{_sysconfdir}/cron.d
 
