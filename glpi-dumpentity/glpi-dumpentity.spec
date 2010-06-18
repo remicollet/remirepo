@@ -1,8 +1,13 @@
 %define pluginname   dumpentity
+%global svnrelease   100
 
 Name:           glpi-dumpentity
-Version:        1.0.1
+Version:        1.2.0
+%if 0%{?svnrelease}
+Release:        0.1.svn%{svnrelease}%{?dist}
+%else
 Release:        1%{?dist}
+%endif
 Summary:        GLPI Plugin for entity export
 Summary(fr):    Extension GLPI d'export d'entité
 
@@ -10,13 +15,19 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            http://www.glpi-project.org/
 
-Source0:        http://www.glpi-project.org/IMG/gz/glpi-%{pluginname}-%{version}.tar.gz
+%if 0%{?svnrelease}
+# svn export -r 100 https://forge.indepnet.net/svn/dumpentity/trunk dumpentity
+# tar czf glpi-dumpentity-1.2.0-100.tar.gz dumpentity
+Source0:        glpi-dumpentity-%{version}-%{svnrelease}.tar.gz
+%else
+Source0:        https://forge.indepnet.net/attachments/download/523/glpi-dumpentity-1.1.2.tar.gz
+%endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.72
+Requires:       glpi >= 0.78
 
 %description
 Plugin which allow to export data from a entity to CSV.
@@ -32,8 +43,6 @@ Conçue pour fonctionner avec les clients utilisant loadentity.
 
 %prep
 %setup -q -c
-
-sed -i -e 's/`glpi`.//' dumpentity/inc/plugin_dumpentity_config.function.php
 
 # dos2unix to avoid rpmlint warnings
 for doc in %{pluginname}/docs/* ; do
@@ -62,6 +71,9 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}
 
 %changelog
+* Fri Jun 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.2.0-0.1.svn100
+- update to 1.2.0 for glpi 0.78 RC (svn snapshot)
+
 * Mon Jul 20 2009 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
 - update to 1.0.1 for glpi 0.72
 
