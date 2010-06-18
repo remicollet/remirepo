@@ -1,6 +1,5 @@
 %global pluginname   pdf
-
-%global svnrelease 188
+%global svnrelease   188
 
 Name:           glpi-pdf
 Version:        0.7.0

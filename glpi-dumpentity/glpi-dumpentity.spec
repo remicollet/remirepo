@@ -1,4 +1,4 @@
-%define pluginname   dumpentity
+%global pluginname   dumpentity
 %global svnrelease   100
 
 Name:           glpi-dumpentity
@@ -13,7 +13,7 @@ Summary(fr):    Extension GLPI d'export d'entité
 
 Group:          Applications/Internet
 License:        GPLv2+
-URL:            http://www.glpi-project.org/
+URL:            https://forge.indepnet.net/projects/dumpentity
 
 %if 0%{?svnrelease}
 # svn export -r 100 https://forge.indepnet.net/svn/dumpentity/trunk dumpentity

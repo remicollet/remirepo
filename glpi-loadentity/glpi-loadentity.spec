@@ -1,23 +1,33 @@
-%define pluginname   loadentity
+%global pluginname   loadentity
+%global svnrelease   57
 
 Name:           glpi-loadentity
-Version:        1.0.0
+Version:        1.2.0
+%if 0%{?svnrelease}
+Release:        0.1.svn%{svnrelease}%{?dist}
+%else
 Release:        1%{?dist}
+%endif
 Summary:        GLPI Plugin for entity import
 Summary(fr):    Extension GLPI d'import d'une entité
 
 Group:          Applications/Internet
 License:        GPLv2+
-URL:            http://www.glpi-project.org/
+URL:            https://forge.indepnet.net/projects/loadentity
 
-Source0:        http://www.glpi-project.org/IMG/gz/glpi-%{pluginname}-%{version}.tar.gz
-Source1:        %{name}.conf
+%if 0%{?svnrelease}
+# svn export -r 57 https://forge.indepnet.net/svn/loadentity/trunk loadentity
+# tar czf glpi-loadentity-1.2.0-57.tar.gz loadentity
+Source0:        glpi-loadentity-%{version}-%{svnrelease}.tar.gz
+%else
+Source0:        https://forge.indepnet.net/attachments/download/523/glpi-dumpentity-1.1.2.tar.gz
+%endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.72
+Requires:       glpi >= 0.78
 Requires:       %{_sysconfdir}/cron.d
 
 %description
@@ -41,6 +51,13 @@ cat >cron <<EOF
 # 0 6 * * * apache php -q -f %{_datadir}/glpi/plugins/%{pluginname}/scripts/run.php
 EOF
 
+cat >httpd <<EOF
+<Directory /usr/share/glpi/plugins/%{pluginname}/scripts>
+    Order Allow,Deny
+    Deny from all
+</Directory>
+EOF
+
 # dos2unix to avoid rpmlint warnings
 for doc in %{pluginname}/docs/* ; do
     sed -i -e 's/\r//' $doc
@@ -58,12 +75,12 @@ mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
 cp -ar %{pluginname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}
 
 mkdir -p %{buildroot}%{_sysconfdir}/cron.d
-install -m 644 cron %{buildroot}%{_sysconfdir}/cron.d/%{name}
+install --mode 644 cron %{buildroot}%{_sysconfdir}/cron.d/%{name}
 
 # ===== apache =====
 rm %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/scripts/.htaccess
 mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
-install --mode 644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/%{name}.conf
+install --mode 644 httpd %{buildroot}/%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
 
 %clean
@@ -77,6 +94,9 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}
 
 %changelog
+* Fri Jun 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.2.0-0.1.svn57
+- update to 1.2.0 for glpi 0.78 RC (svn snapshot)
+
 * Mon Jul 20 2009 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
 - update to 1.0.0 for glpi 0.72
 
