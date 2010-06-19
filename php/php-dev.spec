@@ -20,8 +20,8 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201006130830
-%global phpversion 5.3.3-dev
+%global snapdate 201006191630
+%global phpversion 5.3.3RC2-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %define with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -60,9 +60,6 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.3.3-aconf26x.patch
-
-# http://bugs.php.net/50578
-Patch9: php-5.3.2-phar.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -505,7 +502,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if 0%{?fedora} >= 13
 %patch8 -p1 -b .aconf26x
 %endif
-%patch9 -p1 -b .bang
 
 %patch20 -p1 -b .shutdown
 %patch21 -p1 -b .macropen
@@ -1103,6 +1099,10 @@ echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 %changelog
+* Sat Jun 19 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.1.201006191630
+- new snapshot (5.3.3RC2-dev)
+- remove phar.patch (upstream)
+
 * Sun Jun 13 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.1.201006130830
 - new snapshot
 
