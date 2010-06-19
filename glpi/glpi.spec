@@ -5,7 +5,7 @@
 %endif
 
 %global tarballversion 0.78
-%global svnrelease 11723
+%global svnrelease 11763
 
 Name:           glpi
 Version:        0.78
@@ -21,13 +21,9 @@ Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
 %if 0%{?svnrelease}
-# svn export -r 11723 https://forge.indepnet.net/svn/glpi/trunk glpi
-# rm -rf glpi/tools
-# mv glpi/install/mysql/glpi-0.78-empty.sql .
-# rm -f glpi/install/mysql/*.sql
-# mv glpi-0.78-empty.sql glpi/install/mysql/
-# tar czf glpi-0.78-11723.tar.gz glpi
+# launch mktar %{svnrelease} to create
 Source0:        glpi-0.78-%{svnrelease}.tar.gz
+Source99:       mktar.sh
 %else
 Source0:        https://forge.indepnet.net/attachments/download/597/glpi-0.72.4.tar.gz
 %endif
@@ -240,6 +236,9 @@ fi
 
 
 %changelog
+* Sat Jun 19 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11763
+- new svn snapshot)
+
 * Tue Jun 15 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11723
 - update to 0.78 RC (svn snapshot)
 - use system ezComponents
