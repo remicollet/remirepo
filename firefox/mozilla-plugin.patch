@@ -1,0 +1,10 @@
+diff -up mozilla-1.9.2/xulrunner/installer/mozilla-plugin.pc.in.old mozilla-1.9.2/xulrunner/installer/mozilla-plugin.pc.in
+--- mozilla-1.9.2/xulrunner/installer/mozilla-plugin.pc.in.old	2009-11-25 05:13:11.000000000 +0100
++++ mozilla-1.9.2/xulrunner/installer/mozilla-plugin.pc.in	2009-12-03 10:14:41.000000000 +0100
+@@ -5,5 +5,5 @@ includedir=%includedir%
+ Name: Mozilla Plug-In API
+ Description: Mozilla Plug-In API
+ Version: %MOZILLA_VERSION%
+-Cflags: -I${includedir}/stable -DXP_UNIX %ojidef%
++Cflags: -I${includedir} -DXP_UNIX %ojidef%
+ 
