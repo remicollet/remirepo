@@ -1,20 +1,21 @@
 #global postver b
 
+%global tartype ce
 %global cppconnver 1.1.0-0.1.bzr819
 
 Summary: A MySQL visual database modeling tool
 Name: mysql-workbench
-Version: 5.2.22
+Version: 5.2.24
 Release: 1%{?dist}
 Group: Applications/Databases
 License: GPLv2
 
 URL: http://wb.mysql.com
-Source: %{name}-oss-%{version}%{?postver}.tar.gz
+Source: %{name}-%{tartype}-%{version}%{?postver}.tar.gz
 
 # don't build extension, use system one
 # !!! This patch use versioned soname !!!
-Patch1: %{name}-5.2.17-cppconn.patch
+Patch1: %{name}-5.2.24-cppconn.patch
 Patch2: %{name}-5.2.16-scintilla.patch
 Patch3: %{name}-5.2.22-python.patch
 
@@ -58,6 +59,7 @@ Requires: mysql gnome-keyring
 Requires: mysql-connector-c++ >= %{cppconnver}
 # Official upstream build
 Conflicts: mysql-workbench-oss
+Conflicts: mysql-workbench-ce
 
 
 %description
@@ -69,7 +71,7 @@ tools environment for:
 
 
 %prep
-%setup -q -n %{name}-oss-%{version}%{?postver}
+%setup -q -n %{name}-%{tartype}-%{version}%{?postver}
 
 %patch1 -p1 -b .cppconn
 #patch2 -p1 -b .scintilla
@@ -137,6 +139,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Wed Jun 23 2010 Remi Collet <RPMS@famillecollet.com> 5.2.24-1
+- update to 5.2.24 RC3 Community Edition (CE)
+
 * Fri Jun 04 2010 Remi Collet <RPMS@famillecollet.com> 5.2.22-1
 - update to 5.2.22 RC Community (OSS) Edition
 - build against mysql-connector-c++ 1.1.0 (bzr819)
