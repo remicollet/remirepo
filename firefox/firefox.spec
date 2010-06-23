@@ -1,8 +1,8 @@
 %define nspr_version 4.8
-%define nss_version 3.12.3
+%define nss_version 3.12.6
 %define cairo_version 1.8.8
-%define lcms_version 1.18
 %define freetype_version 2.1.9
+%define lcms_version 1.18
 %define sqlite_version 3.6.22
 
 %define homepage http://start.fedoraproject.org/
@@ -25,12 +25,12 @@
 
 #define relcan plugin1
 %define firefox firefox
-%define mycomment  Beta (build6)
+#define mycomment  Beta (build6)
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        3.6.4
-Release:        0.4.build6%{?dist}
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100529.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100623.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -60,14 +60,18 @@ Patch1:         mozilla-build.patch
 Patch3:         mozilla-jemalloc.patch
 Patch4:         mozilla-about-firefox-version.patch
 Patch5:         mozilla-jemalloc-526152.patch
+Patch7:         xulrunner-1.9.2.1-build.patch
+Patch8:         mozilla-plugin.patch
+Patch9:         mozilla-build-sbrk.patch
+Patch11:        nspr-build.patch
 
 # Fedora specific patches
+Patch20:        mozilla-192-pkgconfig.patch
 
 # Upstream patches
 Patch100:       mozilla-ps-pdf-simplify-operators.patch
 
 # Remi specific patches
-Patch200:       firefox-remi.patch
 
 
 %if %{official_branding}
@@ -169,10 +173,14 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch3  -p1 -b .jemalloc
 %patch4  -p1 -b .about-firefox-version
 %patch5  -p1 -b .jemalloc-526152
+%patch7  -p2 -b .del
+%patch8  -p1 -b .plugin
+%patch9  -p2 -b .sbrk
+%patch11 -p1 -b .nspr
+
+%patch20 -p1 -b .pk
 
 %patch100 -p1 -b .ps-pdf-simplify-operators
-
-%patch200 -p1 -b .remi
 
 %{__rm} -f .mozconfig
 
@@ -187,7 +195,7 @@ ac_add_options --libdir="\$LIBDIR"
 ac_add_options --enable-system-sqlite
 %endif
 %if %{fedora} >= 11
-## Not working since plugin version.... ac_add_options --with-system-nspr
+ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-cairo
@@ -494,9 +502,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 # XXX See if these are needed still
 %{mozappdir}/update*
 %exclude %{mozappdir}/removed-files
-%exclude %{_includedir}/firefox-%{internal_version}
-%exclude %{_libdir}/firefox-devel-%{internal_version}
-%exclude %{_datadir}/idl/firefox-%{internal_version}
+%exclude %{_includedir}/firefox-sdk-%{internal_version}
+%exclude %{_libdir}/firefox-sdk-%{internal_version}
+%exclude %{_datadir}/idl/firefox-sdk-%{internal_version}
 %{_datadir}/icons/hicolor/16x16/apps/%{name}.png
 %{_datadir}/icons/hicolor/22x22/apps/%{name}.png
 %{_datadir}/icons/hicolor/24x24/apps/%{name}.png
@@ -507,7 +515,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
-* Thu Jun 29 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.4.build6
+* Wed Jun 23 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-1
+- update to Firefox 3.6.4 finale
+
+* Thu Jun 10 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.4.build6
 - F12 build
 - fix sqlite dependency (3.6.22)
 - fix path for mozilla-xremote-client in launcher 
