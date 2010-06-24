@@ -54,7 +54,7 @@ Source100:      find-external-requires
 
 Source200:      firefox-bookmarks.html
 
-# build patches
+# build patches from xulrunner
 Patch0:         firefox-version.patch
 Patch1:         mozilla-build.patch
 Patch3:         mozilla-jemalloc.patch
@@ -64,6 +64,11 @@ Patch7:         xulrunner-1.9.2.1-build.patch
 Patch8:         mozilla-plugin.patch
 Patch9:         mozilla-build-sbrk.patch
 Patch11:        nspr-build.patch
+
+# build patches from firefox
+Patch30:        firefox-disable-checkupdates.patch
+Patch31:        firefox-default.patch
+
 
 # Fedora specific patches
 Patch20:        mozilla-192-pkgconfig.patch
@@ -179,6 +184,9 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch11 -p1 -b .nspr
 
 %patch20 -p1 -b .pk
+
+%patch30 -p1 -b .checkupdates
+%patch31 -p2 -b .default
 
 %patch100 -p1 -b .ps-pdf-simplify-operators
 
@@ -517,6 +525,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %changelog
 * Wed Jun 23 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-1
 - update to Firefox 3.6.4 finale
+- sync with patches from rawhide / F-13
 
 * Thu Jun 10 2010 Remi Collet <rpms@famillecollet.com> - 3.6.4-0.4.build6
 - F12 build
