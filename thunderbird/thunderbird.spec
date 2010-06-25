@@ -21,12 +21,12 @@
 
 %define version_internal  3.1
 %define mozappdir         %{_libdir}/%{name}-%{version_internal}
-%define relcan  rc2
+#define relcan  rc2
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
 Version:        3.1
-Release:        0.2.rc2%{?dist}
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -40,7 +40,7 @@ Source0:        %{tarball}
 #NoSource:       0
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-3.1%{?relcan}-20100610.tar.bz2
+Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100625.tar.bz2
 %endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -112,6 +112,7 @@ BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  autoconf213
 BuildRequires:  desktop-file-utils
+BuildRequires:  libcurl-devel
 BuildRequires:  GConf2-devel
 
 %if 0%{?fedora} >= 9
@@ -356,9 +357,8 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{include_debuginfo}
-cp mozilla/dist/thunderbird-%{version}.en-US.linux-%{_target_cpu}-crashreporter-symbols.zip $RPM_BUILD_ROOT/%{_libdir}/debug%{mozappdir}
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/debug%{mozappdir}
-cp %{moz_objdir}/mozilla/dist/thunderbird-%{version}.en-US.linux-i686.crashreporter-symbols.zip $RPM_BUILD_ROOT%{_libdir}/debug%{mozappdir}
+cp %{moz_objdir}/mozilla/dist/thunderbird-%{version}.en-US.linux-*.crashreporter-symbols.zip $RPM_BUILD_ROOT%{_libdir}/debug%{mozappdir}
 %endif
 
 # RC - provide account type
@@ -387,7 +387,7 @@ echo -e "\nWARNING : This %{name} RPM is not an official Fedora build and it"
 echo -e "overrides the official one. Don't file bugs on Fedora Project."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 10
+%if %{?fedora}%{!?fedora:99} <= 11
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -472,6 +472,15 @@ fi
 #===============================================================================
 
 %changelog
+* Fri Jun 25 2010 Remi Collet <rpms@famillecollet.com> 3.1-1
+- update to 3.1 finale
+
+* Thu Jun 24 2010 Jan Horak <jhorak@redhat.com> - 3.1-1
+- Thunderbird 3.1
+
+* Fri Jun 11 2010 Jan Horak <jhorak@redhat.com> - 3.1-0.3.rc2
+- TryExec added to desktop file
+
 * Thu Jun 10 2010 Remi Collet <rpms@famillecollet.com> 3.1-0.2.rc2
 - update to 3.1rc2
 
