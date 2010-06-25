@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.1.48
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -393,7 +393,8 @@ echo -e "You should consider upgrading to a supported release.\n"
 
 %pre server
 /usr/sbin/groupadd -g 27 -o -r mysql >/dev/null 2>&1 || :
-/usr/sbin/useradd -M -N -g mysql -o -r -d /var/lib/mysql -s /bin/bash \
+# -N options used on Fedora not available on EL and fedora <= 8 and EL <= 5
+/usr/sbin/useradd -M -g mysql -o -r -d /var/lib/mysql -s /bin/bash \
 	-c "MySQL Server" -u 27 mysql >/dev/null 2>&1 || :
 
 %post libs
@@ -606,6 +607,9 @@ fi
 
 
 %changelog
+* Fri Jun 25 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.48-1.1
+- fix useradd command (-N not supported everywhere)
+
 * Thu Jun 17 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.48-1
 - sync with rawhide
 - Update to MySQL 5.1.48 Community Server GA
