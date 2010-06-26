@@ -1,0 +1,32 @@
+Guess the UI locale to use.  If only intl.locale.matchOS worked...
+
+Lubomir Rintel <lkundrak@v3.sk>
+
+diff -up mozilla/build/unix/mozilla.in.uilocale mozilla/build/unix/mozilla.in
+diff -up mozilla/build/unix/run-mozilla.sh.uilocale mozilla/build/unix/run-mozilla.sh
+--- mozilla/build/unix/run-mozilla.sh.uilocale	2009-04-28 21:53:14.000000000 +0200
++++ mozilla/build/unix/run-mozilla.sh	2009-04-28 21:54:39.000000000 +0200
+@@ -279,6 +279,23 @@ MOZILLA_FIVE_HOME=$MOZ_DIST_BIN
+ if [ -z "$MRE_HOME" ]; then
+     MRE_HOME=$MOZILLA_FIVE_HOME
+ fi
++
++# Try without a local variant first, then with a local variant
++# So that pt-BR doesn't try to use pt for example
++
++SHORTMOZLOCALE=`echo $LANG | sed "s|_\([^.]*\).*||g"`
++MOZLOCALE=`echo $LANG | sed "s|_\([^.]*\).*|-\1|g"`
++
++if [ -f ${MOZ_DIST_BIN}/extensions/langpack-${MOZLOCALE}@sunbird.mozilla.org/chrome/$MOZLOCALE.jar ]
++then
++	set -- "$@" -UILocale $MOZLOCALE
++else
++	if [ -f ${MOZ_DIST_BIN}/extensions/langpack-${SHORTMOZLOCALE}@sunbird.mozilla.org/chrome/$SHORTMOZLOCALE.jar ]
++	then
++		set -- "$@" -UILocale $SHORTMOZLOCALE
++	fi
++fi
++
+ ##
+ ## Set LD_LIBRARY_PATH
+ ##

@@ -1,0 +1,21 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Sunbird Calendar
+Name[de]=Sunbird Kalender
+Name[cs]=Sunbird Kalendár
+Name[sk]=Sunbird Kalendár
+Comment=The Mozilla Calendar
+Comment[de]=Der Mozilla-Kalender
+Comment[cs]=Mozilla Kalendár
+Comment[sk]=Mozilla Kalendár
+GenericName=The Mozilla Calendar
+GenericName[de]=Der Mozilla-Kalender
+GenericName[cs]=Mozilla Kalendár
+GenericName[sk]=Mozilla Kalendár
+Exec=sunbird
+TryExec=sunbird
+Icon=sunbird
+MimeType=text/calendar;text/x-vcalendar;
+Categories=Office;Calendar;
+Terminal=false
