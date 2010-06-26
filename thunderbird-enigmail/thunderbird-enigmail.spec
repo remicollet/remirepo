@@ -2,6 +2,7 @@
 %define nss_version 3.12.3.99
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
+%define lcms_version 1.19
 %define sqlite_version 3.6.22
 %define libnotify_version 0.4
 %define build_langpacks 1
@@ -115,6 +116,9 @@ BuildRequires:  alsa-lib-devel
 BuildRequires:  autoconf213
 BuildRequires:  desktop-file-utils
 BuildRequires:  GConf2-devel
+%if %{fedora} >= 11
+BuildRequires:  lcms-devel >= %{lcms_version}
+%endif
 
 
 ## For fixing lang
@@ -191,7 +195,7 @@ ac_add_options --enable-libnotify
 %else
 ac_add_options --disable-libnotify
 %endif
-%if %{fedora} >= 9
+%if %{fedora} >= 11
 ac_add_options --enable-system-lcms
 %endif
 %if %{fedora} >= 13
