@@ -87,6 +87,9 @@ BuildRequires:  libnotify-devel >= %{libnotify_version}
 %if %{fedora} >= 9
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
+%ifarch %{ix86} x86_64
+BuildRequires:  wireless-tools-devel
+%endif
 
 
 Requires(post):  desktop-file-utils
@@ -185,6 +188,9 @@ ac_add_options --enable-system-lcms
 %endif
 %if %{fedora} >= 13
 ac_add_options --enable-system-sqlite
+%endif
+%ifarch ppc ppc64
+ac_add_options --disable-necko-wifi
 %endif
 EOF
 

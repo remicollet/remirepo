@@ -5,9 +5,7 @@
 %define lcms_version 1.19
 %define sqlite_version 3.6.22
 %define libnotify_version 0.4
-%define build_langpacks 1
 %define moz_objdir objdir-tb
-%define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
 
 %global thunver  3.1
 #global thunbeta rc1
@@ -187,6 +185,9 @@ cat %{SOURCE10} 		\
 %if %{fedora} < 11
   | grep -v system-cairo 	\
 %endif
+%ifarch %{ix86} x86_64
+  | grep -v disable-necko-wifi 	\
+%endif
   | tee .mozconfig
 
 cat <<EOF | tee -a .mozconfig
@@ -223,7 +224,7 @@ done
 popd
 %else
 tar xzf %{SOURCE100} -C mailnews/extensions
-%endif7
+%endif
 
 #===============================================================================
 

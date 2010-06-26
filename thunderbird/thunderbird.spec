@@ -126,6 +126,9 @@ Requires:       nss >= %{nss_version}
 %if %{fedora} >= 9
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
+%ifarch %{ix86} x86_64
+BuildRequires:  wireless-tools-devel
+%endif
 
 Obsoletes:      thunderbird3
 
@@ -174,6 +177,9 @@ cat %{SOURCE10} 		\
 %endif
 %if %{fedora} < 11
   | grep -v system-cairo 	\
+%endif
+%ifarch %{ix86} x86_64
+  | grep -v disable-necko-wifi 	\
 %endif
   | tee .mozconfig
 
