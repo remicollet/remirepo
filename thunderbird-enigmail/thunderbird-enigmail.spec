@@ -9,7 +9,7 @@
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
 
 %global thunver  3.1
-%global thunbeta rc1
+#global thunbeta rc1
 #global CVS     20091121
 #global prever  rc1
 
@@ -29,7 +29,7 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.1
+Version:        1.1.1
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
@@ -326,6 +326,9 @@ fi
 #===============================================================================
 
 %changelog
+* Sat Jun 26 2010 Remi Collet <rpms@famillecollet.com> 1.1.1-1
+- Enigmail 1.1.1 (against thunderbird 3.1)
+
 * Mon May 31 2010 Remi Collet <rpms@famillecollet.com> 1.1-1
 - Enigmail 1.1 (against thunderbird 3.1rc1)
 
