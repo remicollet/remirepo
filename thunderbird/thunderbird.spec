@@ -2,6 +2,7 @@
 %define nss_version 3.12.3.99
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
+%define lcms_version 1.19
 %define sqlite_version 3.6.22
 %define libnotify_version 0.4
 %define build_langpacks 1
@@ -122,8 +123,8 @@ Requires:       mozilla-filesystem
 Requires:       nspr >= %{nspr_version}
 Requires:       nss >= %{nss_version}
 %endif
-%if 0%{?fedora} >= 13
-Requires:       sqlite >= %{sqlite_version}
+%if %{fedora} >= 9
+BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
 
 Obsoletes:      thunderbird3
@@ -182,7 +183,7 @@ ac_add_options --enable-libnotify
 %else
 ac_add_options --disable-libnotify
 %endif
-%if %{fedora} >= 9
+%if %{fedora} >= 11
 ac_add_options --enable-system-lcms
 %endif
 %if %{fedora} >= 13
@@ -474,6 +475,7 @@ fi
 %changelog
 * Fri Jun 25 2010 Remi Collet <rpms@famillecollet.com> 3.1-1
 - update to 3.1 finale
+- add poor workaround for extensions
 
 * Thu Jun 24 2010 Jan Horak <jhorak@redhat.com> - 3.1-1
 - Thunderbird 3.1
