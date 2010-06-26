@@ -117,6 +117,9 @@ BuildRequires:  GConf2-devel
 %if %{fedora} >= 11
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
+%ifarch %{ix86} x86_64
+BuildRequires:  wireless-tools-devel
+%endif
 
 
 ## For fixing lang
