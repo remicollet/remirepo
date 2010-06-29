@@ -30,7 +30,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        3.6.6
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -218,6 +218,10 @@ ac_add_options --enable-system-lcms
 %endif
 %ifarch ppc ppc64
 ac_add_options --disable-necko-wifi
+ac_add_options --disable-ipc
+%endif
+%if %{fedora} <= 8
+ac_add_options --disable-ipc
 %endif
 ac_add_options --with-system-jpeg
 ac_add_options --with-system-zlib
@@ -501,7 +505,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/plugins
 %{mozappdir}/res
 %{mozappdir}/*.so
+%if %{fedora} > 8
+%ifarch %{ix86} x86_64
 %{mozappdir}/plugin-container
+%endif
+%endif
 %{mozappdir}/mozilla-xremote-client
 %{mozappdir}/platform.ini
 %{mozappdir}/run-mozilla.sh
@@ -523,6 +531,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jun 29 2010 Remi Collet <rpms@famillecollet.com> - 3.6.6-1.1
+- try to build with --disable-ipc option for F-8 and ppc
+
 * Sun Jun 27 2010 Remi Collet <rpms@famillecollet.com> - 3.6.6-1
 - update to Firefox 3.6.6
 
