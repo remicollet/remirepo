@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.3.3
+Version: 3.3.4
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -11,6 +11,8 @@ Source2: phpMyAdmin.htaccess
 
 Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/smooth_yellow-3.3.zip
 Source11: http://downloads.sourceforge.net/sourceforge/phpmyadmin/arctic_ocean-3.3.zip
+Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.0b.zip
+
 
 # See https://sourceforge.net/tracker/?func=detail&atid=377410&aid=2965613&group_id=23067
 Patch0:   phpMyAdmin-vendor.patch
@@ -61,7 +63,7 @@ grep '^define' libraries/vendor_config.php
 # to avoid rpmlint warnings
 find . -name \*.php -exec chmod -x {} \;
 
-for archive in %{SOURCE10} %{SOURCE11}
+for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12}
 do
     %{__unzip} -q $archive -d themes
 done
@@ -119,6 +121,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Jun 29 2010 Remi Collet <rpms@famillecollet.com> 3.3.4-1
+- Upstream released 3.3.4
+- add Paradice 3.0b theme
+
 * Mon May 10 2010 Remi Collet <rpms@famillecollet.com> 3.3.3-1.###.remi
 - Upstream released 3.3.3
 - clean old changelog entry (version < 3.0.0)
