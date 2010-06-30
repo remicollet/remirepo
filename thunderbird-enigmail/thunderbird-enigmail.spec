@@ -28,11 +28,11 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.1.1
+Version:        1.1.2
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -68,6 +68,10 @@ Patch1:         mozilla-jemalloc.patch
 Patch2:         thunderbird-shared-error.patch
 # Fixes gcc complain that nsFrame::delete is protected
 Patch4:         xulrunner-1.9.2.1-build.patch
+
+# Enigmail patch
+Patch101:       enigmail-1.1.2-perm.patch
+
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -227,6 +231,9 @@ done
 popd
 %else
 tar xzf %{SOURCE100} -C mailnews/extensions
+pushd mailnews/extensions/enigmail
+%patch101 -p1
+popd
 %endif
 
 #===============================================================================
@@ -335,6 +342,9 @@ fi
 #===============================================================================
 
 %changelog
+* Wed Jun 30 2010 Remi Collet <rpms@famillecollet.com> 1.1.2-1
+- Enigmail 1.1.1 (against thunderbird 3.1)
+
 * Sat Jun 26 2010 Remi Collet <rpms@famillecollet.com> 1.1.1-2
 - new sources (only fix displayed version)
 
