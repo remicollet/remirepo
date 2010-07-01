@@ -1,11 +1,11 @@
 #global postver b
 
-%global tartype ce
+%global tartype gpl
 %global cppconnver 1.1.0-0.1.bzr819
 
 Summary: A MySQL visual database modeling tool
 Name: mysql-workbench
-Version: 5.2.24
+Version: 5.2.25
 Release: 1%{?dist}
 Group: Applications/Databases
 License: GPLv2
@@ -139,6 +139,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Thu Jul 01 2010 Remi Collet <RPMS@famillecollet.com> 5.2.25-1
+- update to 5.2.25 Community Edition (GPL)
+
 * Wed Jun 23 2010 Remi Collet <RPMS@famillecollet.com> 5.2.24-1
 - update to 5.2.24 RC3 Community Edition (CE)
 
