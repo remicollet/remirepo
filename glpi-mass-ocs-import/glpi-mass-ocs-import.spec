@@ -1,6 +1,6 @@
 %global pluginname   massocsimport
 %global lockname     massocsimport.lock
-%global svnrelease   54
+%global svnrelease   56
 
 Name:           glpi-mass-ocs-import
 Version:        1.4.0
@@ -17,8 +17,8 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/massocsimport
 
 %if 0%{?svnrelease}
-# svn export -r 54 https://forge.indepnet.net/svn/massocsimport/trunk massocsimport
-# tar czf glpi-massocsimport-1.4.0-54.tar.gz massocsimport
+# svn export -r 56 https://forge.indepnet.net/svn/massocsimport/trunk massocsimport
+# tar czf glpi-massocsimport-1.4.0-56.tar.gz massocsimport
 Source0:        glpi-massocsimport-1.4.0-%{svnrelease}.tar.gz
 %else
 Source0:        https://forge.indepnet.net/attachments/download/433/glpi-massocsimport-1.3.0.tar.gz
@@ -139,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 02 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.4.0-0.1.svn56
+- new snapshot
+
 * Fri Jun 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.4.0-0.1.svn54
 - update to 1.4.0 for glpi 0.78 RC (svn snapshot)
 
