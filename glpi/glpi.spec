@@ -5,7 +5,7 @@
 %endif
 
 %global tarballversion 0.78
-%global svnrelease 11771
+%global svnrelease 11854
 
 Name:           glpi
 Version:        0.78
@@ -245,6 +245,9 @@ fi
 
 
 %changelog
+* Fri Jul 02 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11854
+- new svn snapshot
+
 * Sat Jun 19 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11771
 - new svn snapshot
 - switch from gnu-free-sans-fonts to freefont on fedora <= 10 and EL <= 5
