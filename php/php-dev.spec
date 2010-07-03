@@ -20,8 +20,8 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201006191630
-%global phpversion 5.3.3RC2-dev
+%global snapdate 201007030430
+%global phpversion 5.3.3RC3-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %define with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -1099,6 +1099,9 @@ echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 %changelog
+* Sat Jul 03 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.1.201007030430
+- new snapshot (5.3.3RC3-dev)
+
 * Sat Jun 19 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.1.201006191630
 - new snapshot (5.3.3RC2-dev)
 - remove phar.patch (upstream)
