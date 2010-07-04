@@ -942,6 +942,7 @@ install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 # PHP-FPM stuff
 # Log
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/log/php-fpm
+install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
 # Config
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d
 install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
@@ -1105,6 +1106,7 @@ fi
 %{_initrddir}/php-fpm
 %dir %{_sysconfdir}/php-fpm.d
 %dir %{_localstatedir}/log/php-fpm
+%dir %{_localstatedir}/run/php-fpm
 %{_mandir}/man1/php-fpm.1*
 
 %files devel
