@@ -1,3 +1,6 @@
+# TODO make php-fpm optional because of libevent 1.4.11 dependency (EL >= 5, Fedora >= 12)
+
+
 %global contentdir  /var/www
 # API/ABI check
 %global apiver      20090626
@@ -141,6 +144,7 @@ Server which can operate under a threaded server processing model.
 Group: Development/Languages
 Summary: PHP FastCGI Process Manager
 Requires: php-common = %{version}-%{release}
+BuildRequires: libevent-devel >= 1.4.11
 
 %description fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
