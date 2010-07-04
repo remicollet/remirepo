@@ -1,5 +1,5 @@
 # TODO make php-fpm optional because of libevent 1.4.11 dependency (EL >= 5, Fedora >= 12)
-
+# TODO add a logrotate script for php-fpm
 
 %global contentdir  /var/www
 # API/ABI check
