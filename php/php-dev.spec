@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201007030430
+%global snapdate 201007040430
 %global phpversion 5.3.3RC3-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -50,6 +50,9 @@ Source0: http://downloads.php.net/ilia/php-%{phpversion}.tar.bz2
 Source1: php.conf
 Source2: php-53-remi.ini
 Source3: macros.php
+Source4: php-fpm.conf
+Source5: php-fpm-www.conf
+Source6: php-fpm.init
 
 # Build fixes
 Patch1: php-5.3.3-gnusrc.patch
@@ -133,6 +136,16 @@ BuildRequires: libtool-ltdl-devel
 %description zts
 The php-zts package contains a module for use with the Apache HTTP
 Server which can operate under a threaded server processing model.
+
+%package fpm
+Group: Development/Languages
+Summary: PHP FastCGI Process Manager
+Requires: php-common = %{version}-%{release}
+
+%description fpm
+PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
+implementation with some additional features useful for sites of
+any size, especially busier sites.
 
 %package common
 Group: Development/Languages
@@ -531,7 +544,7 @@ cp ext/ereg/regex/COPYRIGHT regex_COPYRIGHT
 cp ext/gd/libgd/README gd_README
 
 # Multiple builds for multiple SAPIs
-mkdir build-cgi build-apache build-embedded build-zts
+mkdir build-cgi build-apache build-embedded build-zts build-fpm
  
 # Remove bogus test; position of read position after fopen(, "a+")
 # is not defined by C standard, so don't presume anything.
@@ -774,6 +787,11 @@ pushd build-apache
 build --with-apxs2=%{_sbindir}/apxs ${without_shared}
 popd
 
+# Build php-fpm
+pushd build-fpm
+build --enable-fpm ${without_shared}
+popd
+
 # Build for inclusion as embedded script language into applications,
 # /usr/lib[64]/libphp5.so
 pushd build-embedded
@@ -885,6 +903,9 @@ make -C build-zts install-modules INSTALL_ROOT=$RPM_BUILD_ROOT
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers INSTALL_ROOT=$RPM_BUILD_ROOT
 
+# Install the php-fpm binary
+make -C build-fpm install-fpm INSTALL_ROOT=$RPM_BUILD_ROOT 
+
 # Install everything from the CGI SAPI build
 make -C build-cgi install INSTALL_ROOT=$RPM_BUILD_ROOT 
 
@@ -913,6 +934,19 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
+
+# PHP-FPM stuff
+# Log
+install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/log/php-fpm
+# Config
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d
+install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
+install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
+mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
+# Service
+install -m 755 -d $RPM_BUILD_ROOT%{_initrddir}
+install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
+
 
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
@@ -1004,10 +1038,20 @@ echo -e "\nWARNING : This %{name}-* RPM are not official Fedora/Redhat build and
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Redhat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 10
+%if %{?fedora}%{!?fedora:99} <= 11
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
+
+
+%post fpm
+/sbin/chkconfig --add php-fpm
+
+%preun fpm
+if [ "$1" = 0 ] ; then
+    /sbin/service php-fpm stop >/dev/null 2>&1
+    /sbin/chkconfig --del php-fpm
+fi
 
 
 %post embedded -p /sbin/ldconfig
@@ -1047,6 +1091,17 @@ echo -e "You should consider upgrading to a supported release.\n"
 %files zts
 %defattr(-,root,root)
 %{_libdir}/httpd/modules/libphp5-zts.so
+
+%files fpm
+%defattr(-,root,root)
+%doc php-fpm.conf.default
+%config(noreplace) %{_sysconfdir}/php-fpm.conf
+%config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
+%{_sbindir}/php-fpm
+%{_initrddir}/php-fpm
+%dir %{_sysconfdir}/php-fpm.d
+%dir %{_localstatedir}/log/php-fpm
+%{_mandir}/man1/php-fpm.1*
 
 %files devel
 %defattr(-,root,root)
@@ -1099,6 +1154,10 @@ echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 %changelog
+* Sun Jul 04 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.2.201007040430
+- new snapshot 
+- first work on php-fpm
+
 * Sat Jul 03 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.1.201007030430
 - new snapshot (5.3.3RC3-dev)
 
