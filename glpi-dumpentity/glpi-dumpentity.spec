@@ -1,5 +1,5 @@
 %global pluginname   dumpentity
-%global svnrelease   100
+%global svnrelease   101
 
 Name:           glpi-dumpentity
 Version:        1.2.0
@@ -16,8 +16,8 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/dumpentity
 
 %if 0%{?svnrelease}
-# svn export -r 100 https://forge.indepnet.net/svn/dumpentity/trunk dumpentity
-# tar czf glpi-dumpentity-1.2.0-100.tar.gz dumpentity
+# svn export -r 101 https://forge.indepnet.net/svn/dumpentity/trunk dumpentity
+# tar czf glpi-dumpentity-1.2.0-101.tar.gz dumpentity
 Source0:        glpi-dumpentity-%{version}-%{svnrelease}.tar.gz
 %else
 Source0:        https://forge.indepnet.net/attachments/download/523/glpi-dumpentity-1.1.2.tar.gz
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}
 
 %changelog
+* Wed Jul 07 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.2.0-0.1.svn101
+- new snapshot
+
 * Fri Jun 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.2.0-0.1.svn100
 - update to 1.2.0 for glpi 0.78 RC (svn snapshot)
 
