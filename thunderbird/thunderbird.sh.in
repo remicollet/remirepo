@@ -81,8 +81,6 @@ fi
 # Modify language pack configuration only when thunderbird is not running 
 # and language packs are not disabled
 if [ $MOZILLA_DOWN -ne 0 ]; then
-     # Remi Workaround for extensions
-     rm -f $HOME/.thunderbird/*/extensions.ini
 
     # Clear already installed langpacks
     mkdir -p $MOZ_EXTENSIONS_PROFILE_DIR
