@@ -318,6 +318,7 @@ fi
 %changelog
 * Sat Jul 10 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.26.b2pre
 - remove link mecanism as thundebird dir is now stable (see #608511)
+- add locales from 1.0b2
 
 * Sat Jun 25 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.25.b2pre
 - Rebuild for remi repo
