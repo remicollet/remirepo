@@ -23,7 +23,8 @@
 %define official_branding 1
 
 %define version_internal  3.1
-%define mozappdir         %{_libdir}/%{name}-%{version_internal}
+%define mozappdir         %{_libdir}/thunderbird-%{version_internal}
+%global enigmail_extname  \{847b3a00-7ab1-11d4-8f02-006008948af5\}
 
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
@@ -32,7 +33,7 @@ Version:        1.1.2
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -57,8 +58,6 @@ Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{versi
 # http://www.mozdev.org/pipermail/enigmail/2009-April/011018.html
 Source101: enigmail-fixlang.php
 
-# From sunbird.src.rpm
-Source102: mozilla-extension-update.sh
 
 # Fix for version issues
 Patch0:         thunderbird-version.patch
@@ -140,15 +139,6 @@ Requires: gnupg, thunderbird >= %{thunver}
 
 # Nothing usefull provided
 AutoProv: 0
-
-%global enigmail_extname '{847b3a00-7ab1-11d4-8f02-006008948af5}'
-%global tbupdate                                          \\\
-        %{_libdir}/%{name}/mozilla-extension-update.sh    \\\
-        --appname thunderbird                             \\\
-        --extname %{enigmail_extname}                     \\\
-        --basedir %{_libdir}                              \\\
-        --extpath %{_libdir}/%{name}                      \\\
-        --action 
 
 
 %description
@@ -291,57 +281,34 @@ popd
 cd %{tarballdir}
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__mkdir_p} $RPM_BUILD_ROOT%{_libdir}
+%{__mkdir_p} $RPM_BUILD_ROOT%{mozappdir}/extensions/%{enigmail_extname}
 
-%{__unzip} -q %{moz_objdir}/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{_libdir}/%{name}
-%{__install} -p -m 755 %{SOURCE102} $RPM_BUILD_ROOT%{_libdir}/%{name}/mozilla-extension-update.sh
-%{__chmod} +x $RPM_BUILD_ROOT%{_libdir}/%{name}/wrappers/*.sh
-
+%{__unzip} -q %{moz_objdir}/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{mozappdir}/extensions/%{enigmail_extname}
+%{__chmod} +x $RPM_BUILD_ROOT%{mozappdir}/extensions/%{enigmail_extname}/wrappers/*.sh
 
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
 
-%post
-%{tbupdate} install || :
-
-
-%preun
-if [ $1 = 0 ]; then
-    %{tbupdate} remove || :
-fi
-
-%postun
-# This is needed not to reverse the effect of our preun, which
-# is guarded against upgrade, but because of our triggerun,
-# which is run on self-upgrade, though triggerpostun isn't
-if [ $1 != 0 ]; then
-    %{tbupdate} install || :
-fi
-
-%triggerin -- thunderbird
-%{tbupdate} install || :
-
-%triggerun -- thunderbird
-%{tbupdate} remove || :
-
-%triggerpostun -- thunderbird
-# Guard against being run post-self-uninstall, even though that
-# doesn't happen currently (see comment above)
-if [ $1 != 0 ]; then
-    %{tbupdate} install || :
+%pre
+# Remomve link from previous installation
+if [ -L %{mozappdir}/extensions/%{enigmail_extname} ]; then
+    %{__rm} %{mozappdir}/extensions/%{enigmail_extname}
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%{_libdir}/%{name}
+%{mozappdir}/extensions/%{enigmail_extname}
 
 
 #===============================================================================
 
 %changelog
+* Sat Jul 10 2010 Remi Collet <rpms@famillecollet.com> 1.1.2-2
+- remove link mecanism as thundebird dir is now stable (see #608511)
+
 * Wed Jun 30 2010 Remi Collet <rpms@famillecollet.com> 1.1.2-1
 - Enigmail 1.1.1 (against thunderbird 3.1)
 
