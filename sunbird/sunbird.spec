@@ -16,6 +16,7 @@
 %define progdir %{_libdir}/%{name}-%{version_internal}pre
 %define thunderbird_version 3.1
 %define libnotify_version 0.4
+%define thundir %{_libdir}/thunderbird-%{thunderbird_version}
 
 # This is to filter unwanted provides, that should be provided only by gecko-devel
 %define _use_internal_dependency_generator 0
@@ -23,7 +24,7 @@
 
 Name:           sunbird
 Version:        1.0
-Release:        0.25.b2pre%{?dist}
+Release:        0.26.b2pre%{?dist}
 Summary:        Calendar application built upon Mozilla toolkit
 
 Group:          Applications/Productivity
@@ -34,10 +35,11 @@ Source0:        thunderbird-%{thunderbird_version}.source.tar.bz2
 Source1:        sunbird.desktop
 Source2:        sunbird-l10n.tar
 #sunbird-langpacks-0.9.tar.gz
-Source3:        mozilla-extension-update.sh
+#Source3:        mozilla-extension-update.sh
 # This is used just for langpacks.
 # TODO: build them!
-#Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/0.9/lightning-0.9.linux-i686.xpi
+Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/lightning.xpi
+Source5:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/gdata-provider.xpi
 Source100:      find-external-requires
 
 # Pulled from Thunderbird
@@ -118,23 +120,8 @@ Mozilla Thunderbird. Since it's an extension, Lightning is tightly
 integrated with Thunderbird, allowing it to easily perform email-related
 calendaring tasks.
 
-%define lightning_extname '{e2fda1a4-762b-4020-b5ad-a41df1933103}'
-%define tbupdate_lightning                                              \\\
-        %{_libdir}/thunderbird-lightning/mozilla-extension-update.sh    \\\
-        --appname thunderbird                                           \\\
-        --extname %{lightning_extname}                                  \\\
-        --basedir %{_libdir}                                            \\\
-        --extpath %{_libdir}/thunderbird-lightning                      \\\
-        --action 
-
-%define gdata_extname '{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}'
-%define tbupdate_gdata                                                  \\\
-        %{_libdir}/thunderbird-lightning/mozilla-extension-update.sh    \\\
-        --appname thunderbird                                           \\\
-        --extname %{gdata_extname}                                      \\\
-        --basedir %{_libdir}                                            \\\
-        --extpath %{_libdir}/thunderbird-lightning-gdata                \\\
-        --action 
+%define lightning_extname \{e2fda1a4-762b-4020-b5ad-a41df1933103\}
+%define gdata_extname \{a62ef8ec-5fdc-40c2-873c-223b8a6925cc\}
 %endif
 
 
@@ -245,23 +232,32 @@ touch $RPM_BUILD_ROOT%{progdir}/extensions/%{lightning_extname}/chrome.manifest
 touch $RPM_BUILD_ROOT%{progdir}/extensions/%{gdata_extname}/chrome.manifest
 
 # Lightning and GData provider for it
-unzip -qod $RPM_BUILD_ROOT%{_libdir}/thunderbird-lightning mozilla/dist/xpi-stage/lightning.xpi
-unzip -qod $RPM_BUILD_ROOT%{_libdir}/thunderbird-lightning-gdata mozilla/dist/xpi-stage/gdata-provider.xpi
-install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/thunderbird-lightning/mozilla-extension-update.sh
+%{__mkdir_p} $RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname}
+unzip -qod   $RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname} mozilla/dist/xpi-stage/lightning.xpi
 
-# No langpacks for preview release
-%if 0
+%{__mkdir_p} $RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname}
+unzip -qod   $RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname} mozilla/dist/xpi-stage/gdata-provider.xpi
+#install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/thunderbird-lightning/mozilla-extension-update.sh
+
 # Unpack lightning language packs, except en_US
 unzip -l %{SOURCE4} '*.jar' |
         awk '/-[^\/]*\.jar/ && !/en-US/ {print $4}' |
-        xargs unzip -qod $RPM_BUILD_ROOT%{_libdir}/thunderbird-lightning %{SOURCE4}
+        xargs unzip -qod $RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname} %{SOURCE4}
 
 # Register them
-ls $RPM_BUILD_ROOT%{_libdir}/thunderbird-lightning/chrome |
+ls $RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname}/chrome |
         sed -n '/en-US/n;s/\(\([^-]*\)-\(.*\)\.jar\)/locale \2 \3 jar:chrome\/\1!\/locale\/\3\/\2\//p' \
-        >>$RPM_BUILD_ROOT%{_libdir}/thunderbird-lightning/chrome.manifest
-        # ^^^ I'm going to burn in hell for this ^^^
-%endif
+        >>$RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname}/chrome.manifest
+
+# Unpack lightning language packs, except en_US
+unzip -l %{SOURCE5} '*.jar' |
+        awk '/-[^\/]*\.jar/ && !/en-US/ {print $4}' |
+        xargs unzip -qod $RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname} %{SOURCE5}
+
+# Register them
+ls $RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname}/chrome |
+        sed -n '/en-US/n;s/\(\([^-]*\)-\(.*\)\.jar\)/locale \2 \3 jar:chrome\/\1!\/locale\/\3\/\2\//p' \
+        >>$RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname}/chrome.manifest
 %endif
 
 # Permissions fixup
@@ -290,41 +286,13 @@ fi
 
 
 %if %with lightning
-%post -n thunderbird-lightning
-%{tbupdate_lightning} install || :
-%{tbupdate_gdata} install || :
-
-
-%preun -n thunderbird-lightning
-if [ $1 = 0 ]; then
-        %{tbupdate_lightning} remove || :
-        %{tbupdate_gdata} remove || :
+%pre -n thunderbird-lightning
+# Remomve link from previous installation
+if [ -L %{mozappdir}/extensions/%{lightning_extname} ]; then
+    %{__rm} %{mozappdir}/extensions/%{lightning_extname}
 fi
-
-
-%postun -n thunderbird-lightning
-# This is needed not to reverse the effect of our preun, which
-# is guarded against upgrade, but because of our triggerun,
-# which is run on self-upgrade, though triggerpostun isn't
-if [ $1 != 0 ]; then
-        %{tbupdate_lightning} install || :
-        %{tbupdate_gdata} install || :
-fi
-
-%triggerin -n thunderbird-lightning -- thunderbird
-%{tbupdate_lightning} install || :
-%{tbupdate_gdata} install || :
-
-%triggerun -n thunderbird-lightning -- thunderbird
-%{tbupdate_lightning} remove || :
-%{tbupdate_gdata} remove || :
-
-%triggerpostun -n thunderbird-lightning -- thunderbird
-# Guard against being run post-self-uninstall, even though that
-# doesn't happen currently (see comment above)
-if [ $1 != 0 ]; then
-        %{tbupdate_lightning} install || :
-        %{tbupdate_gdata} install || :
+if [ -L %{mozappdir}/extensions/%{gdata_extname} ]; then
+    %{__rm} %{mozappdir}/extensions/%{gdata_extname}
 fi
 %endif
 
@@ -342,12 +310,15 @@ fi
 %files -n thunderbird-lightning
 %doc mozilla/LEGAL mozilla/LICENSE mozilla/README.txt
 %defattr(-,root,root,-)
-%{_libdir}/thunderbird-lightning
-%{_libdir}/thunderbird-lightning-gdata
+%{thundir}/extensions/%{lightning_extname}
+%{thundir}/extensions/%{gdata_extname}
 %endif
 
 
 %changelog
+* Sat Jul 10 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.26.b2pre
+- remove link mecanism as thundebird dir is now stable (see #608511)
+
 * Sat Jun 25 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.25.b2pre
 - Rebuild for remi repo
 
