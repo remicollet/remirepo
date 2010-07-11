@@ -968,7 +968,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{_initrddir}
 install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
-install -m 755 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
+install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
 
 %endif
 
@@ -1128,7 +1128,8 @@ fi
 %{_sbindir}/php-fpm
 %{_initrddir}/php-fpm
 %dir %{_sysconfdir}/php-fpm.d
-%dir %{_localstatedir}/log/php-fpm
+# log owned by apache for log
+%attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
 %dir %{_localstatedir}/run/php-fpm
 %{_mandir}/man1/php-fpm.1*
 %endif
