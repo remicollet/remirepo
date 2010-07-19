@@ -1,51 +1,3 @@
-diff -up php5.3-201007030430/configure.in.aconf26x php5.3-201007030430/configure.in
---- php5.3-201007030430/configure.in.aconf26x	2010-07-03 06:59:50.083304160 +0200
-+++ php5.3-201007030430/configure.in	2010-07-03 07:00:52.553178038 +0200
-@@ -1,7 +1,7 @@
- ## $Id: configure.in 300935 2010-07-02 07:32:05Z johannes $ -*- autoconf -*-
- dnl ## Process this file with autoconf to produce a configure script.
- 
--divert(1)
-+divert(1001)
- 
- dnl ## Diversion 1 is the autoconf + automake setup phase. We also
- dnl ## set the PHP version, deal with platform-specific compile
-@@ -292,7 +292,7 @@ sinclude(TSRM/threads.m4)
- sinclude(TSRM/tsrm.m4)
- 
- 
--divert(2)
-+divert(1002)
- 
- dnl ## Diversion 2 is where we set PHP-specific options and come up
- dnl ## with reasonable default values for them. We check for pthreads here
-@@ -331,7 +331,7 @@ if test "$enable_maintainer_zts" = "yes"
-   PTHREADS_FLAGS
- fi
- 
--divert(3)
-+divert(1003)
- 
- dnl ## In diversion 3 we check for compile-time options to the PHP
- dnl ## core and how to deal with different system dependencies. 
-@@ -677,7 +677,7 @@ if test "x$php_crypt_r" = "x1"; then
-   PHP_CRYPT_R_STYLE
- fi
- 
--divert(4)
-+divert(1004)
- 
- dnl ## In diversion 4 we check user-configurable general settings.
- 
-@@ -918,7 +918,7 @@ else
-   AC_MSG_RESULT([using system default])
- fi
- 
--divert(5)
-+divert(1005)
- 
- dnl ## In diversion 5 we check which extensions should be compiled.
- dnl ## All of these are normally in the extension directories.
 diff -up php5.3-201007030430/ext/standard/config.m4.aconf26x php5.3-201007030430/ext/standard/config.m4
 --- php5.3-201007030430/ext/standard/config.m4.aconf26x	2010-06-17 12:36:36.000000000 +0200
 +++ php5.3-201007030430/ext/standard/config.m4	2010-07-03 06:59:50.090304093 +0200
@@ -77,3 +29,50 @@ diff -up php5.3-201007030430/scripts/phpize.m4.aconf26x php5.3-201007030430/scri
  
  AC_PREREQ(2.13)
  AC_INIT(config.m4)
+--- php5.3-201007190630/configure.in.aconf26x	2010-07-19 08:58:50.269024448 +0200
++++ php5.3-201007190630/configure.in	2010-07-19 08:59:32.301148576 +0200
+@@ -1,7 +1,7 @@
+ ## $Id: configure.in 301272 2010-07-14 23:40:42Z johannes $ -*- autoconf -*-
+ dnl ## Process this file with autoconf to produce a configure script.
+ 
+-divert(1)
++divert(1001)
+ 
+ dnl ## Diversion 1 is the autoconf + automake setup phase. We also
+ dnl ## set the PHP version, deal with platform-specific compile
+@@ -292,7 +292,7 @@
+ sinclude(TSRM/tsrm.m4)
+ 
+ 
+-divert(2)
++divert(1002)
+ 
+ dnl ## Diversion 2 is where we set PHP-specific options and come up
+ dnl ## with reasonable default values for them. We check for pthreads here
+@@ -331,7 +331,7 @@
+   PTHREADS_FLAGS
+ fi
+ 
+-divert(3)
++divert(1003)
+ 
+ dnl ## In diversion 3 we check for compile-time options to the PHP
+ dnl ## core and how to deal with different system dependencies. 
+@@ -677,7 +677,7 @@
+   PHP_CRYPT_R_STYLE
+ fi
+ 
+-divert(4)
++divert(1004)
+ 
+ dnl ## In diversion 4 we check user-configurable general settings.
+ 
+@@ -918,7 +918,7 @@
+   AC_MSG_RESULT([using system default])
+ fi
+ 
+-divert(5)
++divert(1005)
+ 
+ dnl ## In diversion 5 we check which extensions should be compiled.
+ dnl ## All of these are normally in the extension directories.

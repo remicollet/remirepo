@@ -20,8 +20,8 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201007110630
-%global phpversion 5.3.3RC3-dev
+%global snapdate 201007190630
+%global phpversion 5.3.3RC4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %define with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -1185,6 +1185,9 @@ fi
 %endif
 
 %changelog
+* Mon Jul 19 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.2.201007190630
+- new snapshot (5.3.3RC4-dev)
+
 * Sun Jul 11 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.2.201007110630
 - new snapshot 
 - own /var/run/php-fpm
