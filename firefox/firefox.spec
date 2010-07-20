@@ -29,8 +29,8 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        3.6.6
-Release:        1%{?dist}.1
+Version:        3.6.7
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100627.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100720.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -59,11 +59,9 @@ Patch0:         firefox-version.patch
 Patch1:         mozilla-build.patch
 Patch3:         mozilla-jemalloc.patch
 Patch4:         mozilla-about-firefox-version.patch
-Patch5:         mozilla-jemalloc-526152.patch
 Patch7:         xulrunner-1.9.2.1-build.patch
 Patch8:         mozilla-plugin.patch
 Patch9:         mozilla-build-sbrk.patch
-Patch11:        nspr-build.patch
 
 # build patches from firefox
 Patch30:        firefox-disable-checkupdates.patch
@@ -177,11 +175,9 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch1  -p1 -b .build
 %patch3  -p1 -b .jemalloc
 %patch4  -p1 -b .about-firefox-version
-%patch5  -p1 -b .jemalloc-526152
 %patch7  -p2 -b .del
 %patch8  -p1 -b .plugin
 %patch9  -p2 -b .sbrk
-%patch11 -p1 -b .nspr
 
 %patch20 -p1 -b .pk
 
@@ -426,6 +422,7 @@ touch $RPM_BUILD_ROOT/%{mozappdir}/components/xpti.dat
 
 # Remi : this appears on Fedora <= 10
 %{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/*.chk
+%{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/dependentlibs.list
 
 
 #---------------------------------------------------------------------
@@ -440,7 +437,7 @@ echo -e "\nWARNING : This %{name} RPM is not an official Fedora build and it"
 echo -e "overrides the official one. Don't file bugs on Fedora Project.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 10
+%if %{?fedora}%{!?fedora:99} <= 11
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -531,8 +528,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jul 20 2010 Remi Collet <rpms@famillecollet.com> - 3.6.7-1
+- update to Firefox 3.6.7
+
 * Tue Jun 29 2010 Remi Collet <rpms@famillecollet.com> - 3.6.6-1.1
-- try to build with --disable-ipc option for F-8 and ppc
+- build with --disable-ipc option for F-8 and ppc
 
 * Sun Jun 27 2010 Remi Collet <rpms@famillecollet.com> - 3.6.6-1
 - update to Firefox 3.6.6
