@@ -26,14 +26,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        3.1
+Version:        3.1.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 %if %{official_branding}
 #%define tarball thunderbird-%{version}.source.tar.bz2
-%define tarball thunderbird-3.1%{?relcan}.source.tar.bz2
+%define tarball thunderbird-%{version}%{?relcan}.source.tar.bz2
 %else
 %define tarball thunderbird-3.1%{?relcan}.source.tar.bz2
 %endif
@@ -41,7 +41,7 @@ Source0:        %{tarball}
 #NoSource:       0
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100625.tar.bz2
+Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100721.tar.bz2
 %endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -479,6 +479,9 @@ fi
 #===============================================================================
 
 %changelog
+* Wed Jul 21 2010 Remi Collet <rpms@famillecollet.com> 3.1.1-1
+- Thunderbird 3.1.1
+
 * Fri Jun 25 2010 Remi Collet <rpms@famillecollet.com> 3.1-1
 - update to 3.1 finale
 - add poor workaround for extensions

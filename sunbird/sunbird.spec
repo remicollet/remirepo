@@ -14,9 +14,10 @@
 
 %define version_internal 1.0b2
 %define progdir %{_libdir}/%{name}-%{version_internal}pre
-%define thunderbird_version 3.1
+%define thunderbird_internal 3.1
+%define thunderbird_version  3.1.1
 %define libnotify_version 0.4
-%define thundir %{_libdir}/thunderbird-%{thunderbird_version}
+%define thundir %{_libdir}/thunderbird-%{thunderbird_internal}
 
 # This is to filter unwanted provides, that should be provided only by gecko-devel
 %define _use_internal_dependency_generator 0
@@ -24,7 +25,7 @@
 
 Name:           sunbird
 Version:        1.0
-Release:        0.26.b2pre%{?dist}
+Release:        0.27%{?dist}
 Summary:        Calendar application built upon Mozilla toolkit
 
 Group:          Applications/Productivity
@@ -316,6 +317,9 @@ fi
 
 
 %changelog
+* Wed Jul 21 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.27
+- Rebuild against Thunderbird 3.1.1
+
 * Sat Jul 10 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.26.b2pre
 - remove link mecanism as thundebird dir is now stable (see #608511)
 - add locales from 1.0b2
