@@ -9,12 +9,12 @@
 %global zipver      1.9.1
 %global jsonver     1.2.1
 
-%define httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
+%global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
 %ifarch ppc ppc64
-%define oraclever 10.2.0.2
+%global oraclever 10.2.0.2
 %else
-%define oraclever 11.1.0.7
+%global oraclever 11.1.0.7
 %endif
 
 # Regression tests take a long time, you can skip 'em with this
@@ -23,20 +23,24 @@
 %global phpversion 5.3.3
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
-%define with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
-%define with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
+%global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
+%global with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
 %if %{?rhel}%{?fedora} > 4
-%define with_enchant 1
+%global with_enchant 1
 %else
-%define with_enchant 0
+%global with_enchant 0
 %endif
 %if 0%{?rhel} >= 5 || 0%{?fedora} >= 12
-%define with_fpm 1
+%ifarch %{ix86} x86_64
+%global with_fpm 1
 %else
-%define with_fpm 0
+%global with_fpm 0
+%endif
+%else
+%global with_fpm 0
 %endif
 
-%define tidyver 	0.99.0-12.20070228
+%global tidyver 	0.99.0-12.20070228
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -640,6 +644,7 @@ cat `aclocal --print-ac-dir`/libtool.m4 > build/libtool.m4
 %endif
 
 # Regenerate configure scripts (patches change config.m4's)
+touch configure.in
 ./buildconf --force
 CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-pointer-sign"
 %if 0%{?rhel} < 5
