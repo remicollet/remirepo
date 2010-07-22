@@ -20,8 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-#global snapdate 201004161430
-%global phpversion 5.3.2
+%global phpversion 5.3.3
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %define with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -31,13 +30,18 @@
 %else
 %define with_enchant 0
 %endif
+%if 0%{?rhel} >= 5 || 0%{?fedora} >= 12
+%define with_fpm 1
+%else
+%define with_fpm 0
+%endif
 
 %define tidyver 	0.99.0-12.20070228
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.3.2
-Release: 2%{?dist}
+Version: 5.3.3
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -50,29 +54,29 @@ Source0: http://downloads.php.net/ilia/php-%{phpversion}.tar.bz2
 Source1: php.conf
 Source2: php-53-remi.ini
 Source3: macros.php
+Source4: php-fpm.conf
+Source5: php-fpm-www.conf
+Source6: php-fpm.init
+Source7: php-fpm.logrotate
 
 # Build fixes
-Patch1: php-5.3.2-gnusrc.patch
+Patch1: php-5.3.3-gnusrc.patch
 Patch2: php-5.3.0-install.patch
 Patch3: php-5.2.4-norpath.patch
 Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.3.2-aconf26x.patch
-
-# http://bugs.php.net/50578
-Patch9: php-5.3.2-phar.patch
-Patch10: php-5.3.2-gc.patch
+Patch8: php-5.3.3-aconf26x.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
-Patch21: php-5.2.3-macropen.patch
+Patch21: php-5.3.3-macropen.patch
 
 # Functional changes
 Patch40: php-5.0.4-dlopen.patch
 Patch41: php-5.3.0-easter.patch
-Patch42: php-5.3.0-systzdata-v6.patch
+Patch42: php-5.3.1-systzdata-v7.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
@@ -136,6 +140,19 @@ BuildRequires: libtool-ltdl-devel
 %description zts
 The php-zts package contains a module for use with the Apache HTTP
 Server which can operate under a threaded server processing model.
+
+%if %{with_fpm}
+%package fpm
+Group: Development/Languages
+Summary: PHP FastCGI Process Manager
+Requires: php-common = %{version}-%{release}
+BuildRequires: libevent-devel >= 1.4.11
+
+%description fpm
+PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
+implementation with some additional features useful for sites of
+any size, especially busier sites.
+%endif
 
 %package common
 Group: Development/Languages
@@ -505,15 +522,13 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if 0%{?fedora} >= 13
 %patch8 -p1 -b .aconf26x
 %endif
-%patch9 -p1 -b .bang
-%patch10 -p4 -b .gc
 
 %patch20 -p1 -b .shutdown
 %patch21 -p1 -b .macropen
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
-%if %{?fedora}%{?rhel:99} >= 10
+%if %{?fedora}%{?rhel:99} >= 11
 %patch42 -p1 -b .systzdata
 %endif
 
@@ -535,11 +550,17 @@ cp ext/ereg/regex/COPYRIGHT regex_COPYRIGHT
 cp ext/gd/libgd/README gd_README
 
 # Multiple builds for multiple SAPIs
-mkdir build-cgi build-apache build-embedded build-zts
- 
+mkdir build-cgi build-apache build-embedded build-zts \
+%if %{with_fpm}
+    build-fpm
+%endif
+
 # Remove bogus test; position of read position after fopen(, "a+")
 # is not defined by C standard, so don't presume anything.
 rm -f ext/standard/tests/file/bug21131.phpt
+# php_egg_logo_guid() removed by patch41
+rm -f tests/basic/php_egg_logo_guid.phpt
+
 
 # Tests that fail.
 rm -f ext/standard/tests/file/bug22414.phpt \
@@ -775,6 +796,13 @@ pushd build-apache
 build --with-apxs2=%{_sbindir}/apxs ${without_shared}
 popd
 
+%if %{with_fpm}
+# Build php-fpm
+pushd build-fpm
+build --enable-fpm ${without_shared}
+popd
+%endif
+
 # Build for inclusion as embedded script language into applications,
 # /usr/lib[64]/libphp5.so
 pushd build-embedded
@@ -886,6 +914,11 @@ make -C build-zts install-modules INSTALL_ROOT=$RPM_BUILD_ROOT
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers INSTALL_ROOT=$RPM_BUILD_ROOT
 
+%if %{with_fpm}
+# Install the php-fpm binary
+make -C build-fpm install-fpm INSTALL_ROOT=$RPM_BUILD_ROOT 
+%endif
+
 # Install everything from the CGI SAPI build
 make -C build-cgi install INSTALL_ROOT=$RPM_BUILD_ROOT 
 
@@ -914,6 +947,25 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
+
+%if %{with_fpm}
+# PHP-FPM stuff
+# Log
+install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/log/php-fpm
+install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
+# Config
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d
+install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
+install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
+mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
+# Service
+install -m 755 -d $RPM_BUILD_ROOT%{_initrddir}
+install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
+# LogRotate
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
+install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
+%endif
+
 
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
@@ -1001,8 +1053,8 @@ rm -f README.{Zeus,QNX,CVS-RULES}
 rm files.* macros.php
 
 %pre common
-echo -e "\nWARNING : This %{name}-* RPM are not official Fedora build and"
-echo -e "overrides the official ones. Don't file bugs on Fedora Project.\n"
+echo -e "\nWARNING : This %{name}-* RPM are not official Fedora/Redhat build and"
+echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Redhat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
 %if %{?fedora}%{!?fedora:99} <= 11
@@ -1010,6 +1062,17 @@ echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
+
+%if %{with_fpm}
+%post fpm
+/sbin/chkconfig --add php-fpm
+
+%preun fpm
+if [ "$1" = 0 ] ; then
+    /sbin/service php-fpm stop >/dev/null 2>&1
+    /sbin/chkconfig --del php-fpm
+fi
+%endif
 
 %post embedded -p /sbin/ldconfig
 %postun embedded -p /sbin/ldconfig
@@ -1048,6 +1111,22 @@ echo -e "You should consider upgrading to a supported release.\n"
 %files zts
 %defattr(-,root,root)
 %{_libdir}/httpd/modules/libphp5-zts.so
+
+%if %{with_fpm}
+%files fpm
+%defattr(-,root,root)
+%doc php-fpm.conf.default
+%config(noreplace) %{_sysconfdir}/php-fpm.conf
+%config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
+%config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
+%{_sbindir}/php-fpm
+%{_initrddir}/php-fpm
+%dir %{_sysconfdir}/php-fpm.d
+# log owned by apache for log
+%attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
+%dir %{_localstatedir}/run/php-fpm
+%{_mandir}/man1/php-fpm.1*
+%endif
 
 %files devel
 %defattr(-,root,root)
@@ -1100,6 +1179,11 @@ echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 %changelog
+* Thu Jul 22 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-1.###.remi
+- update to 5.3.3
+- add php-fpm sub-package
+- systzdata-v7.patch
+
 * Tue Apr 26 2010 Remi Collet <rpms@famillecollet.com> 5.3.2-2.###.remi
 - garbage collector upstream  patches
 

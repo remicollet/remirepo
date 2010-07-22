@@ -37,8 +37,6 @@
 %define with_fpm 0
 %endif
 
-
-
 %define tidyver 	0.99.0-12.20070228
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -563,7 +561,7 @@ mkdir build-cgi build-apache build-embedded build-zts \
 # Remove bogus test; position of read position after fopen(, "a+")
 # is not defined by C standard, so don't presume anything.
 rm -f ext/standard/tests/file/bug21131.phpt
-# php_egg_logo_guid() removed by patch
+# php_egg_logo_guid() removed by patch41
 rm -f tests/basic/php_egg_logo_guid.phpt
 
 
@@ -969,7 +967,6 @@ install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
-
 %endif
 
 
