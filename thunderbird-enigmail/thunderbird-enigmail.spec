@@ -7,7 +7,7 @@
 %define libnotify_version 0.4
 %define moz_objdir objdir-tb
 
-%global thunver  3.1
+%global thunver  3.1.1
 #global thunbeta rc1
 #global CVS     20091121
 #global prever  rc1
@@ -24,7 +24,7 @@
 
 %define version_internal  3.1
 %define mozappdir         %{_libdir}/thunderbird-%{version_internal}
-%global enigmail_extname  \{847b3a00-7ab1-11d4-8f02-006008948af5\}
+%global enigmail_extname  %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{847b3a00-7ab1-11d4-8f02-006008948af5}
 
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
@@ -33,7 +33,7 @@ Version:        1.1.2
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -67,6 +67,9 @@ Patch1:         mozilla-jemalloc.patch
 Patch2:         thunderbird-shared-error.patch
 # Fixes gcc complain that nsFrame::delete is protected
 Patch4:         xulrunner-1.9.2.1-build.patch
+# Fix missing includes for crash reporter, remove in 3.1 final
+Patch5:         xulrunner-missing-headers.patch
+Patch6:         remove-static.patch
 
 # Enigmail patch
 Patch101:       enigmail-1.1.2-perm.patch
@@ -159,6 +162,8 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %patch1 -p0 -b .jemalloc
 %patch2 -p1 -b .shared-error
 %patch4 -p1 -b .protected
+%patch5 -p0 -b .stat
+%patch6 -p1 -b .static
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -281,31 +286,29 @@ popd
 cd %{tarballdir}
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__mkdir_p} $RPM_BUILD_ROOT%{mozappdir}/extensions/%{enigmail_extname}
+%{__mkdir_p} $RPM_BUILD_ROOT%{enigmail_extname}
 
-%{__unzip} -q %{moz_objdir}/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{mozappdir}/extensions/%{enigmail_extname}
-%{__chmod} +x $RPM_BUILD_ROOT%{mozappdir}/extensions/%{enigmail_extname}/wrappers/*.sh
+%{__unzip} -q %{moz_objdir}/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enigmail_extname}
+%{__chmod} +x $RPM_BUILD_ROOT%{enigmail_extname}/wrappers/*.sh
 
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
 
-%pre
-# Remomve link from previous installation
-if [ -L %{mozappdir}/extensions/%{enigmail_extname} ]; then
-    %{__rm} %{mozappdir}/extensions/%{enigmail_extname}
-fi
-
-
 %files
 %defattr(-,root,root,-)
-%{mozappdir}/extensions/%{enigmail_extname}
+%{enigmail_extname}
 
 
 #===============================================================================
 
 %changelog
+* Thu Jul 22 2010 Remi Collet <rpms@famillecollet.com> 1.1.2-3
+- move to /usr/lib/mozilla/extensions (as lightning)
+- build against thunderbird 3.1.1 sources
+- sync patches with F-13
+
 * Sat Jul 10 2010 Remi Collet <rpms@famillecollet.com> 1.1.2-2
 - remove link mecanism as thundebird dir is now stable (see #608511)
 
