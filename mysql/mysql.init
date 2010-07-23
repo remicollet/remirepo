@@ -19,6 +19,10 @@
 exec="/usr/bin/mysqld_safe"
 prog="mysqld"
 
+# Set timeouts here so they can be overridden from /etc/sysconfig/mysqld
+STARTTIMEOUT=120
+STOPTIMEOUT=60
+
 [ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
 
 lockfile=/var/lock/subsys/$prog
@@ -102,8 +106,8 @@ start(){
 	# Rather than assuming we know a valid username, accept an "access
 	# denied" response as meaning the server is functioning.
 	ret=0
-	STARTTIMEOUT=120
-	while [ $STARTTIMEOUT -gt 0 ]; do
+	TIMEOUT="$STARTTIMEOUT"
+	while [ $TIMEOUT -gt 0 ]; do
 	    RESPONSE=`/usr/bin/mysqladmin --socket="$socketfile" --user=UNKNOWN_MYSQL_USER ping 2>&1` && break
 	    echo "$RESPONSE" | grep -q "Access denied for user" && break
 	    if ! /bin/kill -0 $safe_pid 2>/dev/null; then
@@ -112,9 +116,9 @@ start(){
 		break
 	    fi
 	    sleep 1
-	    let STARTTIMEOUT=${STARTTIMEOUT}-1
+	    let TIMEOUT=${TIMEOUT}-1
 	done
-	if [ $STARTTIMEOUT -eq 0 ]; then
+	if [ $TIMEOUT -eq 0 ]; then
 	    echo "Timeout error occurred trying to start MySQL Daemon."
 	    ret=1
 	fi
@@ -139,13 +143,13 @@ stop(){
 	    /bin/kill "$MYSQLPID" >/dev/null 2>&1
 	    ret=$?
 	    if [ $ret -eq 0 ]; then
-		STOPTIMEOUT=60
-		while [ $STOPTIMEOUT -gt 0 ]; do
+		TIMEOUT="$STOPTIMEOUT"
+		while [ $TIMEOUT -gt 0 ]; do
 		    /bin/kill -0 "$MYSQLPID" >/dev/null 2>&1 || break
 		    sleep 1
-		    let STOPTIMEOUT=${STOPTIMEOUT}-1
+		    let TIMEOUT=${TIMEOUT}-1
 		done
-		if [ $STOPTIMEOUT -eq 0 ]; then
+		if [ $TIMEOUT -eq 0 ]; then
 		    echo "Timeout error occurred trying to stop MySQL Daemon."
 		    ret=1
 		    action $"Stopping $prog: " /bin/false

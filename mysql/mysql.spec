@@ -1,6 +1,6 @@
 Name: mysql
-Version: 5.1.48
-Release: 1%{?dist}.1
+Version: 5.1.49
+Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -44,7 +44,7 @@ Patch13: mysql-expired-certs.patch
 Patch14: mysql-missing-string-code.patch
 Patch15: mysql-lowercase-bug.patch
 Patch16: mysql-chain-certs.patch
-
+Patch17: mysql-abi-check.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
@@ -168,7 +168,6 @@ MySQL is a multi-user, multi-threaded SQL database server. This
 package contains the regression test suite distributed with
 the MySQL sources.
 
-
 %prep
 %setup -q -n mysql-%{version}
 
@@ -187,7 +186,10 @@ the MySQL sources.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
-
+%if 0%{?fedora} >= 14
+# GCC 4.5 patch
+%patch17 -p1
+%endif
 
 libtoolize --force
 aclocal
@@ -374,15 +376,15 @@ rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/mysql-test-run.pl.1*
 mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 echo "%{_libdir}/mysql" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
 
-# copy additional docs into build tree so %doc will find them
+# copy additional docs into build tree so %%doc will find them
 cp %{SOURCE6} README.mysql-docs
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pre libs
-echo -e "\nWARNING : This MySQL RPM is not an official Fedora build and it"
-echo -e "overrides the official one. Don't file bugs on Fedora Project."
+echo -e "\nWARNING : This MySQL RPM is not an official Fedora/Redhat build and it"
+echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
 %if %{?fedora}%{!?fedora:99} <= 11
@@ -460,11 +462,10 @@ fi
 
 %files libs
 %defattr(-,root,root)
-
+%doc COPYING EXCEPTIONS-CLIENT
 # although the default my.cnf contains only server settings, we put it in the
 # libs package because it can be used for client settings too.
 %config(noreplace) /etc/my.cnf
-
 %dir %{_libdir}/mysql
 %{_libdir}/mysql/libmysqlclient*.so.*
 /etc/ld.so.conf.d/*
@@ -584,6 +585,7 @@ fi
 
 %files embedded
 %defattr(-,root,root)
+%doc COPYING EXCEPTIONS-CLIENT
 %{_libdir}/mysql/libmysqld.so.*
 
 %files embedded-devel
@@ -605,10 +607,26 @@ fi
 
 %{_mandir}/man1/mysql_client_test.1*
 
-
 %changelog
+* Fri Jul 23 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.49-1
+- sync with rawhide
+- Update to MySQL 5.1.49 Community Server GA
+
+* Tue Jul 13 2010 Tom Lane <tgl@redhat.com> 5.1.48-2
+- Duplicate COPYING and EXCEPTIONS-CLIENT in -libs and -embedded subpackages,
+  to ensure they are available when any subset of mysql RPMs are installed,
+  per revised packaging guidelines
+- Allow init script's STARTTIMEOUT/STOPTIMEOUT to be overridden from sysconfig
+Related: #609734
+
 * Fri Jun 25 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.48-1.1
 - fix useradd command (-N not supported everywhere)
+
+* Mon Jun 21 2010 Tom Lane <tgl@redhat.com> 5.1.48-1
+- Update to MySQL 5.1.48, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.1/en/news-5-1-48.html
+  including a fix for CVE-2010-2008
+Related: #614214
 
 * Thu Jun 17 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.48-1
 - sync with rawhide
