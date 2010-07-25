@@ -1,0 +1,38 @@
+--- php-4.3.11/ext/snmp/php_snmp.h.shutdown
++++ php-4.3.11/ext/snmp/php_snmp.h
+@@ -39,7 +39,6 @@
+ #endif
+ 
+ PHP_MINIT_FUNCTION(snmp);
+-PHP_MSHUTDOWN_FUNCTION(snmp);
+ PHP_MINFO_FUNCTION(snmp);
+ 
+ PHP_FUNCTION(snmpget);
+--- php-4.3.11/ext/snmp/snmp.c.shutdown
++++ php-4.3.11/ext/snmp/snmp.c
+@@ -156,7 +156,7 @@
+ 	"snmp",
+ 	snmp_functions,
+ 	PHP_MINIT(snmp),
+-	PHP_MSHUTDOWN(snmp),
++	NULL,
+ 	NULL,
+ 	NULL,
+ 	PHP_MINFO(snmp),
+@@ -208,16 +208,6 @@
+ }
+ /* }}} */
+ 
+-/* {{{ PHP_MSHUTDOWN_FUNCTION
+- */
+-PHP_MSHUTDOWN_FUNCTION(snmp)
+-{
+-	snmp_shutdown("snmpapp");
+-
+-	return SUCCESS;
+-}
+-/* }}} */
+-
+ /* {{{ PHP_MINFO_FUNCTION
+  */
+ PHP_MINFO_FUNCTION(snmp)

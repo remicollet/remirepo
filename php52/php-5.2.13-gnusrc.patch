@@ -1,0 +1,117 @@
+diff -ur php-5.2.13.orig/configure.in php-5.2.13/configure.in
+--- php-5.2.13.orig/configure.in	2010-02-24 12:23:46.000000000 +0000
++++ php-5.2.13/configure.in	2010-03-06 11:05:46.215767110 +0000
+@@ -58,6 +58,8 @@
+ AC_DEFUN([PHP_EXT_SRCDIR],[$abs_srcdir/ext/$1])dnl
+ AC_DEFUN([PHP_ALWAYS_SHARED],[])dnl
+ 
++AC_DEFINE([_GNU_SOURCE], 1, [Define to enable GNU C Library extensions])
++
+ dnl Setting up the PHP version based on the information above.
+ dnl -------------------------------------------------------------------------
+ 
+diff -ur php-5.2.13.orig/ext/interbase/interbase.c php-5.2.13/ext/interbase/interbase.c
+--- php-5.2.13.orig/ext/interbase/interbase.c	2010-01-03 09:23:27.000000000 +0000
++++ php-5.2.13/ext/interbase/interbase.c	2010-03-06 11:05:46.216766888 +0000
+@@ -24,7 +24,6 @@
+ #include "config.h"
+ #endif
+ 
+-#define _GNU_SOURCE
+ 
+ #include "php.h"
+ 
+diff -ur php-5.2.13.orig/ext/pdo_firebird/firebird_driver.c php-5.2.13/ext/pdo_firebird/firebird_driver.c
+--- php-5.2.13.orig/ext/pdo_firebird/firebird_driver.c	2010-01-03 09:23:27.000000000 +0000
++++ php-5.2.13/ext/pdo_firebird/firebird_driver.c	2010-03-06 11:05:46.217766704 +0000
+@@ -22,7 +22,6 @@
+ #include "config.h"
+ #endif
+ 
+-#define _GNU_SOURCE
+ 
+ #include "php.h"
+ #ifdef ZEND_ENGINE_2
+diff -ur php-5.2.13.orig/ext/standard/file.c php-5.2.13/ext/standard/file.c
+--- php-5.2.13.orig/ext/standard/file.c	2010-02-11 12:32:21.000000000 +0000
++++ php-5.2.13/ext/standard/file.c	2010-03-06 11:05:46.218766723 +0000
+@@ -108,7 +108,6 @@
+ 
+ #ifdef HAVE_FNMATCH
+ #ifndef _GNU_SOURCE
+-#define _GNU_SOURCE
+ #endif
+ #include <fnmatch.h>
+ #endif
+diff -ur php-5.2.13.orig/ext/zlib/zlib_fopen_wrapper.c php-5.2.13/ext/zlib/zlib_fopen_wrapper.c
+--- php-5.2.13.orig/ext/zlib/zlib_fopen_wrapper.c	2010-01-03 09:23:27.000000000 +0000
++++ php-5.2.13/ext/zlib/zlib_fopen_wrapper.c	2010-03-06 11:05:46.219766587 +0000
+@@ -19,8 +19,6 @@
+ 
+ /* $Id: zlib_fopen_wrapper.c 293036 2010-01-03 09:23:27Z sebastian $ */
+ 
+-#define _GNU_SOURCE
+-
+ #include "php.h"
+ #include "php_zlib.h"
+ #include "fopen_wrappers.h"
+Only in php-5.2.13/ext/zlib: zlib_fopen_wrapper.c.orig
+diff -ur php-5.2.13.orig/main/php.h php-5.2.13/main/php.h
+--- php-5.2.13.orig/main/php.h	2010-01-03 09:23:27.000000000 +0000
++++ php-5.2.13/main/php.h	2010-03-06 11:05:46.220766898 +0000
+@@ -30,6 +30,7 @@
+ #define PHP_HAVE_STREAMS
+ #define YYDEBUG 0
+ 
++#include "php_config.h"
+ #include "php_version.h"
+ #include "zend.h"
+ #include "zend_qsort.h"
+diff -ur php-5.2.13.orig/main/streams/cast.c php-5.2.13/main/streams/cast.c
+--- php-5.2.13.orig/main/streams/cast.c	2010-01-19 13:44:08.000000000 +0000
++++ php-5.2.13/main/streams/cast.c	2010-03-06 11:05:46.222766339 +0000
+@@ -18,7 +18,6 @@
+ 
+ /* $Id: cast.c 293732 2010-01-19 13:44:08Z jani $ */
+ 
+-#define _GNU_SOURCE
+ #include "php.h"
+ #include "php_globals.h"
+ #include "php_network.h"
+Only in php-5.2.13/main/streams: cast.c.orig
+diff -ur php-5.2.13.orig/main/streams/memory.c php-5.2.13/main/streams/memory.c
+--- php-5.2.13.orig/main/streams/memory.c	2010-01-03 09:23:27.000000000 +0000
++++ php-5.2.13/main/streams/memory.c	2010-03-06 11:05:46.224766290 +0000
+@@ -18,7 +18,6 @@
+ 
+ /* $Id: memory.c 293036 2010-01-03 09:23:27Z sebastian $ */
+ 
+-#define _GNU_SOURCE
+ #include "php.h"
+ 
+ PHPAPI int php_url_decode(char *str, int len);
+Only in php-5.2.13/main/streams: memory.c.orig
+diff -ur php-5.2.13.orig/main/streams/streams.c php-5.2.13/main/streams/streams.c
+--- php-5.2.13.orig/main/streams/streams.c	2010-01-06 12:54:53.000000000 +0000
++++ php-5.2.13/main/streams/streams.c	2010-03-06 11:05:46.226766057 +0000
+@@ -21,7 +21,6 @@
+ 
+ /* $Id: streams.c 293175 2010-01-06 12:54:53Z iliaa $ */
+ 
+-#define _GNU_SOURCE
+ #include "php.h"
+ #include "php_globals.h"
+ #include "php_network.h"
+Only in php-5.2.13/main/streams: streams.c.orig
+diff -ur php-5.2.13.orig/Zend/zend_language_parser.c php-5.2.13/Zend/zend_language_parser.c
+--- php-5.2.13.orig/Zend/zend_language_parser.c	2010-02-24 12:27:31.000000000 +0000
++++ php-5.2.13/Zend/zend_language_parser.c	2010-03-06 11:05:46.229766071 +0000
+@@ -356,6 +356,8 @@
+ #include "zend_API.h"
+ #include "zend_constants.h"
+ 
++#include <string.h>
++
+ 
+ #define YYERROR_VERBOSE
+ #define YYSTYPE znode

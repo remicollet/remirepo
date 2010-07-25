@@ -1,0 +1,11 @@
+--- php-5.2.7/Makefile.global.orig	2008-12-05 07:37:27.000000000 +0100
++++ php-5.2.7/Makefile.global	2008-12-05 07:37:55.000000000 +0100
+@@ -67,7 +67,7 @@
+ 		done; \
+ 	fi
+ 
+-PHP_TEST_SETTINGS = -d 'open_basedir=' -d 'output_buffering=0' -d 'memory_limit=-1'
++PHP_TEST_SETTINGS = -n -d 'open_basedir=' -d 'output_buffering=0' -d 'memory_limit=-1'
+ PHP_TEST_SHARED_EXTENSIONS =  ` \
+ 	if test "x$(PHP_MODULES)" != "x"; then \
+ 		for i in $(PHP_MODULES)""; do \

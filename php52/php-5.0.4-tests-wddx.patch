@@ -1,0 +1,26 @@
+
+The wddx tests presume that "2040-06-12T04:32:12" cannot be parsed;
+that's only true on platforms with a 32-bit time_t.
+
+--- php-5.0.5/ext/wddx/tests/001.phpt.tests-wddx
++++ php-5.0.5/ext/wddx/tests/001.phpt
+@@ -18,7 +18,7 @@
+   ["aDateTime2"]=>
+   int(329632332)
+   ["aDateTime3"]=>
+-  string(22) "2040-06-12T04:32:12+00"
++  string(12) "NotADateTime"
+   ["aBoolean"]=>
+   bool(true)
+   ["anArray"]=>
+--- php-5.0.5/ext/wddx/tests/wddx.xml.tests-wddx
++++ php-5.0.5/ext/wddx/tests/wddx.xml
+@@ -20,7 +20,7 @@
+                          <dateTime>1980-06-12T04:32:12+00</dateTime>
+                      </var>
+                      <var name='aDateTime3'>
+-                         <dateTime>2040-06-12T04:32:12+00</dateTime>
++                         <dateTime>NotADateTime</dateTime>
+                      </var>
+                      <var name='aBoolean'>
+                          <boolean value='true'/>
