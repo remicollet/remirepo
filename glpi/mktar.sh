@@ -5,7 +5,7 @@ if [ "$1" = "" ]; then
 	exit 1
 fi
 
-svn export -r $1 https://forge.indepnet.net/svn/glpi/trunk glpi
+svn export -r $1 https://forge.indepnet.net/svn/glpi/branches/0.78-bugfixes glpi
 rm -rf glpi/tools
 mv glpi/install/mysql/glpi-0.78-empty.sql .
 rm -f glpi/install/mysql/*.sql

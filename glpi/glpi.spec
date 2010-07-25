@@ -5,7 +5,7 @@
 %endif
 
 %global tarballversion 0.78
-%global svnrelease 11874
+%global svnrelease 11932
 
 Name:           glpi
 Version:        0.78
@@ -245,6 +245,9 @@ fi
 
 
 %changelog
+* Sun Jul 25 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11932
+- new svn snapshot
+
 * Wed Jul 07 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11874
 - new svn snapshot (which is RC2)
 
