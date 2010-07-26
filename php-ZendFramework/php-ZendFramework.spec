@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.10.5
+Version:         1.10.6
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -627,40 +627,46 @@ cd ..
 
 
 %changelog
-* Sun Jun 13 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.10.5-1
+* Mon Jul 26 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10.6-1
+- rebuild for remi repository
+
+* Sun Jul 25 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10.6-1
+- update to 1.10.6 containing over 30 bugfixes
+
+* Sun Jun 13 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10.5-1
 - rebuild for remi repository
 
 * Sat Jun 12 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10.5-1
 - update to 1.10.5 which contains over 60 bugfixes
 
-* Fri May 13 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.10.4-1
+* Fri May 13 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10.4-1
 - rebuild for remi repository
 
 * Thu May 13 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10.4-1
 - about 180 bugfixes since 1.10.2 (http://framework.zend.com/changelog/1.10.4)
 - fixes ZF2010-07: Potential Security Issues in Bundled Dojo Library
 
-* Thu Mar  5 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.10.2-1
+* Thu Mar  5 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10.2-1
 - rebuild for remi repository
 
 * Wed Mar 03 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10.2-1
 - 1.10.2
 - over 50 bugfixes since 1.10.1 (which in turn had over 50 bugfixes)
 
-* Sat Feb 06 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.10-1
+* Sat Feb 06 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10-1
 - rebuild for remi repository
 
 * Sun Jan 31 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10-1
 - 1.10
 - new components: Barcode, Oauth, Markup, Serializer
 
-* Sat Jan 16 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.9.7-1
+* Sat Jan 16 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.9.7-1
 - rebuild for remi repository
 
 * Thu Jan 14 2010 Alexander Kahl <akahl@imttechnologies.com> - 1.9.7-1
 - update to bugfix / security release 1.9.7 
 
-* Fri Dec 18 2009 Remi Collet <Fedora@FamilleCollet.com> - 1.9.6-2
+* Fri Dec 18 2009 Remi Collet <RPMS@FamilleCollet.com> - 1.9.6-2
 - rebuild for remi repository
 
 * Tue Dec 08 2009 Felix Kaechele <felix@fetzig.org> - 1.9.6-2
@@ -669,14 +675,14 @@ cd ..
 * Mon Nov 30 2009 Felix Kaechele <heffer@fedoraproject.org> - 1.9.6-1
 - update to 1.9.6
 
-* Thu Nov 19 2009 Remi Collet <Fedora@FamilleCollet.com> - 1.9.5-1
+* Thu Nov 19 2009 Remi Collet <RPMS@FamilleCollet.com> - 1.9.5-1
 - rebuild for remi repository
 
 * Sun Nov 15 2009 Felix Kaechele <felix@fetzig.org> - 1.9.5-1
 - update to 1.9.5
 - removed test subpackage as it can never comply to font packaging guidelines
 
-* Sat Nov 14 2009 Remi Collet <Fedora@FamilleCollet.com> - 1.9.3-1.PL1
+* Sat Nov 14 2009 Remi Collet <RPMS@FamilleCollet.com> - 1.9.3-1.PL1
 - rebuild for remi repository
 - enable Oracle and Sqlite sub package
 
