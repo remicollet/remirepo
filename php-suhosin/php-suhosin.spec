@@ -44,7 +44,14 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 
 %check
+# For log only (failure don't break build)
 NO_INTERACTION=1 make test
+
+# Minimal load test (break build if fails)
+php --no-php-ini \
+    --define extension_dir=modules \
+    --define extension=suhosin.so \
+    --modules | grep -i suhosin
 
 
 %clean
