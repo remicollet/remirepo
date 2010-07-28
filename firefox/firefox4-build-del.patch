@@ -1,0 +1,11 @@
+--- mozilla-central/layout/generic/nsFrame.h.del	2010-07-28 08:52:27.638525808 +0200
++++ mozilla-central/layout/generic/nsFrame.h	2010-07-28 08:52:33.404150969 +0200
+@@ -151,7 +151,7 @@
+   // Left undefined; nsFrame objects are never allocated from the heap.
+   void* operator new(size_t sz) CPP_THROW_NEW;
+ 
+-protected:
++public:
+   // Overridden to prevent the global delete from being called, since
+   // the memory came out of an arena instead of the heap.
+   //

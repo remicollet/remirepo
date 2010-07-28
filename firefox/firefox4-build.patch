@@ -1,0 +1,23 @@
+diff -up mozilla-central/security/manager/Makefile.in.build mozilla-central/security/manager/Makefile.in
+--- mozilla-central/security/manager/Makefile.in.build	2010-07-21 02:52:39.000000000 +0200
++++ mozilla-central/security/manager/Makefile.in	2010-07-28 08:43:37.494150702 +0200
+@@ -181,7 +181,6 @@ DEFAULT_GMAKE_FLAGS += NSPR_INCLUDE_DIR=
+ DEFAULT_GMAKE_FLAGS += NSPR_LIB_DIR=$(NSPR_LIB_DIR)
+ DEFAULT_GMAKE_FLAGS += MOZILLA_CLIENT=1
+ DEFAULT_GMAKE_FLAGS += NO_MDUPDATE=1
+-DEFAULT_GMAKE_FLAGS += NSS_ENABLE_ECC=1
+ DEFAULT_GMAKE_FLAGS += NSINSTALL="$(NSINSTALL)"
+ ifndef MOZ_NATIVE_SQLITE
+ DEFAULT_GMAKE_FLAGS += SQLITE_LIB_NAME=mozsqlite3
+diff -up mozilla-central/security/manager/ssl/src/Makefile.in.build mozilla-central/security/manager/ssl/src/Makefile.in
+--- mozilla-central/security/manager/ssl/src/Makefile.in.build	2010-07-21 02:52:39.000000000 +0200
++++ mozilla-central/security/manager/ssl/src/Makefile.in	2010-07-28 08:36:19.128540997 +0200
+@@ -113,8 +113,6 @@ CSRCS += md4.c
+ 
+ EXTRA_DEPS = $(NSS_DEP_LIBS)
+ 
+-DEFINES += -DNSS_ENABLE_ECC
+-
+ # Use local includes because they are inserted before INCLUDES
+ # so that Mozilla's nss.h is used, not glibc's
+ LOCAL_INCLUDES += $(NSS_CFLAGS)
