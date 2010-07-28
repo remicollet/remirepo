@@ -145,6 +145,7 @@ BuildRequires:  libXrender-devel
 BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  autoconf213
+BuildRequires:  mesa-libGL-devel
 
 %if %{fedora} >= 7
 Requires:       system-bookmarks
