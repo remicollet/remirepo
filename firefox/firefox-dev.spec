@@ -25,12 +25,12 @@
 
 %global relcan b2
 %global firefox firefox
-%global mycomment  Beta 2 (build1)
+%global mycomment  Beta 2
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.1.beta2.build1%{?dist}
+Release:        0.2.beta2%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -291,7 +291,7 @@ DESTDIR=$RPM_BUILD_ROOT make install
 
 %{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
 
-sed -e 's/^Name=.*/Name=Firefox %{version}%{?relcan} %{?mycomment}/' \
+sed -e 's/^Name=.*/Name=Firefox %{version} %{?mycomment}/' \
     -e "s/firefox/%{name}/" \
     %{SOURCE20} | tee %{name}.desktop
 
@@ -534,6 +534,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Jul 28 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.2.beta2
+- update to 4.0b2
+
+* Wed Jul 28 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.1.beta2.build1
+- update to 4.0b2 build1
+
 * Sat Jul 24 2010 Remi Collet <rpms@famillecollet.com> - 3.6.8-1
 - update to Firefox 3.6.8
 
