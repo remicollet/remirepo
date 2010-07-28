@@ -1,0 +1,90 @@
+#!/bin/sh
+
+getxpi() {
+	if [ x$1 = x ]
+	then	
+		echo "ERREUR : Numero de version absent !"
+	else 	
+		if [ x$1 = xtrunk ]
+		then	URL=http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-trunk-l10n/linux-xpi/
+		elif [ x$2 = x ]
+		then	URL=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/$1/linux-i686/xpi
+		else	URL=ftp://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/$1-candidates/$2/linux-i686/xpi/
+		fi
+		# 74 extensions (25+25+24)
+		for i in af ar as be bg bn-BD bn-IN ca cs cy da de el en-GB eo es-AR es-CL es-ES es-MX et eu fa fi fr fy-NL \
+			ga-IE gl gu-IN he hi-IN hr hu id is it ja ka kk kn ko ku lt lv mk ml mn mr nb-NO nl nn-NO \
+			oc or pa-IN pl pt-BR pt-PT rm ro ru si sk sl sq sr sv-SE ta-LK ta te th tr uk vi zh-CN zh-TW
+		do 	echo -en "$i\t"
+			[ -f $i.xpi ] && echo "already downloaded"
+			[ -f $i.xpi ] || wget -nv $URL/$i.xpi
+		done
+	fi
+}
+
+checkxpi() {
+	[ -d tmp ] && rm -rf tmp/* || mkdir tmp
+
+	for i in *.xpi
+	do	j=$(basename $i .xpi)
+		unzip -q $i -d tmp/$j
+	done
+
+	xmlwf tmp/*/install.rdf
+}
+packxpi() {
+	if [ x$1 = x ]
+	then	
+		echo "ERREUR : langue absente !"
+	elif [ ! -d tmp/$1 ]
+	then
+		echo "ERREUR : langue $1 absente !"
+	else 	
+		echo Création de $1.xpi
+		mv $1.xpi /tmp
+		cd tmp/$1
+		zip ../../$1.xpi install.rdf chrome/* chrome.manifest
+	fi
+}
+donexpi() {
+	if [ x$1 = x ]
+	then
+		echo "ERREUR : Numero de version absent !"
+
+	elif [ x$1 = xtrunk ]
+	then
+		echo "Création de /home/rpmbuild/SOURCES/firefox-langpacks-trunk.tar.bz2"
+		tar cvjf /home/rpmbuild/SPECS/remirepo/firefox/firefox-langpacks-trunk.tar.bz2 \
+			--exclude tmp -C /tmp firefox-langpacks
+	else 	
+		echo "Création de /home/rpmbuild/SPECS/remirepo/firefox/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2"
+		tar cvjf /home/rpmbuild/SPECS/remirepo/firefox/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2 \
+			--exclude tmp -C /tmp firefox-langpacks
+	fi
+}
+case "$1" in
+dir)	dir=/tmp/firefox-langpacks
+	if [ -d $dir ]
+	then
+		echo $dir exists
+	else
+		mkdir $dir && echo $dir created
+	fi
+	;;
+get)	getxpi $2 $3
+	;;
+check)	checkxpi
+	;;
+pack)	packxpi $2
+	;;
+done)	donexpi $2
+	;;
+*)	echo -e "\nusage $0 action\n"
+	echo -e "\t dir"
+	echo -e "\t get version [ rc# ]"
+	echo -e "\t check"
+	echo -e "\t pack langue"
+	echo -e "\t done version"
+	echo ""
+	;;
+esac
