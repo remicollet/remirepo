@@ -45,7 +45,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.3.3
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -99,8 +99,8 @@ BuildRequires: sqlite-devel >= 3.5.9
 %endif
 BuildRequires: sqlite2-devel >= 2.8.0
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
-%if 0%{?fedora} >= 8
-BuildRequires: pcre-devel >= 7.3
+%if 0%{?fedora} >= 10
+BuildRequires: pcre-devel >= 7.8
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 Obsoletes: php-dbg, php3, phpfi, stronghold-php
@@ -689,7 +689,7 @@ ln -sf ../configure
 	--with-iconv \
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
-%if 0%{?fedora} >= 8
+%if 0%{?fedora} >= 10
         --with-pcre-regex=%{_prefix} \
 %endif
 	--with-zlib \
@@ -1184,12 +1184,16 @@ fi
 %endif
 
 %changelog
-* Thu Jul 22 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-1.###.remi
+* Fri Jul 30 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-1.1
+- use system pcre only on fedora >= 10 (version 7.8)
+- rebuild
+
+* Thu Jul 22 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-1.
 - update to 5.3.3
 - add php-fpm sub-package
 - systzdata-v7.patch
 
-* Tue Apr 26 2010 Remi Collet <rpms@famillecollet.com> 5.3.2-2.###.remi
+* Tue Apr 26 2010 Remi Collet <rpms@famillecollet.com> 5.3.2-2
 - garbage collector upstream  patches
 
 * Thu Mar  5 2010 Remi Collet <rpms@famillecollet.com> 5.3.2-1.###.remi
