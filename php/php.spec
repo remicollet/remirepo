@@ -1184,6 +1184,8 @@ fi
 %endif
 
 %changelog
+- use SIGUSR2 for service reload
+
 * Fri Jul 30 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-1.1
 - use system pcre only on fedora >= 10 (version 7.8)
 - rebuild

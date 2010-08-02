@@ -47,6 +47,13 @@ restart () {
         start
 }
 
+reload () {
+	echo -n $"Reloading $prog: "
+	killproc -p ${pidfile} php-fpm -USR2
+	RETVAL=$?
+	echo
+}
+
 
 # See how we were called.
 case "$1" in
@@ -60,8 +67,11 @@ case "$1" in
 	status -p ${pidfile} php-fpm
 	RETVAL=$?
 	;;
-  restart|reload|force-reload)
+  restart)
 	restart
+	;;
+  reload|force-reload)
+	reload
 	;;
   condrestart|try-restart)
 	[ -f ${lockfile} ] && restart || :
