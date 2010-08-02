@@ -30,7 +30,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        3.6.8
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -528,6 +528,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Aug 02 2010 Remi Collet <rpms@famillecollet.com> - 3.6.8-1.1
+- rebuild
+
 * Sat Jul 24 2010 Remi Collet <rpms@famillecollet.com> - 3.6.8-1
 - update to Firefox 3.6.8
 
