@@ -15,7 +15,7 @@
 %define version_internal 1.0b2
 %define progdir %{_libdir}/%{name}-%{version_internal}pre
 %define thunderbird_internal 3.1
-%define thunderbird_version  3.1.1
+%define thunderbird_version  3.1.2
 %define libnotify_version 0.4
 %define thundir %{_libdir}/thunderbird-%{thunderbird_internal}
 
@@ -25,7 +25,7 @@
 
 Name:           sunbird
 Version:        1.0
-Release:        0.27%{?dist}
+Release:        0.28%{?dist}
 Summary:        Calendar application built upon Mozilla toolkit
 
 Group:          Applications/Productivity
@@ -317,6 +317,10 @@ fi
 
 
 %changelog
+* Fri Aug 06 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.28
+- Rebuild against Thunderbird 3.1.2
+- add fixlang.php
+
 * Wed Jul 21 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.27
 - Rebuild against Thunderbird 3.1.1
 
