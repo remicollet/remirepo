@@ -26,7 +26,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        3.1.1
+Version:        3.1.2
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -41,7 +41,7 @@ Source0:        %{tarball}
 #NoSource:       0
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100721.tar.bz2
+Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100806.tar.bz2
 %endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -262,8 +262,6 @@ DESTDIR=$RPM_BUILD_ROOT make install
 
 # install icons
 cd -
-%{__cp} other-licenses/branding/%{name}/mailicon16.png \
-        $RPM_BUILD_ROOT/%{mozappdir}/icons/
 %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps
 %{__cp} other-licenses/branding/%{name}/mailicon16.png \
         $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps/thunderbird.png
@@ -446,7 +444,6 @@ fi
 %{mozappdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
 %dir %{mozappdir}/langpacks
 %{mozappdir}/greprefs
-%{mozappdir}/icons
 %{mozappdir}/isp
 %{mozappdir}/mozilla-xremote-client
 %{mozappdir}/open-browser.sh
@@ -454,7 +451,6 @@ fi
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/thunderbird-bin
 %{mozappdir}/thunderbird
-%{mozappdir}/updater
 %{mozappdir}/*.so
 %dir %{mozappdir}/modules
 %{mozappdir}/modules/*.jsm
@@ -465,10 +461,8 @@ fi
 %{mozappdir}/modules/activity/*.js
 %{mozappdir}/README.txt
 %{mozappdir}/platform.ini
-%{mozappdir}/updater.ini
 %{mozappdir}/application.ini
 %exclude %{mozappdir}/removed-files
-%{mozappdir}/update.locale
 %{_datadir}/icons/hicolor/16x16/apps/thunderbird.png
 %{_datadir}/icons/hicolor/22x22/apps/thunderbird.png
 %{_datadir}/icons/hicolor/24x24/apps/thunderbird.png
@@ -484,6 +478,13 @@ fi
 #===============================================================================
 
 %changelog
+* Fri Aug 06 2010 Remi Collet <rpms@famillecollet.com> 3.1.2-1
+- Thunderbird 3.1.1
+
+* Fri Aug  6 2010 Jan Horak <jhorak@redhat.com> - 3.1.2-1
+- Update to 3.1.2
+- Disable updater
+
 * Wed Jul 21 2010 Remi Collet <rpms@famillecollet.com> 3.1.1-1
 - Thunderbird 3.1.1
 

@@ -1,0 +1,85 @@
+#!/bin/sh
+
+getxpi() {
+	if [ x$1 = x ]
+	then	
+		echo "ERREUR : Numero de version absent !"
+	else 	
+		if [ x$2 = x ]
+		then	URL=http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/$1/linux-i686/xpi
+		else	URL=http://ftp.mozilla.org/pub/mozilla.org/thunderbird/nightly/$1-candidates/$2/linux-xpi
+		fi
+		# 52 extensions (13 + 13 + 13 + 13)
+		for i in af ar be bg bn-BD ca cs da de el en-GB es-AR \
+			es-ES et eu fi fr fy-NL	ga-IE gl he hu id is it \
+			ja ka ko lt mk nb-NO nl nn-NO pa-IN pl pt-BR pt-PT ro \
+			ru si sk sl sq sr sv-SE ta-LK tr uk vi zh-CN zh-TW
+		do 	echo -en "$i\t"
+			#wget -nv $URL/$i.xpi
+			[ -f $i.xpi ] && echo "already downloaded"
+			[ -f $i.xpi ] || wget -nv $URL/$i.xpi -O $i.xpi
+			find . -size 0 -exec rm -f {} \;
+		done
+	fi
+}
+
+checkxpi() {
+	[ -d tmp ] && rm -rf tmp/* || mkdir tmp
+
+	for i in *.xpi
+	do	j=$(basename $i .xpi)
+		unzip -q $i -d tmp/$j
+	done
+
+	xmlwf tmp/*/install.rdf && echo xmlwf OK.
+}
+packxpi() {
+	if [ x$1 = x ]
+	then	
+		echo "ERREUR : langue absente !"
+	elif [ ! -d tmp/$1 ]
+	then
+		echo "ERREUR : langue $1 absente !"
+	else 	
+		echo Création de $1.xpi
+		mv $1.xpi /tmp
+		cd tmp/$1
+		zip ../../$1.xpi install.rdf chrome/* chrome.manifest defaults/pref/all-l10n.js dictionaries/*
+	fi
+}
+donexpi() {
+	if [ x$1 = x ]
+	then
+		echo "ERREUR : Numero de version absent !"
+	else 	
+		echo "Création de /home/rpmbuild/SPECS/remirepo/thunderbird/thunderbird-langpacks-$1-$(date +%Y%m%d).tar.bz2"
+		tar cvjf /home/rpmbuild/SPECS/remirepo/thunderbird/thunderbird-langpacks-$1-$(date +%Y%m%d).tar.bz2 \
+			--exclude tmp -C /tmp thunderbird-langpacks
+	fi
+}
+case "$1" in
+dir)	dir=/tmp/thunderbird-langpacks
+	if [ -d $dir ]
+	then
+		echo $dir exists
+	else
+		mkdir $dir && echo $dir created
+	fi
+	;;
+get)	getxpi $2 $3
+	;;
+check)	checkxpi
+	;;
+pack)	packxpi $2
+	;;
+done)	donexpi $2
+	;;
+*)	echo -e "\nusage $0 action\n"
+	echo -e "\t dir"
+	echo -e "\t get version [ rc# ]"
+	echo -e "\t check"
+	echo -e "\t pack langue"
+	echo -e "\t done version"
+	echo ""
+	;;
+esac
