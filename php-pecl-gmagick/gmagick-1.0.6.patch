@@ -1,0 +1,19 @@
+diff -up gmagick-1.0.6b1/gmagick_methods.c.orig gmagick-1.0.6b1/gmagick_methods.c
+--- gmagick-1.0.6b1/gmagick_methods.c.orig	1970-01-01 10:13:08.000000000 +0100
++++ gmagick-1.0.6b1/gmagick_methods.c	2010-08-07 19:40:41.115213222 +0200
+@@ -186,13 +186,13 @@ PHP_METHOD(gmagick, writeimage)
+ 		filename = MagickGetImageFilename(intern->magick_wand);
+ 		
+ 		if (!filename) {
+-			GMAGICK_THROW_EXCEPTION(GMAGICK_CLASS, "No image filename specified");
++			GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICK_CLASS, "No image filename specified", 1);
+ 		}
+ 		filename_len = strlen(filename);
+ 	}
+ 
+ 	if (!filename_len) {
+-		GMAGICK_THROW_EXCEPTION(GMAGICK_CLASS, "Unable to write the image. Empty filename string provided");
++		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICK_CLASS, "Unable to write the image. Empty filename string provided", 1);
+ 	}
+ 	
+ 	if (all_frames) {
