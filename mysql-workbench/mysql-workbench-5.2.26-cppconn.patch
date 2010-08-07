@@ -1,6 +1,6 @@
-diff -up mysql-workbench-ce-5.2.24/configure.in.cppconn mysql-workbench-ce-5.2.24/configure.in
---- mysql-workbench-ce-5.2.24/configure.in.cppconn	2010-06-19 04:40:20.000000000 +0200
-+++ mysql-workbench-ce-5.2.24/configure.in	2010-06-23 20:07:19.190367417 +0200
+diff -up mysql-workbench-gpl-5.2.26/configure.in.cppconn mysql-workbench-gpl-5.2.26/configure.in
+--- mysql-workbench-gpl-5.2.26/configure.in.cppconn	2010-08-05 15:33:27.000000000 +0200
++++ mysql-workbench-gpl-5.2.26/configure.in	2010-08-07 08:11:56.906643649 +0200
 @@ -462,8 +462,6 @@ res/mysql.profiles/Makefile
  res/sqlidedata/Makefile
  ext/Makefile
@@ -10,18 +10,18 @@ diff -up mysql-workbench-ce-5.2.24/configure.in.cppconn mysql-workbench-ce-5.2.2
  backend/Makefile
  backend/wbpublic/Makefile
  backend/wbprivate/Makefile
-diff -up mysql-workbench-ce-5.2.24/ext/Makefile.am.cppconn mysql-workbench-ce-5.2.24/ext/Makefile.am
---- mysql-workbench-ce-5.2.24/ext/Makefile.am.cppconn	2010-06-23 20:08:40.950491999 +0200
-+++ mysql-workbench-ce-5.2.24/ext/Makefile.am	2010-06-19 04:40:18.000000000 +0200
+diff -up mysql-workbench-gpl-5.2.26/ext/Makefile.am.cppconn mysql-workbench-gpl-5.2.26/ext/Makefile.am
+--- mysql-workbench-gpl-5.2.26/ext/Makefile.am.cppconn	2010-08-05 15:33:23.000000000 +0200
++++ mysql-workbench-gpl-5.2.26/ext/Makefile.am	2010-08-07 08:11:56.907643461 +0200
 @@ -4,4 +4,4 @@ else
  ctemplate_dirs=ctemplate 
  endif
  
 -SUBDIRS=scintilla/gtk cppconn $(ctemplate_dirs)
 +SUBDIRS=scintilla/gtk $(ctemplate_dirs)
-diff -up mysql-workbench-ce-5.2.24/ext/Makefile.in.cppconn mysql-workbench-ce-5.2.24/ext/Makefile.in
---- mysql-workbench-ce-5.2.24/ext/Makefile.in.cppconn	2010-06-19 04:40:24.000000000 +0200
-+++ mysql-workbench-ce-5.2.24/ext/Makefile.in	2010-06-23 20:09:17.544511184 +0200
+diff -up mysql-workbench-gpl-5.2.26/ext/Makefile.in.cppconn mysql-workbench-gpl-5.2.26/ext/Makefile.in
+--- mysql-workbench-gpl-5.2.26/ext/Makefile.in.cppconn	2010-08-05 15:33:32.000000000 +0200
++++ mysql-workbench-gpl-5.2.26/ext/Makefile.in	2010-08-07 08:11:56.907643461 +0200
 @@ -53,7 +53,7 @@ RECURSIVE_CLEAN_TARGETS = mostlyclean-re
    distclean-recursive maintainer-clean-recursive
  ETAGS = etags
@@ -40,9 +40,9 @@ diff -up mysql-workbench-ce-5.2.24/ext/Makefile.in.cppconn mysql-workbench-ce-5.
  all: all-recursive
  
  .SUFFIXES:
-diff -up mysql-workbench-ce-5.2.24/library/dbc/src/driver_manager.cpp.cppconn mysql-workbench-ce-5.2.24/library/dbc/src/driver_manager.cpp
---- mysql-workbench-ce-5.2.24/library/dbc/src/driver_manager.cpp.cppconn	2010-06-19 04:40:15.000000000 +0200
-+++ mysql-workbench-ce-5.2.24/library/dbc/src/driver_manager.cpp	2010-06-23 20:07:19.192367230 +0200
+diff -up mysql-workbench-gpl-5.2.26/library/dbc/src/driver_manager.cpp.cppconn mysql-workbench-gpl-5.2.26/library/dbc/src/driver_manager.cpp
+--- mysql-workbench-gpl-5.2.26/library/dbc/src/driver_manager.cpp.cppconn	2010-08-05 15:33:19.000000000 +0200
++++ mysql-workbench-gpl-5.2.26/library/dbc/src/driver_manager.cpp	2010-08-07 08:11:56.907643461 +0200
 @@ -145,6 +145,8 @@ TunnelConnection *DriverManager::getTunn
  ConnectionWrapper DriverManager::getConnection(const db_mgmt_ConnectionRef &connectionProperties, ConnectionInitSlot connection_init_slot)
  {
@@ -71,7 +71,7 @@ diff -up mysql-workbench-ce-5.2.24/library/dbc/src/driver_manager.cpp.cppconn my
  
 -  GModule *gmodule= g_module_open((_driver_path + "/" + library).c_str(), G_MODULE_BIND_LOCAL);
 +  if (p) {
-+    gmodule = g_module_open(std::string(p).append(".4").c_str(), G_MODULE_BIND_LOCAL);
++    gmodule = g_module_open(std::string(p).append(".5").c_str(), G_MODULE_BIND_LOCAL);
 +    g_free(p);
 +  }
 +

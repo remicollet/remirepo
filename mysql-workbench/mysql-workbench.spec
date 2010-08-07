@@ -1,11 +1,11 @@
 #global postver b
 
 %global tartype gpl
-%global cppconnver 1.1.0-0.1.bzr819
+%global cppconnver 1.1.0-0.1.bzr888
 
-Summary: A MySQL visual database modeling tool
+Summary: A MySQL visual database modeling, administration and querying tool.
 Name: mysql-workbench
-Version: 5.2.25
+Version: 5.2.26
 Release: 1%{?dist}
 Group: Applications/Databases
 License: GPLv2
@@ -15,7 +15,7 @@ Source: %{name}-%{tartype}-%{version}%{?postver}.tar.gz
 
 # don't build extension, use system one
 # !!! This patch use versioned soname !!!
-Patch1: %{name}-5.2.24-cppconn.patch
+Patch1: %{name}-5.2.26-cppconn.patch
 Patch2: %{name}-5.2.16-scintilla.patch
 Patch3: %{name}-5.2.22-python.patch
 
@@ -139,6 +139,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sat Aug 07 2010 Remi Collet <RPMS@famillecollet.com> 5.2.26-1
+- update to 5.2.26 Community Edition (GPL)
+
 * Thu Jul 01 2010 Remi Collet <RPMS@famillecollet.com> 5.2.25-1
 - update to 5.2.25 Community Edition (GPL)
 
