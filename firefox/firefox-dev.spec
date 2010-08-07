@@ -1,5 +1,5 @@
-%define nspr_version 4.8
-%define nss_version 3.12.6
+%define nspr_version 4.8.6
+%define nss_version 3.12.8
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
 %define lcms_version 1.18
@@ -23,14 +23,14 @@
 %define nightly .cvs%{cvsdate}
 %endif
 
-%global relcan b2
+%global relcan b3
 %global firefox firefox
-%global mycomment  Beta 2
+%global mycomment  Beta 3 (build3 candidate)
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.2.beta2%{?dist}
+Release:        0.3.beta3.build3%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100728.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100807.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -111,10 +111,10 @@ BuildRequires:  wireless-tools-devel
 # BR from Xulrunner
 %if %{fedora} >= 99
 BuildRequires:  sqlite-devel >= %{sqlite_version}
-%endif
-%if %{fedora} >= 11
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
+%endif
+%if %{fedora} >= 11
 BuildRequires:  hunspell-devel
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
@@ -200,12 +200,12 @@ ac_add_options --prefix="\$PREFIX"
 ac_add_options --libdir="\$LIBDIR"
 %if %{fedora} >= 99
 ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
 ac_add_options --enable-system-sqlite
 %endif
 %if %{fedora} >= 13
 %endif
 %if %{fedora} >= 11
-ac_add_options --with-system-nss
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-cairo
 %endif
@@ -244,6 +244,7 @@ ac_add_options --enable-startup-notification
 ac_add_options --disable-javaxpcom
 ac_add_options --disable-crashreporter
 ac_add_options --enable-safe-browsing
+ac_add_options --disable-updater
 #ac_add_options --enable-extensions=default,python/xpcom
 %if %{official_branding}
 ac_add_options --enable-official-branding
@@ -448,6 +449,7 @@ echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 %post
+chcon -t textrel_shlib_t %{mozappdir}/libxul.so &>/dev/null || :
 update-desktop-database &> /dev/null || :
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 if [ -x %{_bindir}/gtk-update-icon-cache ]; then
@@ -519,8 +521,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/application.ini
 #%{mozappdir}/.autoreg
-# XXX See if these are needed still
-%{mozappdir}/update*
 %exclude %{mozappdir}/removed-files
 %exclude %{_includedir}/firefox-%{internal_version}
 %exclude %{_libdir}/firefox-devel-%{internal_version}
@@ -535,6 +535,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Aug 07 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.3.beta3.build3
+- update to 4.0b3 build3
+
 * Wed Jul 28 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.2.beta2
 - update to 4.0b2
 
