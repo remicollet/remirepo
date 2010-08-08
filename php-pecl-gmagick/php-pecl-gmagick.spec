@@ -7,14 +7,13 @@
 
 Summary:	Provides a wrapper to the GraphicsMagick library
 Name:		php-pecl-%{pecl_name}
-Version:	1.0.6
+Version:	1.0.7
 Release:	0.1.%{prever}%{?dist}
 License:	PHP
 Group:		Development/Libraries
 URL:		http://pecl.php.net/package/gmagick
 Source0:	http://pecl.php.net/get/gmagick-%{version}%{?prever}.tgz
 
-Patch0:      	gmagick-1.0.6.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:	php-pear >= 1.4.7
@@ -41,8 +40,10 @@ images using the GraphicsMagick API.
 %setup -qc
 cd %{pecl_name}-%{version}%{?prever}
 
-%patch0 -p1 -b .orig
 chmod 0644 README
+
+# See : http://pecl.php.net/bugs/18002
+sed -i -e /PHP_GMAGICK_VERSION/s/1.0.6b1/1.0.7b1/ php_gmagick.h
 
 
 %build
@@ -88,12 +89,17 @@ fi
 %endif
 
 %check
-# simple module load test
 cd %{pecl_name}-%{version}%{?prever}
+# simple module load test
 php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
+# simple version info check
+php --no-php-ini \
+    --define extension_dir=modules \
+    --define extension=%{pecl_name}.so \
+    --info | grep "gmagick version" | grep %{version}%{?prever}
 
 
 %files
@@ -105,9 +111,14 @@ php --no-php-ini \
 
 
 %changelog
+* Sun Aug 08 2010 Remi Collet <rpms@famillecollet.com> 1.0.7-0.1.b1
+- Update to 1.0.7b1 for remi repo
+- remove patch for http://pecl.php.net/bugs/17991
+- add fix for http://pecl.php.net/bugs/18002
+
 * Sat Aug 07 2010 Remi Collet <rpms@famillecollet.com> 1.0.6-0.1.b1
 - Update to 1.0.6b1 for remi repo
-- add patch for http://pecl.php.net/bugs/bug.php?id=17991
+- add patch for http://pecl.php.net/bugs/17991
 
 * Mon Jul 26 2010 Remi Collet <rpms@famillecollet.com> 1.0.5-0.1.b1
 - Update to 1.0.5b1 for remi repo
