@@ -2,5 +2,10 @@ mysql-connector-c++
 -------------------
 
 Package in progress
-Not yet available in fedora.
+
+The bazaar snaphot is required by MySQL Workbench.
+
+Review for fedora official repository is pending
+https://bugzilla.redhat.com/622272
+
 

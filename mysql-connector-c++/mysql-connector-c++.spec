@@ -55,8 +55,8 @@ These are the files needed to compile programs using MySQL Connector/C++.
 %prep
 %setup -q
 
-sed -i -e 's/lib$/%{_lib}/' driver/CMakeLists.txt
-
+%{__sed} -i -e 's/lib$/%{_lib}/' driver/CMakeLists.txt
+%{__chmod} -x examples/*.cpp examples/*.txt
 %{cmake}
 
 
@@ -93,7 +93,6 @@ rm -rf %{buildroot}
 %doc ANNOUNCEMEN* COPYING README CHANGES
 %{_libdir}/libmysqlcppconn.so.*
 %exclude %{_libdir}/libmysqlcppconn-static.a
-#%exclude %{_prefix}/ANNOUNCEMEN*
 %exclude %{_prefix}/COPYING
 %exclude %{_prefix}/README
 
@@ -106,8 +105,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sat Aug 06 2010 Remi Collet <RPMS@famillecollet.com> 1.1.0-0.1.bzr888
-- update to 1.1.0 from bzr snapshot 888
+* Sun Aug 08 2010 Remi Collet <Fedora@famillecollet.com> 1.1.0-0.1.bzr888
+- update to 1.1.0 from bzr snapshot 888 (for Workbench 5.2.26)
+- initial package for fedora review
 
 * Fri Jun 04 2010 Remi Collet <RPMS@famillecollet.com> 1.1.0-0.1.bzr819
 - update to 1.1.0 from bzr snapshot 819
