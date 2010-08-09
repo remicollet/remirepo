@@ -57,10 +57,10 @@ These are the files needed to compile programs using MySQL Connector/C++.
 
 %{__sed} -i -e 's/lib$/%{_lib}/' driver/CMakeLists.txt
 %{__chmod} -x examples/*.cpp examples/*.txt
-%{cmake}
 
 
 %build
+%{cmake}
 %{__make}
 
 
