@@ -4,7 +4,7 @@
 Summary:    MySQL database connector for C++
 Name:       mysql-connector-c++
 Version:    1.1.0
-Release:    0.1.bzr%{?bzr}%{?dist}
+Release:    0.2.bzr%{?bzr}%{?dist}
 Group:      System Environment/Libraries
 License:    GPLv2 with exceptions
 
@@ -13,7 +13,8 @@ URL:        http://forge.mysql.com/wiki/Connector_C++
 
 %if 0%{?bzr}
 # bzr branch -r 888 lp:~mysql/mysql-connector-cpp/trunk mysql-connector-c++-1.1.0
-# less mysql-connector-c++-1.1.0/driver/mysql_metadata.cpp => getDriverMajorVersion / getDriverMinorVersion / getDriverPatchVersion
+# less mysql-connector-c++-1.1.0/driver/mysql_metadata.cpp 
+# check getDriverMajorVersion / getDriverMinorVersion / getDriverPatchVersion
 # tar czf mysql-connector-c++-bzr888.tgz --exclude .bzr mysql-connector-c++-1.1.0
 # rm -rf mysql-connector-c++-1.1.0
 Source0:    mysql-connector-c++-bzr%{bzr}.tgz
@@ -58,9 +59,14 @@ These are the files needed to compile programs using MySQL Connector/C++.
 %{__sed} -i -e 's/lib$/%{_lib}/' driver/CMakeLists.txt
 %{__chmod} -x examples/*.cpp examples/*.txt
 
+# Save examples to keep directory clean (for doc)
+%{__mkdir} _doc_examples
+%{__cp} -pr examples _doc_examples
+
 
 %build
-%{cmake}
+%{cmake} -DMYSQLCPPCONN_BUILD_EXAMPLES:BOOL=0
+
 %{__make}
 
 
@@ -98,13 +104,16 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-,root,root,-)
-%doc examples/README examples/CMakeLists.txt examples/*.cpp examples/*.h
+%doc _doc_examples/examples
 %{_libdir}/libmysqlcppconn.so
 %{_includedir}/mysql*
 %{_includedir}/cppconn
 
 
 %changelog
+* Mon Aug 09 2010 Remi Collet <Fedora@famillecollet.com> 1.1.0-0.2.bzr888
+- Changes from review (#622272)
+
 * Sun Aug 08 2010 Remi Collet <Fedora@famillecollet.com> 1.1.0-0.1.bzr888
 - update to 1.1.0 from bzr snapshot 888 (for Workbench 5.2.26)
 - initial package for fedora review
