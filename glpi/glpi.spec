@@ -5,7 +5,7 @@
 %endif
 
 %global tarballversion 0.78
-%global svnrelease 11932
+%global svnrelease 12085
 
 Name:           glpi
 Version:        0.78
@@ -245,6 +245,9 @@ fi
 
 
 %changelog
+* Tue Aug 10 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn12085
+- new svn snapshot
+
 * Sun Jul 25 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11932
 - new svn snapshot
 

@@ -1,5 +1,5 @@
 %global pluginname   pdf
-%global svnrelease   189
+%global svnrelease   190
 
 Name:           glpi-pdf
 Version:        0.7.0
@@ -16,8 +16,8 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/wiki/pdf/
 
 %if 0%{?svnrelease}
-# svn export -r 189 https://forge.indepnet.net/svn/pdf/trunk pdf
-# tar czf glpi-pdf-0.7.0-189.tar.gz pdf
+# svn export -r 190 https://forge.indepnet.net/svn/pdf/trunk pdf
+# tar czf glpi-pdf-0.7.0-190.tar.gz pdf
 Source0:        glpi-pdf-0.7.0-%{svnrelease}.tar.gz
 %else
 Source0:        https://forge.indepnet.net/attachments/download/171/glpi-pdf-0.6.1.tar.gz
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 10 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.7.0-0.1.svn190
+- new snapshot
+
 * Thu Jul 08 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.7.0-0.1.svn189
 - new snapshot
 

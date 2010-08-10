@@ -1,5 +1,5 @@
 %global pluginname   webservices
-%global svnrelease   173
+%global svnrelease   174
 
 Name:           glpi-webservices
 Version:        1.0.0
@@ -16,8 +16,8 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/webservices
 
 %if 0%{?svnrelease}
-# svn export -r 173 https://forge.indepnet.net/svn/webservices/trunk webservices
-# tar czf glpi-webservices-1.0.0-173.tar.gz webservices
+# svn export -r 174 https://forge.indepnet.net/svn/webservices/trunk webservices
+# tar czf glpi-webservices-1.0.0-174.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
 Source0:        https://forge.indepnet.net/attachments/download/528/glpi-webservices-0.4.0.tar.gz
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 10 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-0.1.svn174
+- new snapshot
+
 * Wed Jul 07 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-0.1.svn173
 - new snapshot
 
