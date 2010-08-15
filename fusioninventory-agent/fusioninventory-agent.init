@@ -1,0 +1,94 @@
+#!/bin/bash
+#
+# chkconfig: 345 88 12
+# description:	FusionInventory Agent
+# processname: fusioninventory-agent
+# config: /etc/sysconfig/fusioninventory-agent.pid
+# pidfile: /var/run/fusioninventory-agent.pid
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+RETVAL=0
+desc="FusionInventory Agent"
+prog=fusioninventory-agent
+lockfile=/var/lock/subsys/$prog
+pidfile=/var/run/$prog.pid
+logfile=/var/log/$prog/$prog.log
+
+# pull in sysconfig settings
+[ -r /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+	# Read configuration
+	i=0
+	OPTS=
+	while [ $i -lt ${#OCSMODE[*]} ]
+	do
+		if [ ${OCSMODE[$i]:-none} == daemon ]; then
+			if [ ! -z "${OCSTAG[$i]}" ]; then
+				OPTS="$OPTS --tag=${OCSTAG[$i]}"
+			fi
+			if [ "z${OCSSERVER[$i]}" = 'zlocal' ]; then
+				# Local inventory
+				OPTS="$OPTS --local=/var/lib/$prog"
+			elif [ ! -z "${OCSSERVER[$i]}" ]; then
+				# Remote inventory
+				OPTS="$OPTS --server=${OCSSERVER[$i]}"
+			fi
+		fi
+		((i++))
+	done
+	if [ -n "$OPTS" ]; then
+		echo -n $"Starting $prog: "
+		daemon $prog $FUSINVOPT --logfile=$logfile --daemon $OPTS
+		RETVAL=$?
+		echo
+	else
+		RETVAL=1
+	fi
+	[ $RETVAL -eq 0 ] && touch $lockfile
+}
+
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
+	echo -n $"Stopping $prog: "
+	killproc $prog
+	RETVAL=$?
+	echo
+	if [ $RETVAL -eq 0 ] ; then
+	    rm -f $lockfile $pidfile
+	fi
+}
+
+case "$1" in
+  start)
+	do_start
+	;;
+  stop)
+	do_stop
+	;;
+  status)
+	status $prog
+	;;
+  restart|reload|force-reload)
+	do_stop
+	do_start
+	;;
+  condrestart)
+	[ -f $lockfile ] && do_stop && do_start || :
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+	exit 1
+	;;
+esac
+exit $RETVAL
+

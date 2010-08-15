@@ -1,0 +1,37 @@
+#!/bin/bash
+NAME=fusioninventory-agent
+LOG=/var/log/$NAME/$NAME.log
+
+exec >>$LOG 2>&1
+
+[ -f   /etc/sysconfig/$NAME ] || exit 0
+source /etc/sysconfig/$NAME
+export PATH
+
+i=0
+while [ $i -lt ${#OCSMODE[*]} ]
+do
+	if [ ${OCSMODE[$i]:-none} == cron ]; then
+		OPTS=
+		if [ ! -z "${OCSPAUSE[$i]}" ]; then
+			OPTS="--wait ${OCSPAUSE[$i]}"
+		fi
+
+		if [ ! -z "${OCSTAG[$i]}" ]; then
+		        OPTS="$OPTS --tag=${OCSTAG[$i]}"
+		fi
+
+		if [ "z${OCSSERVER[$i]}" = 'zlocal' ]; then
+	        	# Local inventory
+	        	OPTS="$OPTS --local=/var/lib/$NAME"
+		elif [ ! -z "${OCSSERVER[$i]}" ]; then
+	        	# Remote inventory
+		        OPTS="$OPTS --lazy --server=${OCSSERVER[$i]}"
+		fi
+		echo "[$(date '+%c')] Running $NAME $OPTS"
+		/usr/bin/$NAME $FUSINVOPT --logfile=$LOG $OPTS
+	fi
+	((i++))
+done
+echo "[$(date '+%c')] End of cron job ($PATH)"
+
