@@ -25,12 +25,12 @@
 
 %global relcan b3
 %global firefox firefox
-%global mycomment  Beta 3 (build3 candidate)
+%global mycomment  Beta 3
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.3.beta3.build3%{?dist}
+Release:        0.4.beta3%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100807.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100815.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -535,6 +535,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Aug 15 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.4.beta3
+- update to 4.0b3 build3
+
 * Sat Aug 07 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.3.beta3.build3
 - update to 4.0b3 build3
 
