@@ -1,5 +1,5 @@
 Name:           perl-FusionInventory-Agent-Task-OcsDeploy
-Version:        1.0.3
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        OCS Inventory NG Software deployment support for FusionInventory Agent
 Summary(fr):    Gestion du déploiement logiciel OCS Inventory NG avec FusionInventory
@@ -7,7 +7,7 @@ License:        GPLv2+
 Group:          Development/Libraries
 
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-agent-task-ocsdeploy
-Source0:        http://forge.fusioninventory.org/attachments/download/48/FusionInventory-Agent-Task-OcsDeploy-1.0.3.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-Task-OcsDeploy-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -87,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Aug 15 2010 Remi Collet <Fedora@famillecollet.com> - 1.0.5-1
+- update to 1.0.5
+
 * Sat May 29 2010 Remi Collet <Fedora@famillecollet.com> - 1.0.3-1
 - update to 1.0.3
 - add filter for Win32 component
