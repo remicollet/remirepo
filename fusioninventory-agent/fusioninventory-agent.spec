@@ -4,15 +4,18 @@ Name:        fusioninventory-agent
 Summary:     FusionInventory agent
 Summary(fr): Agent FusionInventory
 
-Version:   2.0.6
+Version:   2.1
 
 %if 0%{?gitver:1}
 Release:   5.git%{gitver}%{?dist}
 Source0:   fusinv-fusioninventory-agent-2.0.4-20-gf7c5492.tar.gz
 %else
 Release:   1%{?dist}
-Source0:   http://forge.fusioninventory.org/attachments/download/66/FusionInventory-Agent-2.0.6.tar.gz
+Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}.tar.gz
 %endif
+
+# http://github.com/fusinv/fusioninventory-agent/commit/75d7e778c108889cad36b17f06eb876181d9d183
+Patch0:    fusioninventory-agent.patch
 
 Source1:   %{name}.cron
 Source2:   %{name}.init
@@ -37,7 +40,10 @@ Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): /sbin/service
 
-%{?perl_default_filter}
+%{?filter_setup:
+%filter_from_requires /perl(Win32/d
+%?perl_default_filter
+}
 
 
 %description
@@ -84,6 +90,8 @@ Vous pouvez ajouter les paquets additionnels pour les tâches optionnelles :
 %setup -q -n FusionInventory-Agent-%{version}
 %endif
 
+%patch0 -p0
+
 cat <<EOF | tee logrotate
 %{_localstatedir}/log/%{name}/*.log {
     weekly
@@ -102,14 +110,17 @@ cat <<EOF | tee %{name}.conf
 # Add tools directory if needed (tw_cli, hpacucli, ipssend, ...)
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 # Global options
-#FUSINVOPT=--debug
+#FUSINVOPT='--debug --rpc-trust-localhost'
 # Mode, change to "cron" or "daemon" to activate
+# - none (default on install) no activity
+# - cron (inventory only) use the cron.hourly
+# - daemon (recommanded) use the service
 OCSMODE[0]=none
 # OCS server URI
 # OCSSERVER[0]=your.ocsserver.name
 # corresponds with --local=%{_localstatedir}/lib/%{name}
 # OCSSERVER[0]=local
-# Wait before inventory
+# Wait before inventory (for cron mode)
 OCSPAUSE[0]=120
 # Administrative TAG (optional, must be filed before first inventory)
 OCSTAG[0]=
@@ -118,6 +129,7 @@ EOF
 cat <<EOF | tee agent.cfg
 # This file provides global and command line settings
 # For CRON or DAEMON configuration, see %{_sysconfdir}/sysconfig/%{name}
+share-dir=%{perl_vendorlib}/auto/share/dist/FusionInventory-Agent
 basevardir=%{_localstatedir}/lib/%{name}
 logger=Stderr
 server=""
@@ -149,7 +161,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %clean
-rm -rf %{buildroot}
+%{__rm} -rf %{buildroot} %{buildroot}%{_datarootdir}
 
 
 %post
@@ -181,6 +193,7 @@ exit 0
 %{_sysconfdir}/cron.hourly/%{name}
 %{_initrddir}/%{name}
 %{perl_vendorlib}/FusionInventory
+%{perl_vendorlib}/auto
 %{_bindir}/%{name}
 %exclude %{_bindir}/%{name}-config
 %{_mandir}/man1/%{name}*
@@ -190,6 +203,13 @@ exit 0
 
 
 %changelog
+* Mon Aug 16 2010 Remi Collet <Fedora@famillecollet.com> 2.1-1
+- update to 2.1
+- switch download URL back to CPAN
+- add %%{perl_vendorlib}/auto
+- filter perl(Win32*) from Requires
+- add patch (from git) to reopen the file logger if needed
+
 * Sat May 29 2010 Remi Collet <Fedora@famillecollet.com> 2.0.6-1
 - update to 2.0.6
 - swicth download URL to forge

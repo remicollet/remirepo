@@ -45,7 +45,7 @@ do_start()
 	done
 	if [ -n "$OPTS" ]; then
 		echo -n $"Starting $prog: "
-		daemon $prog $FUSINVOPT --logfile=$logfile --daemon $OPTS
+		daemon $prog --logfile=$logfile $FUSINVOPT --daemon $OPTS &>/dev/null
 		RETVAL=$?
 		echo
 	else

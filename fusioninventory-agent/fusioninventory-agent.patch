@@ -1,0 +1,11 @@
+--- lib/FusionInventory/LoggerBackend/File.pm.orig	2010-08-16 18:59:25.573441022 +0200
++++ lib/FusionInventory/LoggerBackend/File.pm	2010-08-16 18:59:44.390565256 +0200
+@@ -57,6 +57,8 @@
+ 
+     return if $message =~ /^$/;
+ 
++    $self->open() unless stat($handle);
++
+     $self->watchSize();
+ 
+     print $handle "[".localtime()."][$level] $message\n";
