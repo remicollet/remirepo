@@ -40,11 +40,13 @@ Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): /sbin/service
 
-%{?filter_setup:
-%filter_from_requires /perl(Win32/d
-%?perl_default_filter
-}
+%{?perl_default_filter}
 
+# This work only on recent fedora
+#{?filter_setup:
+#filter_from_requires /perl(Win32/d
+#?perl_default_filter
+#}
 
 %description
 FusionInventory Agent is an application designed to help a network
@@ -89,6 +91,15 @@ Vous pouvez ajouter les paquets additionnels pour les tâches optionnelles :
 %else
 %setup -q -n FusionInventory-Agent-%{version}
 %endif
+
+cat <<EOF | tee %{name}-req
+#!/bin/sh
+%{__perl_requires} $* | \
+sed -e '/perl(Win32/d'
+EOF
+
+%global __perl_requires %{_builddir}/FusionInventory-Agent-%{version}/%{name}-req
+chmod +x %{__perl_requires}
 
 %patch0 -p0
 
