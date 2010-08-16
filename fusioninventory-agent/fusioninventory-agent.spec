@@ -40,13 +40,17 @@ Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): /sbin/service
 
-%{?perl_default_filter}
 
+%if 0%{?fedora} >= 11
 # This work only on recent fedora
-#{?filter_setup:
-#filter_from_requires /perl(Win32/d
-#?perl_default_filter
-#}
+%{?filter_setup:
+%filter_from_requires /perl(Win32/d
+%?perl_default_filter
+}
+%else 
+%{?perl_default_filter}
+%endif
+
 
 %description
 FusionInventory Agent is an application designed to help a network
