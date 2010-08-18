@@ -94,13 +94,18 @@ Vous pouvez ajouter les paquets additionnels pour les tâches optionnelles :
 %setup -q -n FusionInventory-Agent-%{version}
 %endif
 
+# This work only on older version, and is ignored on recent
 cat <<EOF | tee %{name}-req
 #!/bin/sh
 %{__perl_requires} $* | \
 sed -e '/perl(Win32/d'
 EOF
 
+%if 0%{?gitver:1}
+%global __perl_requires %{_builddir}/fusinv-fusioninventory-agent-%{gitver}/%{name}-req
+%else
 %global __perl_requires %{_builddir}/FusionInventory-Agent-%{version}/%{name}-req
+%endif
 chmod +x %{__perl_requires}
 
 cat <<EOF | tee logrotate
