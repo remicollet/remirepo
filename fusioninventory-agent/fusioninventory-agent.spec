@@ -1,4 +1,4 @@
-#global gitver f7c5492
+%global gitver a7532c0
 
 Name:        fusioninventory-agent
 Summary:     FusionInventory agent
@@ -7,15 +7,13 @@ Summary(fr): Agent FusionInventory
 Version:   2.1
 
 %if 0%{?gitver:1}
-Release:   5.git%{gitver}%{?dist}
-Source0:   fusinv-fusioninventory-agent-2.0.4-20-gf7c5492.tar.gz
+Release:   2.git%{gitver}%{?dist}
+# From http://github.com/fusinv/fusioninventory-agent/tarball/master
+Source0:   fusinv-fusioninventory-agent-2.1-48-ga7532c0.tar.gz
 %else
 Release:   1%{?dist}
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}.tar.gz
 %endif
-
-# http://github.com/fusinv/fusioninventory-agent/commit/75d7e778c108889cad36b17f06eb876181d9d183
-Patch0:    fusioninventory-agent.patch
 
 Source1:   %{name}.cron
 Source2:   %{name}.init
@@ -104,8 +102,6 @@ EOF
 
 %global __perl_requires %{_builddir}/FusionInventory-Agent-%{version}/%{name}-req
 chmod +x %{__perl_requires}
-
-%patch0 -p0
 
 cat <<EOF | tee logrotate
 %{_localstatedir}/log/%{name}/*.log {
@@ -200,7 +196,7 @@ exit 0
 
 %files
 %defattr(-, root, root, -)
-%doc AUTHORS Changes LICENSE README THANKS
+%doc AUTHORS Changes LICENSE THANKS
 %dir %{_sysconfdir}/fusioninventory
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
@@ -218,6 +214,10 @@ exit 0
 
 
 %changelog
+* Wed Aug 18 2010 Remi Collet <Fedora@famillecollet.com> 2.1-2.gita7532c0
+- update to git snaphost which fix EL issues
+- fix init script
+
 * Mon Aug 16 2010 Remi Collet <Fedora@famillecollet.com> 2.1-1
 - update to 2.1
 - switch download URL back to CPAN
