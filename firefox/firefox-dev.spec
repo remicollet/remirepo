@@ -23,14 +23,14 @@
 %define nightly .cvs%{cvsdate}
 %endif
 
-%global relcan b3
+%global relcan b4
 %global firefox firefox
-%global mycomment  Beta 3
+%global mycomment  Beta 4 (Build 2)
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.4.beta3%{?dist}
+Release:        0.5.beta4.build2%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100815.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100818.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -146,6 +146,7 @@ BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  autoconf213
 BuildRequires:  mesa-libGL-devel
+BuildRequires:  yasm
 
 %if %{fedora} >= 7
 Requires:       system-bookmarks
@@ -241,6 +242,7 @@ ac_add_options --enable-pango
 ac_add_options --enable-svg
 ac_add_options --enable-canvas
 ac_add_options --enable-startup-notification
+ac_add_options --disable-cpp-exceptions
 ac_add_options --disable-javaxpcom
 ac_add_options --disable-crashreporter
 ac_add_options --enable-safe-browsing
@@ -495,7 +497,8 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %attr(644, root, root) %{mozappdir}/blocklist.xml
 %attr(644, root, root) %{mozappdir}/components/*.js
 #%attr(644, root, root) %{mozappdir}/components/components.list
-%attr(644, root, root) %{mozappdir}/components/browser.manifest
+%attr(644, root, root) %{mozappdir}/components/*.manifest
+%attr(644, root, root) %{mozappdir}/*.manifest
 %{mozappdir}/defaults
 #%{mozappdir}/greprefs
 %{mozappdir}/greprefs.js
@@ -535,8 +538,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Aug 18 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.3.beta4.build2
+- update to 4.0b4 build2
+- add BR yasm
+
 * Sun Aug 15 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.4.beta3
-- update to 4.0b3 build3
+- update to 4.0b3
 
 * Sat Aug 07 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.3.beta3.build3
 - update to 4.0b3 build3
