@@ -222,6 +222,7 @@ exit 0
 * Wed Aug 18 2010 Remi Collet <Fedora@famillecollet.com> 2.1-2.gita7532c0
 - update to git snaphost which fix EL issues
 - fix init script
+- adapt perl filter for recent/old fedora or EL
 
 * Mon Aug 16 2010 Remi Collet <Fedora@famillecollet.com> 2.1-1
 - update to 2.1
