@@ -1,10 +1,10 @@
-%global gitver a7532c0
+#global gitver a7532c0
 
 Name:        fusioninventory-agent
 Summary:     FusionInventory agent
 Summary(fr): Agent FusionInventory
 
-Version:   2.1
+Version:   2.1.1
 
 %if 0%{?gitver:1}
 Release:   2.git%{gitver}%{?dist}
@@ -219,6 +219,9 @@ exit 0
 
 
 %changelog
+* Wed Aug 18 2010 Remi Collet <Fedora@famillecollet.com> 2.1.1-1
+- update to 2.1.1
+
 * Wed Aug 18 2010 Remi Collet <Fedora@famillecollet.com> 2.1-2.gita7532c0
 - update to git snaphost which fix EL issues
 - fix init script
