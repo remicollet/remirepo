@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.1.49
+Version: 5.1.50
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -182,7 +182,7 @@ the MySQL sources.
 %patch9 -p1
 %patch10 -p1
 %patch12 -p1
-%patch13 -p1
+#patch13 -p1
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
@@ -301,7 +301,7 @@ make check
   # RC minimal test
   cd mysql-test
   %{__perl} ./mysql-test-run.pl \
-    --ssl --mysqld=--binlog-format=mixed --suite=main || :
+    --ssl --mysqld=--binlog-format=mixed --suite=main
 %endif
 
 %install
@@ -608,6 +608,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Aug 20 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.50-1
+- Update to MySQL 5.1.50 Community Server GA
+  http://dev.mysql.com/doc/refman/5.1/en/news-5-1-50.html
+
 * Fri Jul 23 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.49-1
 - sync with rawhide
 - Update to MySQL 5.1.49 Community Server GA

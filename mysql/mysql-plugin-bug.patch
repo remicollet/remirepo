@@ -1,9 +1,23 @@
---- mysql-5.1.49/mysql-test/t/disabled.def.orig	2010-07-09 15:02:24.000000000 +0200
-+++ mysql-5.1.49/mysql-test/t/disabled.def	2010-07-23 10:31:09.431784888 +0200
-@@ -14,3 +14,6 @@
+The plugin_load test fails on PPC64 (maybe not always, but at least in the
+several tries I've made so far).  It doesn't fail on x86, x86_64, or ppc,
+at least not in a similarly small number of tries.  My best theory at the
+moment is that the test itself is wrong.  Reported upstream at
+http://bugs.mysql.com/bug.php?id=42144
+
+For the moment, just disable this test.
+
+Also, disable the outfile_loaddata test, which as of 5.1.38 is giving
+platform-dependent results, with the "expected" results being arguably the
+wrong ones.  This is upstream at http://bugs.mysql.com/bug.php?id=46895
+
+
+--- mysql-5.1.50/mysql-test/t/disabled.def.orig	2010-08-20 18:02:42.934840860 +0200
++++ mysql-5.1.50/mysql-test/t/disabled.def	2010-08-20 18:03:21.034347550 +0200
+@@ -14,3 +14,7 @@
  partition_innodb_plugin  : Bug#53307 2010-04-30 VasilDimov valgrind warnings
  main.mysqlhotcopy_myisam : bug#54129 2010-06-04 Horst
  main.mysqlhotcopy_archive: bug#54129 2010-06-04 Horst
 +#
 +plugin_load         : gives wrong answer on PPC64
 +outfile_loaddata    : gives different results on different platforms
++main.ssl_8k_key     : need investigation
