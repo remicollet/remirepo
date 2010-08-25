@@ -539,7 +539,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
 * Wed Aug 25 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.6.beta4
-- update to 4.0b4 build2
+- update to 4.0 beta 4
 
 * Wed Aug 18 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.5.beta4.build2
 - update to 4.0b4 build2
