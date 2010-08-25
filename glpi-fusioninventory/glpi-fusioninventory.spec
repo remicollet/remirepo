@@ -1,7 +1,7 @@
 %global pluginname   fusioninventory
 
 Name:           glpi-%{pluginname}
-Version:        2.2.1
+Version:        2.2.2
 Release:        1%{?dist}
 Summary:        GLPI Plugin for FusionInventory project
 Summary(fr):    Extension GLPI pour FusionInventory
@@ -10,7 +10,7 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/40/fusioninventory-for-glpi-2.2.1-release.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/120/fusioninventory-for-glpi-2.2.2-release.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -58,6 +58,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 25 2010 Remi Collet <RPMS@FamilleCollet.com> - 2.2.2-1
+- update to 2.2.2
+  Changes : http://forge.fusioninventory.org/news/11
+
 * Fri May 21 2010 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-1
 - update to 2.2.1
 
