@@ -4,7 +4,7 @@ Name:        fusioninventory-agent
 Summary:     FusionInventory agent
 Summary(fr): Agent FusionInventory
 
-Version:   2.1.1
+Version:   2.1.2
 
 %if 0%{?gitver:1}
 Release:   2.git%{gitver}%{?dist}
@@ -201,7 +201,7 @@ exit 0
 
 %files
 %defattr(-, root, root, -)
-%doc AUTHORS Changes LICENSE THANKS
+%doc AUTHORS README* Changes LICENSE THANKS
 %dir %{_sysconfdir}/fusioninventory
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
@@ -219,6 +219,10 @@ exit 0
 
 
 %changelog
+* Wed Aug 25 2010 Remi Collet <Fedora@famillecollet.com> 2.1.2-1
+- update to 2.1.2
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.2/Changes
+
 * Wed Aug 18 2010 Remi Collet <Fedora@famillecollet.com> 2.1.1-1
 - update to 2.1.1
 
