@@ -1,0 +1,105 @@
+From: Date: August 24 2010 3:48pm
+Subject: bzr commit into mysql-5.1-bugteam branch (davi:3489) Bug#55846
+List-Archive: http://lists.mysql.com/commits/116644
+X-Bug: 55846
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1139944217595210815=="
+
+--===============1139944217595210815==
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+# At a local mysql-5.1-bugteam repository of davi
+
+ 3489 Davi Arnaut	2010-08-24
+      Bug#55846: Link tests fail on Windows - my_compiler.h missing
+      
+      Make the my_compiler.h header, like my_attribute.h, part of
+      the distribution. This is required due to the dependency of
+      the former on the latter (which can undefine __attribute__).
+
+    modified:
+      include/Makefile.am
+      scripts/make_win_bin_dist
+=== modified file 'include/Makefile.am'
+--- a/include/Makefile.am	2010-07-14 12:27:13 +0000
++++ b/include/Makefile.am	2010-08-24 13:48:45 +0000
+@@ -26,7 +26,8 @@ pkginclude_HEADERS =	$(HEADERS_ABI) my_d
+ 			decimal.h errmsg.h my_global.h my_net.h \
+ 			my_getopt.h sslopt-longopts.h my_dir.h \
+ 			sslopt-vars.h sslopt-case.h sql_common.h keycache.h \
+-			m_ctype.h my_attribute.h $(HEADERS_GEN_CONFIGURE) \
++			m_ctype.h my_attribute.h my_compiler.h \
++			$(HEADERS_GEN_CONFIGURE) \
+ 			$(HEADERS_GEN_MAKE)
+ 
+ noinst_HEADERS =	config-win.h config-netware.h my_bit.h \
+@@ -37,7 +38,7 @@ noinst_HEADERS =	config-win.h config-net
+ 			my_aes.h my_tree.h my_trie.h hash.h thr_alarm.h \
+ 			thr_lock.h t_ctype.h violite.h my_md5.h base64.h \
+ 			my_handler.h my_time.h my_vle.h my_user.h \
+-			my_libwrap.h my_stacktrace.h my_compiler.h
++			my_libwrap.h my_stacktrace.h
+ 
+ EXTRA_DIST =        mysql.h.pp mysql/plugin.h.pp
+ 
+
+=== modified file 'scripts/make_win_bin_dist'
+--- a/scripts/make_win_bin_dist	2009-11-17 16:53:45 +0000
++++ b/scripts/make_win_bin_dist	2010-08-24 13:48:45 +0000
+@@ -263,6 +263,7 @@ cp include/mysql.h \
+    include/keycache.h \
+    include/m_ctype.h \
+    include/my_attribute.h \
++   include/my_compiler.h \
+    include/mysqld_error.h \
+    include/sql_state.h \
+    include/mysqld_ername.h \
+
+
+--===============1139944217595210815==
+MIME-Version: 1.0
+Content-Type: text/bzr-bundle; charset="us-ascii";
+	name="bzr/davi.arnaut@stripped"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+# Bazaar merge directive format 2 (Bazaar 0.90)
+# revision_id: davi.arnaut@stripped
+# target_branch: file:///home/davi/bzr/bugs/55846-5.1/
+# testament_sha1: a436a03b0f660a8b69093e88fe1377a743d53b3b
+# timestamp: 2010-08-24 10:48:54 -0300
+# base_revision_id: mattias.jonsson@stripped\
+#   mk1a4rux131hao8r
+# 
+# Begin bundle
+IyBCYXphYXIgcmV2aXNpb24gYnVuZGxlIHY0CiMKQlpoOTFBWSZTWWZFKW8AAidfgAAwXGf/93/n
+noS////wUAVMvNwNW6sFVWW7uHCUSAE02lTzDUyofqZJp6jzVPUPQnqG0mZTJ6glIU9DEwJPSmTK
+aNANABkBoANAxJoTUp/onqKeNJomTQxMjDQgGQ0GmhzRkxMAExGBGmBBiMEyYBGCSQUwaTTTKYJt
+U/RPQRT9KeUabUNqAGgKiiY0UdzaboTvYcfRd5FdKF8ue9oiPkV10kC3yPM4DNNfD9ax8xeEkkB+
+e4j9vcquwsnWaDCCLKUfZ66bBq72Q71azfj/NKWib8cQyXI1Blp4YhxdRjVAcGWoW7vTwh5ZfW92
+kvlxB5UQ7Nfz0EO/ztug6qSkVBLNRqQM1jouG7oGtZ4cKCfbUVqwRKKHoPBtIMfRtCuM0oLvK9ds
+yLmR4taNBrTyPMgCadgWYeaxnpjxY/oqJCqrFiRAJxjECJ5rDYJvN6WJuVbFuKgJwwDDo6CnGzSF
+G4OjsKMx02Y1jt7EeIdRXkBumzhRdGxiWTzdqyY6m/LcKmYF/KjRtypvisM0hPSSImaQIItA5LYn
+YauMjFdh3LpZvFqyBdiFCdeUv4+Bd1mDzOhQgzfrgmm57AGwWWUZpnYe+5w1k5BSsgMSowWMpkIK
+AvhHJYGVFNR395hgwkkQogOlAwSZgTNpFk+b2YpgNSpapcYj2EiAv/MPE7JXDR5z6SLlOBGDzMMW
+TDosp9FtoZ9ZqA6TwGrlF+55SbNQ9WAq6mU5g+Nodvesm1VNaLkzYtIKAXQ2gVGisXT2RiXvkB6K
+NNo0xJUBFxdXAvjlIoHgRpL6bVJSztKM4PGD5FCF5zuZsAnUTQidyx2nXoFEuManlBbe4viQPasS
+bZppFVFVXr9vBnPxi8ePKPy8PLLlz82+fqy08EBW/+2f4iOksBrYDESJf5fRwIOfgS4O+eJHhCG4
+14fGbt4MYgZD5KfbK2BCag9MyKpw4JUT7pI0XpvpRTiHuoVK+LLcpJHl6CNZ8rD57jeYDvipzEC7
+Azp1/rIuC5tHYCzv+Bjw8KSg7Sz+9R8s3e0WYQ4tEptIZNnpOBN7wJG6+jpWZRHl8NG0kFAfenQR
+7HcmLvo0C4qmNkjmtSfsjP84e/aPccBj3Zs+UAWOfsPIYHvwldF/8Tbg69DzIVdStnOeSRathccd
+Vl9Ry6ZRZ9BElTPMA6umRV5sIXbCeVTkihBoZXY/YC2v65tnVGQSI4OQ/A4m0NJibzgm3lOOCmMi
+xV8yC8Scdi46NJePP/DdaBVpE99w9d1pWoij4lo5HXIextIGH+yVAahaHMIoMcXJg4wOb9vn5I3D
+p+So3YJbGN4ZjVnTFJXq0OkdUvTjpuggnUKtNk9qGqsFiK9rLDUlxj1sjTumZLTI+0DFHYrJ5/AM
+LEaHl7F2MyJ0DLFhVjbcpkuDnAg61/NtgHOgyDNePbfqmcl0ywGjGZ2oXq1ZiiECEDAFOLyRFxpR
+EmYSQrAN5uQRLlQYIDlyoy4KpPkY89SQPKEb03X1WFB/yCSKwmpeSwZmKGuoEa5RQV5Iao9gD4YT
+ukvrxTsQLTRWSxTBQxSJdV6CJunuLEVORNtOdaQgHd49+Qfl6IJSxzB6TG0ojgGemYSaZW9wvn3Q
+oIYDZKhEBloBvxXI5MzSn4plQ+pD3eCH4HUttwrVR90YiHnMHRGHNaYI6tiMT7oqrOT9JmqRJZTp
+722UPCq9hQOMazbkWjvb155e1iLm0FiRnkGV5oXdMuk6Q8+CMCEe+o7S9OK29obq1nNsbJqjidCC
+KdMWJgJgOVt+JmFgLz7vkcFDhuCOamQ3kI3/i7kinChIMyKUt4A=
+
+
+--===============1139944217595210815==--

@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.1.50
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -44,7 +44,7 @@ Patch13: mysql-expired-certs.patch
 Patch14: mysql-missing-string-code.patch
 Patch15: mysql-lowercase-bug.patch
 Patch16: mysql-chain-certs.patch
-Patch17: mysql-abi-check.patch
+Patch17: mysql-missing-header.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
@@ -54,6 +54,7 @@ BuildRequires: libtool automake autoconf gawk
 BuildRequires: time procps
 # Socket is needed to run regression tests
 BuildRequires: perl(Socket)
+# This is required old EL4
 BuildRequires: perl(Time::HiRes)
 
 Requires: grep, fileutils
@@ -183,14 +184,14 @@ the MySQL sources.
 %patch9 -p1
 %patch10 -p1
 %patch12 -p1
-#patch13 -p1
+%patch13 -p1
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
-%if 0%{?fedora} >= 14
-# GCC 4.5 patch
 %patch17 -p1
-%endif
+
+# workaround for upstream bug #56342
+rm -f mysql-test/t/ssl_8k_key-master.opt
 
 libtoolize --force
 aclocal
@@ -609,6 +610,16 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Aug 28 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.50-2
+- sync with rawhide
+- add patch for missing header (and notify mysql-owner)
+  http://lists.mysql.com/commits/116644
+
+* Sat Aug 28 2010 Tom Lane <tgl@redhat.com> 5.1.50-1
+- Update to MySQL 5.1.50, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.1/en/news-5-1-50.html
+  http://dev.mysql.com/doc/refman/5.1/en/news-5-1-49.html
+
 * Fri Aug 20 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.50-1
 - Update to MySQL 5.1.50 Community Server GA
   http://dev.mysql.com/doc/refman/5.1/en/news-5-1-50.html

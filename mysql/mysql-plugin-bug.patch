@@ -10,14 +10,16 @@ Also, disable the outfile_loaddata test, which as of 5.1.38 is giving
 platform-dependent results, with the "expected" results being arguably the
 wrong ones.  This is upstream at http://bugs.mysql.com/bug.php?id=46895
 
+NB: 42144 is fixed as of 5.1.51, and 46895 has been "fixed" by disabling
+the test, so we won't need this anymore in 5.1.51.
 
---- mysql-5.1.50/mysql-test/t/disabled.def.orig	2010-08-20 18:02:42.934840860 +0200
-+++ mysql-5.1.50/mysql-test/t/disabled.def	2010-08-20 18:03:21.034347550 +0200
-@@ -14,3 +14,7 @@
+
+diff -Naur mysql-5.1.50.orig/mysql-test/t/disabled.def mysql-5.1.50/mysql-test/t/disabled.def
+--- mysql-5.1.50.orig/mysql-test/t/disabled.def	2010-08-03 13:53:51.000000000 -0400
++++ mysql-5.1.50/mysql-test/t/disabled.def	2010-08-27 23:36:17.491455874 -0400
+@@ -14,3 +14,5 @@
  partition_innodb_plugin  : Bug#53307 2010-04-30 VasilDimov valgrind warnings
  main.mysqlhotcopy_myisam : bug#54129 2010-06-04 Horst
  main.mysqlhotcopy_archive: bug#54129 2010-06-04 Horst
 +#
 +plugin_load         : gives wrong answer on PPC64
-+outfile_loaddata    : gives different results on different platforms
-+main.ssl_8k_key     : need investigation
