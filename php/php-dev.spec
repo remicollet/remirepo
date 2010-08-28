@@ -1147,7 +1147,7 @@ fi
 # log owned by apache for log
 %attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
 %dir %{_localstatedir}/run/php-fpm
-%{_mandir}/man1/php-fpm.1*
+%{_mandir}/man8/php-fpm.8*
 %endif
 
 %files devel
