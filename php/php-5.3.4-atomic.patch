@@ -1,0 +1,11 @@
+--- php5.3-201008281230/sapi/fpm/fpm/fpm_atomic.h.orig	2010-08-28 22:14:28.649426025 +0200
++++ php5.3-201008281230/sapi/fpm/fpm/fpm_atomic.h	2010-08-28 22:14:57.439114285 +0200
+@@ -12,7 +12,7 @@
+ #endif
+ #include <sched.h>
+ 
+-#if (__GNUC__) && (__GNUC__ >= 4 &&  __GNUC_MINOR__ >= 1)
++#if (__GNUC__) && (__GNUC__ >= 4 &&  __GNUC_MINOR__ >= 2)
+ 
+ /**
+  * all the cases below (as provided by upstream) define:

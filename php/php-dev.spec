@@ -73,6 +73,8 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.3.4-aconf26x.patch
+# See http://bugs.php.net/52725
+Patch9: php-5.3.4-atomic.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -542,6 +544,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if 0%{?fedora} >= 13
 %patch8 -p1 -b .aconf26x
 %endif
+%patch9 -p1 -b .atomic
 
 %patch20 -p1 -b .shutdown
 %patch21 -p1 -b .macropen
