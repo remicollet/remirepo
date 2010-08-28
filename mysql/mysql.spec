@@ -610,6 +610,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Aug 28 2010 Tom Lane <tgl@redhat.com> 5.1.50-2
+- Include my_compiler.h in distribution, per upstream bug #55846.
+  Otherwise PHP, for example, won't build.
+
 * Sat Aug 28 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.50-2
 - sync with rawhide
 - add patch for missing header (and notify mysql-owner)
