@@ -9,39 +9,43 @@
 %global zipver      1.9.1
 %global jsonver     1.2.1
 
-%define httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
+%global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
 %ifarch ppc ppc64
-%define oraclever 10.2.0.2
+%global oraclever 10.2.0.2
 %else
-%define oraclever 11.1.0.7
+%global oraclever 11.1.0.7
 %endif
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201007190630
-%global phpversion 5.3.3RC4-dev
+%global snapdate 201008281230
+%global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
-%define with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
-%define with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
+%global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
+%global with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
 %if %{?rhel}%{?fedora} > 4
-%define with_enchant 1
+%global with_enchant 1
 %else
-%define with_enchant 0
+%global with_enchant 0
 %endif
 %if 0%{?rhel} >= 5 || 0%{?fedora} >= 12
-%define with_fpm 1
+%ifarch %{ix86} x86_64
+%global with_fpm 1
 %else
-%define with_fpm 0
+%global with_fpm 0
+%endif
+%else
+%global with_fpm 0
 %endif
 
-%define tidyver 	0.99.0-12.20070228
+%global tidyver 	0.99.0-12.20070228
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.3.3
+Version: 5.3.4
 Release: 0.1.%{snapdate}%{?dist}
 License: PHP
 Group: Development/Languages
@@ -68,7 +72,7 @@ Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.3.3-aconf26x.patch
+Patch8: php-5.3.4-aconf26x.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -95,10 +99,9 @@ BuildRequires: libstdc++-devel, openssl-devel, sqlite-devel >= 3.0.0
 %if 0%{?fedora} >= 9
 BuildRequires: sqlite-devel >= 3.5.9
 %endif
-BuildRequires: sqlite2-devel >= 2.8.0
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
-%if 0%{?fedora} >= 8
-BuildRequires: pcre-devel >= 7.3
+%if 0%{?fedora} >= 10
+BuildRequires: pcre-devel >= 7.8
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 Obsoletes: php-dbg, php3, phpfi, stronghold-php
@@ -224,15 +227,30 @@ need to install this package in addition to the php package.
 Summary: A database access abstraction module for PHP applications
 Group: Development/Languages
 Requires: php-common = %{version}-%{release}
-Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo, php-sqlite2
+Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo
 Provides: php-pdo-abi = %{pdover}
-Provides: php-sqlite, php-sqlite2, php-sqlite3, php-pdo_sqlite
+Provides: php-sqlite3, php-pdo_sqlite
 
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
 a database access abstraction layer to PHP.  This module provides
 a common interface for accessing MySQL, PostgreSQL or other 
 databases.
+
+%package sqlite
+Summary: Extension for the SQLite V2 Embeddable SQL Database Engine
+Group: Development/Languages
+BuildRequires: sqlite2-devel >= 2.8.0
+Requires: php-common = %{version}-%{release}
+Obsoletes: php-sqlite2
+Provides: php-pdo-abi = %{pdover}
+Provides: php-sqlite2
+
+%description sqlite
+This is an extension for the SQLite Embeddable SQL Database Engine. 
+SQLite is a C library that implements an embeddable SQL database engine. 
+Programs that link with the SQLite library can have SQL database access 
+without running a separate RDBMS process. 
 
 %package mysql
 Summary: A module for PHP applications that use MySQL databases
@@ -643,6 +661,7 @@ cat `aclocal --print-ac-dir`/libtool.m4 > build/libtool.m4
 %endif
 
 # Regenerate configure scripts (patches change config.m4's)
+touch configure.in
 ./buildconf --force
 CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-pointer-sign"
 %if 0%{?rhel} < 5
@@ -687,7 +706,7 @@ ln -sf ../configure
 	--with-iconv \
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
-%if 0%{?fedora} >= 8
+%if 0%{?fedora} >= 10
         --with-pcre-regex=%{_prefix} \
 %endif
 	--with-zlib \
@@ -1026,7 +1045,7 @@ cat files.sysv* files.posix > files.process
 
 # Package sqlite and pdo_sqlite with pdo; isolating the sqlite dependency
 # isn't useful at this time since rpm itself requires sqlite.
-cat files.sqlite >> files.pdo
+#cat files.sqlite >> files.pdo
 cat files.pdo_sqlite >> files.pdo
 %if 0%{?fedora} >= 9
 cat files.sqlite3 >> files.pdo
@@ -1162,6 +1181,7 @@ fi
 %files bcmath -f files.bcmath
 %files dba -f files.dba
 %files pdo -f files.pdo
+%files sqlite -f files.sqlite
 %files mcrypt -f files.mcrypt
 %files tidy -f files.tidy
 %files mssql -f files.mssql
@@ -1182,6 +1202,11 @@ fi
 %endif
 
 %changelog
+* Sat Aug 28 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201008281230
+- latest changes from 5.3.3 spec
+- new snapshot (5.3.4-dev)
+- new sub-package for sqlite (SQLite v2)
+
 * Mon Jul 19 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.2.201007190630
 - new snapshot (5.3.3RC4-dev)
 
