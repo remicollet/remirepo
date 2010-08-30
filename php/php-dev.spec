@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201008281230
+%global snapdate 201008301430
 %global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -544,7 +544,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if 0%{?fedora} >= 13
 %patch8 -p1 -b .aconf26x
 %endif
-%patch9 -p1 -b .atomic
+%patch9 -p0 -b .atomic
 
 %patch20 -p1 -b .shutdown
 %patch21 -p1 -b .macropen
@@ -1205,10 +1205,15 @@ fi
 %endif
 
 %changelog
+* Mon Aug 30 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201008301430
+- new snapshot (5.3.4-dev)
+- replace upstream patch for http://bugs.php.net/52725
+
 * Sat Aug 28 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201008281230
 - latest changes from 5.3.3 spec
 - new snapshot (5.3.4-dev)
 - new sub-package for sqlite (SQLite v2)
+- add patch for http://bugs.php.net/52725 (EL-5)
 
 * Mon Jul 19 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-0.2.201007190630
 - new snapshot (5.3.3RC4-dev)
