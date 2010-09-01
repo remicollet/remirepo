@@ -65,7 +65,7 @@ Conflicts: mysql-workbench-gpl
 %description
 MySQL Workbench provides Database administrators and developers 
 an integrated tools environment for:
-* Database Design & Modeling
+* Database Design and Modeling
 * SQL Development (replacing MySQL Query Browser)
 * Database Administration (replacing MySQL Administrator)
 
