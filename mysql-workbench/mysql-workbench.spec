@@ -5,18 +5,20 @@
 
 Summary: A MySQL visual database modeling, administration and querying tool.
 Name: mysql-workbench
-Version: 5.2.26
+Version: 5.2.27
 Release: 1%{?dist}
 Group: Applications/Databases
-License: GPLv2
+License: GPLv2 with exceptions
 
 URL: http://wb.mysql.com
+# Upstream has a mirror redirector for downloads, so the URL is hard to
+# represent statically.  You can get the tarball by following a link from
+# http://dev.mysql.com/downloads/workbench/
 Source: %{name}-%{tartype}-%{version}%{?postver}.tar.gz
 
 # don't build extension, use system one
 # !!! This patch use versioned soname !!!
 Patch1: %{name}-5.2.26-cppconn.patch
-Patch2: %{name}-5.2.16-scintilla.patch
 Patch3: %{name}-5.2.22-python.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -74,7 +76,6 @@ tools environment for:
 %setup -q -n %{name}-%{tartype}-%{version}%{?postver}
 
 %patch1 -p1 -b .cppconn
-#patch2 -p1 -b .scintilla
 %patch3 -p1 -b .fixindent
 
 # we use System provided libraries
@@ -83,7 +84,6 @@ rm -rf ext/curl
 rm -rf ext/libsigc++
 rm -rf ext/yassl
 rm -rf ext/cppconn
-#rm -rf ext/scintilla
 
 
 
@@ -93,7 +93,8 @@ NOCONFIGURE=yes ./autogen.sh
 %if %{fedora} >= 12
     --with-system-ctemplate \
 %endif
-    --disable-debug
+    --disable-debug \
+    --enable-python-modules
 
 make %{?_smp_mflags}
 
@@ -106,7 +107,6 @@ make install DESTDIR=%{buildroot}
 echo Cleanup dev file
 find %{buildroot}%{_libdir}/mysql-workbench -name \*.a  -exec rm {} \; -print
 find %{buildroot}%{_libdir}/mysql-workbench -name \*.la -exec rm {} \; -print
-#find %{buildroot}%{_libdir}/mysql-workbench -type f -name \*.so.\* -exec chmod +x {} \;
 
 desktop-file-install --vendor="" \
    --dir=%{buildroot}%{_datadir}/applications/ \
@@ -130,7 +130,6 @@ update-desktop-database &> /dev/null || :
 %doc COPYING samples ChangeLog
 %attr(0755,root,root) %{_bindir}/mysql-workbench
 %attr(0755,root,root) %{_bindir}/mysql-workbench-bin
-##%attr(0755,root,root) %{_bindir}/grtshell
 %dir %{_libdir}/mysql-workbench
 %{_libdir}/mysql-workbench/*
 %{_datadir}/applications/*.desktop
@@ -139,8 +138,13 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sat Aug 07 2010 Remi Collet <Fedora@famillecollet.com> 5.2.27-1
+- update to 5.2.27 Community (OSS) Edition (GPL)
+- initial spec for fedora review
+
 * Sat Aug 07 2010 Remi Collet <RPMS@famillecollet.com> 5.2.26-1
 - update to 5.2.26 Community Edition (GPL)
+- build against mysql-connector-c++ 1.1.0 (bzr888)
 
 * Thu Jul 01 2010 Remi Collet <RPMS@famillecollet.com> 5.2.25-1
 - update to 5.2.25 Community Edition (GPL)
@@ -155,82 +159,82 @@ update-desktop-database &> /dev/null || :
 * Wed May 12 2010 Remi Collet <RPMS@famillecollet.com> 5.2.21-1
 - update to 5.2.21 RC Community (OSS) Edition
 
-* Wed Apr 28 2010 Remi Collet <RPMS@famillecollet.com> 5.2.20-1.###.remi
+* Wed Apr 28 2010 Remi Collet <RPMS@famillecollet.com> 5.2.20-1
 - update to 5.2.20 beta 10 Community (OSS) Edition
 
-* Sat Apr 17 2010 Remi Collet <RPMS@famillecollet.com> 5.2.19-1.###.remi
+* Sat Apr 17 2010 Remi Collet <RPMS@famillecollet.com> 5.2.19-1
 - update to 5.2.19 beta 9 Community (OSS) Edition
 
-* Thu Apr 15 2010 Remi Collet <RPMS@famillecollet.com> 5.2.18-1.###.remi
+* Thu Apr 15 2010 Remi Collet <RPMS@famillecollet.com> 5.2.18-1
 - update to 5.2.18 beta 8 Community (OSS) Edition
 
-* Sat Apr 03 2010 Remi Collet <RPMS@famillecollet.com> 5.2.17-1.###.remi
+* Sat Apr 03 2010 Remi Collet <RPMS@famillecollet.com> 5.2.17-1
 - update to 5.2.17 beta Community (OSS) Edition
 - build against mysql-connector-c++ 1.1.0 (bzr818)
 
-* Wed Feb 17 2010 Remi Collet <RPMS@famillecollet.com> 5.2.16-1.###.remi
+* Wed Feb 17 2010 Remi Collet <RPMS@famillecollet.com> 5.2.16-1
 - update to 5.2.16 beta Community (OSS) Edition
 
-* Thu Feb 04 2010 Remi Collet <RPMS@famillecollet.com> 5.2.15-2.###.remi
+* Thu Feb 04 2010 Remi Collet <RPMS@famillecollet.com> 5.2.15-2
 - update to 5.2.15b beta Community (OSS) Edition
 
-* Sat Jan 30 2010 Remi Collet <RPMS@famillecollet.com> 5.2.15-1.###.remi
+* Sat Jan 30 2010 Remi Collet <RPMS@famillecollet.com> 5.2.15-1
 - update to 5.2.15 beta Community (OSS) Edition
 
-* Fri Jan 22 2010 Remi Collet <RPMS@famillecollet.com> 5.2.14-1.###.remi
+* Fri Jan 22 2010 Remi Collet <RPMS@famillecollet.com> 5.2.14-1
 - update to 5.2.14 beta Community (OSS) Edition
 
-* Sun Jan 10 2010 Remi Collet <RPMS@famillecollet.com> 5.2.11-1.###.remi
+* Sun Jan 10 2010 Remi Collet <RPMS@famillecollet.com> 5.2.11-1
 - update to 5.2.11 beta Community (OSS) Edition
 
-* Sat Sep 05 2009 Remi Collet <RPMS@famillecollet.com> 5.1.18-1.###.remi
+* Sat Sep 05 2009 Remi Collet <RPMS@famillecollet.com> 5.1.18-1
 - update to 5.1.18 GA Community (OSS) Edition
 
-* Sun Aug 16 2009 Remi Collet <RPMS@famillecollet.com> 5.1.17-1.###.remi
+* Sun Aug 16 2009 Remi Collet <RPMS@famillecollet.com> 5.1.17-1
 - update to 5.1.17 GA Community (OSS) Edition
 
-* Wed Jul 01 2009 Remi Collet <RPMS@famillecollet.com> 5.1.16-1.###.remi
+* Wed Jul 01 2009 Remi Collet <RPMS@famillecollet.com> 5.1.16-1
 - update to 5.1.16 GA Community (OSS) Edition
 
-* Sun Jun 28 2009 Remi Collet <RPMS@famillecollet.com> 5.1.15-3.###.remi
+* Sun Jun 28 2009 Remi Collet <RPMS@famillecollet.com> 5.1.15-3
 - switch to system mysql-connector-c++ librairy
 
-* Sat Jun 27 2009 Remi Collet <RPMS@famillecollet.com> 5.1.15-2.###.remi
+* Sat Jun 27 2009 Remi Collet <RPMS@famillecollet.com> 5.1.15-2
 - switch to system librairies (boost, libsigc++, curl, openssl)
 
-* Sat Jun 27 2009 Remi Collet <RPMS@famillecollet.com> 5.1.15-1.###.remi
+* Sat Jun 27 2009 Remi Collet <RPMS@famillecollet.com> 5.1.15-1
 - update to 5.1.15 RC3 Community (OSS) Edition
 
-* Fri Jun 19 2009 Remi Collet <RPMS@famillecollet.com> 5.1.14-1.###.remi
+* Fri Jun 19 2009 Remi Collet <RPMS@famillecollet.com> 5.1.14-1
 - update to 5.1.14 RC2 Community (OSS) Edition
 
-* Fri Jun 12 2009 Remi Collet <RPMS@famillecollet.com> 5.1.13-1.###.remi
+* Fri Jun 12 2009 Remi Collet <RPMS@famillecollet.com> 5.1.13-1
 - update to 5.1.13 RC1 Community (OSS) Edition
 
-* Fri May 01 2009 Remi Collet <RPMS@famillecollet.com> 5.1.12-2.fc11.remi
+* Fri May 01 2009 Remi Collet <RPMS@famillecollet.com> 5.1.12-2
 - F11 build
 - add BR mesa-libGL-devel
 - add gcc44 patch
 
-* Tue Apr 28 2009 Remi Collet <RPMS@famillecollet.com> 5.1.12-1.###.remi
+* Tue Apr 28 2009 Remi Collet <RPMS@famillecollet.com> 5.1.12-1
 - update to 5.1.12 Beta Community (OSS) Edition
 - add a patch for ppc build
 
-* Fri Apr 10 2009 Remi Collet <RPMS@famillecollet.com> 5.1.10-1.###.remi
+* Fri Apr 10 2009 Remi Collet <RPMS@famillecollet.com> 5.1.10-1
 - update to 5.1.10 beta
 
-* Sat Mar 21 2009 Remi Collet <RPMS@famillecollet.com> 5.1.9-1.###.remi
+* Sat Mar 21 2009 Remi Collet <RPMS@famillecollet.com> 5.1.9-1
 - update to 5.1.9 beta
 
-* Sun Jan 13 2009 Remi Collet <RPMS@famillecollet.com> 5.1.7-1.###.remi
+* Sun Jan 13 2009 Remi Collet <RPMS@famillecollet.com> 5.1.7-1
 - update to 5.1.7 alpha
 
-* Sat Dec 13 2008 Remi Collet <RPMS@famillecollet.com> 5.1.5-1.###.remi
+* Sat Dec 13 2008 Remi Collet <RPMS@famillecollet.com> 5.1.5-1
 - update to 5.1.5 alpha
 
-* Wed Dec 03 2008 Remi Collet <RPMS@famillecollet.com> 5.1.4-1.fc10.remi.1
+* Wed Dec 03 2008 Remi Collet <RPMS@famillecollet.com> 5.1.4-1.1
 - remove dev files
 
-* Tue Dec 02 2008 Remi Collet <RPMS@famillecollet.com> 5.1.4-1.fc10.remi
+* Tue Dec 02 2008 Remi Collet <RPMS@famillecollet.com> 5.1.4-1
 - F10 build
 
