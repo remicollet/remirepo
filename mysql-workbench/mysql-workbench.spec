@@ -1,31 +1,30 @@
 #global postver b
-
 %global tartype gpl
 %global cppconnver 1.1.0-0.1.bzr888
 
-Summary: A MySQL visual database modeling, administration and querying tool.
-Name: mysql-workbench
-Version: 5.2.27
-Release: 1%{?dist}
-Group: Applications/Databases
-License: GPLv2 with exceptions
+Summary:   A MySQL visual database modeling, administration and querying tool
+Name:      mysql-workbench
+Version:   5.2.27
+Release:   1%{?dist}
+Group:     Applications/Databases
+License:   GPLv2 with exceptions
 
-URL: http://wb.mysql.com
+URL:       http://wb.mysql.com
 # Upstream has a mirror redirector for downloads, so the URL is hard to
 # represent statically.  You can get the tarball by following a link from
 # http://dev.mysql.com/downloads/workbench/
-Source: %{name}-%{tartype}-%{version}%{?postver}.tar.gz
+Source:    %{name}-%{tartype}-%{version}%{?postver}.tar.gz
 
 # don't build extension, use system one
 # !!! This patch use versioned soname !!!
-Patch1: %{name}-5.2.26-cppconn.patch
-Patch3: %{name}-5.2.22-python.patch
+Patch1:    %{name}-5.2.26-cppconn.patch
+Patch2:    %{name}-5.2.22-python.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
 BuildRequires: libglade2-devel >= 2.0.0
 BuildRequires: lua-devel >= 5.1
-%if %{fedora} >= 12
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildRequires: ctemplate-devel
 %endif
 BuildRequires: libgnome-devel >= 2
@@ -41,32 +40,31 @@ BuildRequires: libsigc++20-devel
 BuildRequires: curl-devel
 BuildRequires: openssl-devel
 BuildRequires: mysql-devel >= 5.1
-%if %{fedora} >= 12
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildRequires: libuuid-devel
 %endif
 BuildRequires: uuid-devel
 BuildRequires: gtkmm24-devel
 BuildRequires: mesa-libGL-devel
 BuildRequires: sqlite-devel
-
-
 BuildRequires: mysql-connector-c++-devel >= %{cppconnver}
 BuildRequires:    desktop-file-utils
+
 Requires(post):   desktop-file-utils
 Requires(postun): desktop-file-utils
-
 Requires: python-paramiko pexpect python-sqlite2
 # requires mysql client pkg (for mysqldump and mysql cmdline client)
 Requires: mysql gnome-keyring
 Requires: mysql-connector-c++ >= %{cppconnver}
-# Official upstream build
+# Official upstream builds (name changes quite often)
 Conflicts: mysql-workbench-oss
 Conflicts: mysql-workbench-ce
+Conflicts: mysql-workbench-gpl
 
 
 %description
-MySQL Workbench provides DBAs and developers an integrated 
-tools environment for:
+MySQL Workbench provides Database administrators and developers 
+an integrated tools environment for:
 * Database Design & Modeling
 * SQL Development (replacing MySQL Query Browser)
 * Database Administration (replacing MySQL Administrator)
@@ -76,7 +74,11 @@ tools environment for:
 %setup -q -n %{name}-%{tartype}-%{version}%{?postver}
 
 %patch1 -p1 -b .cppconn
-%patch3 -p1 -b .fixindent
+%patch2 -p1 -b .fixindent
+
+touch -r COPYING .timestamp4rpm
+%{__sed} -i -e 's/\r//g' COPYING
+touch -r .timestamp4rpm COPYING
 
 # we use System provided libraries
 rm -rf ext/boost
@@ -90,7 +92,7 @@ rm -rf ext/cppconn
 %build
 NOCONFIGURE=yes ./autogen.sh
 %configure \
-%if %{fedora} >= 12
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
     --with-system-ctemplate \
 %endif
     --disable-debug \
@@ -105,9 +107,13 @@ make install DESTDIR=%{buildroot}
 
 # clean dev files
 echo Cleanup dev file
-find %{buildroot}%{_libdir}/mysql-workbench -name \*.a  -exec rm {} \; -print
-find %{buildroot}%{_libdir}/mysql-workbench -name \*.la -exec rm {} \; -print
+find %{buildroot}%{_libdir}/%{name} -name \*.a  -exec rm {} \; -print
+find %{buildroot}%{_libdir}/%{name} -name \*.la -exec rm {} \; -print
 
+# fix perms
+%{__chmod} +x %{buildroot}%{_datadir}/%{name}/sshtunnel.py
+
+#desktop file
 desktop-file-install --vendor="" \
    --dir=%{buildroot}%{_datadir}/applications/ \
          MySQLWorkbench.desktop
@@ -127,20 +133,19 @@ update-desktop-database &> /dev/null || :
 
 %files
 %defattr(-, root, root, -)
-%doc COPYING samples ChangeLog
-%attr(0755,root,root) %{_bindir}/mysql-workbench
-%attr(0755,root,root) %{_bindir}/mysql-workbench-bin
-%dir %{_libdir}/mysql-workbench
-%{_libdir}/mysql-workbench/*
-%{_datadir}/applications/*.desktop
-%dir %{_datadir}/mysql-workbench
-%{_datadir}/mysql-workbench/*
+%doc AUTHORS COPYING COPYING.LGPL README samples ChangeLog
+%attr(0755,root,root) %{_bindir}/%{name}
+%attr(0755,root,root) %{_bindir}/%{name}-bin
+%{_datadir}/applications/MySQLWorkbench.desktop
+%{_libdir}/%{name}
+%{_datadir}/%{name}
 
 
 %changelog
 * Sat Aug 07 2010 Remi Collet <Fedora@famillecollet.com> 5.2.27-1
 - update to 5.2.27 Community (OSS) Edition (GPL)
-- initial spec for fedora review
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-27.html
+- clean spec for fedora review
 
 * Sat Aug 07 2010 Remi Collet <RPMS@famillecollet.com> 5.2.26-1
 - update to 5.2.26 Community Edition (GPL)

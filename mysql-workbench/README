@@ -4,3 +4,7 @@ mysql-workbench
 Package in progress
 Not yet available in fedora.
 
+- mysql-workbench.spec is the one for remi/fedora repository
+- mysql-workbench-{ce,oss,gpl}-5.2.*.spec are the upstream ones
+
+
