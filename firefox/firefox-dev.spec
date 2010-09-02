@@ -23,14 +23,14 @@
 %define nightly .cvs%{cvsdate}
 %endif
 
-%global relcan b4
+%global relcan b5
 %global firefox firefox
-%global mycomment  Beta 4
+%global mycomment  Beta 5 (Build 1)
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.6.beta4%{?dist}
+Release:        0.7.beta5.build1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,12 +43,12 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100825.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100902.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
 Source20:       firefox3.desktop
-Source21:       firefox36.sh.in
+Source21:       firefox4.sh.in
 Source23:       firefox.1
 Source100:      find-external-requires
 
@@ -291,7 +291,9 @@ make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 %{__rm} -rf $RPM_BUILD_ROOT
 cd %{tarballdir}
 
+pushd obj*gnu
 DESTDIR=$RPM_BUILD_ROOT make install
+popd
 
 %{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
 
@@ -382,24 +384,27 @@ for langpack in `ls firefox-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
   extensiondir=$RPM_BUILD_ROOT/%{mozappdir}/langpacks/langpack-$language@firefox.mozilla.org
   %{__mkdir_p} $extensiondir
-  unzip $langpack -d $extensiondir
+  unzip -q $langpack -d $extensiondir
   find $extensiondir -type f | xargs chmod 644
 
-  tmpdir=`mktemp -d %{name}.XXXXXXXX`
-  langtmp=$tmpdir/%{name}/langpack-$language
-  %{__mkdir_p} $langtmp
-  jarfile=$extensiondir/chrome/$language.jar
-  unzip $jarfile -d $langtmp
+  #tmpdir=`mktemp -d %{name}.XXXXXXXX`
+  #langtmp=$tmpdir/%{name}/langpack-$language
+  #%{__mkdir_p} $langtmp
+  #jarfile=$extensiondir/chrome/$language.jar
+  #unzip $jarfile -d $langtmp
 
-  sed -i -e "s|browser.startup.homepage.*$|browser.startup.homepage=%{homepage}|g;" \
-         $langtmp/locale/browser-region/region.properties
+  #sed -i -e "s|browser.startup.homepage.*$|browser.startup.homepage=%{homepage}|g;" \
+  #       $langtmp/locale/browser-region/region.properties
 
-  find $langtmp -type f | xargs chmod 644
-  %{__rm} -rf $jarfile
-  cd $langtmp
-  zip -r -D $jarfile locale
-  cd -
-  %{__rm} -rf $tmpdir
+  #find $langtmp -type f | xargs chmod 644
+  #%{__rm} -rf $jarfile
+  #cd $langtmp
+  #zip -r -D $jarfile locale
+  #cd -
+  #%{__rm} -rf $tmpdir
+  sed -i -e 's@^\(browser\.startup\.homepage\(\|_reset\)\)=.*$@\1=%{homepage}@g;' \
+         $extensiondir/chrome/$language/locale/branding/browserconfig.properties
+  cat    $extensiondir/chrome/$language/locale/branding/browserconfig.properties
 
   language=`echo $language | sed -e 's/-/_/g'`
   extensiondir=`echo $extensiondir | sed -e "s,^$RPM_BUILD_ROOT,,"`
@@ -538,6 +543,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Sep 02 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.7.beta5.build1
+- update to 4.0b5 build1
+
 * Wed Aug 25 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.6.beta4
 - update to 4.0 beta 4
 

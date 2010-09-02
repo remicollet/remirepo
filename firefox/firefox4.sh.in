@@ -1,0 +1,260 @@
+#!/bin/sh
+#
+# The contents of this file are subject to the Netscape Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/NPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Original Code is mozilla.org code.
+#
+# The Initial Developer of the Original Code is Netscape
+# Communications Corporation.  Portions created by Netscape are
+# Copyright (C) 1998 Netscape Communications Corporation. All
+# Rights Reserved.
+#
+# Contributor(s): 
+#
+
+## 
+## Usage:
+##
+## $ firefox
+##
+## This script is meant to run a mozilla program from the mozilla
+## rpm installation.
+##
+## The script will setup all the environment voodoo needed to make
+## mozilla work.
+
+cmdname=`basename $0`
+
+##
+## Variables
+##
+MOZ_ARCH=$(uname -m)
+case $MOZ_ARCH in
+	x86_64 | s390x | sparc64)
+		MOZ_LIB_DIR="/usr/lib64"
+		SECONDARY_LIB_DIR="/usr/lib"
+		;;
+	* )
+		MOZ_LIB_DIR="/usr/lib"
+		SECONDARY_LIB_DIR="/usr/lib64"
+		;;
+esac
+
+if [ ! -x $MOZ_LIB_DIR/firefox-FIREFOX_VERSION/firefox ]; then
+    if [ ! -x $SECONDARY_LIB_DIR/firefox-FIREFOX_VERSION/firefox ]; then
+	echo "Error: $MOZ_LIB_DIR/firefox-FIREFOX_VERSION/firefox not found"
+	if [ -d $SECONDARY_LIB_DIR ]; then
+	    echo "       $SECONDARY_LIB_DIR/firefox-FIREFOX_VERSION/firefox not found"
+	fi
+	exit 1
+    fi
+    MOZ_LIB_DIR="$SECONDARY_LIB_DIR"
+fi
+MOZ_DIST_BIN="$MOZ_LIB_DIR/firefox-FIREFOX_VERSION"
+## firefox DIR for remi 
+MOZ_XUL_DIR="$MOZ_DIST_BIN"
+MOZ_LANGPACKS_DIR="$MOZ_DIST_BIN/langpacks"
+MOZ_EXTENSIONS_PROFILE_DIR="$HOME/.mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+MOZ_PROGRAM="$MOZ_DIST_BIN/firefox"
+MOZ_LAUCHER="$MOZ_DIST_BIN/run-mozilla.sh"
+ 
+##
+## Set MOZ_GRE_CONF
+##
+## Not used for remi ## This build use bundled Xulrunner
+
+##
+## Set MOZILLA_FIVE_HOME
+##
+MOZILLA_FIVE_HOME="$MOZ_DIST_BIN"
+
+export MOZILLA_FIVE_HOME
+
+##
+## Select the propper plugin dir
+## Wrapped plug-ins are located in /lib/mozilla/plugins-wrapped
+##
+if [ -x "/usr/bin/mozilla-plugin-config" ]
+then
+  MOZ_PLUGIN_DIR="plugins-wrapped"
+else
+  MOZ_PLUGIN_DIR="plugins"
+fi
+
+##
+## Make sure that we set the plugin path
+##
+if [ "$MOZ_PLUGIN_PATH" ]
+then
+  MOZ_PLUGIN_PATH=$MOZ_PLUGIN_PATH:$MOZ_LIB_DIR/mozilla/$MOZ_PLUGIN_DIR:$MOZ_DIST_BIN/$MOZ_PLUGIN_DIR
+else
+  MOZ_PLUGIN_PATH=$MOZ_LIB_DIR/mozilla/$MOZ_PLUGIN_DIR:$MOZ_DIST_BIN/$MOZ_PLUGIN_DIR
+fi
+export MOZ_PLUGIN_PATH
+
+##
+## Set MOZ_APP_LAUNCHER for gnome-session
+##
+export MOZ_APP_LAUNCHER="/usr/bin/firefox"
+
+##
+## If plugins are wrapped, check them
+##
+if [ -x "/usr/bin/mozilla-plugin-config" ]
+then
+  /usr/bin/mozilla-plugin-config
+fi
+
+##
+## Set FONTCONFIG_PATH for Xft/fontconfig
+##
+FONTCONFIG_PATH="/etc/fonts:${MOZILLA_FIVE_HOME}/res/Xft"
+export FONTCONFIG_PATH
+
+##
+## In order to better support certain scripts (such as Indic and some CJK 
+## scripts), Fedora builds its Firefox, with permission from the Mozilla 
+## Corporation, with the Pango system as its text renderer.  This change 
+## may negatively impact performance on some pages.  To disable the use of
+## Pango, set MOZ_DISABLE_PANGO=1 in your environment before launching
+## Firefox.
+##
+#
+# MOZ_DISABLE_PANGO=1
+# export MOZ_DISABLE_PANGO
+#
+
+##
+## Disable the GNOME crash dialog, Moz has it's own
+##
+GNOME_DISABLE_CRASH_DIALOG=1
+export GNOME_DISABLE_CRASH_DIALOG
+
+# OK, here's where all the real work gets done
+
+
+##
+## To disable the use of Firefox localization, set MOZ_DISABLE_LANGPACKS=1
+## in your environment before launching Firefox.
+##
+#
+# MOZ_DISABLE_LANGPACKS=1
+# export MOZ_DISABLE_LANGPACKS
+#
+
+##
+## Automatically installed langpacks are tracked by .fedora-langpack-install
+## config file.
+##
+FEDORA_LANGPACK_CONFIG="$MOZ_EXTENSIONS_PROFILE_DIR/.fedora-langpack-install"
+
+# check system locale
+MOZARGS=
+
+# MOZ_DISABLE_LANGPACKS disables language packs completelly
+MOZILLA_DOWN=0
+if ! [ $MOZ_DISABLE_LANGPACKS ] || [ $MOZ_DISABLE_LANGPACKS -eq 0 ]; then
+    if [ -x $MOZ_XUL_DIR/mozilla-xremote-client ]; then
+        # Is firefox running?
+        $MOZ_XUL_DIR/mozilla-xremote-client -a firefox 'ping()' > /dev/null 2>&1
+        MOZILLA_DOWN=$?
+    fi
+fi
+
+# Modify language pack configuration only when firefox is not running 
+# and language packs are not disabled
+if [ $MOZILLA_DOWN -ne 0 ]; then
+
+    # Clear already installed langpacks
+    mkdir -p $MOZ_EXTENSIONS_PROFILE_DIR
+    if [ -f $FEDORA_LANGPACK_CONFIG ]; then
+        rm `cat $FEDORA_LANGPACK_CONFIG` > /dev/null 2>&1
+        rm $FEDORA_LANGPACK_CONFIG > /dev/null 2>&1
+    fi
+
+    # Get locale from system
+    CURRENT_LOCALE=$LC_ALL
+    CURRENT_LOCALE=${CURRENT_LOCALE:-$LC_MESSAGES}
+    CURRENT_LOCALE=${CURRENT_LOCALE:-$LANG}
+    
+    # Try without a local variant first, then with a local variant
+    # So that pt-BR doesn't try to use pt for example
+    SHORTMOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*||g"`
+    MOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*|-\1|g"`
+
+    # Try to link global langpacks to an extension directory
+    if [ -d $MOZ_LANGPACKS_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org/chrome/$SHORTMOZLOCALE ]; then
+        if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org ]; then
+            rmdir "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org" > /dev/null 2>&1
+        fi 
+        if ! [ -e $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org ]; then
+            ln -s $MOZ_LANGPACKS_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org \
+                  $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org
+            echo "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org" > $FEDORA_LANGPACK_CONFIG
+        fi
+    elif [ -d $MOZ_LANGPACKS_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org/chrome/$MOZLOCALE ]; then
+        if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org ]; then
+            rmdir "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org" > /dev/null 2>&1
+        fi 
+        if ! [ -e $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org ]; then
+            ln -s $MOZ_LANGPACKS_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org \
+                  $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org
+            echo "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org" > $FEDORA_LANGPACK_CONFIG
+        fi
+    fi
+
+    # And set it up for mozilla
+    if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org/chrome/$SHORTMOZLOCALE ]; then
+        MOZARGS="-UILocale $SHORTMOZLOCALE"
+    else
+        if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org/chrome/$MOZLOCALE ]; then
+            MOZARGS="-UILocale $MOZLOCALE"
+        fi
+    fi
+fi
+
+# Prepare command line arguments
+script_args=""
+pass_arg_count=0
+while [ $# -gt $pass_arg_count ]
+do
+  case "$1" in
+    -g | --debug)
+      script_args="$script_args -g"
+      debugging=1
+      shift
+      ;;
+    -d | --debugger)
+      if [ $# -gt 1 ]; then
+        script_args="$script_args -d $2"
+        shift 2
+      else
+        shift
+      fi
+      ;;
+    *)
+      # Move the unrecognized argument to the end of the list.
+      arg="$1"
+      shift
+      set -- "$@" "$arg"
+      pass_arg_count=`expr $pass_arg_count + 1`
+      ;;
+  esac
+done
+
+# Run the browser
+debugging=0
+if [ $debugging = 1 ]
+then
+  echo $MOZ_LAUCHER $script_args $MOZ_PROGRAM $MOZARGS "$@"
+fi
+
+exec $MOZ_LAUCHER $script_args $MOZ_PROGRAM $MOZARGS "$@"
