@@ -318,10 +318,9 @@ desktop-file-install --vendor mozilla \
 	-e 's,FIREFOX_RPM_VR,fc%{fedora},g' \
 	-e 's/Fedora/Remi/' > rh-default-prefs
 
-# resolves bug #461880
-%{__cat} > $RPM_BUILD_ROOT/%{mozappdir}/browserconfig.properties << EOF
-browser.startup.homepage=%{homepage}
-EOF
+# Startup page for default language
+sed -i -e 's@^\(browser\.startup\.homepage\(\|_reset\)\)=.*$@\1=%{homepage}@g;' \
+      $RPM_BUILD_ROOT/%{mozappdir}/chrome/en-US/locale/branding/browserconfig.properties
 
 # Export correct locale
 %{__cat} > $RPM_BUILD_ROOT/%{mozappdir}/defaults/pref/firefox-l10n.js << EOF
