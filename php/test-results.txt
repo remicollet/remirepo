@@ -1,5 +1,6 @@
 =====================================================================
-fc13.x86_64 ***** TIME END 2010-05-30 17:14:23
+TIME END 2010-09-05 06:32:23
+
 =====================================================================
 TEST RESULT SUMMARY
 ---------------------------------------------------------------------
@@ -7,14 +8,14 @@ Exts skipped    :   52
 Exts tested     :   26
 ---------------------------------------------------------------------
 
-Number of tests : 11146              6800
-Tests skipped   : 4346 ( 39.0%) --------
+Number of tests : 11205              6846
+Tests skipped   : 4359 ( 38.9%) --------
 Tests warned    :    0 (  0.0%) (  0.0%)
-Tests failed    :   32 (  0.3%) (  0.5%)
-Expected fail   :    7 (  0.1%) (  0.1%)
-Tests passed    : 6761 ( 60.7%) ( 99.4%)
+Tests failed    :   37 (  0.3%) (  0.5%)
+Expected fail   :    8 (  0.1%) (  0.1%)
+Tests passed    : 6801 ( 60.7%) ( 99.3%)
 ---------------------------------------------------------------------
-Time taken      :  273 seconds
+Time taken      :  283 seconds
 =====================================================================
 
 =====================================================================
@@ -23,9 +24,13 @@ FAILED TEST SUMMARY
 easter_date() [ext/calendar/tests/easter_date.phpt]
 unixtojd() [ext/calendar/tests/unixtojd.phpt]
 timezone_abbreviations_list() tests [ext/date/tests/010.phpt]
-Test DateTimeZone::listAbbreviations() function : basic functionality [ext/date/tests/DateTimeZone_listAbbreviations_basic1.phpt]
 Test DateTime::modify() function : usage variation - Passing unexpected values to first argument $modify. [ext/date/tests/DateTime_modify_variation1.phpt]
-Extensive test for date_diff(). [ext/date/tests/date_diff.phpt]
+Bug #33415 [2] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-2.phpt]
+Bug #48187 (DateTime::diff() corrupting microtime() result) [ext/date/tests/bug48187.phpt]
+Bug #51819 (Case discrepancy in timezone names cause Uncaught exception and fatal error) [ext/date/tests/bug51819.phpt]
+Bug #51994 (date_parse_from_format is parsing invalid date using 'yz' format) [ext/date/tests/bug51994.phpt]
+Bug #52290 (setDate, setISODate, setTime works wrong when DateTime created from timestamp) [ext/date/tests/bug52290.phpt]
+Bug #52342 (DateTime setIsoDate results in wrong timestamp) [ext/date/tests/bug52342.phpt]
 Test date_modify() function : usage variation - Passing unexpected values to second argument $format. [ext/date/tests/date_modify_variation2.phpt]
 Test timezone_abbreviations_list() function : basic functionality [ext/date/tests/timezone_abbreviations_list_basic1.phpt]
 timezone_location_get: Test that timezone_location_get returns a correct array of information [ext/date/tests/timezone_location_get.phpt]
@@ -34,6 +39,7 @@ gmp_nextprime() [ext/gmp/tests/gmp_nextprime.phpt]
 Bug #28382 (openssl_x509_parse extensions support) [ext/openssl/tests/bug28382.phpt]
 Bug #47828 (segfaults when a UTF-8 conversion fails openssl_x509_parse()) [ext/openssl/tests/bug47828.phpt]
 openssl_x509_parse() basic test [ext/openssl/tests/openssl_x509_parse_basic.phpt]
+ReflectionClass::isIterateable() [ext/reflection/tests/ReflectionClass_isIterateable_001.phpt]
 Test session_module_name() function : variation [ext/session/tests/session_module_name_variation3.phpt]
 Test session_name() function : error functionality [ext/session/tests/session_name_basic.phpt]
 Test session_name() function : variation [ext/session/tests/session_name_variation1.phpt]
@@ -53,60 +59,4 @@ Test gethostbyaddr() function : basic functionality [ext/standard/tests/network/
 htmlentities() / html_entity_decode() #8592 - #9002 table test [ext/standard/tests/strings/htmlentities17.phpt]
 Test sscanf() function : basic functionality - unsigned format [ext/standard/tests/strings/sscanf_basic6.phpt]
 =====================================================================
-
-
-
-=====================================================================
-fc13.i386 ***** TIME END 2010-05-30 15:32:31
-=====================================================================
-TEST RESULT SUMMARY
----------------------------------------------------------------------
-Exts skipped    :   52
-Exts tested     :   26
----------------------------------------------------------------------
-Number of tests : 11146              6920
-Tests skipped   : 4226 ( 37.9%) --------
-Tests warned    :    0 (  0.0%) (  0.0%)
-Tests failed    :   31 (  0.3%) (  0.4%)
-Expected fail   :    7 (  0.1%) (  0.1%)
-Tests passed    : 6882 ( 61.7%) ( 99.5%)
----------------------------------------------------------------------
-Time taken      :  278 seconds
-=====================================================================
-=====================================================================
-FAILED TEST SUMMARY
----------------------------------------------------------------------
-Bug #45877 (Array key '2147483647' left as string) [Zend/tests/bug45877.phpt]
-easter_date() [ext/calendar/tests/easter_date.phpt]
-unixtojd() [ext/calendar/tests/unixtojd.phpt]
-timezone_abbreviations_list() tests [ext/date/tests/010.phpt]
-Test DateTimeZone::listAbbreviations() function : basic functionality [ext/date/tests/DateTimeZone_listAbbreviations_basic1.phpt]
-Test DateTime::modify() function : usage variation - Passing unexpected values to first argument $modify. [ext/date/tests/DateTime_modify_variation1.phpt]
-Bug #51393 (DateTime::createFromFormat() fails if format string contains timezone) [ext/date/tests/bug51393.phpt]
-Extensive test for date_diff(). [ext/date/tests/date_diff.phpt]
-Test date_modify() function : usage variation - Passing unexpected values to second argument $format. [ext/date/tests/date_modify_variation2.phpt]
-Test timezone_abbreviations_list() function : basic functionality [ext/date/tests/timezone_abbreviations_list_basic1.phpt]
-timezone_location_get: Test that timezone_location_get returns a correct array of information [ext/date/tests/timezone_location_get.phpt]
-gmp_gcdext() basic tests [ext/gmp/tests/022.phpt]
-gmp_nextprime() [ext/gmp/tests/gmp_nextprime.phpt]
-Bug #28382 (openssl_x509_parse extensions support) [ext/openssl/tests/bug28382.phpt]
-Bug #47828 (segfaults when a UTF-8 conversion fails openssl_x509_parse()) [ext/openssl/tests/bug47828.phpt]
-openssl_x509_parse() basic test [ext/openssl/tests/openssl_x509_parse_basic.phpt]
-a script should not be able to modify session.use_trans_sid [ext/session/tests/014.phpt]
-use_trans_sid should not affect SID [ext/session/tests/015.phpt]
-rewriter correctly handles attribute names which contain dashes [ext/session/tests/018.phpt]
-rewriter uses arg_seperator.output for modifying URLs [ext/session/tests/020.phpt]
-rewriter handles form and fieldset tags correctly [ext/session/tests/021.phpt]
-Bug #31454 (Incorrect adding PHPSESSID to links, which contains \r\n) [ext/session/tests/bug36459.phpt]
-Bug #41600 (url rewriter tags doesn't work with namespaced tags) [ext/session/tests/bug41600.phpt]
-Test session_encode() function : error functionality [ext/session/tests/session_encode_error2.phpt]
-SimpleXML: XPath [ext/simplexml/tests/008.phpt]
-Bug #51615 (PHP crash with wrong HTML in SimpleXML) [ext/simplexml/tests/bug51615.phpt]
-ext/sockets - socket_strerror - basic test [ext/sockets/tests/socket_strerror.phpt]
-Bug #44394 (Last two bytes missing from output) with session.use_trans_id [ext/standard/tests/general_functions/bug44394_2.phpt]
-Test var_export() function with valid float values [ext/standard/tests/general_functions/var_export_basic3.phpt]
-Test gethostbyaddr() function : basic functionality [ext/standard/tests/network/gethostbyaddr_basic1.phpt]
-htmlentities() / html_entity_decode() #8592 - #9002 table test [ext/standard/tests/strings/htmlentities17.phpt]
-=====================================================================
-
 
