@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201008301430
+%global snapdate 201009050430
 %global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -73,8 +73,6 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.3.4-aconf26x.patch
-# See http://bugs.php.net/52725
-Patch9: php-5.3.4-atomic.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -544,7 +542,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if 0%{?fedora} >= 13
 %patch8 -p1 -b .aconf26x
 %endif
-%patch9 -p0 -b .atomic
 
 %patch20 -p1 -b .shutdown
 %patch21 -p1 -b .macropen
@@ -1205,6 +1202,9 @@ fi
 %endif
 
 %changelog
+* Sun Sep 05 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201009050430
+- new snapshot (5.3.4-dev)
+
 * Mon Aug 30 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201008301430
 - new snapshot (5.3.4-dev)
 - replace upstream patch for http://bugs.php.net/52725
