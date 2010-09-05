@@ -6,3 +6,13 @@
  --EXPECTF--
 -Fatal error: Undefined class constant 'D::hello' in %s on line %d
 +Fatal error: Class 'D' not found in %s on line %d
+--- ext/calendar/tests/easter_date.phpt.orig	2010-09-05 09:21:38.821146392 +0200
++++ ext/calendar/tests/easter_date.phpt	2010-09-05 09:21:46.626896942 +0200
+@@ -1,5 +1,7 @@
+ --TEST--
+ easter_date()
++--ENV--
++TZ=UTC
+ --INI--
+ date.timezone=UTC
+ --SKIPIF--
