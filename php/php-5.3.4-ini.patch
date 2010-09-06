@@ -1,6 +1,15 @@
---- php5.3-201009050430/main/php_ini.c.orig	2010-09-06 19:46:05.162552614 +0200
-+++ php5.3-201009050430/main/php_ini.c	2010-09-06 19:49:01.614422907 +0200
-@@ -654,9 +654,6 @@
+diff -up php5.3-201009061630/main/php_ini.c.resetini php5.3-201009061630/main/php_ini.c
+--- php5.3-201009061630/main/php_ini.c.resetini	2010-08-31 00:34:49.000000000 +0200
++++ php5.3-201009061630/main/php_ini.c	2010-09-06 20:26:37.946426389 +0200
+@@ -201,6 +201,7 @@ PHPAPI void config_zval_dtor(zval *zvalu
+ /* Reset / free active_ini_sectin global */
+ #define RESET_ACTIVE_INI_HASH() do { \
+ 	active_ini_hash = NULL;          \
++	is_special_section = 0;          \
+ } while (0)
+ /* }}} */
+ 
+@@ -654,9 +655,6 @@ int php_init_config(TSRMLS_D)
  		zend_llist_element *element;
  		int l, total_l = 0;
  
@@ -10,7 +19,7 @@
  		if ((ndir = php_scandir(php_ini_scanned_path, &namelist, 0, php_alphasort)) > 0) {
  			zend_llist_init(&scanned_ini_list, sizeof(char *), (llist_dtor_func_t) free_estring, 1);
  			memset(&fh, 0, sizeof(fh));
-@@ -668,6 +665,9 @@
+@@ -668,6 +666,9 @@ int php_init_config(TSRMLS_D)
  					free(namelist[i]);
  					continue;
  				}
