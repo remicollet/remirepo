@@ -1,0 +1,22 @@
+--- php5.3-201009050430/main/php_ini.c.orig	2010-09-06 19:46:05.162552614 +0200
++++ php5.3-201009050430/main/php_ini.c	2010-09-06 19:49:01.614422907 +0200
+@@ -654,9 +654,6 @@
+ 		zend_llist_element *element;
+ 		int l, total_l = 0;
+ 
+-		/* Reset active ini section */
+-		RESET_ACTIVE_INI_HASH();
+-
+ 		if ((ndir = php_scandir(php_ini_scanned_path, &namelist, 0, php_alphasort)) > 0) {
+ 			zend_llist_init(&scanned_ini_list, sizeof(char *), (llist_dtor_func_t) free_estring, 1);
+ 			memset(&fh, 0, sizeof(fh));
+@@ -668,6 +665,9 @@
+ 					free(namelist[i]);
+ 					continue;
+ 				}
++				/* Reset active ini section */
++				RESET_ACTIVE_INI_HASH();
++
+ 				if (IS_SLASH(php_ini_scanned_path[php_ini_scanned_path_len - 1])) {
+ 					snprintf(ini_file, MAXPATHLEN, "%s%s", php_ini_scanned_path, namelist[i]->d_name);
+ 				} else {
