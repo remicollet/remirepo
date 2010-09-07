@@ -30,7 +30,6 @@ ac_add_options --disable-crashreporter
 ac_add_options --disable-necko-wifi
 ac_add_options --disable-updater
 
-
 export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1
 mk_add_options BUILD_OFFICIAL=1

@@ -1,5 +1,5 @@
 %define nspr_version 4.8
-%define nss_version 3.12.3.99
+%define nss_version 3.12.6
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
 %define lcms_version 1.19
@@ -18,7 +18,7 @@
 %define tarballdir comm-1.9.2
 
 %define official_branding 1
-%define include_debuginfo 0
+%define enable_mozilla_crashreporter 0
 
 %define version_internal  3.1
 %define mozappdir         %{_libdir}/%{name}-%{version_internal}
@@ -26,7 +26,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        3.1.2
+Version:        3.1.3
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -41,7 +41,7 @@ Source0:        %{tarball}
 #NoSource:       0
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100806.tar.bz2
+Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100907.tar.bz2
 %endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -69,7 +69,6 @@ Patch2:         thunderbird-shared-error.patch
 # Fixes gcc complain that nsFrame::delete is protected
 Patch4:         xulrunner-1.9.2.1-build.patch
 # Fix missing includes for crash reporter, remove in 3.1 final
-Patch5:         xulrunner-missing-headers.patch
 Patch6:         remove-static.patch
 
 %if %{official_branding}
@@ -109,7 +108,8 @@ BuildRequires:  libXrender-devel
 %if 0%{?fedora} >= 10
 BuildRequires:  hunspell-devel
 %endif
-%if 0%{?fedora} >= 13
+%if 0%{?fedora} >= 15
+# Need SQLITE_SECURE_DELETE option
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
 BuildRequires:  startup-notification-devel
@@ -148,6 +148,11 @@ Mozilla Thunderbird is a standalone mail and newsgroup client.
 echo CIBLE = %{name}-%{version}-%{release}
 [ -f %{SOURCE1} ] || exit 1
 %setup -q -c
+
+sed -e "s/^Name=.*/Name=Thunderbird %{version} %{?relcan}/" \
+    -e "s/thunderbird/%{name}/" \
+    %{SOURCE20} | tee %{name}.desktop
+
 cd %{tarballdir}
 
 sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
@@ -157,7 +162,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %patch1 -p0 -b .jemalloc
 %patch2 -p1 -b .shared-error
 %patch4 -p1 -b .protected
-%patch5 -p0 -b .stat
 %patch6 -p1 -b .static
 
 
@@ -172,7 +176,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 
 %{__rm} -f .mozconfig
 cat %{SOURCE10} 		\
-%if %{fedora} < 13
+%if %{fedora} < 15
   | grep -v system-sqlite 	\
 %endif
 %if %{fedora} < 11
@@ -197,21 +201,18 @@ ac_add_options --disable-libnotify
 %if %{fedora} >= 11
 ac_add_options --enable-system-lcms
 %endif
-%if %{fedora} >= 13
+%if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
 EOF
 
+#{__cp} %{SOURCE10} .mozconfig
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
 %endif
-%if %{include_debuginfo}
+%if %{enable_mozilla_crashreporter}
 %{__cat} %{SOURCE13} >> .mozconfig
 %endif
-
-sed -e "s/^Name=.*/Name=Thunderbird %{version} %{?relcan}/" \
-    -e "s/thunderbird/%{name}/" \
-    %{SOURCE20} | tee %{name}.desktop
 
 #===============================================================================
 
@@ -241,7 +242,7 @@ export MAKE="gmake %{moz_make_flags}"
 make -f client.mk build
 
 # create debuginfo for crash-stats.mozilla.com
-%if %{include_debuginfo}
+%if %{enable_mozilla_crashreporter}
 cd %{moz_objdir}
 make buildsymbols
 %endif
@@ -285,7 +286,7 @@ desktop-file-install --vendor mozilla \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications \
   --add-category Network \
   --add-category Email \
-  %{name}.desktop
+  ../%{name}.desktop
 
 # set up the thunderbird start script
 rm -f $RPM_BUILD_ROOT/%{_bindir}/thunderbird
@@ -366,9 +367,9 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 
 
 # Add debuginfo for crash-stats.mozilla.com 
-%if %{include_debuginfo}
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/debug%{mozappdir}
-cp %{moz_objdir}/mozilla/dist/thunderbird-%{version}.en-US.linux-*.crashreporter-symbols.zip $RPM_BUILD_ROOT%{_libdir}/debug%{mozappdir}
+%if %{enable_mozilla_crashreporter}
+mkdir -p $RPM_BUILD_ROOT%{_exec_prefix}/lib/debug%{mozappdir}
+cp %{moz_objdir}/mozilla/dist/thunderbird-%{version}.en-US.linux-*.crashreporter-symbols.zip $RPM_BUILD_ROOT%{_exec_prefix}/lib/debug%{mozappdir}
 %endif
 
 # RC - provide account type
@@ -469,7 +470,7 @@ fi
 %{_datadir}/icons/hicolor/256x256/apps/thunderbird.png
 %{_datadir}/icons/hicolor/32x32/apps/thunderbird.png
 %{_datadir}/icons/hicolor/48x48/apps/thunderbird.png
-%if %{include_debuginfo}
+%if %{enable_mozilla_crashreporter}
 %{mozappdir}/crashreporter
 %{mozappdir}/crashreporter.ini
 %{mozappdir}/Throbber-small.gif
@@ -478,8 +479,11 @@ fi
 #===============================================================================
 
 %changelog
+* Tue Sep 07 2010 Remi Collet <rpms@famillecollet.com> 3.1.3-1
+- Thunderbird 3.1.3
+
 * Fri Aug 06 2010 Remi Collet <rpms@famillecollet.com> 3.1.2-1
-- Thunderbird 3.1.1
+- Thunderbird 3.1.2
 
 * Fri Aug  6 2010 Jan Horak <jhorak@redhat.com> - 3.1.2-1
 - Update to 3.1.2
