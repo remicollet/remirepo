@@ -19,6 +19,8 @@ getxpi() {
 			[ -f $i.xpi ] && echo "already downloaded"
 			[ -f $i.xpi ] || wget -nv $URL/$i.xpi
 		done
+		echo -n "Number of XPI found: "
+		ls *.xpi | wc -l
 	fi
 }
 

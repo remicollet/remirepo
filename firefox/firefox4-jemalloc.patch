@@ -1,6 +1,6 @@
 diff -up mozilla-central/memory/jemalloc/jemalloc.h.jemalloc mozilla-central/memory/jemalloc/jemalloc.h
---- mozilla-central/memory/jemalloc/jemalloc.h.jemalloc	2010-07-21 02:52:33.000000000 +0200
-+++ mozilla-central/memory/jemalloc/jemalloc.h	2010-07-28 09:10:06.569525680 +0200
+--- mozilla-central/memory/jemalloc/jemalloc.h.jemalloc	2010-08-18 15:21:10.000000000 -0400
++++ mozilla-central/memory/jemalloc/jemalloc.h	2010-09-01 16:50:38.615946834 -0400
 @@ -42,12 +42,12 @@ extern const char *_malloc_options;
  
  /* Darwin and Linux already have memory allocation functions */
@@ -11,12 +11,12 @@ diff -up mozilla-central/memory/jemalloc/jemalloc.h.jemalloc mozilla-central/mem
 -void	*realloc(void *ptr, size_t size);
 -void	free(void *ptr);
 -int	posix_memalign(void **memptr, size_t alignment, size_t size);
-+void	*malloc(size_t size)  __THROW __attribute_malloc__ __wur;
-+void	*valloc(size_t size)  __THROW __attribute_malloc__ __wur;
-+void	*calloc(size_t num, size_t size)  __THROW __attribute_malloc__ __wur;
-+void	*realloc(void *ptr, size_t size)  __THROW __attribute_malloc__ __wur;
-+void	free(void *ptr)  __THROW __attribute_malloc__ __wur;
-+int	posix_memalign(void **memptr, size_t alignment, size_t size)  __THROW __attribute_malloc__ __wur;
++void *malloc(size_t size) __THROW __attribute_malloc__ __wur;
++void *valloc(size_t size) __THROW __attribute_malloc__ __wur;
++void *calloc(size_t num, size_t size) __THROW __attribute_malloc__ __wur;
++void *realloc(void *ptr, size_t size) __THROW __attribute_malloc__ __wur;
++void free(void *ptr) __THROW __attribute_malloc__ __wur;
++int posix_memalign(void **memptr, size_t alignment, size_t size) __THROW __attribute_malloc__ __wur;
  #endif /* MOZ_MEMORY_DARWIN, MOZ_MEMORY_LINUX */
  
  #if defined(MOZ_MEMORY_ANDROID) || defined(WRAP_MALLOC)

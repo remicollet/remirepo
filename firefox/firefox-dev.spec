@@ -25,12 +25,12 @@
 
 %global relcan b5
 %global firefox firefox
-%global mycomment  Beta 5 (Build 1)
+%global mycomment  Beta 5
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.7.beta5.build1%{?dist}
+Release:        0.8.beta5%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100902.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100908.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -55,25 +55,33 @@ Source100:      find-external-requires
 Source200:      firefox-bookmarks.html
 
 # build patches from xulrunner
-Patch0:         firefox4-version.patch
+#Patch0:         xulrunner-version.patch 	=> firefox / firefox4-version.patch
+#Patch1:         mozilla-build.patch
 Patch1:         firefox4-build.patch
 Patch3:         firefox4-jemalloc.patch
 Patch4:         mozilla-about-firefox-version.patch
-Patch7:         firefox4-build-del.patch
+Patch7:         xulrunner-1.9.2.1-build.patch
 Patch8:         mozilla-plugin.patch
-Patch9:         firefox4-build-sbrk.patch
-Patch10:        firefox4-build-throw.patch
+Patch9:         mozilla-build-sbrk.patch
+Patch10:        mozilla-build-s390.patch
+Patch11:        mozilla-malloc.patch
+
+# Fedora specific patches
+Patch20:        mozilla-193-pkgconfig.patch
+Patch21:        mozilla-libjpeg-turbo.patch
 
 # build patches from firefox
+Patch0:         firefox4-version.patch
+#Patch1:         firefox4-jemalloc.patch	= xulrunner / firefox4-jemalloc.patch
+#Patch2:         firefox4-build-throw.patch	= xulrunner / mozilla-malloc.patch
+
 Patch30:        firefox-disable-checkupdates.patch
-Patch31:        firefox-default.patch
+Patch31:        firefox4-default.patch
 
 
 # Fedora specific patches
-Patch20:        mozilla-192-pkgconfig.patch
 
 # Upstream patches
-Patch100:       mozilla-ps-pdf-simplify-operators.patch
 
 # Remi specific patches
 
@@ -109,7 +117,7 @@ BuildRequires:  wireless-tools-devel
 %endif
 
 # BR from Xulrunner
-%if %{fedora} >= 99
+%if %{fedora} >= 15
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
@@ -175,31 +183,37 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
     > version.patch
 %{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
 
-%patch1  -p1 -b .build
+# Build Patches
+%patch1  -p2 -b .build
 %patch3  -p1 -b .jemalloc
 %patch4  -p1 -b .about-firefox-version
-%patch7  -p1 -b .del
+%patch7  -p2 -b .del
 #patch8  -p1 -b .plugin
-%patch9  -p1 -b .sbrk
-%patch10  -p1 -b .throw
+%patch9  -p2 -b .sbrk
+%ifarch s390
+%patch10 -p1 -b .s390
+%endif
+%patch11 -p2 -b .malloc
 
-#patch20 -p1 -b .pk
+%patch20 -p2 -b .pk
+%if %{fedora} >= 14
+%patch21 -p2 -b .jpeg-turbo
+%endif
 
 %patch30 -p1 -b .checkupdates
-#patch31 -p2 -b .default
-
-#patch100 -p1 -b .ps-pdf-simplify-operators
+%patch31 -p2 -b .default
 
 %{__rm} -f .mozconfig
 
 cat <<EOF_MOZCONFIG | tee .mozconfig 
 . \$topsrcdir/browser/config/mozconfig
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir-%{name}/
 
 # --with-system-png is disabled because Mozilla requires APNG support in libpng
 #ac_add_options --with-system-png
 ac_add_options --prefix="\$PREFIX"
 ac_add_options --libdir="\$LIBDIR"
-%if %{fedora} >= 99
+%if %{fedora} >= 15
 ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 ac_add_options --enable-system-sqlite
@@ -234,7 +248,7 @@ ac_add_options --disable-tests
 ac_add_options --disable-mochitest
 ac_add_options --disable-installer
 ac_add_options --disable-debug
-ac_add_options --enable-optimize
+ac_add_options --enable-optimize="\$MOZ_OPT_FLAGS"
 ac_add_options --enable-xinerama
 ac_add_options --enable-default-toolkit=cairo-gtk2
 ac_add_options --disable-xprint
@@ -265,7 +279,7 @@ cd %{tarballdir}
 
 # Mozilla builds with -Wall with exception of a few warnings which show up
 # everywhere in the code; so, don't override that.
-MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/')
+export MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/')
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
 
@@ -291,7 +305,7 @@ make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 %{__rm} -rf $RPM_BUILD_ROOT
 cd %{tarballdir}
 
-pushd obj*gnu
+pushd objdir-%{name}
 DESTDIR=$RPM_BUILD_ROOT make install
 popd
 
@@ -386,21 +400,6 @@ for langpack in `ls firefox-langpacks/*.xpi`; do
   unzip -q $langpack -d $extensiondir
   find $extensiondir -type f | xargs chmod 644
 
-  #tmpdir=`mktemp -d %{name}.XXXXXXXX`
-  #langtmp=$tmpdir/%{name}/langpack-$language
-  #%{__mkdir_p} $langtmp
-  #jarfile=$extensiondir/chrome/$language.jar
-  #unzip $jarfile -d $langtmp
-
-  #sed -i -e "s|browser.startup.homepage.*$|browser.startup.homepage=%{homepage}|g;" \
-  #       $langtmp/locale/browser-region/region.properties
-
-  #find $langtmp -type f | xargs chmod 644
-  #%{__rm} -rf $jarfile
-  #cd $langtmp
-  #zip -r -D $jarfile locale
-  #cd -
-  #%{__rm} -rf $tmpdir
   sed -i -e 's@^\(browser\.startup\.homepage\(\|_reset\)\)=.*$@\1=%{homepage}@g;' \
          $extensiondir/chrome/$language/locale/branding/browserconfig.properties
   cat    $extensiondir/chrome/$language/locale/branding/browserconfig.properties
@@ -491,7 +490,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %dir %{mozappdir}
 %doc %{mozappdir}/LICENSE
 %doc %{mozappdir}/README.txt
-%{mozappdir}/*.properties
+#%{mozappdir}/*.properties
 %{mozappdir}/chrome
 %dir %{mozappdir}/components
 %ghost %{mozappdir}/components/compreg.dat
@@ -529,9 +528,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/application.ini
 #%{mozappdir}/.autoreg
 %exclude %{mozappdir}/removed-files
-%exclude %{_includedir}/firefox-%{internal_version}
-%exclude %{_libdir}/firefox-devel-%{internal_version}
-%exclude %{_datadir}/idl/firefox-%{internal_version}
+%exclude %{_includedir}/firefox-sdk-%{internal_version}
+%exclude %{_libdir}/firefox-sdk-%{internal_version}
+%exclude %{_datadir}/idl/firefox-sdk-%{internal_version}
 %{_datadir}/icons/hicolor/16x16/apps/%{name}.png
 %{_datadir}/icons/hicolor/22x22/apps/%{name}.png
 %{_datadir}/icons/hicolor/24x24/apps/%{name}.png
@@ -542,6 +541,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Sep 08 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.8.beta5
+- update to 4.0b5
+- sync patches with rawhide
+- set MOZ_OBJDIR
+
 * Thu Sep 02 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.7.beta5.build1
 - update to 4.0b5 build1
 
