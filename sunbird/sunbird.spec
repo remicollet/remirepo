@@ -1,5 +1,5 @@
-%define nspr_version 4.8
-%define nss_version 3.12.3.99
+%define nspr_version 4.8.6
+%define nss_version 3.12.6
 %define cairo_version 1.8.8
 %define dbus_glib_version 0.6
 %define sqlite_version 3.6.22
@@ -76,9 +76,12 @@ BuildRequires:  libical-devel
 BuildRequires:  zip
 BuildRequires:  autoconf213
 BuildRequires:  alsa-lib-devel
+%if 0%{?fedora} >= 15
+## NSPR 4.8.6 is on updates-testing 
+Requires:       nspr >= %{nspr_version}
+%endif
 %if 0%{fedora} >= 11
 BuildRequires:  cairo-devel >= %{cairo_version}
-Requires:       nspr >= %{nspr_version}
 Requires:       nss >= %{nss_version}
 %endif
 %if 0%{?fedora} >= 13
@@ -161,8 +164,10 @@ ac_add_options --libdir="%{_libdir}"
 ac_add_options --prefix="%{_prefix}"
 ac_add_options --with-pthreads
 ac_add_options --with-system-jpeg
-%if %{fedora} >= 11
+%if %{fedora} >= 15
 ac_add_options --with-system-nspr
+%endif
+%if %{fedora} >= 11
 ac_add_options --with-system-nss
 %endif
 ac_add_options --with-system-zlib
