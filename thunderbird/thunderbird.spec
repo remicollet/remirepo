@@ -1,4 +1,4 @@
-%define nspr_version 4.8
+%define nspr_version 4.8.6
 %define nss_version 3.12.6
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
@@ -80,8 +80,11 @@ Patch6:         remove-static.patch
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 15
+## NSPR 4.8.6 is on updates-testing 
 BuildRequires:  nspr-devel >= %{nspr_version}
+%endif
+%if 0%{?fedora} >= 11
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{fedora} >= 11
@@ -122,8 +125,10 @@ BuildRequires:  GConf2-devel
 %if 0%{?fedora} >= 9
 Requires:       mozilla-filesystem
 %endif
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 15
 Requires:       nspr >= %{nspr_version}
+%endif
+%if 0%{?fedora} >= 11
 Requires:       nss >= %{nss_version}
 %endif
 %if %{fedora} >= 9
@@ -178,10 +183,10 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 cat %{SOURCE10} 		\
 %if %{fedora} < 15
   | grep -v system-sqlite 	\
+  | grep -v system-nspr 	\
 %endif
 %if %{fedora} < 11
   | grep -v system-nss 		\
-  | grep -v system-nspr 	\
   | grep -v system-hunspell	\
 %endif
 %if %{fedora} < 11
@@ -481,6 +486,7 @@ fi
 %changelog
 * Tue Sep 07 2010 Remi Collet <rpms@famillecollet.com> 3.1.3-1
 - Thunderbird 3.1.3
+- disable system nspr (version 4.8.6 required not yet available)
 
 * Fri Aug 06 2010 Remi Collet <rpms@famillecollet.com> 3.1.2-1
 - Thunderbird 3.1.2
