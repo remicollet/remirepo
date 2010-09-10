@@ -55,20 +55,22 @@ Source100:      find-external-requires
 Source200:      firefox-bookmarks.html
 
 # build patches from xulrunner
-#Patch0:         xulrunner-version.patch 	=> firefox / firefox4-version.patch
-#Patch1:         mozilla-build.patch
+#Patch0:        xulrunner-version.patch 	=> firefox / firefox4-version.patch
+#Patch1:        mozilla-build.patch
 Patch1:         firefox4-build.patch
 Patch3:         firefox4-jemalloc.patch
 Patch4:         mozilla-about-firefox-version.patch
 Patch7:         xulrunner-1.9.2.1-build.patch
 Patch8:         mozilla-plugin.patch
-Patch9:         mozilla-build-sbrk.patch
+#Patch9:        mozilla-build-sbrk.patch
+Patch9:         firefox4-build-sbrk.patch
 Patch10:        mozilla-build-s390.patch
 Patch11:        mozilla-malloc.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
-Patch21:        mozilla-libjpeg-turbo.patch
+#Patch21:       mozilla-libjpeg-turbo.patch
+Patch21:        firefox4-libjpeg-turbo.patch
 
 # build patches from firefox
 Patch0:         firefox4-version.patch

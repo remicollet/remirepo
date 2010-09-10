@@ -1,19 +1,19 @@
-diff -up xulrunner2-2.0/mozilla-central/js/src/shell/js.cpp.sbrk xulrunner2-2.0/mozilla-central/js/src/shell/js.cpp
---- xulrunner2-2.0/mozilla-central/js/src/shell/js.cpp.sbrk	2010-07-20 20:52:15.000000000 -0400
-+++ xulrunner2-2.0/mozilla-central/js/src/shell/js.cpp	2010-07-28 10:21:51.905606001 -0400
-@@ -1118,7 +1118,7 @@ GC(JSContext *cx, uintN argc, jsval *vp)
+diff -up xulrunner-1.9.2.1/mozilla-1.9.2/js/src/shell/js.cpp.sbrk xulrunner-1.9.2.1/mozilla-1.9.2/js/src/shell/js.cpp
+--- xulrunner-1.9.2.1/mozilla-1.9.2/js/src/shell/js.cpp.sbrk	2010-01-06 04:35:17.000000000 +0100
++++ xulrunner-1.9.2.1/mozilla-1.9.2/js/src/shell/js.cpp	2010-01-13 21:49:33.000000000 +0100
+@@ -1119,7 +1119,7 @@ GC(JSContext *cx, uintN argc, jsval *vp)
      char buf[256];
      JS_snprintf(buf, sizeof(buf), "before %lu, after %lu, break %08lx\n",
-                 (unsigned long)preBytes, (unsigned long)cx->runtime->gcBytes,
+                 (unsigned long)preBytes, (unsigned long)rt->gcBytes,
 -#ifdef HAVE_SBRK
 +#if 0
                  (unsigned long)sbrk(0)
  #else
                  0
-diff -up xulrunner2-2.0/mozilla-central/js/src/xpconnect/shell/xpcshell.cpp.sbrk xulrunner2-2.0/mozilla-central/js/src/xpconnect/shell/xpcshell.cpp
---- xulrunner2-2.0/mozilla-central/js/src/xpconnect/shell/xpcshell.cpp.sbrk	2010-07-20 20:52:20.000000000 -0400
-+++ xulrunner2-2.0/mozilla-central/js/src/xpconnect/shell/xpcshell.cpp	2010-07-28 10:20:36.878606001 -0400
-@@ -540,7 +540,7 @@ GC(JSContext *cx, JSObject *obj, uintN a
+diff -up xulrunner-1.9.2.1/mozilla-1.9.2/js/src/xpconnect/shell/xpcshell.cpp.sbrk xulrunner-1.9.2.1/mozilla-1.9.2/js/src/xpconnect/shell/xpcshell.cpp
+--- xulrunner-1.9.2.1/mozilla-1.9.2/js/src/xpconnect/shell/xpcshell.cpp.sbrk	2010-01-06 04:35:19.000000000 +0100
++++ xulrunner-1.9.2.1/mozilla-1.9.2/js/src/xpconnect/shell/xpcshell.cpp	2010-01-13 22:32:46.000000000 +0100
+@@ -543,7 +543,7 @@ GC(JSContext *cx, JSObject *obj, uintN a
      JS_GC(cx);
      fprintf(gOutFile, "before %lu, after %lu, break %08lx\n",
             (unsigned long)preBytes, (unsigned long)rt->gcBytes,

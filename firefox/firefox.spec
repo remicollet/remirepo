@@ -1,5 +1,5 @@
-%define nspr_version 4.8
-%define nss_version 3.12.6
+%define nspr_version 4.8.6
+%define nss_version 3.12.7
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
 %define lcms_version 1.18
@@ -29,8 +29,8 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        3.6.8
-Release:        1%{?dist}.1
+Version:        3.6.9
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100724.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100910.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -62,6 +62,8 @@ Patch4:         mozilla-about-firefox-version.patch
 Patch7:         xulrunner-1.9.2.1-build.patch
 Patch8:         mozilla-plugin.patch
 Patch9:         mozilla-build-sbrk.patch
+Patch10:        mozilla-build-s390.patch
+Patch11:        mozilla-gdk-pixbuf.patch
 
 # build patches from firefox
 Patch30:        firefox-disable-checkupdates.patch
@@ -70,6 +72,7 @@ Patch31:        firefox-default.patch
 
 # Fedora specific patches
 Patch20:        mozilla-192-pkgconfig.patch
+Patch21:        mozilla-libjpeg-turbo.patch
 
 # Upstream patches
 Patch100:       mozilla-ps-pdf-simplify-operators.patch
@@ -108,12 +111,13 @@ BuildRequires:  wireless-tools-devel
 %endif
 
 # BR from Xulrunner
-%if %{fedora} >= 13
+%if %{fedora} >= 15
+# Requires SQLITE_SECURE_DELETE only in F-15
 BuildRequires:  sqlite-devel >= %{sqlite_version}
+BuildRequires:  nss-devel >= %{nss_version}
+BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
 %if %{fedora} >= 11
-BuildRequires:  nspr-devel >= %{nspr_version}
-BuildRequires:  nss-devel >= %{nss_version}
 BuildRequires:  hunspell-devel
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
@@ -178,8 +182,17 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch7  -p2 -b .del
 %patch8  -p1 -b .plugin
 %patch9  -p2 -b .sbrk
+%ifarch s390
+%patch10 -p1 -b .s390
+%endif
+%if %{fedora} >= 14
+%patch11 -p1 -b .gdk-pixbuf
+%endif
 
 %patch20 -p1 -b .pk
+%if %{fedora} >= 14
+%patch21 -p2 -b .jpeg-turbo
+%endif
 
 %patch30 -p1 -b .checkupdates
 %patch31 -p2 -b .default
@@ -195,12 +208,12 @@ cat <<EOF_MOZCONFIG | tee .mozconfig
 #ac_add_options --with-system-png
 ac_add_options --prefix="\$PREFIX"
 ac_add_options --libdir="\$LIBDIR"
-%if %{fedora} >= 13
+%if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
+ac_add_options --with-system-nss
+ac_add_options --with-system-nspr
 %endif
 %if %{fedora} >= 11
-ac_add_options --with-system-nspr
-ac_add_options --with-system-nss
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-cairo
 %endif
@@ -528,6 +541,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Sep 10 2010 Remi Collet <rpms@famillecollet.com> - 3.6.9-1
+- update to Firefox 3.6.9
+
 * Mon Aug 02 2010 Remi Collet <rpms@famillecollet.com> - 3.6.8-1.1
 - rebuild
 

@@ -1,0 +1,15 @@
+diff -up mozilla-1.9.2/configure.in.gdk-pixbuf mozilla-1.9.2/configure.in
+--- mozilla-1.9.2/configure.in.gdk-pixbuf	2010-07-13 21:10:45.000000000 +0200
++++ mozilla-1.9.2/configure.in	2010-08-03 15:38:43.113733420 +0200
+@@ -5354,7 +5354,10 @@ then
+     then
+         if test "$MOZ_ENABLE_LIBNOTIFY"
+         then
+-            PKG_CHECK_MODULES(MOZ_LIBNOTIFY, libnotify >= $LIBNOTIFY_VERSION)
++            dnl Code which requires gdk-pixbuf is only in
++            dnl toolkit/system/gnome/nsAlertsIconListener.cpp and is compiled
++            dnl only when libnotify is enabled
++            PKG_CHECK_MODULES(MOZ_LIBNOTIFY, libnotify >= $LIBNOTIFY_VERSION gdk-pixbuf-2.0 gtk+-2.0)
+         fi
+     fi
+ fi
