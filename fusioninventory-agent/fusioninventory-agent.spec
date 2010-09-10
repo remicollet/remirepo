@@ -11,7 +11,7 @@ Release:   2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1-48-ga7532c0.tar.gz
 %else
-Release:   1%{?dist}
+Release:   2%{?dist}
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}.tar.gz
 %endif
 
@@ -26,6 +26,12 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: perl(Module::Install)
+# For tests 
+BuildRequires: perl(Time::HiRes) perl(XML::Simple) perl(UNIVERSAL::require)
+%if %{?fedora}%{?rhel} > 4
+BuildRequires: perl(XML::TreePP)
+%endif
+
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:  perl(LWP) perl(Net::IP) perl(HTTP::Status) perl(Net::SSLeay) perl(Crypt::SSLeay)
 Requires:  perl(Proc::Daemon) perl(Proc::PID::File)
@@ -176,6 +182,10 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{__install} -m 755 -Dp %{SOURCE2}   %{buildroot}%{_initrddir}/%{name}
 
 
+%check
+make test
+
+
 %clean
 %{__rm} -rf %{buildroot} %{buildroot}%{_datarootdir}
 
@@ -219,6 +229,9 @@ exit 0
 
 
 %changelog
+* Fri Sep 10 2010 Remi Collet <Fedora@famillecollet.com> 2.1.3-2
+- add %%check
+
 * Sat Sep 04 2010 Remi Collet <Fedora@famillecollet.com> 2.1.3-1
 - update to 2.1.3
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.3/Changes
