@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-OcsDeploy
 Version:        1.0.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        OCS Inventory NG Software deployment support for FusionInventory Agent
 Summary(fr):    Gestion du déploiement logiciel OCS Inventory NG avec FusionInventory
 License:        GPLv2+
@@ -17,8 +17,7 @@ BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Copy::Recursive)
 # For tests
 BuildRequires:  perl(FusionInventory::Agent) >= 2.0
-BuildRequires:  perl(XML::Simple)
-BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Time::HiRes) perl(XML::Simple) perl(Test::More)
 
 Requires:       perl(Archive::Extract)
 Requires:       perl(File::Copy::Recursive)
@@ -68,11 +67,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %check
-%if 0%{?rhel} == 4
-echo "Test disable because Time::Hires not available"
-%else
 make test
-%endif
 
 
 %clean
@@ -87,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 10 2010 Remi Collet <Fedora@famillecollet.com> - 1.0.8-2
+- fix %%check
+
 * Thu Sep 09 2010 Remi Collet <Fedora@famillecollet.com> - 1.0.8-1
 - update to 1.0.7
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-OcsDeploy-1.0.8/Changes
