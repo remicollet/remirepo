@@ -15,7 +15,7 @@
 %define version_internal 1.0b2
 %define progdir %{_libdir}/%{name}-%{version_internal}pre
 %define thunderbird_internal 3.1
-%define thunderbird_version  3.1.2
+%define thunderbird_version  3.1.3
 %define libnotify_version 0.4
 %define thundir %{_libdir}/thunderbird-%{thunderbird_internal}
 
@@ -51,6 +51,7 @@ Patch1:         xulrunner-1.9.2.1-build.patch
 # Ours
 Patch10:        sunbird-1.0-libical.patch
 Patch11:        sunbird-1.0-uilocale.patch
+Patch12:        mozilla-missing-cflags.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -63,7 +64,7 @@ BuildRequires:  freetype-devel >= 2.1.9
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
 BuildRequires:  desktop-file-utils
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 15
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
@@ -72,6 +73,8 @@ BuildRequires:  libpng-devel, libjpeg-devel, gtk2-devel
 BuildRequires:  zlib-devel, gzip, zip, unzip
 BuildRequires:  GConf2-devel
 BuildRequires:  gnome-vfs2-devel
+BuildRequires:  libgnome-devel
+
 BuildRequires:  libical-devel
 BuildRequires:  zip
 BuildRequires:  autoconf213
@@ -84,7 +87,7 @@ Requires:       nspr >= %{nspr_version}
 BuildRequires:  cairo-devel >= %{cairo_version}
 Requires:       nss >= %{nss_version}
 %endif
-%if 0%{?fedora} >= 13
+%if 0%{?fedora} >= 15
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
 %if %{fedora} >= 10
@@ -135,6 +138,9 @@ calendaring tasks.
 %patch1 -p1 -b .protected
 %patch10 -p0 -b .libical
 %patch11 -p0 -b .uilocale
+%if %{fedora} >= 14
+%patch12 -p1 -b .mozcflags
+%endif
 
 find . -name '*.cpp' -o -name '*.h' |xargs chmod -x
 
@@ -166,8 +172,6 @@ ac_add_options --with-pthreads
 ac_add_options --with-system-jpeg
 %if %{fedora} >= 15
 ac_add_options --with-system-nspr
-%endif
-%if %{fedora} >= 11
 ac_add_options --with-system-nss
 %endif
 ac_add_options --with-system-zlib
@@ -179,7 +183,7 @@ ac_add_options --disable-libnotify
 %if %{fedora} >= 11
 ac_add_options --enable-system-lcms
 %endif
-%if %{fedora} >= 13
+%if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
 %ifarch ppc ppc64
@@ -323,7 +327,7 @@ fi
 
 %changelog
 * Fri Aug 06 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.28
-- Rebuild against Thunderbird 3.1.2
+- Rebuild against Thunderbird 3.1.3
 - add fixlang.php
 
 * Wed Jul 21 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.27
