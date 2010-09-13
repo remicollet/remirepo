@@ -1,13 +1,13 @@
 %global	php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%{!?__pecl:		%{expand:	%%global __pecl	%{_bindir}/pecl}}
-%{!?php_extdir:	%{expand:	%%global php_extdir	%(php-config --extension-dir)}}
+%{!?__pecl: %{expand: %%global __pecl	%{_bindir}/pecl}}
+%{!?php_extdir: %{expand: %%global php_extdir	%(php-config --extension-dir)}}
 
 %global	pecl_name	gmagick
 %global prever 		b1
 
 Summary:	Provides a wrapper to the GraphicsMagick library
 Name:		php-pecl-%{pecl_name}
-Version:	1.0.7
+Version:	1.0.8
 Release:	0.1.%{prever}%{?dist}
 License:	PHP
 Group:		Development/Libraries
@@ -90,11 +90,13 @@ fi
 
 %check
 cd %{pecl_name}-%{version}%{?prever}
+
 # simple module load test
 php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
 # simple version info check
 php --no-php-ini \
     --define extension_dir=modules \
@@ -111,6 +113,9 @@ php --no-php-ini \
 
 
 %changelog
+* Mon Sep 13 2010 Remi Collet <rpms@famillecollet.com> 1.0.8-0.1.b1
+- Update to 1.0.8b1 for remi repo
+
 * Sun Aug 08 2010 Remi Collet <rpms@famillecollet.com> 1.0.7-0.1.b1
 - Update to 1.0.7b1 for remi repo
 - remove patch for http://pecl.php.net/bugs/17991
