@@ -32,6 +32,9 @@ bc:
 bi:
 	rpmbuild $(RPMDEFINES) -bi --short-circuit $(NAME).spec
 
+devbp:
+	rpmbuild $(RPMDEFINES)  --define "runselftest 0" -bp $(NAME)-dev.spec
+
 devbi:
 	rpmbuild $(RPMDEFINES)  --define "runselftest 0" -bi --short-circuit $(NAME)-dev.spec
 

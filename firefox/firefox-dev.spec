@@ -66,6 +66,7 @@ Patch8:         mozilla-plugin.patch
 Patch9:         firefox4-build-sbrk.patch
 Patch10:        mozilla-build-s390.patch
 Patch11:        mozilla-malloc.patch
+Patch12:        firefox4-build-macos.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -196,6 +197,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch10 -p1 -b .s390
 %endif
 %patch11 -p2 -b .malloc
+%patch12 -p1 -b .macos
 
 %patch20 -p2 -b .pk
 %if %{fedora} >= 14
@@ -545,6 +547,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %changelog
 * Tue Sep 14 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.9.beta6.build2
 - update to 4.0b6 build2
+- add patch for https://bugzilla.mozilla.org/591152
 
 * Wed Sep 08 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.8.beta5
 - update to 4.0b5
