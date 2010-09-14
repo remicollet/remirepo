@@ -1,0 +1,50 @@
+See https://bugzilla.mozilla.org/show_bug.cgi?id=591152
+
+diff -up mozilla-central/configure.in.orig mozilla-central/configure.in
+--- mozilla-central/configure.in.orig	2010-09-14 21:41:14.883579761 +0200
++++ mozilla-central/configure.in	2010-09-14 21:42:23.976579149 +0200
+@@ -3787,7 +3787,7 @@ fi
+ 
+ dnl check for wcrtomb/mbrtowc
+ dnl =======================================================================
+-if test -z "$MACOS_DEPLOYMENT_TARGET" -o "$MACOS_DEPLOYMENT_TARGET" -ge "100300"; then
++if test "${MACOS_DEPLOYMENT_TARGET:-999999}" -ge "100300"; then
+ AC_LANG_SAVE
+ AC_LANG_CPLUSPLUS
+ AC_CACHE_CHECK(for wcrtomb,
+diff -up mozilla-central/configure.orig mozilla-central/configure
+--- mozilla-central/configure.orig	2010-09-14 21:41:09.557839675 +0200
++++ mozilla-central/configure	2010-09-14 21:42:10.369954678 +0200
+@@ -11978,7 +11978,7 @@ EOF
+     
+ fi
+ 
+-if test -z "$MACOS_DEPLOYMENT_TARGET" -o "$MACOS_DEPLOYMENT_TARGET" -ge "100300"; then
++if test "${MACOS_DEPLOYMENT_TARGET:-999999}" -ge "100300"; then
+ 
+ ac_ext=C
+ # CXXFLAGS is not in ac_cpp because -g, -O, etc. are not valid cpp options.
+diff -up mozilla-central/js/src/configure.in.orig mozilla-central/js/src/configure.in
+--- mozilla-central/js/src/configure.in.orig	2010-09-14 21:41:24.605579748 +0200
++++ mozilla-central/js/src/configure.in	2010-09-14 21:42:49.229954365 +0200
+@@ -3309,7 +3309,7 @@ fi
+ 
+ dnl check for wcrtomb/mbrtowc
+ dnl =======================================================================
+-if test -z "$MACOS_DEPLOYMENT_TARGET" -o "$MACOS_DEPLOYMENT_TARGET" -ge "100300"; then
++if test "${MACOS_DEPLOYMENT_TARGET:-999999}" -ge "100300"; then
+ AC_LANG_SAVE
+ AC_LANG_CPLUSPLUS
+ AC_CACHE_CHECK(for wcrtomb,
+diff -up mozilla-central/js/src/configure.orig mozilla-central/js/src/configure
+--- mozilla-central/js/src/configure.orig	2010-09-14 21:41:20.036829607 +0200
++++ mozilla-central/js/src/configure	2010-09-14 21:42:42.767876525 +0200
+@@ -10234,7 +10234,7 @@ EOF
+ 
+ fi
+ 
+-if test -z "$MACOS_DEPLOYMENT_TARGET" -o "$MACOS_DEPLOYMENT_TARGET" -ge "100300"; then
++if test "${MACOS_DEPLOYMENT_TARGET:-999999}" -ge "100300"; then
+ 
+ ac_ext=C
+ # CXXFLAGS is not in ac_cpp because -g, -O, etc. are not valid cpp options.
