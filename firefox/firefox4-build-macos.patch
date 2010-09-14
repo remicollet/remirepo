@@ -1,4 +1,4 @@
-See https://bugzilla.mozilla.org/show_bug.cgi?id=591152
+See https://bugzilla.mozilla.org/591152
 
 diff -up mozilla-central/configure.in.orig mozilla-central/configure.in
 --- mozilla-central/configure.in.orig	2010-09-14 21:41:14.883579761 +0200
