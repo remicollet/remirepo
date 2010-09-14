@@ -315,6 +315,58 @@ Total:                  523.2ms +/- 3.4%
     unpack-code:         45.0ms +/- 12.8%
     validate-input:      10.6ms +/- 10.5%
 
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13 (build2)
+============================================
+RESULTS (means and 95% confidence intervals)
+--------------------------------------------
+Total:                  512.8ms +/- 1.6%
+--------------------------------------------
+
+  3d:                   110.0ms +/- 1.6%
+    cube:                31.8ms +/- 3.3%
+    morph:               27.2ms +/- 2.0%
+    raytrace:            51.0ms +/- 1.7%
+
+  access:                70.8ms +/- 0.8%
+    binary-trees:        18.8ms +/- 3.0%
+    fannkuch:            32.4ms +/- 2.1%
+    nbody:                9.2ms +/- 6.0%
+    nsieve:              10.4ms +/- 10.7%
+
+  bitops:                23.6ms +/- 7.1%
+    3bit-bits-in-byte:    0.6ms +/- 113.5%
+    bits-in-byte:         9.0ms +/- 0.0%
+    bitwise-and:          4.2ms +/- 32.4%
+    nsieve-bits:          9.8ms +/- 5.7%
+
+  controlflow:            8.0ms +/- 0.0%
+    recursive:            8.0ms +/- 0.0%
+
+  crypto:                37.2ms +/- 5.5%
+    aes:                 20.4ms +/- 6.9%
+    md5:                 11.8ms +/- 8.8%
+    sha1:                 5.0ms +/- 0.0%
+
+  date:                  70.2ms +/- 1.9%
+    format-tofte:        46.0ms +/- 3.3%
+    format-xparb:        24.2ms +/- 2.3%
+
+  math:                  31.8ms +/- 1.7%
+    cordic:              12.2ms +/- 4.6%
+    partial-sums:        13.6ms +/- 5.0%
+    spectral-norm:        6.0ms +/- 0.0%
+
+  regexp:                37.8ms +/- 5.9%
+    dna:                 37.8ms +/- 5.9%
+
+  string:               123.4ms +/- 3.5%
+    base64:               6.0ms +/- 0.0%
+    fasta:               25.2ms +/- 2.2%
+    tagcloud:            37.6ms +/- 3.0%
+    unpack-code:         43.8ms +/- 12.3%
+    validate-input:      10.8ms +/- 15.0%
+
+
 ===================================== V8 =====================================
 http://v8.googlecode.com/svn/data/benchmarks/v5/run.html
 ==============================================================================
@@ -323,5 +375,5 @@ Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.9) Gecko/20100910 Remi/fc13 Fire
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b3) Gecko/20100815 Remi/fc13 Firefox/4.0b3 : 812
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b4) Gecko/20100825 Remi/fc13 Firefox/4.0b4 : 902
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b5) Gecko/20100101 Firefox/4.0b5 Remi/fc13 : 909
-
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13 : 1029 (build2)
 
