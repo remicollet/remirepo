@@ -4,7 +4,7 @@ Name:        fusioninventory-agent
 Summary:     FusionInventory agent
 Summary(fr): Agent FusionInventory
 
-Version:   2.1.3
+Version:   2.1.5
 
 %if 0%{?gitver:1}
 Release:   2.git%{gitver}%{?dist}
@@ -27,7 +27,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: perl(Module::Install)
 # For tests 
-BuildRequires: perl(Time::HiRes) perl(XML::Simple) perl(UNIVERSAL::require)
+BuildRequires: perl(Time::HiRes) perl(XML::Simple) perl(UNIVERSAL::require) perl(Test::More)
 %if %{?fedora}%{?rhel} > 4
 BuildRequires: perl(XML::TreePP)
 %endif
@@ -36,8 +36,8 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:  perl(LWP) perl(Net::IP) perl(HTTP::Status) perl(Net::SSLeay) perl(Crypt::SSLeay)
 Requires:  perl(Proc::Daemon) perl(Proc::PID::File)
 # Not yet available in EPEL ...
-%if %{?fedora}%{?rhel} > 4
 Requires:  perl(Archive::Extract)
+%if %{?fedora}%{?rhel} > 4
 Requires:  perl(Net::CUPS)
 %endif
 Requires(post): /sbin/chkconfig
@@ -229,6 +229,10 @@ exit 0
 
 
 %changelog
+* Wed Sep 15 2010 Remi Collet <Fedora@famillecollet.com> 2.1.5-1
+- update to 2.1.5
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.5/Changes
+
 * Fri Sep 10 2010 Remi Collet <Fedora@famillecollet.com> 2.1.3-2
 - add %%check
 
