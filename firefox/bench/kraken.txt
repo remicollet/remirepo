@@ -1,0 +1,143 @@
+	Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz
+
+===================================== V8 =====================================
+Kraken JavaScript Benchmark Results
+	http://krakenbenchmark.mozilla.com/kraken-1.0/driver.html
+==============================================================================
+
+Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.9) Gecko/20100910 Remi/fc13 Firefox/3.6.9	94221.2ms +/- 3.8%
+
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b4) Gecko/20100825 Remi/fc13 Firefox/4.0b4		10602.2ms +/- 5.2%
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b5) Gecko/20100101 Firefox/4.0b5 Remi/fc13		10186.6ms +/- 6.4%
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13 (build2)	10062.7ms +/- 4.2%
+
+==============================================================================
+
+
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13 (build2)
+===============================================
+RESULTS (means and 95% confidence intervals)
+-----------------------------------------------
+Total:                       10062.7ms +/- 4.2%
+-----------------------------------------------
+
+  ai:                         1141.9ms +/- 14.5%
+    astar:                    1141.9ms +/- 14.5%
+
+  audio:                      4209.5ms +/- 7.7%
+    beat-detection:           1091.5ms +/- 11.7%
+    dft:                       935.6ms +/- 8.5%
+    fft:                      1132.1ms +/- 11.7%
+    oscillator:               1050.3ms +/- 13.5%
+
+  imaging:                    2674.0ms +/- 0.7%
+    gaussian-blur:            1099.8ms +/- 2.0%
+    darkroom:                  460.2ms +/- 2.4%
+    desaturate:               1114.0ms +/- 0.5%
+
+  json:                        322.1ms +/- 3.7%
+    parse-financial:           209.5ms +/- 2.7%
+    stringify-tinderbox:       112.6ms +/- 9.9%
+
+  stanford:                   1715.2ms +/- 6.7%
+    crypto-aes:                366.0ms +/- 14.7%
+    crypto-ccm:                527.5ms +/- 14.8%
+    crypto-pbkdf2:             634.3ms +/- 7.4%
+    crypto-sha256-iterative:   187.4ms +/- 10.7%
+
+
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b5) Gecko/20100101 Firefox/4.0b5 Remi/fc13
+===============================================
+RESULTS (means and 95% confidence intervals)
+-----------------------------------------------
+Total:                       10186.6ms +/- 6.4%
+-----------------------------------------------
+
+  ai:                         1185.2ms +/- 12.6%
+    astar:                    1185.2ms +/- 12.6%
+
+  audio:                      4207.2ms +/- 8.6%
+    beat-detection:           1188.9ms +/- 11.0%
+    dft:                       863.8ms +/- 9.3%
+    fft:                      1095.0ms +/- 12.3%
+    oscillator:               1059.5ms +/- 13.8%
+
+  imaging:                    2783.0ms +/- 6.8%
+    gaussian-blur:            1147.5ms +/- 8.6%
+    darkroom:                  478.9ms +/- 7.2%
+    desaturate:               1156.6ms +/- 5.5%
+
+  json:                        323.2ms +/- 3.5%
+    parse-financial:           211.0ms +/- 0.9%
+    stringify-tinderbox:       112.2ms +/- 10.0%
+
+  stanford:                   1688.0ms +/- 5.6%
+    crypto-aes:                333.8ms +/- 11.5%
+    crypto-ccm:                492.6ms +/- 13.9%
+    crypto-pbkdf2:             650.6ms +/- 11.8%
+    crypto-sha256-iterative:   211.0ms +/- 15.0%
+
+
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b4) Gecko/20100825 Remi/fc13 Firefox/4.0b4
+===============================================
+RESULTS (means and 95% confidence intervals)
+-----------------------------------------------
+Total:                       10602.2ms +/- 5.2%
+-----------------------------------------------
+
+  ai:                         1211.1ms +/- 12.8%
+    astar:                    1211.1ms +/- 12.8%
+
+  audio:                      4331.5ms +/- 9.0%
+    beat-detection:           1181.4ms +/- 10.9%
+    dft:                      1085.2ms +/- 9.8%
+    fft:                      1016.3ms +/- 12.8%
+    oscillator:               1048.6ms +/- 13.6%
+
+  imaging:                    2930.3ms +/- 4.6%
+    gaussian-blur:            1279.7ms +/- 10.4%
+    darkroom:                  532.3ms +/- 12.1%
+    desaturate:               1118.3ms +/- 2.0%
+
+  json:                        322.6ms +/- 7.4%
+    parse-financial:           201.0ms +/- 9.9%
+    stringify-tinderbox:       121.6ms +/- 13.3%
+
+  stanford:                   1806.7ms +/- 9.8%
+    crypto-aes:                391.9ms +/- 12.1%
+    crypto-ccm:                586.2ms +/- 17.3%
+    crypto-pbkdf2:             625.1ms +/- 13.0%
+    crypto-sha256-iterative:   203.5ms +/- 14.3%
+
+
+Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.9) Gecko/20100910 Remi/fc13 Firefox/3.6.9
+===============================================
+RESULTS (means and 95% confidence intervals)
+-----------------------------------------------
+Total:                        94221.2ms +/- 3.8%
+-----------------------------------------------
+
+  ai:                          6824.2ms +/- 14.9%
+    astar:                     6824.2ms +/- 14.9%
+
+  audio:                      22299.0ms +/- 4.7%
+    beat-detection:            6370.9ms +/- 4.8%
+    dft:                       6128.5ms +/- 6.7%
+    fft:                       5364.6ms +/- 7.7%
+    oscillator:                4435.0ms +/- 11.4%
+
+  imaging:                    53564.2ms +/- 5.0%
+    gaussian-blur:            36217.1ms +/- 8.5%
+    darkroom:                  7870.9ms +/- 9.5%
+    desaturate:                9476.2ms +/- 11.6%
+
+  json:                         386.1ms +/- 0.3%
+    parse-financial:            259.0ms +/- 0.4%
+    stringify-tinderbox:        127.1ms +/- 0.5%
+
+  stanford:                   11147.7ms +/- 5.0%
+    crypto-aes:                2164.0ms +/- 11.3%
+    crypto-ccm:                1554.3ms +/- 9.7%
+    crypto-pbkdf2:             5572.5ms +/- 7.6%
+    crypto-sha256-iterative:   1856.9ms +/- 13.7%
+
