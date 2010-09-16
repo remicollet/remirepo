@@ -25,12 +25,12 @@
 
 %global relcan b6
 %global firefox firefox
-%global mycomment  Beta 6 (build2)
+%global mycomment  Beta 6
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.9.beta6.build2%{?dist}
+Release:        0.10.beta6%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100914.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100916.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -545,6 +545,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Sep 16 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.10.beta6
+- update to 4.0b6
+
 * Tue Sep 14 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.9.beta6.build2
 - update to 4.0b6 build2
 - add patch for https://bugzilla.mozilla.org/591152
