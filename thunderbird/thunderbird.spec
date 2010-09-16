@@ -26,7 +26,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        3.1.3
+Version:        3.1.4
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -41,7 +41,7 @@ Source0:        %{tarball}
 #NoSource:       0
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100907.tar.bz2
+Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100916.tar.bz2
 %endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -484,6 +484,9 @@ fi
 #===============================================================================
 
 %changelog
+* Thu Sep 16 2010 Remi Collet <rpms@famillecollet.com> 3.1.4-1
+- Thunderbird 3.1.4
+
 * Tue Sep 07 2010 Remi Collet <rpms@famillecollet.com> 3.1.3-1
 - Thunderbird 3.1.3
 - disable system nspr (version 4.8.6 required not yet available)
