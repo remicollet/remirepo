@@ -29,7 +29,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        3.6.9
+Version:        3.6.10
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100910.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20100916.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -541,6 +541,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Sep 16 2010 Remi Collet <rpms@famillecollet.com> - 3.6.10-1
+- update to Firefox 3.6.10
+
 * Fri Sep 10 2010 Remi Collet <rpms@famillecollet.com> - 3.6.9-1
 - update to Firefox 3.6.9
 
