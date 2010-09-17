@@ -10,4 +10,5 @@ Mozilla/5.0 (X11; Linux x86_64; rv:2.0b3) Gecko/20100815 Remi/fc13 Firefox/4.0b3
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b4) Gecko/20100825 Remi/fc13 Firefox/4.0b4 : 		 902
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b5) Gecko/20100101 Firefox/4.0b5 Remi/fc13 : 		 909
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13 (build2) :	1029
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13 :		1066
 

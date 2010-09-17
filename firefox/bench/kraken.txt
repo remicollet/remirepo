@@ -10,9 +10,40 @@ Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.9) Gecko/20100910 Remi/fc13 Fire
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b4) Gecko/20100825 Remi/fc13 Firefox/4.0b4		10602.2ms +/- 5.2%
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b5) Gecko/20100101 Firefox/4.0b5 Remi/fc13		10186.6ms +/- 6.4%
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13 (build2)	10062.7ms +/- 4.2%
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13		10180.0ms +/- 4.9%
 
 ==============================================================================
 
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13
+===============================================
+RESULTS (means and 95% confidence intervals)
+-----------------------------------------------
+Total:                       10180.0ms +/- 4.9%
+-----------------------------------------------
+
+  ai:                         1254.2ms +/- 14.9%
+    astar:                    1254.2ms +/- 14.9%
+
+  audio:                      4102.2ms +/- 7.0%
+    beat-detection:           1113.0ms +/- 10.2%
+    dft:                       979.0ms +/- 7.7%
+    fft:                      1008.5ms +/- 12.6%
+    oscillator:               1001.7ms +/- 14.7%
+
+  imaging:                    2788.3ms +/- 6.9%
+    gaussian-blur:            1146.4ms +/- 9.4%
+    darkroom:                  472.8ms +/- 9.8%
+    desaturate:               1169.1ms +/- 8.2%
+
+  json:                        330.2ms +/- 5.5%
+    parse-financial:           205.6ms +/- 0.4%
+    stringify-tinderbox:       124.6ms +/- 14.3%
+
+  stanford:                   1705.1ms +/- 3.7%
+    crypto-aes:                382.4ms +/- 12.0%
+    crypto-ccm:                487.5ms +/- 14.3%
+    crypto-pbkdf2:             641.9ms +/- 9.4%
+    crypto-sha256-iterative:   193.3ms +/- 12.2%
 
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc13 (build2)
 ===============================================
