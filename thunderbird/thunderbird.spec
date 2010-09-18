@@ -80,8 +80,8 @@ Patch6:         remove-static.patch
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 15
-## NSPR 4.8.6 is on updates-testing 
+%if 0%{?fedora} >= 13
+## NSPR 4.8.6 is on updates-testing (f12)
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
 %if 0%{?fedora} >= 11
@@ -125,7 +125,7 @@ BuildRequires:  GConf2-devel
 %if 0%{?fedora} >= 9
 Requires:       mozilla-filesystem
 %endif
-%if 0%{?fedora} >= 15
+%if 0%{?fedora} >= 13
 Requires:       nspr >= %{nspr_version}
 %endif
 %if 0%{?fedora} >= 11

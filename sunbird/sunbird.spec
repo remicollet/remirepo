@@ -64,8 +64,11 @@ BuildRequires:  freetype-devel >= 2.1.9
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
 BuildRequires:  desktop-file-utils
-%if 0%{?fedora} >= 15
+%if 0%{?fedora} >= 13
+## NSPR 4.8.6 is on updates-testing (f12)
 BuildRequires:  nspr-devel >= %{nspr_version}
+%endif
+%if 0%{?fedora} >= 11
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 BuildRequires:  dbus-glib-devel >= %{dbus_glib_version}
@@ -79,7 +82,7 @@ BuildRequires:  libical-devel
 BuildRequires:  zip
 BuildRequires:  autoconf213
 BuildRequires:  alsa-lib-devel
-%if 0%{?fedora} >= 15
+%if 0%{?fedora} >= 13
 ## NSPR 4.8.6 is on updates-testing 
 Requires:       nspr >= %{nspr_version}
 %endif
@@ -170,8 +173,10 @@ ac_add_options --libdir="%{_libdir}"
 ac_add_options --prefix="%{_prefix}"
 ac_add_options --with-pthreads
 ac_add_options --with-system-jpeg
-%if %{fedora} >= 15
+%if %{fedora} >= 13
 ac_add_options --with-system-nspr
+%endif
+%if %{fedora} >= 11
 ac_add_options --with-system-nss
 %endif
 ac_add_options --with-system-zlib

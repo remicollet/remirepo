@@ -114,6 +114,8 @@ BuildRequires:  wireless-tools-devel
 %if %{fedora} >= 15
 # Requires SQLITE_SECURE_DELETE only in F-15
 BuildRequires:  sqlite-devel >= %{sqlite_version}
+%endif
+%if %{fedora} >= 13
 BuildRequires:  nss-devel >= %{nss_version}
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
@@ -210,6 +212,8 @@ ac_add_options --prefix="\$PREFIX"
 ac_add_options --libdir="\$LIBDIR"
 %if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
+%endif
+%if %{fedora} >= 13
 ac_add_options --with-system-nss
 ac_add_options --with-system-nspr
 %endif
