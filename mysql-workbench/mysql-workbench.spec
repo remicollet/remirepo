@@ -5,7 +5,7 @@
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   5.2.27
-Release:   1%{?dist}
+Release:   2%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -19,6 +19,8 @@ Source:    %{name}-%{tartype}-%{version}%{?postver}.tar.gz
 # !!! This patch use versioned soname !!!
 Patch1:    %{name}-5.2.26-cppconn.patch
 Patch2:    %{name}-5.2.22-python.patch
+Patch3:    %{name}-5.2.27-ctemplate.patch
+Patch4:    %{name}-5.2.27-dnl.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -75,6 +77,10 @@ an integrated tools environment for:
 
 %patch1 -p1 -b .cppconn
 %patch2 -p1 -b .fixindent
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%patch3 -p1 -b .ctemplate
+%endif
+%patch4 -p1 -b .dnl
 
 touch -r COPYING .timestamp4rpm
 %{__sed} -i -e 's/\r//g' COPYING
@@ -86,17 +92,17 @@ rm -rf ext/curl
 rm -rf ext/libsigc++
 rm -rf ext/yassl
 rm -rf ext/cppconn
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+rm -rf ext/ctemplate
+%endif
 
+# avoid "No such file" during configure
+touch po/POTFILES.in
 
 
 %build
 NOCONFIGURE=yes ./autogen.sh
-%configure \
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-    --with-system-ctemplate \
-%endif
-    --disable-debug \
-    --enable-python-modules
+%configure --disable-debug
 
 make %{?_smp_mflags}
 
@@ -142,6 +148,11 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sat Sep 18 2010 Remi Collet <Fedora@famillecollet.com> 5.2.27-2
+- remove obsoleted configure options
+- add patch to completely remove ctemplate from build process
+- add patch to fix F-14 build
+
 * Sat Aug 07 2010 Remi Collet <Fedora@famillecollet.com> 5.2.27-1
 - update to 5.2.27 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-27.html
