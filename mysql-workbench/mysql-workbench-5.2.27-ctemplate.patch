@@ -1,0 +1,34 @@
+diff -up mysql-workbench-gpl-5.2.27/ext/Makefile.am.ctemplate mysql-workbench-gpl-5.2.27/ext/Makefile.am
+--- mysql-workbench-gpl-5.2.27/ext/Makefile.am.ctemplate	2010-09-18 16:17:13.681151167 +0200
++++ mysql-workbench-gpl-5.2.27/ext/Makefile.am	2010-09-18 16:17:13.688131149 +0200
+@@ -1,7 +1,4 @@
+ 
+-if BUILD_CTEMPLATE
+-else
+-ctemplate_dirs=ctemplate 
+-endif
+ 
+-SUBDIRS=scintilla/gtk $(ctemplate_dirs)
++SUBDIRS=scintilla/gtk
++
+diff -up mysql-workbench-gpl-5.2.27/ext/Makefile.in.ctemplate mysql-workbench-gpl-5.2.27/ext/Makefile.in
+--- mysql-workbench-gpl-5.2.27/ext/Makefile.in.ctemplate	2010-09-18 16:17:13.000000000 +0200
++++ mysql-workbench-gpl-5.2.27/ext/Makefile.in	2010-09-18 16:19:17.531005859 +0200
+@@ -53,7 +53,8 @@ RECURSIVE_CLEAN_TARGETS = mostlyclean-re
+   distclean-recursive maintainer-clean-recursive
+ ETAGS = etags
+ CTAGS = ctags
+-DIST_SUBDIRS = scintilla/gtk ctemplate
++@BUILD_CTEMPLATE_FALSE@ctemplate_dirs = ctemplate 
++DIST_SUBDIRS = scintilla/gtk $(ctemplate_dirs)
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ ACLOCAL = @ACLOCAL@
+ AMTAR = @AMTAR@
+@@ -213,7 +214,6 @@ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-@BUILD_CTEMPLATE_FALSE@ctemplate_dirs = ctemplate 
+ SUBDIRS = scintilla/gtk $(ctemplate_dirs)
+ all: all-recursive
+ 
