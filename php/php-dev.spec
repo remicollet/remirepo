@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201009061630
+%global snapdate 201009180430
 %global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -82,7 +82,6 @@ Patch21: php-5.3.3-macropen.patch
 Patch40: php-5.0.4-dlopen.patch
 Patch41: php-5.3.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
-Patch43: php-5.3.4-ini.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
@@ -552,7 +551,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if %{?fedora}%{?rhel:99} >= 11
 %patch42 -p1 -b .systzdata
 %endif
-%patch43 -p1 -b .resetini
 
 #%patch60 -p1 -b .tests-dashn
 %patch61 -p1 -b .tests-wddx
@@ -1204,6 +1202,9 @@ fi
 %endif
 
 %changelog
+* Sat Sep 18 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201009180430
+- new snapshot (5.3.4-dev)
+
 * Mon Sep 06 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201009061630
 - new snapshot (5.3.4-dev)
 - add patch to reset ini hash between each file (#630635)
