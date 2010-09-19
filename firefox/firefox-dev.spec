@@ -200,7 +200,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch12 -p1 -b .macos
 
 %patch20 -p2 -b .pk
-%if %{fedora} >= 14
+%if %{fedora} >= 15
 %patch21 -p2 -b .jpeg-turbo
 %endif
 
