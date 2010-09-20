@@ -1,11 +1,11 @@
-#global postver b
+%global postver -src
 %global tartype gpl
-%global cppconnver 1.1.0-0.1.bzr888
+%global cppconnver 1.1.0-0.3.bzr895
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   5.2.27
-Release:   2%{?dist}
+Version:   5.2.28
+Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -17,10 +17,9 @@ Source:    %{name}-%{tartype}-%{version}%{?postver}.tar.gz
 
 # don't build extension, use system one
 # !!! This patch use versioned soname !!!
-Patch1:    %{name}-5.2.26-cppconn.patch
+Patch1:    %{name}-5.2.28-cppconn.patch
 Patch2:    %{name}-5.2.22-python.patch
 Patch3:    %{name}-5.2.27-ctemplate.patch
-Patch4:    %{name}-5.2.27-dnl.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -62,6 +61,7 @@ Requires: mysql-connector-c++ >= %{cppconnver}
 Conflicts: mysql-workbench-oss
 Conflicts: mysql-workbench-ce
 Conflicts: mysql-workbench-gpl
+Conflicts: mysql-workbench-com-se
 
 
 %description
@@ -80,7 +80,6 @@ an integrated tools environment for:
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %patch3 -p1 -b .ctemplate
 %endif
-%patch4 -p1 -b .dnl
 
 touch -r COPYING .timestamp4rpm
 %{__sed} -i -e 's/\r//g' COPYING
@@ -148,6 +147,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Mon Sep 20 2010 Remi Collet <Fedora@famillecollet.com> 5.2.28-1
+- update to 5.2.28 Community (OSS) Edition (GPL)
+
 * Sat Sep 18 2010 Remi Collet <Fedora@famillecollet.com> 5.2.27-2
 - remove obsoleted configure options
 - add patch to completely remove ctemplate from build process

@@ -1,3 +1,15 @@
+diff -up mysql-workbench-gpl-5.2.28-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.cppconn mysql-workbench-gpl-5.2.28-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp
+--- mysql-workbench-gpl-5.2.28-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.cppconn	2010-09-20 19:11:07.100715204 +0200
++++ mysql-workbench-gpl-5.2.28-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp	2010-09-20 19:11:12.633514446 +0200
+@@ -47,7 +47,7 @@
+ // this doesn't belong here, but there's no other workaround for having access to mysql_info
+ // because of that we also need to link wbprivate directly to the connector, making their
+ // dynamic loading pretty much useless
+-#include <cppconn/../driver/mysql_connection.h>
++#include <mysql_connection.h>
+ 
+ #include "boost_smart_ptr_helpers.h"
+ 
 diff -up mysql-workbench-gpl-5.2.26/configure.in.cppconn mysql-workbench-gpl-5.2.26/configure.in
 --- mysql-workbench-gpl-5.2.26/configure.in.cppconn	2010-08-05 15:33:27.000000000 +0200
 +++ mysql-workbench-gpl-5.2.26/configure.in	2010-08-07 08:11:56.906643649 +0200
@@ -83,3 +95,51 @@ diff -up mysql-workbench-gpl-5.2.26/library/dbc/src/driver_manager.cpp.cppconn m
    }
    
    Driver *(* get_driver_instance)()= NULL;
+diff -up mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.am.cppconn mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.am
+--- mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.am.cppconn	2010-09-20 22:02:44.930765082 +0200
++++ mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.am	2010-09-20 22:03:42.489372852 +0200
+@@ -48,13 +48,11 @@ mysql_workbench_bin_LDADD=\
+ 	$(top_srcdir)/library/base/src/libwbbase.la\
+ 	$(top_srcdir)/library/grt/src/libgrt.la\
+ 	$(top_srcdir)/library/dbc/libcdbc.la\
+-	$(top_srcdir)/ext/cppconn/driver/mysqlcppconn.la\
+ 	$(top_srcdir)/library/canvas/src/libmdcanvasgtk.la\
+ 	$(top_srcdir)/library/canvas/src/libmdcanvas.la\
+-	$(top_srcdir)/ext/cppconn/driver/mysqlcppconn.la\
+ 	@CTEMPLATE_LIBS@\
+ 	@GNOME_LIBS@ @GRT_LIBS@ @PCRE_LIBS@ @GLIB_LIBS@ @CAIRO_LIBS@ @ZIP_LIBS@ @MYSQL_LIBS@ @SQLITE3_LIBS@\
+-	-lX11
++	-lmysqlcppconn -lX11
+ 
+ #precompiled.h.gch: precompiled.h
+ #	$(CXXCOMPILE) precompiled.h -o precompiled.h.gch
+diff -up mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.in.cppconn mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.in
+--- mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.in.cppconn	2010-09-20 22:02:34.683084613 +0200
++++ mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.in	2010-09-20 22:03:30.266939988 +0200
+@@ -71,10 +71,8 @@ mysql_workbench_bin_DEPENDENCIES =  \
+ 	$(top_srcdir)/library/base/src/libwbbase.la \
+ 	$(top_srcdir)/library/grt/src/libgrt.la \
+ 	$(top_srcdir)/library/dbc/libcdbc.la \
+-	$(top_srcdir)/ext/cppconn/driver/mysqlcppconn.la \
+ 	$(top_srcdir)/library/canvas/src/libmdcanvasgtk.la \
+-	$(top_srcdir)/library/canvas/src/libmdcanvas.la \
+-	$(top_srcdir)/ext/cppconn/driver/mysqlcppconn.la
++	$(top_srcdir)/library/canvas/src/libmdcanvas.la
+ binSCRIPT_INSTALL = $(INSTALL_SCRIPT)
+ SCRIPTS = $(bin_SCRIPTS)
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+@@ -305,13 +303,11 @@ mysql_workbench_bin_LDADD = \
+ 	$(top_srcdir)/library/base/src/libwbbase.la\
+ 	$(top_srcdir)/library/grt/src/libgrt.la\
+ 	$(top_srcdir)/library/dbc/libcdbc.la\
+-	$(top_srcdir)/ext/cppconn/driver/mysqlcppconn.la\
+ 	$(top_srcdir)/library/canvas/src/libmdcanvasgtk.la\
+ 	$(top_srcdir)/library/canvas/src/libmdcanvas.la\
+-	$(top_srcdir)/ext/cppconn/driver/mysqlcppconn.la\
+ 	@CTEMPLATE_LIBS@\
+ 	@GNOME_LIBS@ @GRT_LIBS@ @PCRE_LIBS@ @GLIB_LIBS@ @CAIRO_LIBS@ @ZIP_LIBS@ @MYSQL_LIBS@ @SQLITE3_LIBS@\
+-	-lX11
++	-lmysqlcppconn -lX11
+ 
+ mysql_workbench_bin_SOURCES = \
+ main.cpp\
