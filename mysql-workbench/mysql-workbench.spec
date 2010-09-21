@@ -2,6 +2,9 @@
 %global tartype gpl
 %global cppconnver 1.1.0-0.3.bzr895
 
+# Temporary workaround for "script_templates" which shouldn't be compiled
+%global _python_bytecompile_errors_terminate_build 0
+
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   5.2.28
@@ -16,9 +19,9 @@ URL:       http://wb.mysql.com
 Source:    %{name}-%{tartype}-%{version}%{?postver}.tar.gz
 
 # don't build extension, use system one
-# !!! This patch use versioned soname !!!
+# !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
 Patch1:    %{name}-5.2.28-cppconn.patch
-Patch2:    %{name}-5.2.22-python.patch
+Patch2:    %{name}-5.2.28-python.patch
 Patch3:    %{name}-5.2.27-ctemplate.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -149,6 +152,10 @@ update-desktop-database &> /dev/null || :
 %changelog
 * Mon Sep 20 2010 Remi Collet <Fedora@famillecollet.com> 5.2.28-1
 - update to 5.2.28 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-28.html
+- build against mysql-connector-c++ 1.1.0 (bzr895)
+- improve cppconn patch
+- temporary disable  _python_bytecompile_errors_terminate_build
 
 * Sat Sep 18 2010 Remi Collet <Fedora@famillecollet.com> 5.2.27-2
 - remove obsoleted configure options
