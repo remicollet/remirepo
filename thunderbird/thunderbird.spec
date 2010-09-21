@@ -69,7 +69,10 @@ Patch2:         thunderbird-shared-error.patch
 # Fixes gcc complain that nsFrame::delete is protected
 Patch4:         xulrunner-1.9.2.1-build.patch
 # Fix missing includes for crash reporter, remove in 3.1 final
-Patch6:         remove-static.patch
+
+Patch6:         mozilla-libjpeg-turbo.patch
+Patch7:         mozilla-missing-cflags.patch
+Patch8:         mozilla-build-s390.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -80,8 +83,7 @@ Patch6:         remove-static.patch
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 13
-## NSPR 4.8.6 is on updates-testing (f12)
+%if 0%{?fedora} >= 12
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
 %if 0%{?fedora} >= 11
@@ -125,7 +127,7 @@ BuildRequires:  GConf2-devel
 %if 0%{?fedora} >= 9
 Requires:       mozilla-filesystem
 %endif
-%if 0%{?fedora} >= 13
+%if 0%{?fedora} >= 12
 Requires:       nspr >= %{nspr_version}
 %endif
 %if 0%{?fedora} >= 11
@@ -167,7 +169,11 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %patch1 -p0 -b .jemalloc
 %patch2 -p1 -b .shared-error
 %patch4 -p1 -b .protected
-%patch6 -p1 -b .static
+%patch6 -p1 -b .turbo
+%patch7 -p1 -b .mozcflags
+%ifarch s390
+%patch8 -p0 -b .s390
+%endif
 
 
 %if %{official_branding}
@@ -183,6 +189,8 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 cat %{SOURCE10} 		\
 %if %{fedora} < 15
   | grep -v system-sqlite 	\
+%endif
+%if %{fedora} < 12
   | grep -v system-nspr 	\
 %endif
 %if %{fedora} < 11
