@@ -90,6 +90,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Sep 22 2010 Remi Collet <RPMS@FamilleCollet.com> - 14-6.fc14.remi
+- F14 build - Laughlin
+
 * Sat May 01 2010 Remi Collet <RPMS@FamilleCollet.com> - ##-6.fc##.remi
 - use a mirrorlist URL
 
