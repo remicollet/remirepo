@@ -16,7 +16,7 @@
 
 Summary:                Toolkit for Oracle
 Name:                   tora
-Version:                2.1.2
+Version:                2.1.3
 Release:                1%{?dist}
 URL:                    http://tora.sourceforge.net
 Group:                  Development/Databases
@@ -141,6 +141,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Thu Sep 23 2010 Remi Collet <RPMS@famillecollet.com> 2.1.3-1
+- update to 2.1.3
+
 * Tue May 10 2010 Remi Collet <RPMS@famillecollet.com> 2.1.2-1
 - update to 2.1.2
 
