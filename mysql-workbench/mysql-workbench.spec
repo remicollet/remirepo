@@ -2,7 +2,7 @@
 %global tartype gpl
 %global cppconnver 1.1.0-0.3.bzr895
 
-# Temporary workaround for "script_templates" which shouldn't be compiled
+# "script_templates" (and some others) shouldn't be compiled
 %global _python_bytecompile_errors_terminate_build 0
 
 Summary:   A MySQL visual database modeling, administration and querying tool
@@ -21,8 +21,7 @@ Source:    %{name}-%{tartype}-%{version}%{?postver}.tar.gz
 # don't build extension, use system one
 # !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
 Patch1:    %{name}-5.2.28-cppconn.patch
-Patch2:    %{name}-5.2.28-python.patch
-Patch3:    %{name}-5.2.27-ctemplate.patch
+Patch2:    %{name}-5.2.27-ctemplate.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -39,7 +38,7 @@ BuildRequires: libglade2-devel
 BuildRequires: readline-devel
 BuildRequires: python-devel >= 2.4
 BuildRequires: gnome-keyring-devel
-BuildRequires: boost-devel
+BuildRequires: boost-devel >= 1.37
 BuildRequires: libsigc++20-devel
 BuildRequires: curl-devel
 BuildRequires: openssl-devel
@@ -79,9 +78,8 @@ an integrated tools environment for:
 %setup -q -n %{name}-%{tartype}-%{version}%{?postver}
 
 %patch1 -p1 -b .cppconn
-%patch2 -p1 -b .fixindent
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-%patch3 -p1 -b .ctemplate
+%patch2 -p1 -b .ctemplate
 %endif
 
 touch -r COPYING .timestamp4rpm
@@ -155,7 +153,7 @@ update-desktop-database &> /dev/null || :
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-28.html
 - build against mysql-connector-c++ 1.1.0 (bzr895)
 - improve cppconn patch
-- temporary disable  _python_bytecompile_errors_terminate_build
+- disable  _python_bytecompile_errors_terminate_build
 
 * Sat Sep 18 2010 Remi Collet <Fedora@famillecollet.com> 5.2.27-2
 - remove obsoleted configure options
