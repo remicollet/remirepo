@@ -14,10 +14,10 @@
 
 %define version_internal 1.0b2
 %define progdir %{_libdir}/%{name}-%{version_internal}pre
-%define thunderbird_internal 3.1
-%define thunderbird_version  3.1.3
+%define thunderbird_version 3.1.4
 %define libnotify_version 0.4
-%define thundir %{_libdir}/thunderbird-%{thunderbird_internal}
+%define lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
+%define gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 
 # This is to filter unwanted provides, that should be provided only by gecko-devel
 %define _use_internal_dependency_generator 0
@@ -25,7 +25,7 @@
 
 Name:           sunbird
 Version:        1.0
-Release:        0.28%{?dist}
+Release:        0.30%{?dist}
 Summary:        Calendar application built upon Mozilla toolkit
 
 Group:          Applications/Productivity
@@ -36,7 +36,6 @@ Source0:        thunderbird-%{thunderbird_version}.source.tar.bz2
 Source1:        sunbird.desktop
 Source2:        sunbird-l10n.tar
 #sunbird-langpacks-0.9.tar.gz
-#Source3:        mozilla-extension-update.sh
 # This is used just for langpacks.
 # TODO: build them!
 Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/lightning.xpi
@@ -52,6 +51,7 @@ Patch1:         xulrunner-1.9.2.1-build.patch
 Patch10:        sunbird-1.0-libical.patch
 Patch11:        sunbird-1.0-uilocale.patch
 Patch12:        mozilla-missing-cflags.patch
+Patch13:        mozilla-build-s390.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -64,12 +64,11 @@ BuildRequires:  freetype-devel >= 2.1.9
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
 BuildRequires:  desktop-file-utils
-%if 0%{?fedora} >= 13
-## NSPR 4.8.6 is on updates-testing (f12)
-BuildRequires:  nspr-devel >= %{nspr_version}
-%endif
 %if 0%{?fedora} >= 11
 BuildRequires:  nss-devel >= %{nss_version}
+%endif
+%if 0%{?fedora} >= 11
+BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
 BuildRequires:  dbus-glib-devel >= %{dbus_glib_version}
 BuildRequires:  libpng-devel, libjpeg-devel, gtk2-devel
@@ -82,8 +81,7 @@ BuildRequires:  libical-devel
 BuildRequires:  zip
 BuildRequires:  autoconf213
 BuildRequires:  alsa-lib-devel
-%if 0%{?fedora} >= 13
-## NSPR 4.8.6 is on updates-testing 
+%if 0%{?fedora} >= 12
 Requires:       nspr >= %{nspr_version}
 %endif
 %if 0%{fedora} >= 11
@@ -130,10 +128,7 @@ Mozilla Thunderbird. Since it's an extension, Lightning is tightly
 integrated with Thunderbird, allowing it to easily perform email-related
 calendaring tasks.
 
-%define lightning_extname \{e2fda1a4-762b-4020-b5ad-a41df1933103\}
-%define gdata_extname \{a62ef8ec-5fdc-40c2-873c-223b8a6925cc\}
 %endif
-
 
 %prep
 %setup -n comm-1.9.2 -q -a 2
@@ -143,6 +138,9 @@ calendaring tasks.
 %patch11 -p0 -b .uilocale
 %if %{fedora} >= 14
 %patch12 -p1 -b .mozcflags
+%endif
+%ifarch s390
+%patch13 -p0 -b .s390
 %endif
 
 find . -name '*.cpp' -o -name '*.h' |xargs chmod -x
@@ -173,7 +171,7 @@ ac_add_options --libdir="%{_libdir}"
 ac_add_options --prefix="%{_prefix}"
 ac_add_options --with-pthreads
 ac_add_options --with-system-jpeg
-%if %{fedora} >= 13
+%if %{fedora} >= 12
 ac_add_options --with-system-nspr
 %endif
 %if %{fedora} >= 11
@@ -197,7 +195,6 @@ ac_add_options --disable-necko-wifi
 EOF
 
 make -f client.mk build
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -243,36 +240,34 @@ unzip -qod $RPM_BUILD_ROOT%{progdir}/extensions/%{gdata_extname} \
 
 %if %with lightning
 # Avoid "Chrome Registration Failed" message on first startup and extension installation
-touch $RPM_BUILD_ROOT%{progdir}/extensions/%{lightning_extname}/chrome.manifest
-touch $RPM_BUILD_ROOT%{progdir}/extensions/%{gdata_extname}/chrome.manifest
+mkdir -p $RPM_BUILD_ROOT%{lightning_extname}
+touch $RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
+mkdir -p $RPM_BUILD_ROOT%{gdata_extname}
+touch $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
 
 # Lightning and GData provider for it
-%{__mkdir_p} $RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname}
-unzip -qod   $RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname} mozilla/dist/xpi-stage/lightning.xpi
-
-%{__mkdir_p} $RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname}
-unzip -qod   $RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname} mozilla/dist/xpi-stage/gdata-provider.xpi
-#install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/thunderbird-lightning/mozilla-extension-update.sh
+unzip -qod $RPM_BUILD_ROOT%{lightning_extname} mozilla/dist/xpi-stage/lightning.xpi
+unzip -qod $RPM_BUILD_ROOT%{gdata_extname} mozilla/dist/xpi-stage/gdata-provider.xpi
 
 # Unpack lightning language packs, except en_US
 unzip -l %{SOURCE4} '*.jar' |
         awk '/-[^\/]*\.jar/ && !/en-US/ {print $4}' |
-        xargs unzip -qod $RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname} %{SOURCE4}
+        xargs unzip -qod $RPM_BUILD_ROOT%{lightning_extname}  %{SOURCE4}
 
 # Register them
-ls $RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname}/chrome |
+ls $RPM_BUILD_ROOT%{lightning_extname}/chrome |
         sed -n '/en-US/n;s/\(\([^-]*\)-\(.*\)\.jar\)/locale \2 \3 jar:chrome\/\1!\/locale\/\3\/\2\//p' \
-        >>$RPM_BUILD_ROOT%{thundir}/extensions/%{lightning_extname}/chrome.manifest
+        | tee -a $RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
 
 # Unpack lightning language packs, except en_US
 unzip -l %{SOURCE5} '*.jar' |
         awk '/-[^\/]*\.jar/ && !/en-US/ {print $4}' |
-        xargs unzip -qod $RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname} %{SOURCE5}
+        xargs unzip -qod $RPM_BUILD_ROOT%{gdata_extname} %{SOURCE5}
 
 # Register them
-ls $RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname}/chrome |
+ls $RPM_BUILD_ROOT%{gdata_extname}/chrome |
         sed -n '/en-US/n;s/\(\([^-]*\)-\(.*\)\.jar\)/locale \2 \3 jar:chrome\/\1!\/locale\/\3\/\2\//p' \
-        >>$RPM_BUILD_ROOT%{thundir}/extensions/%{gdata_extname}/chrome.manifest
+        | tee -a $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
 %endif
 
 # Permissions fixup
@@ -283,14 +278,12 @@ find $RPM_BUILD_ROOT -name '*.so' |xargs chmod 0755
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-
 %post
 update-desktop-database %{_datadir}/applications
 touch --no-create %{_datadir}/icons/hicolor
 if [ -x %{_bindir}/gtk-update-icon-cache ]; then
         %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
 fi
-
 
 %postun
 update-desktop-database %{_datadir}/applications
@@ -325,12 +318,24 @@ fi
 %files -n thunderbird-lightning
 %doc mozilla/LEGAL mozilla/LICENSE mozilla/README.txt
 %defattr(-,root,root,-)
-%{thundir}/extensions/%{lightning_extname}
-%{thundir}/extensions/%{gdata_extname}
+%{lightning_extname}
+%{gdata_extname}
 %endif
 
 
 %changelog
+* Thu Sep 23 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.30
+- Rebuild against Thunderbird 3.1.4
+- sync with rawhide
+
+* Thu Sep 16 2010 Dan Horák <dan[at]danny.cz> - 1.0-0.29.b2pre
+- fix build on s390
+
+* Wed Sep  8 2010 Jan Horak <jhorak@redhat.com> - 1.0-0.28.b2pre
+- Changed thunderbird-lightning install location to /usr/lib/mozilla/extensions/{355...
+- Rebuild against Thunderbird 3.1.3
+- Bump version above F13
+
 * Fri Aug 06 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.28
 - Rebuild against Thunderbird 3.1.3
 - add fixlang.php
