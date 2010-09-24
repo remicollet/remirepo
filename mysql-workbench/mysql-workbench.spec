@@ -8,7 +8,7 @@
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   5.2.28
-Release:   1%{?dist}
+Release:   2%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -22,6 +22,7 @@ Source:    %{name}-%{tartype}-%{version}%{?postver}.tar.gz
 # !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
 Patch1:    %{name}-5.2.28-cppconn.patch
 Patch2:    %{name}-5.2.27-ctemplate.patch
+Patch3:    %{name}-5.2.28-tinyxml.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -51,7 +52,8 @@ BuildRequires: gtkmm24-devel
 BuildRequires: mesa-libGL-devel
 BuildRequires: sqlite-devel
 BuildRequires: mysql-connector-c++-devel >= %{cppconnver}
-BuildRequires:    desktop-file-utils
+BuildRequires: desktop-file-utils
+BuildRequires: tinyxml-devel
 
 Requires(post):   desktop-file-utils
 Requires(postun): desktop-file-utils
@@ -81,6 +83,7 @@ an integrated tools environment for:
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %patch2 -p1 -b .ctemplate
 %endif
+%patch3 -p1 -b .tinyxml
 
 touch -r COPYING .timestamp4rpm
 %{__sed} -i -e 's/\r//g' COPYING
@@ -95,6 +98,7 @@ rm -rf ext/cppconn
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 rm -rf ext/ctemplate
 %endif
+rm -rf library/tinyxml
 
 # avoid "No such file" during configure
 touch po/POTFILES.in
@@ -148,6 +152,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Sep 24 2010 Remi Collet <Fedora@famillecollet.com> 5.2.28-2
+- use system tinyxml
+
 * Mon Sep 20 2010 Remi Collet <Fedora@famillecollet.com> 5.2.28-1
 - update to 5.2.28 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-28.html

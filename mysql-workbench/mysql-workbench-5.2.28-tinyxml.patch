@@ -1,0 +1,385 @@
+diff -up mysql-workbench-gpl-5.2.28-src/backend/wbprivate/Makefile.in.tinyxml mysql-workbench-gpl-5.2.28-src/backend/wbprivate/Makefile.in
+--- mysql-workbench-gpl-5.2.28-src/backend/wbprivate/Makefile.in.tinyxml	2010-09-24 17:18:17.482615772 +0200
++++ mysql-workbench-gpl-5.2.28-src/backend/wbprivate/Makefile.in	2010-09-24 17:28:06.014345863 +0200
+@@ -44,7 +44,7 @@ CONFIG_CLEAN_FILES =
+ LIBRARIES = $(noinst_LIBRARIES)
+ ARFLAGS = cru
+ libwbprivate_a_AR = $(AR) $(ARFLAGS)
+-libwbprivate_a_LIBADD =
++libwbprivate_a_LIBADD = -ltinyxml
+ am_libwbprivate_a_OBJECTS = canvas_floater.$(OBJEXT) \
+ 	mini_view.$(OBJEXT) relationship_canvas_floater.$(OBJEXT) \
+ 	wb_catalog_tree.$(OBJEXT) wb_component.$(OBJEXT) \
+@@ -80,9 +80,7 @@ am_libwbprivate_a_OBJECTS = canvas_float
+ 	user_defined_type_editor.$(OBJEXT) \
+ 	edit_sql_script_wizard.$(OBJEXT) \
+ 	edit_table_data_wizard.$(OBJEXT) grt_shell_window.$(OBJEXT) \
+-	grt_code_editor.$(OBJEXT) plugin_manager_window.$(OBJEXT) \
+-	tinyxmlparser.$(OBJEXT) tinyxml.$(OBJEXT) tinystr.$(OBJEXT) \
+-	tinyxmlerror.$(OBJEXT)
++	grt_code_editor.$(OBJEXT) plugin_manager_window.$(OBJEXT)
+ libwbprivate_a_OBJECTS = $(am_libwbprivate_a_OBJECTS)
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+@@ -270,7 +268,6 @@ INCLUDES = @GLIB_CFLAGS@ @SIGC_CFLAGS@ @
+   -I$(top_srcdir)/ext/cppconn/ -I$(top_srcdir)/library/dbc/src\
+   -I$(top_srcdir)/ext/scintilla/include\
+   -I$(top_srcdir)/library/vsqlite++/include\
+-  -I$(top_srcdir)/library/tinyxml
+ 
+ libwbprivate_a_SOURCES = \
+ 	model/canvas_floater.cpp\
+@@ -329,11 +326,7 @@ libwbprivate_a_SOURCES = \
+   $(top_srcdir)/frontend/common/edit_table_data_wizard.cpp\
+   $(top_srcdir)/frontend/common/grt_shell_window.cpp\
+   $(top_srcdir)/frontend/common/grt_code_editor.cpp\
+-  $(top_srcdir)/frontend/common/plugin_manager_window.cpp\
+-  $(top_srcdir)/library/tinyxml/tinyxmlparser.cpp\
+-  $(top_srcdir)/library/tinyxml/tinyxml.cpp\
+-  $(top_srcdir)/library/tinyxml/tinystr.cpp\
+-  $(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
++  $(top_srcdir)/frontend/common/plugin_manager_window.cpp
+ 
+ all: all-am
+ 
+@@ -400,10 +393,6 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/recordset_export_form.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/relationship_canvas_floater.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/starter_popup.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinystr.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxml.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlerror.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlparser.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/upgrade_helper.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/user_defined_type_editor.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wb_catalog_tree.Po@am__quote@
+@@ -1233,62 +1222,6 @@ plugin_manager_window.obj: $(top_srcdir)
+ @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+ @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o plugin_manager_window.obj `if test -f '$(top_srcdir)/frontend/common/plugin_manager_window.cpp'; then $(CYGPATH_W) '$(top_srcdir)/frontend/common/plugin_manager_window.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/frontend/common/plugin_manager_window.cpp'; fi`
+ 
+-tinyxmlparser.o: $(top_srcdir)/library/tinyxml/tinyxmlparser.cpp
+-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxmlparser.o -MD -MP -MF $(DEPDIR)/tinyxmlparser.Tpo -c -o tinyxmlparser.o `test -f '$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinyxmlparser.Tpo $(DEPDIR)/tinyxmlparser.Po
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp' object='tinyxmlparser.o' libtool=no @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxmlparser.o `test -f '$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp
+-
+-tinyxmlparser.obj: $(top_srcdir)/library/tinyxml/tinyxmlparser.cpp
+-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxmlparser.obj -MD -MP -MF $(DEPDIR)/tinyxmlparser.Tpo -c -o tinyxmlparser.obj `if test -f '$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp'; then $(CYGPATH_W) '$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp'; fi`
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinyxmlparser.Tpo $(DEPDIR)/tinyxmlparser.Po
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp' object='tinyxmlparser.obj' libtool=no @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxmlparser.obj `if test -f '$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp'; then $(CYGPATH_W) '$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp'; fi`
+-
+-tinyxml.o: $(top_srcdir)/library/tinyxml/tinyxml.cpp
+-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxml.o -MD -MP -MF $(DEPDIR)/tinyxml.Tpo -c -o tinyxml.o `test -f '$(top_srcdir)/library/tinyxml/tinyxml.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxml.cpp
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinyxml.Tpo $(DEPDIR)/tinyxml.Po
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinyxml.cpp' object='tinyxml.o' libtool=no @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxml.o `test -f '$(top_srcdir)/library/tinyxml/tinyxml.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxml.cpp
+-
+-tinyxml.obj: $(top_srcdir)/library/tinyxml/tinyxml.cpp
+-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxml.obj -MD -MP -MF $(DEPDIR)/tinyxml.Tpo -c -o tinyxml.obj `if test -f '$(top_srcdir)/library/tinyxml/tinyxml.cpp'; then $(CYGPATH_W) '$(top_srcdir)/library/tinyxml/tinyxml.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/library/tinyxml/tinyxml.cpp'; fi`
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinyxml.Tpo $(DEPDIR)/tinyxml.Po
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinyxml.cpp' object='tinyxml.obj' libtool=no @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxml.obj `if test -f '$(top_srcdir)/library/tinyxml/tinyxml.cpp'; then $(CYGPATH_W) '$(top_srcdir)/library/tinyxml/tinyxml.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/library/tinyxml/tinyxml.cpp'; fi`
+-
+-tinystr.o: $(top_srcdir)/library/tinyxml/tinystr.cpp
+-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinystr.o -MD -MP -MF $(DEPDIR)/tinystr.Tpo -c -o tinystr.o `test -f '$(top_srcdir)/library/tinyxml/tinystr.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinystr.cpp
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinystr.Tpo $(DEPDIR)/tinystr.Po
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinystr.cpp' object='tinystr.o' libtool=no @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinystr.o `test -f '$(top_srcdir)/library/tinyxml/tinystr.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinystr.cpp
+-
+-tinystr.obj: $(top_srcdir)/library/tinyxml/tinystr.cpp
+-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinystr.obj -MD -MP -MF $(DEPDIR)/tinystr.Tpo -c -o tinystr.obj `if test -f '$(top_srcdir)/library/tinyxml/tinystr.cpp'; then $(CYGPATH_W) '$(top_srcdir)/library/tinyxml/tinystr.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/library/tinyxml/tinystr.cpp'; fi`
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinystr.Tpo $(DEPDIR)/tinystr.Po
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinystr.cpp' object='tinystr.obj' libtool=no @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinystr.obj `if test -f '$(top_srcdir)/library/tinyxml/tinystr.cpp'; then $(CYGPATH_W) '$(top_srcdir)/library/tinyxml/tinystr.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/library/tinyxml/tinystr.cpp'; fi`
+-
+-tinyxmlerror.o: $(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
+-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxmlerror.o -MD -MP -MF $(DEPDIR)/tinyxmlerror.Tpo -c -o tinyxmlerror.o `test -f '$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinyxmlerror.Tpo $(DEPDIR)/tinyxmlerror.Po
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp' object='tinyxmlerror.o' libtool=no @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxmlerror.o `test -f '$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
+-
+-tinyxmlerror.obj: $(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
+-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxmlerror.obj -MD -MP -MF $(DEPDIR)/tinyxmlerror.Tpo -c -o tinyxmlerror.obj `if test -f '$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp'; then $(CYGPATH_W) '$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp'; fi`
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinyxmlerror.Tpo $(DEPDIR)/tinyxmlerror.Po
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp' object='tinyxmlerror.obj' libtool=no @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxmlerror.obj `if test -f '$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp'; then $(CYGPATH_W) '$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp'; fi`
+-
+ mostlyclean-libtool:
+ 	-rm -f *.lo
+ 
+diff -up mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlide/Makefile.am.tinyxml mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlide/Makefile.am
+--- mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlide/Makefile.am.tinyxml	2010-09-24 17:18:15.967881159 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlide/Makefile.am	2010-09-24 17:19:04.509171348 +0200
+@@ -19,7 +19,6 @@ INCLUDES=\
+ -I$(top_srcdir)/library/sql-parser/source/linux\
+ -I$(top_srcdir)/library/vsqlite++/include\
+ -I$(top_srcdir)/backend/grtdb\
+--I$(top_srcdir)/library/tinyxml\
+ @MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ 
+diff -up mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlide/Makefile.in.tinyxml mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlide/Makefile.in
+--- mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlide/Makefile.in.tinyxml	2010-09-24 17:18:15.855900747 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlide/Makefile.in	2010-09-24 17:18:49.770858939 +0200
+@@ -253,7 +253,6 @@ INCLUDES = \
+ -I$(top_srcdir)/library/sql-parser/source/linux\
+ -I$(top_srcdir)/library/vsqlite++/include\
+ -I$(top_srcdir)/backend/grtdb\
+--I$(top_srcdir)/library/tinyxml\
+ @MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ db_mysql_sqlide_grt_la_LDFLAGS = -module
+diff -up mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlparser/Makefile.am.tinyxml mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlparser/Makefile.am
+--- mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlparser/Makefile.am.tinyxml	2010-09-24 17:18:16.369810766 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlparser/Makefile.am	2010-09-24 17:19:23.799601744 +0200
+@@ -14,7 +14,6 @@ INCLUDES=\
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+ 	-I$(top_srcdir)/library/vsqlite++/include\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	-I$(top_srcdir)/library/base/src\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @PCRE_CFLAGS@ @SIGC_CFLAGS@
+ 
+diff -up mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlparser/Makefile.in.tinyxml mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlparser/Makefile.in
+--- mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlparser/Makefile.in.tinyxml	2010-09-24 17:18:16.166846315 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/db.mysql.sqlparser/Makefile.in	2010-09-24 17:19:14.336359995 +0200
+@@ -265,7 +265,6 @@ INCLUDES = \
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+ 	-I$(top_srcdir)/library/vsqlite++/include\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	-I$(top_srcdir)/library/base/src\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @PCRE_CFLAGS@ @SIGC_CFLAGS@
+ 
+diff -up mysql-workbench-gpl-5.2.28-src/modules/wb.model/Makefile.am.tinyxml mysql-workbench-gpl-5.2.28-src/modules/wb.model/Makefile.am
+--- mysql-workbench-gpl-5.2.28-src/modules/wb.model/Makefile.am.tinyxml	2010-09-24 17:18:16.651761384 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/wb.model/Makefile.am	2010-09-24 17:19:36.363247095 +0200
+@@ -64,7 +64,6 @@ INCLUDES=-I$(top_srcdir)/generated\
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+ 	-I$(top_srcdir)/ext/silvercity/src\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	-I$(top_srcdir)/ext/scintilla/include\
+ 	-I$(top_srcdir)/ext/scintilla/src\
+ 	-I$(top_srcdir)/ext/scintilla/lexlib\
+diff -up mysql-workbench-gpl-5.2.28-src/modules/wb.model/Makefile.in.tinyxml mysql-workbench-gpl-5.2.28-src/modules/wb.model/Makefile.in
+--- mysql-workbench-gpl-5.2.28-src/modules/wb.model/Makefile.in.tinyxml	2010-09-24 17:18:16.562776970 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/wb.model/Makefile.in	2010-09-24 17:19:29.106609899 +0200
+@@ -305,7 +305,6 @@ INCLUDES = -I$(top_srcdir)/generated\
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+ 	-I$(top_srcdir)/ext/silvercity/src\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	-I$(top_srcdir)/ext/scintilla/include\
+ 	-I$(top_srcdir)/ext/scintilla/src\
+ 	-I$(top_srcdir)/ext/scintilla/lexlib\
+diff -up mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.import/Makefile.am.tinyxml mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.import/Makefile.am
+--- mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.import/Makefile.am.tinyxml	2010-09-24 17:18:17.403629621 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.import/Makefile.am	2010-09-24 17:26:48.244585673 +0200
+@@ -15,18 +15,14 @@ INCLUDES=\
+ 	-I$(top_srcdir)/library/sql-parser/include\
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	-I$(top_srcdir)/library/vsqlite++/include\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ 
+ wb_mysql_import_grt_la_LDFLAGS=-module
+-#wb_mysql_import_grt_la_LIBADD=
++wb_mysql_import_grt_la_LIBADD=-ltinyxml
+ 
+ wb_mysql_import_grt_la_SOURCES=\
+ 	src/wb_mysql_import.cpp\
+-	src/wb_mysql_import_dbd4.cpp\
+-	$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp\
+-	$(top_srcdir)/library/tinyxml/tinyxml.cpp\
+-	$(top_srcdir)/library/tinyxml/tinystr.cpp\
+-	$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
++	src/wb_mysql_import_dbd4.cpp
++
+diff -up mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.import/Makefile.in.tinyxml mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.import/Makefile.in
+--- mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.import/Makefile.in.tinyxml	2010-09-24 17:18:17.200665208 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.import/Makefile.in	2010-09-24 17:22:37.807652768 +0200
+@@ -49,10 +49,9 @@ am__strip_dir = `echo $$p | sed -e 's|^.
+ am__installdirs = "$(DESTDIR)$(pkglibdir)"
+ pkglibLTLIBRARIES_INSTALL = $(INSTALL)
+ LTLIBRARIES = $(pkglib_LTLIBRARIES)
+-wb_mysql_import_grt_la_LIBADD =
++wb_mysql_import_grt_la_LIBADD = -ltinyxml 
+ am_wb_mysql_import_grt_la_OBJECTS = wb_mysql_import.lo \
+-	wb_mysql_import_dbd4.lo tinyxmlparser.lo tinyxml.lo tinystr.lo \
+-	tinyxmlerror.lo
++	wb_mysql_import_dbd4.lo
+ wb_mysql_import_grt_la_OBJECTS = $(am_wb_mysql_import_grt_la_OBJECTS)
+ wb_mysql_import_grt_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+@@ -246,19 +245,14 @@ INCLUDES = \
+ 	-I$(top_srcdir)/library/sql-parser/include\
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	-I$(top_srcdir)/library/vsqlite++/include\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ wb_mysql_import_grt_la_LDFLAGS = -module
+-#wb_mysql_import_grt_la_LIBADD=
++wb_mysql_import_grt_la_LIBADD = -ltinyxml
+ wb_mysql_import_grt_la_SOURCES = \
+ 	src/wb_mysql_import.cpp\
+-	src/wb_mysql_import_dbd4.cpp\
+-	$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp\
+-	$(top_srcdir)/library/tinyxml/tinyxml.cpp\
+-	$(top_srcdir)/library/tinyxml/tinystr.cpp\
+-	$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
++	src/wb_mysql_import_dbd4.cpp
+ 
+ all: all-am
+ 
+@@ -329,10 +323,6 @@ mostlyclean-compile:
+ distclean-compile:
+ 	-rm -f *.tab.c
+ 
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinystr.Plo@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxml.Plo@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlerror.Plo@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlparser.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wb_mysql_import.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wb_mysql_import_dbd4.Plo@am__quote@
+ 
+@@ -371,33 +361,6 @@ wb_mysql_import_dbd4.lo: src/wb_mysql_im
+ @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+ @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o wb_mysql_import_dbd4.lo `test -f 'src/wb_mysql_import_dbd4.cpp' || echo '$(srcdir)/'`src/wb_mysql_import_dbd4.cpp
+ 
+-tinyxmlparser.lo: $(top_srcdir)/library/tinyxml/tinyxmlparser.cpp
+-@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxmlparser.lo -MD -MP -MF $(DEPDIR)/tinyxmlparser.Tpo -c -o tinyxmlparser.lo `test -f '$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinyxmlparser.Tpo $(DEPDIR)/tinyxmlparser.Plo
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp' object='tinyxmlparser.lo' libtool=yes @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxmlparser.lo `test -f '$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxmlparser.cpp
+-
+-tinyxml.lo: $(top_srcdir)/library/tinyxml/tinyxml.cpp
+-@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxml.lo -MD -MP -MF $(DEPDIR)/tinyxml.Tpo -c -o tinyxml.lo `test -f '$(top_srcdir)/library/tinyxml/tinyxml.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxml.cpp
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinyxml.Tpo $(DEPDIR)/tinyxml.Plo
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinyxml.cpp' object='tinyxml.lo' libtool=yes @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxml.lo `test -f '$(top_srcdir)/library/tinyxml/tinyxml.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxml.cpp
+-
+-tinystr.lo: $(top_srcdir)/library/tinyxml/tinystr.cpp
+-@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinystr.lo -MD -MP -MF $(DEPDIR)/tinystr.Tpo -c -o tinystr.lo `test -f '$(top_srcdir)/library/tinyxml/tinystr.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinystr.cpp
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinystr.Tpo $(DEPDIR)/tinystr.Plo
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinystr.cpp' object='tinystr.lo' libtool=yes @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinystr.lo `test -f '$(top_srcdir)/library/tinyxml/tinystr.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinystr.cpp
+-
+-tinyxmlerror.lo: $(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
+-@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxmlerror.lo -MD -MP -MF $(DEPDIR)/tinyxmlerror.Tpo -c -o tinyxmlerror.lo `test -f '$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
+-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/tinyxmlerror.Tpo $(DEPDIR)/tinyxmlerror.Plo
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp' object='tinyxmlerror.lo' libtool=yes @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxmlerror.lo `test -f '$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp' || echo '$(srcdir)/'`$(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
+ 
+ mostlyclean-libtool:
+ 	-rm -f *.lo
+diff -up mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.validation/Makefile.am.tinyxml mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.validation/Makefile.am
+--- mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.validation/Makefile.am.tinyxml	2010-09-24 17:18:15.694928908 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.validation/Makefile.am	2010-09-24 17:18:40.528525753 +0200
+@@ -15,7 +15,6 @@ INCLUDES=-I$(top_srcdir)/generated\
+ 	-I$(top_srcdir)/library/sql-parser/include\
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	-I$(top_srcdir)/library/vsqlite++/include\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+diff -up mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.validation/Makefile.in.tinyxml mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.validation/Makefile.in
+--- mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.validation/Makefile.in.tinyxml	2010-09-24 17:18:15.613943077 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/wb.mysql.validation/Makefile.in	2010-09-24 17:18:33.635759153 +0200
+@@ -247,7 +247,6 @@ INCLUDES = -I$(top_srcdir)/generated\
+ 	-I$(top_srcdir)/library/sql-parser/include\
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	-I$(top_srcdir)/library/vsqlite++/include\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+diff -up mysql-workbench-gpl-5.2.28-src/modules/wb.validation/Makefile.am.tinyxml mysql-workbench-gpl-5.2.28-src/modules/wb.validation/Makefile.am
+--- mysql-workbench-gpl-5.2.28-src/modules/wb.validation/Makefile.am.tinyxml	2010-09-24 17:18:16.990702020 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/wb.validation/Makefile.am	2010-09-24 17:19:53.922919199 +0200
+@@ -14,7 +14,6 @@ INCLUDES=-I$(top_srcdir)/generated\
+ 	-I$(top_srcdir)/library/sql-parser/include\
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ 
+diff -up mysql-workbench-gpl-5.2.28-src/modules/wb.validation/Makefile.in.tinyxml mysql-workbench-gpl-5.2.28-src/modules/wb.validation/Makefile.in
+--- mysql-workbench-gpl-5.2.28-src/modules/wb.validation/Makefile.in.tinyxml	2010-09-24 17:18:16.743745274 +0200
++++ mysql-workbench-gpl-5.2.28-src/modules/wb.validation/Makefile.in	2010-09-24 17:19:46.149397588 +0200
+@@ -244,7 +244,6 @@ INCLUDES = -I$(top_srcdir)/generated\
+ 	-I$(top_srcdir)/library/sql-parser/include\
+ 	-I$(top_srcdir)/library/sql-parser/source\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+-	-I$(top_srcdir)/library/tinyxml\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ wb_validation_grt_la_LDFLAGS = -module
+--- mysql-workbench-gpl-5.2.28-src/backend/wbprivate/Makefile.am.tinyxml	2010-09-19 15:35:37.000000000 +0200
++++ mysql-workbench-gpl-5.2.28-src/backend/wbprivate/Makefile.am	2010-09-24 17:33:30.842800818 +0200
+@@ -11,8 +11,7 @@
+   -I$(top_srcdir)/backend/wbprivate/workbench \
+   -I$(top_srcdir)/ext/cppconn/ -I$(top_srcdir)/library/dbc/src\
+   -I$(top_srcdir)/ext/scintilla/include\
+-  -I$(top_srcdir)/library/vsqlite++/include\
+-  -I$(top_srcdir)/library/tinyxml
++  -I$(top_srcdir)/library/vsqlite++/include
+ 
+ libwbprivate_a_SOURCES=\
+ 	model/canvas_floater.cpp\
+@@ -71,11 +70,7 @@
+   $(top_srcdir)/frontend/common/edit_table_data_wizard.cpp\
+   $(top_srcdir)/frontend/common/grt_shell_window.cpp\
+   $(top_srcdir)/frontend/common/grt_code_editor.cpp\
+-  $(top_srcdir)/frontend/common/plugin_manager_window.cpp\
+-  $(top_srcdir)/library/tinyxml/tinyxmlparser.cpp\
+-  $(top_srcdir)/library/tinyxml/tinyxml.cpp\
+-  $(top_srcdir)/library/tinyxml/tinystr.cpp\
+-  $(top_srcdir)/library/tinyxml/tinyxmlerror.cpp
++  $(top_srcdir)/frontend/common/plugin_manager_window.cpp
+ 
+ #BUILT_SOURCES=stdafx.h.gch
+ #stdafx.h.gch: workbench/stdafx.h
+diff -up mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.am.tinyxml mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.am
+--- mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.am.tinyxml	2010-09-24 18:11:29.356728771 +0200
++++ mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.am	2010-09-24 18:12:11.505231814 +0200
+@@ -52,7 +52,7 @@ mysql_workbench_bin_LDADD=\
+ 	$(top_srcdir)/library/canvas/src/libmdcanvas.la\
+ 	@CTEMPLATE_LIBS@\
+ 	@GNOME_LIBS@ @GRT_LIBS@ @PCRE_LIBS@ @GLIB_LIBS@ @CAIRO_LIBS@ @ZIP_LIBS@ @MYSQL_LIBS@ @SQLITE3_LIBS@\
+-	-lmysqlcppconn -lX11
++	-ltinyxml -lmysqlcppconn -lX11
+ 
+ #precompiled.h.gch: precompiled.h
+ #	$(CXXCOMPILE) precompiled.h -o precompiled.h.gch
+diff -up mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.in.tinyxml mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.in
+--- mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.in.tinyxml	2010-09-24 18:11:35.725750336 +0200
++++ mysql-workbench-gpl-5.2.28-src/frontend/linux/workbench/Makefile.in	2010-09-24 18:12:34.852612345 +0200
+@@ -307,7 +307,7 @@ mysql_workbench_bin_LDADD = \
+ 	$(top_srcdir)/library/canvas/src/libmdcanvas.la\
+ 	@CTEMPLATE_LIBS@\
+ 	@GNOME_LIBS@ @GRT_LIBS@ @PCRE_LIBS@ @GLIB_LIBS@ @CAIRO_LIBS@ @ZIP_LIBS@ @MYSQL_LIBS@ @SQLITE3_LIBS@\
+-	-lmysqlcppconn -lX11
++	-ltinyxml -lmysqlcppconn -lX11
+ 
+ mysql_workbench_bin_SOURCES = \
+ main.cpp\
