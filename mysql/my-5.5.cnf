@@ -20,6 +20,9 @@ plugin-load=archive=ha_archive.so;blackhole=ha_blackhole.so
 ;rpl_semi_sync_master_timeout=10
 ;rpl_semi_sync_slave_enabled=1
 
+# http://dev.mysql.com/doc/refman/5.5/en/performance-schema.html
+;performance_schema
+
 
 [mysqld_safe]
 log-error=/var/log/mysqld.log
