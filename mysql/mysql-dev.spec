@@ -10,7 +10,7 @@ URL: http://www.mysql.com
 License: GPLv2 with exceptions
 
 # Regression tests take a long time, you can skip 'em with this
-%{!?runselftest:%global runselftest 1}
+%{!?runselftest:%global runselftest 0}
 
 # Upstream has a mirror redirector for downloads, so the URL is hard to
 # represent statically.  You can get the tarball by following a link from
@@ -44,6 +44,10 @@ Patch10: mysql-5.5-strmov.patch
 Patch14: mysql-missing-string-code.patch
 Patch15: mysql-lowercase-bug.patch
 Patch16: mysql-chain-certs.patch
+# mysql.sock path
+Patch17: mysql-5.5-tests.patch
+# missing rpl_reporting in embedded lib
+Patch18: mysql-5.5-report.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
@@ -187,6 +191,8 @@ the MySQL sources.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
+%patch18 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
@@ -240,15 +246,11 @@ export CFLAGS CXXFLAGS
 	--with-extra-charsets=all \
 	--with-big-tables \
 	--with-pic \
-	--with-plugin-innobase \
-	--with-plugin-archive \
-	--with-plugin-blackhole \
-	--with-plugin-csv \
-	--with-plugin-federated \
 	--with-plugin-partition \
 	--without-example-storage-engine \
 	--without-plugin-daemon_example \
 	--without-plugin-ftexample \
+	--without-plugin-audit_null \
 	--enable-local-infile \
 	--enable-largefile \
 	--enable-thread-safe-client \
@@ -266,16 +268,15 @@ mkdir libmysqld/work
 cd libmysqld/work
 ar -x ../libmysqld.a
 # define twice ??
-rm ha_federated.o
+#rm ha_federated.o
 gcc $CFLAGS $LDFLAGS -shared -Wl,-soname,libmysqld.so.0 -o libmysqld.so.0.0.1 \
 	*.o \
 	-lpthread -lcrypt -lnsl -lssl -lcrypto -lz -lrt -lstdc++ -lm -lc
 # this is to check that we built a complete library
 cp %{SOURCE9} .
 ln -s libmysqld.so.0.0.1 libmysqld.so.0
-## This check fails/ !!!!! temporary disable it
-## gcc -I../../include $CFLAGS mysql-embedded-check.c libmysqld.so.0
-## LD_LIBRARY_PATH=. ldd ./a.out
+gcc -I../../include $CFLAGS -laio -lstdc++ mysql-embedded-check.c libmysqld.so.0
+LD_LIBRARY_PATH=. ldd ./a.out
 cd ../..
 
 make check

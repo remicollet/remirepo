@@ -5,6 +5,22 @@ user=mysql
 # Disabling symbolic-links is recommended to prevent assorted security risks
 symbolic-links=0
 
+# Additional storage engines and plugins
+plugin-load=archive=ha_archive.so;blackhole=ha_blackhole.so
+
+# Add to the above plugin-load option, if needed 
+# http://dev.mysql.com/doc/refman/5.5/en/federated-storage-engine.html
+;federated=ha_federated.so
+# http://dev.mysql.com/doc/refman/5.5/en/replication-semisync.html
+;rpl_semi_sync_master=semisync_master.so
+;rpl_semi_sync_slave=semisync_slave.so
+
+# Others options for Semisynchronous Replication
+;rpl_semi_sync_master_enabled=1
+;rpl_semi_sync_master_timeout=10
+;rpl_semi_sync_slave_enabled=1
+
+
 [mysqld_safe]
 log-error=/var/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid

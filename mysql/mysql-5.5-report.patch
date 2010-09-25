@@ -1,0 +1,38 @@
+diff -up mysql-5.5.6-rc/libmysqld/Makefile.am.report mysql-5.5.6-rc/libmysqld/Makefile.am
+--- mysql-5.5.6-rc/libmysqld/Makefile.am.report	2010-09-25 10:12:21.974211826 +0200
++++ mysql-5.5.6-rc/libmysqld/Makefile.am	2010-09-25 10:13:22.497467790 +0200
+@@ -82,6 +82,7 @@ sqlsources = derror.cc field.cc field_co
+ 	rpl_injector.cc my_user.c partition_info.cc sql_alter.cc \
+ 	sql_servers.cc event_parse_data.cc sql_signal.cc \
+ 	rpl_handler.cc mdl.cc keycaches.cc sql_audit.cc \
++	rpl_reporting.cc \
+ 	sql_partition_admin.cc
+ 
+ libmysqld_int_a_SOURCES= $(libmysqld_sources)
+diff -up mysql-5.5.6-rc/libmysqld/Makefile.in.report mysql-5.5.6-rc/libmysqld/Makefile.in
+--- mysql-5.5.6-rc/libmysqld/Makefile.in.report	2010-09-25 10:12:16.071381356 +0200
++++ mysql-5.5.6-rc/libmysqld/Makefile.in	2010-09-25 10:14:17.781865911 +0200
+@@ -163,6 +163,7 @@ am__objects_3 = derror.$(OBJEXT) field.$
+ 	partition_info.$(OBJEXT) sql_alter.$(OBJEXT) \
+ 	sql_servers.$(OBJEXT) event_parse_data.$(OBJEXT) \
+ 	sql_signal.$(OBJEXT) rpl_handler.$(OBJEXT) mdl.$(OBJEXT) \
++	rpl_reporting.$(OBJEXT) \
+ 	keycaches.$(OBJEXT) sql_audit.$(OBJEXT) \
+ 	sql_partition_admin.$(OBJEXT)
+ nodist_libmysqld_int_a_OBJECTS = $(am__objects_2) $(am__objects_3)
+@@ -631,6 +632,7 @@ sqlsources = derror.cc field.cc field_co
+ 	rpl_injector.cc my_user.c partition_info.cc sql_alter.cc \
+ 	sql_servers.cc event_parse_data.cc sql_signal.cc \
+ 	rpl_handler.cc mdl.cc keycaches.cc sql_audit.cc \
++	rpl_reporting.cc \
+ 	sql_partition_admin.cc
+ 
+ libmysqld_int_a_SOURCES = $(libmysqld_sources)
+@@ -799,6 +801,7 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/records.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpl_filter.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpl_handler.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpl_reporting.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpl_injector.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpl_record.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpl_record_old.Po@am__quote@
