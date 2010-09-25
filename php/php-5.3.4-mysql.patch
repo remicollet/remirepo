@@ -1,0 +1,32 @@
+Linker assure ABI check using soname
+So, this check seems redondant.
+
+MySQL 5.1.50 and 5.5.6 provides libmysqlclient.so.16
+So, according to upstream, this "must" be compatible.
+
+Temporary disable this check to avoid flood in the apache log.
+
+diff -up php5.3-201009250430/ext/mysqli/mysqli_nonapi.c.check php5.3-201009250430/ext/mysqli/mysqli_nonapi.c
+--- php5.3-201009250430/ext/mysqli/mysqli_nonapi.c.check	2010-09-25 07:39:44.689928378 +0200
++++ php5.3-201009250430/ext/mysqli/mysqli_nonapi.c	2010-09-25 07:40:42.815832610 +0200
+@@ -73,7 +73,7 @@ void mysqli_common_connect(INTERNAL_FUNC
+ 	zend_bool			self_alloced = 0;
+ 
+ 
+-#if !defined(MYSQL_USE_MYSQLND)
++#if 0
+ 	if ((MYSQL_VERSION_ID / 100) != (mysql_get_client_version() / 100)) {
+ 		php_error_docref(NULL TSRMLS_CC, E_WARNING,
+ 						"Headers and client library minor version mismatch. Headers:%d Library:%ld",
+diff -up php5.3-201009250430/ext/mysql/php_mysql.c.check php5.3-201009250430/ext/mysql/php_mysql.c
+--- php5.3-201009250430/ext/mysql/php_mysql.c.check	2010-09-25 07:39:35.946641028 +0200
++++ php5.3-201009250430/ext/mysql/php_mysql.c	2010-09-25 07:40:13.389582942 +0200
+@@ -701,7 +701,7 @@ static void php_mysql_do_connect(INTERNA
+ 	zend_bool free_host=0, new_link=0;
+ 	long connect_timeout;
+ 
+-#if !defined(MYSQL_USE_MYSQLND)
++#if 0
+ 	if ((MYSQL_VERSION_ID / 100) != (mysql_get_client_version() / 100)) {
+ 		php_error_docref(NULL TSRMLS_CC, E_WARNING,
+ 						"Headers and client library minor version mismatch. Headers:%d Library:%ld",

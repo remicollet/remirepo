@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201009180430
+%global snapdate 201009250430
 %global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -82,6 +82,7 @@ Patch21: php-5.3.3-macropen.patch
 Patch40: php-5.0.4-dlopen.patch
 Patch41: php-5.3.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
+Patch43: php-5.3.4-mysql.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
@@ -551,6 +552,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if %{?fedora}%{?rhel:99} >= 11
 %patch42 -p1 -b .systzdata
 %endif
+%patch43 -p1 -b .mysqlcheck
 
 #%patch60 -p1 -b .tests-dashn
 %patch61 -p1 -b .tests-wddx
@@ -1202,6 +1204,11 @@ fi
 %endif
 
 %changelog
+* Sat Sep 25 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201009250430
+- new snapshot (5.3.4-dev)
+- add patch to disable "Headers and client library minor version mismatch" warning
+  because soname check must be enough (mysql 5.1.50 and 5.5.6 are ok)
+
 * Sat Sep 18 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201009180430
 - new snapshot (5.3.4-dev)
 
