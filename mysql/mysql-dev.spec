@@ -10,7 +10,7 @@ URL: http://www.mysql.com
 License: GPLv2 with exceptions
 
 # Regression tests take a long time, you can skip 'em with this
-%{!?runselftest:%global runselftest 0}
+%{!?runselftest:%global runselftest 1}
 
 # Upstream has a mirror redirector for downloads, so the URL is hard to
 # represent statically.  You can get the tarball by following a link from
@@ -58,6 +58,9 @@ BuildRequires: libaio-devel
 BuildRequires: time procps
 # Socket is needed to run regression tests
 BuildRequires: perl(Socket)
+# DBI and DBD::mysql are needed to run regression tests
+# This cause mysql BR mysql :(
+BuildRequires: perl(DBD::mysql)
 # This is required old EL4
 BuildRequires: perl(Time::HiRes)
 
