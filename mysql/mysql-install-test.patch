@@ -34,17 +34,3 @@ diff -Naur mysql-5.1.43.orig/mysql-test/README mysql-5.1.43/mysql-test/README
  
  
  You can create your own test cases. To create a test case, create a new
-diff -Naur mysql-5.1.43.orig/mysql-test/lib/mtr_cases.pm mysql-5.1.43/mysql-test/lib/mtr_cases.pm
---- mysql-5.1.43.orig/mysql-test/lib/mtr_cases.pm	2010-01-15 12:14:49.000000000 -0500
-+++ mysql-5.1.43/mysql-test/lib/mtr_cases.pm	2010-02-13 21:17:30.000000000 -0500
-@@ -259,7 +259,9 @@
-     else
-     {
-       $suitedir= my_find_dir($::basedir,
--			     ["mysql-test/suite",
-+			     ["share/mysql-test/suite",
-+			      "share/mysql-test",
-+			      "mysql-test/suite",
- 			      "mysql-test",
- 			      # Look in storage engine specific suite dirs
- 			      "storage/*/mysql-test-suites"

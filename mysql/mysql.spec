@@ -1,6 +1,6 @@
 Name: mysql
-Version: 5.1.50
-Release: 2%{?dist}
+Version: 5.1.51
+Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -44,7 +44,6 @@ Patch13: mysql-expired-certs.patch
 Patch14: mysql-missing-string-code.patch
 Patch15: mysql-lowercase-bug.patch
 Patch16: mysql-chain-certs.patch
-Patch17: mysql-missing-header.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
@@ -188,7 +187,6 @@ the MySQL sources.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
-%patch17 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
@@ -610,6 +608,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sun Sep 26 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.51-1
+- Update to MySQL 5.1.51 Community Server GA
+  http://dev.mysql.com/doc/refman/5.1/en/news-5-1-51.html
+
 * Sat Aug 28 2010 Tom Lane <tgl@redhat.com> 5.1.50-2
 - Include my_compiler.h in distribution, per upstream bug #55846.
   Otherwise PHP, for example, won't build.

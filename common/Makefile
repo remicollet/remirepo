@@ -23,6 +23,9 @@ devsrpm:
 build:
 	rpmbuild $(RPMDEFINES) -bb $(NAME).spec
 
+buildmini:
+	rpmbuild $(RPMDEFINES) --define "runselftest 0" -bb $(NAME).spec
+
 bp:
 	rpmbuild $(RPMDEFINES) -bp $(NAME).spec
 
