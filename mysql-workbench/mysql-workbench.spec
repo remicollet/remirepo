@@ -8,7 +8,7 @@
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   5.2.28
-Release:   2%{?dist}
+Release:   3%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -16,7 +16,7 @@ URL:       http://wb.mysql.com
 # Upstream has a mirror redirector for downloads, so the URL is hard to
 # represent statically.  You can get the tarball by following a link from
 # http://dev.mysql.com/downloads/workbench/
-Source:    %{name}-%{tartype}-%{version}%{?postver}.tar.gz
+Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tartype}-%{version}%{?postver}.tar.gz
 
 # don't build extension, use system one
 # !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
@@ -33,9 +33,7 @@ BuildRequires: ctemplate-devel
 %endif
 BuildRequires: libgnome-devel >= 2
 BuildRequires: automake autoconf libtool
-BuildRequires: lua-devel
 BuildRequires: libzip-devel libxml2-devel
-BuildRequires: libglade2-devel
 BuildRequires: readline-devel
 BuildRequires: python-devel >= 2.4
 BuildRequires: gnome-keyring-devel
@@ -46,17 +44,16 @@ BuildRequires: openssl-devel
 BuildRequires: mysql-devel >= 5.1
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildRequires: libuuid-devel
-%endif
+%else
 BuildRequires: uuid-devel
+%endif
 BuildRequires: gtkmm24-devel
-BuildRequires: mesa-libGL-devel
+BuildRequires: libGL-devel
 BuildRequires: sqlite-devel
 BuildRequires: mysql-connector-c++-devel >= %{cppconnver}
 BuildRequires: desktop-file-utils
 BuildRequires: tinyxml-devel
 
-Requires(post):   desktop-file-utils
-Requires(postun): desktop-file-utils
 Requires: python-paramiko pexpect python-sqlite2
 # requires mysql client pkg (for mysqldump and mysql cmdline client)
 Requires: mysql gnome-keyring
@@ -152,6 +149,13 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Mon Sep 27 2010 Remi Collet <Fedora@famillecollet.com> 5.2.28-3
+- changes from review  (Liang Suilong <liangsuilong@gmail.com>)
+- Edit the Source URL
+- Replace mesa-libGL-devel by libGL-devel
+- Remove Requires for desktop-file-utils
+- Remove duplicate BR: libglade2-devel and lua-devel
+
 * Fri Sep 24 2010 Remi Collet <Fedora@famillecollet.com> 5.2.28-2
 - use system tinyxml
 
