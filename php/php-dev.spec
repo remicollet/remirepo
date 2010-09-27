@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201009250430
+%global snapdate 201009271630
 %global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -65,7 +65,7 @@ Source6: php-fpm.init
 Source7: php-fpm.logrotate
 
 # Build fixes
-Patch1: php-5.3.3-gnusrc.patch
+Patch1: php-5.3.4-gnusrc.patch
 Patch2: php-5.3.0-install.patch
 Patch3: php-5.2.4-norpath.patch
 Patch4: php-5.3.0-phpize64.patch
@@ -1204,6 +1204,9 @@ fi
 %endif
 
 %changelog
+* Mon Sep 27 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201009271630
+- new snapshot (5.3.4-dev)
+
 * Sat Sep 25 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201009250430
 - new snapshot (5.3.4-dev)
 - add patch to disable "Headers and client library minor version mismatch" warning
