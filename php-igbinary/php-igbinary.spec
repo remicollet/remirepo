@@ -73,7 +73,7 @@ EOF
 
 %check
 # simple module load test
-php --no-php-ini \
+%{_bindir}/php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{extname}.so \
     --modules | grep %{extname}
@@ -87,7 +87,7 @@ EOF
 
 # As we have redirected extension_dir
 for ext in %{_libdir}/php/modules/*.so; do
-  ln -s $ext modules
+  %{__ln_s} $ext modules
 done
 
 PHPRC=./php.ini %{__pear} run-tests tests

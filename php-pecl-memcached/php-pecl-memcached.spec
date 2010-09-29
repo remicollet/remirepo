@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcached
 Version:      1.0.2
-Release:      1%{?dist}
+Release:      2%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -15,13 +15,17 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # 5.2.10 required to HAVE_JSON enabled
-BuildRequires: php-devel >= 5.2.10, php-pear
-BuildRequires: libmemcached-devel, zlib-devel
+BuildRequires: php-devel >= 5.2.10
+BuildRequires: php-pear
+BuildRequires: php-igbinary-devel
+BuildRequires: libmemcached-devel
+BuildRequires: zlib-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
 Requires:     php-common >= 5.2.10
+Requires:     php-igbinary
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
@@ -47,7 +51,7 @@ cd %{pecl_name}-%{version}
 %build
 cd %{pecl_name}-%{version}
 phpize
-%configure
+%configure --enable-memcached-igbinary
 %{__make} %{?_smp_mflags}
 
 
@@ -61,7 +65,6 @@ cd %{pecl_name}-%{version}
 %{__cat} > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
-
 
 ; ----- Options to use the memcached session handler
 
@@ -94,9 +97,11 @@ fi
 cd %{pecl_name}-%{version}
 # only check if build extension can be loaded
 %{__ln_s} %{php_extdir}/json.so modules/
+%{__ln_s} %{php_extdir}/igbinary.so modules/
 %{_bindir}/php \
     -n -q -d extension_dir=modules \
     -d extension=json.so \
+    -d extension=igbinary.so \
     -d extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -110,6 +115,9 @@ cd %{pecl_name}-%{version}
 
 
 %changelog
+* Wed Sep 29 2010 Remi Collet <fedora@famillecollet.com> - 1.0.2-2
+- rebuild with igbinary support
+
 * Tue May 04 2010 Remi Collet <fedora@famillecollet.com> - 1.0.2-1
 - update to 1.0.2 for libmemcached 0.40
 
