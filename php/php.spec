@@ -45,7 +45,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.3.3
-Release: 1%{?dist}.1
+Release: 1%{?dist}.2
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -1184,6 +1184,7 @@ fi
 %endif
 
 %changelog
+* Wed Sep 29 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-1.2
 - use SIGUSR2 for service reload
 - fix slowlog comment + set default value
 
