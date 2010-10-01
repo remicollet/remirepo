@@ -1,6 +1,7 @@
---- httpd-2.2.11/configure.in.selinux
-+++ httpd-2.2.11/configure.in
-@@ -412,6 +412,10 @@ getpgid
+diff -up httpd-2.3.8/configure.in.selinux httpd-2.3.8/configure.in
+--- httpd-2.3.8/configure.in.selinux	2010-10-01 18:51:36.960826530 +0200
++++ httpd-2.3.8/configure.in	2010-10-01 18:51:36.984827554 +0200
+@@ -430,6 +430,10 @@ fopen64
  dnl confirm that a void pointer is large enough to store a long integer
  APACHE_CHECK_VOID_PTR_LEN
  
@@ -11,21 +12,22 @@
  dnl ## Check for the tm_gmtoff field in struct tm to get the timezone diffs
  AC_CACHE_CHECK([for tm_gmtoff in struct tm], ac_cv_struct_tm_gmtoff,
  [AC_TRY_COMPILE([#include <sys/types.h>
---- httpd-2.2.11/server/core.c.selinux
-+++ httpd-2.2.11/server/core.c
-@@ -51,6 +51,8 @@
+diff -up httpd-2.3.8/server/core.c.selinux httpd-2.3.8/server/core.c
+--- httpd-2.3.8/server/core.c.selinux	2010-08-22 12:26:18.000000000 +0200
++++ httpd-2.3.8/server/core.c	2010-10-01 18:55:18.178025465 +0200
+@@ -50,6 +50,8 @@
  
  #include "mod_so.h" /* for ap_find_loaded_module_symbol */
  
 +#include <selinux/selinux.h>
 +
- /* LimitRequestBody handling */
- #define AP_LIMIT_REQ_BODY_UNSET         ((apr_off_t) -1)
- #define AP_DEFAULT_LIMIT_REQ_BODY       ((apr_off_t) 0)
-@@ -3796,6 +3798,26 @@ static int core_post_config(apr_pool_t *
-     }
+ #if defined(RLIMIT_CPU) || defined (RLIMIT_DATA) || defined (RLIMIT_VMEM) || defined(RLIMIT_AS) || defined (RLIMIT_NPROC)
+ #include "unixd.h"
  #endif
- 
+@@ -3655,6 +3657,27 @@ static int core_post_config(apr_pool_t *
+                      "or other system security module is loaded.");
+         return !OK;
+     }
 +    {
 +        static int already_warned = 0;
 +        int is_enabled = is_selinux_enabled() > 0;
@@ -45,6 +47,7 @@
 +            }
 +        }
 +    }
++
 +
      return OK;
  }

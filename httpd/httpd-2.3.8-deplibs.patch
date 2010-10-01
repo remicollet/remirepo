@@ -1,0 +1,15 @@
+diff -up httpd-2.3.8/configure.in.deplibs httpd-2.3.8/configure.in
+--- httpd-2.3.8/configure.in.deplibs	2010-08-22 12:34:20.000000000 +0200
++++ httpd-2.3.8/configure.in	2010-10-01 18:36:46.106973515 +0200
+@@ -649,9 +649,9 @@ APACHE_HELP_STRING(--with-suexec-umask,u
+ 
+ dnl APR should go after the other libs, so the right symbols can be picked up
+ if test x${apu_found} != xobsolete; then
+-  AP_LIBS="$AP_LIBS `$apu_config --avoid-ldap --link-libtool --libs`"
++  AP_LIBS="$AP_LIBS `$apu_config --link-libtool`"
+ fi
+-AP_LIBS="$AP_LIBS `$apr_config --link-libtool --libs`" 
++AP_LIBS="$AP_LIBS `$apr_config --link-libtool`" 
+ APACHE_SUBST(AP_LIBS)
+ APACHE_SUBST(AP_BUILD_SRCLIB_DIRS)
+ APACHE_SUBST(AP_CLEAN_SRCLIB_DIRS)

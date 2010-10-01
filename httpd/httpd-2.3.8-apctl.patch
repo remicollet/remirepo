@@ -1,17 +1,7 @@
-
-- fail gracefully if links is not installed on target system
-- source sysconfig/httpd for custom env. vars etc.
-- make httpd -t work even in SELinux
-- refuse to restart into a bad config
-- pass $OPTIONS to all $HTTPD invocation
-
-Upstream-HEAD: vendor
-Upstream-2.0: vendor
-Upstream-Status: Vendor-specific changes for better initscript integration
-
---- httpd-2.1.10/support/apachectl.in.apctl
-+++ httpd-2.1.10/support/apachectl.in
-@@ -43,19 +43,25 @@
+diff -up httpd-2.3.8/support/apachectl.in.apctl httpd-2.3.8/support/apachectl.in
+--- httpd-2.3.8/support/apachectl.in.apctl	2009-04-23 19:45:41.000000000 +0200
++++ httpd-2.3.8/support/apachectl.in	2010-10-01 18:25:41.040624098 +0200
+@@ -44,19 +44,25 @@ ARGV="$@"
  # the path to your httpd binary, including options if necessary
  HTTPD='@exp_sbindir@/@progname@'
  #
@@ -42,7 +32,7 @@ Upstream-Status: Vendor-specific changes for better initscript integration
  #
  # Set this variable to a command that increases the maximum
  # number of file descriptors allowed per child process. This is
-@@ -75,29 +81,51 @@
+@@ -76,29 +82,51 @@ if [ "x$ARGV" = "x" ] ; then 
      ARGV="-h"
  fi
  
@@ -64,7 +54,7 @@ Upstream-Status: Vendor-specific changes for better initscript integration
 +ERROR=$?
 +}
 +
- case $ARGV in
+ case $ACMD in
 -start|stop|restart|graceful|graceful-stop)
 -    $HTTPD -k $ARGV
 -    ERROR=$?
@@ -92,7 +82,7 @@ Upstream-Status: Vendor-specific changes for better initscript integration
 +    testconfig
      ;;
  status)
-+   checklynx
++    checklynx
      $LYNX $STATUSURL | awk ' /process$/ { print; exit } { print } '
      ;;
  fullstatus)
@@ -100,8 +90,8 @@ Upstream-Status: Vendor-specific changes for better initscript integration
      $LYNX $STATUSURL
      ;;
  *)
--    $HTTPD $ARGV
-+    $HTTPD $OPTIONS $ARGV
+-    $HTTPD "$@"
++    $HTTPD $OPTIONS "$@"
      ERROR=$?
  esac
  
