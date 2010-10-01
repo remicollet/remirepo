@@ -1,0 +1,51 @@
+--- httpd-2.2.11/configure.in.selinux
++++ httpd-2.2.11/configure.in
+@@ -412,6 +412,10 @@ getpgid
+ dnl confirm that a void pointer is large enough to store a long integer
+ APACHE_CHECK_VOID_PTR_LEN
+ 
++AC_CHECK_LIB(selinux, is_selinux_enabled, [
++   APR_ADDTO(AP_LIBS, [-lselinux])
++])
++
+ dnl ## Check for the tm_gmtoff field in struct tm to get the timezone diffs
+ AC_CACHE_CHECK([for tm_gmtoff in struct tm], ac_cv_struct_tm_gmtoff,
+ [AC_TRY_COMPILE([#include <sys/types.h>
+--- httpd-2.2.11/server/core.c.selinux
++++ httpd-2.2.11/server/core.c
+@@ -51,6 +51,8 @@
+ 
+ #include "mod_so.h" /* for ap_find_loaded_module_symbol */
+ 
++#include <selinux/selinux.h>
++
+ /* LimitRequestBody handling */
+ #define AP_LIMIT_REQ_BODY_UNSET         ((apr_off_t) -1)
+ #define AP_DEFAULT_LIMIT_REQ_BODY       ((apr_off_t) 0)
+@@ -3796,6 +3798,26 @@ static int core_post_config(apr_pool_t *
+     }
+ #endif
+ 
++    {
++        static int already_warned = 0;
++        int is_enabled = is_selinux_enabled() > 0;
++        
++        if (is_enabled && !already_warned) {
++            security_context_t con;
++            
++            if (getcon(&con) == 0) {
++                
++                ap_log_error(APLOG_MARK, APLOG_NOTICE, 0, NULL,
++                             "SELinux policy enabled; "
++                             "httpd running as context %s", con);
++                
++                already_warned = 1;
++                
++                freecon(con);
++            }
++        }
++    }
++
+     return OK;
+ }
+ 

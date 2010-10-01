@@ -1,0 +1,53 @@
+
+Hack to send the dummy HTTP request only to the first listener 
+configured, to avoid spamming the SSL vhost in the default install.
+
+In 2.2 lr->protocol could be used instead to do this properly, if
+that was actually initialized properly by mod_ssl.
+
+Upstream-Status: not submitted, ugly hack which only makes a difference
+		to the default configuration used in Fedora.  Need to find
+		a way to do this properly.
+
+--- httpd-2.1.10/server/mpm_common.c.pod
++++ httpd-2.1.10/server/mpm_common.c
+@@ -583,6 +584,7 @@
+     apr_socket_t *sock;
+     apr_pool_t *p;
+     apr_size_t len;
++    ap_listen_rec *lr;
+ 
+     /* create a temporary pool for the socket.  pconf stays around too long */
+     rv = apr_pool_create(&p, pod->p);
+@@ -590,8 +592,11 @@
+         return rv;
+     }
+ 
+-    rv = apr_socket_create(&sock, ap_listeners->bind_addr->family,
+-                           SOCK_STREAM, 0, p);
++    /* Find an HTTP listener specified first in the configuration. */
++    for (lr = ap_listeners; lr->next != NULL; lr = lr->next)
++        /* noop */;
++
++    rv = apr_socket_create(&sock, lr->bind_addr->family, SOCK_STREAM, 0, p);
+     if (rv != APR_SUCCESS) {
+         ap_log_error(APLOG_MARK, APLOG_WARNING, rv, ap_server_conf,
+                      "get socket to connect to listener");
+@@ -614,7 +619,7 @@
+         return rv;
+     }
+ 
+-    rv = apr_socket_connect(sock, ap_listeners->bind_addr);
++    rv = apr_socket_connect(sock, lr->bind_addr);
+     if (rv != APR_SUCCESS) {
+         int log_level = APLOG_WARNING;
+ 
+@@ -627,7 +632,7 @@
+         }
+ 
+         ap_log_error(APLOG_MARK, log_level, rv, ap_server_conf,
+-                     "connect to listener on %pI", ap_listeners->bind_addr);
++                     "connect to listener on %pI", lr->bind_addr);
+     }
+ 
+     /* Create the request string. We include a User-Agent so that

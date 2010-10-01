@@ -1,0 +1,30 @@
+--- httpd-2.2.0/modules/aaa/mod_authn_file.c.authnoprov
++++ httpd-2.2.0/modules/aaa/mod_authn_file.c
+@@ -70,6 +70,10 @@
+     apr_status_t status;
+     char *file_password = NULL;
+ 
++    if (!conf->pwfile) {
++        return AUTH_GENERAL_ERROR;
++    }
++
+     status = ap_pcfg_openfile(&f, r->pool, conf->pwfile);
+ 
+     if (status != APR_SUCCESS) {
+--- httpd-2.2.0/modules/aaa/mod_auth_basic.c.authnoprov
++++ httpd-2.2.0/modules/aaa/mod_auth_basic.c
+@@ -252,6 +252,14 @@
+             return DECLINED;
+         }
+ 
++        /* If no providers were configured, and the default file
++         * provider gave a general error (which will happen only if
++         * has not been configured), presume that a non-provider-based
++         * authn module is configured, and get out of the way. */
++        if (!conf->providers && auth_result == AUTH_GENERAL_ERROR) {
++            return DECLINED;
++        }
++
+         switch (auth_result) {
+         case AUTH_DENIED:
+             ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,

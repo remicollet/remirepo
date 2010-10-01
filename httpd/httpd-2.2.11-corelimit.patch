@@ -1,0 +1,28 @@
+--- httpd-2.2.11/server/core.c.corelimit
++++ httpd-2.2.11/server/core.c
+@@ -3777,6 +3779,25 @@ static int core_post_config(apr_pool_t *
+ 
+     set_banner(pconf);
+     ap_setup_make_content_type(pconf);
++
++#ifdef RLIMIT_CORE
++    if (ap_coredumpdir_configured) {
++        struct rlimit lim;
++
++        if (getrlimit(RLIMIT_CORE, &lim) == 0 && lim.rlim_cur == 0) {
++            lim.rlim_cur = lim.rlim_max;
++            if (setrlimit(RLIMIT_CORE, &lim) == 0) {
++                ap_log_error(APLOG_MARK, APLOG_NOTICE, 0, NULL,
++                             "core dump file size limit raised to %lu bytes",
++                             lim.rlim_cur);
++            } else {
++                ap_log_error(APLOG_MARK, APLOG_NOTICE, errno, NULL,
++                             "core dump file size is zero, setrlimit failed");
++            }
++        }
++    }
++#endif
++
+     return OK;
+ }
+ 
