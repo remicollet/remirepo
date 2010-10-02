@@ -1,15 +1,15 @@
 %define contentdir /var/www
 %define suexec_caller apache
-%define mmn 20051115
+%define mmn 20100723
 %define vstring Fedora
 %define mpms worker event
 
 Summary: Apache HTTP Server
 Name: httpd
-Version: 2.2.16
-Release: 1%{?dist}
+Version: 2.3.8
+Release: 0.1%{?dist}
 URL: http://httpd.apache.org/
-Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.gz
+Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
 Source3: httpd.logrotate
 Source4: httpd.init
@@ -21,19 +21,17 @@ Source13: manual.conf
 # Documentation
 Source33: README.confd
 # build/scripts patches
-Patch1: httpd-2.1.10-apctl.patch
-Patch2: httpd-2.1.10-apxs.patch
-Patch3: httpd-2.2.9-deplibs.patch
-Patch4: httpd-2.1.10-disablemods.patch
+Patch1: httpd-2.3.8-apctl.patch
+Patch2: httpd-2.3.8-apxs.patch
+Patch3: httpd-2.3.8-deplibs.patch
 Patch5: httpd-2.1.10-layout.patch
 # Features/functional changes
 Patch20: httpd-2.0.48-release.patch
 Patch21: httpd-2.2.11-xfsz.patch
-Patch22: httpd-2.1.10-pod.patch
+#Patch22: httpd-2.1.10-pod.patch
 Patch23: httpd-2.0.45-export.patch
-Patch24: httpd-2.2.11-corelimit.patch
-Patch25: httpd-2.2.11-selinux.patch
-Patch26: httpd-2.2.9-suenable.patch
+#Patch24: httpd-2.2.11-corelimit.patch
+Patch25: httpd-2.3.8-selinux.patch
 # Bug fixes
 Patch54: httpd-2.2.0-authnoprov.patch
 License: ASL 2.0
@@ -111,15 +109,13 @@ Security (TLS) protocols.
 %patch1 -p1 -b .apctl
 %patch2 -p1 -b .apxs
 %patch3 -p1 -b .deplibs
-%patch4 -p1 -b .disablemods
 %patch5 -p1 -b .layout
 
 %patch21 -p1 -b .xfsz
-%patch22 -p1 -b .pod
+#%patch22 -p1 -b .pod
 %patch23 -p1 -b .export
-%patch24 -p1 -b .corelimit
+#%patch24 -p1 -b .corelimit
 %patch25 -p1 -b .selinux
-%patch26 -p1 -b .suenable
 
 %patch54 -p1 -b .authnoprov
 
@@ -422,6 +418,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_sbindir}/ht*
 %{_sbindir}/apachectl
+%{_sbindir}/fcgistarter
 %{_sbindir}/rotatelogs
 %attr(4510,root,%{suexec_caller}) %{_sbindir}/suexec
 
@@ -480,6 +477,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/build/*.sh
 
 %changelog
+* Fri Oct 01 2010 Remi Collet <RPMS@FamilleCollet.com> - 2.3.8-1
+- update to 2.3.8-Alpha
+
 * Mon Jul 26 2010 Joe Orton <jorton@redhat.com> - 2.2.16-1
 - update to 2.2.16
 

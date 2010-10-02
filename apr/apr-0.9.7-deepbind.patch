@@ -1,0 +1,16 @@
+
+Use RTLD_DEEPBIND by default.  Should really be done with a 
+new function and a caller-specified flag but that got vetoed
+upstream, and DEEPBIND is a good default.
+
+--- apr-0.9.7/dso/unix/dso.c.deepbind
++++ apr-0.9.7/dso/unix/dso.c
+@@ -122,7 +122,7 @@
+     void *os_handle = dlopen((char *)path, RTLD_NOW | RTLD_GLOBAL);
+ 
+ #else
+-    int flags = RTLD_NOW | RTLD_GLOBAL;
++    int flags = RTLD_NOW | RTLD_GLOBAL | RTLD_DEEPBIND;
+     void *os_handle;
+ #ifdef _AIX
+     if (strchr(path + 1, '(') && path[strlen(path) - 1] == ')')

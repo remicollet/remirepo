@@ -1,0 +1,18 @@
+
+- avoid adding %{_libdir} to --link-ld output
+
+--- apr-1.2.2/apr-config.in.libdir
++++ apr-1.2.2/apr-config.in
+@@ -181,8 +181,10 @@
+     ;;
+     --link-ld)
+     if test "$location" = "installed"; then
+-        ### avoid using -L if libdir is a "standard" location like /usr/lib
+-        flags="$flags -L$libdir -l${APR_LIBNAME}"
++        if test "$prefix" != "/usr"; then
++            flags="$flags -L$libdir"
++        fi
++        flags="$flags -l${APR_LIBNAME}"
+     else
+         ### this surely can't work since the library is in .libs?
+         flags="$flags -L$APR_BUILD_DIR -l${APR_LIBNAME}"
