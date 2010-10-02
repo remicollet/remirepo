@@ -5,14 +5,12 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcached
 Version:      1.0.2
-Release:      3%{?dist}
+Release:      3%{?dist}.1
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:       php-pecl-memcached-sasl.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -48,8 +46,6 @@ It also provides a session handler (memcached).
 %prep 
 %setup -c -q
 cd %{pecl_name}-%{version}
-
-%patch0 -p1 -b .sasl
 
 
 %build
@@ -119,6 +115,9 @@ cd %{pecl_name}-%{version}
 
 
 %changelog
+* Sat Oct 02 2010 Remi Collet <fedora@famillecollet.com> - 1.0.2-3.1
+- remove patch 
+
 * Fri Oct 01 2010 Remi Collet <fedora@famillecollet.com> - 1.0.2-3
 - rebuild against libmemcached 0.44 with SASL support
 
