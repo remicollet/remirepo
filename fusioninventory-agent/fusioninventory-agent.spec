@@ -11,7 +11,7 @@ Release:   2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1-48-ga7532c0.tar.gz
 %else
-Release:   2%{?dist}
+Release:   1%{?dist}
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}.tar.gz
 %endif
 
@@ -233,6 +233,7 @@ exit 0
 - update to 2.1.6
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.6/Changes
 - fix init script for multi-server in daemon mode
+- workaround for http://forge.fusioninventory.org/issues/414
 
 * Wed Sep 15 2010 Remi Collet <Fedora@famillecollet.com> 2.1.5-1
 - update to 2.1.5

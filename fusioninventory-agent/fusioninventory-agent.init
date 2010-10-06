@@ -53,7 +53,7 @@ do_start()
 	fi
 	if [ -n "$OPTS" ]; then
 		echo -n $"Starting $prog: "
-		daemon $prog --logfile=$logfile $FUSINVOPT --daemon $OPTS 2>/dev/null
+		daemon $prog --logfile-maxsize=999 --logfile=$logfile $FUSINVOPT --daemon $OPTS 2>/dev/null
 		RETVAL=$?
 		echo
 	else
