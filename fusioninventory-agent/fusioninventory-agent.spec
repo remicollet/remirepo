@@ -4,7 +4,7 @@ Name:        fusioninventory-agent
 Summary:     FusionInventory agent
 Summary(fr): Agent FusionInventory
 
-Version:   2.1.5
+Version:   2.1.6
 
 %if 0%{?gitver:1}
 Release:   2.git%{gitver}%{?dist}
@@ -229,6 +229,11 @@ exit 0
 
 
 %changelog
+* Wed Oct 06 2010 Remi Collet <Fedora@famillecollet.com> 2.1.6-1
+- update to 2.1.6
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.6/Changes
+- fix init script for multi-server in daemon mode
+
 * Wed Sep 15 2010 Remi Collet <Fedora@famillecollet.com> 2.1.5-1
 - update to 2.1.5
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.5/Changes

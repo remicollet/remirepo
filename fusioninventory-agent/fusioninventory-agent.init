@@ -27,6 +27,7 @@ do_start()
 	# Read configuration
 	i=0
 	OPTS=
+	SERVERS=
 	while [ $i -lt ${#OCSMODE[*]} ]
 	do
 		if [ ${OCSMODE[$i]:-none} == daemon ]; then
@@ -38,11 +39,18 @@ do_start()
 				OPTS="$OPTS --local=/var/lib/$prog"
 			elif [ ! -z "${OCSSERVER[$i]}" ]; then
 				# Remote inventory
-				OPTS="$OPTS --server=${OCSSERVER[$i]}"
+				if [ -z "$SERVERS" ]; then
+					SERVERS=${OCSSERVER[$i]}
+				else
+					SERVERS="$SERVERS,${OCSSERVER[$i]}"
+				fi
 			fi
 		fi
 		((i++))
 	done
+	if [ -n "$SERVERS" ]; then
+		OPTS="$OPTS --server=$SERVERS"
+	fi
 	if [ -n "$OPTS" ]; then
 		echo -n $"Starting $prog: "
 		daemon $prog --logfile=$logfile $FUSINVOPT --daemon $OPTS 2>/dev/null
