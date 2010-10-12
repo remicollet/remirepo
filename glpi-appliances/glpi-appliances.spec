@@ -1,5 +1,5 @@
 %global pluginname   appliances
-%global svnrelease   114
+#global svnrelease   114
 
 Name:           glpi-appliances
 Version:        1.6.0
@@ -20,7 +20,7 @@ URL:            https://forge.indepnet.net/projects/appliances
 # tar czf glpi-appliances-1.6.0-114.tar.gz appliances
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/459/glpi-applicatifs-1.5.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/663/glpi-appliances-1.6.0.tar.gz
 %endif
 
 
@@ -80,6 +80,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-1
+- version 1.6.0 and GLPI 0.78 released
+
 * Wed Aug 25 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-0.1.svn114
 - new svn snapshot
 
