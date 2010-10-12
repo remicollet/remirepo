@@ -1,5 +1,5 @@
 %global pluginname   reports
-%global svnrelease   100
+#global svnrelease   100
 
 Name:           glpi-reports
 Version:        1.4.0
@@ -20,7 +20,7 @@ URL:            https://forge.indepnet.net/projects/reports
 # tar czf glpi-reports-1.4.0-100.tar.gz reports
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/136/glpi-reports-1.3.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/661/glpi-reports-1.4.0.tar.gz
 %endif
 
 
@@ -82,6 +82,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.4.0-1
+- version 1.4.0 and GLPI 0.78 released
+
 * Sat Sep 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.4.0-0.1.svn100
 - new snapshot
 
