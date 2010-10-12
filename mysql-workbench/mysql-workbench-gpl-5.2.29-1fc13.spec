@@ -1,10 +1,10 @@
 %if !%{defined version}
-%define version		5.2.24
+%define version		5.2.29
 %endif
 %define release		1
-%define edition   ce
+%define edition   gpl
 
-Summary: A MySQL visual database modeling tool.
+Summary: A MySQL visual database modeling, administration and querying tool.
 Name: mysql-workbench-%{edition}
 Version: %{version}
 Release: %{release}%{targos}
@@ -12,7 +12,7 @@ Group: Applications/Databases
 Vendor: Oracle Corporation
 License: GPL
 URL: http://wb.mysql.com
-Source: %{name}-%{version}.tar.gz
+Source: %{name}-%{version}-src.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: pcre-devel >= 3.9
 BuildRequires: libglade2-devel >= 2.0.0
@@ -27,7 +27,7 @@ BuildRequires: python-devel >= 2.4
 BuildRequires: gnome-keyring-devel
 BuildRequires: boost-devel
 
-%if %{defined suse}
+%if %_vendor == suse
 BuildRequires: libmysqlclient-devel
 BuildRequires: Mesa
 %else
@@ -39,12 +39,12 @@ BuildRequires: gtkmm24-devel
 BuildRequires: mesa-libGL-devel
 %endif
 
-%if %{defined suse}
+%if %_vendor == suse
 Requires: python-paramiko python-pexpect 
 %else
 Requires: python-paramiko pexpect 
 %endif
-%if %{defined fc12}
+%if %{defined fc13}
 Requires: python-sqlite2
 %endif
 # requires mysql client pkg (for mysqldump and mysql cmdline client)
@@ -53,23 +53,29 @@ Requires: mysql gnome-keyring
 # our old package name
 Obsoletes: mysql-workbench-oss
 Conflicts: mysql-workbench-oss
+Conflicts: mysql-workbench-com-se
 
 %description
-MySQL Workbench is modeling tool that allows you to design
-and generate MySQL databases graphically.
-
+MySQL Workbench is a modeling tool that allows you to design
+and generate MySQL databases graphically. It also has administration
+and query development modules where you can manage MySQL server instances
+and execute SQL queries.
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{version}-src
 
 %build
 
 NOCONFIGURE=yes ./autogen.sh
-%configure --disable-debug --enable-python-modules
+%configure --disable-debug 
 make
 
 %install
 make install DESTDIR=%{buildroot}
+
+find %{buildroot}%{_libdir}/mysql-workbench -name \*.a  -exec rm {} \; -print
+find %{buildroot}%{_libdir}/mysql-workbench -name \*.la -exec rm {} \; -print
+
 %if %{defined centos}
 for l in libpixman-1.so.0 libcairo.so.2 libatkmm-1.6.so.1 libcairomm-1.0.so.1 libgdkmm-2.4.so.1 libglibmm-2.4.so.1 libgtkmm-2.4.so.1 libpangomm-1.4.so.1 libzip.so.1 libsigc-2.0.so.0; do
 cp %{_libdir}/$l %{buildroot}/%{_libdir}/mysql-workbench
@@ -79,7 +85,7 @@ done
 
 %clean
 rm -rf %{buildroot}
-rm -rf %{_builddir}/%{name}-%{version}
+rm -rf %{_builddir}/%{name}-%{version}-src
 
 %files
 %defattr(0644, root, root, 0755)
