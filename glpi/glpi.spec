@@ -5,7 +5,7 @@
 %endif
 
 %global tarballversion 0.78
-%global svnrelease 12452
+#global svnrelease 12452
 
 Name:           glpi
 Version:        0.78
@@ -25,7 +25,7 @@ URL:            http://www.glpi-project.org/
 Source0:        glpi-0.78-%{svnrelease}.tar.gz
 Source99:       mktar.sh
 %else
-Source0:        https://forge.indepnet.net/attachments/download/597/glpi-0.72.4.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/656/glpi-0.78.tar.gz
 %endif
 
 Source1:        glpi-httpd.conf
@@ -245,6 +245,9 @@ fi
 
 
 %changelog
+* Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-1
+- version 0.78 released
+
 * Sat Sep 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn12452
 - new svn snapshot (which is > RC3)
 
