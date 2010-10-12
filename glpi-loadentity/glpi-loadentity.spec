@@ -1,5 +1,5 @@
 %global pluginname   loadentity
-%global svnrelease   57
+#global svnrelease   57
 
 Name:           glpi-loadentity
 Version:        1.2.0
@@ -20,7 +20,7 @@ URL:            https://forge.indepnet.net/projects/loadentity
 # tar czf glpi-loadentity-1.2.0-57.tar.gz loadentity
 Source0:        glpi-loadentity-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/523/glpi-dumpentity-1.1.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/666/glpi-loadentity-1.2.0.tar.gz
 %endif
 
 
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}
 
 %changelog
+* Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.2.0-1
+- version 1.2.0 and GLPI 0.78 released
+
 * Fri Jun 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.2.0-0.1.svn57
 - update to 1.2.0 for glpi 0.78 RC (svn snapshot)
 
