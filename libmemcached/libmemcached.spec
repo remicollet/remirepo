@@ -1,18 +1,13 @@
 Name:      libmemcached
 Summary:   Client library and command line tools for memcached server
 Version:   0.44
-Release:   3%{?dist}
+Release:   1%{?dist}
 License:   BSD
 Group:     System Environment/Libraries
 URL:       http://libmemcached.org/
 Source0:   http://launchpad.net/libmemcached/1.0/%{version}/+download/libmemcached-%{version}.tar.gz
 
-# Add -lsasl2 to libmemcached.pc
-# See http://lists.libmemcached.org/pipermail/libmemcached-discuss/2010-October/002207.html
-Patch0:    libmemcached-sasl.patch
-
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: cyrus-sasl-devel
 # checked during configure (for test suite)
 BuildRequires: memcached
 # We patch .m4 files
@@ -51,8 +46,6 @@ you will need to install %{name}-devel.
 %prep
 %setup -q
 
-%patch0 -p1 -b .sasl
-
 %{__rm} -f libmemcached/hsieh_hash.c 
 
 %{__mkdir} examples
@@ -60,8 +53,7 @@ you will need to install %{name}-devel.
 
 
 %build
-config/autorun.sh
-%configure
+%configure --disable-sasl
 %{__make} %{_smp_mflags}
 
 
@@ -119,15 +111,10 @@ config/autorun.sh
 
 
 %changelog
-* Sat Oct 02 2010 Remi Collet <Fedora@famillecollet.com> - 0.44-3
-- improves SASL patch
-
-* Sat Oct 02 2010 Remi Collet <Fedora@famillecollet.com> - 0.44-2
-- enable SASL support
-
 * Fri Oct 01 2010 Remi Collet <Fedora@famillecollet.com> - 0.44-1
 - update to 0.44
 - add soname version in %%file to detect change
+- rebuild for fedora <= 10 and EL witout SASL support
 
 * Fri Jul 30 2010 Remi Collet <Fedora@famillecollet.com> - 0.43-1
 - update to 0.43
