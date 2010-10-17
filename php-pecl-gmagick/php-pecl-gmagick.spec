@@ -8,7 +8,7 @@
 Summary:	Provides a wrapper to the GraphicsMagick library
 Name:		php-pecl-%{pecl_name}
 Version:	1.0.8
-Release:	0.1.%{prever}%{?dist}
+Release:	0.2.%{prever}%{?dist}
 License:	PHP
 Group:		Development/Libraries
 URL:		http://pecl.php.net/package/gmagick
@@ -30,6 +30,8 @@ Requires:	php-api = %{php_apiver}
 Provides:	php-pecl(%{pecl_name}) = %{version}%{?prever}
 
 Conflicts:	php-pecl-imagick
+Conflicts:	php-magickwand
+
 
 %description
 %{pecl_name} is a php extension to create, modify and obtain meta information of
@@ -113,6 +115,9 @@ php --no-php-ini \
 
 
 %changelog
+* Sun Oct 17 2010 Remi Collet <rpms@famillecollet.com> 1.0.8-0.2.b1
+- F-14 build + add Conflicts php-magickwand
+
 * Mon Sep 13 2010 Remi Collet <rpms@famillecollet.com> 1.0.8-0.1.b1
 - Update to 1.0.8b1 for remi repo
 
