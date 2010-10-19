@@ -1,5 +1,5 @@
 %define nspr_version 4.8.6
-%define nss_version 3.12.6
+%define nss_version 3.12.8
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
 %define lcms_version 1.19
@@ -26,7 +26,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        3.1.4
+Version:        3.1.5
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -41,7 +41,7 @@ Source0:        %{tarball}
 #NoSource:       0
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{version}%{?relcan}-20100916.tar.bz2
+Source1:        thunderbird-langpacks-%{version}%{?relcan}-20101019.tar.bz2
 %endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -86,7 +86,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if 0%{?fedora} >= 12
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 13
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{fedora} >= 11
@@ -130,7 +130,7 @@ Requires:       mozilla-filesystem
 %if 0%{?fedora} >= 12
 Requires:       nspr >= %{nspr_version}
 %endif
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 13
 Requires:       nss >= %{nss_version}
 %endif
 %if %{fedora} >= 9
@@ -169,7 +169,9 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %patch1 -p0 -b .jemalloc
 %patch2 -p1 -b .shared-error
 %patch4 -p1 -b .protected
+%if %{fedora} >= 14
 %patch6 -p1 -b .turbo
+%endif
 %patch7 -p1 -b .mozcflags
 %ifarch s390
 %patch8 -p0 -b .s390
@@ -190,11 +192,13 @@ cat %{SOURCE10} 		\
 %if %{fedora} < 15
   | grep -v system-sqlite 	\
 %endif
+%if %{fedora} < 13
+  | grep -v system-nss 		\
+%endif
 %if %{fedora} < 12
   | grep -v system-nspr 	\
 %endif
 %if %{fedora} < 11
-  | grep -v system-nss 		\
   | grep -v system-hunspell	\
 %endif
 %if %{fedora} < 11
@@ -476,6 +480,7 @@ fi
 %{mozappdir}/README.txt
 %{mozappdir}/platform.ini
 %{mozappdir}/application.ini
+%{mozappdir}/blocklist.xml
 %exclude %{mozappdir}/removed-files
 %{_datadir}/icons/hicolor/16x16/apps/thunderbird.png
 %{_datadir}/icons/hicolor/22x22/apps/thunderbird.png
@@ -492,6 +497,12 @@ fi
 #===============================================================================
 
 %changelog
+* Tue Oct 19 2010 Remi Collet <rpms@famillecollet.com> 3.1.5-1
+- Thunderbird 3.1.5
+
+* Tue Oct 19 2010 Jan Horak <jhorak@redhat.com> - 3.1.5-1
+- Update to 3.1.5
+
 * Thu Sep 16 2010 Remi Collet <rpms@famillecollet.com> 3.1.4-1
 - Thunderbird 3.1.4
 
