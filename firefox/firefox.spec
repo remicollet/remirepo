@@ -1,5 +1,5 @@
 %define nspr_version 4.8.6
-%define nss_version 3.12.7
+%define nss_version 3.12.8
 %define cairo_version 1.8.8
 %define freetype_version 2.1.9
 %define lcms_version 1.18
@@ -29,7 +29,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        3.6.10
+Version:        3.6.11
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100916.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20101020.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -74,8 +74,6 @@ Patch31:        firefox-default.patch
 Patch20:        mozilla-192-pkgconfig.patch
 Patch21:        mozilla-libjpeg-turbo.patch
 
-# Upstream patches
-Patch100:       mozilla-ps-pdf-simplify-operators.patch
 
 # Remi specific patches
 
@@ -115,8 +113,10 @@ BuildRequires:  wireless-tools-devel
 # Requires SQLITE_SECURE_DELETE only in F-15
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
-%if %{fedora} >= 13
+%if %{fedora} >= 14
 BuildRequires:  nss-devel >= %{nss_version}
+%endif
+%if %{fedora} >= 12
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
 %if %{fedora} >= 11
@@ -153,6 +153,15 @@ BuildRequires:  autoconf213
 
 %if %{fedora} >= 7
 Requires:       system-bookmarks
+%endif
+%if 0%{?fedora} >= 14
+Requires:       nss >= %{nss_version}
+%endif
+%if 0%{?fedora} >= 12
+Requires:       nspr >= %{nspr_version}
+%endif
+%if %{fedora} >= 9
+BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
 Obsoletes:      mozilla <= 37:1.7.13
 Obsoletes:      firefox36
@@ -199,8 +208,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch30 -p1 -b .checkupdates
 %patch31 -p2 -b .default
 
-%patch100 -p1 -b .ps-pdf-simplify-operators
-
 %{__rm} -f .mozconfig
 
 cat <<EOF_MOZCONFIG | tee .mozconfig 
@@ -213,8 +220,10 @@ ac_add_options --libdir="\$LIBDIR"
 %if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
-%if %{fedora} >= 13
+%if %{fedora} >= 14
 ac_add_options --with-system-nss
+%endif
+%if %{fedora} >= 12
 ac_add_options --with-system-nspr
 %endif
 %if %{fedora} >= 11
@@ -545,6 +554,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Oct 20 2010 Remi Collet <rpms@famillecollet.com> - 3.6.11-1
+- update to Firefox 3.6.11
+
+* Tue Oct 19 2010 Jan Horak <jhorak@redhat.com> - 3.6.11-1
+- Update to 3.6.11
+
 * Thu Sep 16 2010 Remi Collet <rpms@famillecollet.com> - 3.6.10-1
 - update to Firefox 3.6.10
 
