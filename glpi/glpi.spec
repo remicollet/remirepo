@@ -5,12 +5,12 @@
 %endif
 
 %global tarballversion 0.78
-#global svnrelease 12452
+%global svnrelease 12852
 
 Name:           glpi
 Version:        0.78
 %if 0%{?svnrelease}
-Release:        0.1.svn%{svnrelease}%{?dist}
+Release:        2.svn%{svnrelease}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -34,6 +34,9 @@ Source3:        glpi-logrotate
 
 # Switch all internal cron tasks to system
 Patch0:         glpi-cron.patch
+# Patch from SVN, commit 12781,12782 (will be revert to avoid bump version)
+Patch1:         glpi-svn.patch
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -81,6 +84,9 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0
+# revert version bump to stay in 0.78
+%{__patch} --strip=2 --reverse --fuzz=0 <%{P:%%PATCH1}
+%{__rm} install/update_078_0781.php
 
 # Use system lib
 rm -rf lib/cache_lite
@@ -245,6 +251,21 @@ fi
 
 
 %changelog
+* Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-2.svn12852
+- Patches from SVN (12691-12852) for know 0.78 issues
+  https://forge.indepnet.net/issues/2313
+  https://forge.indepnet.net/issues/2314
+  https://forge.indepnet.net/issues/2315
+  https://forge.indepnet.net/issues/2317
+  https://forge.indepnet.net/issues/2326
+  https://forge.indepnet.net/issues/2329
+  https://forge.indepnet.net/issues/2330
+  https://forge.indepnet.net/issues/2332
+  https://forge.indepnet.net/issues/2333
+  https://forge.indepnet.net/issues/2334
+  https://forge.indepnet.net/issues/2335
+  https://forge.indepnet.net/issues/2337
+
 * Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-1
 - version 0.78 released
 

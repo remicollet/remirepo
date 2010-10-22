@@ -1,0 +1,58 @@
+Index: branches/0.78-bugfixes/install/mysql/glpi-0.78-empty.sql
+===================================================================
+--- branches/0.78-bugfixes/install/mysql/glpi-0.78-empty.sql	(revision 12781)
++++ branches/0.78-bugfixes/install/mysql/glpi-0.78-empty.sql	(revision 12782)
+@@ -658,7 +658,7 @@
+   PRIMARY KEY  (`id`)
+ ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ 
+-INSERT INTO `glpi_configs` VALUES ('1','0','250','15','50',' 0.78','5','0','admsys@xxxxx.fr',NULL,'SIGNATURE','0','en_GB','#fff2f2','#ffe0e0','#ffcece','#ffbfbf','#ffadad','#ff5555','2005-12-31','10','','443','',NULL,'1',NULL,'0','08:00:00','20:00:00','1','0','0','http://localhost/glpi/','0','','','100','*','0','50','1','1','0','0','0','50','0','0',NULL,'25',NULL,NULL,NULL,'8080',NULL,NULL,'1','0','0','0','0','0','0','5','2',NULL,NULL,'0','2','2','2','2','1','0','1','1','1','1','0','0','0','0','0','0','0','1','1','1',NULL,'1',NULL,'0','1','0','2097152','0','0','1','0','svg','1','1','1','{\"1\":{\"1\":1,\"2\":1,\"3\":2,\"4\":2,\"5\":2},\"2\":{\"1\":1,\"2\":2,\"3\":2,\"4\":3,\"5\":3},\"3\":{\"1\":2,\"2\":2,\"3\":3,\"4\":4,\"5\":4},\"4\":{\"1\":2,\"2\":3,\"3\":4,\"4\":4,\"5\":5},\"5\":{\"1\":2,\"2\":3,\"3\":4,\"4\":5,\"5\":5}}','62','62','0','0','0','0','0','0');
++INSERT INTO `glpi_configs` VALUES ('1','0','250','15','50',' 0.78.1','5','0','admsys@xxxxx.fr',NULL,'SIGNATURE','0','en_GB','#fff2f2','#ffe0e0','#ffcece','#ffbfbf','#ffadad','#ff5555','2005-12-31','10','','443','',NULL,'1',NULL,'0','08:00:00','20:00:00','1','0','0','http://localhost/glpi/','0','','','100','*','0','50','1','1','0','0','0','50','0','0',NULL,'25',NULL,NULL,NULL,'8080',NULL,NULL,'1','0','0','0','0','0','0','5','2',NULL,NULL,'0','2','2','2','2','1','0','1','1','1','1','0','0','0','0','0','0','0','1','1','1',NULL,'1',NULL,'0','1','0','2097152','0','0','1','0','svg','1','1','1','{\"1\":{\"1\":1,\"2\":1,\"3\":2,\"4\":2,\"5\":2},\"2\":{\"1\":1,\"2\":2,\"3\":2,\"4\":3,\"5\":3},\"3\":{\"1\":2,\"2\":2,\"3\":3,\"4\":4,\"5\":4},\"4\":{\"1\":2,\"2\":3,\"3\":4,\"4\":4,\"5\":5},\"5\":{\"1\":2,\"2\":3,\"3\":4,\"4\":5,\"5\":5}}','62','62','0','0','0','0','0','0');
+ 
+ ### Dump table glpi_consumableitems
+ 
+Index: branches/0.78-bugfixes/config/define.php
+===================================================================
+--- branches/0.78-bugfixes/config/define.php	(révision 12780)
++++ branches/0.78-bugfixes/config/define.php	(révision 12781)
+@@ -31,7 +31,7 @@
+ 
+ 
+ // Current version of GLPI
+-define("GLPI_VERSION","0.78");
++define("GLPI_VERSION","0.78.1");
+ define("GLPI_DEMO_MODE","0");
+ 
+ 
+Index: branches/0.78-bugfixes/install/update.php
+===================================================================
+--- branches/0.78-bugfixes/install/update.php	(révision 12780)
++++ branches/0.78-bugfixes/install/update.php	(révision 12781)
+@@ -602,7 +602,11 @@
+          include("update_0723_078.php");
+          update0723to078();
+       case "0.78":
++         include("update_078_0781.php");
++         update078to0781();
+ 			break;
++      case "0.78.1":
++			break;
+ 		default:
+ 			include("update_031_04.php");
+ 			update031to04();
+@@ -639,12 +643,14 @@
+          update0722to0723();
+          include("update_0723_078.php");
+          update0723to078();
++         include("update_078_0781.php");
++         update078to0781();
+ 
+ 			break;
+ 	}
+ 
+ 	// Update version number and default langage and new version_founded ---- LEAVE AT THE END
+-	$query = "UPDATE `glpi_configs` SET `version` = ' 0.78', language='".$glpilanguage."',founded_new_version='' ;";
++	$query = "UPDATE `glpi_configs` SET `version` = ' 0.78.1', language='".$glpilanguage."',founded_new_version='' ;";
+ 	$DB->query($query) or die("0.6 ".$LANG['update'][90].$DB->error());
+ 
+ 	// Update process desactivate all plugins
