@@ -119,7 +119,7 @@ PHPRC=./php.ini %{__pear} run-tests tests
 
 %changelog
 * Sat Oct 23 2010 Remi Collet <rpms@famillecollet.com> 1.0.2-2
-- filter provides to avoir igbinary.so
+- filter provides to avoid igbinary.so
 - add missing %%dist
 
 * Wed Sep 29 2010 Remi Collet <rpms@famillecollet.com> 1.0.2-1
