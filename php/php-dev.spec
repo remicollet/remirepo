@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201010081430
+%global snapdate 201010230430
 %global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -113,6 +113,14 @@ Requires: php-common = %{version}-%{release}
 Requires: php-cli = %{version}-%{release}
 # To ensure correct /var/lib/php/session ownership:
 Requires(pre): httpd
+
+
+%{?filter_setup:
+%filter_provides_in %{_libdir}/php/modules/.*\.so$
+%filter_provides_in %{_libdir}/php/modules-zts/.*\.so$
+%filter_setup
+}
+
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
@@ -1204,6 +1212,10 @@ fi
 %endif
 
 %changelog
+* Sat Oct 23 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201010230430
+- new snapshot (5.3.4-dev)
+- filter provides (fix rpmlint warning private-shared-object-provides)
+
 * Fri Oct 08 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201010081430
 - new snapshot (5.3.4-dev)
 

@@ -90,16 +90,6 @@ diff -up php5.3-201004081030/Zend/zend_language_parser.c.gnusrc php5.3-201004081
  
  #define YYERROR_VERBOSE
  #define YYSTYPE znode
---- php5.3-201005241430/main/streams/streams.c.gnusrc	2010-05-18 22:35:37.000000000 +0200
-+++ php5.3-201005241430/main/streams/streams.c	2010-05-24 17:02:08.900419954 +0200
-@@ -21,7 +21,6 @@
- 
- /* $Id: streams.c 299466 2010-05-18 19:39:39Z pajoye $ */
- 
--#define _GNU_SOURCE
- #include "php.h"
- #include "php_globals.h"
- #include "php_network.h"
 --- php5.3-201009271630/ext/zlib/zlib_fopen_wrapper.c.gnusrc	2010-09-27 00:34:59.000000000 +0200
 +++ php5.3-201009271630/ext/zlib/zlib_fopen_wrapper.c	2010-09-27 19:30:28.542859456 +0200
 @@ -19,8 +19,6 @@
@@ -111,3 +101,13 @@ diff -up php5.3-201004081030/Zend/zend_language_parser.c.gnusrc php5.3-201004081
  #include "php.h"
  #include "php_zlib.h"
  #include "fopen_wrappers.h"
+--- php5.3-201010230430/main/streams/streams.c.gnusrc	2010-10-13 06:36:11.000000000 +0200
++++ php5.3-201010230430/main/streams/streams.c	2010-10-23 08:30:37.976493156 +0200
+@@ -21,7 +21,6 @@
+ 
+ /* $Id: streams.c 304354 2010-10-13 03:13:29Z cataphract $ */
+ 
+-#define _GNU_SOURCE
+ #include "php.h"
+ #include "php_globals.h"
+ #include "php_network.h"
