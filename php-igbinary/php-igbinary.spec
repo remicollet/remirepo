@@ -1,5 +1,5 @@
-%global	php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%{!?php_extdir: %{expand: %%global php_extdir	%(php-config --extension-dir)}}
+%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
+%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global    extname   igbinary
 
