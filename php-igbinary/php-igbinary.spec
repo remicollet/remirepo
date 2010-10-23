@@ -88,9 +88,12 @@ EOF
 # Create a minimal php.ini
 cat >php.ini <<EOF
 extension_dir=$PWD/modules
-extension=%{extname}.so
 date.timezone=UTC
 EOF
+# Allow to run rpmbuild with extension installed
+if [ ! -f %{php_extdir}/%{extname}.so ]; then
+  echo extension=%{extname}.so >>php.ini
+fi
 
 # As we have redirected extension_dir
 for ext in %{php_extdir}/*.so; do
