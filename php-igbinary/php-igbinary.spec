@@ -7,7 +7,7 @@
 Summary:        Replacement for the standard PHP serializer
 Name:           php-igbinary
 Version:        1.0.2
-Release:        1
+Release:        2%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
 
@@ -23,6 +23,13 @@ Requires:       php(api) = %{php_core_api}
 %else
 Requires:       php-api = %{php_apiver}
 %endif
+
+
+%{?filter_setup:
+%filter_from_provides /%{extname}.so/d
+%filter_setup
+}
+
 
 %description
 Igbinary is a drop in replacement for the standard PHP serializer.
@@ -87,7 +94,7 @@ EOF
 
 # As we have redirected extension_dir
 for ext in %{_libdir}/php/modules/*.so; do
-  %{__ln_s} $ext modules
+  %{__ln_s} $ext modules || :
 done
 
 PHPRC=./php.ini %{__pear} run-tests tests
@@ -111,6 +118,10 @@ PHPRC=./php.ini %{__pear} run-tests tests
 
 
 %changelog
+* Sat Oct 23 2010 Remi Collet <rpms@famillecollet.com> 1.0.2-2
+- filter provides to avoir igbinary.so
+- add missing %%dist
+
 * Wed Sep 29 2010 Remi Collet <rpms@famillecollet.com> 1.0.2-1
 - initital RPM
 
