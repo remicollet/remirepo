@@ -93,7 +93,7 @@ date.timezone=UTC
 EOF
 
 # As we have redirected extension_dir
-for ext in %{_libdir}/php/modules/*.so; do
+for ext in %{php_extdir}/*.so; do
   %{__ln_s} $ext modules || :
 done
 
@@ -109,7 +109,7 @@ PHPRC=./php.ini %{__pear} run-tests tests
 %defattr(-,root,root,-)
 %doc COPYING CREDITS ChangeLog NEWS README
 %config(noreplace) %{_sysconfdir}/php.d/%{extname}.ini
-%{_libdir}/php/modules/%{extname}.so
+%{php_extdir}/%{extname}.so
 
 
 %files devel
