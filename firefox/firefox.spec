@@ -29,7 +29,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        3.6.11
+Version:        3.6.12
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20101020.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20101028.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -113,7 +113,7 @@ BuildRequires:  wireless-tools-devel
 # Requires SQLITE_SECURE_DELETE only in F-15
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
-%if %{fedora} >= 14
+%if %{fedora} >= 13
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{fedora} >= 12
@@ -154,7 +154,7 @@ BuildRequires:  autoconf213
 %if %{fedora} >= 7
 Requires:       system-bookmarks
 %endif
-%if 0%{?fedora} >= 14
+%if 0%{?fedora} >= 13
 Requires:       nss >= %{nss_version}
 %endif
 %if 0%{?fedora} >= 12
@@ -220,7 +220,7 @@ ac_add_options --libdir="\$LIBDIR"
 %if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
-%if %{fedora} >= 14
+%if %{fedora} >= 13
 ac_add_options --with-system-nss
 %endif
 %if %{fedora} >= 12
@@ -554,6 +554,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Oct 28 2010 Remi Collet <rpms@famillecollet.com> - 3.6.12-1
+- update to Firefox 3.6.12
+
+* Wed Oct 27 2010 Jan Horak <jhorak@redhat.com> - 3.6.12-1
+- Update to 3.6.12
+
 * Wed Oct 20 2010 Remi Collet <rpms@famillecollet.com> - 3.6.11-1
 - update to Firefox 3.6.11
 
