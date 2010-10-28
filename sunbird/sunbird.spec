@@ -1,5 +1,5 @@
 %define nspr_version 4.8.6
-%define nss_version 3.12.6
+%define nss_version 3.12.8
 %define cairo_version 1.8.8
 %define dbus_glib_version 0.6
 %define sqlite_version 3.6.22
@@ -12,9 +12,9 @@
 %endif
 %endif
 
-%define version_internal 1.0b2
+%define version_internal 1.0b3
 %define progdir %{_libdir}/%{name}-%{version_internal}pre
-%define thunderbird_version 3.1.4
+%define thunderbird_version 3.1.6
 %define libnotify_version 0.4
 %define lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
 %define gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
@@ -25,7 +25,7 @@
 
 Name:           sunbird
 Version:        1.0
-Release:        0.30%{?dist}
+Release:        0.31%{?dist}
 Summary:        Calendar application built upon Mozilla toolkit
 
 Group:          Applications/Productivity
@@ -64,7 +64,7 @@ BuildRequires:  freetype-devel >= 2.1.9
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
 BuildRequires:  desktop-file-utils
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 13
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if 0%{?fedora} >= 11
@@ -86,6 +86,8 @@ Requires:       nspr >= %{nspr_version}
 %endif
 %if 0%{fedora} >= 11
 BuildRequires:  cairo-devel >= %{cairo_version}
+%endif
+%if 0%{?fedora} >= 13
 Requires:       nss >= %{nss_version}
 %endif
 %if 0%{?fedora} >= 15
@@ -174,7 +176,7 @@ ac_add_options --with-system-jpeg
 %if %{fedora} >= 12
 ac_add_options --with-system-nspr
 %endif
-%if %{fedora} >= 11
+%if %{fedora} >= 13
 ac_add_options --with-system-nss
 %endif
 ac_add_options --with-system-zlib
@@ -324,6 +326,9 @@ fi
 
 
 %changelog
+* Thu Oct 28 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.31
+- Rebuild against Thunderbird 3.1.6
+
 * Thu Sep 23 2010 Remi Collet <rpms@famillecollet.com> 1.0-0.30
 - Rebuild against Thunderbird 3.1.4
 - sync with rawhide
