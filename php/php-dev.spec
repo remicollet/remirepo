@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201010230430
+%global snapdate 201010301430
 %global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -124,7 +124,7 @@ Requires(pre): httpd
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
-easy for developers to write dynamically generated webpages. PHP also
+easy for developers to write dynamically generated web pages. PHP also
 offers built-in database integration for several commercial and
 non-commercial database management systems, so writing a
 database-enabled webpage with PHP is fairly simple. The most common
@@ -573,6 +573,9 @@ echo CIBLE = %{name}-%{version}-%{release}
 sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/pdo_mysql/pdo_mysql.c
 sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/mysqlnd/mysqlnd.c
 
+# Make rpmlint happy
+find . -name \*.c -exec chmod -x {} \;
+find . -name \*.h -exec chmod -x {} \;
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1212,6 +1215,9 @@ fi
 %endif
 
 %changelog
+* Sat Oct 30 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201010301430
+- new snapshot (5.3.4-dev)
+
 * Sat Oct 23 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201010230430
 - new snapshot (5.3.4-dev)
 - filter provides (fix rpmlint warning private-shared-object-provides)
