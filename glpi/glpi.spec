@@ -5,7 +5,7 @@
 %endif
 
 %global tarballversion 0.78
-%global svnrelease 12852
+%global svnrelease 12930
 
 Name:           glpi
 Version:        0.78
@@ -251,6 +251,13 @@ fi
 
 
 %changelog
+* Sun Oct 31 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-2.svn12930
+- Patches from SVN (12691-12930) for know 0.78 issues
+  https://forge.indepnet.net/issues/2374
+  https://forge.indepnet.net/issues/2378
+  https://forge.indepnet.net/issues/2380
+  https://forge.indepnet.net/issues/2382
+
 * Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-2.svn12852
 - Patches from SVN (12691-12852) for know 0.78 issues
   https://forge.indepnet.net/issues/2313
