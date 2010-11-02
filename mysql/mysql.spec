@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.1.51
+Version: 5.1.52
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -35,7 +35,7 @@ Patch2: mysql-errno.patch
 Patch4: mysql-testing.patch
 Patch5: mysql-install-test.patch
 Patch6: mysql-stack-guard.patch
-Patch7: mysql-plugin-bug.patch
+Patch7: mysql-disable-test.patch
 Patch8: mysql-setschedparam.patch
 Patch9: mysql-no-docs.patch
 Patch10: mysql-strmov.patch
@@ -49,6 +49,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
 BuildRequires: gcc-c++, ncurses-devel, zlib-devel
 BuildRequires: libtool automake autoconf gawk
+# For InnoDB Plugin
+BuildRequires: libaio-devel
 # make test requires time and ps
 BuildRequires: time procps
 # Socket is needed to run regression tests
@@ -608,6 +610,22 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Tue Nov 02 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.52-1
+- Update to MySQL 5.1.52 Community Server GA
+- add BR libaio-devel for InnoDB plugin
+
+* Mon Nov  1 2010 Tom Lane <tgl@redhat.com> 5.1.52-1
+- Update to MySQL 5.1.52, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.1/en/news-5-1-52.html
+Resolves: #646569
+
+* Thu Oct  7 2010 Tom Lane <tgl@redhat.com> 5.1.51-2
+- Re-disable the outfile_loaddata test, per report from Dan Horak.
+
+* Wed Oct  6 2010 Tom Lane <tgl@redhat.com> 5.1.51-1
+- Update to MySQL 5.1.51, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.1/en/news-5-1-51.html
+
 * Sun Sep 26 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.51-1
 - Update to MySQL 5.1.51 Community Server GA
   http://dev.mysql.com/doc/refman/5.1/en/news-5-1-51.html

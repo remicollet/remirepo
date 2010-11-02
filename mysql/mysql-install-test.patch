@@ -1,7 +1,4 @@
-mysql's idea of a suitable place to install the regression tests is
-/usr/mysql-test.  To relocate this to a reasonably FHS-compliant place
-like /usr/share/mysql-test, we have to hack up the paths in mtr_cases.pm.
-This patch also improves the documentation a tad.
+Improve the documentation that will be installed in the mysql-test RPM.
 
 
 diff -Naur mysql-5.1.43.orig/mysql-test/README mysql-5.1.43/mysql-test/README
