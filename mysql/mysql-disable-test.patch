@@ -1,0 +1,16 @@
+Disable the outfile_loaddata test, which as of 5.1.38 is giving
+platform-dependent results, with the "expected" results being arguably the
+wrong ones.  This is upstream at http://bugs.mysql.com/bug.php?id=46895
+(note that upstream has also disabled it, but only for Solaris, so we still
+need this patch).
+
+
+diff -Naur mysql-5.1.51.orig/mysql-test/t/disabled.def mysql-5.1.51/mysql-test/t/disabled.def
+--- mysql-5.1.51.orig/mysql-test/t/disabled.def	2010-09-13 10:10:50.000000000 -0400
++++ mysql-5.1.51/mysql-test/t/disabled.def	2010-10-07 11:15:46.167693893 -0400
+@@ -14,3 +14,5 @@
+ partition_innodb_plugin  : Bug#53307 2010-04-30 VasilDimov valgrind warnings
+ main.mysqlhotcopy_myisam : bug#54129 2010-06-04 Horst
+ main.mysqlhotcopy_archive: bug#54129 2010-06-04 Horst
++#
++outfile_loaddata         : bug#46895 code wrong, expected results wrong too
