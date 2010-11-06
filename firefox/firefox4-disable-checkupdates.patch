@@ -1,0 +1,11 @@
+--- mozilla-central/browser/base/content/utilityOverlay.js.checkupdates	2010-11-04 21:05:17.000000000 +0100
++++ mozilla-central/browser/base/content/utilityOverlay.js	2010-11-06 10:49:40.172670752 +0100
+@@ -525,7 +525,7 @@
+ 
+   // Disable the UI if the update enabled pref has been locked by the 
+   // administrator or if we cannot update for some other reason
+-  var canCheckForUpdates = updates.canCheckForUpdates;
++  var canCheckForUpdates = updates.canCheckForUpdates && updates.canApplyUpdates;
+   checkForUpdates.setAttribute("disabled", !canCheckForUpdates);
+   if (!canCheckForUpdates)
+     return; 

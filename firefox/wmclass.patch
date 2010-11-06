@@ -1,0 +1,29 @@
+#
+# Online Desktop expects WMCLASS to match the .desktop file
+# Since renaming the .desktop file is bad, work around this here
+#
+
+diff -up ./widget/src/gtk2/nsWindow.cpp.wmclass ./widget/src/gtk2/nsWindow.cpp
+--- ./widget/src/gtk2/nsWindow.cpp.wmclass	2010-10-25 11:33:21.649433261 -0700
++++ ./widget/src/gtk2/nsWindow.cpp	2010-10-25 11:36:19.864431870 -0700
+@@ -3738,6 +3738,10 @@ nsWindow::Create(nsIWidget        *aPare
+         GetBrandName(brandName);
+         NS_ConvertUTF16toUTF8 cBrand(brandName);
+ 
++        if (brandName.EqualsLiteral("Minefield")) {
++		cBrand.Assign("Firefox");
++        }
++
+         if (mWindowType == eWindowType_dialog) {
+             mShell = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+             SetDefaultIcon();
+@@ -4109,6 +4113,9 @@ nsWindow::SetWindowClass(const nsAString
+ #ifdef MOZ_X11
+   nsXPIDLString brandName;
+   GetBrandName(brandName);
++  if (brandName.EqualsLiteral("Minefield")) {
++    brandName.AssignLiteral("Firefox");
++  }
+ 
+   XClassHint *class_hint = XAllocClassHint();
+   if (!class_hint)

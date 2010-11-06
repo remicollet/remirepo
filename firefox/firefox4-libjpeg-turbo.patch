@@ -1,28 +1,7 @@
-diff -up xulrunner-1.9.3.0/mozilla-central/modules/libpr0n/decoders/jpeg/nsJPEGDecoder.cpp.jpeg-turbo xulrunner-1.9.3.0/mozilla-central/modules/libpr0n/decoders/jpeg/nsJPEGDecoder.cpp
---- xulrunner-1.9.3.0/mozilla-central/modules/libpr0n/decoders/jpeg/nsJPEGDecoder.cpp.jpeg-turbo	2010-08-06 03:09:15.000000000 +0200
-+++ xulrunner-1.9.3.0/mozilla-central/modules/libpr0n/decoders/jpeg/nsJPEGDecoder.cpp	2010-08-16 11:19:17.000000000 +0200
-@@ -58,19 +58,6 @@
- 
- extern "C" {
- #include "iccjpeg.h"
--
--/* Colorspace conversion (copied from jpegint.h) */
--struct jpeg_color_deconverter {
--  JMETHOD(void, start_pass, (j_decompress_ptr cinfo));
--  JMETHOD(void, color_convert, (j_decompress_ptr cinfo,
--				JSAMPIMAGE input_buf, JDIMENSION input_row,
--				JSAMPARRAY output_buf, int num_rows));
--};
--
--METHODDEF(void)
--ycc_rgb_convert_argb (j_decompress_ptr cinfo,
--                 JSAMPIMAGE input_buf, JDIMENSION input_row,
--                 JSAMPARRAY output_buf, int num_rows);
- }
- 
- NS_IMPL_ISUPPORTS1(nsJPEGDecoder, imgIDecoder)
-@@ -443,14 +430,6 @@ nsresult nsJPEGDecoder::Write(const char
-       return NS_OK; /* I/O suspension */
+--- mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp.jpeg-turbo	2010-11-04 21:06:43.000000000 +0100
++++ mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp	2010-11-06 10:46:04.081880464 +0100
+@@ -411,14 +411,6 @@
+       return; /* I/O suspension */
      }
  
 -    /* Force to use our YCbCr to Packed RGB converter when possible */
@@ -36,7 +15,7 @@ diff -up xulrunner-1.9.3.0/mozilla-central/modules/libpr0n/decoders/jpeg/nsJPEGD
      /* If this is a progressive JPEG ... */
      mState = mInfo.buffered_image ? JPEG_DECOMPRESS_PROGRESSIVE : JPEG_DECOMPRESS_SEQUENTIAL;
    }
-@@ -616,15 +595,6 @@ nsJPEGDecoder::OutputScanlines(PRBool* s
+@@ -563,15 +555,6 @@
        PRUint32 *imageRow = ((PRUint32*)mImageData) +
                             (mInfo.output_scanline * mInfo.output_width);
  

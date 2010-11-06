@@ -23,14 +23,14 @@
 %define nightly .cvs%{cvsdate}
 %endif
 
-%global relcan b6
+%global relcan b7
 %global firefox firefox
-%global mycomment  Beta 6
+%global mycomment  Beta 7 Build 1 candidate
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.10.beta6%{?dist}
+Release:        0.11.beta7.build1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20100916.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20101106.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -59,7 +59,7 @@ Source200:      firefox-bookmarks.html
 #Patch1:        mozilla-build.patch
 Patch1:         firefox4-build.patch
 Patch3:         firefox4-jemalloc.patch
-Patch4:         mozilla-about-firefox-version.patch
+# Patch4:         mozilla-about-firefox-version.patch
 Patch7:         xulrunner-1.9.2.1-build.patch
 Patch8:         mozilla-plugin.patch
 #Patch9:        mozilla-build-sbrk.patch
@@ -72,13 +72,15 @@ Patch12:        firefox4-build-macos.patch
 Patch20:        mozilla-193-pkgconfig.patch
 #Patch21:       mozilla-libjpeg-turbo.patch
 Patch21:        firefox4-libjpeg-turbo.patch
+Patch22:        mozilla-notify.patch
+Patch23:        wmclass.patch
 
 # build patches from firefox
 Patch0:         firefox4-version.patch
 #Patch1:         firefox4-jemalloc.patch	= xulrunner / firefox4-jemalloc.patch
 #Patch2:         firefox4-build-throw.patch	= xulrunner / mozilla-malloc.patch
 
-Patch30:        firefox-disable-checkupdates.patch
+Patch30:        firefox4-disable-checkupdates.patch
 Patch31:        firefox4-default.patch
 
 
@@ -122,6 +124,8 @@ BuildRequires:  wireless-tools-devel
 # BR from Xulrunner
 %if %{fedora} >= 15
 BuildRequires:  sqlite-devel >= %{sqlite_version}
+%endif
+%if %{fedora} >= 12
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
@@ -162,6 +166,13 @@ BuildRequires:  yasm
 %if %{fedora} >= 7
 Requires:       system-bookmarks
 %endif
+%if 0%{?fedora} >= 12
+Requires:       nss >= %{nss_version}
+Requires:       nspr >= %{nspr_version}
+%endif
+%if %{fedora} >= 9
+BuildRequires:  lcms-devel >= %{lcms_version}
+%endif
 Obsoletes:      mozilla <= 37:1.7.13
 Obsoletes:      firefox36
 Provides:       webclient
@@ -189,7 +200,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 # Build Patches
 %patch1  -p2 -b .build
 %patch3  -p1 -b .jemalloc
-%patch4  -p1 -b .about-firefox-version
+#patch4  -p1 -b .about-firefox-version
 %patch7  -p2 -b .del
 #patch8  -p1 -b .plugin
 %patch9  -p2 -b .sbrk
@@ -200,9 +211,14 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch12 -p1 -b .macos
 
 %patch20 -p2 -b .pk
-%if %{fedora} >= 15
-%patch21 -p2 -b .jpeg-turbo
+%if %{fedora} >= 14
+%patch21 -p1 -b .jpeg-turbo
 %endif
+%if %{fedora} >= 15
+# when libnotify >= 0.7.0
+%patch22 -p2 -b .notify
+%endif
+%patch23 -p1 -b .wmclass
 
 %patch30 -p1 -b .checkupdates
 %patch31 -p2 -b .default
@@ -211,18 +227,18 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 
 cat <<EOF_MOZCONFIG | tee .mozconfig 
 . \$topsrcdir/browser/config/mozconfig
-mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir-%{name}/
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@
 
 # --with-system-png is disabled because Mozilla requires APNG support in libpng
 #ac_add_options --with-system-png
 ac_add_options --prefix="\$PREFIX"
 ac_add_options --libdir="\$LIBDIR"
 %if %{fedora} >= 15
-ac_add_options --with-system-nspr
-ac_add_options --with-system-nss
 ac_add_options --enable-system-sqlite
 %endif
-%if %{fedora} >= 13
+%if %{fedora} >= 12
+ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
 %endif
 %if %{fedora} >= 11
 ac_add_options --enable-system-hunspell
@@ -309,9 +325,7 @@ make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 %{__rm} -rf $RPM_BUILD_ROOT
 cd %{tarballdir}
 
-pushd objdir-%{name}
 DESTDIR=$RPM_BUILD_ROOT make install
-popd
 
 %{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
 
@@ -439,6 +453,12 @@ touch $RPM_BUILD_ROOT/%{mozappdir}/components/xpti.dat
 %{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/*.chk
 %{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/dependentlibs.list
 
+# Don't need this
+%{__rm}  -f $RPM_BUILD_ROOT/%{mozappdir}/removed-files
+%{__rm} -rf $RPM_BUILD_ROOT/%{_includedir}/firefox-sdk-%{internal_version}
+%{__rm} -rf $RPM_BUILD_ROOT/%{_libdir}/firefox-sdk-%{internal_version}
+%{__rm} -rf $RPM_BUILD_ROOT/%{_datadir}/idl/firefox-sdk-%{internal_version}
+
 
 #---------------------------------------------------------------------
 
@@ -448,8 +468,8 @@ touch $RPM_BUILD_ROOT/%{mozappdir}/components/xpti.dat
 #---------------------------------------------------------------------
 
 %pre
-echo -e "\nWARNING : This %{name} RPM is not an official Fedora build and it"
-echo -e "overrides the official one. Don't file bugs on Fedora Project.\n"
+echo -e "\nWARNING : This %{name} %{version} %{mycomment} RPM is not an official"
+echo -e "Fedora build and it overrides the official one. Don't file bugs on Fedora Project.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
 %if %{?fedora}%{!?fedora:99} <= 11
@@ -531,10 +551,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/application.ini
 #%{mozappdir}/.autoreg
-%exclude %{mozappdir}/removed-files
-%exclude %{_includedir}/firefox-sdk-%{internal_version}
-%exclude %{_libdir}/firefox-sdk-%{internal_version}
-%exclude %{_datadir}/idl/firefox-sdk-%{internal_version}
 %{_datadir}/icons/hicolor/16x16/apps/%{name}.png
 %{_datadir}/icons/hicolor/22x22/apps/%{name}.png
 %{_datadir}/icons/hicolor/24x24/apps/%{name}.png
@@ -545,6 +561,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Nov 06 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.11.beta7.build1
+- update to 4.0b7 build1 candidate
+
 * Thu Sep 16 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.10.beta6
 - update to 4.0b6
 

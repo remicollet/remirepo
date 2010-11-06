@@ -1,0 +1,13 @@
+diff -up xulrunner-2.0/mozilla-central/toolkit/system/gnome/nsAlertsIconListener.cpp.notify xulrunner-2.0/mozilla-central/toolkit/system/gnome/nsAlertsIconListener.cpp
+--- xulrunner-2.0/mozilla-central/toolkit/system/gnome/nsAlertsIconListener.cpp.notify	2010-11-02 17:02:18.266180000 -0400
++++ xulrunner-2.0/mozilla-central/toolkit/system/gnome/nsAlertsIconListener.cpp	2010-11-02 17:02:37.699180028 -0400
+@@ -218,7 +218,7 @@ nsAlertsIconListener::ShowAlert(GdkPixbu
+ {
+   mNotification = notify_notification_new(mAlertTitle.get(),
+                                           mAlertText.get(),
+-                                          NULL, NULL);
++                                          NULL);
+   if (!mNotification)
+     return NS_ERROR_OUT_OF_MEMORY;
+ 
+

@@ -189,9 +189,10 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
     # So that pt-BR doesn't try to use pt for example
     SHORTMOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*||g"`
     MOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*|-\1|g"`
+    MANIFEST="chrome.manifest"
 
     # Try to link global langpacks to an extension directory
-    if [ -d $MOZ_LANGPACKS_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org/chrome/$SHORTMOZLOCALE ]; then
+    if [ -f $MOZ_LANGPACKS_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org/$MANIFEST ]; then
         if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org ]; then
             rmdir "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org" > /dev/null 2>&1
         fi 
@@ -200,7 +201,7 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
                   $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org
             echo "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org" > $FEDORA_LANGPACK_CONFIG
         fi
-    elif [ -d $MOZ_LANGPACKS_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org/chrome/$MOZLOCALE ]; then
+    elif [ -f $MOZ_LANGPACKS_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org/$MANIFEST ]; then
         if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org ]; then
             rmdir "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org" > /dev/null 2>&1
         fi 
@@ -212,10 +213,10 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
     fi
 
     # And set it up for mozilla
-    if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org/chrome/$SHORTMOZLOCALE ]; then
+    if [ -f $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@firefox.mozilla.org/$MANIFEST ]; then
         MOZARGS="-UILocale $SHORTMOZLOCALE"
     else
-        if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org/chrome/$MOZLOCALE ]; then
+        if [ -f $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@firefox.mozilla.org/$MANIFEST ]; then
             MOZARGS="-UILocale $MOZLOCALE"
         fi
     fi
