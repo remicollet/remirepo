@@ -1,6 +1,6 @@
 %global postver -rc
 Name: mysql
-Version: 5.5.6
+Version: 5.5.7
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -45,9 +45,11 @@ Patch14: mysql-missing-string-code.patch
 Patch15: mysql-lowercase-bug.patch
 Patch16: mysql-chain-certs.patch
 # mysql.sock path
-Patch17: mysql-5.5-tests.patch
+#Patch17: mysql-5.5-tests.patch
 # missing rpl_reporting in embedded lib
 Patch18: mysql-5.5-report.patch
+# ABI check fails on client_plugin.h (seems a preprocessor issue)
+Patch19: mysql-5.5-abi.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
@@ -194,11 +196,14 @@ the MySQL sources.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
-%patch17 -p1
+# %patch17 -p1
 %patch18 -p1
+%patch19 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
+# Stupid test which rely on hostname to be "unknown"
+rm -f mysql-test/t/plugin_auth.test
 
 libtoolize --force
 aclocal
@@ -613,6 +618,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Wed Nov 10 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.5.7-1
+- Update to MySQL Community Server 5.5.7 RC
+- add startsos to init script (--skip-grant-tables --skip-networking)
+
 * Fri Sep 24 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.5.6-1
 - Update to MySQL Community Server 5.5.6 RC
 
