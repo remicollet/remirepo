@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.10.6
+Version:         1.11.0
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -371,6 +371,7 @@ cd ..
 %exclude %{_datadir}/php/Zend/Cache/Backend/Memcached.php
 %exclude %{_datadir}/php/Zend/Cache/Backend/Sqlite.php
 %{_datadir}/php/Zend/Cache.php
+%{_datadir}/php/Zend/Cloud
 %{_datadir}/php/Zend/CodeGenerator
 %{_datadir}/php/Zend/Config
 %{_datadir}/php/Zend/Config.php
@@ -627,6 +628,16 @@ cd ..
 
 
 %changelog
+* Wed Nov 10 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.11.0-1
+- rebuild for remi repository (with Oracle and Sqlite stuff)
+
+* Thu Nov 04 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.11.0-1
+- update to 1.11.0
+- new component: Cloud
+- full changelog http://framework.zend.com/changelog/1.11.0
+- release announcement:
+  http://devzone.zend.com/article/12724-Zend-Framework-1.11.0-FINAL-Released
+
 * Mon Jul 26 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10.6-1
 - rebuild for remi repository
 
