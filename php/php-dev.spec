@@ -20,7 +20,7 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201010301430
+%global snapdate 201011110530
 %global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -1215,6 +1215,9 @@ fi
 %endif
 
 %changelog
+* Thu Nov 11 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201011110530
+- new snapshot (5.3.4-dev)
+
 * Sat Oct 30 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201010301430
 - new snapshot (5.3.4-dev)
 

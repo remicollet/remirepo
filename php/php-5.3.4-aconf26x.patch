@@ -29,10 +29,10 @@ diff -up php5.3-201008281230/scripts/phpize.m4.aconf26x php5.3-201008281230/scri
  
  AC_PREREQ(2.13)
  AC_INIT(config.m4)
---- php5.3-201010081430/configure.in.aconf26x	2010-10-08 18:13:09.446319192 +0200
-+++ php5.3-201010081430/configure.in	2010-10-08 18:14:24.781367160 +0200
+--- php5.3-201011110530/configure.in.aconf26x	2010-11-11 07:55:04.067668427 +0100
++++ php5.3-201011110530/configure.in	2010-11-11 07:55:04.081667499 +0100
 @@ -1,7 +1,7 @@
- ## $Id: configure.in 304088 2010-10-05 13:43:35Z tony2001 $ -*- autoconf -*-
+ ## $Id: configure.in 305025 2010-11-02 09:58:08Z jani $ -*- autoconf -*-
  dnl ## Process this file with autoconf to produce a configure script.
  
 -divert(1)
