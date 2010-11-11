@@ -3,7 +3,6 @@
 # oracle-instantclient-devel
 # oracle-instantclient-sqlplus
 # oracle-instantclient-jdbc
-# oracle-instantclient-tools
 # oracle-instantclient-odbc
 # oracle-instantclient-tools
 
@@ -13,18 +12,18 @@
 
 Summary: 	Instant Client for Oracle Database 11g
 Name: 		oracle-instantclient-x86_64
-Version: 	11.2.0.1.0
+Version: 	11.2.0.2.0
 Release:	1%{?dist}
 License:	Oracle
 Group:		Applications/File
 Url:		http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
 
-Source0:	oracle-instantclient11.2-basic-%{version}-1.x86_64.zip
-Source1:	oracle-instantclient11.2-jdbc-%{version}-1.x86_64.zip
-Source2:	oracle-instantclient11.2-odbc-%{version}-1.x86_64.zip
-Source3:	oracle-instantclient11.2-sdk-%{version}-1.x86_64.zip
-Source4:	oracle-instantclient11.2-sqlplus-%{version}-1.x86_64.zip
-Source5:	oracle-instantclient11.2-tools-%{version}-1.x86_64.zip
+Source0:	instantclient-basic-linux-x86-64-%{version}.zip
+Source1:	instantclient-jdbc-linux-x86-64-%{version}.zip
+Source2:	instantclient-odbc-linux-x86-64-%{version}.zip
+Source3:	instantclient-sdk-linux-x86-64-%{version}.zip
+Source4:	instantclient-sqlplus-linux-x86-64-%{version}.zip
+Source5:	instantclient-tools-linux-x86-64-%{version}.zip
 NoSource:       0
 NoSource:       1
 NoSource:       2
@@ -32,7 +31,7 @@ NoSource:       3
 NoSource:       4
 NoSource:       5
 
-Buildroot: 	%{_tmppath}/%{name}-root
+Buildroot: 	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:      x86_64
 
 %define topdir	instantclient_11_2
@@ -120,6 +119,9 @@ cd %{topdir}
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/ld.so.conf.d
 
 # Basic
+%__install adrci		%{buildroot}%{oradir}/bin
+%__install genezi		%{buildroot}%{oradir}/bin
+%__install uidrvci		%{buildroot}%{oradir}/bin
 %__install libclntsh.so.11.1	%{buildroot}%{oradir}/lib
 %__install libnnz11.so		%{buildroot}%{oradir}/lib
 %__install libocci.so.11.1	%{buildroot}%{oradir}/lib
@@ -128,8 +130,6 @@ cd %{topdir}
 %__install ojdbc5.jar		%{buildroot}%{oradir}/lib
 %__install ojdbc6.jar		%{buildroot}%{oradir}/lib
 %__install xstreams.jar		%{buildroot}%{oradir}/lib
-%__install adrci		%{buildroot}%{oradir}/bin
-%__install genezi		%{buildroot}%{oradir}/bin
 
 echo %{oradir}/lib >%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}.conf
 
@@ -172,6 +172,9 @@ rm -rf %{buildroot}
 %files -n oracle-instantclient-basic
 %defattr(-,root,root)
 %doc %{topdir}/BASIC_README
+%dir %{oradir}
+%dir %{oradir}/lib
+%dir %{oradir}/bin
 %{oradir}/lib/libclntsh.so.11.1
 %{oradir}/lib/libnnz11.so
 %{oradir}/lib/libocci.so.11.1
@@ -183,6 +186,7 @@ rm -rf %{buildroot}
 %{_sysconfdir}/ld.so.conf.d/%{name}.conf
 %{oradir}/bin/genezi
 %{oradir}/bin/adrci
+%{oradir}/bin/uidrvci
 
 %files -n oracle-instantclient-devel
 %defattr(-,root,root)
@@ -190,7 +194,7 @@ rm -rf %{buildroot}
 %{oradir}/lib/libclntsh.so
 %{oradir}/lib/libocci.so
 %{oradir}/lib/ottclasses.zip
-%{incdir}/*
+%{incdir}
 
 %post -n oracle-instantclient-sqlplus
 /sbin/ldconfig 
@@ -227,6 +231,9 @@ rm -rf %{buildroot}
 %{oradir}/bin/wrc
 
 %changelog
+* Thu Nov 11 2010 Remi Collet <RPMS@famillecollet.com> 11.2.0.2.0-1
+- update to 11.2.0.2.0
+
 * Fri Feb 12 2010 Remi Collet <RPMS@famillecollet.com> 11.2.0.1.0-1.###.remi
 - update to 11.2.0.1.0
 

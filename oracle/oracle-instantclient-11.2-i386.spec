@@ -12,7 +12,7 @@
 
 Summary: 	Instant Client for Oracle Database 11g
 Name: 		oracle-instantclient-i386
-Version: 	11.2.0.1
+Version: 	11.2.0.2.0
 Release:	1%{?dist}
 License:	Oracle
 Group:		Applications/File
@@ -31,7 +31,7 @@ NoSource:       3
 NoSource:       4
 NoSource:       5
 
-Buildroot: 	%{_tmppath}/%{name}-root
+Buildroot: 	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 #BuildArch:      i386
 
 %define topdir	instantclient_11_2
@@ -119,6 +119,9 @@ cd %{topdir}
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/ld.so.conf.d
 
 # Basic
+%__install adrci		%{buildroot}%{oradir}/bin
+%__install genezi		%{buildroot}%{oradir}/bin
+%__install uidrvci		%{buildroot}%{oradir}/bin
 %__install libclntsh.so.11.1	%{buildroot}%{oradir}/lib
 %__install libnnz11.so		%{buildroot}%{oradir}/lib
 %__install libocci.so.11.1	%{buildroot}%{oradir}/lib
@@ -127,8 +130,6 @@ cd %{topdir}
 %__install ojdbc5.jar		%{buildroot}%{oradir}/lib
 %__install ojdbc6.jar		%{buildroot}%{oradir}/lib
 %__install xstreams.jar		%{buildroot}%{oradir}/lib
-%__install adrci		%{buildroot}%{oradir}/bin
-%__install genezi		%{buildroot}%{oradir}/bin
 
 echo %{oradir}/lib >%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}.conf
 
@@ -171,6 +172,9 @@ rm -rf %{buildroot}
 %files -n oracle-instantclient-basic
 %defattr(-,root,root)
 %doc %{topdir}/BASIC_README
+%dir %{oradir}
+%dir %{oradir}/lib
+%dir %{oradir}/bin
 %{oradir}/lib/libclntsh.so.11.1
 %{oradir}/lib/libnnz11.so
 %{oradir}/lib/libocci.so.11.1
@@ -182,6 +186,7 @@ rm -rf %{buildroot}
 %{_sysconfdir}/ld.so.conf.d/%{name}.conf
 %{oradir}/bin/genezi
 %{oradir}/bin/adrci
+%{oradir}/bin/uidrvci
 
 %files -n oracle-instantclient-devel
 %defattr(-,root,root)
@@ -189,7 +194,7 @@ rm -rf %{buildroot}
 %{oradir}/lib/libclntsh.so
 %{oradir}/lib/libocci.so
 %{oradir}/lib/ottclasses.zip
-%{incdir}/*
+%{incdir}
 
 %post -n oracle-instantclient-sqlplus
 /sbin/ldconfig 
@@ -226,6 +231,9 @@ rm -rf %{buildroot}
 %{oradir}/bin/wrc
 
 %changelog
+* Thu Nov 11 2010 Remi Collet <RPMS@famillecollet.com> 11.2.0.2.0-1
+- update to 11.2.0.2.0
+
 * Sat Dec 26 2009 Remi Collet <RPMS@famillecollet.com> 11.2.0.1-1.###.remi
 - update to 11.2.0.1
 
