@@ -1,6 +1,6 @@
 %define nspr_version 4.8.6
 %define nss_version 3.12.8
-%define cairo_version 1.8.8
+%define cairo_version 1.10
 %define freetype_version 2.1.9
 %define lcms_version 1.18
 %define sqlite_version 3.6.23.1
@@ -25,12 +25,12 @@
 
 %global relcan b7
 %global firefox firefox
-%global mycomment  Beta 7 Build 1 candidate
+%global mycomment  Beta 7
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.11.beta7.build1%{?dist}
+Release:        0.12.beta7%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20101106.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20101111.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -131,6 +131,8 @@ BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{fedora} >= 11
 BuildRequires:  hunspell-devel
+%endif
+%if %{fedora} >= 14
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
 %if %{fedora} >= 10
@@ -179,6 +181,13 @@ Provides:       webclient
 
 %define _use_internal_dependency_generator 0
 %define __find_requires %{SOURCE100}
+
+# 10k of 11k files are in langpacks
+%{?filter_setup:
+%filter_provides_in %{mozappdir}/langpacks
+%filter_requires_in %{mozappdir}/langpacks
+%filter_setup
+}
 
 %description
 Mozilla Firefox is an open-source web browser, designed for standards
@@ -242,6 +251,8 @@ ac_add_options --with-system-nss
 %endif
 %if %{fedora} >= 11
 ac_add_options --enable-system-hunspell
+%endif
+%if %{fedora} >= 14
 ac_add_options --enable-system-cairo
 %endif
 %if %{fedora} >= 10
@@ -561,6 +572,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Nov 11 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.12.beta7
+- update to 4.0b7
+- raise cairo BR to 1.10 (fedora >= 14)
+
 * Sat Nov 06 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.11.beta7.build1
 - update to 4.0b7 build1 candidate
 
