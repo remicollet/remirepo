@@ -35,3 +35,14 @@ diff -up ext/pdo_oci/config.m4.remi-oci8 ext/pdo_oci/config.m4
      elif test -f "$PDO_OCI_IC_PREFIX/client/lib/libclntsh.so" ; then
        PDO_OCI_LIB_DIR="$PDO_OCI_IC_PREFIX/client/lib"
      elif test -f "$PDO_OCI_IC_PREFIX/libclntsh.so" ; then
+--- ext/ldap/php_ldap.h.oci	2010-11-11 19:00:42.195330723 +0100
++++ ext/ldap/php_ldap.h	2010-11-11 19:00:52.390971084 +0100
+@@ -27,7 +27,7 @@
+ #include <lber.h>
+ #endif
+ 
+-#include <ldap.h>
++#include "/usr/include/ldap.h"
+ 
+ extern zend_module_entry ldap_module_entry;
+ #define ldap_module_ptr &ldap_module_entry

@@ -8,19 +8,20 @@
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
+%global oci8ver     1.4.4
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
 %ifarch ppc ppc64
 %global oraclever 10.2.0.2
 %else
-%global oraclever 11.1.0.7
+%global oraclever 11.2
 %endif
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201011110530
+%global snapdate 201011111730
 %global phpversion 5.3.4-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -357,9 +358,10 @@ License.
 %package oci8
 Summary: 	A module for PHP applications that use OCI8 databases
 Group: 		Development/Languages
-BuildRequires: 	oracle-instantclient-devel = %{oraclever}
+BuildRequires: 	oracle-instantclient-devel >= %{oraclever}
 Requires: 	php-common = %{version}-%{release}, php-pdo
-Provides: 	php_database, php-pdo_oci
+Provides: 	php_database, php-pdo_oci = %{oci8ver}
+Provides:       php-pecl-oci8 = %{oci8ver}, php-pecl(json) = %{oci8ver}
 # Should requires libclntsh.so.11.1, but it's not provided by Oracle RPM.
 AutoReq: 	0
 
@@ -649,6 +651,13 @@ if test "$ver" != "%{zipver}"; then
    : Update the zipver macro and rebuild.
    exit 1
 fi
+ver=$(sed -n '/#define PHP_OCI8_VERSION /{s/.* "//;s/".*$//;p}' ext/oci8/php_oci8.h)
+if test "$ver" != "%{oci8ver}"; then
+   : Error: Upstream OCI8 version is now ${ver}, expecting %{oci8ver}.
+   : Update the oci8ver macro and rebuild.
+   exit 1
+fi
+
 ver=$(sed -n '/#define PHP_JSON_VERSION /{s/.* "//;s/".*$//;p}' ext/json/php_json.h)
 if test "$ver" != "%{jsonver}"; then
    : Error: Upstream JSON version is now ${ver}, expecting %{jsonver}.
@@ -1215,6 +1224,10 @@ fi
 %endif
 
 %changelog
+* Thu Nov 11 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201011111730
+- new snapshot (5.3.4-dev)
+- switch to oracle-instantclient-11.2.0.2.0
+
 * Thu Nov 11 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201011110530
 - new snapshot (5.3.4-dev)
 
