@@ -4,11 +4,10 @@
 %global useselinux 0
 %endif
 
-%global tarballversion 0.78
-%global svnrelease 12930
+#global svnrelease 12930
 
 Name:           glpi
-Version:        0.78
+Version:        0.78.1
 %if 0%{?svnrelease}
 Release:        2.svn%{svnrelease}%{?dist}
 %else
@@ -25,7 +24,7 @@ URL:            http://www.glpi-project.org/
 Source0:        glpi-0.78-%{svnrelease}.tar.gz
 Source99:       mktar.sh
 %else
-Source0:        https://forge.indepnet.net/attachments/download/656/glpi-0.78.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/720/glpi-0.78.1.tar.gz
 %endif
 
 Source1:        glpi-httpd.conf
@@ -34,8 +33,6 @@ Source3:        glpi-logrotate
 
 # Switch all internal cron tasks to system
 Patch0:         glpi-cron.patch
-# Patch from SVN, commit 12781,12782 (will be revert to avoid bump version)
-Patch1:         glpi-svn.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,9 +81,6 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0
-# revert version bump to stay in 0.78
-%{__patch} --strip=2 --reverse --fuzz=0 <%{P:%%PATCH1}
-%{__rm} install/update_078_0781.php
 
 # Use system lib
 rm -rf lib/cache_lite
@@ -251,6 +245,9 @@ fi
 
 
 %changelog
+* Mon Nov 15 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78.1-1
+- version 0.78.1 released
+
 * Sun Oct 31 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-2.svn12930
 - Patches from SVN (12691-12930) for know 0.78 issues
   https://forge.indepnet.net/issues/2374
