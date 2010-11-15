@@ -11,7 +11,7 @@ Release:   2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1-48-ga7532c0.tar.gz
 %else
-Release:   1%{?dist}
+Release:   1%{?dist}.1
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}.tar.gz
 %endif
 
@@ -45,7 +45,7 @@ Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): /sbin/service
 
 
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 # This work only on recent fedora
 %{?filter_setup:
 %filter_from_requires /perl(Win32/d
@@ -229,6 +229,9 @@ exit 0
 
 
 %changelog
+* Sat Nov 13 2010 Remi Collet <Fedora@famillecollet.com> 2.1.6-1.1
+- fix perl filter on EL-6
+
 * Wed Oct 06 2010 Remi Collet <Fedora@famillecollet.com> 2.1.6-1
 - update to 2.1.6
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.6/Changes
