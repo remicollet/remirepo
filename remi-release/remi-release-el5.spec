@@ -1,6 +1,10 @@
 Name:           remi-release
-Version:        5
+Version:        %{rhel}
+%if %{rhel} >= 6
+Release:        1%{?dist}
+%else
 Release:        8%{?dist}
+%endif
 Summary:        YUM configuration for remi repository
 Summary(fr):	Configuration de YUM pour le dépôt remi
 
@@ -60,6 +64,9 @@ rm -rf %{buildroot}
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
 
 %changelog
+* Sat Nov 13 2010 Remi Collet <RPMS@FamilleCollet.com> - 6-1.el6.remi
+- EL-6 rebuild
+
 * Sat May 01 2010 Remi Collet <RPMS@FamilleCollet.com> - 5-8.el5.remi
 - use a mirrorlist URL
 
