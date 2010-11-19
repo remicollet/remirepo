@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.1.52
+Version: 5.1.53
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -35,14 +35,14 @@ Patch2: mysql-errno.patch
 Patch4: mysql-testing.patch
 Patch5: mysql-install-test.patch
 Patch6: mysql-stack-guard.patch
-Patch7: mysql-disable-test.patch
+# add by a simple echo - Patch7: mysql-disable-test.patch
 Patch8: mysql-setschedparam.patch
 Patch9: mysql-no-docs.patch
 Patch10: mysql-strmov.patch
 Patch12: mysql-cve-2008-7247.patch
 Patch13: mysql-expired-certs.patch
 Patch14: mysql-missing-string-code.patch
-Patch15: mysql-lowercase-bug.patch
+# applied upstream - Patch15: mysql-lowercase-bug.patch
 Patch16: mysql-chain-certs.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -180,18 +180,24 @@ the MySQL sources.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
+# %patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
-%patch15 -p1
+# %patch15 -p1
 %patch16 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
+
+# This is upstream at http://bugs.mysql.com/bug.php?id=46895
+cat <<EOF >>mysql-test/t/disabled.def
+#
+outfile_loaddata         : bug#46895 code wrong, expected results wrong too
+EOF
 
 libtoolize --force
 aclocal
@@ -610,6 +616,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Nov 19 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.53-1
+- Update to MySQL 5.1.53 Community Server GA
+- add startsos to init script (--skip-grant-tables --skip-networking)
+
 * Tue Nov 02 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.52-1
 - Update to MySQL 5.1.52 Community Server GA
 - add BR libaio-devel for InnoDB plugin
