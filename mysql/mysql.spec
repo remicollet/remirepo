@@ -249,6 +249,9 @@ export CFLAGS CXXFLAGS
 	--with-big-tables \
 	--with-pic \
 	--with-plugin-innobase \
+%if 0%{?rhel} == 4
+	--without-plugin-innodb_plugin \
+%endif
 	--with-plugin-archive \
 	--with-plugin-blackhole \
 	--with-plugin-csv \
@@ -619,6 +622,7 @@ fi
 * Fri Nov 19 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.53-1
 - Update to MySQL 5.1.53 Community Server GA
 - add startsos to init script (--skip-grant-tables --skip-networking)
+- disable innodb plugin on EL-4 (breaks test)
 
 * Tue Nov 02 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.52-1
 - Update to MySQL 5.1.52 Community Server GA
