@@ -1,13 +1,13 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 %{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
-%define php_apiver %((echo %{default_apiver}; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
+%global php_apiver %((echo %{default_apiver}; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 
-%define pecl_name imagick
+%global pecl_name imagick
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
-Version:       3.0.0
+Version:       3.0.1
 Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
@@ -17,7 +17,7 @@ Source:        http://pecl.php.net/get/imagick-%{version}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.3, php-pear
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires: ImageMagick-devel >= 6.5.0
 %else
 BuildRequires: ImageMagick2-devel >= 6.5.0
@@ -34,6 +34,14 @@ Requires:       php(api) = %{php_core_api}
 %else
 Requires:       php-api = %{php_apiver}
 %endif
+
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+%{?filter_setup:
+%filter_provides_in %{php_extdir}/.*\.so$
+%filter_setup
+}
+%endif
+
 
 %description
 Imagick is a native php extension to create and modify images
@@ -111,8 +119,11 @@ php --no-php-ini \
 
 
 %changelog
+* Thu Nov 25 2010 Remi Collet <rpms@famillecollet.com> 3.0.1-1
+- update to 3.0.1
+
 * Mon Jul 26 2010 Remi Collet <rpms@famillecollet.com> 3.0.0-1
-- update to 2.3.0
+- update to 3.0.0
 
 * Wed Aug 26 2009 Remi Collet <rpms@famillecollet.com> 2.3.0-2
 - build against ImageMagick2 6.5.x
