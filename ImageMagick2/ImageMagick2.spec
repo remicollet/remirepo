@@ -1,5 +1,5 @@
-%define VER 6.5.5
-%define Patchlevel 6
+%global VER 6.6.5
+%global Patchlevel 10
 
 %define withdjvu 1
 %if 0%{?rhel}
@@ -20,7 +20,7 @@ Patch1:         ImageMagick-6.4.0-multilib.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
 BuildRequires:  libtiff-devel, giflib-devel, zlib-devel
-%if 0%{?fedora} >= 7
+%if 0%{?fedora} >= 7 || 0%{?rhel} >= 6
 BuildRequires:  perl-devel
 %else
 BuildRequires:  perl
@@ -196,6 +196,7 @@ rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 cp -a www/source $RPM_BUILD_ROOT%{_datadir}/doc/ImageMagick-%{VER}
+# Delete *ONLY* _libdir/*.la files! .la files used internally to handle plugins - BUG#185237!!!
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # fix weird perl Magick.so permissions
@@ -252,6 +253,9 @@ cat >$RPM_BUILD_ROOT%{_includedir}/ImageMagick/magick/magick-config.h <<EOF
 #endif
 EOF
 
+# Fonts must be packaged separately. It does nothave matter and demos work without it.
+rm PerlMagick/demo/Generic.ttf
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -270,8 +274,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc QuickStart.txt ChangeLog Platforms.txt
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
-%{_libdir}/libMagickCore.so.*
-%{_libdir}/libMagickWand.so.*
+%{_libdir}/libMagickCore.so.4*
+%{_libdir}/libMagickWand.so.4*
 %{_libdir}/ImageMagick-%{VER}
 %{_datadir}/ImageMagick-%{VER}
 %if %{withdjvu}
@@ -318,7 +322,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc Magick++/AUTHORS Magick++/ChangeLog Magick++/NEWS Magick++/README
 %doc www/Magick++/COPYING
-%{_libdir}/libMagick++.so.*
+%{_libdir}/libMagick++.so.4*
 
 %files c++-devel
 %defattr(-,root,root,-)
@@ -338,6 +342,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 25 2010 Remi Collet <RPMS@FamilleCollet.com> - 6.6.5.10-1
+- update to 6.6.5-10 (soname bump to .4)
+
 * Sat Sep 05 2009 Remi Collet <RPMS@FamilleCollet.com> - 6.5.5.6-1
 - patch level 6
 
