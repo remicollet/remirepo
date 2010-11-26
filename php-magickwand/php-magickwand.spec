@@ -11,7 +11,12 @@ Group:		Development/Languages
 Source0:	http://image_magick.veidrodis.com/image_magick/php/MagickWandForPHP-%{version}.tar.bz2
 Source1:	magickwand.ini
 URL:		http://www.magickwand.org/
-BuildRequires:	php-devel >= 4.3.0, ImageMagick-devel >= 6.4.0, autoconf, automake, libtool
+BuildRequires:	php-devel >= 4.3.0, autoconf, automake, libtool
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+BuildRequires: ImageMagick-devel >= 6.6.0
+%else
+BuildRequires: ImageMagick2-devel >= 6.6.0
+%endif
 %if %{?php_zend_api}0
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
@@ -56,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/php.d/magickwand.ini
 
 %changelog
+* Fri Nov 26 2010 Remi Collet <rpms@famillecollet.com> 1.0.8-8
+- rebuild against latest ImageMagick 6.6.5.10
+
 * Wed Sep 29 2010 jkeating - 1.0.8-8
 - Rebuilt for gcc bug 634757
 
