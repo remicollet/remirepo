@@ -9,6 +9,11 @@
 %define moz_objdir objdir-tb
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
 
+%define with_lightning_extension 1
+%define lightning_release 0.33.b2pre
+%define lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
+%define gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
+
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
 #
@@ -27,7 +32,7 @@
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
 Version:        3.1.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,6 +48,9 @@ Source0:        %{tarball}
 # Language package archive is build by RH
 Source1:        thunderbird-langpacks-%{version}%{?relcan}-20101028.tar.bz2
 %endif
+Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/lightning.xpi
+Source5:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/gdata-provider.xpi
+
 # Config file for compilation
 Source10:       thunderbird-mozconfig
 # Config file for branded compilation
@@ -68,11 +76,12 @@ Patch1:         mozilla-jemalloc.patch
 Patch2:         thunderbird-shared-error.patch
 # Fixes gcc complain that nsFrame::delete is protected
 Patch4:         xulrunner-1.9.2.1-build.patch
-# Fix missing includes for crash reporter, remove in 3.1 final
-
 Patch6:         mozilla-libjpeg-turbo.patch
 Patch7:         mozilla-missing-cflags.patch
 Patch8:         mozilla-build-s390.patch
+# Remove static build option from crashreporter to remove dependency on static libraries
+Patch9:         crashreporter-remove-static.patch
+Patch10:        mozilla-notify.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -149,7 +158,25 @@ AutoProv: 0
 %description
 Mozilla Thunderbird is a standalone mail and newsgroup client.
 
-#===============================================================================
+%if %{with_lightning_extension}
+%package -n thunderbird-lightning
+Summary:        The calendar extension to Thunderbird
+Version:        1.0
+Release:        %{lightning_release}%{?dist}
+Group:          Applications/Productivity
+Requires:       thunderbird >= %{version}
+Obsoletes:      thunderbird-lightning-wcap <= 0.8
+Provides:       thunderbird-lightning-wcap = %{version}-%{release}
+AutoProv: 0
+
+%description -n thunderbird-lightning
+Lightning brings the Sunbird calendar to the popular email client,
+Mozilla Thunderbird. Since it's an extension, Lightning is tightly
+integrated with Thunderbird, allowing it to easily perform email-related
+calendaring tasks.
+
+%endif
+
 
 %prep
 echo CIBLE = %{name}-%{version}-%{release}
@@ -175,6 +202,11 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %patch7 -p1 -b .mozcflags
 %ifarch s390
 %patch8 -p0 -b .s390
+%endif
+%patch9 -p1 -b .static
+%if %{fedora} >= 15
+# when libnotify >= 0.7.0
+%patch10 -p1 -b .libnotify
 %endif
 
 
@@ -229,6 +261,9 @@ EOF
 %endif
 %if %{enable_mozilla_crashreporter}
 %{__cat} %{SOURCE13} >> .mozconfig
+%endif
+%if %{with_lightning_extension}
+echo "ac_add_options --enable-calendar" >> .mozconfig
 %endif
 
 #===============================================================================
@@ -382,11 +417,42 @@ ln -s %{_datadir}/myspell $RPM_BUILD_ROOT%{mozappdir}/dictionaries
 touch $RPM_BUILD_ROOT%{mozappdir}/components/compreg.dat
 touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 
-
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{enable_mozilla_crashreporter}
 mkdir -p $RPM_BUILD_ROOT%{_exec_prefix}/lib/debug%{mozappdir}
 cp %{moz_objdir}/mozilla/dist/thunderbird-%{version}.en-US.linux-*.crashreporter-symbols.zip $RPM_BUILD_ROOT%{_exec_prefix}/lib/debug%{mozappdir}
+%endif
+
+%if %{with_lightning_extension}
+# Avoid "Chrome Registration Failed" message on first startup and extension installation
+mkdir -p $RPM_BUILD_ROOT%{lightning_extname}
+touch $RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
+mkdir -p $RPM_BUILD_ROOT%{gdata_extname}
+touch $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
+
+# Lightning and GData provider for it
+unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning.xpi
+unzip -qod $RPM_BUILD_ROOT%{gdata_extname} objdir-tb/mozilla/dist/xpi-stage/gdata-provider.xpi
+
+# Unpack lightning language packs, except en_US
+unzip -l %{SOURCE4} '*.jar' |
+        awk '/-[^\/]*\.jar/ && !/en-US/ {print $4}' |
+        xargs unzip -qod $RPM_BUILD_ROOT%{lightning_extname}  %{SOURCE4}
+
+# Register them
+ls $RPM_BUILD_ROOT%{lightning_extname}/chrome |
+        sed -n '/en-US/n;s/\(\([^-]*\)-\(.*\)\.jar\)/locale \2 \3 jar:chrome\/\1!\/locale\/\3\/\2\//p' \
+        | tee -a $RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
+
+# Unpack gdata language packs, except en_US
+unzip -l %{SOURCE5} '*.jar' |
+        awk '/-[^\/]*\.jar/ && !/en-US/ {print $4}' |
+        xargs unzip -qod $RPM_BUILD_ROOT%{gdata_extname} %{SOURCE5}
+
+# Register them
+ls $RPM_BUILD_ROOT%{gdata_extname}/chrome |
+        sed -n '/en-US/n;s/\(\([^-]*\)-\(.*\)\.jar\)/locale \2 \3 jar:chrome\/\1!\/locale\/\3\/\2\//p' \
+        | tee -a $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
 %endif
 
 # RC - provide account type
@@ -494,9 +560,30 @@ fi
 %{mozappdir}/Throbber-small.gif
 %endif
 
+%if %{with_lightning_extension}
+%files -n thunderbird-lightning
+%doc %{tarballdir}/mozilla/LEGAL %{tarballdir}/mozilla/LICENSE %{tarballdir}/mozilla/README.txt
+%defattr(-,root,root,-)
+%{lightning_extname}
+%{gdata_extname}
+%endif
+
 #===============================================================================
 
 %changelog
+* Sat Nov 27 2010 Remi Collet <rpms@famillecollet.com> 3.1.6-2
+- sync with rawhide for lightning
+
+* Mon Nov 22 2010 Jan Horak <jhorak@redhat.com> - 3.1.6-7
+- Added x-scheme-handler/mailto to thunderbird.desktop file
+
+* Mon Nov  8 2010 Jan Horak <jhorak@redhat.com> - 3.1.6-4
+- Added libnotify patch
+- Removed dependency on static libraries
+
+* Fri Oct 29 2010 Jan Horak <jhorak@redhat.com> - 3.1.6-2
+- Move thunderbird-lightning extension from Sunbird package to Thunderbird
+
 * Thu Oct 28 2010 Remi Collet <rpms@famillecollet.com> 3.1.6-1
 - Thunderbird 3.1.6
 
