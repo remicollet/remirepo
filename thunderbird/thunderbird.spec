@@ -9,8 +9,9 @@
 %define moz_objdir objdir-tb
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
 
+%define thunderbird_version 3.1.6
 %define with_lightning_extension 1
-%define lightning_release 0.33.b2pre
+%define lightning_release 0.33.b3pre
 %define lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
 %define gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 
@@ -31,7 +32,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        3.1.6
+Version:        %{thunderbird_version}
 Release:        2%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -164,7 +165,7 @@ Summary:        The calendar extension to Thunderbird
 Version:        1.0
 Release:        %{lightning_release}%{?dist}
 Group:          Applications/Productivity
-Requires:       thunderbird >= %{version}
+Requires:       thunderbird >= %{thunderbird_version}
 Obsoletes:      thunderbird-lightning-wcap <= 0.8
 Provides:       thunderbird-lightning-wcap = %{version}-%{release}
 AutoProv: 0
