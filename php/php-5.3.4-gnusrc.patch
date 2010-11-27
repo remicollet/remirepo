@@ -90,21 +90,21 @@ diff -up php5.3-201004081030/Zend/zend_language_parser.c.gnusrc php5.3-201004081
  #include "php.h"
  #include "php_zlib.h"
  #include "fopen_wrappers.h"
---- php5.3-201010230430/main/streams/streams.c.gnusrc	2010-10-13 06:36:11.000000000 +0200
-+++ php5.3-201010230430/main/streams/streams.c	2010-10-23 08:30:37.976493156 +0200
-@@ -21,7 +21,6 @@
- 
- /* $Id: streams.c 304354 2010-10-13 03:13:29Z cataphract $ */
- 
--#define _GNU_SOURCE
- #include "php.h"
- #include "php_globals.h"
- #include "php_network.h"
 --- php5.3-201011110530/main/streams/cast.c.gnusrc	2010-11-05 20:36:08.000000000 +0100
 +++ php5.3-201011110530/main/streams/cast.c	2010-11-11 07:52:00.335566018 +0100
 @@ -18,7 +18,6 @@
  
  /* $Id: cast.c 305108 2010-11-05 18:53:48Z cataphract $ */
+ 
+-#define _GNU_SOURCE
+ #include "php.h"
+ #include "php_globals.h"
+ #include "php_network.h"
+--- php5.3-201011270530/main/streams/streams.c.gnusrc	2010-11-15 20:35:42.000000000 +0100
++++ php5.3-201011270530/main/streams/streams.c	2010-11-27 08:26:48.836691759 +0100
+@@ -21,7 +21,6 @@
+ 
+ /* $Id: streams.c 305379 2010-11-15 18:22:52Z cataphract $ */
  
 -#define _GNU_SOURCE
  #include "php.h"

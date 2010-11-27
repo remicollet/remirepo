@@ -8,7 +8,7 @@
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
-%global oci8ver     1.4.4
+%global oci8ver     1.4.5-devel
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
@@ -21,13 +21,13 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201011111730
-%global phpversion 5.3.4-dev
+%global snapdate 201011270530
+%global phpversion 5.3.4RC2-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
 %global with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
-%if %{?rhel}%{?fedora} > 4
+%if 0%{?rhel}%{?fedora} > 4
 %global with_enchant 1
 %else
 %global with_enchant 0
@@ -97,12 +97,15 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: bzip2-devel, curl-devel >= 7.9, db4-devel, gmp-devel
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
-BuildRequires: libstdc++-devel, openssl-devel, sqlite-devel >= 3.0.0
-%if 0%{?fedora} >= 9
+BuildRequires: libstdc++-devel, openssl-devel
+%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
+# For Sqlite3 extension
 BuildRequires: sqlite-devel >= 3.5.9
+%else
+BuildRequires: sqlite-devel >= 3.0.0
 %endif
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
-%if 0%{?fedora} >= 10
+%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildRequires: pcre-devel >= 7.8
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
@@ -669,14 +672,14 @@ fi
 : Build for oci8=%{with_oci8} ibase=%{with_ibase}
 
 %build
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 # aclocal workaround - to be improved
 cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4
 %endif
 
 # Force use of system libtool:
 libtoolize --force --copy
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >build/libtool.m4
 %else
 cat `aclocal --print-ac-dir`/libtool.m4 > build/libtool.m4
@@ -728,7 +731,7 @@ ln -sf ../configure
 	--with-iconv \
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
-%if 0%{?fedora} >= 10
+%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
         --with-pcre-regex=%{_prefix} \
 %endif
 	--with-zlib \
@@ -799,7 +802,7 @@ build --enable-force-cgi-redirect \
       --with-pdo-pgsql=shared,%{_prefix} \
       --with-pdo-sqlite=shared,%{_prefix} \
       --with-pdo-dblib=shared,%{_prefix} \
-%if 0%{?fedora} >= 9
+%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
       --with-sqlite3=shared,%{_prefix} \
 %else
       --without-sqlite3 \
@@ -900,7 +903,7 @@ build --with-apxs2=%{_sbindir}/apxs \
       --with-pdo-pgsql=shared,%{_prefix} \
       --with-pdo-sqlite=shared,%{_prefix} \
       --with-pdo-dblib=shared,%{_prefix} \
-%if 0%{?fedora} >= 9
+%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
       --with-sqlite3=shared,%{_prefix} \
 %else
       --without-sqlite3 \
@@ -1019,7 +1022,7 @@ for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} %{?_with_ibase:interbase} %{?_with_ibase:pdo_firebird} sqlite \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json zip \
-%if 0%{?fedora} >= 9
+%if 0%{?fedora} >= 9  || 0%{?rhel} >= 6
     sqlite3 \
 %endif
 %if %{with_enchant}
@@ -1069,7 +1072,7 @@ cat files.sysv* files.posix > files.process
 # isn't useful at this time since rpm itself requires sqlite.
 #cat files.sqlite >> files.pdo
 cat files.pdo_sqlite >> files.pdo
-%if 0%{?fedora} >= 9
+%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
 cat files.sqlite3 >> files.pdo
 %endif
 
@@ -1224,6 +1227,10 @@ fi
 %endif
 
 %changelog
+* Sat Nov 27 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201011270530
+- new snapshot (5.3.4RC2-dev)
+- fix conditional for EL-6
+
 * Thu Nov 11 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201011111730
 - new snapshot (5.3.4-dev)
 - switch to oracle-instantclient-11.2.0.2.0
