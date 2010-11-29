@@ -29,9 +29,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: perl(Module::Install)
 # For tests 
 BuildRequires: perl(Time::HiRes) perl(XML::Simple) perl(UNIVERSAL::require) perl(Test::More)
-%if %{?fedora}%{?rhel} > 4
+# for fedora repo : %if 0%{?fedora}>= 12 || 0%{?rhel} >= 5
 BuildRequires: perl(XML::TreePP)
-%endif
+# %endif
 %if 0%{?fedora} >= 11
 BuildRequires: perl(Test::Compile)
 %endif
@@ -186,8 +186,11 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{__install} -m 755 -Dp %{SOURCE2}   %{buildroot}%{_initrddir}/%{name}
 
 
+# Test fails for now when Test::Compile not available
+%if 0%{?fedora} >= 11
 %check
 make test
+%endif
 
 
 %clean
