@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.3.8
+Version: 3.3.8.1
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -12,6 +12,7 @@ Source2: phpMyAdmin.htaccess
 Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/smooth_yellow-3.3.zip
 Source11: http://downloads.sourceforge.net/sourceforge/phpmyadmin/arctic_ocean-3.3.zip
 Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.0b.zip
+Source13: http://freefr.dl.sourceforge.net/project/phpmyadmin/themes/pmahomme/1.0/pmahomme-1.0.zip
 
 
 # See https://sourceforge.net/tracker/?func=detail&atid=377410&aid=2965613&group_id=23067
@@ -63,7 +64,7 @@ grep '^define' libraries/vendor_config.php
 # to avoid rpmlint warnings
 find . -name \*.php -exec chmod -x {} \;
 
-for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12}
+for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13}
 do
     %{__unzip} -q $archive -d themes
 done
@@ -121,6 +122,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Mon Oct 25 2010 Remi Collet <rpms@famillecollet.com> 3.3.8.1-1
+- Upstream released 3.3.8.1
+- add pmamhomme theme
+
 * Mon Oct 25 2010 Remi Collet <rpms@famillecollet.com> 3.3.8-1
 - Upstream released 3.3.8
 
