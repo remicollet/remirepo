@@ -1,18 +1,19 @@
 #global gitver a7532c0
+%global prever _beta1
 
 Name:        fusioninventory-agent
 Summary:     FusionInventory agent
 Summary(fr): Agent FusionInventory
 
-Version:   2.1.6
+Version:   2.1.7
 
 %if 0%{?gitver:1}
 Release:   2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1-48-ga7532c0.tar.gz
 %else
-Release:   1%{?dist}.1
-Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}.tar.gz
+Release:   0.1.beta1%{?dist}
+Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
 Source1:   %{name}.cron
@@ -30,6 +31,9 @@ BuildRequires: perl(Module::Install)
 BuildRequires: perl(Time::HiRes) perl(XML::Simple) perl(UNIVERSAL::require) perl(Test::More)
 %if %{?fedora}%{?rhel} > 4
 BuildRequires: perl(XML::TreePP)
+%endif
+%if 0%{?fedora} >= 11
+BuildRequires: perl(Test::Compile)
 %endif
 
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -97,7 +101,7 @@ Vous pouvez ajouter les paquets additionnels pour les tâches optionnelles :
 %if 0%{?gitver:1}
 %setup -q -n fusinv-fusioninventory-agent-%{gitver}
 %else
-%setup -q -n FusionInventory-Agent-%{version}
+%setup -q -n FusionInventory-Agent-%{version}%{?prever}
 %endif
 
 # This work only on older version, and is ignored on recent
@@ -110,7 +114,7 @@ EOF
 %if 0%{?gitver:1}
 %global __perl_requires %{_builddir}/fusinv-fusioninventory-agent-%{gitver}/%{name}-req
 %else
-%global __perl_requires %{_builddir}/FusionInventory-Agent-%{version}/%{name}-req
+%global __perl_requires %{_builddir}/FusionInventory-Agent-%{version}%{?prever}/%{name}-req
 %endif
 chmod +x %{__perl_requires}
 
@@ -220,15 +224,20 @@ exit 0
 %{_initrddir}/%{name}
 %{perl_vendorlib}/FusionInventory
 %{perl_vendorlib}/auto
-%{_bindir}/%{name}
+%{_bindir}/fusioninventory-agent
+%{_bindir}/fusioninventory-injector
 %exclude %{_bindir}/%{name}-config
-%{_mandir}/man1/%{name}*
+%{_mandir}/man1/fusioninventory-agent*
+%{_mandir}/man1/fusioninventory-injector*
 %{_mandir}/man3/Fusion*
 %dir %{_localstatedir}/log/%{name}
 %dir %{_localstatedir}/lib/%{name}
 
 
 %changelog
+* Sun Nov 28 2010 Remi Collet <Fedora@famillecollet.com> 2.1.7-0.1.beta1
+- update to 2.1.7 beta1
+
 * Sat Nov 13 2010 Remi Collet <Fedora@famillecollet.com> 2.1.6-1.1
 - fix perl filter on EL-6
 
