@@ -23,7 +23,6 @@ BuildArch: noarch
 
 BuildRequires: unzip
 Requires: webserver 
-Requires: php >= 5.2.0
 Requires: php-mysql >= 5.2.0
 Requires: php-mbstring >= 5.2.0
 Requires: php-gd >= 5.2.0
@@ -122,6 +121,8 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+- don't requires php (to allow nginx or lighttpd instead of apache)
+
 * Mon Oct 25 2010 Remi Collet <rpms@famillecollet.com> 3.3.8.1-1
 - Upstream released 3.3.8.1
 - add pmamhomme theme
