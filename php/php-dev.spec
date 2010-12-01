@@ -21,7 +21,11 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global snapdate 201011270530
+# Use the arch-specific mysql_config binary to avoid mismatch with the
+# arch detection heuristic used by bindir/mysql_config.
+%define mysql_config %{_libdir}/mysql/mysql_config
+
+%global snapdate 201012011530
 %global phpversion 5.3.4RC2-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -119,6 +123,7 @@ Requires: php-cli = %{version}-%{release}
 Requires(pre): httpd
 
 
+# Don't provides extensions, which are not shared library, as .so
 %{?filter_setup:
 %filter_provides_in %{_libdir}/php/modules/.*\.so$
 %filter_provides_in %{_libdir}/php/modules-zts/.*\.so$
@@ -578,10 +583,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/pdo_mysql/pdo_mysql.c
 sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/mysqlnd/mysqlnd.c
 
-# Make rpmlint happy
-find . -name \*.c -exec chmod -x {} \;
-find . -name \*.h -exec chmod -x {} \;
-
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
 cp TSRM/LICENSE TSRM_LICENSE
@@ -599,7 +600,6 @@ mkdir build-cgi build-apache build-embedded build-zts \
 rm -f ext/standard/tests/file/bug21131.phpt
 # php_egg_logo_guid() removed by patch41
 rm -f tests/basic/php_egg_logo_guid.phpt
-
 
 # Tests that fail.
 rm -f ext/standard/tests/file/bug22414.phpt \
@@ -668,6 +668,9 @@ if test "$ver" != "%{jsonver}"; then
    exit 1
 fi
 
+# Fix some bogus permissions
+find . -name \*.[ch] -exec chmod 644 {} \;
+chmod 644 README.*
 
 : Build for oci8=%{with_oci8} ibase=%{with_ibase}
 
@@ -1013,7 +1016,6 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
 %endif
 
-
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
 
@@ -1171,7 +1173,7 @@ fi
 %dir %{_sysconfdir}/php-fpm.d
 # log owned by apache for log
 %attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
-%dir %{_localstatedir}/run/php-fpm
+%ghost %dir %{_localstatedir}/run/php-fpm
 %{_mandir}/man8/php-fpm.8*
 %endif
 
@@ -1227,6 +1229,10 @@ fi
 %endif
 
 %changelog
+* Wed Dec  1 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201012011530
+- new snapshot (5.3.4RC2-dev)
+- sync with latest rawhide fixes (ghost, mysql_config, ...)
+
 * Sat Nov 27 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-0.1.201011270530
 - new snapshot (5.3.4RC2-dev)
 - fix conditional for EL-6

@@ -27,6 +27,8 @@ lockfile=${LOCKFILE-/var/lock/subsys/php-fpm}
 
 start () {
 	echo -n $"Starting $prog: "
+	dir=$(dirname ${pidfile})
+	[ -d $dir ] || mkdir $dir
 	daemon --pidfile ${pidfile} php-fpm
 	RETVAL=$?
 	echo
