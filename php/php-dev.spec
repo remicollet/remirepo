@@ -1106,7 +1106,7 @@ echo -e "\nWARNING : This %{name}-* RPM are not official Fedora/Redhat build and
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Redhat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 11
+%if %{?fedora}%{!?fedora:99} <= 12
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif

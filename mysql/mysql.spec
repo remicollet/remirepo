@@ -398,7 +398,7 @@ echo -e "\nWARNING : This MySQL RPM is not an official Fedora/Redhat build and i
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 11
+%if %{?fedora}%{!?fedora:99} <= 12
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
