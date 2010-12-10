@@ -6,12 +6,11 @@
 %define sqlite_version 3.6.22
 %define libnotify_version 0.4
 %define build_langpacks 1
+%define thunderbird_version 3.1.7
 %define moz_objdir objdir-tb
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
-
-%define thunderbird_version 3.1.6
 %define with_lightning_extension 1
-%define lightning_release 0.33.b3pre
+%define lightning_release 0.38.b3pre
 %define lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
 %define gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 
@@ -28,7 +27,6 @@
 
 %define version_internal  3.1
 %define mozappdir         %{_libdir}/%{name}-%{version_internal}
-#define relcan  rc2
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
@@ -38,16 +36,14 @@ URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 %if %{official_branding}
-#%define tarball thunderbird-%{version}.source.tar.bz2
-%define tarball thunderbird-%{version}%{?relcan}.source.tar.bz2
+%define tarball thunderbird-%{thunderbird_version}.source.tar.bz2
 %else
-%define tarball thunderbird-3.1%{?relcan}.source.tar.bz2
+%define tarball thunderbird-3.1rc1.source.tar.bz2
 %endif
 Source0:        %{tarball}
-#NoSource:       0
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{version}%{?relcan}-20101028.tar.bz2
+Source1:        thunderbird-langpacks-%{thunderbird_version}-20101210.tar.bz2
 %endif
 Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/lightning.xpi
 Source5:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/gdata-provider.xpi
@@ -180,11 +176,11 @@ calendaring tasks.
 
 
 %prep
-echo CIBLE = %{name}-%{version}-%{release}
+echo CIBLE = %{name}-%{thunderbird_version}-%{release}
 [ -f %{SOURCE1} ] || exit 1
 %setup -q -c
 
-sed -e "s/^Name=.*/Name=Thunderbird %{version} %{?relcan}/" \
+sed -e "s/^Name=.*/Name=Thunderbird %{thunderbird_version} %{?relcan}/" \
     -e "s/thunderbird/%{name}/" \
     %{SOURCE20} | tee %{name}.desktop
 
@@ -335,11 +331,13 @@ cd -
 %{__cp} other-licenses/branding/%{name}/mailicon256.png \
         $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/256x256/apps/thunderbird.png
 
+
 desktop-file-install --vendor mozilla \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications \
   --add-category Network \
   --add-category Email \
   ../%{name}.desktop
+
 
 # set up the thunderbird start script
 rm -f $RPM_BUILD_ROOT/%{_bindir}/thunderbird
@@ -421,7 +419,7 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{enable_mozilla_crashreporter}
 mkdir -p $RPM_BUILD_ROOT%{_exec_prefix}/lib/debug%{mozappdir}
-cp %{moz_objdir}/mozilla/dist/thunderbird-%{version}.en-US.linux-*.crashreporter-symbols.zip $RPM_BUILD_ROOT%{_exec_prefix}/lib/debug%{mozappdir}
+cp %{moz_objdir}/mozilla/dist/thunderbird-%{thunderbird_version}.en-US.linux-*.crashreporter-symbols.zip $RPM_BUILD_ROOT%{_exec_prefix}/lib/debug%{mozappdir}
 %endif
 
 %if %{with_lightning_extension}
@@ -572,6 +570,22 @@ fi
 #===============================================================================
 
 %changelog
+* Fri Dec 10 2010 Remi Collet <rpms@famillecollet.com> 3.1.7-2
+- Thunderbird 3.1.7 
+- sync with rawhide, build for old fedora, with lightning langpack
+
+* Thu Dec  9 2010 Jan Horak <jhorak@redhat.com> - 3.1.7-2
+- Fixed useragent
+
+* Thu Dec  9 2010 Jan Horak <jhorak@redhat.com> - 3.1.7-1
+- Update to 3.1.7
+
+* Sat Nov 27 2010 Remi Collet <fedora@famillecollet.com> - 3.1.6-8
+- fix cairo + nspr required version
+- lightning: fix thunderbird version required
+- lightning: fix release (b3pre)
+- lightning: clean install
+
 * Sat Nov 27 2010 Remi Collet <rpms@famillecollet.com> 3.1.6-2
 - sync with rawhide for lightning
 
