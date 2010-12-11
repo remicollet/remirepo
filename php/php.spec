@@ -124,12 +124,14 @@ Requires: php-cli = %{version}-%{release}
 Requires(pre): httpd
 
 
+%if 0%{?fedora}%{?rhel} > 4
 # Don't provides extensions, which are not shared library, as .so
 %{?filter_setup:
 %filter_provides_in %{_libdir}/php/modules/.*\.so$
 %filter_provides_in %{_libdir}/php/modules-zts/.*\.so$
 %filter_setup
 }
+%endif
 
 
 %description
