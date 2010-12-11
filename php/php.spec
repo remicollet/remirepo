@@ -1231,7 +1231,8 @@ fi
 
 %changelog
 * Sat Dec 11 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-1
-- update to 5.3.3
+- update to 5.3.4
+  http://www.php.net/ChangeLog-5.php#5.3.4
 - move phpize to php-cli (see #657812)
 - create php-sqlite subpackage (for old sqlite2 ext)
 
