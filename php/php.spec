@@ -566,7 +566,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
-%if %{?fedora}%{?rhel:99} >= 11
+%if %{?fedora}%{?rhel:99} >= 13
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .mysqlcheck
