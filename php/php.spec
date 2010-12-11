@@ -428,8 +428,7 @@ Requires: php-common = %{version}-%{release}
 # Required to build the bundled GD library
 BuildRequires: libjpeg-devel, libpng-devel, freetype-devel
 %if 0%{?rhel}%{?fedora} > 4
-BuildRequires: t1lib-devel >= 5.0.0
-BuildRequires: libXpm-devel
+BuildRequires: libXpm-devel, t1lib-devel
 %else
 BuildRequires: xorg-x11-devel
 %endif
@@ -1154,7 +1153,7 @@ fi
 %{_bindir}/php-cgi
 %{_bindir}/phar.phar
 %{_bindir}/phar
-# provides this here for pecl command
+# provides phpize here (not in -devel) for pecl command
 %{_bindir}/phpize
 %{_mandir}/man1/php.1*
 %{_mandir}/man1/phpize.1*
