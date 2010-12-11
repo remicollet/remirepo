@@ -8,24 +8,29 @@
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
+%global oci8ver     1.4.5
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
 %ifarch ppc ppc64
 %global oraclever 10.2.0.2
 %else
-%global oraclever 11.1.0.7
+%global oraclever 11.2
 %endif
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-%global phpversion 5.3.3
+# Use the arch-specific mysql_config binary to avoid mismatch with the
+# arch detection heuristic used by bindir/mysql_config.
+%define mysql_config %{_libdir}/mysql/mysql_config
+
+%global phpversion 5.3.4
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
 %global with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
-%if %{?rhel}%{?fedora} > 4
+%if 0%{?rhel}%{?fedora} > 4
 %global with_enchant 1
 %else
 %global with_enchant 0
@@ -44,8 +49,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.3.3
-Release: 1%{?dist}.2
+Version: 5.3.4
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -64,14 +69,14 @@ Source6: php-fpm.init
 Source7: php-fpm.logrotate
 
 # Build fixes
-Patch1: php-5.3.3-gnusrc.patch
+Patch1: php-5.3.4-gnusrc.patch
 Patch2: php-5.3.0-install.patch
 Patch3: php-5.2.4-norpath.patch
 Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.3.3-aconf26x.patch
+Patch8: php-5.3.4-aconf26x.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -81,9 +86,13 @@ Patch21: php-5.3.3-macropen.patch
 Patch40: php-5.0.4-dlopen.patch
 Patch41: php-5.3.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
+Patch43: php-5.3.4-mysql.patch
+# See http://bugs.php.net/53436
+Patch44: php-5.3.4-phpize.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
+Patch62: php-5.3.3-tests.patch
 
 # RC Patch
 Patch91: php-5.3.2-oci8conf.patch
@@ -93,13 +102,15 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: bzip2-devel, curl-devel >= 7.9, db4-devel, gmp-devel
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
-BuildRequires: libstdc++-devel, openssl-devel, sqlite-devel >= 3.0.0
-%if 0%{?fedora} >= 9
+BuildRequires: libstdc++-devel, openssl-devel
+%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
+# For Sqlite3 extension
 BuildRequires: sqlite-devel >= 3.5.9
+%else
+BuildRequires: sqlite-devel >= 3.0.0
 %endif
-BuildRequires: sqlite2-devel >= 2.8.0
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
-%if 0%{?fedora} >= 10
+%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildRequires: pcre-devel >= 7.8
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
@@ -112,9 +123,18 @@ Requires: php-cli = %{version}-%{release}
 # To ensure correct /var/lib/php/session ownership:
 Requires(pre): httpd
 
+
+# Don't provides extensions, which are not shared library, as .so
+%{?filter_setup:
+%filter_provides_in %{_libdir}/php/modules/.*\.so$
+%filter_provides_in %{_libdir}/php/modules-zts/.*\.so$
+%filter_setup
+}
+
+
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
-easy for developers to write dynamically generated webpages. PHP also
+easy for developers to write dynamically generated web pages. PHP also
 offers built-in database integration for several commercial and
 non-commercial database management systems, so writing a
 database-enabled webpage with PHP is fairly simple. The most common
@@ -226,15 +246,29 @@ need to install this package in addition to the php package.
 Summary: A database access abstraction module for PHP applications
 Group: Development/Languages
 Requires: php-common = %{version}-%{release}
-Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo, php-sqlite2
+Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo
 Provides: php-pdo-abi = %{pdover}
-Provides: php-sqlite, php-sqlite2, php-sqlite3, php-pdo_sqlite
+Provides: php-sqlite3, php-pdo_sqlite
 
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
 a database access abstraction layer to PHP.  This module provides
 a common interface for accessing MySQL, PostgreSQL or other 
 databases.
+
+%package sqlite
+Summary: Extension for the SQLite V2 Embeddable SQL Database Engine
+Group: Development/Languages
+BuildRequires: sqlite2-devel >= 2.8.0
+Requires: php-common = %{version}-%{release}
+Obsoletes: php-sqlite2
+Provides: php-sqlite2
+
+%description sqlite
+This is an extension for the SQLite Embeddable SQL Database Engine. 
+SQLite is a C library that implements an embeddable SQL database engine. 
+Programs that link with the SQLite library can have SQL database access 
+without running a separate RDBMS process. 
 
 %package mysql
 Summary: A module for PHP applications that use MySQL databases
@@ -332,9 +366,10 @@ License.
 %package oci8
 Summary: 	A module for PHP applications that use OCI8 databases
 Group: 		Development/Languages
-BuildRequires: 	oracle-instantclient-devel = %{oraclever}
+BuildRequires: 	oracle-instantclient-devel >= %{oraclever}
 Requires: 	php-common = %{version}-%{release}, php-pdo
-Provides: 	php_database, php-pdo_oci
+Provides: 	php_database, php-pdo_oci = %{oci8ver}
+Provides:       php-pecl-oci8 = %{oci8ver}, php-pecl(oci8) = %{oci8ver}
 # Should requires libclntsh.so.11.1, but it's not provided by Oracle RPM.
 AutoReq: 	0
 
@@ -535,9 +570,12 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if %{?fedora}%{?rhel:99} >= 11
 %patch42 -p1 -b .systzdata
 %endif
+%patch43 -p1 -b .mysqlcheck
+%patch44 -p0 -b .headers
 
 #%patch60 -p1 -b .tests-dashn
 %patch61 -p1 -b .tests-wddx
+%patch62 -p0 -b .tests
 
 %patch91 -p0 -b .remi-oci8
 
@@ -545,7 +583,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 # Awful hack for mysqlnd driver default mysql socket patch
 sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/pdo_mysql/pdo_mysql.c
 sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/mysqlnd/mysqlnd.c
-
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -564,7 +601,6 @@ mkdir build-cgi build-apache build-embedded build-zts \
 rm -f ext/standard/tests/file/bug21131.phpt
 # php_egg_logo_guid() removed by patch41
 rm -f tests/basic/php_egg_logo_guid.phpt
-
 
 # Tests that fail.
 rm -f ext/standard/tests/file/bug22414.phpt \
@@ -619,6 +655,12 @@ if test "$ver" != "%{zipver}"; then
    : Update the zipver macro and rebuild.
    exit 1
 fi
+ver=$(sed -n '/#define PHP_OCI8_VERSION /{s/.* "//;s/".*$//;p}' ext/oci8/php_oci8.h)
+if test "$ver" != "%{oci8ver}"; then
+   : Error: Upstream OCI8 version is now ${ver}, expecting %{oci8ver}.
+   : Update the oci8ver macro and rebuild.
+   exit 1
+fi
 ver=$(sed -n '/#define PHP_JSON_VERSION /{s/.* "//;s/".*$//;p}' ext/json/php_json.h)
 if test "$ver" != "%{jsonver}"; then
    : Error: Upstream JSON version is now ${ver}, expecting %{jsonver}.
@@ -626,18 +668,21 @@ if test "$ver" != "%{jsonver}"; then
    exit 1
 fi
 
+# Fix some bogus permissions
+find . -name \*.[ch] -exec chmod 644 {} \;
+chmod 644 README.*
 
 : Build for oci8=%{with_oci8} ibase=%{with_ibase}
 
 %build
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 # aclocal workaround - to be improved
 cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4
 %endif
 
 # Force use of system libtool:
 libtoolize --force --copy
-%if 0%{?fedora} >= 11
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >build/libtool.m4
 %else
 cat `aclocal --print-ac-dir`/libtool.m4 > build/libtool.m4
@@ -689,7 +734,7 @@ ln -sf ../configure
 	--with-iconv \
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
-%if 0%{?fedora} >= 10
+%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
         --with-pcre-regex=%{_prefix} \
 %endif
 	--with-zlib \
@@ -760,7 +805,7 @@ build --enable-force-cgi-redirect \
       --with-pdo-pgsql=shared,%{_prefix} \
       --with-pdo-sqlite=shared,%{_prefix} \
       --with-pdo-dblib=shared,%{_prefix} \
-%if 0%{?fedora} >= 9
+%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
       --with-sqlite3=shared,%{_prefix} \
 %else
       --without-sqlite3 \
@@ -861,7 +906,7 @@ build --with-apxs2=%{_sbindir}/apxs \
       --with-pdo-pgsql=shared,%{_prefix} \
       --with-pdo-sqlite=shared,%{_prefix} \
       --with-pdo-dblib=shared,%{_prefix} \
-%if 0%{?fedora} >= 9
+%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
       --with-sqlite3=shared,%{_prefix} \
 %else
       --without-sqlite3 \
@@ -971,7 +1016,6 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
 %endif
 
-
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
 
@@ -980,7 +1024,7 @@ for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} %{?_with_ibase:interbase} %{?_with_ibase:pdo_firebird} sqlite \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json zip \
-%if 0%{?fedora} >= 9
+%if 0%{?fedora} >= 9  || 0%{?rhel} >= 6
     sqlite3 \
 %endif
 %if %{with_enchant}
@@ -1028,9 +1072,9 @@ cat files.sysv* files.posix > files.process
 
 # Package sqlite and pdo_sqlite with pdo; isolating the sqlite dependency
 # isn't useful at this time since rpm itself requires sqlite.
-cat files.sqlite >> files.pdo
+#cat files.sqlite >> files.pdo
 cat files.pdo_sqlite >> files.pdo
-%if 0%{?fedora} >= 9
+%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
 cat files.sqlite3 >> files.pdo
 %endif
 
@@ -1110,7 +1154,10 @@ fi
 %{_bindir}/php-cgi
 %{_bindir}/phar.phar
 %{_bindir}/phar
+# provides this here for pecl command
+%{_bindir}/phpize
 %{_mandir}/man1/php.1*
+%{_mandir}/man1/phpize.1*
 %doc sapi/cgi/README* sapi/cli/README
 
 %files zts
@@ -1129,18 +1176,16 @@ fi
 %dir %{_sysconfdir}/php-fpm.d
 # log owned by apache for log
 %attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
-%dir %{_localstatedir}/run/php-fpm
-%{_mandir}/man1/php-fpm.1*
+%ghost %dir %{_localstatedir}/run/php-fpm
+%{_mandir}/man8/php-fpm.8*
 %endif
 
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
-%{_bindir}/phpize
 %{_includedir}/php
 %{_libdir}/php/build
 %{_mandir}/man1/php-config.1*
-%{_mandir}/man1/phpize.1*
 %config %{_sysconfdir}/rpm/macros.php
 
 %files embedded
@@ -1164,6 +1209,7 @@ fi
 %files bcmath -f files.bcmath
 %files dba -f files.dba
 %files pdo -f files.pdo
+%files sqlite -f files.sqlite
 %files mcrypt -f files.mcrypt
 %files tidy -f files.tidy
 %files mssql -f files.mssql
@@ -1184,6 +1230,11 @@ fi
 %endif
 
 %changelog
+* Sat Dec 11 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-1
+- update to 5.3.3
+- move phpize to php-cli (see #657812)
+- create php-sqlite subpackage (for old sqlite2 ext)
+
 * Wed Sep 29 2010 Remi Collet <rpms@famillecollet.com> 5.3.3-1.2
 - use SIGUSR2 for service reload
 - fix slowlog comment + set default value

@@ -1,0 +1,34 @@
+--- scripts/phpize.in.orig	2010-12-01 17:00:27.110013483 +0100
++++ scripts/phpize.in	2010-12-01 17:02:12.555757906 +0100
+@@ -161,6 +161,15 @@
+   $PHP_AUTOHEADER || exit 1
+ }
+ 
++phpize_check_headers()
++{
++  if test ! -f $includedir/main/php.h; then
++    echo "Can't find PHP headers in $includedir"
++    echo "The php-devel package is required for use of this command."
++    exit 1
++  fi
++}
++
+ # Main script
+ 
+ case "$1" in 
+@@ -179,12 +188,15 @@
+ 
+   # Version
+   --version|-v)
++    phpize_check_headers
+     phpize_print_api_numbers
+     exit 0
+   ;;
+ 
+   # Default
+   *)
++     phpize_check_headers
++
+      phpize_check_configm4 0
+ 
+      phpize_check_build_files

@@ -261,7 +261,6 @@ Group: Development/Languages
 BuildRequires: sqlite2-devel >= 2.8.0
 Requires: php-common = %{version}-%{release}
 Obsoletes: php-sqlite2
-Provides: php-pdo-abi = %{pdover}
 Provides: php-sqlite2
 
 %description sqlite
@@ -369,7 +368,7 @@ Group: 		Development/Languages
 BuildRequires: 	oracle-instantclient-devel >= %{oraclever}
 Requires: 	php-common = %{version}-%{release}, php-pdo
 Provides: 	php_database, php-pdo_oci = %{oci8ver}
-Provides:       php-pecl-oci8 = %{oci8ver}, php-pecl(json) = %{oci8ver}
+Provides:       php-pecl-oci8 = %{oci8ver}, php-pecl(oci8) = %{oci8ver}
 # Should requires libclntsh.so.11.1, but it's not provided by Oracle RPM.
 AutoReq: 	0
 
@@ -660,7 +659,6 @@ if test "$ver" != "%{oci8ver}"; then
    : Update the oci8ver macro and rebuild.
    exit 1
 fi
-
 ver=$(sed -n '/#define PHP_JSON_VERSION /{s/.* "//;s/".*$//;p}' ext/json/php_json.h)
 if test "$ver" != "%{jsonver}"; then
    : Error: Upstream JSON version is now ${ver}, expecting %{jsonver}.
