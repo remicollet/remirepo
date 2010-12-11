@@ -7,7 +7,7 @@
 %ifarch ppc ppc64
 %global oraclever 10.2.0.2
 %else
-%global oraclever 11.1.0.7
+%global oraclever 11.2
 %endif
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -17,7 +17,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.2.14
+Version: 5.2.15
 Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
@@ -51,7 +51,7 @@ Patch60: php-5.2.7-tests-dashn.patch
 Patch61: php-5.0.4-tests-wddx.patch
 
 # RC Patch
-Patch91: php-5.2.7-oci8conf.patch
+Patch91: php-5.2.15-oci8conf.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -272,7 +272,7 @@ License.
 %package oci8
 Summary: 	A module for PHP applications that use OCI8 databases
 Group: 		Development/Languages
-BuildRequires: 	oracle-instantclient-devel = %{oraclever}
+BuildRequires: 	oracle-instantclient-devel >= %{oraclever}
 Requires: 	php-common = %{version}-%{release}, php-pdo
 Provides: 	php_database
 # Soulhd requires libclntsh.so.11.1, but it's not provided by Oracle RPM.
@@ -900,6 +900,10 @@ echo -e "You should consider upgrading to a supported release.\n"
 %files interbase -f files.interbase
 
 %changelog
+* Sat Dec 11 2010 Remi Collet <rpms@famillecollet.com> 5.2.15-1
+- update to 5.2.15
+- build against Oracle InstantClient 11.2.0.2.0-1
+
 * Sun Jul 25 2010 Remi Collet <rpms@famillecollet.com> 5.2.14-1
 - update to 5.2.14
 
