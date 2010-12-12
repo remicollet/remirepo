@@ -1,0 +1,14 @@
+--- php/php-src/branches/PHP_5_3/ext/intl/formatter/formatter_attr.c	2010/12/10 00:37:31	306153
++++ php/php-src/branches/PHP_5_3/ext/intl/formatter/formatter_attr.c	2010/12/10 00:47:51	306154
+@@ -311,6 +311,11 @@
+ 
+ 		RETURN_FALSE;
+ 	}
++	
++	if (symbol >= UNUM_FORMAT_SYMBOL_COUNT || symbol < 0) {
++		intl_error_set( NULL, U_ILLEGAL_ARGUMENT_ERROR,	"numfmt_set_symbol: invalid symbol value", 0 TSRMLS_CC );
++		RETURN_FALSE;
++	}
+ 
+ 	/* Fetch the object. */
+ 	FORMATTER_METHOD_FETCH_OBJECT;
