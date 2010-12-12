@@ -50,7 +50,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.3.4
-Release: 1%{?dist}.1
+Release: 2%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -1236,7 +1236,7 @@ fi
 %endif
 
 %changelog
-* Sun Dec 12 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-1.1
+* Sun Dec 12 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-2
 - security patch from upstream for #660517
 
 * Sat Dec 11 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-1
