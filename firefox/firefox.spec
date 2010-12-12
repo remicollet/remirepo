@@ -29,7 +29,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        3.6.12
+Version:        3.6.13
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20101028.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20101212.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -60,7 +60,6 @@ Patch1:         mozilla-build.patch
 Patch3:         mozilla-jemalloc.patch
 Patch4:         mozilla-about-firefox-version.patch
 Patch7:         xulrunner-1.9.2.1-build.patch
-Patch8:         mozilla-plugin.patch
 Patch9:         mozilla-build-sbrk.patch
 Patch10:        mozilla-build-s390.patch
 Patch11:        mozilla-gdk-pixbuf.patch
@@ -73,6 +72,7 @@ Patch31:        firefox-default.patch
 # Fedora specific patches
 Patch20:        mozilla-192-pkgconfig.patch
 Patch21:        mozilla-libjpeg-turbo.patch
+Patch22:        mozilla-crashreporter-static.patch
 
 
 # Remi specific patches
@@ -150,6 +150,7 @@ BuildRequires:  libXrender-devel
 BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  autoconf213
+BuildRequires:  libcurl-devel
 
 %if %{fedora} >= 7
 Requires:       system-bookmarks
@@ -191,7 +192,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch3  -p1 -b .jemalloc
 %patch4  -p1 -b .about-firefox-version
 %patch7  -p2 -b .del
-%patch8  -p1 -b .plugin
 %patch9  -p2 -b .sbrk
 %ifarch s390
 %patch10 -p1 -b .s390
@@ -204,6 +204,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %if %{fedora} >= 14
 %patch21 -p2 -b .jpeg-turbo
 %endif
+%patch22 -p1 -b .static
 
 %patch30 -p1 -b .checkupdates
 %patch31 -p2 -b .default
@@ -554,6 +555,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Dec 12 2010 Remi Collet <rpms@famillecollet.com> - 3.6.13-1
+- update to Firefox 3.6.13
+
+* Thu Dec  9 2010 Jan Horak <jhorak@redhat.com> - 3.6.13-1
+- Update to 3.6.13
+
 * Thu Oct 28 2010 Remi Collet <rpms@famillecollet.com> - 3.6.12-1
 - update to Firefox 3.6.12
 
