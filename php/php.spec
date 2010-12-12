@@ -50,7 +50,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.3.4
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -86,9 +86,13 @@ Patch21: php-5.3.3-macropen.patch
 Patch40: php-5.0.4-dlopen.patch
 Patch41: php-5.3.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
-Patch43: php-5.3.4-mysql.patch
 # See http://bugs.php.net/53436
-Patch44: php-5.3.4-phpize.patch
+Patch43: php-5.3.4-phpize.patch
+Patch44: php-5.3.4-mysql.patch
+
+# Security patch from upstream SVN
+# http://svn.php.net/viewvc?view=revision&revision=306154
+Patch50: php-5.3.4-cve.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
@@ -571,10 +575,11 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if %{?fedora}%{?rhel:99} >= 13
 %patch42 -p1 -b .systzdata
 %endif
-%patch43 -p1 -b .mysqlcheck
-%patch44 -p0 -b .headers
+%patch43 -p0 -b .headers
+%patch44 -p1 -b .mysqlcheck
 
-#%patch60 -p1 -b .tests-dashn
+%patch50 -p4 -b .cve
+
 %patch61 -p1 -b .tests-wddx
 %patch62 -p0 -b .tests
 
@@ -1231,6 +1236,9 @@ fi
 %endif
 
 %changelog
+* Sun Dec 12 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-1.1
+- security patch from upstream for #660517
+
 * Sat Dec 11 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-1
 - update to 5.3.4
   http://www.php.net/ChangeLog-5.php#5.3.4
