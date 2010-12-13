@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-OcsDeploy
-Version:        1.0.8
-Release:        2%{?dist}
+Version:        1.1.0
+Release:        1%{?dist}
 Summary:        OCS Inventory NG Software deployment support for FusionInventory Agent
 Summary(fr):    Gestion du déploiement logiciel OCS Inventory NG avec FusionInventory
 License:        GPLv2+
@@ -16,14 +16,15 @@ BuildRequires:  perl(Archive::Extract)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Copy::Recursive)
 # For tests
-BuildRequires:  perl(FusionInventory::Agent) >= 2.0
+BuildRequires:  perl(FusionInventory::Agent) >= 2.1.5
 BuildRequires:  perl(Time::HiRes) perl(XML::Simple) perl(Test::More)
 
 Requires:       perl(Archive::Extract)
-Requires:       perl(File::Copy::Recursive)
-Requires:       perl(FusionInventory::Agent) >= 2.0
-Requires:       perl(XML::Simple)
+Requires:       perl(FusionInventory::Agent) >= 2.1.5
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+%if 0%{?fedora} >= 6 || 0%{?rhel} >= 5
+Requires:       perl(POE::Component::Client::HTTP)
+%endif
 
 
 %description
@@ -78,15 +79,25 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS Changes LICENSE README THANKS
 %{perl_vendorlib}/FusionInventory/Agent/Task/OcsDeploy.pm
+%if 0%{?rhel} == 4
+# this optional module requires perl(POE::Component::Client::HTTP)
+%exclude %{perl_vendorlib}/FusionInventory/Agent/Task/OcsDeploy/P2P.pm
+%else
+%{perl_vendorlib}/FusionInventory/Agent/Task/OcsDeploy/P2P.pm
+%endif
 %{_mandir}/man3/Fusion*
 
 
 %changelog
+* Mon Dec 13 2010 Remi Collet <Fedora@famillecollet.com> - 1.1.0-1
+- update to 1.1.0
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-OcsDeploy-1.1.0/Changes
+
 * Fri Sep 10 2010 Remi Collet <Fedora@famillecollet.com> - 1.0.8-2
 - fix %%check
 
 * Thu Sep 09 2010 Remi Collet <Fedora@famillecollet.com> - 1.0.8-1
-- update to 1.0.7
+- update to 1.0.8
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-OcsDeploy-1.0.8/Changes
 
 * Tue Sep 07 2010 Remi Collet <Fedora@famillecollet.com> - 1.0.7-1
