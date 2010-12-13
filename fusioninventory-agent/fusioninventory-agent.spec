@@ -1,5 +1,5 @@
 #global gitver a7532c0
-%global prever _beta1
+#global prever _beta1
 
 Name:        fusioninventory-agent
 Summary:     FusionInventory agent
@@ -12,7 +12,7 @@ Release:   2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1-48-ga7532c0.tar.gz
 %else
-Release:   0.1.beta1%{?dist}
+Release:   1
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
@@ -186,11 +186,8 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{__install} -m 755 -Dp %{SOURCE2}   %{buildroot}%{_initrddir}/%{name}
 
 
-# Test fails for now when Test::Compile not available
-%if 0%{?fedora} >= 11
 %check
 make test
-%endif
 
 
 %clean
@@ -238,6 +235,10 @@ exit 0
 
 
 %changelog
+* Mon Dec 13 2010 Remi Collet <Fedora@famillecollet.com> 2.1.7-1
+- update to 2.1.7
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.7/Changes
+
 * Sun Nov 28 2010 Remi Collet <Fedora@famillecollet.com> 2.1.7-0.1.beta1
 - update to 2.1.7 beta1
 
