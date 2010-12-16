@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.1.53
+Version: 5.1.54
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -439,7 +439,7 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc README COPYING EXCEPTIONS-CLIENT
+%doc README COPYING
 %doc README.mysql-docs
 
 %{_bindir}/msql2mysql
@@ -473,7 +473,7 @@ fi
 
 %files libs
 %defattr(-,root,root)
-%doc COPYING EXCEPTIONS-CLIENT
+%doc COPYING
 # although the default my.cnf contains only server settings, we put it in the
 # libs package because it can be used for client settings too.
 %config(noreplace) /etc/my.cnf
@@ -596,7 +596,7 @@ fi
 
 %files embedded
 %defattr(-,root,root)
-%doc COPYING EXCEPTIONS-CLIENT
+%doc COPYING
 %{_libdir}/mysql/libmysqld.so.*
 
 %files embedded-devel
@@ -619,6 +619,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Thu Dec 16 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.54-1
+- Update to MySQL 5.1.54 Community Server GA
+- remove EXCEPTIONS-CLIENT (no more provided upstream)
+
 * Fri Nov 19 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.53-1
 - Update to MySQL 5.1.53 Community Server GA
 - add startsos to init script (--skip-grant-tables --skip-networking)
