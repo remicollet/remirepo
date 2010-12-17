@@ -23,14 +23,14 @@
 %define nightly .cvs%{cvsdate}
 %endif
 
-%global relcan b7
+%global relcan b8
 %global firefox firefox
-%global mycomment  Beta 7
+%global mycomment  Beta 8 (Build1 candidate)
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.12.beta7%{?dist}
+Release:        0.13.beta8.build1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20101111.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20101217.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -59,14 +59,15 @@ Source200:      firefox-bookmarks.html
 #Patch1:        mozilla-build.patch
 Patch1:         firefox4-build.patch
 Patch3:         firefox4-jemalloc.patch
-# Patch4:         mozilla-about-firefox-version.patch
 Patch7:         xulrunner-1.9.2.1-build.patch
 Patch8:         mozilla-plugin.patch
 #Patch9:        mozilla-build-sbrk.patch
 Patch9:         firefox4-build-sbrk.patch
-Patch10:        mozilla-build-s390.patch
 Patch11:        mozilla-malloc.patch
-Patch12:        firefox4-build-macos.patch
+#Patch12:        firefox4-build-macos.patch
+Patch12:        xulrunner-2.0-64bit-big-endian.patch
+Patch13:        xulrunner-2.0-secondary-jit.patch
+Patch14:        xulrunner-2.0-chromium-types.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -80,7 +81,7 @@ Patch0:         firefox4-version.patch
 #Patch1:         firefox4-jemalloc.patch	= xulrunner / firefox4-jemalloc.patch
 #Patch2:         firefox4-build-throw.patch	= xulrunner / mozilla-malloc.patch
 
-Patch30:        firefox4-disable-checkupdates.patch
+#Patch30:        firefox4-disable-checkupdates.patch
 Patch31:        firefox4-default.patch
 
 
@@ -209,15 +210,14 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 # Build Patches
 %patch1  -p2 -b .build
 %patch3  -p1 -b .jemalloc
-#patch4  -p1 -b .about-firefox-version
 %patch7  -p2 -b .del
 #patch8  -p1 -b .plugin
 %patch9  -p2 -b .sbrk
-%ifarch s390
-%patch10 -p1 -b .s390
-%endif
 %patch11 -p2 -b .malloc
-%patch12 -p1 -b .macos
+#patch12 -p1 -b .macos
+%patch12 -p2 -b .64bit-big-endian
+%patch13 -p2 -b .secondary-jit
+%patch14 -p2 -b .chromium-types
 
 %patch20 -p2 -b .pk
 %if %{fedora} >= 14
@@ -229,7 +229,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %endif
 %patch23 -p1 -b .wmclass
 
-%patch30 -p1 -b .checkupdates
+#%patch30 -p1 -b .checkupdates
 %patch31 -p2 -b .default
 
 %{__rm} -f .mozconfig
@@ -246,7 +246,7 @@ ac_add_options --libdir="\$LIBDIR"
 ac_add_options --enable-system-sqlite
 %endif
 %if %{fedora} >= 12
-ac_add_options --with-system-nspr
+#ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 %endif
 %if %{fedora} >= 11
@@ -292,6 +292,7 @@ ac_add_options --disable-javaxpcom
 ac_add_options --disable-crashreporter
 ac_add_options --enable-safe-browsing
 ac_add_options --disable-updater
+ac_add_options --enable-shared-js
 #ac_add_options --enable-extensions=default,python/xpcom
 %if %{official_branding}
 ac_add_options --enable-official-branding
@@ -321,14 +322,14 @@ MOZ_SMP_FLAGS=-j1
 %ifnarch ppc ppc64 s390 s390x
 [ -z "$RPM_BUILD_NCPUS" ] && \
      RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
-[ "$RPM_BUILD_NCPUS" -gt 1 ] && MOZ_SMP_FLAGS=-j2
+[ "$RPM_BUILD_NCPUS" -gt 1 ] && MOZ_SMP_FLAGS=-j$RPM_BUILD_NCPUS
 %endif
 
 INTERNAL_GECKO=%{internal_version}
 MOZ_APP_DIR=%{_libdir}/%{name}-${INTERNAL_GECKO}
 
 export LDFLAGS="-Wl,-rpath,${MOZ_APP_DIR}"
-make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
+make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS" MOZ_SERVICES_SYNC="1"
 
 #---------------------------------------------------------------------
 
@@ -360,6 +361,11 @@ desktop-file-install --vendor mozilla \
 %{__cat} %{SOURCE12} | %{__sed} \
 	-e 's,FIREFOX_RPM_VR,fc%{fedora},g' \
 	-e 's/Fedora/Remi/' > rh-default-prefs
+
+######## Strange ########
+unzip -o dist/firefox/omni.jar -d $RPM_BUILD_ROOT/%{mozappdir}
+rm -f $RPM_BUILD_ROOT/%{mozappdir}/omni.jar
+#########################
 
 # Startup page for default language
 sed -i -e 's@^\(browser\.startup\.homepage\(\|_reset\)\)=.*$@\1=%{homepage}@g;' \
@@ -572,6 +578,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Dec 17 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.13.beta8.build1
+- update to 4.0b8 build1 candidate
+
 * Thu Nov 11 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.12.beta7
 - update to 4.0b7
 - raise cairo BR to 1.10 (fedora >= 14)

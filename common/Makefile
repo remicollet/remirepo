@@ -21,10 +21,10 @@ devsrpm:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME)-dev.spec
 
 build:
-	rpmbuild $(RPMDEFINES) -bb $(NAME).spec
+	time rpmbuild $(RPMDEFINES) -bb $(NAME).spec
 
 buildmini:
-	rpmbuild $(RPMDEFINES) --define "runselftest 0" -bb $(NAME).spec
+	time rpmbuild $(RPMDEFINES) --define "runselftest 0" -bb $(NAME).spec
 
 bp:
 	rpmbuild $(RPMDEFINES) -bp $(NAME).spec
@@ -48,8 +48,8 @@ bl:
 	rpmbuild $(RPMDEFINES) -bl --short-circuit $(NAME).spec
 
 devbuild:
-	rpmbuild $(RPMDEFINES) -bb $(NAME)-dev.spec
+	time rpmbuild $(RPMDEFINES) -bb $(NAME)-dev.spec
 
 devbuildmini:
-	rpmbuild $(RPMDEFINES) --define "runselftest 0" -bb $(NAME)-dev.spec
+	time rpmbuild $(RPMDEFINES) --define "runselftest 0" -bb $(NAME)-dev.spec
 

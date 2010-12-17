@@ -7,6 +7,59 @@ http://www2.webkit.org/perf/sunspider-0.9.1/sunspider-0.9.1/driver.html
 Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.12) Gecko/20101028 Remi/fc14 Firefox/3.6.12	2336.1
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc14		 603.8
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7				 391.8
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8				 396.8
+
+=========================================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8				
+============================================
+RESULTS (means and 95% confidence intervals)
+--------------------------------------------
+Total:                 396.8ms +/- 6.7%
+--------------------------------------------
+
+  3d:                   64.5ms +/- 7.8%
+    cube:               26.7ms +/- 10.3%
+    morph:              10.1ms +/- 13.1%
+    raytrace:           27.7ms +/- 12.0%
+
+  access:               60.8ms +/- 10.7%
+    binary-trees:        7.7ms +/- 9.8%
+    fannkuch:           30.3ms +/- 12.5%
+    nbody:               9.0ms +/- 13.0%
+    nsieve:             13.8ms +/- 10.6%
+
+  bitops:               25.5ms +/- 9.1%
+    3bit-bits-in-byte:   1.3ms +/- 26.6%
+    bits-in-byte:       14.6ms +/- 11.4%
+    bitwise-and:         2.9ms +/- 21.6%
+    nsieve-bits:         6.7ms +/- 13.4%
+
+  controlflow:           4.2ms +/- 15.6%
+    recursive:           4.2ms +/- 15.6%
+
+  crypto:               25.7ms +/- 8.6%
+    aes:                14.2ms +/- 11.3%
+    md5:                 6.6ms +/- 12.7%
+    sha1:                4.9ms +/- 16.1%
+
+  date:                 59.7ms +/- 27.9%
+    format-tofte:       30.2ms +/- 12.0%
+    format-xparb:       29.5ms +/- 58.6%
+
+  math:                 38.2ms +/- 7.0%
+    cordic:              8.4ms +/- 14.6%
+    partial-sums:       19.4ms +/- 11.3%
+    spectral-norm:      10.4ms +/- 12.2%
+
+  regexp:               22.5ms +/- 10.4%
+    dna:                22.5ms +/- 10.4%
+
+  string:               95.7ms +/- 7.8%
+    base64:              6.3ms +/- 12.0%
+    fasta:              23.3ms +/- 10.1%
+    tagcloud:           26.2ms +/- 11.8%
+    unpack-code:        29.9ms +/- 11.6%
+    validate-input:     10.0ms +/- 4.8%
 
 =========================================================================================
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7

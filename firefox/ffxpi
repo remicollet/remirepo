@@ -45,7 +45,7 @@ packxpi() {
 		echo Création de $1.xpi
 		mv $1.xpi /tmp
 		cd tmp/$1
-		zip ../../$1.xpi install.rdf chrome/* chrome.manifest
+		zip ../../$1.xpi -r install.rdf chrome/* chrome.manifest
 	fi
 }
 donexpi() {

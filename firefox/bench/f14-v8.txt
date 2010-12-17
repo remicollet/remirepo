@@ -7,4 +7,6 @@ http://v8.googlecode.com/svn/data/benchmarks/v6/run.html
 Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.12) Gecko/20101028 Remi/fc14 Firefox/3.6.12	 255
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc14		 874
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7				2328
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8				2772
+
 
