@@ -1,11 +1,10 @@
-diff -up mysql-5.5.6-rc/libmysqld/Makefile.am.report mysql-5.5.6-rc/libmysqld/Makefile.am
---- mysql-5.5.6-rc/libmysqld/Makefile.am.report	2010-09-25 10:12:21.974211826 +0200
-+++ mysql-5.5.6-rc/libmysqld/Makefile.am	2010-09-25 10:13:22.497467790 +0200
-@@ -82,6 +82,7 @@ sqlsources = derror.cc field.cc field_co
- 	rpl_injector.cc my_user.c partition_info.cc sql_alter.cc \
- 	sql_servers.cc event_parse_data.cc sql_signal.cc \
- 	rpl_handler.cc mdl.cc keycaches.cc sql_audit.cc \
-+	rpl_reporting.cc \
- 	sql_partition_admin.cc
- 
- libmysqld_int_a_SOURCES= $(libmysqld_sources)
+--- mysql-5.5.8/libmysqld/CMakeLists.txt.orig	2010-12-18 08:38:39.647131283 +0100
++++ mysql-5.5.8/libmysqld/CMakeLists.txt	2010-12-18 08:38:42.916733537 +0100
+@@ -83,6 +83,7 @@
+            ../sql/scheduler.cc ../sql/sql_audit.cc
+            ../sql/sql_alter.cc ../sql/sql_partition_admin.cc
+            ../sql/event_parse_data.cc
++           ../sql/rpl_reporting.cc
+            ../sql/sql_signal.cc ../sql/rpl_handler.cc
+ 	       ../sql/rpl_utility.cc
+            ../sql/sys_vars.cc

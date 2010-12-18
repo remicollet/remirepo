@@ -1,6 +1,8 @@
-%global postver -rc
+%global withbench 0
+
+#global postver -rc
 Name: mysql
-Version: 5.5.7
+Version: 5.5.8
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -30,7 +32,7 @@ Source9: mysql-embedded-check.c
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh
 
-Patch1:  mysql-ssl-multilib.patch
+# Patch1:  mysql-ssl-multilib.patch
 Patch2:  mysql-5.5-errno.patch
 # Patch3: mysql-stack.patch
 # only for SSL, Patch4: mysql-testing.patch
@@ -38,23 +40,24 @@ Patch5:  mysql-5.5-install-test.patch
 # mainly ppc, Patch6: mysql-stack-guard.patch
 # test suite, Patch7: mysql-plugin-bug.patch
 # selinux related, Patch8: mysql-setschedparam.patch
-Patch9:  mysql-5.5-no-docs.patch
+# Patch9:  mysql-5.5-no-docs.patch
 Patch10: mysql-5.5-strmov.patch
 # Patch13: mysql-expired-certs.patch
-Patch14: mysql-missing-string-code.patch
-Patch15: mysql-lowercase-bug.patch
+# Patch14: mysql-missing-string-code.patch
+# Patch15: mysql-lowercase-bug.patch
 Patch16: mysql-chain-certs.patch
 # mysql.sock path
 #Patch17: mysql-5.5-tests.patch
 # missing rpl_reporting in embedded lib
 Patch18: mysql-5.5-report.patch
 # ABI check fails on client_plugin.h (seems a preprocessor issue)
-Patch19: mysql-5.5-abi.patch
+# Patch19: mysql-5.5-abi.patch
+Patch20: mysql-5.5-layout.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
 BuildRequires: gcc-c++, ncurses-devel, zlib-devel
-BuildRequires: libtool automake autoconf gawk
+BuildRequires: cmake gawk
 BuildRequires: libaio-devel
 # make test requires time and ps
 BuildRequires: time procps
@@ -154,6 +157,7 @@ MySQL is a multi-user, multi-threaded SQL database server. This
 package contains files needed for developing and testing with
 the embedded version of the MySQL server.
 
+%if %{?withbench}
 %package bench
 
 Summary: MySQL benchmark scripts and data
@@ -165,6 +169,7 @@ Conflicts: MySQL-bench
 MySQL is a multi-user, multi-threaded SQL database server. This
 package contains benchmark scripts and data for use when benchmarking
 MySQL.
+%endif
 
 %package test
 
@@ -182,7 +187,7 @@ the MySQL sources.
 %prep
 %setup -q -n mysql-%{version}%{?postver}
 
-%patch1 -p1
+# %patch1 -p1
 %patch2 -p1
 # %patch3 -p1
 # %patch4 -p1
@@ -190,29 +195,24 @@ the MySQL sources.
 # %patch6 -p1
 # %patch7 -p1
 # %patch8 -p1
-%patch9 -p1
+# %patch9 -p1
 %patch10 -p1
 # %patch13 -p1
-%patch14 -p1
-%patch15 -p1
+# %patch14 -p1
+# %patch15 -p1
 %patch16 -p1
 # %patch17 -p1
-%patch18 -p1
-%patch19 -p1
+%patch18 -p1 -b .missing
+# %patch19 -p1
+%patch20 -p1 -b .layout
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
 # Stupid test which rely on hostname to be "unknown"
 rm -f mysql-test/t/plugin_auth.test
 
-libtoolize --force
-aclocal
-automake --add-missing -Wno-portability
-autoconf
-autoheader
 
 %build
-
 # fail quickly and obviously if user tries to build as root
 %if %runselftest
 	if [ x"`id -u`" = x0 ]; then
@@ -238,38 +238,23 @@ CFLAGS=`echo $CFLAGS| sed -e "s|-O2|-O1|g" `
 CXXFLAGS="$CFLAGS -felide-constructors -fno-rtti -fno-exceptions"
 export CFLAGS CXXFLAGS
 
-# mysql 5.1.30 fails regression tests on x86 unless we use --with-big-tables,
-# suggesting that upstream doesn't bother to test the other case ...
-# note: the with-plugin and without-plugin options do actually work; ignore
-# warnings from configure suggesting they are ignored ...
-%configure \
-	--with-readline \
-	--with-ssl=/usr \
-	--without-debug \
-	--enable-shared \
-	--with-embedded-server \
-	--localstatedir=/var/lib/mysql \
-	--with-unix-socket-path=/var/lib/mysql/mysql.sock \
-	--with-mysqld-user="mysql" \
-	--with-extra-charsets=all \
-	--with-big-tables \
-	--with-pic \
-	--with-plugin-partition \
-	--without-example-storage-engine \
-	--without-plugin-daemon_example \
-	--without-plugin-ftexample \
-	--without-plugin-audit_null \
-	--enable-local-infile \
-	--enable-largefile \
-	--enable-thread-safe-client \
-	--with-comment="MySQL Community Server (GPL) by Remi" \
-	--disable-dependency-tracking
-
 gcc $CFLAGS $LDFLAGS -o scriptstub "-DLIBDIR=\"%{_libdir}/mysql\"" %{SOURCE4}
 
-# Not enabling assembler
+%cmake .   -DBUILD_CONFIG=mysql_release -DINSTALL_LAYOUT=RPM \
+           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+           -DWITH_DEBUG:BOOL=OFF \
+           -DMYSQL_DATADIR:PATH=/var/lib/mysql \
+           -DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
+           -DFEATURE_SET="community" \
+           -DWITH_EMBEDDED_SERVER:BOOL=ON \
+           -DWITH_ARCHIVE_STORAGE_ENGINE:BOOL=ON \
+           -DWITH_BLACKHOLE_STORAGE_ENGINE:BOOL=ON \
+           -DWITH_READLINE:BOOL=ON \
+           -DWITH_SSL:STRING=system \
+           -DENABLED_LOCAL_INFILE:BOOL=ON \
+           -DCOMPILATION_COMMENT="MySQL Community Server (GPL) by Remi"
 
-make %{?_smp_mflags}
+make %{?_smp_mflags}  VERBOSE=1
 
 # regular build will make libmysqld.a but not libmysqld.so :-(
 mkdir libmysqld/work
@@ -280,14 +265,15 @@ ar -x ../libmysqld.a
 gcc $CFLAGS $LDFLAGS -shared -Wl,-soname,libmysqld.so.0 -o libmysqld.so.0.0.1 \
 	*.o \
 	-lpthread -lcrypt -lnsl -lssl -lcrypto -lz -lrt -lstdc++ -lm -lc
+####### Can't use it, for now
 # this is to check that we built a complete library
-cp %{SOURCE9} .
+#cp %{SOURCE9} .
 ln -s libmysqld.so.0.0.1 libmysqld.so.0
-gcc -I../../include $CFLAGS -laio -lstdc++ mysql-embedded-check.c libmysqld.so.0
-LD_LIBRARY_PATH=. ldd ./a.out
+#gcc -I../../include $CFLAGS -laio -lstdc++ mysql-embedded-check.c libmysqld.so.0
+#LD_LIBRARY_PATH=. ldd ./a.out
 cd ../..
 
-make check
+make abi_check_all
 
 %if %runselftest
   # hack to let 32- and 64-bit tests run concurrently on same build machine
@@ -317,7 +303,7 @@ make check
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%makeinstall
+make DESTDIR=$RPM_BUILD_ROOT install
 
 # multilib header hacks
 # we only apply this to known Red Hat multilib arches, per bug #181335
@@ -341,10 +327,12 @@ mkdir -p $RPM_BUILD_ROOT/var/run/mysqld
 install -m 0755 -d $RPM_BUILD_ROOT/var/lib/mysql
 install -m 0755 %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mysqld
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
+%if %{?withbench}
 mv $RPM_BUILD_ROOT/usr/sql-bench $RPM_BUILD_ROOT%{_datadir}/sql-bench
-mv $RPM_BUILD_ROOT/usr/mysql-test $RPM_BUILD_ROOT%{_datadir}/mysql-test
+%endif
+#mv $RPM_BUILD_ROOT/usr/mysql-test $RPM_BUILD_ROOT%{_datadir}/mysql-test
 # 5.1.32 forgets to install the mysql-test README file
-install -m 0644 mysql-test/README $RPM_BUILD_ROOT%{_datadir}/mysql-test/README
+# install -m 0644 mysql-test/README $RPM_BUILD_ROOT%{_datadir}/mysql-test/README
 
 mv ${RPM_BUILD_ROOT}%{_bindir}/mysqlbug ${RPM_BUILD_ROOT}%{_libdir}/mysql/mysqlbug
 install -m 0755 scriptstub ${RPM_BUILD_ROOT}%{_bindir}/mysqlbug
@@ -382,6 +370,10 @@ rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql-log-rotate
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/ChangeLog
 rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/mysql-stress-test.pl.1*
 rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/mysql-test-run.pl.1*
+rm -f ${RPM_BUILD_ROOT}%{_bindir}/mysqlaccess.conf
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/info/mysql.info*
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/magic
+
 
 mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 echo "%{_libdir}/mysql" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
@@ -438,7 +430,7 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc README COPYING EXCEPTIONS-CLIENT
+%doc README COPYING
 %doc README.mysql-docs
 
 %{_bindir}/msql2mysql
@@ -472,12 +464,13 @@ fi
 
 %files libs
 %defattr(-,root,root)
-%doc COPYING EXCEPTIONS-CLIENT
+%doc COPYING
 # although the default my.cnf contains only server settings, we put it in the
 # libs package because it can be used for client settings too.
 %config(noreplace) /etc/my.cnf
 %dir %{_libdir}/mysql
 %{_libdir}/mysql/libmysqlclient*.so.*
+%{_libdir}/mysql/libmysqlservices.*
 /etc/ld.so.conf.d/*
 
 %dir %{_datadir}/mysql
@@ -575,7 +568,7 @@ fi
 
 %{_datadir}/mysql/errmsg-utf8.txt
 %{_datadir}/mysql/fill_help_tables.sql
-%{_datadir}/mysql/mysql_fix_privilege_tables.sql
+#%{_datadir}/mysql/mysql_fix_privilege_tables.sql
 %{_datadir}/mysql/mysql_system_tables.sql
 %{_datadir}/mysql/mysql_system_tables_data.sql
 %{_datadir}/mysql/mysql_test_data_timezone.sql
@@ -595,7 +588,7 @@ fi
 
 %files embedded
 %defattr(-,root,root)
-%doc COPYING EXCEPTIONS-CLIENT
+%doc COPYING
 %{_libdir}/mysql/libmysqld.so.*
 
 %files embedded-devel
@@ -606,9 +599,11 @@ fi
 %{_mandir}/man1/mysql_client_test_embedded.1*
 %{_mandir}/man1/mysqltest_embedded.1*
 
+%if %{?withbench}
 %files bench
 %defattr(-,root,root)
 %{_datadir}/sql-bench
+%endif
 
 %files test
 %defattr(-,root,root)
@@ -618,6 +613,11 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Dec 17 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.5.8-1
+- Update to MySQL Community Server 5.5.8 GA
+- remove EXCEPTIONS-CLIENT (no more provided upstream)
+- no mysql-bench for now
+
 * Wed Nov 10 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.5.7-1
 - Update to MySQL Community Server 5.5.7 RC
 - add startsos to init script (--skip-grant-tables --skip-networking)
