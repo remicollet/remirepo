@@ -1,0 +1,11 @@
+diff -up mysql-5.1.29-rc/scripts/mysql_config.sh.orig mysql-5.1.29-rc/scripts/mysql_config.sh
+--- mysql-5.1.29-rc/scripts/mysql_config.sh.orig	2008-11-08 13:44:03.000000000 +0100
++++ mysql-5.1.29-rc/scripts/mysql_config.sh	2008-11-08 13:45:10.000000000 +0100
+@@ -85,7 +85,6 @@ bindir='@bindir@'
+ # If installed, search for the compiled in directory first (might be "lib64")
+ pkglibdir='@pkglibdir@'
+ pkglibdir_rel=`echo $pkglibdir | sed -e "s;^$basedir/;;"`
+-fix_path pkglibdir $pkglibdir_rel lib/mysql lib
+ 
+ plugindir='@pkgplugindir@'
+ 

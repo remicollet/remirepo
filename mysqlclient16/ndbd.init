@@ -1,0 +1,111 @@
+#!/bin/bash
+#
+# ndbd		This shell script takes care of starting and stopping
+#		the MySQL Cluster data node daemon (ndbd).
+#
+# chkconfig: - 63 37
+# description:	MySQL Cluster data node daemon.
+# processname: ndbd
+# config: /etc/my.cnf
+# pidfile: /var/lib/mysql-cluster/ndb_${node_id}.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+
+prog="ndbd"
+
+# extract value of a MySQL option from config files
+# Usage: get_mysql_option SECTION VARNAME DEFAULT
+# result is returned in $result
+# We use my_print_defaults which prints all options from multiple files,
+# with the more specific ones later; hence take the last match.
+get_mysql_option(){
+	result=`/usr/bin/my_print_defaults "$1" | sed -n "s/^--$2=//p" | tail -n 1`
+	if [ -z "$result" ]; then
+	    # not found, use default
+	    result="$3"
+	fi
+}
+
+get_mysql_option ndbd connect-string "nodeid=2;host=localhost:1186"
+ndbd_connect_string="$result"
+node_id=`echo "$result" | sed 's/^nodeid=\([0-9]*\);.*$/\1/'`
+connect_string=`echo "$result" | sed 's/^.*host=//'`
+pidfile="/var/lib/mysql-cluster/ndb_${node_id}.pid"
+
+# For SELinux we need to use 'runuser' not 'su'
+if [ -x /sbin/runuser ]
+then
+    SU=runuser
+else
+    SU=su
+fi
+
+start(){
+	# all options are expected to be specified in /etc/my.cnf
+	$SU -l mysql -c "/usr/libexec/ndbd" >/dev/null 2>&1
+	ret=$?
+	if [ $ret -eq 0 ]; then
+	    action $"Starting $prog: " /bin/true
+	else
+    	    action $"Starting $prog: " /bin/false
+	fi
+	[ $ret -eq 0 ] && touch /var/lock/subsys/ndbd
+	return $ret
+}
+
+stop(){
+        NDBD_PID=`cat "$pidfile"  2>/dev/null `
+        if [ -n "$NDBD_PID" ]; then
+	    /usr/bin/ndb_mgm -e "$node_id STOP" "$connect_string" >/dev/null
+            ret=$?
+            if [ $ret -eq 0 ]; then
+		rm -f /var/lock/subsys/ndbd
+		rm -f "$pidfile"
+		action $"Stopping $prog: " /bin/true
+            else
+                action $"Stopping $prog: " /bin/false
+            fi
+        else
+            ret=1
+            action $"Stopping $prog: " /bin/false
+        fi
+        return $ret
+}
+ 
+restart(){
+    stop
+    start
+}
+
+condrestart(){
+    [ -e /var/lock/subsys/ndbd ] && restart || :
+}
+
+# See how we were called.
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    status ndbd
+    ;;
+  restart)
+    restart
+    ;;
+  condrestart)
+    condrestart
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|status|condrestart|restart}"
+    exit 1
+esac
+
+exit $?

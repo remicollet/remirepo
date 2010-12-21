@@ -1,0 +1,14 @@
+diff -Naur mysql-5.0.15.orig/include/my_global.h mysql-5.0.15/include/my_global.h
+--- mysql-5.0.15.orig/include/my_global.h	2005-10-16 21:27:27.000000000 -0400
++++ mysql-5.0.15/include/my_global.h	2005-11-02 16:16:37.000000000 -0500
+@@ -107,6 +107,10 @@
+ #define _GNU_SOURCE 1
+ #endif
+ 
++#ifdef __linux__
++#define HAVE_ERRNO_AS_DEFINE
++#endif
++
+ /*
+   Temporary solution to solve bug#7156. Include "sys/types.h" before
+   the thread headers, else the function madvise() will not be defined

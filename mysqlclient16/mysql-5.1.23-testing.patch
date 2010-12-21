@@ -1,0 +1,16 @@
+--- Makefile.am.orig	2008-01-29 22:41:03.000000000 +0100
++++ Makefile.am	2008-02-15 18:45:47.000000000 +0100
+@@ -91,11 +91,11 @@
+ 
+ test-pr:
+ 	cd mysql-test ; \
+-	    @PERL@ ./mysql-test-run.pl $(force) $(mem) --ps-protocol --mysqld=--binlog-format=row
++	    @PERL@ ./mysql-test-run.pl $(force) $(mem) --ssl --ps-protocol --mysqld=--binlog-format=row
+ 
+ test-ns:
+ 	cd mysql-test ; \
+-	    @PERL@ ./mysql-test-run.pl $(force) $(mem) --mysqld=--binlog-format=mixed
++	    @PERL@ ./mysql-test-run.pl $(force) $(mem) --ssl --mysqld=--binlog-format=mixed
+ 
+ test-binlog-statement:
+ 	cd mysql-test ; \

@@ -1,0 +1,54 @@
+With file provides, this test fails :
+
+$ cat r/mysql_upgrade.log 
+Run mysql_upgrade once
+/tmp/mysql-5.0.45/client/.libs/mysqlcheck: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES) when trying to connect
+FATAL ERROR: Upgrade failed
+exec of '/tmp/mysql-5.0.45/client/mysql_upgrade --no-defaults --user=root --port=9306 --socket=/tmp/mysql-5.0.45/mysql-test/var/tmp/master.sock --datadir=/tmp/mysql-5.0.45/mysql-test/var/master-data --basedir=/tmp/mysql-5.0.45 --skip-verbose 2>&1 failed, error: 256, status: 1, errno: 0
+
+This patch avoid this.
+
+
+--- mysql-test/t/mysql_upgrade.test.orig	2007-07-04 15:49:09.000000000 +0200
++++ mysql-test/t/mysql_upgrade.test	2007-07-14 20:14:57.000000000 +0200
+@@ -12,7 +12,7 @@
+ # expected binaries it uses.
+ #
+ --echo Run mysql_upgrade once
+---exec $MYSQL_UPGRADE --skip-verbose 2>&1
++--exec $MYSQL_UPGRADE --skip-verbose --password= 2>&1
+ 
+ # It should have created a file in the MySQL Servers datadir
+ file_exists $MYSQLTEST_VARDIR/master-data/mysql_upgrade_info;
+@@ -20,13 +20,13 @@
+ --echo Run it again - should say already completed
+ --replace_result $MYSQL_SERVER_VERSION VERSION
+ --error 1
+---exec $MYSQL_UPGRADE --skip-verbose 2>&1
++--exec $MYSQL_UPGRADE --skip-verbose --password= 2>&1
+ 
+ # It should have created a file in the MySQL Servers datadir
+ file_exists $MYSQLTEST_VARDIR/master-data/mysql_upgrade_info;
+ 
+ --echo Force should run it regardless of wether it's been run before
+---exec $MYSQL_UPGRADE --skip-verbose --force 2>&1
++--exec $MYSQL_UPGRADE --skip-verbose --force --password= 2>&1
+ 
+ # It should have created a file in the MySQL Servers datadir
+ file_exists $MYSQLTEST_VARDIR/master-data/mysql_upgrade_info;
+@@ -54,7 +54,7 @@
+ --replace_result $MYSQLTEST_VARDIR var
+ --replace_regex /.*mysqlcheck.*: Got/mysqlcheck: Got/ /\([0-9]*\)/(errno)/
+ --error 1
+---exec $MYSQL_UPGRADE --skip-verbose --force --host=not_existing_host 2>&1
++--exec $MYSQL_UPGRADE --skip-verbose --force --host=not_existing_host  2>&1
+ 
+ #
+ # Bug #28401 mysql_upgrade Failed with STRICT_ALL_TABLES, ANSI_QUOTES and NO_ZERO_DATE
+@@ -66,5 +66,5 @@
+ 
+ # Test by setting sql_mode before running mysql_upgrade
+ set GLOBAL sql_mode='STRICT_ALL_TABLES,ANSI_QUOTES,NO_ZERO_DATE';
+---exec $MYSQL_UPGRADE --skip-verbose --force 2>&1
++--exec $MYSQL_UPGRADE --skip-verbose --force --password= 2>&1
+ eval set GLOBAL sql_mode=default;

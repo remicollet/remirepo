@@ -1,0 +1,72 @@
+mysql's idea of a suitable place to install the regression tests is
+/usr/mysql-test.  To relocate this to a reasonably FHS-compliant place
+like /usr/share/mysql-test, we have to hack up the paths in install_test_db.
+This patch also improves the documentation a tad.
+
+
+diff -Naur mysql-5.0.40.orig/mysql-test/README mysql-5.0.40/mysql-test/README
+--- mysql-5.0.40.orig/mysql-test/README	2007-04-20 10:14:42.000000000 -0400
++++ mysql-5.0.40/mysql-test/README	2007-05-23 14:41:03.000000000 -0400
+@@ -6,6 +6,14 @@
+ actually have a co-existing MySQL installation. The tests will not
+ conflict with it.
+ 
++For use in Red Hat distributions, you should run the script as user mysql,
++so the best bet is something like
++	cd /usr/share/mysql-test
++	sudo -u mysql ./mysql-test-run
++This will use the installed mysql executables, but will run a private copy
++of the server process (using data files within /usr/share/mysql-test),
++so you need not start the mysqld service beforehand.
++
+ All tests must pass. If one or more of them fail on your system, please
+ read the following manual section for instructions on how to report the
+ problem:
+@@ -25,7 +33,8 @@
+ 
+ With no test cases named on the command line, mysql-test-run falls back
+ to the normal "non-extern" behavior. The reason for this is that some
+-tests cannot run with an external server.
++tests cannot run with an external server (because they need to control the
++options with which the server is started).
+ 
+ 
+ You can create your own test cases. To create a test case, create a new
+diff -Naur mysql-5.0.40.orig/mysql-test/install_test_db.sh mysql-5.0.40/mysql-test/install_test_db.sh
+--- mysql-5.0.40.orig/mysql-test/install_test_db.sh	2007-04-20 10:14:31.000000000 -0400
++++ mysql-5.0.40/mysql-test/install_test_db.sh	2007-05-23 14:39:44.000000000 -0400
+@@ -26,18 +26,15 @@
+   libexecdir=../libexec
+ 
+   # Check if it's a binary distribution or a 'make install'
+-  if test -x ../libexec/mysqld
++  if test -x /usr/libexec/mysqld
+   then
+-    execdir=../libexec
+-  elif test -x ../../sbin/mysqld  # RPM installation
+-  then
+-    execdir=../../sbin
+-    bindir=../../bin
+-    scriptdir=../bin
+-    libexecdir=../../libexec
++    execdir=/usr/libexec
+   else
+-    execdir=../bin
++    execdir=/usr/bin
+   fi
++  bindir=/usr/bin
++  scriptdir=/usr/bin
++  libexecdir=/usr/libexec
+   fix_bin=mysql-test
+ else
+   execdir=../sql
+@@ -97,7 +94,8 @@
+ 
+ #for error messages
+ if [ x$BINARY_DIST = x1 ] ; then
+-basedir=..
++basedir=/usr/share
++EXTRA_ARG="--language=/usr/share/mysql/english/ --character-sets-dir=/usr/share/mysql/charsets/"
+ else
+ basedir=.
+ EXTRA_ARG="--windows"
