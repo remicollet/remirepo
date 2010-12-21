@@ -1,0 +1,22 @@
+mysql tries to use pthread_setschedparam() with policy = SCHED_OTHER,
+which is not standardized and is not presently supported on Red Hat
+platforms; in fact it generates lots of SELinux warnings (bug #477624).
+Easiest fix is to disable the configure test for it.
+
+
+diff -Naur mysql-5.1.33.orig/configure.in mysql-5.1.33/configure.in
+--- mysql-5.1.33.orig/configure.in	2009-03-13 17:48:52.000000000 -0400
++++ mysql-5.1.33/configure.in	2009-04-07 19:27:25.000000000 -0400
+@@ -2046,10 +2046,10 @@
+   localtime_r gethrtime gmtime_r \
+   locking longjmp lrand48 madvise mallinfo memcpy memmove \
+   mkstemp mlockall perror poll pread pthread_attr_create mmap mmap64 getpagesize \
+-  pthread_attr_getstacksize pthread_attr_setprio pthread_attr_setschedparam \
++  pthread_attr_getstacksize pthread_attr_setprio \
+   pthread_attr_setstacksize pthread_condattr_create pthread_getsequence_np \
+   pthread_key_delete pthread_rwlock_rdlock pthread_setprio \
+-  pthread_setprio_np pthread_setschedparam pthread_sigmask readlink \
++  pthread_setprio_np pthread_sigmask readlink \
+   realpath rename rint rwlock_init setupterm \
+   shmget shmat shmdt shmctl sigaction sigemptyset sigaddset \
+   sighold sigset sigthreadmask port_create sleep \

@@ -1,5 +1,5 @@
 Name: mysqlclient16
-Version: 5.1.30
+Version: 5.1.54
 Release: 1%{dist}
 Summary: MySQL shared libraries.
 License: GPL
@@ -7,21 +7,21 @@ Group: Applications/Databases
 URL: http://www.mysql.com
 
 Source0: http://dev.mysql.com/get/Downloads/MySQL-5.1/mysql-%{version}%{-srctype}.tar.gz
-Source1: mysql.init
-Source3: my.cnf
-Source4: scriptstub.c
 Source5: my_config.h
 Source6: ndbd.init
 Source7: ndb_mgmd.init
 Source8: ndb_types.h
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh 
-Patch1: mysql-5.1.29-libdir.patch
+
+Patch1: mysql-ssl-multilib.patch
 Patch2: mysql-errno.patch
-Patch3: mysql-5.1.26-stack.patch
-Patch4: mysql-5.1.23-testing.patch
-Patch8: mysql-install-test.patch
-Patch12: mysql-5.0.45-upgrade-test.patch
+Patch6: mysql-stack-guard.patch
+# add by a simple echo - Patch7: mysql-disable-test.patch
+Patch8: mysql-setschedparam.patch
+Patch10: mysql-strmov.patch
+Patch12: mysql-cve-2008-7247.patch
+Patch16: mysql-chain-certs.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
@@ -62,15 +62,10 @@ developing MySQL applications using client libraries.
 
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p0
-%patch8 -p1
-%patch12 -p0
-
-for fic in config/ac-macros/*.m4
-do
-	sed -i -e s,/lib/,/%{_lib}/, $fic
-done
+%patch6 -p1
+%patch10 -p1
+%patch12 -p1
+%patch16 -p1
 
 libtoolize --force
 aclocal
@@ -166,8 +161,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc README COPYING EXCEPTIONS-CLIENT
-
+%doc README COPYING
 %{_origlibdir}/mysql/libmysqlclient*.so.*
 /etc/ld.so.conf.d/*
 
@@ -177,5 +171,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}
 
 %changelog
+* Tue Dec 21 2010 Remi Collet <RPMS@FamilleCollet.com> 5.1.54-1
+- update to 5.1.54
+
 * Fri Jan 09 2009 Remi Collet <RPMS@FamilleCollet.com> 5.1.30-1.###.remi
 - first build of mysqlclient16
