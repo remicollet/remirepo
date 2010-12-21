@@ -25,12 +25,12 @@
 
 %global relcan b8
 %global firefox firefox
-%global mycomment  Beta 8 (Build1 candidate)
+%global mycomment  Beta 8
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox4
 Version:        4.0
-Release:        0.13.beta8.build1%{?dist}
+Release:        0.14.beta8%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20101217.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20101221.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -59,8 +59,6 @@ Source200:      firefox-bookmarks.html
 #Patch1:        mozilla-build.patch
 Patch1:         firefox4-build.patch
 Patch3:         firefox4-jemalloc.patch
-Patch7:         xulrunner-1.9.2.1-build.patch
-Patch8:         mozilla-plugin.patch
 #Patch9:        mozilla-build-sbrk.patch
 Patch9:         firefox4-build-sbrk.patch
 Patch11:        mozilla-malloc.patch
@@ -210,8 +208,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 # Build Patches
 %patch1  -p2 -b .build
 %patch3  -p1 -b .jemalloc
-%patch7  -p2 -b .del
-#patch8  -p1 -b .plugin
 %patch9  -p2 -b .sbrk
 %patch11 -p2 -b .malloc
 #patch12 -p1 -b .macos
@@ -293,6 +289,8 @@ ac_add_options --disable-crashreporter
 ac_add_options --enable-safe-browsing
 ac_add_options --disable-updater
 ac_add_options --enable-shared-js
+#ac_add_options --enable-chrome-format=jar
+ac_add_options --enable-url-classifier
 #ac_add_options --enable-extensions=default,python/xpcom
 %if %{official_branding}
 ac_add_options --enable-official-branding
@@ -363,8 +361,10 @@ desktop-file-install --vendor mozilla \
 	-e 's/Fedora/Remi/' > rh-default-prefs
 
 ######## Strange ########
-unzip -o dist/firefox/omni.jar -d $RPM_BUILD_ROOT/%{mozappdir}
-rm -f $RPM_BUILD_ROOT/%{mozappdir}/omni.jar
+if [ -f $RPM_BUILD_ROOT/%{mozappdir}/omni.jar ]; then
+  unzip -o dist/firefox/omni.jar -d $RPM_BUILD_ROOT/%{mozappdir}
+  rm -f $RPM_BUILD_ROOT/%{mozappdir}/omni.jar
+fi
 #########################
 
 # Startup page for default language
@@ -578,6 +578,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Dec 21 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.14.beta8
+- update to 4.0b8
+
 * Fri Dec 17 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.13.beta8.build1
 - update to 4.0b8 build1 candidate
 
