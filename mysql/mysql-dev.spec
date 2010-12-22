@@ -1,5 +1,3 @@
-%global withbench 0
-
 #global postver -rc
 Name: mysql
 Version: 5.5.8
@@ -157,7 +155,6 @@ MySQL is a multi-user, multi-threaded SQL database server. This
 package contains files needed for developing and testing with
 the embedded version of the MySQL server.
 
-%if %{?withbench}
 %package bench
 
 Summary: MySQL benchmark scripts and data
@@ -169,7 +166,6 @@ Conflicts: MySQL-bench
 MySQL is a multi-user, multi-threaded SQL database server. This
 package contains benchmark scripts and data for use when benchmarking
 MySQL.
-%endif
 
 %package test
 
@@ -334,12 +330,6 @@ mkdir -p $RPM_BUILD_ROOT/var/run/mysqld
 install -m 0755 -d $RPM_BUILD_ROOT/var/lib/mysql
 install -m 0755 %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mysqld
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
-%if %{?withbench}
-mv $RPM_BUILD_ROOT/usr/sql-bench $RPM_BUILD_ROOT%{_datadir}/sql-bench
-%endif
-#mv $RPM_BUILD_ROOT/usr/mysql-test $RPM_BUILD_ROOT%{_datadir}/mysql-test
-# 5.1.32 forgets to install the mysql-test README file
-# install -m 0644 mysql-test/README $RPM_BUILD_ROOT%{_datadir}/mysql-test/README
 
 mv ${RPM_BUILD_ROOT}%{_bindir}/mysqlbug ${RPM_BUILD_ROOT}%{_libdir}/mysql/mysqlbug
 install -m 0755 scriptstub ${RPM_BUILD_ROOT}%{_bindir}/mysqlbug
@@ -606,11 +596,9 @@ fi
 %{_mandir}/man1/mysql_client_test_embedded.1*
 %{_mandir}/man1/mysqltest_embedded.1*
 
-%if %{?withbench}
 %files bench
 %defattr(-,root,root)
 %{_datadir}/sql-bench
-%endif
 
 %files test
 %defattr(-,root,root)
@@ -622,9 +610,9 @@ fi
 %changelog
 * Fri Dec 17 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.5.8-1
 - Update to MySQL Community Server 5.5.8 GA
+- move from autotools to cmake
 - remove EXCEPTIONS-CLIENT (no more provided upstream)
-- no mysql-bench for now
-- force soname to .161
+- force soname to .161 (compat-mysql51 provides .16)
 
 * Wed Nov 10 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.5.7-1
 - Update to MySQL Community Server 5.5.7 RC

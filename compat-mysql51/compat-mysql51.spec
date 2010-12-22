@@ -8,9 +8,6 @@ URL: http://www.mysql.com
 
 Source0: http://dev.mysql.com/get/Downloads/MySQL-5.1/mysql-%{version}%{-srctype}.tar.gz
 Source5: my_config.h
-Source6: ndbd.init
-Source7: ndb_mgmd.init
-Source8: ndb_types.h
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh 
 

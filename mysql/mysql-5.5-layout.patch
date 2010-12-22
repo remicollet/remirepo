@@ -1,5 +1,5 @@
 --- mysql-5.5.8/cmake/install_layout.cmake.layout	2010-12-03 18:58:26.000000000 +0100
-+++ mysql-5.5.8/cmake/install_layout.cmake	2010-12-18 10:36:52.631430079 +0100
++++ mysql-5.5.8/cmake/install_layout.cmake	2010-12-22 18:57:31.823379680 +0100
 @@ -127,14 +127,15 @@
  # RPM layout
  #
@@ -19,3 +19,12 @@
    SET(INSTALL_PLUGINDIR_RPM             "lib/mysql/plugin")
  ENDIF()
  #
+@@ -148,7 +149,7 @@
+ SET(INSTALL_SHAREDIR_RPM                "share")
+ SET(INSTALL_MYSQLSHAREDIR_RPM           "share/mysql")
+ SET(INSTALL_MYSQLTESTDIR_RPM            "share/mysql-test")
+-SET(INSTALL_SQLBENCHDIR_RPM             "")
++SET(INSTALL_SQLBENCHDIR_RPM             "share")
+ SET(INSTALL_SUPPORTFILESDIR_RPM         "share/mysql")
+ #
+ SET(INSTALL_MYSQLDATADIR_RPM            "/var/lib/mysql")
