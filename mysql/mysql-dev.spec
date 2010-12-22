@@ -92,7 +92,7 @@ contains the standard MySQL client programs and generic MySQL files.
 Summary: The shared libraries required for MySQL clients
 Group: Applications/Databases
 Requires: /sbin/ldconfig
-Obsoletes: mysqlclient16
+##Obsoletes: mysqlclient16
 
 %description libs
 The mysql-libs package provides the essential shared libraries for any 
@@ -187,6 +187,12 @@ the MySQL sources.
 %prep
 %setup -q -n mysql-%{version}%{?postver}
 
+# change libmysqlclient.so soname to 161
+# to allow install with libmysqlclient16 (from 5.1.x branch)
+# and solves broken dependencies
+sed -i -e '/SHARED_LIB_MAJOR_VERSION/s/16/161/' cmake/mysql_version.cmake
+
+
 # %patch1 -p1
 %patch2 -p1
 # %patch3 -p1
@@ -249,7 +255,7 @@ gcc $CFLAGS $LDFLAGS -o scriptstub "-DLIBDIR=\"%{_libdir}/mysql\"" %{SOURCE4}
            -DWITH_EMBEDDED_SERVER:BOOL=ON \
            -DWITH_ARCHIVE_STORAGE_ENGINE:BOOL=ON \
            -DWITH_BLACKHOLE_STORAGE_ENGINE:BOOL=ON \
-           -DWITH_READLINE:BOOL=ON \
+           -DWITH_READLINE:BOOL=OFF \
            -DWITH_SSL:STRING=system \
            -DENABLED_LOCAL_INFILE:BOOL=ON \
            -DCOMPILATION_COMMENT="MySQL Community Server (GPL) by Remi"
@@ -617,6 +623,7 @@ fi
 - Update to MySQL Community Server 5.5.8 GA
 - remove EXCEPTIONS-CLIENT (no more provided upstream)
 - no mysql-bench for now
+- force soname to .161
 
 * Wed Nov 10 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.5.7-1
 - Update to MySQL Community Server 5.5.7 RC

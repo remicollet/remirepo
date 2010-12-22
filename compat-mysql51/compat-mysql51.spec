@@ -1,4 +1,4 @@
-Name: mysqlclient16
+Name: compat-mysql51
 Version: 5.1.54
 Release: 1%{dist}
 Summary: MySQL shared libraries.
@@ -29,8 +29,10 @@ BuildRequires: gcc-c++, ncurses-devel, zlib-devel
 BuildRequires: libtool automake autoconf
 # make test requires time and ps
 BuildRequires: time procps
-
 Requires: bash
+
+Obsoletes: mysqlclient16 < %{version}
+Provides: mysqlclient16 = %{version}
 
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 %define __perl_requires %{SOURCE999}
