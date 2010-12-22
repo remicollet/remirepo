@@ -256,6 +256,7 @@ gcc $CFLAGS $LDFLAGS -o scriptstub "-DLIBDIR=\"%{_libdir}/mysql\"" %{SOURCE4}
            -DWITH_ARCHIVE_STORAGE_ENGINE:BOOL=ON \
            -DWITH_BLACKHOLE_STORAGE_ENGINE:BOOL=ON \
            -DWITH_READLINE:BOOL=OFF \
+           -DWITH_LIBEDIT:BOOL=OFF \
            -DWITH_SSL:STRING=system \
            -DENABLED_LOCAL_INFILE:BOOL=ON \
            -DCOMPILATION_COMMENT="MySQL Community Server (GPL) by Remi"
