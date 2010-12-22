@@ -51,6 +51,7 @@ Patch18: mysql-5.5-report.patch
 # ABI check fails on client_plugin.h (seems a preprocessor issue)
 # Patch19: mysql-5.5-abi.patch
 Patch20: mysql-5.5-layout.patch
+Patch21: mysql-5.5-readline.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
@@ -207,6 +208,7 @@ sed -i -e '/SHARED_LIB_MAJOR_VERSION/s/16/161/' cmake/mysql_version.cmake
 %patch18 -p1 -b .missing
 # %patch19 -p1
 %patch20 -p1 -b .layout
+%patch21 -p1 -b .readline
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
