@@ -292,6 +292,10 @@ make abi_check_all
   esac
   export MTR_BUILD_THREAD
 
+  # Sometine, test fails because of this lib.
+  LD_LIBRARY_PATH=$PWD/libservices
+  export LD_LIBRARY_PATH
+
   # note: "make test" invokes two largely-duplicate sets of tests,
   # which makes the runtime really unacceptably long ...
   # if you want to change this, look at mysql-testing.patch too.
