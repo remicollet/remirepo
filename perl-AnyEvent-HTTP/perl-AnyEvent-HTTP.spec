@@ -7,7 +7,7 @@ Summary:   Simple but non-blocking HTTP/HTTPS client
 
 Group:     Development/Libraries
 License:   GPL+ or Artistic
-URL:       http://search.cpan.org/dist/Proc-Daemon/
+URL:       http://search.cpan.org/dist/AnyEvent-HTTP/
 Source:    http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/%{perlname}-%{version}.tar.gz
 
 BuildArch: noarch
