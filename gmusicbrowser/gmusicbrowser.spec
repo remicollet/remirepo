@@ -1,6 +1,6 @@
 Name:      gmusicbrowser
 Summary:   Jukebox for large collections of music files
-Version:   1.1.5
+Version:   1.1.6
 Release:   0.1%{?dist}
 License:   GPLv3+
 Group:     Applications/Multimedia
@@ -98,6 +98,9 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Sun Dec 26 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.1.6-0.1
+- update to development version 1.1.6
+
 * Wed Apr 21 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.1.5-0.1
 - update to development version 1.1.5
 
