@@ -1,0 +1,35 @@
+#
+# Define full path to pear/pecl commands to be used in scriptlets:
+#
+%__pear @BINDIR@/pear
+%__pecl @BINDIR@/pecl
+
+#
+# Define PEAR directories used in php-pear-* spec files
+#
+%pear_phpdir  %(%{__pear} config-get php_dir  2> /dev/null || echo undefined)
+%pear_docdir  %(%{__pear} config-get doc_dir  2> /dev/null || echo undefined)
+%pear_testdir %(%{__pear} config-get test_dir 2> /dev/null || echo undefined)
+%pear_datadir %(%{__pear} config-get data_dir 2> /dev/null || echo undefined)
+%pear_cfgdir  %(%{__pear} config-get cfg_dir  2> /dev/null || echo undefined)
+%pear_wwwdir  %(%{__pear} config-get www_dir  2> /dev/null || echo undefined)
+
+#
+# Define PECL directories used in php-pecl-* spec files:
+#
+%pecl_phpdir  %(%{__pecl} config-get php_dir  2> /dev/null || echo undefined)
+%pecl_docdir  %(%{__pecl} config-get doc_dir  2> /dev/null || echo undefined)
+%pecl_testdir %(%{__pecl} config-get test_dir 2> /dev/null || echo undefined)
+%pecl_datadir %(%{__pecl} config-get data_dir 2> /dev/null || echo undefined)
+
+#
+# Define XML directories to store package registration information:
+#
+%pear_xmldir %{pear_phpdir}/.pkgxml
+%pecl_xmldir %{pecl_phpdir}/.pkgxml
+
+#
+# Define macros to be used in scriplets for php-pecl-* spec files:
+#
+%pecl_install %{__pecl} install --nodeps --soft --force --register-only --nobuild
+%pecl_uninstall %{__pecl} uninstall --nodeps --ignore-errors --register-only
