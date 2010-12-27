@@ -52,10 +52,10 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';' -print
 find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';' -print
-chmod -R u+rwX,go+rX,go-w %{buildroot}/*
+%{_fixperms} %{buildroot}%{_prefix}
 
 
 %clean
