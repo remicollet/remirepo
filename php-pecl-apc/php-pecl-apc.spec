@@ -1,27 +1,39 @@
+%{!?phpname:		%{expand: %%global phpname     php}}
+
+%if %{phpname} == php
+%global phpbindir      %{_bindir}
+%global phpconfdir     %{_sysconfdir}
+%global phpincldir     %{_includedir}
+%else
+%global phpbindir      %{_bindir}/%{phpname}
+%global phpconfdir     %{_sysconfdir}/%{phpname}
+%global phpincldir     %{_includedir}/%{phpname}
+%endif
+
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
-%global php_extdir %(php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)                     
+%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)                     
 %global php_zendabiver %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP Extension => //p') | tail -1)
 %global php_version %((echo 0; php-config --version 2>/dev/null) | tail -1)
 %global pecl_name APC
 
 Summary:       APC caches and optimizes PHP intermediate code
-Name:          php-pecl-apc
+Name:          %{phpname}-pecl-apc
 Version:       3.1.6
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-Conflicts:     php-mmcache php-eaccelerator
-BuildRequires: php-devel >= 5.1.0, httpd-devel, php-pear, pcre-devel
+Conflicts:     %{phpname}-mmcache %{phpname}-eaccelerator
+BuildRequires: %{phpname}-devel >= 5.1.0, httpd-devel, %{phpname}-pear, pcre-devel
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 %if %{?php_zend_api}0
 # Require clean ABI/API versions if available (Fedora)
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
+Requires:      %{phpname}(zend-abi) = %{php_zend_api}
+Requires:      %{phpname}(api) = %{php_core_api}
 %else
 %if "%{rhel}" == "5"
 # RHEL5 where we have php-common providing the Zend ABI the "old way"
@@ -31,16 +43,18 @@ Requires:      php-zend-abi = %{php_zendabiver}
 Requires:      php = %{php_version}
 %endif
 %endif
-Provides:      php-pecl(%{pecl_name}) = %{version}
+Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
 
+%if 0%{?fedora}%{?rhel} > 4
 %{?filter_setup:
 %filter_provides_in %{php_extdir}/.*\.so$
 %filter_setup
 }
+%endif
 
 
 %description
@@ -57,8 +71,8 @@ grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
 
 %build
 cd APC-%{version}
-%{_bindir}/phpize
-%configure --enable-apc-mmap --with-php-config=%{_bindir}/php-config
+%{phpbindir}/phpize
+%configure --enable-apc-mmap --with-php-config=%{phpbindir}/php-config
 %{__make} %{?_smp_mflags}
 
 
@@ -77,8 +91,8 @@ popd
 %{__install} -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/apc.ini << 'EOF'
+%{__mkdir_p} %{buildroot}%{phpconfdir}/php.d
+%{__cat} > %{buildroot}%{phpconfdir}/php.d/apc.ini << 'EOF'
 ; Enable apc extension module
 extension = apc.so
 
@@ -154,9 +168,9 @@ EOF
 
 %check
 cd %{pecl_name}-%{version}
-TEST_PHP_EXECUTABLE=$(which php) php run-tests.php \
+TEST_PHP_EXECUTABLE=%{phpbindir}/php %{phpbindir}/php run-tests.php \
     -n -q -d extension_dir=modules \
-    -d extension=apc.so \
+    -d extension=apc.so
 
 
 %if 0%{?pecl_install:1}
@@ -182,12 +196,15 @@ fi
 %doc APC-%{version}/TECHNOTES.txt APC-%{version}/CHANGELOG APC-%{version}/LICENSE
 %doc APC-%{version}/NOTICE        APC-%{version}/TODO      APC-%{version}/apc.php
 %doc APC-%{version}/INSTALL
-%config(noreplace) %{_sysconfdir}/php.d/apc.ini
+%config(noreplace) %{phpconfdir}/php.d/apc.ini
 %{php_extdir}/apc.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Mon Dec 27 2010 Remi Collet <rpms@famillecollet.com> 3.1.6-2
+- relocate using phpname macro
+
 * Tue Nov 30 2010 Remi Collet <Fedora@FamilleCollet.com> - 3.1.6-1
 - update to 3.1.6 (bugfix)
 
