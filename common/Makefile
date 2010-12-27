@@ -20,6 +20,15 @@ srpm:
 devsrpm:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME)-dev.spec
 
+build53:
+	time rpmbuild $(RPMDEFINES) --define "phpname php53" --define "runselftest 0" -bb $(NAME).spec
+
+bi53:
+	time rpmbuild $(RPMDEFINES) --define "phpname php53" --define "runselftest 0"  -bi --short-circuit  $(NAME).spec
+
+srpm53:
+	rpmbuild $(RPMDEFINES) $(SRCDEFINES) --define "phpname php53" -bs $(NAME).spec
+
 build:
 	time rpmbuild $(RPMDEFINES) -bb $(NAME).spec
 
