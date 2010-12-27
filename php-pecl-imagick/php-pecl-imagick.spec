@@ -1,3 +1,15 @@
+%{!?phpname:		%{expand: %%global phpname     php}}
+
+%if %{phpname} == php
+%global phpbindir      %{_bindir}
+%global phpconfdir     %{_sysconfdir}
+%global phpincldir     %{_includedir}
+%else
+%global phpbindir      %{_bindir}/%{phpname}
+%global phpconfdir     %{_sysconfdir}/%{phpname}
+%global phpincldir     %{_includedir}/%{phpname}
+%endif
+
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 %{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
@@ -6,9 +18,9 @@
 %global pecl_name imagick
 
 Summary:       Extension to create and modify images using ImageMagick
-Name:          php-pecl-imagick
+Name:          %{phpname}-pecl-imagick
 Version:       3.0.1
-Release:       1%{?dist}.1
+Release:       2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -16,23 +28,27 @@ Source:        http://pecl.php.net/get/imagick-%{version}.tgz
 
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel >= 5.1.3, php-pear
+BuildRequires: %{phpname}-devel >= 5.1.3, %{phpname}-pear
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
 BuildRequires: ImageMagick-devel >= 6.6.0
 %else
 BuildRequires: ImageMagick2-devel >= 6.6.0
 %endif
+%if 0%{?pecl_install:1}
 Requires(post): %{__pecl}
+%endif
+%if 0%{?pecl_uninstall:1}
 Requires(postun): %{__pecl}
-Provides:      php-pecl(%{pecl_name}) = %{version}
+%endif
+Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}
 
-Conflicts:     php-pecl-gmagick
+Conflicts:     %{phpname}-pecl-gmagick
 
 %if %{?php_zend_api}0
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{phpname}(zend-abi) = %{php_zend_api}
+Requires:       %{phpname}(api) = %{php_core_api}
 %else
-Requires:       php-api = %{php_apiver}
+Requires:       %{phpname}-api = %{php_apiver}
 %endif
 
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
@@ -49,14 +65,15 @@ using the ImageMagick API.
 
 
 %prep
+echo TARGET is %{name}-%{version}-%{release}
 %setup -q -c 
 cd %{pecl_name}-%{version}
 
 
 %build
 cd %{pecl_name}-%{version}
-%{_bindir}/phpize
-%configure --with-imagick=%{prefix}
+%{phpbindir}/phpize
+%configure --with-imagick=%{prefix} --with-php-config=%{phpbindir}/php-config
 %{__make} %{?_smp_mflags}
 
 
@@ -66,8 +83,8 @@ pushd %{pecl_name}-%{version}
 %{__make} install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+%{__mkdir_p} %{buildroot}%{phpconfdir}/php.d
+%{__cat} > %{buildroot}%{phpconfdir}/php.d/%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
 
@@ -78,8 +95,8 @@ EOF
 
 popd
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pecl_xmldir}
-install -pm 644 package.xml $RPM_BUILD_ROOT%{pecl_xmldir}/%{name}.xml
+mkdir -p %{buildroot}%{pecl_xmldir}
+install -pm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %if 0%{?pecl_install:1}
@@ -99,7 +116,7 @@ fi
 %check
 # simple module load test
 pushd %{pecl_name}-%{version}
-php --no-php-ini \
+%{phpbindir}/php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -112,13 +129,16 @@ php --no-php-ini \
 %files
 %defattr(-, root, root, 0755)
 %doc %{pecl_name}-%{version}/{CREDITS,ChangeLog,examples}
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{phpconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
-%exclude %{_includedir}/php/ext/%{pecl_name}
+%exclude %{phpincldir}/php/ext/%{pecl_name}
 
 
 %changelog
+* Sun Dec 27 2010 Remi Collet <rpms@famillecollet.com> 3.0.1-2
+- relocate using phpname macro
+
 * Fri Nov 26 2010 Remi Collet <rpms@famillecollet.com> 3.0.1-1.1
 - rebuild against latest ImageMagick 6.6.5.10
 
