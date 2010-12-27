@@ -1,4 +1,17 @@
-%global peardir %{_datadir}/pear
+%{!?phpname:		%{expand: %%global phpname     php}}
+
+%if %{phpname} == php
+%global phpbindir      %{_bindir}
+%global phpconfdir     %{_sysconfdir}
+%global phpincldir     %{_includedir}
+%global peardir        %{_datadir}/pear
+%else
+%global phpbindir      %{_bindir}/%{phpname}
+%global phpconfdir     %{_sysconfdir}/%{phpname}
+%global phpincldir     %{_includedir}/%{phpname}
+%global peardir        %{_datadir}/%{phpname}/pear
+%endif
+
 
 %global xmlrpcver 1.5.4
 %global getoptver 1.3.0
@@ -7,9 +20,9 @@
 %global xmlutil   1.2.1
 
 Summary: PHP Extension and Application Repository framework
-Name: php-pear
+Name: %{phpname}-pear
 Version: 1.9.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # XML-RPC, Console_Getopt are PHP
@@ -35,17 +48,17 @@ Source24: http://pear.php.net/get/XML_Util-%{xmlutil}.tgz
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-cli >= 5.1.0-1, php-xml, gnupg
+BuildRequires: %{phpname}-cli >= 5.1.0-1, %{phpname}-xml, gnupg
 
-Provides: php-pear(Console_Getopt) = %{getoptver}
-Provides: php-pear(Archive_Tar) = %{arctarver}
-Provides: php-pear(PEAR) = %{version}
-Provides: php-pear(Structures_Graph) = %{structver}
-Provides: php-pear(XML_RPC) = %{xmlrpcver}
-Provides: php-pear(XML_Util) = %{xmlutil}
-Obsoletes: php-pear-XML-Util <= %{xmlutil}
-Provides:  php-pear-XML-Util = %{xmlutil}-%{release}
-Requires:  php-cli >= 5.1.0-1
+Provides: %{phpname}-pear(Console_Getopt) = %{getoptver}
+Provides: %{phpname}-pear(Archive_Tar) = %{arctarver}
+Provides: %{phpname}-pear(PEAR) = %{version}
+Provides: %{phpname}-pear(Structures_Graph) = %{structver}
+Provides: %{phpname}-pear(XML_RPC) = %{xmlrpcver}
+Provides: %{phpname}-pear(XML_Util) = %{xmlutil}
+Obsoletes: %{phpname}-pear-XML-Util <= %{xmlutil}
+Provides:  %{phpname}-pear-XML-Util = %{xmlutil}-%{release}
+Requires:  %{phpname}-cli >= 5.1.0-1
 
 
 %description
@@ -69,14 +82,20 @@ mv package.xml XML_Util.xml
 # apply patches on used PEAR during install
 # -- no patch
 
+%{__sed} -e "s:@BINDIR@:%{phpbindir}:;s:@PEARDIR@:%{peardir}:;s:@CONFDIR@:%{phpconfdir}:" %{SOURCE10} >pear.sh
+%{__sed} -e "s:@BINDIR@:%{phpbindir}:;s:@PEARDIR@:%{peardir}:;s:@CONFDIR@:%{phpconfdir}:" %{SOURCE11} >pecl.sh
+%{__sed} -e "s:@BINDIR@:%{phpbindir}:;s:@PEARDIR@:%{peardir}:;s:@CONFDIR@:%{phpconfdir}:" %{SOURCE12} >pdev.sh
+%{__sed} -e "s:@BINDIR@:%{phpbindir}:;s:@PEARDIR@:%{peardir}:;s:@CONFDIR@:%{phpconfdir}:" %{SOURCE13} >macros
+
+
 %build
 # This is an empty build section.
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-export PHP_PEAR_SYSCONF_DIR=%{_sysconfdir}
-export PHP_PEAR_SIG_KEYDIR=%{_sysconfdir}/pearkeys
+export PHP_PEAR_SYSCONF_DIR=%{phpconfdir}
+export PHP_PEAR_SIG_KEYDIR=%{phpconfdir}/pearkeys
 export PHP_PEAR_SIG_BIN=%{_bindir}/gpg
 export PHP_PEAR_INSTALL_DIR=%{peardir}
 
@@ -91,35 +110,35 @@ install -d $RPM_BUILD_ROOT%{peardir} \
            $RPM_BUILD_ROOT%{_localstatedir}/www/html \
            $RPM_BUILD_ROOT%{peardir}/.pkgxml \
            $RPM_BUILD_ROOT%{_sysconfdir}/rpm \
-           $RPM_BUILD_ROOT%{_sysconfdir}/pear
+           $RPM_BUILD_ROOT%{phpconfdir}/pear
 
 export INSTALL_ROOT=$RPM_BUILD_ROOT
 
-%{_bindir}/php -n -dmemory_limit=32M -dshort_open_tag=0 -dsafe_mode=0 \
+%{phpbindir}/php -n -dmemory_limit=32M -dshort_open_tag=0 -dsafe_mode=0 \
          -derror_reporting=E_ALL -ddetect_unicode=0 \
       %{SOURCE1} -d %{peardir} \
-                 -c %{_sysconfdir}/pear \
-                 -b %{_bindir} \
+                 -c %{phpconfdir}/pear \
+                 -b %{phpbindir} \
+                 -p %{phpbindir}/php \
                  -w %{_localstatedir}/www/html \
                  %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24} %{SOURCE20}
 
 # Replace /usr/bin/* with simple scripts:
-install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pear
-install -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/pecl
-install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
+install -m 755 pear.sh $RPM_BUILD_ROOT%{phpbindir}/pear
+install -m 755 pecl.sh $RPM_BUILD_ROOT%{phpbindir}/pecl
+install -m 755 pdev.sh $RPM_BUILD_ROOT%{phpbindir}/peardev
 
 # Sanitize the pear.conf
-%{_bindir}/php -n %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf $RPM_BUILD_ROOT | 
-  %{_bindir}/php -n %{SOURCE2} php://stdin $PWD > new-pear.conf
-%{_bindir}/php -n %{SOURCE3} new-pear.conf ext_dir |
-  %{_bindir}/php -n %{SOURCE3} php://stdin http_proxy > $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf
+%{phpbindir}/php -n %{SOURCE2} $RPM_BUILD_ROOT%{phpconfdir}/pear.conf $RPM_BUILD_ROOT | 
+  %{phpbindir}/php -n %{SOURCE2} php://stdin $PWD > new-pear.conf
+%{phpbindir}/php -n %{SOURCE3} new-pear.conf ext_dir |
+  %{phpbindir}/php -n %{SOURCE3} php://stdin http_proxy > $RPM_BUILD_ROOT%{phpconfdir}/pear.conf
 
-%{_bindir}/php -r "print_r(unserialize(substr(file_get_contents('$RPM_BUILD_ROOT%{_sysconfdir}/pear.conf'),17)));"
+%{phpbindir}/php -r "print_r(unserialize(substr(file_get_contents('$RPM_BUILD_ROOT%{phpconfdir}/pear.conf'),17)));"
 
 install -m 644 -c %{SOURCE4} LICENSE-XML_RPC
 
-install -m 644 -c %{SOURCE13} \
-           $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.pear     
+install -m 644 -c macros $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.%{name}     
 
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
@@ -136,10 +155,10 @@ install -m 644 XML_Util.xml $RPM_BUILD_ROOT%{peardir}/.pkgxml/
 %check
 # Check that no bogus paths are left in the configuration, or in
 # the generated registry files.
-grep $RPM_BUILD_ROOT $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
-grep %{_libdir} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
-grep '"/tmp"' $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
-grep /usr/local $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
+grep $RPM_BUILD_ROOT $RPM_BUILD_ROOT%{phpconfdir}/pear.conf && exit 1
+grep %{_libdir} $RPM_BUILD_ROOT%{phpconfdir}/pear.conf && exit 1
+grep '"/tmp"' $RPM_BUILD_ROOT%{phpconfdir}/pear.conf && exit 1
+grep /usr/local $RPM_BUILD_ROOT%{phpconfdir}/pear.conf && exit 1
 grep -rl $RPM_BUILD_ROOT $RPM_BUILD_ROOT && exit 1
 
 
@@ -148,24 +167,27 @@ rm -rf $RPM_BUILD_ROOT
 rm new-pear.conf
 
 
-%triggerpostun -- php-pear-XML-Util
+%triggerpostun -- %{phpname}-pear-XML-Util
 # re-register extension unregistered during postun of obsoleted php-pear-XML-Util
-%{_bindir}/pear install --nodeps --soft --force --register-only %{pear_xmldir}/XML_Util.xml >/dev/null || :
+%{phpbindir}/pear install --nodeps --soft --force --register-only %{peardir}/.pkgxml/XML_Util.xml >/dev/null || :
 
 
 %files
 %defattr(-,root,root,-)
 %{peardir}
-%{_bindir}/*
-%config(noreplace) %{_sysconfdir}/pear.conf
-%config %{_sysconfdir}/rpm/macros.pear
+%{phpbindir}/*
+%config(noreplace) %{phpconfdir}/pear.conf
+%config %{_sysconfdir}/rpm/macros.%{name}
 %dir %{_localstatedir}/cache/php-pear
 %dir %{_localstatedir}/www/html
-%dir %{_sysconfdir}/pear
+%dir %{phpconfdir}/pear
 %doc README* LICENSE*
 
 
 %changelog
+* Mon Dec 27 2010 Remi Collet <rpms@famillecollet.com> 1:1.9.1-7
+- relocate using phpname macro
+
 * Sun Dec 12 2010 Remi Collet <Fedora@FamilleCollet.com> 1:1.9.1-6
 - update Console_Getopt to 1.3.0
 - don't require php-devel (#657812)
