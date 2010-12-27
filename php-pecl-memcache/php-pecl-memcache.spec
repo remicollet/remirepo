@@ -1,13 +1,25 @@
+%{!?phpname:		%{expand: %%global phpname     php}}
+
+%if %{phpname} == php
+%global phpbindir      %{_bindir}
+%global phpconfdir     %{_sysconfdir}
+%global phpincldir     %{_includedir}
+%else
+%global phpbindir      %{_bindir}/%{phpname}
+%global phpconfdir     %{_sysconfdir}/%{phpname}
+%global phpincldir     %{_includedir}/%{phpname}
+%endif
+
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
+%{!?php_extdir: %{expand: %%global php_extdir %(%{phpbindir}/php-config --extension-dir)}}
 %global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 
 %global pecl_name memcache
 
 Summary:      Extension to work with the Memcached caching daemon
-Name:         php-pecl-memcache
+Name:         %{phpname}-pecl-memcache
 Version:      3.0.5
-Release:      2%{?dist}
+Release:      3%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -16,7 +28,7 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel >= 4.3.11, php-pear, zlib-devel
+BuildRequires: %{phpname}-devel >= 4.3.11, %{phpname}-pear, zlib-devel
 
 %if 0%{?pecl_install:1}
 Requires(post): %{__pecl}
@@ -24,19 +36,21 @@ Requires(post): %{__pecl}
 %if 0%{?pecl_uninstall:1}
 Requires(postun): %{__pecl}
 %endif
-Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
 %if %{?php_zend_api}0
-Requires:     php(zend-abi) = %{php_zend_api}
-Requires:     php(api) = %{php_core_api}
+Requires:     %{phpname}(zend-abi) = %{php_zend_api}
+Requires:     %{phpname}(api) = %{php_core_api}
 %else
 Requires:     php-api = %{php_apiver}
 %endif
 
 
+%if 0%{?fedora}%{?rhel} > 4
 %{?filter_setup:
 %filter_provides_in %{php_extdir}/.*\.so$
 %filter_setup
 }
+%endif
 
 
 %description
@@ -52,7 +66,7 @@ Memcache can be used as a PHP session handler.
 
 %prep 
 %setup -c -q
-%{_bindir}/php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
+%{phpbindir}/php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
 
 # avoid spurious-executable-perm
 find . -type f -exec chmod -x {} \;
@@ -60,8 +74,8 @@ find . -type f -exec chmod -x {} \;
 
 %build
 cd %{pecl_name}-%{version}
-phpize
-%configure
+%{phpbindir}/phpize
+%configure  --with-php-config=%{phpbindir}/php-config
 %{__make} %{?_smp_mflags}
 
 
@@ -71,8 +85,8 @@ cd %{pecl_name}-%{version}
 %{__make} install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+%{__mkdir_p} %{buildroot}%{phpconfdir}/php.d
+%{__cat} > %{buildroot}%{phpconfdir}/php.d/%{pecl_name}.ini << 'EOF'
 ; ----- Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 
@@ -118,7 +132,7 @@ EOF
 %check
 cd %{pecl_name}-%{version}
 # simple module load test
-%{_bindir}/php --no-php-ini \
+%{phpbindir}/php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -146,12 +160,15 @@ fi
 %defattr(-, root, root, -)
 %doc CHANGELOG %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/README 
 %doc %{pecl_name}-%{version}/example.php %{pecl_name}-%{version}/memcache.php
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{phpconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Mon Dec 27 2010 Remi Collet <rpms@famillecollet.com> 3.0.5-3
+- relocate using phpname macro
+
 * Sat Oct 23 2010  Remi Collet <Fedora@FamilleCollet.com> 3.0.5-2
 - add filter_provides to avoid private-shared-object-provides memcache.so
 
