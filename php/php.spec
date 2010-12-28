@@ -1288,6 +1288,7 @@ fi
 %changelog
 * Sun Dec 26 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-3
 - relocate using phpname macro
+- rebuild against MySQL 5.5
 
 * Sun Dec 12 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-2
 - security patch from upstream for #660517
