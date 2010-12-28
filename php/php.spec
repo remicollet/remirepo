@@ -1026,7 +1026,7 @@ install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules
 # Apache config fragment
 install -m 755 -d $RPM_BUILD_ROOT/%{_origsysconfdir}/httpd/conf.d
 %if %{phpname} == php
-install -m 644 $RPM_SOURCE_DIR/php.conf $RPM_BUILD_ROOT/%{_origsysconfdir}/httpd/conf.d
+install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{_origsysconfdir}/httpd/conf.d
 %else
 %{__sed} -e s'/libphp5/lib%{phpname}/' %{SOURCE1} \
   >$RPM_BUILD_ROOT/%{_origsysconfdir}/httpd/conf.d/%{phpname}.conf
