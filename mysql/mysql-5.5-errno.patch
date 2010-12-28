@@ -1,7 +1,10 @@
-diff -up mysql-5.5.6-rc/include/my_sys.h.orig mysql-5.5.6-rc/include/my_sys.h
---- mysql-5.5.6-rc/include/my_sys.h.orig	2010-09-17 22:48:10.000000000 +0200
-+++ mysql-5.5.6-rc/include/my_sys.h	2010-09-24 19:01:43.250648886 +0200
-@@ -201,13 +201,8 @@ extern void my_large_free(uchar *ptr);
+"extern int errno" is just a really bad idea.
+
+
+diff -Naur mysql-5.5.8.orig/include/my_sys.h mysql-5.5.8/include/my_sys.h
+--- mysql-5.5.8.orig/include/my_sys.h	2010-12-03 12:58:24.000000000 -0500
++++ mysql-5.5.8/include/my_sys.h	2010-12-20 21:20:12.622190325 -0500
+@@ -201,13 +201,8 @@
  #define my_afree(PTR) my_free(PTR)
  #endif /* HAVE_ALLOCA */
  

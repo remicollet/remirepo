@@ -1,7 +1,4 @@
-mysql's idea of a suitable place to install the regression tests is
-/usr/mysql-test.  To relocate this to a reasonably FHS-compliant place
-like /usr/share/mysql-test, we have to hack up the paths in mtr_cases.pm.
-This patch also improves the documentation a tad.
+Improve the documentation that will be installed in the mysql-test RPM.
 
 
 diff -Naur mysql-5.1.43.orig/mysql-test/README mysql-5.1.43/mysql-test/README
@@ -34,13 +31,3 @@ diff -Naur mysql-5.1.43.orig/mysql-test/README mysql-5.1.43/mysql-test/README
  
  
  You can create your own test cases. To create a test case, create a new
---- mysql-5.5.6-rc/mysql-test/lib/mtr_cases.pm.orig	2010-09-24 19:11:14.978713231 +0200
-+++ mysql-5.5.6-rc/mysql-test/lib/mtr_cases.pm	2010-09-24 19:11:25.748104951 +0200
-@@ -276,6 +276,7 @@
-     {
-       $suitedir= my_find_dir($::basedir,
- 			     ["share/mysql-test/suite",
-+			      "share/mysql-test",
- 			      "mysql-test/suite",
- 			      "mysql-test",
- 			      # Look in storage engine specific suite dirs

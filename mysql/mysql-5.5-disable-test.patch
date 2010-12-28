@@ -1,0 +1,27 @@
+Disable the outfile_loaddata test, which as of 5.1.38 is giving
+platform-dependent results, with the "expected" results being arguably the
+wrong ones.  This is upstream at http://bugs.mysql.com/bug.php?id=46895
+(note that upstream has also disabled it, but only for Solaris, so we still
+need this patch).
+
+Also disable sys_vars.plugin_dir_basic, which is broken because
+mysql-test-run doesn't set the right value of MYSQL_LIBDIR.  Upstream at
+http://bugs.mysql.com/bug.php?id=52223
+
+Also disable perfschema.binlog_mix and perfschema.binlog_row, which have
+expected output that doesn't match when openssl is in use.  Upstream at
+http://bugs.mysql.com/bug.php?id=59091
+
+
+diff -Naur mysql-5.5.8.orig/mysql-test/t/disabled.def mysql-5.5.8/mysql-test/t/disabled.def
+--- mysql-5.5.8.orig/mysql-test/t/disabled.def	2010-12-03 12:58:24.000000000 -0500
++++ mysql-5.5.8/mysql-test/t/disabled.def	2010-12-21 11:03:07.288224692 -0500
+@@ -19,3 +19,8 @@
+ sum_distinct-big         : Bug#56927 2010-11-15 mattiasj was not tested
+ alter_table-big          : Bug#37248 2010-11-15 mattiasj was not tested
+ create-big               : Bug#37248 2010-11-15 mattiasj was not tested
++#
++outfile_loaddata         : bug#46895 code wrong, expected results wrong too
++sys_vars.plugin_dir_basic : bug#52223 fails for lib64 library directory
++perfschema.binlog_mix    : bug#59091 fails with openssl
++perfschema.binlog_row    : bug#59091 fails with openssl
