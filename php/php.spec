@@ -141,6 +141,7 @@ Requires(pre): httpd
 
 
 %{expand: %%define _origbindir %{_bindir}}
+%{expand: %%define _originitdir %{_initrddir}}
 %{expand: %%define _origsysconfdir %{_sysconfdir}}
 %if %{phpname} == php
 %global peardir      %{_datadir}/pear
@@ -1043,16 +1044,16 @@ install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{phpname}/session
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/log/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
 # Config
-install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d
+install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/php-fpm.d
 install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
-install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
+install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_origsysconfdir}/php-fpm.d/www.conf
 mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
 # Service
-install -m 755 -d $RPM_BUILD_ROOT%{_initrddir}
-install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
+install -m 755 -d $RPM_BUILD_ROOT%{_originitdir}
+install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
 # LogRotate
-install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
-install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
+install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
+install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 %endif
 
 # Fix the link
@@ -1221,11 +1222,11 @@ fi
 %defattr(-,root,root)
 %doc php-fpm.conf.default
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
-%config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
-%config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
+%config(noreplace) %{_origsysconfdir}/php-fpm.d/www.conf
+%config(noreplace) %{_origsysconfdir}/logrotate.d/php-fpm
 %{_sbindir}/php-fpm
-%{_initrddir}/php-fpm
-%dir %{_sysconfdir}/php-fpm.d
+%{_originitdir}/php-fpm
+%dir %{_origsysconfdir}/php-fpm.d
 # log owned by apache for log
 %attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
 %ghost %dir %{_localstatedir}/run/php-fpm
