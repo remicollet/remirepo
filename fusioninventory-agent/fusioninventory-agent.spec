@@ -12,12 +12,13 @@ Release:   2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1-48-ga7532c0.tar.gz
 %else
-Release:   1
+Release:   2
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
 Source1:   %{name}.cron
 Source2:   %{name}.init
+Source3:   %{name}.py
 
 Group:     Applications/System
 License:   GPLv2+
@@ -77,7 +78,7 @@ You can add additional packages for optional tasks:
 * perl-FusionInventory-Agent-Task-SNMPQuery
     SNMP Query support
 
-
+Edit the /etc/sysconfig/%{name} file for service configuration
 
 %description -l fr
 L'agent FusionInventory est une application destinée à aider l'administrateur
@@ -96,6 +97,28 @@ Vous pouvez ajouter les paquets additionnels pour les tâches optionnelles :
 * perl-FusionInventory-Agent-Task-SNMPQuery
     Gestion de l'interrogation SNMP
 
+Modifier le fichier /etc/sysconfig/%{name} pour configurer le service.
+
+
+%package yum-plugin
+Summary:       Ask FusionInventory agent to send an inventory when yum exits
+Summary(fr):   Demande à l'agent FusionInventory l'envoi d'un inventaire
+Group:         System Environment/Base
+BuildRequires: python-devel
+Requires:      yum >= 3.0
+Requires:      %{name}
+
+%description yum-plugin
+fusioninventory-agent-yum-plugin asks the running service agent to send an inventory
+when yum exits.
+
+This requires the service to be running with the --rpc-trust-localhost option.
+
+%description -l fr yum-plugin
+fusioninventory-agent-yum-plugin demande au service de l'agent d'envoyer un
+inventaire à la fin de l'exécution de yum.
+
+Le service doit être actif et lancé avec l'option --rpc-trust-localhost.
 
 %prep
 %if 0%{?gitver:1}
@@ -135,8 +158,8 @@ cat <<EOF | tee %{name}.conf
 #
 # Add tools directory if needed (tw_cli, hpacucli, ipssend, ...)
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
-# Global options
-#FUSINVOPT='--debug --rpc-trust-localhost'
+# Global options (debug for verbose log, rpc-trust-localhost for yum-plugin)
+FUSINVOPT='--debug --rpc-trust-localhost'
 # Mode, change to "cron" or "daemon" to activate
 # - none (default on install) no activity
 # - cron (inventory only) use the cron.hourly
@@ -184,6 +207,14 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{__install} -m 644 -D  agent.cfg    %{buildroot}%{_sysconfdir}/fusioninventory/agent.cfg
 %{__install} -m 755 -Dp %{SOURCE1}   %{buildroot}%{_sysconfdir}/cron.hourly/%{name}
 %{__install} -m 755 -Dp %{SOURCE2}   %{buildroot}%{_initrddir}/%{name}
+
+# Yum plugin
+%{__install} -m 644 -D %{SOURCE3} %{buildroot}/usr/lib/yum-plugins/%{name}.py
+%{__mkdir_p} %{buildroot}%{_sysconfdir}/yum/pluginconf.d
+cat <<EOF >%{buildroot}%{_sysconfdir}/yum/pluginconf.d/%{name}.conf
+[main]
+enabled=1
+EOF
 
 
 %check
@@ -233,8 +264,16 @@ exit 0
 %dir %{_localstatedir}/log/%{name}
 %dir %{_localstatedir}/lib/%{name}
 
+%files yum-plugin
+%defattr(-, root, root)
+%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/%{name}.conf
+/usr/lib/yum-plugins/%{name}.*
+
 
 %changelog
+* Thu Dec 30 2010 Remi Collet <Fedora@famillecollet.com> 2.1.7-2
+- add the yum-plugin sub-package
+
 * Mon Dec 13 2010 Remi Collet <Fedora@famillecollet.com> 2.1.7-1
 - update to 2.1.7
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.7/Changes
