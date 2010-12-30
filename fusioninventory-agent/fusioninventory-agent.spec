@@ -18,7 +18,9 @@ Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Ag
 
 Source1:   %{name}.cron
 Source2:   %{name}.init
+# Will be in 2.1.8 archive
 Source3:   %{name}.py
+Source4:   %{name}.conf
 
 Group:     Applications/System
 License:   GPLv2+
@@ -105,7 +107,7 @@ Summary:       Ask FusionInventory agent to send an inventory when yum exits
 Summary(fr):   Demande à l'agent FusionInventory l'envoi d'un inventaire
 Group:         System Environment/Base
 BuildRequires: python-devel
-Requires:      yum >= 3.0
+Requires:      yum >= 2.4
 Requires:      %{name}
 
 %description yum-plugin
@@ -208,13 +210,9 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{__install} -m 755 -Dp %{SOURCE1}   %{buildroot}%{_sysconfdir}/cron.hourly/%{name}
 %{__install} -m 755 -Dp %{SOURCE2}   %{buildroot}%{_initrddir}/%{name}
 
-# Yum plugin
+# Yum plugin installation
 %{__install} -m 644 -D %{SOURCE3} %{buildroot}/usr/lib/yum-plugins/%{name}.py
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/yum/pluginconf.d
-cat <<EOF >%{buildroot}%{_sysconfdir}/yum/pluginconf.d/%{name}.conf
-[main]
-enabled=1
-EOF
+%{__install} -m 644 -D %{SOURCE4} %{buildroot}%{_sysconfdir}/yum/pluginconf.d/%{name}.conf
 
 
 %check

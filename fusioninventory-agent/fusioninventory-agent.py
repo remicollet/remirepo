@@ -18,7 +18,7 @@ from yum.plugins import TYPE_CORE
 from urlgrabber.grabber import urlread
 from urlgrabber.grabber import URLGrabError
 
-requires_api_version = '2.5'
+requires_api_version = '2.1'
 plugin_type = TYPE_CORE
 
 def posttrans_hook(conduit):
@@ -27,13 +27,27 @@ def posttrans_hook(conduit):
     Run only after an rpm transaction.
     """
     try:
-        res = urlread('http://localhost:62354/now', 2048)
+        port = conduit.confInt('main', 'port', default=62354)
+        url = "http://localhost:%d/now" % port
+        conduit.info(9, "calling %s" % url)
+        res = urlread(url, 2048)
+
     except URLGrabError, e:
         conduit.info(4, "Unable to send connect to FusionInventory service")
-        conduit.info(6, "%s" %(e,))
+        if '403' in e.args[1]:
+            conduit.info(4, "Check than FusionInventory service runs with rpc-trust-localhost option")
+        else:
+            conduit.info(4, "Check than FusionInventory service is running")
+        conduit.info(6, "Error %s: %s" % (e.args[0], e.args[1]))
         return
+
     if res and 'Done.' in res:
         conduit.info(2, "FusionInventory agent asked to run an inventory")
-    else:
+
+    elif res:
         conduit.info(4, "Bad anwser from FusionInventory agent")
+        conduit.info(8, res)
+
+    else:
+        conduit.info(4, "No anwser from FusionInventory agent")
 
