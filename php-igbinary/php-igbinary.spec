@@ -7,12 +7,16 @@
 Summary:        Replacement for the standard PHP serializer
 Name:           php-igbinary
 Version:        1.0.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
 
 URL:            http://opensource.dynamoid.com/
 Source0:        http://opensource.dynamoid.com/%{extname}-%{version}.tar.gz
+
+# git clone https://github.com/phadej/igbinary.git
+# tar czf igbinary-tests.tgz -C igbinary tests
+Source1:        %{extname}-tests.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel php-pear
@@ -53,9 +57,12 @@ These are the files needed to compile programs using Igbinary
 %prep
 %setup -q -n %{extname}-%{version}
 
+# Take tests directory from SVN which have some php 5.3 fixes
+%{__tar} xzf %{SOURCE1}
+
 
 %build
-phpize
+%{_bindir}/phpize
 %{configure}
 %{__make} %{?_smp_mflags}
 
@@ -85,24 +92,8 @@ EOF
     --define extension=%{extname}.so \
     --modules | grep %{extname}
 
-# Create a minimal php.ini
-cat >php.ini <<EOF
-extension_dir=$PWD/modules
-date.timezone=UTC
-EOF
-# Allow to run rpmbuild with extension installed
-if [ ! -f %{php_extdir}/%{extname}.so ]; then
-  echo extension=%{extname}.so >>php.ini
-fi
-
-# As we have redirected extension_dir
-for ext in %{php_extdir}/*.so; do
-  %{__ln_s} $ext modules || :
-done
-
-PHPRC=./php.ini %{__pear} run-tests tests
-# For now: 30 PASSED, 1 SKIPPED, 5 FAILED TESTS
-
+# For now : Tests failed: 3, Tests passed: 35
+NO_INTERACTION=1 %{__make} test
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -121,6 +112,9 @@ PHPRC=./php.ini %{__pear} run-tests tests
 
 
 %changelog
+* Fri Dec 31 2010 Remi Collet <rpms@famillecollet.com> 1.0.2-3
+- updated tests from Git.
+
 * Sat Oct 23 2010 Remi Collet <rpms@famillecollet.com> 1.0.2-2
 - filter provides to avoid igbinary.so
 - add missing %%dist
