@@ -28,9 +28,9 @@
 %global mycomment  Beta 8
 
 Summary:        Mozilla Firefox Web browser
-Name:           firefox4
+Name:           firefox
 Version:        4.0
-Release:        0.14.beta8%{?dist}
+Release:        0.15.beta8%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -175,7 +175,10 @@ Requires:       nspr >= %{nspr_version}
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
 Obsoletes:      mozilla <= 37:1.7.13
-Obsoletes:      firefox36
+%if %{name} == firefox
+Obsoletes:      firefox4 < %{version}-%{release}
+Provides:       firefox4 = %{version}-%{release}
+%endif
 Provides:       webclient
 
 %define _use_internal_dependency_generator 0
@@ -510,6 +513,8 @@ fi
 update-desktop-database &> /dev/null || :
 
 %preun
+# Only for firefox (not for firefox4, tu manage update from firefox4 to firefox)
+%if %{name} == firefox
 # is it a final removal?
 if [ $1 -eq 0 ]; then
   %{__rm} -rf %{mozappdir}/components
@@ -517,6 +522,7 @@ if [ $1 -eq 0 ]; then
   %{__rm} -rf %{mozappdir}/langpacks
   %{__rm} -rf %{mozappdir}/plugins
 fi
+%endif
 
 %posttrans
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
@@ -578,6 +584,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Dec 31 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.15.beta8
+- rename to firefox (and obsolete firefox4)
+
 * Tue Dec 21 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.14.beta8
 - update to 4.0b8
 
