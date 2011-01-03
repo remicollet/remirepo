@@ -1,18 +1,18 @@
 Name: phpMyAdmin
-Version: 3.3.8.1
+Version: 3.3.9
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
-Group:	Applications/Internet
+Group: Applications/Internet
 License: GPLv2+
-URL: http://www.phpmyadmin.net/	
+URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}-all-languages.tar.bz2
 Source2: phpMyAdmin.htaccess
 
 Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/smooth_yellow-3.3.zip
 Source11: http://downloads.sourceforge.net/sourceforge/phpmyadmin/arctic_ocean-3.3.zip
 Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.0b.zip
-Source13: http://freefr.dl.sourceforge.net/project/phpmyadmin/themes/pmahomme/1.0/pmahomme-1.0.zip
+Source13: http://downloads.sourceforge.net/sourceforge/phpmyadmin/pmahomme-1.0b.zip
 
 
 # See https://sourceforge.net/tracker/?func=detail&atid=377410&aid=2965613&group_id=23067
@@ -121,11 +121,14 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Mon Jan 03 2011 Remi Collet <rpms@famillecollet.com> 3.3.9-1
+- Upstream released 3.3.9
+- update pmamhomme to 1.0b
 - don't requires php (to allow nginx or lighttpd instead of apache)
 
 * Mon Oct 25 2010 Remi Collet <rpms@famillecollet.com> 3.3.8.1-1
 - Upstream released 3.3.8.1
-- add pmamhomme theme
+- add pmamhomme 1.0 theme
 
 * Mon Oct 25 2010 Remi Collet <rpms@famillecollet.com> 3.3.8-1
 - Upstream released 3.3.8
