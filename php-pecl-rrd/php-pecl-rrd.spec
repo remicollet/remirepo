@@ -14,7 +14,9 @@ URL:          http://pecl.php.net/package/rrd
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
 
+# http://pecl.php.net/bugs/21132
 Patch0:       rrd-libdir.patch
+# http://pecl.php.net/bugs/21135
 Patch1:       rrd-build.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -81,6 +83,7 @@ php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
+# See http://pecl.php.net/bugs/21133
 
 
 %clean
@@ -103,7 +106,7 @@ fi
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_name}-%{version}/CREDITS
+%doc CHANGELOG %{pecl_name}-%{version}/CREDITS
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
