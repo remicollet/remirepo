@@ -47,8 +47,8 @@ system for time series data.
 %{_bindir}/php -n %{SOURCE2} package.xml >CHANGELOG
 
 cd %{pecl_name}-%{version}
-%patch0 -p1 -b libdir
-%patch1 -p1 -b build
+%patch0 -p1 -b .libdir
+%patch1 -p1 -b .build
 
 
 %build
