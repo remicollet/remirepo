@@ -1,0 +1,11 @@
+diff -up rrd-0.9.0/config.m4.libdir rrd-0.9.0/config.m4
+--- rrd-0.9.0/config.m4.libdir	2011-01-03 16:10:03.986701038 +0100
++++ rrd-0.9.0/config.m4	2011-01-03 16:10:08.683888973 +0100
+@@ -32,6 +32,7 @@ if test "$PHP_RRD" != "no"; then
+     dnl Library path
+     AC_MSG_CHECKING([for rrdtool library files in default path])
+     for i in librrd.$SHLIB_SUFFIX_NAME librrd.a; do
++      test -f $libdir/$i && RRDTOOL_LIBDIR=$libdir/$i
+       test -f $RRDTOOL_DIR/lib/$i && RRDTOOL_LIBDIR=$RRDTOOL_DIR/lib
+     done
+     if test -z "$RRDTOOL_LIBDIR"; then
