@@ -9,15 +9,6 @@ diff -up rrd-0.9.0/rrd.c.orig rrd-0.9.0/rrd.c
  
  #include <rrd.h>
  
-@@ -243,7 +244,7 @@ PHP_FUNCTION(rrd_lastupdate)
- 
- 	if (rrd_test_error()) rrd_clear_error();
- 
--	if (rrd_lastupdate(2, &argv[1], &last_update, &ds_cnt, &ds_namv,
-+	if (rrd_lastupdate_r(argv[1], &last_update, &ds_cnt, &ds_namv,
- 		&last_ds) == -1) {
- 		efree(argv[2]); efree(argv[1]);
- 		RETURN_FALSE;
 diff -up rrd-0.9.0/rrd_create.c.orig rrd-0.9.0/rrd_create.c
 --- rrd-0.9.0/rrd_create.c.orig	2011-01-03 16:28:23.116703802 +0100
 +++ rrd-0.9.0/rrd_create.c	2011-01-03 16:28:35.260188909 +0100

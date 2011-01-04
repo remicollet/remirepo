@@ -13,11 +13,16 @@ URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
+# svn co http://svn.php.net/repository/pecl/rrd
+# tar cvzf rrd-tests.tgz --exclude .svn -C rrd/trunk tests
+# See http://pecl.php.net/bugs/21133
+Source3:      rrd-tests.tgz
 
 # http://pecl.php.net/bugs/21132
 Patch0:       rrd-libdir.patch
 # http://pecl.php.net/bugs/21135
 Patch1:       rrd-build.patch
+Patch2:       rrd-v14x.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel, rrdtool-devel, php-pear
@@ -49,7 +54,9 @@ system for time series data.
 cd %{pecl_name}-%{version}
 %patch0 -p1 -b .libdir
 %patch1 -p1 -b .build
+%patch2 -p1 -b .v14x
 
+%{__tar} xzf %{SOURCE3}
 
 %build
 cd %{pecl_name}-%{version}
@@ -83,7 +90,8 @@ php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
-# See http://pecl.php.net/bugs/21133
+
+%{__make} test NO_INTERACTION=1
 
 
 %clean
