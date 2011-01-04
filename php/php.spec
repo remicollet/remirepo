@@ -770,7 +770,6 @@ ln -sf ../configure
 	--enable-ftp \
 	--enable-magic-quotes \
 	--enable-sockets \
-	--enable-sysvsem --enable-sysvshm --enable-sysvmsg \
 	--with-kerberos \
 	--enable-ucd-snmp-hack \
 	--enable-shmop \
