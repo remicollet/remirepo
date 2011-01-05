@@ -25,7 +25,7 @@ Patch1:       rrd-build.patch
 Patch2:       rrd-v14x.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel, rrdtool-devel, php-pear
+BuildRequires: php-devel, rrdtool, rrdtool-devel, php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -56,7 +56,27 @@ cd %{pecl_name}-%{version}
 %patch1 -p1 -b .build
 %patch2 -p1 -b .v14x
 
+# Test suite from SVN
 %{__tar} xzf %{SOURCE3}
+
+# generate test file according to tests/testData/readme.txt
+fic=tests/testData/speed.rrd
+%{_bindir}/rrdtool create $fic --start 920804400 \
+  DS:speed:COUNTER:600:U:U \
+  RRA:AVERAGE:0.5:1:24 \
+  RRA:AVERAGE:0.5:6:10
+%{_bindir}/rrdtool update $fic 920804700:12345 920805000:12357 920805300:12363
+%{_bindir}/rrdtool update $fic 920805600:12363 920805900:12363 920806200:12373
+%{_bindir}/rrdtool update $fic 920806500:12383 920806800:12393 920807100:12399
+%{_bindir}/rrdtool update $fic 920807400:12405 920807700:12411 920808000:12415
+%{_bindir}/rrdtool update $fic 920808300:12420 920808600:12422 920808900:12423
+%{_bindir}/rrdtool graph tests/testData/speed.png \
+  --start 920804400 --end 920808000 \
+  --vertical-label m/s \
+  DEF:myspeed=${fic}:speed:AVERAGE \
+  CDEF:realspeed=myspeed,1000,* \
+  LINE2:realspeed#FF0000
+
 
 %build
 cd %{pecl_name}-%{version}
