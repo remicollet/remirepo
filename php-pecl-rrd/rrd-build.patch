@@ -16,7 +16,7 @@ diff -up rrd-0.9.0/rrd_create.c.orig rrd-0.9.0/rrd_create.c
  #include "rrd_create.h"
  #include "php_rrd.h"
  #include "ext/standard/php_array.h"
-+#include "Zend/zend_exceptions.h"
++#include "zend_exceptions.h"
  
  /* declare class entry */
  static zend_class_entry *ce_rrd_create;
@@ -27,7 +27,7 @@ diff -up rrd-0.9.0/rrd_graph.c.orig rrd-0.9.0/rrd_graph.c
  
  #include "php.h"
  #include "ext/standard/php_smart_str.h"
-+#include "Zend/zend_exceptions.h"
++#include "zend_exceptions.h"
  
  #include <rrd.h>
  
@@ -38,7 +38,7 @@ diff -up rrd-0.9.0/rrd_update.c.orig rrd-0.9.0/rrd_update.c
  #include "php_rrd.h"
  #include "rrd_update.h"
  #include "ext/standard/php_smart_str.h"
-+#include "Zend/zend_exceptions.h"
++#include "zend_exceptions.h"
  
  /* declare class entry */
  static zend_class_entry *ce_rrd_update;
