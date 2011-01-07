@@ -1,8 +1,8 @@
-diff -up php-5.3.4/configure.in.aconf26x php-5.3.4/configure.in
---- php-5.3.4/configure.in.aconf26x	2010-12-11 11:02:33.634975461 +0100
-+++ php-5.3.4/configure.in	2010-12-11 11:03:30.336094172 +0100
+diff -up php-5.3.5/configure.in.aconf26x php-5.3.5/configure.in
+--- php-5.3.5/configure.in.aconf26x	2011-01-07 18:10:08.377183393 +0100
++++ php-5.3.5/configure.in	2011-01-07 18:10:14.204214101 +0100
 @@ -1,7 +1,7 @@
- ## $Id: configure.in 306090 2010-12-08 21:38:51Z johannes $ -*- autoconf -*-
+ ## $Id: configure.in 307133 2011-01-05 16:35:33Z johannes $ -*- autoconf -*-
  dnl ## Process this file with autoconf to produce a configure script.
  
 -divert(1)
@@ -46,9 +46,9 @@ diff -up php-5.3.4/configure.in.aconf26x php-5.3.4/configure.in
  
  dnl ## In diversion 5 we check which extensions should be compiled.
  dnl ## All of these are normally in the extension directories.
-diff -up php-5.3.4/ext/standard/config.m4.aconf26x php-5.3.4/ext/standard/config.m4
---- php-5.3.4/ext/standard/config.m4.aconf26x	2010-06-17 12:22:03.000000000 +0200
-+++ php-5.3.4/ext/standard/config.m4	2010-12-11 11:02:33.643973734 +0100
+diff -up php-5.3.5/ext/standard/config.m4.aconf26x php-5.3.5/ext/standard/config.m4
+--- php-5.3.5/ext/standard/config.m4.aconf26x	2010-06-17 12:22:03.000000000 +0200
++++ php-5.3.5/ext/standard/config.m4	2011-01-07 18:09:09.790922608 +0100
 @@ -1,6 +1,6 @@
  dnl $Id: config.m4 300511 2010-06-17 10:22:03Z pajoye $ -*- autoconf -*-
  
@@ -66,9 +66,9 @@ diff -up php-5.3.4/ext/standard/config.m4.aconf26x php-5.3.4/ext/standard/config
  
  dnl
  dnl Check if there is a support means of creating a new process
-diff -up php-5.3.4/scripts/phpize.m4.aconf26x php-5.3.4/scripts/phpize.m4
---- php-5.3.4/scripts/phpize.m4.aconf26x	2010-11-02 10:58:08.000000000 +0100
-+++ php-5.3.4/scripts/phpize.m4	2010-12-11 11:02:33.643973734 +0100
+diff -up php-5.3.5/scripts/phpize.m4.aconf26x php-5.3.5/scripts/phpize.m4
+--- php-5.3.5/scripts/phpize.m4.aconf26x	2010-11-02 10:58:08.000000000 +0100
++++ php-5.3.5/scripts/phpize.m4	2011-01-07 18:09:09.791922611 +0100
 @@ -1,6 +1,6 @@
  dnl This file becomes configure.in for self-contained extensions.
  

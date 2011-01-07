@@ -27,7 +27,7 @@
 # arch detection heuristic used by bindir/mysql_config.
 %define mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.3.4
+%global phpversion 5.3.5
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -51,8 +51,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.4
-Release: 3%{?dist}
+Version: 5.3.5
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -78,7 +78,7 @@ Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.3.4-aconf26x.patch
+Patch8: php-5.3.5-aconf26x.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -1286,6 +1286,10 @@ fi
 %endif
 
 %changelog
+* Fri Jan 07 2011 Remi Collet <rpms@famillecollet.com> 5.3.5-1
+- update to 5.3.5
+  http://www.php.net/ChangeLog-5.php#5.3.5
+
 * Sun Dec 26 2010 Remi Collet <rpms@famillecollet.com> 5.3.4-3
 - relocate using phpname macro
 - rebuild against MySQL 5.5
