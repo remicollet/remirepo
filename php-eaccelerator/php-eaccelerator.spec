@@ -11,7 +11,7 @@ Summary: PHP accelerator, optimizer, encoder and dynamic content cacher
 Name: php-eaccelerator
 Version: 0.9.6.1
 #Release: 0.2%{?svn:.svn%{svn}}%{?dist}
-Release: 3%{?dist}
+Release: 4%{?dist}
 Epoch: 1
 # The eaccelerator module itself is GPLv2+
 # The PHP control panel is under the Zend license (control.php and dasm.php)
@@ -129,6 +129,9 @@ fi
 
 
 %changelog
+* Sat Jan 08 2011 Remi Collet <Fedora@FamilleCollet.com> - 1:0.9.6.1-4
+- rebuild against PHP 5.3.5
+
 * Sun Aug 08 2010 Remi Collet <Fedora@FamilleCollet.com> - 1:0.9.6.1-3
 - rebuild against PHP 5.3.4
 
