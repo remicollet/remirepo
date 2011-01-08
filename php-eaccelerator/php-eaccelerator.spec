@@ -1,5 +1,17 @@
-%global php_extdir %(php-config --extension-dir 2>/dev/null || echo "undefined")
-%global php_version %((echo 0; php-config --version 2>/dev/null) | tail -1)
+%{!?phpname:		%{expand: %%global phpname     php}}
+
+%if %{phpname} == php
+%global phpbindir      %{_bindir}
+%global phpconfdir     %{_sysconfdir}
+%global phpincldir     %{_includedir}
+%else
+%global phpbindir      %{_bindir}/%{phpname}
+%global phpconfdir     %{_sysconfdir}/%{phpname}
+%global phpincldir     %{_includedir}/%{phpname}
+%endif
+
+%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo "undefined")
+%global php_version %((echo 0; %{phpbindir}/php-config --version 2>/dev/null) | tail -1)
 
 # This is the apache userid, used for sysvipc semaphores which is the default
 # on ppc since spinlock is not detected (not supported?)
@@ -8,7 +20,7 @@
 #global svn   358
 
 Summary: PHP accelerator, optimizer, encoder and dynamic content cacher
-Name: php-eaccelerator
+Name: %{phpname}-eaccelerator
 Version: 0.9.6.1
 #Release: 0.2%{?svn:.svn%{svn}}%{?dist}
 Release: 4%{?dist}
@@ -27,12 +39,21 @@ Source1: php-eaccelerator.cron
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 # ABI check is not enough for this extension (http://eaccelerator.net/ticket/438)
-Requires: php-common = %{php_version}
-Provides: php-zend_extension
-Conflicts: php-mmcache
-BuildRequires: php-devel >= 5.1.0
+Requires: %{phpname}-common = %{php_version}
+Provides: %{phpname}-zend_extension
+Conflicts: %{phpname}-mmcache %{phpname}-pecl-apc
+BuildRequires: %{phpname}-devel >= 5.1.0
 # Required by phpize
 BuildRequires: autoconf, automake, libtool
+
+
+%if 0%{?fedora}%{?rhel} > 4
+%{?filter_setup:
+%filter_provides_in %{php_extdir}/.*\.so$
+%filter_setup
+}
+%endif
+
 
 %description
 eAccelerator is a further development of the MMCache PHP Accelerator & Encoder.
@@ -50,13 +71,17 @@ that the overhead of compiling is almost completely eliminated.
 
 # Change paths in the example config, other values are changed by a patch
 %{__sed} -i 's|/usr/lib/php4/|%{php_extdir}/|g;
-             s|/tmp/eaccelerator|%{_var}/cache/php-eaccelerator|g' \
+             s|/tmp/eaccelerator|%{_var}/cache/%{phpname}-eaccelerator|g' \
     eaccelerator.ini
+
+%{__sed} -e 's|php-eaccelerator|%{phpname}-eaccelerator|g' \
+    %{SOURCE1} >%{phpname}-eaccelerator
 
 
 %build
-phpize
+%{phpbindir}/phpize
 %configure \
+    --with-php-config=%{phpbindir}/php-config \
 %ifnarch %{ix86} x86_64
     --with-eaccelerator-userid="%{apache}"
 %endif
@@ -69,15 +94,15 @@ phpize
 %{__make} install INSTALL_ROOT=%{buildroot}
 
 # The cache directory where pre-compiled files will reside
-%{__mkdir_p} %{buildroot}%{_var}/cache/php-eaccelerator
+%{__mkdir_p} %{buildroot}%{_var}/cache/%{phpname}-eaccelerator
 
 # Drop in the bit of configuration
 %{__install} -D -m 0644 eaccelerator.ini \
-    %{buildroot}%{_sysconfdir}/php.d/eaccelerator.ini
+    %{buildroot}%{phpconfdir}/php.d/eaccelerator.ini
 
 # Cache removal cron job
-%{__install} -D -m 0755 -p %{SOURCE1} \
-    %{buildroot}%{_sysconfdir}/cron.daily/php-eaccelerator
+%{__install} -D -m 0755 -p %{phpname}-eaccelerator \
+    %{buildroot}%{_sysconfdir}/cron.daily/%{phpname}-eaccelerator
 
 
 %clean
@@ -87,7 +112,7 @@ phpize
 %preun
 # Upon last removal (not update), clean all cache files
 if [ $1 -eq 0 ]; then
-    %{__rm} -rf %{_var}/cache/php-eaccelerator/* &>/dev/null || :
+    %{__rm} -rf %{_var}/cache/%{phpname}-eaccelerator/* &>/dev/null || :
 fi
 
 %post
@@ -100,16 +125,16 @@ fi
 # allows users to manually change ownership and not have it change back.
 
 # Create the ghost'ed directory with default ownership and mode
-if [ ! -d %{_var}/cache/php-eaccelerator ]; then
-    %{__mkdir_p} %{_var}/cache/php-eaccelerator
-    %{__chown} %{apache}:%{apache} %{_var}/cache/php-eaccelerator
-    %{__chmod} 0750 %{_var}/cache/php-eaccelerator
+if [ ! -d %{_var}/cache/%{phpname}-eaccelerator ]; then
+    %{__mkdir_p} %{_var}/cache/%{phpname}-eaccelerator
+    %{__chown} %{apache}:%{apache} %{_var}/cache/%{phpname}-eaccelerator
+    %{__chmod} 0750 %{_var}/cache/%{phpname}-eaccelerator
 fi
 
 
 %check
 # only check if build extension can be loaded
-%{_bindir}/php \
+%{phpbindir}/php \
     -n -q -d extension_dir=modules \
     -d extension=eaccelerator.so \
     --modules | grep eAccelerator
@@ -119,16 +144,19 @@ fi
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README*
 %doc eaccelerator.ini *.php
-%{_sysconfdir}/cron.daily/php-eaccelerator
-%config(noreplace) %{_sysconfdir}/php.d/eaccelerator.ini
+%{_sysconfdir}/cron.daily/%{phpname}-eaccelerator
+%config(noreplace) %{phpconfdir}/php.d/eaccelerator.ini
 %{php_extdir}/eaccelerator.so
 # We need this hack, as otherwise rpm resets ownership upon package upgrade
 #attr(0750,apache,apache) %{_var}/cache/php-eaccelerator/
 #attr(0750,root,root) %verify(not user group) %{_var}/cache/php-eaccelerator/
-%ghost %{_var}/cache/php-eaccelerator/
+%ghost %{_var}/cache/%{phpname}-eaccelerator/
 
 
 %changelog
+* Sat Jan 08 2011 Remi Collet <Fedora@FamilleCollet.com> - 1:0.9.6.1-4
+- allow relocation with %%{phpname} macro
+
 * Sat Jan 08 2011 Remi Collet <Fedora@FamilleCollet.com> - 1:0.9.6.1-4
 - rebuild against PHP 5.3.5
 
