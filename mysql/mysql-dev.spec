@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.5.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -636,6 +636,15 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Jan 08 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.8-3
+- sync with rawhide
+
+* Mon Jan  3 2011 Tom Lane <tgl@redhat.com> 5.5.8-3
+- my_print_help, load_defaults, free_defaults, and handle_options all turn
+  out to be documented/recommended in Paul DuBois' MySQL book, so we'd better
+  consider them part of the de-facto API.
+Resolves: #666728
+
 * Tue Dec 28 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.5.8-2
 - sync with rawhide
 

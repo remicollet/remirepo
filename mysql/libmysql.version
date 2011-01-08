@@ -107,6 +107,12 @@ libmysqlclient_16 {
 	mysql_thread_safe;
 	mysql_use_result;
 	mysql_warning_count;
+# These are documented in Paul DuBois' MySQL book, so we treat them as part
+# of the de-facto API.
+	free_defaults;
+	handle_options;
+	load_defaults;
+	my_print_help;
   local:
 	*;
 };
@@ -119,13 +125,17 @@ libmysqlclient_16.1 {
 	mysql_load_plugin_v;
 	mysql_plugin_options;
 	mysql_stmt_next_result;
-# Ideally these wouldn't be exported, but mysql-connector-odbc requires them.
-# We limit the damage by prefixing mysql_ (see mysql-dubious-exports.patch),
-# which means the symbols are not present in libmysqlclient_16.
+#
+# Ideally the following symbols wouldn't be exported, but various applications
+# require them.  We limit the namespace damage by prefixing mysql_
+# (see mysql-dubious-exports.patch), which means the symbols are not present
+# in libmysqlclient_16.
+#
+# mysql-connector-odbc requires these
 	mysql_default_charset_info;
 	mysql_get_charset;
 	mysql_get_charset_by_csname;
 	mysql_net_realloc;
-# PHP's mysqli.so requires this (via the ER() macro).
+# PHP's mysqli.so requires this (via the ER() macro)
 	mysql_client_errors;
 };
