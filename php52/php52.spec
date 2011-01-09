@@ -17,7 +17,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.2.16
+Version: 5.2.17
 Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
@@ -900,6 +900,9 @@ echo -e "You should consider upgrading to a supported release.\n"
 %files interbase -f files.interbase
 
 %changelog
+* Sun Jan 09 2011 Remi Collet <rpms@famillecollet.com> 5.2.17-1
+- update to 5.2.17
+
 * Thu Dec 16 2010 Remi Collet <rpms@famillecollet.com> 5.2.16-1
 - update to 5.2.16
 
