@@ -47,7 +47,9 @@ Patch21: mysql-5.5-readline.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
 BuildRequires: gcc-c++, cmake, ncurses-devel, zlib-devel, libaio-devel
-BuildRequires: systemtap-sdt-devel
+%if 0%{?fedora} >= 12
+BuildRequires: systemtap-sdt-devel >= 1.3
+%endif
 # make test requires time and ps
 BuildRequires: time procps
 # Socket is needed to run regression tests
@@ -249,7 +251,9 @@ cmake . -DBUILD_CONFIG=mysql_release \
 	-DMYSQL_DATADIR="/var/lib/mysql" \
 	-DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
 	-DENABLED_LOCAL_INFILE=ON \
+%if 0%{?fedora} >= 12
 	-DENABLE_DTRACE=ON \
+%endif
 	-DWITH_EMBEDDED_SERVER=ON \
 	-DWITH_READLINE=ON \
 	-DWITH_SSL=system \
@@ -266,7 +270,10 @@ ar -x ../libmysqld.a
 # these result in missing dependencies: (filed upstream as bug 59104)
 rm -f sql_binlog.cc.o rpl_utility.cc.o
 gcc $CFLAGS $LDFLAGS -shared -Wl,-soname,libmysqld.so.0 -o libmysqld.so.0.0.1 \
-	*.o ../../probes_mysql.o \
+	*.o \
+%if 0%{?fedora} >= 12
+	../../probes_mysql.o \
+%endif
 	-lpthread -laio -lcrypt -lssl -lcrypto -lz -lrt -lstdc++ -ldl -lm -lc
 # this is to check that we built a complete library
 cp %{SOURCE9} .
