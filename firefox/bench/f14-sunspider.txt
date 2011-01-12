@@ -1,218 +1,277 @@
-	Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz
-
 ========================================== SunSpider ====================================
 http://www2.webkit.org/perf/sunspider/sunspider.html
 http://www2.webkit.org/perf/sunspider-0.9.1/sunspider-0.9.1/driver.html
 =========================================================================================
-Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.12) Gecko/20101028 Remi/fc14 Firefox/3.6.12	2336.1
-Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc14		 603.8
-Mozilla/5.0 (X11; Linux x86_64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7				 391.8
-Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8				 396.8
+
+Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz
+
+	Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.12) Gecko/20101028 Remi/fc14 Firefox/3.6.12	2336.1
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc14		 603.8
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7				 391.8
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8				 396.8
+
+Intel(R) Core(TM) i5 CPU         760  @ 2.80GHz
+
+	Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.10) Gecko/20101005 Fedora/3.6.10-1.fc14 Firefox/3.6.10	1469.4
+	Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.13) Gecko/20110103 Fedora/3.6.13-1.fc14 Firefox/3.6.13	1435.3
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7					 241.7	
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8					 236.8
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b9) Gecko/20100101 Firefox/4.0b9					 218.5
 
 =========================================================================================
-Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8				
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b9) Gecko/20100101 Firefox/4.0b9
 ============================================
 RESULTS (means and 95% confidence intervals)
 --------------------------------------------
-Total:                 396.8ms +/- 6.7%
+Total:                 218.5ms +/- 1.4%
 --------------------------------------------
 
-  3d:                   64.5ms +/- 7.8%
-    cube:               26.7ms +/- 10.3%
-    morph:              10.1ms +/- 13.1%
-    raytrace:           27.7ms +/- 12.0%
+  3d:                   32.0ms +/- 2.4%
+    cube:               13.9ms +/- 3.8%
+    morph:               4.7ms +/- 7.3%
+    raytrace:           13.4ms +/- 3.7%
 
-  access:               60.8ms +/- 10.7%
-    binary-trees:        7.7ms +/- 9.8%
-    fannkuch:           30.3ms +/- 12.5%
-    nbody:               9.0ms +/- 13.0%
-    nsieve:             13.8ms +/- 10.6%
+  access:               35.9ms +/- 4.5%
+    binary-trees:        3.9ms +/- 10.4%
+    fannkuch:           17.0ms +/- 4.4%
+    nbody:               5.5ms +/- 9.2%
+    nsieve:              9.5ms +/- 12.4%
 
-  bitops:               25.5ms +/- 9.1%
-    3bit-bits-in-byte:   1.3ms +/- 26.6%
-    bits-in-byte:       14.6ms +/- 11.4%
-    bitwise-and:         2.9ms +/- 21.6%
-    nsieve-bits:         6.7ms +/- 13.4%
+  bitops:               17.6ms +/- 6.1%
+    3bit-bits-in-byte:   1.0ms +/- 0.0%
+    bits-in-byte:        8.4ms +/- 12.8%
+    bitwise-and:         2.1ms +/- 25.1%
+    nsieve-bits:         6.1ms +/- 8.6%
 
-  controlflow:           4.2ms +/- 15.6%
-    recursive:           4.2ms +/- 15.6%
+  controlflow:           3.1ms +/- 17.0%
+    recursive:           3.1ms +/- 17.0%
 
-  crypto:               25.7ms +/- 8.6%
-    aes:                14.2ms +/- 11.3%
-    md5:                 6.6ms +/- 12.7%
-    sha1:                4.9ms +/- 16.1%
+  crypto:               17.0ms +/- 7.7%
+    aes:                 8.9ms +/- 7.0%
+    md5:                 4.7ms +/- 22.7%
+    sha1:                3.4ms +/- 14.7%
 
-  date:                 59.7ms +/- 27.9%
-    format-tofte:       30.2ms +/- 12.0%
-    format-xparb:       29.5ms +/- 58.6%
+  date:                 26.9ms +/- 4.8%
+    format-tofte:       17.3ms +/- 3.9%
+    format-xparb:        9.6ms +/- 11.7%
 
-  math:                 38.2ms +/- 7.0%
-    cordic:              8.4ms +/- 14.6%
-    partial-sums:       19.4ms +/- 11.3%
-    spectral-norm:      10.4ms +/- 12.2%
+  math:                 21.1ms +/- 5.6%
+    cordic:              5.8ms +/- 9.7%
+    partial-sums:        9.5ms +/- 10.2%
+    spectral-norm:       5.8ms +/- 9.7%
 
-  regexp:               22.5ms +/- 10.4%
-    dna:                22.5ms +/- 10.4%
+  regexp:               11.7ms +/- 5.8%
+    dna:                11.7ms +/- 5.8%
 
-  string:               95.7ms +/- 7.8%
-    base64:              6.3ms +/- 12.0%
-    fasta:              23.3ms +/- 10.1%
-    tagcloud:           26.2ms +/- 11.8%
-    unpack-code:        29.9ms +/- 11.6%
-    validate-input:     10.0ms +/- 4.8%
+  string:               53.2ms +/- 2.0%
+    base64:              4.1ms +/- 15.3%
+    fasta:              11.4ms +/- 7.9%
+    tagcloud:           15.4ms +/- 2.4%
+    unpack-code:        16.8ms +/- 3.4%
+    validate-input:      5.5ms +/- 9.2%
+=========================================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8
+============================================
+RESULTS (means and 95% confidence intervals)
+--------------------------------------------
+Total:                 236.8ms +/- 6.0%
+--------------------------------------------
 
+  3d:                   34.1ms +/- 3.3%
+    cube:               14.9ms +/- 4.8%
+    morph:               5.5ms +/- 11.0%
+    raytrace:           13.7ms +/- 2.5%
+
+  access:               34.5ms +/- 3.1%
+    binary-trees:        4.3ms +/- 8.0%
+    fannkuch:           16.1ms +/- 1.4%
+    nbody:               5.2ms +/- 10.8%
+    nsieve:              8.9ms +/- 12.8%
+
+  bitops:               18.8ms +/- 9.4%
+    3bit-bits-in-byte:   1.0ms +/- 33.7%
+    bits-in-byte:        9.2ms +/- 11.5%
+    bitwise-and:         2.1ms +/- 33.8%
+    nsieve-bits:         6.5ms +/- 22.7%
+
+  controlflow:           3.2ms +/- 14.1%
+    recursive:           3.2ms +/- 14.1%
+
+  crypto:               16.9ms +/- 10.1%
+    aes:                 9.0ms +/- 9.2%
+    md5:                 4.4ms +/- 26.7%
+    sha1:                3.5ms +/- 10.8%
+
+  date:                 33.0ms +/- 30.0%
+    format-tofte:       16.7ms +/- 4.5%
+    format-xparb:       16.3ms +/- 58.4%
+
+  math:                 22.5ms +/- 7.5%
+    cordic:              5.8ms +/- 12.7%
+    partial-sums:       10.1ms +/- 6.2%
+    spectral-norm:       6.6ms +/- 18.5%
+
+  regexp:               12.3ms +/- 7.3%
+    dna:                12.3ms +/- 7.3%
+
+  string:               61.5ms +/- 18.3%
+    base64:              4.1ms +/- 17.3%
+    fasta:              12.3ms +/- 7.3%
+    tagcloud:           16.2ms +/- 3.5%
+    unpack-code:        17.2ms +/- 2.6%
+    validate-input:     11.7ms +/- 93.3%
 =========================================================================================
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7
 ============================================
 RESULTS (means and 95% confidence intervals)
 --------------------------------------------
-Total:                  391.8ms +/- 7.6%
+Total:                 241.7ms +/- 3.4%
 --------------------------------------------
 
-  3d:                    61.8ms +/- 5.3%
-    cube:                22.3ms +/- 8.8%
-    morph:                9.8ms +/- 10.8%
-    raytrace:            29.7ms +/- 9.2%
+  3d:                   30.6ms +/- 6.6%
+    cube:               11.4ms +/- 7.9%
+    morph:               4.7ms +/- 10.3%
+    raytrace:           14.5ms +/- 5.8%
 
-  access:                51.7ms +/- 7.9%
-    binary-trees:         6.1ms +/- 10.3%
-    fannkuch:            25.6ms +/- 12.1%
-    nbody:                8.1ms +/- 2.8%
-    nsieve:              11.9ms +/- 10.0%
+  access:               36.3ms +/- 9.6%
+    binary-trees:        5.4ms +/- 30.7%
+    fannkuch:           16.6ms +/- 5.4%
+    nbody:               5.9ms +/- 13.3%
+    nsieve:              8.4ms +/- 12.2%
 
-  bitops:                22.4ms +/- 7.6%
-    3bit-bits-in-byte:    0.9ms +/- 25.1%
-    bits-in-byte:        11.4ms +/- 10.7%
-    bitwise-and:          3.0ms +/- 15.9%
-    nsieve-bits:          7.1ms +/- 13.0%
+  bitops:               20.6ms +/- 11.1%
+    3bit-bits-in-byte:   1.1ms +/- 36.9%
+    bits-in-byte:       10.1ms +/- 16.2%
+    bitwise-and:         2.7ms +/- 21.8%
+    nsieve-bits:         6.7ms +/- 19.5%
 
-  controlflow:            4.4ms +/- 15.7%
-    recursive:            4.4ms +/- 15.7%
+  controlflow:           3.6ms +/- 29.9%
+    recursive:           3.6ms +/- 29.9%
 
-  crypto:                25.4ms +/- 8.3%
-    aes:                 14.4ms +/- 12.2%
-    md5:                  6.2ms +/- 11.9%
-    sha1:                 4.8ms +/- 15.4%
+  crypto:               19.7ms +/- 11.5%
+    aes:                10.8ms +/- 18.9%
+    md5:                 5.2ms +/- 21.3%
+    sha1:                3.7ms +/- 24.2%
 
-  date:                  50.0ms +/- 4.6%
-    format-tofte:        25.7ms +/- 5.4%
-    format-xparb:        24.3ms +/- 10.6%
+  date:                 32.2ms +/- 9.5%
+    format-tofte:       18.0ms +/- 10.9%
+    format-xparb:       14.2ms +/- 10.8%
 
-  math:                  35.1ms +/- 8.6%
-    cordic:               7.5ms +/- 9.3%
-    partial-sums:        17.3ms +/- 12.9%
-    spectral-norm:       10.3ms +/- 10.9%
+  math:                 20.0ms +/- 5.6%
+    cordic:              6.2ms +/- 19.4%
+    partial-sums:        9.0ms +/- 7.5%
+    spectral-norm:       4.8ms +/- 6.3%
 
-  regexp:                20.4ms +/- 13.2%
-    dna:                 20.4ms +/- 13.2%
+  regexp:               12.5ms +/- 4.9%
+    dna:                12.5ms +/- 4.9%
 
-  string:               120.6ms +/- 20.9%
-    base64:              13.5ms +/- 123.8%
-    fasta:               20.5ms +/- 13.2%
-    tagcloud:            36.3ms +/- 57.3%
-    unpack-code:         31.9ms +/- 10.5%
-    validate-input:      18.4ms +/- 81.6%
-
+  string:               66.2ms +/- 14.1%
+    base64:              4.7ms +/- 27.8%
+    fasta:              12.3ms +/- 9.1%
+    tagcloud:           20.4ms +/- 36.6%
+    unpack-code:        18.8ms +/- 5.6%
+    validate-input:     10.0ms +/- 70.9%
 =========================================================================================
-Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc14
+Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.13) Gecko/20110103 Fedora/3.6.13-1.fc14 Firefox/3.6.13
 ============================================
 RESULTS (means and 95% confidence intervals)
 --------------------------------------------
-Total:                  603.8ms +/- 2.2%
+Total:                 1435.3ms +/- 1.6%
 --------------------------------------------
 
-  3d:                   142.5ms +/- 4.7%
-    cube:                37.4ms +/- 9.5%
-    morph:               34.0ms +/- 8.6%
-    raytrace:            71.1ms +/- 7.2%
+  3d:                   194.5ms +/- 7.3%
+    cube:                64.3ms +/- 0.8%
+    morph:               73.0ms +/- 19.7%
+    raytrace:            57.2ms +/- 0.5%
 
-  access:                94.2ms +/- 4.9%
-    binary-trees:        26.6ms +/- 11.0%
-    fannkuch:            41.2ms +/- 9.9%
-    nbody:               11.5ms +/- 10.3%
-    nsieve:              14.9ms +/- 9.2%
+  access:               235.0ms +/- 5.6%
+    binary-trees:        30.1ms +/- 33.3%
+    fannkuch:            94.6ms +/- 0.8%
+    nbody:               81.9ms +/- 11.7%
+    nsieve:              28.4ms +/- 1.3%
 
-  bitops:                24.4ms +/- 7.6%
-    3bit-bits-in-byte:    1.0ms +/- 33.7%
-    bits-in-byte:         9.9ms +/- 10.5%
-    bitwise-and:          2.4ms +/- 15.4%
-    nsieve-bits:         11.1ms +/- 10.7%
+  bitops:               164.4ms +/- 5.3%
+    3bit-bits-in-byte:   28.7ms +/- 1.7%
+    bits-in-byte:        42.0ms +/- 1.4%
+    bitwise-and:         40.5ms +/- 1.7%
+    nsieve-bits:         53.2ms +/- 15.6%
 
-  controlflow:            9.8ms +/- 14.9%
-    recursive:            9.8ms +/- 14.9%
+  controlflow:           24.2ms +/- 4.4%
+    recursive:           24.2ms +/- 4.4%
 
-  crypto:                45.6ms +/- 8.2%
-    aes:                 26.3ms +/- 10.9%
-    md5:                 12.6ms +/- 10.4%
-    sha1:                 6.7ms +/- 14.3%
+  crypto:                98.8ms +/- 9.0%
+    aes:                 36.5ms +/- 1.9%
+    md5:                 28.6ms +/- 2.4%
+    sha1:                33.7ms +/- 27.1%
 
-  date:                  81.1ms +/- 8.8%
-    format-tofte:        55.6ms +/- 11.6%
-    format-xparb:        25.5ms +/- 4.2%
+  date:                 110.7ms +/- 0.9%
+    format-tofte:        57.7ms +/- 1.2%
+    format-xparb:        53.0ms +/- 1.4%
 
-  math:                  43.3ms +/- 6.7%
-    cordic:              17.2ms +/- 10.1%
-    partial-sums:        16.3ms +/- 11.3%
-    spectral-norm:        9.8ms +/- 10.8%
+  math:                 158.0ms +/- 1.5%
+    cordic:              66.5ms +/- 0.8%
+    partial-sums:        60.2ms +/- 3.9%
+    spectral-norm:       31.3ms +/- 2.4%
 
-  regexp:                22.0ms +/- 9.9%
-    dna:                 22.0ms +/- 9.9%
+  regexp:               105.2ms +/- 0.6%
+    dna:                105.2ms +/- 0.6%
 
-  string:               140.9ms +/- 4.0%
-    base64:               7.7ms +/- 9.8%
-    fasta:               27.2ms +/- 9.0%
-    tagcloud:            43.3ms +/- 6.3%
-    unpack-code:         49.4ms +/- 11.8%
-    validate-input:      13.3ms +/- 8.0%
-
+  string:               344.5ms +/- 8.2%
+    base64:              39.4ms +/- 22.4%
+    fasta:               74.0ms +/- 3.7%
+    tagcloud:            74.3ms +/- 5.8%
+    unpack-code:        111.1ms +/- 9.9%
+    validate-input:      45.7ms +/- 13.6%
 =========================================================================================
-Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.12) Gecko/20101028 Remi/fc14 Firefox/3.6.12
+Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.10) Gecko/20101005 Fedora/3.6.10-1.fc14 Firefox/3.6.10	1469.4
 ============================================
 RESULTS (means and 95% confidence intervals)
 --------------------------------------------
-Total:                 2336.1ms +/- 2.6%
+Total:                 1469.4ms +/- 1.7%
 --------------------------------------------
 
-  3d:                   295.6ms +/- 9.6%
-    cube:                95.2ms +/- 9.3%
-    morph:              113.8ms +/- 21.2%
-    raytrace:            86.6ms +/- 10.2%
+  3d:                   205.9ms +/- 7.6%
+    cube:                76.2ms +/- 19.0%
+    morph:               58.4ms +/- 0.9%
+    raytrace:            71.3ms +/- 20.5%
 
-  access:               349.1ms +/- 9.3%
-    binary-trees:        40.9ms +/- 7.6%
-    fannkuch:           149.7ms +/- 11.2%
-    nbody:              112.0ms +/- 20.1%
-    nsieve:              46.5ms +/- 12.9%
+  access:               233.1ms +/- 3.7%
+    binary-trees:        25.5ms +/- 2.0%
+    fannkuch:            98.8ms +/- 0.3%
+    nbody:               80.3ms +/- 11.3%
+    nsieve:              28.5ms +/- 1.3%
 
-  bitops:               248.4ms +/- 8.6%
-    3bit-bits-in-byte:   36.3ms +/- 5.8%
-    bits-in-byte:        64.3ms +/- 13.1%
-    bitwise-and:         58.2ms +/- 12.7%
-    nsieve-bits:         89.6ms +/- 25.1%
+  bitops:               158.4ms +/- 1.1%
+    3bit-bits-in-byte:   26.6ms +/- 2.9%
+    bits-in-byte:        42.6ms +/- 1.8%
+    bitwise-and:         41.3ms +/- 2.3%
+    nsieve-bits:         47.9ms +/- 1.5%
 
-  controlflow:           34.1ms +/- 8.9%
-    recursive:           34.1ms +/- 8.9%
+  controlflow:           23.7ms +/- 2.5%
+    recursive:           23.7ms +/- 2.5%
 
-  crypto:               131.8ms +/- 6.7%
-    aes:                 55.5ms +/- 10.9%
-    md5:                 38.1ms +/- 10.2%
-    sha1:                38.2ms +/- 3.6%
+  crypto:                96.9ms +/- 0.7%
+    aes:                 37.2ms +/- 1.5%
+    md5:                 29.3ms +/- 2.8%
+    sha1:                30.4ms +/- 2.0%
 
-  date:                 176.3ms +/- 4.5%
-    format-tofte:        84.6ms +/- 5.0%
-    format-xparb:        91.7ms +/- 8.6%
+  date:                 113.4ms +/- 8.4%
+    format-tofte:        62.1ms +/- 15.4%
+    format-xparb:        51.3ms +/- 1.1%
 
-  math:                 264.9ms +/- 11.2%
-    cordic:              98.7ms +/- 20.5%
-    partial-sums:       118.1ms +/- 17.5%
-    spectral-norm:       48.1ms +/- 6.5%
+  math:                 171.9ms +/- 7.2%
+    cordic:              72.3ms +/- 14.2%
+    partial-sums:        66.1ms +/- 12.0%
+    spectral-norm:       33.5ms +/- 1.1%
 
-  regexp:               186.7ms +/- 9.1%
-    dna:                186.7ms +/- 9.1%
+  regexp:               105.9ms +/- 0.6%
+    dna:                105.9ms +/- 0.6%
 
-  string:               649.2ms +/- 5.6%
-    base64:              57.6ms +/- 7.3%
-    fasta:              138.7ms +/- 10.1%
-    tagcloud:           147.9ms +/- 10.9%
-    unpack-code:        207.5ms +/- 13.4%
-    validate-input:      97.5ms +/- 14.0%
+  string:               360.2ms +/- 5.5%
+    base64:              35.9ms +/- 2.4%
+    fasta:               77.6ms +/- 10.2%
+    tagcloud:            79.6ms +/- 13.0%
+    unpack-code:        120.4ms +/- 7.3%
+    validate-input:      46.7ms +/- 6.5%
+============================================
+
