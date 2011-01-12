@@ -23,14 +23,14 @@
 %define nightly .cvs%{cvsdate}
 %endif
 
-%global relcan b8
+%global relcan b9
 %global firefox firefox
-%global mycomment  Beta 8
+%global mycomment  Beta 9 (build 1 candidate)
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        4.0
-Release:        0.15.beta8%{?dist}
+Release:        0.16.beta9.build1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20101221.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20110112.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -51,8 +51,6 @@ Source20:       firefox3.desktop
 Source21:       firefox4.sh.in
 Source23:       firefox.1
 Source100:      find-external-requires
-
-Source200:      firefox-bookmarks.html
 
 # build patches from xulrunner
 #Patch0:        xulrunner-version.patch 	=> firefox / firefox4-version.patch
@@ -131,7 +129,7 @@ BuildRequires:  nss-devel >= %{nss_version}
 %if %{fedora} >= 11
 BuildRequires:  hunspell-devel
 %endif
-%if %{fedora} >= 14
+%if %{fedora} >= 99
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
 %if %{fedora} >= 10
@@ -140,9 +138,7 @@ BuildRequires:  libnotify-devel
 %if %{fedora} >= 9
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
-%if %{fedora} >= 7
 BuildRequires:  system-bookmarks
-%endif
 BuildRequires:  libpng-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  zip
@@ -164,9 +160,7 @@ BuildRequires:  autoconf213
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  yasm
 
-%if %{fedora} >= 7
 Requires:       system-bookmarks
-%endif
 %if 0%{?fedora} >= 12
 Requires:       nss >= %{nss_version}
 Requires:       nspr >= %{nspr_version}
@@ -251,7 +245,7 @@ ac_add_options --with-system-nss
 %if %{fedora} >= 11
 ac_add_options --enable-system-hunspell
 %endif
-%if %{fedora} >= 14
+%if %{fedora} >= 99
 ac_add_options --enable-system-cairo
 %endif
 %if %{fedora} >= 10
@@ -264,9 +258,6 @@ ac_add_options --enable-system-lcms
 %endif
 %ifarch ppc ppc64
 ac_add_options --disable-necko-wifi
-ac_add_options --disable-ipc
-%endif
-%if %{fedora} <= 8
 ac_add_options --disable-ipc
 %endif
 ac_add_options --with-system-jpeg
@@ -386,11 +377,7 @@ EOF
 
 # set up our default bookmarks
 %{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/defaults/profile/bookmarks.html
-%if %{fedora} >= 7
 ln -s %{default_bookmarks_file} $RPM_BUILD_ROOT/%{mozappdir}/defaults/profile/bookmarks.html
-%else
-%{__cp} %{SOURCE200} $RPM_BUILD_ROOT/%{mozappdir}/defaults/profile/bookmarks.html
-%endif
 
 %{__install} -p -D -m 644 %{SOURCE23} $RPM_BUILD_ROOT%{_mandir}/man1/%{name}.1
 
@@ -456,11 +443,9 @@ done
 # Copy over the LICENSE
 %{__install} -p -c -m 644 LICENSE $RPM_BUILD_ROOT/%{mozappdir}
 
-%if %{fedora} >= 7
 # Use the system hunspell dictionaries
 %{__rm} -rf $RPM_BUILD_ROOT/%{mozappdir}/dictionaries
 ln -s %{_datadir}/myspell $RPM_BUILD_ROOT%{mozappdir}/dictionaries
-%endif
 
 # ghost files
 touch $RPM_BUILD_ROOT/%{mozappdir}/components/compreg.dat
@@ -584,6 +569,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Jan 12 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.16.beta9.build1
+- update to 4.0b9 build1 candidate
+- use bundled cairo
+
 * Fri Dec 31 2010 Remi Collet <rpms@famillecollet.com> - 4.0-0.15.beta8
 - rename to firefox (and obsolete firefox4)
 
