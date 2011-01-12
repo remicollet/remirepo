@@ -55,7 +55,7 @@ BuildRequires: time procps
 # Socket is needed to run regression tests
 BuildRequires: perl(Socket)
 # This is required old EL4
-BuildRequires: perl(Time::HiRes)
+BuildRequires: perl(Time::HiRes), bison
 
 Requires: grep, fileutils
 Requires: %{name}-libs = %{version}-%{release}
@@ -256,7 +256,11 @@ cmake . -DBUILD_CONFIG=mysql_release \
 %endif
 	-DWITH_EMBEDDED_SERVER=ON \
 	-DWITH_READLINE=ON \
+%if 0%{?rhel} <= 4
+	-DWITH_SSL=bundled \
+%else
 	-DWITH_SSL=system \
+%endif
 	-DWITH_ZLIB=system
 
 gcc $CFLAGS $LDFLAGS -o scriptstub "-DLIBDIR=\"%{_libdir}/mysql\"" %{SOURCE4}
@@ -308,14 +312,14 @@ cd ../..
   # test SSL with --ssl
   # avoid redundant test runs with --binlog-format=mixed
   # increase timeouts to prevent unwanted failures during mass rebuilds
+  cd mysql-test
   (
-    cd mysql-test
     # perl ./mysql-test-run.pl --force --retry=0 --ssl --mysqld=--binlog-format=mixed --suite-timeout=720 --testcase-timeout=30
     # Run less test to speed up build process
-    %{__perl} ./mysql-test-run.pl --ssl --mysqld=--binlog-format=mixed --suite=main
-    # cmake build scripts will install the var cruft if left alone :-(
-    rm -rf var
+    %{__perl} ./mysql-test-run.pl --force --ssl --mysqld=--binlog-format=mixed --suite=main
   ) 
+  # cmake build scripts will install the var cruft if left alone :-(
+  rm -rf var
 %endif
 
 %install
