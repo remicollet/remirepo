@@ -56,7 +56,7 @@ Source100:      find-external-requires
 #Patch0:        xulrunner-version.patch 	=> firefox / firefox4-version.patch
 #Patch1:        mozilla-build.patch
 Patch1:         firefox4-build.patch
-Patch3:         firefox4-jemalloc.patch
+#Patch3:         firefox4-jemalloc.patch
 #Patch9:        mozilla-build-sbrk.patch
 Patch9:         firefox4-build-sbrk.patch
 Patch11:        mozilla-malloc.patch
@@ -204,7 +204,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 
 # Build Patches
 %patch1  -p2 -b .build
-%patch3  -p1 -b .jemalloc
+#patch3  -p1 -b .jemalloc
 %patch9  -p2 -b .sbrk
 %patch11 -p2 -b .malloc
 #patch12 -p1 -b .macos
