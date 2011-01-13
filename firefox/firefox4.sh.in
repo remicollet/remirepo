@@ -251,6 +251,12 @@ do
   esac
 done
 
+##
+## Enable WebGL
+##
+MOZ_GLX_IGNORE_BLACKLIST=1
+export MOZ_GLX_IGNORE_BLACKLIST
+
 # Run the browser
 debugging=0
 if [ $debugging = 1 ]

@@ -3,7 +3,7 @@
 %define cairo_version 1.10
 %define freetype_version 2.1.9
 %define lcms_version 1.18
-%define sqlite_version 3.6.23.1
+%define sqlite_version 3.7.1
 
 %define homepage http://start.fedoraproject.org/
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
