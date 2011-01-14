@@ -28,7 +28,7 @@
 %global mycomment  Beta 9
 
 Summary:        Mozilla Firefox Web browser
-Name:           firefox4
+Name:           firefox
 Version:        4.0
 Release:        0.17.beta9%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
@@ -170,7 +170,7 @@ BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
 Obsoletes:      mozilla <= 37:1.7.13
 %if %{name} == firefox
-Obsoletes:      firefox4 < %{version}-%{release}
+Obsoletes:      firefox4
 Provides:       firefox4 = %{version}-%{release}
 %endif
 Provides:       webclient
