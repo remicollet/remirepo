@@ -25,12 +25,12 @@
 
 %global relcan b9
 %global firefox firefox
-%global mycomment  Beta 9 (build 1 candidate)
+%global mycomment  Beta 9
 
 Summary:        Mozilla Firefox Web browser
-Name:           firefox
+Name:           firefox4
 Version:        4.0
-Release:        0.16.beta9.build1%{?dist}
+Release:        0.17.beta9%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20110112.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-20110114.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -569,6 +569,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Jan 14 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.17.beta9
+- update to 4.0b9
+
 * Wed Jan 12 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.16.beta9.build1
 - update to 4.0b9 build1 candidate
 - use bundled cairo

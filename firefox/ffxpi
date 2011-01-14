@@ -47,6 +47,9 @@ packxpi() {
 		mv $1.xpi /tmp
 		cd tmp/$1
 		zip ../../$1.xpi -r install.rdf chrome/* chrome.manifest
+
+		echo -n "Controle... "
+		xmlwf install.rdf && echo done
 	fi
 }
 donexpi() {
