@@ -6,20 +6,16 @@
 
 Summary:        Replacement for the standard PHP serializer
 Name:           php-igbinary
-Version:        1.0.2
-Release:        3%{?dist}
+Version:        1.1.1
+Release:        1%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
 
 URL:            http://opensource.dynamoid.com/
 Source0:        http://opensource.dynamoid.com/%{extname}-%{version}.tar.gz
 
-# git clone https://github.com/phadej/igbinary.git
-# tar czf igbinary-tests.tgz -C igbinary tests
-Source1:        %{extname}-tests.tgz
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel php-pear
+BuildRequires:  php-pecl-apc-devel php-pear 
 
 %if %{?php_zend_api}0
 Requires:       php(zend-abi) = %{php_zend_api}
@@ -29,10 +25,12 @@ Requires:       php-api = %{php_apiver}
 %endif
 
 
+%if 0%{?fedora}%{?rhel} > 4
 %{?filter_setup:
 %filter_from_provides /%{extname}.so/d
 %filter_setup
 }
+%endif
 
 
 %description
@@ -57,9 +55,6 @@ These are the files needed to compile programs using Igbinary
 %prep
 %setup -q -n %{extname}-%{version}
 
-# Take tests directory from SVN which have some php 5.3 fixes
-%{__tar} xzf %{SOURCE1}
-
 
 %build
 %{_bindir}/phpize
@@ -82,6 +77,9 @@ extension=%{extname}.so
 
 ; Use igbinary as session serializer
 ;session.serialize_handler=igbinary
+
+; Use igbinary as APC serializer
+;apc.serializer=igbinary
 EOF
 
 
@@ -92,8 +90,12 @@ EOF
     --define extension=%{extname}.so \
     --modules | grep %{extname}
 
-# For now : Tests failed: 3, Tests passed: 35
-NO_INTERACTION=1 %{__make} test
+# APC required for test 045
+%{__ln_s} %{php_extdir}/apc.so modules/
+
+NO_INTERACTION=1 %{__make} test | tee rpmtests.log
+grep -q "FAILED TEST" rpmtests.log && exit 1
+
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -112,6 +114,9 @@ NO_INTERACTION=1 %{__make} test
 
 
 %changelog
+* Mon Jan 17 2011 Remi Collet <rpms@famillecollet.com> 1.1.1-1
+- update to 1.1.1
+
 * Fri Dec 31 2010 Remi Collet <rpms@famillecollet.com> 1.0.2-3
 - updated tests from Git.
 
