@@ -1,3 +1,15 @@
+%{!?phpname:		%{expand: %%global phpname     php}}
+
+%if %{phpname} == php
+%global phpbindir      %{_bindir}
+%global phpconfdir     %{_sysconfdir}
+%global phpincldir     %{_includedir}
+%else
+%global phpbindir      %{_bindir}/%{phpname}
+%global phpconfdir     %{_sysconfdir}/%{phpname}
+%global phpincldir     %{_includedir}/%{phpname}
+%endif
+
 %global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 %{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
@@ -5,9 +17,9 @@
 
 
 Summary:        Replacement for the standard PHP serializer
-Name:           php-igbinary
+Name:           %{phpname}-igbinary
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
 
@@ -15,11 +27,11 @@ URL:            http://opensource.dynamoid.com/
 Source0:        http://opensource.dynamoid.com/%{extname}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
-BuildRequires:  php-pecl-apc-devel php-pear 
+BuildRequires:  %{phpname}-pecl-apc-devel %{phpname}-pear
 
 %if %{?php_zend_api}0
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{phpname}(zend-abi) = %{php_zend_api}
+Requires:       %{phpname}(api) = %{php_core_api}
 %else
 Requires:       php-api = %{php_apiver}
 %endif
@@ -57,8 +69,8 @@ These are the files needed to compile programs using Igbinary
 
 
 %build
-%{_bindir}/phpize
-%{configure}
+%{phpbindir}/phpize
+%{configure} --with-php-config=%{phpbindir}/php-config
 %{__make} %{?_smp_mflags}
 
 
@@ -66,8 +78,8 @@ These are the files needed to compile programs using Igbinary
 %{__rm} -rf %{buildroot}
 %{__make} install INSTALL_ROOT=%{buildroot}
 
-%{__mkdir} -p %{buildroot}%{_sysconfdir}/php.d/
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/%{extname}.ini <<EOF
+%{__mkdir} -p %{buildroot}%{phpconfdir}/php.d/
+%{__cat} > %{buildroot}%{phpconfdir}/php.d/%{extname}.ini <<EOF
 ; Enable %{extname} extension module
 extension=%{extname}.so
 
@@ -85,7 +97,7 @@ EOF
 
 %check
 # simple module load test
-%{_bindir}/php --no-php-ini \
+%{phpbindir}/php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{extname}.so \
     --modules | grep %{extname}
@@ -104,16 +116,19 @@ grep -q "FAILED TEST" rpmtests.log && exit 1
 %files
 %defattr(-,root,root,-)
 %doc COPYING CREDITS ChangeLog NEWS README
-%config(noreplace) %{_sysconfdir}/php.d/%{extname}.ini
+%config(noreplace) %{phpconfdir}/php.d/%{extname}.ini
 %{php_extdir}/%{extname}.so
 
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/php/ext/%{extname}/%{extname}.h
+%{phpincldir}/php/ext/%{extname}/%{extname}.h
 
 
 %changelog
+* Mon Jan 17 2011 Remi Collet <rpms@famillecollet.com> 1.1.1-2
+- allow relocation using phpname macro
+
 * Mon Jan 17 2011 Remi Collet <rpms@famillecollet.com> 1.1.1-1
 - update to 1.1.1
 
