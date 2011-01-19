@@ -1,8 +1,8 @@
 %define pluginname   datainjection
 
 Name:           glpi-data-injection
-Version:        1.7.2
-Release:        1%{?dist}
+Version:        2.0.0
+Release:        0.1.beta%{?dist}
 Summary:        Plugin for importing data into GLPI
 Summary(fr):    Extension pour importer des données dans GLPI
 
@@ -11,12 +11,12 @@ License:        GPLv2+
 
 URL:            https://forge.indepnet.net/projects/show/datainjection
 #               This change for each new version
-Source0:        https://forge.indepnet.net/attachments/download/497/glpi-datainjection-1.7.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/774/glpi-datainjection-2.0.0-beta.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.72
+Requires:       glpi >= 0.78.2
 
 # This plugin is renamed (for 0.72)
 Provides:       glpi-datainjection = %{version}-%{release}
@@ -54,6 +54,8 @@ for fic in docs/*; do
   rm $fic.ref
 done
 
+# don't need this
+rm -f testwebservice.php
 
 %build
 # empty build
@@ -82,17 +84,17 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/*.php
 %dir %{_datadir}/glpi/plugins/%{pluginname}/locales
 %{_datadir}/glpi/plugins/%{pluginname}/ajax
-%{_datadir}/glpi/plugins/%{pluginname}/config
 %{_datadir}/glpi/plugins/%{pluginname}/css
-%{_datadir}/glpi/plugins/%{pluginname}/fonts
 %{_datadir}/glpi/plugins/%{pluginname}/front
 %{_datadir}/glpi/plugins/%{pluginname}/inc
 %{_datadir}/glpi/plugins/%{pluginname}/javascript
 %{_datadir}/glpi/plugins/%{pluginname}/pics
 
 
-
 %changelog
+* Wed Jan 19 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-0.1.beta
+- update to 2.0.0-beta
+
 * Sun Dec 10 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.7.2-1
 - update to 1.7.2
 - fix URL + Source (link to new forge)
