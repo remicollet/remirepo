@@ -1,31 +1,11 @@
-diff -up xulrunner-2.0/mozilla-central/js/src/jsval.h.s390 xulrunner-2.0/mozilla-central/js/src/jsval.h
---- xulrunner-2.0/mozilla-central/js/src/jsval.h.s390	2010-11-15 10:43:49.000000000 +0100
-+++ xulrunner-2.0/mozilla-central/js/src/jsval.h	2010-11-15 10:45:41.000000000 +0100
-@@ -331,6 +331,27 @@ typedef union jsval_layout
+diff -up xulrunner-2.0/mozilla-central/js/src/jsval.h.64bit-big-endian xulrunner-2.0/mozilla-central/js/src/jsval.h
+--- xulrunner-2.0/mozilla-central/js/src/jsval.h.64bit-big-endian	2011-01-20 15:59:49.000000000 +0100
++++ xulrunner-2.0/mozilla-central/js/src/jsval.h	2011-01-20 16:00:21.000000000 +0100
+@@ -347,6 +347,7 @@ typedef union jsval_layout
+             int32          i32;
+             uint32         u32;
+             JSWhyMagic     why;
++            jsuword        word;
+         } payload;
+     } s;
      double asDouble;
-     void *asPtr;
- } jsval_layout;
-+# elif JS_BITS_PER_WORD == 64
-+typedef union jsval_layout
-+{
-+    uint64 asBits;
-+#ifndef _WIN64
-+    /* MSVC does not pack these correctly :-( */
-+    struct {
-+        uint64             payload47 : 47;
-+        JSValueTag         tag : 17;
-+    } debugView;
-+#endif
-+    struct {
-+        union {
-+            int32          i32;
-+            uint32         u32;
-+            JSWhyMagic     why;
-+        } payload;
-+    } s;
-+    double asDouble;
-+    void *asPtr;
-+} jsval_layout;
- # endif /* JS_BITS_PER_WORD */
- #endif  /* defined(IS_LITTLE_ENDIAN) */
- 

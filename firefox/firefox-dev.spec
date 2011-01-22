@@ -1,5 +1,5 @@
-%define nspr_version 4.8.6
-%define nss_version 3.12.8
+%define nspr_version 4.8.7
+%define nss_version 3.12.9
 %define cairo_version 1.10
 %define freetype_version 2.1.9
 %define lcms_version 1.18
@@ -23,14 +23,15 @@
 %define nightly .cvs%{cvsdate}
 %endif
 
-%global relcan b9
-%global firefox firefox
-%global mycomment  Beta 9
+%global relcan     b10
+%global firefox    firefox
+%global mycomment  Beta 10 build1 candidate
+%global datelang   20110122
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        4.0
-Release:        0.17.beta9%{?dist}
+Release:        0.18.beta10.build1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +44,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-20110114.tar.bz2
+Source2:        firefox-langpacks-%{version}%{?relcan}-%{datelang}.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -64,6 +65,8 @@ Patch11:        mozilla-malloc.patch
 Patch12:        xulrunner-2.0-64bit-big-endian.patch
 Patch13:        xulrunner-2.0-secondary-jit.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
+Patch15:        xulrunner-2.0-system-cairo.patch
+Patch16:        xulrunner-2.0-system-cairo-tee.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -122,14 +125,14 @@ BuildRequires:  wireless-tools-devel
 %if %{fedora} >= 15
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
-%if %{fedora} >= 12
+%if %{fedora} >= 14
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{fedora} >= 11
 BuildRequires:  hunspell-devel
 %endif
-%if %{fedora} >= 99
+%if %{fedora} >= 15
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
 %if %{fedora} >= 10
@@ -161,7 +164,7 @@ BuildRequires:  mesa-libGL-devel
 BuildRequires:  yasm
 
 Requires:       system-bookmarks
-%if 0%{?fedora} >= 12
+%if 0%{?fedora} >= 14
 Requires:       nss >= %{nss_version}
 Requires:       nspr >= %{nspr_version}
 %endif
@@ -211,6 +214,10 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch12 -p2 -b .64bit-big-endian
 %patch13 -p2 -b .secondary-jit
 %patch14 -p2 -b .chromium-types
+%if 0%{?fedora} >= 15
+%patch15 -p1 -b .system-cairo
+%patch16 -p1 -b .system-cairo-tee
+%endif
 
 %patch20 -p2 -b .pk
 %if %{fedora} >= 14
@@ -223,7 +230,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch23 -p1 -b .wmclass
 
 #%patch30 -p1 -b .checkupdates
-%patch31 -p2 -b .default
+%patch31 -p1 -b .default
 
 %{__rm} -f .mozconfig
 
@@ -238,14 +245,14 @@ ac_add_options --libdir="\$LIBDIR"
 %if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
-%if %{fedora} >= 12
-#ac_add_options --with-system-nspr
+%if %{fedora} >= 14
+ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 %endif
 %if %{fedora} >= 11
 ac_add_options --enable-system-hunspell
 %endif
-%if %{fedora} >= 99
+%if %{fedora} >= 15
 ac_add_options --enable-system-cairo
 %endif
 %if %{fedora} >= 10
@@ -569,6 +576,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Jan 22 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.18.beta10.build1
+- update to 4.0b10 build1 candidate
+- switch back to system cairo (patches from rawhide)
+- BR nss >= 3.12.9, nspr >= 4.8.7
+
 * Fri Jan 14 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.17.beta9
 - update to 4.0b9
 

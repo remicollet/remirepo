@@ -11,11 +11,12 @@ getxpi() {
 		then	URL=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/$1/linux-i686/xpi
 		else	URL=ftp://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/$1-candidates/$2/linux-i686/xpi/
 		fi
-		# 75 extensions (24+28+24+7)
-		for i in af ak ar as be bg bn-BD bn-IN br ca cs cy da de el en-GB en-ZA eo es-AR es-CL es-ES es-MX et eu \
-			fa fi fr fy-NL ga-IE gd gl gu-IN he hi-IN hr hu hy-AM id is it ja ka kk kn ko ku lg lt lv mk ml mn  \
-			mr nb-NO nl nn-NO oc or pa-IN pl pt-BR pt-PT rm ro ru si sk sl sq sr sv-SE ta-LK ta te th tr \
-                        uk vi zh-CN zh-TW mai nso son
+		# 83 max extensions (20+20+20+20+3)
+		for i in af ak ar as ast be bg bn-BD bn-IN br ca cs cy da de el en-GB en-ZA eo es-AR \
+			es-CL es-ES es-MX et eu	fa fi fr fy-NL ga-IE gd gl gu-IN he hi-IN hr hu hy-AM id is it \
+			ja ka kk kn ko ku lg lt lv mai mk ml mn mr nb-NO nl nn-NO nso oc or\
+                        pa-IN pl pt-BR pt-PT rm ro ru si sk sl son sq sr sv-SE ta ta-LK te th tr uk \
+                        vi zh-CN zh-TW
 		do 	echo -en "$i\t"
 			[ -f $i.xpi ] && echo "already downloaded"
 			[ -f $i.xpi ] || wget -nv $URL/$i.xpi
@@ -53,6 +54,7 @@ packxpi() {
 	fi
 }
 donexpi() {
+	cd ..
 	if [ x$1 = x ]
 	then
 		echo "ERREUR : Numero de version absent !"
@@ -61,22 +63,20 @@ donexpi() {
 	then
 		echo "Création de /home/rpmbuild/SOURCES/firefox-langpacks-trunk.tar.bz2"
 		tar cvjf /home/rpmbuild/SPECS/remirepo/firefox/firefox-langpacks-trunk.tar.bz2 \
-			--exclude tmp -C /tmp firefox-langpacks
+			--exclude tmp firefox-langpacks
 	else 	
 		echo "Création de /home/rpmbuild/SPECS/remirepo/firefox/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2"
 		tar cvjf /home/rpmbuild/SPECS/remirepo/firefox/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2 \
-			--exclude tmp -C /tmp firefox-langpacks
+			--exclude tmp firefox-langpacks
 	fi
 }
+
+dir=/dev/shm/firefox-langpacks
+
+[ -d $dir ] || (mkdir $dir && echo $dir created)
+cd $dir
+
 case "$1" in
-dir)	dir=/tmp/firefox-langpacks
-	if [ -d $dir ]
-	then
-		echo $dir exists
-	else
-		mkdir $dir && echo $dir created
-	fi
-	;;
 get)	getxpi $2 $3
 	;;
 check)	checkxpi
@@ -86,7 +86,6 @@ pack)	packxpi $2
 done)	donexpi $2
 	;;
 *)	echo -e "\nusage $0 action\n"
-	echo -e "\t dir"
 	echo -e "\t get version [ rc# ]"
 	echo -e "\t check"
 	echo -e "\t pack langue"

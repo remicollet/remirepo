@@ -1,0 +1,56 @@
+diff -up mozilla-central/gfx/thebes/gfxContext.cpp.system-cairo-tee mozilla-central/gfx/thebes/gfxContext.cpp
+--- mozilla-central/gfx/thebes/gfxContext.cpp.system-cairo-tee	2011-01-22 01:25:38.000000000 +0100
++++ mozilla-central/gfx/thebes/gfxContext.cpp	2011-01-22 16:36:13.796269437 +0100
+@@ -782,6 +782,7 @@ gfxContext::PushGroupAndCopyBackground(g
+             cairo_push_group_with_content(mCairo, CAIRO_CONTENT_COLOR);
+             nsRefPtr<gfxASurface> d = CurrentSurface();
+ 
++#if CAIRO_HAS_TEE_SURFACE
+             if (d->GetType() == gfxASurface::SurfaceTypeTee) {
+                 NS_ASSERTION(s->GetType() == gfxASurface::SurfaceTypeTee, "Mismatched types");
+                 nsAutoTArray<nsRefPtr<gfxASurface>,2> ss;
+@@ -793,7 +794,9 @@ gfxContext::PushGroupAndCopyBackground(g
+                 for (PRUint32 i = 0; i < ss.Length(); ++i) {
+                     CopySurface(ss[i], ds[i], translation);
+                 }
+-            } else {
++            } else
++#endif
++            {
+                 CopySurface(s, d, gfxPoint(0, 0));
+             }
+             d->SetOpaqueRect(s->GetOpaqueRect());
+diff -up mozilla-central/gfx/thebes/gfxTeeSurface.cpp.system-cairo-tee mozilla-central/gfx/thebes/gfxTeeSurface.cpp
+--- mozilla-central/gfx/thebes/gfxTeeSurface.cpp.system-cairo-tee	2011-01-22 01:25:38.000000000 +0100
++++ mozilla-central/gfx/thebes/gfxTeeSurface.cpp	2011-01-22 16:32:36.626717637 +0100
+@@ -39,6 +39,7 @@
+ 
+ #include "cairo.h"
+ 
++#if CAIRO_HAS_TEE_SURFACE
+ gfxTeeSurface::gfxTeeSurface(cairo_surface_t *csurf)
+ {
+     Init(csurf, PR_TRUE);
+@@ -75,3 +76,4 @@ gfxTeeSurface::GetSurfaces(nsTArray<nsRe
+         *elem = Wrap(csurf);
+     }
+ }
++#endif
+diff -up mozilla-central/gfx/thebes/gfxTeeSurface.h.system-cairo-tee mozilla-central/gfx/thebes/gfxTeeSurface.h
+--- mozilla-central/gfx/thebes/gfxTeeSurface.h.system-cairo-tee	2011-01-22 01:25:38.000000000 +0100
++++ mozilla-central/gfx/thebes/gfxTeeSurface.h	2011-01-22 16:39:27.912850300 +0100
+@@ -41,6 +41,7 @@
+ #include "gfxASurface.h"
+ #include "nsTArray.h"
+ 
++#if CAIRO_HAS_TEE_SURFACE
+ /**
+  * Wraps a cairo_tee_surface. The first surface in the surface list is the
+  * primary surface, which answers all surface queries (including size).
+@@ -62,5 +63,6 @@ public:
+      */
+     void GetSurfaces(nsTArray<nsRefPtr<gfxASurface> > *aSurfaces);
+ };
++#endif
+ 
+ #endif /* GFX_TEESURFACE_H */
