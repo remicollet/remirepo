@@ -2,7 +2,7 @@
 #global svnrelease   194
 
 Name:           glpi-pdf
-Version:        0.7.0
+Version:        0.7.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,7 +20,7 @@ URL:            https://forge.indepnet.net/wiki/pdf/
 # tar czf glpi-pdf-0.7.0-194.tar.gz pdf
 Source0:        glpi-pdf-0.7.0-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/660/glpi-pdf-0.7.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/782/glpi-pdf-0.7.1.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 22 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.7.1-1
+- version 0.7.1
+
 * Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.7.0-1
 - version 0.7.0 and GLPI 0.78 released
 
