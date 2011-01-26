@@ -25,13 +25,13 @@
 
 %global relcan     b10
 %global firefox    firefox
-%global mycomment  Beta 10 build1 candidate
-%global datelang   20110122
+%global mycomment  Beta 10
+%global datelang   20110126
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        4.0
-Release:        0.18.beta10.build1%{?dist}
+Release:        0.19.beta10%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -44,7 +44,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source2:        firefox-langpacks-%{version}%{?relcan}-%{datelang}.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?relcan}-%{datelang}.tar.bz2
 %endif
 Source12:       firefox-redhat-default-prefs.js
 # firefox3.destop without translation to allow change name
@@ -61,12 +61,12 @@ Patch1:         firefox4-build.patch
 #Patch9:        mozilla-build-sbrk.patch
 Patch9:         firefox4-build-sbrk.patch
 Patch11:        mozilla-malloc.patch
-#Patch12:        firefox4-build-macos.patch
 Patch12:        xulrunner-2.0-64bit-big-endian.patch
 Patch13:        xulrunner-2.0-secondary-jit.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
 Patch15:        xulrunner-2.0-system-cairo.patch
 Patch16:        xulrunner-2.0-system-cairo-tee.patch
+Patch17:        xulrunner-2.0-os2cc.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -196,7 +196,7 @@ compliance, performance and portability.
 
 %prep
 %if %{build_langpacks}
-[ -f %{SOURCE2} ] || exit 1
+[ -f %{SOURCE1} ] || exit 1
 %endif
 %setup -q -c
 cd %{tarballdir}
@@ -218,10 +218,11 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %patch15 -p1 -b .system-cairo
 %patch16 -p1 -b .system-cairo-tee
 %endif
+%patch17 -p1 -b .os2cc
 
 %patch20 -p2 -b .pk
 %if %{fedora} >= 14
-%patch21 -p1 -b .jpeg-turbo
+%patch21 -p2 -b .jpeg-turbo
 %endif
 %if %{fedora} >= 15
 # when libnotify >= 0.7.0
@@ -231,6 +232,11 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 
 #%patch30 -p1 -b .checkupdates
 %patch31 -p1 -b .default
+
+%if 0%{?fedora} >= 15
+# For xulrunner-2.0-system-cairo-tee.patch
+autoconf-2.13
+%endif
 
 %{__rm} -f .mozconfig
 
@@ -310,7 +316,11 @@ cd %{tarballdir}
 
 # Mozilla builds with -Wall with exception of a few warnings which show up
 # everywhere in the code; so, don't override that.
-export MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/')
+#
+# Disable C++ exceptions since Mozilla code is not exception-safe
+#
+export MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
+                             %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
 
@@ -424,7 +434,7 @@ echo > ../%{name}.lang
 %if %{build_langpacks}
 # Install langpacks
 %{__mkdir_p} $RPM_BUILD_ROOT/%{mozappdir}/langpacks
-%{__tar} xjf %{SOURCE2}
+%{__tar} xjf %{SOURCE1}
 for langpack in `ls firefox-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
   extensiondir=$RPM_BUILD_ROOT/%{mozappdir}/langpacks/langpack-$language@firefox.mozilla.org
@@ -576,9 +586,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Jan 26 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.19.beta10
+- update to 4.0b10
+- switch to system cairo on fedora >= 15 only (patches from rawhide)
+
+* Tue Jan 25 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.13b10
+- Firefox 4.0 Beta 10
+
 * Sat Jan 22 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.18.beta10.build1
 - update to 4.0b10 build1 candidate
-- switch back to system cairo (patches from rawhide)
 - BR nss >= 3.12.9, nspr >= 4.8.7
 
 * Fri Jan 14 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.17.beta9

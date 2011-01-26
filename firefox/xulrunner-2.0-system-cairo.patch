@@ -1,7 +1,7 @@
 https://bugzilla.mozilla.org/show_bug.cgi?id=623797
 
 work around new features that are not avaliable in system-cairo on linux
-(romaxa's patch with modification for return failure with <gcc-4.5)
+(romaxa's original patch with modifications to use cairo-tee)
 
 diff --git a/config/system-headers b/config/system-headers
 --- a/config/system-headers
@@ -49,16 +49,18 @@ diff --git a/gfx/thebes/gfxASurface.cpp b/gfx/thebes/gfxASurface.cpp
  {
      if (!mSurfaceValid)
          return (gfxSurfaceType)-1;
-@@ -432,26 +434,32 @@ gfxASurface::FormatFromContent(gfxASurfa
+@@ -430,28 +432,34 @@ gfxASurface::FormatFromContent(gfxASurfa
+         default:
+             return ImageFormatRGB24;
      }
  }
  
  void
  gfxASurface::SetSubpixelAntialiasingEnabled(PRBool aEnabled)
  {
++#ifdef MOZ_TREE_CAIRO
      if (!mSurfaceValid)
          return;
-+#ifdef MOZ_TREE_CAIRO
      cairo_surface_set_subpixel_antialiasing(mSurface,
          aEnabled ? CAIRO_SUBPIXEL_ANTIALIASING_ENABLED : CAIRO_SUBPIXEL_ANTIALIASING_DISABLED);
 +#endif
@@ -82,6 +84,34 @@ diff --git a/gfx/thebes/gfxASurface.cpp b/gfx/thebes/gfxASurface.cpp
      switch (format) {
          case ImageFormatARGB32:
          case ImageFormatRGB24:
+diff --git a/gfx/thebes/gfxTeeSurface.cpp b/gfx/thebes/gfxTeeSurface.cpp
+--- a/gfx/thebes/gfxTeeSurface.cpp
++++ b/gfx/thebes/gfxTeeSurface.cpp
+@@ -32,17 +32,24 @@
+  * and other provisions required by the GPL or the LGPL. If you do not delete
+  * the provisions above, a recipient may use your version of this file under
+  * the terms of any one of the MPL, the GPL or the LGPL.
+  *
+  * ***** END LICENSE BLOCK ***** */
+ 
+ #include "gfxTeeSurface.h"
+ 
++/* Once cairo in tree is update ensure we remove the ifdef
++    and just include cairo-tee.h
++*/
++#ifdef MOZ_TREE_CAIRO
+ #include "cairo.h"
++#else
++#include "cairo-tee.h"
++#endif
+ 
+ gfxTeeSurface::gfxTeeSurface(cairo_surface_t *csurf)
+ {
+     Init(csurf, PR_TRUE);
+ }
+ 
+ gfxTeeSurface::gfxTeeSurface(gfxASurface **aSurfaces, PRInt32 aSurfaceCount)
+ {
 diff --git a/js/src/config/system-headers b/js/src/config/system-headers
 --- a/js/src/config/system-headers
 +++ b/js/src/config/system-headers

@@ -1,56 +1,29 @@
-diff -up mozilla-central/gfx/thebes/gfxContext.cpp.system-cairo-tee mozilla-central/gfx/thebes/gfxContext.cpp
---- mozilla-central/gfx/thebes/gfxContext.cpp.system-cairo-tee	2011-01-22 01:25:38.000000000 +0100
-+++ mozilla-central/gfx/thebes/gfxContext.cpp	2011-01-22 16:36:13.796269437 +0100
-@@ -782,6 +782,7 @@ gfxContext::PushGroupAndCopyBackground(g
-             cairo_push_group_with_content(mCairo, CAIRO_CONTENT_COLOR);
-             nsRefPtr<gfxASurface> d = CurrentSurface();
+https://bugzilla.mozilla.org/show_bug.cgi?id=623797
+
+# HG changeset patch
+# User Jory A. Pratt (anarchy@gentoo.org)
+# Parent b27366868c807e07a11741a7a2eb404ebc08e5e7
+Check to ensure system cairo has tee backend support, part 2 bug #623797
+
+diff --git a/configure.in b/configure.in
+--- a/configure.in
++++ b/configure.in
+@@ -8714,16 +8714,17 @@ if test "$MOZ_TREE_CAIRO"; then
  
-+#if CAIRO_HAS_TEE_SURFACE
-             if (d->GetType() == gfxASurface::SurfaceTypeTee) {
-                 NS_ASSERTION(s->GetType() == gfxASurface::SurfaceTypeTee, "Mismatched types");
-                 nsAutoTArray<nsRefPtr<gfxASurface>,2> ss;
-@@ -793,7 +794,9 @@ gfxContext::PushGroupAndCopyBackground(g
-                 for (PRUint32 i = 0; i < ss.Length(); ++i) {
-                     CopySurface(ss[i], ds[i], translation);
-                 }
--            } else {
-+            } else
-+#endif
-+            {
-                 CopySurface(s, d, gfxPoint(0, 0));
-             }
-             d->SetOpaqueRect(s->GetOpaqueRect());
-diff -up mozilla-central/gfx/thebes/gfxTeeSurface.cpp.system-cairo-tee mozilla-central/gfx/thebes/gfxTeeSurface.cpp
---- mozilla-central/gfx/thebes/gfxTeeSurface.cpp.system-cairo-tee	2011-01-22 01:25:38.000000000 +0100
-+++ mozilla-central/gfx/thebes/gfxTeeSurface.cpp	2011-01-22 16:32:36.626717637 +0100
-@@ -39,6 +39,7 @@
+     CAIRO_FEATURES_H=gfx/cairo/cairo/src/cairo-features.h
+     mv -f $CAIRO_FEATURES_H "$CAIRO_FEATURES_H".orig 2> /dev/null
  
- #include "cairo.h"
+ else
+    PKG_CHECK_MODULES(CAIRO, cairo >= $CAIRO_VERSION pixman-1 freetype2 fontconfig)
+    MOZ_CAIRO_CFLAGS=$CAIRO_CFLAGS
+    MOZ_CAIRO_LIBS=$CAIRO_LIBS
++   PKG_CHECK_MODULES(CAIRO_TEE, cairo-tee >= $CAIRO_VERSION)
+    if test "$MOZ_X11"; then
+         PKG_CHECK_MODULES(CAIRO_XRENDER, cairo-xlib-xrender >= $CAIRO_VERSION)
+         MOZ_CAIRO_LIBS="$MOZ_CAIRO_LIBS $XLDFLAGS $CAIRO_XRENDER_LIBS"
+         MOZ_CAIRO_CFLAGS="$MOZ_CAIRO_CFLAGS $CAIRO_XRENDER_CFLAGS"
+    fi
+ fi
  
-+#if CAIRO_HAS_TEE_SURFACE
- gfxTeeSurface::gfxTeeSurface(cairo_surface_t *csurf)
- {
-     Init(csurf, PR_TRUE);
-@@ -75,3 +76,4 @@ gfxTeeSurface::GetSurfaces(nsTArray<nsRe
-         *elem = Wrap(csurf);
-     }
- }
-+#endif
-diff -up mozilla-central/gfx/thebes/gfxTeeSurface.h.system-cairo-tee mozilla-central/gfx/thebes/gfxTeeSurface.h
---- mozilla-central/gfx/thebes/gfxTeeSurface.h.system-cairo-tee	2011-01-22 01:25:38.000000000 +0100
-+++ mozilla-central/gfx/thebes/gfxTeeSurface.h	2011-01-22 16:39:27.912850300 +0100
-@@ -41,6 +41,7 @@
- #include "gfxASurface.h"
- #include "nsTArray.h"
- 
-+#if CAIRO_HAS_TEE_SURFACE
- /**
-  * Wraps a cairo_tee_surface. The first surface in the surface list is the
-  * primary surface, which answers all surface queries (including size).
-@@ -62,5 +63,6 @@ public:
-      */
-     void GetSurfaces(nsTArray<nsRefPtr<gfxASurface> > *aSurfaces);
- };
-+#endif
- 
- #endif /* GFX_TEESURFACE_H */
+ AC_SUBST(MOZ_TREE_CAIRO)
+

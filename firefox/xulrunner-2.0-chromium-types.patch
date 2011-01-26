@@ -1,3 +1,5 @@
+https://bugzilla.mozilla.org/show_bug.cgi?id=627669
+
 diff -up xulrunner-2.0/mozilla-central/gfx/ycbcr/chromium_types.h.chromium-types xulrunner-2.0/mozilla-central/gfx/ycbcr/chromium_types.h
 --- xulrunner-2.0/mozilla-central/gfx/ycbcr/chromium_types.h.chromium-types	2010-11-04 21:05:47.000000000 +0100
 +++ xulrunner-2.0/mozilla-central/gfx/ycbcr/chromium_types.h	2010-11-15 14:20:12.000000000 +0100
