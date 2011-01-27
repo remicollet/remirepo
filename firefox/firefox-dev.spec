@@ -31,7 +31,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        4.0
-Release:        0.19.beta10%{?dist}
+Release:        0.20.beta10%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -80,7 +80,7 @@ Patch0:         firefox4-version.patch
 #Patch1:         firefox4-jemalloc.patch	= xulrunner / firefox4-jemalloc.patch
 #Patch2:         firefox4-build-throw.patch	= xulrunner / mozilla-malloc.patch
 
-#Patch30:        firefox4-disable-checkupdates.patch
+Patch30:        revert-562138.patch
 Patch31:        firefox4-default.patch
 
 
@@ -230,7 +230,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %endif
 %patch23 -p1 -b .wmclass
 
-#%patch30 -p1 -b .checkupdates
+%patch30 -p1 -b .revert-562138
 %patch31 -p1 -b .default
 
 %if 0%{?fedora} >= 15
@@ -586,6 +586,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Jan 27 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.20.beta10
+- latest patch from rawhide
+
+* Wed Jan 26 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.18
+- Fix issue with popup windows showing in the wrong place
+
 * Wed Jan 26 2011 Remi Collet <rpms@famillecollet.com> - 4.0-0.19.beta10
 - update to 4.0b10
 - switch to system cairo on fedora >= 15 only (patches from rawhide)
