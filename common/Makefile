@@ -62,3 +62,6 @@ devbuild:
 devbuildmini:
 	time rpmbuild $(RPMDEFINES) --define "runselftest 0" -bb $(NAME)-dev.spec
 
+sign:
+	rpmsign --addsign *.src.rpm
+
