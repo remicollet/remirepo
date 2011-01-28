@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=BlueGriffon
+GenericName=Web Editor
+Comment=The next-generation Web Editor
+Exec=bluegriffon
+TryExec=bluegriffon
+Icon=bluegriffon
+Terminal=false
+Type=Application
+StartupWMClass=bluegriffon-bin
+StartupNotify=true
+
