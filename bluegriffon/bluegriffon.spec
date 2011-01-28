@@ -196,7 +196,7 @@ MOZ_SMP_FLAGS=-j1
 MOZ_APP_DIR=%{_libdir}/%{name}
 
 export LDFLAGS="-Wl,-rpath,${MOZ_APP_DIR}"
-make -f client.mk build_all
+make -f client.mk build_all STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 
 
 %install
