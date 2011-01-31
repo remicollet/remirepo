@@ -226,7 +226,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 %endif
 %if %{fedora} >= 15
 # when libnotify >= 0.7.0
-%patch22 -p2 -b .notify
+%patch22 -p1 -b .notify
 %endif
 %patch23 -p1 -b .wmclass
 
