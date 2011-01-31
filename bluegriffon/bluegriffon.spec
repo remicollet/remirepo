@@ -1,30 +1,53 @@
-%define nspr_version 4.8.7
-%define nss_version 3.12.9
-%define cairo_version 1.10
-%define freetype_version 2.1.9
-%define lcms_version 1.18
-%define sqlite_version 3.7.1
+%global nspr_version 4.8.7
+%global nss_version 3.12.9
+%global cairo_version 1.10
+%global freetype_version 2.1.9
+%global lcms_version 1.18
+%global sqlite_version 3.7.1
 
-%define mozappdir %{_libdir}/bluegriffon
-%define tarballdir mozilla-central
-%define snapdate 20110128
+%global mozappdir   %{_libdir}/bluegriffon
+%global tarballdir  mozilla-central
+%global snapdate    20110131
+%global svnmain     540
+%global svnlocales  13
+
 
 Summary:        The next-generation Web Editor
+Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        0.9
-Release:        0.1.hg%{snapdate}%{?dist}
+Release:        0.2.svn%{svnmain}%{?dist}
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Editors
 
-Source0:        %{name}-%{snapdate}.tar.bz2
-Source1:        %{name}.sh
-Source2:        %{name}.desktop
+# hg clone http://hg.mozilla.org/mozilla-central/
+# tar cjf mozilla-central-20110131.tar.bz2 --exclude .hg mozilla-central
+Source0:        mozilla-central-%{snapdate}.tar.bz2
+
+# svn checkout http://sources.disruptive-innovations.com/bluegriffon/trunk bluegriffon
+# tar cjf bluegriffon-540.tar.bz2 --exclude .svn bluegriffon
+Source1:        %{name}-%{svnmain}.tar.bz2
+
+# svn checkout http://sources.disruptive-innovations.com/bluegriffon-l10n locales
+# tar cjf bluegriffon-l10n-13.tar.bz2 --exclude .svn locales
+Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
+
+Source11:       %{name}.sh
+Source12:        %{name}.desktop
 
 Patch1:         firefox4-build.patch
 Patch2:         firefox4-build-sbrk.patch
 Patch3:         mozilla-malloc.patch
 Patch4:         firefox4-libjpeg-turbo.patch
+Patch5:         mozilla-notify.patch
+
+Patch12:        xulrunner-2.0-64bit-big-endian.patch
+Patch13:        xulrunner-2.0-secondary-jit.patch
+Patch14:        xulrunner-2.0-chromium-types.patch
+Patch15:        xulrunner-2.0-system-cairo.patch
+Patch16:        xulrunner-2.0-system-cairo-tee.patch
+Patch17:        xulrunner-2.0-os2cc.patch
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -93,13 +116,25 @@ BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
 
 %description
-BlueGriffon is a new WYSIWYG content editor for the World Wide Web. 
+BlueGriffon is a new WYSIWYG content editor for the World Wide Web.
+
 Powered by Gecko, the rendering engine of Firefox 4, it's a modern
 and robust solution to edit Web pages in conformance to the latest
 Web Standards.
 
+%description -l fr
+BlueGriffon est un nouvel éditeur de page web WYSIWYG.
+
+Basé sur Gecko, le moteur de rendu de Firefox 4, c'est une solution
+moderne et fiable pour éditer des pages Web conformes aux dernières
+normes w3c.
+
+
 %prep
 %setup -q -n %{tarballdir}
+
+tar xjf %{SOURCE1}
+tar xjf %{SOURCE2} --directory %{name}
 
 patch -p1 < bluegriffon/config/content.patch
 
@@ -109,9 +144,26 @@ patch -p1 < bluegriffon/config/content.patch
 %if %{fedora} >= 14
 %patch4  -p2 -b .jpeg-turbo
 %endif
+%if %{fedora} >= 15
+# when libnotify >= 0.7.0
+%patch5 -p1 -b .notify
+%endif
+
+%patch12 -p2 -b .64bit-big-endian
+%patch13 -p2 -b .secondary-jit
+%patch14 -p2 -b .chromium-types
+%if %{fedora} >= 15
+%patch15 -p1 -b .system-cairo
+%patch16 -p1 -b .system-cairo-tee
+%endif
+%patch17 -p1 -b .os2cc
+
+%if 0%{?fedora} >= 15
+# For xulrunner-2.0-system-cairo-tee.patch
+autoconf-2.13
+%endif
 
 #See http://bluegriffon.org/pages/Build-BlueGriffon
-
 cat <<EOF_MOZCONFIG | tee .mozconfig 
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@
 
@@ -179,7 +231,7 @@ EOF_MOZCONFIG
 
 
 %build
-export MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
+export MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
    %{__sed} -e 's/-Wall//' -e 's/-fexceptions//g')
 
 export CFLAGS=$MOZ_OPT_FLAGS
@@ -208,14 +260,14 @@ tar --create --file - --dereference --directory=dist/bin . \
   | tar --extract --file - --directory $RPM_BUILD_ROOT/%{mozappdir}
 
 # Launcher
-install -D -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/%{name}
+install -D -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/%{name}
 
 # Shortcut
 desktop-file-install  \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications \
   --add-category Development \
   --add-category Network \
-  %{SOURCE2}
+  %{SOURCE12}
 
 # Icons
 install -D -m 644  bluegriffon/app/icons/default16.png  $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
@@ -258,6 +310,11 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Mon Jan 31 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.2.svn540
+- split sources
+- more patches from Firefox (fix rawhide build)
+- add french sumnary/description
+
 * Fri Jan 28 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.1.hg20110128
 - first work on RPM - BlueGriffon 0.9rc1
 
