@@ -1,0 +1,12 @@
+diff -up mozilla-central/browser/installer/Makefile.in.version mozilla-central/browser/installer/Makefile.in
+--- mozilla-central/browser/installer/Makefile.in.version	2010-08-06 03:08:59.000000000 +0200
++++ mozilla-central/browser/installer/Makefile.in	2010-08-30 15:27:40.000000000 +0200
+@@ -45,6 +45,8 @@ include $(DEPTH)/config/autoconf.mk
+ 
+ include $(topsrcdir)/config/rules.mk
+ 
++MOZ_APP_VERSION="__RPM_VERSION_INTERNAL__"
++
+ MOZ_PKG_REMOVALS = $(srcdir)/removed-files.in
+ 
+ ifdef MOZ_ENABLE_LIBXUL
