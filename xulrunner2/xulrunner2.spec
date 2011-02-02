@@ -442,6 +442,10 @@ mkdir -p $RPM_BUILD_ROOT$DEBUG_LIB_DIR/debug%{mozappdir}
 cp dist/%{shortname}-%{version}*.crashreporter-symbols.zip $RPM_BUILD_ROOT$DEBUG_LIB_DIR/debug%{mozappdir}
 %endif
 
+# Remi : this appears on Fedora <= 13
+%{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/*.chk
+
+
 #---------------------------------------------------------------------
 
 %clean
