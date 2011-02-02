@@ -300,9 +300,9 @@ DESTDIR=$RPM_BUILD_ROOT make install
              $RPM_BUILD_ROOT%{_includedir}/${INTERNAL_APP_SDK_NAME}
 %{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
 
-# set up our default preferences
-%{__cat} %{SOURCE12} | %{__sed} -e 's,RPM_VERREL,%{version}-%{release},g' > rh-default-prefs
-%{__install} -p -D -m 644 rh-default-prefs $RPM_BUILD_ROOT/%{mozappdir}/defaults/pref/all-redhat.js
+# set up our default preferences - (change Vendor to Remi, requested by upstream)
+%{__cat} %{SOURCE12} | %{__sed} -e 's,RPM_VERREL,%{version}-%{release},g' -e 's,Fedora,Remi,g' | tee rh-default-prefs
+%{__install} -p -D -m 644 rh-default-prefs $RPM_BUILD_ROOT/%{mozappdir}/defaults/pref/all-remi.js
 %{__rm} rh-default-prefs
 
 # Start script install
