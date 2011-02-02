@@ -417,10 +417,10 @@ chmod 644 $RPM_BUILD_ROOT/etc/gre.d/%{gre_conf_file}
 %define ld_conf_file %{name}-32.conf
 %endif
 
-%{__mkdir_p} $RPM_BUILD_ROOT/etc/ld.so.conf.d
-%{__cat} > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{ld_conf_file} << EOF
-%{mozappdir}
-EOF
+#%{__mkdir_p} $RPM_BUILD_ROOT/etc/ld.so.conf.d
+#%{__cat} > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{ld_conf_file} << EOF
+#%{mozappdir}
+#EOF
                         
 # Copy over the LICENSE
 %{__install} -p -c -m 644 LICENSE $RPM_BUILD_ROOT%{mozappdir}
@@ -496,7 +496,7 @@ fi
 %{mozappdir}/platform.ini
 %{mozappdir}/dependentlibs.list
 %{mozappdir}/greprefs.js
-%{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
+#%{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
 %if %{?moz_out_of_process_plugins}
 %{mozappdir}/plugin-container
 %endif
