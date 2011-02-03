@@ -10,7 +10,7 @@
 %global shortname         xulrunner
 
 %global version_internal  2
-%global pretag            b10
+%global pretag            b11
 %global mozappdir         %{_libdir}/%{shortname}-%{version_internal}
 %global tarballdir        mozilla-central
 %global gre_dir           %{_sysconfdir}/gre.d
@@ -42,12 +42,13 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        0.18.beta10%{?dist}
+Release:        0.19.beta11.build2%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 # You can get sources at ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pretag}/source
-Source0:        %{shortname}-%{version}%{?pretag}.source.tar.bz2
+#Source0:        %{shortname}-%{version}%{?pretag}.source.tar.bz2
+Source0:        firefox-4.0%{?pretag}.source.tar.bz2
 Source10:       %{shortname}-mozconfig
 Source11:       %{shortname}-mozconfig-debuginfo
 Source12:       %{shortname}-redhat-default-prefs.js
@@ -72,7 +73,7 @@ Patch23:        wmclass.patch
 Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
-Patch30:        revert-562138.patch
+#Patch30:        revert-562138.patch
 
 # ---------------------------------------------------
 
@@ -210,7 +211,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
-%patch30 -p1 -b .revert-562138
+#%patch30 -p1 -b .revert-562138
 
 %if %{fedora} >= 15
 # For xulrunner-2.0-system-cairo-tee.patch
@@ -537,6 +538,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Feb 03 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.19.beta11.build2
+- 2.0b11 build2 candidate (using firefox sources)
+
 * Tue Feb 01 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.18.beta10
 - rename to xulrunner2
 - merge most changes from spot

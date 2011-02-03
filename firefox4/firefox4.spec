@@ -11,14 +11,14 @@
 
 %global shortname		firefox
 %global internal_version	4
-%global mycomment   		Beta 10
+%global mycomment   		Beta 11 build2 candidate
 
 %global mozappdir               %{_libdir}/%{shortname}-%{internal_version}
 %global tarballdir              mozilla-central
 
 # xulrunner_version matches the firefox package.
 # xulrunner_version_max is first next incompatible xulrunner version
-%define xulrunner_version       2.0-0.18
+%define xulrunner_version       2.0-0.19
 %define xulrunner_version_max   2.1
 
 %define official_branding       1
@@ -29,19 +29,19 @@
 %define cvsdate 20080327
 %define nightly .cvs%{cvsdate}
 %else
-%define prever  b10
+%define prever  b11
 %endif
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        4.0
-Release:        0.21.beta10%{?dist}
+Release:        0.22.beta11.build2%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?prever}/source/firefox-%{version}%{?prever}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        firefox-langpacks-%{version}%{?prever}-20110125.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?prever}-20110203.tar.bz2
 %endif
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
@@ -428,6 +428,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Feb 03 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.22.beta11.build2
+- 4.0b11 build2 candidate
+
 * Wed Feb 02 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.21.beta10
 - sync with rawhide, use system xulrunner2
 
