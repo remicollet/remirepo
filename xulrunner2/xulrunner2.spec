@@ -369,6 +369,12 @@ popd
   dist/bin/xpt_link \
   $RPM_BUILD_ROOT/%{mozappdir}
 
+%if %{?fedora} < 14
+%{__install} -D -p -m 755 \
+   dist/sdk/bin/nspr-config \
+   $RPM_BUILD_ROOT${MOZ_APP_SDK_DIR}/sdk/bin/nspr-config
+%endif
+
 %{__rm} -rf $RPM_BUILD_ROOT/%{_includedir}/%{shortname}-%{version_internal}
 %{__rm} -rf $RPM_BUILD_ROOT/%{_datadir}/idl/%{shortname}-%{version_internal}
 
