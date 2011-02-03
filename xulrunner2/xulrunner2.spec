@@ -13,6 +13,7 @@
 %global pretag            b10
 %global mozappdir         %{_libdir}/%{shortname}-%{version_internal}
 %global tarballdir        mozilla-central
+%global gre_dir           %{_sysconfdir}/gre.d
 
 # crash reporter and out-of-process-plugins work only on x86/x86_64
 %ifarch %{ix86} x86_64
@@ -21,6 +22,14 @@
 %else
 %global enable_mozilla_crashreporter 0
 %global moz_out_of_process_plugins   0
+%endif
+
+%ifarch x86_64 ia64 s390x ppc64 sparc64
+%global mozbits 64
+%global gre_conf_file gre2-64.conf
+%else
+%global mozbits 32
+%global gre_conf_file gre2.conf
 %endif
 
 # The actual sqlite version (see #480989):
@@ -119,7 +128,11 @@ Requires:       sqlite >= %{sqlite_build_version}
 Provides:       gecko-libs = %{version}
 
 %description
-XULRunner provides the XUL Runtime environment for Gecko applications.
+XULRunner is a Mozilla runtime package that can be used to bootstrap XUL+XPCOM
+applications that are as rich as Firefox and Thunderbird. It provides mechanisms
+for installing, upgrading, and uninstalling these applications. XULRunner also
+provides libxul, a solution which allows the embedding of Mozilla technologies
+in other projects and products.
 
 %package devel
 Summary: Development files for Gecko
@@ -167,7 +180,8 @@ Requires: wireless-tools-devel
 %endif
 
 %description devel
-Gecko development files.
+This package contains the libraries amd header files that are needed
+for writing XUL+XPCOM applications with Mozilla XULRunner and Gecko.
 
 #---------------------------------------------------------------------
 
@@ -331,13 +345,6 @@ cd -
 %{__cp} $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/libxul-embedding.pc \
         $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/libxul-embedding-unstable.pc
 
-# Fix multilib devel conflicts...
-%ifarch x86_64 ia64 s390x ppc64 sparc64
-%define mozbits 64
-%else
-%define mozbits 32
-%endif
-
 function install_file() {
 genheader=$*
 mv ${genheader}.h ${genheader}%{mozbits}.h
@@ -405,29 +412,22 @@ done
 popd
 
 # GRE stuff
-%ifarch x86_64 ia64 ppc64 s390x sparc64
-%define gre_conf_file gre2-64.conf
-%else
-%define gre_conf_file gre2.conf
-%endif
-
 MOZILLA_GECKO_VERSION=`./config/milestone.pl --topsrcdir=.`
-%{__mv} $RPM_BUILD_ROOT/etc/gre.d/$MOZILLA_GECKO_VERSION".system.conf" \
-        $RPM_BUILD_ROOT/etc/gre.d/%{gre_conf_file}
-chmod 644 $RPM_BUILD_ROOT/etc/gre.d/%{gre_conf_file}
+%{__mv} $RPM_BUILD_ROOT%{gre_dir}/$MOZILLA_GECKO_VERSION".system.conf" \
+        $RPM_BUILD_ROOT%{gre_dir}/%{gre_conf_file}
+chmod 644 $RPM_BUILD_ROOT%{gre_dir}/%{gre_conf_file}
 
 # Library path
-%ifarch x86_64 ia64 ppc64 s390x sparc64
-%define ld_conf_file %{name}-64.conf
-%else
-%define ld_conf_file %{name}-32.conf
+LD_SO_CONF_D=%{_sysconfdir}/ld.so.conf.d
+LD_CONF_FILE=%{name}-%{mozbits}.conf
+
+%if %{name} == %{shortname}
+%{__mkdir_p} ${RPM_BUILD_ROOT}${LD_SO_CONF_D}
+%{__cat} > ${RPM_BUILD_ROOT}${LD_SO_CONF_D}/${LD_CONF_FILE} << EOF
+%{mozappdir}
+EOF
 %endif
 
-#%{__mkdir_p} $RPM_BUILD_ROOT/etc/ld.so.conf.d
-#%{__cat} > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{ld_conf_file} << EOF
-#%{mozappdir}
-#EOF
-                        
 # Copy over the LICENSE
 %{__install} -p -c -m 644 LICENSE $RPM_BUILD_ROOT%{mozappdir}
 
@@ -476,8 +476,8 @@ fi
 %files
 %defattr(-,root,root,-)
 %{_bindir}/%{name}
-%dir /etc/gre.d
-/etc/gre.d/%{gre_conf_file}
+%dir %{_sysconfdir}/gre.d
+%{_sysconfdir}/gre.d/gre*.conf
 %dir %{mozappdir}
 %doc %attr(644, root, root) %{mozappdir}/LICENSE
 %doc %attr(644, root, root) %{mozappdir}/README.txt
@@ -506,7 +506,9 @@ fi
 %{mozappdir}/platform.ini
 %{mozappdir}/dependentlibs.list
 %{mozappdir}/greprefs.js
-#%{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
+%if %{name} == %{shortname}
+%{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
+%endif
 %if %{?moz_out_of_process_plugins}
 %{mozappdir}/plugin-container
 %endif
