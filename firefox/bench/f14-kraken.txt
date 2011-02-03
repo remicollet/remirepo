@@ -18,8 +18,39 @@ Intel(R) Core(TM) i5 CPU         760  @ 2.80GHz
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8					 5221.3
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b9) Gecko/20100101 Firefox/4.0b9					 5143.7
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b10) Gecko/20100101 Firefox/4.0b10				 4712.3
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b11) Gecko/20110203 Firefox/4.0b11				 4734.2
 
+=========================================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b11) Gecko/20110203 Firefox/4.0b11
+===============================================
+RESULTS (means and 95% confidence intervals)
+-----------------------------------------------
+Total:                        4734.2ms +/- 1.6%
+-----------------------------------------------
 
+  ai:                         1111.4ms +/- 6.6%
+    astar:                    1111.4ms +/- 6.6%
+
+  audio:                      1397.6ms +/- 1.2%
+    beat-detection:            441.7ms +/- 3.2%
+    dft:                       275.8ms +/- 1.7%
+    fft:                       356.6ms +/- 2.5%
+    oscillator:                323.5ms +/- 2.0%
+
+  imaging:                    1373.7ms +/- 0.2%
+    gaussian-blur:             518.3ms +/- 0.4%
+    darkroom:                  197.6ms +/- 0.2%
+    desaturate:                657.8ms +/- 0.1%
+
+  json:                        153.8ms +/- 1.7%
+    parse-financial:           100.1ms +/- 2.3%
+    stringify-tinderbox:        53.7ms +/- 1.1%
+
+  stanford:                    697.7ms +/- 2.0%
+    crypto-aes:                215.2ms +/- 6.4%
+    crypto-ccm:                157.6ms +/- 5.6%
+    crypto-pbkdf2:             225.8ms +/- 5.2%
+    crypto-sha256-iterative:    99.1ms +/- 6.0%
 =========================================================================================
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b10) Gecko/20100101 Firefox/4.0b10
 ===============================================
