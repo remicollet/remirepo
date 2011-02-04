@@ -11,14 +11,14 @@
 
 %global shortname		firefox
 %global internal_version	4
-%global mycomment   		Beta 11 build2 candidate
+%global mycomment   		Beta 11 build3 candidate
 
 %global mozappdir               %{_libdir}/%{shortname}-%{internal_version}
 %global tarballdir              mozilla-central
 
 # xulrunner_version matches the firefox package.
 # xulrunner_version_max is first next incompatible xulrunner version
-%define xulrunner_version       2.0-0.19
+%define xulrunner_version       2.0-0.20
 %define xulrunner_version_max   2.1
 
 %define official_branding       1
@@ -35,7 +35,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        4.0
-Release:        0.22.beta11.build2%{?dist}
+Release:        0.23.beta11.build3%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -428,6 +428,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Feb 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.23.beta11.build3
+- 4.0b11 build3 candidate
+
 * Thu Feb 03 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.22.beta11.build2
 - 4.0b11 build2 candidate
 
