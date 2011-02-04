@@ -11,12 +11,15 @@
 %global svnmain     540
 %global svnlocales  13
 
+%global withxulrunner 1
+%global xulrunner_version       2.0-0.20
+%global xulrunner_version_max   2.1
 
 Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        0.9
-Release:        0.2.svn%{svnmain}%{?dist}
+Release:        0.3.svn%{svnmain}%{?dist}
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Editors
@@ -33,6 +36,7 @@ Source1:        %{name}-%{svnmain}.tar.bz2
 # tar cjf bluegriffon-l10n-13.tar.bz2 --exclude .svn locales
 Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
 
+Source10:       %{name}.sh.in
 Source11:       %{name}.sh
 Source12:        %{name}.desktop
 
@@ -51,9 +55,17 @@ Patch17:        xulrunner-2.0-os2cc.patch
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
+BuildRequires:  desktop-file-utils
+BuildRequires:  system-bookmarks
+BuildRequires:  yasm
+
+%if %{withxulrunner}
+BuildRequires:  xulrunner2-devel >= %{xulrunner_version}
+Requires:       xulrunner2 >= %{xulrunner_version}
+Conflicts:      xulrunner2 >= %{xulrunner_version_max}
+%else
 BuildRequires:  zip
 BuildRequires:  libIDL-devel
-BuildRequires:  desktop-file-utils
 BuildRequires:  gtk2-devel
 BuildRequires:  gnome-vfs2-devel
 BuildRequires:  libgnomeui-devel
@@ -85,7 +97,6 @@ BuildRequires:  libnotify-devel
 %if %{fedora} >= 9
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
-BuildRequires:  system-bookmarks
 BuildRequires:  libpng-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  zip
@@ -105,7 +116,6 @@ BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  autoconf213
 BuildRequires:  mesa-libGL-devel
-BuildRequires:  yasm
 
 %if 0%{?fedora} >= 14
 Requires:       nss >= %{nss_version}
@@ -114,6 +124,8 @@ Requires:       nspr >= %{nspr_version}
 %if %{fedora} >= 9
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
+%endif
+
 
 %description
 BlueGriffon is a new WYSIWYG content editor for the World Wide Web.
@@ -229,6 +241,12 @@ ac_add_options --enable-safe-browsing
 ac_add_options --disable-updater
 EOF_MOZCONFIG
 
+%if %{withxulrunner}
+echo "ac_add_options --enable-libxul"  >> .mozconfig
+echo "ac_add_options --with-libxul-sdk=\
+`pkg-config --variable=sdkdir libxul`" >> .mozconfig
+%endif
+
 
 %build
 export MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
@@ -248,7 +266,7 @@ MOZ_SMP_FLAGS=-j1
 MOZ_APP_DIR=%{_libdir}/%{name}
 
 export LDFLAGS="-Wl,-rpath,${MOZ_APP_DIR}"
-make -f client.mk build_all STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
+make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 
 
 %install
@@ -256,11 +274,19 @@ make -f client.mk build_all STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 
 # No Make install for now :(
 mkdir -p $RPM_BUILD_ROOT/%{mozappdir}
-tar --create --file - --dereference --directory=dist/bin . \
+tar --create --file - --dereference --directory=dist/bin --exclude xulrunner . \
   | tar --extract --file - --directory $RPM_BUILD_ROOT/%{mozappdir}
 
 # Launcher
+%if %{withxulrunner}
+install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
+XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
+%{__cat} %{SOURCE10} | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g" > \
+  $RPM_BUILD_ROOT%{_bindir}/%{name}
+%{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
+%else
 install -D -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/%{name}
+%endif
 
 # Shortcut
 desktop-file-install  \
@@ -282,7 +308,6 @@ ln -s %{_datadir}/myspell $RPM_BUILD_ROOT%{mozappdir}/dictionaries
 
 
 %post
-chcon -t textrel_shlib_t %{mozappdir}/libxul.so &>/dev/null || :
 update-desktop-database &> /dev/null || :
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 if [ -x %{_bindir}/gtk-update-icon-cache ]; then
@@ -310,6 +335,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Feb 04 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.3.svn540
+- add stuff to build against system xulrunner2
+
 * Mon Jan 31 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.2.svn540
 - split sources
 - more patches from Firefox (fix rawhide build)
