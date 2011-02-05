@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 3.3.9
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -16,7 +16,12 @@ Source13: http://downloads.sourceforge.net/sourceforge/phpmyadmin/pmahomme-1.0b.
 
 
 # See https://sourceforge.net/tracker/?func=detail&atid=377410&aid=2965613&group_id=23067
-Patch0:   phpMyAdmin-vendor.patch
+Patch0: phpMyAdmin-vendor.patch
+
+# http://www.phpmyadmin.net/home_page/security/PMASA-2010-9.php
+Patch1: CVE-2010-4480.patch
+# http://www.phpmyadmin.net/home_page/security/PMASA-2010-10.php
+Patch2: CVE-2010-4481.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -42,6 +47,8 @@ is available in 50 languages
 %setup -qn phpMyAdmin-%{version}-all-languages
 
 %patch0 -p0
+%patch1 -p1
+%patch2 -p1
 
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
@@ -121,6 +128,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sat Feb 05 2011 Remi Collet <rpms@famillecollet.com> 3.3.9-2
+- upstream patches for CVE-2010-4480 and CVE-2010-4481
+
 * Mon Jan 03 2011 Remi Collet <rpms@famillecollet.com> 3.3.9-1
 - Upstream released 3.3.9
 - update pmamhomme to 1.0b
