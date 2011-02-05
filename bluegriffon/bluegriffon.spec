@@ -7,29 +7,27 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-central
-%global snapdate    20110131
-%global svnmain     540
+%global svnmain     541
 %global svnlocales  13
 
-%global withxulrunner 1
+%global withxulrunner           1
 %global xulrunner_version       2.0-0.20
 %global xulrunner_version_max   2.1
+%global srcversion              4.0b11
 
 Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        0.9
-Release:        0.3.svn%{svnmain}%{?dist}
+Release:        0.4.svn%{svnmain}%{?dist}
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Editors
 
-# hg clone http://hg.mozilla.org/mozilla-central/
-# tar cjf mozilla-central-20110131.tar.bz2 --exclude .hg mozilla-central
-Source0:        mozilla-central-%{snapdate}.tar.bz2
+Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{srcversion}.source.tar.bz2
 
 # svn checkout http://sources.disruptive-innovations.com/bluegriffon/trunk bluegriffon
-# tar cjf bluegriffon-540.tar.bz2 --exclude .svn bluegriffon
+# tar cjf bluegriffon-541.tar.bz2 --exclude .svn bluegriffon
 Source1:        %{name}-%{svnmain}.tar.bz2
 
 # svn checkout http://sources.disruptive-innovations.com/bluegriffon-l10n locales
@@ -38,7 +36,7 @@ Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
 
 Source10:       %{name}.sh.in
 Source11:       %{name}.sh
-Source12:        %{name}.desktop
+Source12:       %{name}.desktop
 
 Patch1:         firefox4-build.patch
 Patch2:         firefox4-build-sbrk.patch
@@ -124,6 +122,7 @@ Requires:       nspr >= %{nspr_version}
 %if %{fedora} >= 9
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
+# endif %{withxulrunner}
 %endif
 
 
@@ -176,7 +175,7 @@ autoconf-2.13
 %endif
 
 #See http://bluegriffon.org/pages/Build-BlueGriffon
-cat <<EOF_MOZCONFIG | tee .mozconfig 
+cat <<EOF_MOZCONFIG > .mozconfig 
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@
 
 ac_add_options --enable-application=%{name}
@@ -234,7 +233,6 @@ ac_add_options --enable-pango
 ac_add_options --enable-svg
 ac_add_options --enable-canvas
 ac_add_options --enable-startup-notification
-ac_add_options --disable-cpp-exceptions
 ac_add_options --disable-javaxpcom
 ac_add_options --disable-crashreporter
 ac_add_options --enable-safe-browsing
@@ -244,12 +242,12 @@ EOF_MOZCONFIG
 %if %{withxulrunner}
 echo "ac_add_options --enable-libxul"  >> .mozconfig
 echo "ac_add_options --with-libxul-sdk=\
-`pkg-config --variable=sdkdir libxul`" >> .mozconfig
+$(pkg-config --variable=sdkdir libxul)" >> .mozconfig
 %endif
 
 
 %build
-export MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
+export MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
    %{__sed} -e 's/-Wall//' -e 's/-fexceptions//g')
 
 export CFLAGS=$MOZ_OPT_FLAGS
@@ -335,6 +333,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sat Feb 05 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.4.svn541
+- rebuild
+
 * Fri Feb 04 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.3.svn540
 - add stuff to build against system xulrunner2
 
