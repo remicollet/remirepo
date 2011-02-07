@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.5.8
-Release: 3%{?dist}
+Release: 9%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -40,6 +40,10 @@ Patch6: mysql-chain-certs.patch
 Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
 Patch9: mysql-5.5-disable-test.patch
+Patch10: mysql-embedded-crash.patch
+Patch11: mysql-home.patch
+Patch12: mysql-plugin-bool.patch
+Patch13: mysql-s390-tsc.patch
 
 # RC patch for backports
 Patch21: mysql-5.5-readline.patch
@@ -52,10 +56,10 @@ BuildRequires: systemtap-sdt-devel >= 1.3
 %endif
 # make test requires time and ps
 BuildRequires: time procps
-# Socket is needed to run regression tests
-BuildRequires: perl(Socket)
+# Socket and Time::HiRes are needed to run regression tests
+BuildRequires: perl(Socket), perl(Time::HiRes)
 # This is required old EL4
-BuildRequires: perl(Time::HiRes), bison
+BuildRequires: bison
 
 Requires: grep, fileutils
 Requires: %{name}-libs = %{version}-%{release}
@@ -66,8 +70,9 @@ Conflicts: MySQL
 # mysql-cluster used to be built from this SRPM, but no more
 Obsoletes: mysql-cluster < 5.1.44
 
-# Working around perl dependency checking bug in rpm FTTB. Remove later.
+# When rpm 4.9 is universal, this could be cleaned up:
 %global __perl_requires %{SOURCE999}
+%global __perllib_requires %{SOURCE999}
 
 %description
 MySQL is a multi-user, multi-threaded SQL database server. MySQL is a
@@ -193,6 +198,10 @@ sed -i -e '/SHARED_LIB_MAJOR_VERSION/s/16/161/' cmake/mysql_version.cmake
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
 # Backports specific patches
 %patch21 -p1 -b .readline
 
@@ -225,8 +234,7 @@ CFLAGS="$CFLAGS -fPIC"
 %ifarch sparc sparcv9 sparc64
 CFLAGS=`echo $CFLAGS| sed -e "s|-O2|-O1|g" `
 %endif
-# extra C++ flags as per recommendations in mysql's INSTALL-SOURCE doc
-CXXFLAGS="$CFLAGS -felide-constructors -fno-rtti -fno-exceptions"
+CXXFLAGS="$CFLAGS"
 export CFLAGS CXXFLAGS
 
 # The INSTALL_xxx macros have to be specified relative to CMAKE_INSTALL_PREFIX
@@ -647,6 +655,36 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Mon Feb 07 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.8-9
+- sync with rawhide
+
+* Fri Feb  4 2011 Tom Lane <tgl@redhat.com> 5.5.8-9
+- Support s390/s390x in performance schema's cycle-counting functions
+  (needed to make regression tests pass on these platforms)
+
+* Thu Feb  3 2011 Tom Lane <tgl@redhat.com> 5.5.8-8
+- PPC64 floating-point differences are not masked by -ffloat-store after all,
+  so let's just disable gis regression test till upstream makes it less picky
+Resolves: #674253
+- Add __perllib_requires setting to make rpm 4.9 do what we need
+
+* Wed Feb  2 2011 Tom Lane <tgl@redhat.com> 5.5.8-7
+- Work around some portability issues on PPC64
+Resolves: #674253
+
+* Thu Jan 20 2011 Tom Lane <tgl@redhat.com> 5.5.8-6
+- Remove no-longer-needed special switches in CXXFLAGS, per yesterday's
+  discussion in fedora-devel about -fexceptions.
+- Rebuild needed anyway to check compatibility with latest systemtap.
+
+* Thu Jan 13 2011 Tom Lane <tgl@redhat.com> 5.5.8-5
+- Fix failure to honor MYSQL_HOME environment variable
+Resolves: #669364
+
+* Thu Jan 13 2011 Tom Lane <tgl@redhat.com> 5.5.8-4
+- Fix crash during startup of embedded mysqld library
+Resolves: #667365
+
 * Sat Jan 08 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.8-3
 - sync with rawhide
 

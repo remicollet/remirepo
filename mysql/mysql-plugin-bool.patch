@@ -1,0 +1,42 @@
+Fix plugin boolean variables to receive the value "1", not "-1", when they
+are set to 1.  Aside from being bizarre, the existing behavior is unportable:
+machines where char is unsigned print "255" instead.  Filed upstream at
+http://bugs.mysql.com/bug.php?id=59905
+
+
+diff -Naur mysql-5.5.8.orig/sql/sql_plugin.cc mysql-5.5.8/sql/sql_plugin.cc
+--- mysql-5.5.8.orig/sql/sql_plugin.cc	2010-12-03 12:58:26.000000000 -0500
++++ mysql-5.5.8/sql/sql_plugin.cc	2011-02-01 20:34:10.218305349 -0500
+@@ -2024,7 +2024,7 @@
+       goto err;
+     result= (int) tmp;
+   }
+-  *(my_bool *) save= -result;
++  *(my_bool *) save= result ? true : false;
+   return 0;
+ err:
+   return 1;
+diff -Naur mysql-5.5.8.orig/mysql-test/suite/sys_vars/r/rpl_semi_sync_master_enabled_basic.result mysql-5.5.8/mysql-test/suite/sys_vars/r/rpl_semi_sync_master_enabled_basic.result
+--- mysql-5.5.8.orig/mysql-test/suite/sys_vars/r/rpl_semi_sync_master_enabled_basic.result	2010-12-03 12:58:25.000000000 -0500
++++ mysql-5.5.8/mysql-test/suite/sys_vars/r/rpl_semi_sync_master_enabled_basic.result	2011-02-01 21:53:20.006302245 -0500
+@@ -45,7 +45,7 @@
+ ERROR HY000: Variable 'rpl_semi_sync_master_enabled' is a GLOBAL variable and should be set with SET GLOBAL
+ select @@global.rpl_semi_sync_master_enabled;
+ @@global.rpl_semi_sync_master_enabled
+--1
++1
+ select @@session.rpl_semi_sync_master_enabled;
+ ERROR HY000: Variable 'rpl_semi_sync_master_enabled' is a GLOBAL variable
+ show global variables like 'rpl_semi_sync_master_enabled';
+diff -Naur mysql-5.5.8.orig/mysql-test/suite/sys_vars/r/rpl_semi_sync_slave_enabled_basic.result mysql-5.5.8/mysql-test/suite/sys_vars/r/rpl_semi_sync_slave_enabled_basic.result
+--- mysql-5.5.8.orig/mysql-test/suite/sys_vars/r/rpl_semi_sync_slave_enabled_basic.result	2010-12-03 12:58:26.000000000 -0500
++++ mysql-5.5.8/mysql-test/suite/sys_vars/r/rpl_semi_sync_slave_enabled_basic.result	2011-02-01 21:53:59.689249491 -0500
+@@ -45,7 +45,7 @@
+ ERROR HY000: Variable 'rpl_semi_sync_slave_enabled' is a GLOBAL variable and should be set with SET GLOBAL
+ select @@global.rpl_semi_sync_slave_enabled;
+ @@global.rpl_semi_sync_slave_enabled
+--1
++1
+ select @@session.rpl_semi_sync_slave_enabled;
+ ERROR HY000: Variable 'rpl_semi_sync_slave_enabled' is a GLOBAL variable
+ show global variables like 'rpl_semi_sync_slave_enabled';
