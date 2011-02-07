@@ -1,6 +1,6 @@
 Name: mysql
-Version: 5.5.8
-Release: 9%{?dist}
+Version: 5.5.9
+Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -322,7 +322,7 @@ cd ../..
   # increase timeouts to prevent unwanted failures during mass rebuilds
   cd mysql-test
   (
-    # perl ./mysql-test-run.pl --force --retry=0 --ssl --mysqld=--binlog-format=mixed --suite-timeout=720 --testcase-timeout=30
+    # perl ./mysql-test-run.pl --force --retry=0 --mysqld=--binlog-format=mixed --suite-timeout=720 --testcase-timeout=30
     # Run less test to speed up build process
     %{__perl} ./mysql-test-run.pl --force --ssl --mysqld=--binlog-format=mixed --suite=main
   ) 
@@ -655,8 +655,9 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
-* Mon Feb 07 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.8-9
-- sync with rawhide
+* Mon Feb 07 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.9-1
+- sync with rawhide (latest patches for 5.5.8)
+- update to 5.5.9
 
 * Fri Feb  4 2011 Tom Lane <tgl@redhat.com> 5.5.8-9
 - Support s390/s390x in performance schema's cycle-counting functions
