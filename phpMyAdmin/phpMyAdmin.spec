@@ -1,6 +1,6 @@
 Name: phpMyAdmin
-Version: 3.3.9
-Release: 2%{?dist}
+Version: 3.3.9.1
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -128,6 +128,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Feb 08 2011 Remi Collet <rpms@famillecollet.com> 3.3.9.1-1
+- Upstream released 3.3.9.1
+
 * Sat Feb 05 2011 Remi Collet <rpms@famillecollet.com> 3.3.9-2
 - upstream patches for CVE-2010-4480 and CVE-2010-4481
 
