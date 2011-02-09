@@ -42,7 +42,7 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        0.20.beta11.build3%{?dist}
+Release:        0.21.beta11%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -538,6 +538,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Feb 09 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.21.beta11
+- Update to 2.0 Beta 11
+
 * Fri Feb 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.20.beta11.build3
 - 2.0b11 build3 candidate (using firefox sources)
 

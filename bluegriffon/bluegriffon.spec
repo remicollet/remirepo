@@ -7,11 +7,11 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-central
-%global svnmain     541
-%global svnlocales  13
+%global svnmain     553
+%global svnlocales  23
 
 %global withxulrunner           1
-%global xulrunner_version       2.0-0.20
+%global xulrunner_version       2.0-0.21
 %global xulrunner_version_max   2.1
 %global srcversion              4.0b11
 
@@ -19,7 +19,7 @@ Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        0.9
-Release:        0.4.svn%{svnmain}%{?dist}
+Release:        0.5.svn%{svnmain}%{?dist}
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Editors
@@ -27,11 +27,11 @@ Group:          Applications/Editors
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{srcversion}.source.tar.bz2
 
 # svn checkout http://sources.disruptive-innovations.com/bluegriffon/trunk bluegriffon
-# tar cjf bluegriffon-541.tar.bz2 --exclude .svn bluegriffon
+# tar cjf bluegriffon-553.tar.bz2 --exclude .svn bluegriffon
 Source1:        %{name}-%{svnmain}.tar.bz2
 
 # svn checkout http://sources.disruptive-innovations.com/bluegriffon-l10n locales
-# tar cjf bluegriffon-l10n-13.tar.bz2 --exclude .svn locales
+# tar cjf bluegriffon-l10n-23.tar.bz2 --exclude .svn locales
 Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
 
 Source10:       %{name}.sh.in
@@ -333,6 +333,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Wed Feb 09 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.5.svn553
+- bluegriffon svn 553, locales svn 23
+- rebuild against xulrunnner 2.0b11
+
 * Sat Feb 05 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.4.svn541
 - rebuild
 
