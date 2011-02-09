@@ -132,8 +132,9 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
+  | grep -v disable-cpp-exceptions \
 %if %{fedora} < 15
-   | grep -v enable-system-sqlite  \
+  | grep -v enable-system-sqlite   \
 %endif
 %if %{fedora} < 14
   | grep -v with-system-nspr       \
@@ -180,7 +181,7 @@ cd %{tarballdir}
 MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions//g')
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS=$MOZ_OPT_FLAGS
+export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'

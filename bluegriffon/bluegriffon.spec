@@ -7,7 +7,7 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-central
-%global svnmain     553
+%global svnmain     554
 %global svnlocales  23
 
 %global withxulrunner           1
@@ -19,7 +19,7 @@ Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        0.9
-Release:        0.5.svn%{svnmain}%{?dist}
+Release:        0.6.svn%{svnmain}%{?dist}
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Editors
@@ -333,6 +333,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Wed Feb 09 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.6.svn554
+- bluegriffon svn 554
+
 * Wed Feb 09 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.5.svn553
 - bluegriffon svn 553, locales svn 23
 - rebuild against xulrunnner 2.0b11

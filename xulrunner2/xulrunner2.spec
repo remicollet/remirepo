@@ -221,8 +221,9 @@ autoconf-2.13
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
+  | grep -v disable-cpp-exceptions \
 %if %{fedora} < 15
-   | grep -v enable-system-sqlite  \
+  | grep -v enable-system-sqlite   \
 %endif
 %if %{fedora} < 14
   | grep -v with-system-nspr       \
@@ -272,10 +273,10 @@ cd %{tarballdir}
 #
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
+MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
                       %{__sed} -e 's/-Wall//' -e 's/-fexceptions//g')
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS=$MOZ_OPT_FLAGS
+export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
