@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.1.54
+Version: 5.1.55
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -617,6 +617,9 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Thu Feb 10 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.1.55-1
+- Update to MySQL 5.1.55 Community Server GA
+
 * Thu Dec 16 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.1.54-1
 - Update to MySQL 5.1.54 Community Server GA
 - remove EXCEPTIONS-CLIENT (no more provided upstream)
