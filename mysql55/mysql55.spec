@@ -21,7 +21,7 @@ Source0: mysql-%{version}.tar.gz
 # ./generate-tarball.sh $VERSION
 # Source1: generate-tarball.sh not used for remi repo
 Source2: mysql.init
-Source3: my-5.5.cnf
+Source3: my.cnf
 Source4: scriptstub.c
 Source5: my_config.h
 Source6: README.mysql-docs
@@ -31,22 +31,22 @@ Source9: mysql-embedded-check.c
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh
 
-Patch1: mysql-5.5-errno.patch
-Patch2: mysql-5.5-strmov.patch
-Patch3: mysql-5.5-install-test.patch
+Patch1: mysql-errno.patch
+Patch2: mysql-strmov.patch
+Patch3: mysql-install-test.patch
 Patch4: mysql-expired-certs.patch
-Patch5: mysql-5.5-stack-guard.patch
+Patch5: mysql-stack-guard.patch
 Patch6: mysql-chain-certs.patch
 Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
-Patch9: mysql-5.5-disable-test.patch
+Patch9: mysql-disable-test.patch
 Patch10: mysql-embedded-crash.patch
 Patch11: mysql-home.patch
 Patch12: mysql-plugin-bool.patch
 Patch13: mysql-s390-tsc.patch
 
 # RC patch for backports
-Patch21: mysql-5.5-readline.patch
+Patch21: mysql-readline.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
