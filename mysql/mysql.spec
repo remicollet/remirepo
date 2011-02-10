@@ -42,7 +42,6 @@ Patch10: mysql-strmov.patch
 Patch12: mysql-cve-2008-7247.patch
 Patch13: mysql-expired-certs.patch
 Patch14: mysql-missing-string-code.patch
-# applied upstream - Patch15: mysql-lowercase-bug.patch
 Patch16: mysql-chain-certs.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -187,7 +186,6 @@ the MySQL sources.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
-# %patch15 -p1
 %patch16 -p1
 
 # workaround for upstream bug #56342
