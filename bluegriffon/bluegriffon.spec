@@ -7,7 +7,7 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-central
-%global svnmain     554
+%global svnmain     0
 %global svnlocales  23
 
 %global withxulrunner           1
@@ -19,13 +19,18 @@ Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        0.9
+%if %{svnmain}
 Release:        0.6.svn%{svnmain}%{?dist}
+%else
+Release:        1%{?dist}
+%endif
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Editors
 
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{srcversion}.source.tar.bz2
 
+%if %{svnmain}
 # svn checkout http://sources.disruptive-innovations.com/bluegriffon/trunk bluegriffon
 # tar cjf bluegriffon-553.tar.bz2 --exclude .svn bluegriffon
 Source1:        %{name}-%{svnmain}.tar.bz2
@@ -33,6 +38,10 @@ Source1:        %{name}-%{svnmain}.tar.bz2
 # svn checkout http://sources.disruptive-innovations.com/bluegriffon-l10n locales
 # tar cjf bluegriffon-l10n-23.tar.bz2 --exclude .svn locales
 Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
+%else
+Source1:        %{name}-%{version}.tar.bz2
+Source2:        %{name}-l10n-%{version}.tar.bz2
+%endif
 
 Source10:       %{name}.sh.in
 Source11:       %{name}.sh
@@ -333,6 +342,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Feb 11 2011 Remi Collet <rpms@famillecollet.com> - 0.9-1
+- BlueGriffon 0.9 "Cape Town" (svn = 560, locales = 25)
+  http://bluegriffon.org/post/2011/02/11/BlueGriffon-0.9-Cape-Town
+
 * Wed Feb 09 2011 Remi Collet <rpms@famillecollet.com> - 0.9-0.6.svn554
 - bluegriffon svn 554
 
