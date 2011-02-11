@@ -52,7 +52,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.5
-Release: 1%{?dist}.1
+Release: 1%{?dist}.2
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -1286,6 +1286,9 @@ fi
 %endif
 
 %changelog
+* Fri Feb 11 2011 Remi Collet <rpms@famillecollet.com> 5.3.5-1.2
+- rebuild against MySQL 5.5 (fedora <= 8)
+
 * Sat Jan 22 2011 Remi Collet <rpms@famillecollet.com> 5.3.5-1.1
 - rebuild against freetds 0.82 (EL <= 5, fedora <= 10)
 
