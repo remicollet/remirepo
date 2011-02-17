@@ -1,11 +1,8 @@
-
-Fix use of divert() to work with autoconf 2.6x.
-
-diff -up php-5.3.2/configure.in.aconf26x php-5.3.2/configure.in
---- php-5.3.2/configure.in.aconf26x	2010-03-06 07:55:20.000000000 +0100
-+++ php-5.3.2/configure.in	2010-03-06 07:57:57.000000000 +0100
+diff -up php-5.3.6RC1/configure.in.aconf26x php-5.3.6RC1/configure.in
+--- php-5.3.6RC1/configure.in.aconf26x	2011-02-17 16:30:32.081892440 +0100
++++ php-5.3.6RC1/configure.in	2011-02-17 16:31:06.329999541 +0100
 @@ -1,7 +1,7 @@
- ## $Id: configure.in 295792 2010-03-03 16:36:07Z johannes $ -*- autoconf -*-
+ ## $Id: configure.in 308398 2011-02-16 20:20:33Z johannes $ -*- autoconf -*-
  dnl ## Process this file with autoconf to produce a configure script.
  
 -divert(1)
@@ -49,18 +46,18 @@ diff -up php-5.3.2/configure.in.aconf26x php-5.3.2/configure.in
  
  dnl ## In diversion 5 we check which extensions should be compiled.
  dnl ## All of these are normally in the extension directories.
-diff -up php-5.3.2/ext/standard/config.m4.aconf26x php-5.3.2/ext/standard/config.m4
---- php-5.3.2/ext/standard/config.m4.aconf26x	2010-02-22 01:34:22.000000000 +0100
-+++ php-5.3.2/ext/standard/config.m4	2010-03-06 07:58:47.000000000 +0100
+diff -up php-5.3.6RC1/ext/standard/config.m4.aconf26x php-5.3.6RC1/ext/standard/config.m4
+--- php-5.3.6RC1/ext/standard/config.m4.aconf26x	2010-06-17 12:22:03.000000000 +0200
++++ php-5.3.6RC1/ext/standard/config.m4	2011-02-17 16:30:32.091891889 +0100
 @@ -1,6 +1,6 @@
- dnl $Id: config.m4 295350 2010-02-22 00:34:22Z pajoye $ -*- autoconf -*-
+ dnl $Id: config.m4 300511 2010-06-17 10:22:03Z pajoye $ -*- autoconf -*-
  
 -divert(3)dnl
 +divert(1003)dnl
  
  dnl
  dnl Check if flush should be called explicitly after buffered io
-@@ -333,7 +333,7 @@ dnl
+@@ -342,7 +342,7 @@ dnl
  AC_CHECK_FUNCS(getcwd getwd asinh acosh atanh log1p hypot glob strfmon nice fpclass isinf isnan mempcpy strpncpy)
  AC_FUNC_FNMATCH	
  
@@ -69,9 +66,9 @@ diff -up php-5.3.2/ext/standard/config.m4.aconf26x php-5.3.2/ext/standard/config
  
  dnl
  dnl Check if there is a support means of creating a new process
-diff -up php-5.3.2/scripts/phpize.m4.aconf26x php-5.3.2/scripts/phpize.m4
---- php-5.3.2/scripts/phpize.m4.aconf26x	2009-12-02 18:42:58.000000000 +0100
-+++ php-5.3.2/scripts/phpize.m4	2010-03-06 07:55:20.000000000 +0100
+diff -up php-5.3.6RC1/scripts/phpize.m4.aconf26x php-5.3.6RC1/scripts/phpize.m4
+--- php-5.3.6RC1/scripts/phpize.m4.aconf26x	2010-11-02 10:58:08.000000000 +0100
++++ php-5.3.6RC1/scripts/phpize.m4	2011-02-17 16:30:32.092891834 +0100
 @@ -1,6 +1,6 @@
  dnl This file becomes configure.in for self-contained extensions.
  
