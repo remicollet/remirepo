@@ -19,7 +19,7 @@
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
 Version:       3.1.7
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
@@ -30,7 +30,7 @@ Conflicts:     %{phpname}-mmcache %{phpname}-eaccelerator
 BuildRequires: %{phpname}-devel >= 5.1.0, httpd-devel, %{phpname}-pear, pcre-devel
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-%if %{?php_zend_api}0
+%if 0%{?php_zend_api:1}
 # Require clean ABI/API versions if available (Fedora)
 Requires:      %{phpname}(zend-abi) = %{php_zend_api}
 Requires:      %{phpname}(api) = %{php_core_api}
@@ -215,6 +215,9 @@ fi
 
 
 %changelog
+* Thu Feb 17 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.7-1.1
+- test rebuild with new Arch specific ABI macro
+
 * Wed Jan 12 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.7-1
 - update to 3.1.7 (bugfix)
 - add devel subpackage (for serializer)
