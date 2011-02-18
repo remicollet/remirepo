@@ -1,18 +1,40 @@
 Name:      libmemcached
 Summary:   Client library and command line tools for memcached server
-Version:   0.44
+Version:   0.46
 Release:   1%{?dist}
 License:   BSD
 Group:     System Environment/Libraries
 URL:       http://libmemcached.org/
-Source0:   http://launchpad.net/libmemcached/1.0/%{version}/+download/libmemcached-%{version}.tar.gz
+# Original sources:
+#   http://launchpad.net/libmemcached/1.0/%{version}/+download/libmemcached-%{version}.tar.gz
+# The source tarball must be repackaged to remove the Hsieh hash
+# code, since the license is non-free.  When upgrading, download the new
+# source tarball, and run "./strip-hsieh.sh <version>" to produce the
+# "-exhsieh" tarball.
+Source0:   libmemcached-%{version}-exhsieh.tar.gz
+
+# Add -lsasl2 to libmemcached.pc
+# See http://lists.libmemcached.org/pipermail/libmemcached-discuss/2010-October/002207.html
+Patch0:    libmemcached-sasl.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-# checked during configure (for test suite)
-BuildRequires: memcached
-# We patch .m4 files
-BuildRequires: libtool autoconf automake
 
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+BuildRequires: cyrus-sasl-devel
+%endif
+%if 0%{?fedora} >= 12
+BuildRequires: systemtap-sdt-devel
+%endif
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+BuildRequires: libevent-devel
+%endif
+# checked during configure (for test suite)
+#BuildRequires: memcached
+# We patch .m4 files
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+# Need libtool >= 2
+BuildRequires: libtool autoconf automake
+%endif
 
 %description
 libmemcached is a C client library to the memcached server
@@ -33,9 +55,9 @@ memerror - Creates human readable messages from libmemcached error codes.
 %package devel
 Summary: Header files and development libraries for %{name}
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
-Requires: pkgconfig
-Requires: cyrus-sasl-devel
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: pkgconfig%{?_isa}
+Requires: cyrus-sasl-devel%{?_isa}
 
 %description devel
 This package contains the header files and development libraries
@@ -46,14 +68,22 @@ you will need to install %{name}-devel.
 %prep
 %setup -q
 
-%{__rm} -f libmemcached/hsieh_hash.c 
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+%patch0 -p1 -b .sasl
+%endif
 
 %{__mkdir} examples
 %{__cp} -p tests/*.{c,cpp,h} examples/
 
 
 %build
-%configure --disable-sasl
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+config/autorun.sh
+# option --with-memcached=false to disable server binary check (as we don't run test)
+%configure --with-memcached=false
+%else
+%configure --with-memcached=false --disable-sasl
+%endif
 %{__make} %{_smp_mflags}
 
 
@@ -105,16 +135,36 @@ you will need to install %{name}-devel.
 %{_libdir}/libmemcachedprotocol.so
 %{_libdir}/libmemcachedutil.so
 %{_libdir}/pkgconfig/libmemcached.pc
-%{_mandir}/man3/libmemcached*.3.gz
-%{_mandir}/man3/memcached_*.3.gz
+%{_mandir}/man3/libmemcached*
+%{_mandir}/man3/memcached_*
 %{_mandir}/man3/hashkit*
 
 
 %changelog
+* Fri Feb 18 2011 Remi Collet <Fedora@famillecollet.com> - 0.46-1
+- rebuild for remi repo without SASL for fedora <= 10 and EL <= 5
+
+* Fri Feb 18 2011 Remi Collet <Fedora@famillecollet.com> - 0.46-1
+- update to 0.46
+
+* Sat Feb 12 2011 Remi Collet <Fedora@famillecollet.com> - 0.44-6
+- arch specific requires
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.44-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Wed Nov 24 2010 Joe Orton <jorton@redhat.com> - 0.44-4
+- repackage source tarball to remove non-free Hsieh hash code
+
+* Sat Oct 02 2010 Remi Collet <Fedora@famillecollet.com> - 0.44-3
+- improves SASL patch
+
+* Sat Oct 02 2010 Remi Collet <Fedora@famillecollet.com> - 0.44-2
+- enable SASL support
+
 * Fri Oct 01 2010 Remi Collet <Fedora@famillecollet.com> - 0.44-1
 - update to 0.44
 - add soname version in %%file to detect change
-- rebuild for fedora <= 10 and EL witout SASL support
 
 * Fri Jul 30 2010 Remi Collet <Fedora@famillecollet.com> - 0.43-1
 - update to 0.43
