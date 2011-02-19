@@ -20,3 +20,43 @@ diff -up libmemcached-0.44/support/libmemcached.pc.in.sasl libmemcached-0.44/sup
 -Libs: -L${libdir} -lmemcached
 +Libs: @LTLIBSASL2@ -L${libdir} -lmemcached
  Cflags: -I${includedir}
+--- libmemcached-0.46/Makefile.in.orig	2011-02-19 17:54:29.000000000 +0100
++++ libmemcached-0.46/Makefile.in	2011-02-19 17:54:51.000000000 +0100
+@@ -113,7 +113,7 @@
+ @BUILD_BYTEORDER_TRUE@am__append_4 = libmemcached/libbyteorder.la
+ @BUILD_BYTEORDER_TRUE@am__append_5 = libmemcached/libbyteorder.la
+ @BUILD_BYTEORDER_TRUE@am__append_6 = libmemcached/libbyteorder.la
+-@HAVE_SASL_TRUE@am__append_7 = $(LIBSASL)
++@HAVE_SASL_TRUE@am__append_7 = $(LTLIBSASL2)
+ @HAVE_SASL_TRUE@am__append_8 = libmemcached/sasl.c
+ @HAVE_DTRACE_TRUE@am__append_9 = libmemcached/dtrace_probes.h
+ @HAVE_DTRACE_TRUE@am__append_10 = libmemcached/dtrace_probes.h
+@@ -291,6 +291,7 @@
+ 	$(am_libmemcached_libbyteorder_la_OBJECTS)
+ @BUILD_BYTEORDER_TRUE@am_libmemcached_libbyteorder_la_rpath =
+ am__DEPENDENCIES_1 =
++@HAVE_SASL_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
+ am__libmemcached_libmemcached_la_SOURCES_DIST =  \
+ 	libmemcached/allocators.c libmemcached/analyze.c \
+ 	libmemcached/auto.c libmemcached/behavior.c \
+@@ -396,7 +397,6 @@
+ PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
+ am_clients_memcapable_OBJECTS = clients/memcapable.$(OBJEXT)
+ clients_memcapable_OBJECTS = $(am_clients_memcapable_OBJECTS)
+-@HAVE_SASL_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
+ am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1) clients/libutilities.la \
+ 	libmemcached/libmemcached.la $(am__DEPENDENCIES_2)
+ clients_memcapable_DEPENDENCIES = $(am__DEPENDENCIES_3) \
+@@ -974,9 +974,10 @@
+ libmemcached_libmemcached_la_LIBADD = $(LIBM) \
+ 	libmemcached/libmemcachedcallbacks.la \
+ 	libmemcached/libmemcachedinternal.la \
+-	libhashkit/libhashkitinc.la $(am__append_5) $(am__append_13)
++	libhashkit/libhashkitinc.la $(am__append_5) $(am__append_7) \
++	$(am__append_13)
+ libmemcached_libmemcached_la_LDFLAGS = ${AM_LDFLAGS} -version-info \
+-	${MEMCACHED_LIBRARY_VERSION} $(am__append_7) $(am__append_26)
++	${MEMCACHED_LIBRARY_VERSION} $(am__append_26)
+ libmemcached_libmemcachedutil_la_SOURCES = \
+ 					  libmemcached/util/ping.c \
+ 					  libmemcached/util/pool.c \

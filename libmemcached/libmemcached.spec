@@ -1,7 +1,7 @@
 Name:      libmemcached
 Summary:   Client library and command line tools for memcached server
 Version:   0.46
-Release:   1%{?dist}
+Release:   1%{?dist}.1
 License:   BSD
 Group:     System Environment/Libraries
 URL:       http://libmemcached.org/
@@ -19,22 +19,14 @@ Patch0:    libmemcached-sasl.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires: cyrus-sasl-devel
-%endif
 %if 0%{?fedora} >= 12
 BuildRequires: systemtap-sdt-devel
 %endif
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires: libevent-devel
 %endif
-# checked during configure (for test suite)
-#BuildRequires: memcached
-# We patch .m4 files
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-# Need libtool >= 2
-BuildRequires: libtool autoconf automake
-%endif
+
 
 %description
 libmemcached is a C client library to the memcached server
@@ -68,22 +60,14 @@ you will need to install %{name}-devel.
 %prep
 %setup -q
 
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 %patch0 -p1 -b .sasl
-%endif
 
 %{__mkdir} examples
 %{__cp} -p tests/*.{c,cpp,h} examples/
 
 
 %build
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-config/autorun.sh
-# option --with-memcached=false to disable server binary check (as we don't run test)
 %configure --with-memcached=false
-%else
-%configure --with-memcached=false --disable-sasl
-%endif
 %{__make} %{_smp_mflags}
 
 
@@ -141,6 +125,10 @@ config/autorun.sh
 
 
 %changelog
+* Sat Feb 19 2011 Remi Collet <Fedora@famillecollet.com> - 0.46-1.1
+- update sasl.patch to avoid need of autoconf
+- rebuild for remi repo with SASL for fedora <= 10 and EL <= 5
+
 * Fri Feb 18 2011 Remi Collet <Fedora@famillecollet.com> - 0.46-1
 - rebuild for remi repo without SASL for fedora <= 10 and EL <= 5
 
