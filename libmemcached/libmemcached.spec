@@ -48,7 +48,7 @@ memerror - Creates human readable messages from libmemcached error codes.
 Summary: Header files and development libraries for %{name}
 Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: pkgconfig%{?_isa}
+Requires: pkgconfig
 Requires: cyrus-sasl-devel%{?_isa}
 
 %description devel
@@ -67,6 +67,7 @@ you will need to install %{name}-devel.
 
 
 %build
+# option --with-memcached=false to disable server binary check (as we don't run test)
 %configure --with-memcached=false
 %{__make} %{_smp_mflags}
 
