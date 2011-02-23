@@ -1,3 +1,5 @@
+%global shortname         xulrunner
+
 # Minimal required versions
 %global nspr_version 4.8.7
 %global nss_version 3.12.9
@@ -7,11 +9,16 @@
 %global libnotify_version 0.7.0
 %global lcms_version 1.18
 
-%global shortname         xulrunner
+# gecko_dir_ver should be set to the version in our directory names
+# alpha_version should be set to the alpha number if using an alpha, 0 otherwise
+# beta_version  should be set to the beta number if using a beta, 0 otherwise
+# rc_version    should be set to the RC number if using an RC, 0 otherwise
+%global gecko_dir_ver 2
+%global alpha_version 0
+%global beta_version  11
+%global rc_version    0
 
-%global version_internal  2
-%global pretag            b11
-%global mozappdir         %{_libdir}/%{shortname}-%{version_internal}
+%global mozappdir         %{_libdir}/%{shortname}-%{gecko_dir_ver}
 %global tarballdir        mozilla-central
 %global gre_dir           %{_sysconfdir}/gre.d
 
@@ -24,16 +31,34 @@
 %global moz_out_of_process_plugins   0
 %endif
 
-%ifarch x86_64 ia64 s390x ppc64 sparc64
-%global mozbits 64
-%global gre_conf_file gre2-64.conf
-%else
-%global mozbits 32
+%if %{__isa_bits} == 32
 %global gre_conf_file gre2.conf
+%endif
+%if %{__isa_bits} == 64
+%global gre_conf_file gre2-64.conf
 %endif
 
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
+
+%if %{alpha_version} > 0
+%global pre_version a%{alpha_version}
+%global pre_name    alpha%{alpha_version}
+%endif
+%if %{beta_version} > 0
+%global pre_version b%{beta_version}
+%global pre_name    beta%{beta_version}
+%endif
+%if %{rc_version} > 0
+%global pre_version rc%{rc_version}
+%global pre_name    rc%{rc_version}
+%endif
+%if %{defined pre_version}
+%global gecko_verrel %{expand:%%{version}}-%{pre_name}
+%global pre_tag .%{pre_version}
+%else
+%global gecko_verrel %{expand:%%{version}}-1
+%endif
 
 Summary:        XUL Runtime for Gecko Applications
 %if %{fedora} >= 15
@@ -42,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        0.21.beta11%{?dist}
+Release:        0.22%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -73,7 +98,6 @@ Patch23:        wmclass.patch
 Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
-#Patch30:        revert-562138.patch
 
 # ---------------------------------------------------
 
@@ -126,7 +150,8 @@ Requires:       nss >= %{nss_version}
 %if %{fedora} >= 15
 Requires:       sqlite >= %{sqlite_build_version}
 %endif
-Provides:       gecko-libs = %{version}
+Provides:       gecko-libs = %{gecko_verrel}
+Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
 
 %description
 XULRunner is a Mozilla runtime package that can be used to bootstrap XUL+XPCOM
@@ -141,8 +166,10 @@ Group: Development/Libraries
 Obsoletes: mozilla-devel < 1.9
 Obsoletes: firefox-devel < 2.1
 Obsoletes: xulrunner-devel-unstable
-Provides: gecko-devel = %{version}
-Provides: gecko-devel-unstable = %{version}
+Provides: gecko-devel = %{gecko_verrel}
+Provides: gecko-devel%{?_isa} = %{gecko_verrel}
+Provides: gecko-devel-unstable = %{gecko_verrel}
+Provides: gecko-devel-unstable%{?_isa} = %{gecko_verrel}
 
 Requires: %{name} = %{version}-%{release}
 %if %{fedora} >= 14
@@ -190,7 +217,7 @@ for writing XUL+XPCOM applications with Mozilla XULRunner and Gecko.
 %setup -q -c
 cd %{tarballdir}
 
-sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
+sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
     > version.patch
 %{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
 
@@ -210,8 +237,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %patch22 -p1 -b .notify
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
-
-#%patch30 -p1 -b .revert-562138
 
 %if %{fedora} >= 15
 # For xulrunner-2.0-system-cairo-tee.patch
@@ -248,6 +273,12 @@ echo "ac_add_options --enable-system-lcms" >> .mozconfig
 
 %if !%{?moz_out_of_process_plugins}
 echo "ac_add_options --disable-ipc" >> .mozconfig
+%endif
+
+# Upstream bug filed without resolution
+# for now make sure jit is not enabled on sparc64
+%ifarch sparc64
+echo "ac_add_options --disable-jit" >> .mozconfig
 %endif
 
 #---------------------------------------------------------------------
@@ -306,7 +337,7 @@ make buildsymbols
 cd %{tarballdir}
 %{__rm} -rf $RPM_BUILD_ROOT
 
-INTERNAL_APP_SDK_NAME=%{shortname}-sdk-%{version_internal}
+INTERNAL_APP_SDK_NAME=%{shortname}-sdk-%{gecko_dir_ver}
 MOZ_APP_SDK_DIR=%{_libdir}/${INTERNAL_APP_SDK_NAME}
 
 DESTDIR=$RPM_BUILD_ROOT make install
@@ -323,7 +354,7 @@ DESTDIR=$RPM_BUILD_ROOT make install
 
 # Start script install
 %{__rm} -rf $RPM_BUILD_ROOT%{_bindir}/%{shortname}
-%{__cat} %{SOURCE21} | %{__sed} -e 's,XULRUNNER_VERSION,%{version_internal},g' > \
+%{__cat} %{SOURCE21} | %{__sed} -e 's,XULRUNNER_VERSION,%{gecko_dir_ver},g' > \
   $RPM_BUILD_ROOT%{_bindir}/%{name}
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
 
@@ -347,9 +378,10 @@ cd -
 %{__cp} $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/libxul-embedding.pc \
         $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/libxul-embedding-unstable.pc
 
+# Fix multilib devel conflicts...
 function install_file() {
 genheader=$*
-mv ${genheader}.h ${genheader}%{mozbits}.h
+mv ${genheader}.h ${genheader}%{__isa_bits}.h
 cat > ${genheader}.h << EOF
 /* This file exists to fix multilib conflicts */
 #if defined(__x86_64__) || defined(__ia64__) || defined(__s390x__) || defined(__powerpc64__) || (defined(__sparc__) && defined(__arch64__))
@@ -384,8 +416,8 @@ popd
    $RPM_BUILD_ROOT${MOZ_APP_SDK_DIR}/sdk/bin/nspr-config
 %endif
 
-%{__rm} -rf $RPM_BUILD_ROOT/%{_includedir}/%{shortname}-%{version_internal}
-%{__rm} -rf $RPM_BUILD_ROOT/%{_datadir}/idl/%{shortname}-%{version_internal}
+%{__rm} -rf $RPM_BUILD_ROOT/%{_includedir}/%{shortname}-%{gecko_dir_ver}
+%{__rm} -rf $RPM_BUILD_ROOT/%{_datadir}/idl/%{shortname}-%{gecko_dir_ver}
 
 %{__rm} -rf $RPM_BUILD_ROOT${MOZ_APP_SDK_DIR}/include
 ln -s  %{_includedir}/${INTERNAL_APP_SDK_NAME} \
@@ -421,7 +453,7 @@ chmod 644 $RPM_BUILD_ROOT%{gre_dir}/%{gre_conf_file}
 
 # Library path
 LD_SO_CONF_D=%{_sysconfdir}/ld.so.conf.d
-LD_CONF_FILE=%{name}-%{mozbits}.conf
+LD_CONF_FILE=xulrunner-%{__isa_bits}.conf
 
 %if %{name} == %{shortname}
 %{__mkdir_p} ${RPM_BUILD_ROOT}${LD_SO_CONF_D}
@@ -527,8 +559,8 @@ fi
 
 %files devel
 %defattr(-,root,root,-)
-%{_datadir}/idl/%{shortname}*%{version_internal}
-%{_includedir}/%{shortname}*%{version_internal}
+%{_datadir}/idl/%{shortname}*%{gecko_dir_ver}
+%{_includedir}/%{shortname}*%{gecko_dir_ver}
 %{_libdir}/%{shortname}-sdk-*/
 %{_libdir}/pkgconfig/*.pc
 %{mozappdir}/xpcshell
@@ -539,7 +571,28 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Feb 23 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.22.beta11
+- sync with rawhide
+
+* Sun Feb 13 2011 Dennis Gilmore <dennis@ausil.us> 2.0-0.22
+- disable nanojit on sparc64 its not supported and doesnt get automatically switched off
+
+* Thu Feb 10 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.21
+- Also provide arch-agnostic versions of gecko virtual provides
+
+* Thu Feb 10 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.20
+- Introduce better versioning for our gecko virtual provides
+- Now, the gecko-libs and gecko-devel virtual provides will be pinned
+  to an individual Gecko release, so packages can do things like
+    Requires: gecko-libs = 2.0-beta11
+    BuildRequires: gecko-libs = 2.0-beta11
+- Final releases will be pinned to e.g. 2.0-1 regardless of %%{release}
+- Also, make sure those virtual provides are arch-specific
+
 * Wed Feb 09 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.21.beta11
+- Update to 2.0 Beta 11
+
+* Tue Feb  8 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.19
 - Update to 2.0 Beta 11
 
 * Fri Feb 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.20.beta11.build3
