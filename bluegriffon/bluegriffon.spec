@@ -10,10 +10,9 @@
 %global svnmain     0
 %global svnlocales  23
 
-%global withxulrunner           1
-%global xulrunner_version       2.0-0.21
-%global xulrunner_version_max   2.1
-%global srcversion              4.0b11
+%global withxulrunner   1
+%global gecko_version   2.0-beta12
+%global srcversion      4.0b12
 
 Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
@@ -22,7 +21,7 @@ Version:        0.9
 %if %{svnmain}
 Release:        0.6.svn%{svnmain}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 %endif
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -58,7 +57,6 @@ Patch13:        xulrunner-2.0-secondary-jit.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
 Patch15:        xulrunner-2.0-system-cairo.patch
 Patch16:        xulrunner-2.0-system-cairo-tee.patch
-Patch17:        xulrunner-2.0-os2cc.patch
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -67,9 +65,8 @@ BuildRequires:  system-bookmarks
 BuildRequires:  yasm
 
 %if %{withxulrunner}
-BuildRequires:  xulrunner2-devel >= %{xulrunner_version}
-Requires:       xulrunner2 >= %{xulrunner_version}
-Conflicts:      xulrunner2 >= %{xulrunner_version_max}
+BuildRequires:  gecko-devel = %{gecko_version}
+Requires:       gecko-libs%{?_isa} = %{gecko_version}
 %else
 BuildRequires:  zip
 BuildRequires:  libIDL-devel
@@ -176,7 +173,6 @@ patch -p1 < bluegriffon/config/content.patch
 %patch15 -p1 -b .system-cairo
 %patch16 -p1 -b .system-cairo-tee
 %endif
-%patch17 -p1 -b .os2cc
 
 %if 0%{?fedora} >= 15
 # For xulrunner-2.0-system-cairo-tee.patch
@@ -342,6 +338,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Feb 23 2011 Remi Collet <rpms@famillecollet.com> - 0.9-1.1
+- rebuild against xulrunnner 2.0b12
+
 * Fri Feb 11 2011 Remi Collet <rpms@famillecollet.com> - 0.9-1
 - BlueGriffon 0.9 "Cape Town" (svn = 560, locales = 25)
   http://bluegriffon.org/post/2011/02/11/BlueGriffon-0.9-Cape-Town
