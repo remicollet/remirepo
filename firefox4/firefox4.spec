@@ -10,11 +10,11 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Beta 11
+%global mycomment       Beta 12 build1 candidate
 %global firefox_dir_ver 4
-%global gecko_version   2.0-beta11
-%global pre_version     b11
-%global pre_tag         .%{?pre_version}
+%global gecko_version   2.0-beta12
+%global pre_version     b12
+%global pre_tag         .beta12.build1
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global tarballdir    mozilla-central
@@ -32,7 +32,7 @@ License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_version}/source/firefox-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        firefox-langpacks-%{version}%{?pre_version}-20110209.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?pre_version}-20110223.tar.bz2
 %endif
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
@@ -405,8 +405,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
-* Wed Feb 23 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.25.beta11
+* Wed Feb 23 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.25.beta12.build1
 - sync with rawhide
+- Firefox 4.0 Beta 12 build1 candidate
 
 * Thu Feb 10 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.16b11
 - Update gecko-{libs,devel} requires

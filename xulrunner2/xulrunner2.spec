@@ -15,7 +15,7 @@
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
 %global gecko_dir_ver 2
 %global alpha_version 0
-%global beta_version  11
+%global beta_version  12
 %global rc_version    0
 
 %global mozappdir         %{_libdir}/%{shortname}-%{gecko_dir_ver}
@@ -67,13 +67,13 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        0.22%{?pre_tag}%{?dist}
+Release:        0.22%{?pre_tag}.build1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 # You can get sources at ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pretag}/source
 #Source0:        %{shortname}-%{version}%{?pretag}.source.tar.bz2
-Source0:        firefox-4.0%{?pretag}.source.tar.bz2
+Source0:        firefox-4.0%{?pre_version}.source.tar.bz2
 Source10:       %{shortname}-mozconfig
 Source11:       %{shortname}-mozconfig-debuginfo
 Source12:       %{shortname}-redhat-default-prefs.js
@@ -88,12 +88,12 @@ Patch13:        xulrunner-2.0-secondary-jit.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
 Patch15:        xulrunner-2.0-system-cairo.patch
 Patch16:        xulrunner-2.0-system-cairo-tee.patch
-Patch17:        xulrunner-2.0-os2cc.patch
+# Applied upstream Patch17:        xulrunner-2.0-os2cc.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
 Patch21:        mozilla-libjpeg-turbo.patch
-Patch22:        mozilla-notify.patch
+# Applied upstream Patch22:        mozilla-notify.patch
 Patch23:        wmclass.patch
 Patch24:        crashreporter-remove-static.patch
 
@@ -230,11 +230,11 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch15 -p1 -b .system-cairo
 %patch16 -p1 -b .system-cairo-tee
 %endif
-%patch17 -p1 -b .os2cc
+#patch17 -p1 -b .os2cc
 
 %patch20 -p2 -b .pk
 %patch21 -p2 -b .jpeg-turbo
-%patch22 -p1 -b .notify
+#patch22 -p1 -b .notify
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
@@ -571,8 +571,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
-* Wed Feb 23 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.22.beta11
+* Wed Feb 23 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.22.beta12.build1
 - sync with rawhide
+- update to 2.0 Beta12 build1 candidate
 
 * Sun Feb 13 2011 Dennis Gilmore <dennis@ausil.us> 2.0-0.22
 - disable nanojit on sparc64 its not supported and doesnt get automatically switched off
