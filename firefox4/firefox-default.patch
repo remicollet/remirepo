@@ -1,91 +1,34 @@
-diff -up firefox-4.0/mozilla-central/browser/components/preferences/advanced.xul.default firefox-4.0/mozilla-central/browser/components/preferences/advanced.xul
---- firefox-4.0/mozilla-central/browser/components/preferences/advanced.xul.default	2010-08-06 03:08:58.000000000 +0200
-+++ firefox-4.0/mozilla-central/browser/components/preferences/advanced.xul	2010-08-30 16:35:21.000000000 +0200
-@@ -183,10 +183,11 @@
-           </groupbox>
- 
- #ifdef HAVE_SHELL_SERVICE
-+#ifdef MOZ_CRASHREPORTER
-           <!-- System Defaults -->
-           <groupbox id="systemDefaultsGroup" orient="vertical">
-             <caption label="&systemDefaults.label;"/>
--
-+#ifdef 0
-             <hbox id="checkDefaultBox" align="center" flex="1">      
-               <checkbox id="alwaysCheckDefault" preference="browser.shell.checkDefaultBrowser"
-                         label="&alwaysCheckDefault.label;" accesskey="&alwaysCheckDefault.accesskey;"
-@@ -196,6 +197,7 @@
-                       oncommand="gAdvancedPane.checkNow()"
-                       preference="pref.general.disable_button.default_browser"/>
-             </hbox>
-+#endif
- #ifdef MOZ_CRASHREPORTER
-             <checkbox id="submitCrashesBox" flex="1"
-                       oncommand="gAdvancedPane.updateSubmitCrashes();"
-@@ -203,6 +205,7 @@
- #endif
-           </groupbox>
- #endif
-+#endif
-         </tabpanel>
- 
-         <!-- Network -->
-diff -up firefox-4.0/mozilla-central/browser/components/shell/src/nsGNOMEShellService.cpp.default firefox-4.0/mozilla-central/browser/components/shell/src/nsGNOMEShellService.cpp
---- firefox-4.0/mozilla-central/browser/components/shell/src/nsGNOMEShellService.cpp.default	2010-08-06 03:08:59.000000000 +0200
-+++ firefox-4.0/mozilla-central/browser/components/shell/src/nsGNOMEShellService.cpp	2010-08-30 16:37:41.000000000 +0200
-@@ -140,27 +140,21 @@ NS_IMPL_ISUPPORTS1(nsGNOMEShellService, 
- PRBool
- nsGNOMEShellService::KeyMatchesAppName(const char *aKeyValue) const
+diff -up mozilla-central/browser/components/shell/src/nsGNOMEShellService.cpp.default mozilla-central/browser/components/shell/src/nsGNOMEShellService.cpp
+--- mozilla-central/browser/components/shell/src/nsGNOMEShellService.cpp.default	2011-02-07 14:53:16.883934747 -0800
++++ mozilla-central/browser/components/shell/src/nsGNOMEShellService.cpp	2011-02-07 17:11:55.209941360 -0800
+@@ -104,8 +104,6 @@ static const char kDesktopColorKey[] = D
+ nsresult
+ nsGNOMEShellService::Init()
  {
-+  nsCAutoString appName;
+-  nsresult rv;
+-
+   // GConf _must_ be available, or we do not allow
+   // CreateInstance to succeed.
  
--  gchar *commandPath;
-   if (mUseLocaleFilenames) {
-     gchar *nativePath = g_filename_from_utf8(aKeyValue, -1, NULL, NULL, NULL);
-     if (!nativePath) {
-       NS_ERROR("Error converting path to filesystem encoding");
-       return PR_FALSE;
-     }
+@@ -120,19 +118,9 @@ nsGNOMEShellService::Init()
+   // the locale encoding.  If it's not set, they use UTF-8.
+   mUseLocaleFilenames = PR_GetEnv("G_BROKEN_FILENAMES") != nsnull;
+ 
+-  nsCOMPtr<nsIProperties> dirSvc
+-    (do_GetService("@mozilla.org/file/directory_service;1"));
+-  NS_ENSURE_TRUE(dirSvc, NS_ERROR_NOT_AVAILABLE);
 -
--    commandPath = g_find_program_in_path(nativePath);
-+    appName.Assign(nativePath);
-     g_free(nativePath);
-   } else {
--    commandPath = g_find_program_in_path(aKeyValue);
-+    appName.Assign(aKeyValue);
-   }
+-  nsCOMPtr<nsILocalFile> appPath;
+-  rv = dirSvc->Get(NS_XPCOM_CURRENT_PROCESS_DIR, NS_GET_IID(nsILocalFile),
+-                   getter_AddRefs(appPath));
+-  NS_ENSURE_SUCCESS(rv, rv);
++  mAppPath.Assign(NS_LITERAL_CSTRING(MOZ_APP_NAME));
+ 
+-  rv = appPath->AppendNative(NS_LITERAL_CSTRING(MOZ_APP_NAME));
+-  NS_ENSURE_SUCCESS(rv, rv);
 -
--  if (!commandPath)
--    return PR_FALSE;
--
--  PRBool matches = mAppPath.Equals(commandPath);
--  g_free(commandPath);
--  return matches;
-+  // Compare default browser command retrieved from gconf with MOZ_APP_NAME
-+  return appName.EqualsLiteral(MOZ_APP_NAME);
+-  return appPath->GetNativePath(mAppPath);
++  return NS_OK;
  }
  
- NS_IMETHODIMP
-@@ -215,8 +209,8 @@ nsGNOMEShellService::SetDefaultBrowser(P
- 
-   nsCOMPtr<nsIGConfService> gconf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
-   if (gconf) {
--    nsCAutoString appKeyValue(mAppPath);
--    appKeyValue.Append(" \"%s\"");
-+    nsCAutoString appKeyValue(MOZ_APP_NAME);
-+    appKeyValue.Append(" %s");
-     for (unsigned int i = 0; i < NS_ARRAY_LENGTH(appProtocols); ++i) {
-       if (appProtocols[i].essential || aClaimAllTypes) {
-         gconf->SetAppForProtocol(nsDependentCString(appProtocols[i].name),
-diff -up firefox-4.0/mozilla-central/browser/components/shell/src/nsGNOMEShellService.h.default firefox-4.0/mozilla-central/browser/components/shell/src/nsGNOMEShellService.h
---- firefox-4.0/mozilla-central/browser/components/shell/src/nsGNOMEShellService.h.default	2010-08-06 03:08:59.000000000 +0200
-+++ firefox-4.0/mozilla-central/browser/components/shell/src/nsGNOMEShellService.h	2010-08-30 16:35:22.000000000 +0200
-@@ -43,7 +43,7 @@
- class nsGNOMEShellService : public nsIShellService
- {
- public:
--  nsGNOMEShellService() : mCheckedThisSession(PR_FALSE) { }
-+  nsGNOMEShellService() : mCheckedThisSession(PR_TRUE) { }
- 
-   NS_DECL_ISUPPORTS
-   NS_DECL_NSISHELLSERVICE
+ NS_IMPL_ISUPPORTS1(nsGNOMEShellService, nsIShellService)

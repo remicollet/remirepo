@@ -1,5 +1,5 @@
 # Separated plugins are supported on x86(64) only
-%ifarch i386 i686 x86_64
+%ifarch %{ix86} x86_64
 %define separated_plugins 1
 %else
 %define separated_plugins 0
@@ -9,39 +9,30 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global shortname		firefox
-%global internal_version	4
-%global mycomment   		Beta 11
+%global shortname       firefox
+%global mycomment       Beta 11
+%global firefox_dir_ver 4
+%global gecko_version   2.0-beta11
+%global pre_version     b11
+%global pre_tag         .%{?pre_version}
 
-%global mozappdir               %{_libdir}/%{shortname}-%{internal_version}
-%global tarballdir              mozilla-central
-
-# xulrunner_version matches the firefox package.
-# xulrunner_version_max is first next incompatible xulrunner version
-%define xulrunner_version       2.0-0.21
-%define xulrunner_version_max   2.1
+%global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
+%global tarballdir    mozilla-central
 
 %define official_branding       1
 %define build_langpacks         1
 %define include_debuginfo       0
 
-%if ! %{official_branding}
-%define cvsdate 20080327
-%define nightly .cvs%{cvsdate}
-%else
-%define prever  b11
-%endif
-
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        4.0
-Release:        0.24.beta11%{?dist}
+Release:        0.25%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
-Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?prever}/source/firefox-%{version}%{?prever}.source.tar.bz2
+Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_version}/source/firefox-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        firefox-langpacks-%{version}%{?prever}-20110209.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?pre_version}-20110209.tar.bz2
 %endif
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
@@ -50,9 +41,6 @@ Source13:       firefox-mozconfig-debuginfo
 Source20:       firefox.desktop
 Source21:       firefox.sh.in
 Source23:       firefox.1
-# Not necessary
-# Source100:      find-external-requires
-
 
 #Build patches
 Patch0:         firefox-version.patch
@@ -80,8 +68,7 @@ BuildRequires:  xulrunner2-devel >= %{xulrunner_version}
 # For WebM support
 BuildRequires:	yasm
 
-Requires:       xulrunner2 >= %{xulrunner_version}
-Conflicts:      xulrunner2 >= %{xulrunner_version_max}
+Requires:       gecko-libs%{?_isa} = %{gecko_version}
 Requires:       system-bookmarks
 Obsoletes:      mozilla <= 37:1.7.13
 Provides:       webclient
@@ -90,9 +77,6 @@ Obsoletes:      firefox4
 Provides:       firefox4 = %{version}-%{release}
 %endif
 
-
-# %%define _use_internal_dependency_generator 0
-# %%define __find_requires %{SOURCE100}
 
 # 10k of 11k files are in langpacks
 %{?filter_setup:
@@ -112,7 +96,7 @@ compliance, performance and portability.
 %setup -q -c
 cd %{tarballdir}
 
-sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
+sed -e 's/__RPM_VERSION_INTERNAL__/%{firefox_dir_ver}/' %{P:%%PATCH0} \
     > version.patch
 %{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
     
@@ -120,7 +104,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{internal_version}/' %{P:%%PATCH0} \
 # For branding specific patches.
 
 # Fedora patches
-%patch11 -p2 -b .default
+%patch11 -p1 -b .default
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -196,10 +180,7 @@ MOZ_SMP_FLAGS=-j1
 [ "$RPM_BUILD_NCPUS" -ge 4 ] && MOZ_SMP_FLAGS=-j4
 %endif
 
-INTERNAL_GECKO=%{internal_version}
-MOZ_APP_DIR=%{_libdir}/%{shortname}-${INTERNAL_GECKO}
-
-export LDFLAGS="-Wl,-rpath,${MOZ_APP_DIR}"
+export LDFLAGS="-Wl,-rpath,%{mozappdir}"
 make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS" MOZ_SERVICES_SYNC="1"
 
 # create debuginfo for crash-stats.mozilla.com
@@ -212,11 +193,6 @@ make buildsymbols
 
 %install
 cd %{tarballdir}
-
-INTERNAL_GECKO=%{internal_version}
-
-INTERNAL_APP_NAME=%{shortname}-${INTERNAL_GECKO}
-MOZ_APP_DIR=%{_libdir}/${INTERNAL_APP_NAME}
 
 DESTDIR=$RPM_BUILD_ROOT make install
 
@@ -233,7 +209,7 @@ desktop-file-install --vendor mozilla \
 # set up the firefox start script
 %{__rm} -rf $RPM_BUILD_ROOT%{_bindir}/%{shortname}
 XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
-%{__cat} %{SOURCE21} | %{__sed} -e 's,FIREFOX_VERSION,%{internal_version},g' \
+%{__cat} %{SOURCE21} | %{__sed} -e 's,FIREFOX_VERSION,%{firefox_dir_ver},g' \
 		     | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g"  \
 		     | %{__sed} -e "s,FIREFOXBIN,%{name},g" > \
   $RPM_BUILD_ROOT%{_bindir}/%{name}
@@ -429,7 +405,16 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Feb 23 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.25.beta11
+- sync with rawhide
+
+* Thu Feb 10 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.16b11
+- Update gecko-{libs,devel} requires
+
 * Wed Feb 09 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.24.beta11
+- Firefox 4.0 Beta 11
+
+* Tue Feb 08 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.15b11
 - Firefox 4.0 Beta 11
 
 * Fri Feb 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.23.beta11.build3
