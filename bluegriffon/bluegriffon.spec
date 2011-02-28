@@ -10,7 +10,6 @@
 %global svnmain     0
 %global svnlocales  23
 
-%global withxulrunner   1
 %global gecko_version   2.0-beta12
 %global srcversion      4.0b12
 
@@ -21,7 +20,7 @@ Version:        0.9
 %if %{svnmain}
 Release:        0.6.svn%{svnmain}%{?dist}
 %else
-Release:        1%{?dist}.1
+Release:        2%{?dist}
 %endif
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -46,91 +45,20 @@ Source10:       %{name}.sh.in
 Source11:       %{name}.sh
 Source12:       %{name}.desktop
 
-Patch1:         firefox4-build.patch
-Patch2:         firefox4-build-sbrk.patch
-Patch3:         mozilla-malloc.patch
-Patch4:         firefox4-libjpeg-turbo.patch
-Patch5:         mozilla-notify.patch
-
-Patch12:        xulrunner-2.0-64bit-big-endian.patch
-Patch13:        xulrunner-2.0-secondary-jit.patch
-Patch14:        xulrunner-2.0-chromium-types.patch
-Patch15:        xulrunner-2.0-system-cairo.patch
-Patch16:        xulrunner-2.0-system-cairo-tee.patch
-
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  system-bookmarks
 BuildRequires:  yasm
 
-%if %{withxulrunner}
+%if %{fedora} >= 15
 BuildRequires:  gecko-devel = %{gecko_version}
-Requires:       gecko-libs%{?_isa} = %{gecko_version}
+%global xulbin xulrunner
 %else
-BuildRequires:  zip
-BuildRequires:  libIDL-devel
-BuildRequires:  gtk2-devel
-BuildRequires:  gnome-vfs2-devel
-BuildRequires:  libgnomeui-devel
-BuildRequires:  krb5-devel
-BuildRequires:  pango-devel
-BuildRequires:  freetype-devel >= 2.1.9
-BuildRequires:  libXt-devel
-BuildRequires:  libXrender-devel
-BuildRequires:  startup-notification-devel
-BuildRequires:  wireless-tools-devel
-
-# BR from Xulrunner
-%if %{fedora} >= 15
-BuildRequires:  sqlite-devel >= %{sqlite_version}
+BuildRequires:  xulrunner2-devel >= %{xulrunner_version}
+%global xulbin xulrunner2
 %endif
-%if %{fedora} >= 14
-BuildRequires:  nspr-devel >= %{nspr_version}
-BuildRequires:  nss-devel >= %{nss_version}
-%endif
-%if %{fedora} >= 11
-BuildRequires:  hunspell-devel
-%endif
-%if %{fedora} >= 15
-BuildRequires:  cairo-devel >= %{cairo_version}
-%endif
-%if %{fedora} >= 10
-BuildRequires:  libnotify-devel
-%endif
-%if %{fedora} >= 9
-BuildRequires:  lcms-devel >= %{lcms_version}
-%endif
-BuildRequires:  libpng-devel
-BuildRequires:  libjpeg-devel
-BuildRequires:  zip
-BuildRequires:  bzip2-devel
-BuildRequires:  zlib-devel
-BuildRequires:  libIDL-devel
-BuildRequires:  gtk2-devel
-BuildRequires:  gnome-vfs2-devel
-BuildRequires:  libgnome-devel
-BuildRequires:  libgnomeui-devel
-BuildRequires:  krb5-devel
-BuildRequires:  pango-devel
-BuildRequires:  freetype-devel >= %{freetype_version}
-BuildRequires:  libXt-devel
-BuildRequires:  libXrender-devel
-BuildRequires:  startup-notification-devel
-BuildRequires:  alsa-lib-devel
-BuildRequires:  autoconf213
-BuildRequires:  mesa-libGL-devel
-
-%if 0%{?fedora} >= 14
-Requires:       nss >= %{nss_version}
-Requires:       nspr >= %{nspr_version}
-%endif
-%if %{fedora} >= 9
-BuildRequires:  lcms-devel >= %{lcms_version}
-%endif
-# endif %{withxulrunner}
-%endif
-
+Requires:       gecko-libs%{?_isa} = %{gecko_version}
 
 %description
 BlueGriffon is a new WYSIWYG content editor for the World Wide Web.
@@ -153,31 +81,6 @@ normes w3c.
 tar xjf %{SOURCE1}
 tar xjf %{SOURCE2} --directory %{name}
 
-patch -p1 < bluegriffon/config/content.patch
-
-%patch1  -p2 -b .build
-%patch2  -p2 -b .sbrk
-%patch3  -p2 -b .malloc
-%if %{fedora} >= 14
-%patch4  -p2 -b .jpeg-turbo
-%endif
-%if %{fedora} >= 15
-# when libnotify >= 0.7.0
-%patch5 -p1 -b .notify
-%endif
-
-%patch12 -p2 -b .64bit-big-endian
-%patch13 -p2 -b .secondary-jit
-%patch14 -p2 -b .chromium-types
-%if %{fedora} >= 15
-%patch15 -p1 -b .system-cairo
-%patch16 -p1 -b .system-cairo-tee
-%endif
-
-%if 0%{?fedora} >= 15
-# For xulrunner-2.0-system-cairo-tee.patch
-autoconf-2.13
-%endif
 
 #See http://bluegriffon.org/pages/Build-BlueGriffon
 cat <<EOF_MOZCONFIG > .mozconfig 
@@ -242,17 +145,16 @@ ac_add_options --disable-javaxpcom
 ac_add_options --disable-crashreporter
 ac_add_options --enable-safe-browsing
 ac_add_options --disable-updater
+ac_add_options --enable-libxul
 EOF_MOZCONFIG
 
-%if %{withxulrunner}
-echo "ac_add_options --enable-libxul"  >> .mozconfig
+echo ""  >> .mozconfig
 echo "ac_add_options --with-libxul-sdk=\
 $(pkg-config --variable=sdkdir libxul)" >> .mozconfig
-%endif
 
 
 %build
-export MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
+MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
    %{__sed} -e 's/-Wall//' -e 's/-fexceptions//g')
 
 export CFLAGS=$MOZ_OPT_FLAGS
@@ -281,15 +183,12 @@ tar --create --file - --dereference --directory=dist/bin --exclude xulrunner . \
   | tar --extract --file - --directory $RPM_BUILD_ROOT/%{mozappdir}
 
 # Launcher
-%if %{withxulrunner}
 install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
 XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
-%{__cat} %{SOURCE10} | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g" > \
-  $RPM_BUILD_ROOT%{_bindir}/%{name}
+%{__cat} %{SOURCE10} | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g" \
+                     | %{__sed} -e "s,XULRUNNER_BIN,%{xulbin},g" \
+  > $RPM_BUILD_ROOT%{_bindir}/%{name}
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
-%else
-install -D -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/%{name}
-%endif
 
 # Shortcut
 desktop-file-install  \
@@ -338,8 +237,11 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
-* Fri Feb 23 2011 Remi Collet <rpms@famillecollet.com> - 0.9-1.1
+* Mon Feb 28 2011 Remi Collet <rpms@famillecollet.com> - 0.9-2
 - rebuild against xulrunnner 2.0b12
+
+* Fri Feb 23 2011 Remi Collet <rpms@famillecollet.com> - 0.9-1.1
+- rebuild against xulrunnner 2.0b12 build 1
 
 * Fri Feb 11 2011 Remi Collet <rpms@famillecollet.com> - 0.9-1
 - BlueGriffon 0.9 "Cape Town" (svn = 560, locales = 25)
