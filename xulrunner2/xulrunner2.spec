@@ -67,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        0.22%{?pre_tag}.build1%{?dist}
+Release:        0.23%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -86,18 +86,15 @@ Patch9:         mozilla-build-sbrk.patch
 Patch12:        xulrunner-2.0-64bit-big-endian.patch
 Patch13:        xulrunner-2.0-secondary-jit.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
-Patch15:        xulrunner-2.0-system-cairo.patch
-Patch16:        xulrunner-2.0-system-cairo-tee.patch
-# Applied upstream Patch17:        xulrunner-2.0-os2cc.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
 Patch21:        mozilla-libjpeg-turbo.patch
-# Applied upstream Patch22:        mozilla-notify.patch
 Patch23:        wmclass.patch
 Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
+Patch30:        xulrunner-omnijar.patch
 
 # ---------------------------------------------------
 
@@ -133,7 +130,6 @@ BuildRequires:  sqlite-devel >= %{sqlite_version}
 BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  libnotify-devel
-BuildRequires:  autoconf213
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  yasm
 BuildRequires:  libcurl-devel
@@ -226,22 +222,13 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch12 -p2 -b .64bit-big-endian
 %patch13 -p2 -b .secondary-jit
 %patch14 -p2 -b .chromium-types
-%if %{fedora} >= 15
-%patch15 -p1 -b .system-cairo
-%patch16 -p1 -b .system-cairo-tee
-%endif
-#patch17 -p1 -b .os2cc
 
 %patch20 -p2 -b .pk
 %patch21 -p2 -b .jpeg-turbo
-#patch22 -p1 -b .notify
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
-%if %{fedora} >= 15
-# For xulrunner-2.0-system-cairo-tee.patch
-autoconf-2.13
-%endif
+%patch30 -p1 -b .omnijar
 
 
 %{__rm} -f .mozconfig
@@ -340,17 +327,15 @@ cd %{tarballdir}
 INTERNAL_APP_SDK_NAME=%{shortname}-sdk-%{gecko_dir_ver}
 MOZ_APP_SDK_DIR=%{_libdir}/${INTERNAL_APP_SDK_NAME}
 
+# set up our prefs before install, so it gets pulled in to omni.jar
+%{__cp} -p %{SOURCE12} dist/bin/defaults/pref/all-redhat.js
+
 DESTDIR=$RPM_BUILD_ROOT make install
 
 %{__mkdir_p} $RPM_BUILD_ROOT/%{mozappdir} \
              $RPM_BUILD_ROOT%{_datadir}/idl/${INTERNAL_APP_SDK_NAME} \
              $RPM_BUILD_ROOT%{_includedir}/${INTERNAL_APP_SDK_NAME}
 %{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
-
-# set up our default preferences - (change Vendor to Remi, requested by upstream)
-%{__cat} %{SOURCE12} | %{__sed} -e 's,RPM_VERREL,%{version}-%{release},g' -e 's,Fedora,Remi,g' | tee rh-default-prefs
-%{__install} -p -D -m 644 rh-default-prefs $RPM_BUILD_ROOT/%{mozappdir}/defaults/pref/all-remi.js
-%{__rm} rh-default-prefs
 
 # Start script install
 %{__rm} -rf $RPM_BUILD_ROOT%{_bindir}/%{shortname}
@@ -359,10 +344,6 @@ DESTDIR=$RPM_BUILD_ROOT make install
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
 
 %{__rm} -f $RPM_BUILD_ROOT%{mozappdir}/%{shortname}-config
-
-cd $RPM_BUILD_ROOT%{mozappdir}/chrome
-find . -name "*" -type d -maxdepth 1 -exec %{__rm} -rf {} \;
-cd -
 
 # Prepare our devel package
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_includedir}/${INTERNAL_APP_SDK_NAME}
@@ -394,13 +375,7 @@ EOF
 
 pushd $RPM_BUILD_ROOT/%{_includedir}/${INTERNAL_APP_SDK_NAME}
 install_file "mozilla-config"
-popd
-
-pushd $RPM_BUILD_ROOT/%{_includedir}/${INTERNAL_APP_SDK_NAME}
 install_file "jsautocfg"
-popd
-
-pushd $RPM_BUILD_ROOT/%{_includedir}/${INTERNAL_APP_SDK_NAME}
 install_file "js-config"
 popd
 
@@ -522,15 +497,11 @@ fi
 %ghost %{mozappdir}/components/compreg.dat
 %ghost %{mozappdir}/components/xpti.dat
 %{mozappdir}/components/*.so
-%{mozappdir}/components/*.xpt
 %{mozappdir}/components/*.manifest
-%attr(644, root, root) %{mozappdir}/components/*.js
-%{mozappdir}/defaults
 %dir %{mozappdir}/icons
 %attr(644, root, root) %{mozappdir}/icons/*
-%{mozappdir}/modules
+%{mozappdir}/omni.jar
 %{mozappdir}/plugins
-%{mozappdir}/res
 %{mozappdir}/*.so
 %{mozappdir}/mozilla-xremote-client
 %{mozappdir}/run-mozilla.sh
@@ -539,7 +510,6 @@ fi
 %{mozappdir}/xulrunner-stub
 %{mozappdir}/platform.ini
 %{mozappdir}/dependentlibs.list
-%{mozappdir}/greprefs.js
 %if %{name} == %{shortname}
 %{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
 %endif
@@ -571,6 +541,19 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Feb 28 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.23.beta12
+- sync with rawhide
+- update to 2.0 Beta12
+
+* Sun Feb 27 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.25
+- Make Firefox's User-Agent string match upstream's
+
+* Sat Feb 26 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.24
+- Switch to using the omni chrome file format
+
+* Fri Feb 25 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.23
+- Update to 2.0 Beta 12
+
 * Wed Feb 23 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.22.beta12.build1
 - sync with rawhide
 - update to 2.0 Beta12 build1 candidate

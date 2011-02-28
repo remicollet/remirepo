@@ -6,5 +6,3 @@ pref("browser.display.use_system_colors",   true);
 pref("browser.download.folderList",         1);
 pref("browser.link.open_external",          3);
 pref("browser.shell.checkDefaultBrowser",   false);
-pref("general.useragent.vendor", "Fedora");
-pref("general.useragent.vendorSub", "FIREFOX_RPM_VR");

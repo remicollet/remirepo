@@ -19,7 +19,59 @@ Intel(R) Core(TM) i5 CPU         760  @ 2.80GHz
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b9) Gecko/20100101 Firefox/4.0b9					 218.5
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b10) Gecko/20100101 Firefox/4.0b10				 225.8
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b11) Gecko/20110203 Firefox/4.0b11				 231.9
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b12) Gecko/20100101 Firefox/4.0b12				 237.4
 
+=========================================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0b12) Gecko/20100101 Firefox/4.0b12
+============================================
+RESULTS (means and 95% confidence intervals)
+--------------------------------------------
+Total:                 237.4ms +/- 5.4%
+--------------------------------------------
+
+  3d:                   35.2ms +/- 5.0%
+    cube:               15.3ms +/- 12.3%
+    morph:               5.0ms +/- 0.0%
+    raytrace:           14.9ms +/- 10.7%
+
+  access:               36.5ms +/- 16.4%
+    binary-trees:        4.4ms +/- 32.7%
+    fannkuch:           17.9ms +/- 15.0%
+    nbody:               6.0ms +/- 29.7%
+    nsieve:              8.2ms +/- 18.3%
+
+  bitops:               20.2ms +/- 18.0%
+    3bit-bits-in-byte:   0.6ms +/- 83.3%
+    bits-in-byte:        9.6ms +/- 25.8%
+    bitwise-and:         2.7ms +/- 33.1%
+    nsieve-bits:         7.3ms +/- 26.9%
+
+  controlflow:           4.5ms +/- 29.2%
+    recursive:           4.5ms +/- 29.2%
+
+  crypto:               19.7ms +/- 11.1%
+    aes:                10.2ms +/- 11.8%
+    md5:                 5.8ms +/- 28.9%
+    sha1:                3.7ms +/- 30.3%
+
+  date:                 29.2ms +/- 6.8%
+    format-tofte:       19.8ms +/- 11.5%
+    format-xparb:        9.4ms +/- 14.4%
+
+  math:                 25.0ms +/- 21.9%
+    cordic:              6.1ms +/- 27.3%
+    partial-sums:       10.6ms +/- 23.0%
+    spectral-norm:       8.3ms +/- 33.7%
+
+  regexp:               12.4ms +/- 11.9%
+    dna:                12.4ms +/- 11.9%
+
+  string:               54.7ms +/- 5.2%
+    base64:              4.6ms +/- 25.6%
+    fasta:              11.7ms +/- 18.9%
+    tagcloud:           14.8ms +/- 5.0%
+    unpack-code:        17.3ms +/- 7.3%
+    validate-input:      6.3ms +/- 31.2%
 =========================================================================================
 Mozilla/5.0 (X11; Linux x86_64; rv:2.0b11) Gecko/20110203 Firefox/4.0b11
 ============================================

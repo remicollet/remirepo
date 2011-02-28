@@ -64,7 +64,7 @@ MOZ_DIST_BIN="$MOZ_LIB_DIR/firefox-FIREFOX_VERSION"
 MOZ_XUL_DIR="$MOZ_LIB_DIR/XULRUNNER_DIRECTORY"
 MOZ_LANGPACKS_DIR="$MOZ_DIST_BIN/langpacks"
 MOZ_EXTENSIONS_PROFILE_DIR="$HOME/.mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-MOZ_PROGRAM="/usr/bin/xulrunner2 $MOZ_DIST_BIN/$MOZ_FIREFOX_FILE"
+MOZ_PROGRAM="/usr/bin/XULRUNNER_BIN $MOZ_DIST_BIN/$MOZ_FIREFOX_FILE"
 MOZ_LAUCHER="$MOZ_DIST_BIN/run-mozilla.sh"
  
 ##
@@ -108,7 +108,7 @@ export MOZ_PLUGIN_PATH
 ##
 ## Set MOZ_APP_LAUNCHER for gnome-session
 ##
-export MOZ_APP_LAUNCHER="/usr/bin/FIREFOXBIN"
+export MOZ_APP_LAUNCHER="/usr/bin/FIREFOX_BIN"
 
 ##
 ## If plugins are wrapped, check them
