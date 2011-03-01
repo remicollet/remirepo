@@ -9,5 +9,5 @@ Icon=thunderbird
 Terminal=false
 Type=Application
 StartupWMClass=Thunderbird-bin
-MimeType=message/rfc822;x-scheme-handler/mailto;
+MimeType=message/rfc822;
 StartupNotify=true

@@ -9,9 +9,9 @@ getxpi() {
 		then	URL=http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/$1/linux-i686/xpi
 		else	URL=http://ftp.mozilla.org/pub/mozilla.org/thunderbird/nightly/$1-candidates/$2/linux-xpi
 		fi
-		# 52 extensions (13 + 13 + 13 + 13)
+		# 53 extensions (13 + 14 + 13 + 13)
 		for i in af ar be bg bn-BD ca cs da de el en-GB es-AR \
-			es-ES et eu fi fr fy-NL	ga-IE gl he hu id is it \
+			es-ES et eu fi fr fy-NL	ga-IE gd gl he hu id is it \
 			ja ka ko lt mk nb-NO nl nn-NO pa-IN pl pt-BR pt-PT ro \
 			ru si sk sl sq sr sv-SE ta-LK tr uk vi zh-CN zh-TW
 		do 	echo -en "$i\t"

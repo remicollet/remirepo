@@ -6,11 +6,11 @@
 %define sqlite_version 3.6.22
 %define libnotify_version 0.4
 %define build_langpacks 1
-%define thunderbird_version 3.1.7
+%define thunderbird_version 3.1.8
 %define moz_objdir objdir-tb
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
-%define with_lightning_extension 1
-%define lightning_release 0.38.b3pre
+%define with_lightning_extension 0
+%define lightning_release 0.39.b3pre
 %define lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
 %define gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 
@@ -23,7 +23,12 @@
 %define tarballdir comm-1.9.2
 
 %define official_branding 1
+# enable crash reporter only for iX86
+%ifarch %{ix86} x86_64
+%define enable_mozilla_crashreporter 1
+%else
 %define enable_mozilla_crashreporter 0
+%endif
 
 %define version_internal  3.1
 %define mozappdir         %{_libdir}/%{name}-%{version_internal}
@@ -31,7 +36,7 @@
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
 Version:        %{thunderbird_version}
-Release:        2%{?dist}
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -43,7 +48,7 @@ Group:          Applications/Internet
 Source0:        %{tarball}
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{thunderbird_version}-20101210.tar.bz2
+Source1:        thunderbird-langpacks-%{thunderbird_version}-20110301.tar.bz2
 %endif
 Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/lightning.xpi
 Source5:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/gdata-provider.xpi
@@ -78,7 +83,6 @@ Patch7:         mozilla-missing-cflags.patch
 Patch8:         mozilla-build-s390.patch
 # Remove static build option from crashreporter to remove dependency on static libraries
 Patch9:         crashreporter-remove-static.patch
-Patch10:        mozilla-notify.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -98,9 +102,7 @@ BuildRequires:  nss-devel >= %{nss_version}
 %if %{fedora} >= 11
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
-%if %{fedora} >= 10
 BuildRequires:  libnotify-devel >= %{libnotify_version}
-%endif
 BuildRequires:  libpng-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  zip
@@ -116,7 +118,7 @@ BuildRequires:  pango-devel
 BuildRequires:  freetype-devel >= %{freetype_version}
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
-%if 0%{?fedora} >= 10
+%if 0%{?fedora} >= 11
 BuildRequires:  hunspell-devel
 %endif
 %if 0%{?fedora} >= 15
@@ -130,16 +132,14 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  libcurl-devel
 BuildRequires:  GConf2-devel
 
-%if 0%{?fedora} >= 9
 Requires:       mozilla-filesystem
-%endif
 %if 0%{?fedora} >= 12
 Requires:       nspr >= %{nspr_version}
 %endif
 %if 0%{?fedora} >= 13
 Requires:       nss >= %{nss_version}
 %endif
-%if %{fedora} >= 9
+%if 0%{?fedora} >= 11
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
 %ifarch %{ix86} x86_64
@@ -201,10 +201,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %patch8 -p0 -b .s390
 %endif
 %patch9 -p1 -b .static
-%if %{fedora} >= 15
-# when libnotify >= 0.7.0
-%patch10 -p1 -b .libnotify
-%endif
 
 
 %if %{official_branding}
@@ -239,11 +235,7 @@ cat %{SOURCE10} 		\
   | tee .mozconfig
 
 cat <<EOF | tee -a .mozconfig
-%if %{fedora} >= 10
 ac_add_options --enable-libnotify
-%else
-ac_add_options --disable-libnotify
-%endif
 %if %{fedora} >= 11
 ac_add_options --enable-system-lcms
 %endif
@@ -405,11 +397,9 @@ cd mozilla
 install -c -m 644 LICENSE $RPM_BUILD_ROOT%{mozappdir}
 cd -
 
-%if 0%{?fedora} >= 7
 # Use the system hunspell dictionaries
 %{__rm} -rf $RPM_BUILD_ROOT/%{mozappdir}/dictionaries
 ln -s %{_datadir}/myspell $RPM_BUILD_ROOT%{mozappdir}/dictionaries
-%endif
 
 # ghost files
 %{__mkdir_p} $RPM_BUILD_ROOT%{mozappdir}/components
@@ -418,8 +408,10 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{enable_mozilla_crashreporter}
-mkdir -p $RPM_BUILD_ROOT%{_exec_prefix}/lib/debug%{mozappdir}
-cp %{moz_objdir}/mozilla/dist/thunderbird-%{thunderbird_version}.en-US.linux-*.crashreporter-symbols.zip $RPM_BUILD_ROOT%{_exec_prefix}/lib/debug%{mozappdir}
+# Debug symbols are stored in /usr/lib even in x86_64 arch
+DEBUG_LIB_DIR=`echo %{_libdir}|sed -e "s/lib64/lib/"`
+mkdir -p $RPM_BUILD_ROOT$DEBUG_LIB_DIR/debug%{mozappdir}
+cp objdir-tb/mozilla/dist/%{name}-%{thunderbird_version}*.crashreporter-symbols.zip $RPM_BUILD_ROOT$DEBUG_LIB_DIR/debug%{mozappdir}
 %endif
 
 %if %{with_lightning_extension}
@@ -570,6 +562,17 @@ fi
 #===============================================================================
 
 %changelog
+* Tue Mar  1 2011 Remi Collet <rpms@famillecollet.com> 3.1.8-1
+- Thunderbird 3.1.8
+- sync with f13/f14, build for old fedora, with lightning langpack
+- disable lightning which is broken (previous still works)
+
+* Tue Mar  1 2011 Jan Horak <jhorak@redhat.com> - 3.1.8-1
+- Update to 3.1.8
+
+* Mon Jan  3 2011 Jan Horak <jhorak@redhat.com> - 3.1.7-3
+- Mozilla crash reporter enabled
+
 * Fri Dec 10 2010 Remi Collet <rpms@famillecollet.com> 3.1.7-2
 - Thunderbird 3.1.7 
 - sync with rawhide, build for old fedora, with lightning langpack
