@@ -36,19 +36,19 @@
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
 Version:        %{thunderbird_version}
-Release:        1%{?dist}
+Release:        3%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 %if %{official_branding}
-%define tarball thunderbird-%{thunderbird_version}.source.tar.bz2
+%define tarball thunderbird-%{version}.source.tar.bz2
 %else
 %define tarball thunderbird-3.1rc1.source.tar.bz2
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{thunderbird_version}-20110301.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20110301.tar.bz2
 %endif
 Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/lightning.xpi
 Source5:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/gdata-provider.xpi
@@ -74,8 +74,6 @@ Source100:      find-external-requires
 Patch0:         thunderbird-version.patch
 # Fix for jemalloc
 Patch1:         mozilla-jemalloc.patch
-# Fix for installation fail when building with dynamic linked libraries
-Patch2:         thunderbird-shared-error.patch
 # Fixes gcc complain that nsFrame::delete is protected
 Patch4:         xulrunner-1.9.2.1-build.patch
 Patch6:         mozilla-libjpeg-turbo.patch
@@ -139,6 +137,9 @@ Requires:       nspr >= %{nspr_version}
 %if 0%{?fedora} >= 13
 Requires:       nss >= %{nss_version}
 %endif
+%if 0%{?fedora} >= 15
+Requires:       sqlite >= %{sqlite_version}
+%endif
 %if 0%{?fedora} >= 11
 BuildRequires:  lcms-devel >= %{lcms_version}
 %endif
@@ -191,7 +192,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
 
 %patch1 -p0 -b .jemalloc
-%patch2 -p1 -b .shared-error
 %patch4 -p1 -b .protected
 %if %{fedora} >= 14
 %patch6 -p1 -b .turbo
@@ -562,13 +562,16 @@ fi
 #===============================================================================
 
 %changelog
+* Wed Mar  2 2011 Remi Collet <rpms@famillecollet.com> 3.1.8-3
+- sync with f14
+
+* Tue Mar  1 2011 Jan Horak <jhorak@redhat.com> - 3.1.8-3
+- Update to 3.1.8
+
 * Tue Mar  1 2011 Remi Collet <rpms@famillecollet.com> 3.1.8-1
 - Thunderbird 3.1.8
 - sync with f13/f14, build for old fedora, with lightning langpack
 - disable lightning which is broken (previous still works)
-
-* Tue Mar  1 2011 Jan Horak <jhorak@redhat.com> - 3.1.8-1
-- Update to 3.1.8
 
 * Mon Jan  3 2011 Jan Horak <jhorak@redhat.com> - 3.1.7-3
 - Mozilla crash reporter enabled
