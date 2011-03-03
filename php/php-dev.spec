@@ -26,7 +26,7 @@
 %define mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate 201012011530
-%global phpversion 5.3.6RC1
+%global phpversion 5.3.6RC2
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -46,12 +46,16 @@
 %global with_fpm 0
 %endif
 
-%global tidyver 	0.99.0-12.20070228
+%if 0%{?__isa:1}
+%global isasuffix -%{__isa}
+%else
+%global isasuffix %nil
+%endif
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.3.6
-Release: 0.1.RC1%{?dist}
+Release: 0.2.RC2%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -128,8 +132,8 @@ Requires(pre): httpd
 %if 0%{?fedora}%{?rhel} > 4
 # Don't provides extensions, which are not shared library, as .so
 %{?filter_setup:
-%filter_provides_in %{_libdir}/%{phpname}/modules/.*\.so$
-%filter_provides_in %{_libdir}/%{phpname}/modules-zts/.*\.so$
+%filter_provides_in %{_libdir}/php/modules/.*\.so$
+%filter_provides_in %{_libdir}/php/modules-zts/.*\.so$
 %filter_setup
 }
 %endif
@@ -189,30 +193,44 @@ Summary: Common files for PHP
 # Remove this when value change
 Provides: php-api = %{apiver}, php-zend-abi = %{zendver}
 Provides: php(api) = %{apiver}, php(zend-abi) = %{zendver}
-# New API check
-Provides: php-api = %{apiver}-%{?__isa}, php-zend-abi = %{zendver}-%{?__isa}
-Provides: php(api) = %{apiver}-%{?__isa}, php(zend-abi) = %{zendver}-%{?__isa}
-# Provides for all builtin modules:
-Provides: php-bz2, php-calendar, php-ctype, php-curl, php-date, php-exif
-Provides: php-ftp, php-gettext, php-gmp, php-hash, php-iconv, php-libxml
-Provides: php-reflection, php-session, php-shmop, php-simplexml, php-sockets
-Provides: php-spl, php-tokenizer, php-openssl, php-pcre
-Provides: php-zlib, php-json, php-zip, php-fileinfo
-Provides: php-bz2%{?_isa}, php-calendar%{?_isa}, php-ctype%{?_isa}, php-curl%{?_isa}, php-date%{?_isa}, php-exif%{?_isa}
-Provides: php-ftp%{?_isa}, php-gettext%{?_isa}, php-gmp%{?_isa}, php-hash%{?_isa}, php-iconv%{?_isa}, php-libxml%{?_isa}
-Provides: php-reflection%{?_isa}, php-session%{?_isa}, php-shmop%{?_isa}, php-simplexml%{?_isa}, php-sockets%{?_isa}
-Provides: php-spl%{?_isa}, php-tokenizer%{?_isa}, php-openssl%{?_isa}, php-pcre%{?_isa}
-Provides: php-zlib%{?_isa}, php-json%{?_isa}, php-zip%{?_isa}, php-fileinfo%{?_isa}
+# New ABI/API check - Arch specific
+Provides: php-api = %{apiver}%{isasuffix}, php-zend-abi = %{zendver}%{isasuffix}
+Provides: php(api) = %{apiver}%{isasuffix}, php(zend-abi) = %{zendver}%{isasuffix}
+# Provides for all builtin/shared modules:
+Provides: php-bz2, php-bz2%{?_isa}
+Provides: php-calendar, php-calendar%{?_isa}
+Provides: php-ctype, php-ctype%{?_isa}
+Provides: php-curl, php-curl%{?_isa}
+Provides: php-date, php-date%{?_isa}
+Provides: php-exif, php-exif%{?_isa}
+Provides: php-fileinfo, php-fileinfo%{?_isa}
+Provides: php-pecl-Fileinfo = %{fileinfover}, php-pecl-Fileinfo%{?_isa} = %{fileinfover}
+Provides: php-pecl(Fileinfo) = %{fileinfover}, php-pecl(Fileinfo)%{?_isa} = %{fileinfover}
+Provides: php-ftp, php-ftp%{?_isa}
+Provides: php-gettext, php-gettext%{?_isa}
+Provides: php-gmp, php-gmp%{?_isa}
+Provides: php-hash, php-hash%{?_isa}
+Provides: php-iconv, php-iconv%{?_isa}
+Provides: php-json, php-json%{?_isa}
+Provides: php-pecl-json = %{jsonver}, php-pecl-json%{?_isa} = %{jsonver}
+Provides: php-pecl(json) = %{jsonver}, php-pecl(json)%{?_isa} = %{jsonver}
+Provides: php-libxml, php-libxml%{?_isa}
+Provides: php-openssl, php-openssl%{?_isa}
+Provides: php-pecl-phar = %{pharver}, php-pecl-phar%{?_isa} = %{pharver}
+Provides: php-pecl(phar) = %{pharver}, php-pecl(phar)%{?_isa} = %{pharver}
+Provides: php-pcre, php-pcre%{?_isa}
+Provides: php-reflection, php-reflection%{?_isa}
+Provides: php-session, php-session%{?_isa}
+Provides: php-shmop, php-shmop%{?_isa}
+Provides: php-simplexml, php-simplexml%{?_isa}
+Provides: php-sockets, php-sockets%{?_isa}
+Provides: php-spl, php-spl%{?_isa}
+Provides: php-tokenizer, php-tokenizer%{?_isa}
+Provides: php-zip, php-zip%{?_isa}
+Provides: php-pecl-zip = %{zipver}, php-pecl-zip%{?_isa} = %{zipver}
+Provides: php-pecl(zip) = %{zipver}, php-pecl(zip)%{?_isa} = %{zipver}
+Provides: php-zlib, php-zlib%{?_isa}
 Obsoletes: php-openssl, php-pecl-zip, php-pecl-json, php-json, php-pecl-phar, php-pecl-Fileinfo
-# For obsoleted pecl extension
-Provides: php-pecl-json = %{jsonver}, php-pecl(json) = %{jsonver}
-Provides: php-pecl-zip = %{zipver}, php-pecl(zip) = %{zipver}
-Provides: php-pecl-phar = %{pharver}, php-pecl(phar) = %{pharver}
-Provides: php-pecl-Fileinfo = %{fileinfover}, php-pecl(Fileinfo) = %{fileinfover}
-Provides: php-pecl-json%{?_isa} = %{jsonver}, php-pecl(json)%{?_isa} = %{jsonver}
-Provides: php-pecl-zip%{?_isa} = %{zipver}, php-pecl(zip)%{?_isa} = %{zipver}
-Provides: php-pecl-phar%{?_isa} = %{pharver}, php-pecl(phar)%{?_isa} = %{pharver}
-Provides: php-pecl-Fileinfo%{?_isa} = %{fileinfover}, php-pecl(Fileinfo)%{?_isa} = %{fileinfover}
 
 %description common
 The php-common package contains files used by both the php
@@ -265,8 +283,10 @@ Summary: A database access abstraction module for PHP applications
 Group: Development/Languages
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo
+# Remove this when value change
 Provides: php-pdo-abi = %{pdover}
-Provides: php-pdo-abi = %{pdover}-%{?__isa}
+# New ABI/API check - Arch specific
+Provides: php-pdo-abi = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-pdo_sqlite
 Provides: php-sqlite3%{?_isa}, php-pdo_sqlite%{?_isa}
 
@@ -1108,9 +1128,9 @@ cat files.json files.zip files.curl files.phar files.fileinfo > files.common
 
 # Install the macros file:
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
-sed -e "s/@PHP_APIVER@/%{apiver}-%{?__isa}/"   \
-    -e "s/@PHP_ZENDVER@/%{zendver}-%{?__isa}/" \
-    -e "s/@PHP_PDOVER@/%{pdover}-%{?__isa}/"   \
+sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
+    -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
+    -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
     < %{SOURCE3} | tee macros.php
 install -m 644 -c macros.php \
            $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.php
@@ -1256,6 +1276,10 @@ fi
 %endif
 
 %changelog
+* Thu Mar 03 2011 Remi Collet <rpms@famillecollet.com> 5.3.6-0.2.RC2
+- PHP 5.3.6RC2
+- add Arch specific ABI macro (from rawhide)
+
 * Thu Feb 17 2011 Remi Collet <rpms@famillecollet.com> 5.3.6-0.1.RC1
 - PHP 5.3.6RC1
 - add Arch specific requires/provides
