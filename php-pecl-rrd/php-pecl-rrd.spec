@@ -5,7 +5,7 @@
 
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
-Version:      0.9.0
+Version:      0.10.0
 Release:      1%{?dist}
 License:      PHP
 Group:        Development/Languages
@@ -13,24 +13,13 @@ URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
-# svn co http://svn.php.net/repository/pecl/rrd
-# tar cvzf rrd-tests.tgz --exclude .svn -C rrd/trunk tests
-# See http://pecl.php.net/bugs/21133
-Source3:      rrd-tests.tgz
-
-# http://pecl.php.net/bugs/21132
-Patch0:       rrd-libdir.patch
-# http://pecl.php.net/bugs/21135
-Patch1:       rrd-build.patch
-Patch2:       rrd-v14x.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel, rrdtool, rrdtool-devel, php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Obsoletes:    rrdtool-php < 1.4.5
-Provides:     rrdtool-php = 1:%{version}-%{release}
+Conflicts:    rrdtool-php
 Provides:     php-pecl(%{pecl_name}) = %{version}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
@@ -49,15 +38,9 @@ system for time series data.
 
 %prep 
 %setup -c -q
-%{_bindir}/php -n %{SOURCE2} package.xml >CHANGELOG
+%{_bindir}/php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 10
 
 cd %{pecl_name}-%{version}
-%patch0 -p1 -b .libdir
-%patch1 -p1 -b .build
-%patch2 -p1 -b .v14x
-
-# Test suite from SVN
-%{__tar} xzf %{SOURCE3}
 
 # generate test file according to tests/testData/readme.txt
 fic=tests/testData/speed.rrd
@@ -141,6 +124,11 @@ fi
 
 
 %changelog
+* Fri Mar 04 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10.0-1
+- Version 0.10.0 (stable) - API 0.10.0 (beta)
+- remove patches, merged upstream
+
 * Mon Jan 03 2011 Remi Collet <Fedora@FamilleCollet.com> 0.9.0-1
+- Version 0.9.0 (beta) - API 0.9.0 (beta)
 - initial RPM
 
