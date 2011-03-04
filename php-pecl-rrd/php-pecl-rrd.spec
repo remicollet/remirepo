@@ -14,6 +14,8 @@ URL:          http://pecl.php.net/package/rrd
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
 
+# http://pecl.php.net/bugs/22576
+# http://pecl.php.net/bugs/22577
 Patch0:       rrd-build.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
