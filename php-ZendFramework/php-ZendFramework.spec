@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.11.3
+Version:         1.11.4
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -628,6 +628,15 @@ cd ..
 
 
 %changelog
+* Fri Mar 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.4-1
+- update to 1.11.4
+- rebuild for remi repository (with Oracle and Sqlite stuff)
+
+* Fri Mar 04 2011 Felix Kaechele <heffer@fedoraproject.org> - 1.11.4-1
+- update to 1.11.4
+- over 40 bugs were fixed
+- full changelog http://framework.zend.com/changelog/1.11.4
+
 * Sun Feb 13 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.3-1
 - rebuild for remi repository (with Oracle and Sqlite stuff)
 
