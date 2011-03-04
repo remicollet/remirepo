@@ -14,6 +14,8 @@ URL:          http://pecl.php.net/package/rrd
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
 
+Patch0:       rrd-build.patch
+
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel, rrdtool, rrdtool-devel, php-pear
 
@@ -41,9 +43,11 @@ system for time series data.
 %{_bindir}/php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 10
 
 cd %{pecl_name}-%{version}
+%patch0 -p1 -b .build
 
 # generate test file according to tests/testData/readme.txt
-fic=tests/testData/speed.rrd
+dir=tests/testData
+fic=$dir/speed.rrd
 %{_bindir}/rrdtool create $fic --start 920804400 \
   DS:speed:COUNTER:600:U:U \
   RRA:AVERAGE:0.5:1:24 \
@@ -59,6 +63,23 @@ fic=tests/testData/speed.rrd
   DEF:myspeed=${fic}:speed:AVERAGE \
   CDEF:realspeed=myspeed,1000,* \
   LINE2:realspeed#FF0000
+
+# %{_bindir}/rrdtool fetch $fic AVERAGE --start 920804400 --end 920809200 >$dir/rrd_updater_fetch.txt
+
+fic=$dir/moreDS.rrd
+%{_bindir}/rrdtool create $fic --start 920804400 \
+  DS:speed1:COUNTER:600:U:U \
+  DS:speed2:COUNTER:600:U:U \
+  RRA:AVERAGE:0.5:1:24 \
+  RRA:AVERAGE:0.5:6:10
+%{_bindir}/rrdtool update $fic \
+ 920804700:12345:11340 920805000:12357:11357 920805300:12363:11363 \
+ 920805600:12363:11364 920805900:12363:11364 920806200:12373:11373 \
+ 920806500:12383:11373 920806800:12393:11393 920807100:12399:11399 \
+ 920807400:12405:11405 920807700:12411:11411 920808000:12415:11415 \
+ 920808300:12420:11420 920808600:12422:11422 920808900:12423:11423
+
+# %{_bindir}/rrdtool fetch moreDS.rrd AVERAGE --start 920804400 --end 920808000 >$dir/moreDS_fetch.txt
 
 
 %build

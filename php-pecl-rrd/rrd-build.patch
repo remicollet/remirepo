@@ -1,0 +1,24 @@
+diff -up rrd-0.10.0/php_rrd.h.build rrd-0.10.0/php_rrd.h
+--- rrd-0.10.0/php_rrd.h.build	2011-03-04 20:44:48.013287482 +0100
++++ rrd-0.10.0/php_rrd.h	2011-03-04 20:44:51.842330451 +0100
+@@ -22,7 +22,7 @@
+ extern zend_module_entry rrd_module_entry;
+ #define phpext_rrd_ptr &rrd_module_entry
+ 
+-#define PHP_RRD_VERSION "0.9.0"
++#define PHP_RRD_VERSION "0.10.0"
+ 
+ #ifdef ZTS
+ #include "TSRM.h"
+diff -up rrd-0.10.0/rrd_create.c.build rrd-0.10.0/rrd_create.c
+--- rrd-0.10.0/rrd_create.c.build	2011-03-02 12:55:17.000000000 +0100
++++ rrd-0.10.0/rrd_create.c	2011-03-04 20:41:53.330311653 +0100
+@@ -115,7 +115,7 @@ PHP_METHOD(RRDCreator, __construct)
+ 	char *path; int path_length;
+ 	/* better to set defaults for optional parameters */
+ 	char *start_time = NULL; int start_time_length = 0;
+-	uint step = 0;
++	long step = 0;
+ 	int argc = ZEND_NUM_ARGS();
+ 
+ 	if (zend_parse_parameters(argc TSRMLS_CC, "s|sl", &path, &path_length,
