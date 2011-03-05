@@ -6,7 +6,7 @@
 %define sqlite_version 3.6.22
 %define libnotify_version 0.4
 %define build_langpacks 1
-%define thunderbird_version 3.1.8
+%define thunderbird_version 3.1.9
 %define moz_objdir objdir-tb
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
 %define with_lightning_extension 0
@@ -36,7 +36,7 @@
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
 Version:        %{thunderbird_version}
-Release:        3%{?dist}
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -48,7 +48,7 @@ Group:          Applications/Internet
 Source0:        %{tarball}
 %if %{build_langpacks}
 # Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{version}-20110301.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20110305.tar.bz2
 %endif
 Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/lightning.xpi
 Source5:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/gdata-provider.xpi
@@ -562,6 +562,9 @@ fi
 #===============================================================================
 
 %changelog
+* Sat Mar  5 2011 Remi Collet <rpms@famillecollet.com> 3.1.9-1
+- Thunderbird 3.1.9
+
 * Wed Mar  2 2011 Remi Collet <rpms@famillecollet.com> 3.1.8-3
 - sync with f14
 
