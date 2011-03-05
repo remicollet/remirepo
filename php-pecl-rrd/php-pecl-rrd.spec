@@ -6,7 +6,7 @@
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
 Version:      0.10.0
-Release:      1%{?dist}
+Release:      2%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
@@ -14,14 +14,14 @@ URL:          http://pecl.php.net/package/rrd
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
 
-# http://pecl.php.net/bugs/22576
-# http://pecl.php.net/bugs/22577
+# http://pecl.php.net/bugs/22576 - extension version
+# http://pecl.php.net/bugs/22577 - long parameter
+# http://pecl.php.net/bugs/22580 - rrdtool version check
 Patch0:       rrd-build.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.2
 BuildRequires: rrdtool
-# http://pecl.php.net/bugs/22580
 BuildRequires: rrdtool-devel >= 1.3.0
 BuildRequires: php-pear
 
@@ -156,6 +156,9 @@ fi
 
 
 %changelog
+* Sat Mar 05 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10.0-2
+- improved patch
+
 * Fri Mar 04 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10.0-1
 - Version 0.10.0 (stable) - API 0.10.0 (beta)
 - remove patches, merged upstream
