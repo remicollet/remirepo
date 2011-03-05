@@ -19,7 +19,11 @@ Source2:      xml2changelog
 Patch0:       rrd-build.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel, rrdtool, rrdtool-devel, php-pear
+BuildRequires: php-devel >= 5.3.2
+BuildRequires: rrdtool
+# http://pecl.php.net/bugs/22580
+BuildRequires: rrdtool-devel >= 1.3.0
+BuildRequires: php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -48,6 +52,7 @@ cd %{pecl_name}-%{version}
 %patch0 -p1 -b .build
 
 # generate test file according to tests/testData/readme.txt
+# http://pecl.php.net/bugs/22578
 dir=tests/testData
 fic=$dir/speed.rrd
 %{_bindir}/rrdtool create $fic --start 920804400 \
@@ -119,6 +124,10 @@ php --no-php-ini \
 
 %{__make} test NO_INTERACTION=1
 
+# Test results are arch and rrdtool version dependant.
+# http://pecl.php.net/bugs/22579
+find tests -name \*diff -exec echo -en "\nFAILED: " \; -print -exec cat {} \;
+
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -150,6 +159,7 @@ fi
 * Fri Mar 04 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10.0-1
 - Version 0.10.0 (stable) - API 0.10.0 (beta)
 - remove patches, merged upstream
+- add links to 5 new upstream bugs
 
 * Mon Jan 03 2011 Remi Collet <Fedora@FamilleCollet.com> 0.9.0-1
 - Version 0.9.0 (beta) - API 0.9.0 (beta)
