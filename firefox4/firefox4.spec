@@ -10,14 +10,14 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Beta 12
+%global mycomment       RC1 build1 candidate
 %global firefox_dir_ver 4
-%global gecko_version   2.0-beta12
-%global pre_version     b12
-%global pre_tag         .beta12
+%global gecko_version   2.0-rc1
+%global pre_version     rc1
+%global pre_tag         .rc1.build1
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
-%global tarballdir    mozilla-central
+%global tarballdir    mozilla-2.0
 
 %define official_branding       1
 %define build_langpacks         1
@@ -26,13 +26,13 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        4.0
-Release:        0.26%{?pre_tag}%{?dist}
+Release:        0.27%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_version}/source/firefox-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        firefox-langpacks-%{version}%{?pre_version}-20110228.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?pre_version}-20110305.tar.bz2
 %endif
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
@@ -64,11 +64,10 @@ Patch11:        firefox-default.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  system-bookmarks
-%if %{fedora} >= 15
 BuildRequires:  gecko-devel%{?_isa} = %{gecko_version}
+%if %{fedora} >= 15
 %global xulbin xulrunner
 %else
-BuildRequires:  xulrunner2-devel >= %{xulrunner_version}
 %global xulbin xulrunner2
 %endif
 # For WebM support
@@ -99,6 +98,8 @@ compliance, performance and portability.
 #---------------------------------------------------------------------
 
 %prep
+echo CIBLE = %{name}-%{version}-%{release}
+[ -f %{SOURCE1} ] || exit 1
 %setup -q -c
 cd %{tarballdir}
 
@@ -389,6 +390,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Mar 05 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.27.rc1.build1
+- Firefox 4.0 RC1 build1 candidate
+
 * Mon Feb 28 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.26.beta12
 - sync with rawhide
 - Firefox 4.0 Beta 12

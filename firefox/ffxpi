@@ -11,12 +11,12 @@ getxpi() {
 		then	URL=http://releases.mozilla.org/pub/mozilla.org/firefox/releases/$1/linux-i686/xpi
 		else	URL=ftp://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/$1-candidates/$2/linux-i686/xpi/
 		fi
-		# 83 max extensions (20+20+20+20+3)
-		for i in af ak ar as ast be bg bn-BD bn-IN br ca cs cy da de el en-GB en-ZA eo es-AR \
+		# 85 max extensions (21+20+20+20+4)
+		for i in af ak ar as ast be bg bn-BD bn-IN br bs ca cs cy da de el en-GB en-ZA eo es-AR \
 			es-CL es-ES es-MX et eu	fa fi fr fy-NL ga-IE gd gl gu-IN he hi-IN hr hu hy-AM id is it \
 			ja ka kk kn ko ku lg lt lv mai mk ml mn mr nb-NO nl nn-NO nso oc or\
                         pa-IN pl pt-BR pt-PT rm ro ru si sk sl son sq sr sv-SE ta ta-LK te th tr uk \
-                        vi zh-CN zh-TW
+                        vi zh-CN zh-TW zu
 		do 	echo -en "$i\t"
 			[ -f $i.xpi ] && echo "already downloaded"
 			[ -f $i.xpi ] || wget -nv $URL/$i.xpi

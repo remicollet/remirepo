@@ -15,11 +15,11 @@
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
 %global gecko_dir_ver 2
 %global alpha_version 0
-%global beta_version  12
-%global rc_version    0
+%global beta_version  0
+%global rc_version    1
 
 %global mozappdir         %{_libdir}/%{shortname}-%{gecko_dir_ver}
-%global tarballdir        mozilla-central
+%global tarballdir        mozilla-2.0
 %global gre_dir           %{_sysconfdir}/gre.d
 
 # crash reporter and out-of-process-plugins work only on x86/x86_64
@@ -67,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        0.23%{?pre_tag}%{?dist}
+Release:        0.24%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -265,7 +265,7 @@ echo "ac_add_options --disable-ipc" >> .mozconfig
 # Upstream bug filed without resolution
 # for now make sure jit is not enabled on sparc64
 %ifarch sparc64
-echo "ac_add_options --disable-jit" >> .mozconfig
+echo "ac_add_options --disable-tracejit" >> .mozconfig
 %endif
 
 #---------------------------------------------------------------------
@@ -541,6 +541,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Mar 05 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.24.rc1.build1
+- Update to 2.0 RC1 build1 candidate
+
 * Mon Feb 28 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.23.beta12
 - sync with rawhide
 - update to 2.0 Beta12
