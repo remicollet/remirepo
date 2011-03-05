@@ -9,8 +9,8 @@
 %define thunderbird_version 3.1.9
 %define moz_objdir objdir-tb
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
-%define with_lightning_extension 0
-%define lightning_release 0.39.b3pre
+%define with_lightning_extension 1
+%define lightning_release 0.40.b3pre
 %define lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
 %define gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 

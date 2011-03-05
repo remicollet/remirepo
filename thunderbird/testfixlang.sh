@@ -3,7 +3,7 @@
 set -x 
 
 if [ ! -d /tmp/comm-1.9.2 ]; then
-	tar xjf thunderbird-3.1.8.source.tar.bz2 -C /tmp && echo Sources extracted
+	tar xjf thunderbird-3.1.9.source.tar.bz2 -C /tmp && echo Sources extracted
 fi
 
 DIR=/tmp/testfixlang
