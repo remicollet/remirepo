@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.1.55
+Version: 5.1.56
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -617,6 +617,9 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Mar 05 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.1.56-1
+- Update to MySQL 5.1.56 Community Server GA
+
 * Thu Feb 10 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.1.55-1
 - Update to MySQL 5.1.55 Community Server GA
 
