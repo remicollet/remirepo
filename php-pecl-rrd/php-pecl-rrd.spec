@@ -19,6 +19,9 @@ Source2:      xml2changelog
 # http://pecl.php.net/bugs/22580 - rrdtool version check
 Patch0:       rrd-build.patch
 
+# http://pecl.php.net/bugs/22579 - tests are arch dependant
+Patch1:       rrd-tests.patch
+
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.2
 BuildRequires: rrdtool
@@ -50,6 +53,7 @@ system for time series data.
 
 cd %{pecl_name}-%{version}
 %patch0 -p1 -b .build
+%patch1 -p1 -b .tests
 
 # generate test file according to tests/testData/readme.txt
 # http://pecl.php.net/bugs/22578
@@ -122,12 +126,18 @@ php --no-php-ini \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-%{__make} test NO_INTERACTION=1
+%{__make} test NO_INTERACTION=1 | tee rpmtests.log
 
-# Test results are arch and rrdtool version dependant.
-# http://pecl.php.net/bugs/22579
-find tests -name \*diff -exec echo -en "\nFAILED: " \; -print -exec cat {} \;
-
+if  grep -q "FAILED TEST" rpmtests.log; then
+  for t in tests/*diff; do
+     echo "*** FAILED: $(basename $t .diff)"
+     diff -u tests/$(basename $t .diff).exp tests/$(basename $t .diff).out || :
+  done
+  # tests only succeed with rrdtool 1.4.x
+%if %{?fedora} >= 14
+  exit 1
+%endif
+fi
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -157,7 +167,7 @@ fi
 
 %changelog
 * Sat Mar 05 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10.0-2
-- improved patch
+- improved patches
 
 * Fri Mar 04 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10.0-1
 - Version 0.10.0 (stable) - API 0.10.0 (beta)
