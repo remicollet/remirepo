@@ -1,0 +1,50 @@
+all: speed.png rrd_updater_fetch.txt speed-dump.xml moreDS_fetch.txt
+	@echo 'You can run "make test"'
+
+clean:
+	rm -f *.rrd *.png *.xml *fetch.txt
+
+speed.rrd:
+	rrdtool create speed.rrd --start 920804400 \
+		DS:speed:COUNTER:600:U:U \
+		RRA:AVERAGE:0.5:1:24 \
+		RRA:AVERAGE:0.5:6:10
+	rrdtool update speed.rrd \
+		920804700:12345 920805000:12357 920805300:12363 \
+		920805600:12363 920805900:12363 920806200:12373 \
+		920806500:12383 920806800:12393 920807100:12399 \
+		920807400:12405 920807700:12411 920808000:12415 \
+		920808300:12420 920808600:12422 920808900:12423
+
+speed.png: speed.rrd
+	rrdtool graph speed.png \
+		--start 920804400 --end 920808000 \
+		--vertical-label m/s \
+		DEF:myspeed=speed.rrd:speed:AVERAGE \
+		CDEF:realspeed=myspeed,1000,* \
+		LINE2:realspeed#FF0000
+
+rrd_updater_fetch.txt: speed.rrd
+	rrdtool fetch speed.rrd AVERAGE \
+		--start 920804400 --end 920809200 >rrd_updater_fetch.txt
+
+speed-dump.xml: speed.rrd
+	rrdtool dump speed.rrd >speed-dump.xml
+
+moreDS.rrd:
+	rrdtool create moreDS.rrd --start 920804400 \
+		DS:speed1:COUNTER:600:U:U \
+		DS:speed2:COUNTER:600:U:U \
+		RRA:AVERAGE:0.5:1:24 \
+		RRA:AVERAGE:0.5:6:10
+	rrdtool update moreDS.rrd \
+		920804700:12345:11340 920805000:12357:11357 920805300:12363:11363 \
+		920805600:12363:11364 920805900:12363:11364 920806200:12373:11373 \
+		920806500:12383:11373 920806800:12393:11393 920807100:12399:11399 \
+		920807400:12405:11405 920807700:12411:11411 920808000:12415:11415 \
+		920808300:12420:11420 920808600:12422:11422 920808900:12423:11423
+
+moreDS_fetch.txt: moreDS.rrd
+	rrdtool fetch moreDS.rrd AVERAGE \
+		--start 920804400 --end 920808000 >moreDS_fetch.txt
+

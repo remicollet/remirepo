@@ -13,6 +13,9 @@ URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
+# generate test file according to tests/testData/readme.txt
+# http://pecl.php.net/bugs/22578
+Source3:      rrd-test-makefile
 
 # http://pecl.php.net/bugs/22576 - extension version
 # http://pecl.php.net/bugs/22577 - long parameter
@@ -55,42 +58,7 @@ cd %{pecl_name}-%{version}
 %patch0 -p1 -b .build
 %patch1 -p1 -b .tests
 
-# generate test file according to tests/testData/readme.txt
-# http://pecl.php.net/bugs/22578
-dir=tests/testData
-fic=$dir/speed.rrd
-%{_bindir}/rrdtool create $fic --start 920804400 \
-  DS:speed:COUNTER:600:U:U \
-  RRA:AVERAGE:0.5:1:24 \
-  RRA:AVERAGE:0.5:6:10
-%{_bindir}/rrdtool update $fic 920804700:12345 920805000:12357 920805300:12363
-%{_bindir}/rrdtool update $fic 920805600:12363 920805900:12363 920806200:12373
-%{_bindir}/rrdtool update $fic 920806500:12383 920806800:12393 920807100:12399
-%{_bindir}/rrdtool update $fic 920807400:12405 920807700:12411 920808000:12415
-%{_bindir}/rrdtool update $fic 920808300:12420 920808600:12422 920808900:12423
-%{_bindir}/rrdtool graph tests/testData/speed.png \
-  --start 920804400 --end 920808000 \
-  --vertical-label m/s \
-  DEF:myspeed=${fic}:speed:AVERAGE \
-  CDEF:realspeed=myspeed,1000,* \
-  LINE2:realspeed#FF0000
-
-# %{_bindir}/rrdtool fetch $fic AVERAGE --start 920804400 --end 920809200 >$dir/rrd_updater_fetch.txt
-
-fic=$dir/moreDS.rrd
-%{_bindir}/rrdtool create $fic --start 920804400 \
-  DS:speed1:COUNTER:600:U:U \
-  DS:speed2:COUNTER:600:U:U \
-  RRA:AVERAGE:0.5:1:24 \
-  RRA:AVERAGE:0.5:6:10
-%{_bindir}/rrdtool update $fic \
- 920804700:12345:11340 920805000:12357:11357 920805300:12363:11363 \
- 920805600:12363:11364 920805900:12363:11364 920806200:12373:11373 \
- 920806500:12383:11373 920806800:12393:11393 920807100:12399:11399 \
- 920807400:12405:11405 920807700:12411:11411 920808000:12415:11415 \
- 920808300:12420:11420 920808600:12422:11422 920808900:12423:11423
-
-# %{_bindir}/rrdtool fetch moreDS.rrd AVERAGE --start 920804400 --end 920808000 >$dir/moreDS_fetch.txt
+cp %{SOURCE3} tests/testData/Makefile
 
 
 %build
@@ -126,6 +94,8 @@ php --no-php-ini \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%{__make} -C tests/testData clean
+%{__make} -C tests/testData all
 %{__make} test NO_INTERACTION=1 | tee rpmtests.log
 
 if  grep -q "FAILED TEST" rpmtests.log; then
@@ -133,8 +103,8 @@ if  grep -q "FAILED TEST" rpmtests.log; then
      echo "*** FAILED: $(basename $t .diff)"
      diff -u tests/$(basename $t .diff).exp tests/$(basename $t .diff).out || :
   done
-  # tests only succeed with rrdtool 1.4.x
 %if %{?fedora} >= 14
+  # tests only succeed with rrdtool 1.4.x
   exit 1
 %endif
 fi
