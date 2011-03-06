@@ -10,4 +10,5 @@ http://pecl.php.net/bugs/21177 - rrd 0.10.0 report as 0.9.0
 http://pecl.php.net/bugs/21178 - This RRD was created on another architecture
 http://pecl.php.net/bugs/21179 - FAIL rrd_info test [tests/rrd_012.phpt]
 http://pecl.php.net/bugs/21180 - Build fails against rrdtool 1.2.x
+http://pecl.php.net/bugs/21183 - Please provides LICENSE file
 

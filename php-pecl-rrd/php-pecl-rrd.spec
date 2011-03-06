@@ -129,6 +129,7 @@ fi
 
 %files
 %defattr(-, root, root, -)
+# http://pecl.php.net/bugs/22583 - Request for LICENSE
 %doc CHANGELOG %{pecl_name}-%{version}/CREDITS
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
