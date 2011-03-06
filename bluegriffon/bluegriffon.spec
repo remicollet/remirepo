@@ -7,8 +7,8 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-central
-%global svnmain     0
-%global svnlocales  23
+%global svnmain     580
+%global svnlocales  33
 
 %global gecko_version   2.0-beta12
 %global srcversion      4.0b12
@@ -18,7 +18,7 @@ Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        0.9
 %if %{svnmain}
-Release:        0.6.svn%{svnmain}%{?dist}
+Release:        3.svn%{svnmain}%{?dist}
 %else
 Release:        2%{?dist}
 %endif
@@ -237,6 +237,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sun Mar 06 2011 Remi Collet <rpms@famillecollet.com> - 0.9-3.svn580
+- bluegriffon svn 580, locales svn 33
+
 * Mon Feb 28 2011 Remi Collet <rpms@famillecollet.com> - 0.9-2
 - rebuild against xulrunnner 2.0b12
 
