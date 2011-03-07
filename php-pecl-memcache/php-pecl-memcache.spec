@@ -37,7 +37,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 %endif
 Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
-%if %{?php_zend_api}0
+%if 0%{?php_zend_api:1}
 Requires:     %{phpname}(zend-abi) = %{php_zend_api}
 Requires:     %{phpname}(api) = %{php_core_api}
 %else
