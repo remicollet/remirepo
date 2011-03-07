@@ -25,6 +25,9 @@ Patch0:       rrd-build.patch
 # http://pecl.php.net/bugs/22579 - tests are arch dependant
 Patch1:       rrd-tests.patch
 
+# http://pecl.php.net/bugs/22586 - RFE php-strversion
+Patch2:       rrd-features.patch
+
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.2
 BuildRequires: rrdtool
@@ -57,6 +60,7 @@ system for time series data.
 cd %{pecl_name}-%{version}
 %patch0 -p1 -b .build
 %patch1 -p1 -b .tests
+%patch2 -p1 -b .features
 
 cp %{SOURCE3} tests/testData/Makefile
 
@@ -103,7 +107,7 @@ if  grep -q "FAILED TEST" rpmtests.log; then
      echo "*** FAILED: $(basename $t .diff)"
      diff -u tests/$(basename $t .diff).exp tests/$(basename $t .diff).out || :
   done
-%if %{?fedora} >= 14
+%if 0%{?fedora} >= 14
   # tests only succeed with rrdtool 1.4.x
   exit 1
 %endif
@@ -139,6 +143,7 @@ fi
 %changelog
 * Sat Mar 05 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10.0-2
 - improved patches
+- implement rrd_strversion
 
 * Fri Mar 04 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10.0-1
 - Version 0.10.0 (stable) - API 0.10.0 (beta)
