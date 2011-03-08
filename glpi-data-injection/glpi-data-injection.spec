@@ -1,8 +1,8 @@
 %define pluginname   datainjection
 
 Name:           glpi-data-injection
-Version:        2.0.0
-Release:        0.1.beta%{?dist}
+Version:        2.0.1
+Release:        1.beta%{?dist}
 Summary:        Plugin for importing data into GLPI
 Summary(fr):    Extension pour importer des données dans GLPI
 
@@ -11,7 +11,7 @@ License:        GPLv2+
 
 URL:            https://forge.indepnet.net/projects/show/datainjection
 #               This change for each new version
-Source0:        https://forge.indepnet.net/attachments/download/774/glpi-datainjection-2.0.0-beta.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/813/glpi-datainjection-2.0.1-beta.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -92,6 +92,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.1-1.beta
+- update to 2.0.1-beta
+
 * Wed Jan 19 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-0.1.beta
 - update to 2.0.0-beta
 
