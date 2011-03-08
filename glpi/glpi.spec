@@ -7,7 +7,7 @@
 #global svnrelease 12930
 
 Name:           glpi
-Version:        0.78.2
+Version:        0.78.3
 %if 0%{?svnrelease}
 Release:        2.svn%{svnrelease}%{?dist}
 %else
@@ -24,7 +24,7 @@ URL:            http://www.glpi-project.org/
 Source0:        glpi-0.78-%{svnrelease}.tar.gz
 Source99:       mktar.sh
 %else
-Source0:        https://forge.indepnet.net/attachments/download/772/glpi-0.78.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/812/glpi-0.78.3.tar.gz
 %endif
 
 Source1:        glpi-httpd.conf
@@ -245,11 +245,17 @@ fi
 
 
 %changelog
+* Tue Mar  8 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.2-1
+- version 0.78.3 released
+  https://forge.indepnet.net/projects/glpi/versions/537
+
 * Tue Jan 18 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.2-1
 - version 0.78.2 released
+  https://forge.indepnet.net/projects/glpi/versions/529
 
 * Mon Nov 15 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78.1-1
 - version 0.78.1 released
+  https://forge.indepnet.net/projects/glpi/versions/522
 
 * Sun Oct 31 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-2.svn12930
 - Patches from SVN (12691-12930) for know 0.78 issues
@@ -275,6 +281,7 @@ fi
 
 * Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-1
 - version 0.78 released
+  https://forge.indepnet.net/projects/glpi/versions/32
 
 * Sat Sep 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn12452
 - new svn snapshot (which is > RC3)
