@@ -52,7 +52,7 @@ BuildRequires: libuuid-devel
 %else
 BuildRequires: uuid-devel
 %endif
-BuildRequires: gtkmm24-devel
+BuildRequires: gtkmm24-devel >= 2.18
 BuildRequires: libGL-devel
 BuildRequires: sqlite-devel
 %if 0%{?cppconnver:1}
