@@ -7,7 +7,7 @@
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   5.2.29
+Version:   5.2.30
 Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
@@ -149,6 +149,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Mon Nov 22 2010 Remi Collet <Fedora@famillecollet.com> 5.2.30-1
+- update to 5.2.30 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-30.html
+
 * Tue Oct 12 2010 Remi Collet <Fedora@famillecollet.com> 5.2.29-1
 - update to 5.2.29 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-29.html
