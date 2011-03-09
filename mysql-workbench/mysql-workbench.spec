@@ -1,13 +1,16 @@
+%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+
 %global postver -src
+%global mw_version 5.2.32
 %global tartype gpl
-%global cppconnver 1.1.0-0.3.bzr895
+#global cppconnver 1.1.0-0.3.bzr895
 
 # "script_templates" (and some others) shouldn't be compiled
 %global _python_bytecompile_errors_terminate_build 0
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   5.2.30
+Version:   %{mw_version}
 Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
@@ -21,8 +24,8 @@ Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tar
 # don't build extension, use system one
 # !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
 Patch1:    %{name}-5.2.28-cppconn.patch
-Patch2:    %{name}-5.2.27-ctemplate.patch
-Patch3:    %{name}-5.2.28-tinyxml.patch
+Patch2:    %{name}-5.2.32-ctemplate.patch
+Patch3:    %{name}-5.2.32-tinyxml.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -50,14 +53,19 @@ BuildRequires: uuid-devel
 BuildRequires: gtkmm24-devel
 BuildRequires: libGL-devel
 BuildRequires: sqlite-devel
+%if 0%{?cppconnver:1}
 BuildRequires: mysql-connector-c++-devel >= %{cppconnver}
+%endif
 BuildRequires: desktop-file-utils
 BuildRequires: tinyxml-devel
 
 Requires: python-paramiko pexpect python-sqlite2
+Requires: mysql-utilities
 # requires mysql client pkg (for mysqldump and mysql cmdline client)
 Requires: mysql gnome-keyring
+%if 0%{?cppconnver:1}
 Requires: mysql-connector-c++ >= %{cppconnver}
+%endif
 # Official upstream builds (name changes quite often)
 Conflicts: mysql-workbench-oss
 Conflicts: mysql-workbench-ce
@@ -73,13 +81,40 @@ an integrated tools environment for:
 * Database Administration (replacing MySQL Administrator)
 
 
-%prep
-%setup -q -n %{name}-%{tartype}-%{version}%{?postver}
+%package -n mysql-utilities
 
+Summary:        Scripts for managing and administering MySQL servers
+# Not yet published (else will be package separatly)
+# see ext/mysql-utilities/CHANGES.txt
+Version:        1.0.0
+Release:        0%{?dist}
+
+BuildArch:      noarch
+BuildRequires:  python-devel >= 2.4
+%if 0%{?fedora} >= 14
+BuildRequires:  python-sphinx >= 1.0
+%endif
+
+Requires:       mysql-connector-python
+
+%description -n mysql-utilities
+MySQL Utilities contain a collection of scripts useful for managing
+and administering MySQL servers.
+
+
+%prep
+%setup -q -n %{name}-%{tartype}-%{mw_version}%{?postver}
+
+%if 0%{?cppconnver:1}
+# Use system cppconn if an upstream version
 %patch1 -p1 -b .cppconn
+rm -rf ext/cppconn
+%endif
+
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %patch2 -p1 -b .ctemplate
 %endif
+
 %patch3 -p1 -b .tinyxml
 
 touch -r COPYING .timestamp4rpm
@@ -91,7 +126,6 @@ rm -rf ext/boost
 rm -rf ext/curl
 rm -rf ext/libsigc++
 rm -rf ext/yassl
-rm -rf ext/cppconn
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 rm -rf ext/ctemplate
 %endif
@@ -103,14 +137,31 @@ touch po/POTFILES.in
 
 %build
 NOCONFIGURE=yes ./autogen.sh
-%configure --disable-debug
+%configure --disable-debug --enable-mysql-utilities
 
 make %{?_smp_mflags}
+
+%if 0%{?fedora} >= 14
+pushd ext/mysql-utilities
+%{__python} setup.py build_man
+popd
+%endif
 
 
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
+
+pushd ext/mysql-utilities
+%{__install} --directory %{buildroot}%{_prefix}/man/man1
+%{__python} setup.py install --skip-profile --root %{buildroot}
+
+%if 0%{?fedora} >= 14
+%{__install} --directory %{buildroot}%{_mandir}
+%{__mv} %{buildroot}%{_prefix}/man/man1 %{buildroot}%{_mandir}/man1
+%endif
+popd
+
 
 # clean dev files
 echo Cleanup dev file
@@ -140,15 +191,47 @@ update-desktop-database &> /dev/null || :
 
 %files
 %defattr(-, root, root, -)
-%doc AUTHORS COPYING COPYING.LGPL README samples ChangeLog
-%attr(0755,root,root) %{_bindir}/%{name}
-%attr(0755,root,root) %{_bindir}/%{name}-bin
+# NEWS and ChangeLog are empty or outdated
+%doc AUTHORS COPYING COPYING.LGPL README samples
+%{_bindir}/%{name}
+%{_bindir}/%{name}-bin
 %{_datadir}/applications/MySQLWorkbench.desktop
 %{_libdir}/%{name}
 %{_datadir}/%{name}
+%exclude %{_datadir}/doc/%{name}
+
+
+%files -n mysql-utilities
+%defattr(-, root, root, -)
+%doc ext/mysql-utilities/*.txt
+%{_bindir}/mysqldbcopy
+%{_bindir}/mysqldbexport
+%{_bindir}/mysqldbimport
+%{_bindir}/mysqldiff
+%{_bindir}/mysqldiskusage
+%{_bindir}/mysqlindexcheck
+%{_bindir}/mysqlmetagrep
+%{_bindir}/mysqlprocgrep
+%{_bindir}/mysqlreplicate
+%{_bindir}/mysqlserverclone
+%{_bindir}/mysqluserclone
+%{python_sitelib}/mysql/utilities
+%{python_sitelib}/mysql_utilities*
+%if 0%{?fedora} >= 14
+%{_mandir}/man1/*
+%endif
+# empty file already provided by mysql-connector-python
+%exclude %{python_sitelib}/mysql/__init*
 
 
 %changelog
+* Wed Mar 09 2011 Remi Collet <Fedora@famillecollet.com> 5.2.32-1
+- update to 5.2.32 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-32.html
+- use bundled cppconn (which is a fork of svn version...)
+- add mysql-utilities sub-package
+- requires mysql-connector-python
+
 * Mon Nov 22 2010 Remi Collet <Fedora@famillecollet.com> 5.2.30-1
 - update to 5.2.30 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-30.html

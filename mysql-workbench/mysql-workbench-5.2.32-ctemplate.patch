@@ -1,0 +1,15 @@
+diff -up mysql-workbench-gpl-5.2.32-src/ext/Makefile.am.ctemplate mysql-workbench-gpl-5.2.32-src/ext/Makefile.am
+--- mysql-workbench-gpl-5.2.32-src/ext/Makefile.am.ctemplate	2011-03-04 01:54:51.000000000 +0100
++++ mysql-workbench-gpl-5.2.32-src/ext/Makefile.am	2011-03-09 16:15:36.132686915 +0100
+@@ -1,10 +1,5 @@
+ 
+-if BUILD_CTEMPLATE
+-else
+-ctemplate_dirs=ctemplate 
+-endif
+-
+-SUBDIRS=scintilla/gtk cppconn vsqlite++ $(ctemplate_dirs)
++SUBDIRS=scintilla/gtk cppconn vsqlite++
+ 
+ if BUNDLE_UTILITIES
+ all-am:
