@@ -3,6 +3,8 @@
 %global postver -src
 %global mw_version 5.2.32
 %global tartype gpl
+
+# Use system cppconn if a compatible upstream version exists
 #global cppconnver 1.1.0-0.3.bzr895
 
 # "script_templates" (and some others) shouldn't be compiled
@@ -57,7 +59,9 @@ BuildRequires: sqlite-devel
 BuildRequires: mysql-connector-c++-devel >= %{cppconnver}
 %endif
 BuildRequires: desktop-file-utils
-BuildRequires: tinyxml-devel
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
+BuildRequires: tinyxml-devel >= 2.6.0
+%endif
 
 Requires: python-paramiko pexpect python-sqlite2
 Requires: mysql-utilities
@@ -106,7 +110,6 @@ and administering MySQL servers.
 %setup -q -n %{name}-%{tartype}-%{mw_version}%{?postver}
 
 %if 0%{?cppconnver:1}
-# Use system cppconn if an upstream version
 %patch1 -p1 -b .cppconn
 rm -rf ext/cppconn
 %endif
@@ -115,7 +118,10 @@ rm -rf ext/cppconn
 %patch2 -p1 -b .ctemplate
 %endif
 
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 %patch3 -p1 -b .tinyxml
+rm -rf library/tinyxml
+%endif
 
 touch -r COPYING .timestamp4rpm
 %{__sed} -i -e 's/\r//g' COPYING
@@ -129,7 +135,6 @@ rm -rf ext/yassl
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 rm -rf ext/ctemplate
 %endif
-rm -rf library/tinyxml
 
 # avoid "No such file" during configure
 touch po/POTFILES.in
@@ -231,6 +236,7 @@ update-desktop-database &> /dev/null || :
 - use bundled cppconn (which is a fork of svn version...)
 - add mysql-utilities sub-package
 - requires mysql-connector-python
+- use system tinyxml >= 2.6.0 when available
 
 * Mon Nov 22 2010 Remi Collet <Fedora@famillecollet.com> 5.2.30-1
 - update to 5.2.30 Community (OSS) Edition (GPL)
