@@ -6,12 +6,12 @@
 %global sqlite_version 3.7.1
 
 %global mozappdir   %{_libdir}/bluegriffon
-%global tarballdir  mozilla-central
-%global svnmain     580
+%global tarballdir  mozilla-2.0
+%global svnmain     584
 %global svnlocales  33
 
-%global gecko_version   2.0-beta12
-%global srcversion      4.0b12
+%global gecko_version   2.0-rc1
+%global srcversion      4.0rc1
 
 Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
@@ -54,9 +54,11 @@ BuildRequires:  yasm
 %if %{fedora} >= 15
 BuildRequires:  gecko-devel = %{gecko_version}
 %global xulbin xulrunner
+%global grecnf gre
 %else
 BuildRequires:  xulrunner2-devel >= %{xulrunner_version}
 %global xulbin xulrunner2
+%global grecnf gre2
 %endif
 Requires:       gecko-libs%{?_isa} = %{gecko_version}
 
@@ -187,6 +189,7 @@ install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
 XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
 %{__cat} %{SOURCE10} | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g" \
                      | %{__sed} -e "s,XULRUNNER_BIN,%{xulbin},g" \
+		     | %{__sed} -e "s,GRE_CONFIG,%{grecnf},g"  \
   > $RPM_BUILD_ROOT%{_bindir}/%{name}
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
 
@@ -237,6 +240,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Thu Mar 10 2011 Remi Collet <rpms@famillecollet.com> - 0.9-3.svn584
+- bluegriffon svn 584, locales svn 33
+- rebuild against xulrunnner 2.0rc1
+
 * Sun Mar 06 2011 Remi Collet <rpms@famillecollet.com> - 0.9-3.svn580
 - bluegriffon svn 580, locales svn 33
 

@@ -10,11 +10,11 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       RC1 build1 candidate
+%global mycomment       Release Candicate 1
 %global firefox_dir_ver 4
 %global gecko_version   2.0-rc1
 %global pre_version     rc1
-%global pre_tag         .rc1.build1
+%global pre_tag         .rc1
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global tarballdir    mozilla-2.0
@@ -24,15 +24,15 @@
 %define include_debuginfo       0
 
 Summary:        Mozilla Firefox Web browser
-Name:           %{shortname}
+Name:           %{shortname}4
 Version:        4.0
-Release:        0.27%{?pre_tag}%{?dist}
+Release:        0.28%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_version}/source/firefox-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        firefox-langpacks-%{version}%{?pre_version}-20110305.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?pre_version}-20110310.tar.bz2
 %endif
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
@@ -67,8 +67,10 @@ BuildRequires:  system-bookmarks
 BuildRequires:  gecko-devel%{?_isa} = %{gecko_version}
 %if %{fedora} >= 15
 %global xulbin xulrunner
+%global grecnf gre
 %else
 %global xulbin xulrunner2
+%global grecnf gre2
 %endif
 # For WebM support
 BuildRequires:	yasm
@@ -98,7 +100,7 @@ compliance, performance and portability.
 #---------------------------------------------------------------------
 
 %prep
-echo CIBLE = %{name}-%{version}-%{release}
+echo TARGET = %{name}-%{version}-%{release}%{?dist}
 [ -f %{SOURCE1} ] || exit 1
 %setup -q -c
 cd %{tarballdir}
@@ -241,6 +243,7 @@ XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,
 %{__cat} %{SOURCE21} | %{__sed} -e 's,FIREFOX_VERSION,%{firefox_dir_ver},g' \
 		     | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g"  \
 		     | %{__sed} -e "s,XULRUNNER_BIN,%{xulbin},g"  \
+		     | %{__sed} -e "s,GRE_CONFIG,%{grecnf},g"  \
 		     | %{__sed} -e "s,FIREFOX_BIN,%{name},g" \
   > $RPM_BUILD_ROOT%{_bindir}/%{name}
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
@@ -390,6 +393,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Mar 10 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.28.rc1
+- Firefox 4.0 Release Candidate 1
+
+* Wed Mar  9 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.19
+- Firefox 4.0 RC 1
+
 * Sat Mar 05 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.27.rc1.build1
 - Firefox 4.0 RC1 build1 candidate
 

@@ -67,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        0.24%{?pre_tag}%{?dist}
+Release:        0.25%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -210,6 +210,7 @@ for writing XUL+XPCOM applications with Mozilla XULRunner and Gecko.
 #---------------------------------------------------------------------
 
 %prep
+echo TARGET = %{name}-%{version}-%{release}%{?dist}
 %setup -q -c
 cd %{tarballdir}
 
@@ -541,6 +542,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Mar 10 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.25.rc1
+- Update to 2.0 RC1
+
+* Wed Mar  9 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.26
+- Update to 2.0 RC 1
+
 * Sat Mar 05 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.24.rc1.build1
 - Update to 2.0 RC1 build1 candidate
 

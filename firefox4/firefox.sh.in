@@ -70,9 +70,9 @@ MOZ_LAUCHER="$MOZ_DIST_BIN/run-mozilla.sh"
 ##
 ## Set MOZ_GRE_CONF
 ##
-MOZ_GRE_CONF=/etc/gre.d/gre2.conf
+MOZ_GRE_CONF=/etc/gre.d/GRE_CONFIG.conf
 if [ "$MOZ_LIB_DIR" == "/usr/lib64" ]; then
-  MOZ_GRE_CONF=/etc/gre.d/gre2-64.conf
+  MOZ_GRE_CONF=/etc/gre.d/GRE_CONFIG-64.conf
 fi
 export MOZ_GRE_CONF
 
