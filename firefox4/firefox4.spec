@@ -24,7 +24,7 @@
 %define include_debuginfo       0
 
 Summary:        Mozilla Firefox Web browser
-Name:           %{shortname}4
+Name:           %{shortname}
 Version:        4.0
 Release:        0.28%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
