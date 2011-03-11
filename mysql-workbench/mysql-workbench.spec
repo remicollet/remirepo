@@ -1,7 +1,7 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 %global postver -src
-%global mw_version 5.2.32
+%global mw_version 5.2.33
 %global tartype gpl
 
 # Use system cppconn if a compatible upstream version exists
@@ -91,7 +91,7 @@ Summary:        Scripts for managing and administering MySQL servers
 # Not yet published (else will be package separatly)
 # see ext/mysql-utilities/CHANGES.txt
 Version:        1.0.0
-Release:        0%{?dist}
+Release:        0.%{mw_version}%{?dist}
 
 BuildArch:      noarch
 BuildRequires:  python-devel >= 2.4
@@ -230,6 +230,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Mar 11 2011 Remi Collet <Fedora@famillecollet.com> 5.2.33-1
+- update to 5.2.33 Community (OSS) Edition (GPL)
+
 * Wed Mar 09 2011 Remi Collet <Fedora@famillecollet.com> 5.2.32-1
 - update to 5.2.32 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-32.html
