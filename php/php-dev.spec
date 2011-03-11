@@ -26,7 +26,7 @@
 %define mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate 201012011530
-%global phpversion 5.3.6RC2
+%global phpversion 5.3.6RC3
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -55,7 +55,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.3.6
-Release: 0.2.RC2%{?dist}
+Release: 0.3.RC3%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -1276,6 +1276,9 @@ fi
 %endif
 
 %changelog
+* Fri Mar 11 2011 Remi Collet <rpms@famillecollet.com> 5.3.6-0.3.RC3
+- PHP 5.3.6RC3
+
 * Thu Mar 03 2011 Remi Collet <rpms@famillecollet.com> 5.3.6-0.2.RC2
 - PHP 5.3.6RC2
 - add Arch specific ABI macro (from rawhide)
