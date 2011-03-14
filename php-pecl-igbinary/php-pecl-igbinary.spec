@@ -1,4 +1,4 @@
-%{!?phpname:		%{expand: %%global phpname     php}}
+%{!?phpname: %{expand: %%global phpname php}}
 
 %if %{phpname} == php
 %global phpbindir      %{_bindir}
@@ -10,31 +10,37 @@
 %global phpincldir     %{_includedir}/%{phpname}
 %endif
 
-%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 %{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global    extname   igbinary
 
 
 Summary:        Replacement for the standard PHP serializer
-Name:           %{phpname}-igbinary
+Name:           %{phpname}-pecl-igbinary
 Version:        1.1.1
-Release:        2%{?dist}
+Release:        1%{?dist}
+# http://pecl.php.net/bugs/22599
 License:        BSD
 Group:          System Environment/Libraries
 
-URL:            http://opensource.dynamoid.com/
-Source0:        http://opensource.dynamoid.com/%{extname}-%{version}.tar.gz
+URL:            http://pecl.php.net/package/igbinary
+Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
+# http://pecl.php.net/bugs/22598
+Source1:        %{extname}-tests.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
-BuildRequires:  %{phpname}-pecl-apc-devel %{phpname}-pear
+BuildRequires:  %{phpname}-pecl-apc-devel >= 3.1.7
+BuildRequires:  %{phpname}-pear
+BuildRequires:  %{phpname}-devel >= 5.2.0
 
-%if %{?php_zend_api}0
+Requires(post): %{__pecl}
+Requires(postun): %{__pecl}
 Requires:       %{phpname}(zend-abi) = %{php_zend_api}
 Requires:       %{phpname}(api) = %{php_core_api}
-%else
-Requires:       php-api = %{php_apiver}
-%endif
+Obsoletes:      %{phpname}-%{extname} <= 1.1.1
+Provides:       %{phpname}-%{extname} = %{version}-%{release}
+Provides:       %{phpname}-%{extname}%{?_isa} = %{version}-%{release}
+Provides:       %{phpname}-pecl(%{extname}) = %{version}
 
 
 %if 0%{?fedora}%{?rhel} > 4
@@ -57,18 +63,23 @@ based storages for serialized data.
 %package devel
 Summary:       Igbinary developer files (header)
 Group:         Development/Libraries
-Requires:      php-igbinary = %{version}-%{release}
-Requires:      php-devel
+Requires:      %{phpname}-pecl-%{extname}%{?_isa} = %{version}-%{release}
+Requires:      %{phpname}-devel%{?_isa}
+Obsoletes:     %{phpname}-%{extname}-devel <= 1.1.1
+Provides:      %{phpname}-%{extname}-devel = %{version}-%{release}
+Provides:      %{phpname}-%{extname}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using Igbinary
 
 
 %prep
-%setup -q -n %{extname}-%{version}
-
+%setup -q -c
+cd %{extname}-%{version}
+%{__tar} xzf %{SOURCE1}
 
 %build
+cd %{extname}-%{version}
 %{phpbindir}/phpize
 %{configure} --with-php-config=%{phpbindir}/php-config
 %{__make} %{?_smp_mflags}
@@ -76,6 +87,11 @@ These are the files needed to compile programs using Igbinary
 
 %install
 %{__rm} -rf %{buildroot}
+
+%{__mkdir_p} %{buildroot}%{pecl_xmldir}
+%{__install} -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+cd %{extname}-%{version}
 %{__make} install INSTALL_ROOT=%{buildroot}
 
 %{__mkdir} -p %{buildroot}%{phpconfdir}/php.d/
@@ -96,7 +112,10 @@ EOF
 
 
 %check
+cd %{extname}-%{version}
+
 # simple module load test
+# (without APC to ensure than can run without)
 %{phpbindir}/php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{extname}.so \
@@ -113,19 +132,43 @@ grep -q "FAILED TEST" rpmtests.log && exit 1
 %{__rm} -rf %{buildroot}
 
 
+%if 0%{?pecl_install:1}
+%post
+%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%endif
+
+
+%if 0%{?pecl_uninstall:1}
+%postun
+if [ $1 -eq 0 ] ; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+fi
+%endif
+
+
+
 %files
 %defattr(-,root,root,-)
-%doc COPYING CREDITS ChangeLog NEWS README
+%doc %{extname}-%{version}/COPYING
+%doc %{extname}-%{version}/CREDITS
+%doc %{extname}-%{version}/ChangeLog
+%doc %{extname}-%{version}/NEWS
+%doc %{extname}-%{version}/README
 %config(noreplace) %{phpconfdir}/php.d/%{extname}.ini
 %{php_extdir}/%{extname}.so
+%{pecl_xmldir}/%{name}.xml
 
 
 %files devel
 %defattr(-,root,root,-)
-%{phpincldir}/php/ext/%{extname}/%{extname}.h
+%{phpincldir}/php/ext/%{extname}
 
 
 %changelog
+* Mon Mar 14 2011 Remi Collet <rpms@famillecollet.com> 1.1.1-1
+- version 1.1.1 published on pecl.php.net
+- rename to php-pecl-igbinary
+
 * Mon Jan 17 2011 Remi Collet <rpms@famillecollet.com> 1.1.1-2
 - allow relocation using phpname macro
 
