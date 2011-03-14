@@ -141,7 +141,7 @@ grep -q "FAILED TEST" rpmtests.log && exit 1
 %if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
-    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+    %{pecl_uninstall} %{extname} >/dev/null || :
 fi
 %endif
 
