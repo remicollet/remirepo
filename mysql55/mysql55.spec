@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.9
+Version: 5.5.10
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -20,6 +20,7 @@ Source0: mysql-%{version}.tar.gz
 # the tarball into the current directory:
 # ./generate-tarball.sh $VERSION
 # Source1: generate-tarball.sh not used for remi repo
+Source1: mysql.sysconfig
 Source2: mysql.init
 Source3: my.cnf
 Source4: scriptstub.c
@@ -182,11 +183,6 @@ the MySQL sources.
 
 # Can't provide this file (by licence)
 rm -f Docs/mysql.info
-
-# change libmysqlclient.so soname to 161
-# to allow install with libmysqlclient16 (from 5.1.x branch)
-# and solves broken dependencies
-sed -i -e '/SHARED_LIB_MAJOR_VERSION/s/16/161/' cmake/mysql_version.cmake
 
 
 %patch1 -p1
@@ -375,7 +371,9 @@ touch $RPM_BUILD_ROOT/var/log/mysqld.log
 
 mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
 mkdir -p $RPM_BUILD_ROOT/var/run/mysqld
+mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
 install -m 0755 -d $RPM_BUILD_ROOT/var/lib/mysql
+install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mysqld
 install -m 0755 %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mysqld
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
 
@@ -527,7 +525,7 @@ fi
 # libs package because it can be used for client settings too.
 %config(noreplace) /etc/my.cnf
 %dir %{_libdir}/mysql
-%{_libdir}/mysql/libmysqlclient.so.*
+%{_libdir}/mysql/libmysqlclient.so.18.*
 /etc/ld.so.conf.d/*
 
 %dir %{_datadir}/mysql
@@ -633,6 +631,7 @@ fi
 %attr(0755,mysql,mysql) %dir /var/run/mysqld
 %attr(0755,mysql,mysql) %dir /var/lib/mysql
 %attr(0640,mysql,mysql) %config(noreplace) %verify(not md5 size mtime) /var/log/mysqld.log
+%config(noreplace) /etc/sysconfig/mysqld
 
 %files devel
 %defattr(-,root,root)
@@ -667,6 +666,13 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Tue Mar 15 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.10-1
+- update to MySQL 5.5.10 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-10.html
+- provides /etc/sysconfig/mysqld
+- fix default my.cnf
+- client ABI bump to .18 by upstream
+
 * Mon Feb 07 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.9-1
 - sync with rawhide (latest patches for 5.5.8)
 - update to MySQL 5.5.9 Community Server GA
