@@ -1,10 +1,14 @@
-%global bzr 888
+%global bzr 895
 
 
 Summary:    MySQL database connector for C++
 Name:       mysql-connector-c++
 Version:    1.1.0
-Release:    0.2.bzr%{?bzr}%{?dist}
+%if 0%{?bzr}
+Release:    0.7.bzr%{?bzr}%{?dist}
+%else
+Release:    1%{?dist}
+%endif
 Group:      System Environment/Libraries
 License:    GPLv2 with exceptions
 
@@ -12,14 +16,17 @@ License:    GPLv2 with exceptions
 URL:        http://forge.mysql.com/wiki/Connector_C++
 
 %if 0%{?bzr}
-# bzr branch -r 888 lp:~mysql/mysql-connector-cpp/trunk mysql-connector-c++-1.1.0
+# bzr branch -r 895 lp:~mysql/mysql-connector-cpp/trunk mysql-connector-c++-1.1.0
 # less mysql-connector-c++-1.1.0/driver/mysql_metadata.cpp 
 # check getDriverMajorVersion / getDriverMinorVersion / getDriverPatchVersion
-# tar czf mysql-connector-c++-bzr888.tgz --exclude .bzr mysql-connector-c++-1.1.0
+# tar czf mysql-connector-c++-bzr895.tgz --exclude .bzr mysql-connector-c++-1.1.0
 # rm -rf mysql-connector-c++-1.1.0
-Source0:    mysql-connector-c++-bzr%{bzr}.tgz
+Source0:    %{name}-bzr%{bzr}.tgz
 %else
-Source0:    http://dev.mysql.com/get/Downloads/Connector-C++/%{name}-%{version}.tar.gz
+# Upstream has a mirror redirector for downloads, so the URL is hard to
+# represent statically.  You can get the tarball by following a link from
+# http://dev.mysql.com/downloads/connector/cpp
+Source0:    %{name}-%{version}.tar.gz
 %endif
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -101,6 +108,9 @@ rm -rf %{buildroot}
 %exclude %{_libdir}/libmysqlcppconn-static.a
 %exclude %{_prefix}/COPYING
 %exclude %{_prefix}/README
+%if 0%{?bzr} == 0
+%exclude %{_prefix}/ANNOUNCEMENT
+%endif
 
 %files devel
 %defattr(-,root,root,-)
@@ -111,6 +121,21 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 15 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.0-0.7.bzr895
+- rebuild for new mysql client ABI (.18)
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-0.6.bzr895
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Tue Dec 28 2010 Remi Collet <Fedora@famillecollet.com> 1.1.0-0.5.bzr895
+- rebuilt for MySQL 5.5.8
+
+* Wed Sep 29 2010 jkeating - 1.1.0-0.4.bzr895
+- Rebuilt for gcc bug 634757
+
+* Mon Sep 20 2010 Remi Collet <Fedora@famillecollet.com> 1.1.0-0.3.bzr895
+- update to 1.1.0 from bzr snapshot 895 (for Workbench 5.2.28)
+
 * Mon Aug 09 2010 Remi Collet <Fedora@famillecollet.com> 1.1.0-0.2.bzr888
 - Changes from review (#622272)
 

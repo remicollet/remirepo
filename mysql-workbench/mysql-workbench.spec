@@ -13,7 +13,7 @@
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   %{mw_version}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -230,6 +230,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Tue Mar 15 2011 Remi Collet <Fedora@FamilleCollet.com> 5.2.33-1
+- rebuild for new mysql client ABI (.18)
+
 * Fri Mar 11 2011 Remi Collet <Fedora@famillecollet.com> 5.2.33-1
 - update to 5.2.33 Community (OSS) Edition (GPL)
 

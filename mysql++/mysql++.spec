@@ -1,7 +1,7 @@
 Summary:    C++ wrapper for the MySQL C API
 Name:       mysql++
 Version:    3.1.0
-Release:    6%{?dist}
+Release:    7%{?dist}
 License:    LGPLv2
 Group:      Development/Libraries
 URL:        http://tangentsoft.net/mysql++/
@@ -137,6 +137,9 @@ rm -rf %{buildroot} doc/examples
 
 
 %changelog
+* Tue Mar 15 2011 Remi Collet <Fedora@FamilleCollet.com> 3.1.0-7
+- rebuild for new mysql client ABI (.18)
+
 * Sat Feb 12 2011 Remi Collet <Fedora@FamilleCollet.com> 3.1.0-6
 - arch specific requires
 

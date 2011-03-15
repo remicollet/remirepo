@@ -525,7 +525,7 @@ fi
 # libs package because it can be used for client settings too.
 %config(noreplace) /etc/my.cnf
 %dir %{_libdir}/mysql
-%{_libdir}/mysql/libmysqlclient.so.18.*
+%{_libdir}/mysql/libmysqlclient.so.18*
 /etc/ld.so.conf.d/*
 
 %dir %{_datadir}/mysql

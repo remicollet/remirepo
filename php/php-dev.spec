@@ -55,7 +55,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.3.6
-Release: 0.3.RC3%{?dist}
+Release: 0.4.RC3%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -1276,6 +1276,9 @@ fi
 %endif
 
 %changelog
+* Tue Mar 15 2011 Remi Collet <Fedora@FamilleCollet.com> 5.3.6-0.4.RC3
+- rebuild for new mysql client ABI (.18)
+
 * Fri Mar 11 2011 Remi Collet <rpms@famillecollet.com> 5.3.6-0.3.RC3
 - PHP 5.3.6RC3
 
