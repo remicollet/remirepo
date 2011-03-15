@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<book xmlns:fo="http://www.w3.org/1999/XSL/Format"
+	title="MySQL++: C++ wrapper for MySQL’s C API"
+	name="mysql++"
+	link="userman/index.html">
+  <chapters>
+    <sub name="User Manual" link="userman/index.html"/>
+    <sub name="Reference Manual" link="refman/index.html"/>
+  </chapters>
+</book>
+

@@ -1,0 +1,32 @@
+diff -up mysql++-3.1.0/ssx/genv2.cpp.build mysql++-3.1.0/ssx/genv2.cpp
+--- mysql++-3.1.0/ssx/genv2.cpp.build	2010-06-20 08:29:51.000000000 +0200
++++ mysql++-3.1.0/ssx/genv2.cpp	2010-06-20 08:32:56.000000000 +0200
+@@ -35,6 +35,7 @@
+ #include <iostream>
+ #include <fstream>
+ #include <typeinfo>
++#include <string.h>
+ 
+ using namespace std;
+ 
+diff -up mysql++-3.1.0/lib/refcounted.h.gcc mysql++-3.1.0/lib/refcounted.h
+--- mysql++-3.1.0/lib/refcounted.h.gcc	2011-02-11 19:17:49.000000000 +0100
++++ mysql++-3.1.0/lib/refcounted.h	2011-02-11 19:18:08.000000000 +0100
+@@ -101,7 +101,7 @@ public:
+ 	{
+ 		std::auto_ptr<T> exception_guard(counted_);
+ 		if (counted_) {
+-			refs_ = new size_t(1);
++			refs_ = new std::size_t(1);
+ 		}
+ 		exception_guard.release();	// previous new didn't throw
+ 	}
+@@ -255,7 +255,7 @@ private:
+ 	/// We can't keep this as a plain integer because this object
+ 	/// allows itself to be copied.  All copies need to share this
+ 	/// reference count, not just the pointer to the counted object.
+-	size_t* refs_;
++	std::size_t* refs_;
+ };
+ 
+ 
