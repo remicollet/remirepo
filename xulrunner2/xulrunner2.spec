@@ -16,7 +16,7 @@
 %global gecko_dir_ver 2
 %global alpha_version 0
 %global beta_version  0
-%global rc_version    1
+%global rc_version    2
 
 %global mozappdir         %{_libdir}/%{shortname}-%{gecko_dir_ver}
 %global tarballdir        mozilla-2.0
@@ -67,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        0.25%{?pre_tag}%{?dist}
+Release:        0.26%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -113,9 +113,9 @@ BuildRequires:  bzip2-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libIDL-devel
 BuildRequires:  gtk2-devel
-BuildRequires:  gnome-vfs2-devel
-BuildRequires:  libgnome-devel
-BuildRequires:  libgnomeui-devel
+#BuildRequires:  gnome-vfs2-devel
+#BuildRequires:  libgnome-devel
+#BuildRequires:  libgnomeui-devel
 BuildRequires:  krb5-devel
 BuildRequires:  pango-devel
 BuildRequires:  freetype-devel >= %{freetype_version}
@@ -136,6 +136,9 @@ BuildRequires:  libcurl-devel
 BuildRequires:  lcms-devel >= %{lcms_version}
 %ifarch %{ix86} x86_64
 BuildRequires:  wireless-tools-devel
+%endif
+%if %{fedora} >= 13
+BuildRequires:  libvpx-devel
 %endif
 
 Requires:       mozilla-filesystem
@@ -181,9 +184,9 @@ Requires: bzip2-devel
 Requires: zlib-devel
 Requires: libIDL-devel
 Requires: gtk2-devel
-Requires: gnome-vfs2-devel
-Requires: libgnome-devel
-Requires: libgnomeui-devel
+#Requires: gnome-vfs2-devel
+#Requires: libgnome-devel
+#Requires: libgnomeui-devel
 Requires: krb5-devel
 Requires: pango-devel
 Requires: freetype-devel >= %{freetype_version}
@@ -250,6 +253,9 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %endif
 %ifarch %{ix86} x86_64
   | grep -v disable-necko-wifi     \
+%endif
+%if %{fedora} < 13
+  | grep -v with-system-libvpx     \
 %endif
   | tee .mozconfig
 
@@ -542,6 +548,17 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Mar 19 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.26.rc2
+- Update to 2.0 RC1
+
+* Fri Mar 18 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.28
+- Update to 2.0 RC2
+
+* Thu Mar 17 2011 Jan Horak <jhorak@redhat.com> - 2.0-0.27
+- Disabled gnomevfs
+- Enabled gio
+- Build with system libvpx
+
 * Thu Mar 10 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.25.rc1
 - Update to 2.0 RC1
 
