@@ -27,7 +27,7 @@
 # arch detection heuristic used by bindir/mysql_config.
 %define mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.3.5
+%global phpversion 5.3.6
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -47,7 +47,7 @@
 %global with_fpm 0
 %endif
 
-%if %{?__isa:1}
+%if 0%{?__isa:1}
 %global isasuffix -%{__isa}
 %else
 %global isasuffix %nil
@@ -59,8 +59,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.5
-Release: 6%{?dist}
+Version: 5.3.6
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -75,14 +75,14 @@ Source6: php-fpm.init
 Source7: php-fpm.logrotate
 
 # Build fixes
-Patch1: php-5.3.4-gnusrc.patch
+Patch1: php-5.3.6-gnusrc.patch
 Patch2: php-5.3.0-install.patch
 Patch3: php-5.2.4-norpath.patch
 Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.3.5-aconf26x.patch
+Patch8: php-5.3.6-aconf26x.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -94,10 +94,6 @@ Patch41: php-5.3.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.3.4-phpize.patch
-
-# Security patch from upstream SVN
-# http://svn.php.net/viewvc?view=revision&revision=306154
-Patch50: php-5.3.4-cve.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
@@ -337,7 +333,7 @@ without running a separate RDBMS process.
 %package mysql
 Summary: A module for PHP applications that use MySQL databases
 Group: Development/Languages
-Requires: %{phpname}-common%{?_isa} = %{version}-%{release}, %{phpname}-pdo
+Requires: %{phpname}-common%{?_isa} = %{version}-%{release}, %{phpname}-pdo%{?_isa}
 Provides: %{phpname}_database
 Provides: %{phpname}-mysqli, %{phpname}-mysqli%{?_isa}
 Provides: %{phpname}-pdo_mysql, %{phpname}-pdo_mysql%{?_isa}
@@ -644,9 +640,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p0 -b .headers
-%patch44 -p1 -b .mysqlcheck
-
-%patch50 -p4 -b .cve
 
 %patch61 -p1 -b .tests-wddx
 %patch62 -p0 -b .tests
@@ -1356,6 +1349,10 @@ fi
 %endif
 
 %changelog
+* Thu Mar 17 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-1
+- update to 5.3.6
+  http://www.php.net/ChangeLog-5.php#5.3.6
+
 * Tue Mar 15 2011 Joe Orton <jorton@redhat.com> - 5.3.5-6
 - disable zip extension per "No Bundled Libraries" policy (#551513)
 

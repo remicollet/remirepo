@@ -23,7 +23,7 @@ Summary: PHP accelerator, optimizer, encoder and dynamic content cacher
 Name: %{phpname}-eaccelerator
 Version: 0.9.6.1
 #Release: 0.2%{?svn:.svn%{svn}}%{?dist}
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 1
 # The eaccelerator module itself is GPLv2+
 # The PHP control panel is under the Zend license (control.php and dasm.php)
@@ -39,7 +39,7 @@ Source1: php-eaccelerator.cron
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 # ABI check is not enough for this extension (http://eaccelerator.net/ticket/438)
-Requires: %{phpname}-common = %{php_version}
+Requires: %{phpname}-common%{?_isa} = %{php_version}
 Provides: %{phpname}-zend_extension
 Conflicts: %{phpname}-mmcache %{phpname}-pecl-apc
 BuildRequires: %{phpname}-devel >= 5.1.0
@@ -154,6 +154,12 @@ fi
 
 
 %changelog
+* Thu Mar 17 2011 Remi Collet <Fedora@FamilleCollet.com> - 1:0.9.6.1-5
+- rebuild against PHP 5.3.6
+
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.6.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Sat Jan 08 2011 Remi Collet <Fedora@FamilleCollet.com> - 1:0.9.6.1-4
 - allow relocation with %%{phpname} macro
 
