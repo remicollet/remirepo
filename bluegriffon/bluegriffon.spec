@@ -7,18 +7,18 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-2.0
-%global svnmain     584
-%global svnlocales  33
+%global svnmain     597
+%global svnlocales  36
 
-%global gecko_version   2.0-rc1
-%global srcversion      4.0rc1
+%global gecko_version   2.0-rc2
+%global srcversion      4.0rc2
 
 Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
-Version:        0.9
+Version:        0.9.1
 %if %{svnmain}
-Release:        3.svn%{svnmain}%{?dist}
+Release:        0.svn%{svnmain}%{?dist}
 %else
 Release:        2%{?dist}
 %endif
@@ -147,6 +147,8 @@ ac_add_options --disable-javaxpcom
 ac_add_options --disable-crashreporter
 ac_add_options --enable-safe-browsing
 ac_add_options --disable-updater
+ac_add_options --enable-gio
+ac_add_options --disable-gnomevfs
 ac_add_options --enable-libxul
 EOF_MOZCONFIG
 
@@ -240,6 +242,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sat Mar 19 2011 Remi Collet <rpms@famillecollet.com> - 0.9.1-0.svn597
+- bluegriffon svn 597, locales svn 36
+- rebuild against xulrunnner 2.0rc2
+
 * Thu Mar 10 2011 Remi Collet <rpms@famillecollet.com> - 0.9-3.svn584
 - bluegriffon svn 584, locales svn 33
 - rebuild against xulrunnner 2.0rc1

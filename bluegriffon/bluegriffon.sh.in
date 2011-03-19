@@ -63,7 +63,7 @@ fi
 MOZ_DIST_BIN="$MOZ_LIB_DIR/bluegriffon"
 MOZ_XUL_DIR="$MOZ_LIB_DIR/XULRUNNER_DIRECTORY"
 MOZ_PROGRAM="/usr/bin/XULRUNNER_BIN $MOZ_DIST_BIN/$MOZ_BLUEGRIFFON_FILE"
-MOZ_LAUCHER="$MOZ_DIST_BIN/run-mozilla.sh"
+MOZ_LAUNCHER="$MOZ_DIST_BIN/run-mozilla.sh"
  
 ##
 ## Set MOZ_GRE_CONF
@@ -175,7 +175,7 @@ done
 debugging=0
 if [ $debugging = 1 ]
 then
-  echo $MOZ_LAUCHER $script_args $MOZ_PROGRAM "$@"
+  echo $MOZ_LAUNCHER $script_args $MOZ_PROGRAM "$@"
 fi
 
-exec $MOZ_LAUCHER $script_args $MOZ_PROGRAM "$@"
+exec $MOZ_LAUNCHER $script_args $MOZ_PROGRAM "$@"
