@@ -10,13 +10,14 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Release Candicate 1
+%global mycomment       Release Candidate 2
 %global firefox_dir_ver 4
-%global gecko_version   2.0-rc1
-%global pre_version     rc1
-%global pre_tag         .rc1
+%global gecko_version   2.0-rc2
+%global pre_version     rc2
+%global pre_tag         .%{?pre_version}
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
+%global langpackdir   %{mozappdir}/langpacks
 %global tarballdir    mozilla-2.0
 
 %define official_branding       1
@@ -26,13 +27,13 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        4.0
-Release:        0.28%{?pre_tag}%{?dist}
+Release:        0.29%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_version}/source/firefox-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        firefox-langpacks-%{version}%{?pre_version}-20110310.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?pre_version}-20110319.tar.bz2
 %endif
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
@@ -83,14 +84,6 @@ Provides:       webclient
 Obsoletes:      firefox4
 Provides:       firefox4 = %{version}-%{release}
 %endif
-
-
-# 10k of 11k files are in langpacks
-%{?filter_setup:
-%filter_provides_in %{mozappdir}/langpacks
-%filter_requires_in %{mozappdir}/langpacks
-%filter_setup
-}
 
 
 %description
@@ -279,22 +272,26 @@ XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,
 
 echo > ../%{name}.lang
 %if %{build_langpacks}
-# Install langpacks
-%{__mkdir_p} $RPM_BUILD_ROOT/%{mozappdir}/langpacks
-%{__tar} xjf %{SOURCE1}
+# Extract langpacks, make any mods needed, repack the langpack, and install it.
+%{__mkdir_p} $RPM_BUILD_ROOT%{langpackdir}
+%{__tar} xf %{SOURCE1}
 for langpack in `ls firefox-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
-  extensiondir=$RPM_BUILD_ROOT/%{mozappdir}/langpacks/langpack-$language@firefox.mozilla.org
-  %{__mkdir_p} $extensiondir
-  unzip -q $langpack -d $extensiondir
-  find $extensiondir -type f | xargs chmod 644
+  extensionID=langpack-$language@firefox.mozilla.org
+  %{__mkdir_p} $extensionID
+  unzip -q $langpack -d $extensionID
+  find $extensionID -type f | xargs chmod 644
 
   sed -i -e "s|browser.startup.homepage.*$|browser.startup.homepage=%{homepage}|g;" \
-         $extensiondir/chrome/$language/locale/branding/browserconfig.properties
+     $extensionID/chrome/$language/locale/branding/browserconfig.properties
 
+  cd $extensionID
+  zip -qr9mX ../${extensionID}.xpi *
+  cd -
+
+  %{__install} -m 644 ${extensionID}.xpi $RPM_BUILD_ROOT%{langpackdir}
   language=`echo $language | sed -e 's/-/_/g'`
-  extensiondir=`echo $extensiondir | sed -e "s,^$RPM_BUILD_ROOT,,"`
-  echo "%%lang($language) $extensiondir" >> ../%{name}.lang
+  echo "%%lang($language) %{langpackdir}/${extensionID}.xpi" >> ../%{name}.lang
 done
 %{__rm} -rf firefox-langpacks
 %endif # build_langpacks
@@ -393,6 +390,15 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Mar 19 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.29.rc2
+- Firefox 4.0 Release Candidate 2
+
+* Fri Mar 18 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.21
+- Firefox 4.0 RC 2
+
+* Thu Mar 17 2011 Jan Horak <jhorak@redhat.com> - 4.0-0.20
+- Rebuild against xulrunner with disabled gnomevfs and enabled gio
+
 * Sat Mar 10 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.28.rc1
 - Firefox 4.0 Release Candidate 1
 
