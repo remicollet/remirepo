@@ -2,17 +2,19 @@
 
 Name:           mysql-connector-python
 Version:        0.3.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MySQL Connector/Python 
 
 Group:          Development/Languages
-License:        GPLv2+
+License:        GPLv2 with exceptions
 URL:            https://launchpad.net/myconnpy
 Source0:        http://launchpad.net/myconnpy/0.3/%{version}/+download/%{name}-%{version}-devel.tar.gz
 
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  python-devel
+# for unittest
+BuildRequires:  mysql-server
 
 
 %description
@@ -35,6 +37,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install --root $RPM_BUILD_ROOT
 
 
+%check
+%{__python} unittests.py --mysql-basedir=%{_prefix}
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -47,6 +53,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Mar 20 2011 Remi Collet <Fedora@famillecollet.com> 0.3.2-2
+- run unittest during %%check
+- fix License
+
 * Wed Mar 09 2011 Remi Collet <Fedora@famillecollet.com> 0.3.2-1
 - first RPM
 
