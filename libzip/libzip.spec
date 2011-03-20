@@ -1,19 +1,21 @@
 # Fedora Review Request #393041
 # https://bugzilla.redhat.com/show_bug.cgi?id=393041
 
-Name:           libzip
-Version:        0.9.3
-Release:        3%{?dist}
+Name:           libzip2
+Version:        0.10
+Release:        1%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
-Group:          System Environment/Libraries
+Group:          Applications/File
 License:        BSD
 URL:            http://www.nih.at/libzip/index.html
-Source0:        http://www.nih.at/libzip/%{name}-%{version}.tar.bz2
+Source0:        http://www.nih.at/libzip/libzip-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  automake libtool
 BuildRequires:  zlib-devel
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+
 
 %description
 libzip is a C library for reading, creating, and modifying zip archives. Files
@@ -22,17 +24,25 @@ other zip archives. Changes made without closing the archive can be reverted.
 The API is documented by man pages.
 
 %package devel
-Summary: Development files for %{name}
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Summary:   Development files for %{name}
+Group:     Development/Libraries
+Requires:  %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 
+%package libs
+Summary: Tools files for %{name}
+Group:   System Environment/Libraries
+
+%description libs
+The %{name}-tools package contains tools that use %{name}.
+
+
 %prep
-%setup -q
+%setup -q -n libzip-%{version}
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 #if "%{_libdir}" != "/usr/lib"
@@ -51,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
+# Need to check this, for multilib
+mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h $RPM_BUILD_ROOT%{_includedir}
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -63,22 +76,29 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS NEWS README THANKS TODO
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
 %{_bindir}/ziptorrent
-%{_libdir}/libzip.so.1*
 %{_mandir}/man1/*zip*
+
+%files libs
+%defattr(-,root,root,-)
+%doc AUTHORS NEWS README THANKS TODO
+%{_libdir}/libzip.so.2*
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/zip.h
+%{_includedir}/zip*.h
 %{_libdir}/libzip.so
 %{_libdir}/pkgconfig/libzip.pc
 %{_mandir}/man3/*zip*
 
 
 %changelog
+* Sun Mar 20 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10-1
+- update to 0.10
+- rename to libzip2 and split tools in sub package
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
