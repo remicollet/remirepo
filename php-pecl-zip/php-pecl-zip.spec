@@ -19,6 +19,8 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:      bug38943.inc
 Source2:      xml2changelog
 
+Patch0:       zip-systemlibzip.patch
+
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel, zlib-devel
 BuildRequires: php-pear(PEAR) >= 1.7.0
@@ -43,11 +45,14 @@ Zip est une extension pour créer et lire les archives au format ZIP.
 %{_bindir}/php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 10
 %{__cp} %{SOURCE1} %{pecl_name}-%{version}/tests/bug38943.inc
 
+cd %{pecl_name}-%{version}
+%patch0 -p1 -b .systemlibzip
+
 
 %build
 cd %{pecl_name}-%{version}
 phpize
-%configure
+%configure --with-libzip-dir=%{_prefix}
 %{__make} %{?_smp_mflags}
 
 
