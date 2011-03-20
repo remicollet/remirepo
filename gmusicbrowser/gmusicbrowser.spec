@@ -1,7 +1,7 @@
 Name:      gmusicbrowser
 Summary:   Jukebox for large collections of music files
 Version:   1.1.7
-Release:   1%{?dist}
+Release:   1%{?dist}.1
 License:   GPLv3+
 Group:     Applications/Multimedia
 
@@ -12,6 +12,7 @@ Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 BuildRequires:    desktop-file-utils
+BuildRequires:    perl-devel
 Requires(post):   desktop-file-utils
 Requires(postun): desktop-file-utils
 
@@ -129,6 +130,9 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Sun Mar 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.7-1.1
+- missing BR on perl-devel for filter
+
 * Sun Mar 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.7-1
 - update to development version 1.1.7
 
