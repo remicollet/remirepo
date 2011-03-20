@@ -1,11 +1,11 @@
 Name:      gmusicbrowser
 Summary:   Jukebox for large collections of music files
-Version:   1.1.6
-Release:   0.1%{?dist}
+Version:   1.1.7
+Release:   1%{?dist}
 License:   GPLv3+
 Group:     Applications/Multimedia
 
-URL:       http://gmusicbrowser.sourceforge.net/
+URL:       http://gmusicbrowser.org/
 Source0:   http://gmusicbrowser.org/download/%{name}-%{version}.tar.gz
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -22,8 +22,37 @@ Requires:         vorbis-tools, flac123, alsa-utils
 Requires:         perl(Gtk2::MozEmbed)
 %endif
 
+
+# We need to keep perl(Gtk2) perl(Gtk2::MozEmbed) perl(Gtk2::Notify)
+# perl(Gtk2::Pango) perl(Gtk2::TrayIcon)
+
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+%{?filter_setup:
+%filter_from_provides /perl(/d
+%filter_from_requires /perl(simple_http)/d
+%filter_from_requires /perl(gmusicbrowser/d
+%filter_from_requires /perl(Layout::Label)/d
+%filter_from_requires /perl(SongArray)/d
+%filter_from_requires /perl(Gtk2::B/d
+%filter_from_requires /perl(Gtk2::C/d
+%filter_from_requires /perl(Gtk2::D/d
+%filter_from_requires /perl(Gtk2::E/d
+%filter_from_requires /perl(Gtk2::F/d
+%filter_from_requires /perl(Gtk2::H/d
+%filter_from_requires /perl(Gtk2::L/d
+%filter_from_requires /perl(Gtk2::Notebook)/d
+%filter_from_requires /perl(Gtk2::O/d
+%filter_from_requires /perl(Gtk2::ProgressBar)/d
+%filter_from_requires /perl(Gtk2::S/d
+%filter_from_requires /perl(Gtk2::ToggleButton)/d
+%filter_from_requires /perl(Gtk2::V/d
+%filter_from_requires /perl(Gtk2::W/d
+%?perl_default_filter
+}
+%else
 # Only perl* retrieved which aren't needed
 AutoProv: no
+%endif
 
 
 %description
@@ -43,6 +72,7 @@ Main features :
 %prep
 %setup -q
 
+%if 0%{?fedora} < 11 && 0%{?rhel} < 6
 cat <<EOF > %{name}-req
 #!/bin/sh
 %{__perl_requires} $* |\
@@ -51,6 +81,7 @@ EOF
 
 %define __perl_requires %{_builddir}/%{name}-%{version}/%{name}-req
 chmod +x %{__perl_requires}
+%endif
 
 
 %build
@@ -98,6 +129,13 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Sun Mar 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.7-1
+- update to development version 1.1.7
+
+* Sun Feb 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.6-1
+- update to 1.1.6
+- fix URL and filter (hope this is temporary)
+
 * Sun Dec 26 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.1.6-0.1
 - update to development version 1.1.6
 
