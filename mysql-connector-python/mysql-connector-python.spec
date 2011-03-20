@@ -28,12 +28,13 @@ is necessary to run this Python DB API v2.0 compliant driver.
 
 %{__chmod} -x python2/examples/*py
 
+
 %build
 # nothin to build
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 %{__python} setup.py install --root $RPM_BUILD_ROOT
 
 
@@ -42,7 +43,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 
 
 %files
