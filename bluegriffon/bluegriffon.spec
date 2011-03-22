@@ -10,15 +10,15 @@
 %global svnmain     597
 %global svnlocales  36
 
-%global gecko_version   2.0-rc2
-%global srcversion      4.0rc2
+%global gecko_version   2.0-1
+%global srcversion      4.0
 
 Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        0.9.1
 %if %{svnmain}
-Release:        0.svn%{svnmain}%{?dist}
+Release:        0.svn%{svnmain}%{?dist}.1
 %else
 Release:        2%{?dist}
 %endif
@@ -56,7 +56,7 @@ BuildRequires:  gecko-devel = %{gecko_version}
 %global xulbin xulrunner
 %global grecnf gre
 %else
-BuildRequires:  xulrunner2-devel >= %{xulrunner_version}
+BuildRequires:  gecko-devel = %{gecko_version}
 %global xulbin xulrunner2
 %global grecnf gre2
 %endif
@@ -242,6 +242,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Tue Mar 22 2011 Remi Collet <rpms@famillecollet.com> - 0.9.1-0.svn597.1
+- rebuild against xulrunnner 2.0
+
 * Sat Mar 19 2011 Remi Collet <rpms@famillecollet.com> - 0.9.1-0.svn597
 - bluegriffon svn 597, locales svn 36
 - rebuild against xulrunnner 2.0rc2

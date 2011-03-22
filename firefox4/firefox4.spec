@@ -10,11 +10,11 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Release Candidate 2
+#global mycomment       Release Candidate 2
 %global firefox_dir_ver 4
-%global gecko_version   2.0-rc2
-%global pre_version     rc2
-%global pre_tag         .%{?pre_version}
+%global gecko_version   2.0-1
+#%global pre_version     rc2
+#%global pre_tag         .%{?pre_version}
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
@@ -27,7 +27,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        4.0
-Release:        0.29%{?pre_tag}%{?dist}
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -65,7 +65,7 @@ Patch11:        firefox-default.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  system-bookmarks
-BuildRequires:  gecko-devel%{?_isa} = %{gecko_version}
+BuildRequires:  gecko-devel = %{gecko_version}
 %if %{fedora} >= 15
 %global xulbin xulrunner
 %global grecnf gre
@@ -311,7 +311,7 @@ sed -i -e "s/\[Crash Reporter\]/[Crash Reporter]\nEnabled=1/" $RPM_BUILD_ROOT/%{
 #---------------------------------------------------------------------
 
 %pre
-echo -e "\nWARNING : This %{name} %{version} %{mycomment} RPM is not an official"
+echo -e "\nWARNING : This %{name} %{version} %{?mycomment} RPM is not an official"
 echo -e "Fedora build and it overrides the official one. Don't file bugs on Fedora Project.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
@@ -390,6 +390,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Mar 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-1
+- Firefox 4.0 Finale
+
 * Sat Mar 19 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.29.rc2
 - Firefox 4.0 Release Candidate 2
 

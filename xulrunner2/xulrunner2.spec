@@ -16,7 +16,7 @@
 %global gecko_dir_ver 2
 %global alpha_version 0
 %global beta_version  0
-%global rc_version    2
+%global rc_version    0
 
 %global mozappdir         %{_libdir}/%{shortname}-%{gecko_dir_ver}
 %global tarballdir        mozilla-2.0
@@ -67,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        0.26%{?pre_tag}%{?dist}
+Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -548,8 +548,11 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Mar 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-1
+- Update to 2.0
+
 * Sat Mar 19 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-0.26.rc2
-- Update to 2.0 RC1
+- Update to 2.0 RC2
 
 * Fri Mar 18 2011 Christopher Aillon <caillon@redhat.com> - 2.0-0.28
 - Update to 2.0 RC2
