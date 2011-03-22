@@ -12,9 +12,10 @@
 %global shortname       firefox
 #global mycomment       Release Candidate 2
 %global firefox_dir_ver 4
-%global gecko_version   2.0-1
-#%global pre_version     rc2
-#%global pre_tag         .%{?pre_version}
+%global gecko_version   2.0
+%global alpha_version   0
+%global beta_version    0
+%global rc_version      0
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
@@ -24,16 +25,35 @@
 %define build_langpacks         1
 %define include_debuginfo       0
 
+%if %{alpha_version} > 0
+%global pre_version a%{alpha_version}
+%global pre_name    alpha%{alpha_version}
+%endif
+%if %{beta_version} > 0
+%global pre_version b%{beta_version}
+%global pre_name    beta%{beta_version}
+%endif
+%if %{rc_version} > 0
+%global pre_version rc%{rc_version}
+%global pre_name    rc%{rc_version}
+%endif
+%if %{defined pre_version}
+%global gecko_verrel %{gecko_version}-%{pre_name}
+%global pre_tag .%{pre_version}
+%else
+%global gecko_verrel %{gecko_version}-1
+%endif
+
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        4.0
-Release:        1%{?dist}
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_version}/source/firefox-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        firefox-langpacks-%{version}%{?pre_version}-20110319.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?pre_version}-20110322.tar.bz2
 %endif
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
@@ -65,7 +85,7 @@ Patch11:        firefox-default.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  system-bookmarks
-BuildRequires:  gecko-devel = %{gecko_version}
+BuildRequires:  gecko-devel = %{gecko_verrel}
 %if %{fedora} >= 15
 %global xulbin xulrunner
 %global grecnf gre
@@ -76,7 +96,7 @@ BuildRequires:  gecko-devel = %{gecko_version}
 # For WebM support
 BuildRequires:	yasm
 
-Requires:       gecko-libs%{?_isa} = %{gecko_version}
+Requires:       gecko-libs%{?_isa} = %{gecko_verrel}
 Requires:       system-bookmarks
 Obsoletes:      mozilla <= 37:1.7.13
 Provides:       webclient

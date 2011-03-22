@@ -241,7 +241,7 @@ done
 debugging=0
 if [ $debugging = 1 ]
 then
-  echo $MOZ_LAUNCHER $script_args $MOZ_PROGRAM $MOZARGS "$@"
+  echo $MOZ_LAUNCHER $script_args $MOZ_PROGRAM "$@"
 fi
 
-exec $MOZ_LAUNCHER $script_args $MOZ_PROGRAM $MOZARGS "$@"
+exec $MOZ_LAUNCHER $script_args $MOZ_PROGRAM "$@"
