@@ -1,8 +1,8 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%global postver -src
-%global mw_version 5.2.33
-%global tartype gpl
+%global mw_version 5.2.33b
+%global tarversion gpl-5.2.33b-src
+%global srcversion gpl-5.2.33-src
 
 # Use system cppconn if a compatible upstream version exists
 #global cppconnver 1.1.0-0.3.bzr895
@@ -13,7 +13,7 @@
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   %{mw_version}
-Release:   2%{?dist}
+Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -21,7 +21,7 @@ URL:       http://wb.mysql.com
 # Upstream has a mirror redirector for downloads, so the URL is hard to
 # represent statically.  You can get the tarball by following a link from
 # http://dev.mysql.com/downloads/workbench/
-Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tartype}-%{version}%{?postver}.tar.gz
+Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tarversion}.tar.gz
 
 # don't build extension, use system one
 # !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
@@ -107,7 +107,7 @@ and administering MySQL servers.
 
 
 %prep
-%setup -q -n %{name}-%{tartype}-%{mw_version}%{?postver}
+%setup -q -n %{name}-%{srcversion}
 
 %if 0%{?cppconnver:1}
 %patch1 -p1 -b .cppconn
@@ -116,6 +116,7 @@ rm -rf ext/cppconn
 
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %patch2 -p1 -b .ctemplate
+rm -rf ext/ctemplate
 %endif
 
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
@@ -132,9 +133,6 @@ rm -rf ext/boost
 rm -rf ext/curl
 rm -rf ext/libsigc++
 rm -rf ext/yassl
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-rm -rf ext/ctemplate
-%endif
 
 # avoid "No such file" during configure
 touch po/POTFILES.in
@@ -166,7 +164,6 @@ pushd ext/mysql-utilities
 %{__mv} %{buildroot}%{_prefix}/man/man1 %{buildroot}%{_mandir}/man1
 %endif
 popd
-
 
 # clean dev files
 echo Cleanup dev file
@@ -230,6 +227,11 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Wed Mar 23 2011 Remi Collet <Fedora@famillecollet.com> 5.2.33b-1
+- update to 5.2.33b Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-33b.html
+  http://wb.mysql.com/?page_id=49
+
 * Tue Mar 15 2011 Remi Collet <Fedora@FamilleCollet.com> 5.2.33-1
 - rebuild for new mysql client ABI (.18)
 
