@@ -7,8 +7,8 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-2.0
-%global svnmain     597
-%global svnlocales  36
+#global svnmain     608
+#global svnlocales  38
 
 %global gecko_version   2.0-1
 %global srcversion      4.0
@@ -17,10 +17,10 @@ Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        0.9.1
-%if %{svnmain}
+%if 0%{?svnmain}
 Release:        0.svn%{svnmain}%{?dist}.1
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -28,7 +28,7 @@ Group:          Applications/Editors
 
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{srcversion}.source.tar.bz2
 
-%if %{svnmain}
+%if 0%{?svnmain}
 # svn checkout http://sources.disruptive-innovations.com/bluegriffon/trunk bluegriffon
 # tar cjf bluegriffon-553.tar.bz2 --exclude .svn bluegriffon
 Source1:        %{name}-%{svnmain}.tar.bz2
@@ -50,13 +50,12 @@ BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  desktop-file-utils
 BuildRequires:  system-bookmarks
 BuildRequires:  yasm
+BuildRequires:  gecko-devel = %{gecko_version}
 
 %if %{fedora} >= 15
-BuildRequires:  gecko-devel = %{gecko_version}
 %global xulbin xulrunner
 %global grecnf gre
 %else
-BuildRequires:  gecko-devel = %{gecko_version}
 %global xulbin xulrunner2
 %global grecnf gre2
 %endif
@@ -78,6 +77,7 @@ normes w3c.
 
 
 %prep
+echo TARGET %{name}-%{version}-%{release}
 %setup -q -n %{tarballdir}
 
 tar xjf %{SOURCE1}
@@ -242,6 +242,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Mon Mar 29 2011 Remi Collet <rpms@famillecollet.com> - 0.9.1-1
+- BlueGriffon 0.9.1 "Coffee Overflow"
+  http://bluegriffon.org/post/2011/03/29/BlueGriffon-0.9.1-Coffee-Overflow
+
 * Tue Mar 22 2011 Remi Collet <rpms@famillecollet.com> - 0.9.1-0.svn597.1
 - rebuild against xulrunnner 2.0
 
