@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -233,16 +233,16 @@ Provides: %{phpname}-pecl-json = %{jsonver}, %{phpname}-pecl-json%{?_isa} = %{js
 Provides: %{phpname}-pecl(json) = %{jsonver}, %{phpname}-pecl(json)%{?_isa} = %{jsonver}
 Provides: %{phpname}-libxml, %{phpname}-libxml%{?_isa}
 Provides: %{phpname}-openssl, %{phpname}-openssl%{?_isa}
-Provides: %{phpname}-pecl-phar = %{pharver}, php-pecl-phar%{?_isa} = %{pharver}
-Provides: %{phpname}-pecl(phar) = %{pharver}, php-pecl(phar)%{?_isa} = %{pharver}
-Provides: %{phpname}-pcre, php-pcre%{?_isa}
-Provides: %{phpname}-reflection, php-reflection%{?_isa}
-Provides: %{phpname}-session, php-session%{?_isa}
-Provides: %{phpname}-shmop, php-shmop%{?_isa}
-Provides: %{phpname}-simplexml, php-simplexml%{?_isa}
-Provides: %{phpname}-sockets, php-sockets%{?_isa}
-Provides: %{phpname}-spl, php-spl%{?_isa}
-Provides: %{phpname}-tokenizer, php-tokenizer%{?_isa}
+Provides: %{phpname}-pecl-phar = %{pharver}, %{phpname}-pecl-phar%{?_isa} = %{pharver}
+Provides: %{phpname}-pecl(phar) = %{pharver}, %{phpname}-pecl(phar)%{?_isa} = %{pharver}
+Provides: %{phpname}-pcre, %{phpname}-pcre%{?_isa}
+Provides: %{phpname}-reflection, %{phpname}-reflection%{?_isa}
+Provides: %{phpname}-session, %{phpname}-session%{?_isa}
+Provides: %{phpname}-shmop, %{phpname}-shmop%{?_isa}
+Provides: %{phpname}-simplexml, %{phpname}-simplexml%{?_isa}
+Provides: %{phpname}-sockets, %{phpname}-sockets%{?_isa}
+Provides: %{phpname}-spl, %{phpname}-spl%{?_isa}
+Provides: %{phpname}-tokenizer, %{phpname}-tokenizer%{?_isa}
 %if %{with_zip}
 Provides: %{phpname}-zip, %{phpname}-zip%{?_isa}
 Provides: %{phpname}-pecl-zip = %{zipver}, %{phpname}-pecl-zip%{?_isa} = %{zipver}
@@ -333,7 +333,7 @@ without running a separate RDBMS process.
 %package mysql
 Summary: A module for PHP applications that use MySQL databases
 Group: Development/Languages
-Requires: %{phpname}-common%{?_isa} = %{version}-%{release}, %{phpname}-pdo%{?_isa}
+Requires: %{phpname}-pdo%{?_isa} = %{version}-%{release}
 Provides: %{phpname}_database
 Provides: %{phpname}-mysqli, %{phpname}-mysqli%{?_isa}
 Provides: %{phpname}-pdo_mysql, %{phpname}-pdo_mysql%{?_isa}
@@ -350,7 +350,7 @@ this package and the php package.
 %package pgsql
 Summary: A PostgreSQL database module for PHP
 Group: Development/Languages
-Requires: %{phpname}-common%{?_isa} = %{version}-%{release}, %{phpname}-pdo%{?_isa}
+Requires: %{phpname}-pdo%{?_isa} = %{version}-%{release}
 Provides: %{phpname}_database
 Provides: %{phpname}-pdo_pgsql, %{phpname}-pdo_pgsql%{?_isa}
 Obsoletes: mod_php3-pgsql, stronghold-php-pgsql
@@ -381,7 +381,7 @@ communication.
 
 %package odbc
 Group: Development/Languages
-Requires: %{phpname}-common%{?_isa} = %{version}-%{release}, %{phpname}-pdo%{?_isa}
+Requires: %{phpname}-pdo%{?_isa} = %{version}-%{release}
 Summary: A module for PHP applications that use ODBC databases
 Provides: %{phpname}_database
 Provides: %{phpname}-pdo_odbc, %{phpname}-pdo_odbc%{?_isa}
@@ -412,7 +412,7 @@ support to PHP for using the SOAP web services protocol.
 Summary: 	A module for PHP applications that use Interbase/Firebird databases
 Group: 		Development/Languages
 BuildRequires:  firebird-devel
-Requires: 	%{phpname}-common%{?_isa} = %{version}-%{release}, %{phpname}-pdo%{?_isa}
+Requires: 	%{phpname}-pdo%{?_isa} = %{version}-%{release}
 Provides: 	%{phpname}_database
 Provides: 	%{phpname}-firebird, %{phpname}-firebird%{?_isa}
 Provides: 	%{phpname}-pdo_firebird, %{phpname}-pdo_firebird%{?_isa}
@@ -436,7 +436,7 @@ License.
 Summary: 	A module for PHP applications that use OCI8 databases
 Group: 		Development/Languages
 BuildRequires: 	oracle-instantclient-devel >= %{oraclever}
-Requires: 	%{phpname}-common%{?_isa} = %{version}-%{release}, %{phpname}-pdo%{?_isa}
+Requires: 	%{phpname}-pdo%{?_isa} = %{version}-%{release}
 Provides: 	%{phpname}_database 
 Provides: 	%{phpname}-pdo_oci = %{oci8ver}, %{phpname}-pdo_oci%{?_isa} = %{oci8ver}
 Provides:       %{phpname}-pecl-oci8 = %{oci8ver}, %{phpname}-pecl-oci8%{?_isa} = %{oci8ver}
@@ -552,7 +552,7 @@ support for using the tidy library to PHP.
 %package mssql
 Summary: MSSQL database module for PHP
 Group: Development/Languages
-Requires: %{phpname}-common%{?_isa} = %{version}-%{release}, %{phpname}-pdo%{?_isa}
+Requires: %{phpname}-pdo%{?_isa} = %{version}-%{release}
 BuildRequires: freetds-devel
 Provides: %{phpname}-pdo_dblib, %{phpname}-pdo_dblib%{?_isa}
 
@@ -619,7 +619,8 @@ support for using the enchant library to PHP.
 
 %prep
 echo CIBLE = %{name}-%{version}-%{release}
-%setup -q
+%setup -q -n php-%{version}
+
 %patch1 -p1 -b .gnusrc
 %patch2 -p1 -b .install
 %patch3 -p1 -b .norpath
@@ -1182,7 +1183,9 @@ cat files.zip >> files.common
 
 # Install the macros file:
 install -d $RPM_BUILD_ROOT%{_origsysconfdir}/rpm
-sed -e "s/@PHP_APIVER@/%{apiver}/;s/@PHP_ZENDVER@/%{zendver}/;s/@PHP_PDOVER@/%{pdover}/" \
+sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
+    -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
+    -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
     -e "s,/php/,/%{phpname}/," \
     < %{SOURCE3} > macros.php
 install -m 644 -c macros.php \
@@ -1349,6 +1352,9 @@ fi
 %endif
 
 %changelog
+* Wed Mar 29 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-2
+- fix relocated (php53) build
+
 * Thu Mar 17 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-1
 - update to 5.3.6
   http://www.php.net/ChangeLog-5.php#5.3.6
