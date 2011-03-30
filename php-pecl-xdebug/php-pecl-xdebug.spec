@@ -1,10 +1,22 @@
+%{!?phpname:		%{expand: %%global phpname     php}}
+
+%if %{phpname} == php
+%global phpbindir      %{_bindir}
+%global phpconfdir     %{_sysconfdir}
+%global phpincldir     %{_includedir}
+%else
+%global phpbindir      %{_bindir}/%{phpname}
+%global phpconfdir     %{_sysconfdir}/%{phpname}
+%global phpincldir     %{_includedir}/%{phpname}
+%endif
+
 %global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
+%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)
 
 %global pecl_name xdebug
 
-Name:           php-pecl-xdebug
+Name:           %{phpname}-pecl-xdebug
 Version:        2.1.1
 Release:        1%{?dist}
 Summary:        PECL package for debugging PHP scripts
@@ -15,8 +27,8 @@ URL:            http://pecl.php.net/package/xdebug
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-pear  >= 1:1.4.9-1.2
-BuildRequires:  php-devel >= 5.1.0
+BuildRequires:  %{phpname}-pear  >= 1:1.4.9-1.2
+BuildRequires:  %{phpname}-devel >= 5.1.0
 BuildRequires:  libedit-devel
 
 %if 0%{?pecl_install:1}
@@ -25,21 +37,23 @@ Requires(post): %{__pecl}
 %if 0%{?pecl_uninstall:1}
 Requires(postun): %{__pecl}
 %endif
-Provides:       php-pecl(Xdebug) = %{version}
-Provides:       php-pecl(Xdebug)%{?_isa} = %{version}
+Provides:       %{phpname}-pecl(Xdebug) = %{version}
+Provides:       %{phpname}-pecl(Xdebug)%{?_isa} = %{version}
 
 %if 0%{?php_zend_api:1}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{phpname}(zend-abi) = %{php_zend_api}
+Requires:       %{phpname}(api) = %{php_core_api}
 %else
 Requires:       php-api = %{php_apiver}
 %endif
 
 
+%if 0%{?fedora}%{?rhel} > 4
 %{?filter_setup:
 %filter_provides_in %{php_extdir}/.*\.so$
 %filter_setup
 }
+%endif
 
 
 %description
@@ -69,8 +83,8 @@ fi
 
 %build
 cd %{pecl_name}-%{version}
-phpize
-%configure --enable-xdebug
+%{phpbindir}/phpize
+%configure --enable-xdebug  --with-php-config=%{phpbindir}/php-config
 %{__make} %{?_smp_mflags}
 
 # Build debugclient
@@ -87,12 +101,12 @@ rm -rf $RPM_BUILD_ROOT docs
 make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # install debugclient
-install -d $RPM_BUILD_ROOT%{_bindir}
-install -pm 755 debugclient/debugclient $RPM_BUILD_ROOT%{_bindir}
+install -d $RPM_BUILD_ROOT%{phpbindir}
+install -pm 755 debugclient/debugclient $RPM_BUILD_ROOT%{phpbindir}
 
 # install config file
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
-cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+install -d $RPM_BUILD_ROOT%{phpconfdir}/php.d
+cat > $RPM_BUILD_ROOT%{phpconfdir}/php.d/%{pecl_name}.ini << 'EOF'
 ; Enable xdebug extension module
 zend_extension=%{php_extdir}/%{pecl_name}.so
 EOF
@@ -109,7 +123,7 @@ install -pm 644 %{pecl_name}.xml $RPM_BUILD_ROOT%{pecl_xmldir}/%{name}.xml
 %check
 cd %{pecl_name}-%{version}
 # only check if build extension can be loaded
-%{_bindir}/php \
+%{phpbindir}/php \
     --no-php-ini \
     --define zend_extension=modules/%{pecl_name}.so \
     --modules | grep Xdebug
@@ -136,13 +150,16 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc docs/*
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{phpconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{_bindir}/debugclient
+%{phpbindir}/debugclient
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Wed Mar 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.1-1
+- allow relocation
+
 * Wed Mar 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.1-1
 - update to 2.1.1
 - patch reported version
