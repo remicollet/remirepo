@@ -76,6 +76,8 @@ You can add additional packages for optional tasks:
     Network Discovery support
 * perl-FusionInventory-Agent-Task-SNMPQuery
     SNMP Query support
+* perl-FusionInventory-Agent-Task-ESX
+    vCenter/ESX/ESXi remote inventory
 
 Edit the /etc/sysconfig/%{name} file for service configuration
 
