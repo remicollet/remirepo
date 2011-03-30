@@ -5,22 +5,19 @@ Name:        fusioninventory-agent
 Summary:     FusionInventory agent
 Summary(fr): Agent FusionInventory
 
-Version:   2.1.7
+Version:   2.1.8
 
 %if 0%{?gitver:1}
 Release:   2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1-48-ga7532c0.tar.gz
 %else
-Release:   2
+Release:   1
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
 Source1:   %{name}.cron
 Source2:   %{name}.init
-# Will be in 2.1.8 archive
-Source3:   %{name}.py
-Source4:   %{name}.conf
 
 Group:     Applications/System
 License:   GPLv2+
@@ -211,8 +208,8 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{__install} -m 755 -Dp %{SOURCE2}   %{buildroot}%{_initrddir}/%{name}
 
 # Yum plugin installation
-%{__install} -m 644 -D %{SOURCE3} %{buildroot}/usr/lib/yum-plugins/%{name}.py
-%{__install} -m 644 -D %{SOURCE4} %{buildroot}%{_sysconfdir}/yum/pluginconf.d/%{name}.conf
+%{__install} -m 644 -D contrib/yum-plugin/%{name}.py   %{buildroot}/usr/lib/yum-plugins/%{name}.py
+%{__install} -m 644 -D contrib/yum-plugin/%{name}.conf %{buildroot}%{_sysconfdir}/yum/pluginconf.d/%{name}.conf
 
 
 %check
@@ -269,6 +266,10 @@ exit 0
 
 
 %changelog
+* Wed Mar 30 2011 Remi Collet <Fedora@famillecollet.com> 2.1.8-1
+- update to 2.1.8
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.8/Changes
+
 * Thu Dec 30 2010 Remi Collet <Fedora@famillecollet.com> 2.1.7-2
 - add the yum-plugin sub-package
 
