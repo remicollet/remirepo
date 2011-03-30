@@ -1,5 +1,5 @@
 Name:           perl-FusionInventory-Agent-Task-SNMPQuery
-Version:        1.2
+Version:        1.3
 Release:        1%{?dist}
 Summary:        SNMP Query support for FusionInventory Agent
 License:        GPLv2+
@@ -64,6 +64,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 30 2011 Remi Collet <Fedora@famillecollet.com> 1.3-1
+- update to 1.3
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-SNMPQuery-1.3/Changes
+
 * Mon Aug 16 2010 Remi Collet <Fedora@famillecollet.com> 1.2-1
 - update to 1.2
 
