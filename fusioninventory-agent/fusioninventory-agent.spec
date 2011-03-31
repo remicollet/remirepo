@@ -100,6 +100,8 @@ Vous pouvez ajouter les paquets additionnels pour les tâches optionnelles :
     Gestion de la découverte réseau
 * perl-FusionInventory-Agent-Task-SNMPQuery
     Gestion de l'interrogation SNMP
+* perl-FusionInventory-Agent-Task-ESX
+    Inventaire à distance des vCenter/ESX/ESXi
 
 Modifier le fichier /etc/sysconfig/%{name} pour configurer le service.
 
