@@ -102,6 +102,10 @@ Patch62: php-5.3.3-tests.patch
 # RC Patch
 Patch91: php-5.3.2-oci8conf.patch
 
+# Missing functions when build with libedit
+# See http://bugs.php.net/54450
+Patch92: php-5.3.6-readline.patch
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -646,6 +650,8 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch62 -p0 -b .tests
 
 %patch91 -p0 -b .remi-oci8
+%patch92 -p1 -b .libedit
+
 
 %if %{phpname} != php
 %{__sed} -i -e '/^phpbuilddir/s,/php/,/%{phpname}/,' scripts/Makefile.frag
