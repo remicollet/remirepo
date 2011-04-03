@@ -73,6 +73,7 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 # Fix wrong-script-end-of-line-encoding
 sed -i -e 's/\r//' $RPM_BUILD_ROOT%{_bindir}/phpci
+sed -i -e 's/\r//' $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/README.markdown
 
 
 %check
