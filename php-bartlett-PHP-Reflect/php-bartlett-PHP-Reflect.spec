@@ -5,11 +5,11 @@
 Name:           php-bartlett-PHP-Reflect
 Version:        0.5.0
 Release:        1%{?dist}
-Summary:        Adds the ability to reverse-engineer classes, interfaces, functions, constants and more
+Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
-License:        BSD License
-URL:            http://bartlett.laurent-laville.org/package/PHP_Reflect
+License:        BSD
+URL:            http://bartlett.laurent-laville.org/
 Source0:        http://%{channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -29,8 +29,7 @@ Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
 %description
 PHP_Reflect adds the ability to reverse-engineer classes, interfaces,
-functions, constants 
-and more, by connecting php callbacks to other tokens.
+functions, constants and more, by connecting php callbacks to other tokens.
 
 
 %prep
@@ -52,7 +51,7 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docdir
+rm -rf $RPM_BUILD_ROOT
 PHPRC=../php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
@@ -66,7 +65,7 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}
 
-# OK (20 tests, 37 assertions)
+# Version 0.5.0 : OK (20 tests, 37 assertions)
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --bootstrap $RPM_BUILD_ROOT%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
@@ -97,7 +96,7 @@ fi
 
 %changelog
 * Fri Mar 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.5.0-1
-- Version 0.4.0 (beta) - API 0.5.0 (beta)
+- Version 0.5.0 (beta) - API 0.5.0 (beta)
 
 * Wed Feb 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.4.0-1
 - Version 0.4.0 (beta)
