@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -231,6 +231,7 @@ Provides: %{phpname}-ftp, %{phpname}-ftp%{?_isa}
 Provides: %{phpname}-gettext, %{phpname}-gettext%{?_isa}
 Provides: %{phpname}-gmp, %{phpname}-gmp%{?_isa}
 Provides: %{phpname}-hash, %{phpname}-hash%{?_isa}
+Provides: %{phpname}-mhash = %{version}, %{phpname}-mhash%{?_isa} = %{version}
 Provides: %{phpname}-iconv, %{phpname}-iconv%{?_isa}
 Provides: %{phpname}-json, %{phpname}-json%{?_isa}
 Provides: %{phpname}-pecl-json = %{jsonver}, %{phpname}-pecl-json%{?_isa} = %{jsonver}
@@ -255,6 +256,7 @@ Obsoletes: %{phpname}-pecl-zip
 %endif
 Provides: %{phpname}-zlib, %{phpname}-zlib%{?_isa}
 Obsoletes: %{phpname}-openssl, %{phpname}-pecl-json, %{phpname}-json, %{phpname}-pecl-phar, %{phpname}-pecl-Fileinfo
+Obsoletes: %{phpname}-mhash < 5.3.0
 
 %description common
 The %{phpname}-common package contains files used by both the php
@@ -834,6 +836,7 @@ ln -sf ../configure
 %if %{?fedora}%{?rhel:99} >= 10
         --with-system-tzdata \
 %endif
+	--with-mhash \
 	$* 
 if test $? != 0; then 
   tail -500 config.log
@@ -1358,6 +1361,9 @@ fi
 %endif
 
 %changelog
+* Mon Apr  4 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-3
+- enable mhash extension (emulated by hash extension)
+
 * Wed Mar 29 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-2
 - fix relocated (php53) build
 
