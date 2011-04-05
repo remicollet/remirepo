@@ -1,6 +1,6 @@
 Name: mysql
-Version: 5.5.10
-Release: 2%{?dist}
+Version: 5.5.11
+Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -500,6 +500,7 @@ fi
 %defattr(-,root,root)
 %doc README COPYING README.mysql-license
 %doc README.mysql-docs
+%doc Docs
 
 %{_bindir}/msql2mysql
 %{_bindir}/mysql
@@ -680,6 +681,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Tue Apr 05 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.11-1
+- update to MySQL 5.5.11 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-11.html
+
 * Wed Mar 23 2011 Tom Lane <tgl@redhat.com> 5.5.10-2
 - Add my_make_scrambled_password to the list of symbols exported by
   libmysqlclient.so.  Needed at least by pure-ftpd.
