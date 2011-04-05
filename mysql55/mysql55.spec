@@ -278,7 +278,7 @@ cmake . -DBUILD_CONFIG=mysql_release \
 %endif
 	-DWITH_EMBEDDED_SERVER=ON \
 	-DWITH_READLINE=ON \
-%if 0%{?fedora} >= 6 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 9 || 0%{?rhel} >= 5
 	-DWITH_SSL=system \
 %else
 	-DWITH_SSL=bundled \
