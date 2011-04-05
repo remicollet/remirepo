@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.5.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -29,6 +29,7 @@ Source6: README.mysql-docs
 Source7: README.mysql-license
 Source8: libmysql.version
 Source9: mysql-embedded-check.c
+Source10: mysql.tmpfiles.d
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh
 
@@ -63,7 +64,7 @@ BuildRequires: perl(Socket), perl(Time::HiRes)
 BuildRequires: bison
 
 Requires: grep, fileutils
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: bash
 
 # MySQL (with caps) is upstream's spelling of their own RPMs for mysql
@@ -97,8 +98,8 @@ MySQL server.
 
 Summary: The MySQL server and related files
 Group: Applications/Databases
-Requires: %{name} = %{version}-%{release}
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: sh-utils
 Requires(pre): /usr/sbin/useradd
 Requires(post): chkconfig
@@ -106,6 +107,10 @@ Requires(preun): chkconfig
 # This is for /sbin/service
 Requires(preun): initscripts
 Requires(postun): initscripts
+%if 0%{?fedora} >= 15
+# This is for /etc/tmpfiles.d
+Requires: systemd-units
+%endif
 # mysqlhotcopy needs DBI/DBD support
 Requires: perl-DBI, perl-DBD-MySQL
 Conflicts: MySQL-server
@@ -120,9 +125,9 @@ the MySQL server and some accompanying files and directories.
 
 Summary: Files for development of MySQL applications
 Group: Applications/Databases
-Requires: %{name} = %{version}-%{release}
-Requires: %{name}-libs = %{version}-%{release}
-Requires: openssl-devel
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires: openssl-devel%{?_isa}
 Conflicts: MySQL-devel
 
 %description devel
@@ -144,8 +149,8 @@ into a client application instead of running as a separate process.
 
 Summary: Development files for MySQL as an embeddable library
 Group: Applications/Databases
-Requires: %{name}-embedded = %{version}-%{release}
-Requires: %{name}-devel = %{version}-%{release}
+Requires: %{name}-embedded%{?_isa} = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description embedded-devel
 MySQL is a multi-user, multi-threaded SQL database server. This
@@ -156,7 +161,7 @@ the embedded version of the MySQL server.
 
 Summary: MySQL benchmark scripts and data
 Group: Applications/Databases
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 Conflicts: MySQL-bench
 
 %description bench
@@ -168,9 +173,9 @@ MySQL.
 
 Summary: The test suite distributed with MySQL
 Group: Applications/Databases
-Requires: %{name} = %{version}-%{release}
-Requires: %{name}-libs = %{version}-%{release}
-Requires: %{name}-server = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires: %{name}-server%{?_isa} = %{version}-%{release}
 Conflicts: MySQL-test
 
 %description test
@@ -215,6 +220,7 @@ sys_vars.plugin_dir_basic : bug#52223 fails for lib64 library directory
 perfschema.binlog_mix    : bug#59091 fails with openssl
 perfschema.binlog_row    : bug#59091 fails with openssl
 gis                      : bug#59908 has platform-dependent results
+innodb.innodb            : bug#60155 has platform-dependent results
 main.information_schema  : fails in mock, ok after install :(
 EOF
 
@@ -272,10 +278,10 @@ cmake . -DBUILD_CONFIG=mysql_release \
 %endif
 	-DWITH_EMBEDDED_SERVER=ON \
 	-DWITH_READLINE=ON \
-%if 0%{?rhel} <= 4
-	-DWITH_SSL=bundled \
-%else
+%if 0%{?fedora} >= 6 || 0%{?rhel} >= 5
 	-DWITH_SSL=system \
+%else
+	-DWITH_SSL=bundled \
 %endif
 	-DWITH_ZLIB=system
 
@@ -377,6 +383,11 @@ install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mysqld
 install -m 0755 %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mysqld
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
 
+%if 0%{?fedora} >= 15
+mkdir -p $RPM_BUILD_ROOT/etc/tmpfiles.d
+install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/tmpfiles.d/mysql.conf
+%endif
+
 # Fix funny permissions that cmake build scripts apply to config files
 chmod 644 ${RPM_BUILD_ROOT}%{_datadir}/mysql/config.*.ini
 
@@ -449,11 +460,11 @@ echo -e "You should consider upgrading to a supported release.\n"
 
 %pre server
 /usr/sbin/groupadd -g 27 -o -r mysql >/dev/null 2>&1 || :
-%if 0%{?fedora} > 9 || 0%{?rhel} > 6
+%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 /usr/sbin/useradd -M -N -g mysql -o -r -d /var/lib/mysql -s /bin/bash \
 	-c "MySQL Server" -u 27 mysql >/dev/null 2>&1 || :
 %else
-# -N options used on Fedora not available on EL and fedora <= 8 and EL <= 5
+# -N options used on Fedora not available on fedora <= 8 and EL <= 5
 /usr/sbin/useradd -M -g mysql -o -r -d /var/lib/mysql -s /bin/bash \
 	-c "MySQL Server" -u 27 mysql >/dev/null 2>&1 || :
 %endif 
@@ -628,6 +639,9 @@ fi
 %{_datadir}/mysql/config.*.ini
 
 /etc/rc.d/init.d/mysqld
+%if 0%{?fedora} >= 15
+/etc/tmpfiles.d/mysql.conf
+%endif
 %attr(0755,mysql,mysql) %dir /var/run/mysqld
 %attr(0755,mysql,mysql) %dir /var/lib/mysql
 %attr(0640,mysql,mysql) %config(noreplace) %verify(not md5 size mtime) /var/log/mysqld.log
@@ -666,6 +680,19 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Wed Mar 23 2011 Tom Lane <tgl@redhat.com> 5.5.10-2
+- Add my_make_scrambled_password to the list of symbols exported by
+  libmysqlclient.so.  Needed at least by pure-ftpd.
+
+* Mon Mar 21 2011 Tom Lane <tgl@redhat.com> 5.5.10-1
+- Update to MySQL 5.5.10, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-10.html
+  Note that this includes a rather belated soname version bump for
+  libmysqlclient.so, from .16 to .18
+- Add tmpfiles.d config file so that /var/run/mysqld is recreated at boot
+  (only needed in Fedora 15 and later)
+Resolves: #658938
+
 * Tue Mar 15 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.10-1
 - update to MySQL 5.5.10 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-10.html

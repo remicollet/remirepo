@@ -16,11 +16,14 @@ Also disable gis, which expects the results of floating-point calculations
 to match to seventeen digits precision everywhere.  Of course they won't.
 Upstream at http://bugs.mysql.com/bug.php?id=59908
 
+Also disable innodb.innodb, which is showing platform-dependent results
+as of 5.5.9.  Upstream at http://bugs.mysql.com/bug.php?id=60155
 
-diff -Naur mysql-5.5.8.orig/mysql-test/t/disabled.def mysql-5.5.8/mysql-test/t/disabled.def
---- mysql-5.5.8.orig/mysql-test/t/disabled.def	2010-12-03 12:58:24.000000000 -0500
-+++ mysql-5.5.8/mysql-test/t/disabled.def	2011-02-03 11:10:31.325627589 -0500
-@@ -19,3 +19,9 @@
+
+diff -Naur mysql-5.5.9.orig/mysql-test/t/disabled.def mysql-5.5.9/mysql-test/t/disabled.def
+--- mysql-5.5.9.orig/mysql-test/t/disabled.def	2011-01-19 17:37:09.000000000 -0500
++++ mysql-5.5.9/mysql-test/t/disabled.def	2011-02-16 23:19:34.844378338 -0500
+@@ -18,3 +18,10 @@
  sum_distinct-big         : Bug#56927 2010-11-15 mattiasj was not tested
  alter_table-big          : Bug#37248 2010-11-15 mattiasj was not tested
  create-big               : Bug#37248 2010-11-15 mattiasj was not tested
@@ -30,3 +33,4 @@ diff -Naur mysql-5.5.8.orig/mysql-test/t/disabled.def mysql-5.5.8/mysql-test/t/d
 +perfschema.binlog_mix    : bug#59091 fails with openssl
 +perfschema.binlog_row    : bug#59091 fails with openssl
 +gis                      : bug#59908 has platform-dependent results
++innodb.innodb            : bug#60155 has platform-dependent results
