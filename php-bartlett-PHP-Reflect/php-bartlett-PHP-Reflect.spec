@@ -3,7 +3,7 @@
 %global pear_name PHP_Reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        0.5.0
+Version:        0.6.0
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -14,12 +14,12 @@ Source0:        http://%{channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.9.2
+BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
 
-Requires:       php-pear(PEAR) >= 1.9.2
+Requires:       php-pear(PEAR) >= 1.9.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-channel(%{channel})
@@ -65,7 +65,7 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}
 
-# Version 0.5.0 : OK (20 tests, 37 assertions)
+# Version 0.6.0 : OK (22 tests, 39 assertions)
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --bootstrap $RPM_BUILD_ROOT%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
@@ -89,12 +89,19 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Bartlett
 %{pear_testdir}/PHP_Reflect
 
 
 %changelog
+* Mon Apr 11 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.6.0-1
+- Version 0.6.0 (beta) - API 0.6.0 (beta)
+
+* Wed Apr 06 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.5.1-1
+- Version 0.5.1 (beta) - API 0.5.0 (beta)
+
 * Fri Mar 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.5.0-1
 - Version 0.5.0 (beta) - API 0.5.0 (beta)
 
