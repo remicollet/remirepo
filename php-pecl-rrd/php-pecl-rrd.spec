@@ -5,28 +5,14 @@
 
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
-Version:      0.10.0
-Release:      2%{?dist}
+Version:      1.0.0
+Release:      1%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
-# generate test file according to tests/testData/readme.txt
-# http://pecl.php.net/bugs/22578
-Source3:      rrd-test-makefile
-
-# http://pecl.php.net/bugs/22576 - extension version
-# http://pecl.php.net/bugs/22577 - long parameter
-# http://pecl.php.net/bugs/22580 - rrdtool version check
-Patch0:       rrd-build.patch
-
-# http://pecl.php.net/bugs/22579 - tests are arch dependant
-Patch1:       rrd-tests.patch
-
-# http://pecl.php.net/bugs/22586 - RFE php-strversion
-Patch2:       rrd-features.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.2
@@ -56,13 +42,6 @@ system for time series data.
 %prep 
 %setup -c -q
 %{_bindir}/php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 10
-
-cd %{pecl_name}-%{version}
-%patch0 -p1 -b .build
-%patch1 -p1 -b .tests
-%patch2 -p1 -b .features
-
-cp %{SOURCE3} tests/testData/Makefile
 
 
 %build
@@ -98,8 +77,13 @@ php --no-php-ini \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-%{__make} -C tests/testData clean
-%{__make} -C tests/testData all
+
+%{__make} -C tests/data clean
+%{__make} -C tests/data all
+
+: =====================================================================
+rrdtool
+
 %{__make} test NO_INTERACTION=1 | tee rpmtests.log
 
 if  grep -q "FAILED TEST" rpmtests.log; then
@@ -109,6 +93,7 @@ if  grep -q "FAILED TEST" rpmtests.log; then
   done
 %if 0%{?fedora} >= 14
   # tests only succeed with rrdtool 1.4.x
+  # http://pecl.php.net/bugs/22642
   exit 1
 %endif
 fi
@@ -133,14 +118,18 @@ fi
 
 %files
 %defattr(-, root, root, -)
-# http://pecl.php.net/bugs/22583 - Request for LICENSE
-%doc CHANGELOG %{pecl_name}-%{version}/CREDITS
+%doc CHANGELOG
+%doc %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/LICENSE
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Tue Apr 12 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.0-1
+- Version 1.0.0 (stable) - API 1.0.0 (stable)
+- remove all patches merged by upstream
+
 * Sat Mar 05 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10.0-2
 - improved patches
 - implement rrd_strversion

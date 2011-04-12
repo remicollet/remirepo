@@ -4,13 +4,18 @@ http://pecl.php.net/bugs/21133 - Provides tests
 http://pecl.php.net/bugs/21135 - declaration warnings - missing headers
 http://pecl.php.net/bugs/21178 - Build against rrdtool 1.4.x
 
+Old bugs (merged in version 1.0.0)
+http://pecl.php.net/bugs/21580 - Build fails against rrdtool 1.2.x
+http://pecl.php.net/bugs/21583 - Please provides LICENSE file
+http://pecl.php.net/bugs/21576 - FAIL RRDCreator test
+http://pecl.php.net/bugs/21577 - rrd 0.10.0 report as 0.9.0
+http://pecl.php.net/bugs/21578 - This RRD was created on another architecture
+http://pecl.php.net/bugs/21579 - FAIL rrd_info test [tests/rrd_012.phpt]
+http://pecl.php.net/bugs/22586 - RFE php-strversion
+
 Commited but not yet published
-http://pecl.php.net/bugs/21180 - Build fails against rrdtool 1.2.x
-http://pecl.php.net/bugs/21183 - Please provides LICENSE file
+	none
 
 Current Bugs
-http://pecl.php.net/bugs/21176 - FAIL RRDCreator test
-http://pecl.php.net/bugs/21177 - rrd 0.10.0 report as 0.9.0
-http://pecl.php.net/bugs/21178 - This RRD was created on another architecture
-http://pecl.php.net/bugs/21179 - FAIL rrd_info test [tests/rrd_012.phpt]
-http://pecl.php.net/bugs/22586 - RFE php-strversion
+http://pecl.php.net/bugs/22642 - Build logs against various rrdtool version (with failed tests)
+
