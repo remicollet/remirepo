@@ -19,3 +19,6 @@ Commited but not yet published
 Current Bugs
 http://pecl.php.net/bugs/22642 - Build logs against various rrdtool version (with failed tests)
 
+
+Submitted for review : https://bugzilla.redhat.com/695819
+
