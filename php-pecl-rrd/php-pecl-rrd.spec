@@ -41,7 +41,7 @@ system for time series data.
 
 %prep 
 %setup -c -q
-%{_bindir}/php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 10
+php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 10
 
 
 %build
@@ -49,25 +49,24 @@ cd %{pecl_name}-%{version}
 phpize
 %configure
 
-%{__make} %{?_smp_mflags}
+make %{?_smp_mflags}
 
 
 %install
 cd %{pecl_name}-%{version}
-%{__rm} -rf %{buildroot}
-%{__make} install INSTALL_ROOT=%{buildroot}
+rm -rf %{buildroot}
+make install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+mkdir -p %{buildroot}%{_sysconfdir}/php.d
+cat > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
 
 # Install XML package description
-# use 'name' rather than 'pecl_name' to avoid conflict with pear extensions
-%{__mkdir_p} %{buildroot}%{pecl_xmldir}
-%{__install} -m 644 ../package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+mkdir -p %{buildroot}%{pecl_xmldir}
+install -m 644 ../package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %check
@@ -78,13 +77,9 @@ php --no-php-ini \
     --modules | grep %{pecl_name}
 
 
-%{__make} -C tests/data clean
-%{__make} -C tests/data all
-
-: =====================================================================
-rrdtool
-
-%{__make} test NO_INTERACTION=1 | tee rpmtests.log
+make -C tests/data clean
+make -C tests/data all
+make test NO_INTERACTION=1 | tee rpmtests.log
 
 if  grep -q "FAILED TEST" rpmtests.log; then
   for t in tests/*diff; do
@@ -99,7 +94,7 @@ if  grep -q "FAILED TEST" rpmtests.log; then
 fi
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %if 0%{?pecl_install:1}
