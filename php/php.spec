@@ -106,6 +106,9 @@ Patch91: php-5.3.2-oci8conf.patch
 # See http://bugs.php.net/54450
 Patch92: php-5.3.6-readline.patch
 
+# On EL4, include order breaks build against MySQL 5.5
+Patch93: php-5.3.6-mysqli.patch
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -653,6 +656,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 
 %patch91 -p0 -b .remi-oci8
 %patch92 -p1 -b .libedit
+%patch93 -p1 -b .mysqli
 
 
 %if %{phpname} != php
@@ -1361,6 +1365,9 @@ fi
 %endif
 
 %changelog
+* Fri Apr 15 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-3
+- add patch to fix build against MySQL 5.5 on EL-4
+
 * Mon Apr  4 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-3
 - enable mhash extension (emulated by hash extension)
 
