@@ -87,6 +87,7 @@ contains the standard MySQL client programs and generic MySQL files.
 Summary: The shared libraries required for MySQL clients
 Group: Applications/Databases
 Requires: /sbin/ldconfig
+Obsoletes: compat-mysql55 <= %{version}
 
 %description libs
 The mysql-libs package provides the essential shared libraries for any 
@@ -681,6 +682,9 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Not yet build
+- add Obsoletes for compat-mysql55
+
 * Tue Apr 05 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.11-1
 - update to MySQL 5.5.11 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-11.html
