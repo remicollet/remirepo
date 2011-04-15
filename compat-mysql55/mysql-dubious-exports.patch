@@ -1,0 +1,60 @@
+Prefix mysql_ to the real names of several symbols that have to be exported
+from libmysqlclient because mysql-connector-odbc and/or PHP depend on them.
+This limits the intrusion on application namespace.
+
+
+diff -Naur mysql-5.5.8.orig/include/errmsg.h mysql-5.5.8/include/errmsg.h
+--- mysql-5.5.8.orig/include/errmsg.h	2010-12-03 12:58:24.000000000 -0500
++++ mysql-5.5.8/include/errmsg.h	2010-12-27 14:29:59.184552374 -0500
+@@ -24,6 +24,7 @@
+ #endif
+ void	init_client_errs(void);
+ void	finish_client_errs(void);
++#define client_errors mysql_client_errors		/* namespace sanity */
+ extern const char *client_errors[];	/* Error messages */
+ #ifdef	__cplusplus
+ }
+diff -Naur mysql-5.5.8.orig/include/my_sys.h mysql-5.5.8/include/my_sys.h
+--- mysql-5.5.8.orig/include/my_sys.h	2010-12-03 12:58:24.000000000 -0500
++++ mysql-5.5.8/include/my_sys.h	2010-12-27 14:27:23.956926896 -0500
+@@ -227,6 +227,7 @@
+ 
+ /* charsets */
+ #define MY_ALL_CHARSETS_SIZE 2048
++#define default_charset_info mysql_default_charset_info	/* namespace sanity */
+ extern MYSQL_PLUGIN_IMPORT CHARSET_INFO *default_charset_info;
+ extern MYSQL_PLUGIN_IMPORT CHARSET_INFO *all_charsets[MY_ALL_CHARSETS_SIZE];
+ extern CHARSET_INFO compiled_charsets[];
+@@ -914,6 +915,9 @@
+ extern uint get_collation_number(const char *name);
+ extern const char *get_charset_name(uint cs_number);
+ 
++#define get_charset mysql_get_charset		/* namespace sanity */
++#define get_charset_by_csname mysql_get_charset_by_csname
++
+ extern CHARSET_INFO *get_charset(uint cs_number, myf flags);
+ extern CHARSET_INFO *get_charset_by_name(const char *cs_name, myf flags);
+ extern CHARSET_INFO *get_charset_by_csname(const char *cs_name,
+diff -Naur mysql-5.5.8.orig/include/mysql.h.pp mysql-5.5.8/include/mysql.h.pp
+--- mysql-5.5.8.orig/include/mysql.h.pp	2010-12-03 12:58:24.000000000 -0500
++++ mysql-5.5.8/include/mysql.h.pp	2010-12-27 14:27:23.956926896 -0500
+@@ -86,7 +86,7 @@
+ void my_net_local_init(NET *net);
+ void net_end(NET *net);
+   void net_clear(NET *net, my_bool clear_buffer);
+-my_bool net_realloc(NET *net, size_t length);
++my_bool mysql_net_realloc(NET *net, size_t length);
+ my_bool net_flush(NET *net);
+ my_bool my_net_write(NET *net,const unsigned char *packet, size_t len);
+ my_bool net_write_command(NET *net,unsigned char command,
+diff -Naur mysql-5.5.8.orig/include/mysql_com.h mysql-5.5.8/include/mysql_com.h
+--- mysql-5.5.8.orig/include/mysql_com.h	2010-12-03 12:58:24.000000000 -0500
++++ mysql-5.5.8/include/mysql_com.h	2010-12-27 14:27:23.957927198 -0500
+@@ -448,6 +448,7 @@
+ void	my_net_local_init(NET *net);
+ void	net_end(NET *net);
+   void	net_clear(NET *net, my_bool clear_buffer);
++#define net_realloc mysql_net_realloc		/* namespace sanity */
+ my_bool net_realloc(NET *net, size_t length);
+ my_bool	net_flush(NET *net);
+ my_bool	my_net_write(NET *net,const unsigned char *packet, size_t len);

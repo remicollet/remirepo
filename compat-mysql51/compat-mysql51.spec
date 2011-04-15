@@ -43,7 +43,7 @@ Provides: mysqlclient16 = %{version}
 %description
 This package contains backlevel versions of the MySQL client libraries
 for use with applications linked against them.  These shared libraries
-were created using MySQL %[version}.
+were created using MySQL %{version}.
 
 %package devel
 

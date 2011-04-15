@@ -1,0 +1,36 @@
+Disable the outfile_loaddata test, which as of 5.1.38 is giving
+platform-dependent results, with the "expected" results being arguably the
+wrong ones.  This is upstream at http://bugs.mysql.com/bug.php?id=46895
+(note that upstream has also disabled it, but only for Solaris, so we still
+need this patch).
+
+Also disable sys_vars.plugin_dir_basic, which is broken because
+mysql-test-run doesn't set the right value of MYSQL_LIBDIR.  Upstream at
+http://bugs.mysql.com/bug.php?id=52223
+
+Also disable perfschema.binlog_mix and perfschema.binlog_row, which have
+expected output that doesn't match when openssl is in use.  Upstream at
+http://bugs.mysql.com/bug.php?id=59091
+
+Also disable gis, which expects the results of floating-point calculations
+to match to seventeen digits precision everywhere.  Of course they won't.
+Upstream at http://bugs.mysql.com/bug.php?id=59908
+
+Also disable innodb.innodb, which is showing platform-dependent results
+as of 5.5.9.  Upstream at http://bugs.mysql.com/bug.php?id=60155
+
+
+diff -Naur mysql-5.5.9.orig/mysql-test/t/disabled.def mysql-5.5.9/mysql-test/t/disabled.def
+--- mysql-5.5.9.orig/mysql-test/t/disabled.def	2011-01-19 17:37:09.000000000 -0500
++++ mysql-5.5.9/mysql-test/t/disabled.def	2011-02-16 23:19:34.844378338 -0500
+@@ -18,3 +18,10 @@
+ sum_distinct-big         : Bug#56927 2010-11-15 mattiasj was not tested
+ alter_table-big          : Bug#37248 2010-11-15 mattiasj was not tested
+ create-big               : Bug#37248 2010-11-15 mattiasj was not tested
++#
++outfile_loaddata         : bug#46895 code wrong, expected results wrong too
++sys_vars.plugin_dir_basic : bug#52223 fails for lib64 library directory
++perfschema.binlog_mix    : bug#59091 fails with openssl
++perfschema.binlog_row    : bug#59091 fails with openssl
++gis                      : bug#59908 has platform-dependent results
++innodb.innodb            : bug#60155 has platform-dependent results
