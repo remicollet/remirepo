@@ -1,15 +1,7 @@
 MySQL
 -----
 
-Backport of latest fedora package (sometime latest version before rawhide)
+MySQL 5.1.x is no more maintained in remi repository.
 
-
-Diff:
-	- federated engine enabled at startup
-	- innodb_plugin provided (must be enable in my.cnf)
-	- archive, blackhole and federated engines not build as plugin
-	- obsolete mysqlclient16
-	- minimal test suite (full is too long to run)
-	- comment: "MySQL Community Server (GPL) by Remi"
-	- use upstream tarball
+See mysql55 folder
 
