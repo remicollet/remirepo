@@ -1,4 +1,3 @@
-%define _default_patch_fuzz 2 \n\n
 %global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 %global php_extdir  %(php-config --extension-dir 2>/dev/null || echo "undefined")
 %global php_version %(php-config --version 2>/dev/null || echo 0)
@@ -7,18 +6,15 @@
 %define pecl_name ssh2
 
 Name:           php-pecl-ssh2
-Version:        0.11.0
-Release:        7%{?dist}
+Version:        0.11.2
+Release:        1%{?dist}
 Summary:        Bindings for the libssh2 library
 
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/ssh2
 Source0:        http://pecl.php.net/get/ssh2-%{version}.tgz
-Source1:        PHP-LICENSE-3.01
 Source2:        php-pecl-ssh2-0.10-README
-
-Patch0:         ssh2-php53.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -27,7 +23,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Provides:       php-pecl(ssh2) = %{version}
 
-%if %{?php_zend_api}0
+%if %{?php_zend_api:1}0
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 %else
@@ -43,16 +39,9 @@ libssh2 is available from http://www.sourceforge.net/projects/libssh2
 %prep
 %setup -c -q 
 
-#convert package.xml to V2 format
-%{__pear} convert package.xml package2.xml 
+%{__mv} package.xml %{pecl_name}-%{version}/%{name}.xml
 
-%{__mv} package2.xml %{pecl_name}-%{version}/%{pecl_name}.xml
-
-%{__install} -m 644 -c %{SOURCE1} LICENSE
 %{__install} -m 644 -c %{SOURCE2} README
-
-cd %{pecl_name}-%{version}
-%patch0 -p0 -b .php53
 
 
 %build
@@ -67,7 +56,7 @@ cd %{pecl_name}-%{version}
 %{__make} install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
-install -Dpm 644 %{pecl_name}.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 %{name}.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
 %{__install} -d %{buildroot}%{_sysconfdir}/php.d
@@ -75,6 +64,14 @@ install -Dpm 644 %{pecl_name}.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 ; Enable ssh2 extension module
 extension=ssh2.so
 EOF
+
+
+%check
+cd %{pecl_name}-%{version}
+php --no-php-ini \
+    --define extension_dir=modules \
+    --define extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
 
 
 %if 0%{?pecl_install:1}
@@ -97,13 +94,17 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README
+%doc README
 %config(noreplace) %{_sysconfdir}/php.d/ssh2.ini
 %{php_extdir}/ssh2.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Sat Apr 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.11.2-1
+- update to 0.11.2
+- add minimal %%check
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
