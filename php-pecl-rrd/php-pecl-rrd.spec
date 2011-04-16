@@ -5,14 +5,13 @@
 
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
-Version:      1.0.0
+Version:      1.0.1
 Release:      1%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-Source2:      xml2changelog
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.2
@@ -41,7 +40,6 @@ system for time series data.
 
 %prep 
 %setup -c -q
-php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 10
 
 
 %build
@@ -113,7 +111,6 @@ fi
 
 %files
 %defattr(-, root, root, -)
-%doc CHANGELOG
 %doc %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/LICENSE
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -121,6 +118,10 @@ fi
 
 
 %changelog
+* Sat Apr 16 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.1-1
+- Version 1.0.1 (stable) - API 1.0.1 (stable)
+- remove generated Changelog (only latest version, no real value)
+
 * Tue Apr 12 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.0-1
 - Version 1.0.0 (stable) - API 1.0.0 (stable)
 - remove all patches merged by upstream
