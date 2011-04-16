@@ -8,7 +8,7 @@
 Summary:	Provides a wrapper to the GraphicsMagick library
 Name:		php-pecl-%{pecl_name}
 Version:	1.0.8
-Release:	0.2.%{prever}%{?dist}
+Release:	0.3.%{prever}%{?dist}
 License:	PHP
 Group:		Development/Libraries
 URL:		http://pecl.php.net/package/gmagick
@@ -21,7 +21,7 @@ BuildRequires: 	php-devel >= 5.1.3, GraphicsMagick-devel >= 1.2.6
 
 Requires(post):	%{__pecl}
 Requires(postun): %{__pecl}
-%if %{?php_zend_api}0
+%if %{?php_zend_api:1}0
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
 %else
@@ -115,6 +115,9 @@ php --no-php-ini \
 
 
 %changelog
+* Sat Apr 16 2011 Remi Collet <rpms@famillecollet.com> 1.0.8-0.3.b1
+- fix build against latest php
+
 * Sun Oct 17 2010 Remi Collet <rpms@famillecollet.com> 1.0.8-0.2.b1
 - F-14 build + add Conflicts php-magickwand
 

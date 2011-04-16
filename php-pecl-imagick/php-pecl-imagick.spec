@@ -44,7 +44,7 @@ Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}
 
 Conflicts:     %{phpname}-pecl-gmagick
 
-%if %{?php_zend_api}0
+%if %{?php_zend_api:1}0
 Requires:       %{phpname}(zend-abi) = %{php_zend_api}
 Requires:       %{phpname}(api) = %{php_core_api}
 %else
