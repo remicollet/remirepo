@@ -1,0 +1,10 @@
+--- ssh2.c.php53	2008-12-14 10:04:22.000000000 +0100
++++ ssh2.c	2008-12-14 10:04:24.000000000 +0100
+@@ -48,7 +48,6 @@
+ #endif
+ 
+ #ifdef ZEND_ENGINE_2
+-static
+     ZEND_BEGIN_ARG_INFO(php_ssh2_first_arg_force_ref, 0)
+         ZEND_ARG_PASS_INFO(1)
+     ZEND_END_ARG_INFO()
