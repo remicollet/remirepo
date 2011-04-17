@@ -23,10 +23,10 @@
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
-%define mysql_config %{_libdir}/mysql/mysql_config
+%global mysql_config %{_libdir}/mysql/mysql_config
 
-#global snapdate 201012011530
-%global phpversion 5.3.6RC3
+%global snapdate 201104170830
+%global phpversion 5.3.7-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -52,10 +52,14 @@
 %global isasuffix %nil
 %endif
 
+# Flip these to 1 and zip respectively to enable zip support again
+%global with_zip 1
+%global zipmod zip
+
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.3.6
-Release: 0.4.RC3%{?dist}
+Version: 5.3.7
+Release: 0.1.%{snapdate}%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -81,7 +85,7 @@ Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.3.6-aconf26x.patch
+Patch8: php-5.3.7-aconf26x.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -93,14 +97,20 @@ Patch41: php-5.3.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.3.4-phpize.patch
-Patch44: php-5.3.4-mysql.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
 Patch62: php-5.3.3-tests.patch
 
 # RC Patch
-Patch91: php-5.3.2-oci8conf.patch
+Patch91: php-5.3.7-oci8conf.patch
+
+# Missing functions when build with libedit
+# See http://bugs.php.net/54450
+Patch92: php-5.3.6-readline.patch
+
+# On EL4, include order breaks build against MySQL 5.5
+Patch93: php-5.3.6-mysqli.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -154,10 +164,9 @@ language to Apache HTTP Server.
 Group: Development/Languages
 Summary: Command-line interface for PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Provides: php-cgi = %{version}-%{release}
-Provides: php-cgi%{?_isa} = %{version}-%{release}
-Provides: php-pcntl, php-readline
-Provides: php-pcntl%{?_isa}, php-readline%{?_isa}
+Provides: php-cgi = %{version}-%{release}, php-cgi%{?_isa} = %{version}-%{release}
+Provides: php-pcntl, php-pcntl%{?_isa}
+Provides: php-readline, php-readline%{?_isa}
 
 %description cli
 The php-cli package contains the command-line interface 
@@ -179,6 +188,9 @@ Server which can operate under a threaded server processing model.
 Group: Development/Languages
 Summary: PHP FastCGI Process Manager
 Requires: php-common%{?_isa} = %{version}-%{release}
+%if 0%{?fedora} >= 15
+Requires: systemd-units
+%endif
 BuildRequires: libevent-devel >= 1.4.11
 
 %description fpm
@@ -210,6 +222,7 @@ Provides: php-ftp, php-ftp%{?_isa}
 Provides: php-gettext, php-gettext%{?_isa}
 Provides: php-gmp, php-gmp%{?_isa}
 Provides: php-hash, php-hash%{?_isa}
+Provides: php-mhash = %{version}, php-mhash%{?_isa} = %{version}
 Provides: php-iconv, php-iconv%{?_isa}
 Provides: php-json, php-json%{?_isa}
 Provides: php-pecl-json = %{jsonver}, php-pecl-json%{?_isa} = %{jsonver}
@@ -226,11 +239,15 @@ Provides: php-simplexml, php-simplexml%{?_isa}
 Provides: php-sockets, php-sockets%{?_isa}
 Provides: php-spl, php-spl%{?_isa}
 Provides: php-tokenizer, php-tokenizer%{?_isa}
+%if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
 Provides: php-pecl-zip = %{zipver}, php-pecl-zip%{?_isa} = %{zipver}
 Provides: php-pecl(zip) = %{zipver}, php-pecl(zip)%{?_isa} = %{zipver}
+Obsoletes: php-pecl-zip
+%endif
 Provides: php-zlib, php-zlib%{?_isa}
-Obsoletes: php-openssl, php-pecl-zip, php-pecl-json, php-json, php-pecl-phar, php-pecl-Fileinfo
+Obsoletes: php-openssl, php-pecl-json, php-json, php-pecl-phar, php-pecl-Fileinfo
+Obsoletes: php-mhash < 5.3.0
 
 %description common
 The php-common package contains files used by both the php
@@ -287,8 +304,8 @@ Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo
 Provides: php-pdo-abi = %{pdover}
 # New ABI/API check - Arch specific
 Provides: php-pdo-abi = %{pdover}%{isasuffix}
-Provides: php-sqlite3, php-pdo_sqlite
-Provides: php-sqlite3%{?_isa}, php-pdo_sqlite%{?_isa}
+Provides: php-sqlite3, php-sqlite3%{?_isa}
+Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
 
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
@@ -314,9 +331,10 @@ without running a separate RDBMS process.
 %package mysql
 Summary: A module for PHP applications that use MySQL databases
 Group: Development/Languages
-Requires: php-common%{?_isa} = %{version}-%{release}, php-pdo%{?_isa}
-Provides: php_database, php-mysqli, php-pdo_mysql
-Provides: php-mysqli%{?_isa}, php-pdo_mysql%{?_isa}
+Requires: php-pdo%{?_isa} = %{version}-%{release}
+Provides: php_database
+Provides: php-mysqli, php-mysqli%{?_isa}
+Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
 Obsoletes: mod_php3-mysql, stronghold-php-mysql
 BuildRequires: mysql-devel >= 4.1.0
 
@@ -330,8 +348,9 @@ this package and the php package.
 %package pgsql
 Summary: A PostgreSQL database module for PHP
 Group: Development/Languages
-Requires: php-common%{?_isa} = %{version}-%{release}, php-pdo%{?_isa}
-Provides: php_database, php-pdo_pgsql, php-pdo_pgsql%{?_isa}
+Requires: php-pdo%{?_isa} = %{version}-%{release}
+Provides: php_database
+Provides: php-pdo_pgsql, php-pdo_pgsql%{?_isa}
 Obsoletes: mod_php3-pgsql, stronghold-php-pgsql
 BuildRequires: krb5-devel, openssl-devel, postgresql-devel
 
@@ -348,8 +367,10 @@ php package.
 Summary: Modules for PHP script using system process interfaces
 Group: Development/Languages
 Requires: php-common%{?_isa} = %{version}-%{release}
-Provides: php-posix, php-sysvsem, php-sysvshm, php-sysvmsg
-Provides: php-posix%{?_isa}, php-sysvsem%{?_isa}, php-sysvshm%{?_isa}, php-sysvmsg%{?_isa}
+Provides: php-posix, php-posix%{?_isa}
+Provides: php-sysvsem, php-sysvsem%{?_isa}
+Provides: php-sysvshm, php-sysvshm%{?_isa}
+Provides: php-sysvmsg, php-sysvmsg%{?_isa}
 
 %description process
 The php-process package contains dynamic shared objects which add
@@ -358,9 +379,10 @@ communication.
 
 %package odbc
 Group: Development/Languages
-Requires: php-common%{?_isa} = %{version}-%{release}, php-pdo%{?_isa}
+Requires: php-pdo%{?_isa} = %{version}-%{release}
 Summary: A module for PHP applications that use ODBC databases
-Provides: php_database, php-pdo_odbc, php-pdo_odbc%{?_isa}
+Provides: php_database
+Provides: php-pdo_odbc, php-pdo_odbc%{?_isa}
 Obsoletes: stronghold-php-odbc
 BuildRequires: unixODBC-devel
 
@@ -388,9 +410,10 @@ support to PHP for using the SOAP web services protocol.
 Summary: 	A module for PHP applications that use Interbase/Firebird databases
 Group: 		Development/Languages
 BuildRequires:  firebird-devel
-Requires: 	php-common%{?_isa} = %{version}-%{release}, php-pdo%{?_isa}
-Provides: 	php_database, php-firebird, php-pdo_firebird
-Provides: 	php-firebird%{?_isa}, php-pdo_firebird%{?_isa}
+Requires: 	php-pdo%{?_isa} = %{version}-%{release}
+Provides: 	php_database
+Provides: 	php-firebird, php-firebird%{?_isa}
+Provides: 	php-pdo_firebird, php-pdo_firebird%{?_isa}
 
 %description interbase
 The php-interbase package contains a dynamic shared object that will add
@@ -411,7 +434,7 @@ License.
 Summary:        A module for PHP applications that use OCI8 databases
 Group:          Development/Languages
 BuildRequires:  oracle-instantclient-devel >= %{oraclever}
-Requires:       php-common%{?_isa} = %{version}-%{release}, php-pdo%{?_isa}
+Requires:       php-pdo%{?_isa} = %{version}-%{release}
 Provides:       php_database, php-pdo_oci = %{oci8ver}, php-pdo_oci%{?_isa} = %{oci8ver}
 Provides:       php-pecl-oci8 = %{oci8ver}, php-pecl(oci8) = %{oci8ver}, php-pecl(oci8)%{?_isa} = %{oci8ver}
 # Should requires libclntsh.so.11.1, but it's not provided by Oracle RPM.
@@ -425,7 +448,7 @@ support for accessing OCI8 databases to PHP.
 %package snmp
 Summary: A module for PHP applications that query SNMP-managed devices
 Group: Development/Languages
-Requires: php-common%{?_isa} = %{version}-%{release}, net-snmp%{?_isa}
+Requires: php-common%{?_isa} = %{version}-%{release}, net-snmp
 BuildRequires: net-snmp-devel
 
 %description snmp
@@ -439,8 +462,10 @@ Summary: A module for PHP applications which use XML
 Group: Development/Languages
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php-domxml, php-dom
-Provides: php-dom, php-xsl, php-domxml, php-wddx
-Provides: php-dom%{?_isa}, php-xsl%{?_isa}, php-domxml%{?_isa}, php-wddx%{?_isa}
+Provides: php-dom, php-dom%{?_isa}
+Provides: php-xsl, php-xsl%{?_isa}
+Provides: php-domxml, php-domxml%{?_isa}
+Provides: php-wddx, php-wddx%{?_isa}
 BuildRequires: libxslt-devel >= 1.0.18-1, libxml2-devel >= 2.4.14-1
 
 %description xml
@@ -524,7 +549,7 @@ support for using the tidy library to PHP.
 %package mssql
 Summary: MSSQL database module for PHP
 Group: Development/Languages
-Requires: php-common%{?_isa} = %{version}-%{release}, php-pdo%{?_isa}
+Requires: php-pdo%{?_isa} = %{version}-%{release}
 BuildRequires: freetds-devel
 Provides: php-pdo_dblib, php-pdo_dblib%{?_isa}
 
@@ -617,13 +642,14 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p0 -b .headers
-%patch44 -p1 -b .mysqlcheck
 
 #%patch60 -p1 -b .tests-dashn
 %patch61 -p1 -b .tests-wddx
 %patch62 -p0 -b .tests
 
-%patch91 -p0 -b .remi-oci8
+%patch91 -p1 -b .remi-oci8
+%patch92 -p1 -b .libedit
+%patch93 -p1 -b .mysqli
 
 
 # Awful hack for mysqlnd driver default mysql socket patch
@@ -718,6 +744,9 @@ fi
 find . -name \*.[ch] -exec chmod 644 {} \;
 chmod 644 README.*
 
+# php-fpm configuration files for tmpfiles.d
+echo "d %{_localstatedir}/run/php-fpm 755 root root" >php-fpm.tmpfiles
+
 : Build for oci8=%{with_oci8} ibase=%{with_ibase}
 
 %build
@@ -798,6 +827,7 @@ ln -sf ../configure
 %if %{?fedora}%{?rhel:99} >= 10
         --with-system-tzdata \
 %endif
+        --with-mhash \
 	$* 
 if test $? != 0; then 
   tail -500 config.log
@@ -857,7 +887,9 @@ build --enable-force-cgi-redirect \
 %endif
       --with-sqlite=shared,%{_prefix} \
       --enable-json=shared \
+%if %{with_zip}
       --enable-zip=shared \
+%endif
       --without-readline \
       --with-libedit \
       --with-pspell=shared \
@@ -958,7 +990,9 @@ build --with-apxs2=%{_sbindir}/apxs \
 %endif
       --with-sqlite=shared,%{_prefix} \
       --enable-json=shared \
+%if %{with_zip}
       --enable-zip=shared \
+%endif
       --without-readline \
       --with-libedit \
       --with-pspell=shared \
@@ -1036,7 +1070,7 @@ install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules
 
 # Apache config fragment
 install -m 755 -d $RPM_BUILD_ROOT/etc/httpd/conf.d
-install -m 644 $RPM_SOURCE_DIR/php.conf $RPM_BUILD_ROOT/etc/httpd/conf.d
+install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/etc/httpd/conf.d
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
@@ -1059,6 +1093,11 @@ install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
+%if 0%{?fedora} >= 15
+# tmpfiles.d
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
+install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm.conf
+%endif
 %endif
 
 # Fix the link
@@ -1124,7 +1163,10 @@ cat files.sqlite3 >> files.pdo
 %endif
 
 # Package json, zip, curl, phar and fileinfo in -common.
-cat files.json files.zip files.curl files.phar files.fileinfo > files.common
+cat files.json files.curl files.phar files.fileinfo > files.common
+%if %{with_zip}
+cat files.zip >> files.common
+%endif
 
 # Install the macros file:
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
@@ -1201,7 +1243,10 @@ fi
 %{_bindir}/php-cgi
 %{_bindir}/phar.phar
 %{_bindir}/phar
+# provides phpize here (not in -devel) for pecl command
+%{_bindir}/phpize
 %{_mandir}/man1/php.1*
+%{_mandir}/man1/phpize.1*
 %doc sapi/cgi/README* sapi/cli/README
 
 %files zts
@@ -1215,6 +1260,9 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
+%if 0%{?fedora} >= 15
+%config(noreplace) %{_sysconfdir}/tmpfiles.d/php-fpm.conf
+%endif
 %{_sbindir}/php-fpm
 %{_initrddir}/php-fpm
 %dir %{_sysconfdir}/php-fpm.d
@@ -1227,11 +1275,9 @@ fi
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
-%{_bindir}/phpize
 %{_includedir}/php
 %{_libdir}/php/build
 %{_mandir}/man1/php-config.1*
-%{_mandir}/man1/phpize.1*
 %config %{_sysconfdir}/rpm/macros.php
 
 %files embedded
@@ -1276,6 +1322,9 @@ fi
 %endif
 
 %changelog
+* Sun Apr 17 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201104170830
+- new snapshot (5.3.7-dev)
+
 * Tue Mar 15 2011 Remi Collet <Fedora@FamilleCollet.com> 5.3.6-0.4.RC3
 - rebuild for new mysql client ABI (.18)
 
