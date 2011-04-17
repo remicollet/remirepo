@@ -3,7 +3,7 @@
 %global pear_name PHP_Reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        0.6.0
+Version:        0.7.0
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -65,7 +65,7 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}
 
-# Version 0.6.0 : OK (22 tests, 39 assertions)
+# Version 0.6.0 : OK (25 tests, 42 assertions)
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --bootstrap $RPM_BUILD_ROOT%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
@@ -96,6 +96,9 @@ fi
 
 
 %changelog
+* Sat Apr 17 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.7.0-1
+- Version 0.7.0 (beta) - API 0.7.0 (beta)
+
 * Mon Apr 11 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.6.0-1
 - Version 0.6.0 (beta) - API 0.6.0 (beta)
 
