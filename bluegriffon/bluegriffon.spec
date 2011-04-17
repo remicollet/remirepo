@@ -7,18 +7,18 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-2.0
-#global svnmain     608
-#global svnlocales  38
+%global svnmain     635
+%global svnlocales  47
 
-%global gecko_version   2.0-1
-%global srcversion      4.0
+%global gecko_version   2.0.1-1
+%global srcversion      4.0.1
 
 Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
-Version:        0.9.1
+Version:        1.0
 %if 0%{?svnmain}
-Release:        0.svn%{svnmain}%{?dist}.1
+Release:        0.1.svn%{svnmain}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -94,6 +94,7 @@ ac_add_options --enable-application=%{name}
 #ac_add_options --with-system-png
 ac_add_options --prefix="\$PREFIX"
 ac_add_options --libdir="\$LIBDIR"
+ac_add_options --disable-cpp-exceptions
 %if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
@@ -159,10 +160,9 @@ $(pkg-config --variable=sdkdir libxul)" >> .mozconfig
 
 %build
 MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
-   %{__sed} -e 's/-Wall//' -e 's/-fexceptions//g')
-
+                     %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
+export CXXFLAGS=$MOZ_OPT_FLAGS
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
@@ -242,6 +242,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sun Apr 17 2011 Remi Collet <rpms@famillecollet.com> - 1.0-0.1.svn635
+- bluegriffon 1.0pre1, svn 635, locales svn 47
+- build against xulrunner 2.0.1 build1 candidate
+
 * Mon Mar 29 2011 Remi Collet <rpms@famillecollet.com> - 0.9.1-1
 - BlueGriffon 0.9.1 "Coffee Overflow"
   http://bluegriffon.org/post/2011/03/29/BlueGriffon-0.9.1-Coffee-Overflow
