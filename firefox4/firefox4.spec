@@ -47,7 +47,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        4.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        3%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -67,9 +67,10 @@ Source23:       firefox.1
 Patch0:         firefox-version.patch
 
 # Fedora patches
-Patch11:        firefox-default.patch
 
 # Upstream patches
+Patch30:        firefox-4.0-moz-app-launcher.patch
+Patch31:        firefox-4.0-gnome3.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -105,6 +106,11 @@ Obsoletes:      firefox4
 Provides:       firefox4 = %{version}-%{release}
 %endif
 
+# For GNOME 3 support, we need 2.0-2
+# The specific BR/Require pair can go away when we bump to >= 2.0.1
+# since it will be brought in by the gecko requirements
+BuildRequires:  xulrunner-devel >= 2.0-2
+Requires:       xulrunner >= 2.0-2
 
 %description
 Mozilla Firefox is an open-source web browser, designed for standards
@@ -126,7 +132,10 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{firefox_dir_ver}/' %{P:%%PATCH0} \
 # For branding specific patches.
 
 # Fedora patches
-%patch11 -p1 -b .default
+
+# Upstream patches
+%patch30 -p1 -b .moz-app-launcher
+%patch31 -p1 -b .gnome3
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -138,11 +147,10 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{firefox_dir_ver}/' %{P:%%PATCH0} \
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-  | grep -v disable-cpp-exceptions \
 %if %{fedora} < 15
   | grep -v enable-system-sqlite   \
 %endif
-%if %{fedora} < 14
+%if %{fedora} < 13
   | grep -v with-system-nspr       \
   | grep -v with-system-nss        \
 %endif
@@ -185,9 +193,9 @@ cd %{tarballdir}
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
 MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
-                     %{__sed} -e 's/-Wall//' -e 's/-fexceptions//g')
+                     %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
+export CXXFLAGS=$MOZ_OPT_FLAGS
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
@@ -360,8 +368,8 @@ update-desktop-database &> /dev/null || :
 if [ $1 -eq 0 ]; then
   %{__rm} -rf %{mozappdir}/components
   %{__rm} -rf %{mozappdir}/extensions
-  %{__rm} -rf %{mozappdir}/langpacks
   %{__rm} -rf %{mozappdir}/plugins
+  %{__rm} -rf %{langpackdir}
 fi
 %endif
 
@@ -410,6 +418,16 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Apr  4 2011 Christopher Aillon <caillon@redhat.com> - 4.0-3
+- Updates for NetworkManager 0.9
+- Updates for GNOME 3
+
+* Tue Mar 22 2011 Christopher Aillon <caillon@redhat.com> - 4.0-2
+- Rebuild
+
+* Tue Mar 22 2011 Christopher Aillon <caillon@redhat.com> - 4.0-1
+- Firefox 4
+
 * Tue Mar 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-1
 - Firefox 4.0 Finale
 
