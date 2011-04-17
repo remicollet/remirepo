@@ -66,14 +66,14 @@ Name:           %{shortname}
 %else
 Name:           %{shortname}2
 %endif
-Version:        2.0
-Release:        3%{?dist}
+Version:        2.0.1
+Release:        0.1.build1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 # You can get sources at ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pretag}/source
 #Source0:        %{shortname}-%{version}%{?pretag}.source.tar.bz2
-Source0:        firefox-4.0%{?pre_version}.source.tar.bz2
+Source0:        firefox-4.0.1%{?pre_version}.source.tar.bz2
 Source10:       %{shortname}-mozconfig
 Source11:       %{shortname}-mozconfig-debuginfo
 Source12:       %{shortname}-redhat-default-prefs.js
@@ -232,8 +232,8 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
-%patch30 -p1 -b .zip-deadlocks
-%patch31 -p1 -b .baddevice
+# Applied %patch30 -p1 -b .zip-deadlocks
+# Applied %patch31 -p1 -b .baddevice
 %patch32 -p1 -b .moz-app-launcher
 %patch33 -p1 -b .gnome3
 %patch34 -p1 -b .network-link-service
@@ -553,6 +553,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Apr 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-0.1.build1
+- Update to 2.0.1 build1 candidate
+
 * Sun Apr 10 2011 Christopher Aillon <caillon@redhat.com> - 2.0-3
 - Fix offline status issue on version upgrades
 - Fix a hang with 20+ extensions
