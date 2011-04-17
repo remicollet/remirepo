@@ -1,0 +1,271 @@
+https://bugzilla.mozilla.org/show_bug.cgi?id=627672
+
+diff -p -U8 mozilla-2.0/netwerk/base/src/nsIOService.cpp.network-link-service mozilla-2.0/netwerk/base/src/nsIOService.cpp
+--- mozilla-2.0/netwerk/base/src/nsIOService.cpp.network-link-service	2011-03-18 16:34:03.000000000 -0700
++++ mozilla-2.0/netwerk/base/src/nsIOService.cpp	2011-04-03 21:40:34.787142329 -0700
+@@ -160,31 +160,33 @@ PRInt16 gBadPortList[] = { 
+   2049, // nfs
+   4045, // lockd
+   6000, // x11        
+   0,    // This MUST be zero so that we can populating the array
+ };
+ 
+ static const char kProfileChangeNetTeardownTopic[] = "profile-change-net-teardown";
+ static const char kProfileChangeNetRestoreTopic[] = "profile-change-net-restore";
++static const char kStartupTopic[] = "profile-after-change";
+ 
+ // Necko buffer cache
+ nsIMemory* nsIOService::gBufferCache = nsnull;
+ PRUint32   nsIOService::gDefaultSegmentSize = 4096;
+ PRUint32   nsIOService::gDefaultSegmentCount = 24;
+ 
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+ nsIOService::nsIOService()
+     : mOffline(PR_TRUE)
+     , mOfflineForProfileChange(PR_FALSE)
+     , mManageOfflineStatus(PR_TRUE)
+     , mSettingOffline(PR_FALSE)
+     , mSetOfflineValue(PR_FALSE)
+     , mShutdown(PR_FALSE)
++    , mNetworkLinkServiceInitialized(PR_FALSE)
+     , mChannelEventSinks(NS_CHANNEL_EVENT_SINK_CATEGORY)
+     , mContentSniffers(NS_CONTENT_SNIFFER_CATEGORY)
+ {
+ }
+ 
+ nsresult
+ nsIOService::Init()
+ {
+@@ -229,16 +231,17 @@ nsIOService::Init()
+     }
+     
+     // Register for profile change notifications
+     nsCOMPtr<nsIObserverService> observerService =
+         mozilla::services::GetObserverService();
+     if (observerService) {
+         observerService->AddObserver(this, kProfileChangeNetTeardownTopic, PR_TRUE);
+         observerService->AddObserver(this, kProfileChangeNetRestoreTopic, PR_TRUE);
++        observerService->AddObserver(this, kStartupTopic, PR_TRUE);
+         observerService->AddObserver(this, NS_XPCOM_SHUTDOWN_OBSERVER_ID, PR_TRUE);
+         observerService->AddObserver(this, NS_NETWORK_LINK_TOPIC, PR_TRUE);
+     }
+     else
+         NS_WARNING("failed to get observer service");
+         
+     NS_TIME_FUNCTION_MARK("Registered observers");
+ 
+@@ -257,32 +260,20 @@ nsIOService::Init()
+         NS_WARN_IF_FALSE(NS_SUCCEEDED(rv), "Was unable to allocate.  No gBufferCache.");
+         CallQueryInterface(recyclingAllocator, &gBufferCache);
+     }
+ 
+     NS_TIME_FUNCTION_MARK("Set up the recycling allocator");
+ 
+     gIOService = this;
+ 
+-#ifdef MOZ_IPC
+-    // go into managed mode if we can, and chrome process
+-    if (XRE_GetProcessType() == GeckoProcessType_Default)
+-#endif
+-        mNetworkLinkService = do_GetService(NS_NETWORK_LINK_SERVICE_CONTRACTID);
++    // We can't really determine if the machine has a usable network connection,
++    // (mNetworkLinkService will be initialized later) so let's cross our fingers!
++    SetOffline(PR_FALSE);
+ 
+-    if (!mNetworkLinkService)
+-        // We can't really determine if the machine has a usable network connection,
+-        // so let's cross our fingers!
+-        mManageOfflineStatus = PR_FALSE;
+-
+-    if (mManageOfflineStatus)
+-        TrackNetworkLinkStatusForOffline();
+-    else
+-        SetOffline(PR_FALSE);
+-    
+     NS_TIME_FUNCTION_MARK("Set up network link service");
+ 
+     return NS_OK;
+ }
+ 
+ 
+ nsIOService::~nsIOService()
+ {
+@@ -306,16 +293,54 @@ nsIOService::InitializeSocketTransportSe
+     if (mSocketTransportService) {
+         rv = mSocketTransportService->Init();
+         NS_ASSERTION(NS_SUCCEEDED(rv), "socket transport service init failed");
+     }
+ 
+     return rv;
+ }
+ 
++nsresult
++nsIOService::InitializeNetworkLinkService()
++{
++    NS_TIME_FUNCTION;
++
++    nsresult rv = NS_OK;
++
++    if (mNetworkLinkServiceInitialized)
++      return rv;
++
++#ifdef MOZ_IPC
++    // go into managed mode if we can, and chrome process
++    if (XRE_GetProcessType() == GeckoProcessType_Default)
++#endif
++    {
++        mNetworkLinkService = do_GetService(NS_NETWORK_LINK_SERVICE_CONTRACTID, &rv);
++        if (NS_FAILED(rv)) {
++            NS_WARNING("failed to get network link service");
++            return rv;
++        }
++    }
++  
++    mNetworkLinkServiceInitialized = PR_TRUE;
++
++    if (!mNetworkLinkService) {
++        // We can't really determine if the machine has a usable network connection,
++        // so let's cross our fingers!
++        mManageOfflineStatus = PR_FALSE;
++    }
++
++    if (mManageOfflineStatus)
++        TrackNetworkLinkStatusForOffline();
++    else
++        SetOffline(PR_FALSE);
++    
++    return rv;
++}
++
+ nsIOService*
+ nsIOService::GetInstance() {
+     if (!gIOService) {
+         gIOService = new nsIOService();
+         if (!gIOService)
+             return nsnull;
+         NS_ADDREF(gIOService);
+ 
+@@ -658,16 +683,19 @@ nsIOService::NewChannel(const nsACString
+     if (NS_FAILED(rv)) return rv;
+ 
+     return NewChannelFromURI(uri, result);
+ }
+ 
+ PRBool
+ nsIOService::IsLinkUp()
+ {
++    NS_ASSERTION(mNetworkLinkServiceInitialized, 
++                 "network link service should be initialized");
++
+     if (!mNetworkLinkService) {
+         // We cannot decide, assume the link is up
+         return PR_TRUE;
+     }
+ 
+     PRBool isLinkUp;
+     nsresult rv;
+     rv = mNetworkLinkService->GetIsLinkUp(&isLinkUp);
+@@ -938,16 +966,20 @@ nsIOService::Observe(nsISupports *subjec
+         if (mOfflineForProfileChange) {
+             mOfflineForProfileChange = PR_FALSE;
+             if (!mManageOfflineStatus ||
+                 NS_FAILED(TrackNetworkLinkStatusForOffline())) {
+                 SetOffline(PR_FALSE);
+             }
+         } 
+     }
++    else if (!strcmp(topic, kStartupTopic)) {
++        // Lazy initialization of network link service (see bug 620472)
++        InitializeNetworkLinkService();
++    }
+     else if (!strcmp(topic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
+         // Remember we passed XPCOM shutdown notification to prevent any
+         // changes of the offline status from now. We must not allow going
+         // online after this point.
+         mShutdown = PR_TRUE;
+ 
+         SetOffline(PR_TRUE);
+ 
+@@ -1055,32 +1087,42 @@ nsIOService::NewSimpleNestedURI(nsIURI* 
+     NS_IF_ADDREF(*aResult = new nsSimpleNestedURI(safeURI));
+     return *aResult ? NS_OK : NS_ERROR_OUT_OF_MEMORY;
+ }
+ 
+ NS_IMETHODIMP
+ nsIOService::SetManageOfflineStatus(PRBool aManage) {
+     PRBool wasManaged = mManageOfflineStatus;
+     mManageOfflineStatus = aManage;
++
++    if (!mNetworkLinkServiceInitialized) {
++        nsresult rv = InitializeNetworkLinkService();
++        if (NS_FAILED(rv))
++            return rv;
++    }
++    
+     if (mManageOfflineStatus && !wasManaged)
+         return TrackNetworkLinkStatusForOffline();
+     return NS_OK;
+ }
+ 
+ NS_IMETHODIMP
+ nsIOService::GetManageOfflineStatus(PRBool* aManage) {
+     *aManage = mManageOfflineStatus;
+     return NS_OK;
+ }
+ 
+ nsresult
+ nsIOService::TrackNetworkLinkStatusForOffline()
+ {
+     NS_ASSERTION(mManageOfflineStatus,
+                  "Don't call this unless we're managing the offline status");
++    NS_ASSERTION(mNetworkLinkServiceInitialized, 
++                "network link service should be set up");
++
+     if (!mNetworkLinkService)
+         return NS_ERROR_FAILURE;
+ 
+     if (mShutdown)
+         return NS_ERROR_NOT_AVAILABLE;
+   
+     // check to make sure this won't collide with Autodial
+     if (mSocketTransportService) {
+diff -p -U8 mozilla-2.0/netwerk/base/src/nsIOService.h.network-link-service mozilla-2.0/netwerk/base/src/nsIOService.h
+--- mozilla-2.0/netwerk/base/src/nsIOService.h.network-link-service	2011-03-18 16:34:03.000000000 -0700
++++ mozilla-2.0/netwerk/base/src/nsIOService.h	2011-04-03 21:34:34.608645179 -0700
+@@ -129,16 +129,17 @@ private:
+                                               nsIProtocolHandler* hdlr);
+ 
+     // Prefs wrangling
+     NS_HIDDEN_(void) PrefsChanged(nsIPrefBranch *prefs, const char *pref = nsnull);
+     NS_HIDDEN_(void) GetPrefBranch(nsIPrefBranch2 **);
+     NS_HIDDEN_(void) ParsePortList(nsIPrefBranch *prefBranch, const char *pref, PRBool remove);
+ 
+     nsresult InitializeSocketTransportService();
++    nsresult InitializeNetworkLinkService();
+ 
+ private:
+     PRPackedBool                         mOffline;
+     PRPackedBool                         mOfflineForProfileChange;
+     PRPackedBool                         mManageOfflineStatus;
+ 
+     // Used to handle SetOffline() reentrancy.  See the comment in
+     // SetOffline() for more details.
+@@ -146,16 +147,17 @@ private:
+     PRPackedBool                         mSetOfflineValue;
+ 
+     PRPackedBool                         mShutdown;
+ 
+     nsCOMPtr<nsPISocketTransportService> mSocketTransportService;
+     nsCOMPtr<nsPIDNSService>             mDNSService;
+     nsCOMPtr<nsIProtocolProxyService2>   mProxyService;
+     nsCOMPtr<nsINetworkLinkService>      mNetworkLinkService;
++    PRPackedBool                         mNetworkLinkServiceInitialized;
+     
+     // Cached protocol handlers
+     nsWeakPtr                            mWeakHandler[NS_N(gScheme)];
+ 
+     // cached categories
+     nsCategoryCache<nsIChannelEventSink> mChannelEventSinks;
+     nsCategoryCache<nsIContentSniffer>   mContentSniffers;
+ 

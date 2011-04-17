@@ -1,0 +1,195 @@
+https://bugzilla.mozilla.org/show_bug.cgi?id=637286
+
+# HG changeset patch
+# User Michael Wu <mwu@mozilla.com>
+# Date 1301598072 14400
+# Node ID 46171fccbedad63dd408985d725422d69e2d7b1e
+# Parent  a2840fe77a5b168ba0244140bf142cec7b827c94
+Bug 637286 - Eliminate deadlocks in ReleaseZip, r=taras a=dveditz
+
+diff --git a/modules/libjar/nsJAR.cpp b/modules/libjar/nsJAR.cpp
+--- a/modules/libjar/nsJAR.cpp
++++ b/modules/libjar/nsJAR.cpp
+@@ -166,16 +166,17 @@ nsrefcnt nsJAR::Release(void)
+ 
+ NS_IMETHODIMP
+ nsJAR::Open(nsIFile* zipFile)
+ {
+   NS_ENSURE_ARG_POINTER(zipFile);
+   if (mLock) return NS_ERROR_FAILURE; // Already open!
+ 
+   mZipFile = zipFile;
++  mOuterZipEntry.Truncate();
+ 
+   mLock = PR_NewLock();
+   NS_ENSURE_TRUE(mLock, NS_ERROR_OUT_OF_MEMORY);
+   
+ #ifdef MOZ_OMNIJAR
+   // The omnijar is special, it is opened early on and closed late
+   // this avoids reopening it
+   PRBool equals;
+@@ -232,17 +233,16 @@ nsJAR::Close()
+     PR_DestroyLock(mLock);
+     mLock = nsnull;
+   }
+ 
+   mParsedManifest = PR_FALSE;
+   mManifestData.Reset();
+   mGlobalStatus = JAR_MANIFEST_NOT_PARSED;
+   mTotalItemsInManifest = 0;
+-  mOuterZipEntry.Truncate(0);
+ 
+ #ifdef MOZ_OMNIJAR
+   if (mZip == mozilla::OmnijarReader()) {
+     mZip.forget();
+     mZip = new nsZipArchive();
+     return NS_OK;
+   }
+ #endif
+@@ -1285,41 +1285,38 @@ nsZipReaderCache::ReleaseZip(nsJAR* zip)
+   // needs removing. 
+   if (!oldest)
+     return NS_OK;
+ 
+ #ifdef ZIP_CACHE_HIT_RATE
+     mZipCacheFlushes++;
+ #endif
+ 
+-  // Clear the cache pointer in case we gave out this oldest guy while
+-  // his Release call was being made. Otherwise we could nest on ReleaseZip
+-  // when the second owner calls Release and we are still here in this lock.
+-  oldest->SetZipReaderCache(nsnull);
+-
+   // remove from hashtable
+   nsCAutoString uri;
+   rv = oldest->GetJarPath(uri);
+   if (NS_FAILED(rv))
+     return rv;
+ 
+-  if (zip->mOuterZipEntry.IsEmpty()) {
++  if (oldest->mOuterZipEntry.IsEmpty()) {
+     uri.Insert(NS_LITERAL_CSTRING("file:"), 0);
+   } else {
+     uri.Insert(NS_LITERAL_CSTRING("jar:"), 0);
+     uri.AppendLiteral("!/");
+-    uri.Append(zip->mOuterZipEntry);
++    uri.Append(oldest->mOuterZipEntry);
+   }
+ 
+   nsCStringKey key(uri);
+-#ifdef DEBUG
+-  PRBool removed =
+-#endif
+-    mZips.Remove(&key);   // Releases
++  nsRefPtr<nsJAR> removed;
++  mZips.Remove(&key, (nsISupports **)removed.StartAssignment());
+   NS_ASSERTION(removed, "botched");
++  NS_ASSERTION(oldest == removed, "removed wrong entry");
++
++  if (removed)
++    removed->SetZipReaderCache(nsnull);
+ 
+   return NS_OK;
+ }
+ 
+ static PRBool
+ FindFlushableZip(nsHashKey *aKey, void *aData, void* closure)
+ {
+   nsHashKey** flushableKeyPtr = (nsHashKey**)closure;
+diff --git a/modules/libjar/test/unit/data/test_bug637286.zip b/modules/libjar/test/unit/data/test_bug637286.zip
+new file mode 100644
+index 0000000000000000000000000000000000000000..5dc8e747eaa212ae633bb24679f95d10c06cba8b
+GIT binary patch
+literal 12958
+zc%0>$OH7<q6vr<!^C3gUcg43~scq9_80Q7kZW`A`3=7y96D_pG2UCevO4P)K)mUE*
+zOA|LpAV46g8(p|^;mU=pE+hmN5K_~)AcPPI@qB#Vd(JoKp2cj>%;baNaewpuxSZVo
+zeGK%aGwmjNY~J|v!p*@;w|;@w(baB_o6)hck?}%)a`f8JVAiB-3se2kH8hbiTj^ml
+z;2PhB#-pEqF`tLm(UpeAmut17Rzpz>(rWPPNcjHs(M#`yZ;jVJ8VfJiCc?L`zjtk9
+zIIMj*G9G>aKY#bl$s6Ht?Ml9Vpsyv>nU>zA!`R19pG6;!-ZS|BJtqv@VbB_VzXhHb
+z;Pdd&@8W&uCX>>~taK5rw}G{-%DP*$E;{QSVC|@~&WqM1XT1xoT~*dEi`Hdly$7s4
+zRn`U3y5g+&fwkWx);-Sp09XgAtc#*`ud_Y`)}bovl4xCZ)@E_4Kf3f-mqqJy&N>Cg
+zDOJ`L(fYiz&VX@7m325N1X2tsD}Y*2Rn|RHSC=r5wn8_zs_N=q(Hi@@4UF4VSyx4C
+z45V2w&Z@G$C|YA6&4F=Fm35zJje)cqjJun}8Utw_jPt6jUlpw}kQTtWpvt;mw8lVM
+z0^^b@>(@kU45Vc+E;ora2GR-`S5#S_kOC<V*Q<b9RTW4Fq^>SwAgw|-S5<ZOSE4lr
+z(rGZBR%Lxlw8sDN88DtvW&O2ije&F)jAxs~8UyJZ7|*G){zkOMKspb`^Qx@B6|FIl
+zE`aeulUQRQT?FGrRo35$))+{az<5cO_4lGR2GV6PURGt@B?VF(xYhu*rYex$mb$uv
+zf%Fb^^Bq-PeNyUb9Ie*@wXUkGPf5}^SZ@GoqdBB;tlk9FrYh;vk~9w0TY%b9C4EMc
+z#*z9Spzf)XJ}XJ%Kz$!j_f<$Elb^1uXVSBFL44LOMk9ouR-=#|3n?OH+e6`}zbNIO
+z7E38Q%8rM^Pg7CKddgBtj<V~a@Y6|@ayM-$Wk=cbQ24nQO8GNmDHTWAZ<z9XU@1M0
+za^Rux(<qekYpbR7I?ADk!cTWl%JKu2QgxL0oJW$vPfJkBOq->gbCi^a!cQMi$`4sf
+zIqxVL4~6gMQ_AgjOL34D&!2_wj#J3ZV<x#*9>ja)^%TC_Oer5fXeoFvZ5|5Wy`_}#
+z4okrT$a*MzH<VJYK4d9a067nZ@3T?L8xLCw7C?8yl)*<V1q&eWq43==O1b!`rC<RR
+zJQTj0L@BR4W+_+zB@cz~Q&39p<CcO2P;Qu#d%{w%04g2|-#ws|uH%;CAgi7N;H&Wz
+z()pxGuFVJW+I&5QuWnOHN2jG=0Ze-+e6^TT(ob0m8qIhpd>xWf_8bKZV76h(zfW5V
+z7Qmc`!dC|=W#bu3!2+1~Q24qNrTqP@rC<RpG)(#HIZMF;SoBc%Y7nLT@w}yA0W5ha
+ze07CVetW@EumF}l6uw$PDL=nxDGsvcDF8nEr;xeOB-a9hcrBow!e`Tz^5Y3hagcS-
+zt?-E&g-mss#9TFq=c<iCzC39XbH5;-`_)7E?1@4?dC4T^Qb9bIs)z8|NMbxYWfF6f
+iAfB7lLwLHUkSnK6BI^fn)~5;jEIe~Cj=z2;`szQ{1jZ@=
+
+diff --git a/modules/libjar/test/unit/test_bug637286.js b/modules/libjar/test/unit/test_bug637286.js
+new file mode 100644
+--- /dev/null
++++ b/modules/libjar/test/unit/test_bug637286.js
+@@ -0,0 +1,60 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is mozilla.org code.
++ *
++ * The Initial Developer of the Original Code is
++ * Mozilla Foundation.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ * 
++ * Contributor(s):
++ *  Michael Wu <mwu@mozilla.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++const Cc = Components.classes;
++const Ci = Components.interfaces;
++
++// Check that the zip cache can expire entries from nested jars
++var ios = Cc["@mozilla.org/network/io-service;1"].
++          getService(Ci.nsIIOService);
++
++function open_inner_zip(base, idx) {
++    var spec = "jar:" + base + "inner" + idx + ".zip!/foo";
++    var channel = ios.newChannel(spec, null, null);
++    var stream = channel.open();
++}
++
++function run_test() {
++  var file = do_get_file("data/test_bug637286.zip");
++  var outerJarBase = "jar:" + ios.newFileURI(file).spec + "!/";
++
++  for (var i = 0; i < 40; i++) {
++    open_inner_zip(outerJarBase, i);
++    gc();
++  }
++}
++
+
+

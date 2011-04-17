@@ -67,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -94,12 +94,18 @@ Patch23:        wmclass.patch
 Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
-Patch30:        xulrunner-omnijar.patch
+Patch30:        xulrunner-2.0-zip-deadlocks.patch
+Patch31:        xulrunner-2.0-baddevice.patch
+Patch32:        firefox-4.0-moz-app-launcher.patch
+Patch33:        firefox-4.0-gnome3.patch
+Patch34:        xulrunner-2.0-network-link-service.patch
+Patch35:        xulrunner-2.0-NetworkManager09.patch
+Patch36:        xulrunner-omnijar.patch
 
 # ---------------------------------------------------
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-%if %{fedora} >= 14
+%if %{fedora} >= 13
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
@@ -113,9 +119,6 @@ BuildRequires:  bzip2-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libIDL-devel
 BuildRequires:  gtk2-devel
-#BuildRequires:  gnome-vfs2-devel
-#BuildRequires:  libgnome-devel
-#BuildRequires:  libgnomeui-devel
 BuildRequires:  krb5-devel
 BuildRequires:  pango-devel
 BuildRequires:  freetype-devel >= %{freetype_version}
@@ -142,7 +145,7 @@ BuildRequires:  libvpx-devel
 %endif
 
 Requires:       mozilla-filesystem
-%if %{fedora} >= 14
+%if %{fedora} >= 13
 Requires:       nspr >= %{nspr_version}
 Requires:       nss >= %{nss_version}
 %endif
@@ -171,7 +174,7 @@ Provides: gecko-devel-unstable = %{gecko_verrel}
 Provides: gecko-devel-unstable%{?_isa} = %{gecko_verrel}
 
 Requires: %{name} = %{version}-%{release}
-%if %{fedora} >= 14
+%if %{fedora} >= 13
 Requires: nspr-devel >= %{nspr_version}
 Requires: nss-devel >= %{nss_version}
 %endif
@@ -184,9 +187,6 @@ Requires: bzip2-devel
 Requires: zlib-devel
 Requires: libIDL-devel
 Requires: gtk2-devel
-#Requires: gnome-vfs2-devel
-#Requires: libgnome-devel
-#Requires: libgnomeui-devel
 Requires: krb5-devel
 Requires: pango-devel
 Requires: freetype-devel >= %{freetype_version}
@@ -232,16 +232,21 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
-%patch30 -p1 -b .omnijar
+%patch30 -p1 -b .zip-deadlocks
+%patch31 -p1 -b .baddevice
+%patch32 -p1 -b .moz-app-launcher
+%patch33 -p1 -b .gnome3
+%patch34 -p1 -b .network-link-service
+%patch35 -p1 -b .NetworkManager09
+%patch36 -p1 -b .omnijar
 
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-  | grep -v disable-cpp-exceptions \
 %if %{fedora} < 15
   | grep -v enable-system-sqlite   \
 %endif
-%if %{fedora} < 14
+%if %{fedora} < 13
   | grep -v with-system-nspr       \
   | grep -v with-system-nss        \
 %endif
@@ -298,10 +303,10 @@ cd %{tarballdir}
 #
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
-MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
-                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions//g')
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
+                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
+export CXXFLAGS=$MOZ_OPT_FLAGS
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
@@ -548,6 +553,18 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Apr 10 2011 Christopher Aillon <caillon@redhat.com> - 2.0-3
+- Fix offline status issue on version upgrades
+- Fix a hang with 20+ extensions
+
+* Mon Apr  4 2011 Christopher Aillon <caillon@redhat.com> - 2.0-2
+- Fix SIGABRT in X_CloseDevice: XI_BadDevice
+- Updates for NetworkManager 0.9
+- Updates for GNOME 3
+
+* Tue Mar 22 2011 Christopher Aillon <caillon@redhat.com> - 2.0-1
+- 2.0
+
 * Tue Mar 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0-1
 - Update to 2.0
 
