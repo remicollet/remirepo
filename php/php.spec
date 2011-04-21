@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.6
-Release: 3%{?dist}
+Release: 3%{?dist}.1
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
