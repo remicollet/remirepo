@@ -1,0 +1,52 @@
+diff -up mock-1.1.9/py/mock.py.orig mock-1.1.9/py/mock.py
+--- mock-1.1.9/py/mock.py.orig	2011-02-18 22:18:59.000000000 +0100
++++ mock-1.1.9/py/mock.py	2011-04-21 10:22:04.599771253 +0200
+@@ -253,8 +253,8 @@ def setup_default_config_opts(config_opt
+ 
+     # cleanup_on_* only take effect for separate --resultdir
+     # config_opts provides fine-grained control. cmdline only has big hammer
+-    config_opts['cleanup_on_success'] = 1
+-    config_opts['cleanup_on_failure'] = 1
++    config_opts['cleanup_on_success'] = True
++    config_opts['cleanup_on_failure'] = True
+ 
+     config_opts['createrepo_on_rpms'] = False
+     config_opts['createrepo_command'] = '/usr/bin/createrepo -d -q -x *.src.rpm' # default command
+@@ -389,10 +389,6 @@ def set_config_opts_per_cmdline(config_o
+                 % (i, config_opts['plugins']))
+         config_opts['plugin_conf']['%s_enable' % i] = True
+ 
+-    if options.cleanup_after and not options.resultdir:
+-        raise mock.exception.BadCmdline(
+-            "Must specify --resultdir when using --cleanup-after")
+-
+     if options.mode in ("rebuild",) and len(args) > 1 and not options.resultdir:
+         raise mock.exception.BadCmdline(
+             "Must specify --resultdir when building multiple RPMS.")
+@@ -405,8 +401,9 @@ def set_config_opts_per_cmdline(config_o
+         config_opts['cleanup_on_success'] = True
+         config_opts['cleanup_on_failure'] = True
+ 
+-    # cant cleanup unless separate resultdir
+-    if not options.resultdir:
++    # cant cleanup unless resultdir is separate from the root dir
++    rootdir = os.path.join(config_opts['basedir'], config_opts['root'])
++    if mock.util.is_in_dir(config_opts['resultdir'] % config_opts, rootdir):
+         config_opts['cleanup_on_success'] = False
+         config_opts['cleanup_on_failure'] = False
+ 
+diff -up mock-1.1.9/py/mock/util.py.orig mock-1.1.9/py/mock/util.py
+--- mock-1.1.9/py/mock/util.py.orig	2011-02-18 22:18:20.000000000 +0100
++++ mock-1.1.9/py/mock/util.py	2011-04-21 10:21:59.005114748 +0200
+@@ -340,3 +340,11 @@ class ChildPreExec(object):
+         condChroot(self.chrootPath)
+         condDropPrivs(self.uid, self.gid)
+         condChdir(self.cwd)
++
++def is_in_dir(path, directory):
++    """Tests whether `path` is inside `directory`."""
++    # use realpath to expand symlinks
++    path = os.path.realpath(path)
++    directory = os.path.realpath(directory)
++
++    return os.path.commonprefix([path, directory]) == directory

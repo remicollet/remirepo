@@ -15,6 +15,10 @@ Release: 1%{?dist}
 License: GPLv2+
 Group: Development/Tools
 Source: https://fedorahosted.org/mock/attachment/wiki/MockTarballs/%{name}-%{version}.tar.gz
+
+# https://bugzilla.redhat.com/668222
+Patch0: mock.patch
+
 URL: http://fedoraproject.org/wiki/Projects/Mock
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -32,6 +36,9 @@ Mock takes an SRPM and builds it in a chroot
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .orig
+
 
 %build
 %configure
@@ -115,6 +122,9 @@ fi
 %attr(02775, root, mock) %dir /var/cache/mock
 
 %changelog
+* Thu Apr 21 2011 Remi Collet <rpms@famillecollet.com> 1.1.9-1
+- Fix #688222 cleanup_on_success from config not honored
+
 * Fri Feb 18 2011 Clark Williams <williams@redhat.com> - 1.1.9-1
 - fix createrepo generated root-owned repository data (BZ# 668278)
 - fix createrepo generated root-owned repository data (BZ# 668278)
