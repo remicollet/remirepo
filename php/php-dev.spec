@@ -25,7 +25,7 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global snapdate 201104170830
+%global snapdate 201104220630
 %global phpversion 5.3.7-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -1322,6 +1322,9 @@ fi
 %endif
 
 %changelog
+* Thu Apr 22 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201104220630
+- new snapshot (5.3.7-dev)
+
 * Sun Apr 17 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201104170830
 - new snapshot (5.3.7-dev)
 
