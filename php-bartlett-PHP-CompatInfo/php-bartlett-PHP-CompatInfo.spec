@@ -1,12 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name PHP_CompatInfo
-%global channel   bartlett.laurent-laville.org
-
-%global prever RC3
+%global pear_name   PHP_CompatInfo
+%global channel     bartlett.laurent-laville.org
+%global prever      RC4
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.0.0
-Release:        0.2.%{prever}%{?dist}
+Release:        0.3.%{prever}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -16,21 +15,23 @@ Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.9.1
+BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 0.5.0
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 0.7.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-xml >= 5.2.0
-Requires:       php-pear(PEAR) >= 1.9.1
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 0.5.0
+Requires:       php-pear(PEAR) >= 1.9.0
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 0.7.0
 Requires:       php-pear(Console_CommandLine) >= 1.1.3
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6.1
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
 # Optional and not yet availalble php-pear(Net_Growl) >= 2.2.2
+# php-pear(components.ez.no/Base) required by ConsoleTools
+# php-pear(pear.phpunit.de/PHP_Timer) required by PHPUnit
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
 
@@ -79,9 +80,9 @@ sed -i -e 's/\r//' $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/README.markdown
 %check
 cd %{pear_name}-%{version}%{?prever}
 
-# OK (64 tests, 806 assertions) when all extensions installed
+# OK (443 tests, 7982 assertions) when all extensions installed
 # OK, but incomplete or skipped tests!
-# Tests: 56, Assertions: 478, Skipped: 10.
+# Tests: 329, Assertions: 5446, Skipped: 133.
 %{_bindir}/phpunit \
     -d date.timezone=UTC \
     --bootstrap $RPM_BUILD_ROOT%{pear_phpdir}/Bartlett/PHP/CompatInfo/Autoload.php \
@@ -112,6 +113,9 @@ fi
 
 
 %changelog
+* Tue Apr 26 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-0.3.RC4
+- Version 2.0.0RC4 (beta) - API 2.0.0 (beta)
+
 * Fri Mar 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-0.2.RC3
 - Version 2.0.0RC3
 
