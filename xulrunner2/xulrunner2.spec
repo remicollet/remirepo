@@ -67,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}2
 %endif
 Version:        2.0.1
-Release:        0.1.build1%{?dist}
+Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -397,7 +397,7 @@ popd
   dist/bin/xpt_link \
   $RPM_BUILD_ROOT/%{mozappdir}
 
-%if %{?fedora} < 14
+%if %{?fedora} < 13
 %{__install} -D -p -m 755 \
    dist/sdk/bin/nspr-config \
    $RPM_BUILD_ROOT${MOZ_APP_SDK_DIR}/sdk/bin/nspr-config
@@ -553,6 +553,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Apr 28 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1
+
 * Sun Apr 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-0.1.build1
 - Update to 2.0.1 build1 candidate
 
