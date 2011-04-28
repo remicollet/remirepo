@@ -10,7 +10,7 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Build1 candidate
+#global mycomment       Build1 candidate
 %global firefox_dir_ver 4
 %global gecko_version   2.0.1
 %global alpha_version   0
@@ -47,13 +47,13 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        4.0.1
-Release:        0.1.build1%{?pre_tag}%{?dist}
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_version}/source/firefox-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        firefox-langpacks-%{version}%{?pre_version}-20110417.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?pre_version}-20110428.tar.bz2
 %endif
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
@@ -272,26 +272,11 @@ XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,
 
 %{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/firefox-config
 
-%{__cp} other-licenses/branding/%{shortname}/default16.png \
-        $RPM_BUILD_ROOT/%{mozappdir}/icons/
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps
-%{__cp} other-licenses/branding/%{shortname}/default16.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/22x22/apps
-%{__cp} other-licenses/branding/%{shortname}/default22.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/22x22/apps/%{name}.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/24x24/apps
-%{__cp} other-licenses/branding/%{shortname}/default24.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/24x24/apps/%{name}.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps
-%{__cp} other-licenses/branding/%{shortname}/default32.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
-%{__cp} other-licenses/branding/%{shortname}/default48.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/256x256/apps
-%{__cp} other-licenses/branding/%{shortname}/default256.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/256x256/apps/%{name}.png
+for s in 16 22 24 32 48 256; do
+    %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps
+    %{__cp} -p other-licenses/branding/%{shortname}/default${s}.png \
+               $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps/%{name}.png
+done
 
 echo > ../%{name}.lang
 %if %{build_langpacks}
@@ -343,20 +328,6 @@ echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
-%post
-update-desktop-database &> /dev/null || :
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
-
-%postun
-if [ $1 -eq 0 ] ; then
-    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-update-desktop-database &> /dev/null || :
-
 %if %{name} == %{shortname}
 %preun
 # is it a final removal?
@@ -367,6 +338,18 @@ if [ $1 -eq 0 ]; then
   %{__rm} -rf %{langpackdir}
 fi
 %endif
+
+%post
+update-desktop-database &> /dev/null || :
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun
+update-desktop-database &> /dev/null || :
+if [ $1 -eq 0 ] ; then
+    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
 
 
 %files -f %{name}.lang
@@ -388,7 +371,7 @@ fi
 %dir %{mozappdir}/extensions
 %{mozappdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
 %if %{build_langpacks}
-%dir %{mozappdir}/langpacks
+%dir %{langpackdir}
 %endif
 %{mozappdir}/omni.jar
 %{mozappdir}/icons
@@ -413,6 +396,13 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Apr 28 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0.1-1
+- Update to 4.0.1
+- pull latest changes from rawhide
+
+* Thu Apr 21 2011 Christopher Aillon <caillon@redhat.com> - 4.0-4
+- Spec file cleanups
+
 * Sun Apr 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0.1-0.1.build1
 - Update to 4.0.1 build1 candidate
 
