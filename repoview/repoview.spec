@@ -8,6 +8,9 @@ License:        GPLv2+
 URL:            http://fedorahosted.org/repoview/
 Source0:        http://icon.fedorapeople.org/repoview/%{name}-%{version}.tar.gz
 Source1:        fedora-repoview-templates.tar.gz
+
+Patch0:         %{name}.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -28,6 +31,8 @@ sed -i -e \
 sed -i -e \
     "s|^DEFAULT_TEMPLATEDIR =.*|DEFAULT_TEMPLATEDIR = '%{_datadir}/%{name}/templates'|g" \
     repoview.py
+
+%patch0 -p1 -b .bug636601
 
 
 %build
@@ -59,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 28 2011 Remi Collet <rpms@famillecollet.com> - 0.6.5-2
+- add patch for https://bugzilla.redhat.com/636601
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

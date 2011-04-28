@@ -1,0 +1,12 @@
+diff -up repoview-0.6.5/repoview.py.old repoview-0.6.5/repoview.py
+--- repoview-0.6.5/repoview.py.old	2011-04-28 19:26:17.523891356 +0200
++++ repoview-0.6.5/repoview.py	2011-04-28 19:27:06.439031474 +0200
+@@ -856,7 +856,7 @@ class Repoview:
+             rss_kid.pkg_data = pkg_data
+             description = rss_kid.serialize()
+             etb.start('description')
+-            etb.data(description)
++            etb.data(description.decode('utf8'))
+             etb.end('description')
+             etb.end('item')
+         
