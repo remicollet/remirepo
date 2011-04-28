@@ -7,8 +7,9 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-2.0
-%global svnmain     635
-%global svnlocales  47
+%global svnmain     651
+%global svnlocales  56
+%global prever      pre1
 
 %global gecko_version   2.0.1-1
 %global srcversion      4.0.1
@@ -17,10 +18,10 @@ Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
 Version:        1.0
-%if 0%{?svnmain}
-Release:        0.1.svn%{svnmain}%{?dist}
+%if %{?svnmain}
+Release:        0.2.svn%{svnmain}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        0.2.pre1%{?dist}
 %endif
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -28,22 +29,33 @@ Group:          Applications/Editors
 
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{srcversion}.source.tar.bz2
 
-%if 0%{?svnmain}
-# svn checkout http://sources.disruptive-innovations.com/bluegriffon/trunk bluegriffon
-# tar cjf bluegriffon-553.tar.bz2 --exclude .svn bluegriffon
+%if %{?svnmain}
+# svn export -r 553 http://sources.disruptive-innovations.com/bluegriffon/trunk bluegriffon
+# tar cjf bluegriffon-553.tar.bz2 bluegriffon
 Source1:        %{name}-%{svnmain}.tar.bz2
+%else
+# svn export http://sources.disruptive-innovations.com/bluegriffon/tags/1.0pre1 bluegriffon
+# tar cjf bluegriffon-1.0pre1.tar.bz2 bluegriffon
+Source1:        %{name}-%{version}%{?prever}.tar.bz2
+%endif
 
-# svn checkout http://sources.disruptive-innovations.com/bluegriffon-l10n locales
-# tar cjf bluegriffon-l10n-23.tar.bz2 --exclude .svn locales
+%if %{?svnlocales}
+# svn export -r 52 http://sources.disruptive-innovations.com/bluegriffon-l10n locales
+# tar cjf bluegriffon-l10n-52.tar.bz2 locales
 Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
 %else
-Source1:        %{name}-%{version}.tar.bz2
-Source2:        %{name}-l10n-%{version}.tar.bz2
+Source2:        %{name}-l10n-%{version}%{?prever}.tar.bz2
 %endif
 
 Source10:       %{name}.sh.in
 Source11:       %{name}.sh
 Source12:       %{name}.desktop
+
+Patch0:         %{name}-build.patch
+
+# Upstream Firefox patches
+Patch30:        firefox-4.0-moz-app-launcher.patch
+Patch31:        firefox-4.0-gnome3.patch
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -83,6 +95,12 @@ echo TARGET %{name}-%{version}-%{release}
 tar xjf %{SOURCE1}
 tar xjf %{SOURCE2} --directory %{name}
 
+%patch0  -p0 -b .build
+
+# Upstream patches
+%patch30 -p1 -b .moz-app-launcher
+%patch31 -p1 -b .gnome3
+
 
 #See http://bluegriffon.org/pages/Build-BlueGriffon
 cat <<EOF_MOZCONFIG > .mozconfig 
@@ -98,7 +116,7 @@ ac_add_options --disable-cpp-exceptions
 %if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
-%if %{fedora} >= 14
+%if %{fedora} >= 13
 ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 %endif
@@ -242,6 +260,11 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Thu Apr 28 2011 Remi Collet <rpms@famillecollet.com> - 1.0-0.2.svn651
+- bluegriffon 1.0pre1, svn 651, locales svn 56
+- build against xulrunner 2.0.1
+- add Gnome3 patch from Firefox
+
 * Sun Apr 17 2011 Remi Collet <rpms@famillecollet.com> - 1.0-0.1.svn635
 - bluegriffon 1.0pre1, svn 635, locales svn 47
 - build against xulrunner 2.0.1 build1 candidate
