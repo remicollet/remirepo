@@ -6,4 +6,5 @@
 */noarch
 */x86_64
 *.xpi
+*~
 package*.xml
