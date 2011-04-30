@@ -7,8 +7,12 @@ Release: 3%{?dist}
 License: GPLv2
 Group: System Environment/Base
 Source: %{name}-%{version}.tar.gz
+
 Patch0: ten-changelog-limit.patch
 Patch1: createrepo-head.patch
+# https://bugzilla.redhat.com/500364
+Patch2: createrepo-checksum.patch
+
 URL: http://createrepo.baseurl.org/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArchitectures: noarch
@@ -24,6 +28,7 @@ packages.
 %setup -q
 %patch0 -p0
 %patch1 -p1
+%patch2 -p1
 
 %build
 
@@ -47,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/createrepo
 
 %changelog
+* Sat Apr 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.9.9-3
+- add patch for https://bugzilla.redhat.com/500364
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.9-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

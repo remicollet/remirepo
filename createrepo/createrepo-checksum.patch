@@ -1,0 +1,42 @@
+diff -up createrepo-0.9.9/createrepo/__init__.py.orig createrepo-0.9.9/createrepo/__init__.py
+--- createrepo-0.9.9/createrepo/__init__.py.orig	2011-04-30 09:53:30.075996090 +0200
++++ createrepo-0.9.9/createrepo/__init__.py	2011-04-30 09:54:09.909152883 +0200
+@@ -612,7 +612,8 @@ class MetaDataGenerator:
+             worker_chunks = utils.split_list_into_equal_chunks(pkgfiles,  self.conf.workers)
+             worker_cmd_dict = {}
+             worker_jobs = {}
+-            base_worker_cmdline = [self.conf.worker_cmd, 
++            base_worker_cmdline = [self.conf.worker_cmd,
++                    '--checksum=%s' % self.conf.sumtype, 
+                     '--pkgoptions=_reldir=%s' % reldir,
+                     '--pkgoptions=_collapse_libc_requires=%s' % self.conf.collapse_glibc_requires, 
+                     '--pkgoptions=_cachedir=%s' % self.conf.cachedir,
+diff -up createrepo-0.9.9/worker.py.orig createrepo-0.9.9/worker.py
+--- createrepo-0.9.9/worker.py.orig	2011-04-30 09:53:30.076996094 +0200
++++ createrepo-0.9.9/worker.py	2011-04-30 09:54:04.105129474 +0200
+@@ -20,6 +20,8 @@ from optparse import OptionParser
+ # and reassemble at the end
+ 
+ def main(args):
++    _def   = yum.misc._default_checksums[0]
++
+     parser = OptionParser()
+     parser.add_option('--tmpmdpath', default=None, 
+                 help="path where the outputs should be dumped for this worker")
+@@ -31,6 +33,8 @@ def main(args):
+                 help="output errors and a total")
+     parser.add_option("--globalopts", default=[], action='append',
+                 help="general options in the format of key=value")
++    parser.add_option("-s", "--checksum", default=_def, dest='sumtype',
++                help="specify the checksum type to use (default: %s)" % _def)
+ 
+     
+     opts, pkgs = parser.parse_args(args)
+@@ -80,6 +84,7 @@ def main(args):
+                 print "reading %s" % (pkgfile)
+ 
+             pkg = createrepo.yumbased.CreateRepoPackage(ts, package=pkgpath, 
++                                                        sumtype=opts.sumtype,
+                                                         external_data=external_data)
+             pri.write(pkg.xml_dump_primary_metadata())
+             fl.write(pkg.xml_dump_filelists_metadata())
