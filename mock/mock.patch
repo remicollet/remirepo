@@ -50,3 +50,14 @@ diff -up mock-1.1.9/py/mock/util.py.orig mock-1.1.9/py/mock/util.py
 +    directory = os.path.realpath(directory)
 +
 +    return os.path.commonprefix([path, directory]) == directory
+--- mock-1.1.9/py/mock/plugins/ccache.py.orig	2011-04-30 11:23:04.167083378 +0200
++++ mock-1.1.9/py/mock/plugins/ccache.py	2011-04-30 11:26:58.778589188 +0200
+@@ -50,6 +50,8 @@
+     def _ccachePreInitHook(self):
+         getLog().info("enabled ccache")
+         mock.util.mkdirIfAbsent(self.rootObj.makeChrootPath('/tmp/ccache'))
++        self.rootObj.uidManager.dropPrivsTemp()
+         mock.util.mkdirIfAbsent(self.ccachePath)
++        self.rootObj.uidManager.restorePrivs()
+         os.environ['CCACHE_DIR'] = "/tmp/ccache"
+         os.environ['CCACHE_UMASK'] = "002"

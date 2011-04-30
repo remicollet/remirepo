@@ -11,7 +11,7 @@
 Summary: Builds packages inside chroots
 Name: mock
 Version: %{release_version}
-Release: 1%{?dist}
+Release: 1%{?dist}.2
 License: GPLv2+
 Group: Development/Tools
 Source: https://fedorahosted.org/mock/attachment/wiki/MockTarballs/%{name}-%{version}.tar.gz
@@ -122,6 +122,12 @@ fi
 %attr(02775, root, mock) %dir /var/cache/mock
 
 %changelog
+* Sat Apr 30 2011 Remi Collet <rpms@famillecollet.com> 1.1.9-1.2
+- Fix previous patch and dump release
+
+* Sat Apr 30 2011 Remi Collet <rpms@famillecollet.com> 1.1.9-1.1
+- Fix #700983 ccache dir owned by root
+
 * Thu Apr 21 2011 Remi Collet <rpms@famillecollet.com> 1.1.9-1
 - Fix #688222 cleanup_on_success from config not honored
 
