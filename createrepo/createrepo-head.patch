@@ -1,0 +1,35 @@
+diff --git a/createrepo/__init__.py b/createrepo/__init__.py
+index 8f2538e..07abc27 100644
+--- a/createrepo/__init__.py
++++ b/createrepo/__init__.py
+@@ -660,7 +660,12 @@ class MetaDataGenerator:
+                     if line:
+                         self.callback.errorlog('Worker %s: %s' % (num, line.rstrip()))
+                     
+-                
++            for (num, job) in worker_jobs.items():
++                if job.returncode != 0:
++                    msg = "Worker exited with non-zero value: %s. Fatal." % job.returncode
++                    self.callback.errorlog(msg)
++                    raise MDError, msg
++                    
+             if not self.conf.quiet:
+                 self.callback.log("Workers Finished")
+             # finished with workers
+diff --git a/worker.py b/worker.py
+index eb35ef7..591a922 100755
+--- a/worker.py
++++ b/worker.py
+@@ -83,8 +83,10 @@ def main(args):
+                                                         external_data=external_data)
+             pri.write(pkg.xml_dump_primary_metadata())
+             fl.write(pkg.xml_dump_filelists_metadata())
+-            other.write(pkg.xml_dump_other_metadata(clog_limit=
+-                                            globalopts.get('clog_limit', None)))
++            clog_limit=globalopts.get('clog_limit', None)
++            if clog_limit is not None:
++                 clog_limit = int(clog_limit)
++            other.write(pkg.xml_dump_other_metadata(clog_limit=clog_limit))
+         except yum.Errors.YumBaseError, e:
+             print >> sys.stderr, "Error: %s" % e
+             continue
