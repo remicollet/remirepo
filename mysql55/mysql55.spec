@@ -682,7 +682,8 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
-* Not yet build
+* Sat Apr 30 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.11-1.fc15
+- f15 build
 - add Obsoletes for compat-mysql55
 
 * Tue Apr 05 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.11-1
