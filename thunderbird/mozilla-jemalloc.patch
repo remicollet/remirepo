@@ -1,24 +1,47 @@
-diff -r f1af606531f5 memory/jemalloc/jemalloc.h
---- mozilla/memory/jemalloc/jemalloc.h	Sat Nov 22 20:22:22 2008 +0100
-+++ mozilla/memory/jemalloc/jemalloc.h	Mon Dec 01 16:53:06 2008 -0500
-@@ -45,14 +45,14 @@
+# HG changeset patch
+# User Takanori MATSUURA <t.matsuu@gmail.com>
+# Date 1267955626 -3600
+# Node ID 7a2802932585e73f9fc817497b1d323f820d8fc9
+# Parent  c2630edd612be6e301616c5219327560ea3955f5
+Bug 526389 - Skip redefinition of memory allocation functions for MacOS X and Linux. r=jasone
+
+diff --git mozilla/memory/jemalloc/jemalloc.h mozilla/memory/jemalloc/jemalloc.h
+--- mozilla/memory/jemalloc/jemalloc.h
++++ mozilla/memory/jemalloc/jemalloc.h
+@@ -74,26 +74,31 @@ typedef struct {
+ 	 * Current memory usage statistics.
+ 	 */
+ 	size_t	mapped;		/* Bytes mapped (not necessarily committed). */
+ 	size_t	committed;	/* Bytes committed (readable/writable). */
+ 	size_t	allocated;	/* Bytes allocted (in use by application). */
+ 	size_t	dirty;		/* Bytes dirty (committed unused pages). */
  } jemalloc_stats_t;
  
- #ifndef MOZ_MEMORY_DARWIN
--void	*malloc(size_t size);
--void	*valloc(size_t size);
--void	*calloc(size_t num, size_t size);
--void	*realloc(void *ptr, size_t size);
--void	free(void *ptr);
-+void	*malloc(size_t size)  __THROW __attribute_malloc__ __wur;
-+void	*valloc(size_t size)  __THROW __attribute_malloc__ __wur;
-+void	*calloc(size_t num, size_t size)  __THROW __attribute_malloc__ __wur;
-+void	*realloc(void *ptr, size_t size)  __THROW __attribute_malloc__ __wur;
-+void	free(void *ptr)  __THROW __attribute_malloc__ __wur;
- #endif
+-#ifndef MOZ_MEMORY_DARWIN
++/* Darwin and Linux already have memory allocation functions */
++#if (!defined(MOZ_MEMORY_DARWIN) && !defined(MOZ_MEMORY_LINUX))
+ void	*malloc(size_t size);
+ void	*valloc(size_t size);
+ void	*calloc(size_t num, size_t size);
+ void	*realloc(void *ptr, size_t size);
+ void	free(void *ptr);
+-#endif
++int	posix_memalign(void **memptr, size_t alignment, size_t size);
++#endif /* MOZ_MEMORY_DARWIN, MOZ_MEMORY_LINUX */
  
 -int	posix_memalign(void **memptr, size_t alignment, size_t size);
-+int	posix_memalign(void **memptr, size_t alignment, size_t size)  __THROW __attribute_malloc__ __wur;
++/* Linux has memalign */
++#if !defined(MOZ_MEMORY_LINUX)
  void	*memalign(size_t alignment, size_t size);
++#endif /* MOZ_MEMORY_LINUX */
++
  size_t	malloc_usable_size(const void *ptr);
  void	jemalloc_stats(jemalloc_stats_t *stats);
+ 
+ #ifdef __cplusplus
+ } /* extern "C" */
+ #endif
+ 
+ #endif /* _JEMALLOC_H_ */
+
+

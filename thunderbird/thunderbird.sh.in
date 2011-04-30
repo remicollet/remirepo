@@ -99,26 +99,20 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
     SHORTMOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*||g"`
     MOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*|-\1|g"`
 
-    # Try to link global langpacks to an extension directory
-    if [ -f $MOZ_LANGPACKS_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org/chrome/$SHORTMOZLOCALE.jar ]; then
-        if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org ]; then
-            rmdir "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org" > /dev/null 2>&1
-        fi 
-        if ! [ -e $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org ]; then
-            ln -s $MOZ_LANGPACKS_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org \
-                  $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org
-            echo "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${SHORTMOZLOCALE}@thunderbird.mozilla.org" > $FEDORA_LANGPACK_CONFIG
+    function create_langpack_link() {
+        local language=$*
+        local langpack=langpack-${language}@thunderbird.mozilla.org
+        if [ -f $MOZ_LANGPACKS_DIR/$langpack/chrome.manifest ]; then
+            rm -rf $MOZ_EXTENSIONS_PROFILE_DIR/$langpack
+            ln -s $MOZ_LANGPACKS_DIR/$langpack \
+                  $MOZ_EXTENSIONS_PROFILE_DIR/$langpack
+            echo $MOZ_EXTENSIONS_PROFILE_DIR/$langpack > $FEDORA_LANGPACK_CONFIG
+            return 0
         fi
-    elif [ -f $MOZ_LANGPACKS_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org/chrome/$MOZLOCALE.jar ]; then
-        if [ -d $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org ]; then
-            rmdir "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org" > /dev/null 2>&1
-        fi 
-        if ! [ -e $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org ]; then
-            ln -s $MOZ_LANGPACKS_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org \
-                  $MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org
-            echo "$MOZ_EXTENSIONS_PROFILE_DIR/langpack-${MOZLOCALE}@thunderbird.mozilla.org" > $FEDORA_LANGPACK_CONFIG
-        fi
-    fi
+        return 1
+    }
+
+    create_langpack_link $SHORTMOZLOCALE || create_langpack_link $MOZLOCALE || true
 fi
 
 exec $MOZ_PROGRAM "$@"

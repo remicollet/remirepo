@@ -6,13 +6,7 @@
 %define sqlite_version 3.6.22
 %define libnotify_version 0.4
 %define build_langpacks 1
-%define thunderbird_version 3.1.9
-%define moz_objdir objdir-tb
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
-%define with_lightning_extension 1
-%define lightning_release 0.40.b3pre
-%define lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
-%define gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -35,7 +29,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        %{thunderbird_version}
+Version:        3.1.10
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -47,40 +41,27 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-# Language package archive is build by RH
-Source1:        thunderbird-langpacks-%{version}-20110305.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20110430.tar.bz2
 %endif
-Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/lightning.xpi
-Source5:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2/linux-i686/gdata-provider.xpi
 
-# Config file for compilation
 Source10:       thunderbird-mozconfig
-# Config file for branded compilation
 Source11:       thunderbird-mozconfig-branded
-# Default preferences for Thunderbird
 Source12:       thunderbird-redhat-default-prefs.js
-# Config file for debug builds
 Source13:       thunderbird-mozconfig-debuginfo
-# Desktop file
 Source20:       thunderbird.desktop
-# TB execute script
 Source21:       thunderbird.sh.in
-# Script called when user click on link in message
-Source30:       thunderbird-open-browser.sh
-# Finds requirements provided outside of the current file set
 Source100:      find-external-requires
 
-# Fix for version issues
+# Mozilla (XULRunner) patches
 Patch0:         thunderbird-version.patch
-# Fix for jemalloc
-Patch1:         mozilla-jemalloc.patch
-# Fixes gcc complain that nsFrame::delete is protected
-Patch4:         xulrunner-1.9.2.1-build.patch
-Patch6:         mozilla-libjpeg-turbo.patch
-Patch7:         mozilla-missing-cflags.patch
-Patch8:         mozilla-build-s390.patch
-# Remove static build option from crashreporter to remove dependency on static libraries
-Patch9:         crashreporter-remove-static.patch
+Patch1:         thunderbird-default.patch
+Patch2:         mozilla-jemalloc.patch
+Patch3:         xulrunner-1.9.2.1-build.patch
+Patch4:         mozilla-libjpeg-turbo.patch
+Patch5:         mozilla-missing-cflags.patch
+Patch6:         mozilla-build-s390.patch
+Patch7:         crashreporter-remove-static.patch
+Patch9:         xulrunner-2.0-os2cc.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -156,32 +137,32 @@ AutoProv: 0
 %description
 Mozilla Thunderbird is a standalone mail and newsgroup client.
 
-%if %{with_lightning_extension}
-%package -n thunderbird-lightning
-Summary:        The calendar extension to Thunderbird
-Version:        1.0
-Release:        %{lightning_release}%{?dist}
-Group:          Applications/Productivity
-Requires:       thunderbird >= %{thunderbird_version}
-Obsoletes:      thunderbird-lightning-wcap <= 0.8
-Provides:       thunderbird-lightning-wcap = %{version}-%{release}
-AutoProv: 0
-
-%description -n thunderbird-lightning
-Lightning brings the Sunbird calendar to the popular email client,
-Mozilla Thunderbird. Since it's an extension, Lightning is tightly
-integrated with Thunderbird, allowing it to easily perform email-related
-calendaring tasks.
-
+%if %{enable_mozilla_crashreporter}
+%global moz_debug_prefix %{_prefix}/lib/debug
+%global moz_debug_dir %{moz_debug_prefix}%{mozappdir}
+%global uname_m %(uname -m)
+%global symbols_file_name %{name}-%{version}.en-US.%{_os}-%{uname_m}.crashreporter-symbols.zip
+%global symbols_file_path %{moz_debug_dir}/%{symbols_file_name}
+%global _find_debuginfo_opts -p %{symbols_file_path} -o debugcrashreporter.list
+%global crashreporter_pkg_name mozilla-crashreporter-%{name}-debuginfo
+%package -n %{crashreporter_pkg_name}
+Summary: Debugging symbols used by Mozilla's crash reporter servers
+Group: Development/Debug
+%description -n %{crashreporter_pkg_name}
+This package provides debug information for XULRunner, for use by
+Mozilla's crash reporter servers.  If you are trying to locally
+debug %{name}, you want to install %{name}-debuginfo instead.
+%files -n %{crashreporter_pkg_name} -f debugcrashreporter.list
+%defattr(-,root,root)
 %endif
 
 
 %prep
-echo CIBLE = %{name}-%{thunderbird_version}-%{release}
+echo CIBLE = %{name}-%{version}-%{release}
 [ -f %{SOURCE1} ] || exit 1
 %setup -q -c
 
-sed -e "s/^Name=.*/Name=Thunderbird %{thunderbird_version} %{?relcan}/" \
+sed -e "s/^Name=.*/Name=Thunderbird %{version} %{?relcan}/" \
     -e "s/thunderbird/%{name}/" \
     %{SOURCE20} | tee %{name}.desktop
 
@@ -191,17 +172,21 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
     > version.patch
 %{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
 
-%patch1 -p0 -b .jemalloc
-%patch4 -p1 -b .protected
+# Mozilla (XULRunner) patches
+cd mozilla
+%patch1 -p2 -b .default-application
+%patch2 -p1 -b .jemalloc
+%patch3 -p2 -b .protected
 %if %{fedora} >= 14
-%patch6 -p1 -b .turbo
+%patch4 -p2 -b .turbo
 %endif
-%patch7 -p1 -b .mozcflags
+%patch5 -p2 -b .mozcflags
 %ifarch s390
-%patch8 -p0 -b .s390
+%patch6 -p1 -b .s390
 %endif
-%patch9 -p1 -b .static
-
+%patch7 -p2 -b .static
+%patch9 -p1 -b .os2cc
+cd ..
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -211,8 +196,8 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 
 %endif
 
-
 %{__rm} -f .mozconfig
+#{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
 %if %{fedora} < 15
   | grep -v system-sqlite 	\
@@ -244,15 +229,11 @@ ac_add_options --enable-system-sqlite
 %endif
 EOF
 
-#{__cp} %{SOURCE10} .mozconfig
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
 %endif
 %if %{enable_mozilla_crashreporter}
 %{__cat} %{SOURCE13} >> .mozconfig
-%endif
-%if %{with_lightning_extension}
-echo "ac_add_options --enable-calendar" >> .mozconfig
 %endif
 
 #===============================================================================
@@ -263,11 +244,18 @@ cd %{tarballdir}
 INTERNAL_GECKO=%{version_internal}
 MOZ_APP_DIR=%{mozappdir}
 
-# Build with -Os as it helps the browser; also, don't override mozilla's warning
-# level; they use -Wall but disable a few warnings that show up _everywhere_
-MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | %{__sed} -e 's/-O2/-Os/' -e 's/-Wall//')
+# -fpermissive is needed to build with gcc 4.6+ which has become stricter
+#
+# Mozilla builds with -Wall with exception of a few warnings which show up
+# everywhere in the code; so, don't override that.
+#
+# Disable C++ exceptions since Mozilla code is not exception-safe
+# 
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
+                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
+export CFLAGS=$MOZ_OPT_FLAGS
+export CXXFLAGS=$MOZ_OPT_FLAGS
 
-export RPM_OPT_FLAGS=$MOZ_OPT_FLAGS
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
 
@@ -284,7 +272,6 @@ make -f client.mk build
 
 # create debuginfo for crash-stats.mozilla.com
 %if %{enable_mozilla_crashreporter}
-cd %{moz_objdir}
 make buildsymbols
 %endif
 
@@ -299,29 +286,14 @@ INTERNAL_GECKO=%{version_internal}
 INTERNAL_APP_NAME=%{name}-${INTERNAL_GECKO}
 MOZ_APP_DIR=%{_libdir}/${INTERNAL_APP_NAME}
 
-cd %{moz_objdir}
 DESTDIR=$RPM_BUILD_ROOT make install
 
 # install icons
-cd -
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps
-%{__cp} other-licenses/branding/%{name}/mailicon16.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps/thunderbird.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/22x22/apps
-%{__cp} other-licenses/branding/%{name}/mailicon22.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/22x22/apps/thunderbird.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/24x24/apps
-%{__cp} other-licenses/branding/%{name}/mailicon24.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/24x24/apps/thunderbird.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps
-%{__cp} other-licenses/branding/%{name}/mailicon32.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps/thunderbird.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
-%{__cp} other-licenses/branding/%{name}/mailicon48.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/thunderbird.png
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/256x256/apps
-%{__cp} other-licenses/branding/%{name}/mailicon256.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/256x256/apps/thunderbird.png
+for s in 16 22 24 32 48 256; do
+    %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps
+    %{__cp} -p other-licenses/branding/%{name}/mailicon${s}.png \
+               $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps/thunderbird.png
+done
 
 
 desktop-file-install --vendor mozilla \
@@ -337,13 +309,9 @@ rm -f $RPM_BUILD_ROOT/%{_bindir}/thunderbird
   $RPM_BUILD_ROOT%{_bindir}/thunderbird
 %{__chmod} 755 $RPM_BUILD_ROOT/%{_bindir}/thunderbird
 
-install -Dm755 %{SOURCE30} $RPM_BUILD_ROOT/%{mozappdir}/open-browser.sh
-%{__sed} -i -e 's|LIBDIR|%{_libdir}|g' $RPM_BUILD_ROOT/%{mozappdir}/open-browser.sh
-
 # set up our default preferences
-%{__cat} %{SOURCE12} | %{__sed} -e 's,THUNDERBIRD_RPM_VR,fc%{fedora},g' \
-                                -e 's,Fedora,Remi,g' \
-                                -e 's,COMMAND,%{mozappdir}/open-browser.sh,g' > \
+%{__cat} %{SOURCE12} | %{__sed} -e 's,Fedora,Remi,g' \
+                                -e 's,THUNDERBIRD_RPM_VR,fc%{fedora},g' > \
         $RPM_BUILD_ROOT/rh-default-prefs
 %{__install} -D $RPM_BUILD_ROOT/rh-default-prefs $RPM_BUILD_ROOT/%{mozappdir}/greprefs/all-remi.js
 %{__install} -D $RPM_BUILD_ROOT/rh-default-prefs $RPM_BUILD_ROOT/%{mozappdir}/defaults/pref/all-remi.js
@@ -408,43 +376,10 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{enable_mozilla_crashreporter}
-# Debug symbols are stored in /usr/lib even in x86_64 arch
-DEBUG_LIB_DIR=`echo %{_libdir}|sed -e "s/lib64/lib/"`
-mkdir -p $RPM_BUILD_ROOT$DEBUG_LIB_DIR/debug%{mozappdir}
-cp objdir-tb/mozilla/dist/%{name}-%{thunderbird_version}*.crashreporter-symbols.zip $RPM_BUILD_ROOT$DEBUG_LIB_DIR/debug%{mozappdir}
+%{__mkdir_p} $RPM_BUILD_ROOT/%{moz_debug_dir}
+%{__cp} mozilla/dist/%{symbols_file_name} $RPM_BUILD_ROOT/%{moz_debug_dir}
 %endif
 
-%if %{with_lightning_extension}
-# Avoid "Chrome Registration Failed" message on first startup and extension installation
-mkdir -p $RPM_BUILD_ROOT%{lightning_extname}
-touch $RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
-mkdir -p $RPM_BUILD_ROOT%{gdata_extname}
-touch $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
-
-# Lightning and GData provider for it
-unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning.xpi
-unzip -qod $RPM_BUILD_ROOT%{gdata_extname} objdir-tb/mozilla/dist/xpi-stage/gdata-provider.xpi
-
-# Unpack lightning language packs, except en_US
-unzip -l %{SOURCE4} '*.jar' |
-        awk '/-[^\/]*\.jar/ && !/en-US/ {print $4}' |
-        xargs unzip -qod $RPM_BUILD_ROOT%{lightning_extname}  %{SOURCE4}
-
-# Register them
-ls $RPM_BUILD_ROOT%{lightning_extname}/chrome |
-        sed -n '/en-US/n;s/\(\([^-]*\)-\(.*\)\.jar\)/locale \2 \3 jar:chrome\/\1!\/locale\/\3\/\2\//p' \
-        | tee -a $RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
-
-# Unpack gdata language packs, except en_US
-unzip -l %{SOURCE5} '*.jar' |
-        awk '/-[^\/]*\.jar/ && !/en-US/ {print $4}' |
-        xargs unzip -qod $RPM_BUILD_ROOT%{gdata_extname} %{SOURCE5}
-
-# Register them
-ls $RPM_BUILD_ROOT%{gdata_extname}/chrome |
-        sed -n '/en-US/n;s/\(\([^-]*\)-\(.*\)\.jar\)/locale \2 \3 jar:chrome\/\1!\/locale\/\3\/\2\//p' \
-        | tee -a $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
-%endif
 
 # RC - provide account type
 [ -f   $RPM_BUILD_ROOT%{mozappdir}/isp/gmail.rdf ] || \
@@ -521,7 +456,6 @@ fi
 %{mozappdir}/greprefs
 %{mozappdir}/isp
 %{mozappdir}/mozilla-xremote-client
-%{mozappdir}/open-browser.sh
 %{mozappdir}/res
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/thunderbird-bin
@@ -551,17 +485,26 @@ fi
 %{mozappdir}/Throbber-small.gif
 %endif
 
-%if %{with_lightning_extension}
-%files -n thunderbird-lightning
-%doc %{tarballdir}/mozilla/LEGAL %{tarballdir}/mozilla/LICENSE %{tarballdir}/mozilla/README.txt
-%defattr(-,root,root,-)
-%{lightning_extname}
-%{gdata_extname}
-%endif
-
 #===============================================================================
 
 %changelog
+* Sat Apr 30 2011 Remi Collet <rpms@famillecollet.com> 3.1.10-1
+- Thunderbird 3.1.10
+
+* Thu Apr 28 2011 Jan Horak <jhorak@redhat.com> - 3.1.10-1
+- Update to 3.1.10
+
+* Thu Apr 21 2011 Christopher Aillon <caillon@redhat.com> - 3.1.9-7
+- Make gvfs-open launch a compose window (salimma)
+- Spec file cleanups (salimma, caillon)
+- Split out mozilla crashreporter symbols to its own debuginfo package (caillon)
+
+* Fri Apr  1 2011 Orion Poplawski <orion@cora.nwra.com> - 3.1.9-5
+- Enable startup notification
+
+* Mon Mar  7 2011 Jan Horak <jhorak@redhat.com> - 3.1.9-1
+- Update to 3.1.9
+
 * Sat Mar  5 2011 Remi Collet <rpms@famillecollet.com> 3.1.9-1
 - Thunderbird 3.1.9
 

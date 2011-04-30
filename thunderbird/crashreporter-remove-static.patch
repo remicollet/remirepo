@@ -1,3 +1,5 @@
+Remove static build option from crashreporter to remove dependency on static libraries
+
 diff -up comm-1.9.2/mozilla/toolkit/crashreporter/google-breakpad/src/tools/linux/dump_syms/Makefile.in.static comm-1.9.2/mozilla/toolkit/crashreporter/google-breakpad/src/tools/linux/dump_syms/Makefile.in
 --- comm-1.9.2/mozilla/toolkit/crashreporter/google-breakpad/src/tools/linux/dump_syms/Makefile.in.static	2010-06-23 19:47:11.000000000 +0200
 +++ comm-1.9.2/mozilla/toolkit/crashreporter/google-breakpad/src/tools/linux/dump_syms/Makefile.in	2010-07-12 15:51:41.000000000 +0200

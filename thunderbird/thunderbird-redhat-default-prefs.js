@@ -8,11 +8,6 @@ pref("intl.locale.matchOS", true);
 pref("mail.shell.checkDefaultClient", false);
 pref("toolkit.networkmanager.disable", false);
 
-# Make hyperlinks work
-pref("network.protocol-handler.app.http", "COMMAND");
-pref("network.protocol-handler.app.https", "COMMAND");
-pref("network.protocol-handler.app.ftp", "COMMAND");
-
 # Disable global indexing by default
 pref("mailnews.database.global.indexer.enabled", false);
 
