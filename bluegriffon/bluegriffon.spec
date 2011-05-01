@@ -134,6 +134,10 @@ ac_add_options --disable-libnotify
 %if %{fedora} >= 9
 ac_add_options --enable-system-lcms
 %endif
+%if %{fedora} >= 15
+# Official Fedora Xulrunner don't have it
+ac_add_options --disable-necko-wifi
+%endif
 %ifarch ppc ppc64
 ac_add_options --disable-necko-wifi
 ac_add_options --disable-ipc
