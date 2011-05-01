@@ -1,15 +1,14 @@
-diff -up bluegriffon/langpacks/Makefile.in.build bluegriffon/langpacks/Makefile.in
---- bluegriffon/langpacks/Makefile.in.build	2011-04-28 16:28:14.000000000 +0200
-+++ bluegriffon/langpacks/Makefile.in	2011-04-28 19:04:23.746193923 +0200
-@@ -19,9 +19,9 @@ libs::$(_AVAILABLE_LOCALES)
+--- bluegriffon/langpacks/Makefile.in.build	2011-04-30 12:59:38.000000000 +0200
++++ bluegriffon/langpacks/Makefile.in	2011-05-01 19:45:22.417064996 +0200
+@@ -20,9 +20,9 @@
  	mkdir -p $(FINAL_TARGET)/distribution/extensions
  	rm -f $(FINAL_TARGET)/distribution/extensions/*.xpi
  	rm -f $(srcdir)/*.xpi
--	$(foreach f,$^, cd $(srcdir)/`basename $f`; zip -r ../langpack-`basename $f`@bluegriffon.org.xpi . ;)
--	$(foreach f,$^, cd $(topsrcdir)/bluegriffon/locales/`basename $f`; zip -r $(topsrcdir)/bluegriffon/langpacks/langpack-`basename $f`@bluegriffon.org.xpi . ;)
+-	$(foreach f,$^, cd $(srcdir)/`basename $f`; zip -qr ../langpack-`basename $f`@bluegriffon.org.xpi . ;)
+-	$(foreach f,$^, cd $(topsrcdir)/bluegriffon/locales/`basename $f`; zip -qr $(topsrcdir)/bluegriffon/langpacks/langpack-`basename $f`@bluegriffon.org.xpi . ;)
 -	$(INSTALL) $(srcdir)/*.xpi $(DIST)/bin/distribution/extensions
-+	$(foreach f,$^, cd `basename $f`; zip -r ../langpack-`basename $f`@bluegriffon.org.xpi . ; cd .. ; )
-+	$(foreach f,$^, cd ../locales/`basename $f`; zip -r ../../langpacks/langpack-`basename $f`@bluegriffon.org.xpi . ; cd .. ; )
++	$(foreach f,$^, cd `basename $f`; zip -qr ../langpack-`basename $f`@bluegriffon.org.xpi . ; cd .. ; )
++	$(foreach f,$^, cd ../locales/`basename $f`; zip -qr ../../langpacks/langpack-`basename $f`@bluegriffon.org.xpi . ; cd .. ; )
 +	$(INSTALL) $(srcdir)/*.xpi $(DIST)/bin/extensions
  
  include $(topsrcdir)/config/rules.mk

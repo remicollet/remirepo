@@ -7,9 +7,9 @@
 
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-2.0
-%global svnmain     651
-%global svnlocales  56
-%global prever      pre1
+%global svnmain     0
+%global svnlocales  58
+#global prever      pre1
 
 %global gecko_version   2.0.1-1
 %global srcversion      4.0.1
@@ -21,7 +21,7 @@ Version:        1.0
 %if %{?svnmain}
 Release:        0.2.svn%{svnmain}%{?dist}
 %else
-Release:        0.2.pre1%{?dist}
+Release:        1%{?dist}
 %endif
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -34,14 +34,14 @@ Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/fir
 # tar cjf bluegriffon-553.tar.bz2 bluegriffon
 Source1:        %{name}-%{svnmain}.tar.bz2
 %else
-# svn export http://sources.disruptive-innovations.com/bluegriffon/tags/1.0pre1 bluegriffon
-# tar cjf bluegriffon-1.0pre1.tar.bz2 bluegriffon
+# svn export http://sources.disruptive-innovations.com/bluegriffon/tags/1.0 bluegriffon
+# tar cjf bluegriffon-1.0.tar.bz2 bluegriffon
 Source1:        %{name}-%{version}%{?prever}.tar.bz2
 %endif
 
 %if %{?svnlocales}
-# svn export -r 52 http://sources.disruptive-innovations.com/bluegriffon-l10n locales
-# tar cjf bluegriffon-l10n-52.tar.bz2 locales
+# svn export -r 58 http://sources.disruptive-innovations.com/bluegriffon-l10n locales
+# tar cjf bluegriffon-l10n-58.tar.bz2 locales
 Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
 %else
 Source2:        %{name}-l10n-%{version}%{?prever}.tar.bz2
@@ -264,6 +264,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sun May  1 2011 Remi Collet <rpms@famillecollet.com> - 1.0-1
+- bluegriffon 1.0 (tags/1.0 + locales 58)
+
 * Thu Apr 28 2011 Remi Collet <rpms@famillecollet.com> - 1.0-0.2.svn651
 - bluegriffon 1.0pre1, svn 651, locales svn 56
 - build against xulrunner 2.0.1
