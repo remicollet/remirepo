@@ -18,8 +18,8 @@
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
-Version:       3.1.7
-Release:       1%{?dist}.1
+Version:       3.1.8
+Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
@@ -65,8 +65,8 @@ intermediate code.
 %package devel
 Summary:       APC developer files (header)
 Group:         Development/Libraries
-Requires:      %{phpname}-pecl-apc = %{version}-%{release}
-Requires:      %{phpname}-devel
+Requires:      %{phpname}-pecl-apc%{?_isa} = %{version}-%{release}
+Requires:      %{phpname}-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using APC serializer.
@@ -215,6 +215,9 @@ fi
 
 
 %changelog
+* Tue May  3 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.8-1
+- update to 3.1.8 (bugfix, stable)
+
 * Thu Feb 17 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.7-1.1
 - test rebuild with new Arch specific ABI macro
 
