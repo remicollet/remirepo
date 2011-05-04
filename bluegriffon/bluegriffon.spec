@@ -8,10 +8,14 @@
 %global mozappdir   %{_libdir}/bluegriffon
 %global tarballdir  mozilla-2.0
 %global svnmain     0
-%global svnlocales  58
-#global prever      pre1
+%global svnlocales  0
+# According to upstream 1.0RC4 is the 1.0 finale
+%global prever      RC4
 
-%global gecko_version   2.0.1-1
+# gecko version, else to use bundled version
+#global gecko_version   2.0.1-1
+
+# Firefox version of sources used
 %global srcversion      4.0.1
 
 Summary:        The next-generation Web Editor
@@ -21,7 +25,7 @@ Version:        1.0
 %if %{?svnmain}
 Release:        0.2.svn%{svnmain}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        3%{?dist}
 %endif
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -34,16 +38,18 @@ Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/fir
 # tar cjf bluegriffon-553.tar.bz2 bluegriffon
 Source1:        %{name}-%{svnmain}.tar.bz2
 %else
-# svn export http://sources.disruptive-innovations.com/bluegriffon/tags/1.0 bluegriffon
-# tar cjf bluegriffon-1.0.tar.bz2 bluegriffon
+# svn export http://sources.disruptive-innovations.com/bluegriffon/tags/1.0RC4 bluegriffon
+# tar cjf bluegriffon-1.0RC4.tar.bz2 bluegriffon
 Source1:        %{name}-%{version}%{?prever}.tar.bz2
 %endif
 
 %if %{?svnlocales}
-# svn export -r 58 http://sources.disruptive-innovations.com/bluegriffon-l10n locales
+# svn export -r 58 http://sources.disruptive-innovations.com/bluegriffon-l10n/trunk locales
 # tar cjf bluegriffon-l10n-58.tar.bz2 locales
 Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
 %else
+# svn export http://sources.disruptive-innovations.com/bluegriffon-l10n/tags/1.0RC4 locales
+# tar cjf bluegriffon-l10n-1.0RC4.tar.bz2 locales
 Source2:        %{name}-l10n-%{version}%{?prever}.tar.bz2
 %endif
 
@@ -51,27 +57,84 @@ Source10:       %{name}.sh.in
 Source11:       %{name}.sh
 Source12:       %{name}.desktop
 
-Patch0:         %{name}-build.patch
 
-# Upstream Firefox patches
-Patch30:        firefox-4.0-moz-app-launcher.patch
-Patch31:        firefox-4.0-gnome3.patch
+# build patches
+Patch0:         xulrunner-version.patch
+Patch1:         mozilla-build.patch
+Patch9:         mozilla-build-sbrk.patch
+Patch12:        xulrunner-2.0-64bit-big-endian.patch
+Patch13:        xulrunner-2.0-secondary-jit.patch
+Patch14:        xulrunner-2.0-chromium-types.patch
+
+# Fedora specific patches
+Patch20:        mozilla-193-pkgconfig.patch
+Patch21:        mozilla-libjpeg-turbo.patch
+Patch23:        wmclass.patch
+Patch24:        crashreporter-remove-static.patch
+
+# Upstream patches
+Patch32:        firefox-4.0-moz-app-launcher.patch
+Patch33:        firefox-4.0-gnome3.patch
+Patch34:        xulrunner-2.0-network-link-service.patch
+Patch35:        xulrunner-2.0-NetworkManager09.patch
+Patch36:        xulrunner-omnijar.patch
+
+# BlueGriffon patches
+Patch100:       bluegriffon-build.patch
+
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  desktop-file-utils
-BuildRequires:  system-bookmarks
 BuildRequires:  yasm
-BuildRequires:  gecko-devel = %{gecko_version}
 
+%if 0%{?gecko_version:1}
 %if %{fedora} >= 15
 %global xulbin xulrunner
 %global grecnf gre
 %else
 %global xulbin xulrunner2
 %global grecnf gre2
-%endif
+BuildRequires:  gecko-devel = %{gecko_version}
 Requires:       gecko-libs%{?_isa} = %{gecko_version}
+%endif
+%else
+%if %{fedora} >= 13
+BuildRequires:  nspr-devel >= %{nspr_version}
+BuildRequires:  nss-devel >= %{nss_version}
+%endif
+%if %{fedora} >= 15
+BuildRequires:  cairo-devel >= %{cairo_version}
+%endif
+BuildRequires:  libpng-devel
+BuildRequires:  libjpeg-devel
+BuildRequires:  zip
+BuildRequires:  bzip2-devel
+BuildRequires:  zlib-devel
+BuildRequires:  libIDL-devel
+BuildRequires:  gtk2-devel
+BuildRequires:  krb5-devel
+BuildRequires:  pango-devel
+BuildRequires:  freetype-devel >= %{freetype_version}
+BuildRequires:  libXt-devel
+BuildRequires:  libXrender-devel
+%if %{fedora} >= 11
+BuildRequires:  hunspell-devel
+%endif
+%if %{fedora} >= 15
+BuildRequires:  sqlite-devel >= %{sqlite_version}
+%endif
+BuildRequires:  startup-notification-devel
+BuildRequires:  alsa-lib-devel
+BuildRequires:  libnotify-devel
+BuildRequires:  mesa-libGL-devel
+BuildRequires:  yasm
+BuildRequires:  libcurl-devel
+BuildRequires:  lcms-devel >= %{lcms_version}
+%if %{fedora} >= 13
+BuildRequires:  libvpx-devel
+%endif
+%endif
 
 %description
 BlueGriffon is a new WYSIWYG content editor for the World Wide Web.
@@ -90,16 +153,41 @@ normes w3c.
 
 %prep
 echo TARGET %{name}-%{version}-%{release}
+%if 0%{?gecko_version:1}
+echo use GECKO %{gecko_version}
+%else
+echo use Bundled GECKO
+%endif
 %setup -q -n %{tarballdir}
 
 tar xjf %{SOURCE1}
 tar xjf %{SOURCE2} --directory %{name}
 
-%patch0  -p0 -b .build
+sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
+    > version.patch
+%{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
 
-# Upstream patches
-%patch30 -p1 -b .moz-app-launcher
-%patch31 -p1 -b .gnome3
+%patch1  -p2 -b .build
+%patch9  -p2 -b .sbrk
+%patch12 -p2 -b .64bit-big-endian
+%patch13 -p2 -b .secondary-jit
+%patch14 -p2 -b .chromium-types
+
+%patch20 -p2 -b .pk
+%patch21 -p2 -b .jpeg-turbo
+%patch23 -p1 -b .wmclass
+%patch24 -p1 -b .static
+
+%patch32 -p1 -b .moz-app-launcher
+%patch33 -p1 -b .gnome3
+%patch34 -p1 -b .network-link-service
+%patch35 -p1 -b .NetworkManager09
+%patch36 -p1 -b .omnijar
+
+%patch100  -p0 -b .build
+
+# Patch provided in bluegriffon sources
+patch -p1 <bluegriffon/config/content.patch
 
 
 #See http://bluegriffon.org/pages/Build-BlueGriffon
@@ -126,22 +214,9 @@ ac_add_options --enable-system-hunspell
 %if %{fedora} >= 15
 ac_add_options --enable-system-cairo
 %endif
-%if %{fedora} >= 10
 ac_add_options --enable-libnotify
-%else
-ac_add_options --disable-libnotify
-%endif
-%if %{fedora} >= 9
 ac_add_options --enable-system-lcms
-%endif
-%if %{fedora} >= 15
-# Official Fedora Xulrunner don't have it
 ac_add_options --disable-necko-wifi
-%endif
-%ifarch ppc ppc64
-ac_add_options --disable-necko-wifi
-ac_add_options --disable-ipc
-%endif
 ac_add_options --with-system-jpeg
 ac_add_options --with-system-zlib
 ac_add_options --with-system-bz2
@@ -158,7 +233,7 @@ ac_add_options --disable-static
 ac_add_options --disable-mochitest
 ac_add_options --disable-installer
 ac_add_options --disable-debug
-ac_add_options --enable-optimize="\$MOZ_OPT_FLAGS"
+ac_add_options --enable-optimize
 ac_add_options --enable-xinerama
 ac_add_options --enable-default-toolkit=cairo-gtk2
 ac_add_options --disable-xprint
@@ -172,16 +247,17 @@ ac_add_options --enable-safe-browsing
 ac_add_options --disable-updater
 ac_add_options --enable-gio
 ac_add_options --disable-gnomevfs
-ac_add_options --enable-libxul
 EOF_MOZCONFIG
 
 echo ""  >> .mozconfig
+%if 0%{?gecko_version:1}
 echo "ac_add_options --with-libxul-sdk=\
 $(pkg-config --variable=sdkdir libxul)" >> .mozconfig
+%endif
 
 
 %build
-MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
+MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS -fpermissive | \
                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
@@ -209,6 +285,7 @@ tar --create --file - --dereference --directory=dist/bin --exclude xulrunner . \
   | tar --extract --file - --directory $RPM_BUILD_ROOT/%{mozappdir}
 
 # Launcher
+%if 0%{?gecko_version:1}
 install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
 XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
 %{__cat} %{SOURCE10} | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g" \
@@ -216,6 +293,9 @@ XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,
 		     | %{__sed} -e "s,GRE_CONFIG,%{grecnf},g"  \
   > $RPM_BUILD_ROOT%{_bindir}/%{name}
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
+%else
+install -D -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/%{name}
+%endif
 
 # Shortcut
 desktop-file-install  \
@@ -264,6 +344,12 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Wed May  4 2011 Remi Collet <rpms@famillecollet.com> - 1.0-3
+- rebuild with bundled xulrunnner
+
+* Wed May  4 2011 Remi Collet <rpms@famillecollet.com> - 1.0-2
+- BlueGriffon 1.0 "Zephyr" (tags/1.0RC4 which is 1.0 finale)
+
 * Sun May  1 2011 Remi Collet <rpms@famillecollet.com> - 1.0-1
 - bluegriffon 1.0 (tags/1.0 + locales 58)
 
