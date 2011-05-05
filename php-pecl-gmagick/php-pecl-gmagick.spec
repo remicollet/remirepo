@@ -3,12 +3,12 @@
 %{!?php_extdir: %{expand: %%global php_extdir	%(php-config --extension-dir)}}
 
 %global	pecl_name	gmagick
-%global prever 		b1
+%global prever 		b2
 
 Summary:	Provides a wrapper to the GraphicsMagick library
 Name:		php-pecl-%{pecl_name}
 Version:	1.0.8
-Release:	0.3.%{prever}%{?dist}
+Release:	0.4.%{prever}%{?dist}
 License:	PHP
 Group:		Development/Libraries
 URL:		http://pecl.php.net/package/gmagick
@@ -44,8 +44,8 @@ cd %{pecl_name}-%{version}%{?prever}
 
 chmod 0644 README
 
-# See : http://pecl.php.net/bugs/18002
-sed -i -e /PHP_GMAGICK_VERSION/s/1.0.6b1/1.0.7b1/ php_gmagick.h
+# Check to avoid See : http://pecl.php.net/bugs/18002
+grep '"%{version}%{?prever}"' php_gmagick.h || exit1
 
 
 %build
@@ -99,12 +99,6 @@ php --no-php-ini \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-# simple version info check
-php --no-php-ini \
-    --define extension_dir=modules \
-    --define extension=%{pecl_name}.so \
-    --info | grep "gmagick version" | grep %{version}%{?prever}
-
 
 %files
 %defattr(-,root,root,-)
@@ -115,6 +109,9 @@ php --no-php-ini \
 
 
 %changelog
+* Thu May 05 2011 Remi Collet <rpms@famillecollet.com> 1.0.8-0.4.b2
+- Update to 1.0.8b2
+
 * Sat Apr 16 2011 Remi Collet <rpms@famillecollet.com> 1.0.8-0.3.b1
 - fix build against latest php
 
