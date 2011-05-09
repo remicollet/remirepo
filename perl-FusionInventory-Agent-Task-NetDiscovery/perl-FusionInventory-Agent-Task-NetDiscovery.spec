@@ -1,5 +1,5 @@
 Name:           perl-FusionInventory-Agent-Task-NetDiscovery
-Version:        1.4
+Version:        1.5
 Release:        1%{?dist}
 Summary:        Network discovery support for FusionInventory Agent
 License:        GPLv2+
@@ -68,6 +68,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May  9 2011 Remi Collet <Fedora@famillecollet.com> 1.5-1
+- update to 1.5
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-NetDiscovery-1.5/Changes
+
 * Wed Mar 30 2011 Remi Collet <Fedora@famillecollet.com> 1.4-1
 - update to 1.4
 
