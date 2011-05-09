@@ -9,8 +9,7 @@
 %global tarballdir  mozilla-2.0
 %global svnmain     0
 %global svnlocales  0
-# According to upstream 1.0RC4 is the 1.0 finale
-%global prever      RC4
+%global prever      %nil
 
 # gecko version, else to use bundled version
 #global gecko_version   2.0.1-1
@@ -25,7 +24,7 @@ Version:        1.0
 %if %{?svnmain}
 Release:        0.2.svn%{svnmain}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -38,8 +37,8 @@ Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/fir
 # tar cjf bluegriffon-553.tar.bz2 bluegriffon
 Source1:        %{name}-%{svnmain}.tar.bz2
 %else
-# svn export http://sources.disruptive-innovations.com/bluegriffon/tags/1.0RC4 bluegriffon
-# tar cjf bluegriffon-1.0RC4.tar.bz2 bluegriffon
+# svn export http://sources.disruptive-innovations.com/bluegriffon/tags/1.0 bluegriffon
+# tar cjf bluegriffon-1.0.tar.bz2 bluegriffon
 Source1:        %{name}-%{version}%{?prever}.tar.bz2
 %endif
 
@@ -48,8 +47,8 @@ Source1:        %{name}-%{version}%{?prever}.tar.bz2
 # tar cjf bluegriffon-l10n-58.tar.bz2 locales
 Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
 %else
-# svn export http://sources.disruptive-innovations.com/bluegriffon-l10n/tags/1.0RC4 locales
-# tar cjf bluegriffon-l10n-1.0RC4.tar.bz2 locales
+# svn export http://sources.disruptive-innovations.com/bluegriffon-l10n/tags/1.0 locales
+# tar cjf bluegriffon-l10n-1.0.tar.bz2 locales
 Source2:        %{name}-l10n-%{version}%{?prever}.tar.bz2
 %endif
 
@@ -81,6 +80,7 @@ Patch36:        xulrunner-omnijar.patch
 
 # BlueGriffon patches
 Patch100:       bluegriffon-build.patch
+Patch101:       bluegriffon-prefs.patch
 
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -185,6 +185,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch36 -p1 -b .omnijar
 
 %patch100  -p0 -b .build
+%patch101  -p0 -b .rpmprefs
 
 # Patch provided in bluegriffon sources
 patch -p1 <bluegriffon/config/content.patch
@@ -344,6 +345,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Mon May  9 2011 Remi Collet <rpms@famillecollet.com> - 1.0-4
+- BlueGriffon 1.0 "Zephyr" (tags/1.0 which is really 1.0 finale)
+- patch default prefs to disable update and enable OS locale
+
 * Wed May  4 2011 Remi Collet <rpms@famillecollet.com> - 1.0-3
 - rebuild with bundled xulrunnner
 
