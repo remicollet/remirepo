@@ -92,7 +92,7 @@ start(){
 	chmod 0755 "$datadir"
 	# If startsos
 	if [ "$1" = "sos" ] ; then
-		exec="$exec --skip-grant-tables --skip-networking"
+		MYOPTIONS="$MYOPTIONS --skip-grant-tables --skip-networking"
 	fi
 	# Pass all the options determined above, to ensure consistent behavior.
 	# In many cases mysqld_safe would arrive at the same conclusions anyway

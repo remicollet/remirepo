@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.11
+Version: 5.5.12
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -43,7 +43,7 @@ Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
 # Patch9: mysql-disable-test.patch
 Patch10: mysql-embedded-crash.patch
-Patch11: mysql-home.patch
+# Patch11: mysql-home.patch
 Patch12: mysql-plugin-bool.patch
 Patch13: mysql-s390-tsc.patch
 
@@ -201,7 +201,7 @@ rm -f Docs/mysql.info
 %patch8 -p1
 # %patch9 -p1
 %patch10 -p1
-%patch11 -p1
+# %patch11 -p1
 %patch12 -p1
 %patch13 -p1
 # Backports specific patches
@@ -682,6 +682,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Mon May 09 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.12-1
+- update to MySQL 5.5.12 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-12.html
+
 * Sat Apr 30 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.11-1.fc15
 - f15 build
 - add Obsoletes for compat-mysql55
