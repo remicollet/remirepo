@@ -8,6 +8,9 @@ License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/DBD-mysql/
 Source0:        http://www.cpan.org/authors/id/C/CA/CAPTTOFU/DBD-mysql-%{version}.tar.gz
 
+# https://bugzilla.redhat.com/703185
+Patch0:         is_prefix.patch
+
 # Prevent bug #443495
 BuildRequires:  perl(DBI) >= 1.607
 
@@ -24,6 +27,9 @@ An implementation of DBI for MySQL for Perl.
 
 %prep
 %setup -q -n DBD-mysql-%{version}
+
+%patch0 -p1 -b .prefix
+
 # Correct file permissions
 find . -type f | xargs chmod -x
 
@@ -66,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 09 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.018-5
+- workaround for  https://bugzilla.redhat.com/703185
+
 * Tue Mar 22 2011 Marcela Mašláňová <mmaslano@redhat.com> - 4.018-5
 - rebuilt for libmysqlclient
 
