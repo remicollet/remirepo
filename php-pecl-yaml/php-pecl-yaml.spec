@@ -24,10 +24,12 @@ Provides: php-pecl(%{pecl_name}) = %{version}
 Requires: php(zend-abi) = %{php_zend_api}
 Requires: php(api) = %{php_core_api}
 
+%if 0%{?fedora}%{?rhel} > 4
 %{?filter_setup:
 %filter_provides_in %{php_extdir}/.*\.so$
 %filter_setup
 }
+%endif
 
 
 %description
