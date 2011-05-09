@@ -3,17 +3,17 @@
 
 %global pecl_name yaml
 
-Summary: PHP Bindings for yaml
-Name: php-pecl-yaml
-Version: 1.0.1
-Release: 2%{?dist}
-License: PHP
-Group: Development/Languages
-URL: http://pecl.php.net/package/yaml
+Summary:       PHP Bindings for yaml
+Name:          php-pecl-yaml
+Version:       1.0.1
+Release:       2%{?dist}
+License:       MIT
+Group:         Development/Languages
+URL:           http://pecl.php.net/package/yaml
 
-Source: http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.2.0
 BuildRequires: php-pear
 BuildRequires: libyaml-devel
@@ -130,6 +130,7 @@ fi
 %changelog
 * Fri May 06 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-2
 - clean spec
+- fix requirment, license, tests...
 
 * Wed May 05 2011 Thomas Morse <tmorse@empowercampaigns.com> 1.0.1-1
 - Version 1.0.1
