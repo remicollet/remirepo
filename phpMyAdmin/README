@@ -3,8 +3,6 @@ phpMyAdmin
 
 Diff from fedora packages
 
-- version 3.3.x
+- version 3.4.x
 - embeded themes
-- IPv6 loopback allowed
-- use libraries/vendor_config.php instead of link
-
+- don't requires httpd

@@ -22,6 +22,16 @@ Alias /phpmyadmin /usr/share/phpMyAdmin
     Deny from All
     Allow from None
 </Directory>
+<Directory /usr/share/phpMyAdmin/setup/frames>
+    Order Deny,Allow
+    Deny from All
+    Allow from None
+</Directory>
+<Directory /usr/share/phpMyAdmin/setup/lib>
+    Order Deny,Allow
+    Deny from All
+    Allow from None
+</Directory>
 
 # This configuration prevents mod_security at phpMyAdmin directories from
 # filtering SQL etc.  This may break your mod_security implementation.

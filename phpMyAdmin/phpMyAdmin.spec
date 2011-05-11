@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.3.10
+Version: 3.4.0
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -9,19 +9,15 @@ URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}-all-languages.tar.bz2
 Source2: phpMyAdmin.htaccess
 
-Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/smooth_yellow-3.3.zip
-Source11: http://downloads.sourceforge.net/sourceforge/phpmyadmin/arctic_ocean-3.3.zip
-Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.0b.zip
-Source13: http://downloads.sourceforge.net/sourceforge/phpmyadmin/pmahomme-1.0b.zip
-
-# See https://sourceforge.net/tracker/?func=detail&atid=377410&aid=2965613&group_id=23067
-Patch0: phpMyAdmin-vendor.patch
+Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/darkblue_orange-2.10.zip
+Source11: http://downloads.sourceforge.net/sourceforge/phpmyadmin/graphite-1.0.zip
+Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/toba-0.2.zip
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-
 BuildRequires: unzip
+
 Requires: webserver 
 Requires: php-mysql >= 5.2.0
 Requires: php-mbstring >= 5.2.0
@@ -41,8 +37,6 @@ is available in 50 languages
 %prep
 %setup -qn phpMyAdmin-%{version}-all-languages
 
-%patch0 -p0
-
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
     -e "/'blowfish_secret'/s@''@'MUSTBECHANGEDONINSTALL'@"  \
@@ -53,7 +47,7 @@ sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_datadir}/doc/%{name}-%{version}/LICENSE@" \
-    -e "/'CONFIG_FILE'/s@./config.inc.php@%{_sysconfdir}/%{name}/config.inc.php@" \
+    -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
     -i libraries/vendor_config.php
 
@@ -63,7 +57,7 @@ grep '^define' libraries/vendor_config.php
 # to avoid rpmlint warnings
 find . -name \*.php -exec chmod -x {} \;
 
-for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13}
+for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12}
 do
     %{__unzip} -q $archive -d themes
 done
@@ -86,8 +80,8 @@ rm -rf %{buildroot}
 %{__rm} -f %{buildroot}/%{_datadir}/%{name}/[CIRLT]*
 %{__rm} -f %{buildroot}/%{_datadir}/%{name}/libraries/.htaccess
 %{__rm} -f %{buildroot}/%{_datadir}/%{name}/setup/lib/.htaccess
+%{__rm} -f %{buildroot}/%{_datadir}/%{name}/setup/frames/.htaccess
 %{__rm} -rf %{buildroot}/%{_datadir}/%{name}/contrib
-%{__rm} -rf %{buildroot}/%{_datadir}/%{name}/documentation-gsoc
 
 %{__mkdir} -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
 
@@ -96,7 +90,7 @@ rm -rf %{buildroot}
 rm -rf %{buildroot}
 
 
-%if %{?fedora}%{!?fedora:99} <= 10
+%if %{?fedora}%{!?fedora:99} <= 12
 %pre
 echo -e "\nWARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
@@ -110,17 +104,21 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README LICENSE CREDITS TODO Documentation.txt documentation-gsoc
+%doc ChangeLog README LICENSE CREDITS TODO Documentation.txt
 %{_datadir}/%{name}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/phpMyAdmin.conf
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %dir %{_localstatedir}/lib/%{name}/upload
 %dir %attr(755,apache,root) %{_localstatedir}/lib/%{name}/save
 %dir %attr(755,apache,root) %{_localstatedir}/lib/%{name}/config
 
 
 %changelog
+* Wed May 11 2011 Remi Collet <rpms@famillecollet.com> 3.4.0-1
+- Upstream released 3.4.0
+- remove 3.3 themes and add 3.4 ones
+
 * Sat Mar 19 2011 Remi Collet <rpms@famillecollet.com> 3.3.10-1
 - Upstream released 3.3.10
 
