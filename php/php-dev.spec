@@ -25,7 +25,7 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global snapdate 201104281230
+%global snapdate 201105121030
 %global phpversion 5.3.7-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -78,7 +78,7 @@ Source6: php-fpm.init
 Source7: php-fpm.logrotate
 
 # Build fixes
-Patch1: php-5.3.6-gnusrc.patch
+Patch1: php-5.3.7-gnusrc.patch
 Patch2: php-5.3.0-install.patch
 Patch3: php-5.2.4-norpath.patch
 Patch4: php-5.3.0-phpize64.patch
@@ -111,6 +111,11 @@ Patch92: php-5.3.6-readline.patch
 
 # On EL4, include order breaks build against MySQL 5.5
 Patch93: php-5.3.6-mysqli.patch
+
+# backport for http://bugs.php.net/50755 (Open) PDO DBLIB Fails with OOM
+# http://svn.php.net/viewvc?view=revision&revision=300002
+# http://svn.php.net/viewvc?view=revision&revision=300089
+Patch94: php-pdo-dblib-50755.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -650,6 +655,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch91 -p1 -b .remi-oci8
 %patch92 -p1 -b .libedit
 %patch93 -p1 -b .mysqli
+%patch94 -p1 -b .50755
 
 
 # Awful hack for mysqlnd driver default mysql socket patch
@@ -1322,6 +1328,10 @@ fi
 %endif
 
 %changelog
+* Thu May 12 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201105121030
+- new snapshot (5.3.7-dev)
+- backport patch for #50755 (multiple rowset in pdo_dblib)
+
 * Thu Apr 28 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201104281230
 - new snapshot (5.3.7-dev)
 
