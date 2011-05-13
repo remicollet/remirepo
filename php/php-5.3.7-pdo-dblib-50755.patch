@@ -1,6 +1,6 @@
 diff -up php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c.50755 php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c
 --- php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c.50755	2011-03-17 14:35:50.000000000 +0100
-+++ php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c	2011-05-12 15:06:23.948657270 +0200
++++ php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c	2011-05-13 18:56:02.329918378 +0200
 @@ -33,234 +33,105 @@
  #include "php_pdo_dblib_int.h"
  #include "zend_exceptions.h"
@@ -292,7 +292,7 @@ diff -up php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c.50755 php5.3-20110512103
  	col->param_type = PDO_PARAM_STR;
  		
  	return 1;
-@@ -269,11 +140,83 @@ static int pdo_dblib_stmt_describe(pdo_s
+@@ -269,11 +140,76 @@ static int pdo_dblib_stmt_describe(pdo_s
  static int pdo_dblib_stmt_get_col(pdo_stmt_t *stmt, int colno, char **ptr,
  	 unsigned long *len, int *caller_frees TSRMLS_DC)
  {
@@ -325,7 +325,6 @@ diff -up php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c.50755 php5.3-20110512103
 +			memcpy(tmp_ptr, *ptr, *len);
 +			tmp_ptr[*len] = '\0';
 +			*ptr = tmp_ptr;
-+			++(*len);
 +			break;
 +		case SQLMONEY:
 +		case SQLMONEY4:
@@ -358,14 +357,8 @@ diff -up php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c.50755 php5.3-20110512103
 +			if (dbwillconvert(coltype, SQLCHAR)) {
 +				tmp_len = 32 + (2 * (*len));
 +				tmp_ptr = emalloc(tmp_len);
-+
-+				*len = dbconvert(NULL, coltype, *ptr, *len, SQLCHAR, tmp_ptr, tmp_len);
-+
-+				if (*len >= 0) {
-+					tmp_ptr[*len] = '\0';
-+				}
++				*len = dbconvert(NULL, coltype, *ptr, *len, SQLCHAR, tmp_ptr, -1);
 +				*ptr = tmp_ptr;
-+				*len = tmp_len;
 +		} else {
 +			*len = 0;
 +			*ptr = NULL;
@@ -379,7 +372,7 @@ diff -up php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c.50755 php5.3-20110512103
  	return 1;
  }
  
-@@ -283,17 +226,6 @@ static int pdo_dblib_stmt_param_hook(pdo
+@@ -283,17 +219,6 @@ static int pdo_dblib_stmt_param_hook(pdo
  	return 1;
  }
  
@@ -397,7 +390,7 @@ diff -up php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c.50755 php5.3-20110512103
  
  struct pdo_stmt_methods dblib_stmt_methods = {
  	pdo_dblib_stmt_dtor,
-@@ -305,7 +237,7 @@ struct pdo_stmt_methods dblib_stmt_metho
+@@ -305,7 +230,7 @@ struct pdo_stmt_methods dblib_stmt_metho
  	NULL, /* set attr */
  	NULL, /* get attr */
  	NULL, /* meta */
@@ -408,7 +401,7 @@ diff -up php5.3-201105121030/ext/pdo_dblib/dblib_stmt.c.50755 php5.3-20110512103
  
 diff -up php5.3-201105121030/ext/pdo_dblib/php_pdo_dblib_int.h.50755 php5.3-201105121030/ext/pdo_dblib/php_pdo_dblib_int.h
 --- php5.3-201105121030/ext/pdo_dblib/php_pdo_dblib_int.h.50755	2011-01-01 04:37:16.000000000 +0100
-+++ php5.3-201105121030/ext/pdo_dblib/php_pdo_dblib_int.h	2011-05-12 14:55:25.873118234 +0200
++++ php5.3-201105121030/ext/pdo_dblib/php_pdo_dblib_int.h	2011-05-13 18:49:33.325783259 +0200
 @@ -114,28 +114,7 @@ typedef struct {
  } pdo_dblib_db_handle;
  

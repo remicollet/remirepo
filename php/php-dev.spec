@@ -25,7 +25,7 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global snapdate 201105121030
+%global snapdate 201105131630
 %global phpversion 5.3.7-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -115,7 +115,9 @@ Patch93: php-5.3.6-mysqli.patch
 # backport for http://bugs.php.net/50755 (Open) PDO DBLIB Fails with OOM
 # http://svn.php.net/viewvc?view=revision&revision=300002
 # http://svn.php.net/viewvc?view=revision&revision=300089
-Patch94: php-pdo-dblib-50755.patch
+# http://svn.php.net/viewvc?view=revision&revision=300646
+# http://svn.php.net/viewvc?view=revision&revision=300791
+Patch94: php-5.3.7-pdo-dblib-50755.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -1328,6 +1330,10 @@ fi
 %endif
 
 %changelog
+* Thu May 12 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201105131630
+- new snapshot (5.3.7-dev)
+- backport more patches in pdo_dblib
+
 * Thu May 12 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201105121030
 - new snapshot (5.3.7-dev)
 - backport patch for #50755 (multiple rowset in pdo_dblib)
