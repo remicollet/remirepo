@@ -19,11 +19,14 @@
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
 Version:       3.1.8
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
+
+# http://pecl.php.net/bugs/22687
+Patch0:        APC.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 Conflicts:     %{phpname}-mmcache %{phpname}-eaccelerator
@@ -77,6 +80,8 @@ These are the files needed to compile programs using APC serializer.
 
 # Check than upstream version is correct, http://pecl.php.net/bugs/19590
 grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
+
+%patch0 -p0 -b .orig
 
 
 %build
@@ -215,6 +220,9 @@ fi
 
 
 %changelog
+* Sat May 14 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.8-2
+- fix for http://pecl.php.net/bugs/22687
+
 * Tue May  3 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.8-1
 - update to 3.1.8 (bugfix, stable)
 

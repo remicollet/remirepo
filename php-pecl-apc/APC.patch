@@ -1,0 +1,11 @@
+--- APC-3.1.8/apc_main.c	2011-05-02 20:33:03.000000000 +0200
++++ APC-3.1.8/apc_main.c	2011-05-14 11:28:38.432802232 +0200
+@@ -563,8 +563,6 @@
+             if (h->type != ZEND_HANDLE_FILENAME) {
+                 zend_llist_add_element(&CG(open_files), h); 
+             }
+-
+-            op_array->filename = filename;
+             return op_array;
+         }
+         if(APCG(report_autofilter)) {
