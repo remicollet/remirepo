@@ -11,22 +11,19 @@
 %endif
 
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
-%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)                     
+%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)
 %global php_zendabiver %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP Extension => //p') | tail -1)
 %global php_version %((echo 0; php-config --version 2>/dev/null) | tail -1)
 %global pecl_name APC
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
-Version:       3.1.8
-Release:       2%{?dist}
+Version:       3.1.9
+Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
-
-# http://pecl.php.net/bugs/22687
-Patch0:        APC.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 Conflicts:     %{phpname}-mmcache %{phpname}-eaccelerator
@@ -80,8 +77,6 @@ These are the files needed to compile programs using APC serializer.
 
 # Check than upstream version is correct, http://pecl.php.net/bugs/19590
 grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
-
-%patch0 -p0 -b .orig
 
 
 %build
@@ -220,6 +215,9 @@ fi
 
 
 %changelog
+* Sun May 15 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.9-1
+- update to 3.1.9 (bugfix, stable)
+
 * Sat May 14 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.8-2
 - fix for http://pecl.php.net/bugs/22687
 
