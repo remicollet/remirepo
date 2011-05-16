@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.6
-Release: 3%{?dist}.1
+Release: 4%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -108,6 +108,13 @@ Patch92: php-5.3.6-readline.patch
 
 # On EL4, include order breaks build against MySQL 5.5
 Patch93: php-5.3.6-mysqli.patch
+
+# backport for http://bugs.php.net/50755  (multiple rowset in pdo_dblib)
+# http://svn.php.net/viewvc?view=revision&revision=300002
+# http://svn.php.net/viewvc?view=revision&revision=300089
+# http://svn.php.net/viewvc?view=revision&revision=300646
+# http://svn.php.net/viewvc?view=revision&revision=300791
+Patch94: php-5.3.6-pdo-dblib-50755.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -657,6 +664,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch91 -p0 -b .remi-oci8
 %patch92 -p1 -b .libedit
 %patch93 -p1 -b .mysqli
+%patch94 -p1 -b .50755
 
 
 %if %{phpname} != php
@@ -1365,6 +1373,9 @@ fi
 %endif
 
 %changelog
+* Mon May 16 2011 Remi Collet <rpms@famillecollet.com> 5.3.6-4
+- backport patch for #50755 (multiple rowset in pdo_dblib)
+
 * Fri Apr 15 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-3
 - add patch to fix build against MySQL 5.5 on EL-4
 
