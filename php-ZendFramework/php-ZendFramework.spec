@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.11.4
+Version:         1.11.6
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -628,6 +628,15 @@ cd ..
 
 
 %changelog
+* Fri May 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.6-1
+- update to 1.11.6
+- rebuild for remi repository (with Oracle and Sqlite stuff)
+
+* Mon May 23 2011 Felix Kaechele <heffer@fedoraproject.org> - 1.11.6-1
+- update to 1.11.6
+- fixes ZF2011-02: Potential SQL Injection Vector When Using PDO_MySql
+- full changelog http://framework.zend.com/changelog/1.11.6
+
 * Fri Mar 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.4-1
 - update to 1.11.4
 - rebuild for remi repository (with Oracle and Sqlite stuff)
