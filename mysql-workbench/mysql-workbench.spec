@@ -28,6 +28,8 @@ Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tar
 Patch1:    %{name}-5.2.28-cppconn.patch
 Patch2:    %{name}-5.2.32-ctemplate.patch
 Patch3:    %{name}-5.2.32-tinyxml.patch
+# http://bugs.mysql.com/60603
+Patch4:    %{name}-5.2.33-gcc46.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -75,6 +77,13 @@ Conflicts: mysql-workbench-oss
 Conflicts: mysql-workbench-ce
 Conflicts: mysql-workbench-gpl
 Conflicts: mysql-workbench-com-se
+# Old GUI Tools no more maintained
+Obsoletes: mysql-gui-tools < 5.1
+Obsoletes: mysql-administrator < 5.1
+Obsoletes: mysql-query-browser < 5.1
+Provides:  mysql-gui-tools = %{version}
+Provides:  mysql-administrator = %{version}
+Provides:  mysql-query-browser = %{version}
 
 
 %description
@@ -124,6 +133,8 @@ rm -rf ext/ctemplate
 rm -rf library/tinyxml
 %endif
 
+%patch4 -p1 -b .gcc46
+
 touch -r COPYING .timestamp4rpm
 %{__sed} -i -e 's/\r//g' COPYING
 touch -r .timestamp4rpm COPYING
@@ -140,6 +151,7 @@ touch po/POTFILES.in
 
 %build
 NOCONFIGURE=yes ./autogen.sh
+export CXXFLAGS="$RPM_OPT_FLAGS -fpermissive"
 %configure --disable-debug --enable-mysql-utilities
 
 make %{?_smp_mflags}
@@ -231,6 +243,13 @@ update-desktop-database &> /dev/null || :
 - update to 5.2.33b Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-33b.html
   http://wb.mysql.com/?page_id=49
+- use bundled cppconn (which is a fork of svn version...)
+- add mysql-utilities sub-package
+- requires mysql-connector-python
+- use system tinyxml >= 2.6.0 when available
+- update bug for gcc 4.6
+  http://bugs.mysql.com/60603
+- rebuild for new MySQL client library
 
 * Tue Mar 15 2011 Remi Collet <Fedora@FamilleCollet.com> 5.2.33-1
 - rebuild for new mysql client ABI (.18)
