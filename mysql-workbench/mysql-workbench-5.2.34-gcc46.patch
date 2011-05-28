@@ -1,0 +1,11 @@
+diff -up mysql-workbench-gpl-5.2.34-src/modules/db.mysql/src/db_mysql_catalog_report.h.gcc46 mysql-workbench-gpl-5.2.34-src/modules/db.mysql/src/db_mysql_catalog_report.h
+--- mysql-workbench-gpl-5.2.34-src/modules/db.mysql/src/db_mysql_catalog_report.h.gcc46	2011-05-28 08:12:31.887897052 +0200
++++ mysql-workbench-gpl-5.2.34-src/modules/db.mysql/src/db_mysql_catalog_report.h	2011-05-28 08:13:10.397054637 +0200
+@@ -10,6 +10,7 @@
+ #include "config.h"
+ #endif
+ 
++#include <cstddef>
+ #include "ctemplate/template.h"
+ 
+ #include "grt/common.h"

@@ -1,0 +1,12 @@
+diff -up mysql-workbench-gpl-5.2.34-src/ext/mysql-utilities/setup.py.orig mysql-workbench-gpl-5.2.34-src/ext/mysql-utilities/setup.py
+--- mysql-workbench-gpl-5.2.34-src/ext/mysql-utilities/setup.py.orig	2011-05-28 08:32:01.667811328 +0200
++++ mysql-workbench-gpl-5.2.34-src/ext/mysql-utilities/setup.py	2011-05-28 08:32:30.464887518 +0200
+@@ -110,7 +110,7 @@ class install_man(distutils.core.Command
+         self.set_undefined_options('build_sphinx',
+                                    ('build_dir', 'build_dir'),
+                                    )
+-        self.target_dir = os.path.join(self.install_base, 'man')
++        self.target_dir = os.path.join(self.install_base, 'share/man')
+         self.source_dir = os.path.join(self.build_dir, 'man')
+ 
+     def run(self):
