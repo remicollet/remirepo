@@ -1,0 +1,67 @@
+diff -up mysql-workbench-gpl-5.2.34-src/backend/wbprivate/Makefile.am.tinyxml mysql-workbench-gpl-5.2.34-src/backend/wbprivate/Makefile.am
+--- mysql-workbench-gpl-5.2.34-src/backend/wbprivate/Makefile.am.tinyxml	2011-05-24 16:12:57.000000000 +0200
++++ mysql-workbench-gpl-5.2.34-src/backend/wbprivate/Makefile.am	2011-05-28 08:02:15.299247072 +0200
+@@ -13,8 +13,7 @@ INCLUDES=@GLIB_CFLAGS@ @SIGC_CFLAGS@ @GR
+   -I$(top_srcdir)/ext/cppconn/ -I$(top_srcdir)/library/dbc/src\
+   -I$(top_srcdir)/ext/scintilla/include\
+   -I$(top_srcdir)/ext/vsqlite++/include\
+-  -I$(top_srcdir)/ext/vsqlite\
+-  -I$(top_srcdir)/ext/tinyxml
++  -I$(top_srcdir)/ext/vsqlite
+ 
+ libwbprivate_a_SOURCES=\
+ 	model/canvas_floater.cpp\
+@@ -75,11 +74,7 @@ libwbprivate_a_SOURCES=\
+   $(top_srcdir)/frontend/common/grt_code_editor.cpp\
+   $(top_srcdir)/frontend/common/grt_python_debugger.cpp\
+   $(top_srcdir)/frontend/common/plugin_manager_window.cpp\
+-  $(top_srcdir)/frontend/common/plugin_install_window.cpp\
+-  $(top_srcdir)/ext/tinyxml/tinyxmlparser.cpp\
+-  $(top_srcdir)/ext/tinyxml/tinyxml.cpp\
+-  $(top_srcdir)/ext/tinyxml/tinystr.cpp\
+-  $(top_srcdir)/ext/tinyxml/tinyxmlerror.cpp
++  $(top_srcdir)/frontend/common/plugin_install_window.cpp
+ 
+ #BUILT_SOURCES=stdafx.h.gch
+ #stdafx.h.gch: workbench/stdafx.h
+diff -up mysql-workbench-gpl-5.2.34-src/library/forms/Makefile.am.tinyxml mysql-workbench-gpl-5.2.34-src/library/forms/Makefile.am
+--- mysql-workbench-gpl-5.2.34-src/library/forms/Makefile.am.tinyxml	2011-05-24 16:12:55.000000000 +0200
++++ mysql-workbench-gpl-5.2.34-src/library/forms/Makefile.am	2011-05-28 08:01:19.473065610 +0200
+@@ -68,7 +68,7 @@ gtk/src/lf_button.cpp\
+ gtk/src/lf_menu.cpp\
+ gtk/src/lf_menubar.cpp
+ 
+-libmforms_la_LIBADD=@GNOME_LIBS@ @GNOME_KEYRING_LIBS@
++libmforms_la_LIBADD=@GNOME_LIBS@ @GNOME_KEYRING_LIBS@ -ltinyxml
+ 
+ INCLUDES=@GLIB_CFLAGS@ @GNOME_CFLAGS@ @SIGC_CFLAGS@ @CAIRO_CFLAGS@ @GNOME_KEYRING_CFLAGS@ @PCRE_CFLAGS@ \
+ -I$(top_srcdir)/library/forms\
+@@ -80,7 +80,6 @@ INCLUDES=@GLIB_CFLAGS@ @GNOME_CFLAGS@ @S
+ -I$(top_srcdir)/ext/vsqlite\
+ -I$(top_srcdir)/library/\
+ -I$(top_srcdir)/ext\
+--I$(top_srcdir)/ext/tinyxml\
+ -I$(top_srcdir)/ext/scintilla/include
+ 
+ 
+diff -up mysql-workbench-gpl-5.2.34-src/modules/wb.mysql.import/Makefile.am.tinyxml mysql-workbench-gpl-5.2.34-src/modules/wb.mysql.import/Makefile.am
+--- mysql-workbench-gpl-5.2.34-src/modules/wb.mysql.import/Makefile.am.tinyxml	2011-05-24 16:12:59.000000000 +0200
++++ mysql-workbench-gpl-5.2.34-src/modules/wb.mysql.import/Makefile.am	2011-05-28 08:00:15.373887490 +0200
+@@ -17,7 +17,6 @@ INCLUDES=\
+ 	-I$(top_srcdir)/library/sql-parser/source/linux\
+ 	-I$(top_srcdir)/ext/vsqlite\
+ 	-I$(top_srcdir)/ext/vsqlite++/include\
+-	-I$(top_srcdir)/ext/tinyxml\
+ 	@MYSQL_INCLUDE@ @GRT_CFLAGS@ @GLIB_CFLAGS@ @SIGC_CFLAGS@
+ 
+ 
+@@ -26,8 +25,4 @@ wb_mysql_import_grt_la_LDFLAGS=-module
+ 
+ wb_mysql_import_grt_la_SOURCES=\
+ 	src/wb_mysql_import.cpp\
+-	src/wb_mysql_import_dbd4.cpp\
+-	$(top_srcdir)/ext/tinyxml/tinyxmlparser.cpp\
+-	$(top_srcdir)/ext/tinyxml/tinyxml.cpp\
+-	$(top_srcdir)/ext/tinyxml/tinystr.cpp\
+-	$(top_srcdir)/ext/tinyxml/tinyxmlerror.cpp
++	src/wb_mysql_import_dbd4.cpp

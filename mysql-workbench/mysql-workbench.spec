@@ -1,8 +1,8 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%global mw_version 5.2.33b
-%global tarversion gpl-5.2.33b-src
-%global srcversion gpl-5.2.33-src
+%global mw_version 5.2.34
+%global tarversion gpl-5.2.34-src
+%global srcversion gpl-5.2.34-src
 
 # Use system cppconn if a compatible upstream version exists
 #global cppconnver 1.1.0-0.3.bzr895
@@ -27,9 +27,12 @@ Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tar
 # !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
 Patch1:    %{name}-5.2.28-cppconn.patch
 Patch2:    %{name}-5.2.32-ctemplate.patch
-Patch3:    %{name}-5.2.32-tinyxml.patch
+Patch3:    %{name}-5.2.34-tinyxml.patch
 # http://bugs.mysql.com/60603
-Patch4:    %{name}-5.2.33-gcc46.patch
+Patch4:    %{name}-5.2.34-gcc46.patch
+# redirect man page to /usr/share
+Patch5:    %{name}-5.2.34-man.patch
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -99,7 +102,7 @@ an integrated tools environment for:
 Summary:        Scripts for managing and administering MySQL servers
 # Not yet published (else will be package separatly)
 # see ext/mysql-utilities/CHANGES.txt
-Version:        1.0.0
+Version:        1.0.1
 Release:        0.%{mw_version}%{?dist}
 
 BuildArch:      noarch
@@ -134,6 +137,8 @@ rm -rf library/tinyxml
 %endif
 
 %patch4 -p1 -b .gcc46
+%patch5 -p1 -b .man
+
 
 touch -r COPYING .timestamp4rpm
 %{__sed} -i -e 's/\r//g' COPYING
@@ -168,13 +173,8 @@ rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 
 pushd ext/mysql-utilities
-%{__install} --directory %{buildroot}%{_prefix}/man/man1
+%{__install} --directory %{buildroot}%{_mandir}/man1
 %{__python} setup.py install --skip-profile --root %{buildroot}
-
-%if 0%{?fedora} >= 14
-%{__install} --directory %{buildroot}%{_mandir}
-%{__mv} %{buildroot}%{_prefix}/man/man1 %{buildroot}%{_mandir}/man1
-%endif
 popd
 
 # clean dev files
@@ -228,6 +228,7 @@ update-desktop-database &> /dev/null || :
 %{_bindir}/mysqlprocgrep
 %{_bindir}/mysqlreplicate
 %{_bindir}/mysqlserverclone
+%{_bindir}/mysqlserverinfo
 %{_bindir}/mysqluserclone
 %{python_sitelib}/mysql/utilities
 %{python_sitelib}/mysql_utilities*
@@ -239,6 +240,12 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Wed Mar 23 2011 Remi Collet <Fedora@famillecollet.com> 5.2.34-1
+- update to 5.2.34 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-34.html
+  http://wb.mysql.com/?page_id=49
+- mysql-utilities 1.0.1rc1
+
 * Wed Mar 23 2011 Remi Collet <Fedora@famillecollet.com> 5.2.33b-1
 - update to 5.2.33b Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-33b.html
