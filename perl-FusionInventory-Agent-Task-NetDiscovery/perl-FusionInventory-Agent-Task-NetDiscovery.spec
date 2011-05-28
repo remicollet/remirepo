@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-NetDiscovery
 Version:        1.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Network discovery support for FusionInventory Agent
 License:        GPLv2+
 Group:          Development/Libraries
@@ -18,6 +18,7 @@ BuildRequires:  perl(XML::TreePP)
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(FusionInventory::Agent) >= 2.0
+Requires:       perl(XML::SAX)
 # Optional (but recommended) dependencies
 Requires:       perl(Parallel::ForkManager)
 Requires:       perl(Net::SNMP)
@@ -68,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 28 2011 Remi Collet <Fedora@famillecollet.com> 1.5-2
+- add dependency on perl(XML::SAX)
+
 * Mon May  9 2011 Remi Collet <Fedora@famillecollet.com> 1.5-1
 - update to 1.5
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-NetDiscovery-1.5/Changes
