@@ -94,8 +94,6 @@ Patch23:        wmclass.patch
 Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
-Patch30:        xulrunner-2.0-zip-deadlocks.patch
-Patch31:        xulrunner-2.0-baddevice.patch
 Patch32:        firefox-4.0-moz-app-launcher.patch
 Patch33:        firefox-4.0-gnome3.patch
 Patch34:        xulrunner-2.0-network-link-service.patch
@@ -210,6 +208,26 @@ Requires: wireless-tools-devel
 This package contains the libraries amd header files that are needed
 for writing XUL+XPCOM applications with Mozilla XULRunner and Gecko.
 
+%if %{enable_mozilla_crashreporter}
+%global moz_debug_prefix %{_prefix}/lib/debug
+%global moz_debug_dir %{moz_debug_prefix}%{mozappdir}
+%global uname_m %(uname -m)
+%global symbols_file_name %{shortname}-%{version}.en-US.%{_os}-%{uname_m}.crashreporter-symbols.zip
+%global symbols_file_path %{moz_debug_dir}/%{symbols_file_name}
+%global _find_debuginfo_opts -p %{symbols_file_path} -o debugcrashreporter.list
+%global crashreporter_pkg_name mozilla-crashreporter-%{name}-debuginfo
+%package -n %{crashreporter_pkg_name}
+Summary: Debugging symbols used by Mozilla's crash reporter servers
+Group: Development/Debug
+%description -n %{crashreporter_pkg_name}
+This package provides debug information for XULRunner, for use by
+Mozilla's crash reporter servers.  If you are trying to locally
+debug %{name}, you want to install %{name}-debuginfo instead.
+%files -n %{crashreporter_pkg_name} -f debugcrashreporter.list
+%defattr(-,root,root)
+%endif
+
+
 #---------------------------------------------------------------------
 
 %prep
@@ -232,8 +250,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
-# Applied %patch30 -p1 -b .zip-deadlocks
-# Applied %patch31 -p1 -b .baddevice
 %patch32 -p1 -b .moz-app-launcher
 %patch33 -p1 -b .gnome3
 %patch34 -p1 -b .network-link-service
@@ -463,10 +479,8 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{enable_mozilla_crashreporter}
-# Debug symbols are stored in /usr/lib even in x86_64 arch
-DEBUG_LIB_DIR=`echo %{_libdir}|sed -e "s/lib64/lib/"`
-mkdir -p $RPM_BUILD_ROOT$DEBUG_LIB_DIR/debug%{mozappdir}
-cp dist/%{shortname}-%{version}*.crashreporter-symbols.zip $RPM_BUILD_ROOT$DEBUG_LIB_DIR/debug%{mozappdir}
+%{__mkdir_p} $RPM_BUILD_ROOT/%{moz_debug_dir}
+%{__cp} dist/%{symbols_file_name} $RPM_BUILD_ROOT/%{moz_debug_dir}
 %endif
 
 # Remi : this appears on Fedora <= 13
