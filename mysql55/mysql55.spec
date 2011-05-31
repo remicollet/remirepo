@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.12
+Version: 5.5.13
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -678,6 +678,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Tue May 31 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.13-1
+- update to MySQL 5.5.13 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-13.html
+
 * Tue May 10 2011 Tom Lane <tgl@redhat.com> 5.5.12-1
 - Update to MySQL 5.5.12, for various fixes described at
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-12.html
