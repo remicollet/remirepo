@@ -43,9 +43,8 @@ Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
 # Patch9: mysql-disable-test.patch
 Patch10: mysql-embedded-crash.patch
-# Patch11: mysql-home.patch
-Patch12: mysql-plugin-bool.patch
-Patch13: mysql-s390-tsc.patch
+Patch11: mysql-plugin-bool.patch
+Patch12: mysql-s390-tsc.patch
 
 # RC patch for backports
 Patch21: mysql-readline.patch
@@ -199,11 +198,9 @@ rm -f Docs/mysql.info
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-# %patch9 -p1
 %patch10 -p1
-# %patch11 -p1
+%patch11 -p1
 %patch12 -p1
-%patch13 -p1
 # Backports specific patches
 %patch21 -p1 -b .readline
 
@@ -220,7 +217,6 @@ outfile_loaddata         : bug#46895 code wrong, expected results wrong too
 sys_vars.plugin_dir_basic : bug#52223 fails for lib64 library directory
 perfschema.binlog_mix    : bug#59091 fails with openssl
 perfschema.binlog_row    : bug#59091 fails with openssl
-gis                      : bug#59908 has platform-dependent results
 innodb.innodb            : bug#60155 has platform-dependent results
 main.information_schema  : fails in mock, ok after install :(
 EOF
@@ -682,6 +678,19 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Tue May 10 2011 Tom Lane <tgl@redhat.com> 5.5.12-1
+- Update to MySQL 5.5.12, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-12.html
+
+* Tue May 10 2011 Tom Lane <tgl@redhat.com> 5.5.10-3
+- Add LSB init block to initscript, to ensure sane ordering at system boot
+Resolves: #703214
+- Improve initscript start action to notice when mysqladmin is failing
+  because of configuration problems
+Related: #703476
+- Remove exclusion of "gis" regression test, since upstream bug 59908
+  is fixed (for some value of "fixed") as of 5.5.10.
+
 * Mon May 09 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.12-1
 - update to MySQL 5.5.12 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-12.html

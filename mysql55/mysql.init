@@ -8,6 +8,15 @@
 # processname: mysqld
 # config: /etc/my.cnf
 # pidfile: /var/run/mysqld/mysqld.pid
+### BEGIN INIT INFO
+# Provides: mysqld
+# Required-Start: $local_fs $remote_fs $network $named $syslog $time
+# Required-Stop: $local_fs $remote_fs $network $named $syslog $time
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: start and stop MySQL server
+# Description: MySQL database server
+### END INIT INFO
 
 # Source function library.
 . /etc/rc.d/init.d/functions
@@ -113,7 +122,19 @@ start(){
 	ret=0
 	TIMEOUT="$STARTTIMEOUT"
 	while [ $TIMEOUT -gt 0 ]; do
-	    RESPONSE=`/usr/bin/mysqladmin --socket="$socketfile" --user=UNKNOWN_MYSQL_USER ping 2>&1` && break
+	    RESPONSE=`/usr/bin/mysqladmin --socket="$socketfile" --user=UNKNOWN_MYSQL_USER ping 2>&1`
+	    mret=$?
+	    if [ $mret -eq 0 ]; then
+		break
+	    fi
+	    # exit codes 1, 11 (EXIT_CANNOT_CONNECT_TO_SERVICE) are expected,
+	    # anything else suggests a configuration error
+	    if [ $mret -ne 1 -a $mret -ne 11 ]; then
+		echo "$RESPONSE"
+		echo "Cannot check for MySQL Daemon startup because of mysqladmin failure."
+		ret=1
+		break
+	    fi
 	    echo "$RESPONSE" | grep -q "Access denied for user" && break
 	    if ! /bin/kill -0 $safe_pid 2>/dev/null; then
 		echo "MySQL Daemon failed to start."
