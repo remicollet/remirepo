@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcached
 Version:      1.0.2
-Release:      3%{?dist}.2
+Release:      6%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -17,19 +17,28 @@ BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
 BuildRequires: php-devel >= 5.2.10
 BuildRequires: php-pear
-BuildRequires: php-igbinary-devel
+BuildRequires: php-pecl-igbinary-devel
 BuildRequires: libmemcached-devel
 BuildRequires: zlib-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:     php-common >= 5.2.10
-Requires:     php-igbinary
+Requires:     php-common%{?_isa} >= 5.2.10
+Requires:     php-pecl-igbinary%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
 Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
+
+
+%if 0%{?fedora}%{?rhel} > 4
+%{?filter_setup:
+%filter_provides_in %{php_extdir}/.*\.so$
+%filter_setup
+}
+%endif
 
 
 %description
@@ -65,6 +74,7 @@ cd %{pecl_name}-%{version}
 %{__cat} > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
+
 
 ; ----- Options to use the memcached session handler
 
@@ -115,6 +125,9 @@ cd %{pecl_name}-%{version}
 
 
 %changelog
+* Thu Jun 02 2011  Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-6
+- rebuild against libmemcached 0.49
+
 * Sat Feb 19 2011 Remi Collet <fedora@famillecollet.com> - 1.0.2-3.2
 - rebuild for remi repo with SASL for fedora <= 10 and EL <= 5
 
