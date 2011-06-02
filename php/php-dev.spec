@@ -25,7 +25,7 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global snapdate 201105131630
+%global snapdate 201106021630
 %global phpversion 5.3.7-dev
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
@@ -85,6 +85,7 @@ Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
+# from http://svn.php.net/viewvc?view=revision&revision=311042
 Patch8: php-5.3.7-aconf26x.patch
 
 # Fixes for extension modules
@@ -1330,6 +1331,9 @@ fi
 %endif
 
 %changelog
+* Thu Jun 02 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201106021630
+- new snapshot (5.3.7-dev)
+
 * Thu May 12 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201105131630
 - new snapshot (5.3.7-dev)
 - backport more patches in pdo_dblib

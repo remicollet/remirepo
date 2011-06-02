@@ -1,79 +1,194 @@
-diff -up php5.3-201104170830/configure.in.aconf26x php5.3-201104170830/configure.in
---- php5.3-201104170830/configure.in.aconf26x	2011-04-17 11:53:27.299728930 +0200
-+++ php5.3-201104170830/configure.in	2011-04-17 11:54:25.291130472 +0200
-@@ -1,7 +1,7 @@
+diff -up php5.3-201106021630/configure.in.orig php5.3-201106021630/configure.in
+--- php5.3-201106021630/configure.in.orig	2011-06-02 19:29:31.659745113 +0200
++++ php5.3-201106021630/configure.in	2011-06-02 19:30:35.112936325 +0200
+@@ -1,28 +1,6 @@
  ## $Id: configure.in 310307 2011-04-18 09:50:32Z bjori $ -*- autoconf -*-
  dnl ## Process this file with autoconf to produce a configure script.
  
 -divert(1)
-+divert(1001)
+-
+-dnl ## Diversion 1 is the autoconf + automake setup phase. We also
+-dnl ## set the PHP version, deal with platform-specific compile
+-dnl ## options and check for the basic compile tools.
+-
+-dnl ## Diversion 2 is the initial checking of OS features, programs,
+-dnl ## libraries and so on.
+-
+-dnl ## In diversion 3 we check for compile-time options to the PHP
+-dnl ## core and how to deal with different system dependencies. 
+-dnl ## This includes whether debugging or short tags are enabled
+-dnl ## and the default behaviour of php.ini options.
+-dnl ## This is also where an SAPI interface is selected (choosing between
+-dnl ## Apache module, CGI etc.)
+-
+-dnl ## In diversion 4 we check user-configurable general settings.
+-
+-dnl ## In diversion 5 we check which extensions should be compiled.
+-dnl ## All of these are normally in the extension directories.
+-dnl ## Diversion 5 is the last one.  Here we generate files and clean up.
+-
+ dnl include Zend specific macro definitions first
+ dnl -------------------------------------------------------------------------
+ sinclude(Zend/acinclude.m4)
+@@ -30,8 +8,10 @@ sinclude(Zend/acinclude.m4)
+ dnl Basic autoconf + automake initialization, generation of config.nice.
+ dnl -------------------------------------------------------------------------
  
- dnl ## Diversion 1 is the autoconf + automake setup phase. We also
- dnl ## set the PHP version, deal with platform-specific compile
-@@ -292,7 +292,7 @@ sinclude(TSRM/threads.m4)
+-AC_PREREQ(2.13)
++AC_PREREQ(2.60)
+ AC_INIT(README.SVN-RULES)
++AC_PRESERVE_HELP_ORDER
++
+ 
+ PHP_CONFIG_NICE(config.nice)
+ 
+@@ -292,14 +272,6 @@ sinclude(TSRM/threads.m4)
  sinclude(TSRM/tsrm.m4)
  
  
 -divert(2)
-+divert(1002)
+-
+-dnl ## Diversion 2 is where we set PHP-specific options and come up
+-dnl ## with reasonable default values for them. We check for pthreads here
+-dnl ## because the information is needed by the SAPI configuration.
+-dnl ## This is also where an SAPI interface is selected (choosing between
+-dnl ## Apache module, CGI etc.)
+-
+ dnl .
+ dnl -------------------------------------------------------------------------
  
- dnl ## Diversion 2 is where we set PHP-specific options and come up
- dnl ## with reasonable default values for them. We check for pthreads here
-@@ -331,7 +331,7 @@ if test "$enable_maintainer_zts" = "yes"
+@@ -331,13 +303,6 @@ if test "$enable_maintainer_zts" = "yes"
    PTHREADS_FLAGS
  fi
  
 -divert(3)
-+divert(1003)
+-
+-dnl ## In diversion 3 we check for compile-time options to the PHP
+-dnl ## core and how to deal with different system dependencies. 
+-dnl ## This includes whether debugging or short tags are enabled
+-dnl ## and the default behaviour of php.ini options.
+-
+ dnl Starting system checks.
+ dnl -------------------------------------------------------------------------
  
- dnl ## In diversion 3 we check for compile-time options to the PHP
- dnl ## core and how to deal with different system dependencies. 
-@@ -677,7 +677,7 @@ if test "x$php_crypt_r" = "x1"; then
+@@ -677,10 +642,6 @@ if test "x$php_crypt_r" = "x1"; then
    PHP_CRYPT_R_STYLE
  fi
  
 -divert(4)
-+divert(1004)
- 
- dnl ## In diversion 4 we check user-configurable general settings.
- 
-@@ -918,7 +918,7 @@ else
+-
+-dnl ## In diversion 4 we check user-configurable general settings.
+-
+ dnl General settings.
+ dnl -------------------------------------------------------------------------
+ PHP_CONFIGURE_PART(General settings)
+@@ -918,11 +879,6 @@ else
    AC_MSG_RESULT([using system default])
  fi
  
 -divert(5)
-+divert(1005)
+-
+-dnl ## In diversion 5 we check which extensions should be compiled.
+-dnl ## All of these are normally in the extension directories.
+-
+ dnl Extension configuration.
+ dnl -------------------------------------------------------------------------
  
- dnl ## In diversion 5 we check which extensions should be compiled.
- dnl ## All of these are normally in the extension directories.
-diff -up php5.3-201104170830/ext/standard/config.m4.aconf26x php5.3-201104170830/ext/standard/config.m4
---- php5.3-201104170830/ext/standard/config.m4.aconf26x	2010-06-17 12:36:36.000000000 +0200
-+++ php5.3-201104170830/ext/standard/config.m4	2011-04-17 11:53:27.304729655 +0200
-@@ -1,6 +1,6 @@
+diff -up php5.3-201106021630/ext/standard/config.m4.orig php5.3-201106021630/ext/standard/config.m4
+--- php5.3-201106021630/ext/standard/config.m4.orig	2011-06-02 19:30:53.758992671 +0200
++++ php5.3-201106021630/ext/standard/config.m4	2011-06-02 19:31:13.312051834 +0200
+@@ -1,7 +1,5 @@
  dnl $Id: config.m4 300511 2010-06-17 10:22:03Z pajoye $ -*- autoconf -*-
  
 -divert(3)dnl
-+divert(1003)dnl
- 
+-
  dnl
  dnl Check if flush should be called explicitly after buffered io
-@@ -342,7 +342,7 @@ dnl
+ dnl
+@@ -342,8 +340,6 @@ dnl
  AC_CHECK_FUNCS(getcwd getwd asinh acosh atanh log1p hypot glob strfmon nice fpclass isinf isnan mempcpy strpncpy)
  AC_FUNC_FNMATCH	
  
 -divert(5)dnl
-+divert(1005)dnl
- 
+-
  dnl
  dnl Check if there is a support means of creating a new process
-diff -up php5.3-201104170830/scripts/phpize.m4.aconf26x php5.3-201104170830/scripts/phpize.m4
---- php5.3-201104170830/scripts/phpize.m4.aconf26x	2010-11-02 12:37:19.000000000 +0100
-+++ php5.3-201104170830/scripts/phpize.m4	2011-04-17 11:53:27.305729800 +0200
-@@ -1,6 +1,6 @@
+ dnl and defining which handles it receives
+diff -up php5.3-201106021630/scripts/php-config.in.orig php5.3-201106021630/scripts/php-config.in
+--- php5.3-201106021630/scripts/php-config.in.orig	2011-06-02 19:31:30.366103496 +0200
++++ php5.3-201106021630/scripts/php-config.in	2011-06-02 19:31:47.569155668 +0200
+@@ -2,6 +2,7 @@
+ 
+ SED="@SED@"
+ prefix="@prefix@"
++datarootdir="@datarootdir@"
+ exec_prefix="@exec_prefix@"
+ version="@PHP_VERSION@"
+ vernum="@PHP_VERSION_ID@"
+diff -up php5.3-201106021630/scripts/phpize.in.orig php5.3-201106021630/scripts/phpize.in
+--- php5.3-201106021630/scripts/phpize.in.orig	2011-06-02 19:32:04.339206585 +0200
++++ php5.3-201106021630/scripts/phpize.in	2011-06-02 19:32:16.135242430 +0200
+@@ -2,6 +2,7 @@
+ 
+ # Variable declaration
+ prefix='@prefix@'
++datarootdir='@datarootdir@'
+ exec_prefix="`eval echo @exec_prefix@`"
+ phpdir="@libdir@/php/build"
+ includedir="`eval echo @includedir@`/php"
+diff -up php5.3-201106021630/scripts/phpize.m4.orig php5.3-201106021630/scripts/phpize.m4
+--- php5.3-201106021630/scripts/phpize.m4.orig	2011-06-02 19:32:32.540292329 +0200
++++ php5.3-201106021630/scripts/phpize.m4	2011-06-02 19:32:54.310358624 +0200
+@@ -1,9 +1,8 @@
  dnl This file becomes configure.in for self-contained extensions.
  
 -divert(1)
-+divert(1001)
- 
- AC_PREREQ(2.13)
+-
+-AC_PREREQ(2.13)
++AC_PREREQ(2.60)
  AC_INIT(config.m4)
++AC_PRESERVE_HELP_ORDER
+ 
+ PHP_CONFIG_NICE(config.nice)
+ 
+--- php5.3-201106021630/build/buildcheck.sh.aconf26x	2011-06-02 19:39:33.041577148 +0200
++++ php5.3-201106021630/build/buildcheck.sh	2011-06-02 19:40:03.854665341 +0200
+@@ -28,33 +28,23 @@
+   PHP_AUTOCONF='autoconf'
+ fi
+ 
+-# autoconf 2.13 or newer
++# autoconf 2.60 or newer
+ ac_version=`$PHP_AUTOCONF --version 2>/dev/null|head -n 1|sed -e 's/^[^0-9]*//' -e 's/[a-z]* *$//'`
+ if test -z "$ac_version"; then
+ echo "buildconf: autoconf not found."
+-echo "           You need autoconf version 2.13 or newer installed"
++echo "           You need autoconf version 2.60 or newer installed"
+ echo "           to build PHP from SVN."
+ exit 1
+ fi
+ IFS=.; set $ac_version; IFS=' '
+-if test "$1" = "2" -a "$2" -lt "13" || test "$1" -lt "2"; then
++if test "$1" = "2" -a "$2" -lt "60" || test "$1" -lt "2"; then
+ echo "buildconf: autoconf version $ac_version found."
+-echo "           You need autoconf version 2.13 or newer installed"
++echo "           You need autoconf version 2.60 or newer installed"
+ echo "           to build PHP from SVN."
+ exit 1
+ fi
+ 
+-if test "$1" = "2" -a "$2" -gt "59"; then
+-  echo "buildconf: You need autoconf 2.59 or lower to build this version of PHP."
+-  echo "           You are currently trying to use $ac_version"
+-  echo "           Most distros have separate autoconf 2.13 or 2.59 packages."
+-  echo "           On Debian/Ubuntu both autoconf2.13 and autoconf2.59 packages exist."
+-  echo "           Install autoconf2.13 and set the PHP_AUTOCONF env var to "
+-  echo "           autoconf2.13 and try again."
+-  exit 1
+-else
+-  echo "buildconf: autoconf version $ac_version (ok)"
+-fi
++echo "buildconf: autoconf version $ac_version (ok)"
+ 
+ if test "$1" = "2" -a "$2" -ge "50"; then
+   ./vcsclean
