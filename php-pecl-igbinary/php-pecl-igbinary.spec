@@ -10,7 +10,8 @@
 %global phpincldir     %{_includedir}/%{phpname}
 %endif
 
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
+%{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
+%{!?php_extdir: %{expand: %%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php/modules)}}
 
 %global    extname   igbinary
 
