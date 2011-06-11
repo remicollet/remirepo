@@ -43,7 +43,7 @@ Requires:       php-pear(Cache_Lite) >= 1.7.4
 Requires:       php-PHPMailer
 Requires:       php-pear-CAS >= 1.1.0
 Requires:       php-pear(components.ez.no/Graph) >= 1.5
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6 
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       gnu-free-sans-fonts
 %else
 Requires:       freefont
@@ -88,11 +88,11 @@ rm -rf lib/phpmailer
 rm -rf lib/phpcas
 rm -rf lib/ezcomponents
 
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6 
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 cp %{SOURCE2} config/config_path.php 
 %else
 # fix font path on old version
-sed -e /GLPI_FONT_FREESANS/s/gnu-free/freefont/ %{SOURCE2} >config/config_path.php 
+sed -e /GLPI_FONT_FREESANS/s/gnu-free/freefont/ %{SOURCE2} >config/config_path.php
 %endif
 
 mv lib/tiny_mce/license.txt LICENSE.tiny_mce
