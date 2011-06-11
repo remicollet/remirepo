@@ -1,17 +1,17 @@
 %define pluginname   datainjection
 
 Name:           glpi-data-injection
-Version:        2.0.1
-Release:        1.beta%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Plugin for importing data into GLPI
 Summary(fr):    Extension pour importer des données dans GLPI
 
 Group:          Applications/Internet
 License:        GPLv2+
 
-URL:            https://forge.indepnet.net/projects/show/datainjection
-#               This change for each new version
-Source0:        https://forge.indepnet.net/attachments/download/813/glpi-datainjection-2.0.1-beta.tar.gz
+URL:            https://forge.indepnet.net/projects/datainjection
+# This change for each new version
+Source0:        https://forge.indepnet.net/attachments/download/899/glpi-datainjection-2.0.2.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -27,7 +27,7 @@ Plugin for importing data into GLPI
 It'll can serve, for example, to :
 - import machines at the delivery (electronic delivery order in CSV)
 - import additional data
-- import equipments not managed by OCS
+- import equipment not managed by OCS
 - transmit from an other tool of asset management
 
 %description -l fr
@@ -43,7 +43,6 @@ Elle pourra servir, par exemple, à :
 %prep
 %setup -q -c
 
-#mv %{pluginname}/test test
 mv %{pluginname}/docs docs
 
 # dos2unix to avoid rpmlint warnings
@@ -56,6 +55,10 @@ done
 
 # don't need this
 rm -f testwebservice.php
+
+# fix in SVN...
+chmod -x datainjection/ajax/model.tabs.php
+
 
 %build
 # empty build
@@ -92,6 +95,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 11 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.2-1
+- update to 2.0.2
+  https://forge.indepnet.net/projects/datainjection/versions/544
+
 * Tue Mar  8 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.1-1.beta
 - update to 2.0.1-beta
 
