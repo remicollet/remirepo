@@ -3,7 +3,7 @@
 #global svnrelease   60
 
 Name:           glpi-mass-ocs-import
-Version:        1.4.1
+Version:        1.4.2
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -21,7 +21,7 @@ URL:            https://forge.indepnet.net/projects/massocsimport
 # tar czf glpi-massocsimport-1.4.0-60.tar.gz massocsimport
 Source0:        glpi-massocsimport-1.4.0-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/711/glpi-massocsimport-1.4.1.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/898/glpi-massocsimport-1.4.2.tar.gz
 %endif
 
 
@@ -139,6 +139,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 11 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.4.2-1
+- version 1.4.2
+  https://forge.indepnet.net/projects/massocsimport/versions/534
+
 * Sun Oct 31 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.4.1-1
 - version 1.4.1 (minor bugfix)
 
