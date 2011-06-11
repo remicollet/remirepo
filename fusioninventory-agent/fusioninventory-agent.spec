@@ -172,9 +172,12 @@ FUSINVOPT='--debug --rpc-trust-localhost'
 # - none (default on install) no activity
 # - cron (inventory only) use the cron.hourly
 # - daemon (recommanded) use the service
+#   DON'T FORGET to enale the service
 OCSMODE[0]=none
-# OCS server URI
+# OCS Inventory or FusionInventory server URI
 # OCSSERVER[0]=your.ocsserver.name
+# OCSSERVER[0]=http://your.ocsserver.name/ocsinventory
+# OCSSERVER[0]=http://your.glpiserveur.name/glpi/plugins/fusioninventory/
 # corresponds with --local=%{_localstatedir}/lib/%{name}
 # OCSSERVER[0]=local
 # Wait before inventory (for cron mode)
