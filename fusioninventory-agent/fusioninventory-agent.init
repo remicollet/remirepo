@@ -65,10 +65,10 @@ do_start()
 		daemon $prog --logfile-maxsize=999 --logfile=$logfile $FUSINVOPT --daemon $OPTS 2>/dev/null
 		RETVAL=$?
 		echo
+                [ $RETVAL -eq 0 ] && touch $lockfile
 	else
-		RETVAL=1
+		RETVAL=0
 	fi
-	[ $RETVAL -eq 0 ] && touch $lockfile
 }
 
 #
