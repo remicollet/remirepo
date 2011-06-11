@@ -172,7 +172,7 @@ FUSINVOPT='--debug --rpc-trust-localhost'
 # - none (default on install) no activity
 # - cron (inventory only) use the cron.hourly
 # - daemon (recommanded) use the service
-#   DON'T FORGET to enale the service
+#   DON'T FORGET to enable the service
 OCSMODE[0]=none
 # OCS Inventory or FusionInventory server URI
 # OCSSERVER[0]=your.ocsserver.name
