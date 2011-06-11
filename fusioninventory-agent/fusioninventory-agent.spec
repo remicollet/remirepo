@@ -1,4 +1,4 @@
-#global gitver a7532c0
+%global gitver 9bd1238
 #global prever _beta1
 
 Name:        fusioninventory-agent
@@ -8,23 +8,19 @@ Group:       Applications/System
 License:     GPLv2+
 URL:         http://fusioninventory.org/
 
-Version:     2.1.8
+Version:     2.1.9
 
 %if 0%{?gitver:1}
-Release:   2.git%{gitver}%{?dist}
+Release:   0.1.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
-Source0:   fusinv-fusioninventory-agent-2.1-48-ga7532c0.tar.gz
+Source0:   fusinv-fusioninventory-agent-2.1.8-95-g9bd1238.tar.gz
 %else
-Release:   2
+Release:   3
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
 Source1:   %{name}.cron
 Source2:   %{name}.init
-
-# See http://forge.fusioninventory.org/issues/636
-# revert this change which break compatibility with previous version
-Patch0:    %{name}-revert.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -32,9 +28,12 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: perl(Module::Install)
 # For tests 
 BuildRequires: perl(Time::HiRes) perl(XML::Simple) perl(UNIVERSAL::require) perl(Test::More)
-# for fedora repo : %if 0%{?fedora}>= 12 || 0%{?rhel} >= 5
+%if 0%{?fedora}>= 12 || 0%{?rhel} >= 5
 BuildRequires: perl(XML::TreePP)
-# %endif
+%endif
+%if 0%{?fedora}>= 10 || 0%{?rhel} >= 5
+BuildRequires: perl(JSON)
+%endif
 %if 0%{?fedora} >= 11
 BuildRequires: perl(Test::Compile)
 %endif
@@ -132,8 +131,6 @@ Le service doit être actif et lancé avec l'option --rpc-trust-localhost.
 %else
 %setup -q -n FusionInventory-Agent-%{version}%{?prever}
 %endif
-
-%patch0 -p1 -b .revert
 
 # This work only on older version, and is ignored on recent
 cat <<EOF | tee %{name}-req
@@ -253,7 +250,10 @@ exit 0
 
 %files
 %defattr(-, root, root, -)
-%doc AUTHORS README* Changes LICENSE THANKS
+%doc AUTHORS Changes LICENSE THANKS
+%if ! 0%{?gitver:1}
+%doc README*
+%endif
 %dir %{_sysconfdir}/fusioninventory
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
@@ -278,6 +278,11 @@ exit 0
 
 
 %changelog
+* Sat Jun 11 2011 Remi Collet <Fedora@famillecollet.com> 2.1.9-0.1.git9bd1238
+- update to 2.1.9 from git
+- improved init script for systemd
+- improved comment for use with glpi-fusioninventory
+
 * Thu Mar 31 2011 Remi Collet <Fedora@famillecollet.com> 2.1.8-2
 - revert change for issue 656 which breaks compatibility
 
