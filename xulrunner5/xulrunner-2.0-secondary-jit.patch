@@ -1,0 +1,11 @@
+--- mozilla-beta/js/src/Makefile.in.sbrk	2011-05-27 18:12:07.000000000 +0200
++++ mozilla-beta/js/src/Makefile.in	2011-06-01 19:03:45.633705918 +0200
+@@ -391,7 +391,7 @@
+ # END enclude sources for V8 dtoa
+ #############################################
+ 
+-ifeq (,$(filter-out powerpc sparc,$(TARGET_CPU)))
++ifeq (,$(filter-out powerpc powerpc64 sparc sparc64 s390 s390x,$(TARGET_CPU)))
+ 
+ VPATH +=	$(srcdir)/assembler \
+ 		$(srcdir)/assembler/wtf \

@@ -20,11 +20,11 @@
 Summary:        The next-generation Web Editor
 Summary(fr):    La nouvelle génération d'éditeur web
 Name:           bluegriffon
-Version:        1.0
+Version:        1.1.1
 %if %{?svnmain}
 Release:        0.2.svn%{svnmain}%{?dist}
 %else
-Release:        4%{?dist}
+Release:        1%{?dist}
 %endif
 URL:            http://bluegriffon.org/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -37,8 +37,8 @@ Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/fir
 # tar cjf bluegriffon-553.tar.bz2 bluegriffon
 Source1:        %{name}-%{svnmain}.tar.bz2
 %else
-# svn export http://sources.disruptive-innovations.com/bluegriffon/tags/1.0 bluegriffon
-# tar cjf bluegriffon-1.0.tar.bz2 bluegriffon
+# svn export http://sources.disruptive-innovations.com/bluegriffon/tags/1.1.1 bluegriffon
+# tar cjf bluegriffon-1.1.1.tar.bz2 bluegriffon
 Source1:        %{name}-%{version}%{?prever}.tar.bz2
 %endif
 
@@ -47,8 +47,8 @@ Source1:        %{name}-%{version}%{?prever}.tar.bz2
 # tar cjf bluegriffon-l10n-58.tar.bz2 locales
 Source2:        %{name}-l10n-%{svnlocales}.tar.bz2
 %else
-# svn export http://sources.disruptive-innovations.com/bluegriffon-l10n/tags/1.0 locales
-# tar cjf bluegriffon-l10n-1.0.tar.bz2 locales
+# svn export http://sources.disruptive-innovations.com/bluegriffon-l10n/tags/1.1.1 locales
+# tar cjf bluegriffon-l10n-1.1.1.tar.bz2 locales
 Source2:        %{name}-l10n-%{version}%{?prever}.tar.bz2
 %endif
 
@@ -345,6 +345,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Jun 10 2011 Remi Collet <rpms@famillecollet.com> - 1.1.1-1
+- BlueGriffon 1.1.1 "Gudea"
+
 * Mon May  9 2011 Remi Collet <rpms@famillecollet.com> - 1.0-4
 - BlueGriffon 1.0 "Zephyr" (tags/1.0 which is really 1.0 finale)
 - patch default prefs to disable update and enable OS locale

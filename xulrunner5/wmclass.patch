@@ -1,0 +1,24 @@
+diff -up mozilla-beta/widget/src/gtk2/nsWindow.cpp.wmclass mozilla-beta/widget/src/gtk2/nsWindow.cpp
+--- mozilla-beta/widget/src/gtk2/nsWindow.cpp.wmclass	2011-05-27 18:12:59.000000000 +0200
++++ mozilla-beta/widget/src/gtk2/nsWindow.cpp	2011-06-01 19:09:24.859102528 +0200
+@@ -3905,6 +3905,10 @@ nsWindow::Create(nsIWidget        *aPare
+         GetBrandName(brandName);
+         NS_ConvertUTF16toUTF8 cBrand(brandName);
+ 
++        if (brandName.EqualsLiteral("Minefield")) {
++		cBrand.Assign("Firefox");
++        }
++
+         if (mWindowType == eWindowType_dialog) {
+             mShell = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+             SetDefaultIcon();
+@@ -4275,6 +4279,9 @@ nsWindow::SetWindowClass(const nsAString
+ #ifdef MOZ_X11
+   nsXPIDLString brandName;
+   GetBrandName(brandName);
++  if (brandName.EqualsLiteral("Minefield")) {
++    brandName.AssignLiteral("Firefox");
++  }
+ 
+   XClassHint *class_hint = XAllocClassHint();
+   if (!class_hint)

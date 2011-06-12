@@ -1,15 +1,18 @@
---- bluegriffon/langpacks/Makefile.in.build	2011-04-30 12:59:38.000000000 +0200
-+++ bluegriffon/langpacks/Makefile.in	2011-05-01 19:45:22.417064996 +0200
-@@ -20,9 +20,9 @@
+--- bluegriffon/langpacks/Makefile.in.build	2011-05-30 12:43:10.000000000 +0200
++++ bluegriffon/langpacks/Makefile.in	2011-06-10 22:07:36.878502982 +0200
+@@ -26,12 +26,12 @@
  	mkdir -p $(FINAL_TARGET)/distribution/extensions
  	rm -f $(FINAL_TARGET)/distribution/extensions/*.xpi
  	rm -f $(srcdir)/*.xpi
 -	$(foreach f,$^, cd $(srcdir)/`basename $f`; zip -qr ../langpack-`basename $f`@bluegriffon.org.xpi . ;)
 -	$(foreach f,$^, cd $(topsrcdir)/bluegriffon/locales/`basename $f`; zip -qr $(topsrcdir)/bluegriffon/langpacks/langpack-`basename $f`@bluegriffon.org.xpi . ;)
--	$(INSTALL) $(srcdir)/*.xpi $(DIST)/bin/distribution/extensions
 +	$(foreach f,$^, cd `basename $f`; zip -qr ../langpack-`basename $f`@bluegriffon.org.xpi . ; cd .. ; )
 +	$(foreach f,$^, cd ../locales/`basename $f`; zip -qr ../../langpacks/langpack-`basename $f`@bluegriffon.org.xpi . ; cd .. ; )
+ ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
+ 	$(INSTALL) $(srcdir)/*.xpi $(DIST)/$(APP_NAME).app/Contents/MacOS/distribution/extensions
+ else
+-	$(INSTALL) $(srcdir)/*.xpi $(DIST)/bin/distribution/extensions
 +	$(INSTALL) $(srcdir)/*.xpi $(DIST)/bin/extensions
+ endif
  
  include $(topsrcdir)/config/rules.mk
- 

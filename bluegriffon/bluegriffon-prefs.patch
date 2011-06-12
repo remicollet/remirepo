@@ -1,6 +1,6 @@
---- bluegriffon/app/profile/bluegriffon-prefs.js.orig	2011-05-09 19:00:50.365129800 +0200
-+++ bluegriffon/app/profile/bluegriffon-prefs.js	2011-05-09 19:01:17.667204761 +0200
-@@ -105,8 +105,8 @@
+--- bluegriffon/app/profile/bluegriffon-prefs.js.rpmprefs	2011-06-01 17:10:02.000000000 +0200
++++ bluegriffon/app/profile/bluegriffon-prefs.js	2011-06-10 22:11:11.582111789 +0200
+@@ -108,8 +108,8 @@
  pref("bluegriffon.structurebar.role.show", true);
  
  // updates
@@ -11,12 +11,11 @@
  
  pref("html5.enable", true);
  pref("bluegriffon.defaults.doctype", "kXHTML5");
-@@ -117,3 +117,8 @@
- pref("bluegriffon.tabs.position", "center");
+@@ -121,3 +121,7 @@
  
  pref("bluegriffon.osx.dock-integration", true);
+ pref("extensions.getAddons.cache.enabled", false);
 +
 +// Locales
 +pref("general.useragent.locale", "");
 +pref("intl.locale.matchOS", true);
-+

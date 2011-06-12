@@ -1,22 +1,22 @@
-%global pluginname   fusioninventory
-
-Name:           glpi-%{pluginname}
-Version:        2.2.2
+Name:           glpi-fusioninventory
+Version:        2.3.4
 Release:        1%{?dist}
-Summary:        GLPI Plugin for FusionInventory project
-Summary(fr):    Extension GLPI pour FusionInventory
+Summary:        FusionInventory Server embedded as a GLPI plugin
+Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
 Group:          Applications/Internet
 License:        GPLv2+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/120/fusioninventory-for-glpi-2.2.2-release.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/386/fusioninventory-for-glpi-metapackage_2.3.4.tar.gz
+Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-# php-mysql + php-xml already required by GLPI.
-Requires:       glpi >= 0.72.1
+Requires:       glpi >= 0.78
+Requires:       glpi-reports
+
 
 %description
 FusionInventory Server embedded as a plugin into GLPI.
@@ -30,10 +30,18 @@ Serveur FusionInventory embarqué dans une extension GLPI.
 %setup -q -c
 
 # dos2unix to avoid rpmlint warnings
-for doc in %{pluginname}/docs/* ; do
+for doc in */docs/* ; do
     sed -i -e 's/\r//' $doc
 done
-mv %{pluginname}/docs docs
+mv fusinvsnmp/docs      fusinvsnmp-docs  
+mv fusioninventory/docs fusioninventory-docs
+
+find . -name \*.php -exec chmod -x {} \;
+find . -name \*.sql -exec chmod -x {} \;
+
+# .htaccess replaced by a httpd config file
+rm -f fusioninventory/install/mysql/.htaccess
+rm -f fusinvsnmp/install/mysql/.htaccess
 
 
 %build
@@ -44,20 +52,69 @@ mv %{pluginname}/docs docs
 rm -rf %{buildroot} 
 
 mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
-cp -ar %{pluginname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}
+cp -ar fusinvinventory %{buildroot}/%{_datadir}/glpi/plugins/fusinvinventory
+cp -ar fusinvsnmp      %{buildroot}/%{_datadir}/glpi/plugins/fusinvsnmp
+cp -ar fusioninventory %{buildroot}/%{_datadir}/glpi/plugins/fusioninventory
+
+install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+
+# Lang
+for i in %{buildroot}%{_datadir}/glpi/plugins/fus*/locales/*
+do
+  lang=$(basename $i)
+  plug=$(basename $(dirname $(dirname $i)))
+  echo "%lang(${lang:0:2}) %{_datadir}/glpi/plugins/$plug/locales/${lang}"
+done | tee %{name}.lang
 
 
 %clean
 rm -rf %{buildroot} 
 
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc docs/*
-%{_datadir}/glpi/plugins/%{pluginname}
+%{_sysconfdir}/httpd/conf.d/%{name}.conf
+# fusioninventory
+%doc fusioninventory-docs/*
+%dir %{_datadir}/glpi/plugins/fusioninventory
+%dir %{_datadir}/glpi/plugins/fusioninventory/locales
+%{_datadir}/glpi/plugins/fusioninventory/*.php
+%{_datadir}/glpi/plugins/fusioninventory/*.js
+%{_datadir}/glpi/plugins/fusioninventory/ajax
+%{_datadir}/glpi/plugins/fusioninventory/front
+%{_datadir}/glpi/plugins/fusioninventory/inc
+%{_datadir}/glpi/plugins/fusioninventory/install
+%{_datadir}/glpi/plugins/fusioninventory/pics
+%{_datadir}/glpi/plugins/fusioninventory/tools
+# fusinvinventory
+%dir %{_datadir}/glpi/plugins/fusinvinventory
+%dir %{_datadir}/glpi/plugins/fusinvinventory/locales
+%{_datadir}/glpi/plugins/fusinvinventory/*.php
+%{_datadir}/glpi/plugins/fusinvinventory/ajax
+%{_datadir}/glpi/plugins/fusinvinventory/front
+%{_datadir}/glpi/plugins/fusinvinventory/inc
+%{_datadir}/glpi/plugins/fusinvinventory/install
+%{_datadir}/glpi/plugins/fusinvinventory/pics
+# fusinvsnmp
+%doc fusinvsnmp-docs
+%dir %{_datadir}/glpi/plugins/fusinvsnmp
+%dir %{_datadir}/glpi/plugins/fusinvsnmp/locales
+%{_datadir}/glpi/plugins/fusinvsnmp/*.php
+%{_datadir}/glpi/plugins/fusinvsnmp/*.js
+%{_datadir}/glpi/plugins/fusinvsnmp/ajax
+%{_datadir}/glpi/plugins/fusinvsnmp/front
+%{_datadir}/glpi/plugins/fusinvsnmp/inc
+%{_datadir}/glpi/plugins/fusinvsnmp/install
+%{_datadir}/glpi/plugins/fusinvsnmp/models
+%{_datadir}/glpi/plugins/fusinvsnmp/pics
+%{_datadir}/glpi/plugins/fusinvsnmp/report
+%{_datadir}/glpi/plugins/fusinvsnmp/tool
 
 
 %changelog
+* Sat Jun 11 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.3.4-1
+- update to 2.3.4 for GLPI 0.78
+
 * Wed Aug 25 2010 Remi Collet <RPMS@FamilleCollet.com> - 2.2.2-1
 - update to 2.2.2
   Changes : http://forge.fusioninventory.org/news/11

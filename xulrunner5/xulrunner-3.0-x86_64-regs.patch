@@ -1,0 +1,132 @@
+diff -up mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/linux_dumper.cc.x86_64-regs mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/linux_dumper.cc
+--- mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/linux_dumper.cc.x86_64-regs	2011-06-01 15:25:16.056396005 -0400
++++ mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/linux_dumper.cc	2011-06-01 15:26:59.448387901 -0400
+@@ -439,7 +439,7 @@ bool LinuxDumper::ThreadInfoGet(ThreadIn
+ #if defined(__i386)
+   memcpy(&stack_pointer, &info->regs.esp, sizeof(info->regs.esp));
+ #elif defined(__x86_64)
+-  memcpy(&stack_pointer, &info->regs.rsp, sizeof(info->regs.rsp));
++  memcpy(&stack_pointer, &info->regs.sp, sizeof(info->regs.sp));
+ #elif defined(__ARM_EABI__)
+   memcpy(&stack_pointer, &info->regs.ARM_sp, sizeof(info->regs.ARM_sp));
+ #else
+diff -up mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/linux_dumper.h.x86_64-regs mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/linux_dumper.h
+--- mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/linux_dumper.h.x86_64-regs	2011-05-27 12:12:46.000000000 -0400
++++ mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/linux_dumper.h	2011-06-01 14:46:49.929396001 -0400
+@@ -75,6 +75,38 @@ typedef Elf64_auxv_t elf_aux_entry;
+ // This should always be less than NAME_MAX!
+ const char kLinuxGateLibraryName[] = "linux-gate.so";
+ 
++#if defined(__x86_64)
++struct x86_64_user_regs_struct {
++       unsigned long   r15;
++       unsigned long   r14;
++       unsigned long   r13;
++       unsigned long   r12;
++       unsigned long   bp;
++       unsigned long   bx;
++       unsigned long   r11;
++       unsigned long   r10;
++       unsigned long   r9;
++       unsigned long   r8;
++       unsigned long   ax;
++       unsigned long   cx;
++       unsigned long   dx;
++       unsigned long   si;
++       unsigned long   di;
++       unsigned long   orig_ax;
++       unsigned long   ip;
++       unsigned long   cs;
++       unsigned long   flags;
++       unsigned long   sp;
++       unsigned long   ss;
++       unsigned long   fs_base;
++       unsigned long   gs_base;
++       unsigned long   ds;
++       unsigned long   es;
++       unsigned long   fs;
++       unsigned long   gs;
++};
++#endif
++
+ // We produce one of these structures for each thread in the crashed process.
+ struct ThreadInfo {
+   pid_t tid;    // thread id
+@@ -86,9 +118,13 @@ struct ThreadInfo {
+   const void* stack;  // pointer to the stack area
+   size_t stack_len;  // length of the stack to copy
+ 
+-
+-#if defined(__i386) || defined(__x86_64)
++#if defined(__x86_64)
++  x86_64_user_regs_struct regs;
++#endif
++#if defined(__i386)
+   user_regs_struct regs;
++#endif
++#if defined(__i386) || defined(__x86_64)
+   user_fpregs_struct fpregs;
+   static const unsigned kNumDebugRegisters = 8;
+   debugreg_t dregs[8];
+diff -up mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/minidump_writer.cc.x86_64-regs mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/minidump_writer.cc
+--- mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/minidump_writer.cc.x86_64-regs	2011-05-27 12:12:46.000000000 -0400
++++ mozilla-beta/toolkit/crashreporter/google-breakpad/src/client/linux/minidump_writer/minidump_writer.cc	2011-06-01 14:46:49.930396001 -0400
+@@ -228,7 +228,7 @@ static void CPUFillFromThreadInfo(MDRawC
+   out->gs = info.regs.gs;
+ 
+   out->ss = info.regs.ss;
+-  out->eflags = info.regs.eflags;
++  out->eflags = info.regs.flags;
+ 
+   out->dr0 = info.dregs[0];
+   out->dr1 = info.dregs[1];
+@@ -239,16 +239,16 @@ static void CPUFillFromThreadInfo(MDRawC
+   out->dr6 = info.dregs[6];
+   out->dr7 = info.dregs[7];
+ 
+-  out->rax = info.regs.rax;
+-  out->rcx = info.regs.rcx;
+-  out->rdx = info.regs.rdx;
+-  out->rbx = info.regs.rbx;
+-
+-  out->rsp = info.regs.rsp;
+-
+-  out->rbp = info.regs.rbp;
+-  out->rsi = info.regs.rsi;
+-  out->rdi = info.regs.rdi;
++  out->rax = info.regs.ax;
++  out->rcx = info.regs.cx;
++  out->rdx = info.regs.dx;
++  out->rbx = info.regs.bx;
++
++  out->rsp = info.regs.sp;
++
++  out->rbp = info.regs.bp;
++  out->rsi = info.regs.si;
++  out->rdi = info.regs.di;
+   out->r8 = info.regs.r8;
+   out->r9 = info.regs.r9;
+   out->r10 = info.regs.r10;
+@@ -258,7 +258,7 @@ static void CPUFillFromThreadInfo(MDRawC
+   out->r14 = info.regs.r14;
+   out->r15 = info.regs.r15;
+ 
+-  out->rip = info.regs.rip;
++  out->rip = info.regs.ip;
+ 
+   out->flt_save.control_word = info.fpregs.cwd;
+   out->flt_save.status_word = info.fpregs.swd;
+@@ -322,11 +322,11 @@ static void CPUFillFromUContext(MDRawCon
+ }
+ 
+ static uintptr_t InstructionPointer(const ThreadInfo& info) {
+-  return info.regs.rip;
++  return info.regs.ip;
+ }
+ 
+ static uintptr_t StackPointer(const ThreadInfo& info) {
+-  return info.regs.rsp;
++  return info.regs.sp;
+ }
+ 
+ static uintptr_t StackPointer(const ucontext* uc) {

@@ -1,0 +1,24 @@
+diff -up mozilla-beta/js/src/shell/js.cpp.sbrk mozilla-beta/js/src/shell/js.cpp
+--- mozilla-beta/js/src/shell/js.cpp.sbrk	2011-05-27 18:12:09.000000000 +0200
++++ mozilla-beta/js/src/shell/js.cpp	2011-06-01 19:00:34.599406095 +0200
+@@ -1410,7 +1410,7 @@ GC(JSContext *cx, uintN argc, jsval *vp)
+     char buf[256];
+     JS_snprintf(buf, sizeof(buf), "before %lu, after %lu, break %08lx\n",
+                 (unsigned long)preBytes, (unsigned long)cx->runtime->gcBytes,
+-#ifdef HAVE_SBRK
++#if 0
+                 (unsigned long)sbrk(0)
+ #else
+                 0
+diff -up mozilla-beta/js/src/xpconnect/shell/xpcshell.cpp.sbrk mozilla-beta/js/src/xpconnect/shell/xpcshell.cpp
+--- mozilla-beta/js/src/xpconnect/shell/xpcshell.cpp.sbrk	2011-05-27 18:12:14.000000000 +0200
++++ mozilla-beta/js/src/xpconnect/shell/xpcshell.cpp	2011-06-01 19:00:34.601406152 +0200
+@@ -552,7 +552,7 @@ GC(JSContext *cx, uintN argc, jsval *vp)
+     JS_GC(cx);
+     fprintf(gOutFile, "before %lu, after %lu, break %08lx\n",
+            (unsigned long)preBytes, (unsigned long)rt->gcBytes,
+-#if defined(XP_UNIX) && !defined(__SYMBIAN32__)
++#if 0 //defined(XP_UNIX) && !defined(__SYMBIAN32__)
+            (unsigned long)sbrk(0)
+ #else
+            0

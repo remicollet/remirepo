@@ -1,0 +1,38 @@
+diff -up firefox-4.0.1/mozilla-2.0/browser/build.mk.stub firefox-4.0.1/mozilla-2.0/browser/build.mk
+--- firefox-4.0.1/mozilla-2.0/browser/build.mk.stub	2011-04-14 07:28:21.000000000 +0200
++++ firefox-4.0.1/mozilla-2.0/browser/build.mk	2011-05-10 11:33:21.343196025 +0200
+@@ -53,7 +53,7 @@ ifdef MOZ_SERVICES_SYNC
+ tier_app_dirs += services
+ endif
+ 
+-tier_app_dirs += browser
++tier_app_dirs += browser xulrunner
+ # Never add other tier_app_dirs after browser. They won't get packaged
+ # properly on mac.
+ 
+diff -up firefox-4.0.1/mozilla-2.0/xulrunner/Makefile.in.stub firefox-4.0.1/mozilla-2.0/xulrunner/Makefile.in
+--- firefox-4.0.1/mozilla-2.0/xulrunner/Makefile.in.stub	2011-04-14 07:28:50.000000000 +0200
++++ firefox-4.0.1/mozilla-2.0/xulrunner/Makefile.in	2011-05-10 11:33:21.343196025 +0200
+@@ -44,10 +44,7 @@ VPATH     = @srcdir@
+ include $(DEPTH)/config/autoconf.mk
+ 
+ PARALLEL_DIRS = \
+-  app \
+-  setup \
+   stub \
+-  examples \
+   $(NULL)
+ 
+ ifeq ($(OS_ARCH),WINNT)
+diff -up firefox-4.0.1/mozilla-2.0/xulrunner/stub/Makefile.in.stub firefox-4.0.1/mozilla-2.0/xulrunner/stub/Makefile.in
+--- firefox-4.0.1/mozilla-2.0/xulrunner/stub/Makefile.in.stub	2011-05-10 11:38:26.000000000 +0200
++++ firefox-4.0.1/mozilla-2.0/xulrunner/stub/Makefile.in	2011-05-10 11:38:35.054399530 +0200
+@@ -101,7 +101,7 @@ WIN32_EXE_LDFLAGS += -ENTRY:wmainCRTStar
+ endif
+ endif
+ 
+-LIBS += $(JEMALLOC_LIBS)
++#LIBS += $(JEMALLOC_LIBS)
+ 
+ include $(topsrcdir)/config/rules.mk
+ 

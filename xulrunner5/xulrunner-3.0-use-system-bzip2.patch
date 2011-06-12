@@ -1,0 +1,12 @@
+diff -up mozilla-beta/other-licenses/bsdiff/Makefile.in.BAD mozilla-beta/other-licenses/bsdiff/Makefile.in
+--- mozilla-beta/other-licenses/bsdiff/Makefile.in.BAD	2011-06-01 12:56:48.808396460 -0400
++++ mozilla-beta/other-licenses/bsdiff/Makefile.in	2011-06-01 12:57:02.344390470 -0400
+@@ -48,7 +48,7 @@ include $(DEPTH)/config/autoconf.mk
+ HOST_PROGRAM = mbsdiff$(BIN_SUFFIX)
+ HOST_CSRCS = bsdiff.c
+ 
+-HOST_LIBS += $(DIST)/host/lib/$(LIB_PREFIX)hostbz2.$(LIB_SUFFIX)
++HOST_LIBS += $(BZ2_LIBS)
+ 
+ ifneq (,$(filter WINCE WINNT,$(HOST_OS_ARCH)))
+ HOST_EXTRA_LIBS += $(call EXPAND_LIBNAME,Ws2_32)
