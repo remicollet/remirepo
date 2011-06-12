@@ -1,0 +1,528 @@
+diff -up mozilla-2.0/browser/app/profile/firefox.js.blue mozilla-2.0/browser/app/profile/firefox.js
+--- mozilla-2.0/browser/app/profile/firefox.js.blue	2011-04-14 07:28:21.000000000 +0200
++++ mozilla-2.0/browser/app/profile/firefox.js	2011-06-12 17:13:35.389007262 +0200
+@@ -206,6 +206,7 @@ pref("extensions.getMoreThemesURL", "htt
+ pref("extensions.dss.enabled", false);          // Dynamic Skin Switching                                               
+ pref("extensions.dss.switchPending", false);    // Non-dynamic switch pending after next
+                                                 // restart.
++pref("extensions.closeOnEscape", false); // allow the escape key to close the add-ons manager if it is standalone
+ 
+ pref("extensions.{972ce4c6-7e08-4474-a285-3208198ce6fd}.name", "chrome://browser/locale/browser.properties");
+ pref("extensions.{972ce4c6-7e08-4474-a285-3208198ce6fd}.description", "chrome://browser/locale/browser.properties");
+diff -up mozilla-2.0/caps/src/nsScriptSecurityManager.cpp.blue mozilla-2.0/caps/src/nsScriptSecurityManager.cpp
+--- mozilla-2.0/caps/src/nsScriptSecurityManager.cpp.blue	2011-04-14 07:28:22.000000000 +0200
++++ mozilla-2.0/caps/src/nsScriptSecurityManager.cpp	2011-06-12 17:13:35.390007266 +0200
+@@ -1546,6 +1546,7 @@ nsScriptSecurityManager::CheckLoadURIWit
+                              &hasFlags);
+     NS_ENSURE_SUCCESS(rv, rv);
+     if (hasFlags) {
++        return NS_OK;
+         // resource: and chrome: are equivalent, securitywise
+         // That's bogus!!  Fix this.  But watch out for
+         // the view-source stylesheet?
+diff -up mozilla-2.0/content/base/public/nsIDocumentEncoder.idl.blue mozilla-2.0/content/base/public/nsIDocumentEncoder.idl
+--- mozilla-2.0/content/base/public/nsIDocumentEncoder.idl.blue	2011-04-14 07:28:22.000000000 +0200
++++ mozilla-2.0/content/base/public/nsIDocumentEncoder.idl	2011-06-12 17:13:35.391007270 +0200
+@@ -237,6 +237,11 @@ interface nsIDocumentEncoder : nsISuppor
+   const unsigned long OutputFormatDelSp  = (1 << 20);
+  
+   /**
++   * Output all non-ascii characters as numeric entities
++   */
++  const unsigned long OutputEncodeCharacterEntities = (1 << 21);
++
++  /**
+    * Initialize with a pointer to the document and the mime type.
+    * @param aDocument Document to encode.
+    * @param aMimeType MimeType to use. May also be set by SetMimeType.
+diff -up mozilla-2.0/content/base/src/nsCopySupport.cpp.blue mozilla-2.0/content/base/src/nsCopySupport.cpp
+--- mozilla-2.0/content/base/src/nsCopySupport.cpp.blue	2011-04-14 07:28:22.000000000 +0200
++++ mozilla-2.0/content/base/src/nsCopySupport.cpp	2011-06-12 17:13:35.392007274 +0200
+@@ -436,7 +436,7 @@ nsresult nsCopySupport::IsPlainTextConte
+   // copy it properly (all the copy code for non-plaintext assumes using HTML
+   // serializers and parsers is OK, and those mess up XHTML).
+   nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(aDoc);
+-  if (!(htmlDoc && aDoc->IsHTML()))
++  if (!htmlDoc)
+     *aIsPlainTextContext = PR_TRUE;
+ 
+   return NS_OK;
+diff -up mozilla-2.0/content/base/src/nsDocumentEncoder.cpp.blue mozilla-2.0/content/base/src/nsDocumentEncoder.cpp
+--- mozilla-2.0/content/base/src/nsDocumentEncoder.cpp.blue	2011-04-14 07:28:22.000000000 +0200
++++ mozilla-2.0/content/base/src/nsDocumentEncoder.cpp	2011-06-12 17:13:35.392007274 +0200
+@@ -1333,7 +1333,7 @@ nsHTMLCopyEncoder::SetSelection(nsISelec
+   
+   // also consider ourselves in a text widget if we can't find an html document
+   nsCOMPtr<nsIHTMLDocument> htmlDoc = do_QueryInterface(mDocument);
+-  if (!(htmlDoc && mDocument->IsHTML()))
++  if (!htmlDoc)
+     mIsTextWidget = PR_TRUE;
+   
+   // normalize selection if we are not in a widget
+diff -up mozilla-2.0/content/base/src/nsHTMLContentSerializer.cpp.blue mozilla-2.0/content/base/src/nsHTMLContentSerializer.cpp
+--- mozilla-2.0/content/base/src/nsHTMLContentSerializer.cpp.blue	2011-04-14 07:28:22.000000000 +0200
++++ mozilla-2.0/content/base/src/nsHTMLContentSerializer.cpp	2011-06-12 17:13:35.393007277 +0200
+@@ -250,14 +250,15 @@ nsHTMLContentSerializer::AppendElementSt
+ 
+   PRBool lineBreakBeforeOpen = LineBreakBeforeOpen(content->GetNameSpaceID(), name);
+ 
+-  if ((mDoFormat || forceFormat) && !mPreLevel && !mDoRaw) {
++  if (((mDoFormat || forceFormat) && !mPreLevel) || mDoRaw) {
+     if (mColPos && lineBreakBeforeOpen) {
+       AppendNewLineToString(aStr);
++      mMayIgnoreLineBreakSequence = PR_FALSE;
+     }
+     else {
+       MaybeAddNewlineForRootNode(aStr);
+     }
+-    if (!mColPos) {
++    if (!mColPos && !mDoRaw) {
+       AppendIndentation(aStr);
+     }
+     else if (mAddSpace) {
+@@ -513,7 +514,8 @@ nsHTMLContentSerializer::AppendAndTransl
+   PRBool nonBasicEntities =
+     !!(mFlags & (nsIDocumentEncoder::OutputEncodeLatin1Entities |
+                  nsIDocumentEncoder::OutputEncodeHTMLEntities   |
+-                 nsIDocumentEncoder::OutputEncodeW3CEntities));
++                 nsIDocumentEncoder::OutputEncodeW3CEntities    |
++                 nsIDocumentEncoder::OutputEncodeCharacterEntities));
+ 
+   if (!nonBasicEntities &&
+       (mFlags & (nsIDocumentEncoder::OutputEncodeBasicEntities))) {
+@@ -569,7 +571,13 @@ nsHTMLContentSerializer::AppendAndTransl
+       // needs to be replaced
+       for (; c < fragmentEnd; c++, advanceLength++) {
+         PRUnichar val = *c;
+-        if (val <= kValNBSP && entityTable[val]) {
++        if ((val == kValNBSP || val > 127) &&
++            (mFlags & nsIDocumentEncoder::OutputEncodeCharacterEntities)) {
++          nsAutoString entityValue(PRUnichar('#'));
++          entityValue.AppendInt(val);
++          entityText = ToNewCString(entityValue);
++		break;
++        } else if (val <= kValNBSP && entityTable[val]) {
+           fullConstEntityText = entityTable[val];
+           break;
+         } else if (val > 127 &&
+diff -up mozilla-2.0/content/base/src/nsXHTMLContentSerializer.cpp.blue mozilla-2.0/content/base/src/nsXHTMLContentSerializer.cpp
+--- mozilla-2.0/content/base/src/nsXHTMLContentSerializer.cpp.blue	2011-04-14 07:28:22.000000000 +0200
++++ mozilla-2.0/content/base/src/nsXHTMLContentSerializer.cpp	2011-06-12 17:13:35.395007284 +0200
+@@ -761,14 +761,23 @@ nsXHTMLContentSerializer::LineBreakBefor
+     return mAddSpace;
+   }
+ 
+-  if (aName == nsGkAtoms::title ||
++  if (// aName == nsGkAtoms::title ||
+       aName == nsGkAtoms::meta  ||
+-      aName == nsGkAtoms::link  ||
+-      aName == nsGkAtoms::style ||
++      //aName == nsGkAtoms::link  ||
++      //aName == nsGkAtoms::style ||
+       aName == nsGkAtoms::select ||
+       aName == nsGkAtoms::option ||
+       aName == nsGkAtoms::script ||
+-      aName == nsGkAtoms::html) {
++      aName == nsGkAtoms::html ||
++      aName == nsGkAtoms::head ||
++      //aName == nsGkAtoms::body ||
++      aName == nsGkAtoms::table ||
++      aName == nsGkAtoms::caption ||
++      aName == nsGkAtoms::tbody ||
++      aName == nsGkAtoms::thead ||
++      aName == nsGkAtoms::tfoot ||
++      aName == nsGkAtoms::tr ||
++      aName == nsGkAtoms::td) {
+     return PR_TRUE;
+   }
+   else {
+@@ -795,7 +804,7 @@ nsXHTMLContentSerializer::LineBreakAfter
+ 
+   if ((aName == nsGkAtoms::html) ||
+       (aName == nsGkAtoms::head) ||
+-      (aName == nsGkAtoms::body) ||
++      //(aName == nsGkAtoms::body) ||
+       (aName == nsGkAtoms::ul) ||
+       (aName == nsGkAtoms::ol) ||
+       (aName == nsGkAtoms::dl) ||
+@@ -832,7 +841,10 @@ nsXHTMLContentSerializer::LineBreakBefor
+       (aName == nsGkAtoms::dl) ||
+       (aName == nsGkAtoms::select) ||
+       (aName == nsGkAtoms::table) ||
+-      (aName == nsGkAtoms::tbody)) {
++      (aName == nsGkAtoms::tbody) ||
++      (aName == nsGkAtoms::thead) ||
++      (aName == nsGkAtoms::tfoot) ||
++      (aName == nsGkAtoms::tr)) {
+     return PR_TRUE;
+   }
+   return PR_FALSE;
+@@ -897,6 +909,8 @@ nsXHTMLContentSerializer::MaybeEnterInPr
+       name == nsGkAtoms::noframes
+       ) {
+     mPreLevel++;
++    if (name != nsGkAtoms::pre)
++      ++mDisableEntityEncoding;
+   }
+ }
+ 
+@@ -915,6 +929,8 @@ nsXHTMLContentSerializer::MaybeLeaveFrom
+       name == nsGkAtoms::noframes
+     ) {
+     --mPreLevel;
++    if (name != nsGkAtoms::pre)
++      --mDisableEntityEncoding;
+   }
+ }
+ 
+@@ -1034,3 +1050,4 @@ nsXHTMLContentSerializer::HasNoChildren(
+ 
+   return PR_TRUE;
+ }
++
+diff -up mozilla-2.0/content/base/src/nsXMLContentSerializer.cpp.blue mozilla-2.0/content/base/src/nsXMLContentSerializer.cpp
+--- mozilla-2.0/content/base/src/nsXMLContentSerializer.cpp.blue	2011-04-14 07:28:22.000000000 +0200
++++ mozilla-2.0/content/base/src/nsXMLContentSerializer.cpp	2011-06-12 17:13:35.396007288 +0200
+@@ -61,6 +61,7 @@
+ #include "prprf.h"
+ #include "nsUnicharUtils.h"
+ #include "nsCRT.h"
++#include "nsIParserService.h"
+ #include "nsContentUtils.h"
+ #include "nsAttrName.h"
+ #include "nsILineBreaker.h"
+@@ -649,7 +650,25 @@ nsXMLContentSerializer::SerializeAttr(co
+   PRBool rawAppend = mDoRaw && aDoEscapeEntities;
+   nsAString& attrString = (rawAppend) ? aStr : attrString_;
+ 
+-  attrString.Append(PRUnichar(' '));
++  if (mColPos + 1 >= mMaxColumn) {
++    if (mPreLevel > 0 || mDoRaw) {
++      AppendToStringConvertLF(mLineBreak, aStr);
++    }
++    else if (mDoFormat) {
++      AppendToStringFormatedWrapped(mLineBreak, aStr);
++      AppendIndentation(aStr);
++    }
++    else if (mDoWrap) {
++      AppendToStringWrapped(mLineBreak, aStr);
++      AppendIndentation(aStr);
++    }
++    else {
++      AppendToStringConvertLF(mLineBreak, aStr);
++    }
++  }
++  else
++    attrString.Append(PRUnichar(' '));
++
+   if (!aPrefix.IsEmpty()) {
+     attrString.Append(aPrefix);
+     attrString.Append(PRUnichar(':'));
+@@ -723,6 +742,8 @@ nsXMLContentSerializer::SerializeAttr(co
+     attrString.Append(sValue);
+     attrString.Append(cDelimiter);
+   }
++  AppendToStringConvertLF(attrString, aStr);
++  /* XXX
+   if (mPreLevel > 0 || mDoRaw) {
+     AppendToStringConvertLF(attrString, aStr);
+   }
+@@ -735,6 +756,7 @@ nsXMLContentSerializer::SerializeAttr(co
+   else {
+     AppendToStringConvertLF(attrString, aStr);
+   }
++  */
+ }
+ 
+ PRUint32 
+@@ -939,7 +961,7 @@ nsXMLContentSerializer::AppendElementSta
+   nsIAtom *name = content->Tag();
+   PRBool lineBreakBeforeOpen = LineBreakBeforeOpen(content->GetNameSpaceID(), name);
+ 
+-  if ((mDoFormat || forceFormat) && !mPreLevel && !mDoRaw) {
++  if (((mDoFormat || forceFormat) && !mPreLevel) || mDoRaw) {
+     if (mColPos && lineBreakBeforeOpen) {
+       AppendNewLineToString(aStr);
+     }
+@@ -1186,6 +1208,21 @@ nsXMLContentSerializer::AppendToString(c
+     return;
+   }
+   mColPos += aStr.Length();
++  nsASingleFragmentString::const_char_iterator pos, end, sequenceStart;
++
++  aStr.BeginReading(pos);
++  aStr.EndReading(end);
++  PRBool foundOtherThanCR = PR_FALSE;
++  while (!foundOtherThanCR && pos < end) {
++    if (*pos != '\n' && *pos != '\r') {
++      foundOtherThanCR = PR_TRUE;
++    }
++    pos++;
++  }
++
++  if (!foundOtherThanCR) {
++    mMayIgnoreLineBreakSequence = PR_TRUE;
++  }
+   aOutputStr.Append(aStr);
+ }
+ 
+@@ -1296,6 +1333,10 @@ nsXMLContentSerializer::MaybeLeaveFromPr
+ void
+ nsXMLContentSerializer::AppendNewLineToString(nsAString& aStr)
+ {
++  if (!mPreLevel && mMayIgnoreLineBreakSequence) {
++    mMayIgnoreLineBreakSequence = PR_FALSE;
++    return;
++  }
+   AppendToString(mLineBreak, aStr);
+   mMayIgnoreLineBreakSequence = PR_TRUE;
+   mColPos = 0;
+@@ -1336,7 +1377,39 @@ nsXMLContentSerializer::DecrIndentation(
+ PRBool
+ nsXMLContentSerializer::LineBreakBeforeOpen(PRInt32 aNamespaceID, nsIAtom* aName)
+ {
+-  return mAddSpace;
++    if (aNamespaceID != kNameSpaceID_XHTML) {
++      return mAddSpace;
++    }
++
++    if (aName == nsGkAtoms::title ||
++        aName == nsGkAtoms::meta  ||
++        aName == nsGkAtoms::link  ||
++        aName == nsGkAtoms::style ||
++        aName == nsGkAtoms::select ||
++        aName == nsGkAtoms::option ||
++        aName == nsGkAtoms::script ||
++        aName == nsGkAtoms::html ||
++        aName == nsGkAtoms::table ||
++        aName == nsGkAtoms::caption ||
++        aName == nsGkAtoms::tbody ||
++        aName == nsGkAtoms::thead ||
++        aName == nsGkAtoms::tfoot ||
++        aName == nsGkAtoms::tr ||
++        aName == nsGkAtoms::td) {
++      return PR_TRUE;
++    }
++    else {
++      nsIParserService* parserService = nsContentUtils::GetParserService();
++
++      if (parserService) {
++        PRBool res;
++        parserService->
++          IsBlock(parserService->HTMLCaseSensitiveAtomTagToId(aName), res);
++        return res;
++      }
++    }
++
++    return mAddSpace;
+ }
+ 
+ PRBool 
+@@ -1348,7 +1421,39 @@ nsXMLContentSerializer::LineBreakAfterOp
+ PRBool 
+ nsXMLContentSerializer::LineBreakBeforeClose(PRInt32 aNamespaceID, nsIAtom* aName)
+ {
+-  return mAddSpace;
++    if (aNamespaceID != kNameSpaceID_XHTML) {
++      return mAddSpace;
++    }
++
++    if (aName == nsGkAtoms::title ||
++        aName == nsGkAtoms::meta  ||
++        aName == nsGkAtoms::link  ||
++        aName == nsGkAtoms::style ||
++        aName == nsGkAtoms::select ||
++        aName == nsGkAtoms::option ||
++        aName == nsGkAtoms::script ||
++        aName == nsGkAtoms::html ||
++        aName == nsGkAtoms::table ||
++        aName == nsGkAtoms::caption ||
++        aName == nsGkAtoms::tbody ||
++        aName == nsGkAtoms::thead ||
++        aName == nsGkAtoms::tfoot ||
++        aName == nsGkAtoms::tr ||
++        aName == nsGkAtoms::td) {
++      return PR_TRUE;
++    }
++    else {
++      nsIParserService* parserService = nsContentUtils::GetParserService();
++
++      if (parserService) {
++        PRBool res;
++        parserService->
++          IsBlock(parserService->HTMLCaseSensitiveAtomTagToId(aName), res);
++        return res;
++      }
++    }
++
++    return mAddSpace;
+ }
+ 
+ PRBool 
+@@ -1464,6 +1569,7 @@ nsXMLContentSerializer::AppendFormatedWr
+       // Since we only saw linebreaks, but no spaces or tabs,
+       // let's write a linebreak now.
+       AppendNewLineToString(aOutputStr);
++      mMayIgnoreLineBreakSequence = PR_TRUE;
+     }
+   }
+ }
+diff -up mozilla-2.0/editor/libeditor/html/nsHTMLDataTransfer.cpp.blue mozilla-2.0/editor/libeditor/html/nsHTMLDataTransfer.cpp
+--- mozilla-2.0/editor/libeditor/html/nsHTMLDataTransfer.cpp.blue	2011-04-14 07:28:27.000000000 +0200
++++ mozilla-2.0/editor/libeditor/html/nsHTMLDataTransfer.cpp	2011-06-12 17:13:35.397007292 +0200
+@@ -1380,13 +1380,43 @@ NS_IMETHODIMP nsHTMLEditor::InsertFromTr
+         textDataObj->GetData(text);
+         NS_ASSERTION(text.Length() <= (len/2), "Invalid length!");
+         stuffToPaste.Assign(text.get(), len / 2);
++
++        // Find where the <body> tag starts.
++        nsReadingIterator<PRUnichar> beginbody;
++        nsReadingIterator<PRUnichar> endbody;
++        stuffToPaste.BeginReading(beginbody);
++        stuffToPaste.EndReading(endbody);
++        PRBool foundbody = CaseInsensitiveFindInReadable(NS_LITERAL_STRING("<body"),
++                                                         beginbody, endbody);
++        nsAutoString realStuffToPaste;
++        if (foundbody) {
++          nsReadingIterator<PRUnichar> endstartbody;
++          stuffToPaste.EndReading(endstartbody);
++          PRBool foundstartbody = CaseInsensitiveFindInReadable(NS_LITERAL_STRING(">"),
++                                                                endbody, endstartbody);
++          if (!foundstartbody)
++            return NS_ERROR_FAILURE;
++
++          nsReadingIterator<PRUnichar> beginclosebody;
++          nsReadingIterator<PRUnichar> endclosebody;
++          stuffToPaste.BeginReading(beginclosebody);
++          stuffToPaste.EndReading(endclosebody);
++
++          // Find the index before "</body>"
++          PRBool foundclosehead = CaseInsensitiveFindInReadable(
++                   NS_LITERAL_STRING("</body>"), beginclosebody, endclosebody);
++          realStuffToPaste.Assign(Substring(endstartbody, beginclosebody));
++        }
++        else
++          realStuffToPaste.Assign(stuffToPaste);
+         nsAutoEditBatch beginBatching(this);
+-        rv = DoInsertHTMLWithContext(stuffToPaste,
++        rv = DoInsertHTMLWithContext(realStuffToPaste,
+                                      aContextStr, aInfoStr, flavor,
+                                      aSourceDoc,
+                                      aDestinationNode, aDestOffset,
+                                      aDoDeleteSelection,
+-                                     isSafe);
++                                     //isSafe);
++                                     true);
+       }
+     }
+     else if (0 == nsCRT::strcmp(bestFlavor, kUnicodeMime) ||
+diff -up mozilla-2.0/editor/libeditor/html/nsHTMLEditRules.cpp.blue mozilla-2.0/editor/libeditor/html/nsHTMLEditRules.cpp
+--- mozilla-2.0/editor/libeditor/html/nsHTMLEditRules.cpp.blue	2011-04-14 07:28:27.000000000 +0200
++++ mozilla-2.0/editor/libeditor/html/nsHTMLEditRules.cpp	2011-06-12 17:13:35.399007300 +0200
+@@ -1450,39 +1450,8 @@ nsHTMLEditRules::WillInsertText(PRInt32 
+     // it is to search for both tabs and newlines.
+     if (isPRE || IsPlaintextEditor())
+     {
+-      while (unicodeBuf && (pos != -1) && (pos < (PRInt32)(*inString).Length()))
+-      {
+-        PRInt32 oldPos = pos;
+-        PRInt32 subStrLen;
+-        pos = tString.FindChar(nsCRT::LF, oldPos);
+-
+-        if (pos != -1) 
+-        {
+-          subStrLen = pos - oldPos;
+-          // if first char is newline, then use just it
+-          if (subStrLen == 0)
+-            subStrLen = 1;
+-        }
+-        else
+-        {
+-          subStrLen = tString.Length() - oldPos;
+-          pos = tString.Length();
+-        }
+-
+-        nsDependentSubstring subStr(tString, oldPos, subStrLen);
+-        
+-        // is it a return?
+-        if (subStr.Equals(newlineStr))
+-        {
+-          res = mHTMLEditor->CreateBRImpl(address_of(curNode), &curOffset, address_of(unused), nsIEditor::eNone);
+-          pos++;
+-        }
+-        else
+-        {
+-          res = mHTMLEditor->InsertTextImpl(subStr, address_of(curNode), &curOffset, doc);
+-        }
+-        NS_ENSURE_SUCCESS(res, res);
+-      }
++      res = mHTMLEditor->InsertTextImpl(tString, address_of(curNode), &curOffset, doc);
++      NS_ENSURE_SUCCESS(res, res);
+     }
+     else
+     {
+diff -up mozilla-2.0/toolkit/mozapps/extensions/content/extensions.js.blue mozilla-2.0/toolkit/mozapps/extensions/content/extensions.js
+--- mozilla-2.0/toolkit/mozapps/extensions/content/extensions.js.blue	2011-04-14 07:28:48.000000000 +0200
++++ mozilla-2.0/toolkit/mozapps/extensions/content/extensions.js	2011-06-12 17:24:19.838174163 +0200
+@@ -55,6 +55,7 @@ const PREF_CHECK_UPDATE_SECURITY = "exte
+ const PREF_AUTOUPDATE_DEFAULT = "extensions.update.autoUpdateDefault";
+ const PREF_GETADDONS_CACHE_ENABLED = "extensions.getAddons.cache.enabled";
+ const PREF_GETADDONS_CACHE_ID_ENABLED = "extensions.%ID%.getAddons.cache.enabled";
++const PREF_CLOSE_ADDONS_MANAGER_ON_ESCAPE = "extensions.closeOnEscape";
+ 
+ const BRANCH_REGEXP = /^([^\.]+\.[0-9]+[a-z]*).*/gi;
+ 
+@@ -105,6 +106,18 @@ __defineGetter__("gIsInitializing", func
+ 
+ function initialize() {
+   document.removeEventListener("load", initialize, true);
++
++ // should we allow the window to close when the user hits the ESC key?
++ let closeOnEscape = false; // default for Firefox 4+
++ try {
++   closeOnEscape = Services.prefs.getBoolPref(PREF_CLOSE_ADDONS_MANAGER_ON_ESCAPE);
++ } catch(e) { }
++ if (!closeOnEscape) {
++   let escapeKeyElt = document.getElementById("escapeKey");
++   if (escapeKeyElt)
++     escapeKeyElt.setAttribute("disabled", "true");
++ }
++
+   gCategories.initialize();
+   gHeader.initialize();
+   gViewController.initialize();
+@@ -2288,7 +2301,7 @@ var gListView = {
+ 
+     for (let i = 0; i < this._listBox.itemCount; i++) {
+       let item = this._listBox.childNodes[i];
+-      if (item[prop] == aObj) {
++      if (prop in item && item[prop] == aObj) {
+         this._listBox.removeChild(item);
+         this.showEmptyNotice(this._listBox.itemCount == 0);
+         return;
+diff -up mozilla-2.0/toolkit/mozapps/extensions/content/extensions.xul.blue mozilla-2.0/toolkit/mozapps/extensions/content/extensions.xul
+--- mozilla-2.0/toolkit/mozapps/extensions/content/extensions.xul.blue	2011-04-14 07:28:48.000000000 +0200
++++ mozilla-2.0/toolkit/mozapps/extensions/content/extensions.xul	2011-06-12 17:13:35.402007310 +0200
+@@ -65,6 +65,10 @@
+   <script type="application/javascript"
+           src="chrome://global/content/contentAreaUtils.js"/>
+ 
++  <keyset>
++    <key id="escapeKey" keycode="VK_ESCAPE" oncommand="window.close()"/>
++  </keyset>
++
+   <popupset>
+     <!-- menu for an addon item -->
+     <menupopup id="addonitem-popup">
+diff -up mozilla-2.0/widget/src/gtk2/nsWindow.cpp.blue mozilla-2.0/widget/src/gtk2/nsWindow.cpp
+--- mozilla-2.0/widget/src/gtk2/nsWindow.cpp.blue	2011-06-12 17:13:35.314006981 +0200
++++ mozilla-2.0/widget/src/gtk2/nsWindow.cpp	2011-06-12 17:13:35.404007318 +0200
+@@ -3937,6 +3937,8 @@ nsWindow::Create(nsIWidget        *aPare
+                 gdk_window_add_filter(mShell->window,
+                                       popup_take_focus_filter, NULL); 
+ #endif
++                // XXX BlueGriffon ugly hack to work around bug 662770
++                gtk_window_set_modal(GTK_WINDOW(mShell), TRUE);
+             }
+ 
+             GdkWindowTypeHint gtkTypeHint;
