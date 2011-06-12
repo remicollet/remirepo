@@ -82,6 +82,8 @@ Patch36:        xulrunner-omnijar.patch
 Patch100:       bluegriffon-build.patch
 Patch101:       bluegriffon-prefs.patch
 
+# bluegriffon/config/content.patch rewritted for 4.0.1
+Patch102:       bluegriffon-mozilla.patch
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -188,7 +190,8 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch101  -p0 -b .rpmprefs
 
 # Patch provided in bluegriffon sources
-patch -p1 <bluegriffon/config/content.patch
+#patch -p1 -b -z .blue <bluegriffon/config/content.patch
+%patch102  -p1 -b .blue
 
 
 #See http://bluegriffon.org/pages/Build-BlueGriffon
@@ -284,6 +287,7 @@ make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 mkdir -p $RPM_BUILD_ROOT/%{mozappdir}
 tar --create --file - --dereference --directory=dist/bin --exclude xulrunner . \
   | tar --extract --file - --directory $RPM_BUILD_ROOT/%{mozappdir}
+cp bluegriffon/langpacks/langpack-*.xpi $RPM_BUILD_ROOT/%{mozappdir}/extensions
 
 # Launcher
 %if 0%{?gecko_version:1}

@@ -1,7 +1,10 @@
 --- bluegriffon/langpacks/Makefile.in.build	2011-05-30 12:43:10.000000000 +0200
-+++ bluegriffon/langpacks/Makefile.in	2011-06-10 22:07:36.878502982 +0200
-@@ -26,12 +26,12 @@
++++ bluegriffon/langpacks/Makefile.in	2011-06-12 18:12:34.564228673 +0200
+@@ -24,14 +24,15 @@
+     
+ libs::$(_AVAILABLE_LOCALES)
  	mkdir -p $(FINAL_TARGET)/distribution/extensions
++	mkdir -p $(DIST)/bin/extensions
  	rm -f $(FINAL_TARGET)/distribution/extensions/*.xpi
  	rm -f $(srcdir)/*.xpi
 -	$(foreach f,$^, cd $(srcdir)/`basename $f`; zip -qr ../langpack-`basename $f`@bluegriffon.org.xpi . ;)
