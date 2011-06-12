@@ -22,4 +22,30 @@ Intel(R) Core(TM) i5 CPU         760  @ 2.80GHz
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b12) Gecko/20100101 Firefox/4.0b12				5090
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0) Gecko/20100101 Firefox/4.0 (rc1)				5132
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0) Gecko/20100101 Firefox/4.0 (rc1)				5105
+        Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1                                  5266
+        Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b5                                    4989
+
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b5
+==============================================================================
+Score: 4989
+Richards: 7555
+DeltaBlue: 4754
+Crypto: 8143
+RayTrace: 4111
+EarleyBoyer: 5077
+RegExp: 1865
+Splay: 6756
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1
+==============================================================================       
+Score: 5266
+Richards: 7869
+DeltaBlue: 5977
+Crypto: 8290
+RayTrace: 4103
+EarleyBoyer: 5268
+RegExp: 2118
+Splay: 6291
+==============================================================================
 
