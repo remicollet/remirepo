@@ -10,11 +10,12 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Beta 5 Build1 candidate
+%global mycomment       Beta 6 Build 1 candidate
 %global firefox_dir_ver 5
 %global alpha_version   0
-%global beta_version    5
+%global beta_version    6
 %global rc_version      0
+%global datelang        20110614
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
@@ -52,13 +53,13 @@ Name:           %{shortname}
 Name:           %{shortname}5
 %endif
 Version:        5.0
-Release:        0.2.b5.build1%{?dist}
+Release:        0.3.beta6.build1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_version}/source/firefox-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        firefox-langpacks-%{version}%{?pre_version}-20110612.tar.bz2
+Source1:        firefox-langpacks-%{version}%{?pre_version}-%{datelang}.tar.bz2
 %endif
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
@@ -415,6 +416,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jun 14 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.2.beta6.build1
+- update to 5.0 Beta 6 Build 1 Candidate
+
 * Sun Jun 12 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.2.b5.build1
 - fix desktop file
 

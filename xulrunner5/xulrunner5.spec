@@ -15,7 +15,7 @@
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
 %global gecko_dir_ver 5
 %global alpha_version 0
-%global beta_version  5
+%global beta_version  6
 %global rc_version    0
 
 %global mozappdir	%{_libdir}/%{shortname}-%{gecko_dir_ver}
@@ -67,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}5
 %endif
 Version:        5.0
-Release:        0.1.b5.build1%{?dist}
+Release:        0.2.beta6.build1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -573,6 +573,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jun 14 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.2.beta6.build1
+- Update to 5.0 Beta 6 build 1 candidate
+
 * Sun Jun 12 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.1.b5.build1
 - use patch from spot
 - Update to 5.0b5 build1

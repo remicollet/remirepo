@@ -65,8 +65,16 @@ donexpi() {
 		tar cvjf /home/rpmbuild/SPECS/remirepo/firefox4/firefox-langpacks-trunk.tar.bz2 \
 			--exclude tmp firefox-langpacks
 	else 	
-		echo "Création de /home/rpmbuild/SPECS/remirepo/firefox/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2"
-		tar cvjf /home/rpmbuild/SPECS/remirepo/firefox4/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2 \
+	        case $1 in
+	                5*)     dest=firefox5
+	                        ;;
+	                4*)     dest=firefox4
+	                        ;;
+	                *)      dest=firefox
+	                        ;;
+	        esac
+		echo "Création de /home/rpmbuild/SPECS/remirepo/$dest/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2"
+		tar cvjf /home/rpmbuild/SPECS/remirepo/$dest/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2 \
 			--exclude tmp firefox-langpacks
 	fi
 }
