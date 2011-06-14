@@ -1,24 +1,32 @@
-diff -up install/update_0723_078.php.cron install/update_0723_078.php
---- install/update_0723_078.php.cron	2010-06-15 19:21:06.749549193 +0200
-+++ install/update_0723_078.php	2010-06-15 19:23:32.651892513 +0200
-@@ -2097,6 +2097,9 @@ function update0723to078($output='HTML')
-          ('Ticket','alertnotclosed','43200',NULL,'1','1','3','0','24','30',NULL,NULL,NULL)";
-       $DB->query($query) or die("0.78 populate glpi_crontasks" . $LANG['update'][90] . $DB->error());
- 
+diff -up glpi/install/install.php.cron glpi/install/install.php
+--- glpi/install/install.php.cron	2011-06-13 09:24:03.000000000 +0200
++++ glpi/install/install.php	2011-06-13 09:26:15.000000000 +0200
+@@ -361,6 +361,11 @@ function step4 ($host, $user, $password,
+       $query = "UPDATE `glpi_users`
+                 SET `language` = NULL";
+       $DB->query($query) or die("4203 ".$LANG['update'][90].$DB->error());
++      
 +      // RPM provides a good system cron
 +      $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1";
-+      $DB->query($query) or die("0.78 update glpi_crontasks (for RPM)" . $LANG['update'][90] . $DB->error());
++      $DB->query($query)
++      or die("RPM update of glpi_crontasks. " . $LANG['update'][90] . $DB->error());      
     }
-    $ADDTODISPLAYPREF['Crontask']=array(8,3,4,7);
  
---- install/mysql/glpi-0.78.2-empty.sql.cron	2010-11-15 18:57:02.766598708 +0100
-+++ install/mysql/glpi-0.78.2-empty.sql	2010-11-15 18:57:44.406719150 +0100
-@@ -910,6 +910,8 @@
- INSERT INTO `glpi_crontasks` VALUES ('14','ReservationItem','reservation','3600',NULL,'1','1','3','0','24','30',NULL,NULL,NULL);
- INSERT INTO `glpi_crontasks` VALUES ('15','Ticket','closeticket','43200',NULL,'1','1','3','0','24','30',NULL,NULL,NULL);
- INSERT INTO `glpi_crontasks` VALUES ('16','Ticket','alertnotclosed','43200',NULL,'1','1','3','0','24','30',NULL,NULL,NULL);
-+### RPM provides a good system cron
-+UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1;
  
- ### Dump table glpi_devicecases
+diff -up glpi/install/mysql/glpi-0.80-empty.sql.cron glpi/install/mysql/glpi-0.80-empty.sql
+diff -up glpi/install/update_0782_080.php.cron glpi/install/update_0782_080.php
+diff -up glpi/install/update.php.cron glpi/install/update.php
+--- glpi/install/update.php.cron	2011-06-13 09:21:52.000000000 +0200
++++ glpi/install/update.php	2011-06-13 09:26:06.000000000 +0200
+@@ -760,6 +760,11 @@ function updateDbUpTo031() {
+    $plugin = new Plugin();
+    $plugin->unactivateAll();
  
++   // RPM provides a good system cron
++   $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1";
++   $DB->query($query)
++   or die("RPM update of glpi_crontasks. " . $LANG['update'][90] . $DB->error());
++   
+    echo "<h3>".$LANG['update'][139]."</h3>";
+ 
+    optimize_tables($migration);

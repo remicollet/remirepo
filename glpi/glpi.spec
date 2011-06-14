@@ -7,7 +7,7 @@
 #global svnrelease 12930
 
 Name:           glpi
-Version:        0.78.5
+Version:        0.80
 %if 0%{?svnrelease}
 Release:        2.svn%{svnrelease}%{?dist}
 %else
@@ -24,7 +24,7 @@ URL:            http://www.glpi-project.org/
 Source0:        glpi-0.78-%{svnrelease}.tar.gz
 Source99:       mktar.sh
 %else
-Source0:        https://forge.indepnet.net/attachments/download/850/glpi-0.78.5.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/863/glpi-0.80.tar.gz
 %endif
 
 Source1:        glpi-httpd.conf
@@ -38,10 +38,10 @@ Patch0:         glpi-cron.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       php >= 5.0.0, php-mysql, httpd, php-gd, php-ldap, php-imap, php-mbstring, php-xml, php-json
+Requires:       php >= 5.2.0, php-mysql, httpd, php-gd, php-ldap, php-imap, php-mbstring, php-xml, php-json
 Requires:       php-pear(Cache_Lite) >= 1.7.4
 Requires:       php-PHPMailer
-Requires:       php-pear-CAS >= 1.1.0
+Requires:       php-pear-CAS >= 1.2.0
 Requires:       php-pear(components.ez.no/Graph) >= 1.5
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       gnu-free-sans-fonts
@@ -80,7 +80,7 @@ techniciens grâce à une maintenance plus cohérente.
 %prep
 %setup -q -n glpi
 
-%patch0
+%patch0 -p1
 
 # Use system lib
 rm -rf lib/cache_lite
@@ -129,7 +129,6 @@ do   cp -ar $i %{buildroot}/%{_datadir}/%{name}/$i
 done
 
 find %{buildroot}/%{_datadir}/%{name} -type f -exec chmod 644 {} \; 
-# chmod 755 %{buildroot}/%{_datadir}/%{name}/scripts/*.sh
 
 # ===== apache =====
 mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
@@ -245,6 +244,10 @@ fi
 
 
 %changelog
+* Mon Jun 13 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80-1
+- version 0.80 released
+  https://forge.indepnet.net/projects/glpi/versions/466
+
 * Tue May  3 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.5-1
 - version 0.78.4 released
   https://forge.indepnet.net/projects/glpi/versions/563
