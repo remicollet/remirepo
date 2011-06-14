@@ -188,6 +188,10 @@ echo "ac_add_options --with-libxul-sdk=\
 echo "ac_add_options --disable-ipc" >> .mozconfig
 %endif
 
+%if %{fedora} < 14
+echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
+%endif
+
 #---------------------------------------------------------------------
 
 %build

@@ -249,7 +249,9 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch14 -p1 -b .chromium-types
 
 %patch20 -p1 -b .pk
+%if %{fedora} >= 14
 %patch21 -p1 -b .jpeg-turbo
+%endif
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
@@ -290,7 +292,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %endif
 
 echo "ac_add_options --enable-system-lcms" >> .mozconfig
-#echo "ac_add_options --enable-official-branding" >> .mozconfig
 
 %if !%{?moz_out_of_process_plugins}
 echo "ac_add_options --disable-ipc" >> .mozconfig
@@ -300,6 +301,10 @@ echo "ac_add_options --disable-ipc" >> .mozconfig
 # for now make sure jit is not enabled on sparc64
 %ifarch sparc64
 echo "ac_add_options --disable-tracejit" >> .mozconfig
+%endif
+
+%if %{fedora} < 14
+echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
 
 #---------------------------------------------------------------------
