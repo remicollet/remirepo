@@ -41,9 +41,8 @@ BuildRequires: perl(Test::Compile)
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:  perl(LWP) perl(Net::IP) perl(HTTP::Status) perl(Net::SSLeay) perl(Crypt::SSLeay)
 Requires:  perl(Proc::Daemon) perl(Proc::PID::File)
-# Not yet available in EPEL ...
+%if 0%{?fedora} >= 6 || 0%{?rhel} >= 5
 Requires:  perl(Archive::Extract)
-%if %{?fedora}%{?rhel} > 4
 Requires:  perl(Net::CUPS)
 %endif
 Requires(post): /sbin/chkconfig
