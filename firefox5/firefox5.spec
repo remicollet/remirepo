@@ -53,7 +53,7 @@ Name:           %{shortname}
 Name:           %{shortname}5
 %endif
 Version:        5.0
-Release:        0.4.beta7.build1%{?dist}
+Release:        0.5.beta7.build1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -191,6 +191,9 @@ echo "ac_add_options --disable-ipc" >> .mozconfig
 %if %{fedora} < 14
 echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
+
+# Temporary hack
+sed -i -e 's/@PRE_RELEASE_SUFFIX@/ 5 Beta/' browser/base/content/browser.xul
 
 #---------------------------------------------------------------------
 
@@ -420,6 +423,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Jun 15 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.5.beta7.build1
+- fix windows title
+
 * Wed Jun 15 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.4.beta7.build1
 - update to 5.0 Beta 7 Build 1 Candidate
 
