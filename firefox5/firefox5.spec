@@ -10,12 +10,12 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Beta 6 Build 1 candidate
+%global mycomment       Beta 7 Build 1 candidate
 %global firefox_dir_ver 5
 %global alpha_version   0
-%global beta_version    6
+%global beta_version    7
 %global rc_version      0
-%global datelang        20110614
+%global datelang        20110615
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
@@ -53,7 +53,7 @@ Name:           %{shortname}
 Name:           %{shortname}5
 %endif
 Version:        5.0
-Release:        0.3.beta6.build1%{?dist}
+Release:        0.4.beta7.build1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -420,7 +420,10 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
-* Tue Jun 14 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.2.beta6.build1
+* Wed Jun 15 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.4.beta7.build1
+- update to 5.0 Beta 7 Build 1 Candidate
+
+* Tue Jun 14 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.3.beta6.build1
 - update to 5.0 Beta 6 Build 1 Candidate
 
 * Sun Jun 12 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.2.b5.build1
