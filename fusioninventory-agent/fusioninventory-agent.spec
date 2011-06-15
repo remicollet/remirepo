@@ -1,4 +1,4 @@
-%global gitver 9bd1238
+#global gitver 9bd1238
 #global prever _beta1
 
 Name:        fusioninventory-agent
@@ -15,7 +15,7 @@ Release:   0.1.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1.8-95-g9bd1238.tar.gz
 %else
-Release:   3
+Release:   1
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
@@ -278,6 +278,10 @@ exit 0
 
 
 %changelog
+* Wed Jun 15 2011 Remi Collet <Fedora@famillecollet.com> 2.1.9-1
+- update to 2.1.9
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.9/Changes
+
 * Sat Jun 11 2011 Remi Collet <Fedora@famillecollet.com> 2.1.9-0.1.git9bd1238
 - update to 2.1.9 from git
 - improved init script for systemd
