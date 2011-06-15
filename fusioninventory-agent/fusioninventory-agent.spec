@@ -80,7 +80,7 @@ You can add additional packages for optional tasks:
 * perl-FusionInventory-Agent-Task-ESX
     vCenter/ESX/ESXi remote inventory
 
-Edit the /etc/sysconfig/%{name} file for service configuration
+Edit the /etc/sysconfig/%{name} file for service configuration.
 
 %description -l fr
 L'agent FusionInventory est une application destinée à aider l'administrateur
@@ -101,7 +101,8 @@ Vous pouvez ajouter les paquets additionnels pour les tâches optionnelles :
 * perl-FusionInventory-Agent-Task-ESX
     Inventaire à distance des vCenter/ESX/ESXi
 
-Modifier le fichier /etc/sysconfig/%{name} pour configurer le service.
+Modifier le fichier /etc/sysconfig/%{name} pour configurer
+le service.
 
 
 %package yum-plugin
@@ -113,8 +114,8 @@ Requires:      yum >= 2.4
 Requires:      %{name}
 
 %description yum-plugin
-fusioninventory-agent-yum-plugin asks the running service agent to send an inventory
-when yum exits.
+fusioninventory-agent-yum-plugin asks the running service agent to send an
+inventory when yum exits.
 
 This requires the service to be running with the --rpc-trust-localhost option.
 
@@ -158,7 +159,9 @@ EOF
 cat <<EOF | tee %{name}.conf
 #
 # Fusion Inventory Agent Configuration File
-# used by hourly cron job used to override the %{name}.cfg setup.
+# used by hourly cron job and service launcher to override the %{name}.cfg setup.
+#
+# DONT FORGET to enable the service !
 #
 # Add tools directory if needed (tw_cli, hpacucli, ipssend, ...)
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -204,20 +207,20 @@ make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} %{buildroot}/*
 
 
-%{__mkdir_p} %{buildroot}%{_localstatedir}/{log,lib}/%{name}
+mkdir -p %{buildroot}%{_localstatedir}/{log,lib}/%{name}
 
-%{__install} -m 644 -D  logrotate    %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-%{__install} -m 644 -D  %{name}.conf %{buildroot}%{_sysconfdir}/sysconfig/%{name}
-%{__install} -m 644 -D  agent.cfg    %{buildroot}%{_sysconfdir}/fusioninventory/agent.cfg
-%{__install} -m 755 -Dp %{SOURCE1}   %{buildroot}%{_sysconfdir}/cron.hourly/%{name}
-%{__install} -m 755 -Dp %{SOURCE2}   %{buildroot}%{_initrddir}/%{name}
+install -m 644 -D  logrotate    %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+install -m 644 -D  %{name}.conf %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -m 644 -D  agent.cfg    %{buildroot}%{_sysconfdir}/fusioninventory/agent.cfg
+install -m 755 -Dp %{SOURCE1}   %{buildroot}%{_sysconfdir}/cron.hourly/%{name}
+install -m 755 -Dp %{SOURCE2}   %{buildroot}%{_initrddir}/%{name}
 
 # Yum plugin installation
-%{__install} -m 644 -D contrib/yum-plugin/%{name}.py   %{buildroot}/usr/lib/yum-plugins/%{name}.py
-%{__install} -m 644 -D contrib/yum-plugin/%{name}.conf %{buildroot}%{_sysconfdir}/yum/pluginconf.d/%{name}.conf
+install -m 644 -D contrib/yum-plugin/%{name}.py   %{buildroot}%{_prefix}/lib/yum-plugins/%{name}.py
+install -m 644 -D contrib/yum-plugin/%{name}.conf %{buildroot}%{_sysconfdir}/yum/pluginconf.d/%{name}.conf
 
 
 %check
@@ -225,7 +228,7 @@ make test
 
 
 %clean
-%{__rm} -rf %{buildroot} %{buildroot}%{_datarootdir}
+rm -rf %{buildroot} %{buildroot}%{_datarootdir}
 
 
 %post
@@ -273,7 +276,7 @@ exit 0
 %files yum-plugin
 %defattr(-, root, root)
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/%{name}.conf
-/usr/lib/yum-plugins/%{name}.*
+%{_prefix}/lib/yum-plugins/%{name}.*
 
 
 %changelog
