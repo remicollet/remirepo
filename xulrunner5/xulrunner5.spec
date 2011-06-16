@@ -15,11 +15,11 @@
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
 %global gecko_dir_ver 5
 %global alpha_version 0
-%global beta_version  7
+%global beta_version  0
 %global rc_version    0
 
 %global mozappdir	%{_libdir}/%{shortname}-%{gecko_dir_ver}
-%global tarballdir	mozilla-beta
+%global tarballdir	mozilla-release
 #%global gre_dir		%{_sysconfdir}/gre.d
 
 # crash reporter and out-of-process-plugins work only on x86/x86_64
@@ -67,7 +67,7 @@ Name:           %{shortname}
 Name:           %{shortname}5
 %endif
 Version:        5.0
-Release:        0.4.beta7.build1%{?dist}
+Release:        0.6.build1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -578,6 +578,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Jun 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.6.build1
+- Update to 5.0 build 1 candidate
+
 * Wed Jun 15 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.4.beta7.build1
 - Update to 5.0 Beta 7 build 1 candidate
 

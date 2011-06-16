@@ -10,16 +10,16 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Beta 7 Build 1 candidate
+%global mycomment       RC Build 1 candidate
 %global firefox_dir_ver 5
 %global alpha_version   0
-%global beta_version    7
+%global beta_version    0
 %global rc_version      0
-%global datelang        20110615
+%global datelang        20110616
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
-%global tarballdir    mozilla-beta
+%global tarballdir    mozilla-release
 
 %{!?xulrunner_libdir: %global xulrunner_libdir %(pkg-config --variable=libdir libxul5)}
 
@@ -47,13 +47,9 @@
 %endif
 
 Summary:        Mozilla Firefox Web browser
-%if %{fedora} >= 16
 Name:           %{shortname}
-%else
-Name:           %{shortname}5
-%endif
 Version:        5.0
-Release:        0.5.beta7.build1%{?dist}
+Release:        0.6.build1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -193,7 +189,7 @@ echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
 
 # Temporary hack
-sed -i -e 's/@PRE_RELEASE_SUFFIX@/ 5 Beta/' browser/base/content/browser.xul
+sed -i -e 's/@PRE_RELEASE_SUFFIX@/ 5 RC/' browser/base/content/browser.xul
 
 #---------------------------------------------------------------------
 
@@ -423,6 +419,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Jun 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.6.build1
+- Update to 5.0 build 1 candidate
+
 * Wed Jun 15 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.5.beta7.build1
 - fix windows title
 
