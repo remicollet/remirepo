@@ -18,9 +18,9 @@
 %global beta_version  0
 %global rc_version    0
 
-%global mozappdir	%{_libdir}/%{shortname}-%{gecko_dir_ver}
-%global tarballdir	mozilla-release
-#%global gre_dir		%{_sysconfdir}/gre.d
+%global mozappdir         %{_libdir}/%{shortname}-%{gecko_dir_ver}
+%global tarballdir        mozilla-release
+%global gre_dir           %{_sysconfdir}/gre.d
 
 # crash reporter and out-of-process-plugins work only on x86/x86_64
 %ifarch %{ix86} x86_64
@@ -31,12 +31,12 @@
 %global moz_out_of_process_plugins   0
 %endif
 
-#%if %{__isa_bits} == 32
-#%global gre_conf_file gre5.conf
-#%endif
-#%if %{__isa_bits} == 64
-#%global gre_conf_file gre5-64.conf
-#%endif
+%ifarch x86_64
+%global gre_conf_file gre5-64.conf
+%else
+%global gre_conf_file gre5.conf
+%endif
+
 
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
@@ -61,13 +61,9 @@
 %endif
 
 Summary:        XUL Runtime for Gecko Applications
-%if %{fedora} >= 16
-Name:           %{shortname}
-%else
 Name:           %{shortname}5
-%endif
 Version:        5.0
-Release:        0.6.build1%{?dist}
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -83,9 +79,15 @@ Source21:       %{shortname}.sh.in
 Patch0:         xulrunner-version.patch
 Patch1:         mozilla-build.patch
 Patch9:         mozilla-build-sbrk.patch
-# Patch12:        xulrunner-2.0-64bit-big-endian.patch
 Patch13:        xulrunner-2.0-secondary-jit.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
+Patch15:        firefox-5.0-xulstub.patch
+%if 0%{?fedora} <= 15
+Patch16:        add-gtkmozembed.patch
+%endif
+%if 0%{?fedora} > 15
+Patch17:        xulrunner-5.0-curl.patch
+%endif
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -96,12 +98,9 @@ Patch24:        crashreporter-remove-static.patch
 # Upstream patches
 Patch32:        firefox-4.0-moz-app-launcher.patch
 Patch33:        firefox-4.0-gnome3.patch
-Patch34:        xulrunner-3.0-network-link-service.patch
+Patch34:        xulrunner-2.0-network-link-service.patch
 Patch35:        xulrunner-2.0-NetworkManager09.patch
-Patch36:        xulrunner-3.0-omnijar.patch
-
-Patch40:	xulrunner-3.0-use-system-bzip2.patch
-Patch41:	xulrunner-3.0-x86_64-regs.patch
+Patch36:        xulrunner-omnijar-5.patch
 
 # ---------------------------------------------------
 
@@ -156,6 +155,7 @@ Requires:       sqlite >= %{sqlite_build_version}
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
 
+
 %description
 XULRunner is a Mozilla runtime package that can be used to bootstrap XUL+XPCOM
 applications that are as rich as Firefox and Thunderbird. It provides mechanisms
@@ -174,7 +174,7 @@ Provides: gecko-devel%{?_isa} = %{gecko_verrel}
 Provides: gecko-devel-unstable = %{gecko_verrel}
 Provides: gecko-devel-unstable%{?_isa} = %{gecko_verrel}
 
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 %if %{fedora} >= 13
 Requires: nspr-devel >= %{nspr_version}
 Requires: nss-devel >= %{nss_version}
@@ -242,27 +242,30 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
     > version.patch
 %{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
 
-%patch1  -p1 -b .build
-%patch9  -p1 -b .sbrk
-# %patch12 -p2 -b .64bit-big-endian
-%patch13 -p1 -b .secondary-jit
-%patch14 -p1 -b .chromium-types
+%patch1  -p2 -b .build
+%patch9  -p2 -b .sbrk
+%patch13 -p2 -b .secondary-jit
+%patch14 -p2 -b .chromium-types
+%patch15 -p1 -R -b .xulstub
+%if 0%{?fedora} <= 15
+%patch16 -p2 -b .gtkmozembed
+%endif
+%if 0%{?fedora} > 15
+%patch17 -p2 -b .curl
+%endif
 
-%patch20 -p1 -b .pk
+%patch20 -p2 -b .pk
 %if %{fedora} >= 14
-%patch21 -p1 -b .jpeg-turbo
+%patch21 -p2 -b .jpeg-turbo
 %endif
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
 %patch32 -p1 -b .moz-app-launcher
 %patch33 -p1 -b .gnome3
-%patch34 -p1 -b .network-link-service
+%patch34 -p2 -b .network-link-service
 %patch35 -p1 -b .NetworkManager09
-%patch36 -p1 -b .omnijar
-
-%patch40 -p1 -b .system-bz2
-%patch41 -p1 -b .x86_64-regs
+%patch36 -p2 -b .omnijar
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -330,7 +333,7 @@ cd %{tarballdir}
 #
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
-export MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
                       %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
@@ -460,10 +463,10 @@ done
 popd
 
 # GRE stuff
-#MOZILLA_GECKO_VERSION=`./config/milestone.pl --topsrcdir=.`
-#%{__mv} $RPM_BUILD_ROOT%{gre_dir}/$MOZILLA_GECKO_VERSION".system.conf" \
-#        $RPM_BUILD_ROOT%{gre_dir}/%{gre_conf_file}
-#chmod 644 $RPM_BUILD_ROOT%{gre_dir}/%{gre_conf_file}
+MOZILLA_GECKO_VERSION=`./config/milestone.pl --topsrcdir=.`
+%{__mv} $RPM_BUILD_ROOT%{gre_dir}/$MOZILLA_GECKO_VERSION".system.conf" \
+        $RPM_BUILD_ROOT%{gre_dir}/%{gre_conf_file}
+chmod 644 $RPM_BUILD_ROOT%{gre_dir}/%{gre_conf_file}
 
 # Library path
 LD_SO_CONF_D=%{_sysconfdir}/ld.so.conf.d
@@ -522,8 +525,8 @@ fi
 %files
 %defattr(-,root,root,-)
 %{_bindir}/%{name}
-#%dir %{_sysconfdir}/gre.d
-#%{_sysconfdir}/gre.d/gre*.conf
+%dir %{_sysconfdir}/gre.d
+%{_sysconfdir}/gre.d/gre*.conf
 %dir %{mozappdir}
 %doc %attr(644, root, root) %{mozappdir}/LICENSE
 %doc %attr(644, root, root) %{mozappdir}/README.txt
@@ -554,10 +557,6 @@ fi
 %{mozappdir}/plugin-container
 %endif
 
-# XXX See if these are needed still
-%{mozappdir}/updater*
-%exclude %{mozappdir}/update.locale
-
 %if %{enable_mozilla_crashreporter}
 %{mozappdir}/crashreporter
 %{mozappdir}/crashreporter.ini
@@ -578,6 +577,19 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Jun 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-1
+- sync with f15/rawhide
+- update to 5.0 finale
+
+* Tue Jun 24 2011 Martin Stransky <stransky@redhat.com> 5.0-3
+- libCurl build fix
+
+* Wed Jun 22 2011 Martin Stransky <stransky@redhat.com> 5.0-2
+- Reverted mozbz#648156 - Remove gtkmozembed
+
+* Tue Jun 21 2011 Martin Stransky <stransky@redhat.com> 5.0-1
+- 5.0
+
 * Thu Jun 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.6.build1
 - Update to 5.0 build 1 candidate
 

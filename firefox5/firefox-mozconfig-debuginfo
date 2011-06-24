@@ -1,6 +1,5 @@
 # For mozilla's debuginfo:
-export CFLAGS="-gstabs+"
-export CXXFLAGS="-gstabs+"
+export CFLAGS="$CFLAGS -gdwarf-2"
+export CXXFLAGS="$CXXFLAGS -gdwarf-2"
 export MOZ_DEBUG_SYMBOLS=1
 ac_add_options --enable-crashreporter
-

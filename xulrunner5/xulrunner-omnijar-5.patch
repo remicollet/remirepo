@@ -1,6 +1,10 @@
-diff -up mozilla-beta/browser/locales/Makefile.in.omnijar mozilla-beta/browser/locales/Makefile.in
---- mozilla-beta/browser/locales/Makefile.in.omnijar	2011-05-27 12:11:55.000000000 -0400
-+++ mozilla-beta/browser/locales/Makefile.in	2011-06-01 12:01:32.293379851 -0400
+# HG changeset patch
+# Parent a7dea879b4b445a23186f438900562155bb39e99
+Bug 620931 part 1 - Use chrome manifest to register resource://gre-resources/
+
+diff -up xulrunner-5.0/mozilla-release/browser/locales/Makefile.in.omnijar xulrunner-5.0/mozilla-release/browser/locales/Makefile.in
+--- xulrunner-5.0/mozilla-release/browser/locales/Makefile.in.omnijar	2011-06-15 23:57:18.000000000 +0200
++++ xulrunner-5.0/mozilla-release/browser/locales/Makefile.in	2011-06-21 13:16:56.434904620 +0200
 @@ -186,7 +186,7 @@ libs-%:
  	@$(MAKE) -C ../../toolkit/locales libs-$* BOTH_MANIFESTS=1
  	@$(MAKE) -C ../../services/sync/locales AB_CD=$* XPI_NAME=locale-$* BOTH_MANIFESTS=1
@@ -10,9 +14,9 @@ diff -up mozilla-beta/browser/locales/Makefile.in.omnijar mozilla-beta/browser/l
  	@$(MAKE) -C $(DEPTH)/$(MOZ_BRANDING_DIRECTORY)/locales AB_CD=$* XPI_NAME=locale-$* BOTH_MANIFESTS=1
  
  
-diff -up mozilla-beta/ipc/glue/GeckoChildProcessHost.cpp.omnijar mozilla-beta/ipc/glue/GeckoChildProcessHost.cpp
---- mozilla-beta/ipc/glue/GeckoChildProcessHost.cpp.omnijar	2011-05-27 12:12:07.000000000 -0400
-+++ mozilla-beta/ipc/glue/GeckoChildProcessHost.cpp	2011-06-01 11:07:22.779396004 -0400
+diff -up xulrunner-5.0/mozilla-release/ipc/glue/GeckoChildProcessHost.cpp.omnijar xulrunner-5.0/mozilla-release/ipc/glue/GeckoChildProcessHost.cpp
+--- xulrunner-5.0/mozilla-release/ipc/glue/GeckoChildProcessHost.cpp.omnijar	2011-06-15 23:57:27.000000000 +0200
++++ xulrunner-5.0/mozilla-release/ipc/glue/GeckoChildProcessHost.cpp	2011-06-21 12:46:33.537167186 +0200
 @@ -492,16 +492,19 @@ GeckoChildProcessHost::PerformAsyncLaunc
  
    childArgv.insert(childArgv.end(), aExtraOpts.begin(), aExtraOpts.end());
@@ -67,9 +71,9 @@ diff -up mozilla-beta/ipc/glue/GeckoChildProcessHost.cpp.omnijar mozilla-beta/ip
  
    cmdLine.AppendLooseValue(UTF8ToWide(pidstring));
  
-diff -up mozilla-beta/js/src/xpconnect/loader/mozJSComponentLoader.cpp.omnijar mozilla-beta/js/src/xpconnect/loader/mozJSComponentLoader.cpp
---- mozilla-beta/js/src/xpconnect/loader/mozJSComponentLoader.cpp.omnijar	2011-05-27 12:12:14.000000000 -0400
-+++ mozilla-beta/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2011-06-01 12:05:38.114386823 -0400
+diff -up xulrunner-5.0/mozilla-release/js/src/xpconnect/loader/mozJSComponentLoader.cpp.omnijar xulrunner-5.0/mozilla-release/js/src/xpconnect/loader/mozJSComponentLoader.cpp
+--- xulrunner-5.0/mozilla-release/js/src/xpconnect/loader/mozJSComponentLoader.cpp.omnijar	2011-06-15 23:57:31.000000000 +0200
++++ xulrunner-5.0/mozilla-release/js/src/xpconnect/loader/mozJSComponentLoader.cpp	2011-06-21 13:34:03.057293901 +0200
 @@ -86,6 +86,7 @@
  #include "nsILocalFileWin.h"
  #endif
@@ -131,6 +135,7 @@ diff -up mozilla-beta/js/src/xpconnect/loader/mozJSComponentLoader.cpp.omnijar m
 +    out.Append(Substring(spec, base.Length()));
 +    return PR_TRUE;
 +}
++
  /**
   * PathifyURI transforms mozilla .js uris into useful zip paths
   * to make it makes it easier to manipulate startup cache entries
@@ -191,32 +196,32 @@ diff -up mozilla-beta/js/src/xpconnect/loader/mozJSComponentLoader.cpp.omnijar m
 +    nsresult rv;
 +    nsCOMPtr<nsIURI> uri = in;
 +    nsCAutoString spec;
-+
++    
 +    out = "jsloader";
-+
++    
 +    // Resolve resource:// URIs. At the end of this if/else block, we
 +    // have both spec and uri variables identifying the same URI.
 +    if (NS_SUCCEEDED(in->SchemeIs("resource", &equals)) && equals) {
 +        nsCOMPtr<nsIIOService> ioService = do_GetIOService(&rv);
 +        NS_ENSURE_SUCCESS(rv, rv);
-+
++    
 +        nsCOMPtr<nsIProtocolHandler> ph;
 +        rv = ioService->GetProtocolHandler("resource", getter_AddRefs(ph));
 +        NS_ENSURE_SUCCESS(rv, rv);
-+
++    
 +        nsCOMPtr<nsIResProtocolHandler> irph(do_QueryInterface(ph, &rv));
 +        NS_ENSURE_SUCCESS(rv, rv);
-+
-+	rv = irph->ResolveURI(in, spec);
++    
++        rv = irph->ResolveURI(in, spec);
 +        NS_ENSURE_SUCCESS(rv, rv);
-+
++    
 +        rv = ioService->NewURI(spec, nsnull, nsnull, getter_AddRefs(uri));
-+	NS_ENSURE_SUCCESS(rv, rv);
++        NS_ENSURE_SUCCESS(rv, rv);
 +    } else {
 +        rv = in->GetSpec(spec);
 +        NS_ENSURE_SUCCESS(rv, rv);
 +    }
-+
++    
 +    if (!canonicalizeBase(spec, out, mozilla::Omnijar::GRE) &&
 +        !canonicalizeBase(spec, out, mozilla::Omnijar::APP)) {
 +        if (NS_SUCCEEDED(uri->SchemeIs("file", &equals)) && equals) {
@@ -232,20 +237,19 @@ diff -up mozilla-beta/js/src/xpconnect/loader/mozJSComponentLoader.cpp.omnijar m
 +        } else if (NS_SUCCEEDED(uri->SchemeIs("jar", &equals)) && equals) {
 +            nsCOMPtr<nsIJARURI> jarURI = do_QueryInterface(uri, &rv);
 +            NS_ENSURE_SUCCESS(rv, rv);
-+
++    
 +            nsCOMPtr<nsIURI> jarFileURI;
 +            rv = jarURI->GetJARFile(getter_AddRefs(jarFileURI));
 +            NS_ENSURE_SUCCESS(rv, rv);
-+
-+
++    
 +            nsCOMPtr<nsIFileURL> jarFileURL;
 +            jarFileURL = do_QueryInterface(jarFileURI, &rv);
 +            NS_ENSURE_SUCCESS(rv, rv);
-+	 
++    
 +            nsCAutoString path;
 +            rv = jarFileURL->GetPath(path);
 +            NS_ENSURE_SUCCESS(rv, rv);
-+	    out.Append(path);
++            out.Append(path);
 +    
 +            rv = jarURI->GetJAREntry(path);
 +            NS_ENSURE_SUCCESS(rv, rv);
@@ -255,30 +259,30 @@ diff -up mozilla-beta/js/src/xpconnect/loader/mozJSComponentLoader.cpp.omnijar m
 +            nsCAutoString spec;
 +            rv = uri->GetSpec(spec);
 +            NS_ENSURE_SUCCESS(rv, rv);
-+            
++    
 +            out.Append("/");
 +            out.Append(spec);
 +        }
 +    }
-+
++    
 +    out.Append(".bin");
 +    return NS_OK;
  }
  
  /* static */
-diff -up mozilla-beta/layout/style/jar.mn.omnijar mozilla-beta/layout/style/jar.mn
---- mozilla-beta/layout/style/jar.mn.omnijar	2011-05-27 12:12:22.000000000 -0400
-+++ mozilla-beta/layout/style/jar.mn	2011-06-01 11:07:22.770395961 -0400
+diff -up xulrunner-5.0/mozilla-release/layout/style/jar.mn.omnijar xulrunner-5.0/mozilla-release/layout/style/jar.mn
+--- xulrunner-5.0/mozilla-release/layout/style/jar.mn.omnijar	2011-06-15 23:57:39.000000000 +0200
++++ xulrunner-5.0/mozilla-release/layout/style/jar.mn	2011-06-21 12:46:33.530167305 +0200
 @@ -6,3 +6,5 @@ toolkit.jar:
  *  res/forms.css    (forms.css)
     res/arrow.gif    (arrow.gif)
     res/arrowd.gif   (arrowd.gif)
 +
 +% resource gre-resources %res/
-diff -up mozilla-beta/modules/libjar/nsJAR.cpp.omnijar mozilla-beta/modules/libjar/nsJAR.cpp
---- mozilla-beta/modules/libjar/nsJAR.cpp.omnijar	2011-05-27 12:12:24.000000000 -0400
-+++ mozilla-beta/modules/libjar/nsJAR.cpp	2011-06-01 12:07:21.528407206 -0400
-@@ -177,16 +177,13 @@ nsJAR::Open(nsIFile* zipFile)
+diff -up xulrunner-5.0/mozilla-release/modules/libjar/nsJAR.cpp.omnijar xulrunner-5.0/mozilla-release/modules/libjar/nsJAR.cpp
+--- xulrunner-5.0/mozilla-release/modules/libjar/nsJAR.cpp.omnijar	2011-06-15 23:58:10.000000000 +0200
++++ xulrunner-5.0/mozilla-release/modules/libjar/nsJAR.cpp	2011-06-21 13:23:23.829895163 +0200
+@@ -177,16 +177,14 @@ nsJAR::Open(nsIFile* zipFile)
    mOuterZipEntry.Truncate();
    mOpened = PR_TRUE;
    
@@ -295,10 +299,11 @@ diff -up mozilla-beta/modules/libjar/nsJAR.cpp.omnijar mozilla-beta/modules/libj
      return NS_OK;
    }
 -#endif
++
    return mZip->OpenArchive(zipFile);
  }
  
-@@ -235,13 +232,12 @@ nsJAR::Close()
+@@ -235,13 +233,13 @@ nsJAR::Close()
    mGlobalStatus = JAR_MANIFEST_NOT_PARSED;
    mTotalItemsInManifest = 0;
  
@@ -311,10 +316,11 @@ diff -up mozilla-beta/modules/libjar/nsJAR.cpp.omnijar mozilla-beta/modules/libj
      return NS_OK;
    }
 -#endif
++
    return mZip->CloseArchive();
  }
  
-@@ -392,12 +388,11 @@ nsJAR::GetCertificatePrincipal(const cha
+@@ -392,12 +390,11 @@ nsJAR::GetCertificatePrincipal(const cha
      return NS_ERROR_NULL_POINTER;
    *aPrincipal = nsnull;
  
@@ -329,9 +335,9 @@ diff -up mozilla-beta/modules/libjar/nsJAR.cpp.omnijar mozilla-beta/modules/libj
  
    //-- Parse the manifest
    nsresult rv = ParseManifest();
-diff -up mozilla-beta/modules/libpref/src/nsPrefService.cpp.omnijar mozilla-beta/modules/libpref/src/nsPrefService.cpp
---- mozilla-beta/modules/libpref/src/nsPrefService.cpp.omnijar	2011-05-27 12:12:24.000000000 -0400
-+++ mozilla-beta/modules/libpref/src/nsPrefService.cpp	2011-06-01 11:07:22.782395998 -0400
+diff -up xulrunner-5.0/mozilla-release/modules/libpref/src/nsPrefService.cpp.omnijar xulrunner-5.0/mozilla-release/modules/libpref/src/nsPrefService.cpp
+--- xulrunner-5.0/mozilla-release/modules/libpref/src/nsPrefService.cpp.omnijar	2011-06-15 23:57:41.000000000 +0200
++++ xulrunner-5.0/mozilla-release/modules/libpref/src/nsPrefService.cpp	2011-06-21 12:46:33.545167043 +0200
 @@ -70,10 +70,8 @@
  
  #include "nsITimelineService.h"
@@ -541,9 +547,9 @@ diff -up mozilla-beta/modules/libpref/src/nsPrefService.cpp.omnijar mozilla-beta
    }
  
    rv = pref_LoadPrefsInDirList(NS_APP_PREFS_DEFAULTS_DIR_LIST);
-diff -up mozilla-beta/netwerk/protocol/res/nsResProtocolHandler.cpp.omnijar mozilla-beta/netwerk/protocol/res/nsResProtocolHandler.cpp
---- mozilla-beta/netwerk/protocol/res/nsResProtocolHandler.cpp.omnijar	2011-05-27 12:12:28.000000000 -0400
-+++ mozilla-beta/netwerk/protocol/res/nsResProtocolHandler.cpp	2011-06-01 12:15:42.131397292 -0400
+diff -up xulrunner-5.0/mozilla-release/netwerk/protocol/res/nsResProtocolHandler.cpp.omnijar xulrunner-5.0/mozilla-release/netwerk/protocol/res/nsResProtocolHandler.cpp
+--- xulrunner-5.0/mozilla-release/netwerk/protocol/res/nsResProtocolHandler.cpp.omnijar	2011-06-15 23:57:50.000000000 +0200
++++ xulrunner-5.0/mozilla-release/netwerk/protocol/res/nsResProtocolHandler.cpp	2011-06-21 13:30:07.167653046 +0200
 @@ -76,8 +76,8 @@ static nsResProtocolHandler *gResHandler
  static PRLogModuleInfo *gResLog;
  #endif
@@ -677,9 +683,9 @@ diff -up mozilla-beta/netwerk/protocol/res/nsResProtocolHandler.cpp.omnijar mozi
  static PLDHashOperator
  EnumerateSubstitution(const nsACString& aKey,
                        nsIURI* aURI,
-diff -up mozilla-beta/startupcache/StartupCache.cpp.omnijar mozilla-beta/startupcache/StartupCache.cpp
---- mozilla-beta/startupcache/StartupCache.cpp.omnijar	2011-05-27 12:12:44.000000000 -0400
-+++ mozilla-beta/startupcache/StartupCache.cpp	2011-06-01 12:10:55.896393082 -0400
+diff -up xulrunner-5.0/mozilla-release/startupcache/StartupCache.cpp.omnijar xulrunner-5.0/mozilla-release/startupcache/StartupCache.cpp
+--- xulrunner-5.0/mozilla-release/startupcache/StartupCache.cpp.omnijar	2011-06-15 23:57:54.000000000 +0200
++++ xulrunner-5.0/mozilla-release/startupcache/StartupCache.cpp	2011-06-21 13:10:46.687518879 +0200
 @@ -250,17 +250,26 @@ StartupCache::GetBuffer(const char* id, 
      } 
    }
@@ -705,15 +711,15 @@ diff -up mozilla-beta/startupcache/StartupCache.cpp.omnijar mozilla-beta/startup
 +      *outbuf = zipItem.Forget();
 +      *length = zipItem.Length();
 +      return NS_OK;
-+    }
++    } 
 +  }
 +
    return NS_ERROR_NOT_AVAILABLE;
  }
  
-diff -up mozilla-beta/toolkit/mozapps/installer/packager.mk.omnijar mozilla-beta/toolkit/mozapps/installer/packager.mk
---- mozilla-beta/toolkit/mozapps/installer/packager.mk.omnijar	2011-05-27 12:12:54.000000000 -0400
-+++ mozilla-beta/toolkit/mozapps/installer/packager.mk	2011-06-01 11:07:22.778396009 -0400
+diff -up xulrunner-5.0/mozilla-release/toolkit/mozapps/installer/packager.mk.omnijar xulrunner-5.0/mozilla-release/toolkit/mozapps/installer/packager.mk
+--- xulrunner-5.0/mozilla-release/toolkit/mozapps/installer/packager.mk.omnijar	2011-06-15 23:58:10.000000000 +0200
++++ xulrunner-5.0/mozilla-release/toolkit/mozapps/installer/packager.mk	2011-06-21 12:46:33.535167224 +0200
 @@ -397,7 +397,7 @@ OMNIJAR_FILES	= \
  
  NON_OMNIJAR_FILES += \
@@ -723,9 +729,9 @@ diff -up mozilla-beta/toolkit/mozapps/installer/packager.mk.omnijar mozilla-beta
    res/cursors/\* \
    res/MainMenu.nib/\* \
    $(NULL)
-diff -up mozilla-beta/toolkit/xre/nsAppRunner.cpp.omnijar mozilla-beta/toolkit/xre/nsAppRunner.cpp
---- mozilla-beta/toolkit/xre/nsAppRunner.cpp.omnijar	2011-05-27 12:12:58.000000000 -0400
-+++ mozilla-beta/toolkit/xre/nsAppRunner.cpp	2011-06-01 12:12:41.260398054 -0400
+diff -up xulrunner-5.0/mozilla-release/toolkit/xre/nsAppRunner.cpp.omnijar xulrunner-5.0/mozilla-release/toolkit/xre/nsAppRunner.cpp
+--- xulrunner-5.0/mozilla-release/toolkit/xre/nsAppRunner.cpp.omnijar	2011-06-15 23:57:56.000000000 +0200
++++ xulrunner-5.0/mozilla-release/toolkit/xre/nsAppRunner.cpp	2011-06-21 13:20:33.307973388 +0200
 @@ -3877,25 +3877,35 @@ XRE_InitCommandLine(int aArgc, char* aAr
    delete[] canonArgs;
  #endif
@@ -774,9 +780,9 @@ diff -up mozilla-beta/toolkit/xre/nsAppRunner.cpp.omnijar mozilla-beta/toolkit/x
  }
  
  nsresult
-diff -up mozilla-beta/toolkit/xre/nsEmbedFunctions.cpp.omnijar mozilla-beta/toolkit/xre/nsEmbedFunctions.cpp
---- mozilla-beta/toolkit/xre/nsEmbedFunctions.cpp.omnijar	2011-05-27 12:12:58.000000000 -0400
-+++ mozilla-beta/toolkit/xre/nsEmbedFunctions.cpp	2011-06-01 11:07:22.917395542 -0400
+diff -up xulrunner-5.0/mozilla-release/toolkit/xre/nsEmbedFunctions.cpp.omnijar xulrunner-5.0/mozilla-release/toolkit/xre/nsEmbedFunctions.cpp
+--- xulrunner-5.0/mozilla-release/toolkit/xre/nsEmbedFunctions.cpp.omnijar	2011-06-15 23:57:56.000000000 +0200
++++ xulrunner-5.0/mozilla-release/toolkit/xre/nsEmbedFunctions.cpp	2011-06-21 12:46:33.558166809 +0200
 @@ -512,9 +512,7 @@ XRE_InitChildProcess(int aArgc,
        // Allow ProcessChild to clean up after itself before going out of
        // scope and being deleted
@@ -788,9 +794,9 @@ diff -up mozilla-beta/toolkit/xre/nsEmbedFunctions.cpp.omnijar mozilla-beta/tool
      }
    }
  
-diff -up mozilla-beta/toolkit/xre/nsXREDirProvider.cpp.omnijar mozilla-beta/toolkit/xre/nsXREDirProvider.cpp
---- mozilla-beta/toolkit/xre/nsXREDirProvider.cpp.omnijar	2011-05-27 12:12:58.000000000 -0400
-+++ mozilla-beta/toolkit/xre/nsXREDirProvider.cpp	2011-06-01 11:07:22.926395754 -0400
+diff -up xulrunner-5.0/mozilla-release/toolkit/xre/nsXREDirProvider.cpp.omnijar xulrunner-5.0/mozilla-release/toolkit/xre/nsXREDirProvider.cpp
+--- xulrunner-5.0/mozilla-release/toolkit/xre/nsXREDirProvider.cpp.omnijar	2011-06-15 23:57:57.000000000 +0200
++++ xulrunner-5.0/mozilla-release/toolkit/xre/nsXREDirProvider.cpp	2011-06-21 12:46:33.575166505 +0200
 @@ -301,9 +301,6 @@ nsXREDirProvider::GetFile(const char* aP
      if (NS_SUCCEEDED(rv))
        file = lf;
@@ -801,9 +807,9 @@ diff -up mozilla-beta/toolkit/xre/nsXREDirProvider.cpp.omnijar mozilla-beta/tool
  
    else if (!strcmp(aProperty, NS_APP_PROFILE_DIR_STARTUP) && mProfileDir) {
      return mProfileDir->Clone(aFile);
-diff -up mozilla-beta/xpcom/build/Makefile.in.omnijar mozilla-beta/xpcom/build/Makefile.in
---- mozilla-beta/xpcom/build/Makefile.in.omnijar	2011-05-27 12:12:59.000000000 -0400
-+++ mozilla-beta/xpcom/build/Makefile.in	2011-06-01 11:07:22.918395570 -0400
+diff -up xulrunner-5.0/mozilla-release/xpcom/build/Makefile.in.omnijar xulrunner-5.0/mozilla-release/xpcom/build/Makefile.in
+--- xulrunner-5.0/mozilla-release/xpcom/build/Makefile.in.omnijar	2011-06-15 23:57:58.000000000 +0200
++++ xulrunner-5.0/mozilla-release/xpcom/build/Makefile.in	2011-06-21 12:46:33.560166773 +0200
 @@ -69,6 +69,7 @@ CPPSRCS		= \
  		nsXPComInit.cpp \
  		nsXPCOMStrings.cpp \
@@ -823,9 +829,9 @@ diff -up mozilla-beta/xpcom/build/Makefile.in.omnijar mozilla-beta/xpcom/build/M
  SHARED_LIBRARY_LIBS = \
  		$(DEPTH)/chrome/src/$(LIB_PREFIX)chrome_s.$(LIB_SUFFIX) \
  		../ds/$(LIB_PREFIX)xpcomds_s.$(LIB_SUFFIX) \
-diff -up mozilla-beta/xpcom/build/nsXPComInit.cpp.omnijar mozilla-beta/xpcom/build/nsXPComInit.cpp
---- mozilla-beta/xpcom/build/nsXPComInit.cpp.omnijar	2011-05-27 12:12:59.000000000 -0400
-+++ mozilla-beta/xpcom/build/nsXPComInit.cpp	2011-06-01 12:14:13.509384443 -0400
+diff -up xulrunner-5.0/mozilla-release/xpcom/build/nsXPComInit.cpp.omnijar xulrunner-5.0/mozilla-release/xpcom/build/nsXPComInit.cpp
+--- xulrunner-5.0/mozilla-release/xpcom/build/nsXPComInit.cpp.omnijar	2011-06-15 23:58:00.000000000 +0200
++++ xulrunner-5.0/mozilla-release/xpcom/build/nsXPComInit.cpp	2011-06-21 13:15:00.545014024 +0200
 @@ -457,25 +457,25 @@ NS_InitXPCOM2(nsIServiceManager* *result
          if (NS_FAILED(rv)) return rv;
      }
@@ -842,6 +848,11 @@ diff -up mozilla-beta/xpcom/build/nsXPComInit.cpp.omnijar mozilla-beta/xpcom/bui
 -        rv = NS_ERROR_FAILURE;
          nsDirectoryService::gService->Get(NS_GRE_DIR,
                                            NS_GET_IID(nsIFile),
++                                          getter_AddRefs(file));       
++        greDir = do_QueryInterface(file);
++
++        nsDirectoryService::gService->Get(NS_XPCOM_CURRENT_PROCESS_DIR,
++                                          NS_GET_IID(nsIFile),
                                            getter_AddRefs(file));
 -        if (file)
 -            rv = file->Append(NS_LITERAL_STRING("omni.jar"));
@@ -849,11 +860,6 @@ diff -up mozilla-beta/xpcom/build/nsXPComInit.cpp.omnijar mozilla-beta/xpcom/bui
 -            omnijar = do_QueryInterface(file);
 -        if (NS_SUCCEEDED(rv))
 -            mozilla::SetOmnijar(omnijar);
-+        greDir = do_QueryInterface(file);
-+
-+        nsDirectoryService::gService->Get(NS_XPCOM_CURRENT_PROCESS_DIR,
-+                                          NS_GET_IID(nsIFile),
-+                                          getter_AddRefs(file));
 +        appDir = do_QueryInterface(file);
 +
 +        rv = mozilla::Omnijar::SetBase(greDir, appDir);
@@ -874,9 +880,9 @@ diff -up mozilla-beta/xpcom/build/nsXPComInit.cpp.omnijar mozilla-beta/xpcom/bui
  
      NS_LogTerm();
  
-diff -up mozilla-beta/xpcom/build/Omnijar.cpp.omnijar mozilla-beta/xpcom/build/Omnijar.cpp
---- mozilla-beta/xpcom/build/Omnijar.cpp.omnijar	2011-05-27 12:12:59.000000000 -0400
-+++ mozilla-beta/xpcom/build/Omnijar.cpp	2011-06-01 11:07:22.919395598 -0400
+diff -up xulrunner-5.0/mozilla-release/xpcom/build/Omnijar.cpp.omnijar xulrunner-5.0/mozilla-release/xpcom/build/Omnijar.cpp
+--- xulrunner-5.0/mozilla-release/xpcom/build/Omnijar.cpp.omnijar	2011-06-15 23:57:58.000000000 +0200
++++ xulrunner-5.0/mozilla-release/xpcom/build/Omnijar.cpp	2011-06-21 12:46:33.563166721 +0200
 @@ -21,6 +21,7 @@
   *
   * Contributor(s):
@@ -1093,9 +1099,9 @@ diff -up mozilla-beta/xpcom/build/Omnijar.cpp.omnijar mozilla-beta/xpcom/build/O
  }
  
 +} /* namespace mozilla */
-diff -up mozilla-beta/xpcom/build/Omnijar.h.omnijar mozilla-beta/xpcom/build/Omnijar.h
---- mozilla-beta/xpcom/build/Omnijar.h.omnijar	2011-05-27 12:12:59.000000000 -0400
-+++ mozilla-beta/xpcom/build/Omnijar.h	2011-06-01 11:07:22.920395626 -0400
+diff -up xulrunner-5.0/mozilla-release/xpcom/build/Omnijar.h.omnijar xulrunner-5.0/mozilla-release/xpcom/build/Omnijar.h
+--- xulrunner-5.0/mozilla-release/xpcom/build/Omnijar.h.omnijar	2011-06-15 23:57:58.000000000 +0200
++++ xulrunner-5.0/mozilla-release/xpcom/build/Omnijar.h	2011-06-21 12:46:33.564166703 +0200
 @@ -21,6 +21,7 @@
   *
   * Contributor(s):
@@ -1249,9 +1255,9 @@ diff -up mozilla-beta/xpcom/build/Omnijar.h.omnijar mozilla-beta/xpcom/build/Omn
 +} /* namespace mozilla */
  
  #endif /* mozilla_Omnijar_h */
-diff -up mozilla-beta/xpcom/components/nsComponentManager.cpp.omnijar mozilla-beta/xpcom/components/nsComponentManager.cpp
---- mozilla-beta/xpcom/components/nsComponentManager.cpp.omnijar	2011-05-27 12:12:59.000000000 -0400
-+++ mozilla-beta/xpcom/components/nsComponentManager.cpp	2011-06-01 11:07:22.923395698 -0400
+diff -up xulrunner-5.0/mozilla-release/xpcom/components/nsComponentManager.cpp.omnijar xulrunner-5.0/mozilla-release/xpcom/components/nsComponentManager.cpp
+--- xulrunner-5.0/mozilla-release/xpcom/components/nsComponentManager.cpp.omnijar	2011-06-15 23:58:01.000000000 +0200
++++ xulrunner-5.0/mozilla-release/xpcom/components/nsComponentManager.cpp	2011-06-21 12:46:33.569166613 +0200
 @@ -174,8 +174,6 @@ NS_DEFINE_CID(kCategoryManagerCID, NS_CA
  #define COMPMGR_TIME_FUNCTION_CONTRACTID(cid) do {} while (0)
  #endif
@@ -1305,9 +1311,9 @@ diff -up mozilla-beta/xpcom/components/nsComponentManager.cpp.omnijar mozilla-be
      nsCategoryManager::GetSingleton()->SuppressNotifications(false);
  
      mStatus = NORMAL;
-diff -up mozilla-beta/xulrunner/confvars.sh.omnijar mozilla-beta/xulrunner/confvars.sh
---- mozilla-beta/xulrunner/confvars.sh.omnijar	2011-05-27 12:13:00.000000000 -0400
-+++ mozilla-beta/xulrunner/confvars.sh	2011-06-01 11:07:22.927395786 -0400
+diff -up xulrunner-5.0/mozilla-release/xulrunner/confvars.sh.omnijar xulrunner-5.0/mozilla-release/xulrunner/confvars.sh
+--- xulrunner-5.0/mozilla-release/xulrunner/confvars.sh.omnijar	2011-06-15 23:58:02.000000000 +0200
++++ xulrunner-5.0/mozilla-release/xulrunner/confvars.sh	2011-06-21 12:46:33.578166451 +0200
 @@ -41,6 +41,7 @@ MOZ_APP_DISPLAYNAME=XULRunner
  MOZ_UPDATER=1
  MOZ_XULRUNNER=1

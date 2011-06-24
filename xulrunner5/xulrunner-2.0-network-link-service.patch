@@ -1,6 +1,6 @@
-diff -up mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service mozilla-beta/netwerk/base/src/nsIOService.cpp
---- mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service	2011-05-27 12:12:24.000000000 -0400
-+++ mozilla-beta/netwerk/base/src/nsIOService.cpp	2011-06-01 11:05:22.408404771 -0400
+diff -up xulrunner-5.0/mozilla-release/netwerk/base/src/nsIOService.cpp.network-link-service xulrunner-5.0/mozilla-release/netwerk/base/src/nsIOService.cpp
+--- xulrunner-5.0/mozilla-release/netwerk/base/src/nsIOService.cpp.network-link-service	2011-06-15 23:57:41.000000000 +0200
++++ xulrunner-5.0/mozilla-release/netwerk/base/src/nsIOService.cpp	2011-06-21 14:04:16.798060709 +0200
 @@ -165,6 +165,7 @@ PRInt16 gBadPortList[] = { 
  
  static const char kProfileChangeNetTeardownTopic[] = "profile-change-net-teardown";
@@ -25,7 +25,7 @@ diff -up mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service mozi
          observerService->AddObserver(this, NS_XPCOM_SHUTDOWN_OBSERVER_ID, PR_TRUE);
          observerService->AddObserver(this, NS_NETWORK_LINK_TOPIC, PR_TRUE);
      }
-@@ -262,20 +265,10 @@ nsIOService::Init()
+@@ -262,19 +265,9 @@ nsIOService::Init()
  
      gIOService = this;
  
@@ -37,19 +37,18 @@ diff -up mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service mozi
 -        // We can't really determine if the machine has a usable network connection,
 -        // so let's cross our fingers!
 -        mManageOfflineStatus = PR_FALSE;
-+    // We can't really determine if the machine has a usable network connection,
-+    // (mNetworkLinkService will be initialized later) so let's cross our fingers!
-+    SetOffline(PR_FALSE);
- 
+-
 -    if (mManageOfflineStatus)
 -        TrackNetworkLinkStatusForOffline();
 -    else
 -        SetOffline(PR_FALSE);
--    
++    // We can't really determine if the machine has a usable network connection,
++    // (mNetworkLinkService will be initialized later) so let's cross our fingers!
++    SetOffline(PR_FALSE);
+     
      NS_TIME_FUNCTION_MARK("Set up network link service");
  
-     return NS_OK;
-@@ -309,6 +302,44 @@ nsIOService::InitializeSocketTransportSe
+@@ -309,6 +302,47 @@ nsIOService::InitializeSocketTransportSe
      return rv;
  }
  
@@ -63,10 +62,12 @@ diff -up mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service mozi
 +    if (mNetworkLinkServiceInitialized)
 +      return rv;
 +
-+#ifdef MOZ_IPC
++#if defined(MOZ_PLATFORM_MAEMO)
++    // libdbusservice fails to initialize on Maemo platform, see Bug 627672
++    mNetworkLinkService = NULL;
++#else
 +    // go into managed mode if we can, and chrome process
 +    if (XRE_GetProcessType() == GeckoProcessType_Default)
-+#endif
 +    {
 +        mNetworkLinkService = do_GetService(NS_NETWORK_LINK_SERVICE_CONTRACTID, &rv);
 +        if (NS_FAILED(rv)) {
@@ -74,7 +75,8 @@ diff -up mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service mozi
 +            return rv;
 +        }
 +    }
-+  
++#endif
++
 +    mNetworkLinkServiceInitialized = PR_TRUE;
 +
 +    if (!mNetworkLinkService) {
@@ -94,7 +96,7 @@ diff -up mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service mozi
  nsIOService*
  nsIOService::GetInstance() {
      if (!gIOService) {
-@@ -682,6 +713,9 @@ nsIOService::NewChannel(const nsACString
+@@ -682,6 +716,9 @@ nsIOService::NewChannel(const nsACString
  PRBool
  nsIOService::IsLinkUp()
  {
@@ -104,7 +106,7 @@ diff -up mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service mozi
      if (!mNetworkLinkService) {
          // We cannot decide, assume the link is up
          return PR_TRUE;
-@@ -960,6 +994,10 @@ nsIOService::Observe(nsISupports *subjec
+@@ -960,6 +997,10 @@ nsIOService::Observe(nsISupports *subjec
              }
          } 
      }
@@ -115,21 +117,19 @@ diff -up mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service mozi
      else if (!strcmp(topic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
          // Remember we passed XPCOM shutdown notification to prevent any
          // changes of the offline status from now. We must not allow going
-@@ -1077,6 +1115,13 @@ NS_IMETHODIMP
+@@ -1077,6 +1118,11 @@ NS_IMETHODIMP
  nsIOService::SetManageOfflineStatus(PRBool aManage) {
      PRBool wasManaged = mManageOfflineStatus;
      mManageOfflineStatus = aManage;
 +
 +    if (!mNetworkLinkServiceInitialized) {
-+        nsresult rv = InitializeNetworkLinkService();
-+        if (NS_FAILED(rv))
-+            return rv;
++        InitializeNetworkLinkService();
 +    }
-+    
++
      if (mManageOfflineStatus && !wasManaged)
          return TrackNetworkLinkStatusForOffline();
      return NS_OK;
-@@ -1093,6 +1138,9 @@ nsIOService::TrackNetworkLinkStatusForOf
+@@ -1093,6 +1139,9 @@ nsIOService::TrackNetworkLinkStatusForOf
  {
      NS_ASSERTION(mManageOfflineStatus,
                   "Don't call this unless we're managing the offline status");
@@ -139,9 +139,9 @@ diff -up mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service mozi
      if (!mNetworkLinkService)
          return NS_ERROR_FAILURE;
  
-diff -up mozilla-beta/netwerk/base/src/nsIOService.h.network-link-service mozilla-beta/netwerk/base/src/nsIOService.h
---- mozilla-beta/netwerk/base/src/nsIOService.h.network-link-service	2011-05-27 12:12:24.000000000 -0400
-+++ mozilla-beta/netwerk/base/src/nsIOService.h	2011-06-01 11:00:21.986396001 -0400
+diff -up xulrunner-5.0/mozilla-release/netwerk/base/src/nsIOService.h.network-link-service xulrunner-5.0/mozilla-release/netwerk/base/src/nsIOService.h
+--- xulrunner-5.0/mozilla-release/netwerk/base/src/nsIOService.h.network-link-service	2011-06-15 23:57:41.000000000 +0200
++++ xulrunner-5.0/mozilla-release/netwerk/base/src/nsIOService.h	2011-06-21 13:59:23.147215108 +0200
 @@ -134,6 +134,7 @@ private:
      NS_HIDDEN_(void) ParsePortList(nsIPrefBranch *prefBranch, const char *pref, PRBool remove);
  

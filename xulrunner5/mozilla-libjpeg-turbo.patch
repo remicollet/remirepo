@@ -1,7 +1,7 @@
-diff -up mozilla-beta/modules/libpr0n/decoders/nsJPEGDecoder.cpp.turbo mozilla-beta/modules/libpr0n/decoders/nsJPEGDecoder.cpp
---- mozilla-beta/modules/libpr0n/decoders/nsJPEGDecoder.cpp.turbo	2011-05-27 18:12:24.000000000 +0200
-+++ mozilla-beta/modules/libpr0n/decoders/nsJPEGDecoder.cpp	2011-06-01 19:08:04.414802739 +0200
-@@ -430,14 +430,6 @@ nsJPEGDecoder::WriteInternal(const char 
+diff -up xulrunner-2.0/mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp.jpeg-turbo xulrunner-2.0/mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp
+--- xulrunner-2.0/mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp.jpeg-turbo	2010-11-04 21:06:43.000000000 +0100
++++ xulrunner-2.0/mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp	2010-11-12 12:39:08.047171412 +0100
+@@ -411,14 +411,6 @@ nsJPEGDecoder::WriteInternal(const char 
        return; /* I/O suspension */
      }
  
@@ -16,7 +16,7 @@ diff -up mozilla-beta/modules/libpr0n/decoders/nsJPEGDecoder.cpp.turbo mozilla-b
      /* If this is a progressive JPEG ... */
      mState = mInfo.buffered_image ? JPEG_DECOMPRESS_PROGRESSIVE : JPEG_DECOMPRESS_SEQUENTIAL;
    }
-@@ -582,15 +574,6 @@ nsJPEGDecoder::OutputScanlines(PRBool* s
+@@ -563,15 +555,6 @@ nsJPEGDecoder::OutputScanlines(PRBool* s
        PRUint32 *imageRow = ((PRUint32*)mImageData) +
                             (mInfo.output_scanline * mInfo.output_width);
  

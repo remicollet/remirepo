@@ -10,18 +10,17 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       RC Build 1 candidate
+#global mycomment       RC Build 1 candidate
 %global firefox_dir_ver 5
+%global gecko_version   5.0
 %global alpha_version   0
 %global beta_version    0
 %global rc_version      0
-%global datelang        20110616
+%global datelang        20110624
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
 %global tarballdir    mozilla-release
-
-%{!?xulrunner_libdir: %global xulrunner_libdir %(pkg-config --variable=libdir libxul5)}
 
 %define official_branding       1
 %define build_langpacks         1
@@ -40,16 +39,16 @@
 %global pre_name    rc%{rc_version}
 %endif
 %if %{defined pre_version}
-%global gecko_verrel %{version}-%{pre_name}
+%global gecko_verrel %{gecko_version}-%{pre_name}
 %global pre_tag .%{pre_version}
 %else
-%global gecko_verrel %{version}-1
+%global gecko_verrel %{gecko_version}-1
 %endif
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        5.0
-Release:        0.6.build1%{?dist}
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -67,14 +66,15 @@ Source23:       firefox.1
 
 #Build patches
 Patch0:         firefox-version.patch
+Patch1:         firefox-5.0-cache-build.patch
 
 # Fedora patches
 Patch12:        firefox-stub.patch
+Patch13:        firefox-5.0-xulstub.patch
 
 # Upstream patches
 Patch30:        firefox-4.0-moz-app-launcher.patch
 Patch31:        firefox-4.0-gnome3.patch
-Patch40:	firefox5-disable-broken-cache-gen.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -128,16 +128,18 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{firefox_dir_ver}/' %{P:%%PATCH0} \
 %{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
     
 
+# Build patches
+%patch1 -p2 -b .cache
+
 # For branding specific patches.
 
 # Fedora patches
 %patch12 -p2 -b .stub
+%patch13 -p1 -R -b .xulstub
 
 # Upstream patches
 %patch30 -p1 -b .moz-app-launcher
 %patch31 -p1 -b .gnome3
-
-%patch40 -p1 -b .disable-patch-gen
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -189,7 +191,7 @@ echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
 
 # Temporary hack
-sed -i -e 's/@PRE_RELEASE_SUFFIX@/ 5 RC/' browser/base/content/browser.xul
+sed -i -e 's/@PRE_RELEASE_SUFFIX@//' browser/base/content/browser.xul
 
 #---------------------------------------------------------------------
 
@@ -201,7 +203,7 @@ cd %{tarballdir}
 #
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
-export MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS -fPIC | \
+MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS -fPIC | \
                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
@@ -274,7 +276,6 @@ desktop-file-install --vendor mozilla \
 # set up the firefox start script
 %{__rm} -rf $RPM_BUILD_ROOT%{_bindir}/%{shortname}
 XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
-##		     | %{__sed} -e "s,GRE_CONFIG,%{grecnf},g"  \
 %{__cat} %{SOURCE21} | %{__sed} -e 's,FIREFOX_VERSION,%{firefox_dir_ver},g' \
 		     | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g"  \
 		     | %{__sed} -e "s,XULRUNNER_BIN,%{xulbin},g"  \
@@ -345,7 +346,7 @@ echo -e "\nWARNING : This %{name} %{version} %{?mycomment} RPM is not an officia
 echo -e "Fedora build and it overrides the official one. Don't file bugs on Fedora Project.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 12
+%if %{?fedora}%{!?fedora:99} <= 13
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -419,6 +420,13 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Jun 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-1
+- sync with f15/rawhide
+- update to 5.0 finale
+
+* Tue Jun 21 2011 Martin Stransky <stransky@redhat.com> - 5.0-1
+- Update to 5.0
+
 * Thu Jun 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-0.6.build1
 - Update to 5.0 build 1 candidate
 

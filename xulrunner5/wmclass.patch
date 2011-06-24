@@ -1,7 +1,12 @@
-diff -up mozilla-beta/widget/src/gtk2/nsWindow.cpp.wmclass mozilla-beta/widget/src/gtk2/nsWindow.cpp
---- mozilla-beta/widget/src/gtk2/nsWindow.cpp.wmclass	2011-05-27 18:12:59.000000000 +0200
-+++ mozilla-beta/widget/src/gtk2/nsWindow.cpp	2011-06-01 19:09:24.859102528 +0200
-@@ -3905,6 +3905,10 @@ nsWindow::Create(nsIWidget        *aPare
+#
+# Online Desktop expects WMCLASS to match the .desktop file
+# Since renaming the .desktop file is bad, work around this here
+#
+
+diff -up ./widget/src/gtk2/nsWindow.cpp.wmclass ./widget/src/gtk2/nsWindow.cpp
+--- ./widget/src/gtk2/nsWindow.cpp.wmclass	2010-10-25 11:33:21.649433261 -0700
++++ ./widget/src/gtk2/nsWindow.cpp	2010-10-25 11:36:19.864431870 -0700
+@@ -3738,6 +3738,10 @@ nsWindow::Create(nsIWidget        *aPare
          GetBrandName(brandName);
          NS_ConvertUTF16toUTF8 cBrand(brandName);
  
@@ -12,7 +17,7 @@ diff -up mozilla-beta/widget/src/gtk2/nsWindow.cpp.wmclass mozilla-beta/widget/s
          if (mWindowType == eWindowType_dialog) {
              mShell = gtk_window_new(GTK_WINDOW_TOPLEVEL);
              SetDefaultIcon();
-@@ -4275,6 +4279,9 @@ nsWindow::SetWindowClass(const nsAString
+@@ -4109,6 +4113,9 @@ nsWindow::SetWindowClass(const nsAString
  #ifdef MOZ_X11
    nsXPIDLString brandName;
    GetBrandName(brandName);

@@ -1,6 +1,9 @@
---- mozilla-beta/js/src/Makefile.in.sbrk	2011-05-27 18:12:07.000000000 +0200
-+++ mozilla-beta/js/src/Makefile.in	2011-06-01 19:03:45.633705918 +0200
-@@ -391,7 +391,7 @@
+https://bugzilla.mozilla.org/show_bug.cgi?id=627668
+
+diff -up xulrunner-2.0/mozilla-central/js/src/Makefile.in.big-endian-jit xulrunner-2.0/mozilla-central/js/src/Makefile.in
+--- xulrunner-2.0/mozilla-central/js/src/Makefile.in.big-endian-jit	2010-11-04 21:05:48.000000000 +0100
++++ xulrunner-2.0/mozilla-central/js/src/Makefile.in	2010-11-15 14:17:39.000000000 +0100
+@@ -371,7 +371,7 @@ CPPSRCS += 	checks.cc \
  # END enclude sources for V8 dtoa
  #############################################
  
