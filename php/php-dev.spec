@@ -8,7 +8,7 @@
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
-%global oci8ver     1.4.5
+%global oci8ver     1.4.6-dev
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
@@ -25,8 +25,8 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global snapdate 201106021630
-%global phpversion 5.3.7-dev
+#global snapdate 201106021630
+%global phpversion 5.3.7RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -59,7 +59,11 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.3.7
+%if 0%{?snapdate:1}
 Release: 0.1.%{snapdate}%{?dist}
+%else
+Release: 0.2.RC1%{?dist}
+%endif
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -67,7 +71,7 @@ URL: http://www.php.net/
 %if 0%{?snapdate:1}
 Source0: http://www.php.net/distributions/php5.3-%{snapdate}.tar.bz2
 %else
-Source0: http://downloads.php.net/ilia/php-%{phpversion}.tar.bz2
+Source0: http://downloads.php.net/johannes/php-5.3.7RC1.tar.gz
 %endif
 Source1: php.conf
 Source2: php-53-remi.ini
@@ -86,7 +90,8 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 # from http://svn.php.net/viewvc?view=revision&revision=311042
-Patch8: php-5.3.7-aconf26x.patch
+# and  http://svn.php.net/viewvc?view=revision&revision=311908
+Patch8: php-5.3.7-aconf259.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -1331,6 +1336,9 @@ fi
 %endif
 
 %changelog
+* Sat Jun 25 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.2.RC1
+- php 5.3.7RC1
+
 * Thu Jun 02 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.1.201106021630
 - new snapshot (5.3.7-dev)
 

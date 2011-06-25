@@ -1,8 +1,50 @@
-diff -up php5.3-201106021630/configure.in.orig php5.3-201106021630/configure.in
---- php5.3-201106021630/configure.in.orig	2011-06-02 19:29:31.659745113 +0200
-+++ php5.3-201106021630/configure.in	2011-06-02 19:30:35.112936325 +0200
+diff -up php-5.3.7RC1/build/buildcheck.sh.aconf26x php-5.3.7RC1/build/buildcheck.sh
+--- php-5.3.7RC1/build/buildcheck.sh.aconf26x	2011-05-18 21:55:34.000000000 +0200
++++ php-5.3.7RC1/build/buildcheck.sh	2011-06-25 16:33:02.981568589 +0200
+@@ -28,33 +28,23 @@ if test -z "$PHP_AUTOCONF"; then
+   PHP_AUTOCONF='autoconf'
+ fi
+ 
+-# autoconf 2.13 or newer
++# autoconf 2.59 or newer
+ ac_version=`$PHP_AUTOCONF --version 2>/dev/null|head -n 1|sed -e 's/^[^0-9]*//' -e 's/[a-z]* *$//'`
+ if test -z "$ac_version"; then
+ echo "buildconf: autoconf not found."
+-echo "           You need autoconf version 2.13 or newer installed"
++echo "           You need autoconf version 2.59 or newer installed"
+ echo "           to build PHP from SVN."
+ exit 1
+ fi
+ IFS=.; set $ac_version; IFS=' '
+-if test "$1" = "2" -a "$2" -lt "13" || test "$1" -lt "2"; then
++if test "$1" = "2" -a "$2" -lt "59" || test "$1" -lt "2"; then
+ echo "buildconf: autoconf version $ac_version found."
+-echo "           You need autoconf version 2.13 or newer installed"
++echo "           You need autoconf version 2.59 or newer installed"
+ echo "           to build PHP from SVN."
+ exit 1
+ fi
+ 
+-if test "$1" = "2" -a "$2" -gt "59"; then
+-  echo "buildconf: You need autoconf 2.59 or lower to build this version of PHP."
+-  echo "           You are currently trying to use $ac_version"
+-  echo "           Most distros have separate autoconf 2.13 or 2.59 packages."
+-  echo "           On Debian/Ubuntu both autoconf2.13 and autoconf2.59 packages exist."
+-  echo "           Install autoconf2.13 and set the PHP_AUTOCONF env var to "
+-  echo "           autoconf2.13 and try again."
+-  exit 1
+-else
+-  echo "buildconf: autoconf version $ac_version (ok)"
+-fi
++echo "buildconf: autoconf version $ac_version (ok)"
+ 
+ if test "$1" = "2" -a "$2" -ge "50"; then
+   ./vcsclean
+diff -up php-5.3.7RC1/configure.in.aconf26x php-5.3.7RC1/configure.in
+--- php-5.3.7RC1/configure.in.aconf26x	2011-06-25 16:31:35.665479009 +0200
++++ php-5.3.7RC1/configure.in	2011-06-25 16:33:58.421646250 +0200
 @@ -1,28 +1,6 @@
- ## $Id: configure.in 310307 2011-04-18 09:50:32Z bjori $ -*- autoconf -*-
+ ## $Id: configure.in 312204 2011-06-16 12:40:37Z johannes $ -*- autoconf -*-
  dnl ## Process this file with autoconf to produce a configure script.
  
 -divert(1)
@@ -35,9 +77,9 @@ diff -up php5.3-201106021630/configure.in.orig php5.3-201106021630/configure.in
  dnl -------------------------------------------------------------------------
  
 -AC_PREREQ(2.13)
-+AC_PREREQ(2.60)
++AC_PREREQ(2.59)
  AC_INIT(README.SVN-RULES)
-+AC_PRESERVE_HELP_ORDER
++ifdef([AC_PRESERVE_HELP_ORDER], [AC_PRESERVE_HELP_ORDER], [])
 +
  
  PHP_CONFIG_NICE(config.nice)
@@ -94,9 +136,9 @@ diff -up php5.3-201106021630/configure.in.orig php5.3-201106021630/configure.in
  dnl Extension configuration.
  dnl -------------------------------------------------------------------------
  
-diff -up php5.3-201106021630/ext/standard/config.m4.orig php5.3-201106021630/ext/standard/config.m4
---- php5.3-201106021630/ext/standard/config.m4.orig	2011-06-02 19:30:53.758992671 +0200
-+++ php5.3-201106021630/ext/standard/config.m4	2011-06-02 19:31:13.312051834 +0200
+diff -up php-5.3.7RC1/ext/standard/config.m4.aconf26x php-5.3.7RC1/ext/standard/config.m4
+--- php-5.3.7RC1/ext/standard/config.m4.aconf26x	2010-06-17 12:22:03.000000000 +0200
++++ php-5.3.7RC1/ext/standard/config.m4	2011-06-25 16:31:35.673479015 +0200
 @@ -1,7 +1,5 @@
  dnl $Id: config.m4 300511 2010-06-17 10:22:03Z pajoye $ -*- autoconf -*-
  
@@ -114,9 +156,9 @@ diff -up php5.3-201106021630/ext/standard/config.m4.orig php5.3-201106021630/ext
  dnl
  dnl Check if there is a support means of creating a new process
  dnl and defining which handles it receives
-diff -up php5.3-201106021630/scripts/php-config.in.orig php5.3-201106021630/scripts/php-config.in
---- php5.3-201106021630/scripts/php-config.in.orig	2011-06-02 19:31:30.366103496 +0200
-+++ php5.3-201106021630/scripts/php-config.in	2011-06-02 19:31:47.569155668 +0200
+diff -up php-5.3.7RC1/scripts/php-config.in.aconf26x php-5.3.7RC1/scripts/php-config.in
+--- php-5.3.7RC1/scripts/php-config.in.aconf26x	2011-04-18 13:13:37.000000000 +0200
++++ php-5.3.7RC1/scripts/php-config.in	2011-06-25 16:31:35.674479016 +0200
 @@ -2,6 +2,7 @@
  
  SED="@SED@"
@@ -125,9 +167,9 @@ diff -up php5.3-201106021630/scripts/php-config.in.orig php5.3-201106021630/scri
  exec_prefix="@exec_prefix@"
  version="@PHP_VERSION@"
  vernum="@PHP_VERSION_ID@"
-diff -up php5.3-201106021630/scripts/phpize.in.orig php5.3-201106021630/scripts/phpize.in
---- php5.3-201106021630/scripts/phpize.in.orig	2011-06-02 19:32:04.339206585 +0200
-+++ php5.3-201106021630/scripts/phpize.in	2011-06-02 19:32:16.135242430 +0200
+diff -up php-5.3.7RC1/scripts/phpize.in.aconf26x php-5.3.7RC1/scripts/phpize.in
+--- php-5.3.7RC1/scripts/phpize.in.aconf26x	2011-06-25 16:31:35.661479007 +0200
++++ php-5.3.7RC1/scripts/phpize.in	2011-06-25 16:31:35.675479017 +0200
 @@ -2,6 +2,7 @@
  
  # Variable declaration
@@ -136,59 +178,18 @@ diff -up php5.3-201106021630/scripts/phpize.in.orig php5.3-201106021630/scripts/
  exec_prefix="`eval echo @exec_prefix@`"
  phpdir="@libdir@/php/build"
  includedir="`eval echo @includedir@`/php"
-diff -up php5.3-201106021630/scripts/phpize.m4.orig php5.3-201106021630/scripts/phpize.m4
---- php5.3-201106021630/scripts/phpize.m4.orig	2011-06-02 19:32:32.540292329 +0200
-+++ php5.3-201106021630/scripts/phpize.m4	2011-06-02 19:32:54.310358624 +0200
+diff -up php-5.3.7RC1/scripts/phpize.m4.aconf26x php-5.3.7RC1/scripts/phpize.m4
+--- php-5.3.7RC1/scripts/phpize.m4.aconf26x	2010-11-02 10:58:08.000000000 +0100
++++ php-5.3.7RC1/scripts/phpize.m4	2011-06-25 16:34:25.177688339 +0200
 @@ -1,9 +1,8 @@
  dnl This file becomes configure.in for self-contained extensions.
  
 -divert(1)
 -
 -AC_PREREQ(2.13)
-+AC_PREREQ(2.60)
++AC_PREREQ(2.59)
  AC_INIT(config.m4)
-+AC_PRESERVE_HELP_ORDER
++ifdef([AC_PRESERVE_HELP_ORDER], [AC_PRESERVE_HELP_ORDER], [])
  
  PHP_CONFIG_NICE(config.nice)
  
---- php5.3-201106021630/build/buildcheck.sh.aconf26x	2011-06-02 19:39:33.041577148 +0200
-+++ php5.3-201106021630/build/buildcheck.sh	2011-06-02 19:40:03.854665341 +0200
-@@ -28,33 +28,23 @@
-   PHP_AUTOCONF='autoconf'
- fi
- 
--# autoconf 2.13 or newer
-+# autoconf 2.60 or newer
- ac_version=`$PHP_AUTOCONF --version 2>/dev/null|head -n 1|sed -e 's/^[^0-9]*//' -e 's/[a-z]* *$//'`
- if test -z "$ac_version"; then
- echo "buildconf: autoconf not found."
--echo "           You need autoconf version 2.13 or newer installed"
-+echo "           You need autoconf version 2.60 or newer installed"
- echo "           to build PHP from SVN."
- exit 1
- fi
- IFS=.; set $ac_version; IFS=' '
--if test "$1" = "2" -a "$2" -lt "13" || test "$1" -lt "2"; then
-+if test "$1" = "2" -a "$2" -lt "60" || test "$1" -lt "2"; then
- echo "buildconf: autoconf version $ac_version found."
--echo "           You need autoconf version 2.13 or newer installed"
-+echo "           You need autoconf version 2.60 or newer installed"
- echo "           to build PHP from SVN."
- exit 1
- fi
- 
--if test "$1" = "2" -a "$2" -gt "59"; then
--  echo "buildconf: You need autoconf 2.59 or lower to build this version of PHP."
--  echo "           You are currently trying to use $ac_version"
--  echo "           Most distros have separate autoconf 2.13 or 2.59 packages."
--  echo "           On Debian/Ubuntu both autoconf2.13 and autoconf2.59 packages exist."
--  echo "           Install autoconf2.13 and set the PHP_AUTOCONF env var to "
--  echo "           autoconf2.13 and try again."
--  exit 1
--else
--  echo "buildconf: autoconf version $ac_version (ok)"
--fi
-+echo "buildconf: autoconf version $ac_version (ok)"
- 
- if test "$1" = "2" -a "$2" -ge "50"; then
-   ./vcsclean
