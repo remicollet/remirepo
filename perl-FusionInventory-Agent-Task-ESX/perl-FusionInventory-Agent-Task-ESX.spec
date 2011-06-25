@@ -1,5 +1,5 @@
 Name:           perl-FusionInventory-Agent-Task-ESX
-Version:        1.0.1
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        vCenter/ESX/ESXi remote inventory for FusionInventory Agent
 License:        GPLv2+
@@ -12,14 +12,14 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl >= 1:5.8.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(FusionInventory::Agent) >= 2.1.8
+BuildRequires:  perl(FusionInventory::Agent) >= 2.1.9
 BuildRequires:  perl(HTTP::Cookies)
 BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(XML::TreePP)
 
-Requires:       perl(FusionInventory::Agent) >= 2.1.8
+Requires:       perl(FusionInventory::Agent) >= 2.1.9
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
@@ -65,6 +65,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jun 24 2011 Remi Collet <Fedora@famillecollet.com> 1.1.1-1
+- update to 1.1.1
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-ESX-1.1.1/Changes
+
 * Wed Mar 30 2011 Remi Collet <Fedora@famillecollet.com> 1.0.1-1
 - update to 1.0.1 (with LICENSE)
 
