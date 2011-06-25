@@ -29,7 +29,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        3.1.10
+Version:        3.1.11
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -41,7 +41,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20110430.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20110625.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -407,7 +407,7 @@ echo -e "\nWARNING : This %{name} RPM is not an official Fedora build and it"
 echo -e "overrides the official one. Don't file bugs on Fedora Project."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 12
+%if %{?fedora}%{!?fedora:99} <= 13
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -488,6 +488,12 @@ fi
 #===============================================================================
 
 %changelog
+* Sat Jun 25 2011 Remi Collet <rpms@famillecollet.com> 3.1.11-1
+- Thunderbird 3.1.10
+
+* Tue Jun 21 2011 Jan Horak <jhorak@redhat.com> - 3.1.11-1
+- Update to 3.1.11
+
 * Sat Apr 30 2011 Remi Collet <rpms@famillecollet.com> 3.1.10-1
 - Thunderbird 3.1.10
 
