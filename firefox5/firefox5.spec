@@ -48,7 +48,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        5.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -71,6 +71,7 @@ Patch1:         firefox-5.0-cache-build.patch
 # Fedora patches
 Patch12:        firefox-stub.patch
 Patch13:        firefox-5.0-xulstub.patch
+Patch14:        firefox-5.0-asciidel.patch
 
 # Upstream patches
 Patch30:        firefox-4.0-moz-app-launcher.patch
@@ -90,17 +91,11 @@ Patch31:        firefox-4.0-gnome3.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  system-bookmarks
-BuildRequires:  gecko-devel = %{gecko_verrel}
-%if %{fedora} >= 16
-%global xulbin xulrunner
-#%global grecnf gre
-%else
-%global xulbin xulrunner5
-#%global grecnf gre5
-%endif
+BuildRequires:  xulrunner5-devel = %{version}
 # For WebM support
 BuildRequires:	yasm
 
+Requires:       xulrunner5%{?_isa} = %{version}
 Requires:       gecko-libs%{?_isa} = %{gecko_verrel}
 Requires:       system-bookmarks
 Obsoletes:      mozilla <= 37:1.7.13
@@ -136,6 +131,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{firefox_dir_ver}/' %{P:%%PATCH0} \
 # Fedora patches
 %patch12 -p2 -b .stub
 %patch13 -p1 -R -b .xulstub
+%patch14 -p1 -b .asciidel
 
 # Upstream patches
 %patch30 -p1 -b .moz-app-launcher
@@ -189,9 +185,6 @@ echo "ac_add_options --disable-ipc" >> .mozconfig
 %if %{fedora} < 14
 echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
-
-# Temporary hack
-sed -i -e 's/@PRE_RELEASE_SUFFIX@//' browser/base/content/browser.xul
 
 #---------------------------------------------------------------------
 
@@ -278,8 +271,6 @@ desktop-file-install --vendor mozilla \
 XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
 %{__cat} %{SOURCE21} | %{__sed} -e 's,FIREFOX_VERSION,%{firefox_dir_ver},g' \
 		     | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g"  \
-		     | %{__sed} -e "s,XULRUNNER_BIN,%{xulbin},g"  \
-		     | %{__sed} -e "s,FIREFOX_BIN,%{name},g" \
   > $RPM_BUILD_ROOT%{_bindir}/%{name}
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
 
@@ -420,6 +411,13 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Jun 25 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-2
+- sync with f15/rawhide
+- requires xulrunner5 (mainly for f15)
+
+* Fri Jun 24 2011 Bill Nottingham <notting@redhat.com> - 5.0-2
+- Fix an issue with a stray glyph in the window title
+
 * Fri Jun 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-1
 - sync with f15/rawhide
 - update to 5.0 finale
