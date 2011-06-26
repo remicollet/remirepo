@@ -112,6 +112,7 @@ rm -rf %{buildroot}
 %changelog
 * Sun Jun 26 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.3.5-1
 - update to 2.3.5
+  http://fusioninventory.org/wordpress/2011/06/26/fusioninventory-for-glpi-2-3-5-is-available/
 
 * Sat Jun 11 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.3.4-1
 - update to 2.3.4 for GLPI 0.78
