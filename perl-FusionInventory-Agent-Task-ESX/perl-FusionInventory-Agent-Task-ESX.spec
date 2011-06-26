@@ -26,6 +26,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 
 
 %description
+vCenter, ESX and ESXi remote inventory using SOAP interface.
+
 You can import the generated files in:
 - GLPI with FusionInventory for GLPI
 - ocsinventory
