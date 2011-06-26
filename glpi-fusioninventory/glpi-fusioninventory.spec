@@ -1,5 +1,5 @@
 Name:           glpi-fusioninventory
-Version:        2.3.4
+Version:        2.3.5
 Release:        1%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
@@ -8,13 +8,14 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/386/fusioninventory-for-glpi-metapackage_2.3.4.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/408/fusioninventory-for-glpi-metapackage_2.3.5.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 Requires:       glpi >= 0.78
+Requires:       glpi <  0.80
 Requires:       glpi-reports
 
 
@@ -35,9 +36,6 @@ for doc in */docs/* ; do
 done
 mv fusinvsnmp/docs      fusinvsnmp-docs  
 mv fusioninventory/docs fusioninventory-docs
-
-find . -name \*.php -exec chmod -x {} \;
-find . -name \*.sql -exec chmod -x {} \;
 
 # .htaccess replaced by a httpd config file
 rm -f fusioninventory/install/mysql/.htaccess
@@ -112,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 26 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.3.5-1
+- update to 2.3.5
+
 * Sat Jun 11 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.3.4-1
 - update to 2.3.4 for GLPI 0.78
 
