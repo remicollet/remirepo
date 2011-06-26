@@ -15,7 +15,7 @@ Release:   0.1.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1.8-95-g9bd1238.tar.gz
 %else
-Release:   1
+Release:   1%{?dist}
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
@@ -280,6 +280,9 @@ exit 0
 
 
 %changelog
+* Sun Jun 26 2011 Remi Collet <Fedora@famillecollet.com> 2.1.9-1
+- missing dist tag
+
 * Wed Jun 15 2011 Remi Collet <Fedora@famillecollet.com> 2.1.9-1
 - update to 2.1.9
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.9/Changes
