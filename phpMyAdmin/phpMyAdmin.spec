@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.4.2
+Version: 3.4.3
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -115,6 +115,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Mon Jun 27 2011 Remi Collet <rpms@famillecollet.com> 3.4.3-1
+- Upstream released 3.4.2
+
 * Fri Jun 10 2011 Remi Collet <rpms@famillecollet.com> 3.4.2-1
 - Upstream released 3.4.2
 
