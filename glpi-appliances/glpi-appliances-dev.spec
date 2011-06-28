@@ -27,7 +27,8 @@ Source0:        https://forge.indepnet.net/attachments/download/663/glpi-applian
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.78
+Requires:       glpi >= 0.80
+Requires:       glpi <  0.81
 Requires:       php-xmlrpc php-soap
 
 %description
@@ -80,7 +81,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Jun 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-0.1.svn136
+* Tue Jun 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.7.0-0.1.svn136
 - version 1.7.0 for glpi 0.80 (svn snapshot)
 
 * Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-1
