@@ -1,5 +1,5 @@
 Name:           perl-FusionInventory-Agent-Task-ESX
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        vCenter/ESX/ESXi remote inventory for FusionInventory Agent
 License:        GPLv2+
@@ -67,6 +67,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 28 2011 Remi Collet <Fedora@famillecollet.com> 1.1.2-1
+- update to 1.1.2
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-ESX-1.1.2/Changes
+
 * Sat Jun 24 2011 Remi Collet <Fedora@famillecollet.com> 1.1.1-1
 - update to 1.1.1
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-ESX-1.1.1/Changes
