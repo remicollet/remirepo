@@ -1,5 +1,5 @@
 %global pluginname   reports
-%global svnrelease   158
+#global svnrelease   158
 
 Name:           glpi-reports
 Version:        1.5.0
@@ -20,7 +20,7 @@ URL:            https://forge.indepnet.net/projects/reports
 # tar czf glpi-reports-1.5.0-158.tar.gz reports
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/661/glpi-reports-1.4.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/926/glpi-reports-1.5.0.tar.gz
 %endif
 
 
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.0-1
+- version 1.5.0 released
+
 * Tue Jun 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.0-0.1.svn158
 - version 1.5.0 for glpi 0.80 (svn snapshot)
 
