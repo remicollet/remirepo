@@ -8,7 +8,7 @@
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
-%global oci8ver     1.4.6-dev
+%global oci8ver     1.4.6
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate 201106021630
-%global phpversion 5.3.7RC1
+%global phpversion 5.3.7RC2
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -62,7 +62,7 @@ Version: 5.3.7
 %if 0%{?snapdate:1}
 Release: 0.1.%{snapdate}%{?dist}
 %else
-Release: 0.2.RC1%{?dist}
+Release: 0.3.RC2%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -71,7 +71,7 @@ URL: http://www.php.net/
 %if 0%{?snapdate:1}
 Source0: http://www.php.net/distributions/php5.3-%{snapdate}.tar.bz2
 %else
-Source0: http://downloads.php.net/johannes/php-5.3.7RC1.tar.gz
+Source0: https://downloads.php.net/ilia/php-%{phpversion}.tar.bz2
 %endif
 Source1: php.conf
 Source2: php-53-remi.ini
@@ -643,7 +643,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %if 0%{?fedora} >= 13
-%patch8 -p1 -b .aconf26x
+%patch8 -p1 -b .aconf259
 %endif
 
 %patch20 -p1 -b .shutdown
@@ -1336,6 +1336,9 @@ fi
 %endif
 
 %changelog
+* Fri Jul 01 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.3.RC2
+- php 5.3.7RC2
+
 * Sat Jun 25 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.2.RC1
 - php 5.3.7RC1
 
