@@ -1,11 +1,17 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   PHP_CompatInfo
 %global channel     bartlett.laurent-laville.org
-%global prever      RC4
+
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%global withhtmldoc 1
+%else
+%global withhtmldoc 0
+%endif
+
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.0.0
-Release:        0.3.%{prever}%{?dist}
+Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -20,6 +26,11 @@ BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
 BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 0.7.0
+%if %{withhtmldoc}
+# to build HTML documentation
+BuildRequires:  php-pear(pear.phing.info/phing)
+BuildRequires:  asciidoc >= 8.4.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -42,6 +53,10 @@ version and extensions required for it to run. CLI version has many reports
 (extension, interface, class, function, constant) to display and ability to
 show content of dictionary references.
 
+%if %{withhtmldoc}
+Documentation :  %{pear_docdir}/%{pear_name}/docs/phpci-book.html
+%endif
+
 
 %prep
 %setup -q -c
@@ -57,7 +72,15 @@ mv -f ../package.xml %{name}.xml
 
 %build
 cd %{pear_name}-%{version}%{?prever}
-# Empty build section, most likely nothing required.
+
+%if %{withhtmldoc}
+# Generate the HTML documentation
+phing -f docs/build-phing.xml \
+      -Dhomedir=$PWD \
+      -Dasciidoc.home=%{_datadir}/asciidoc \
+      make-full-docs
+ls -lort docs
+%endif
 
 
 %install
@@ -76,11 +99,16 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 sed -i -e 's/\r//' $RPM_BUILD_ROOT%{_bindir}/phpci
 sed -i -e 's/\r//' $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/README.markdown
 
+%if %{withhtmldoc}
+# Install the HTML Documentation
+install -m 644 docs/*.html $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/docs
+%endif
+
 
 %check
 cd %{pear_name}-%{version}%{?prever}
 
-# OK (443 tests, 7982 assertions) when all extensions installed
+# OK (444, Assertions: 8380, Skipped: 7) when all extensions installed
 # OK, but incomplete or skipped tests!
 # Tests: 329, Assertions: 5446, Skipped: 133.
 # Reference tests need some fixes for EL-4, so ignore result for now
@@ -118,6 +146,10 @@ fi
 
 
 %changelog
+* Sat Jun 02 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-1
+- Version 2.0.0 (stable) - API 2.0.0 (stable)
+- add HTML documentation
+
 * Tue Apr 26 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-0.3.RC4
 - Version 2.0.0RC4 (beta) - API 2.0.0 (beta)
 
