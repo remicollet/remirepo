@@ -10,6 +10,9 @@ Group:          Applications/File
 License:        BSD
 URL:            http://www.nih.at/libzip/index.html
 Source0:        http://www.nih.at/libzip/libzip-%{version}.tar.bz2
+
+Patch0:         libzip-php.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  automake libtool
@@ -43,6 +46,8 @@ The %{name}-tools package contains tools that use %{name}.
 
 %prep
 %setup -q -n libzip-%{version}
+
+%patch0 -p1 -b .forphp
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 #if "%{_libdir}" != "/usr/lib"
@@ -97,7 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun Mar 20 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10-1
 - update to 0.10
-- rename to libzip2 and split tools in sub package
+- rename to libzip2 and split libs in sub package
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
