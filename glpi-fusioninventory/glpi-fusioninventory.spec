@@ -1,5 +1,5 @@
 Name:           glpi-fusioninventory
-Version:        2.3.5
+Version:        2.3.6
 Release:        1%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
@@ -8,7 +8,7 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/408/fusioninventory-for-glpi-metapackage_2.3.5.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/410/fusioninventory-for-glpi-metapackage_2.3.6.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -83,7 +83,6 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusioninventory/inc
 %{_datadir}/glpi/plugins/fusioninventory/install
 %{_datadir}/glpi/plugins/fusioninventory/pics
-%{_datadir}/glpi/plugins/fusioninventory/tools
 # fusinvinventory
 %dir %{_datadir}/glpi/plugins/fusinvinventory
 %dir %{_datadir}/glpi/plugins/fusinvinventory/locales
@@ -110,6 +109,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.3.6-1
+- update to 2.3.6
+  http://fusioninventory.org/wordpress/2011/07/04/1122/
+
 * Sun Jun 26 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.3.5-1
 - update to 2.3.5
   http://fusioninventory.org/wordpress/2011/06/26/fusioninventory-for-glpi-2-3-5-is-available/
