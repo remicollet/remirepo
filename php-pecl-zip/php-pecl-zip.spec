@@ -24,6 +24,7 @@ Patch0:       zip-systemlibzip.patch
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel, zlib-devel
 BuildRequires: php-pear(PEAR) >= 1.7.0
+BuildRequires: libzip2-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -80,15 +81,12 @@ php --no-php-ini \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-%{__make} test NO_INTERACTION=1 | tee rpmtests.log
-
-if  grep -q "FAILED TEST" rpmtests.log; then
-  for t in tests/*diff; do
-     echo "*** FAILED: $(basename $t .diff)"
-     diff -u tests/$(basename $t .diff).exp tests/$(basename $t .diff).out || :
-  done
-  exit 1
-fi
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
+   REPORT_EXIT_STATUS=1 \
+   NO_INTERACTION=1 \
+   TEST_PHP_EXECUTABLE=%{_bindir}/php \
+   %{_bindir}/php \
+   run-tests.php
 
 
 %clean
