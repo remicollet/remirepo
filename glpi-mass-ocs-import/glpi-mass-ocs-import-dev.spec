@@ -3,7 +3,7 @@
 #global svnrelease   108
 
 Name:           glpi-mass-ocs-import
-Version:        1.5.0
+Version:        1.5.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -21,11 +21,8 @@ URL:            https://forge.indepnet.net/projects/massocsimport
 # tar czf glpi-massocsimport-1.5.0-108.tar.gz massocsimport
 Source0:        glpi-massocsimport-1.5.0-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/927/glpi-massocsimport-1.5.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/928/glpi-massocsimport-1.5.1.tar.gz
 %endif
-
-# https://forge.indepnet.net/issues/2966
-Patch0:         %{name}-svn.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -55,9 +52,8 @@ synchronisation.
 %prep
 %setup -q -c 
 
-cd %{pluginname}
-%patch0 -p1
-cd ..
+# Temporary
+sed -i -e s/1.5.0/1.5.1/ %{pluginname}/setup.php
 
 # fix wrong-file-end-of-line-encoding, preserving timestamp
 mv %{pluginname}/docs docs
@@ -147,6 +143,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.1-1
+- version 1.5.1 released
+
 * Thu Jun 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.0-1
 - version 1.5.0 released
 
