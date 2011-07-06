@@ -3,14 +3,13 @@ platform-dependent results, with the "expected" results being arguably the
 wrong ones.  This is upstream at http://bugs.mysql.com/bug.php?id=46895
 (note that upstream has also disabled it, but only for Solaris, so we still
 need this patch).
+This is allegedly fixed for 5.5.14 ...
 
 Also disable sys_vars.plugin_dir_basic, which is broken because
 mysql-test-run doesn't set the right value of MYSQL_LIBDIR.  Upstream at
 http://bugs.mysql.com/bug.php?id=52223
-
-Also disable perfschema.binlog_mix and perfschema.binlog_row, which have
-expected output that doesn't match when openssl is in use.  Upstream at
-http://bugs.mysql.com/bug.php?id=59091
+Still fails in 5.5.13, but apparently due to be fixed soon?
+upstream marked it closed on 2-May.
 
 Also disable innodb.innodb, which is showing platform-dependent results
 as of 5.5.9.  Upstream at http://bugs.mysql.com/bug.php?id=60155
@@ -19,13 +18,11 @@ as of 5.5.9.  Upstream at http://bugs.mysql.com/bug.php?id=60155
 diff -Naur mysql-5.5.12.orig/mysql-test/t/disabled.def mysql-5.5.12/mysql-test/t/disabled.def
 --- mysql-5.5.12.orig/mysql-test/t/disabled.def	2011-04-11 06:44:01.000000000 -0400
 +++ mysql-5.5.12/mysql-test/t/disabled.def	2011-05-10 18:42:11.742438341 -0400
-@@ -17,3 +17,9 @@
+@@ -17,3 +17,7 @@
  alter_table-big          : Bug#37248 2010-11-15 mattiasj was not tested
  create-big               : Bug#37248 2010-11-15 mattiasj was not tested
  archive-big              : Bug#11817185 2011-03-10 Anitha Disabled since this leads to timeout on Solaris Sparc
 +#
 +outfile_loaddata         : bug#46895 code wrong, expected results wrong too
 +sys_vars.plugin_dir_basic : bug#52223 fails for lib64 library directory
-+perfschema.binlog_mix    : bug#59091 fails with openssl
-+perfschema.binlog_row    : bug#59091 fails with openssl
 +innodb.innodb            : bug#60155 has platform-dependent results

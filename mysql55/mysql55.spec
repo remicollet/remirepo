@@ -215,8 +215,6 @@ cat <<EOF >>mysql-test/t/disabled.def
 #
 outfile_loaddata         : bug#46895 code wrong, expected results wrong too
 sys_vars.plugin_dir_basic : bug#52223 fails for lib64 library directory
-perfschema.binlog_mix    : bug#59091 fails with openssl
-perfschema.binlog_row    : bug#59091 fails with openssl
 innodb.innodb            : bug#60155 has platform-dependent results
 main.information_schema  : fails in mock, ok after install :(
 EOF
@@ -678,6 +676,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Thu Jun  2 2011 Tom Lane <tgl@redhat.com> 5.5.13-1
+- Update to MySQL 5.5.13, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-13.html
+
 * Tue May 31 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.13-1
 - update to MySQL 5.5.13 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-13.html
