@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.13
+Version: 5.5.14
 Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -217,6 +217,7 @@ outfile_loaddata         : bug#46895 code wrong, expected results wrong too
 sys_vars.plugin_dir_basic : bug#52223 fails for lib64 library directory
 innodb.innodb            : bug#60155 has platform-dependent results
 main.information_schema  : fails in mock, ok after install :(
+main.openssl_1           : error message seems to have change...
 EOF
 
 
@@ -676,6 +677,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Wed Jul  6 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.14-1
+- update to MySQL 5.5.14 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-14.html
+
 * Thu Jun  2 2011 Tom Lane <tgl@redhat.com> 5.5.13-1
 - Update to MySQL 5.5.13, for various fixes described at
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-13.html
