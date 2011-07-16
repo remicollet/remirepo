@@ -22,13 +22,11 @@
 %global tarballdir        mozilla-release
 %global gre_dir           %{_sysconfdir}/gre.d
 
-# crash reporter and out-of-process-plugins work only on x86/x86_64
+# crash reporter work only on x86/x86_64
 %ifarch %{ix86} x86_64
 %global enable_mozilla_crashreporter 1
-%global moz_out_of_process_plugins   1
 %else
 %global enable_mozilla_crashreporter 0
-%global moz_out_of_process_plugins   0
 %endif
 
 %ifarch x86_64
@@ -63,7 +61,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}5
 Version:        5.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        5%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -88,6 +86,7 @@ Patch16:        add-gtkmozembed.patch
 %if 0%{?fedora} > 15
 Patch17:        xulrunner-5.0-curl.patch
 %endif
+Patch18:        xulrunner-5.0-secondary-ipc.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -245,7 +244,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch1  -p2 -b .build
 %patch9  -p2 -b .sbrk
 %patch13 -p2 -b .secondary-jit
-%patch14 -p2 -b .chromium-types
+%patch14 -p1 -b .chromium-types
 %patch15 -p1 -R -b .xulstub
 %if 0%{?fedora} <= 15
 %patch16 -p2 -b .gtkmozembed
@@ -253,6 +252,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %if 0%{?fedora} > 15
 %patch17 -p2 -b .curl
 %endif
+%patch18 -p2 -b .secondary-ipc
 
 %patch20 -p2 -b .pk
 %if %{fedora} >= 14
@@ -295,10 +295,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %endif
 
 echo "ac_add_options --enable-system-lcms" >> .mozconfig
-
-%if !%{?moz_out_of_process_plugins}
-echo "ac_add_options --disable-ipc" >> .mozconfig
-%endif
 
 # Upstream bug filed without resolution
 # for now make sure jit is not enabled on sparc64
@@ -553,9 +549,7 @@ fi
 %if %{name} == %{shortname}
 %{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
 %endif
-%if %{?moz_out_of_process_plugins}
 %{mozappdir}/plugin-container
-%endif
 
 %if %{enable_mozilla_crashreporter}
 %{mozappdir}/crashreporter
@@ -577,6 +571,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Jun 30 2011 Martin Stransky <stransky@redhat.com> 5.0-5
+- Fixed build on powerpc(64)
+
+* Tue Jun 28 2011 Dan Horák <dan[at]danny.cz> - 5.0-4
+- fix build on secondary arches with IPC enabled
+
 * Fri Jun 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-1
 - sync with f15/rawhide
 - update to 5.0 finale
