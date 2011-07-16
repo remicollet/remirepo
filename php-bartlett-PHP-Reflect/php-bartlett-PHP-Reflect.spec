@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Sat Jun 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.1-1
+- Version 1.0.1 (stable) - API 1.0.0 (stable)
+
 * Sat Jun 02 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-1
 - Version 1.0.0 (stable) - API 1.0.0 (stable)
 - add HTML documentation
