@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jul 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.6.1-1
+- rebuild for remi repository
+
 * Sun Jun 26 2011 Andrew Colin Kissa <andrew@topdog.za.net> - 1.6.1-1
 - update to latest upstream
 
