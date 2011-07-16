@@ -9,7 +9,7 @@
 Summary: Validating, recursive, and caching DNS(SEC) resolver
 Name: unbound
 Version: 1.4.12
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 License: BSD
 URL: http://www.nlnetlabs.nl/unbound/
 Source: http://www.unbound.net/downloads/%{name}-%{version}.tar.gz
@@ -23,7 +23,7 @@ Patch1: unbound-1.2-glob.patch
 
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: flex, openssl-devel , ldns-devel >= 1.5.0, 
+BuildRequires: flex, openssl-devel, ldns-devel >= 1.5.0
 BuildRequires: libevent-devel expat-devel
 %if %{with_python}
 BuildRequires:  python-devel swig
@@ -76,7 +76,6 @@ Summary: Libraries used by the unbound server and client applications
 Group: Applications/System
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
-Requires: openssl >= 0.9.8g-12
 
 %description libs
 Contains libraries used by the unbound server and client applications
@@ -200,6 +199,9 @@ fi
 %postun libs -p /sbin/ldconfig
 
 %changelog
+* Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.4.12-1.1
+- remove openssl version dependency (for EL-5) use detected soname
+
 * Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.4.12-1
 - update to 1.4.12 for remi repo
 
