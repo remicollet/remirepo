@@ -1,0 +1,262 @@
+diff -Naur captcha-2.3.orig/captcha.php captcha-2.3.new/captcha.php
+--- captcha-2.3.orig/captcha.php	2011-04-12 04:46:35.000000000 +0200
++++ captcha-2.3.new/captcha.php	2011-05-03 14:26:36.221434902 +0200
+@@ -4,7 +4,7 @@
+    title: Easy_CAPTCHA
+    description: highly configurable, user-friendly and accessible CAPTCHA
+    version: 2.3
+-   author: milki
++   author: mario <xmilky@@gmail::com>
+    url: http://freshmeat.net/projects/captchaphp
+    config:
+       <const name="CAPTCHA_PERSISTENT" value="1"  type="boolean" title="persistent cookie" description="sets a cookie after user successfully solved it, spares further captchas for a few days" />
+@@ -99,9 +99,16 @@
+ @define("CAPTCHA_BASE_URL", (empty($_SERVER['HTTPS'])? "http": "https") . "://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/" .  substr(realpath(__FILE__), strlen(realpath($_SERVER["DOCUMENT_ROOT"]))));
+ 
+ #-- texts
+-@define("CAPTCHA_PROMPT_TEXT", 'please enter the letters you recognize in the CAPTCHA image to the left');
++@define("CAPTCHA_PROMPT_TEXT", 'Please enter the letters you recognize in the CAPTCHA image to the left.');
+ @define("CAPTCHA_WHATIS_TEXT", 'What is %s = ');
+-@define("CAPTCHA_REDRAW_TEXT", 'click on image to redraw');
++@define("CAPTCHA_REDRAW_TEXT", 'Click on image to redraw.');
++# error messages (not usually seen by users)
++@define("CAPTCHA_ERROBJ_TEXT", 'Invalid object created.');
++@define("CAPTCHA_ERRSAVE_TEXT", 'Storing of captcha_id and session data was unsuccessful.');
++@define("CAPTCHA_ERRID_TEXT", 'No ->id present.');
++@define("CAPTCHA_ERRCREA_TEXT", 'No ->created timestamp.');
++@define("CAPTCHA_NOGD_TEXT", 'PHP setup lacks GD. No image drawing is possible, CAPTCHA won\'t function.');
++@define("CAPTCHA_ERRINVREQ_TEXT", 'captcha error: request invalid (wrong storage id) / or expired');
+ 
+ 
+ 
+@@ -161,13 +168,14 @@
+       }
+    }
+ 
++   
+ 
+    #-- create solutions
+    function generate() {
+ 
+       #-- init
+       srand(microtime() + time()/2 - 21017);
+-      if ($this->id) { $this->prev[] = $this->id; }
++      if (!empty($this->id)) { $this->prev[] = $this->id; }
+       $this->id = $this->new_id();
+       
+       #-- meta informations
+@@ -214,12 +222,12 @@
+    
+    #-- examine if captcha data is fresh
+    function is_valid() {
+-      return isset($this->id) && ($this->created)
++      return isset($this->id) && !empty($this->created)
+           && ($this->expires > time())
+           && ($this->tries > 0)
+           && ($this->failures < 500)
+           && ($this->passed < $this->maxpasses)
+-          || $this->delete() || $this->log("is_valid", "EXPIRED", "and deleted") && false;
++          || $this->log("is_valid", "EXPIRED", "and deleted") && $this->delete() && false;
+    }
+ 
+ 
+@@ -236,7 +244,7 @@
+       #-- failure
+       if ((0 >= $this->tries--) || !$this->is_valid()) {
+          // log, this is either a frustrated user or a bot knocking
+-         $this->log("::solved", "INVALID", "tries exhausted ($this->tries) or expired(?) captcha");
++         $this->log("::solved", "INVALID", "tries exhausted ({$this->tries}) or expired(?) captcha");
+       }
+       
+       #-- test
+@@ -292,13 +300,14 @@
+       
+       #-- check for errors
+       $errors = array(
+-          "invalid object created" => !$this->is_valid(),
+-          "captcha_id storage could not be saved" => !$this->saved,
+-          "no ->id present" => empty($this->id),
+-          "no ->created timestamp" =>  empty($this->created),
++          CAPTCHA_ERROBJ_TEXT => !$this->is_valid(),
++          CAPTCHA_ERRSAVE_TEXT => !$this->saved,
++          CAPTCHA_ERRID_TEXT => empty($this->id),
++          CAPTCHA_ERRCREA_TEXT =>  empty($this->created),
++          CAPTCHA_NOGD_TEXT => !function_exists('imagecreatetruecolor'),
+       );
+       if (array_sum($errors)) {
+-         return '<div id="captcha" class="error">*' . implode("<br>*", array_keys(array_filter($errors))) . '</div>';
++          return '<div id="captcha" class="error">*' . implode("<br>*", array_filter(array_keys(array_filter($errors)), 'htmlentities')) . '</div>';
+       }
+       
+       #-- prepare output vars
+@@ -310,20 +319,18 @@
+       $alt_text = htmlentities($this->text->question);
+       $new_urls = CAPTCHA_NEW_URLS ? 0 : 1;
+       $onClick = CAPTCHA_ONCLICK_HIRES ? 'onClick="this.src += this.src.match(/hires/) ? \'.\' : \'hires=1&\';"' : 'onClick="this.src += \'.\';"';
+-      $onKeyDown = CAPTCHA_AJAX ? 'onKeyUp="captcha_check_solution()"' : '';
++      $onKeyUp = CAPTCHA_AJAX ? 'onKeyUp="captcha_check_solution()"' : '';
+       $javascript = CAPTCHA_AJAX ? '<script src="'.$base_url.'base.js&captcha_new_urls='.$new_urls.'" type="text/javascript" language="JavaScript" id="captcha_ajax_1"></script>' : '';
+-      $error = function_exists('imagecreatetruecolor') ? '' : '<div class="error">PHP setup lacks GD. No image drawing possible</div>';
+ 
+       #-- assemble
+       $HTML =
+          //'<script type="text/javascript" language="JavaScript">if (document.getElementById("captcha")) { document.getElementById("captcha").parentNode.removeChild(document.getElementById("captcha")); }</script>' .   // workaround for double instantiations
+          '<div id="captcha" class="captcha">' .
+-         $error .
+          '<input type="hidden" id="'.$p_id.'" name="'.$p_id.'" value="'.$id.'" />' .
+-         '<img src="'.$img_url .'&" width="'.$this->image->width.'" height="'.$this->image->height.'" alt="'.$alt_text.'" align="middle" '.$onClick.' title="' . CAPTCHA_REDRAW_TEXT . '" />' .
++         '<img src="'.$img_url .'&" width="'.$this->image->width.'" height="'.$this->image->height.'" alt="'.$alt_text.'" align="middle" '.$onClick.' title="' . htmlentities(CAPTCHA_REDRAW_TEXT) . '" />' .
+          '&nbsp;' .
+          $add_text .
+-         '<input title="' . CAPTCHA_PROMPT_TEXT . '" type="text" '.$onKeyDown.' id="'.$p_input.'" name="'.$p_input.'" value="'.(isset($_REQUEST[$p_input])?htmlentities($_REQUEST[$p_input]):"") .
++         '<input title="' . htmlentities(CAPTCHA_PROMPT_TEXT) . '" type="text" '.$onKeyUp.' id="'.$p_input.'" name="'.$p_input.'" value="'.(isset($_REQUEST[$p_input])?htmlentities($_REQUEST[$p_input]):"") .
+          '" size="8" style="'.CAPTCHA_INPUT_STYLE.'" />' .
+          $javascript .
+          '</div>';
+@@ -337,9 +344,9 @@
+    function log($error, $category, $message) {
+       // append to text file
+       if (CAPTCHA_LOG) {
+-         file_put_contents(
++         @file_put_contents(
+              CAPTCHA_TEMP_DIR . "/captcha.log",
+-             "[$error] -$category- \"$message\" $_SERVER[REMOTE_ADDR] id={$this->id} tries={$this->tries} failures={$this->failures} created/time/expires=$this->created/".time()."/$this->expires \n",
++             "[$error] -$category- \"$message\" $_SERVER[REMOTE_ADDR] id={$this->id} tries={$this->tries} failures={$this->failures} created/time/expires={$this->created}/".time()."/{$this->expires} \n",
+              FILE_APPEND|LOCK_EX
+          );
+       }
+@@ -357,7 +364,7 @@
+          }
+       }
+       else {
+-         $this->log("captcha file does not exist $fn");
++         $this->log("load", "INVALID", "captcha file does not exist $fn");
+       }
+    }
+ 
+@@ -365,34 +372,36 @@
+    function save() {
+       $this->straighten_temp_dir();
+       if ($fn = $this->data_file()) {
+-         $this->saved = file_put_contents($fn, serialize($this), LOCK_EX);
++         $this->saved = @file_put_contents($fn, serialize($this), LOCK_EX);
+       }
+    }
+    
+    #-- remove $this data file
+    function delete() {
+       // delete current and all previous data files
+-      $this->prev[] = $this->id;
++      if (!empty($this->id)) {
++         $this->prev[] = $this->id;
++      }
+       if (isset($this->prev)) {
+-         foreach ($this->prev as $id) {
++         foreach ((array)$this->prev as $id) {
+             @unlink($this->data_file($id));
+          }
+       }
+       // clean object
+       foreach ((array)$this as $name=>$val) {
+-         unset($this->{$name});
++         $this->{$name} = false;
+       }
+-      return(FALSE);  // far if-chaining in ->is_valid()
++      return(FALSE);  // for if-chaining in ->is_valid()
+    }
+    
+    #-- clean-up or init temporary directory
+    function straighten_temp_dir() {
+       // create dir
+       if (!file_exists($dir=CAPTCHA_TEMP_DIR)) {
+-         mkdir($dir);
++         @mkdir($dir);
+       }
+       // clean up old files
+-      if ((rand(0,100) <= 5) && ($dh = opendir($dir))) {
++      if ((rand(0,100) <= 5) && ($dh = @opendir($dir))) {
+          $t_kill = time() - CAPTCHA_TIMEOUT * 1.2;
+          while($fn = readdir($dh)) if ($fn[0] != ".") {
+             if (filemtime("$dir/$fn") < $t_kill) {
+@@ -1013,10 +1022,11 @@
+ 
+    #-- determine usable temp directory
+    function tmp() {
++       $DIR = dirname(__FILE__);
+        return current(
+-           array_filter(   // filter by writability
++           @array_filter(   // filter by writability
+                array_filter(  // filter empty entries
+-                   @array(
++                   array(
+                       $_SERVER['TMPDIR'],
+                       $_SERVER['REDIRECT_TMPDIR'],
+                       $_SERVER['TEMP'],
+@@ -1024,7 +1034,8 @@
+                       $_SERVER['TMP'],
+                       $_SERVER['TEMPDIR'],
+                       function_exists("sys_get_temp_dir") ? sys_get_temp_dir() : "",
+-                      '/tmp'
++                      '/tmp', '/temp',
++                      "$DIR/tmp", "$DIR/../tmp", "$DIR/../../tmp",
+                    )
+                ),
+                "is_writable"
+@@ -1053,7 +1064,7 @@
+   
+                #-- check
+                if ($expired || empty($c->image)) {
+-                   die(easy_captcha_utility::js_header('alert("captcha error: request invalid (wrong storage id) / or expired");'));
++                   die(easy_captcha_utility::js_header('alert("' . addslashes(CAPTCHA_ERRINVREQ_TEXT) . '");'));
+                }
+                if (0 >= $c->ajax_tries--) {
+                   $c->log("::API", "JS-RPC", "ajax_tries exhausted ($c->ajax_tries)");
+@@ -1258,4 +1269,4 @@
+ 
+ 
+ 
+-?>
+\ No newline at end of file
++?>
+diff -Naur captcha-2.3.orig/index.php captcha-2.3.new/index.php
+--- captcha-2.3.orig/index.php	2010-05-20 20:18:31.000000000 +0200
++++ captcha-2.3.new/index.php	2011-04-13 14:54:13.000000000 +0200
+@@ -3,7 +3,7 @@
+   // load library and preset a few options
+   define("CAPTCHA_INVERSE", 1);    // black background
+   define("CAPTCHA_NEW_URLS", 0);   // no auto-disabling/hiding for the demo
+-  include("captcha.php");
++  include("captchaphp/captcha.php");
+ 
+ ?>
+ <html>
+@@ -109,7 +109,7 @@
+ 
+ 
+ 
+-<form action="index.php" method="GET" x-enctype="multipart/form-data" accept-encoding="UTF-8">
++<form action="<?php echo htmlspecialchars(basename($_SERVER['SCRIPT_NAME'])); ?>" method="GET" x-enctype="multipart/form-data" accept-encoding="UTF-8">
+   <textarea name="texta1" cols="40" rows="5">...</textarea>
+   <?php
+      // output CAPTCHA img + input box
+@@ -126,7 +126,7 @@
+ 
+ 
+  <div>
+-  <a href="http://www.freshmeat.net/p/captchaphp">get updates (freshmeat.net)</a>
++  <a href="http://www.freshmeat.net/projects/captchaphp">get updates (freshmeat.net)</a>
+   |
+   <a href="captcha.tgz">download</a>
+   |
+diff -Naur captcha-2.3.orig/README captcha-2.3.new/README
+--- captcha-2.3.orig/README	2011-04-12 04:46:29.000000000 +0200
++++ captcha-2.3.new/README	2011-04-13 16:33:41.000000000 +0200
+@@ -399,7 +399,7 @@
+ - alternatives for finding temporary directory from env / php.ini
+ 
+ 2.2
+- - Many many many patches from Patrick Monerat, downstream Fedora
++ - Many many many patches from Patrick Monnerat, downstream Fedora
+  - different font distributed alongside
+ 
+ 2.1 (unreleased)
