@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.11.7
+Version:         1.11.8
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -125,10 +125,10 @@ This package contains the Zend Framework CAPTCHA extension.
 Summary:  Zend Framework Dojo Toolkit integration component
 Group:    Development/Libraries
 Requires: %{name} = %{version}-%{release}
+Requires: dojo
 
 %description Dojo
-This package contains the Zend Framework Dojo Toolkit component as well as a
-copy of Dojo itself.
+This package contains the Zend Framework Dojo Toolkit component.
 
 
 %package Db-Adapter-Mysqli
@@ -329,7 +329,6 @@ find . -type f -name \*.sh \
 %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/php
 %{__cp} -pr library/Zend $RPM_BUILD_ROOT%{_datadir}/php
 %{__cp} -pr demos/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend/demos
-%{__cp} -pr externals $RPM_BUILD_ROOT%{_datadir}/php/Zend
 
 # ZendX
 cd extras
@@ -487,8 +486,6 @@ cd ..
 %{_datadir}/php/Zend/View.php
 %{_datadir}/php/Zend/Wildfire
 %{_datadir}/php/Zend/XmlRpc
-%{_datadir}/php/Zend/externals
-%exclude %{_datadir}/php/Zend/externals/dojo
 
 %files demos
 %defattr(-,root,root,-)
@@ -563,7 +560,6 @@ cd ..
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Dojo.php
 %{_datadir}/php/Zend/Dojo
-%{_datadir}/php/Zend/externals/dojo
 %doc LICENSE.txt
 
 %files Feed
@@ -628,6 +624,15 @@ cd ..
 
 
 %changelog
+* Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.8-1
+- update to 1.11.8
+- rebuild for remi repository (with Oracle and Sqlite stuff)
+
+* Fri Jul 08 2011 Felix Kaechele <heffer@fedoraproject.org> - 1.11.8-2
+- update to 1.11.8
+- full changelog http://framework.zend.com/changelog/1.11.8
+- removed bundled Dojo
+
 * Sun Jun 12 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.7-1
 - update to 1.11.7
 - rebuild for remi repository (with Oracle and Sqlite stuff)
