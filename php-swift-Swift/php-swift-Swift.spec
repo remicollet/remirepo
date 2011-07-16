@@ -46,10 +46,6 @@ cd %{pear_name}-%{version}
 rm -rf $RPM_BUILD_ROOT docdir
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
 
-# Move documentation
-mkdir -p docdir
-mv $RPM_BUILD_ROOT%{pear_docdir}/* docdir
-
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 
@@ -82,15 +78,14 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/*
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
-#%{pear_testdir}/%{pear_name}
-# Expand this as needed to avoid owning dirs owned by our dependencies
 %{pear_phpdir}/%{pear_name}
 
 %changelog
 * Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.1.1-1
 - rebuild for remi repository
+- doc in /usr/share/doc/pear
 
 * Fri Jul 15 2011 Christof Damian <christof@damian.net> - 4.1.1-1
 - upstream 4.1.1
