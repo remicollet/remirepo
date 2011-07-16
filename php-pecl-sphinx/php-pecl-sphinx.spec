@@ -1,11 +1,11 @@
-%global php_apiver	%((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%{!?__pecl:		%{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir:		%{expand: %%global php_extdir %(php-config --extension-dir)}}
+%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
+%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %define pecl_name sphinx
 
 Name:		php-pecl-sphinx
-Version:	1.0.4
+Version:	1.1.0
 Release:	1%{?dist}
 Summary:	PECL extension for Sphinx SQL full-text search engine
 Group:		Development/Languages
@@ -13,18 +13,15 @@ License:	PHP
 URL:		http://pecl.php.net/package/%{pecl_name}
 Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:	libsphinxclient-devel php-pear
+BuildRequires:	libsphinxclient-devel
+BuildRequires:  php-pear
 BuildRequires:	php-devel >= 5.1.3
-Requires(post):	%{__pecl}
-Requires(postun):	%{__pecl}
-Provides:	php-pecl(%{pecl_name}) = %{version}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
+Requires(post): %{__pecl}
+Requires(postun): %{__pecl}
 
-%if %{?php_zend_api}0
-Requires:	php(zend-abi) = %{php_zend_api}
-Requires:	php(api) = %{php_core_api}
-%else
-Requires:	php-api = %{php_apiver}
-%endif
+Provides:       php-pecl(%{pecl_name}) = %{version}
 
 
 %description
@@ -35,9 +32,6 @@ client library for Sphinx the SQL full-text search engine.
 %setup -q -c
 [ -f package2.xml ] || %{__mv} package.xml package2.xml
 %{__mv} package2.xml %{pecl_name}-%{version}/%{pecl_name}.xml
-
-# see http://pecl.php.net/bugs/bug.php?id=17877
-sed -i -e '/PHP_SPHINX_VERSION/s/1.0.3/1.0.4/' %{pecl_name}-%{version}/php_sphinx.h
 
 
 %build
@@ -73,19 +67,14 @@ EOF
 %clean
 %{__rm} -rf %{buildroot}
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
-if [ $1 -eq 0 ]; then
+if [ $1 -eq 0 ]  ; then
 %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
-
 
 %files
 %defattr(-,root,root,-)
@@ -96,8 +85,18 @@ fi
 
 
 %changelog
+* Sat Jul 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.0-1
+- rebuild for remi repository
+
+* Fri Jul 15 2011 Andrew Colin Kissa <andrew@topdog.za.net> - 1.1.0-1
+- Update to latest upstream
+- Fix bugzilla #715830
+
 * Tue Jul 26 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.0.4-1
 - update to 1.0.4
+
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Sat Sep 12 2009 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-2
 - rebuild for remi repository and PHP 5.3
