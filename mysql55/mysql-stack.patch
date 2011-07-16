@@ -1,0 +1,27 @@
+Talk about silly byte-shaving ... the "stock" value of STACK_MIN_SIZE
+does not work on s390x, and probably not on some other platforms either.
+Knock it up to twice the pre-5.0.33 value to have some margin for future
+changes in compiler, glibc, etc.  Suspect this number if
+"execution_constants" regression test fails.
+
+Note: STACK_MIN_SIZE has to be enough less than DEFAULT_THREAD_STACK / 8
+to provide some headroom, which means that its value can't be raised too much
+further without increasing the latter as well.
+
+As of 5.1.33 the stock value is 16000, which might be enough ... or maybe
+not.  For the moment, we keep this patch around for reference, but it's
+not being applied.
+
+
+diff -Naur mysql-5.1.30.orig/sql/mysql_priv.h mysql-5.1.30/sql/mysql_priv.h
+--- mysql-5.1.30.orig/sql/mysql_priv.h	2008-11-14 11:37:13.000000000 -0500
++++ mysql-5.1.30/sql/mysql_priv.h	2009-01-13 11:07:35.000000000 -0500
+@@ -286,7 +286,7 @@
+  Feel free to raise this by the smallest amount you can to get the
+  "execution_constants" test to pass.
+  */
+-#define STACK_MIN_SIZE          12000   ///< Abort if less stack during eval.
++#define STACK_MIN_SIZE          16384   ///< Abort if less stack during eval.
+ 
+ #define STACK_MIN_SIZE_FOR_OPEN 1024*80
+ #define STACK_BUFF_ALLOC        352     ///< For stack overrun checks

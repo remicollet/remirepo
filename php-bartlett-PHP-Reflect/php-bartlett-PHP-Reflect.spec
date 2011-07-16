@@ -10,7 +10,7 @@
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 

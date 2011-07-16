@@ -12,8 +12,6 @@
 # Provides: mysqld
 # Required-Start: $local_fs $remote_fs $network $named $syslog $time
 # Required-Stop: $local_fs $remote_fs $network $named $syslog $time
-# Default-Start: 2 3 4 5
-# Default-Stop: 0 1 6
 # Short-Description: start and stop MySQL server
 # Description: MySQL database server
 ### END INIT INFO
