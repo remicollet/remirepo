@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{php_confdir}/php-libvirt.ini
 
 %changelog
+* Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.4.1-5
+- rebuild for remi repo
+
 * Tue Apr 19 2011 Michal Novotny <minovotn@redhat.com> - 0.4.1-5
 - Minor memory leak fixes
 - Several bug fixes
