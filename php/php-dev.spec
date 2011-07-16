@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate 201106021630
-%global phpversion 5.3.7RC2
+%global phpversion 5.3.7RC3
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -62,7 +62,7 @@ Version: 5.3.7
 %if 0%{?snapdate:1}
 Release: 0.1.%{snapdate}%{?dist}
 %else
-Release: 0.3.RC2%{?dist}
+Release: 0.4.RC3%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -1336,6 +1336,9 @@ fi
 %endif
 
 %changelog
+* Fri Jul 15 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.4.RC3
+- php 5.3.7RC3
+
 * Fri Jul 01 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.3.RC2
 - php 5.3.7RC2
 
