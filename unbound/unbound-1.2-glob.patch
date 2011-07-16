@@ -1,0 +1,13 @@
+diff -Naur unbound-1.2.0/validator/val_anchor.c unbound-1.2.0.new/validator/val_anchor.c
+--- unbound-1.2.0/validator/val_anchor.c	2009-01-07 07:24:34.000000000 -0500
++++ unbound-1.2.0.new/validator/val_anchor.c	2009-01-20 17:31:43.000000000 -0500
+@@ -718,7 +718,8 @@
+ 			log_err("wildcard trusted-keys-file %s: expansion "
+ 				"failed (%s)", pat, strerror(errno));
+ 		}
+-		return 0;
++		/* ignore globs that yield no files */
++		return 1;
+ 	}
+ 	/* process files found, if any */
+ 	for(i=0; i<(size_t)g.gl_pathc; i++) {
