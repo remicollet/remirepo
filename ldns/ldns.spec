@@ -125,6 +125,9 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.6.10-1
+- rebuild for remi repo
+
 * Wed Jun 08 2011 Paul Wouters <paul@xelerance.com> - 1.6.10-1
 - Upodated to 1.6.10
 - Commented out dependancies that are only needed for snapshots
