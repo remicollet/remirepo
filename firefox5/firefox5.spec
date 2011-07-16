@@ -12,11 +12,11 @@
 %global shortname       firefox
 #global mycomment       RC Build 1 candidate
 %global firefox_dir_ver 5
-%global gecko_version   5.0
+%global gecko_version   5.0.1
 %global alpha_version   0
 %global beta_version    0
 %global rc_version      0
-%global datelang        20110624
+%global datelang        20110716
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
@@ -47,8 +47,8 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        5.0
-Release:        2%{?pre_tag}%{?dist}
+Version:        5.0.1
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -411,6 +411,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0.1-1
+- Update to 5.0.1
+
 * Sat Jun 25 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0-2
 - sync with f15/rawhide
 - requires xulrunner5 (mainly for f15)

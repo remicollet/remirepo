@@ -60,8 +60,8 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}5
-Version:        5.0
-Release:        5%{?pre_tag}%{?dist}
+Version:        5.0.1
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -233,7 +233,7 @@ debug %{name}, you want to install %{name}-debuginfo instead.
 #---------------------------------------------------------------------
 
 %prep
-echo TARGET = %{name}-%{version}-%{release}%{?dist}
+echo TARGET = %{name}-%{version}-%{release}%{?dist}  GECKO = %{gecko_verrel}
 %setup -q -c
 cd %{tarballdir}
 
@@ -571,6 +571,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.0.1-1
+- Update to 5.0.1
+
 * Thu Jun 30 2011 Martin Stransky <stransky@redhat.com> 5.0-5
 - Fixed build on powerpc(64)
 
