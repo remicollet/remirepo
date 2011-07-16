@@ -92,11 +92,11 @@ fi
 - Update to latest upstream
 - Fix bugzilla #715830
 
-* Tue Jul 26 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.0.4-1
-- update to 1.0.4
-
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Tue Jul 26 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.0.4-1
+- update to 1.0.4
 
 * Sat Sep 12 2009 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-2
 - rebuild for remi repository and PHP 5.3
