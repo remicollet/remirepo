@@ -8,10 +8,10 @@
 
 Summary: Validating, recursive, and caching DNS(SEC) resolver
 Name: unbound
-Version: 1.4.11
+Version: 1.4.12
 Release: 1%{?dist}
 License: BSD
-Url: http://www.nlnetlabs.nl/unbound/
+URL: http://www.nlnetlabs.nl/unbound/
 Source: http://www.unbound.net/downloads/%{name}-%{version}.tar.gz
 Source1: unbound.init
 Source2: unbound.conf
@@ -38,6 +38,7 @@ Requires(preun): initscripts
 Requires(postun): initscripts
 Requires: ldns >= 1.5.0
 Requires(pre): shadow-utils
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 Obsoletes:      dnssec-conf < 1.27-2
 Provides:       dnssec-conf = 1.27-1
@@ -57,7 +58,7 @@ as a server, but are linked into an application) are easily possible.
 Summary: Plugin for the munin / munin-node monitoring package
 Group:     System Environment/Daemons
 Requires: munin-node
-Requires: %{name} = %{version}-%{release}, bc
+Requires: %{name}%{?_isa} = %{version}-%{release}, bc
 
 %description munin
 Plugin for the munin / munin-node monitoring package
@@ -65,7 +66,7 @@ Plugin for the munin / munin-node monitoring package
 %package devel
 Summary: Development package that includes the unbound header files
 Group: Development/Libraries
-Requires: %{name}-libs = %{version}-%{release}, openssl-devel, ldns-devel
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}, openssl-devel, ldns-devel
 
 %description devel
 The devel package contains the unbound library and the include files
@@ -84,7 +85,7 @@ Contains libraries used by the unbound server and client applications
 %package python
 Summary: Python modules and extensions for unbound
 Group: Applications/System
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description python
 Python modules and extensions for unbound
@@ -199,6 +200,9 @@ fi
 %postun libs -p /sbin/ldconfig
 
 %changelog
+* Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.4.12-1
+- update to 1.4.12 for remi repo
+
 * Sun Jul 03 2011 Paul Wouters <paul@xelerance.com> - 1.4.11-1
 - Updated to 1.4.11
 - removed integrated CVE patch
