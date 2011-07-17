@@ -101,8 +101,8 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
 
     function create_langpack_link() {
         local language=$*
-        local langpack=langpack-${language}@thunderbird.mozilla.org
-        if [ -f $MOZ_LANGPACKS_DIR/$langpack/chrome.manifest ]; then
+        local langpack=langpack-${language}@thunderbird.mozilla.org.xpi
+        if [ -f $MOZ_LANGPACKS_DIR/$langpack ]; then
             rm -rf $MOZ_EXTENSIONS_PROFILE_DIR/$langpack
             ln -s $MOZ_LANGPACKS_DIR/$langpack \
                   $MOZ_EXTENSIONS_PROFILE_DIR/$langpack

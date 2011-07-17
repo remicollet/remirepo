@@ -26,7 +26,7 @@
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
 Version:        5.0
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -316,14 +316,18 @@ touch %{name}.lang
 %{__tar} xjf %{SOURCE1}
 for langpack in `ls thunderbird-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
-  extensiondir=$RPM_BUILD_ROOT%{mozappdir}/langpacks/langpack-$language@thunderbird.mozilla.org
-  %{__mkdir_p} $extensiondir
-  unzip -q $langpack -d $extensiondir
-  find $extensiondir -type f | xargs chmod 644
+  extensionID=langpack-$language@thunderbird.mozilla.org
+  
+#  extensiondir=$RPM_BUILD_ROOT%{mozappdir}/langpacks/langpack-$language@thunderbird.mozilla.org
+#  %{__mkdir_p} $extensiondir
+#  unzip -q $langpack -d $extensiondir
+#  find $extensiondir -type f | xargs chmod 644
   
   language=`echo $language | sed -e 's/-/_/g'`
-  extensiondir=`echo $extensiondir | sed -e "s,^$RPM_BUILD_ROOT,,"`
-  echo "%%lang($language) $extensiondir" >> %{name}.lang
+#  extensiondir=`echo $extensiondir | sed -e "s,^$RPM_BUILD_ROOT,,"`
+#  echo "%%lang($language) $extensiondir" >> %{name}.lang
+  %{__install} -m 644 ${langpack} $RPM_BUILD_ROOT%{mozappdir}/langpacks/${extensionID}.xpi
+  echo "%%lang($language) %{mozappdir}/langpacks/${extensionID}.xpi" >> %{name}.lang
 done
 %{__rm} -rf thunderbird-langpacks
 %endif # build_langpacks
@@ -453,6 +457,9 @@ fi
 #===============================================================================
 
 %changelog
+* Sun Jul 17 2011 Remi Collet <rpms@famillecollet.com> 5.0-1.1
+- don't unzip the langpacks
+
 * Sun Jul 17 2011 Remi Collet <rpms@famillecollet.com> 5.0-1
 - Thunderbird 5.0, sync with rawhide
 
