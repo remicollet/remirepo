@@ -68,9 +68,7 @@ BuildRequires:  nspr-devel >= %{nspr_version}
 %if 0%{?fedora} >= 13
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
-%if %{fedora} >= 11
 BuildRequires:  cairo-devel >= %{cairo_version}
-%endif
 BuildRequires:  libnotify-devel >= %{libnotify_version}
 BuildRequires:  libpng-devel
 BuildRequires:  libjpeg-devel
@@ -87,9 +85,7 @@ BuildRequires:  pango-devel
 BuildRequires:  freetype-devel >= %{freetype_version}
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
-%if 0%{?fedora} >= 11
 BuildRequires:  hunspell-devel
-%endif
 %if 0%{?fedora} >= 15
 # Need SQLITE_SECURE_DELETE option
 BuildRequires:  sqlite-devel >= %{sqlite_version}
@@ -102,6 +98,10 @@ BuildRequires:  libcurl-devel
 BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  GConf2-devel
+BuildRequires:  lcms-devel >= %{lcms_version}
+%ifarch %{ix86} x86_64
+BuildRequires:  wireless-tools-devel
+%endif
 
 Requires:       mozilla-filesystem
 %if 0%{?fedora} >= 12
@@ -112,12 +112,6 @@ Requires:       nss >= %{nss_version}
 %endif
 %if 0%{?fedora} >= 15
 Requires:       sqlite >= %{sqlite_version}
-%endif
-%if 0%{?fedora} >= 11
-BuildRequires:  lcms-devel >= %{lcms_version}
-%endif
-%ifarch %{ix86} x86_64
-BuildRequires:  wireless-tools-devel
 %endif
 
 Obsoletes:      thunderbird3
@@ -192,12 +186,6 @@ cat %{SOURCE10} 		\
 %if %{fedora} < 12
   | grep -v system-nspr 	\
 %endif
-%if %{fedora} < 11
-  | grep -v system-hunspell	\
-%endif
-%if %{fedora} < 11
-  | grep -v system-cairo 	\
-%endif
 %ifarch %{ix86} x86_64
   | grep -v disable-necko-wifi 	\
 %endif
@@ -205,9 +193,7 @@ cat %{SOURCE10} 		\
 
 cat <<EOF | tee -a .mozconfig
 ac_add_options --enable-libnotify
-%if %{fedora} >= 11
 ac_add_options --enable-system-lcms
-%endif
 %if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
