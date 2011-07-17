@@ -54,7 +54,7 @@ Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{versi
 %endif
 
 # http://www.mozdev.org/pipermail/enigmail/2009-April/011018.html
-Source101: enigmail-fixlang.php
+Source101:      enigmail-fixlang.php
 
 
 Patch0:         thunderbird-version.patch
@@ -193,7 +193,6 @@ EOF
 %endif
 
 # ===== Enigmail work =====
-# ===== Fixing langpack
 %if 0%{?CVS}
 mkdir mailnews/extensions/enigmail
 tar xzf %{SOURCE100} -C mailnews/extensions/enigmail
@@ -206,6 +205,7 @@ pushd mailnews/extensions/enigmail
 popd
 %endif
 
+# ===== Fixing langpack
 pushd mailnews/extensions/enigmail
 for rep in $(cat lang/current-languages.txt)
 do
