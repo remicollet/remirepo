@@ -31,7 +31,7 @@ Version:        1.2
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -115,11 +115,9 @@ BuildRequires:  lcms-devel >= %{lcms_version}
 BuildRequires:  wireless-tools-devel
 %endif
 
-
 ## For fixing lang
-%if 0%{?CVS}
 BuildRequires:  dos2unix, php-cli
-%endif
+
 
 # Without this enigmmail will require libxpcom.so and other .so  
 # which are not provided by thunderbird (to avoid mistake, 
@@ -291,6 +289,9 @@ cd %{tarballdir}
 #===============================================================================
 
 %changelog
+* Sun Jul 17 2011 Remi Collet <remi@fedoraproject.org> 1.2-1.1
+- fix BR (dos2unix + php-cli)
+
 * Sun Jul 17 2011 Remi Collet <rpms@famillecollet.com> 1.2-1
 - Enigmail 1.2 for Thunderbird 5.0
 
