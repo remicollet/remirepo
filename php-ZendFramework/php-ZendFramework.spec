@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.11.8
+Version:         1.11.9
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -42,7 +42,7 @@ Obsoletes: %{name}-tests < 1.9.6-2
 %description
 Extending the art & spirit of PHP, Zend Framework is based on simplicity,
 object-oriented best practices, corporate friendly licensing, and a rigorously
-tested agile codebase. Zend Framework is focused on building more secure,
+tested agile code base. Zend Framework is focused on building more secure,
 reliable, and modern Web 2.0 applications & web services, and consuming widely
 available APIs from leading vendors like Google, Amazon, Yahoo!, Flickr, as
 well as API providers and catalogers like StrikeIron and ProgrammableWeb.
@@ -624,11 +624,20 @@ cd ..
 
 
 %changelog
+* Sun Jul 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.9-1
+- update to 1.11.9
+- rebuild for remi repository (with Oracle and Sqlite stuff)
+
+* Sat Jul 16 2011 Felix Kaechele <heffer@fedoraproject.org> - 1.11.9-1
+- update to 1.11.9
+- fixes some nasty bugs
+- full changelog http://framework.zend.com/changelog/1.11.9
+
 * Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.8-1
 - update to 1.11.8
 - rebuild for remi repository (with Oracle and Sqlite stuff)
 
-* Fri Jul 08 2011 Felix Kaechele <heffer@fedoraproject.org> - 1.11.8-2
+* Fri Jul 08 2011 Felix Kaechele <heffer@fedoraproject.org> - 1.11.8-1
 - update to 1.11.8
 - full changelog http://framework.zend.com/changelog/1.11.8
 - removed bundled Dojo
