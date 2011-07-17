@@ -1,0 +1,11 @@
+diff -up mozilla-1.9.2/js/src/jstl.h.s390 mozilla-1.9.2/js/src/jstl.h
+--- mozilla-1.9.2/js/src/jstl.h.s390	2011-02-18 19:33:24.000000000 +0100
++++ mozilla-1.9.2/js/src/jstl.h	2011-03-07 08:41:29.000000000 +0100
+@@ -195,7 +195,6 @@ class ReentrancyGuard
+ JS_ALWAYS_INLINE size_t
+ RoundUpPow2(size_t x)
+ {
+-    typedef tl::StaticAssert<tl::IsSameType<size_t,JSUword>::result>::result _;
+     size_t log2 = JS_CEILING_LOG2W(x);
+     JS_ASSERT(log2 < tl::BitSize<size_t>::result);
+     size_t result = size_t(1) << log2;

@@ -1,0 +1,26 @@
+--- enigmail/package/install.rdf.orig	2011-07-17 20:18:23.000000000 +0200
++++ enigmail/package/install.rdf	2011-07-17 20:18:32.000000000 +0200
+@@ -5,7 +5,7 @@
+ 
+   <Description about="urn:mozilla:install-manifest">
+     <em:id>{847b3a00-7ab1-11d4-8f02-006008948af5}</em:id>
+-    <em:version>1.2pre</em:version>
++    <em:version>1.2</em:version>
+     <em:type>2</em:type> <!-- type = extension -->
+     <em:unpack>true</em:unpack>
+ 
+@@ -27,14 +27,6 @@
+         <em:maxVersion>2.1.*</em:maxVersion>
+       </Description>
+     </em:targetApplication>
+-    <!-- em:targetApplication>
+-      < ! -- Spicebird -- >
+-      <Description>
+-        <em:id>{ee53ece0-255c-4cc6-8a7e-81a8b6e5ba2c}</em:id>
+-        <em:minVersion>0.7</em:minVersion>
+-        <em:maxVersion>0.8</em:maxVersion>
+-      </Description>
+-    </em:targetApplication -->
+ 
+ <!-- targetPlatform placeholder -->
+ 
