@@ -1,0 +1,71 @@
+--- docs/index.txt.orig	2011-07-18 17:56:01.598097428 +0200
++++ docs/index.txt	2011-07-18 17:55:43.602953982 +0200
+@@ -94,17 +94,15 @@
+ The PHP_Reflect manual is available in a selection of formats. Pick a format
+ from the table below to start downloading.
+ 
+-[grid="rows",format="csv"]
+ [options="header"]
+ |===========================
+-Language,Single HTML file,Many HTML files,HTML Help file,PDF file
+-English,link:{binary_dir}userguide.zip[userguide.zip] (6Kb), link:{binary_dir}userguide.chunked.zip[userguide.chunked.zip] (42Kb) , link:{binary_dir}userguide.chm.zip[userguide.chm.zip] (39Kb), link:{binary_dir}userguide.pdf[pdf] (70Kb)
++| Language | Single HTML file | Many HTML files | HTML Help file | PDF file
++| English | link:{binary_dir}userguide.zip[userguide.zip] 6 Kb | link:{binary_dir}userguide.chunked.zip[userguide.chunked.zip] 42 Kb | link:{binary_dir}userguide.chm[userguide.chm.zip] 46 Kb | link:{binary_dir}userguide.pdf[userguide.pdf] 70 Kb
+ |===========================
+ 
+ 
+-[appendix]
+-Classes Source Code
+--------------------
++== Appendix A: Classes Source Code
++
+ Below you can find highlighted PHP source code
+ (with http://pygments.org/[Pygments])
+ of PHP_Reflect classes version {revnumber}
+@@ -113,27 +111,22 @@
+ * link:sources/Autoload.html[Autoload]
+ * link:sources/Token.html[Tokens]
+ 
+-[appendix]
+-Examples
+---------
++== Appendix B: Examples
++
+ .Scan a simple file
+ * link:sources/scanFile.html[Basic usage with default options]
+ 
+-[appendix]
+-Changelog
+----------
++== Appendix C: Changelog
+ link:CHANGELOG.html[History of changes]
+ 
+-[appendix]
+-License
+--------
++== Appendix D: License
++
+ Released under the link:LICENSE.html[BSD] license,
+ you are free to do whatever you want, even in a commercial environment.
+ You are also encouraged to contribute.
+ 
+-[appendix]
+-Credits
+--------
++== Appendix E: Credits
++
+ 
+ [quote, , https://github.com/sebastianbergmann/]
+ ____
+@@ -144,9 +137,8 @@
+ ____
+ 
+ 
+-[appendix]
+-Links
+------
++== Appendix F: Links
++
+ All pages of this site, and user guide were generated with AsciiDoc 8.6.5,
+ assisted by FOP 1.0 (for PDFs). Automated build process uses Phing 2.4.5
+ 

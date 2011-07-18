@@ -10,7 +10,7 @@
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -18,6 +18,9 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://bartlett.laurent-laville.org/
 Source0:        http://%{channel}/get/%{pear_name}-%{version}%{?prever}.tgz
+
+# for old asciidoc version https://bugzilla.redhat.com/556171
+Patch0:         PHP_Reflect-docs.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -44,7 +47,7 @@ PHP_Reflect adds the ability to reverse-engineer classes, interfaces,
 functions, constants and more, by connecting php callbacks to other tokens.
 
 %if %{withhtmldoc}
-Documentation :  %{pear_docdir}/%{pear_name}/docs/userguide.html
+Documentation :  %{pear_docdir}/%{pear_name}/docs/index.html
 %endif
 
 
@@ -55,6 +58,8 @@ Documentation :  %{pear_docdir}/%{pear_name}/docs/userguide.html
 cd %{pear_name}-%{version}%{?prever}
 mv -f ../package.xml %{name}.xml
 
+%patch0 -p0 -b .fix
+
 
 %build
 cd %{pear_name}-%{version}%{?prever}
@@ -64,8 +69,14 @@ cd %{pear_name}-%{version}%{?prever}
 phing -f docs/build-phing.xml \
       -Dhomedir=$PWD \
       -Dasciidoc.home=%{_datadir}/asciidoc \
-      make-userguide
+      make-full-docs
+
+# asciidoc fails silently
+[ -f docs/index.html ] || exit 1
 %endif
+
+# restore unpatched docs (for install and checksum)
+mv docs/index.txt.fix docs/index.txt
 
 
 %install
@@ -81,15 +92,17 @@ mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 %if %{withhtmldoc}
-# Install the HTML Documentation
-install -m 644 docs/userguide.html $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/docs
+# Install the generated HTML Documentation
+for doc in docs/*.html docs/sources/*.html ; do
+  install -m 644 $doc $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/$(dirname $doc)
+done
 %endif
 
 
 %check
 cd %{pear_name}-%{version}%{?prever}
 
-# Version 1.0.0 : OK (25 tests, 42 assertions)
+# Version 1.0.2 : OK (25 tests, 42 assertions)
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --bootstrap $RPM_BUILD_ROOT%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
@@ -120,6 +133,9 @@ fi
 
 
 %changelog
+* Mon Jul 18 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-1
+- Version 1.0.2 (stable) - API 1.0.0 (stable)
+
 * Sat Jun 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.1-1
 - Version 1.0.1 (stable) - API 1.0.0 (stable)
 
