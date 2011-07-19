@@ -1,6 +1,6 @@
 %define nspr_version 4.8.6
 %define nss_version 3.12.8
-%define cairo_version 1.8.8
+%define cairo_version 1.10.0
 %define freetype_version 2.1.9
 %define lcms_version 1.19
 %define sqlite_version 3.6.22
@@ -80,7 +80,10 @@ BuildRequires:  nspr-devel >= %{nspr_version}
 %if 0%{?fedora} >= 13
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
+%if %{fedora} >= 15
+# Library requirements (cairo-tee >= 1.10)
 BuildRequires:  cairo-devel >= %{cairo_version}
+%endif
 BuildRequires:  libnotify-devel >= %{libnotify_version}
 BuildRequires:  libpng-devel
 BuildRequires:  libjpeg-devel
@@ -172,6 +175,9 @@ cat %{SOURCE10} 		\
 %endif
 %if %{fedora} < 12
   | grep -v system-nspr 	\
+%endif
+%if %{fedora} < 15
+  | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
   | grep -v disable-necko-wifi 	\

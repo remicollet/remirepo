@@ -179,6 +179,7 @@ Requires: nspr-devel >= %{nspr_version}
 Requires: nss-devel >= %{nss_version}
 %endif
 %if %{fedora} >= 15
+# Library requirements (cairo-tee >= 1.10)
 Requires: cairo-devel >= %{cairo_version}
 %endif
 Requires: libjpeg-devel
