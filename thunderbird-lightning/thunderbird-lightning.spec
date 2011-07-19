@@ -1,8 +1,9 @@
-%global nspr_version 4.8
+%global nspr_version 4.8.6
 %global nss_version 3.12.8
 %global cairo_version 1.8.8
 %global freetype_version 2.1.9
-%global sqlite_version 3.6.14
+%global lcms_version 1.19
+%global sqlite_version 3.6.22
 %global libnotify_version 0.4
 %global thunderbird_version 5.0
 %global moz_objdir objdir-tb
@@ -21,10 +22,12 @@
 %global version_internal  5
 %global mozappdir         %{_libdir}/%{name}-%{version_internal}
 
+%global lightprever b4
+
 Name:           thunderbird-lightning
 Summary:        The calendar extension to Thunderbird
 Version:        1.0
-Release:        0.45.b3pre%{?dist}
+Release:        0.45.%{lightprever}%{?dist}
 URL:            http://www.mozilla.org/projects/calendar/lightning/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Productivity
@@ -43,8 +46,12 @@ Patch1:         xulrunner-2.0-secondary-jit.patch
 Patch2:         xulrunner-5.0-secondary-ipc.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+%if 0%{?fedora} >= 12
 BuildRequires:  nspr-devel >= %{nspr_version}
+%endif
+%if 0%{?fedora} >= 13
 BuildRequires:  nss-devel >= %{nss_version}
+%endif
 %if 0%{?fedora} > 15
 BuildRequires:  nss-static
 %endif
@@ -66,7 +73,10 @@ BuildRequires:  freetype-devel >= %{freetype_version}
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
 BuildRequires:  hunspell-devel
+%if 0%{?fedora} >= 15
+# Need SQLITE_SECURE_DELETE option
 BuildRequires:  sqlite-devel >= %{sqlite_version}
+%endif
 BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  autoconf213
@@ -75,6 +85,12 @@ BuildRequires:  libcurl-devel
 BuildRequires:  python
 BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
+BuildRequires:  GConf2-devel
+BuildRequires:  lcms-devel >= %{lcms_version}
+%ifarch %{ix86} x86_64
+BuildRequires:  wireless-tools-devel
+%endif
+
 Requires:       thunderbird >= %{thunderbird_version}
 Obsoletes:      thunderbird-lightning-wcap <= 0.8
 Provides:       thunderbird-lightning-wcap = %{version}-%{release}
@@ -91,8 +107,16 @@ calendaring tasks.
 
 
 %prep
+echo TARGET = %{name}-%{version}-%{release}
+
 %setup -q -c
 cd %{tarballdir}
+
+lightprever=$(cat calendar/sunbird/config/version.txt)
+if [ "$lightprever" != "%{version}%{lightprever}" ]; then
+  echo Bad version, detected=$lightprever, expected=%{version}%{lightprever}
+  exit 1
+fi
 
 sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
     > version.patch
@@ -102,7 +126,29 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 %patch2 -p1 -b .secondary-ipc
 
 %{__rm} -f .mozconfig
-%{__cp} %{SOURCE10} .mozconfig
+#{__cp} %{SOURCE10} .mozconfig
+cat %{SOURCE10} 		\
+%if %{fedora} < 15
+  | grep -v system-sqlite 	\
+%endif
+%if %{fedora} < 13
+  | grep -v system-nss 		\
+%endif
+%if %{fedora} < 12
+  | grep -v system-nspr 	\
+%endif
+%ifarch %{ix86} x86_64
+  | grep -v disable-necko-wifi 	\
+%endif
+  | tee .mozconfig
+
+cat <<EOF | tee -a .mozconfig
+ac_add_options --enable-libnotify
+ac_add_options --enable-system-lcms
+%if %{fedora} >= 15
+ac_add_options --enable-system-sqlite
+%endif
+EOF
 
 # Fix permissions
 find -name \*.js | xargs chmod -x
@@ -176,6 +222,9 @@ find $RPM_BUILD_ROOT -name \*.so | xargs chmod 0755
 #===============================================================================
 
 %changelog
+* Tue Jul 19 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.45.b4
+- rebuild for remi repo (and fix release)
+
 * Tue Jul 19 2011 Dan Horák <dan[at]danny.cz> - 1.0-0.45.b3pre
 - add xulrunner patches for secondary arches
 
