@@ -27,7 +27,7 @@
 Name:           thunderbird-lightning
 Summary:        The calendar extension to Thunderbird
 Version:        1.0
-Release:        0.45.%{lightprever}%{?dist}
+Release:        0.46.%{lightprever}%{?dist}
 URL:            http://www.mozilla.org/projects/calendar/lightning/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Productivity
@@ -38,6 +38,9 @@ Source0:        http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases
 Source10:       thunderbird-mozconfig
 # Finds requirements provided outside of the current file set
 Source100:      find-external-requires
+
+# Only for langpacks
+Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/%{version}%{lightprever}/lightning.xpi
 
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-version.patch
@@ -111,8 +114,20 @@ calendaring tasks.
 
 %prep
 echo TARGET = %{name}-%{version}-%{release}
-
 %setup -q -c
+
+# Uncompress XPI for langpacks
+unzip -qo %{SOURCE4}
+
+# Remove dir which are not langpacks
+rm -rf chrome/lightning chrome/icons chrome/calendar chrome/*en-US
+# Prepare registration of the found langpacks
+touch chrome.add
+ls chrome \
+  | sed -n 's/\(\([^-]*\)-\(.*\)\)/locale \2 \3 chrome\/\1\/locale\/\3\/\2\//p' \
+  | tee -a chrome.add
+
+# Continue with Thunderbird
 cd %{tarballdir}
 
 lightprever=$(cat calendar/sunbird/config/version.txt)
@@ -212,6 +227,10 @@ unzip -qod $RPM_BUILD_ROOT%{gdata_extname} objdir-tb/mozilla/dist/xpi-stage/gdat
 # Fix up permissions
 find $RPM_BUILD_ROOT -name \*.so | xargs chmod 0755
 
+# Langpacks
+cp -a ../chrome/*-* $RPM_BUILD_ROOT%{lightning_extname}/chrome
+cat ../chrome.add >>$RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
+
 #===============================================================================
 
 %clean
@@ -228,6 +247,9 @@ find $RPM_BUILD_ROOT -name \*.so | xargs chmod 0755
 #===============================================================================
 
 %changelog
+* Tue Jul 19 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.46.b4
+- add langpacks
+
 * Tue Jul 19 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.45.b4
 - rebuild for remi repo (and fix release)
 
