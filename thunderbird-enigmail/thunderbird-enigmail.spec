@@ -31,7 +31,7 @@ Version:        1.2
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        1%{?dist}.1
+Release:        1%{?dist}.2
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -181,6 +181,7 @@ cat %{SOURCE10} 		\
 cat <<EOF | tee -a .mozconfig
 ac_add_options --enable-libnotify
 ac_add_options --enable-system-lcms
+ac_add_options --enable-chrome-format=jar
 %if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
@@ -254,13 +255,6 @@ make -f client.mk build
 pushd mailnews/extensions/enigmail
 ./makemake -r
 make
-popd
-
-pushd mozilla/dist/bin/chrome/enigmail
-zip ../enigmail.jar  -r content locale skin
-popd
-
-pushd mailnews/extensions/enigmail
 make xpi
 popd
 
@@ -289,6 +283,9 @@ cd %{tarballdir}
 #===============================================================================
 
 %changelog
+* Tue Jul 19 2011 Remi Collet <remi@fedoraproject.org> 1.2-1.2
+- add --enable-chrome-format=jar to generate enigmail.jar
+
 * Sun Jul 17 2011 Remi Collet <remi@fedoraproject.org> 1.2-1.1
 - fix BR (dos2unix + php-cli)
 
