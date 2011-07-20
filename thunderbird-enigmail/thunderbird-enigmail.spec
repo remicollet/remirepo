@@ -191,6 +191,9 @@ ac_add_options --enable-chrome-format=jar
 %if %{fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
+%if %{fedora} < 14
+ac_add_options --disable-libjpeg-turbo
+%endif
 EOF
 
 %if %{official_branding}
