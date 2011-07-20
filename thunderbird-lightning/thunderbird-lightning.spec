@@ -27,7 +27,7 @@
 Name:           thunderbird-lightning
 Summary:        The calendar extension to Thunderbird
 Version:        1.0
-Release:        0.46.%{lightprever}%{?dist}
+Release:        0.47.%{lightprever}%{?dist}
 URL:            http://www.mozilla.org/projects/calendar/lightning/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Productivity
@@ -47,6 +47,10 @@ Patch0:         thunderbird-version.patch
 # secondary arch patches inherited from xulrunner
 Patch1:         xulrunner-2.0-secondary-jit.patch
 Patch2:         xulrunner-5.0-secondary-ipc.patch
+
+# WCAP bug, see https://bugzilla.mozilla.org/668153
+Patch9:         lightning-wcap.patch
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if 0%{?fedora} >= 12
@@ -117,7 +121,7 @@ echo TARGET = %{name}-%{version}-%{release}
 %setup -q -c
 
 # Uncompress XPI for langpacks
-unzip -qo %{SOURCE4}
+unzip -qo %{SOURCE4} chrome/*
 
 # Remove dir which are not langpacks
 rm -rf chrome/lightning chrome/icons chrome/calendar chrome/*en-US
@@ -142,6 +146,9 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 
 %patch1 -p1 -b .secondary-jit
 %patch2 -p1 -b .secondary-ipc
+
+%patch9 -p1 -b .wcap
+
 
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
@@ -247,6 +254,9 @@ cat ../chrome.add >>$RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
 #===============================================================================
 
 %changelog
+* Wed Jul 20 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.47.b4
+- add patch for wcap bug https://bugzilla.mozilla.org/668153
+
 * Tue Jul 19 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.46.b4
 - add langpacks
 
