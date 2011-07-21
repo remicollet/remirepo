@@ -1,0 +1,13 @@
+diff -Naur PHPMailer_v5.1.orig/class.phpmailer.php PHPMailer_v5.1.new/class.phpmailer.php
+--- PHPMailer_v5.1.orig/class.phpmailer.php	2011-07-18 15:16:37.473177156 +0200
++++ PHPMailer_v5.1.new/class.phpmailer.php	2011-07-18 15:17:47.021871402 +0200
+@@ -1238,8 +1238,8 @@
+         $signed = tempnam("", "signed");
+         if (@openssl_pkcs7_sign($file, $signed, "file://".$this->sign_cert_file, array("file://".$this->sign_key_file, $this->sign_key_pass), NULL)) {
+           @unlink($file);
+-          @unlink($signed);
+           $body = file_get_contents($signed);
++          @unlink($signed);
+         } else {
+           @unlink($file);
+           @unlink($signed);
