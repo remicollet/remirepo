@@ -4,7 +4,7 @@
 %global pecl_name oauth
 
 Name:		php-pecl-oauth	
-Version:	1.2.1
+Version:	1.2.2
 Release:	1%{?dist}
 Summary:	PHP OAuth consumer extension
 Group:		Development/Languages
@@ -90,6 +90,9 @@ php -n \
 %{pecl_xmldir}/%{name}.xml
 
 %changelog
+* Fri Jul 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.2-1
+- update to 1.2.2
+
 * Fri Jul 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.1-1
 - rebuild for remi repo
 
