@@ -7,7 +7,7 @@
 #global svnrelease 12930
 
 Name:           glpi
-Version:        0.80.1
+Version:        0.80.2
 %if 0%{?svnrelease}
 Release:        2.svn%{svnrelease}%{?dist}
 %else
@@ -24,7 +24,7 @@ URL:            http://www.glpi-project.org/
 Source0:        glpi-0.78-%{svnrelease}.tar.gz
 Source99:       mktar.sh
 %else
-Source0:        https://forge.indepnet.net/attachments/download/918/glpi-0.80.1.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/943/glpi-0.80.2.tar.gz
 %endif
 
 Source1:        glpi-httpd.conf
@@ -81,6 +81,7 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0 -p1
+rm -f install/*.orig
 
 # Use system lib
 rm -rf lib/cache_lite
@@ -244,6 +245,10 @@ fi
 
 
 %changelog
+* Fri Jul 22 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.2-1
+- version 0.80.2 released (bug + security fix)
+  https://forge.indepnet.net/projects/glpi/versions/605
+
 * Tue Jun 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.1-1
 - version 0.80.1 released (bugfix)
   https://forge.indepnet.net/projects/glpi/versions/575
