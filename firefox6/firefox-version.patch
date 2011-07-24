@@ -1,0 +1,11 @@
+--- mozilla-beta/browser/installer/Makefile.in.version	2011-07-22 00:18:32.000000000 +0200
++++ mozilla-beta/browser/installer/Makefile.in	2011-07-24 13:51:05.628832753 +0200
+@@ -45,6 +45,8 @@ include $(DEPTH)/config/autoconf.mk
+ 
+ include $(topsrcdir)/config/rules.mk
+ 
++MOZ_APP_VERSION="__RPM_VERSION_INTERNAL__"
++
+ MOZ_PKG_REMOVALS = $(srcdir)/removed-files.in
+ 
+ MOZ_PKG_MANIFEST_P = $(srcdir)/package-manifest.in

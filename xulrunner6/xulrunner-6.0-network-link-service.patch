@@ -1,0 +1,152 @@
+diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp
+--- xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service	2011-07-22 00:18:50.000000000 +0200
++++ xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp	2011-07-24 12:12:47.462637547 +0200
+@@ -165,6 +165,7 @@ PRInt16 gBadPortList[] = { 
+ 
+ static const char kProfileChangeNetTeardownTopic[] = "profile-change-net-teardown";
+ static const char kProfileChangeNetRestoreTopic[] = "profile-change-net-restore";
++static const char kStartupTopic[] = "profile-after-change";
+ 
+ // Necko buffer cache
+ nsIMemory* nsIOService::gBufferCache = nsnull;
+@@ -235,6 +236,7 @@ nsIOService::Init()
+     if (observerService) {
+         observerService->AddObserver(this, kProfileChangeNetTeardownTopic, PR_TRUE);
+         observerService->AddObserver(this, kProfileChangeNetRestoreTopic, PR_TRUE);
++        observerService->AddObserver(this, kStartupTopic, PR_TRUE);
+         observerService->AddObserver(this, NS_XPCOM_SHUTDOWN_OBSERVER_ID, PR_TRUE);
+         observerService->AddObserver(this, NS_NETWORK_LINK_TOPIC, PR_TRUE);
+     }
+@@ -263,19 +265,9 @@ nsIOService::Init()
+ 
+     gIOService = this;
+ 
+-    // go into managed mode if we can, and chrome process
+-    if (XRE_GetProcessType() == GeckoProcessType_Default)
+-        mNetworkLinkService = do_GetService(NS_NETWORK_LINK_SERVICE_CONTRACTID);
+-
+-    if (!mNetworkLinkService)
+-        // We can't really determine if the machine has a usable network connection,
+-        // so let's cross our fingers!
+-        mManageOfflineStatus = PR_FALSE;
+-
+-    if (mManageOfflineStatus)
+-        TrackNetworkLinkStatusForOffline();
+-    else
+-        SetOffline(PR_FALSE);
++    // We can't really determine if the machine has a usable network connection,
++    // (mNetworkLinkService will be initialized later) so let's cross our fingers!
++    SetOffline(PR_FALSE);
+     
+     NS_TIME_FUNCTION_MARK("Set up network link service");
+ 
+@@ -311,6 +303,47 @@ nsIOService::InitializeSocketTransportSe
+     return rv;
+ }
+ 
++nsresult
++nsIOService::InitializeNetworkLinkService()
++{
++    NS_TIME_FUNCTION;
++
++    nsresult rv = NS_OK;
++
++    if (mNetworkLinkServiceInitialized)
++      return rv;
++
++#if defined(MOZ_PLATFORM_MAEMO)
++    // libdbusservice fails to initialize on Maemo platform, see Bug 627672
++    mNetworkLinkService = NULL;
++#else
++    // go into managed mode if we can, and chrome process
++    if (XRE_GetProcessType() == GeckoProcessType_Default)
++    {
++        mNetworkLinkService = do_GetService(NS_NETWORK_LINK_SERVICE_CONTRACTID, &rv);
++        if (NS_FAILED(rv)) {
++            NS_WARNING("failed to get network link service");
++            return rv;
++        }
++    }
++#endif
++
++    mNetworkLinkServiceInitialized = PR_TRUE;
++
++    if (!mNetworkLinkService) {
++        // We can't really determine if the machine has a usable network connection,
++        // so let's cross our fingers!
++        mManageOfflineStatus = PR_FALSE;
++    }
++
++    if (mManageOfflineStatus)
++        TrackNetworkLinkStatusForOffline();
++    else
++        SetOffline(PR_FALSE);
++    
++    return rv;
++}
++
+ nsIOService*
+ nsIOService::GetInstance() {
+     if (!gIOService) {
+@@ -694,6 +727,9 @@ nsIOService::NewChannel(const nsACString
+ PRBool
+ nsIOService::IsLinkUp()
+ {
++    NS_ASSERTION(mNetworkLinkServiceInitialized, 
++                 "network link service should be initialized");
++
+     if (!mNetworkLinkService) {
+         // We cannot decide, assume the link is up
+         return PR_TRUE;
+@@ -973,6 +1009,10 @@ nsIOService::Observe(nsISupports *subjec
+             }
+         } 
+     }
++    else if (!strcmp(topic, kStartupTopic)) {
++        // Lazy initialization of network link service (see bug 620472)
++        InitializeNetworkLinkService();
++    }
+     else if (!strcmp(topic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
+         // Remember we passed XPCOM shutdown notification to prevent any
+         // changes of the offline status from now. We must not allow going
+@@ -1090,6 +1130,11 @@ NS_IMETHODIMP
+ nsIOService::SetManageOfflineStatus(PRBool aManage) {
+     PRBool wasManaged = mManageOfflineStatus;
+     mManageOfflineStatus = aManage;
++
++    if (!mNetworkLinkServiceInitialized) {
++        InitializeNetworkLinkService();
++    }
++
+     if (mManageOfflineStatus && !wasManaged)
+         return TrackNetworkLinkStatusForOffline();
+     return NS_OK;
+@@ -1106,6 +1151,9 @@ nsIOService::TrackNetworkLinkStatusForOf
+ {
+     NS_ASSERTION(mManageOfflineStatus,
+                  "Don't call this unless we're managing the offline status");
++    NS_ASSERTION(mNetworkLinkServiceInitialized, 
++                "network link service should be set up");
++
+     if (!mNetworkLinkService)
+         return NS_ERROR_FAILURE;
+ 
+diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h.network-link-service xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h
+--- xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h.network-link-service	2011-07-22 00:18:50.000000000 +0200
++++ xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h	2011-07-24 12:12:47.463637550 +0200
+@@ -134,6 +134,7 @@ private:
+     NS_HIDDEN_(void) ParsePortList(nsIPrefBranch *prefBranch, const char *pref, PRBool remove);
+ 
+     nsresult InitializeSocketTransportService();
++    nsresult InitializeNetworkLinkService();
+ 
+ private:
+     PRPackedBool                         mOffline;
+@@ -151,6 +152,7 @@ private:
+     nsCOMPtr<nsPIDNSService>             mDNSService;
+     nsCOMPtr<nsIProtocolProxyService2>   mProxyService;
+     nsCOMPtr<nsINetworkLinkService>      mNetworkLinkService;
++    PRPackedBool                         mNetworkLinkServiceInitialized;
+     
+     // Cached protocol handlers
+     nsWeakPtr                            mWeakHandler[NS_N(gScheme)];
