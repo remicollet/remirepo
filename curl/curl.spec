@@ -4,7 +4,7 @@ Version: 7.21.7
 Release: 1%{?dist}
 License: MIT
 Group: Applications/Internet
-Source: http://curl.haxx.se/download/%{name}-%{version}.tar.lzma
+Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
 Source2: curlbuild.h
 Source3: hide_selinux.c
 
@@ -46,7 +46,7 @@ BuildRequires: zlib-devel
 BuildRequires: valgrind
 %endif
 
-Requires: libcurl = %{version}-%{release}
+Requires: libcurl4%{?_isa} = %{version}-%{release}
 
 # require at least the version of libssh2 that we were built against,
 # to ensure that we have the necessary symbols available (#525002, #642796)
@@ -60,23 +60,25 @@ uploading, HTTP form based upload, proxies, cookies, user+password
 authentication (Basic, Digest, NTLM, Negotiate, kerberos...), file transfer
 resume, proxy tunneling and a busload of other useful tricks. 
 
-%package -n libcurl
+%package -n libcurl4
 Summary: A library for getting files from web servers
 Group: Development/Libraries
 Requires: libssh2%{?_isa} >= %{libssh2_version}
 
-%description -n libcurl
-libcurl is a free and easy-to-use client-side URL transfer library, supporting
+%description -n libcurl4
+libcurl4 is a free and easy-to-use client-side URL transfer library, supporting
 FTP, FTPS, HTTP, HTTPS, SCP, SFTP, TFTP, TELNET, DICT, LDAP, LDAPS, FILE, IMAP,
 SMTP, POP3 and RTSP. libcurl supports SSL certificates, HTTP POST, HTTP PUT,
 FTP uploading, HTTP form based upload, proxies, cookies, user+password
 authentication (Basic, Digest, NTLM, Negotiate, Kerberos4), file transfer
 resume, http proxy tunneling and more.
 
-%package -n libcurl-devel
+libcurl4 allow to install latest version beside system libcurl
+
+%package -n libcurl4-devel
 Summary: Files needed for building applications with libcurl
 Group: Development/Libraries
-Requires: libcurl = %{version}-%{release}
+Requires: libcurl4%{?_isa} = %{version}-%{release}
 
 # From Fedora 14, %%{_datadir}/aclocal is included in the filesystem package
 %if 0%{?fedora} < 14
@@ -90,11 +92,15 @@ Requires: pkgconfig
 
 Provides: curl-devel = %{version}-%{release}
 Obsoletes: curl-devel < %{version}-%{release}
+# By design
+Conflicts: libcurl-devel
 
-%description -n libcurl-devel
-The libcurl-devel package includes header files and libraries necessary for
+%description -n libcurl4-devel
+The libcurl4-devel package includes header files and libraries necessary for
 developing programs which use the libcurl library. It contains the API
 documentation of the library, too.
+
+libcurl4-devel conflicts with libcurl-devel. Only 1 must be installed.
 
 %prep
 %setup -q
@@ -118,7 +124,11 @@ done
 rm -f tests/data/test1112
 
 # replace hard wired port numbers in the test suite
-sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ tests/data/test*
+%ifarch x86_64
+sed -i s/899\\\([0-9]\\\)/649\\1/ tests/data/test*
+%else
+sed -i s/899\\\([0-9]\\\)/329\\1/ tests/data/test*
+%endif
 
 %build
 [ -x /usr/kerberos/bin/krb5-config ] && KRB5_PREFIX="=/usr/kerberos"
@@ -162,7 +172,12 @@ export LD_PRELOAD
 
 # use different port range for 32bit and 64bit build, thus make it possible
 # to run both in parallel on the same machine
-./runtests.pl -a -b%{?__isa_bits}90 -p -v
+%ifarch x86_64
+./runtests.pl -a -b6490 -p -v
+%else
+./runtests.pl -a -b3290 -p -v
+%endif
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -175,7 +190,7 @@ install -d $RPM_BUILD_ROOT%{_datadir}/aclocal
 install -m 644 docs/libcurl/libcurl.m4 $RPM_BUILD_ROOT%{_datadir}/aclocal
 
 # Make libcurl-devel multilib-ready (bug #488922)
-%if 0%{?__isa_bits} == 64
+%ifarch x86_64
 %define _curlbuild_h curlbuild-64.h
 %else
 %define _curlbuild_h curlbuild-32.h
@@ -188,9 +203,9 @@ install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_includedir}/curl/curlbuild.h
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -n libcurl -p /sbin/ldconfig
+%post -n libcurl4 -p /sbin/ldconfig
 
-%postun -n libcurl -p /sbin/ldconfig
+%postun -n libcurl4 -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
@@ -201,11 +216,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/curl
 %{_mandir}/man1/curl.1*
 
-%files -n libcurl
+%files -n libcurl4
 %defattr(-,root,root,-)
-%{_libdir}/libcurl.so.*
+%{_libdir}/libcurl.so.4*
 
-%files -n libcurl-devel
+%files -n libcurl4-devel
 %defattr(-,root,root,-)
 %doc docs/examples/*.c docs/examples/Makefile.example docs/INTERNALS
 %doc docs/CONTRIBUTE docs/libcurl/ABI
@@ -218,6 +233,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Sun Jul 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-1
+- rebuild for remi repo with libcurl4 sub-packages
+
 * Thu Jun 23 2011 Kamil Dudka <kdudka@redhat.com> 7.21.7-1
 - new upstream release (fixes CVE-2011-2192)
 
