@@ -146,9 +146,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{firefox_dir_ver}/' %{P:%%PATCH0} \
   | grep -v with-system-nspr       \
   | grep -v with-system-nss        \
 %endif
-%if %{fedora} < 11
-  | grep -v enable-system-hunspell \
-%endif
 %if %{fedora} < 15
   | grep -v enable-system-cairo    \
 %endif
