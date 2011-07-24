@@ -1,0 +1,26 @@
+From d6c42a5bf66d4d458b20836573d6989e53f7d423 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 18 Feb 2011 17:49:59 +0100
+Subject: [PATCH] curl: work around valgrind bug (RHBZ#678518)
+
+https://bugs.kde.org/show_bug.cgi?id=264936
+---
+ tests/data/test165 |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/tests/data/test165 b/tests/data/test165
+index ddfe1e9..b2cbc4f 100644
+--- a/tests/data/test165
++++ b/tests/data/test165
+@@ -54,5 +54,8 @@ Accept: */*
+ Proxy-Connection: Keep-Alive
+ 
+ </protocol>
++<valgrind>
++disable
++</valgrind>
+ </verify>
+ </testcase>
+-- 
+1.7.4
+

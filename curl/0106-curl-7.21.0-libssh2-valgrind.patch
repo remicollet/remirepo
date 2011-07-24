@@ -1,0 +1,31 @@
+ tests/data/test604 |    3 +++
+ tests/data/test623 |    4 +++-
+ 2 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/tests/data/test604 b/tests/data/test604
+index af0259f..2bcf7d1 100644
+--- a/tests/data/test604
++++ b/tests/data/test604
+@@ -26,5 +26,8 @@ SFTP retrieval of nonexistent file
+ <errorcode>
+ 78
+ </errorcode>
++<valgrind>
++disable
++</valgrind>
+ </verify>
+ </testcase>
+diff --git a/tests/data/test623 b/tests/data/test623
+index 19e505b..38a41d2 100644
+--- a/tests/data/test623
++++ b/tests/data/test623
+@@ -36,6 +36,8 @@ for ssh upload test
+ <errorcode>
+ 79
+ </errorcode>
+-
++<valgrind>
++disable
++</valgrind>
+ </verify>
+ </testcase>

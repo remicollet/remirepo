@@ -1,0 +1,30 @@
+ tests/data/Makefile.am |    2 +-
+ tests/data/Makefile.in |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tests/data/Makefile.am b/tests/data/Makefile.am
+index 9370974..b553f54 100644
+--- a/tests/data/Makefile.am
++++ b/tests/data/Makefile.am
+@@ -69,7 +69,7 @@ test1078 test1079 test1080 test1081 test1082 test1083 test1084 test1085	\
+ test1086 test1087 test1088 test1089 test1090 test1091 test1092 test1093	\
+ test1094 test1095 test1096 test1097 test1098 test1099 test1100 test1101	\
+ test1102 test1103 test1104 test1105 test1106 test1107 test1108 test1109	\
+-test1110 test1111 test1112 test1113 test1114 test1115 test1116 test1117	\
++test1110 test1111          test1113 test1114 test1115 test1116 test1117	\
+ test1118 test1119 test1120 test1121 test1122 test1123 test1124 test1125	\
+ test1126 test1127 test1128 test1200 test1201 test1202 test1203 test1300	\
+ test1301 test1302 test1303 test1304 test1305 test1306 test1307 test1308	\
+diff --git a/tests/data/Makefile.in b/tests/data/Makefile.in
+index 435b126..1d71c4e 100644
+--- a/tests/data/Makefile.in
++++ b/tests/data/Makefile.in
+@@ -317,7 +317,7 @@ test1078 test1079 test1080 test1081 test1082 test1083 test1084 test1085	\
+ test1086 test1087 test1088 test1089 test1090 test1091 test1092 test1093	\
+ test1094 test1095 test1096 test1097 test1098 test1099 test1100 test1101	\
+ test1102 test1103 test1104 test1105 test1106 test1107 test1108 test1109	\
+-test1110 test1111 test1112 test1113 test1114 test1115 test1116 test1117	\
++test1110 test1111          test1113 test1114 test1115 test1116 test1117	\
+ test1118 test1119 test1120 test1121 test1122 test1123 test1124 test1125	\
+ test1126 test1127 test1128 test1200 test1201 test1202 test1203 test1300	\
+ test1301 test1302 test1303 test1304 test1305 test1306 test1307 test1308	\

@@ -1,0 +1,64 @@
+ curl-config.in |   22 ++++------------------
+ libcurl.pc.in  |    1 +
+ 2 files changed, 5 insertions(+), 18 deletions(-)
+
+diff --git a/curl-config.in b/curl-config.in
+index ebda129..b404827 100644
+--- a/curl-config.in
++++ b/curl-config.in
+@@ -43,7 +43,6 @@ Available values for OPTION include:
+   --libs      library linking information
+   --prefix    curl install prefix
+   --protocols newline separated list of enabled protocols
+-  --static-libs static libcurl library linking information
+   --version   output version information
+   --vernum    output the version information as a number (hexadecimal)
+ EOF
+@@ -74,7 +73,7 @@ while test $# -gt 0; do
+ 	;;
+ 
+     --cc)
+-	echo "@CC@"
++	echo "gcc"
+ 	;;
+ 
+     --prefix)
+@@ -136,25 +135,12 @@ while test $# -gt 0; do
+        	;;
+ 
+     --libs)
+-	if test "X@libdir@" != "X/usr/lib" -a "X@libdir@" != "X/usr/lib64"; then
+-	   CURLLIBDIR="-L@libdir@ "
+-	else
+-	   CURLLIBDIR=""
+-	fi
+-	if test "X@REQUIRE_LIB_DEPS@" = "Xyes"; then
+-	  echo ${CURLLIBDIR}-lcurl @LDFLAGS@ @LIBCURL_LIBS@ @LIBS@
+-	else
+-	  echo ${CURLLIBDIR}-lcurl @LDFLAGS@ @LIBS@
+-	fi
+-	;;
+-
+-    --static-libs)
+-	echo @libdir@/libcurl.@libext@ @LDFLAGS@ @LIBCURL_LIBS@ @LIBS@
++	pkg-config libcurl --libs
+ 	;;
+ 
+     --configure)
+-      echo @CONFIGURE_OPTIONS@
+-    ;;
++	pkg-config libcurl --variable=configure_options | sed 's/^"//;s/"$//'
++	;;
+ 
+     *)
+         echo "unknown option: $1"
+--- a/libcurl.pc.in
++++ b/libcurl.pc.in
+@@ -29,6 +29,7 @@ libdir=@libdir@
+ includedir=@includedir@
+ supported_protocols="@SUPPORT_PROTOCOLS@"
+ supported_features="@SUPPORT_FEATURES@"
++configure_options=@CONFIGURE_OPTIONS@
+ 
+ Name: libcurl
+ URL: http://curl.haxx.se/

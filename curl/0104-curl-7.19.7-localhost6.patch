@@ -1,0 +1,51 @@
+diff --git a/tests/data/test1083 b/tests/data/test1083
+index e441278..b0958b6 100644
+--- a/tests/data/test1083
++++ b/tests/data/test1083
+@@ -33,13 +33,13 @@ ipv6
+ http-ipv6
+ </server>
+  <name>
+-HTTP-IPv6 GET with ip6-localhost --interface
++HTTP-IPv6 GET with localhost6 --interface
+  </name>
+  <command>
+--g "http://%HOST6IP:%HTTP6PORT/1083" --interface ip6-localhost
++-g "http://%HOST6IP:%HTTP6PORT/1083" --interface localhost6
+ </command>
+ <precheck>
+-perl -e "if ('%CLIENT6IP' ne '[::1]') {print 'Test requires default test server host address';} else {exec './server/resolve --ipv6 ip6-localhost'; print 'Cannot run precheck resolve';}"
++perl -e "if ('%CLIENT6IP' ne '[::1]') {print 'Test requires default test server host address';} else {exec './server/resolve --ipv6 localhost6'; print 'Cannot run precheck resolve';}"
+ </precheck>
+ </client>
+ 
+diff --git a/tests/data/test241 b/tests/data/test241
+index 46eae1f..4e1632c 100644
+--- a/tests/data/test241
++++ b/tests/data/test241
+@@ -30,13 +30,13 @@ ipv6
+ http-ipv6
+ </server>
+  <name>
+-HTTP-IPv6 GET (using ip6-localhost)
++HTTP-IPv6 GET (using localhost6)
+  </name>
+  <command>
+--g "http://ip6-localhost:%HTTP6PORT/241"
++-g "http://localhost6:%HTTP6PORT/241"
+ </command>
+ <precheck>
+-./server/resolve --ipv6 ip6-localhost
++./server/resolve --ipv6 localhost6
+ </precheck>
+ </client>
+ 
+@@ -48,7 +48,7 @@ HTTP-IPv6 GET (using ip6-localhost)
+ </strip>
+ <protocol>
+ GET /241 HTTP/1.1
+-Host: ip6-localhost:%HTTP6PORT
++Host: localhost6:%HTTP6PORT
+ Accept: */*
+ 
+ </protocol>
