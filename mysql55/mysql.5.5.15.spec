@@ -24,7 +24,7 @@
 %define mysql_vendor_2          Sun Microsystems, Inc.
 %define mysql_vendor            Oracle and/or its affiliates
 
-%define mysql_version   5.5.10
+%define mysql_version   5.5.15
 
 %define mysqld_user     mysql
 %define mysqld_group    mysql
@@ -222,10 +222,10 @@
 Name:           MySQL%{product_suffix}
 Summary:        MySQL: a very fast and reliable SQL database server
 Group:          Applications/Databases
-Version:        5.5.10
+Version:        5.5.15
 Release:        %{release}%{?distro_releasetag:.%{distro_releasetag}}
 Distribution:   %{distro_description}
-License:        Copyright (c) 2000, 2011, %{mysql_vendor}.  All rights reserved.  Use is subject to license terms.  Under %{license_type} license as shown in the Description field.
+License:        Copyright (c) 2000, 2011, %{mysql_vendor}. All rights reserved. Under %{license_type} license as shown in the Description field.
 Source:         http://www.mysql.com/Downloads/MySQL-5.5/%{src_dir}.tar.gz
 URL:            http://www.mysql.com/
 Packager:       MySQL Build Team <build@mysql.com>
@@ -721,13 +721,12 @@ else
 fi
 # echo "Analyzed: SERVER_TO_START=$SERVER_TO_START"
 if [ ! -d $mysql_datadir/mysql ] ; then
-	mkdir $mysql_datadir/mysql;
+	mkdir $mysql_datadir/mysql $mysql_datadir/test
 	echo "MySQL RPM installation of version $NEW_VERSION" >> $STATUS_FILE
 else
 	# If the directory exists, we may assume it is an upgrade.
 	echo "MySQL RPM upgrade to version $NEW_VERSION" >> $STATUS_FILE
 fi
-if [ ! -d $mysql_datadir/test ] ; then mkdir $mysql_datadir/test; fi
 
 # ----------------------------------------------------------------------
 # Make MySQL start/shutdown automatically when the machine does it.
@@ -762,7 +761,12 @@ chown -R %{mysqld_user}:%{mysqld_group} $mysql_datadir
 # ----------------------------------------------------------------------
 # Initiate databases if needed
 # ----------------------------------------------------------------------
-%{_bindir}/mysql_install_db --rpm --user=%{mysqld_user}
+if ! grep '^MySQL RPM upgrade' $STATUS_FILE >/dev/null 2>&1 ; then
+	# Fix bug#45415: no "mysql_install_db" on an upgrade
+	# Do this as a negative to err towards more "install" runs
+	# rather than to miss one.
+	%{_bindir}/mysql_install_db --rpm --user=%{mysqld_user}
+fi
 
 # ----------------------------------------------------------------------
 # Upgrade databases if needed would go here - but it cannot be automated yet
@@ -947,6 +951,8 @@ echo "====="                                     >> $STATUS_HISTORY
 %doc %{license_files_server}
 %endif
 %doc %{src_dir}/Docs/ChangeLog
+%doc %{src_dir}/Docs/INFO_SRC*
+%doc release/Docs/INFO_BIN*
 %doc release/support-files/my-*.cnf
 
 %doc %attr(644, root, root) %{_infodir}/mysql.info*
@@ -1124,6 +1130,12 @@ echo "====="                                     >> $STATUS_HISTORY
 # merging BK trees)
 ##############################################################################
 %changelog
+* Thu Jul 07 2011 Joerg Bruehe <joerg.bruehe@oracle.com>
+
+- Fix bug#45415: "rpm upgrade recreates test database"
+  Let the creation of the "test" database happen only during a new installation,
+  not in an RPM upgrade.
+  This affects both the "mkdir" and the call of "mysql_install_db".
 
 * Thu Feb 09 2011 Joerg Bruehe <joerg.bruehe@oracle.com>
 
@@ -1131,6 +1143,10 @@ echo "====="                                     >> $STATUS_HISTORY
   ("datadir" and "pid-file"), the mechanism to detect a running server (on upgrade)
   should still work, and use these locations.
   The problem was that the fix for bug#27072 did not check for local settings.
+  
+* Mon Jan 31 2011 Joerg Bruehe <joerg.bruehe@oracle.com>
+
+- Install the new "manifest" files: "INFO_SRC" and "INFO_BIN".
 
 * Tue Nov 23 2010 Jonathan Perkin <jonathan.perkin@oracle.com>
 
