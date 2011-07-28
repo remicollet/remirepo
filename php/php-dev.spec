@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate 201106021630
-%global phpversion 5.3.7RC3
+%global phpversion 5.3.7RC4
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -62,7 +62,7 @@ Version: 5.3.7
 %if 0%{?snapdate:1}
 Release: 0.1.%{snapdate}%{?dist}
 %else
-Release: 0.4.RC3%{?dist}
+Release: 0.5.RC4%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -113,7 +113,7 @@ Patch91: php-5.3.7-oci8conf.patch
 
 # Missing functions when build with libedit
 # See http://bugs.php.net/54450
-Patch92: php-5.3.6-readline.patch
+Patch92: php-5.3.7-readline.patch
 
 # On EL4, include order breaks build against MySQL 5.5
 Patch93: php-5.3.6-mysqli.patch
@@ -1336,6 +1336,9 @@ fi
 %endif
 
 %changelog
+* Thu Jul 28 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.5.RC4
+- php 5.3.7RC4
+
 * Fri Jul 15 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.4.RC3
 - php 5.3.7RC3
 
