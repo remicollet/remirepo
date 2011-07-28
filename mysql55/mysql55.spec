@@ -1,6 +1,6 @@
 Name: mysql
-Version: 5.5.14
-Release: 2%{?dist}
+Version: 5.5.15
+Release: 1%{?dist}
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -42,7 +42,6 @@ Patch6: mysql-chain-certs.patch
 Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
 # Patch9: mysql-disable-test.patch
-Patch10: mysql-embedded-crash.patch
 Patch11: mysql-plugin-bool.patch
 Patch12: mysql-s390-tsc.patch
 Patch13: mysql-openssl-test.patch
@@ -200,7 +199,6 @@ rm -f Docs/mysql.info
 %patch7 -p1
 %patch8 -p1
 # si below %patch9 -p1
-%patch10 -p1
 %patch11 -p1
 %patch12 -p1
 %if 0%{?fedora} >= 9 || 0%{?rhel} >= 5
@@ -681,6 +679,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Thu Jul 28 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.15-1
+- update to MySQL 5.5.15 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-15.html
+
 * Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.14-2
 - sync with rawhide
 
