@@ -27,11 +27,11 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.2
+Version:        1.2.1
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        1%{?dist}.2
+Release:        1%{?dist}
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -288,6 +288,9 @@ cd %{tarballdir}
 #===============================================================================
 
 %changelog
+* Sat Jul 30 2011 Remi Collet <remi@fedoraproject.org> 1.2.1-1
+- Enigmail 1.2.1 for Thunderbird 5.0
+
 * Tue Jul 19 2011 Remi Collet <remi@fedoraproject.org> 1.2-1.2
 - add --enable-chrome-format=jar to generate enigmail.jar
 
