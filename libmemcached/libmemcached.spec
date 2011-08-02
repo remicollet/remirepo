@@ -13,6 +13,8 @@ URL:       http://libmemcached.org/
 # "-exhsieh" tarball.
 Source0:   libmemcached-%{version}-exhsieh.tar.gz
 
+Patch0:    libmemcached-test.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: cyrus-sasl-devel
 %if 0%{?fedora} >= 12
@@ -54,6 +56,8 @@ you will need to install %{name}-devel.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .test
 
 %{__mkdir} examples
 %{__cp} -p tests/*.{c,cpp,h} examples/

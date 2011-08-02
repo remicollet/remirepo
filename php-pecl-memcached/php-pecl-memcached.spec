@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcached
 Version:      1.0.2
-Release:      6%{?dist}
+Release:      7%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -33,12 +33,11 @@ Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
 
 
-%if 0%{?fedora}%{?rhel} > 4
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-%endif
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
 
 
 %description
@@ -84,6 +83,7 @@ extension=%{pecl_name}.so
 ;session.save_path="localhost:11211"
 EOF
 
+
 # Install XML package description
 %{__mkdir_p} %{buildroot}%{pecl_xmldir}
 %{__install} -m 644 ../package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -125,6 +125,10 @@ cd %{pecl_name}-%{version}
 
 
 %changelog
+* Sun Jul 31 2011  Remi Collet <remi@fedoraproject.org> - 1.0.2-7
+- rebuild against libmemcached 0.51
+- filter for RPM 4.8/4.9
+
 * Thu Jun 02 2011  Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-6
 - rebuild against libmemcached 0.49
 
