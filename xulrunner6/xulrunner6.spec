@@ -15,7 +15,7 @@
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
 %global gecko_dir_ver 6
 %global alpha_version 0
-%global beta_version  3
+%global beta_version  4
 %global rc_version    0
 
 %global mozappdir         %{_libdir}/%{shortname}-%{gecko_dir_ver}
@@ -54,7 +54,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
 Version:        6.0
-Release:        0.1.beta3.build2%{?dist}
+Release:        0.1.beta4%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -535,6 +535,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Aug 02 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0-0.1.beta4
+- update to 6.0 beta4
+
 * Sun Jul 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0-0.1.beta3.build2
 - update to 6.0 beta3 build2 candidate
 

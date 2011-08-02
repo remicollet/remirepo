@@ -10,13 +10,13 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Beta 3 Build 2 candidate
+%global mycomment       Beta 4
 %global firefox_dir_ver 6
 %global gecko_version   6.0
 %global alpha_version   0
-%global beta_version    3
+%global beta_version    4
 %global rc_version      0
-%global datelang        20110724
+%global datelang        20110802
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
@@ -46,9 +46,9 @@
 %endif
 
 Summary:        Mozilla Firefox Web browser
-Name:           %{shortname}
+Name:           %{shortname}6
 Version:        6.0
-Release:        0.1.beta3.build2%{?dist}
+Release:        0.1.beta4%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -70,6 +70,11 @@ Patch0:         firefox-version.patch
 # Fedora patches
 Patch12:        firefox-6.0-stub.patch
 Patch14:        firefox-5.0-asciidel.patch
+
+# Generate cache is broken
+# +++ Failed to get ScriptSecurityManager service, running without principals
+# Segmentation fault in xpcshell call
+Patch15:        firefox-6.0-nocache.patch
 
 # Upstream patches
 
@@ -126,6 +131,8 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{firefox_dir_ver}/' %{P:%%PATCH0} \
 # Fedora patches
 %patch12 -p2 -b .stub
 %patch14 -p1 -b .asciidel
+
+%patch15 -p0 -b .nocache
 
 # Upstream patches
 
@@ -217,10 +224,6 @@ make buildsymbols
 %install
 cd %{tarballdir}
 
-# SPOT: We need to make these symlinks, because it is easier to do that than to hack up 
-# the install scripts.
-ln -s %{xulrunner_libdir}/xpcshell dist/bin/xpcshell
-
 # set up our prefs and add it to the package manifest file, so it gets pulled in
 # to omni.jar which gets created during make install
 %{__cp} %{SOURCE12} dist/bin/defaults/preferences/all-redhat.js
@@ -273,7 +276,7 @@ XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,
 
 for s in 16 22 24 32 48 256; do
     %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps
-    %{__cp} -p other-licenses/branding/%{shortname}/default${s}.png \
+    %{__cp} -p browser/branding/official/default${s}.png \
                $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps/%{name}.png
 done
 
@@ -389,6 +392,8 @@ fi
 %{_datadir}/icons/hicolor/256x256/apps/%{name}.png
 %{_datadir}/icons/hicolor/32x32/apps/%{name}.png
 %{_datadir}/icons/hicolor/48x48/apps/%{name}.png
+# Probably not needed
+%{mozappdir}/defaults/preferences/channel-prefs.js
 
 %if %{include_debuginfo}
 #%{mozappdir}/crashreporter
@@ -400,6 +405,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Aug 02 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0-0.1.beta4
+- update to 6.0 beta4
+
 * Sun Jul 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0-0.1.beta3.build2
 - update to 6.0 beta3 build2 candidate
 
