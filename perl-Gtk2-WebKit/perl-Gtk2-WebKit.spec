@@ -10,9 +10,12 @@ Source0:        http://www.cpan.org/modules/by-module/Gtk2/Gtk2-WebKit-%{version
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl >= 1:5.8.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(ExtUtils::Depends)
+BuildRequires:  perl(ExtUtils::PkgConfig)
 BuildRequires:  perl(Gtk2)
 BuildRequires:  perl(Test::More) >= 0.89
 BuildRequires:  webkitgtk-devel
+BuildRequires:  perl-Glib-devel
 
 Requires:       perl(Gtk2)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
