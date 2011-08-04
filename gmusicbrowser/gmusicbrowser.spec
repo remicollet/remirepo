@@ -1,7 +1,7 @@
 Name:      gmusicbrowser
 Summary:   Jukebox for large collections of music files
 Version:   1.1.7
-Release:   1%{?dist}.1
+Release:   2%{?dist}
 License:   GPLv3+
 Group:     Applications/Multimedia
 
@@ -19,15 +19,17 @@ Requires(postun): desktop-file-utils
 # Optionnal Deps and not detected
 Requires:         perl(Gtk2::TrayIcon), perl(Locale::gettext) >= 1.04, perl(GStreamer)
 Requires:         vorbis-tools, flac123, alsa-utils 
-%if 0%{?fedora} >= 10
+%if 0%{?fedora} < 14
 Requires:         perl(Gtk2::MozEmbed)
+%else
+Requires:         perl(Gtk2::WebKit)
 %endif
 
 
 # We need to keep perl(Gtk2) perl(Gtk2::MozEmbed) perl(Gtk2::Notify)
-# perl(Gtk2::Pango) perl(Gtk2::TrayIcon)
+# perl(Gtk2::Pango) perl(Gtk2::TrayIcon) perl(Gtk2::WebKit)
 
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+# RPM 4.8 style:
 %{?filter_setup:
 %filter_from_provides /perl(/d
 %filter_from_requires /perl(simple_http)/d
@@ -48,12 +50,30 @@ Requires:         perl(Gtk2::MozEmbed)
 %filter_from_requires /perl(Gtk2::ToggleButton)/d
 %filter_from_requires /perl(Gtk2::V/d
 %filter_from_requires /perl(Gtk2::W/d
-%?perl_default_filter
 }
-%else
-# Only perl* retrieved which aren't needed
-AutoProv: no
-%endif
+%{?perl_default_filter}
+
+# RPM 4.9 style:
+# Filter underspecified dependencies
+%global __provides_exclude %{?__provides_exclude:__provides_exclude|}^perl\\(
+%global __requires_exclude %{?__requires_exclude:__requires_exclude|}^perl\\(simple_http\\)
+%global __requires_exclude %__requires_exclude|^perl\\(gmusicbrowser
+%global __requires_exclude %__requires_exclude|^perl\\(Layout::Label\\)
+%global __requires_exclude %__requires_exclude|^perl\\(SongArray)
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::B
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::C
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::D
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::E
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::F
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::H
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::L
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::Notebook\\)
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::O
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::ProgressBar\\)
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::S
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::ToggleButton\\)
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::V
+%global __requires_exclude %__requires_exclude|^perl\\(Gtk2::W
 
 
 %description
@@ -72,17 +92,6 @@ Main features :
 
 %prep
 %setup -q
-
-%if 0%{?fedora} < 11 && 0%{?rhel} < 6
-cat <<EOF > %{name}-req
-#!/bin/sh
-%{__perl_requires} $* |\
-sed -e '/perl(gmusicbrowser/d' -e '/perl(simple_http)/d'
-EOF
-
-%define __perl_requires %{_builddir}/%{name}-%{version}/%{name}-req
-chmod +x %{__perl_requires}
-%endif
 
 
 %build
@@ -130,6 +139,11 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Thu Aug 04 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.7-2
+- only requires perl(Gtk2::MozEmbed) on fedora < 15
+  else requires perl(Gtk2::WebKit)
+- fix filter for RPM 4.9
+
 * Sun Mar 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.7-1.1
 - missing BR on perl-devel for filter
 
