@@ -60,6 +60,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
+# request for License
+# https://rt.cpan.org/Public/Bug/Display.html?id=70048
 %doc Changes maps README
 %{perl_vendorarch}/auto/Gtk2
 %{perl_vendorarch}/Gtk2/*
