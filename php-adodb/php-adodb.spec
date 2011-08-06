@@ -2,7 +2,7 @@
 
 Name:           php-adodb
 Summary:        Database abstraction layer for PHP
-Version:        5.11
+Version:        5.12
 Release:        1%{?dist}
 
 License:        BSD or LGPLv2+
@@ -11,7 +11,7 @@ Group:          Development/Libraries
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Source0:        http://downloads.sourceforge.net/adodb/adodb%{tarballversion}.tgz
+Source0:        http://downloads.sourceforge.net/adodb/adodb%{tarballversion}.zip
 
 Requires:       php-common
 
@@ -59,6 +59,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_var}/www/icons/*
 
 %changelog
+* Sat Aug 06 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.12-1
+- rebuild for remi repository
+
+* Fri Aug 05 2011 Gianluca Sforna <giallu@gmail.com> - 5.12-1
+- New upstream release
+
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.11-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Thu May 27 2010 Remi Collet <RPMS@FamilleCollet.com> - 5.11-1
 - rebuild for remi repository
 
