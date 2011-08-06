@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-OcsDeploy
 Version:        1.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        OCS Inventory NG Software deployment support for FusionInventory Agent
 Summary(fr):    Gestion du déploiement logiciel OCS Inventory NG avec FusionInventory
 License:        GPLv2+
@@ -27,15 +27,11 @@ Requires:       perl(POE::Component::Client::HTTP)
 %endif
 
 
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-# This work only on recent fedora - But only lates rpm detect this
-%{?filter_setup:
-%filter_from_requires /perl(Win32/d
-%?perl_default_filter
-}
-%else
+# RPM 4.8
+%{?filter_from_requires: %filter_from_requires /perl(Win32/d}
 %{?perl_default_filter}
-%endif
+# RPM 4.9
+%global __requires_exclude %{?__requires_exclude:__requires_exclude|}^perl\\(Win32
 
 
 %description
@@ -52,6 +48,7 @@ déploiement de logiciel envoyés par un serveur OCS Inventory NG.
 %setup -q -n FusionInventory-Agent-Task-OcsDeploy-%{version}
 
 # Filtering auto Requires detection
+# Only used for old fedora and RHEL version
 cat <<EOF | tee %{name}-req
 #!/bin/sh
 %{__perl_requires} $* | \
@@ -100,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 06 2011 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
+- adapt filter
+
 * Fri May 13 2011 Remi Collet <Fedora@famillecollet.com> - 1.1.0-2
 - fix f15 build (filter perl(Win32::OLE) dependency)
 
