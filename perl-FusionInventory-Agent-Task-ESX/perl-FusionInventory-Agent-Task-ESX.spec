@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-ESX
 Version:        1.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        vCenter/ESX/ESXi remote inventory for FusionInventory Agent
 License:        GPLv2+
 Group:          Development/Libraries
@@ -18,6 +18,7 @@ BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(XML::TreePP)
+BuildRequires:  perl(LWP::Protocol::https)
 
 Requires:       perl(FusionInventory::Agent) >= 2.1.9
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -67,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 08 2011 Remi Collet <Fedora@famillecollet.com> 1.1.2-2
+- add BR perl(LWP::Protocol::https)
+
 * Tue Jun 28 2011 Remi Collet <Fedora@famillecollet.com> 1.1.2-1
 - update to 1.1.2
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-ESX-1.1.2/Changes
