@@ -1,0 +1,11 @@
+--- pythonmod/pythonmod.c.orig	2011-08-08 20:45:48.344987246 +0200
++++ pythonmod/pythonmod.c	2011-08-08 21:31:41.429025557 +0200
+@@ -153,6 +153,8 @@
+    }
+    PyRun_SimpleString("sys.path.append('"RUN_DIR"') \n");
+    PyRun_SimpleString("sys.path.append('"SHARE_DIR"') \n");
++   PyRun_SimpleString("import sysconfig \n");
++   PyRun_SimpleString("sys.path.append(sysconfig.get_path('purelib')) \n");
+    if (PyRun_SimpleString("from unboundmodule import *\n") < 0)
+    {
+       log_err("pythonmod: cannot initialize core module: unboundmodule.py"); 
