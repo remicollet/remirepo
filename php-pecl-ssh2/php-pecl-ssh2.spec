@@ -3,11 +3,11 @@
 %global php_version %(php-config --version 2>/dev/null || echo 0)
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
-%define pecl_name ssh2
+%global pecl_name ssh2
 
 Name:           php-pecl-ssh2
 Version:        0.11.2
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 Summary:        Bindings for the libssh2 library
 
 License:        PHP
@@ -30,6 +30,13 @@ Requires:       php(api) = %{php_core_api}
 # for EL-5
 Requires:       php-api = %{php_apiver}
 %endif
+
+
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
 
 
 %description
@@ -101,6 +108,10 @@ fi
 
 
 %changelog
+* Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.11.2-1.1
+- EL-5 rebuild for libssh2
+- add filter
+
 * Sat Apr 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.11.2-1
 - update to 0.11.2
 - add minimal %%check
