@@ -1,0 +1,30 @@
+From 5eb2396cd15cbbf73b02ad6bbcc313167330c2b5 Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Thu, 4 Aug 2011 23:22:48 +0200
+Subject: [PATCH] segfault fixed
+
+When using both -J and a single -O with multiple URLs, a missing init
+could cause badness.
+
+Bug: http://curl.haxx.se/mail/lib-2011-07/0126.html and
+     http://bugzilla.redhat.com/723075
+Reported by: Paul Howarth and Garrett Holmstrom
+---
+ src/main.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/src/main.c b/src/main.c
+index 6dcf333..eae45de 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -4898,6 +4898,7 @@ operate(struct Configurable *config, int argc, argv_item_t argv[])
+     outs.stream = stdout;
+     outs.config = config;
+     outs.bytes = 0; /* nothing written yet */
++    outs.filename = NULL;
+ 
+     /* save outfile pattern before expansion */
+     if(urlnode->outfile) {
+-- 
+1.7.4.4
+

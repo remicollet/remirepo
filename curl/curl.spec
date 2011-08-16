@@ -1,12 +1,24 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 7.21.7
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
 Source2: curlbuild.h
 Source3: hide_selinux.c
+
+# add a new option CURLOPT_GSSAPI_DELEGATION (#719939)
+Patch1: 0001-curl-7.21.7-a7864c4.patch
+
+# fix SIGSEGV of curl -O -J given more than one URLs (#723075)
+Patch2: 0002-curl-7.21.7-5eb2396.patch
+
+# introduce the --delegation option of curl (#730444)
+Patch3: 0003-curl-7.21.7-5538904.patch
+
+# initialize NSS with no database if the selected database is broken (#728562)
+Patch4: 0004-curl-7.21.7-d6f319f.patch
 
 # patch making libcurl multilib ready
 Patch101: 0101-curl-7.21.1-multilib.patch
@@ -112,6 +124,12 @@ for f in CHANGES README; do
     mv -f ${f}.utf8 ${f}
 done
 
+# upstream patches (already applied)
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+
 # Fedora patches
 %patch101 -p1
 %patch102 -p1
@@ -170,12 +188,15 @@ gcc -o hide_selinux.so -fPIC -shared %{SOURCE3}
 LD_PRELOAD="`readlink -f ./hide_selinux.so`:$LD_PRELOAD"
 export LD_PRELOAD
 
+# test 310, 311, 312 requires libnsspem.so not provides in latest nss for EL-5
+DISABLED="!310 !311 !312"
+
 # use different port range for 32bit and 64bit build, thus make it possible
 # to run both in parallel on the same machine
 %ifarch x86_64
-./runtests.pl -a -b6490 -p -v
+./runtests.pl -a -b6490 -p -v $DISABLED
 %else
-./runtests.pl -a -b3290 -p -v
+./runtests.pl -a -b3290 -p -v $DISABLED
 %endif
 
 
@@ -233,6 +254,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-3
+- sync with rawhide
+- disable tests which requires libnsspem.so (not available in EL-5)
+
+* Mon Aug 15 2011 Kamil Dudka <kdudka@redhat.com> 7.21.7-3
+- fix SIGSEGV of curl -O -J given more than one URLs (#723075)
+- introduce the --delegation option of curl (#730444)
+- initialize NSS with no database if the selected database is broken (#728562)
+
+* Wed Aug 03 2011 Kamil Dudka <kdudka@redhat.com> 7.21.7-2
+- add a new option CURLOPT_GSSAPI_DELEGATION (#719939)
+
 * Sun Jul 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-1
 - rebuild for remi repo with libcurl4 sub-packages
 
