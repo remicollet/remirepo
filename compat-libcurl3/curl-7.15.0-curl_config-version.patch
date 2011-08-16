@@ -1,0 +1,12 @@
+--- curl-7.15.0/configure.ac.ver	2005-11-30 13:33:54.360624896 +0100
++++ curl-7.15.0/configure.ac	2005-11-30 13:34:14.009637792 +0100
+@@ -43,7 +43,8 @@
+ 
+ dnl
+ dnl we extract the numerical version for curl-config only
+-VERSIONNUM=`$SED -ne 's/^#define LIBCURL_VERSION_NUM 0x\(.*\)/\1/p' ${srcdir}/include/curl/curlver.h`
++VERSIONNUM=`$SED  -rne 's/^#define LIBCURL_VERSION_(MAJOR|MINOR|PATCH) ([^ ]*)$/\2/p' ${srcdir}/include/curl/curlver.h | xargs -n1 printf %02x; echo`
++ 
+ AC_SUBST(VERSIONNUM)
+ 
+ dnl Solaris pkgadd support definitions

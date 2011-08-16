@@ -62,7 +62,7 @@ Version: 5.3.7
 %if 0%{?snapdate:1}
 Release: 0.1.%{snapdate}%{?dist}
 %else
-Release: 0.6.RC5%{?dist}
+Release: 0.7.RC5%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -1336,6 +1336,9 @@ fi
 %endif
 
 %changelog
+* Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> 5.3.7-0.7.RC5
+- EL-5 rebuild for libcurl4
+
 * Thu Aug 11 2011 Remi Collet <rpms@famillecollet.com> 5.3.7-0.6.RC5
 - php 5.3.7RC5
 

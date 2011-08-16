@@ -1,0 +1,12 @@
+diff -rup curl-7.15.5.orig/lib/select.c curl-7.15.5/lib/select.c
+--- curl-7.15.5.orig/lib/select.c	2006-05-05 12:24:27.000000000 +0200
++++ curl-7.15.5/lib/select.c	2009-10-27 15:17:49.144741885 +0100
+@@ -113,7 +113,7 @@ int Curl_select(curl_socket_t readfd, cu
+   if (writefd != CURL_SOCKET_BAD) {
+     if (pfd[num].revents & POLLOUT)
+       ret |= CSELECT_OUT;
+-    if (pfd[num].revents & POLLERR)
++    if (pfd[num].revents & (POLLERR|POLLHUP))
+       ret |= CSELECT_ERR;
+   }
+ 

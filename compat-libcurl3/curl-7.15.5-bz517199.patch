@@ -1,0 +1,38 @@
+diff -rup curl-7.15.5.orig/lib/http.c curl-7.15.5/lib/http.c
+--- curl-7.15.5.orig/lib/http.c	2009-08-14 13:04:26.830607819 +0200
++++ curl-7.15.5/lib/http.c	2009-08-14 13:04:46.772482970 +0200
+@@ -1967,6 +1967,14 @@ CURLcode Curl_http(struct connectdata *c
+                 te
+                 );
+ 
++    /*
++     * Free userpwd now --- cannot reuse this for Negotiate and possibly NTLM
++     * with basic and digest, it will be freed anyway by the next request
++     */
++
++    Curl_safefree (conn->allocptr.userpwd);
++    conn->allocptr.userpwd = NULL;
++
+     if(result)
+       return result;
+ 
+diff -rup curl-7.15.5.orig/lib/http_negotiate.c curl-7.15.5/lib/http_negotiate.c
+--- curl-7.15.5.orig/lib/http_negotiate.c	2009-08-14 13:04:26.846608324 +0200
++++ curl-7.15.5/lib/http_negotiate.c	2009-08-14 13:05:15.467037550 +0200
+@@ -248,7 +248,6 @@ int Curl_input_negotiate(struct connectd
+ CURLcode Curl_output_negotiate(struct connectdata *conn)
+ {
+   struct negotiatedata *neg_ctx = &conn->data->state.negotiate;
+-  OM_uint32 minor_status;
+   char *encoded = NULL;
+   int len;
+ 
+@@ -300,7 +299,7 @@ CURLcode Curl_output_negotiate(struct co
+   conn->allocptr.userpwd =
+     aprintf("Authorization: %s %s\r\n", neg_ctx->protocol, encoded);
+   free(encoded);
+-  gss_release_buffer(&minor_status, &neg_ctx->output_token);
++  Curl_cleanup_negotiate (conn->data);
+   return (conn->allocptr.userpwd == NULL) ? CURLE_OUT_OF_MEMORY : CURLE_OK;
+ }
+ 

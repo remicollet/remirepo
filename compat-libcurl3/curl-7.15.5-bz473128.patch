@@ -1,0 +1,12 @@
+diff -rup curl-7.15.5.orig/docs/curl.1 curl-7.15.5/docs/curl.1
+--- curl-7.15.5.orig/docs/curl.1	2006-07-27 01:20:47.000000000 +0200
++++ curl-7.15.5/docs/curl.1	2009-10-27 13:27:18.996742031 +0100
+@@ -924,6 +924,8 @@ mutually exclusive.
+ If this option is used several times, the last one will be used. (This option
+ was previously wrongly documented and used as --socks without the number
+ appended.)
++
++This option (as well as \fI--socks4\fP) does not work with IPv6, FTPS or LDAP.
+ .IP "--stderr <file>"
+ Redirect all writes to stderr to the specified file instead. If the file name
+ is a plain '-', it is instead written to stdout. This option has no point when

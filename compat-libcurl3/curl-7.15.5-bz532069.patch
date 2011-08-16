@@ -1,0 +1,159 @@
+diff -rup curl-7.15.5.orig/CHANGES curl-7.15.5/CHANGES
+--- curl-7.15.5.orig/CHANGES	2006-08-07 08:27:59.000000000 +0200
++++ curl-7.15.5/CHANGES	2009-10-30 23:42:35.373803847 +0100
+@@ -6,6 +6,16 @@
+ 
+                                   Changelog
+ 
++Daniel Stenberg (25 Sep 2009)
++- Chris Mumford filed bug report #2861587
++  (http://curl.haxx.se/bug/view.cgi?id=2861587) identifying that libcurl used
++  the OpenSSL function X509_load_crl_file() wrongly and failed if it would
++  load a CRL file with more than one certificate within. This is now fixed.
++  
++Daniel Stenberg (6 Jun 2008)
++- Axel Tillequin and Arnaud Ebalard added support for CURLOPT_CRLFILE, for
++  OpenSSL, NSS and GnuTLS-built libcurls.
++
+ Version 7.15.5 (7 August 2006)
+ 
+ Daniel (2 August 2006)
+diff -rup curl-7.15.5.orig/docs/libcurl/curl_easy_setopt.3 curl-7.15.5/docs/libcurl/curl_easy_setopt.3
+--- curl-7.15.5.orig/docs/libcurl/curl_easy_setopt.3	2009-10-30 23:41:03.845741285 +0100
++++ curl-7.15.5/docs/libcurl/curl_easy_setopt.3	2009-10-30 23:42:35.374803796 +0100
+@@ -1260,6 +1260,24 @@ makes sense only when used in combinatio
+ is zero, \fICURLOPT_CAPATH\fP need not even indicate an accessible
+ path.  The \fICURLOPT_CAPATH\fP function apparently does not work in
+ Windows due to some limitation in openssl. (Added in 7.9.8)
++.IP CURLOPT_CRLFILE
++Pass a char * to a zero terminated string naming a file with the concatenation
++of CRL (in PEM format) to use in the certificate validation that occurs during
++the SSL exchange.
++
++When curl is built to use NSS or GnuTLS, there is no way to influence the use
++of CRL passed to help in the verification process. When libcurl is built with
++OpenSSL support, X509_V_FLAG_CRL_CHECK and X509_V_FLAG_CRL_CHECK_ALL are both
++set, requiring CRL check against all the elements of the certificate chain if
++a CRL file is passed.
++
++This option makes sense only when used in combination with the
++\fICURLOPT_SSL_VERIFYPEER\fP option.
++
++A specific error code (CURLE_SSL_CRL_BADFILE) is defined with the option. It
++is returned when the SSL exchange fails because the CRL file cannot be loaded.
++Note that a failure in certificate verification due to a revocation information
++found in the CRL does not trigger this specific error.
+ .IP CURLOPT_RANDOM_FILE
+ Pass a char * to a zero terminated file name. The file will be used to read
+ from to seed the random engine for SSL. The more random the specified file is,
+diff -rup curl-7.15.5.orig/docs/libcurl/libcurl-errors.3 curl-7.15.5/docs/libcurl/libcurl-errors.3
+--- curl-7.15.5.orig/docs/libcurl/libcurl-errors.3	2006-06-24 23:49:40.000000000 +0200
++++ curl-7.15.5/docs/libcurl/libcurl-errors.3	2009-10-30 23:42:35.374803796 +0100
+@@ -208,6 +208,8 @@ No such TFTP user
+ Character conversion failed
+ .IP "CURLE_CONV_REQD (76)"
+ Caller must register conversion callbacks
++.IP "CURLE_SSL_CRL_BADFILE (82)"
++Failed to load CRL file (Added in 7.19.0)
+ .SH "CURLMcode"
+ This is the generic return code used by functions in the libcurl multi
+ interface. Also consider \fIcurl_multi_strerror(3)\fP.
+diff -rup curl-7.15.5.orig/include/curl/curl.h curl-7.15.5/include/curl/curl.h
+--- curl-7.15.5.orig/include/curl/curl.h	2009-10-30 23:41:03.846741384 +0100
++++ curl-7.15.5/include/curl/curl.h	2009-10-30 23:42:35.375803976 +0100
+@@ -339,6 +339,8 @@ typedef enum {
+                                     CURLOPT_CONV_FROM_NETWORK_FUNCTION,
+                                     CURLOPT_CONV_TO_NETWORK_FUNCTION, and
+                                     CURLOPT_CONV_FROM_UTF8_FUNCTION */
++  CURLE_SSL_CRL_BADFILE = 82,    /* 82 - could not load CRL file, missing or
++                                    wrong format (Added in 7.19.0) */
+   CURL_LAST /* never use! */
+ } CURLcode;
+ 
+@@ -995,6 +997,9 @@ typedef enum {
+   /* Pointer to command string to send if USER/PASS fails. */
+   CINIT(FTP_ALTERNATIVE_TO_USER, OBJECTPOINT, 147),
+ 
++  /* CRL file */
++  CINIT(CRLFILE, OBJECTPOINT, 169),
++
+   /* set the bitmask for the protocols that are allowed to be used for the
+      transfer, which thus helps the app which takes URLs from users or other
+      external inputs and want to restrict what protocol(s) to deal
+diff -rup curl-7.15.5.orig/lib/ssluse.c curl-7.15.5/lib/ssluse.c
+--- curl-7.15.5.orig/lib/ssluse.c	2009-10-30 23:41:03.852866415 +0100
++++ curl-7.15.5/lib/ssluse.c	2009-10-30 23:45:20.895778697 +0100
+@@ -1305,6 +1305,32 @@ Curl_ossl_connect_step1(struct connectda
+           data->set.ssl.CAfile ? data->set.ssl.CAfile : "none",
+           data->set.ssl.CApath ? data->set.ssl.CApath : "none");
+   }
++
++  if (data->set.ssl.CRLfile) {
++    /* tell SSL where to find CRL file that is used to check certificate
++     * revocation */
++    X509_LOOKUP *lookup =
++      X509_STORE_add_lookup(connssl->ctx->cert_store,X509_LOOKUP_file());
++    if ( !lookup ||
++         (!X509_load_crl_file(lookup,data->set.ssl.CRLfile,
++			     X509_FILETYPE_PEM)) ) {
++      failf(data,"error loading CRL file :\n"
++            "  CRLfile: %s\n",
++            data->set.ssl.CRLfile?
++            data->set.ssl.CRLfile: "none");
++      return CURLE_SSL_CRL_BADFILE;
++    }
++    else {
++      /* Everything is fine. */
++      infof(data, "successfully load CRL file:\n");
++      X509_STORE_set_flags(connssl->ctx->cert_store,
++			   X509_V_FLAG_CRL_CHECK|X509_V_FLAG_CRL_CHECK_ALL);
++    }
++    infof(data,
++          "  CRLfile: %s\n", data->set.ssl.CRLfile ?
++	  data->set.ssl.CRLfile: "none");
++  }
++
+   /* SSL always tries to verify the peer, this only says whether it should
+    * fail to connect if the verification fails, or if it should continue
+    * anyway. In the latter case the result of the verification is checked with
+diff -rup curl-7.15.5.orig/lib/strerror.c curl-7.15.5/lib/strerror.c
+--- curl-7.15.5.orig/lib/strerror.c	2006-08-01 11:39:01.000000000 +0200
++++ curl-7.15.5/lib/strerror.c	2009-10-30 23:42:35.376803807 +0100
+@@ -241,6 +241,9 @@ curl_easy_strerror(CURLcode error)
+   case CURLE_FTP_SSL_FAILED:
+     return "Requested FTP SSL level failed";
+ 
++  case CURLE_SSL_CRL_BADFILE:
++    return "Failed to load CRL file (path? access rights?, format?)";
++
+   case CURLE_SEND_FAIL_REWIND:
+     return "Send failed since rewinding of the data stream failed";
+ 
+diff -rup curl-7.15.5.orig/lib/url.c curl-7.15.5/lib/url.c
+--- curl-7.15.5.orig/lib/url.c	2009-10-30 23:41:03.848741261 +0100
++++ curl-7.15.5/lib/url.c	2009-10-30 23:42:35.378944509 +0100
+@@ -1360,6 +1360,13 @@ CURLcode Curl_setopt(struct SessionHandl
+     /* This does not work on windows. */
+     data->set.ssl.CApath = va_arg(param, char *);
+     break;
++  case CURLOPT_CRLFILE:
++    /*
++     * Set CRL file info for SSL connection. Specify file name of the CRL
++     * to check certificates revocation
++     */
++    data->set.ssl.CRLfile = va_arg(param, char *);
++    break;
+   case CURLOPT_TELNETOPTIONS:
+     /*
+      * Set a linked list of telnet options
+diff -rup curl-7.15.5.orig/lib/urldata.h curl-7.15.5/lib/urldata.h
+--- curl-7.15.5.orig/lib/urldata.h	2009-10-30 23:41:03.849741307 +0100
++++ curl-7.15.5/lib/urldata.h	2009-10-30 23:42:35.379944623 +0100
+@@ -171,6 +171,7 @@ struct ssl_config_data {
+                             2: CN must match hostname */
+   char *CApath;          /* DOES NOT WORK ON WINDOWS */
+   char *CAfile;          /* cerficate to verify peer against */
++  char *CRLfile;         /* CRL to check cerficate revocation */
+   char *random_file;     /* path to file containing "random" data */
+   char *egdsocket;       /* path to file containing the EGD daemon socket */
+   char *cipher_list;     /* list of ciphers to use */

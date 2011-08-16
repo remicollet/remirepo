@@ -1,0 +1,71 @@
+From ab76eba3c4dcb076f33ae3b6a8ce3fab98bad9d5 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Sun, 23 Jan 2011 16:42:31 +0100
+Subject: [PATCH] ldap: bz#655073
+
+Patch originally written by Pierre Carrier.
+---
+ lib/ldap.c |   26 ++++++++++++++++++++++++--
+ 1 files changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/lib/ldap.c b/lib/ldap.c
+index 5b845a4..69b8aa9 100644
+--- a/lib/ldap.c
++++ b/lib/ldap.c
+@@ -63,6 +63,7 @@
+ #include "ldap.h"
+ #include "memory.h"
+ #include "base64.h"
++#include "http.h"
+ 
+ #define _MPRINTF_REPLACE /* use our functions only */
+ #include <curl/mprintf.h>
+@@ -253,6 +254,7 @@ CURLcode Curl_ldap(struct connectdata *conn, bool *done)
+   void   (*ldap_free_urldesc)(void *);
+ #endif
+   void  *(__cdecl *ldap_init)(char *, int);
++  int    (__cdecl *ldap_init_fd)(int, int, char *, void *);
+   int    (__cdecl *ldap_simple_bind_s)(void *, char *, char *);
+   int    (__cdecl *ldap_unbind_s)(void *);
+   int    (__cdecl *ldap_search_s)(void *, char *, int, char *, char **,
+@@ -269,7 +271,7 @@ CURLcode Curl_ldap(struct connectdata *conn, bool *done)
+   void   (__cdecl *ber_free)(void *, int);
+   int    (__cdecl *ldap_set_option)(void *, int, void *);
+ 
+-  void *server;
++  void *server = NULL;
+   LDAPURLDesc *ludp = NULL;
+   const char *mod_name;
+   void *result;
+@@ -316,7 +318,27 @@ CURLcode Curl_ldap(struct connectdata *conn, bool *done)
+   DYNA_GET_FUNCTION(void (__cdecl *)(void *, int), ber_free);
+   DYNA_GET_FUNCTION(int (__cdecl *)(void *, int, void *), ldap_set_option);
+ 
+-  server = (*ldap_init)(conn->host.name, (int)conn->port);
++  if(conn->bits.tunnel_proxy && conn->bits.httpproxy) {
++    /* for LDAP over HTTP proxy */
++    ldap_init_fd = (int (__cdecl *)(int, int, char *, void *))
++                   DynaGetFunction("ldap_init_fd");
++    if(!ldap_init_fd) {
++      failf(data, "Cannot use ldap_init_fd (%s), your openldap version is "
++                  "probably too old for HTTP proxying", dlerror());
++      status = CURLE_COULDNT_CONNECT;
++      goto quit;
++    }
++    if(CURLE_OK != Curl_proxyCONNECT(conn, FIRSTSOCKET, conn->host.name,
++                                     conn->remote_port)) {
++      status = CURLE_COULDNT_CONNECT;
++      goto quit;
++    }
++    if((*ldap_init_fd)(conn->sock[FIRSTSOCKET], /* LDAP_PROTO_TCP */1, NULL,
++                       &server))
++      server = NULL;
++  } else {
++    server = (*ldap_init)(conn->host.name, (int)conn->port);
++  }
+   if (server == NULL) {
+     failf(data, "LDAP local: Cannot connect to %s:%d",
+           conn->host.name, conn->port);
+-- 
+1.7.3.4
+

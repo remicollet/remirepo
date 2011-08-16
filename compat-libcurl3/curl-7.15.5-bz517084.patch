@@ -1,0 +1,12 @@
+diff -rup curl-7.15.5.orig/src/main.c curl-7.15.5/src/main.c
+--- curl-7.15.5.orig/src/main.c	2006-07-27 01:20:48.000000000 +0200
++++ curl-7.15.5/src/main.c	2009-10-27 15:55:59.627758853 +0100
+@@ -513,6 +513,8 @@ static void help(void)
+     "    --create-dirs   Create necessary local directory hierarchy",
+     "    --crlf          Convert LF to CRLF in upload",
+     " -f/--fail          Fail silently (no output at all) on HTTP errors (H)",
++    "    --ftp-account <data> Account data to send when requested by server (F)",
++    "    --ftp-alternative-to-user <cmd> String to replace \"USER [name]\" (F)",
+     "    --ftp-create-dirs Create the remote dirs if not present (F)",
+     "    --ftp-method [multicwd/nocwd/singlecwd] Control CWD usage (F)",
+     "    --ftp-pasv      Use PASV/EPSV instead of PORT (F)",
