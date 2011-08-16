@@ -1,10 +1,10 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others).
-Name: curl 
+Name: compat-libcurl3
 Version: 7.15.5
-Release: 9%{?dist}.3
+Release: 1%{?dist}
 License: MIT
 Group: Applications/Internet
-Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
+Source: http://curl.haxx.se/download/curl-%{version}.tar.bz2
 Patch0: curl-7.14.1-nousr.patch
 Patch1: curl-7.15.0-curl_config-version.patch
 Patch2: curl-7.15.3-multilib.patch
@@ -30,6 +30,10 @@ to work without user interaction or any kind of interactivity. cURL
 offers many useful capabilities, like proxy support, user
 authentication, FTP upload, HTTP post, and file transfer resume.
 
+%{name} is provided for compatibility for package build against old
+libcurl (libcurl.so.3 provided by version < 7.16)
+
+
 %package devel
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}, openssl-devel, libidn-devel
@@ -44,7 +48,8 @@ use cURL's capabilities internally.
 %prep
 rm -rf $RPM_BUILD_ROOT
 
-%setup -q 
+%setup -q -n curl-%{version}
+
 %patch0 -p1 -b .nousr
 %patch1 -p1 -b .ver
 %patch2 -p1 -b .multilib
@@ -97,8 +102,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/BUGS docs/FAQ docs/FEATURES
 %doc docs/MANUAL docs/RESOURCES
 %doc docs/TheArtOfHttpScripting docs/TODO
-%{_bindir}/curl
-%{_mandir}/man1/curl.1*
+%exclude %{_bindir}/curl
+%exclude %{_mandir}/man1/curl.1*
 %{_libdir}/libcurl.so.*
 #%{_datadir}/ssl/certs/ca-bundle.crt
 
@@ -114,6 +119,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-3
+- build as compat-libcurl3 for remi repository
+
 * Thu Jun 23 2011 Kamil Dudka <kdudka@redhat.com> 7.15.5-9.el5_6.3
 - do not delegate GSSAPI credentials (CVE-2011-2192)
 
@@ -320,7 +328,7 @@ Resolves: #485290
 - remove docs/LIBCURL from docs list; remove unpackaged libcurl.la
 - libtoolize and reconf
 
-* Mon Jul 22 2002 Trond Eivind Glomsrød <teg@redhat.com> 7.9.8-1
+* Mon Jul 22 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 7.9.8-1
 - 7.9.8 (# 69473)
 
 * Fri Jun 21 2002 Tim Powers <timp@redhat.com>
@@ -329,20 +337,20 @@ Resolves: #485290
 * Sun May 26 2002 Tim Powers <timp@redhat.com>
 - automated rebuild
 
-* Thu May 16 2002 Trond Eivind Glomsrød <teg@redhat.com> 7.9.7-1
+* Thu May 16 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 7.9.7-1
 - 7.9.7
 
-* Wed Apr 24 2002 Trond Eivind Glomsrød <teg@redhat.com> 7.9.6-1
+* Wed Apr 24 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 7.9.6-1
 - 7.9.6
 
-* Thu Mar 21 2002 Trond Eivind Glomsrød <teg@redhat.com> 7.9.5-2
+* Thu Mar 21 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 7.9.5-2
 - Stop the curl-config script from printing -I/usr/include 
   and -L/usr/lib (#59497)
 
-* Fri Mar  8 2002 Trond Eivind Glomsrød <teg@redhat.com> 7.9.5-1
+* Fri Mar  8 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 7.9.5-1
 - 7.9.5
 
-* Tue Feb 26 2002 Trond Eivind Glomsrød <teg@redhat.com> 7.9.3-2
+* Tue Feb 26 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 7.9.3-2
 - Rebuild
 
 * Wed Jan 23 2002 Nalin Dahyabhai <nalin@redhat.com> 7.9.3-1
@@ -351,7 +359,7 @@ Resolves: #485290
 * Wed Jan 09 2002 Tim Powers <timp@redhat.com> 7.9.2-2
 - automated rebuild
 
-* Wed Jan  9 2002 Trond Eivind Glomsrød <teg@redhat.com> 7.9.2-1
+* Wed Jan  9 2002 Trond Eivind GlomsrÃ¸d <teg@redhat.com> 7.9.2-1
 - 7.9.2
 
 * Fri Aug 17 2001 Nalin Dahyabhai <nalin@redhat.com>
