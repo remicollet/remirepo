@@ -1,7 +1,19 @@
-diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp
---- xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-link-service	2011-07-22 00:18:50.000000000 +0200
-+++ xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp	2011-07-24 12:12:47.462637547 +0200
-@@ -165,6 +165,7 @@ PRInt16 gBadPortList[] = { 
+# HG changeset patch
+# Parent 31879b88cc82c1f44e6a6c25a05aa2c70af22d7e
+# User Martin Stransky <stransky@redhat.com>
+Bug 627672 - XPCOM component (libdbusservice.so) is not registered although it should be; r=cbiesinger
+
+
+
+diff --git a/netwerk/base/src/nsIOService.cpp b/netwerk/base/src/nsIOService.cpp
+--- a/netwerk/base/src/nsIOService.cpp
++++ b/netwerk/base/src/nsIOService.cpp
+@@ -160,31 +160,33 @@ PRInt16 gBadPortList[] = {
+   2049, // nfs
+   4045, // lockd
+   6000, // x11        
+   0,    // This MUST be zero so that we can populating the array
+ };
  
  static const char kProfileChangeNetTeardownTopic[] = "profile-change-net-teardown";
  static const char kProfileChangeNetRestoreTopic[] = "profile-change-net-restore";
@@ -9,7 +21,33 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-li
  
  // Necko buffer cache
  nsIMemory* nsIOService::gBufferCache = nsnull;
-@@ -235,6 +236,7 @@ nsIOService::Init()
+ PRUint32   nsIOService::gDefaultSegmentSize = 4096;
+ PRUint32   nsIOService::gDefaultSegmentCount = 24;
+ 
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+ nsIOService::nsIOService()
+     : mOffline(PR_TRUE)
+     , mOfflineForProfileChange(PR_FALSE)
+     , mManageOfflineStatus(PR_TRUE)
+     , mSettingOffline(PR_FALSE)
+     , mSetOfflineValue(PR_FALSE)
+     , mShutdown(PR_FALSE)
++    , mNetworkLinkServiceInitialized(PR_FALSE)
+     , mChannelEventSinks(NS_CHANNEL_EVENT_SINK_CATEGORY)
+     , mContentSniffers(NS_CONTENT_SNIFFER_CATEGORY)
+     , mAutoDialEnabled(PR_FALSE)
+ {
+ }
+ 
+ nsresult
+ nsIOService::Init()
+@@ -230,16 +232,17 @@ nsIOService::Init()
+     }
+     
+     // Register for profile change notifications
+     nsCOMPtr<nsIObserverService> observerService =
+         mozilla::services::GetObserverService();
      if (observerService) {
          observerService->AddObserver(this, kProfileChangeNetTeardownTopic, PR_TRUE);
          observerService->AddObserver(this, kProfileChangeNetRestoreTopic, PR_TRUE);
@@ -17,7 +55,17 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-li
          observerService->AddObserver(this, NS_XPCOM_SHUTDOWN_OBSERVER_ID, PR_TRUE);
          observerService->AddObserver(this, NS_NETWORK_LINK_TOPIC, PR_TRUE);
      }
-@@ -263,19 +265,9 @@ nsIOService::Init()
+     else
+         NS_WARNING("failed to get observer service");
+         
+     NS_TIME_FUNCTION_MARK("Registered observers");
+ 
+@@ -258,29 +261,19 @@ nsIOService::Init()
+         NS_WARN_IF_FALSE(NS_SUCCEEDED(rv), "Was unable to allocate.  No gBufferCache.");
+         CallQueryInterface(recyclingAllocator, &gBufferCache);
+     }
+ 
+     NS_TIME_FUNCTION_MARK("Set up the recycling allocator");
  
      gIOService = this;
  
@@ -40,7 +88,17 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-li
      
      NS_TIME_FUNCTION_MARK("Set up network link service");
  
-@@ -311,6 +303,47 @@ nsIOService::InitializeSocketTransportSe
+     return NS_OK;
+ }
+ 
+ 
+ nsIOService::~nsIOService()
+@@ -306,16 +299,57 @@ nsIOService::InitializeSocketTransportSe
+         rv = mSocketTransportService->Init();
+         NS_ASSERTION(NS_SUCCEEDED(rv), "socket transport service init failed");
+         mSocketTransportService->SetAutodialEnabled(mAutoDialEnabled);
+     }
+ 
      return rv;
  }
  
@@ -88,7 +146,17 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-li
  nsIOService*
  nsIOService::GetInstance() {
      if (!gIOService) {
-@@ -694,6 +727,9 @@ nsIOService::NewChannel(const nsACString
+         gIOService = new nsIOService();
+         if (!gIOService)
+             return nsnull;
+         NS_ADDREF(gIOService);
+ 
+@@ -689,16 +723,19 @@ nsIOService::NewChannel(const nsACString
+     if (NS_FAILED(rv)) return rv;
+ 
+     return NewChannelFromURI(uri, result);
+ }
+ 
  PRBool
  nsIOService::IsLinkUp()
  {
@@ -98,7 +166,17 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-li
      if (!mNetworkLinkService) {
          // We cannot decide, assume the link is up
          return PR_TRUE;
-@@ -973,6 +1009,10 @@ nsIOService::Observe(nsISupports *subjec
+     }
+ 
+     PRBool isLinkUp;
+     nsresult rv;
+     rv = mNetworkLinkService->GetIsLinkUp(&isLinkUp);
+@@ -968,16 +1005,20 @@ nsIOService::Observe(nsISupports *subjec
+         if (mOfflineForProfileChange) {
+             mOfflineForProfileChange = PR_FALSE;
+             if (!mManageOfflineStatus ||
+                 NS_FAILED(TrackNetworkLinkStatusForOffline())) {
+                 SetOffline(PR_FALSE);
              }
          } 
      }
@@ -109,7 +187,17 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-li
      else if (!strcmp(topic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
          // Remember we passed XPCOM shutdown notification to prevent any
          // changes of the offline status from now. We must not allow going
-@@ -1090,6 +1130,11 @@ NS_IMETHODIMP
+         // online after this point.
+         mShutdown = PR_TRUE;
+ 
+         SetOffline(PR_TRUE);
+ 
+@@ -1085,32 +1126,40 @@ nsIOService::NewSimpleNestedURI(nsIURI* 
+     NS_IF_ADDREF(*aResult = new nsSimpleNestedURI(safeURI));
+     return *aResult ? NS_OK : NS_ERROR_OUT_OF_MEMORY;
+ }
+ 
+ NS_IMETHODIMP
  nsIOService::SetManageOfflineStatus(PRBool aManage) {
      PRBool wasManaged = mManageOfflineStatus;
      mManageOfflineStatus = aManage;
@@ -121,7 +209,16 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-li
      if (mManageOfflineStatus && !wasManaged)
          return TrackNetworkLinkStatusForOffline();
      return NS_OK;
-@@ -1106,6 +1151,9 @@ nsIOService::TrackNetworkLinkStatusForOf
+ }
+ 
+ NS_IMETHODIMP
+ nsIOService::GetManageOfflineStatus(PRBool* aManage) {
+     *aManage = mManageOfflineStatus;
+     return NS_OK;
+ }
+ 
+ nsresult
+ nsIOService::TrackNetworkLinkStatusForOffline()
  {
      NS_ASSERTION(mManageOfflineStatus,
                   "Don't call this unless we're managing the offline status");
@@ -131,10 +228,20 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.cpp.network-li
      if (!mNetworkLinkService)
          return NS_ERROR_FAILURE;
  
-diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h.network-link-service xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h
---- xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h.network-link-service	2011-07-22 00:18:50.000000000 +0200
-+++ xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h	2011-07-24 12:12:47.463637550 +0200
-@@ -134,6 +134,7 @@ private:
+     if (mShutdown)
+         return NS_ERROR_NOT_AVAILABLE;
+   
+     // check to make sure this won't collide with Autodial
+     if (mSocketTransportService) {
+diff --git a/netwerk/base/src/nsIOService.h b/netwerk/base/src/nsIOService.h
+--- a/netwerk/base/src/nsIOService.h
++++ b/netwerk/base/src/nsIOService.h
+@@ -129,16 +129,17 @@ private:
+                                               nsIProtocolHandler* hdlr);
+ 
+     // Prefs wrangling
+     NS_HIDDEN_(void) PrefsChanged(nsIPrefBranch *prefs, const char *pref = nsnull);
+     NS_HIDDEN_(void) GetPrefBranch(nsIPrefBranch2 **);
      NS_HIDDEN_(void) ParsePortList(nsIPrefBranch *prefBranch, const char *pref, PRBool remove);
  
      nsresult InitializeSocketTransportService();
@@ -142,7 +249,17 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h.network-link
  
  private:
      PRPackedBool                         mOffline;
-@@ -151,6 +152,7 @@ private:
+     PRPackedBool                         mOfflineForProfileChange;
+     PRPackedBool                         mManageOfflineStatus;
+ 
+     // Used to handle SetOffline() reentrancy.  See the comment in
+     // SetOffline() for more details.
+@@ -146,16 +147,17 @@ private:
+     PRPackedBool                         mSetOfflineValue;
+ 
+     PRPackedBool                         mShutdown;
+ 
+     nsCOMPtr<nsPISocketTransportService> mSocketTransportService;
      nsCOMPtr<nsPIDNSService>             mDNSService;
      nsCOMPtr<nsIProtocolProxyService2>   mProxyService;
      nsCOMPtr<nsINetworkLinkService>      mNetworkLinkService;
@@ -150,3 +267,8 @@ diff -up xulrunner6-6.0/mozilla-beta/netwerk/base/src/nsIOService.h.network-link
      
      // Cached protocol handlers
      nsWeakPtr                            mWeakHandler[NS_N(gScheme)];
+ 
+     // cached categories
+     nsCategoryCache<nsIChannelEventSink> mChannelEventSinks;
+     nsCategoryCache<nsIContentSniffer>   mContentSniffers;
+ 

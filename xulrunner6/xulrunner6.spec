@@ -15,11 +15,11 @@
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
 %global gecko_dir_ver 6
 %global alpha_version 0
-%global beta_version  4
+%global beta_version  0
 %global rc_version    0
 
 %global mozappdir         %{_libdir}/%{shortname}-%{gecko_dir_ver}
-%global tarballdir        mozilla-beta
+%global tarballdir        mozilla-release
 
 # crash reporter work only on x86/x86_64
 #%ifarch %{ix86} x86_64
@@ -54,7 +54,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
 Version:        6.0
-Release:        0.1.beta4%{?dist}
+Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -77,6 +77,7 @@ Patch16:        add-gtkmozembed.patch
 %if 0%{?fedora} > 15
 Patch17:        xulrunner-5.0-curl.patch
 %endif
+Patch18:        xulrunner-6.0-secondary-ipc.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -85,8 +86,9 @@ Patch23:        wmclass.patch
 Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
-Patch34:        xulrunner-6.0-network-link-service.patch
+Patch34:        xulrunner-2.0-network-link-service.patch
 Patch35:        xulrunner-2.0-NetworkManager09.patch
+Patch36:        mozilla-639554.patch
 
 # ---------------------------------------------------
 
@@ -234,6 +236,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %if 0%{?fedora} > 15
 %patch17 -p2 -b .curl
 %endif
+%patch18 -p2 -b .secondary-ipc
 
 %patch20 -p2 -b .pk
 %if %{fedora} >= 14
@@ -242,8 +245,9 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
-%patch34 -p2 -b .network-link-service
+%patch34 -p1 -b .network-link-service
 %patch35 -p1 -b .NetworkManager09
+%patch36 -p1 -b .639554
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -494,7 +498,6 @@ fi
 %{mozappdir}/chrome
 %{mozappdir}/chrome.manifest
 %{mozappdir}/dictionaries
-%{mozappdir}/hyphenation
 %dir %{mozappdir}/components
 %ghost %{mozappdir}/components/compreg.dat
 %ghost %{mozappdir}/components/xpti.dat
@@ -516,6 +519,7 @@ fi
 %{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
 %endif
 %{mozappdir}/plugin-container
+%{mozappdir}/hyphenation
 
 %if %{enable_mozilla_crashreporter}
 %{mozappdir}/crashreporter
@@ -535,6 +539,15 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Aug 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0-1
+- sync with rawhide, update to 6.0
+
+* Tue Aug 16 2011 Martin Stransky <stransky@redhat.com> 6.0-2
+- Updated gtkmozembed patch
+
+* Tue Aug 16 2011 Martin Stransky <stransky@redhat.com> 6.0-1
+- 6.0
+
 * Tue Aug 02 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0-0.1.beta4
 - update to 6.0 beta4
 

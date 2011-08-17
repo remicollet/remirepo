@@ -10,17 +10,17 @@
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
 %global shortname       firefox
-%global mycomment       Beta 4
+#global mycomment       Beta 4
 %global firefox_dir_ver 6
 %global gecko_version   6.0
 %global alpha_version   0
-%global beta_version    4
+%global beta_version    0
 %global rc_version      0
-%global datelang        20110802
+%global datelang        20110817
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
-%global tarballdir    mozilla-beta
+%global tarballdir    mozilla-release
 
 %define official_branding       1
 %define build_langpacks         1
@@ -46,9 +46,9 @@
 %endif
 
 Summary:        Mozilla Firefox Web browser
-Name:           %{shortname}6
+Name:           %{shortname}
 Version:        6.0
-Release:        0.1.beta4%{?dist}
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -66,15 +66,10 @@ Source23:       firefox.1
 
 #Build patches
 Patch0:         firefox-version.patch
+Patch1:         firefox-6.0-cache-build.patch
 
 # Fedora patches
-Patch12:        firefox-6.0-stub.patch
 Patch14:        firefox-5.0-asciidel.patch
-
-# Generate cache is broken
-# +++ Failed to get ScriptSecurityManager service, running without principals
-# Segmentation fault in xpcshell call
-Patch15:        firefox-6.0-nocache.patch
 
 # Upstream patches
 
@@ -102,8 +97,8 @@ Requires:       system-bookmarks
 Obsoletes:      mozilla <= 37:1.7.13
 Provides:       webclient
 %if %{name} == %{shortname}
-Obsoletes:      firefox5
-Provides:       firefox5 = %{version}-%{release}
+Obsoletes:      firefox%{firefox_dir_ver}
+Provides:       firefox%{firefox_dir_ver} = %{version}-%{release}
 %endif
 
 
@@ -125,14 +120,12 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{firefox_dir_ver}/' %{P:%%PATCH0} \
     
 
 # Build patches
+%patch1 -p2 -b .cache
 
 # For branding specific patches.
 
 # Fedora patches
-%patch12 -p2 -b .stub
 %patch14 -p1 -b .asciidel
-
-%patch15 -p0 -b .nocache
 
 # Upstream patches
 
@@ -192,7 +185,7 @@ cd %{tarballdir}
 #
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
-MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS -fPIC | \
+MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
@@ -266,9 +259,8 @@ XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,
   > $RPM_BUILD_ROOT%{_bindir}/%{name}
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
 
-# Remove binary stub from xulrunner
-%{__rm} -rf $RPM_BUILD_ROOT/%{mozappdir}/%{shortname}
-
+# Link with xulrunner 
+ln -s `pkg-config --variable=libdir libxul` $RPM_BUILD_ROOT/%{mozappdir}/xulrunner
 
 %{__install} -p -D -m 644 %{SOURCE23} $RPM_BUILD_ROOT%{_mandir}/man1/%{name}.1
 
@@ -317,10 +309,6 @@ done
 %if %{include_debuginfo}
 sed -i -e "s/\[Crash Reporter\]/[Crash Reporter]\nEnabled=1/" $RPM_BUILD_ROOT/%{mozappdir}/application.ini
 %endif
-
-# Install our xulrunner stub
-%{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/firefox
-%{__cp} xulrunner/stub/xulrunner-stub $RPM_BUILD_ROOT/%{mozappdir}/firefox
 
 #---------------------------------------------------------------------
 
@@ -374,6 +362,7 @@ fi
 %dir %{mozappdir}/components
 %{mozappdir}/components/*.so
 %{mozappdir}/components/binary.manifest
+%{mozappdir}/defaults/preferences/channel-prefs.js
 %attr(644, root, root) %{mozappdir}/blocklist.xml
 %dir %{mozappdir}/extensions
 %{mozappdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
@@ -392,8 +381,7 @@ fi
 %{_datadir}/icons/hicolor/256x256/apps/%{name}.png
 %{_datadir}/icons/hicolor/32x32/apps/%{name}.png
 %{_datadir}/icons/hicolor/48x48/apps/%{name}.png
-# Probably not needed
-%{mozappdir}/defaults/preferences/channel-prefs.js
+%{mozappdir}/xulrunner
 
 %if %{include_debuginfo}
 #%{mozappdir}/crashreporter
@@ -405,6 +393,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Aug 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0-1
+- sync with rawhide, update to 6.0
+
+* Tue Aug 16 2011 Martin Stransky <stransky@redhat.com> - 6.0-1
+- Update to 6.0
+
 * Tue Aug 02 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0-0.1.beta4
 - update to 6.0 beta4
 
