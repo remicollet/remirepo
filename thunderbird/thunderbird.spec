@@ -14,7 +14,7 @@
 # IMPORTANT: If there is no top level directory, this should be 
 # set to the cwd, ie: '.'
 #%define tarballdir .
-%define tarballdir comm-miramar
+%define tarballdir comm-release
 
 %define official_branding 1
 # don't enable crash reporter for remi repo
@@ -25,8 +25,8 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        5.0
-Release:        1%{?dist}.1
+Version:        6.0
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -37,7 +37,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20110717.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20110817.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -50,7 +50,6 @@ Source100:      find-external-requires
 
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-version.patch
-Patch6:         mozilla-build-s390.patch
 Patch7:         crashreporter-remove-static.patch
 
 %if %{official_branding}
@@ -159,9 +158,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 
 # Mozilla (XULRunner) patches
 cd mozilla
-%ifarch s390
-%patch6 -p1 -b .s390
-%endif
 %patch7 -p2 -b .static
 cd ..
 
@@ -446,6 +442,18 @@ fi
 #===============================================================================
 
 %changelog
+* Wed Aug 17 2011 Remi Collet <rpms@famillecollet.com> 6.0-1
+- Thunderbird 6.0, sync with rawhide
+
+* Tue Aug 16 2011 Jan Horak <jhorak@redhat.com> - 6.0-1
+- Update to 6.0
+
+* Sun Aug 16 2011 Remi Collet <remi@fedoraproject.org> 5.0-4
+- Don't unzip the langpacks
+
+* Mon Aug 15 2011 Jan Horak <jhorak@redhat.com> - 5.0-3
+- Rebuild due to rhbz#728707
+
 * Sun Jul 17 2011 Remi Collet <rpms@famillecollet.com> 5.0-1.1
 - don't unzip the langpacks
 
