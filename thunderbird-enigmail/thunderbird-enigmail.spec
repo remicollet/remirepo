@@ -8,7 +8,7 @@
 %define build_langpacks 1
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 
-%global thunver  5.0
+%global thunver  6.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -16,18 +16,18 @@
 # IMPORTANT: If there is no top level directory, this should be 
 # set to the cwd, ie: '.'
 #%define tarballdir .
-%define tarballdir comm-miramar
+%define tarballdir comm-release
 
 %define official_branding 1
 
-%define version_internal  5.0
+%define version_internal  6.0
 %define mozappdir         %{_libdir}/thunderbird-%{version_internal}
 %global enigmail_extname  %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{847b3a00-7ab1-11d4-8f02-006008948af5}
 
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.2.1
+Version:        1.3
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
@@ -58,7 +58,6 @@ Source101:      enigmail-fixlang.php
 
 
 Patch0:         thunderbird-version.patch
-Patch6:         mozilla-build-s390.patch
 Patch7:         crashreporter-remove-static.patch
 
 # Enigmail patch
@@ -148,9 +147,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 
 # Mozilla (XULRunner) patches
 cd mozilla
-%ifarch s390
-%patch6 -p1 -b .s390
-%endif
 %patch7 -p2 -b .static
 cd ..
 
@@ -288,6 +284,9 @@ cd %{tarballdir}
 #===============================================================================
 
 %changelog
+* Wed Aug 17 2011 Remi Collet <remi@fedoraproject.org> 1.3-1
+- Enigmail 1.3 for Thunderbird 6.0
+
 * Sat Jul 30 2011 Remi Collet <remi@fedoraproject.org> 1.2.1-1
 - Enigmail 1.2.1 for Thunderbird 5.0
 

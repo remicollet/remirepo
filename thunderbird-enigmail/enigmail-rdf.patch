@@ -1,8 +1,7 @@
-diff -up enigmail/package/install.rdf.orig enigmail/package/install.rdf
---- enigmail/package/install.rdf.orig	2011-07-26 17:53:13.000000000 +0200
-+++ enigmail/package/install.rdf	2011-07-30 19:10:04.392345142 +0200
+--- enigmail/package/install.rdf.orig	2011-08-13 18:08:54.000000000 +0200
++++ enigmail/package/install.rdf	2011-08-17 14:53:43.454176196 +0200
 @@ -27,14 +27,6 @@
-         <em:maxVersion>2.2.*</em:maxVersion>
+         <em:maxVersion>2.3.*</em:maxVersion>
        </Description>
      </em:targetApplication>
 -    <!-- em:targetApplication>
