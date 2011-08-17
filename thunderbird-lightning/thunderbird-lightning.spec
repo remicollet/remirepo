@@ -5,7 +5,7 @@
 %global lcms_version 1.19
 %global sqlite_version 3.6.22
 %global libnotify_version 0.4
-%global thunderbird_version 5.0
+%global thunderbird_version 6.0
 %global moz_objdir objdir-tb
 %global thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 %global lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
@@ -17,22 +17,22 @@
 # IMPORTANT: If there is no top level directory, this should be
 # set to the cwd, ie: '.'
 #define tarballdir .
-%global tarballdir comm-miramar
+%global tarballdir comm-release
 
-%global version_internal  5
+%global version_internal  6
 %global mozappdir         %{_libdir}/%{name}-%{version_internal}
 
-%global lightprever b4
+%global lightprever b5pre
 
 Name:           thunderbird-lightning
 Summary:        The calendar extension to Thunderbird
 Version:        1.0
-Release:        0.47.%{lightprever}%{?dist}
+Release:        0.48.%{lightprever}%{?dist}
 URL:            http://www.mozilla.org/projects/calendar/lightning/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Productivity
 #Someday lightning will produce a release we can use
-#Source0:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b2rc3/source/lightning-1.0b2.source.tar.bz2
+# Source0:      http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/%{version}%{lightprever}/source/lightning-%{version}%{lightprever}-source.tar.bz2
 Source0:        http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/%{thunderbird_version}/source/thunderbird-%{thunderbird_version}.source.tar.bz2
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -44,12 +44,6 @@ Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/r
 
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-version.patch
-# secondary arch patches inherited from xulrunner
-Patch1:         xulrunner-2.0-secondary-jit.patch
-Patch2:         xulrunner-5.0-secondary-ipc.patch
-
-# WCAP bug, see https://bugzilla.mozilla.org/668153
-Patch9:         lightning-wcap.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -141,11 +135,6 @@ fi
 sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
     > version.patch
 %{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
-
-%patch1 -p1 -b .secondary-jit
-%patch2 -p1 -b .secondary-ipc
-
-%patch9 -p1 -b .wcap
 
 
 %{__rm} -f .mozconfig
@@ -253,6 +242,9 @@ cat ../chrome.add >>$RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
 #===============================================================================
 
 %changelog
+* Wed Aug 17 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.48.b5pre
+- Update to 1.0b5pre from Thunderbird 6.0 sources
+
 * Wed Jul 20 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.47.b4
 - add patch for wcap bug https://bugzilla.mozilla.org/668153
 
