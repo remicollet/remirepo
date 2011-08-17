@@ -1,7 +1,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 7.21.7
-Release: 3%{?dist}
+Release: 3%{?dist}.1
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
@@ -58,7 +58,7 @@ BuildRequires: zlib-devel
 BuildRequires: valgrind
 %endif
 
-Requires: libcurl4%{?_isa} = %{version}-%{release}
+Requires: libcurl%{?_isa} = %{version}-%{release}
 
 # require at least the version of libssh2 that we were built against,
 # to ensure that we have the necessary symbols available (#525002, #642796)
@@ -72,25 +72,23 @@ uploading, HTTP form based upload, proxies, cookies, user+password
 authentication (Basic, Digest, NTLM, Negotiate, kerberos...), file transfer
 resume, proxy tunneling and a busload of other useful tricks. 
 
-%package -n libcurl4
+%package -n libcurl
 Summary: A library for getting files from web servers
 Group: Development/Libraries
 Requires: libssh2%{?_isa} >= %{libssh2_version}
 
-%description -n libcurl4
-libcurl4 is a free and easy-to-use client-side URL transfer library, supporting
+%description -n libcurl
+libcurl is a free and easy-to-use client-side URL transfer library, supporting
 FTP, FTPS, HTTP, HTTPS, SCP, SFTP, TFTP, TELNET, DICT, LDAP, LDAPS, FILE, IMAP,
 SMTP, POP3 and RTSP. libcurl supports SSL certificates, HTTP POST, HTTP PUT,
 FTP uploading, HTTP form based upload, proxies, cookies, user+password
 authentication (Basic, Digest, NTLM, Negotiate, Kerberos4), file transfer
 resume, http proxy tunneling and more.
 
-libcurl4 allow to install latest version beside system libcurl
-
-%package -n libcurl4-devel
+%package -n libcurl-devel
 Summary: Files needed for building applications with libcurl
 Group: Development/Libraries
-Requires: libcurl4%{?_isa} = %{version}-%{release}
+Requires: libcurl%{?_isa} = %{version}-%{release}
 
 # From Fedora 14, %%{_datadir}/aclocal is included in the filesystem package
 %if 0%{?fedora} < 14
@@ -104,15 +102,11 @@ Requires: pkgconfig
 
 Provides: curl-devel = %{version}-%{release}
 Obsoletes: curl-devel < %{version}-%{release}
-# By design
-Conflicts: libcurl-devel
 
-%description -n libcurl4-devel
-The libcurl4-devel package includes header files and libraries necessary for
+%description -n libcurl-devel
+The libcurl-devel package includes header files and libraries necessary for
 developing programs which use the libcurl library. It contains the API
 documentation of the library, too.
-
-libcurl4-devel conflicts with libcurl-devel. Only 1 must be installed.
 
 %prep
 %setup -q
@@ -224,9 +218,9 @@ install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_includedir}/curl/curlbuild.h
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -n libcurl4 -p /sbin/ldconfig
+%post -n libcurl -p /sbin/ldconfig
 
-%postun -n libcurl4 -p /sbin/ldconfig
+%postun -n libcurl -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
@@ -237,11 +231,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/curl
 %{_mandir}/man1/curl.1*
 
-%files -n libcurl4
+%files -n libcurl
 %defattr(-,root,root,-)
 %{_libdir}/libcurl.so.4*
 
-%files -n libcurl4-devel
+%files -n libcurl-devel
 %defattr(-,root,root,-)
 %doc docs/examples/*.c docs/examples/Makefile.example docs/INTERNALS
 %doc docs/CONTRIBUTE docs/libcurl/ABI
@@ -254,6 +248,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-3.14
+- keep "libcurl" name (and provides compat-libcurl3 as another package)
+
 * Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-3
 - sync with rawhide
 - disable tests which requires libnsspem.so (not available in EL-5)
