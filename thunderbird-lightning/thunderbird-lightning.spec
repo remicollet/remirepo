@@ -1,5 +1,5 @@
-%global nspr_version 4.8.7
-%global nss_version 3.12.8
+%global nspr_version 4.8.8
+%global nss_version 3.12.10
 %global cairo_version 1.10.0
 %global freetype_version 2.1.9
 %global lcms_version 1.19
@@ -47,7 +47,7 @@ Patch0:         thunderbird-version.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 13
+%if 0%{?fedora} >= 14
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
@@ -143,7 +143,7 @@ cat %{SOURCE10} 		\
 %if %{fedora} < 15
   | grep -v system-sqlite 	\
 %endif
-%if %{fedora} < 13
+%if %{fedora} < 14
   | grep -v system-nss 		\
   | grep -v system-nspr 	\
 %endif

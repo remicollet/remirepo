@@ -1,5 +1,5 @@
-%define nspr_version 4.8.7
-%define nss_version 3.12.8
+%define nspr_version 4.8.8
+%define nss_version 3.12.10
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
 %define lcms_version 1.19
@@ -73,7 +73,7 @@ Patch100:       enigmail-rdf.patch
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 13
+%if 0%{?fedora} >= 14
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
@@ -164,7 +164,7 @@ cat %{SOURCE10} 		\
 %if %{fedora} < 15
   | grep -v system-sqlite 	\
 %endif
-%if %{fedora} < 13
+%if %{fedora} < 14
   | grep -v system-nss 		\
   | grep -v system-nspr 	\
 %endif
