@@ -25,7 +25,39 @@ Intel(R) Core(TM) i5 CPU         760  @ 2.80GHz
         Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1                                   4292.4
         Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b5                                     4338.0
         Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b7                                     4296.6
+        Mozilla/5.0 (X11; Linux x86_64; rv:6.0) Gecko/20100101 Firefox/6.0                                       4251.9
+        
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:6.0) Gecko/20100101 Firefox/6.0
+===============================================
+RESULTS (means and 95% confidence intervals)
+-----------------------------------------------
+Total:                        4251.9ms +/- 0.8%
+-----------------------------------------------
 
+  ai:                         1005.2ms +/- 1.7%
+    astar:                    1005.2ms +/- 1.7%
+
+  audio:                      1092.7ms +/- 1.5%
+    beat-detection:            312.3ms +/- 4.4%
+    dft:                       246.9ms +/- 2.1%
+    fft:                       211.3ms +/- 0.7%
+    oscillator:                322.2ms +/- 0.7%
+
+  imaging:                    1388.0ms +/- 0.4%
+    gaussian-blur:             520.6ms +/- 0.5%
+    darkroom:                  202.7ms +/- 1.0%
+    desaturate:                664.7ms +/- 0.4%
+
+  json:                        126.1ms +/- 1.8%
+    parse-financial:            71.0ms +/- 3.5%
+    stringify-tinderbox:        55.1ms +/- 0.7%
+
+  stanford:                    639.9ms +/- 0.8%
+    crypto-aes:                197.3ms +/- 0.7%
+    crypto-ccm:                131.6ms +/- 1.4%
+    crypto-pbkdf2:             210.0ms +/- 1.7%
+    crypto-sha256-iterative:   101.0ms +/- 1.5%
 ==============================================================================
 Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b7
 ===============================================
