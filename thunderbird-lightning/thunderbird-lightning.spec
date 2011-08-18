@@ -31,8 +31,7 @@ Release:        0.48.%{lightprever}%{?dist}
 URL:            http://www.mozilla.org/projects/calendar/lightning/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Productivity
-#Someday lightning will produce a release we can use
-# Source0:      http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/%{version}%{lightprever}/source/lightning-%{version}%{lightprever}-source.tar.bz2
+#Source0:       http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/%{version}%{lightprever}/source/lightning-%{version}%{lightprever}-source.tar.bz2
 Source0:        http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/%{thunderbird_version}/source/thunderbird-%{thunderbird_version}.source.tar.bz2
 # Config file for compilation
 Source10:       thunderbird-mozconfig
@@ -122,6 +121,10 @@ touch chrome.add
 ls chrome \
   | sed -n 's/\(\([^-]*\)-\(.*\)\)/locale \2 \3 chrome\/\1\/locale\/\3\/\2\//p' \
   | tee -a chrome.add
+
+sed -i -e '/maxVersion/s/>5/>6/' %{tarballdir}/calendar/providers/gdata/install.rdf
+sed -i -e '/maxVersion/s/>5/>6/' %{tarballdir}/calendar/lightning/install.rdf
+
 
 # Continue with Thunderbird
 cd %{tarballdir}
