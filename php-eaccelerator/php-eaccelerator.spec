@@ -23,7 +23,7 @@ Summary: PHP accelerator, optimizer, encoder and dynamic content cacher
 Name: %{phpname}-eaccelerator
 Version: 0.9.6.1
 #Release: 0.2%{?svn:.svn%{svn}}%{?dist}
-Release: 5%{?dist}
+Release: 8%{?dist}
 Epoch: 1
 # The eaccelerator module itself is GPLv2+
 # The PHP control panel is under the Zend license (control.php and dasm.php)
@@ -40,19 +40,20 @@ Source1: php-eaccelerator.cron
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 # ABI check is not enough for this extension (http://eaccelerator.net/ticket/438)
 Requires: %{phpname}-common%{?_isa} = %{php_version}
+# Required by our cleanup cron job
+Requires: tmpwatch
 Provides: %{phpname}-zend_extension
-Conflicts: %{phpname}-mmcache %{phpname}-pecl-apc
+Conflicts: %{phpname}-mmcache
 BuildRequires: %{phpname}-devel >= 5.1.0
 # Required by phpize
 BuildRequires: autoconf, automake, libtool
 
 
-%if 0%{?fedora}%{?rhel} > 4
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-%endif
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
 
 
 %description
@@ -70,11 +71,11 @@ that the overhead of compiling is almost completely eliminated.
 
 
 # Change paths in the example config, other values are changed by a patch
-%{__sed} -i 's|/usr/lib/php4/|%{php_extdir}/|g;
-             s|/tmp/eaccelerator|%{_var}/cache/%{phpname}-eaccelerator|g' \
+sed -i 's|/usr/lib/php4/|%{php_extdir}/|g;
+        s|/tmp/eaccelerator|%{_var}/cache/%{phpname}-eaccelerator|g' \
     eaccelerator.ini
 
-%{__sed} -e 's|php-eaccelerator|%{phpname}-eaccelerator|g' \
+sed -e 's|php-eaccelerator|%{phpname}-eaccelerator|g' \
     %{SOURCE1} >%{phpname}-eaccelerator
 
 
@@ -86,33 +87,33 @@ that the overhead of compiling is almost completely eliminated.
     --with-eaccelerator-userid="%{apache}"
 %endif
 
-%{__make} %{?_smp_mflags}
+make %{?_smp_mflags}
 
 
 %install
-%{__rm} -rf %{buildroot}
-%{__make} install INSTALL_ROOT=%{buildroot}
+rm -rf %{buildroot}
+make install INSTALL_ROOT=%{buildroot}
 
 # The cache directory where pre-compiled files will reside
-%{__mkdir_p} %{buildroot}%{_var}/cache/%{phpname}-eaccelerator
+mkdir -p %{buildroot}%{_var}/cache/%{phpname}-eaccelerator
 
 # Drop in the bit of configuration
-%{__install} -D -m 0644 eaccelerator.ini \
+install -D -m 0644 eaccelerator.ini \
     %{buildroot}%{phpconfdir}/php.d/eaccelerator.ini
 
 # Cache removal cron job
-%{__install} -D -m 0755 -p %{phpname}-eaccelerator \
+install -D -m 0755 -p %{phpname}-eaccelerator \
     %{buildroot}%{_sysconfdir}/cron.daily/%{phpname}-eaccelerator
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %preun
 # Upon last removal (not update), clean all cache files
 if [ $1 -eq 0 ]; then
-    %{__rm} -rf %{_var}/cache/%{phpname}-eaccelerator/* &>/dev/null || :
+    rm -rf %{_var}/cache/%{phpname}-eaccelerator/* &>/dev/null || :
 fi
 
 %post
@@ -126,14 +127,14 @@ fi
 
 # Create the ghost'ed directory with default ownership and mode
 if [ ! -d %{_var}/cache/%{phpname}-eaccelerator ]; then
-    %{__mkdir_p} %{_var}/cache/%{phpname}-eaccelerator
-    %{__chown} %{apache}:%{apache} %{_var}/cache/%{phpname}-eaccelerator
-    %{__chmod} 0750 %{_var}/cache/%{phpname}-eaccelerator
+    mkdir -p %{_var}/cache/%{phpname}-eaccelerator
+    chown %{apache}:%{apache} %{_var}/cache/%{phpname}-eaccelerator
+    chmod 0750 %{_var}/cache/%{phpname}-eaccelerator
 fi
 
 
 %check
-# only check if build extension can be loaded
+# Check if the built extension can be loaded
 %{phpbindir}/php \
     -n -q -d extension_dir=modules \
     -d extension=eaccelerator.so \
@@ -154,7 +155,15 @@ fi
 
 
 %changelog
-* Thu Mar 17 2011 Remi Collet <Fedora@FamilleCollet.com> - 1:0.9.6.1-5
+* Thu Aug 18 2011 Remi Collet <remi@fedoraproject.org> - 1:0.9.6.1-8
+- rebuild against PHP 5.3.7
+- add filter (to avoid private-shared-object-provides)
+
+* Wed Jul 13 2011 Matthias Saou <http://freshrpms.net/> 1:0.9.6.1-7
+- Add missing tmpwatch requirement (#711236).
+- Stop using macros for simple commands, following recent guidelines changes.
+
+* Thu Mar 17 2011 Remi Collet <Fedora@FamilleCollet.com> - 1:0.9.6.1-6
 - rebuild against PHP 5.3.6
 
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.6.1-5
