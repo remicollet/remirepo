@@ -10,7 +10,7 @@
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
-%global oci8ver     1.4.5
+%global oci8ver     1.4.6
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
@@ -25,9 +25,9 @@
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
-%define mysql_config %{_libdir}/mysql/mysql_config
+%global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.3.6
+%global phpversion 5.3.7
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -59,8 +59,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.6
-Release: 4%{?dist}
+Version: 5.3.7
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -75,14 +75,16 @@ Source6: php-fpm.init
 Source7: php-fpm.logrotate
 
 # Build fixes
-Patch1: php-5.3.6-gnusrc.patch
+Patch1: php-5.3.7-gnusrc.patch
 Patch2: php-5.3.0-install.patch
 Patch3: php-5.2.4-norpath.patch
 Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.3.6-aconf26x.patch
+# from http://svn.php.net/viewvc?view=revision&revision=311042
+# and  http://svn.php.net/viewvc?view=revision&revision=311908
+Patch8: php-5.3.7-aconf259.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -100,11 +102,11 @@ Patch61: php-5.0.4-tests-wddx.patch
 Patch62: php-5.3.3-tests.patch
 
 # RC Patch
-Patch91: php-5.3.2-oci8conf.patch
+Patch91: php-5.3.7-oci8conf.patch
 
 # Missing functions when build with libedit
 # See http://bugs.php.net/54450
-Patch92: php-5.3.6-readline.patch
+Patch92: php-5.3.7-readline.patch
 
 # On EL4, include order breaks build against MySQL 5.5
 Patch93: php-5.3.6-mysqli.patch
@@ -114,7 +116,7 @@ Patch93: php-5.3.6-mysqli.patch
 # http://svn.php.net/viewvc?view=revision&revision=300089
 # http://svn.php.net/viewvc?view=revision&revision=300646
 # http://svn.php.net/viewvc?view=revision&revision=300791
-Patch94: php-5.3.6-pdo-dblib-50755.patch
+Patch94: php-5.3.7-pdo-dblib-50755.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -133,7 +135,13 @@ BuildRequires: zlib-devel, smtpdaemon, libedit-devel
 BuildRequires: pcre-devel >= 7.8
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
-Obsoletes: %{phpname}-dbg, php3, phpfi, stronghold-php
+%if 0%{?rhel}%{?fedora} > 4
+BuildRequires: libtool-ltdl-devel
+%endif
+
+Obsoletes: %{phpname}-dbg, php3, phpfi, stronghold-php, %{phpname}-zts
+Provides: %{phpname}-zts = %{version}-%{release}
+Provides: %{phpname}-zts%{?_isa} = %{version}-%{release}
 Requires: httpd-mmn = %{httpd_mmn}
 Provides: mod_php = %{version}-%{release}
 Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
@@ -141,16 +149,6 @@ Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
 Requires: %{phpname}-cli%{?_isa} = %{version}-%{release}
 # To ensure correct /var/lib/php/session ownership:
 Requires(pre): httpd
-
-
-%if 0%{?fedora}%{?rhel} > 4
-# Don't provides extensions, which are not shared library, as .so
-%{?filter_setup:
-%filter_provides_in %{_libdir}/%{phpname}/modules/.*\.so$
-%filter_provides_in %{_libdir}/%{phpname}/modules-zts/.*\.so$
-%filter_setup
-}
-%endif
 
 
 %{expand: %%define _origbindir %{_bindir}}
@@ -164,6 +162,14 @@ Requires(pre): httpd
 %global _sysconfdir  /etc/%{phpname}
 %global peardir      %{_datadir}/%{phpname}/pear
 %endif
+
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules-zts/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/%{phpname}/modules/.*\\.so$
+%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/%{phpname}/modules-zts/.*\\.so$
 
 
 %description
@@ -189,18 +195,6 @@ Provides: %{phpname}-readline, %{phpname}-readline%{?_isa}
 The %{phpname}-cli package contains the command-line interface 
 executing PHP scripts, /usr/bin/php, and the CGI interface.
 
-%package zts
-Group: Development/Languages
-Summary: Thread-safe PHP interpreter for use with the Apache HTTP Server
-Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
-Requires: httpd-mmn = %{httpd_mmn}
-%if 0%{?rhel}%{?fedora} > 4
-BuildRequires: libtool-ltdl-devel
-%endif
-
-%description zts
-The %{phpname}-zts package contains a module for use with the Apache HTTP
-Server which can operate under a threaded server processing model.
 
 %if %{with_fpm}
 %package fpm
@@ -338,7 +332,8 @@ Group: Development/Languages
 BuildRequires: sqlite2-devel >= 2.8.0
 Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
 Obsoletes: %{phpname}-sqlite2
-Provides: %{phpname}-sqlite2, %{phpname}-sqlite2%{?_isa}
+Provides: %{phpname}-sqlite2 = %{version}-%{release}
+Provides: %{phpname}-sqlite2%{?_isa} = %{version}-%{release}
 
 %description sqlite
 This is an extension for the SQLite Embeddable SQL Database Engine. 
@@ -644,8 +639,8 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
-%if 0%{?fedora} >= 13
-%patch8 -p1 -b .aconf26x
+%if 0%{?fedora} >= 13 || 0%{?rhel} >= 6
+%patch8 -p1 -b .aconf259
 %endif
 
 %patch20 -p1 -b .shutdown
@@ -661,7 +656,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch61 -p1 -b .tests-wddx
 %patch62 -p0 -b .tests
 
-%patch91 -p0 -b .remi-oci8
+%patch91 -p1 -b .remi-oci8
 %patch92 -p1 -b .libedit
 %patch93 -p1 -b .mysqli
 %patch94 -p1 -b .50755
@@ -1254,8 +1249,10 @@ fi
 %defattr(-,root,root)
 %if %{phpname} == php
 %{_libdir}/httpd/modules/libphp5.so
+%{_libdir}/httpd/modules/libphp5-zts.so
 %else
 %{_libdir}/httpd/modules/lib%{phpname}.so
+%{_libdir}/httpd/modules/lib%{phpname}-zts.so
 %endif
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/%{phpname}/session
 %config(noreplace) %{_origsysconfdir}/httpd/conf.d/%{phpname}.conf
@@ -1291,14 +1288,6 @@ fi
 %exclude %{_mandir}/man1/phpize.1*
 %endif
 %doc sapi/cgi/README* sapi/cli/README
-
-%files zts
-%defattr(-,root,root)
-%if %{phpname} == php
-%{_libdir}/httpd/modules/libphp5-zts.so
-%else
-%{_libdir}/httpd/modules/lib%{phpname}-zts.so
-%endif
 
 %if %{with_fpm}
 %files fpm
@@ -1373,6 +1362,11 @@ fi
 %endif
 
 %changelog
+* Thu Aug 18 2011 Remi Collet <Fedora@famillecollet.com> 5.3.7-1
+- update to 5.3.7
+  http://www.php.net/ChangeLog-5.php#5.3.7
+- merge php-zts into php (#698084)
+
 * Mon May 16 2011 Remi Collet <rpms@famillecollet.com> 5.3.6-4
 - backport patch for #50755 (multiple rowset in pdo_dblib)
 

@@ -71,3 +71,6 @@ sign:
 diff: /tmp/filtered.spec
 	colordiff -u  /tmp/filtered.spec /home/extras/GIT/$(NAME)/$(NAME).spec
 
+devdiff: /tmp/filtered.spec
+	colordiff -u  /tmp/filtered.spec $(NAME)-dev.spec
+

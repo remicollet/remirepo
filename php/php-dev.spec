@@ -118,7 +118,7 @@ Patch92: php-5.3.7-readline.patch
 # On EL4, include order breaks build against MySQL 5.5
 Patch93: php-5.3.6-mysqli.patch
 
-# backport for http://bugs.php.net/50755 (Open) PDO DBLIB Fails with OOM
+# backport for http://bugs.php.net/50755  (multiple rowset in pdo_dblib)
 # http://svn.php.net/viewvc?view=revision&revision=300002
 # http://svn.php.net/viewvc?view=revision&revision=300089
 # http://svn.php.net/viewvc?view=revision&revision=300646
@@ -142,7 +142,13 @@ BuildRequires: zlib-devel, smtpdaemon, libedit-devel
 BuildRequires: pcre-devel >= 7.8
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
-Obsoletes: php-dbg, php3, phpfi, stronghold-php
+%if 0%{?rhel}%{?fedora} > 4
+BuildRequires: libtool-ltdl-devel
+%endif
+
+Obsoletes: php-dbg, php3, phpfi, stronghold-php, php-zts
+Provides: php-zts = %{version}-%{release}
+Provides: php-zts%{?_isa} = %{version}-%{release}
 Requires: httpd-mmn = %{httpd_mmn}
 Provides: mod_php = %{version}-%{release}
 Requires: php-common%{?_isa} = %{version}-%{release}
@@ -152,14 +158,13 @@ Requires: php-cli%{?_isa} = %{version}-%{release}
 Requires(pre): httpd
 
 
-%if 0%{?fedora}%{?rhel} > 4
-# Don't provides extensions, which are not shared library, as .so
-%{?filter_setup:
-%filter_provides_in %{_libdir}/php/modules/.*\.so$
-%filter_provides_in %{_libdir}/php/modules-zts/.*\.so$
-%filter_setup
-}
-%endif
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules-zts/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/%{phpname}/modules/.*\\.so$
+%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/%{phpname}/modules-zts/.*\\.so$
 
 
 %description
@@ -185,16 +190,6 @@ Provides: php-readline, php-readline%{?_isa}
 The php-cli package contains the command-line interface 
 executing PHP scripts, /usr/bin/php, and the CGI interface.
 
-%package zts
-Group: Development/Languages
-Summary: Thread-safe PHP interpreter for use with the Apache HTTP Server
-Requires: php-common%{?_isa} = %{version}-%{release}
-Requires: httpd-mmn = %{httpd_mmn}
-BuildRequires: libtool-ltdl-devel
-
-%description zts
-The php-zts package contains a module for use with the Apache HTTP
-Server which can operate under a threaded server processing model.
 
 %if %{with_fpm}
 %package fpm
@@ -332,8 +327,8 @@ Group: Development/Languages
 BuildRequires: sqlite2-devel >= 2.8.0
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php-sqlite2
-Provides: php-sqlite2
-Provides: php-sqlite2%{?_isa}
+Provides: php-sqlite2 = %{version}-%{release}
+Provides: php-sqlite2%{?_isa} = %{version}-%{release}
 
 %description sqlite
 This is an extension for the SQLite Embeddable SQL Database Engine. 
@@ -1232,6 +1227,7 @@ fi
 %files
 %defattr(-,root,root)
 %{_libdir}/httpd/modules/libphp5.so
+%{_libdir}/httpd/modules/libphp5-zts.so
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/php.conf
 %{contentdir}/icons/php.gif
@@ -1262,10 +1258,6 @@ fi
 %{_mandir}/man1/php.1*
 %{_mandir}/man1/phpize.1*
 %doc sapi/cgi/README* sapi/cli/README
-
-%files zts
-%defattr(-,root,root)
-%{_libdir}/httpd/modules/libphp5-zts.so
 
 %if %{with_fpm}
 %files fpm
