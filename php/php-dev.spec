@@ -637,7 +637,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
-%if 0%{?fedora} >= 13 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 6 || 0%{?rhel} >= 5
 %patch8 -p1 -b .aconf259
 %endif
 
