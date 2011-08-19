@@ -4,16 +4,16 @@
 
 %global pecl_name mongo
 
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-%endif
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.2.1
+Version:      1.2.3
 Release:      1%{?dist}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -142,6 +142,9 @@ cd %{pecl_name}-%{version}
 
 
 %changelog
+* Fri Aug 19 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.3-1
+- update to 1.2.3
+
 * Mon Jul 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.1-1
 - rebuild for remi repo
 
