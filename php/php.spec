@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.7
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -1362,6 +1362,9 @@ fi
 %endif
 
 %changelog
+* Fri Aug 19 2011 Remi Collet <Fedora@famillecollet.com> 5.3.7-1.1
+- EL-5 build with latest libcurl 7.21.7
+
 * Thu Aug 18 2011 Remi Collet <Fedora@famillecollet.com> 5.3.7-1
 - update to 5.3.7
   http://www.php.net/ChangeLog-5.php#5.3.7
