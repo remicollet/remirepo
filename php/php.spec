@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.7
-Release: 1%{?dist}.1
+Release: 2%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -89,6 +89,8 @@ Patch8: php-5.3.7-aconf259.patch
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
 Patch21: php-5.3.3-macropen.patch
+# https://bugs.php.net/55439
+Patch22: php-5.3.7-crypt.patch
 
 # Functional changes
 Patch40: php-5.0.4-dlopen.patch
@@ -645,6 +647,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 
 %patch20 -p1 -b .shutdown
 %patch21 -p1 -b .macropen
+%patch22 -p4 -b .crypt
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -1362,6 +1365,9 @@ fi
 %endif
 
 %changelog
+* Sat Aug 20 2011 Remi Collet <Fedora@famillecollet.com> 5.3.7-2
+- add patch for https://bugs.php.net/55439
+
 * Fri Aug 19 2011 Remi Collet <Fedora@famillecollet.com> 5.3.7-1.1
 - EL-5 build with latest libcurl 7.21.7
 
