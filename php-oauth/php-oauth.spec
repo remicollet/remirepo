@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Aug 21 2011 Remi Collet <RPMS@FamilleCollet.com> 1.0-0.9.svn1262
+- rebuild for remi repository
+
 * Fri Aug 19 2011 F. Kooman <fkooman@tuxed.net> - 1.0-0.9.svn1262
 - update to svn1262
 - move test server class to examples
