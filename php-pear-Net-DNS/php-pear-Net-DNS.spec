@@ -2,7 +2,7 @@
 %define pear_name Net_DNS
 
 Name:           php-pear-Net-DNS
-Version:        1.0.5
+Version:        1.0.7
 Release:        1%{?dist}
 Summary:        Resolver library used to communicate with a DNS server
 
@@ -73,9 +73,12 @@ fi
 %dir %{pear_phpdir}/Net
 %{pear_phpdir}/Net/DNS
 %{pear_phpdir}/Net/DNS.php
-%exclude %{pear_phpdir}/tests
+%{pear_testdir}/%{pear_name}
 
 %changelog
+* Sun Aug 21 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.0.7-1
+- update to 1.0.7 for remi repo
+
 * Sun Aug 15 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.0.5-1
 - rebuild for remi repository
 
