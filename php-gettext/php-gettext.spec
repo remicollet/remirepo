@@ -33,6 +33,9 @@ rm -rf %{buildroot}
 %{_datadir}/php/%{name}
 
 %changelog
+* Sun Aug 21 2011 Remi Collet <RPMS@FamilleCollet.com> 1.0.11-1
+- rebuild for remi repository
+
 * Sun Jul 31 2011 Robert Scheck <robert@fedoraproject.org> 1.0.11-1
 - Upgrade to 1.0.11
 
