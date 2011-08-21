@@ -50,6 +50,9 @@ fi
 %{pear_xmldir}/%{name}.xml
 
 %changelog
+* Sun Aug 21 2011 Remi Collet <RPMS@FamilleCollet.com> 1.3-2
+- rebuild for remi repository
+
 * Sun Jul 31 2011 Robert Scheck <robert@fedoraproject.org> 1.3-2
 - Corrected undefined macro in %%postun scriptlet (#725914 #c1)
 
