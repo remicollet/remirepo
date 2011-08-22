@@ -11,7 +11,7 @@ Version:        0.80.2
 %if 0%{?svnrelease}
 Release:        2.svn%{svnrelease}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
@@ -48,14 +48,15 @@ Requires:       gnu-free-sans-fonts
 %else
 Requires:       freefont
 %endif
-Requires:       %{_sysconfdir}/logrotate.d
+Requires:         %{_sysconfdir}/logrotate.d
 Requires(postun): /sbin/service
-Requires(post): /sbin/service
-BuildRequires:  dos2unix
+Requires(post):   /sbin/service
 %if %{useselinux}
-Requires:       policycoreutils
+Requires(post):   /sbin/restorecon
+Requires(post):   /usr/sbin/semanage
+Requires(postun): /usr/sbin/semanage
 %endif
-Requires:       %{_sysconfdir}/cron.d
+Requires:         %{_sysconfdir}/cron.d
 
 
 %description
@@ -101,7 +102,7 @@ mv lib/extjs/gpl-3.0.txt    LICENSE.extjs
 mv lib/icalcreator/lgpl.txt LICENSE.icalcreator
 rm scripts/glpi_cron_*.sh
 
-dos2unix -o LICENSE.tiny_mce
+sed -i -e 's/\r//' LICENSE.tiny_mce
 for fic in LISEZMOI.txt README.txt
 do
    iconv -f ISO-8859-15 -t UTF-8 $fic >a && mv a $fic
@@ -110,7 +111,7 @@ done
 cat >cron <<EOF
 # GLPI core
 # Run cron from to execute task even when no user connected
-*/4 * * * * apache %{_bindir}/php %{_datadir}/%{name}/front/cron.php
+*/3 * * * * apache %{_bindir}/php %{_datadir}/%{name}/front/cron.php
 EOF
 
 
@@ -245,6 +246,10 @@ fi
 
 
 %changelog
+* Mon Aug 22 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.2-2
+- fix SElinux dependencies (semanage + restorecon)
+- increase cron run frequency (3 tasks each 3 minutes)
+
 * Fri Jul 22 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.2-1
 - version 0.80.2 released (bug + security fix)
   https://forge.indepnet.net/projects/glpi/versions/605

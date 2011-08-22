@@ -1,7 +1,7 @@
-diff -up glpi/install/install.php.cron glpi/install/install.php
---- glpi/install/install.php.cron	2011-06-13 09:24:03.000000000 +0200
-+++ glpi/install/install.php	2011-06-13 09:26:15.000000000 +0200
-@@ -361,6 +361,11 @@ function step4 ($host, $user, $password,
+diff -ru glpi.cron/install/install.php glpi/install/install.php
+--- glpi.cron/install/install.php	2011-07-21 20:50:28.000000000 +0200
++++ glpi/install/install.php	2011-08-22 19:17:20.468262531 +0200
+@@ -357,6 +357,15 @@
        $query = "UPDATE `glpi_users`
                  SET `language` = NULL";
        $DB->query($query) or die("4203 ".$LANG['update'][90].$DB->error());
@@ -9,16 +9,18 @@ diff -up glpi/install/install.php.cron glpi/install/install.php
 +      // RPM provides a good system cron
 +      $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1";
 +      $DB->query($query)
-+      or die("RPM update of glpi_crontasks. " . $LANG['update'][90] . $DB->error());      
++      or die("RPM update of glpi_crontasks. " . $LANG['update'][90] . $DB->error());
++
++      $query = "UPDATE `glpi_configs` SET `cron_limit` = '3'";
++      $DB->query($query)
++      or die("RPM update of glpi_configs. " . $LANG['update'][90] . $DB->error());
     }
  
  
-diff -up glpi/install/mysql/glpi-0.80-empty.sql.cron glpi/install/mysql/glpi-0.80-empty.sql
-diff -up glpi/install/update_0782_080.php.cron glpi/install/update_0782_080.php
-diff -up glpi/install/update.php.cron glpi/install/update.php
---- glpi/install/update.php.cron	2011-06-13 09:21:52.000000000 +0200
-+++ glpi/install/update.php	2011-06-13 09:26:06.000000000 +0200
-@@ -760,6 +760,11 @@ function updateDbUpTo031() {
+diff -ru glpi.cron/install/update.php glpi/install/update.php
+--- glpi.cron/install/update.php	2011-07-21 20:50:28.000000000 +0200
++++ glpi/install/update.php	2011-08-22 19:18:48.485449461 +0200
+@@ -762,6 +762,11 @@
     $plugin = new Plugin();
     $plugin->unactivateAll();
  
@@ -26,7 +28,8 @@ diff -up glpi/install/update.php.cron glpi/install/update.php
 +   $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1";
 +   $DB->query($query)
 +   or die("RPM update of glpi_crontasks. " . $LANG['update'][90] . $DB->error());
-+   
++
     echo "<h3>".$LANG['update'][139]."</h3>";
  
     optimize_tables($migration);
+Seulement dans glpi/install/: update.php~
