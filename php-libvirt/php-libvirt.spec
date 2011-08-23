@@ -3,7 +3,7 @@
 %define		php_extdir  %{_libdir}/php/modules
 
 Name:		php-libvirt
-Version:	0.4.3
+Version:	0.4.4
 Release:	1%{?dist}%{?extra_release}
 Summary:	PHP language binding for Libvirt
 
@@ -33,7 +33,9 @@ For more details see: http://www.libvirt.org/php/
 %package -n php-libvirt-doc
 Summary:	Document of php-libvirt
 Group:		Development/Libraries
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildArch:	noarch
+%endif
 Requires:	php-libvirt = %{version}
 
 %description -n php-libvirt-doc
@@ -69,6 +71,12 @@ rm -rf %{buildroot}
 %{_datadir}/doc/%{name}-%{version}/html
 
 %changelog
+* Tue Aug 23 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.4.4-1
+- rebuild for remi repo
+
+* Mon Aug 22 2011 Michal Novotny <minovotn@redhat.com> - 0.4.4
+- Several bugfixes and updated SPEC file and codes not to require open tags
+
 * Sun Aug 21 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.4.3-1
 - rebuild for remi repo
 
