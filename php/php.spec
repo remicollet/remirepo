@@ -27,7 +27,7 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.3.7
+%global phpversion 5.3.8
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -59,8 +59,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.7
-Release: 2%{?dist}.1
+Version: 5.3.8
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -84,13 +84,11 @@ Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 # from http://svn.php.net/viewvc?view=revision&revision=311042
 # and  http://svn.php.net/viewvc?view=revision&revision=311908
-Patch8: php-5.3.7-aconf259.patch
+Patch8: php-5.3.8-aconf259.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
 Patch21: php-5.3.3-macropen.patch
-# https://bugs.php.net/55439
-Patch22: php-5.3.7-crypt.patch
 
 # Functional changes
 Patch40: php-5.0.4-dlopen.patch
@@ -647,7 +645,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 
 %patch20 -p1 -b .shutdown
 %patch21 -p1 -b .macropen
-%patch22 -p4 -b .crypt
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -1365,6 +1362,10 @@ fi
 %endif
 
 %changelog
+* Tue Aug 23 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-1
+- update to 5.3.8
+  http://www.php.net/ChangeLog-5.php#5.3.8
+
 * Sun Aug 21 2011 Remi Collet <Fedora@famillecollet.com> 5.3.7-2.1
 - EL-5 build with latest libcurl 7.21.7
 

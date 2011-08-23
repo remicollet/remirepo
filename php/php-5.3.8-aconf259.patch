@@ -1,6 +1,6 @@
-diff -up php-5.3.7/build/buildcheck.sh.aconf259 php-5.3.7/build/buildcheck.sh
---- php-5.3.7/build/buildcheck.sh.aconf259	2011-05-18 21:55:34.000000000 +0200
-+++ php-5.3.7/build/buildcheck.sh	2011-08-18 18:05:07.401955101 +0200
+diff -up php-5.3.8/build/buildcheck.sh.aconf259 php-5.3.8/build/buildcheck.sh
+--- php-5.3.8/build/buildcheck.sh.aconf259	2011-05-18 21:55:34.000000000 +0200
++++ php-5.3.8/build/buildcheck.sh	2011-08-23 13:43:08.977271533 +0200
 @@ -28,33 +28,23 @@ if test -z "$PHP_AUTOCONF"; then
    PHP_AUTOCONF='autoconf'
  fi
@@ -40,11 +40,11 @@ diff -up php-5.3.7/build/buildcheck.sh.aconf259 php-5.3.7/build/buildcheck.sh
  
  if test "$1" = "2" -a "$2" -ge "50"; then
    ./vcsclean
-diff -up php-5.3.7/configure.in.aconf259 php-5.3.7/configure.in
---- php-5.3.7/configure.in.aconf259	2011-08-18 18:05:07.393955075 +0200
-+++ php-5.3.7/configure.in	2011-08-18 18:05:43.766072484 +0200
+diff -up php-5.3.8/configure.in.aconf259 php-5.3.8/configure.in
+--- php-5.3.8/configure.in.aconf259	2011-08-23 13:43:08.971271521 +0200
++++ php-5.3.8/configure.in	2011-08-23 13:43:34.264326174 +0200
 @@ -1,28 +1,6 @@
- ## $Id: configure.in 315066 2011-08-17 13:30:04Z iliaa $ -*- autoconf -*-
+ ## $Id: configure.in 315343 2011-08-23 08:56:29Z johannes $ -*- autoconf -*-
  dnl ## Process this file with autoconf to produce a configure script.
  
 -divert(1)
@@ -136,9 +136,9 @@ diff -up php-5.3.7/configure.in.aconf259 php-5.3.7/configure.in
  dnl Extension configuration.
  dnl -------------------------------------------------------------------------
  
-diff -up php-5.3.7/ext/standard/config.m4.aconf259 php-5.3.7/ext/standard/config.m4
---- php-5.3.7/ext/standard/config.m4.aconf259	2010-06-17 12:22:03.000000000 +0200
-+++ php-5.3.7/ext/standard/config.m4	2011-08-18 18:05:07.403955107 +0200
+diff -up php-5.3.8/ext/standard/config.m4.aconf259 php-5.3.8/ext/standard/config.m4
+--- php-5.3.8/ext/standard/config.m4.aconf259	2010-06-17 12:22:03.000000000 +0200
++++ php-5.3.8/ext/standard/config.m4	2011-08-23 13:43:08.979271537 +0200
 @@ -1,7 +1,5 @@
  dnl $Id: config.m4 300511 2010-06-17 10:22:03Z pajoye $ -*- autoconf -*-
  
@@ -156,9 +156,9 @@ diff -up php-5.3.7/ext/standard/config.m4.aconf259 php-5.3.7/ext/standard/config
  dnl
  dnl Check if there is a support means of creating a new process
  dnl and defining which handles it receives
-diff -up php-5.3.7/scripts/php-config.in.aconf259 php-5.3.7/scripts/php-config.in
---- php-5.3.7/scripts/php-config.in.aconf259	2011-04-18 13:13:37.000000000 +0200
-+++ php-5.3.7/scripts/php-config.in	2011-08-18 18:05:07.404955110 +0200
+diff -up php-5.3.8/scripts/php-config.in.aconf259 php-5.3.8/scripts/php-config.in
+--- php-5.3.8/scripts/php-config.in.aconf259	2011-04-18 13:13:37.000000000 +0200
++++ php-5.3.8/scripts/php-config.in	2011-08-23 13:43:08.980271540 +0200
 @@ -2,6 +2,7 @@
  
  SED="@SED@"
@@ -167,9 +167,9 @@ diff -up php-5.3.7/scripts/php-config.in.aconf259 php-5.3.7/scripts/php-config.i
  exec_prefix="@exec_prefix@"
  version="@PHP_VERSION@"
  vernum="@PHP_VERSION_ID@"
-diff -up php-5.3.7/scripts/phpize.in.aconf259 php-5.3.7/scripts/phpize.in
---- php-5.3.7/scripts/phpize.in.aconf259	2011-08-18 18:05:07.390955065 +0200
-+++ php-5.3.7/scripts/phpize.in	2011-08-18 18:05:07.405955113 +0200
+diff -up php-5.3.8/scripts/phpize.in.aconf259 php-5.3.8/scripts/phpize.in
+--- php-5.3.8/scripts/phpize.in.aconf259	2011-08-23 13:43:08.968271513 +0200
++++ php-5.3.8/scripts/phpize.in	2011-08-23 13:43:08.981271543 +0200
 @@ -2,6 +2,7 @@
  
  # Variable declaration
@@ -178,9 +178,9 @@ diff -up php-5.3.7/scripts/phpize.in.aconf259 php-5.3.7/scripts/phpize.in
  exec_prefix="`eval echo @exec_prefix@`"
  phpdir="@libdir@/php/build"
  includedir="`eval echo @includedir@`/php"
-diff -up php-5.3.7/scripts/phpize.m4.aconf259 php-5.3.7/scripts/phpize.m4
---- php-5.3.7/scripts/phpize.m4.aconf259	2010-11-02 10:58:08.000000000 +0100
-+++ php-5.3.7/scripts/phpize.m4	2011-08-18 18:05:07.406955117 +0200
+diff -up php-5.3.8/scripts/phpize.m4.aconf259 php-5.3.8/scripts/phpize.m4
+--- php-5.3.8/scripts/phpize.m4.aconf259	2010-11-02 10:58:08.000000000 +0100
++++ php-5.3.8/scripts/phpize.m4	2011-08-23 13:43:08.982271545 +0200
 @@ -1,9 +1,8 @@
  dnl This file becomes configure.in for self-contained extensions.
  
