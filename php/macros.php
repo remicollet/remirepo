@@ -5,4 +5,5 @@
 %php_zend_api @PHP_ZENDVER@
 %php_pdo_api @PHP_PDOVER@
 
-%php_extdir %{_libdir}/php/modules
+%php_extdir    %{_libdir}/php/modules
+%php_ztsextdir %{_libdir}/php/modules-zts

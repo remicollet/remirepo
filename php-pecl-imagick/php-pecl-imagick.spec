@@ -10,9 +10,6 @@
 %global phpincldir     %{_includedir}/%{phpname}
 %endif
 
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
-
 %global php_apiver %((echo %{default_apiver}; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 
 %global pecl_name imagick
@@ -20,7 +17,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{phpname}-pecl-imagick
 Version:       3.0.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -72,19 +69,31 @@ cd %{pecl_name}-%{version}
 
 %build
 cd %{pecl_name}-%{version}
+# ZTS build
+%{phpbindir}/php-zts/phpize
+%configure --with-imagick=%{prefix} --with-php-config=%{phpbindir}/php-zts/php-config
+make %{?_smp_mflags}
+
+# Save the ZTS build
+mv modules/%{pecl_name}.so ztsso
+# Generate the clean build tree
+make distclean
+
+# Standard build
 %{phpbindir}/phpize
 %configure --with-imagick=%{prefix} --with-php-config=%{phpbindir}/php-config
-%{__make} %{?_smp_mflags}
+make %{?_smp_mflags}
 
 
 %install
 pushd %{pecl_name}-%{version}
-%{__rm} -rf %{buildroot}
-%{__make} install INSTALL_ROOT=%{buildroot}
+rm -rf %{buildroot}
+make install INSTALL_ROOT=%{buildroot}
+
+install -D -m 755 ztsso %{buildroot}%{php_ztsextdir}/%{pecl_name}.so
 
 # Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{phpconfdir}/php.d
-%{__cat} > %{buildroot}%{phpconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
 
@@ -92,6 +101,9 @@ extension = %{pecl_name}.so
 ;imagick.locale_fix=0
 ;imagick.progress_monitor=0
 EOF
+
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{phpconfdir}/php.d/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{phpconfdir}/php-zts.d/%{pecl_name}.ini
 
 popd
 # Install XML package description
@@ -123,19 +135,24 @@ pushd %{pecl_name}-%{version}
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-, root, root, 0755)
 %doc %{pecl_name}-%{version}/{CREDITS,ChangeLog,examples}
 %config(noreplace) %{phpconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{phpconfdir}/php-zts.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 %exclude %{phpincldir}/php/ext/%{pecl_name}
 
 
 %changelog
+* Tue Aug 24 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.0.1-3
+- build zts extension
+
 * Sun Dec 27 2010 Remi Collet <rpms@famillecollet.com> 3.0.1-2
 - relocate using phpname macro
 

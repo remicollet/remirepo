@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.8
-Release: 1%{?dist}.1
+Release: 2%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -271,6 +271,8 @@ Group: Development/Libraries
 Summary: Files needed for building PHP extensions
 Requires: %{phpname}%{?_isa} = %{version}-%{release}, autoconf, automake
 Obsoletes: %{phpname}-pecl-pdo-devel
+Provides: php-zts-devel = %{version}-%{release}
+Provides: php-zts-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{phpname}-devel package contains the files needed for building PHP
@@ -961,6 +963,9 @@ cp ../ext/sqlite/libsqlite/src/encode.c ext/sqlite/libsqlite/src/
 
 EXTENSION_DIR=%{_libdir}/%{phpname}/modules-zts
 build --with-apxs2=%{_sbindir}/apxs \
+      --bindir=%{_bindir}/php-zts \
+      --includedir=%{_includedir}/php-zts \
+      --libdir=%{_libdir}/php-zts \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
       --enable-force-cgi-redirect \
@@ -1054,18 +1059,22 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 # Install the extensions for the ZTS version
-make -C build-zts install-modules INSTALL_ROOT=$RPM_BUILD_ROOT
+make -C build-zts install-build install-programs install-headers install-modules \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # Install the version for embedded script language in applications + php_embed.h
-make -C build-embedded install-sapi install-headers INSTALL_ROOT=$RPM_BUILD_ROOT
+make -C build-embedded install-sapi install-headers \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
 
 %if %{with_fpm}
 # Install the php-fpm binary
-make -C build-fpm install-fpm INSTALL_ROOT=$RPM_BUILD_ROOT 
+make -C build-fpm install-fpm \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
 %endif
 
 # Install everything from the CGI SAPI build
-make -C build-cgi install INSTALL_ROOT=$RPM_BUILD_ROOT 
+make -C build-cgi install \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # Install the default configuration file and icons
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/
@@ -1311,8 +1320,12 @@ fi
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
+%{_bindir}/php-zts/php-config
+%{_bindir}/php-zts/phpize
 %{_includedir}/php
+%{_includedir}/php-zts
 %{_libdir}/%{phpname}/build
+%{_libdir}/php-zts/%{phpname}/build
 %if %{phpname} == php
 %{_mandir}/man1/php-config.1*
 %else
@@ -1362,6 +1375,9 @@ fi
 %endif
 
 %changelog
+* Wed Aug 24 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-2
+- provides zts devel stuff
+
 * Tue Aug 23 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-1.1
 - EL-5 build with latest libcurl 7.21.7
 

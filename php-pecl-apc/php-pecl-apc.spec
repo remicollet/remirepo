@@ -19,7 +19,7 @@
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
 Version:       3.1.9
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
@@ -81,15 +81,24 @@ grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
 
 %build
 cd APC-%{version}
+%{phpbindir}/php-zts/phpize
+%configure --enable-apc-mmap --with-php-config=%{phpbindir}/php-zts/php-config
+make %{?_smp_mflags}
+
+mv modules/apc.so apczts
+make distclean
+
 %{phpbindir}/phpize
 %configure --enable-apc-mmap --with-php-config=%{phpbindir}/php-config
-%{__make} %{?_smp_mflags}
+make %{?_smp_mflags}
 
 
 %install
 pushd APC-%{version}
-%{__rm} -rf %{buildroot}
-%{__make} install INSTALL_ROOT=%{buildroot}
+rm -rf %{buildroot}
+make install INSTALL_ROOT=%{buildroot}
+
+install -D -m 755 apczts %{buildroot}%{php_ztsextdir}/apc.so
 
 # Fix the charset of NOTICE
 iconv -f iso-8859-1 -t utf8 NOTICE >NOTICE.utf8
@@ -97,12 +106,10 @@ mv NOTICE.utf8 NOTICE
 
 popd
 # Install the package XML file
-%{__mkdir_p} %{buildroot}%{pecl_xmldir}
-%{__install} -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{phpconfdir}/php.d
-%{__cat} > %{buildroot}%{phpconfdir}/php.d/apc.ini << 'EOF'
+cat > apc.ini << 'EOF'
 ; Enable apc extension module
 extension = apc.so
 
@@ -174,6 +181,8 @@ apc.file_md5=0
 ; not documented
 apc.preload_path
 EOF
+install -D -m 644 apc.ini %{buildroot}%{phpconfdir}/php.d/apc.ini
+install -D -m 644 apc.ini %{buildroot}%{phpconfdir}/php-zts.d/apc.ini
 
 
 %check
@@ -198,7 +207,7 @@ fi
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %files
@@ -207,7 +216,9 @@ fi
 %doc APC-%{version}/NOTICE        APC-%{version}/TODO      APC-%{version}/apc.php
 %doc APC-%{version}/INSTALL
 %config(noreplace) %{phpconfdir}/php.d/apc.ini
+%config(noreplace) %{phpconfdir}/php-zts.d/apc.ini
 %{php_extdir}/apc.so
+%{php_ztsextdir}/apc.so
 %{pecl_xmldir}/%{name}.xml
 
 %files devel
@@ -215,6 +226,9 @@ fi
 
 
 %changelog
+* Tue Aug 24 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.9-2
+- build zts extension
+
 * Sun May 15 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.9-1
 - update to 3.1.9 (bugfix, stable)
 
