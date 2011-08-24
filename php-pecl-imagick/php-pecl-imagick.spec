@@ -1,17 +1,5 @@
 %{!?phpname:		%{expand: %%global phpname     php}}
 
-%if %{phpname} == php
-%global phpbindir      %{_bindir}
-%global phpconfdir     %{_sysconfdir}
-%global phpincldir     %{_includedir}
-%else
-%global phpbindir      %{_bindir}/%{phpname}
-%global phpconfdir     %{_sysconfdir}/%{phpname}
-%global phpincldir     %{_includedir}/%{phpname}
-%endif
-
-%global php_apiver %((echo %{default_apiver}; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-
 %global pecl_name imagick
 
 Summary:       Extension to create and modify images using ImageMagick
@@ -31,29 +19,23 @@ BuildRequires: ImageMagick-devel >= 6.6.0
 %else
 BuildRequires: ImageMagick2-devel >= 6.6.0
 %endif
-%if 0%{?pecl_install:1}
 Requires(post): %{__pecl}
-%endif
-%if 0%{?pecl_uninstall:1}
 Requires(postun): %{__pecl}
-%endif
 Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}
 
 Conflicts:     %{phpname}-pecl-gmagick
 
-%if %{?php_zend_api:1}0
 Requires:       %{phpname}(zend-abi) = %{php_zend_api}
 Requires:       %{phpname}(api) = %{php_core_api}
-%else
-Requires:       %{phpname}-api = %{php_apiver}
-%endif
 
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-%endif
+
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -64,33 +46,30 @@ using the ImageMagick API.
 %prep
 echo TARGET is %{name}-%{version}-%{release}
 %setup -q -c 
-cd %{pecl_name}-%{version}
+
+cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 
 %build
-cd %{pecl_name}-%{version}
+cd %{pecl_name}-%{version}-zts
 # ZTS build
-%{phpbindir}/php-zts/phpize
-%configure --with-imagick=%{prefix} --with-php-config=%{phpbindir}/php-zts/php-config
+%{php_ztsbindir}/phpize
+%configure --with-imagick=%{prefix} --with-php-config=%{php_ztsbindir}/php-config
 make %{?_smp_mflags}
 
-# Save the ZTS build
-mv modules/%{pecl_name}.so ztsso
-# Generate the clean build tree
-make distclean
-
 # Standard build
-%{phpbindir}/phpize
-%configure --with-imagick=%{prefix} --with-php-config=%{phpbindir}/php-config
+cd ../%{pecl_name}-%{version}
+%{php_bindir}/phpize
+%configure --with-imagick=%{prefix} --with-php-config=%{php_bindir}/php-config
 make %{?_smp_mflags}
 
 
 %install
-pushd %{pecl_name}-%{version}
 rm -rf %{buildroot}
-make install INSTALL_ROOT=%{buildroot}
 
-install -D -m 755 ztsso %{buildroot}%{php_ztsextdir}/%{pecl_name}.so
+make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}-zts
+
+make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}
 
 # Drop in the bit of configuration
 cat > %{pecl_name}.ini << 'EOF'
@@ -102,33 +81,28 @@ extension = %{pecl_name}.so
 ;imagick.progress_monitor=0
 EOF
 
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{phpconfdir}/php.d/%{pecl_name}.ini
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{phpconfdir}/php-zts.d/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
-popd
 # Install XML package description
 mkdir -p %{buildroot}%{pecl_xmldir}
 install -pm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %check
 # simple module load test
 pushd %{pecl_name}-%{version}
-%{phpbindir}/php --no-php-ini \
+%{php_bindir}/php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -141,12 +115,13 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root, 0755)
 %doc %{pecl_name}-%{version}/{CREDITS,ChangeLog,examples}
-%config(noreplace) %{phpconfdir}/php.d/%{pecl_name}.ini
-%config(noreplace) %{phpconfdir}/php-zts.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
-%exclude %{phpincldir}/php/ext/%{pecl_name}
+%{php_incldir}/ext/%{pecl_name}
+%{php_ztsincldir}/ext/%{pecl_name}
 
 
 %changelog

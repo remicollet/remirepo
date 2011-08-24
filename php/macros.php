@@ -3,7 +3,16 @@
 # 
 %php_core_api @PHP_APIVER@
 %php_zend_api @PHP_ZENDVER@
-%php_pdo_api @PHP_PDOVER@
+%php_pdo_api  @PHP_PDOVER@
 
 %php_extdir    %{_libdir}/php/modules
 %php_ztsextdir %{_libdir}/php/modules-zts
+
+%php_inidir    %{_sysconfdir}/php.d
+%php_ztsinidir %{_sysconfdir}/php-zts.d
+
+%php_incldir    %{_includedir}/php
+%php_ztsincldir %{_includedir}/php-zts/php
+
+%php_bindir    %{_bindir}
+%php_ztsbindir %{_bindir}/php-zts

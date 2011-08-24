@@ -1,17 +1,5 @@
 %{!?phpname:		%{expand: %%global phpname     php}}
 
-%if %{phpname} == php
-%global phpbindir      %{_bindir}
-%global phpconfdir     %{_sysconfdir}
-%global phpincldir     %{_includedir}
-%else
-%global phpbindir      %{_bindir}/%{phpname}
-%global phpconfdir     %{_sysconfdir}/%{phpname}
-%global phpincldir     %{_includedir}/%{phpname}
-%endif
-
-%{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
-%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)
 %global php_zendabiver %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP Extension => //p') | tail -1)
 %global php_version %((echo 0; php-config --version 2>/dev/null) | tail -1)
 %global pecl_name APC
@@ -49,12 +37,13 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
 
-%if 0%{?fedora}%{?rhel} > 4
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-%endif
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -78,33 +67,35 @@ These are the files needed to compile programs using APC serializer.
 # Check than upstream version is correct, http://pecl.php.net/bugs/19590
 grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
 
+cp -pr APC-%{version} APC-%{version}-zts
+
 
 %build
-cd APC-%{version}
-%{phpbindir}/php-zts/phpize
-%configure --enable-apc-mmap --with-php-config=%{phpbindir}/php-zts/php-config
+cd APC-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure --enable-apc-mmap --with-php-config=%{php_ztsbindir}/php-config
 make %{?_smp_mflags}
 
-mv modules/apc.so apczts
-make distclean
-
-%{phpbindir}/phpize
-%configure --enable-apc-mmap --with-php-config=%{phpbindir}/php-config
+cd ../APC-%{version}
+%{php_bindir}/phpize
+%configure --enable-apc-mmap --with-php-config=%{php_bindir}/php-config
 make %{?_smp_mflags}
 
 
 %install
-pushd APC-%{version}
 rm -rf %{buildroot}
+pushd APC-%{version}-zts
 make install INSTALL_ROOT=%{buildroot}
+popd
 
-install -D -m 755 apczts %{buildroot}%{php_ztsextdir}/apc.so
+pushd APC-%{version}
+make install INSTALL_ROOT=%{buildroot}
 
 # Fix the charset of NOTICE
 iconv -f iso-8859-1 -t utf8 NOTICE >NOTICE.utf8
 mv NOTICE.utf8 NOTICE
-
 popd
+
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
@@ -181,13 +172,13 @@ apc.file_md5=0
 ; not documented
 apc.preload_path
 EOF
-install -D -m 644 apc.ini %{buildroot}%{phpconfdir}/php.d/apc.ini
-install -D -m 644 apc.ini %{buildroot}%{phpconfdir}/php-zts.d/apc.ini
+install -D -m 644 apc.ini %{buildroot}%{php_ztsinidir}/apc.ini
+install -D -m 644 apc.ini %{buildroot}%{php_inidir}/apc.ini
 
 
 %check
 cd %{pecl_name}-%{version}
-TEST_PHP_EXECUTABLE=%{phpbindir}/php %{phpbindir}/php run-tests.php \
+TEST_PHP_EXECUTABLE=%{php_bindir}/php %{php_bindir}/php run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=apc.so
 
@@ -215,14 +206,16 @@ rm -rf %{buildroot}
 %doc APC-%{version}/TECHNOTES.txt APC-%{version}/CHANGELOG APC-%{version}/LICENSE
 %doc APC-%{version}/NOTICE        APC-%{version}/TODO      APC-%{version}/apc.php
 %doc APC-%{version}/INSTALL
-%config(noreplace) %{phpconfdir}/php.d/apc.ini
-%config(noreplace) %{phpconfdir}/php-zts.d/apc.ini
+%config(noreplace) %{php_inidir}/apc.ini
+%config(noreplace) %{php_ztsinidir}/apc.ini
 %{php_extdir}/apc.so
 %{php_ztsextdir}/apc.so
 %{pecl_xmldir}/%{name}.xml
 
+
 %files devel
-%{phpincldir}/php/ext/apc
+%{php_incldir}/ext/apc
+%{php_ztsincldir}/ext/apc
 
 
 %changelog
