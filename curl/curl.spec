@@ -1,7 +1,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 7.21.7
-Release: 3%{?dist}.1
+Release: 4%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
@@ -13,6 +13,7 @@ Patch1: 0001-curl-7.21.7-a7864c4.patch
 
 # fix SIGSEGV of curl -O -J given more than one URLs (#723075)
 Patch2: 0002-curl-7.21.7-5eb2396.patch
+Patch5: 0005-curl-7.21.7-61ae7e9.patch
 
 # introduce the --delegation option of curl (#730444)
 Patch3: 0003-curl-7.21.7-5538904.patch
@@ -123,6 +124,7 @@ done
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 # Fedora patches
 %patch101 -p1
@@ -248,6 +250,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Thu Aug 25 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-4
+- sync with rawhide
+
+* Sun Aug 21 2011 Paul Howarth <paul@city-fan.org> 7.21.7-4
+- actually fix SIGSEGV of curl -O -J given more than one URL (#723075)
+
 * Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-3.14
 - keep "libcurl" name (and provides compat-libcurl3 as another package)
 
@@ -256,7 +264,7 @@ rm -rf $RPM_BUILD_ROOT
 - disable tests which requires libnsspem.so (not available in EL-5)
 
 * Mon Aug 15 2011 Kamil Dudka <kdudka@redhat.com> 7.21.7-3
-- fix SIGSEGV of curl -O -J given more than one URLs (#723075)
+- fix SIGSEGV of curl -O -J given more than one URL (#723075)
 - introduce the --delegation option of curl (#730444)
 - initialize NSS with no database if the selected database is broken (#728562)
 
