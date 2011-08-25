@@ -120,7 +120,7 @@ cd %{pear_name}-%{version}%{?prever}
 %{_bindir}/phpunit \
     -d date.timezone=UTC \
     --bootstrap $RPM_BUILD_ROOT%{pear_phpdir}/Bartlett/PHP/CompatInfo/Autoload.php \
-%if 0%{?rhel} == 4
+%if 0%{?rhel} < 6 && 0%{?fedora} < 8
     tests || exit 0
 %else
     tests
