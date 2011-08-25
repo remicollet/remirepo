@@ -10,7 +10,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.0.0
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -18,6 +18,9 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
+
+# for old asciidoc version https://bugzilla.redhat.com/556171
+Patch0:         PHP_CompatInfo-docs.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -52,22 +55,19 @@ PHP_CompatInfo will parse a file/folder/array to find out the minimum
 version and extensions required for it to run. CLI version has many reports
 (extension, interface, class, function, constant) to display and ability to
 show content of dictionary references.
-
 %if %{withhtmldoc}
-Documentation :  %{pear_docdir}/%{pear_name}/docs/phpci-book.html
+HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/index.html
 %endif
 
 
 %prep
 %setup -q -c
 
-# Create a "localized" php.ini to avoid build warning
-cp -pf /etc/php.ini .
-echo "date.timezone=UTC" >> php.ini
-
 # Package is V2
 cd %{pear_name}-%{version}%{?prever}
 mv -f ../package.xml %{name}.xml
+
+%patch0 -p1 -b .fix
 
 
 %build
@@ -79,14 +79,19 @@ phing -f docs/build-phing.xml \
       -Dhomedir=$PWD \
       -Dasciidoc.home=%{_datadir}/asciidoc \
       make-full-docs
-ls -lort docs
+
+# asciidoc fails silently
+[ -f docs/index.html ] || exit 1
 %endif
+
+# restore unpatched docs (for install and checksum)
+mv docs/index.txt.fix docs/index.txt
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
 cd %{pear_name}-%{version}%{?prever}
-PHPRC=../php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
@@ -146,7 +151,11 @@ fi
 
 
 %changelog
-* Sat Jun 02 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-1
+* Thu Aug 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.0-1
+- Version 2.1.0 (stable) - API 2.1.0 (stable)
+- fix documentation for asciidoc 8.4
+
+* Sat Jun 02 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-1
 - Version 2.0.0 (stable) - API 2.0.0 (stable)
 - add HTML documentation
 
