@@ -20,12 +20,12 @@
 # don't enable crash reporter for remi repo
 %define enable_mozilla_crashreporter 0
 
-%define version_internal  5.0
+%define version_internal  6
 %define mozappdir         %{_libdir}/%{name}-%{version_internal}
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        6.0
+Version:        6.0.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -37,7 +37,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20110817.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20110901.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -51,6 +51,7 @@ Source100:      find-external-requires
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-version.patch
 Patch7:         crashreporter-remove-static.patch
+Patch8:         xulrunner-6.0-secondary-ipc.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -159,6 +160,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch7 -p2 -b .static
+%patch8 -p2 -b .secondary-ipc
 cd ..
 
 %if %{official_branding}
@@ -442,6 +444,12 @@ fi
 #===============================================================================
 
 %changelog
+* Thu Sep 01 2011 Remi Collet <rpms@famillecollet.com> 6.0.1-1
+- Thunderbird 6.0.1
+
+* Wed Aug 31 2011 Dan Horák <dan[at]danny.cz> - 6.0-2
+- add secondary-ipc patch from xulrunner
+
 * Wed Aug 17 2011 Remi Collet <rpms@famillecollet.com> 6.0-1
 - Thunderbird 6.0, sync with rawhide
 
