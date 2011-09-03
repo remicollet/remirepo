@@ -2,8 +2,8 @@
 
 %global contentdir  /var/www
 # API/ABI check
-%global apiver      20090626
-%global zendver     20090626
+%global apiver      20100412
+%global zendver     20100525
 %global pdover      20080721
 # Extension version
 %global fileinfover 1.0.5-dev
@@ -27,7 +27,8 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.3.8
+%global phpversion 5.4.0beta1-dev
+%global snapdate   201109031230
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -59,15 +60,23 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.8
+Version: 5.4.0
+%if 0%{?snapdate}
+Release: 0.1.%{snapdate}%{?dist}
+%else
 Release: 2%{?dist}
+%endif
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
 
+%if 0%{?snapdate}
+Source0: http://www.php.net/distributions/php5.4-%{snapdate}.tar.bz2
+%else
 Source0: http://www.php.net/distributions/php-%{version}.tar.bz2
+%endif
 Source1: php.conf
-Source2: php-53-remi.ini
+Source2: php.ini
 Source3: macros.php
 Source4: php-fpm.conf
 Source5: php-fpm-www.conf
@@ -75,48 +84,39 @@ Source6: php-fpm.init
 Source7: php-fpm.logrotate
 
 # Build fixes
-Patch1: php-5.3.7-gnusrc.patch
-Patch2: php-5.3.0-install.patch
-Patch3: php-5.2.4-norpath.patch
-Patch4: php-5.3.0-phpize64.patch
+#Patch1: php-5.3.7-gnusrc.patch
+#Patch2: php-5.3.0-install.patch
+#Patch3: php-5.2.4-norpath.patch
+#Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-# from http://svn.php.net/viewvc?view=revision&revision=311042
-# and  http://svn.php.net/viewvc?view=revision&revision=311908
-Patch8: php-5.3.8-aconf259.patch
+Patch8: php-5.4.0-fpmstatus.patch
 
 # Fixes for extension modules
-Patch20: php-4.3.11-shutdown.patch
-Patch21: php-5.3.3-macropen.patch
+#Patch20: php-4.3.11-shutdown.patch
+#Patch21: php-5.3.3-macropen.patch
 
 # Functional changes
-Patch40: php-5.0.4-dlopen.patch
-Patch41: php-5.3.0-easter.patch
-Patch42: php-5.3.1-systzdata-v7.patch
+#Patch40: php-5.0.4-dlopen.patch
+#Patch41: php-5.3.0-easter.patch
+#Patch42: php-5.3.1-systzdata-v7.patch
 # See http://bugs.php.net/53436
-Patch43: php-5.3.4-phpize.patch
+#Patch43: php-5.3.4-phpize.patch
 
 # Fixes for tests
-Patch61: php-5.0.4-tests-wddx.patch
-Patch62: php-5.3.3-tests.patch
+#Patch61: php-5.0.4-tests-wddx.patch
+#Patch62: php-5.3.3-tests.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Missing functions when build with libedit
 # See http://bugs.php.net/54450
-Patch92: php-5.3.7-readline.patch
+#Patch92: php-5.3.7-readline.patch
 
 # On EL4, include order breaks build against MySQL 5.5
-Patch93: php-5.3.6-mysqli.patch
-
-# backport for http://bugs.php.net/50755  (multiple rowset in pdo_dblib)
-# http://svn.php.net/viewvc?view=revision&revision=300002
-# http://svn.php.net/viewvc?view=revision&revision=300089
-# http://svn.php.net/viewvc?view=revision&revision=300646
-# http://svn.php.net/viewvc?view=revision&revision=300791
-Patch94: php-5.3.7-pdo-dblib-50755.patch
+#Patch93: php-5.3.6-mysqli.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -327,21 +327,6 @@ The %{phpname}-pdo package contains a dynamic shared object that will add
 a database access abstraction layer to PHP.  This module provides
 a common interface for accessing MySQL, PostgreSQL or other 
 databases.
-
-%package sqlite
-Summary: Extension for the SQLite V2 Embeddable SQL Database Engine
-Group: Development/Languages
-BuildRequires: sqlite2-devel >= 2.8.0
-Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
-Obsoletes: %{phpname}-sqlite2
-Provides: %{phpname}-sqlite2 = %{version}-%{release}
-Provides: %{phpname}-sqlite2%{?_isa} = %{version}-%{release}
-
-%description sqlite
-This is an extension for the SQLite Embeddable SQL Database Engine. 
-SQLite is a C library that implements an embeddable SQL database engine. 
-Programs that link with the SQLite library can have SQL database access 
-without running a separate RDBMS process. 
 
 %package mysql
 Summary: A module for PHP applications that use MySQL databases
@@ -632,36 +617,37 @@ support for using the enchant library to PHP.
 
 %prep
 echo CIBLE = %{name}-%{version}-%{release}
+%if 0%{?snapdate}
+%setup -q -n php5.4-%{snapdate}
+%else
 %setup -q -n php-%{version}
+%endif
 
-%patch1 -p1 -b .gnusrc
-%patch2 -p1 -b .install
-%patch3 -p1 -b .norpath
-%patch4 -p1 -b .phpize64
+#%patch1 -p1 -b .gnusrc
+#%patch2 -p1 -b .install
+#%patch3 -p1 -b .norpath
+#%patch4 -p1 -b .phpize64
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
-%if 0%{?fedora} >= 6 || 0%{?rhel} >= 5
-%patch8 -p1 -b .aconf259
-%endif
+%patch8 -p1 -b .fpmstatus
 
-%patch20 -p1 -b .shutdown
-%patch21 -p1 -b .macropen
+#%patch20 -p1 -b .shutdown
+#%patch21 -p1 -b .macropen
 
-%patch40 -p1 -b .dlopen
-%patch41 -p1 -b .easter
+#%patch40 -p1 -b .dlopen
+#%patch41 -p1 -b .easter
 %if %{?fedora}%{?rhel:99} >= 13
-%patch42 -p1 -b .systzdata
+#%patch42 -p1 -b .systzdata
 %endif
-%patch43 -p0 -b .headers
+#%patch43 -p0 -b .headers
 
-%patch61 -p1 -b .tests-wddx
-%patch62 -p0 -b .tests
+#%patch61 -p1 -b .tests-wddx
+#%patch62 -p0 -b .tests
 
 %patch91 -p1 -b .remi-oci8
-%patch92 -p1 -b .libedit
-%patch93 -p1 -b .mysqli
-%patch94 -p1 -b .50755
+#%patch92 -p1 -b .libedit
+#%patch93 -p1 -b .mysqli
 
 
 %if %{phpname} != php
@@ -859,11 +845,8 @@ make %{?_smp_mflags}
 # Build /usr/bin/php-cgi with the CGI SAPI, and all the shared extensions
 pushd build-cgi
 
-# RC patch ??? (only for EL-5 ??)
-mkdir -p ext/sqlite/libsqlite/src
-cp ../ext/sqlite/libsqlite/src/encode.c ext/sqlite/libsqlite/src/
-
 build --enable-force-cgi-redirect \
+      --libdir=%{_libdir}/php \
       --enable-pcntl \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
@@ -903,7 +886,6 @@ build --enable-force-cgi-redirect \
 %else
       --without-sqlite3 \
 %endif
-      --with-sqlite=shared,%{_prefix} \
       --enable-json=shared \
 %if %{with_zip}
       --enable-zip=shared \
@@ -930,7 +912,6 @@ popd
 without_shared="--without-mysql --without-gd \
       --disable-dom --disable-dba --without-unixODBC \
       --disable-pdo --disable-xmlreader --disable-xmlwriter \
-      --without-sqlite \
       --without-sqlite3 --disable-phar --disable-fileinfo \
       --disable-json --without-pspell --disable-wddx \
       --without-curl --disable-posix \
@@ -938,30 +919,31 @@ without_shared="--without-mysql --without-gd \
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
 pushd build-apache
-build --with-apxs2=%{_sbindir}/apxs ${without_shared}
+build --with-apxs2=%{_sbindir}/apxs \
+      --libdir=%{_libdir}/php \
+      ${without_shared}
 popd
 
 %if %{with_fpm}
 # Build php-fpm
 pushd build-fpm
-build --enable-fpm ${without_shared}
+build --enable-fpm \
+      --libdir=%{_libdir}/php \
+      ${without_shared}
 popd
 %endif
 
 # Build for inclusion as embedded script language into applications,
 # /usr/lib[64]/libphp5.so
 pushd build-embedded
-build --enable-embed ${without_shared}
+build --enable-embed \
+      ${without_shared}
 popd
 
 # Build a special thread-safe Apache SAPI
 pushd build-zts
 
-# RC patch ??? (only for EL-5 ??)
-mkdir -p ext/sqlite/libsqlite/src
-cp ../ext/sqlite/libsqlite/src/encode.c ext/sqlite/libsqlite/src/
-
-EXTENSION_DIR=%{_libdir}/%{phpname}/modules-zts
+EXTENSION_DIR=%{_libdir}/%{phpname}-zts/modules
 build --with-apxs2=%{_sbindir}/apxs \
       --bindir=%{_bindir}/php-zts \
       --includedir=%{_includedir}/php-zts \
@@ -1009,7 +991,6 @@ build --with-apxs2=%{_sbindir}/apxs \
 %else
       --without-sqlite3 \
 %endif
-      --with-sqlite=shared,%{_prefix} \
       --enable-json=shared \
 %if %{with_zip}
       --enable-zip=shared \
@@ -1144,7 +1125,7 @@ install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm
 # Generate files lists and stub .ini files for each subpackage
 for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
-    %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} %{?_with_ibase:interbase} %{?_with_ibase:pdo_firebird} sqlite \
+    %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} %{?_with_ibase:interbase} %{?_with_ibase:pdo_firebird} \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json zip \
 %if 0%{?fedora} >= 9  || 0%{?rhel} >= 6
     sqlite3 \
@@ -1166,7 +1147,7 @@ EOF
     cat > files.${mod} <<EOF
 %attr(755,root,root) %{_libdir}/%{phpname}/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
-%attr(755,root,root) %{_libdir}/%{phpname}/modules-zts/${mod}.so
+%attr(755,root,root) %{_libdir}/%{phpname}-zts/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${mod}.ini
 EOF
 done
@@ -1270,14 +1251,15 @@ fi
 %files common -f files.common
 %defattr(-,root,root)
 %doc CODING_STANDARDS CREDITS EXTENSIONS INSTALL LICENSE NEWS README*
-%doc Zend/ZEND_* TSRM_LICENSE regex_COPYRIGHT UPGRADING
+%doc Zend/ZEND_* TSRM_LICENSE regex_COPYRIGHT
 %doc php.ini-*
 %config(noreplace) %{_sysconfdir}/php.ini
 %dir %{_sysconfdir}/php.d
 %dir %{_sysconfdir}/php-zts.d
 %dir %{_libdir}/%{phpname}
 %dir %{_libdir}/%{phpname}/modules
-%dir %{_libdir}/%{phpname}/modules-zts
+%dir %{_libdir}/%{phpname}-zts
+%dir %{_libdir}/%{phpname}-zts/modules
 %dir %{_localstatedir}/lib/php
 %dir %{_datadir}/%{phpname}
 
@@ -1315,6 +1297,7 @@ fi
 %attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
 %dir %{_localstatedir}/run/php-fpm
 %{_mandir}/man8/php-fpm.8*
+%{_datadir}/fpm/status.html
 %endif
 
 %files devel
@@ -1325,7 +1308,7 @@ fi
 %{_includedir}/php
 %{_includedir}/php-zts
 %{_libdir}/%{phpname}/build
-%{_libdir}/php-zts/%{phpname}/build
+%{_libdir}/%{phpname}-zts/build
 %if %{phpname} == php
 %{_mandir}/man1/php-config.1*
 %else
@@ -1354,7 +1337,6 @@ fi
 %files bcmath -f files.bcmath
 %files dba -f files.dba
 %files pdo -f files.pdo
-%files sqlite -f files.sqlite
 %files mcrypt -f files.mcrypt
 %files tidy -f files.tidy
 %files mssql -f files.mssql
@@ -1375,6 +1357,11 @@ fi
 %endif
 
 %changelog
+* Sat Sep 03 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.1.201109031230
+- first work on php 5.4
+- remove -sqlite subpackage
+- move php/modules-zts to php-zts/modules
+
 * Wed Aug 24 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-2
 - provides zts devel stuff
 
