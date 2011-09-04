@@ -630,6 +630,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
+# https://bugs.php.net/55577
 %patch8 -p1 -b .fpmstatus
 
 #%patch20 -p1 -b .shutdown
