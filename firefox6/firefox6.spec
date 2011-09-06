@@ -12,11 +12,11 @@
 %global shortname       firefox
 #global mycomment       Beta 4
 %global firefox_dir_ver 6
-%global gecko_version   6.0.1
+%global gecko_version   6.0.2
 %global alpha_version   0
 %global beta_version    0
 %global rc_version      0
-%global datelang        20110901
+%global datelang        20110906
 
 %global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
 %global langpackdir   %{mozappdir}/langpacks
@@ -47,7 +47,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        6.0.1
+Version:        6.0.2
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -393,6 +393,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Sep 06 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0.2-1
+- update to 6.0.2
+
 * Thu Sep 01 2011 Remi Collet <RPMS@FamilleCollet.com> - 6.0.1-1
 - update to 6.0.1
 
