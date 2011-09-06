@@ -25,7 +25,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        6.0.1
+Version:        6.0.2
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -37,7 +37,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20110901.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20110906.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -444,6 +444,9 @@ fi
 #===============================================================================
 
 %changelog
+* Tue Sep 06 2011 Remi Collet <rpms@famillecollet.com> 6.0.2-1
+- Thunderbird 6.0.2
+
 * Thu Sep 01 2011 Remi Collet <rpms@famillecollet.com> 6.0.1-1
 - Thunderbird 6.0.1
 
