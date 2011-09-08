@@ -28,7 +28,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 %global phpversion 5.4.0beta1-dev
-%global snapdate   201109031230
+%global snapdate   201109081430
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -62,7 +62,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.4.0
 %if 0%{?snapdate}
-Release: 0.1.%{snapdate}%{?dist}
+Release: 0.2.%{snapdate}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -344,6 +344,25 @@ MySQL database support to PHP. MySQL is an object-relational database
 management system. PHP is an HTML-embeddable scripting language. If
 you need MySQL support for PHP applications, you will need to install
 this package and the php package.
+
+%package mysqlnd
+Summary: A module for PHP applications that use MySQL databases
+Group: Development/Languages
+Requires: %{phpname}-pdo%{?_isa} = %{version}-%{release}
+Provides: %{phpname}_database
+Provides: %{phpname}-mysql, %{phpname}-mysql%{?_isa}
+Provides: %{phpname}-mysqli, %{phpname}-mysqli%{?_isa}
+Provides: %{phpname}-pdo_mysql, %{phpname}-pdo_mysql%{?_isa}
+Conflicts: %{phpname}-mysql
+
+%description mysqlnd
+The %{phpname}-mysql package contains a dynamic shared object that will add
+MySQL database support to PHP. MySQL is an object-relational database
+management system. PHP is an HTML-embeddable scripting language. If
+you need MySQL support for PHP applications, you will need to install
+this package and the php package.
+
+This package use the MySQL Native Driver
 
 %package pgsql
 Summary: A PostgreSQL database module for PHP
@@ -910,10 +929,10 @@ build --enable-force-cgi-redirect \
       --with-recode=shared,%{_prefix}
 popd
 
-without_shared="--without-mysql --without-gd \
+without_shared="--without-gd \
       --disable-dom --disable-dba --without-unixODBC \
-      --disable-pdo --disable-xmlreader --disable-xmlwriter \
-      --without-sqlite3 --disable-phar --disable-fileinfo \
+      --disable-xmlreader --disable-xmlwriter \
+      --disable-phar --disable-fileinfo \
       --disable-json --without-pspell --disable-wddx \
       --without-curl --disable-posix \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
@@ -922,6 +941,12 @@ without_shared="--without-mysql --without-gd \
 pushd build-apache
 build --with-apxs2=%{_sbindir}/apxs \
       --libdir=%{_libdir}/php \
+      --enable-mysqlnd=shared \
+      --with-mysql=shared,mysqlnd \
+      --with-mysqli=shared,mysqlnd \
+      --enable-pdo=shared \
+      --with-pdo-mysql=shared,mysqlnd \
+      --with-pdo-sqlite=shared,%{_prefix} \
       ${without_shared}
 popd
 
@@ -929,6 +954,7 @@ popd
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
+      --without-mysql --disable-pdo --without-sqlite3 \
       --libdir=%{_libdir}/php \
       ${without_shared}
 popd
@@ -937,7 +963,8 @@ popd
 # Build for inclusion as embedded script language into applications,
 # /usr/lib[64]/libphp5.so
 pushd build-embedded
-build --enable-embed \
+build --enable-embed --disable-pdo --without-sqlite3 \
+      --without-mysql \
       ${without_shared}
 popd
 
@@ -961,6 +988,7 @@ build --with-apxs2=%{_sbindir}/apxs \
       --enable-dba=shared --with-db4=%{_prefix} \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
+      --enable-mysqlnd=shared \
       --with-mysql=shared,mysqlnd \
       --with-mysqli=shared,mysqlnd \
       --enable-mysqlnd-threading \
@@ -1076,6 +1104,12 @@ install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modu
 install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/lib%{phpname}.so
 %endif
 
+# install the mysqlnd stuff
+install -D -m 755 build-apache/modules/mysqlnd.so   $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd.so
+install -D -m 755 build-apache/modules/mysql.so     $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_mysql.so
+install -D -m 755 build-apache/modules/mysqli.so    $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_mysqli.so
+install -D -m 755 build-apache/modules/pdo_mysql.so $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_pdo_mysql.so
+
 # install the ZTS DSO
 %if %{phpname} == php
 install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/libphp5-zts.so
@@ -1124,7 +1158,7 @@ install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
 
 # Generate files lists and stub .ini files for each subpackage
-for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
+for mod in pgsql mysqlnd mysql mysqli odbc ldap snmp xmlrpc imap \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} %{?_with_ibase:interbase} %{?_with_ibase:pdo_firebird} \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json zip \
@@ -1153,11 +1187,28 @@ EOF
 EOF
 done
 
+# This extension are build only for NTS
+for mod in mysqlnd_mysql mysqlnd_mysqli mysqlnd_pdo_mysql; do
+    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
+; Enable ${mod} extension module
+extension=${mod}.so
+EOF
+    cat > files.${mod} <<EOF
+%attr(755,root,root) %{_libdir}/%{phpname}/modules/${mod}.so
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
+EOF
+done
+
 # The dom, xsl and xml* modules are all packaged in php-xml
 cat files.dom files.xsl files.xml{reader,writer} files.wddx > files.xml
 
 # The mysql and mysqli modules are both packaged in php-mysql
 cat files.mysqli >> files.mysql
+# mysqlnd
+cat files.mysqlnd_mysql \
+    files.mysqlnd_mysqli \
+    files.mysqlnd_pdo_mysql \
+    >> files.mysqlnd
 
 # Split out the PDO modules
 cat files.pdo_dblib >> files.mssql
@@ -1348,6 +1399,7 @@ fi
 %if %{with_enchant}
 %files enchant -f files.enchant
 %endif
+%files mysqlnd -f files.mysqlnd
 
 %if %{with_oci8}
 %files oci8 -f files.oci8
@@ -1358,6 +1410,10 @@ fi
 %endif
 
 %changelog
+* Thu Sep 08 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.2.201109081430
+- new snapshot
+- build mysql/mysqli against both libmysql and mysqlnd (new mysqlnd sub-package)
+
 * Sat Sep 03 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.1.201109031230
 - first work on php 5.4
 - remove -sqlite subpackage
