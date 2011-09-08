@@ -876,8 +876,9 @@ build --enable-force-cgi-redirect \
       --enable-dba=shared --with-db4=%{_prefix} \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
-      --with-mysql=shared,%{_prefix} \
-      --with-mysqli=shared,%{mysql_config} \
+      --enable-mysqlnd=shared \
+      --with-mysql=shared,mysqlnd \
+      --with-mysqli=shared,mysqlnd \
 %ifarch x86_64
       %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever}} \
 %else
@@ -897,7 +898,7 @@ build --enable-force-cgi-redirect \
       --enable-fastcgi \
       --enable-pdo=shared \
       --with-pdo-odbc=shared,unixODBC,%{_prefix} \
-      --with-pdo-mysql=shared,%{mysql_config} \
+      --with-pdo-mysql=shared,mysqlnd \
       --with-pdo-pgsql=shared,%{_prefix} \
       --with-pdo-sqlite=shared,%{_prefix} \
       --with-pdo-dblib=shared,%{_prefix} \
@@ -941,11 +942,10 @@ without_shared="--without-gd \
 pushd build-apache
 build --with-apxs2=%{_sbindir}/apxs \
       --libdir=%{_libdir}/php \
-      --enable-mysqlnd=shared \
-      --with-mysql=shared,mysqlnd \
-      --with-mysqli=shared,mysqlnd \
       --enable-pdo=shared \
-      --with-pdo-mysql=shared,mysqlnd \
+      --with-mysql=shared,%{_prefix} \
+      --with-mysqli=shared,%{mysql_config} \
+      --with-pdo-mysql=shared,%{mysql_config} \
       --with-pdo-sqlite=shared,%{_prefix} \
       ${without_shared}
 popd
@@ -1086,6 +1086,15 @@ make -C build-fpm install-fpm \
 make -C build-cgi install \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 
+# rename extensions build with mysqlnd
+for ext in mysql mysqli pdo_mysql; do
+  mv $RPM_BUILD_ROOT%{_libdir}/php/modules/$ext.so $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_$ext.so
+done
+
+# Install the mysql extension build with libmysql
+make -C build-apache install-modules \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
+
 # Install the default configuration file and icons
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/
 #install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/php.ini
@@ -1103,12 +1112,6 @@ install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modu
 %else
 install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/lib%{phpname}.so
 %endif
-
-# install the mysqlnd stuff
-install -D -m 755 build-apache/modules/mysqlnd.so   $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd.so
-install -D -m 755 build-apache/modules/mysql.so     $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_mysql.so
-install -D -m 755 build-apache/modules/mysqli.so    $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_mysqli.so
-install -D -m 755 build-apache/modules/pdo_mysql.so $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_pdo_mysql.so
 
 # install the ZTS DSO
 %if %{phpname} == php
