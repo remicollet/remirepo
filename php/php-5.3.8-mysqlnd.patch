@@ -1,0 +1,53 @@
+diff -up php-5.3.8/ext/mysqlnd/config9.m4.mysqlnd php-5.3.8/ext/mysqlnd/config9.m4
+--- php-5.3.8/ext/mysqlnd/config9.m4.mysqlnd	2011-09-09 15:59:29.105335672 +0200
++++ php-5.3.8/ext/mysqlnd/config9.m4	2011-09-09 15:59:39.586337034 +0200
+@@ -3,6 +3,10 @@ dnl $Id: config9.m4 309609 2011-03-23 17
+ dnl config.m4 for mysqlnd driver
+ 
+ 
++PHP_ARG_ENABLE(mysqlnd, whether to enable mysqlnd,
++  [  --enable-mysqlnd       Enable mysqlnd expliciely, will be done implicitly
++                         when required by other extensions], no, yes)
++
+ PHP_ARG_ENABLE(mysqlnd_compression_support, whether to enable compressed protocol support in mysqlnd,
+ [  --disable-mysqlnd-compression-support
+                             Disable support for the MySQL compressed protocol in mysqlnd], yes, no)
+@@ -13,7 +17,7 @@ if test -z "$PHP_ZLIB_DIR"; then
+ fi
+ 
+ dnl If some extension uses mysqlnd it will get compiled in PHP core
+-if test "$PHP_MYSQLND_ENABLED" = "yes"; then
++if test "$PHP_MYSQLND" != "no" || test "$PHP_MYSQLND_ENABLED" = "yes"; then
+   mysqlnd_ps_sources="mysqlnd_ps.c mysqlnd_ps_codec.c"
+   mysqlnd_base_sources="mysqlnd.c mysqlnd_charset.c mysqlnd_wireprotocol.c \
+                    mysqlnd_loaddata.c mysqlnd_net.c mysqlnd_statistics.c \
+@@ -27,12 +31,12 @@ if test "$PHP_MYSQLND_ENABLED" = "yes"; 
+   AC_DEFINE([MYSQLND_SSL_SUPPORTED], 1, [Enable SSL support])
+ 
+   mysqlnd_sources="$mysqlnd_base_sources $mysqlnd_ps_sources"
+-  PHP_NEW_EXTENSION(mysqlnd, $mysqlnd_sources, no)
++  PHP_NEW_EXTENSION(mysqlnd, $mysqlnd_sources, $ext_shared)
+   PHP_ADD_BUILD_DIR([ext/mysqlnd], 1)
+   PHP_INSTALL_HEADERS([ext/mysqlnd/])
+ fi
+ 
+-if test "$PHP_MYSQLND_ENABLED" = "yes" || test "$PHP_MYSQLI" != "no"; then
++if test "$PHP_MYSQLND" != "no" || test "$PHP_MYSQLND_ENABLED" = "yes" || test "$PHP_MYSQLI" != "no"; then
+   PHP_ADD_BUILD_DIR([ext/mysqlnd], 1)
+ 
+   dnl This creates a file so it has to be after above macros
+diff -up php-5.3.8/ext/mysqlnd/php_mysqlnd.c.mysqlnd php-5.3.8/ext/mysqlnd/php_mysqlnd.c
+--- php-5.3.8/ext/mysqlnd/php_mysqlnd.c.mysqlnd	2011-08-06 16:47:44.000000000 +0200
++++ php-5.3.8/ext/mysqlnd/php_mysqlnd.c	2011-09-09 15:57:09.126606157 +0200
+@@ -299,6 +299,11 @@ zend_module_entry mysqlnd_module_entry =
+ };
+ /* }}} */
+ 
++/* {{{ COMPILE_DL_MYSQLND */
++#ifdef COMPILE_DL_MYSQLND
++ZEND_GET_MODULE(mysqlnd)
++#endif
++/* }}} */
+ 
+ /*
+  * Local variables:
