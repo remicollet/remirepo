@@ -1,9 +1,5 @@
 %{!?phpname:		%{expand: %%global phpname     php}}
 
-# TODO use --libdir instead of patch4
-# TODO review macros.php for relocation
-# TODO move hack for mysql.soc to patch9
-
 %global contentdir  /var/www
 # API/ABI check
 %global apiver      20090626
@@ -72,7 +68,11 @@ URL: http://www.php.net/
 Source0: http://www.php.net/distributions/php-%{version}.tar.bz2
 Source1: php.conf
 Source2: php-53-remi.ini
+%if %{phpname} == php
 Source3: macros.php
+%else
+Source3: macros.phpname
+%endif
 Source4: php-fpm.conf
 Source5: php-fpm-www.conf
 Source6: php-fpm.init
@@ -82,7 +82,6 @@ Source7: php-fpm.logrotate
 Patch1: php-5.3.7-gnusrc.patch
 Patch2: php-5.3.0-install.patch
 Patch3: php-5.2.4-norpath.patch
-Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
@@ -159,6 +158,7 @@ Requires(pre): httpd
 
 %{expand: %%define _origbindir %{_bindir}}
 %{expand: %%define _originitdir %{_initrddir}}
+%{expand: %%define _origincludedir %{_includedir}}
 %{expand: %%define _origsysconfdir %{_sysconfdir}}
 %if %{phpname} == php
 %global peardir      %{_datadir}/pear
@@ -171,11 +171,11 @@ Requires(pre): httpd
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules-zts/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}-zts/modules/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/%{phpname}/modules/.*\\.so$
-%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/%{phpname}/modules-zts/.*\\.so$
+%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/%{phpname}-zts/modules/.*\\.so$
 
 
 %description
@@ -359,6 +359,7 @@ Provides: %{phpname}-mysqli%{?_isa} = %{version}-%{release}
 Provides: %{phpname}-pdo_mysql, %{phpname}-pdo_mysql%{?_isa}
 Obsoletes: mod_php3-mysql, stronghold-php-mysql
 BuildRequires: mysql-devel >= 4.1.0
+Conflicts: %{phpname}-mysqlnd
 
 %description mysql
 The %{phpname}-mysql package contains a dynamic shared object that will add
@@ -377,7 +378,6 @@ Provides: %{phpname}-mysql%{?_isa} = %{version}-%{release}
 Provides: %{phpname}-mysqli = %{version}-%{release}
 Provides: %{phpname}-mysqli%{?_isa} = %{version}-%{release}
 Provides: %{phpname}-pdo_mysql, %{phpname}-pdo_mysql%{?_isa}
-Conflicts: %{phpname}-mysql
 
 %description mysqlnd
 The %{phpname}-mysql package contains a dynamic shared object that will add
@@ -665,7 +665,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch1 -p1 -b .gnusrc
 %patch2 -p1 -b .install
 %patch3 -p1 -b .norpath
-%patch4 -p1 -b .phpize64
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
@@ -692,15 +691,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch93 -p1 -b .mysqli
 %patch94 -p1 -b .50755
 
-
-%if %{phpname} != php
-%{__sed} -i -e '/^phpbuilddir/s,/php/,/%{phpname}/,' scripts/Makefile.frag
-%{__sed} -i -e '/^phpdir/s,/php/,/%{phpname}/,' scripts/phpize.in
-%endif
-
-# Awful hack for mysqlnd driver default mysql socket patch
-sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/pdo_mysql/pdo_mysql.c
-sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/mysqlnd/mysqlnd.c
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -893,6 +883,7 @@ mkdir -p ext/sqlite/libsqlite/src
 cp ../ext/sqlite/libsqlite/src/encode.c ext/sqlite/libsqlite/src/
 
 build --enable-force-cgi-redirect \
+      --libdir=%{_libdir}/%{phpname} \
       --enable-pcntl \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
@@ -969,6 +960,7 @@ without_shared="--without-gd \
 # Build Apache module, and the CLI SAPI, /usr/bin/php
 pushd build-apache
 build --with-apxs2=%{_sbindir}/apxs \
+      --libdir=%{_libdir}/%{phpname} \
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
@@ -981,6 +973,7 @@ popd
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
+      --libdir=%{_libdir}/%{phpname} \
       --without-mysql --disable-pdo \
       ${without_shared}
 popd
@@ -1001,11 +994,11 @@ pushd build-zts
 mkdir -p ext/sqlite/libsqlite/src
 cp ../ext/sqlite/libsqlite/src/encode.c ext/sqlite/libsqlite/src/
 
-EXTENSION_DIR=%{_libdir}/%{phpname}/modules-zts
+EXTENSION_DIR=%{_libdir}/%{phpname}-zts/modules
 build --with-apxs2=%{_sbindir}/apxs \
-      --bindir=%{_bindir}/php-zts \
-      --includedir=%{_includedir}/php-zts \
-      --libdir=%{_libdir}/php-zts \
+      --bindir=%{_origbindir}/%{phpname}-zts \
+      --includedir=%{_origincludedir}/%{phpname}-zts \
+      --libdir=%{_libdir}/%{phpname}-zts \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
       --enable-force-cgi-redirect \
@@ -1219,7 +1212,7 @@ EOF
     cat > files.${mod} <<EOF
 %attr(755,root,root) %{_libdir}/%{phpname}/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
-%attr(755,root,root) %{_libdir}/%{phpname}/modules-zts/${mod}.so
+%attr(755,root,root) %{_libdir}/%{phpname}-zts/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${mod}.ini
 EOF
 done
@@ -1348,7 +1341,7 @@ fi
 %dir %{_sysconfdir}/php-zts.d
 %dir %{_libdir}/%{phpname}
 %dir %{_libdir}/%{phpname}/modules
-%dir %{_libdir}/%{phpname}/modules-zts
+%dir %{_libdir}/%{phpname}-zts/modules
 %dir %{_localstatedir}/lib/php
 %dir %{_datadir}/%{phpname}
 
@@ -1396,7 +1389,7 @@ fi
 %{_includedir}/php
 %{_includedir}/php-zts
 %{_libdir}/%{phpname}/build
-%{_libdir}/php-zts/%{phpname}/build
+%{_libdir}/%{phpname}-zts//build
 %if %{phpname} == php
 %{_mandir}/man1/php-config.1*
 %else
@@ -1449,6 +1442,8 @@ fi
 %changelog
 * Wed Aug 24 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-3
 - add mysqlnd sub-package
+- move /usr/lib[64]/php/modules-zts to /usr/lib[64]/php-zts/modules
+- drop patch4 (use --libdir option instead)
 
 * Wed Aug 24 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-2
 - provides zts devel stuff

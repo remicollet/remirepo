@@ -1,6 +1,6 @@
 diff -up php-5.3.8/ext/mysqlnd/config9.m4.mysqlnd php-5.3.8/ext/mysqlnd/config9.m4
---- php-5.3.8/ext/mysqlnd/config9.m4.mysqlnd	2011-09-09 15:59:29.105335672 +0200
-+++ php-5.3.8/ext/mysqlnd/config9.m4	2011-09-09 15:59:39.586337034 +0200
+--- php-5.3.8/ext/mysqlnd/config9.m4.mysqlnd	2011-03-23 18:14:28.000000000 +0100
++++ php-5.3.8/ext/mysqlnd/config9.m4	2011-09-12 17:44:54.403846592 +0200
 @@ -3,6 +3,10 @@ dnl $Id: config9.m4 309609 2011-03-23 17
  dnl config.m4 for mysqlnd driver
  
@@ -36,9 +36,21 @@ diff -up php-5.3.8/ext/mysqlnd/config9.m4.mysqlnd php-5.3.8/ext/mysqlnd/config9.
    PHP_ADD_BUILD_DIR([ext/mysqlnd], 1)
  
    dnl This creates a file so it has to be after above macros
+diff -up php-5.3.8/ext/mysqlnd/mysqlnd.c.mysqlnd php-5.3.8/ext/mysqlnd/mysqlnd.c
+--- php-5.3.8/ext/mysqlnd/mysqlnd.c.mysqlnd	2011-09-12 17:50:37.676119503 +0200
++++ php-5.3.8/ext/mysqlnd/mysqlnd.c	2011-09-12 17:50:41.695136669 +0200
+@@ -620,7 +620,7 @@ MYSQLND_METHOD(mysqlnd_conn, connect)(MY
+ 		if (host_len == sizeof("localhost") - 1 && !strncasecmp(host, "localhost", host_len)) {
+ 			DBG_INF_FMT("socket=%s", socket_or_pipe? socket_or_pipe:"n/a");
+ 			if (!socket_or_pipe) {
+-				socket_or_pipe = "/tmp/mysql.sock";
++				socket_or_pipe = "/var/lib/mysql/mysql.sock";
+ 			}
+ 			transport_len = spprintf(&transport, 0, "unix://%s", socket_or_pipe);
+ 			unix_socket = TRUE;
 diff -up php-5.3.8/ext/mysqlnd/php_mysqlnd.c.mysqlnd php-5.3.8/ext/mysqlnd/php_mysqlnd.c
 --- php-5.3.8/ext/mysqlnd/php_mysqlnd.c.mysqlnd	2011-08-06 16:47:44.000000000 +0200
-+++ php-5.3.8/ext/mysqlnd/php_mysqlnd.c	2011-09-09 15:57:09.126606157 +0200
++++ php-5.3.8/ext/mysqlnd/php_mysqlnd.c	2011-09-12 17:44:54.404846593 +0200
 @@ -299,6 +299,11 @@ zend_module_entry mysqlnd_module_entry =
  };
  /* }}} */
@@ -51,3 +63,15 @@ diff -up php-5.3.8/ext/mysqlnd/php_mysqlnd.c.mysqlnd php-5.3.8/ext/mysqlnd/php_m
  
  /*
   * Local variables:
+diff -up php-5.3.8/ext/pdo_mysql/pdo_mysql.c.mysqlnd php-5.3.8/ext/pdo_mysql/pdo_mysql.c
+--- php-5.3.8/ext/pdo_mysql/pdo_mysql.c.mysqlnd	2011-09-12 17:49:24.769799256 +0200
++++ php-5.3.8/ext/pdo_mysql/pdo_mysql.c	2011-09-12 17:49:31.216828314 +0200
+@@ -42,7 +42,7 @@ ZEND_DECLARE_MODULE_GLOBALS(pdo_mysql);
+ #  ifdef PHP_MYSQL_UNIX_SOCK_ADDR
+ #   define PDO_MYSQL_UNIX_ADDR PHP_MYSQL_UNIX_SOCK_ADDR
+ #  else
+-#   define PDO_MYSQL_UNIX_ADDR "/tmp/mysql.sock"
++#   define PDO_MYSQL_UNIX_ADDR "/var/lib/mysql/mysql.sock"
+ #  endif
+ # endif
+ #endif

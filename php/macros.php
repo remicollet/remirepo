@@ -6,7 +6,7 @@
 %php_pdo_api  @PHP_PDOVER@
 
 %php_extdir    %{_libdir}/php/modules
-%php_ztsextdir %{_libdir}/php/modules-zts
+%php_ztsextdir %{_libdir}/php-zts/modules
 
 %php_inidir    %{_sysconfdir}/php.d
 %php_ztsinidir %{_sysconfdir}/php-zts.d
