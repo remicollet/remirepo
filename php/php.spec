@@ -89,6 +89,7 @@ Patch7: php-5.3.0-recode.patch
 # and  http://svn.php.net/viewvc?view=revision&revision=311908
 Patch8: php-5.3.8-aconf259.patch
 # from http://svn.php.net/viewvc?view=revision&revision=316281
+# + fix harcoded mysql.sock path
 Patch9: php-5.3.8-mysqlnd.patch
 
 # Fixes for extension modules
@@ -380,7 +381,7 @@ Provides: %{phpname}-mysqli%{?_isa} = %{version}-%{release}
 Provides: %{phpname}-pdo_mysql, %{phpname}-pdo_mysql%{?_isa}
 
 %description mysqlnd
-The %{phpname}-mysql package contains a dynamic shared object that will add
+The %{phpname}-mysqlnd package contains a dynamic shared object that will add
 MySQL database support to PHP. MySQL is an object-relational database
 management system. PHP is an HTML-embeddable scripting language. If
 you need MySQL support for PHP applications, you will need to install
