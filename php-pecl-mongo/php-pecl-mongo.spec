@@ -1,19 +1,22 @@
+%{!?phpname:		%{expand: %%global phpname     php}}
+
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 %{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global pecl_name mongo
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 Summary:      PHP MongoDB database driver
-Name:         php-pecl-mongo
-Version:      1.2.4
+Name:         %{phpname}-pecl-mongo
+Version:      1.2.5
 Release:      1%{?dist}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -23,20 +26,16 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: php-devel >= 5.1.0
-BuildRequires: php-pear >= 1.4.9-1.2
+BuildRequires: %{phpname}-devel >= 5.1.0
+BuildRequires: %{phpname}-pear >= 1.4.9-1.2
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-%if 0%{?php_zend_api:1}
-Requires:     php(zend-abi) = %{php_zend_api}
-Requires:     php(api) = %{php_core_api}
-%else
-Requires:     php-api = %{php_apiver}
-%endif
+Requires:     %{phpname}(zend-abi) = %{php_zend_api}
+Requires:     %{phpname}(api) = %{php_core_api}
 
-Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
 
 
 %description
@@ -45,24 +44,10 @@ in PHP.
 
 %prep 
 %setup -c -q
-cd %{pecl_name}-%{version}
 
+cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
-%build
-cd %{pecl_name}-%{version}
-phpize
-%configure 
-%{__make} %{?_smp_mflags}
-
-
-%install
-cd %{pecl_name}-%{version}
-%{__rm} -rf %{buildroot}
-%{__make} install INSTALL_ROOT=%{buildroot}
-
-# Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+%{__cat} >%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 
@@ -100,13 +85,38 @@ mongo.native_long = true
 mongo.utf8 = 1
 EOF
 
+
+%build
+cd %{pecl_name}-%{version}
+%{php_bindir}/phpize
+%configure  --with-php-config=%{php_bindir}/php-config
+%{__make} %{?_smp_mflags}
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure  --with-php-config=%{php_ztsbindir}/php-config
+%{__make} %{?_smp_mflags}
+
+
+%install
+rm -rf %{buildroot}
+
+make -C %{pecl_name}-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+     
+make -C %{pecl_name}-%{version}-zts \
+     install INSTALL_ROOT=%{buildroot}
+
+# Drop in the bit of configuration
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+
 # Install XML package description
-%{__mkdir_p} %{buildroot}%{pecl_xmldir}
-%{__install} -m 644 ../package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %post
@@ -127,8 +137,8 @@ fi
 cd %{pecl_name}-%{version}
 # only check if build extension can be loaded
 
-%{_bindir}/php \
-    -n -d extension_dir=modules \
+%{__php} -n \
+    -d extension_dir=modules \
     -d extension=%{pecl_name}.so \
     -i | grep "MongoDB Support => enabled"
 
@@ -136,12 +146,20 @@ cd %{pecl_name}-%{version}
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_name}-%{version}/README.md
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Fri Sep 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.5-1
+- update to 1.2.5
+- clean spec
+- allow relocation
+- build zts extension
+
 * Sat Aug 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.4-1
 - update to 1.2.4
 
