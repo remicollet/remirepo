@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -1097,6 +1097,14 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 make -C build-zts install-build install-programs install-headers install-modules \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 
+# rename extensions build with mysqlnd
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqlnd_mysql.so
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqli.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqlnd_mysqli.so
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/pdo_mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/pdo_mysqlnd.so
+
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
      INSTALL_ROOT=$RPM_BUILD_ROOT
@@ -1112,12 +1120,12 @@ make -C build-cgi install \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # rename extensions build with mysqlnd
-mv $RPM_BUILD_ROOT%{_libdir}/php/modules/mysql.so \
-   $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_mysql.so
-mv $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqli.so \
-   $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_mysqli.so
-mv $RPM_BUILD_ROOT%{_libdir}/php/modules/pdo_mysql.so \
-   $RPM_BUILD_ROOT%{_libdir}/php/modules/pdo_mysqlnd.so
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/mysqlnd_mysql.so
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/mysqli.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/mysqlnd_mysqli.so
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/pdo_mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/pdo_mysqlnd.so
 
 # Install the mysql extension build with libmysql
 make -C build-apache install-modules \
@@ -1189,7 +1197,8 @@ install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
 
 # Generate files lists and stub .ini files for each subpackage
-for mod in pgsql mysqlnd mysql mysqli odbc ldap snmp xmlrpc imap \
+for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
+    mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} %{?_with_ibase:interbase} %{?_with_ibase:pdo_firebird} sqlite \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json zip \
@@ -1206,30 +1215,27 @@ for mod in pgsql mysqlnd mysql mysqli odbc ldap snmp xmlrpc imap \
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
+    cat > files.${mod} <<EOF
+%attr(755,root,root) %{_libdir}/%{phpname}/modules/${mod}.so
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
+EOF
+
+if [ -f $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/${mod}.so ]
+then
     cat > $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${mod}.ini <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
-    cat > files.${mod} <<EOF
-%attr(755,root,root) %{_libdir}/%{phpname}/modules/${mod}.so
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
+    cat >> files.${mod} <<EOF
 %attr(755,root,root) %{_libdir}/%{phpname}-zts/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${mod}.ini
 EOF
+else
+    echo "** Extension ${mod} not available for ZTS build"
+fi
+
 done
 
-# This extension are build only for NTS
-for mod in mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd; do
-    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
-; Enable ${mod} extension module
-; Must also have mysqlnd enabled (see mysqlnd.ini)
-extension=${mod}.so
-EOF
-    cat > files.${mod} <<EOF
-%attr(755,root,root) %{_libdir}/%{phpname}/modules/${mod}.so
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
-EOF
-done
 
 # The dom, xsl and xml* modules are all packaged in php-xml
 cat files.dom files.xsl files.xml{reader,writer} files.wddx > files.xml
@@ -1276,7 +1282,7 @@ install -d $RPM_BUILD_ROOT%{_origsysconfdir}/rpm
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
     -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
-    -e "s,/php/,/%{phpname}/," \
+    -e "s/@PHPNAME@/%{phpname}/" \
     < %{SOURCE3} > macros.php
 install -m 644 -c macros.php \
            $RPM_BUILD_ROOT%{_origsysconfdir}/rpm/macros.%{phpname}
@@ -1342,6 +1348,7 @@ fi
 %dir %{_sysconfdir}/php-zts.d
 %dir %{_libdir}/%{phpname}
 %dir %{_libdir}/%{phpname}/modules
+%dir %{_libdir}/%{phpname}-zts
 %dir %{_libdir}/%{phpname}-zts/modules
 %dir %{_localstatedir}/lib/php
 %dir %{_datadir}/%{phpname}
@@ -1385,10 +1392,11 @@ fi
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
-%{_bindir}/php-zts/php-config
-%{_bindir}/php-zts/phpize
+%{_origbindir}/%{phpname}-zts/php-config
+%{_origbindir}/%{phpname}-zts/phpize
+%dir %{_origincludedir}/%{phpname}
 %{_includedir}/php
-%{_includedir}/php-zts
+%{_origincludedir}/%{phpname}-zts
 %{_libdir}/%{phpname}/build
 %{_libdir}/%{phpname}-zts//build
 %if %{phpname} == php
@@ -1441,7 +1449,12 @@ fi
 %endif
 
 %changelog
-* Wed Aug 24 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-3
+* Fri Sep 16 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-4
+- fix mysql subpackages for ZTS
+- fix relocation (php53 build)
+- create %%__php macro
+
+* Wed Sep 14 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-3
 - add mysqlnd sub-package
 - move /usr/lib[64]/php/modules-zts to /usr/lib[64]/php-zts/modules
 - drop patch4 (use --libdir option instead)

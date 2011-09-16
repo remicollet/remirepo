@@ -14,5 +14,6 @@
 %php_incldir    %{_includedir}/php
 %php_ztsincldir %{_includedir}/php-zts/php
 
+%__php         %{_bindir}/php
 %php_bindir    %{_bindir}
 %php_ztsbindir %{_bindir}/php-zts
