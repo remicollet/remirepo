@@ -7,7 +7,7 @@
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
 Version:       3.1.9
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
@@ -16,8 +16,6 @@ Source:        http://pecl.php.net/get/APC-%{version}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 Conflicts:     %{phpname}-mmcache %{phpname}-eaccelerator
 BuildRequires: %{phpname}-devel >= 5.1.0, httpd-devel, %{phpname}-pear, pcre-devel
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 %if 0%{?php_zend_api:1}
 # Require clean ABI/API versions if available (Fedora)
 Requires:      %{phpname}(zend-abi) = %{php_zend_api}
@@ -33,9 +31,10 @@ Requires:      php = %{php_version}
 %endif
 Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}
 
+%if 0%{?pecl_install:1}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-
+%endif
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
@@ -178,7 +177,7 @@ install -D -m 644 apc.ini %{buildroot}%{php_inidir}/apc.ini
 
 %check
 cd %{pecl_name}-%{version}
-TEST_PHP_EXECUTABLE=%{php_bindir}/php %{php_bindir}/php run-tests.php \
+TEST_PHP_EXECUTABLE=%{__php} %{__php} run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=apc.so
 
@@ -219,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.9-3
+- rebuild using latest php version and macro
+
 * Tue Aug 24 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.9-2
 - build zts extension
 
