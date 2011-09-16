@@ -1,6 +1,9 @@
 Name: mysql
-Version: 5.5.15
+Version: 5.5.16
 Release: 1%{?dist}
+# NOTE: Our convention for the life of F15 is that sysv packages will be
+# numbered 1dist.n while systemd packages will be 2dist and higher.
+
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
 URL: http://www.mysql.com
@@ -33,6 +36,7 @@ Source10: mysql.tmpfiles.d
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh
 
+# Comments for these patches are in the patch files.
 Patch1: mysql-errno.patch
 Patch2: mysql-strmov.patch
 Patch3: mysql-install-test.patch
@@ -42,9 +46,9 @@ Patch6: mysql-chain-certs.patch
 Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
 # Patch9: mysql-disable-test.patch
-Patch11: mysql-plugin-bool.patch
-Patch12: mysql-s390-tsc.patch
-Patch13: mysql-openssl-test.patch
+Patch10: mysql-plugin-bool.patch
+Patch11: mysql-s390-tsc.patch
+Patch12: mysql-openssl-test.patch
 
 # RC patch for backports
 Patch21: mysql-readline.patch
@@ -199,10 +203,11 @@ rm -f Docs/mysql.info
 %patch7 -p1
 %patch8 -p1
 # si below %patch9 -p1
+%patch10 -p1
 %patch11 -p1
-%patch12 -p1
 %if 0%{?fedora} >= 9 || 0%{?rhel} >= 5
-%patch13 -p1
+# When build with system openssl
+%patch12 -p1
 %endif
 # Backports specific patches
 %patch21 -p1 -b .readline
@@ -591,6 +596,7 @@ fi
 %{_bindir}/replace
 %{_bindir}/resolve_stack_dump
 %{_bindir}/resolveip
+%{_bindir}/mysql_plugin
 
 /usr/libexec/mysqld
 
@@ -627,6 +633,7 @@ fi
 %{_mandir}/man1/resolve_stack_dump.1*
 %{_mandir}/man1/resolveip.1*
 %{_mandir}/man1/mysql_tzinfo_to_sql.1*
+%{_mandir}/man1/mysql_plugin.1*
 %{_mandir}/man8/mysqld.8*
 
 %{_datadir}/mysql/errmsg-utf8.txt
@@ -656,6 +663,7 @@ fi
 %files embedded
 %defattr(-,root,root)
 %doc README COPYING README.mysql-license
+%{_bindir}/mysql_embedded
 %{_libdir}/mysql/libmysqld.so.*
 
 %files embedded-devel
@@ -679,6 +687,14 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Sep 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.16-1
+- update to MySQL 5.5.16 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-16.html
+
+* Fri Jul 29 2011 Tom Lane <tgl@redhat.com> 5.5.15-1
+- Update to MySQL 5.5.15, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-15.html
+
 * Thu Jul 28 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.15-1
 - update to MySQL 5.5.15 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-15.html

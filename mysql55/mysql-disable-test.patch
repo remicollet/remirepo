@@ -14,12 +14,12 @@ Also disable innodb.innodb, which is showing platform-dependent results
 as of 5.5.9.  Upstream at http://bugs.mysql.com/bug.php?id=60155
 
 
-diff -Naur mysql-5.5.14.orig/mysql-test/t/disabled.def mysql-5.5.14/mysql-test/t/disabled.def
---- mysql-5.5.14.orig/mysql-test/t/disabled.def	2011-06-21 12:42:40.000000000 -0400
-+++ mysql-5.5.14/mysql-test/t/disabled.def	2011-07-11 14:33:46.560138525 -0400
-@@ -17,3 +17,7 @@
+diff -Naur mysql-5.5.15.orig/mysql-test/t/disabled.def mysql-5.5.15/mysql-test/t/disabled.def
+--- mysql-5.5.15.orig/mysql-test/t/disabled.def	2011-07-13 15:09:03.000000000 -0400
++++ mysql-5.5.15/mysql-test/t/disabled.def	2011-07-29 11:48:39.214514072 -0400
+@@ -16,3 +16,7 @@
+ create-big               : Bug#11748731 2010-11-15 mattiasj was not tested
  archive-big              : Bug#11817185 2011-03-10 Anitha Disabled since this leads to timeout on Solaris Sparc
- main.query_cache_28249   : Bug#12584161 2009-03-25 main.query_cache_28249 fails sporadically
  log_tables-big           : Bug#11756699 2010-11-15 mattiasj report already exists
 +#
 +outfile_loaddata         : bug#46895 code wrong, expected results wrong too
