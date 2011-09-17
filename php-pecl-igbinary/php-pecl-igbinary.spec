@@ -1,15 +1,5 @@
 %{!?phpname: %{expand: %%global phpname php}}
 
-%if %{phpname} == php
-%global phpbindir      %{_bindir}
-%global phpconfdir     %{_sysconfdir}
-%global phpincldir     %{_includedir}
-%else
-%global phpbindir      %{_bindir}/%{phpname}
-%global phpconfdir     %{_sysconfdir}/%{phpname}
-%global phpincldir     %{_includedir}/%{phpname}
-%endif
-
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 %{!?php_extdir: %{expand: %%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php/modules)}}
 
@@ -19,7 +9,7 @@
 Summary:        Replacement for the standard PHP serializer
 Name:           %{phpname}-pecl-igbinary
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 # http://pecl.php.net/bugs/22599
 License:        BSD
 Group:          System Environment/Libraries
@@ -44,12 +34,13 @@ Provides:       %{phpname}-%{extname}%{?_isa} = %{version}-%{release}
 Provides:       %{phpname}-pecl(%{extname}) = %{version}
 
 
-%if 0%{?fedora}%{?rhel} > 4
-%{?filter_setup:
-%filter_from_provides /%{extname}.so/d
-%filter_setup
-}
-%endif
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -76,27 +67,14 @@ These are the files needed to compile programs using Igbinary
 
 %prep
 %setup -q -c
+
 cd %{extname}-%{version}
 %{__tar} xzf %{SOURCE1}
+cd ..
 
-%build
-cd %{extname}-%{version}
-%{phpbindir}/phpize
-%{configure} --with-php-config=%{phpbindir}/php-config
-%{__make} %{?_smp_mflags}
+cp -r %{extname}-%{version} %{extname}-%{version}-zts
 
-
-%install
-%{__rm} -rf %{buildroot}
-
-%{__mkdir_p} %{buildroot}%{pecl_xmldir}
-%{__install} -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
-
-cd %{extname}-%{version}
-%{__make} install INSTALL_ROOT=%{buildroot}
-
-%{__mkdir} -p %{buildroot}%{phpconfdir}/php.d/
-%{__cat} > %{buildroot}%{phpconfdir}/php.d/%{extname}.ini <<EOF
+cat >%{extname}.ini <<EOF
 ; Enable %{extname} extension module
 extension=%{extname}.so
 
@@ -112,39 +90,62 @@ extension=%{extname}.so
 EOF
 
 
+%build
+cd %{extname}-%{version}
+%{php_bindir}/phpize
+%configure --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../%{extname}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+
+
+%install
+rm -rf %{buildroot}
+
+make install -C %{extname}-%{version} \
+     INSTALL_ROOT=%{buildroot}
+     
+make install -C %{extname}-%{version}-zts \
+     INSTALL_ROOT=%{buildroot}
+
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+install -D -m 644 %{extname}.ini %{buildroot}%{php_inidir}/%{extname}.ini
+install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
+
+
 %check
 cd %{extname}-%{version}
 
 # simple module load test
 # (without APC to ensure than can run without)
-%{phpbindir}/php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{extname}.so \
     --modules | grep %{extname}
 
 # APC required for test 045
-%{__ln_s} %{php_extdir}/apc.so modules/
+ln -s %{php_extdir}/apc.so modules/
 
 NO_INTERACTION=1 %{__make} test | tee rpmtests.log
 grep -q "FAILED TEST" rpmtests.log && exit 1
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{extname} >/dev/null || :
 fi
-%endif
 
 
 
@@ -155,17 +156,24 @@ fi
 %doc %{extname}-%{version}/ChangeLog
 %doc %{extname}-%{version}/NEWS
 %doc %{extname}-%{version}/README
-%config(noreplace) %{phpconfdir}/php.d/%{extname}.ini
+%config(noreplace) %{php_inidir}/%{extname}.ini
+%config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
+%{php_ztsextdir}/%{extname}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %files devel
 %defattr(-,root,root,-)
-%{phpincldir}/php/ext/%{extname}
+%{php_incldir}/ext/%{extname}
+%{php_ztsincldir}/ext/%{extname}
 
 
 %changelog
+* Sat Sep 17 2011 Remi Collet <rpms@famillecollet.com> 1.1.1-2
+- use latest macro
+- build zts extension
+
 * Mon Mar 14 2011 Remi Collet <rpms@famillecollet.com> 1.1.1-1
 - version 1.1.1 published on pecl.php.net
 - rename to php-pecl-igbinary
