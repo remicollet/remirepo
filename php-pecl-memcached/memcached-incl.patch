@@ -1,0 +1,12 @@
+diff -up memcached-1.0.2/config.m4.orig memcached-1.0.2/config.m4
+--- memcached-1.0.2/config.m4.orig	2011-09-17 17:23:48.000000000 +0200
++++ memcached-1.0.2/config.m4	2011-09-17 17:24:52.000000000 +0200
+@@ -94,7 +94,7 @@ if test "$PHP_MEMCACHED" != "no"; then
+       igbinary_inc_path="$abs_srcdir/include/php"
+     elif test -f "$abs_srcdir/ext/igbinary/igbinary.h"; then
+       igbinary_inc_path="$abs_srcdir"
+-    elif test -f "$phpincludedir/ext/session/igbinary.h"; then
++    elif test -f "$phpincludedir/ext/igbinary/igbinary.h"; then
+       igbinary_inc_path="$phpincludedir"
+     else
+       for i in php php4 php5 php6; do
