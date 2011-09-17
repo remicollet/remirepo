@@ -2,12 +2,13 @@ Name:           perl-HTTP-Server-Simple-Authen
 Version:        0.04
 Release:        1%{?dist}
 Summary:        Authentication plugin for HTTP::Server::Simple
-License:        CHECK(GPL+ or Artistic)
+# https://rt.cpan.org/Public/Bug/Display.html?id=71033
+# You can redistribute it and/or modify it under the same terms as Perl itself.
+License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTTP-Server-Simple-Authen/
 Source0:        http://www.cpan.org/modules/by-module/HTTP/HTTP-Server-Simple-Authen-%{version}.tar.gz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Authen::Simple) >= 0.04
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -18,6 +19,9 @@ Requires:       perl(Authen::Simple) >= 0.04
 Requires:       perl(HTTP::Server::Simple) >= 0.16
 Requires:       perl(Test::More) >= 0.32
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%{?perl_default_filter}
+
 
 %description
 HTTP::Server::Simple::Authen is an HTTP::Server::Simple plugin to allow
@@ -35,26 +39,21 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install PERL_INSTALL_ROOT=%{buildroot}
 
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} %{buildroot}/*
 
 
 %check
 make test
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc Changes
 %{perl_vendorlib}/HTTP/Server/Simple/*
 %{_mandir}/man3/HTTP*
