@@ -23,7 +23,7 @@ BuildRequires: php-devel >= 5.3.4
 BuildRequires: php-mysqlnd
 BuildRequires: php-pear
 BuildRequires: libmemcached-devel >= 0.38
-BuildRequires: sqlite-devel
+BuildRequires: sqlite-devel >= 3.5.9
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -49,7 +49,7 @@ The mysqlnd query result cache plugin is a mysqlnd plugin.
 It adds basic client side result set caching to all PHP MySQL extensions
 (ext/mysql, ext/mysqli, PDO_MySQL). if they are compiled to use mysqlnd.
 It does not change the API of the MySQL extensions and thus it operates
-virtually transparent for applications."
+virtually transparent for applications.
 
 Documentation : http://www.php.net/mysqlnd_qc
 

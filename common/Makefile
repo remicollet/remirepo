@@ -29,6 +29,9 @@ bi53:
 srpm53:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) --define "phpname php53" -bs $(NAME).spec
 
+devsrpm53:
+	rpmbuild $(RPMDEFINES) $(SRCDEFINES) --define "phpname php53" -bs $(NAME)-dev.spec
+
 build:
 	time rpmbuild $(RPMDEFINES) -bb $(NAME).spec
 
