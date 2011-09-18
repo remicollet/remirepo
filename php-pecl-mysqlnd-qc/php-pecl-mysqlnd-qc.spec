@@ -5,20 +5,22 @@ Summary:      A query cache plugin for mysqlnd
 Name:         php-pecl-mysqlnd-qc
 Version:      1.0.1
 Release:      1%{?dist}
+# http://pecl.php.net/bugs/bug.php?id=24364
 License:      PHP
 Group:        Development/Languages
-URL:          http://pecl.php.net/package/%{pecl_name}
+URL:          http://pecl.php.net/package/mysqlnd_qc
 
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # From http://www.php.net/manual/en/mysqlnd-qc.configuration.php
 Source1:      mysqlnd_qc.ini
 
-# http://pecl.php.net/bugs/bug.php?id=24363
+# http://pecl.php.net/bugs/bug.php?id=24365
 Patch0:       mysqlnd_qc-build.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.4
+BuildRequires: php-mysqlnd
 BuildRequires: php-pear
 BuildRequires: libmemcached-devel >= 0.38
 BuildRequires: sqlite-devel
@@ -49,6 +51,8 @@ It adds basic client side result set caching to all PHP MySQL extensions
 It does not change the API of the MySQL extensions and thus it operates
 virtually transparent for applications."
 
+Documentation : http://www.php.net/mysqlnd_qc
+
 
 %prep 
 %setup -c -q
@@ -58,10 +62,12 @@ cp %{SOURCE1} %{pecl_name}.ini
 cd %{pecl_name}-%{version}
 %patch0 -p1 -b .build
 
+
 %build
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 
+# don't use --enable-mysqlnd-qc-apc because:
 # APC is onlysupported if both APC and MySQL Query Cache are compiled statically
 
 %configure \
