@@ -42,7 +42,7 @@ The mysqlnd query result cache plugin is a mysqlnd plugin.
 It adds basic client side result set caching to all PHP MySQL extensions
 (ext/mysql, ext/mysqli, PDO_MySQL). if they are compiled to use mysqlnd.
 It does not change the API of the MySQL extensions and thus it operates
-virtually transparent for applications."
+virtually transparent for applications.
 
 
 %prep 
