@@ -10,6 +10,7 @@ URL:            http://search.cpan.org/dist/HTTP-Server-Simple-Authen/
 Source0:        http://www.cpan.org/modules/by-module/HTTP/HTTP-Server-Simple-Authen-%{version}.tar.gz
 
 BuildArch:      noarch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(Authen::Simple) >= 0.04
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(HTTP::Server::Simple) >= 0.16
@@ -39,8 +40,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make pure_install PERL_INSTALL_ROOT=%{buildroot}
 
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
