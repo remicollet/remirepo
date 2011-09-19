@@ -11,7 +11,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -21,6 +21,10 @@ Source0:        http://%{channel}/get/%{pear_name}-%{version}%{?prever}.tgz
 
 # for old asciidoc version https://bugzilla.redhat.com/556171
 Patch0:         PHP_Reflect-docs.patch
+# Don't install .js (unused)
+Patch1:         PHP_Reflect-deljs.patch
+# Install generated doc using pear command
+Patch2:         PHP_Reflect-addhtml.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -58,7 +62,10 @@ cd %{pear_name}-%{version}%{?prever}
 mv -f ../package.xml %{name}.xml
 
 %patch0 -p0 -b .fix
-
+%patch1 -p1 -b .deljs
+%if %{withhtmldoc}
+%patch2 -p1 -b .addhtml
+%endif
 
 %build
 cd %{pear_name}-%{version}%{?prever}
@@ -70,8 +77,11 @@ phing -f docs/build-phing.xml \
       -Dasciidoc.home=%{_datadir}/asciidoc \
       make-full-docs
 
-# asciidoc fails silently
-[ -f docs/index.html ] || exit 1
+# Asciidoc fails silently
+# Check that our patch for installed doc is ok
+cpt=$(find docs -name \*.html | wc -l)
+echo "File generated:$cpt, expected:9"
+[ $cpt -eq 9 ] || exit 1
 %endif
 
 # restore unpatched docs (for install and checksum)
@@ -79,23 +89,18 @@ mv docs/index.txt.fix docs/index.txt
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}%{?prever}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_phpdir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-%if %{withhtmldoc}
-# Install the generated HTML Documentation
-for doc in docs/*.html docs/sources/*.html ; do
-  install -m 644 $doc $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/$(dirname $doc)
-done
-%endif
 
 
 %check
@@ -104,12 +109,12 @@ cd %{pear_name}-%{version}%{?prever}
 # Version 1.0.2 : OK (25 tests, 42 assertions)
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
-  --bootstrap $RPM_BUILD_ROOT%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
+  --bootstrap %{buildroot}%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
   tests
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -132,6 +137,10 @@ fi
 
 
 %changelog
+* Mon Sep 19 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-2
+- remove unused .js and improve installation of generated doc
+- use buildroot macro
+
 * Mon Jul 18 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-1
 - Version 1.0.2 (stable) - API 1.0.0 (stable)
 
