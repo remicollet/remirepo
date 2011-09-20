@@ -8,19 +8,27 @@
 %global withhtmldoc 0
 %endif
 
+# TODO : link /usr/share/pear/data/PHP_CompatInfo/misc/jquery-1.5.min.js
+#        to system jquery when available, then fix License (BSD only)
+
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
-License:        BSD
+# PHP-CompatInfo is BSD, bundled jquery is MIT (or GPL)
+License:        BSD and MIT
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
 
 # for old asciidoc version https://bugzilla.redhat.com/556171
 Patch0:         PHP_CompatInfo-docs.patch
+# Remove unused .js script
+Patch1:         PHP_CompatInfo-deljs.patch
+# Install generated doc using pear command
+Patch2:         PHP_CompatInfo-addhtml.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -55,6 +63,7 @@ PHP_CompatInfo will parse a file/folder/array to find out the minimum
 version and extensions required for it to run. CLI version has many reports
 (extension, interface, class, function, constant) to display and ability to
 show content of dictionary references.
+
 %if %{withhtmldoc}
 HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/index.html
 %endif
@@ -68,6 +77,10 @@ cd %{pear_name}-%{version}%{?prever}
 mv -f ../package.xml %{name}.xml
 
 %patch0 -p1 -b .fix
+%patch1 -p1 -b .deljs
+%if %{withhtmldoc}
+%patch2 -p1 -b .addhtml
+%endif
 
 
 %build
@@ -81,7 +94,9 @@ phing -f docs/build-phing.xml \
       make-full-docs
 
 # asciidoc fails silently
-[ -f docs/index.html ] || exit 1
+cpt=$(find docs -name \*.html | wc -l)
+echo "File generated:$cpt, expected:5"
+[ $cpt -eq 5 ] || exit 1
 %endif
 
 # restore unpatched docs (for install and checksum)
@@ -89,25 +104,20 @@ mv docs/index.txt.fix docs/index.txt
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}%{?prever}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_phpdir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 # Fix wrong-script-end-of-line-encoding
-sed -i -e 's/\r//' $RPM_BUILD_ROOT%{_bindir}/phpci
-sed -i -e 's/\r//' $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/README.markdown
-
-%if %{withhtmldoc}
-# Install the HTML Documentation
-install -m 644 docs/*.html $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/docs
-%endif
+sed -i -e 's/\r//' %{buildroot}%{_bindir}/phpci
+sed -i -e 's/\r//' %{buildroot}%{pear_docdir}/%{pear_name}/README.markdown
 
 
 %check
@@ -119,7 +129,8 @@ cd %{pear_name}-%{version}%{?prever}
 # Reference tests need some fixes for EL-4, so ignore result for now
 %{_bindir}/phpunit \
     -d date.timezone=UTC \
-    --bootstrap $RPM_BUILD_ROOT%{pear_phpdir}/Bartlett/PHP/CompatInfo/Autoload.php \
+    -d memory_limit=-1 \
+    --bootstrap %{buildroot}%{pear_phpdir}/Bartlett/PHP/CompatInfo/Autoload.php \
 %if 0%{?rhel} < 6 && 0%{?fedora} < 8
     tests || exit 0
 %else
@@ -151,6 +162,11 @@ fi
 
 
 %changelog
+* Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.0-2
+- comments from review #693204
+- remove ascii*js (not used)
+- add MIT to license for bundled jquery
+
 * Thu Aug 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.0-1
 - Version 2.1.0 (stable) - API 2.1.0 (stable)
 - fix documentation for asciidoc 8.4

@@ -49,6 +49,7 @@ Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
 %description
 PHP_Reflect adds the ability to reverse-engineer classes, interfaces,
 functions, constants and more, by connecting php callbacks to other tokens.
+
 %if %{withhtmldoc}
 HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/index.html
 %endif
@@ -66,6 +67,7 @@ mv -f ../package.xml %{name}.xml
 %if %{withhtmldoc}
 %patch2 -p1 -b .addhtml
 %endif
+
 
 %build
 cd %{pear_name}-%{version}%{?prever}
