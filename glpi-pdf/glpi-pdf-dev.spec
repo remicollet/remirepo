@@ -2,7 +2,7 @@
 #global svnrelease   259
 
 Name:           glpi-pdf
-Version:        0.80
+Version:        0.80.3
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,13 +20,13 @@ URL:            https://forge.indepnet.net/projects/pdf
 # tar czf glpi-pdf-0.8.0-259.tar.gz pdf
 Source0:        glpi-pdf-0.8.0-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/932/glpi-pdf-0.80.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/966/glpi-pdf-0.80.3.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.80
+Requires:       glpi >= 0.80.3
 Requires:       glpi <  0.81
 
 
@@ -85,6 +85,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.3-1
+- version 0.80.3
+  https://forge.indepnet.net/projects/pdf/versions/617
+
 * Tue Jul 19 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80-1
 - update to 0.80 (version have change from 0.8.0)
 
