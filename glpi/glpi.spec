@@ -7,11 +7,11 @@
 #global svnrelease 12930
 
 Name:           glpi
-Version:        0.80.2
+Version:        0.80.3
 %if 0%{?svnrelease}
 Release:        2.svn%{svnrelease}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
@@ -24,7 +24,7 @@ URL:            http://www.glpi-project.org/
 Source0:        glpi-0.78-%{svnrelease}.tar.gz
 Source99:       mktar.sh
 %else
-Source0:        https://forge.indepnet.net/attachments/download/943/glpi-0.80.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/967/glpi-0.80.31.tar.gz
 %endif
 
 Source1:        glpi-httpd.conf
@@ -246,6 +246,10 @@ fi
 
 
 %changelog
+* Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.3-1
+- version 0.80.3 released (bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/621
+
 * Mon Aug 22 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.2-2
 - fix SElinux dependencies (semanage + restorecon)
 - increase cron run frequency (3 tasks each 3 minutes)
