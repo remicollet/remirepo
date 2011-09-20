@@ -1,10 +1,10 @@
 %define pluginname   datainjection
-%global svnrelease   593
+%global svnrelease   596
 
 Name:           glpi-data-injection
 Version:        2.1.0
 %if 0%{?svnrelease}
-Release:        0.1.svn%{svnrelease}%{?dist}
+Release:        0.2.svn%{svnrelease}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -16,8 +16,8 @@ License:        GPLv2+
 
 URL:            https://forge.indepnet.net/projects/datainjection
 %if 0%{?svnrelease}
-# svn export -r 593 https://forge.indepnet.net/svn/datainjection/trunk datainjection
-# tar czf glpi-datainjection-2.1.0-593.tar.gz datainjection
+# svn export -r 596 https://forge.indepnet.net/svn/datainjection/trunk datainjection
+# tar czf glpi-datainjection-2.1.0-596.tar.gz datainjection
 Source0:        glpi-datainjection-2.1.0-%{svnrelease}.tar.gz
 %else
 # This change for each new version
@@ -109,6 +109,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.0-0.2.svn596
+- new snapshot
+
 * Sun Jul 24 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.0-0.1.svn593
 - update to 2.1.0 for glpi 0.80 (svn snapshot)
 
