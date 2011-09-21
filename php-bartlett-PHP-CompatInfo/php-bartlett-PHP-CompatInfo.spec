@@ -25,7 +25,7 @@ Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%
 
 # for old asciidoc version https://bugzilla.redhat.com/556171
 Patch0:         PHP_CompatInfo-docs.patch
-# Remove unused .js scripts
+# Remove unused asciidoc*.js scripts
 # source7813.php => PHP License
 # source13873.php => GPL
 # and tests which use this files.
@@ -165,10 +165,12 @@ fi
 
 
 %changelog
-* Wed Sep 21 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.0-3
+* Wed Sep 21 2011 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
 - remove all files with licensing issue
+  don't use it during test, don't install it
+  can keep it in sources are this files are still under free license
 
-* Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.0-2
+* Tue Sep 20 2011 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - comments from review #693204
 - remove ascii*js (not used)
 - add MIT to license for bundled jquery
