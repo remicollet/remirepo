@@ -14,7 +14,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -25,8 +25,11 @@ Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%
 
 # for old asciidoc version https://bugzilla.redhat.com/556171
 Patch0:         PHP_CompatInfo-docs.patch
-# Remove unused .js script
-Patch1:         PHP_CompatInfo-deljs.patch
+# Remove unused .js scripts
+# source7813.php => PHP License
+# source13873.php => GPL
+# and tests which use this files.
+Patch1:         PHP_CompatInfo-del.patch
 # Install generated doc using pear command
 Patch2:         PHP_CompatInfo-addhtml.patch
 
@@ -77,7 +80,7 @@ cd %{pear_name}-%{version}%{?prever}
 mv -f ../package.xml %{name}.xml
 
 %patch0 -p1 -b .fix
-%patch1 -p1 -b .deljs
+%patch1 -p1 -b .del
 %if %{withhtmldoc}
 %patch2 -p1 -b .addhtml
 %endif
@@ -162,6 +165,9 @@ fi
 
 
 %changelog
+* Wed Sep 21 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.0-3
+- remove all files with licensing issue
+
 * Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.0-2
 - comments from review #693204
 - remove ascii*js (not used)
