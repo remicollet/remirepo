@@ -1,0 +1,52 @@
+diff -up PHP_CompatInfo-2.1.0/php-bartlett-PHP-CompatInfo.xml.deljs PHP_CompatInfo-2.1.0/php-bartlett-PHP-CompatInfo.xml
+--- PHP_CompatInfo-2.1.0/php-bartlett-PHP-CompatInfo.xml.deljs	2011-08-24 20:39:25.000000000 +0200
++++ PHP_CompatInfo-2.1.0/php-bartlett-PHP-CompatInfo.xml	2011-09-21 17:41:03.925086384 +0200
+@@ -136,12 +136,6 @@ Bug fixes:
+    <file baseinstalldir="Bartlett" md5sum="adcac4a13f10988d55dc357ff91aee0e" name="docs/images/thumb_summary2.png" role="doc">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+-   <file baseinstalldir="Bartlett" md5sum="a3e60e26c6b1b9271c48e16dda9b6e03" name="docs/js/asciidoc-xhtml11.js" role="doc">
+-    <tasks:replace from="@package_version@" to="version" type="package-info" />
+-   </file>
+-   <file baseinstalldir="Bartlett" md5sum="9f32dfead2e0cdcf5e3157a4f8cb0a3b" name="docs/js/asciidoc.js" role="doc">
+-    <tasks:replace from="@package_version@" to="version" type="package-info" />
+-   </file>
+    <file baseinstalldir="Bartlett" md5sum="16cfb6e94de43a22241c92bed60d02c2" name="docs/styles/flask.css" role="doc">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+@@ -736,9 +730,6 @@ Bug fixes:
+    <file baseinstalldir="Bartlett" md5sum="35505cce5faa97b9c143f6ce53b7a72c" name="tests/_files/source6581.php" role="test">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+-   <file baseinstalldir="Bartlett" md5sum="249296c67a98618527669212d47923df" name="tests/_files/source7813.php" role="test">
+-    <tasks:replace from="@package_version@" to="version" type="package-info" />
+-   </file>
+    <file baseinstalldir="Bartlett" md5sum="4ba6508ce5fb1de3d5f6e2db518c0637" name="tests/_files/source10100.php" role="test">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+@@ -748,9 +739,6 @@ Bug fixes:
+    <file baseinstalldir="Bartlett" md5sum="be4f84e82acd838ee9202cbc87f01f0a" name="tests/_files/source13568.php" role="test">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+-   <file baseinstalldir="Bartlett" md5sum="79676ff8f980d53d07249c5684eb12d0" name="tests/_files/source13873.php" role="test">
+-    <tasks:replace from="@package_version@" to="version" type="package-info" />
+-   </file>
+    <file baseinstalldir="Bartlett" md5sum="c48d70ec9db9a67b61c33dcc7a82642b" name="tests/_files/source14696.php" role="test">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+@@ -772,15 +760,9 @@ Bug fixes:
+    <file baseinstalldir="Bartlett" md5sum="bda22dd135c0c4f7ee5a0212d7a69681" name="tests/InterfaceTest.php" role="test">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+-   <file baseinstalldir="Bartlett" md5sum="90e48d1f6e8a42c95793f5578dbad80b" name="tests/IssueTest.php" role="test">
+-    <tasks:replace from="@package_version@" to="version" type="package-info" />
+-   </file>
+    <file baseinstalldir="Bartlett" md5sum="4d45dab1a4194641f85fbc08cd0de157" name="tests/MagicConstantTest.php" role="test">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+-   <file baseinstalldir="Bartlett" md5sum="29bb287cdbe03d2b9ac5a8309198df41" name="tests/PackageTest.php" role="test">
+-    <tasks:replace from="@package_version@" to="version" type="package-info" />
+-   </file>
+    <file baseinstalldir="Bartlett" md5sum="6fd3e176cb64b4b8a5c303ba3359d7d3" name="LICENSE" role="doc">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
