@@ -237,7 +237,7 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
-* Fri Sep 23 2011 Remi Collet <Fedora@famillecollet.com> 5.2.35-1
+* Fri Sep 23 2011 Remi Collet <remi@fedoraproject.org> 5.2.35-1
 - update to 5.2.35 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-35.html
 
