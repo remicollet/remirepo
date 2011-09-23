@@ -1,8 +1,8 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%global mw_version 5.2.34
-%global tarversion gpl-5.2.34-src
-%global srcversion gpl-5.2.34-src
+%global mw_version 5.2.35
+%global tarversion gpl-5.2.35-src
+%global srcversion gpl-5.2.35-src
 
 # Use system cppconn if a compatible upstream version exists
 #global cppconnver 1.1.0-0.3.bzr895
@@ -28,8 +28,6 @@ Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tar
 Patch1:    %{name}-5.2.28-cppconn.patch
 Patch2:    %{name}-5.2.32-ctemplate.patch
 Patch3:    %{name}-5.2.34-tinyxml.patch
-# http://bugs.mysql.com/60603
-Patch4:    %{name}-5.2.34-gcc46.patch
 # redirect man page to /usr/share
 Patch5:    %{name}-5.2.34-man.patch
 
@@ -136,7 +134,6 @@ rm -rf ext/ctemplate
 rm -rf library/tinyxml
 %endif
 
-%patch4 -p1 -b .gcc46
 %patch5 -p1 -b .man
 
 
@@ -240,6 +237,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Sep 23 2011 Remi Collet <Fedora@famillecollet.com> 5.2.35-1
+- update to 5.2.35 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-35.html
+
 * Wed Mar 23 2011 Remi Collet <Fedora@famillecollet.com> 5.2.34-1
 - update to 5.2.34 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-34.html
