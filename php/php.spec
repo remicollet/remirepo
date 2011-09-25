@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -102,6 +102,8 @@ Patch41: php-5.3.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.3.4-phpize.patch
+# http://svn.php.net/viewvc?view=revision&revision=317183
+Patch44: php-5.3.8-isa.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
@@ -683,6 +685,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p0 -b .headers
+%patch44 -p4 -b .isa
 
 %patch61 -p1 -b .tests-wddx
 %patch62 -p0 -b .tests
@@ -1449,6 +1452,9 @@ fi
 %endif
 
 %changelog
+* Sat Sep 25 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-5
+- revert is_a to php <= 5.3.6 behaviour (from upstream)
+
 * Fri Sep 16 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-4
 - fix mysql subpackages for ZTS
 - fix relocation (php53 build)
