@@ -17,7 +17,7 @@ diff --git a/src/main.c b/src/main.c
 index 6dcf333..eae45de 100644
 --- a/src/main.c
 +++ b/src/main.c
-@@ -4898,6 +4898,7 @@ operate(struct Configurable *config, int argc, argv_item_t argv[])
+@@ -4866,6 +4866,7 @@ operate(struct Configurable *config, int argc, argv_item_t argv[])
      outs.stream = stdout;
      outs.config = config;
      outs.bytes = 0; /* nothing written yet */

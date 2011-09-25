@@ -19,7 +19,7 @@ diff --git a/src/main.c b/src/main.c
 index 276718b..56cd133 100644
 --- a/src/main.c
 +++ b/src/main.c
-@@ -5415,8 +5415,6 @@ operate(struct Configurable *config, int argc, argv_item_t argv[])
+@@ -5371,8 +5371,6 @@ operate(struct Configurable *config, int argc, argv_item_t argv[])
          my_setopt(curl, CURLOPT_QUOTE, config->quote);
          my_setopt(curl, CURLOPT_POSTQUOTE, config->postquote);
          my_setopt(curl, CURLOPT_PREQUOTE, config->prequote);
@@ -28,7 +28,7 @@ index 276718b..56cd133 100644
          my_setopt_str(curl, CURLOPT_COOKIEFILE, config->cookiefile);
          /* cookie jar was added in 7.9 */
          if(config->cookiejar)
-@@ -5621,6 +5619,12 @@ operate(struct Configurable *config, int argc, argv_item_t argv[])
+@@ -5577,6 +5575,12 @@ operate(struct Configurable *config, int argc, argv_item_t argv[])
            my_setopt(curl, CURLOPT_HEADERFUNCTION, header_callback);
            my_setopt(curl, CURLOPT_HEADERDATA, &outs);
          }

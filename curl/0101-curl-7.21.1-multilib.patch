@@ -1,20 +1,13 @@
- curl-config.in |   22 ++++------------------
- libcurl.pc.in  |    1 +
- 2 files changed, 5 insertions(+), 18 deletions(-)
+ curl-config.in     |   16 +++-------------
+ docs/curl-config.1 |    4 +++-
+ libcurl.pc.in      |    1 +
+ 3 files changed, 7 insertions(+), 14 deletions(-)
 
 diff --git a/curl-config.in b/curl-config.in
-index ebda129..b404827 100644
+index 150004d..95d0759 100644
 --- a/curl-config.in
 +++ b/curl-config.in
-@@ -43,7 +43,6 @@ Available values for OPTION include:
-   --libs      library linking information
-   --prefix    curl install prefix
-   --protocols newline separated list of enabled protocols
--  --static-libs static libcurl library linking information
-   --version   output version information
-   --vernum    output the version information as a number (hexadecimal)
- EOF
-@@ -74,7 +73,7 @@ while test $# -gt 0; do
+@@ -74,7 +74,7 @@ while test $# -gt 0; do
  	;;
  
      --cc)
@@ -23,7 +16,7 @@ index ebda129..b404827 100644
  	;;
  
      --prefix)
-@@ -136,25 +135,12 @@ while test $# -gt 0; do
+@@ -136,24 +136,14 @@ while test $# -gt 0; do
         	;;
  
      --libs)
@@ -37,21 +30,36 @@ index ebda129..b404827 100644
 -	else
 -	  echo ${CURLLIBDIR}-lcurl @LDFLAGS@ @LIBS@
 -	fi
--	;;
--
--    --static-libs)
--	echo @libdir@/libcurl.@libext@ @LDFLAGS@ @LIBCURL_LIBS@ @LIBS@
 +	pkg-config libcurl --libs
+ 	;;
+ 
+     --static-libs)
+-	echo @libdir@/libcurl.@libext@ @LDFLAGS@ @LIBCURL_LIBS@ @LIBS@
  	;;
  
      --configure)
 -      echo @CONFIGURE_OPTIONS@
--    ;;
 +	pkg-config libcurl --variable=configure_options | sed 's/^"//;s/"$//'
-+	;;
+     ;;
  
      *)
-         echo "unknown option: $1"
+diff --git a/docs/curl-config.1 b/docs/curl-config.1
+index c4f4e2b..3e0ea60 100644
+--- a/docs/curl-config.1
++++ b/docs/curl-config.1
+@@ -65,7 +65,9 @@ be listed using uppercase and are separated by newlines. There may be none,
+ one, or several protocols in the list. (Added in 7.13.0)
+ .IP "--static-libs"
+ Shows the complete set of libs and other linker options you will need in order
+-to link your application with libcurl statically. (Added in 7.17.1)
++to link your application with libcurl statically. Note that Fedora/RHEL libcurl
++packages do not provide any static libraries, thus cannot be linked statically.
++(Added in 7.17.1)
+ .IP "--version"
+ Outputs version information about the installed libcurl.
+ .IP "--vernum"
+diff --git a/libcurl.pc.in b/libcurl.pc.in
+index 2ba9c39..f8f8b00 100644
 --- a/libcurl.pc.in
 +++ b/libcurl.pc.in
 @@ -29,6 +29,7 @@ libdir=@libdir@

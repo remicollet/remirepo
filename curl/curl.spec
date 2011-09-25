@@ -1,7 +1,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 7.21.7
-Release: 4%{?dist}.1
+Release: 5%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
@@ -20,6 +20,9 @@ Patch3: 0003-curl-7.21.7-5538904.patch
 
 # initialize NSS with no database if the selected database is broken (#728562)
 Patch4: 0004-curl-7.21.7-d6f319f.patch
+
+# break busy loops in tests 502, 555, and 573
+Patch6: 0006-curl-7.21.7-3445fa2.patch
 
 # patch making libcurl multilib ready
 Patch101: 0101-curl-7.21.1-multilib.patch
@@ -254,6 +257,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Sun Sep 25 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-5
+- sync with fedora 16
+
+* Mon Sep 19 2011 Kamil Dudka <kdudka@redhat.com> 7.21.7-5
+- curl-config now provides dummy --static-libs option (#733956)
+- break busy loops in tests 502, 555, and 573
+
 * Tue Sep 13 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-4.1
 - raise openldap dependency
 
