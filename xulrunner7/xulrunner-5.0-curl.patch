@@ -1,0 +1,44 @@
+diff -up xulrunner-5.0/mozilla-release/config/system-headers.old xulrunner-5.0/mozilla-release/config/system-headers
+--- xulrunner-5.0/mozilla-release/config/system-headers.old	2011-06-15 23:57:19.000000000 +0200
++++ xulrunner-5.0/mozilla-release/config/system-headers	2011-06-24 11:03:04.725787684 +0200
+@@ -207,7 +207,6 @@ ctime
+ ctype.h
+ curl/curl.h
+ curl/easy.h
+-curl/types.h
+ curses.h
+ cxxabi.h
+ DateTimeUtils.h
+diff -up xulrunner-5.0/mozilla-release/js/src/config/system-headers.old xulrunner-5.0/mozilla-release/js/src/config/system-headers
+--- xulrunner-5.0/mozilla-release/js/src/config/system-headers.old	2011-06-15 23:57:28.000000000 +0200
++++ xulrunner-5.0/mozilla-release/js/src/config/system-headers	2011-06-24 11:05:09.305688350 +0200
+@@ -207,7 +207,6 @@ ctime
+ ctype.h
+ curl/curl.h
+ curl/easy.h
+-curl/types.h
+ curses.h
+ cxxabi.h
+ DateTimeUtils.h
+diff -up xulrunner-5.0/mozilla-release/toolkit/crashreporter/google-breakpad/src/common/linux/http_upload.cc.old xulrunner-5.0/mozilla-release/toolkit/crashreporter/google-breakpad/src/common/linux/http_upload.cc
+--- xulrunner-5.0/mozilla-release/toolkit/crashreporter/google-breakpad/src/common/linux/http_upload.cc.old	2011-06-15 23:57:55.000000000 +0200
++++ xulrunner-5.0/mozilla-release/toolkit/crashreporter/google-breakpad/src/common/linux/http_upload.cc	2011-06-24 11:02:26.854732204 +0200
+@@ -33,7 +33,6 @@
+ #include <dlfcn.h>
+ #include <curl/curl.h>
+ #include <curl/easy.h>
+-#include <curl/types.h>
+ 
+ namespace {
+ 
+diff -up xulrunner-5.0/mozilla-release/toolkit/crashreporter/google-breakpad/src/common/linux/libcurl_wrapper.cc.old xulrunner-5.0/mozilla-release/toolkit/crashreporter/google-breakpad/src/common/linux/libcurl_wrapper.cc
+--- xulrunner-5.0/mozilla-release/toolkit/crashreporter/google-breakpad/src/common/linux/libcurl_wrapper.cc.old	2011-06-15 23:57:55.000000000 +0200
++++ xulrunner-5.0/mozilla-release/toolkit/crashreporter/google-breakpad/src/common/linux/libcurl_wrapper.cc	2011-06-24 11:02:08.801845273 +0200
+@@ -29,7 +29,6 @@
+ 
+ #include <curl/curl.h>
+ #include <curl/easy.h>
+-#include <curl/types.h>
+ #include <dlfcn.h>
+ 
+ #include <iostream>
