@@ -18,7 +18,7 @@
 %global rc_version      0
 %global datelang        20110927
 
-%global mozappdir     %{_libdir}/%{shortname}-%{firefox_dir_ver}
+%global mozappdir     %{_libdir}/%{shortname}
 %global langpackdir   %{mozappdir}/langpacks
 %global tarballdir    mozilla-release
 
@@ -48,7 +48,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        7.0
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -65,7 +65,7 @@ Source21:       firefox.sh.in
 Source23:       firefox.1
 
 #Build patches
-Patch0:         firefox-version.patch
+Patch0:         firefox-install-dir.patch
 Patch1:         firefox-7.0-cache-build.patch
 
 # Fedora patches
@@ -114,12 +114,8 @@ echo TARGET = %{name}-%{version}-%{release}%{?dist}
 %setup -q -c
 cd %{tarballdir}
 
-sed -e 's/__RPM_VERSION_INTERNAL__/%{firefox_dir_ver}/' %{P:%%PATCH0} \
-    > version.patch
-%{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
-    
-
 # Build patches
+%patch0 -p2 -b .install-dir
 %patch1 -p2 -b .cache
 
 # For branding specific patches.
@@ -254,8 +250,7 @@ desktop-file-install --vendor mozilla \
 # set up the firefox start script
 %{__rm} -rf $RPM_BUILD_ROOT%{_bindir}/%{shortname}
 XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
-%{__cat} %{SOURCE21} | %{__sed} -e 's,FIREFOX_VERSION,%{firefox_dir_ver},g' \
-		     | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g"  \
+%{__cat} %{SOURCE21} | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g"  \
   > $RPM_BUILD_ROOT%{_bindir}/%{name}
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
 
@@ -393,6 +388,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Sep 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0-1.1
+- changes from rawhide (install dir)
+
+* Tue Sep 27 2011 Jan Horak <jhorak@redhat.com> - 7.0
+- Update to 7.0
+
 * Tue Sep 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0-1
 - update to 7.0
 
