@@ -19,18 +19,18 @@ case $MOZ_ARCH in
                 ;;
 esac
 
-if [ ! -x $MOZ_LIB_DIR/thunderbird-TBIRD_VERSION/thunderbird ]; then
-    if [ ! -x $SECONDARY_LIB_DIR/thunderbird-TBIRD_VERSION/thunderbird ]; then
-        echo "Error: $MOZ_LIB_DIR/thunderbird-TBIRD_VERSION/thunderbird not found"
+if [ ! -x $MOZ_LIB_DIR/thunderbird/thunderbird ]; then
+    if [ ! -x $SECONDARY_LIB_DIR/thunderbird/thunderbird ]; then
+        echo "Error: $MOZ_LIB_DIR/thunderbird/thunderbird not found"
         if [ -d $SECONDARY_LIB_DIR ]; then
-            echo "       $SECONDARY_LIB_DIR/thunderbird-TBIRD_VERSION/thunderbird not found"
+            echo "       $SECONDARY_LIB_DIR/thunderbird/thunderbird not found"
         fi
         exit 1
     fi
     MOZ_LIB_DIR="$SECONDARY_LIB_DIR"
 fi
 
-MOZ_DIST_BIN="$MOZ_LIB_DIR/thunderbird-TBIRD_VERSION"
+MOZ_DIST_BIN="$MOZ_LIB_DIR/thunderbird"
 MOZ_PROGRAM="$MOZ_DIST_BIN/thunderbird"
 MOZ_LANGPACKS_DIR="$MOZ_DIST_BIN/langpacks"
 MOZ_EXTENSIONS_PROFILE_DIR="$HOME/.mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}"
