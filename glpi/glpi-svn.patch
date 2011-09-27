@@ -1,0 +1,13 @@
+Index: branches/0.80-bugfixes/front/ticketsatisfaction.form.php
+===================================================================
+--- branches/0.80-bugfixes/front/ticketsatisfaction.form.php	(revision 15785)
++++ branches/0.80-bugfixes/front/ticketsatisfaction.form.php	(revision 15786)
+@@ -37,7 +37,7 @@
+ define('GLPI_ROOT', '..');
+ include (GLPI_ROOT . "/inc/includes.php");
+ 
+-checkCentralAccess();
++checkLoginUser();
+ 
+ $inquest = new TicketSatisfaction();
+ 

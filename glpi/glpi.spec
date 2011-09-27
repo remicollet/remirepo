@@ -7,7 +7,7 @@
 #global svnrelease 12930
 
 Name:           glpi
-Version:        0.80.3
+Version:        0.80.4
 %if 0%{?svnrelease}
 Release:        2.svn%{svnrelease}%{?dist}
 %else
@@ -24,7 +24,7 @@ URL:            http://www.glpi-project.org/
 Source0:        glpi-0.78-%{svnrelease}.tar.gz
 Source99:       mktar.sh
 %else
-Source0:        https://forge.indepnet.net/attachments/download/967/glpi-0.80.31.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/974/glpi-0.80.4.tar.gz
 %endif
 
 Source1:        glpi-httpd.conf
@@ -33,6 +33,9 @@ Source3:        glpi-logrotate
 
 # Switch all internal cron tasks to system
 Patch0:         glpi-cron.patch
+
+# https://forge.indepnet.net/issues/3157
+Patch1:         glpi-svn.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -82,7 +85,8 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0 -p1
-rm -f install/*.orig
+%patch1 -p2
+find . -name \*.orig -exec rm {} \; -print
 
 # Use system lib
 rm -rf lib/cache_lite
@@ -246,6 +250,11 @@ fi
 
 
 %changelog
+* Tue Sep 27 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.4-1
+- version 0.80.4 released (bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/632
+- patch for https://forge.indepnet.net/issues/3157
+
 * Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.3-1
 - version 0.80.3 released (bugfix)
   https://forge.indepnet.net/projects/glpi/versions/621
