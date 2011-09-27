@@ -1,0 +1,18 @@
+--- firefox-7.0/mozilla-release/toolkit/mozapps/installer/packager.mk.cache	2011-09-27 18:26:36.804952679 +0200
++++ firefox-7.0/mozilla-release/toolkit/mozapps/installer/packager.mk	2011-09-27 18:26:50.996987240 +0200
+@@ -383,7 +383,6 @@
+ endif
+ 
+ ifdef MOZ_OMNIJAR
+-GENERATE_CACHE ?= true
+ 
+ OMNIJAR_FILES	= \
+   chrome \
+@@ -413,7 +412,6 @@
+     mv tmp.manifest $$m; \
+   done; \
+   $(ZIP) -r9m omni.jar $(OMNIJAR_FILES) -x $(NON_OMNIJAR_FILES) && \
+-  $(GENERATE_CACHE) && \
+   $(OPTIMIZE_JARS_CMD) --optimize $(JARLOG_DIR_AB_CD) ./ ./ && \
+   mv binary.manifest components && \
+   printf "manifest components/binary.manifest\n" > chrome.manifest
