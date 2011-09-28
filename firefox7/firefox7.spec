@@ -48,7 +48,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        7.0
-Release:        1%{?dist}.1
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -388,7 +388,7 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
-* Tue Sep 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0-1.1
+* Tue Sep 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0-1
 - changes from rawhide (install dir)
 
 * Tue Sep 27 2011 Jan Horak <jhorak@redhat.com> - 7.0
