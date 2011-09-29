@@ -8,7 +8,7 @@
 %define build_langpacks 1
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 
-%global thunver  6.0
+%global thunver  7.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -20,14 +20,13 @@
 
 %define official_branding 1
 
-%define version_internal  6.0
-%define mozappdir         %{_libdir}/thunderbird-%{version_internal}
+%define mozappdir         %{_libdir}/thunderbird
 %global enigmail_extname  %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{847b3a00-7ab1-11d4-8f02-006008948af5}
 
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.3
+Version:        1.3.2
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
@@ -57,11 +56,12 @@ Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{versi
 Source101:      enigmail-fixlang.php
 
 
-Patch0:         thunderbird-version.patch
+# Mozilla (XULRunner) patches
+Patch0:         thunderbird-install-dir.patch
 Patch7:         crashreporter-remove-static.patch
+Patch8:         xulrunner-6.0-secondary-ipc.patch
 
 # Enigmail patch
-Patch100:       enigmail-rdf.patch
 
 
 %if %{official_branding}
@@ -141,20 +141,18 @@ features provided by GnuPG
 %setup -q -c
 cd %{tarballdir}
 
-sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
-    > version.patch
-%{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
-
+%patch0  -p2 -b .dir
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch7 -p2 -b .static
+%patch8 -p2 -b .secondary-ipc
 cd ..
 
 %if %{official_branding}
 # Required by Mozilla Corporation
 
 %else
-# Not yet approved by Mozillla Corporation
+# Not yet approved by Mozilla Corporation
 
 %endif
 
@@ -201,7 +199,6 @@ tar xzf %{SOURCE100} -C mailnews/extensions/enigmail
 tar xzf %{SOURCE100} -C mailnews/extensions
 pushd mailnews/extensions/enigmail
 # Apply Enigmail patch here
-%patch100 -p1 -b .orig
 popd
 %endif
 
@@ -219,9 +216,6 @@ popd
 
 %build
 cd %{tarballdir}
-
-INTERNAL_GECKO=%{version_internal}
-MOZ_APP_DIR=%{mozappdir}
 
 # -fpermissive is needed to build with gcc 4.6+ which has become stricter
 #
@@ -284,6 +278,9 @@ cd %{tarballdir}
 #===============================================================================
 
 %changelog
+* Thu Sep 29 2011 Remi Collet <remi@fedoraproject.org> 1.3.2-1
+- Enigmail 1.3.2 for Thunderbird 7.0
+
 * Wed Aug 17 2011 Remi Collet <remi@fedoraproject.org> 1.3-1
 - Enigmail 1.3 for Thunderbird 6.0
 
