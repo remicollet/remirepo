@@ -53,7 +53,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        7.0
+Version:        7.0.1
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -537,6 +537,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Sep 30 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0.1-1
+- update to 7.0.1
+
 * Tue Sep 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0-1
 - update to 7.0
 

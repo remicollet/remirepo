@@ -12,11 +12,11 @@
 %global shortname       firefox
 #global mycomment       Beta 4
 %global firefox_dir_ver 7
-%global gecko_version   7.0
+%global gecko_version   7.0.1
 %global alpha_version   0
 %global beta_version    0
 %global rc_version      0
-%global datelang        20110927
+%global datelang        20110930
 
 %global mozappdir     %{_libdir}/%{shortname}
 %global langpackdir   %{mozappdir}/langpacks
@@ -42,12 +42,12 @@
 %global gecko_verrel %{gecko_version}-%{pre_name}
 %global pre_tag .%{pre_version}
 %else
-%global gecko_verrel %{gecko_version}-1
+%global gecko_verrel %{gecko_version}
 %endif
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        7.0
+Version:        7.0.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -388,6 +388,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Sep 30 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0.1-1
+- update to 7.0.1
+
 * Tue Sep 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0-1
 - changes from rawhide (install dir)
 
