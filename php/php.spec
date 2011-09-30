@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.8
-Release: 5%{?dist}
+Release: 5%{?dist}.1
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -1452,6 +1452,9 @@ fi
 %endif
 
 %changelog
+* Fri Sep 30 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-5.1
+- EL-5 rebuild (with standard curl 7.15)
+
 * Sat Sep 25 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-5
 - revert is_a to php <= 5.3.6 behaviour (from upstream)
 
