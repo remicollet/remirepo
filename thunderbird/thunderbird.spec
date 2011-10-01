@@ -23,7 +23,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        7.0
+Version:        7.0.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -35,7 +35,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20110927.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20111001.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -259,11 +259,11 @@ desktop-file-install --vendor mozilla \
 
 # set up the thunderbird start script
 rm -f $RPM_BUILD_ROOT/%{_bindir}/thunderbird
-install -m 755 %{SOURCE21} $RPM_BUILD_ROOT%{_bindir}/thunderbird
+%{__cat} %{SOURCE21}  > $RPM_BUILD_ROOT%{_bindir}/thunderbird
+%{__chmod} 755 $RPM_BUILD_ROOT/%{_bindir}/thunderbird
 
 # set up our default preferences
-%{__cat} %{SOURCE12} | %{__sed} -e 's,Fedora,Remi,g' \
-                                -e 's,THUNDERBIRD_RPM_VR,fc%{fedora},g' > \
+%{__cat} %{SOURCE12} | %{__sed} -e 's,THUNDERBIRD_RPM_VR,%{version}-%{release},g' > \
         $RPM_BUILD_ROOT/rh-default-prefs
 %{__install} -D $RPM_BUILD_ROOT/rh-default-prefs $RPM_BUILD_ROOT/%{mozappdir}/greprefs/all-remi.js
 %{__install} -D $RPM_BUILD_ROOT/rh-default-prefs $RPM_BUILD_ROOT/%{mozappdir}/defaults/pref/all-remi.js
@@ -421,6 +421,9 @@ fi
 #===============================================================================
 
 %changelog
+* Sat Oct 01 2011 Remi Collet <rpms@famillecollet.com> 7.0.1-1
+- Thunderbird 7.0.1
+
 * Tue Sep 27 2011 Remi Collet <rpms@famillecollet.com> 7.0-1
 - Thunderbird 7.0
 
