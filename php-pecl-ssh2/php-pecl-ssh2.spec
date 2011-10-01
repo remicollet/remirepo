@@ -1,15 +1,13 @@
-%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%global php_extdir  %(php-config --extension-dir 2>/dev/null || echo "undefined")
-%global php_version %(php-config --version 2>/dev/null || echo 0)
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name ssh2
 
 Name:           php-pecl-ssh2
-Version:        0.11.2
-Release:        1%{?dist}.1
+Version:        0.11.3
+Release:        1%{?dist}
 Summary:        Bindings for the libssh2 library
 
+# http://pecl.php.net/bugs/bug.php?id=24364
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/ssh2
@@ -17,60 +15,82 @@ Source0:        http://pecl.php.net/get/ssh2-%{version}.tgz
 Source2:        php-pecl-ssh2-0.10-README
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildRequires:  libssh2-devel php-devel php-pear
+
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Provides:       php-pecl(ssh2) = %{version}
-
-%if %{?php_zend_api:1}0
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-%else
-# for EL-5
-Requires:       php-api = %{php_apiver}
-%endif
 
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
-Bindings to the functions of libssh2 which implements the SSH2 protocol.
-libssh2 is available from http://www.sourceforge.net/projects/libssh2
+Bindings to the libssh2 library which provide access to resources
+(shell, remote exec, tunneling, file transfer) on a remote machine using
+a secure cryptographic transport.
+
+Documentation : http://php.net/ssh2
+
 
 %prep
 %setup -c -q 
 
-%{__mv} package.xml %{pecl_name}-%{version}/%{name}.xml
+# http://pecl.php.net/bugs/bug.php?id=24390
+sed -i -e '/PHP_SSH2_VERSION/s/0.11.3-dev/0.11.3/' %{pecl_name}-%{version}/php_ssh2.h
 
-%{__install} -m 644 -c %{SOURCE2} README
+extver=$(sed -n '/#define PHP_SSH2_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_ssh2.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream PDO ABI version is now ${extver}, expecting %{version}.
+   : Update the pdover macro and rebuild.
+   exit 1
+fi
+
+cp %{SOURCE2} README
+
+cat > ssh2.ini << 'EOF'
+; Enable ssh2 extension module
+extension=ssh2.so
+EOF
+
+cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 
 %build
 cd %{pecl_name}-%{version}
-phpize
-%configure
-%{__make} %{?_smp_mflags}
+%{php_bindir}/phpize
+%configure  --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure  --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+
 
 %install
-cd %{pecl_name}-%{version}
-%{__rm} -rf %{buildroot}
-%{__make} install INSTALL_ROOT=%{buildroot}
+rm -rf %{buildroot}
+
+make -C %{pecl_name}-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+
+make -C %{pecl_name}-%{version}-zts \
+     install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
-install -Dpm 644 %{name}.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-%{__install} -d %{buildroot}%{_sysconfdir}/php.d
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/ssh2.ini << 'EOF'
-; Enable ssh2 extension module
-extension=ssh2.so
-EOF
+install -Dpm644 ssh2.ini %{buildroot}%{php_inidir}/ssh2.ini
+install -Dpm644 ssh2.ini %{buildroot}%{php_ztsinidir}/ssh2.ini
 
 
 %check
@@ -81,33 +101,35 @@ php --no-php-ini \
     --modules | grep %{pecl_name}
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
 %doc README
-%config(noreplace) %{_sysconfdir}/php.d/ssh2.ini
+%config(noreplace) %{php_inidir}/ssh2.ini
+%config(noreplace) %{php_ztsinidir}/ssh2.ini
 %{php_extdir}/ssh2.so
+%{php_ztsextdir}/ssh2.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Sat Oct 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.11.3-1
+- update to 0.11.3
+- zts extension
+
 * Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.11.2-1.1
 - EL-5 rebuild for libssh2
 - add filter
