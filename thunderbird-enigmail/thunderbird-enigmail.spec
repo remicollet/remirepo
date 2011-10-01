@@ -8,7 +8,7 @@
 %define build_langpacks 1
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 
-%global thunver  7.0
+%global thunver  7.0.1
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -30,7 +30,7 @@ Version:        1.3.2
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -198,6 +198,12 @@ tar xzf %{SOURCE100} -C mailnews/extensions/enigmail
 %else
 tar xzf %{SOURCE100} -C mailnews/extensions
 pushd mailnews/extensions/enigmail
+# From: Patrick Brunschwig <patrick@mozilla-enigmail.org>
+# All tarballs (as well as CVS) will *always* report as 1.4a1pre (or whatever
+# the next major version would be). This is because I create builds from trunk
+# and simply label the result as 1.3.x.
+sed -i -e '/em:version/s/1.4a1pre/%{version}/' package/install.rdf
+grep '<em:version>%{version}</em:version>' package/install.rdf || exit 1
 # Apply Enigmail patch here
 popd
 %endif
@@ -278,6 +284,10 @@ cd %{tarballdir}
 #===============================================================================
 
 %changelog
+* Sat Oct 01 2011 Remi Collet <remi@fedoraproject.org> 1.3.2-2
+- Enigmail 1.3.2 for Thunderbird 7.0.1
+- fix extension version
+
 * Thu Sep 29 2011 Remi Collet <remi@fedoraproject.org> 1.3.2-1
 - Enigmail 1.3.2 for Thunderbird 7.0
 
