@@ -1,8 +1,6 @@
-Bug 668460 - Adds IPC build config for s390(x) and powerpc(64)
-
-diff -up xulrunner-5.0/mozilla/ipc/chromium/src/base/data_pack.cc.secondary-ipc xulrunner-5.0/mozilla/ipc/chromium/src/base/data_pack.cc
---- xulrunner-5.0/mozilla/ipc/chromium/src/base/data_pack.cc.secondary-ipc	2011-06-15 23:57:27.000000000 +0200
-+++ xulrunner-5.0/mozilla/ipc/chromium/src/base/data_pack.cc	2011-06-30 09:08:26.777844341 +0200
+diff -up xulrunner-6.0/mozilla-release/ipc/chromium/src/base/data_pack.cc.secondary-ipc xulrunner-6.0/mozilla-release/ipc/chromium/src/base/data_pack.cc
+--- xulrunner-6.0/mozilla-release/ipc/chromium/src/base/data_pack.cc.secondary-ipc	2011-08-11 23:41:01.000000000 +0200
++++ xulrunner-6.0/mozilla-release/ipc/chromium/src/base/data_pack.cc	2011-08-16 10:05:26.325449386 +0200
 @@ -91,14 +91,7 @@ bool DataPack::Load(const FilePath& path
  bool DataPack::Get(uint32_t resource_id, StringPiece* data) {
    // It won't be hard to make this endian-agnostic, but it's not worth
@@ -19,18 +17,17 @@ diff -up xulrunner-5.0/mozilla/ipc/chromium/src/base/data_pack.cc.secondary-ipc 
  
    DataPackEntry* target = reinterpret_cast<DataPackEntry*>(
        bsearch(&resource_id, mmap_->data() + kHeaderLength, resource_count_,
-diff -up xulrunner-5.0/mozilla/ipc/chromium/src/build/build_config.h.secondary-ipc xulrunner-5.0/mozilla/ipc/chromium/src/build/build_config.h
---- xulrunner-5.0/mozilla/ipc/chromium/src/build/build_config.h.secondary-ipc	2011-06-15 23:57:27.000000000 +0200
-+++ xulrunner-5.0/mozilla/ipc/chromium/src/build/build_config.h	2011-06-30 09:08:26.777844341 +0200
+diff -up xulrunner-6.0/mozilla-release/ipc/chromium/src/build/build_config.h.secondary-ipc xulrunner-6.0/mozilla-release/ipc/chromium/src/build/build_config.h
+--- xulrunner-6.0/mozilla-release/ipc/chromium/src/build/build_config.h.secondary-ipc	2011-08-11 23:41:01.000000000 +0200
++++ xulrunner-6.0/mozilla-release/ipc/chromium/src/build/build_config.h	2011-08-16 10:07:23.093899409 +0200
 @@ -57,9 +57,24 @@
  #define ARCH_CPU_ARMEL 1
  #define ARCH_CPU_32_BITS 1
  #define WCHAR_T_IS_UNSIGNED 1
--#elif defined(__ppc__)
 +#elif defined(__powerpc64__)
 +#define ARCH_CPU_PPC64 1
 +#define ARCH_CPU_64_BITS 1
-+#elif defined(__powerpc__)
+ #elif defined(__ppc__) || defined(__powerpc__)
  #define ARCH_CPU_PPC 1
  #define ARCH_CPU_32_BITS 1
 +#elif defined(__s390x__)
@@ -48,9 +45,9 @@ diff -up xulrunner-5.0/mozilla/ipc/chromium/src/build/build_config.h.secondary-i
  #else
  #error Please add support for your architecture in build/build_config.h
  #endif
-diff -up xulrunner-5.0/mozilla/ipc/chromium/src/chrome/common/ipc_message_utils.h.secondary-ipc xulrunner-5.0/mozilla/ipc/chromium/src/chrome/common/ipc_message_utils.h
---- xulrunner-5.0/mozilla/ipc/chromium/src/chrome/common/ipc_message_utils.h.secondary-ipc	2011-06-15 23:57:27.000000000 +0200
-+++ xulrunner-5.0/mozilla/ipc/chromium/src/chrome/common/ipc_message_utils.h	2011-06-30 09:47:16.629029528 +0200
+diff -up xulrunner-6.0/mozilla-release/ipc/chromium/src/chrome/common/ipc_message_utils.h.secondary-ipc xulrunner-6.0/mozilla-release/ipc/chromium/src/chrome/common/ipc_message_utils.h
+--- xulrunner-6.0/mozilla-release/ipc/chromium/src/chrome/common/ipc_message_utils.h.secondary-ipc	2011-08-11 23:41:01.000000000 +0200
++++ xulrunner-6.0/mozilla-release/ipc/chromium/src/chrome/common/ipc_message_utils.h	2011-08-16 10:05:26.326449206 +0200
 @@ -219,7 +219,8 @@ struct ParamTraits<unsigned long> {
    }
  };

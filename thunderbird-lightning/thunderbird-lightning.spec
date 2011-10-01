@@ -5,9 +5,14 @@
 %global lcms_version 1.19
 %global sqlite_version 3.6.22
 %global libnotify_version 0.4
-%global thunderbird_version 6.0
+# Update these two as a pair
+%global thunderbird_version 7.0
+%global thunderbird_next_version 8.0
+%global lightprever b7
+# Compatible versions are listed in:
+# comm-release/calendar/lightning/install.rdf.rej
+# comm-release/calendar/providers/gdata/install.rdf.rej
 %global moz_objdir objdir-tb
-%global thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 %global lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
 %global gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 
@@ -19,30 +24,30 @@
 #define tarballdir .
 %global tarballdir comm-release
 
-%global version_internal  6
-%global mozappdir         %{_libdir}/%{name}-%{version_internal}
-
-%global lightprever b5pre
+%global mozappdir         %{_libdir}/%{name}
 
 Name:           thunderbird-lightning
 Summary:        The calendar extension to Thunderbird
 Version:        1.0
-Release:        0.48.%{lightprever}%{?dist}
+Release:        0.50.%{lightprever}%{?dist}
 URL:            http://www.mozilla.org/projects/calendar/lightning/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Productivity
-#Source0:       http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/%{version}%{lightprever}/source/lightning-%{version}%{lightprever}-source.tar.bz2
-Source0:        http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/%{thunderbird_version}/source/thunderbird-%{thunderbird_version}.source.tar.bz2
+#Someday lightning will produce a release we can use
+Source0:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b7/source/lightning-1.0b7.source.tar.bz2
+#Source0:        http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/%{thunderbird_version}/source/thunderbird-%{thunderbird_version}.source.tar.bz2
+# This script will generate the language source below
+Source1:        mklangsource.sh
+Source2:        l10n-miramar.tar.bz2
 # Config file for compilation
 Source10:       thunderbird-mozconfig
 # Finds requirements provided outside of the current file set
 Source100:      find-external-requires
 
-# Only for langpacks
-Source4:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/%{version}%{lightprever}/lightning.xpi
 
 # Mozilla (XULRunner) patches
-Patch0:         thunderbird-version.patch
+Patch0:         thunderbird-install-dir.patch
+Patch8:         xulrunner-6.0-secondary-ipc.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -109,24 +114,8 @@ calendaring tasks.
 
 %prep
 echo TARGET = %{name}-%{version}-%{release}
-%setup -q -c
+%setup -q -c -a 2
 
-# Uncompress XPI for langpacks
-unzip -qo %{SOURCE4} chrome/*
-
-# Remove dir which are not langpacks
-rm -rf chrome/lightning chrome/icons chrome/calendar chrome/*en-US
-# Prepare registration of the found langpacks
-touch chrome.add
-ls chrome \
-  | sed -n 's/\(\([^-]*\)-\(.*\)\)/locale \2 \3 chrome\/\1\/locale\/\3\/\2\//p' \
-  | tee -a chrome.add
-
-sed -i -e '/maxVersion/s/>5/>6/' %{tarballdir}/calendar/providers/gdata/install.rdf
-sed -i -e '/maxVersion/s/>5/>6/' %{tarballdir}/calendar/lightning/install.rdf
-
-
-# Continue with Thunderbird
 cd %{tarballdir}
 
 lightprever=$(cat calendar/sunbird/config/version.txt)
@@ -135,10 +124,11 @@ if [ "$lightprever" != "%{version}%{lightprever}" ]; then
   exit 1
 fi
 
-sed -e 's/__RPM_VERSION_INTERNAL__/%{version_internal}/' %{P:%%PATCH0} \
-    > version.patch
-%{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
-
+%patch0  -p2 -b .dir
+# Mozilla (XULRunner) patches
+cd mozilla
+%patch8 -p2 -b .secondary-ipc
+cd ..
 
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
@@ -206,6 +196,14 @@ export LDFLAGS="-Wl,-rpath,%{mozappdir}"
 export MAKE="gmake %{moz_make_flags}"
 make -f client.mk build STRIP=/bin/true
 
+# Package l10n files
+cd objdir-tb/calendar/lightning
+make AB_CD=all L10N_XPI_NAME=lightning-all repack-clobber-all
+grep -v 'osx' ../../../calendar/locales/shipped-locales | while read lang x
+do
+   make AB_CD=all L10N_XPI_NAME=lightning-all libs-$lang
+done
+
 #===============================================================================
 
 %install
@@ -219,15 +217,11 @@ mkdir -p $RPM_BUILD_ROOT%{gdata_extname}
 touch $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
 
 # Lightning and GData provider for it
-unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning.xpi
+unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning-all.xpi
 unzip -qod $RPM_BUILD_ROOT%{gdata_extname} objdir-tb/mozilla/dist/xpi-stage/gdata-provider.xpi
 
 # Fix up permissions
 find $RPM_BUILD_ROOT -name \*.so | xargs chmod 0755
-
-# Langpacks
-cp -a ../chrome/*-* $RPM_BUILD_ROOT%{lightning_extname}/chrome
-cat ../chrome.add >>$RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
 
 #===============================================================================
 
@@ -245,6 +239,15 @@ cat ../chrome.add >>$RPM_BUILD_ROOT%{lightning_extname}/chrome.manifest
 #===============================================================================
 
 %changelog
+* Sat Oct 01 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.50.b7
+- Use lightning 1.0b7 source for TB 7
+- sync with rawhide
+
+* Wed Sep 28 2011 Orion Poplawski <orion@cora.nwra.com> - 1.0-0.50.b7
+- Use lightning 1.0b7 source for TB 7
+- Update l10n source
+- Drop tbver patch
+
 * Wed Aug 17 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.48.b5pre
 - Update to 1.0b5pre from Thunderbird 6.0 sources
 
