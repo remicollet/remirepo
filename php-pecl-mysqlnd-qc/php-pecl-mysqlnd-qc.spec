@@ -85,7 +85,7 @@ rm -rf %{buildroot}
 make install -C %{pecl_name}-%{version}     INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -122,7 +122,7 @@ php -n -q \
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_name}-%{version}/web
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
