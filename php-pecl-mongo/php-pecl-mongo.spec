@@ -1,5 +1,4 @@
-%{!?phpname:		%{expand: %%global phpname     php}}
-
+%{!?phpname:    %{expand: %%global phpname     php}}
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 %{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
@@ -16,7 +15,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         %{phpname}-pecl-mongo
-Version:      1.2.5
+Version:      1.2.6
 Release:      1%{?dist}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -25,13 +24,11 @@ URL:          http://pecl.php.net/package/%{pecl_name}
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildRequires: %{phpname}-devel >= 5.1.0
 BuildRequires: %{phpname}-pear >= 1.4.9-1.2
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-
 Requires:     %{phpname}(zend-abi) = %{php_zend_api}
 Requires:     %{phpname}(api) = %{php_core_api}
 
@@ -41,6 +38,7 @@ Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
 %description
 This package provides an interface for communicating with the MongoDB database
 in PHP.
+
 
 %prep 
 %setup -c -q
@@ -120,17 +118,13 @@ rm -rf %{buildroot}
 
 
 %post
-%if 0%{?pecl_install:1}
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
 %postun
-%if 0%{?pecl_uninstall:1}
 if [ "$1" -eq "0" ]; then
-%{pecl_uninstall} %{pecl_name} >/dev/null || :
+   %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %check
@@ -154,6 +148,9 @@ cd %{pecl_name}-%{version}
 
 
 %changelog
+* Sun Oct 02 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.6-1
+- update to 1.2.6
+
 * Fri Sep 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.5-1
 - update to 1.2.5
 - clean spec
