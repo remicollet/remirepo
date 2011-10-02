@@ -1,0 +1,28 @@
+diff -up mysqlnd_ms-1.1.0/mysqlnd_query_lexer.c.orig mysqlnd_ms-1.1.0/mysqlnd_query_lexer.c
+--- mysqlnd_ms-1.1.0/mysqlnd_query_lexer.c.orig	2011-10-02 17:31:10.304612212 +0200
++++ mysqlnd_ms-1.1.0/mysqlnd_query_lexer.c	2011-10-02 17:33:11.977016537 +0200
+@@ -4859,6 +4859,10 @@ static yyconst flex_int16_t yy_chk[15745
+ Compile with : flex mysqlnd_query_lexer.flex
+ */
+ 
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include <string.h>
+ #include "php.h"
+ #include "php_ini.h"
+diff -up mysqlnd_ms-1.1.0/mysqlnd_query_lexer.flex.orig mysqlnd_ms-1.1.0/mysqlnd_query_lexer.flex
+--- mysqlnd_ms-1.1.0/mysqlnd_query_lexer.flex.orig	2011-10-02 17:31:05.101594816 +0200
++++ mysqlnd_ms-1.1.0/mysqlnd_query_lexer.flex	2011-10-02 17:31:38.624706658 +0200
+@@ -22,6 +22,10 @@
+ Compile with : flex mysqlnd_query_lexer.flex
+ */
+ 
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include <string.h>
+ #include "php.h"
+ #include "php_ini.h"

@@ -4,7 +4,7 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
 Version:      1.1.0
-Release:      1%{?dist}
+Release:      1%{?dist}.1
 
 License:      PHP
 Group:        Development/Languages
@@ -14,6 +14,9 @@ Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # From http://www.php.net/manual/en/mysqlnd-ms.configuration.php
 Source1:      %{pecl_name}.ini
+
+# http://pecl.php.net/bugs/bug.php?id=24391
+Patch0:       %{pecl_name}-build.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.6
@@ -56,16 +59,17 @@ Documentation : http://www.php.net/mysqlnd_ms
 cp %{SOURCE1} %{pecl_name}.ini
 
 cd %{pecl_name}-%{version}
+%patch0 -p 1 -b .build
 
 
 %build
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 
-# Not yet available --enable-mysqlnd-ms-table-filter \
 %configure \
     --with-libdir=%{_lib} \
     --enable-mysqlnd-ms \
+    --enable-mysqlnd-ms-table-filter \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -118,5 +122,8 @@ php -n -q \
 
 
 %changelog
-* Sun Oct 02 2011  Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+* Sun Oct 02 2011 Remi Collet <remi@fedoraproject.org> - 1.1.0-1.1
+- build with --enable-mysqlnd-ms-table-filter
+
+* Sun Oct 02 2011 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Initial RPM
