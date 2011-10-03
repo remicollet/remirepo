@@ -1,4 +1,5 @@
-%{!?phpname:		%{expand: %%global phpname     php}}
+%{!?__pecl:  %{expand: %%global __pecl %{_bindir}/pecl}}
+%{!?phpname: %{expand: %%global phpname php}}
 
 %global pecl_name imagick
 
