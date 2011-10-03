@@ -5,7 +5,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{phpname}-pecl-imagick
 Version:       3.0.1
-Release:       3%{?dist}
+Release:       3%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -47,6 +47,15 @@ using the ImageMagick API.
 echo TARGET is %{name}-%{version}-%{release}
 %setup -q -c 
 
+cat > %{pecl_name}.ini << 'EOF'
+; Enable %{pecl_name} extension module
+extension = %{pecl_name}.so
+
+; Options not documented
+;imagick.locale_fix=0
+;imagick.progress_monitor=0
+EOF
+
 cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 
@@ -68,19 +77,9 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 
 make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}-zts
-
 make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}
 
 # Drop in the bit of configuration
-cat > %{pecl_name}.ini << 'EOF'
-; Enable %{pecl_name} extension module
-extension = %{pecl_name}.so
-
-; Options not documented
-;imagick.locale_fix=0
-;imagick.progress_monitor=0
-EOF
-
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
@@ -102,7 +101,7 @@ fi
 %check
 # simple module load test
 pushd %{pecl_name}-%{version}
-%{php_bindir}/php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -125,6 +124,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 03 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.0.1-3.1
+- spec cleanup
+
 * Tue Aug 24 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.0.1-3
 - build zts extension
 
