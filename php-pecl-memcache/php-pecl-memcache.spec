@@ -1,25 +1,13 @@
-%{!?phpname:		%{expand: %%global phpname     php}}
-
-%if %{phpname} == php
-%global phpbindir      %{_bindir}
-%global phpconfdir     %{_sysconfdir}
-%global phpincldir     %{_includedir}
-%else
-%global phpbindir      %{_bindir}/%{phpname}
-%global phpconfdir     %{_sysconfdir}/%{phpname}
-%global phpincldir     %{_includedir}/%{phpname}
-%endif
-
+%{!?phpname:    %{expand: %%global phpname    php}}
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 %{!?php_extdir: %{expand: %%global php_extdir %(%{phpbindir}/php-config --extension-dir)}}
-%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 
 %global pecl_name memcache
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{phpname}-pecl-memcache
 Version:      3.0.6
-Release:      1%{?dist}
+Release:      2%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -30,27 +18,21 @@ Source2:      xml2changelog
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{phpname}-devel >= 4.3.11, %{phpname}-pear, zlib-devel
 
-%if 0%{?pecl_install:1}
 Requires(post): %{__pecl}
-%endif
-%if 0%{?pecl_uninstall:1}
 Requires(postun): %{__pecl}
-%endif
-Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
-%if 0%{?php_zend_api:1}
 Requires:     %{phpname}(zend-abi) = %{php_zend_api}
 Requires:     %{phpname}(api) = %{php_core_api}
-%else
-Requires:     php-api = %{php_apiver}
-%endif
+
+Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
 
 
-%if 0%{?fedora}%{?rhel} > 4
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-%endif
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -66,27 +48,9 @@ Memcache can be used as a PHP session handler.
 
 %prep 
 %setup -c -q
-%{phpbindir}/php -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
+%{__php} -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
 
-# avoid spurious-executable-perm
-find . -type f -exec chmod -x {} \;
-
-
-%build
-cd %{pecl_name}-%{version}
-%{phpbindir}/phpize
-%configure  --with-php-config=%{phpbindir}/php-config
-%{__make} %{?_smp_mflags}
-
-
-%install
-cd %{pecl_name}-%{version}
-%{__rm} -rf %{buildroot}
-%{__make} install INSTALL_ROOT=%{buildroot}
-
-# Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{phpconfdir}/php.d
-%{__cat} > %{buildroot}%{phpconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+cat >%{pecl_name}.ini << 'EOF'
 ; ----- Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 
@@ -123,49 +87,80 @@ extension=%{pecl_name}.so
 ;session.save_path="tcp://localhost:11211?persistent=1&weight=1&timeout=1&retry_interval=15"
 EOF
 
+# avoid spurious-executable-perm
+find . -type f -exec chmod -x {} \;
+
+cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+
+
+%build
+cd %{pecl_name}-%{version}
+%{php_bindir}/phpize
+%configure --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+
+
+%install
+rm -rf %{buildroot}
+
+make -C %{pecl_name}-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+
+make -C %{pecl_name}-%{version}-zts \
+     install INSTALL_ROOT=%{buildroot}
+
+# Drop in the bit of configuration
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+
 # Install XML package description
-# use 'name' rather than 'pecl_name' to avoid conflict with pear extensions
-%{__mkdir_p} %{buildroot}%{pecl_xmldir}
-%{__install} -m 644 ../package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %check
 cd %{pecl_name}-%{version}
 # simple module load test
-%{phpbindir}/php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %files
 %defattr(-, root, root, -)
 %doc CHANGELOG %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/README 
 %doc %{pecl_name}-%{version}/example.php %{pecl_name}-%{version}/memcache.php
-%config(noreplace) %{phpconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Mon Oct 03 2011 Remi Collet <Fedora@FamilleCollet.com> 3.0.6-2
+- clean spec for latest macros
+- build zts extension
+
 * Mon Apr 11 2011 Remi Collet <Fedora@FamilleCollet.com> 3.0.6-1
 - update to 3.0.6
 
