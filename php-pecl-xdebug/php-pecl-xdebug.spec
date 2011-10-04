@@ -1,29 +1,16 @@
-%{!?phpname:		%{expand: %%global phpname     php}}
-
-%if %{phpname} == php
-%global phpbindir      %{_bindir}
-%global phpconfdir     %{_sysconfdir}
-%global phpincldir     %{_includedir}
-%else
-%global phpbindir      %{_bindir}/%{phpname}
-%global phpconfdir     %{_sysconfdir}/%{phpname}
-%global phpincldir     %{_includedir}/%{phpname}
-%endif
-
-%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)
+%{!?phpname: %{expand: %%global phpname    php}}
+%{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
 
 Name:           %{phpname}-pecl-xdebug
 Version:        2.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PECL package for debugging PHP scripts
 
 License:        BSD
 Group:          Development/Languages
-URL:            http://pecl.php.net/package/xdebug
+URL:            http://xdebug.org/
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -31,28 +18,22 @@ BuildRequires:  %{phpname}-pear  >= 1:1.4.9-1.2
 BuildRequires:  %{phpname}-devel >= 5.1.0
 BuildRequires:  libedit-devel
 
-%if 0%{?pecl_install:1}
 Requires(post): %{__pecl}
-%endif
-%if 0%{?pecl_uninstall:1}
 Requires(postun): %{__pecl}
-%endif
-Provides:       %{phpname}-pecl(Xdebug) = %{version}
-Provides:       %{phpname}-pecl(Xdebug)%{?_isa} = %{version}
-
-%if 0%{?php_zend_api:1}
 Requires:       %{phpname}(zend-abi) = %{php_zend_api}
 Requires:       %{phpname}(api) = %{php_core_api}
-%else
-Requires:       php-api = %{php_apiver}
-%endif
+
+Provides:       %{phpname}-pecl(Xdebug) = %{version}
+Provides:       %{phpname}-pecl(Xdebug)%{?_isa} = %{version}
 
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -76,9 +57,8 @@ Xdebug also provides:
 
 %prep
 %setup -qc
+
 cd %{pecl_name}-%{version}
-# package.xml is V1, package2.xml is V2
-mv ../package2.xml %{pecl_name}.xml
 
 # fix rpmlint warnings
 iconv -f iso8859-1 -t utf-8 Changelog > Changelog.conv && mv -f Changelog.conv Changelog
@@ -91,82 +71,103 @@ if test "$ver" != "%{version}"; then
    exit 1
 fi
 
+cd ..
+cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+
+
 %build
 cd %{pecl_name}-%{version}
-%{phpbindir}/phpize
-%configure --enable-xdebug  --with-php-config=%{phpbindir}/php-config
-%{__make} %{?_smp_mflags}
+%{php_bindir}/phpize
+%configure --enable-xdebug  --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
 
 # Build debugclient
 pushd debugclient
 #cp %{_datadir}/automake-1.??/depcomp .
 %configure --with-libedit
-%{__make} %{?_smp_mflags}
+make %{?_smp_mflags}
 popd
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure --enable-xdebug  --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
 
 
 %install
-cd %{pecl_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docs
-make install INSTALL_ROOT=$RPM_BUILD_ROOT
+rm -rf %{buildroot}
+
+make -C %{pecl_name}-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+
+make -C %{pecl_name}-%{version}-zts \
+     install INSTALL_ROOT=%{buildroot}
 
 # install debugclient
-install -d $RPM_BUILD_ROOT%{phpbindir}
-install -pm 755 debugclient/debugclient $RPM_BUILD_ROOT%{phpbindir}
-
-# install config file
-install -d $RPM_BUILD_ROOT%{phpconfdir}/php.d
-cat > $RPM_BUILD_ROOT%{phpconfdir}/php.d/%{pecl_name}.ini << 'EOF'
-; Enable xdebug extension module
-zend_extension=%{php_extdir}/%{pecl_name}.so
-EOF
-
-# install doc files
-install -d ../docs
-install -pm 644 Changelog CREDITS LICENSE NEWS README ../docs
+install -Dpm 755 %{pecl_name}-%{version}/debugclient/debugclient \
+        %{buildroot}%{php_bindir}/debugclient
 
 # Install XML package description
-install -d $RPM_BUILD_ROOT%{pecl_xmldir}
-install -pm 644 %{pecl_name}.xml $RPM_BUILD_ROOT%{pecl_xmldir}/%{name}.xml
+# package.xml is V1, package2.xml is V2
+install -Dpm 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+# install config file
+install -d %{buildroot}%{php_inidir}
+cat > %{buildroot}%{php_inidir}/%{pecl_name}.ini << 'EOF'
+; Enable xdebug extension module
+zend_extension=%{php_extdir}/%{pecl_name}.so
+
+; see http://xdebug.org/docs/all_settings
+EOF
+
+install -d %{buildroot}%{php_ztsinidir}
+cat > %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini << 'EOF'
+; Enable xdebug extension module
+zend_extension=%{php_ztsextdir}/%{pecl_name}.so
+
+; see http://xdebug.org/docs/all_settings
+EOF
 
 
 %check
 cd %{pecl_name}-%{version}
 # only check if build extension can be loaded
-%{phpbindir}/php \
+%{__php} \
     --no-php-ini \
     --define zend_extension=modules/%{pecl_name}.so \
     --modules | grep Xdebug
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
-%doc docs/*
-%config(noreplace) %{phpconfdir}/php.d/%{pecl_name}.ini
+%doc  %{pecl_name}-%{version}/{Changelog,CREDITS,LICENSE,NEWS,README}
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{phpbindir}/debugclient
+%{php_ztsextdir}/%{pecl_name}.so
+%{php_bindir}/debugclient
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Tue Oct 04 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.2-2
+- ZTS extension
+- spec cleanups
+
 * Thu Jul 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.2-1
 - update to 2.1.2
 - fix provides filter for rpm 4.9
