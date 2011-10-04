@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{phpname}-pecl-memcached
 Version:      1.0.2
-Release:      8%{?dist}
+Release:      9%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -14,6 +14,11 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # http://pecl.php.net/bugs/bug.php?id=24362
 Patch0:       memcached-incl.patch
+
+# Fix ZTS build with igbinary support
+# https://github.com/php-memcached-dev/php-memcached/commit/5beaeedefe5c1eea6d637e3eeeeaf0957a5660ac
+Patch1:       memcached-zts.patch
+
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
@@ -37,9 +42,11 @@ Provides:     %{phpname}-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -70,9 +77,10 @@ EOF
 
 cd %{pecl_name}-%{version}
 %patch0 -p1 -b .incl
+%patch1 -p1 -b .zts
 cd ..
 
-#cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 
 %build
@@ -82,21 +90,21 @@ cd %{pecl_name}-%{version}
            --with-php-config=%{php_bindir}/php-config
 make %{?_smp_mflags}
 
-#cd ../%{pecl_name}-%{version}-zts
-#{php_ztsbindir}/phpize
-#configure --enable-memcached-igbinary \
-#           --with-php-config=%{php_ztsbindir}/php-config
-#make %{?_smp_mflags}
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure --enable-memcached-igbinary \
+           --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
 
 
 %install
 rm -rf %{buildroot}
 make install -C %{pecl_name}-%{version}     INSTALL_ROOT=%{buildroot}
-#make install -C %{pecl_name}-%{version}-zts INSTALL_ROOT=%{buildroot}
+make install -C %{pecl_name}-%{version}-zts INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-#install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -133,13 +141,16 @@ ln -s %{php_extdir}/igbinary.so modules/
 %defattr(-, root, root, -)
 %doc %{pecl_name}-%{version}/{CREDITS,LICENSE,README.markdown,ChangeLog}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
-#%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-#%{php_ztsextdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Tue Oct 04 2011  Remi Collet <remi@fedoraproject.org> - 1.0.2-9
+- ZTS extension
+
 * Sat Sep 17 2011  Remi Collet <remi@fedoraproject.org> - 1.0.2-8
 - allow relocation
 - work for ZTS (not yet ok)
