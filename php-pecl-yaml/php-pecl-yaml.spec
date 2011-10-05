@@ -1,12 +1,11 @@
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global pecl_name yaml
 
 Summary:       PHP Bindings for yaml
 Name:          php-pecl-yaml
 Version:       1.0.1
-Release:       2%{?dist}
+Release:       4%{?dist}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -20,16 +19,17 @@ BuildRequires: libyaml-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides: php-pecl(%{pecl_name}) = %{version}
-Requires: php(zend-abi) = %{php_zend_api}
-Requires: php(api) = %{php_core_api}
+Provides:      php-pecl(%{pecl_name}) = %{version}
+Requires:      php(zend-abi) = %{php_zend_api}
+Requires:      php(api) = %{php_core_api}
 
-%if 0%{?fedora}%{?rhel} > 4
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-%endif
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -40,23 +40,13 @@ LibYAML library.
 %prep
 %setup -c -q
 
+extver=$(sed -n '/#define PHP_YAML_MODULE_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_yaml.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
 
-%build
-cd %{pecl_name}-%{version}
-phpize
-%configure
-
-make %{?_smp_mflags}
-
-
-%install
-cd %{pecl_name}-%{version}
-rm -rf %{buildroot}
-make install INSTALL_ROOT=%{buildroot}
-
-# Drop in the bit of configuration
-mkdir -p %{buildroot}%{_sysconfdir}/php.d
-cat > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 
@@ -80,14 +70,39 @@ yaml.output_indent = 2
 yaml.output_width = 80
 EOF
 
+cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+
+
+%build
+cd %{pecl_name}-%{version}
+%{php_bindir}/phpize
+%configure  --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure  --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+
+
+%install
+make -C %{pecl_name}-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+
+make -C %{pecl_name}-%{version}-zts \
+     install INSTALL_ROOT=%{buildroot}
+
 # Install XML package description
-mkdir -p %{buildroot}%{pecl_xmldir}
-install -m 644 ../package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+# install config file
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 
 %check
 cd %{pecl_name}-%{version}
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -107,29 +122,31 @@ fi
 rm -rf %{buildroot}
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/LICENSE
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%doc %{pecl_name}-%{version}/{CREDITS,LICENSE}
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Wed Oct 05 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.1-4
+- ZTS extension
+- spec cleanups
+
 * Fri May 06 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-2
 - clean spec
 - fix requirment, license, tests...
