@@ -1,17 +1,21 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global pecl_name rrd
+%global pre       RC1
 
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
-Version:      1.0.4
-Release:      1%{?dist}
+Version:      1.0.5
+Release:      0.1.%{pre}%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
 
-Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?pre}.tgz
+
+# http://pecl.php.net/bugs/bug.php?id=24401
+Patch0:       rrd-zts.patch
+
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.2
@@ -22,16 +26,18 @@ BuildRequires: php-pear
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Conflicts:    rrdtool-php
-Provides:     php-pecl(%{pecl_name}) = %{version}
+Provides:     php-pecl(%{pecl_name}) = %{version}%{?pre}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -42,35 +48,46 @@ system for time series data.
 %prep 
 %setup -c -q
 
+cd %{pecl_name}-%{version}%{?pre}
+%patch0 -p 1 -b .zts
+cd ..
 
-%build
-cd %{pecl_name}-%{version}
-phpize
-%configure
+cp -r %{pecl_name}-%{version}%{?pre} %{pecl_name}-%{version}-zts
 
-make %{?_smp_mflags}
-
-
-%install
-cd %{pecl_name}-%{version}
-rm -rf %{buildroot}
-make install INSTALL_ROOT=%{buildroot}
-
-# Drop in the bit of configuration
-mkdir -p %{buildroot}%{_sysconfdir}/php.d
-cat > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
 
+
+%build
+cd %{pecl_name}-%{version}%{?pre}
+%{php_bindir}/phpize
+%configure --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+
+
+%install
+rm -rf %{buildroot}
+make install -C %{pecl_name}-%{version}%{?pre} INSTALL_ROOT=%{buildroot}
+make install -C %{pecl_name}-%{version}-zts    INSTALL_ROOT=%{buildroot}
+
+# Drop in the bit of configuration
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+
 # Install XML package description
-mkdir -p %{buildroot}%{pecl_xmldir}
-install -m 644 ../package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %check
-cd %{pecl_name}-%{version}
-php --no-php-ini \
+cd %{pecl_name}-%{version}%{?pre}
+%{__php} --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -92,33 +109,36 @@ if  grep -q "FAILED TEST" rpmtests.log; then
 %endif
 fi
 
+
 %clean
 rm -rf %{buildroot}
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/LICENSE
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%doc %{pecl_name}-%{version}%{?pre}/{CREDITS,LICENSE}
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Wed Oct 05 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.5-0.1.RC1
+- update to 1.0.5RC1
+- build ZTS extension
+
 * Tue Aug 16 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.4-1
 - Version 1.0.4 (stable) - API 1.0.4 (stable)
 - fix filters

@@ -1,0 +1,119 @@
+diff -up rrd-1.0.5-zts/config.h.zts rrd-1.0.5-zts/config.h
+diff -up rrd-1.0.5-zts/php_rrd.h.zts rrd-1.0.5-zts/php_rrd.h
+diff -up rrd-1.0.5-zts/rrd_create.c.zts rrd-1.0.5-zts/rrd_create.c
+--- rrd-1.0.5-zts/rrd_create.c.zts	2011-10-05 16:55:01.879360846 +0200
++++ rrd-1.0.5-zts/rrd_create.c	2011-10-05 16:57:33.400886856 +0200
+@@ -359,7 +359,7 @@ static zend_function_entry rrd_create_me
+ };
+ 
+ /* minit hook, called from main module minit */
+-void rrd_create_minit(TSRMLS_DC)
++void rrd_create_minit(TSRMLS_D)
+ {
+ 	zend_class_entry ce;
+ 	INIT_CLASS_ENTRY(ce, "RRDCreator", rrd_create_methods);
+diff -up rrd-1.0.5-zts/rrd_create.h.zts rrd-1.0.5-zts/rrd_create.h
+--- rrd-1.0.5-zts/rrd_create.h.zts	2011-10-05 16:55:01.890360872 +0200
++++ rrd-1.0.5-zts/rrd_create.h	2011-10-05 16:55:39.430491085 +0200
+@@ -19,7 +19,7 @@
+ #ifndef RRD_CREATE_H
+ #define RRD_CREATE_H
+ 
+-void rrd_create_minit(TSRMLS_DC);
++void rrd_create_minit(TSRMLS_D);
+ PHP_FUNCTION(rrd_create);
+ 
+ #endif  /* RRD_CREATE_H */
+diff -up rrd-1.0.5-zts/rrd.c.zts rrd-1.0.5-zts/rrd.c
+--- rrd-1.0.5-zts/rrd.c.zts	2011-10-05 16:55:01.876360794 +0200
++++ rrd-1.0.5-zts/rrd.c	2011-10-05 16:56:02.510571180 +0200
+@@ -585,9 +585,9 @@ static zend_function_entry rrd_functions
+ /* {{{ PHP_MINIT_FUNCTION */
+ static PHP_MINIT_FUNCTION(rrd)
+ {
+-	rrd_graph_minit(TSRMLS_CC);
+-	rrd_create_minit(TSRMLS_CC);
+-	rrd_update_minit(TSRMLS_CC);
++	rrd_graph_minit(TSRMLS_C);
++	rrd_create_minit(TSRMLS_C);
++	rrd_update_minit(TSRMLS_C);
+ 	return SUCCESS;
+ }
+ /* }}} */
+diff -up rrd-1.0.5-zts/rrd_graph.c.zts rrd-1.0.5-zts/rrd_graph.c
+--- rrd-1.0.5-zts/rrd_graph.c.zts	2011-10-05 16:55:01.881360851 +0200
++++ rrd-1.0.5-zts/rrd_graph.c	2011-10-05 16:57:10.217806300 +0200
+@@ -319,7 +319,7 @@ PHP_METHOD(RRDGraph, saveVerbose)
+ 
+ 	/* making return array */
+ 	array_init(return_value);
+-	rrd_info_toarray(rrd_info_data, return_value);
++	rrd_info_toarray(rrd_info_data, return_value TSRMLS_CC);
+ 
+ 	rrd_info_free(rrd_info_data);
+ 	rrd_args_free(graph_argv);
+@@ -413,7 +413,7 @@ static zend_function_entry rrd_graph_met
+ };
+ 
+ /* minit hook, called from main module minit */
+-void rrd_graph_minit(TSRMLS_DC)
++void rrd_graph_minit(TSRMLS_D)
+ {
+ 	zend_class_entry ce;
+ 	INIT_CLASS_ENTRY(ce, "RRDGraph", rrd_graph_methods);
+diff -up rrd-1.0.5-zts/rrd_graph.h.zts rrd-1.0.5-zts/rrd_graph.h
+--- rrd-1.0.5-zts/rrd_graph.h.zts	2011-10-05 16:55:01.892360879 +0200
++++ rrd-1.0.5-zts/rrd_graph.h	2011-10-05 16:55:20.609425792 +0200
+@@ -19,7 +19,7 @@
+ #ifndef RRD_GRAPH_H
+ #define RRD_GRAPH_H
+ 
+-extern void rrd_graph_minit(TSRMLS_DC);
++extern void rrd_graph_minit(TSRMLS_D);
+ extern PHP_FUNCTION(rrd_graph);
+ 
+ #endif  /* RRD_GRAPH_H */
+diff -up rrd-1.0.5-zts/rrd_info.c.zts rrd-1.0.5-zts/rrd_info.c
+--- rrd-1.0.5-zts/rrd_info.c.zts	2011-10-05 16:55:01.882360849 +0200
++++ rrd-1.0.5-zts/rrd_info.c	2011-10-05 16:58:30.590085673 +0200
+@@ -60,7 +60,7 @@ PHP_FUNCTION(rrd_info)
+ 
+ 	/* making return array*/
+ 	array_init(return_value);
+-	rrd_info_toarray(rrd_info_data, return_value);
++	rrd_info_toarray(rrd_info_data, return_value TSRMLS_CC);
+ 	rrd_info_free(rrd_info_data);
+ }
+ /* }}} */
+@@ -99,4 +99,4 @@ uint rrd_info_toarray(const rrd_info_t *
+ 
+ 	return 1;
+ }
+-/* }}} */
+\ Pas de fin de ligne à la fin du fichier.
++/* }}} */
+diff -up rrd-1.0.5-zts/rrd_info.h.zts rrd-1.0.5-zts/rrd_info.h
+diff -up rrd-1.0.5-zts/rrd_update.c.zts rrd-1.0.5-zts/rrd_update.c
+--- rrd-1.0.5-zts/rrd_update.c.zts	2011-10-05 16:55:01.884360848 +0200
++++ rrd-1.0.5-zts/rrd_update.c	2011-10-05 16:57:52.776954202 +0200
+@@ -290,7 +290,7 @@ static zend_function_entry rrd_update_me
+ };
+ 
+ /* minit hook, called from main module minit */
+-void rrd_update_minit(TSRMLS_DC)
++void rrd_update_minit(TSRMLS_D)
+ {
+ 	zend_class_entry ce;
+ 	INIT_CLASS_ENTRY(ce, "RRDUpdater", rrd_update_methods);
+diff -up rrd-1.0.5-zts/rrd_update.h.zts rrd-1.0.5-zts/rrd_update.h
+--- rrd-1.0.5-zts/rrd_update.h.zts	2011-10-05 16:55:01.896360893 +0200
++++ rrd-1.0.5-zts/rrd_update.h	2011-10-05 16:55:42.005500019 +0200
+@@ -19,7 +19,7 @@
+ #ifndef RRD_UPDATE_H
+ #define RRD_UPDATE_H
+ 
+-void rrd_update_minit(TSRMLS_DC);
++void rrd_update_minit(TSRMLS_D);
+ PHP_FUNCTION(rrd_update);
+ 
+ #endif  /* RRD_UPDATE_H */
