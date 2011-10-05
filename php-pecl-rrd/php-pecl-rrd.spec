@@ -5,7 +5,7 @@
 
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
-Version:      1.0.3
+Version:      1.0.4
 Release:      1%{?dist}
 License:      PHP
 Group:        Development/Languages
@@ -27,10 +27,11 @@ Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
 
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
 
 
 %description
@@ -118,6 +119,10 @@ fi
 
 
 %changelog
+* Tue Aug 16 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.4-1
+- Version 1.0.4 (stable) - API 1.0.4 (stable)
+- fix filters
+
 * Fri Apr 29 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.3-1
 - Version 1.0.3 (stable) - API 1.0.3 (stable)
 - no change in sources
