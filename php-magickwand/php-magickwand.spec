@@ -1,29 +1,35 @@
-%global php_apiver	%((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%{!?php_extdir:		%{expand: %%global php_extdir %(php-config --extension-dir)}}
+%global pecl_name magickwand
 
-Summary:	PHP API for ImageMagick
-Name:		php-magickwand
-Version:	1.0.8
-Release:	8%{?dist}
-License:	ImageMagick
-Group:		Development/Languages
+Summary:       PHP API for ImageMagick
+Name:          php-magickwand
+Version:       1.0.8
+Release:       10%{?dist}
+License:       ImageMagick
+Group:         Development/Languages
+URL:           http://www.magickwand.org/
 # Only latest version is always kept on: http://www.magickwand.org/download/php/
-Source0:	http://image_magick.veidrodis.com/image_magick/php/MagickWandForPHP-%{version}.tar.bz2
-Source1:	magickwand.ini
-URL:		http://www.magickwand.org/
-BuildRequires:	php-devel >= 4.3.0, autoconf, automake, libtool
+Source0:       http://image_magick.veidrodis.com/image_magick/php/MagickWandForPHP-%{version}.tar.bz2
+Source1:       magickwand.ini
+
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: php-devel >= 4.3.0, autoconf, automake, libtool
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
 BuildRequires: ImageMagick-devel >= 6.6.0
 %else
 BuildRequires: ImageMagick2-devel >= 6.6.0
 %endif
-%if %{?php_zend_api}0
-Requires:	php(zend-abi) = %{php_zend_api}
-Requires:	php(api) = %{php_core_api}
-%else
-Requires:	php-api = %{php_apiver}
-%endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Requires:      php(zend-abi) = %{php_zend_api}
+Requires:      php(api) = %{php_core_api}
+
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+
 
 %description
 MagickWand for PHP is a native PHP interface to the new
@@ -32,35 +38,64 @@ of the ImageMagick C API, excluding some X-Server related
 functionality and progress monitoring.
 
 %prep
-%setup -q -n MagickWandForPHP-%{version}
-export PHP_RPATH=no
-phpize
-%configure
-
-%build
-make %{?_smp_mflags}
-
-%install
-rm -rf $RPM_BUILD_ROOT
-make install-modules INSTALL_ROOT=$RPM_BUILD_ROOT
-install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/magickwand.ini
+%setup -q -c
 
 # Fix incorrect end-of-line encoding
-sed -i 's/\r//' README
+sed -i 's/\r//' MagickWandForPHP-%{version}/README
+
+cp -pr MagickWandForPHP-%{version} MagickWandForPHP-%{version}-zts
+
+
+%build
+export PHP_RPATH=no
+
+cd MagickWandForPHP-%{version}
+%{php_bindir}/phpize
+%configure --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../MagickWandForPHP-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+
+
+%install
+rm -rf %{buildroot}
+make -C MagickWandForPHP-%{version}     install-modules INSTALL_ROOT=%{buildroot}
+make -C MagickWandForPHP-%{version}-zts install-modules INSTALL_ROOT=%{buildroot}
+
+install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+
 
 %check
-make test
+cd MagickWandForPHP-%{version}
+# simple module load test
+%{__php} --no-php-ini \
+    --define extension_dir=modules \
+    --define extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
+
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHOR ChangeLog CREDITS LICENSE README TODO
-%{php_extdir}/magickwand.so
-%config(noreplace) %{_sysconfdir}/php.d/magickwand.ini
+%doc MagickWandForPHP-%{version}/{AUTHOR,ChangeLog,CREDITS,LICENSE,README,TODO}
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
+
 
 %changelog
+* Thu Oct 06 2011 Remi Collet <rpms@famillecollet.com> 1.0.8-10
+- ZTS extension
+- spec cleanups
+
 * Fri Nov 26 2010 Remi Collet <rpms@famillecollet.com> 1.0.8-8
 - rebuild against latest ImageMagick 6.6.5.10
 
