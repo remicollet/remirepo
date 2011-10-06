@@ -1,5 +1,4 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global pecl_name solr
 
@@ -7,7 +6,7 @@ Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           php-pecl-solr
 Version:        1.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -16,18 +15,22 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:        xml2changelog
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Provides:       php-pecl(%{pecl_name}) = %{version}, php-%{pecl_name} = %{version}
 BuildRequires:  php-devel, php-pear, curl-devel, libxml2-devel
+
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:     php(zend-abi) = %{php_zend_api}
-Requires:     php(api) = %{php_core_api}
-Requires:     php-xml >= 5.2.3
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
+Requires:       php-xml >= 5.2.3
+Provides:       php-pecl(%{pecl_name}) = %{version}, php-%{pecl_name} = %{version}
 
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -76,9 +79,15 @@ http://www.php.net/manual/fr/book.solr.php
 
 %prep
 %setup -c -q
-%{_bindir}/php -n %{SOURCE2} package.xml >CHANGELOG
+%{__php} -n %{SOURCE2} package.xml >CHANGELOG
 
 cd %{pecl_name}-%{version}
+extver=$(sed -n '/#define PHP_SOLR_DOTTED_VERSION/{s/.* "//;s/".*$//;p}' php_solr_version.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
+
 chmod -x README.* \
          CREDITS \
          LICENSE \
@@ -86,30 +95,43 @@ chmod -x README.* \
          docs/documentation.php \
          *.c \
          *.h
+cd ..
 
-
-%build
-cd %{pecl_name}-%{version}
-phpize
-%configure
-%{__make} %{?_smp_mflags}
-
-
-%install
-cd %{pecl_name}-%{version}
-rm -rf %{buildroot}
-make install INSTALL_ROOT=%{buildroot}
-
-# Drop in the bit of configuration
-mkdir -p %{buildroot}%{_sysconfdir}/php.d
-cat > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+cat > %{pecl_name}.ini << 'EOF'
 ; Enable Solr extension module
 extension=%{pecl_name}.so
 EOF
 
+cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+
+
+%build
+cd %{pecl_name}-%{version}
+%{php_bindir}/phpize
+%configure  --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure  --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+
+
+%install
+rm -rf %{buildroot}
+
+make -C %{pecl_name}-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+
+make -C %{pecl_name}-%{version}-zts \
+     install INSTALL_ROOT=%{buildroot}
+
 # Install XML package description
-mkdir -p %{buildroot}%{pecl_xmldir}
-install -p -m 644 ../package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+# install config file
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 
 %post
@@ -123,7 +145,7 @@ fi
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %check
@@ -150,12 +172,18 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=curl.so -d extensio
 %doc %{pecl_name}-%{version}/TODO
 %doc %{pecl_name}-%{version}/LICENSE
 %doc %{pecl_name}-%{version}/docs/documentation.php
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Thu Oct 06 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.1-2
+- ZTS extension
+- spec cleanups
+
 * Fri Jun 10 2011 Remi Collet <Fedora@famillecollet.com> - 1.0.1-1
 - Version 1.0.1 (stable) - API 1.0.1 (stable)
 - run test suite after build
