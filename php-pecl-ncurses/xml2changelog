@@ -1,0 +1,34 @@
+<?php
+$prog=array_shift($_SERVER['argv']);
+if ($_SERVER['argc']<2) die ("usage : " . $prog . " path_to_package.xml [ --debug ]\n");
+$file=array_shift($_SERVER['argv']);
+
+($xml=simplexml_load_file($file)) || die ($file . " not found !\n");
+if (in_array("--debug", $_SERVER['argv'])) print_r($xml);
+
+if ($xml['version'] >= "2"){ // Package.xml V 2.0
+	printf("*** Version %s (%s) - API %s (%s) - %s\n\n%s\n\n",
+		$xml->version->release, $xml->stability->release, 
+		$xml->version->api, $xml->stability->api, 
+		$xml->date, $xml->notes);
+	$new=$xml->version->release;
+
+	if (isset($xml->changelog->release) && count($xml->changelog->release)) 
+	    foreach($xml->changelog->release as $rel) {
+		$old=$rel->version->release;
+		if ("$old" != "$new") {
+		    printf("*** Version %s (%s) - API %s (%s) - %s\n\n%s\n\n",
+			$rel->version->release, $rel->stability->release, 
+			$rel->version->api, $rel->stability->api, 
+			$rel->date, $rel->notes);
+		}
+	    }
+} else { // Package.xml V 1.0
+	printf("* Version %s (%s) - %s\n\n%s\n\n",
+		$xml->release->version, $xml->release->state, $xml->release->date, $xml->release->notes);
+
+	foreach($xml->changelog->release as $rel)
+		printf("* Version %s (%s) - %s\n\n%s\n\n",
+			$rel->version, $rel->state, $rel->date, $rel->notes);
+}
+?>
