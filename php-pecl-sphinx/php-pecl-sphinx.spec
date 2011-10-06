@@ -77,6 +77,8 @@ cd %{pecl_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
+
 make -C %{pecl_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
 
