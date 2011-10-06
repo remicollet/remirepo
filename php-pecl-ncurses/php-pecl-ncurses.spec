@@ -1,5 +1,4 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global pecl_name ncurses
 
@@ -25,11 +24,13 @@ Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
-
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -45,71 +46,88 @@ line.
 
 %prep 
 %setup -c -q
-%{_bindir}/php -n %{SOURCE2} package.xml >CHANGELOG
+%{__php} -n %{SOURCE2} package.xml >CHANGELOG
 
-cd %{pecl_name}-%{version}
-
-
-%build
-cd %{pecl_name}-%{version}
-phpize
-%configure --enable-ncursesw
-
-%{__make} %{?_smp_mflags}
-
-
-%install
-cd %{pecl_name}-%{version}
-%{__rm} -rf %{buildroot}
-%{__make} install INSTALL_ROOT=%{buildroot}
-
-# Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+cat >%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
 
+cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+
+
+%build
+cd %{pecl_name}-%{version}
+%{php_bindir}/phpize
+%configure --enable-ncursesw \
+           --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure --enable-ncursesw \
+           --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+
+
+%install
+rm -rf %{buildroot}
+
+make -C %{pecl_name}-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+
+make -C %{pecl_name}-%{version}-zts \
+     install INSTALL_ROOT=%{buildroot}
+
 # Install XML package description
-# use 'name' rather than 'pecl_name' to avoid conflict with pear extensions
-%{__mkdir_p} %{buildroot}%{pecl_xmldir}
-%{__install} -m 644 ../package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+# install config file
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 
 %check
 cd %{pecl_name}-%{version}
-TEST_PHP_EXECUTABLE=$(which php) php run-tests.php \
-    -n -q -d extension_dir=modules \
+
+TEST_PHP_EXECUTABLE=%{__php} \
+REPORT_EXIT_STATUS=1 \
+NO_INTERACTION=1 \
+%{__php} run-tests.php \
+    -n -q \
+    -d extension_dir=modules \
     -d extension=%{pecl_name}.so \
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %files
 %defattr(-, root, root, -)
-%doc CHANGELOG %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/example1.php
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%doc CHANGELOG %{pecl_name}-%{version}/{CREDITS,example1.php}
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Thu Oct 06 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.1-3
+- ZTS extension
+- spec cleanups
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
