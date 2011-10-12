@@ -1,3 +1,4 @@
+%define build_langpacks 1
 %global nspr_version 4.8.8
 %global nss_version 3.12.10
 %global cairo_version 1.10.0
@@ -38,7 +39,9 @@ Source0:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/r
 #Source0:        http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/%{thunderbird_version}/source/thunderbird-%{thunderbird_version}.source.tar.bz2
 # This script will generate the language source below
 Source1:        mklangsource.sh
+%if %{build_langpacks}
 Source2:        l10n-miramar.tar.bz2
+%endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
 # Finds requirements provided outside of the current file set
@@ -114,7 +117,11 @@ calendaring tasks.
 
 %prep
 echo TARGET = %{name}-%{version}-%{release}
+%if %{build_langpacks}
 %setup -q -c -a 2
+%else
+%setup -q -c
+%endif
 
 cd %{tarballdir}
 
@@ -197,12 +204,14 @@ export MAKE="gmake %{moz_make_flags}"
 make -f client.mk build STRIP=/bin/true
 
 # Package l10n files
+%if %{build_langpacks}
 cd objdir-tb/calendar/lightning
 make AB_CD=all L10N_XPI_NAME=lightning-all repack-clobber-all
 grep -v 'osx' ../../../calendar/locales/shipped-locales | while read lang x
 do
    make AB_CD=all L10N_XPI_NAME=lightning-all libs-$lang
 done
+%endif
 
 #===============================================================================
 
@@ -217,7 +226,11 @@ mkdir -p $RPM_BUILD_ROOT%{gdata_extname}
 touch $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
 
 # Lightning and GData provider for it
+%if %{build_langpacks}
 unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning-all.xpi
+%else
+unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning.xpi
+%endif
 unzip -qod $RPM_BUILD_ROOT%{gdata_extname} objdir-tb/mozilla/dist/xpi-stage/gdata-provider.xpi
 
 # Fix up permissions
