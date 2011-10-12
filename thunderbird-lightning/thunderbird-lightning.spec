@@ -58,7 +58,7 @@ BuildRequires:  nss-devel >= %{nss_version}
 %if 0%{?fedora} > 15
 BuildRequires:  nss-static
 %endif
-%if %{fedora} >= 15
+%if 0%{?fedora} >= 15
 # Library requirements (cairo-tee >= 1.10)
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
@@ -133,14 +133,14 @@ cd ..
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
-%if %{fedora} < 15
+%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
   | grep -v system-sqlite 	\
 %endif
-%if %{fedora} < 14
+%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
   | grep -v system-nss 		\
   | grep -v system-nspr 	\
 %endif
-%if %{fedora} < 15
+%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
   | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
@@ -151,10 +151,10 @@ cat %{SOURCE10} 		\
 cat <<EOF | tee -a .mozconfig
 ac_add_options --enable-libnotify
 ac_add_options --enable-system-lcms
-%if %{fedora} >= 15
+%if 0%{?fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
-%if %{fedora} < 14
+%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
 ac_add_options --disable-libjpeg-turbo
 %endif
 EOF
@@ -239,6 +239,9 @@ find $RPM_BUILD_ROOT -name \*.so | xargs chmod 0755
 #===============================================================================
 
 %changelog
+* Wed Oct 12 2011 Georgi Georgiev <chutzimir@gmail.com> - 1.0-0.50.b7
+- Make it work on RHEL
+
 * Sat Oct 01 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.50.b7
 - Use lightning 1.0b7 source for TB 7
 - sync with rawhide
