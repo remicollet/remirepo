@@ -89,11 +89,11 @@ Patch35:        xulrunner-2.0-NetworkManager09.patch
 # ---------------------------------------------------
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-%if %{fedora} >= 14
+%if 0%{?fedora} >= 14
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
-%if %{fedora} >= 15
+%if 0%{?fedora} >= 15
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
 BuildRequires:  libpng-devel
@@ -109,7 +109,7 @@ BuildRequires:  freetype-devel >= %{freetype_version}
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
 BuildRequires:  hunspell-devel
-%if %{fedora} >= 15
+%if 0%{?fedora} >= 15
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
 BuildRequires:  startup-notification-devel
@@ -122,16 +122,16 @@ BuildRequires:  yasm
 BuildRequires:  wireless-tools-devel
 %endif
 BuildRequires:  curl-devel
-%if %{fedora} >= 13
+%if 0%{?fedora} >= 13
 BuildRequires:  libvpx-devel
 %endif
 
 Requires:       mozilla-filesystem
-%if %{fedora} >= 14
+%if 0%{?fedora} >= 14
 Requires:       nspr >= %{nspr_version}
 Requires:       nss >= %{nss_version}
 %endif
-%if %{fedora} >= 15
+%if 0%{?fedora} >= 15
 Requires:       sqlite >= %{sqlite_build_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
@@ -160,11 +160,11 @@ Provides: gecko-devel-unstable = %{gecko_verrel}
 Provides: gecko-devel-unstable%{?_isa} = %{gecko_verrel}
 
 Requires: %{name}%{?_isa} = %{version}-%{release}
-%if %{fedora} >= 14
+%if 0%{?fedora} >= 14
 Requires: nspr-devel >= %{nspr_version}
 Requires: nss-devel >= %{nss_version}
 %endif
-%if %{fedora} >= 15
+%if 0%{?fedora} >= 15
 # Library requirements (cairo-tee >= 1.10)
 Requires: cairo-devel >= %{cairo_version}
 %endif
@@ -238,7 +238,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch18 -p2 -b .secondary-ipc
 
 %patch20 -p2 -b .pk
-%if %{fedora} >= 14
+%if 0%{?fedora} >= 14
 %patch21 -p2 -b .jpeg-turbo
 %endif
 %patch23 -p1 -b .wmclass
@@ -249,20 +249,20 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if %{fedora} < 15
+%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
   | grep -v enable-system-sqlite   \
 %endif
-%if %{fedora} < 14
+%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
   | grep -v with-system-nspr       \
   | grep -v with-system-nss        \
 %endif
-%if %{fedora} < 15
+%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
   | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
   | grep -v disable-necko-wifi     \
 %endif
-%if %{fedora} < 13
+%if 0%{?fedora} < 13 || 0%{?rhel} <= 6
   | grep -v with-system-libvpx     \
 %endif
   | tee .mozconfig
@@ -279,14 +279,14 @@ echo "ac_add_options --enable-system-lcms" >> .mozconfig
 echo "ac_add_options --disable-tracejit" >> .mozconfig
 %endif
 
-%if %{fedora} < 14
+%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
 echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
 
 #---------------------------------------------------------------------
 
 %build
-%if %{fedora} >= 15
+%if 0%{?fedora} >= 15
 # Do not proceed with build if the sqlite require would be broken:
 # make sure the minimum requirement is non-empty, ...
 sqlite_version=$(expr "%{sqlite_version}" : '\([0-9]*\.\)[0-9]*\.') || exit 1
@@ -398,7 +398,7 @@ popd
   dist/bin/xpidl \
   $RPM_BUILD_ROOT/%{mozappdir}
 
-%if %{?fedora} < 13
+%if 0%{?fedora} < 13 || 0%{?rhel} <= 6
 %{__install} -D -p -m 755 \
    dist/sdk/bin/nspr-config \
    $RPM_BUILD_ROOT${MOZ_APP_SDK_DIR}/sdk/bin/nspr-config
@@ -537,6 +537,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Oct 12 2011 Georgi Georgiev <chutzimir@gmail.com> - 7.0.1-1
+- Make it work on RHEL
+
 * Fri Sep 30 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0.1-1
 - update to 7.0.1
 
