@@ -140,7 +140,9 @@ debug %{name}, you want to install %{name}-debuginfo instead.
 
 %prep
 echo CIBLE = %{name}-%{version}-%{release}
+%if %{build_langpacks}
 [ -f %{SOURCE1} ] || exit 1
+%endif
 %setup -q -c
 
 sed -e "s/^Name=.*/Name=Thunderbird %{version} %{?relcan}/" \
@@ -388,7 +390,9 @@ fi
 %{mozappdir}/dictionaries
 %dir %{mozappdir}/extensions
 %{mozappdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
+%if %{build_langpacks}
 %dir %{mozappdir}/langpacks
+%endif
 %{mozappdir}/greprefs
 %{mozappdir}/isp
 %{mozappdir}/mozilla-xremote-client

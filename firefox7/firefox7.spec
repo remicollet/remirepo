@@ -110,7 +110,9 @@ compliance, performance and portability.
 
 %prep
 echo TARGET = %{name}-%{version}-%{release}%{?dist}
+%if %{build_langpacks}
 [ -f %{SOURCE1} ] || exit 1
+%endif
 %setup -q -c
 cd %{tarballdir}
 
