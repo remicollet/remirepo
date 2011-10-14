@@ -3,7 +3,7 @@
 
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
-Version:      1.1.0
+Version:      1.1.1
 Release:      2%{?dist}
 
 License:      PHP
@@ -132,6 +132,9 @@ ln -sf %{php_extdir}/json.so modules/
 
 
 %changelog
+* Fri Oct 14 2011 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+- update to 1.1.1
+
 * Sun Oct 02 2011 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
 - build zts extension
 
