@@ -11,6 +11,11 @@ License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# https://bugs.php.net/bug.php?id=60066
+Patch0:         geoip-build.patch
+# https://bugs.php.net/bug.php?id=59804
+Patch1:         geoip-tests.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  GeoIP-devel
 BuildRequires:  php-devel
@@ -46,6 +51,11 @@ if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
 fi
+
+cd %{pecl_name}-%{version}
+%patch0 -p1 -b .build
+%patch1 -p0 -b .tests
+cd ..
 
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -88,12 +98,12 @@ install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 cd %{pecl_name}-%{version}
 
 TEST_PHP_EXECUTABLE=%{__php} \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 %{__php} run-tests.php \
     -n -q \
     -d extension_dir=modules \
-    -d extension=%{pecl_name}.so \
+    -d extension=%{pecl_name}.so
 
 
 %clean
@@ -122,6 +132,9 @@ fi
 * Wed Oct 05 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.7-6
 - ZTS extension
 - spec cleanups
+- run test suite
+- patch for https://bugs.php.net/bug.php?id=60066
+- patch for https://bugs.php.net/bug.php?id=59804
 
 * Fri Jul 15 2011 Andrew Colin Kissa <andrew@topdog.za.net> - 1.0.7-6
 - Fix bugzilla #715693
