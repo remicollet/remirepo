@@ -1,21 +1,20 @@
 %{!?__pecl:	%{expand: %%global __pecl	%{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %define pecl_name gearman
 
 Name:		php-pecl-gearman
-Version:	0.7.0
-Release:	5%{?dist}
+Version:	0.8.0
+Release:	1%{?dist}
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
 License:	PHP
 URL:		http://gearman.org
-Source0:	http://pecl.php.net/get/gearman-0.7.0.tgz
+Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	php-devel, libgearman-devel > 0.8, gearmand >= 0.12, re2c
+BuildRequires:	php-devel, libgearman-devel > 0.10, gearmand >= 0.12
 BuildRequires:	php-pear
 # Required by phpize
 BuildRequires: autoconf, automake, libtool
@@ -25,7 +24,16 @@ Requires:	php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:	php-common, gearmand >= 0.12, libgearman > 0.8
+Requires:	php-common, gearmand >= 0.12, libgearman > 0.10
+
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+
 
 %description
 
@@ -33,53 +41,91 @@ This extension uses libgearman library to provide API for
 communicating with gearmand, and writing clients and workers
 
 %prep
-%setup -q -n gearman-%{version}
+%setup -q -c
+
+extver=$(sed -n '/#define PHP_GEARMAN_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_gearman.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
+
+cat >%{pecl_name}.ini <<EOF
+; enable %{pecl_name} extension
+extension=%{pecl_name}.so
+EOF
+
+cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+
 
 %build
-phpize
-%configure
+cd %{pecl_name}-%{version}
+%{php_bindir}/phpize
+%configure  --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure  --with-php-config=%{php_ztsbindir}/php-config
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install INSTALL_ROOT=$RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/php.d
-cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/gearman.ini << 'EOF'
-; enable gearman extension
-extension="gearman.so"
-EOF
+rm -rf %{buildroot}
+
+make -C %{pecl_name}-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+
+make -C %{pecl_name}-%{version}-zts \
+     install INSTALL_ROOT=%{buildroot}
+
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pecl_xmldir}
-install -m 644 ../package.xml $RPM_BUILD_ROOT%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+# install config file
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+
+
+%check
+cd %{pecl_name}-%{version}
+
+# simple module load test
+%{__php} --no-php-ini \
+    --define extension_dir=modules \
+    --define extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
-%if 0%{?pecl_install:1}
+
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
-%if 0%{?pecl_uninstall:1}
+
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
-%{_sysconfdir}/php.d/gearman.ini
+
 %files
 %defattr(-,root,root,-)
-%config(noreplace) %{_sysconfdir}/php.d/gearman.ini
-%{php_extdir}/gearman.so
+%doc %{pecl_name}-%{version}/{ChangeLog,README,CREDITS,EXPERIMENTAL,LICENSE}
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
-
-%doc ChangeLog README CREDITS EXPERIMENTAL LICENSE
 
 
 %changelog
+* Sat Oct 15 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.8.0-1
+- update to 0.8.0
+- ZTS extension
+- spec cleanup and minimal %%check
+
 * Fri Aug 12 2011 Jesse Keating <jkeating@redhat.com> - 0.7.0-5
 - Rebuild for broken deps
 
