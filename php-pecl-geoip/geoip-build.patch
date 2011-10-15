@@ -1,12 +1,13 @@
-diff -up geoip-1.0.7/geoip.c.orig geoip-1.0.7/geoip.c
---- geoip-1.0.7/geoip.c.orig	2011-10-15 16:25:26.612833903 +0200
-+++ geoip-1.0.7/geoip.c	2011-10-15 16:26:14.279997257 +0200
-@@ -229,7 +229,7 @@ PHP_FUNCTION(geoip_db_get_all_info)
+--- pecl/geoip/trunk/geoip.c	2010/03/31 20:39:48	297236
++++ pecl/geoip/trunk/geoip.c	2011/06/05 19:00:52	311837
+@@ -238,7 +238,9 @@
  
- 	for (i=0; i < NUM_DB_TYPES; i++)
- 	{
--		if (NULL != GeoIPDBDescription[i])
-+		if (GeoIPDBDescription[i] && GeoIPDBFileName[i])
- 		{
- 			zval *row;
- 			ALLOC_INIT_ZVAL(row);
+ 			add_assoc_bool(row, "available", GeoIP_db_avail(i));
+ 			add_assoc_string(row, "description", (char *)GeoIPDBDescription[i], 1);
+-			add_assoc_string(row, "filename", GeoIPDBFileName[i], 1);
++			if (GeoIPDBFileName[i]) {
++				add_assoc_string(row, "filename", GeoIPDBFileName[i], 1);
++			}
+ 
+ 			add_index_zval(return_value, i, row);
+ 		}

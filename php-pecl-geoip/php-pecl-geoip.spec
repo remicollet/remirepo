@@ -4,7 +4,7 @@
 
 Name:           php-pecl-geoip
 Version:        1.0.7
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Extension to map IP addresses to geographic places
 Group:          Development/Languages
 License:        PHP
@@ -53,7 +53,7 @@ if test "x${extver}" != "x%{version}"; then
 fi
 
 cd %{pecl_name}-%{version}
-%patch0 -p1 -b .build
+%patch0 -p3 -b .build
 %patch1 -p0 -b .tests
 cd ..
 
@@ -129,6 +129,9 @@ fi
 
 
 %changelog
+* Sat Oct 15 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.7-7
+- upstream patch for https://bugs.php.net/bug.php?id=60066
+
 * Wed Oct 05 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.7-6
 - ZTS extension
 - spec cleanups
