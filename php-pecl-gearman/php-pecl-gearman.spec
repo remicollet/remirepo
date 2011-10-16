@@ -14,7 +14,7 @@ Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	php-devel, libgearman-devel > 0.10, gearmand >= 0.12
+BuildRequires:	php-devel, libgearman-devel > 0.10
 BuildRequires:	php-pear
 # Required by phpize
 BuildRequires: autoconf, automake, libtool
@@ -23,8 +23,6 @@ Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-
-Requires:	php-common, gearmand >= 0.12, libgearman > 0.10
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
@@ -36,9 +34,9 @@ Requires:	php-common, gearmand >= 0.12, libgearman > 0.10
 
 
 %description
-
 This extension uses libgearman library to provide API for
 communicating with gearmand, and writing clients and workers
+
 
 %prep
 %setup -q -c
@@ -125,6 +123,7 @@ fi
 - update to 0.8.0
 - ZTS extension
 - spec cleanup and minimal %%check
+- fix requires
 
 * Fri Aug 12 2011 Jesse Keating <jkeating@redhat.com> - 0.7.0-5
 - Rebuild for broken deps
