@@ -1,5 +1,4 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global pecl_name mailparse
 
@@ -26,11 +25,13 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Provides: php-pecl(%{pecl_name}) = %{version}-%{release}
 
-
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -39,28 +40,15 @@ It can deal with rfc822 and rfc2045 (MIME) compliant messages.
 
 
 %prep
-# We need to create our working directory since the package*.xml files from
-# the sources extract straight to it
 %setup -q -c
 
-# Move back all other sources to the top level working directory
-%{__mv} mailparse-%{version}/* .
-%{__chmod} -x *.php *.c *.h
+extver=$(sed -n '/#define PHP_MAILPARSE_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_mailparse.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
 
-
-%build
-phpize
-%configure
-%{__make} %{?_smp_mflags}
-
-
-%install
-%{__rm} -rf %{buildroot}
-%{__make} install INSTALL_ROOT=%{buildroot}
-
-# Drop in the bit of configuration
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} > %{buildroot}%{_sysconfdir}/php.d/z-mailparse.ini << 'EOF'
+cat > %{pecl_name}.ini << 'EOF'
 ; Enable mailparse extension module
 extension = mailparse.so
 
@@ -68,48 +56,83 @@ extension = mailparse.so
 ;mailparse.def_charset = us-ascii
 EOF
 
+chmod -x %{pecl_name}-%{version}/*.{php,c,h}
+
+cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+
+
+%build
+cd %{pecl_name}-%{version}
+%{php_bindir}/phpize
+%configure  --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../%{pecl_name}-%{version}-zts
+%{php_ztsbindir}/phpize
+%configure  --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+
+
+%install
+rm -rf %{buildroot}
+
+make -C %{pecl_name}-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+
+make -C %{pecl_name}-%{version}-zts \
+     install INSTALL_ROOT=%{buildroot}
+
 # Install XML package description
-# use 'name' rather than 'pecl_name' to avoid conflict with pear extensions
-%{__mkdir_p} %{buildroot}%{pecl_xmldir}
-%{__install} -m 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+# install config file
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
 
 
 %check
-%{__ln_s} %{php_extdir}/mbstring.so modules
-TEST_PHP_EXECUTABLE=$(which php) php run-tests.php \
+cd %{pecl_name}-%{version}
+ln -s %{php_extdir}/mbstring.so modules
+
+TEST_PHP_EXECUTABLE=%{__php} \
+REPORT_EXIT_STATUS=1 \
+NO_INTERACTION=1 \
+%{__php} run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=mbstring.so \
     -d extension=%{pecl_name}.so \
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %files
 %defattr(-,root,root,-)
-%doc README CREDITS try.php
+%doc %{pecl_name}-%{version}/{README,CREDITS,try.php}
 # We prefix the config file with "z-" so that it loads after mbstring.ini
-%config(noreplace) %{_sysconfdir}/php.d/z-mailparse.ini
-%{php_extdir}/mailparse.so
+%config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
+%{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Sun Oct 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.5-4
+- ZTS extension
+- spec cleanups
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
