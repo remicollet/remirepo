@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{phpname}-pecl-memcached
 Version:      1.0.2
-Release:      9%{?dist}
+Release:      10%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -148,6 +148,9 @@ ln -s %{php_extdir}/igbinary.so modules/
 
 
 %changelog
+* Sun Oct 16 2011  Remi Collet <remi@fedoraproject.org> - 1.0.2-10
+- rebuild against latest libmemcached (f16 only)
+
 * Tue Oct 04 2011  Remi Collet <remi@fedoraproject.org> - 1.0.2-9
 - ZTS extension
 
