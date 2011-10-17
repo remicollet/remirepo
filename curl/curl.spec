@@ -1,7 +1,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 7.21.7
-Release: 5%{?dist}
+Release: 5%{?dist}.2
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
@@ -48,8 +48,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: groff
 BuildRequires: krb5-devel
 BuildRequires: libidn-devel
-BuildRequires: libssh2-devel
-BuildRequires: nss-devel
+BuildRequires: libssh2-devel >= 1.2.0
+BuildRequires: openssl-devel
 BuildRequires: openldap-devel >= %{openldap_version}
 BuildRequires: openssh-clients
 BuildRequires: openssh-server
@@ -62,7 +62,7 @@ BuildRequires: zlib-devel
 BuildRequires: valgrind
 %endif
 
-Requires: libcurl%{?_isa} = %{version}-%{release}
+Requires: libcurl = %{version}-%{release}
 
 # require at least the version of libssh2 that we were built against,
 # to ensure that we have the necessary symbols available (#525002, #642796)
@@ -83,7 +83,7 @@ resume, proxy tunneling and a busload of other useful tricks.
 Summary: A library for getting files from web servers
 Group: Development/Libraries
 Requires: libssh2%{?_isa} >= %{libssh2_version}
-Requires: openldap%{?_isa} >= %{openldap_version}
+Requires: openldap >= %{openldap_version}
 
 %description -n libcurl
 libcurl is a free and easy-to-use client-side URL transfer library, supporting
@@ -96,7 +96,7 @@ resume, http proxy tunneling and more.
 %package -n libcurl-devel
 Summary: Files needed for building applications with libcurl
 Group: Development/Libraries
-Requires: libcurl%{?_isa} = %{version}-%{release}
+Requires: libcurl = %{version}-%{release}
 
 # From Fedora 14, %%{_datadir}/aclocal is included in the filesystem package
 %if 0%{?fedora} < 14
@@ -132,6 +132,7 @@ done
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 # Fedora patches
 %patch101 -p1
@@ -163,7 +164,7 @@ sed -i s/899\\\([0-9]\\\)/329\\1/ tests/data/test*
     --with-gssapi${KRB5_PREFIX} \
     --with-libidn \
     --with-libssh2 \
-    --without-ssl --with-nss
+    --with-ssl --without-nss
 #    --enable-debug
 # use ^^^ to turn off optimizations, etc.
 
@@ -191,8 +192,8 @@ gcc -o hide_selinux.so -fPIC -shared %{SOURCE3}
 LD_PRELOAD="`readlink -f ./hide_selinux.so`:$LD_PRELOAD"
 export LD_PRELOAD
 
-# test 310, 311, 312 requires libnsspem.so not provides in latest nss for EL-5
-DISABLED="!310 !311 !312"
+# Ignore this tests for now (use !xxx)
+DISABLED=
 
 # use different port range for 32bit and 64bit build, thus make it possible
 # to run both in parallel on the same machine
@@ -257,6 +258,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Mon Oct 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-5.2
+- dump release and build against libssh2 1.2.7
+
+* Mon Oct 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-5.1
+- use openssl instead of nss (unusable on EL-5)
+
 * Sun Sep 25 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-5
 - sync with fedora 16
 
