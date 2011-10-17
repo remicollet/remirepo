@@ -1,21 +1,17 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name rrd
-%global pre       RC1
+%global pre       RC2
 
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
 Version:      1.0.5
-Release:      0.1.%{pre}%{?dist}
+Release:      0.2.%{pre}%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?pre}.tgz
-
-# http://pecl.php.net/bugs/bug.php?id=24401
-Patch0:       rrd-zts.patch
-
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.2
@@ -48,11 +44,13 @@ system for time series data.
 %prep 
 %setup -c -q
 
-cd %{pecl_name}-%{version}%{?pre}
-%patch0 -p 1 -b .zts
-cd ..
-
 cp -r %{pecl_name}-%{version}%{?pre} %{pecl_name}-%{version}-zts
+
+extver=$(sed -n '/#define PHP_RRD_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}%{?pre}/php_rrd.h)
+if test "x${extver}" != "x%{version}%{?pre}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
 
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -135,9 +133,14 @@ fi
 
 
 %changelog
+* Mon Oct 17 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.5-0.2.RC2
+- update to 1.0.5RC2
+- drop patch merged upstream
+
 * Wed Oct 05 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.5-0.1.RC1
 - update to 1.0.5RC1
 - build ZTS extension
+- patch for https://bugs.php.net/bug.php?id=59992
 
 * Tue Aug 16 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.4-1
 - Version 1.0.4 (stable) - API 1.0.4 (stable)
