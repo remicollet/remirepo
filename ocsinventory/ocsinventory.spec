@@ -11,19 +11,16 @@
 Name:        ocsinventory
 Summary:     Open Computer and Software Inventory Next Generation
 
-Version:     1.3.3
-Release:     4%{?dist}
+Version:     2.0.2
+Release:     1%{?dist}
 
 Group:       Applications/Internet
 License:     GPLv2
 URL:         http://www.ocsinventory-ng.org/
 
 # This change for each version... thanks launchpad :(
-Source0:     http://launchpad.net/ocsinventory-server/stable-1.3/%{version}/+download/%{tarname}-%{version}.tar.gz
+Source0:     http://launchpad.net/ocsinventory-server/stable-2.0/%{version}/+download/%{tarname}-%{version}.tar.gz
 Source1:     ocsinventory-reports.conf
-
-# Upstream patch from Bzr
-Patch1:      %{name}-upstream.patch
 
 
 BuildArch:   noarch
@@ -50,7 +47,7 @@ such as switch, router, network printer and unattended devices.
 
 OCS Inventory NG includes package deployment feature on client computers.
 
-ocsinventory is a metapackage that will install the communication server,
+ocsinventory is a meta-package that will install the communication server,
 the administration console and the database server (MySQL).
 
 %description -l fr
@@ -132,8 +129,7 @@ navigateur favori.
 %prep
 %setup -q -n %{tarname}-%{version}
 
-%patch1 -p0
-
+chmod -x binutils/ocs-errors
 
 %build
 cd Apache
@@ -163,14 +159,14 @@ rm -f %{buildroot}%{perl_vendorlib}/Apache/Ocsinventory/Server/Modperl1.pm
 
 cd ..
 
-%{__mkdir_p} %{buildroot}%{_localstatedir}/log/ocsinventory-server
+mkdir -p %{buildroot}%{_localstatedir}/log/ocsinventory-server
 
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/logrotate.d
-%{__sed} -e 's;PATH_TO_LOG_DIRECTORY;%{_localstatedir}/log/ocsinventory-server;' \
+mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
+sed -e 's;PATH_TO_LOG_DIRECTORY;%{_localstatedir}/log/ocsinventory-server;' \
    ./etc/logrotate.d/ocsinventory-server >%{buildroot}%{_sysconfdir}/logrotate.d/ocsinventory-server
 
 # default configuration (localhost) should work on "simple" installation
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/httpd/conf.d
+mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
 %{__sed} -e "s;DATABASE_SERVER;localhost;g" \
     -e "s;DATABASE_PORT;3306;g" \
 %if 0%{?rhel} == 4
@@ -184,26 +180,39 @@ cd ..
 
 # --- ocsinventory-reports --- administration console
 
-%{__mkdir_p} %{buildroot}/%{_datadir}/ocsinventory-reports
-cp -ar ocsreports %{buildroot}/%{_datadir}/ocsinventory-reports
-find %{buildroot}/%{_datadir}/ocsinventory-reports \( -name \*.php -o -name \*.css \) -exec chmod -x {} \;
+mkdir -p %{buildroot}%{_datadir}/ocsinventory-reports
+cp -ar ocsreports %{buildroot}%{_datadir}/ocsinventory-reports
+find %{buildroot}%{_datadir}/ocsinventory-reports \
+     -type f -exec chmod -x {} \;
 
-%{__mkdir_p} %{buildroot}/%{_sysconfdir}/ocsinventory/ocsinventory-reports
+mkdir -p %{buildroot}%{_sysconfdir}/ocsinventory/ocsinventory-reports
 
-mv %{buildroot}/%{_datadir}/ocsinventory-reports/ocsreports/dbconfig.inc.php \
-   %{buildroot}/%{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php
-ln -s ../../../../%{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php %{buildroot}/%{_datadir}/ocsinventory-reports/ocsreports/dbconfig.inc.php
+mv %{buildroot}%{_datadir}/ocsinventory-reports/ocsreports/dbconfig.inc.php \
+   %{buildroot}%{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php
+
+ln -s %{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php \
+      %{buildroot}%{_datadir}/ocsinventory-reports/ocsreports/dbconfig.inc.php
+
+# Not usefull for now (path is harcoded)
+sed -i -e '/CONF_MYSQL/s;dbconfig.inc.php;%{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php;' \
+    %{buildroot}%{_datadir}/ocsinventory-reports/ocsreports/var.php
+
+mkdir -p %{buildroot}%{_localstatedir}/lib/ocsinventory-reports/{download,ipd,snmp}
+mkdir -p %{buildroot}%{_bindir}
+
+install -pm 644 etc/ocsinventory/snmp_com.txt     %{buildroot}%{_localstatedir}/lib/ocsinventory-reports/snmp/snmp_com.txt
+install -pm 755 binutils/ipdiscover-util.pl       %{buildroot}%{_datadir}/ocsinventory-reports/ocsreports/ipdiscover-util.pl
+install -pm 755 binutils/ocsinventory-injector.pl %{buildroot}%{_bindir}/ocsinventory-injector
+install -pm 755 binutils/ocsinventory-log.pl      %{buildroot}%{_bindir}/ocsinventory-log
 
 
-%{__mkdir_p} %{buildroot}%{_localstatedir}/lib/ocsinventory-reports/{download,ipd}
-
-%{__install} -pm 755 binutils/ipdiscover-util.pl %{buildroot}/%{_datadir}/ocsinventory-reports/ocsreports/ipdiscover-util.pl
-
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/httpd/conf.d
-%{__sed} -e "s;OCSREPORTS_ALIAS;/ocsreports;g" \
-         -e "s;PATH_TO_OCSREPORTS_DIR;%{_datadir}/ocsinventory-reports/ocsreports;g" \
-         -e "s;PACKAGES_ALIAS;/download;g" \
-         -e "s;PATH_TO_PACKAGES_DIR;%{_localstatedir}/lib/ocsinventory-reports/download;g" \
+mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
+sed -e "s;OCSREPORTS_ALIAS;/ocsreports;g" \
+    -e "s;PATH_TO_OCSREPORTS_DIR;%{_datadir}/ocsinventory-reports/ocsreports;g" \
+    -e "s;PACKAGES_ALIAS;/download;g" \
+    -e "s;PATH_TO_PACKAGES_DIR;%{_localstatedir}/lib/ocsinventory-reports/download;g" \
+    -e "s;SNMP_ALIAS;/snmp;g" \
+    -e "s;PATH_TO_SNMP_DIR;%{_localstatedir}/lib/ocsinventory-reports/snmp;g" \
     %{SOURCE1} >%{buildroot}%{_sysconfdir}/httpd/conf.d/ocsinventory-reports.conf
 
 
@@ -261,9 +270,13 @@ fi
 %files server
 %defattr(-, root, root, -)
 %doc LICENSE.txt README Apache/Changes
+%doc binutils/*.README
+%doc binutils/{ocs-errors,soap-client.pl}
 %config(noreplace) %{_sysconfdir}/logrotate.d/ocsinventory-server
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/ocsinventory-server.conf
 %attr(755,apache,root) %{_localstatedir}/log/ocsinventory-server
+%{_bindir}/ocsinventory-injector
+%{_bindir}/ocsinventory-log
 %{perl_vendorlib}/Apache
 
 
@@ -278,9 +291,14 @@ fi
 %attr(755,apache,root) %dir %{_localstatedir}/lib/ocsinventory-reports
 %attr(755,apache,root) %dir %{_localstatedir}/lib/ocsinventory-reports/ipd
 %attr(755,apache,root) %dir %{_localstatedir}/lib/ocsinventory-reports/download
+%attr(755,apache,root) %dir %{_localstatedir}/lib/ocsinventory-reports/snmp
+%attr(644,apache,root) %config(noreplace) %{_localstatedir}/lib/ocsinventory-reports/snmp/snmp_com.txt
 
 
 %changelog
+* Sun Oct 23 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.2-1
+- update to 2.0.2
+
 * Tue Jul 19 2011 Petr Sabata <contyk@redhat.com> - 1.3.3-4
 - Perl mass rebuild
 
