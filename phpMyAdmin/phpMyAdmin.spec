@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.4.6
+Version: 3.4.7
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -12,6 +12,7 @@ Source2: phpMyAdmin.htaccess
 Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/darkblue_orange-2.10.zip
 Source11: http://downloads.sourceforge.net/sourceforge/phpmyadmin/graphite-1.0.zip
 Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/toba-0.2.zip
+Source13: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.4.zip
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -57,7 +58,7 @@ grep '^define' libraries/vendor_config.php
 # to avoid rpmlint warnings
 find . -name \*.php -exec chmod -x {} \;
 
-for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12}
+for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13}
 do
     %{__unzip} -q $archive -d themes
 done
@@ -115,6 +116,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sun Oct 23 2011 Remi Collet <rpms@famillecollet.com> 3.4.7-1
+- Upstream released 3.4.7 (bugfix)
+- add Paradice 3.4 theme
+
 * Sun Oct 16 2011 Remi Collet <rpms@famillecollet.com> 3.4.6-1
 - Upstream released 3.4.6 (security)
   Fix PMASA-2011-15 and PMASA-2011-16
