@@ -3,8 +3,8 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-Timer
-Version:        1.0.0
-Release:        3%{?dist}
+Version:        1.0.2
+Release:        1%{?dist}
 Summary:        PHP Utility class for timing
 
 Group:          Development/Libraries
@@ -14,7 +14,7 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.0
+BuildRequires:  php-pear >= 1:1.9.2
 BuildRequires:  php-channel(%{channel})
 Requires:       php-channel(%{channel})
 Requires:       php-common >= 5.2.7
@@ -75,10 +75,14 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/PHP
 
 %changelog
+* Sun Oct 23 2011 Remi Collet <rpms@famillecollet.com> 1.0.2-1
+- update to 1.0.2
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
