@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.11.10
+Version:         1.11.11
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -55,7 +55,7 @@ Requires: %{name} = %{version}-%{release}
 
 %description demos
 This package includes Zend Framework demos for the Feeds, Gdata, Mail, OpenId,
-Pdf, Search-Lucene and Services subpackages.
+Pdf, Search-Lucene and Services sub packages.
 
 
 %package extras
@@ -267,7 +267,10 @@ This package contains web service client APIs for the following services:
 - Amazon (including Ec2, S3)
 - Audioscrobbler
 - del.icio.us
+- Developer Garden
+- eBay
 - Flickr
+- LiveDocx
 - Nirvanix
 - ReCaptcha
 - Simpy
@@ -275,6 +278,8 @@ This package contains web service client APIs for the following services:
 - StrikeIron
 - Technorati
 - Twitter
+- Various URL Shortener services
+- Windows Azure
 - Yahoo!
 
 
@@ -320,25 +325,25 @@ find . -type f -perm /111 \
 find . -type f -name \*.sh \
   -fprint valid_executables -exec %{__chmod} +x '{}' \; >/dev/null
 
-%{__cat} executables valid_executables|sort|uniq -u > invalid_executables
+cat executables valid_executables|sort|uniq -u > invalid_executables
 
 
 %install
-%{__rm} -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
-%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/php
-%{__cp} -pr library/Zend $RPM_BUILD_ROOT%{_datadir}/php
-%{__cp} -pr demos/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend/demos
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/php
+cp -pr library/Zend $RPM_BUILD_ROOT%{_datadir}/php
+cp -pr demos/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend/demos
 
 # ZendX
 cd extras
-%{__cp} -pr library/ZendX $RPM_BUILD_ROOT%{_datadir}/php
+cp -pr library/ZendX $RPM_BUILD_ROOT%{_datadir}/php
 cd ..
 
-%{__cp} -pr bin/zf.{php,sh} \
+cp -pr bin/zf.{php,sh} \
   $RPM_BUILD_ROOT%{_datadir}/php/Zend
-%{__mkdir_p} $RPM_BUILD_ROOT%{_bindir}
-%{__ln_s} %{_datadir}/php/Zend/zf.sh \
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+ln -s %{_datadir}/php/Zend/zf.sh \
   $RPM_BUILD_ROOT%{_bindir}/zf
 
 
@@ -624,6 +629,15 @@ cd ..
 
 
 %changelog
+* Mon Oct 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.11-1
+- update to 1.11.11
+- rebuild for remi repository (with Oracle and Sqlite stuff)
+
+* Fri Oct 14 2011 Felix Kaechele <heffer@fedoraproject.org> - 1.11.11-1
+- update to 1.11.11
+- full changelog http://framework.zend.com/changelog/1.11.11
+- spec cleanup
+
 * Sat Aug 06 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.10-1
 - update to 1.11.10
 - rebuild for remi repository (with Oracle and Sqlite stuff)
