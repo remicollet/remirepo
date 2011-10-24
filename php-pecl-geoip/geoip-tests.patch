@@ -1,38 +1,3 @@
-Index: tests/008.phpt
-===================================================================
---- tests/008.phpt	(revision 311865)
-+++ tests/008.phpt	(working copy)
-@@ -5,7 +5,11 @@
- --FILE--
- <?php
- 
--var_dump( geoip_db_filename(14) );
-+if (GEOIP_NUM_DB_TYPES <= 18 ) {
-+    var_dump( geoip_db_filename(14) );
-+} else {
-+    var_dump( geoip_db_filename(19) );
-+}
- 
- ?>
- --EXPECT--
-Index: tests/011.phpt
-===================================================================
---- tests/011.phpt	(revision 311865)
-+++ tests/011.phpt	(working copy)
-@@ -4,8 +4,12 @@
- <?php if (!extension_loaded("geoip")) print "skip"; ?>
- --FILE--
- <?php
-+if (GEOIP_NUM_DB_TYPES <= 18 ) {
-+    geoip_database_info(14);
-+} else {
-+    geoip_database_info(19);
-+}
- 
--geoip_database_info(14);
- 
- ?>
- --EXPECTF--
 Index: tests/014.phpt
 ===================================================================
 --- tests/014.phpt	(revision 311865)
@@ -58,15 +23,3 @@ Index: tests/014.phpt
  
  Warning: geoip_time_zone_by_country_and_region(): You need to specify at least the country code. in %s on line %d
  bool(false)
-Index: geoip.c
-===================================================================
---- geoip.c	(revision 311865)
-+++ geoip.c	(working copy)
-@@ -118,6 +118,7 @@
- 	_GeoIP_setup_dbfilename();
- 	
- 	/* For database type constants */
-+	REGISTER_LONG_CONSTANT("GEOIP_NUM_DB_TYPES",        NUM_DB_TYPES,              CONST_CS | CONST_PERSISTENT);
- 	REGISTER_LONG_CONSTANT("GEOIP_COUNTRY_EDITION",     GEOIP_COUNTRY_EDITION,     CONST_CS | CONST_PERSISTENT);
- 	REGISTER_LONG_CONSTANT("GEOIP_REGION_EDITION_REV0", GEOIP_REGION_EDITION_REV0, CONST_CS | CONST_PERSISTENT);
- 	REGISTER_LONG_CONSTANT("GEOIP_CITY_EDITION_REV0",   GEOIP_CITY_EDITION_REV0,   CONST_CS | CONST_PERSISTENT);

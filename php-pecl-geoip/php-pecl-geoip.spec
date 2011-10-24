@@ -3,16 +3,14 @@
 %define pecl_name geoip
 
 Name:           php-pecl-geoip
-Version:        1.0.7
-Release:        7%{?dist}
+Version:        1.0.8
+Release:        1%{?dist}
 Summary:        Extension to map IP addresses to geographic places
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://bugs.php.net/bug.php?id=60066
-Patch0:         geoip-build.patch
 # https://bugs.php.net/bug.php?id=59804
 Patch1:         geoip-tests.patch
 
@@ -53,7 +51,6 @@ if test "x${extver}" != "x%{version}"; then
 fi
 
 cd %{pecl_name}-%{version}
-%patch0 -p3 -b .build
 %patch1 -p0 -b .tests
 cd ..
 
@@ -129,6 +126,9 @@ fi
 
 
 %changelog
+* Mon Oct 24 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.8-1
+- update to 1.0.8
+
 * Sat Oct 15 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.7-7
 - upstream patch for https://bugs.php.net/bug.php?id=60066
 
