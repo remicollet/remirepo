@@ -12,7 +12,7 @@ Name:        ocsinventory
 Summary:     Open Computer and Software Inventory Next Generation
 
 Version:     2.0.2
-Release:     1%{?dist}
+Release:     1%{?dist}.1
 
 Group:       Applications/Internet
 License:     GPLv2
@@ -22,6 +22,8 @@ URL:         http://www.ocsinventory-ng.org/
 Source0:     http://launchpad.net/ocsinventory-server/stable-2.0/%{version}/+download/%{tarname}-%{version}.tar.gz
 Source1:     ocsinventory-reports.conf
 
+# Manage upgrade from 1.3.x
+Patch0:      %{name}-upgrade.patch
 
 BuildArch:   noarch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -129,6 +131,8 @@ navigateur favori.
 %prep
 %setup -q -n %{tarname}-%{version}
 
+%patch0 -p0
+
 chmod -x binutils/ocs-errors
 
 %build
@@ -229,6 +233,7 @@ semanage fcontext -a -s system_u -t httpd_log_t -r s0 "%{_localstatedir}/log/ocs
 restorecon -R %{_localstatedir}/log/ocsinventory-server
 ) &>/dev/null ||:
 %endif
+/sbin/service httpd condrestart > /dev/null 2>&1 || :
 
 
 %post reports
@@ -245,12 +250,13 @@ restorecon -R %{_localstatedir}/lib/ocsinventory-reports
 
 
 %postun server
-%if %{useselinux}
 if [ "$1" -eq "0" ]; then
+%if %{useselinux}
     # Remove the File Context
     semanage fcontext -d "%{_localstatedir}/log/ocsinventory-server(/.*)?" &>/dev/null || :
-fi
 %endif
+    /sbin/service httpd condrestart > /dev/null 2>&1 || :
+fi
 
 
 %postun reports
@@ -296,6 +302,10 @@ fi
 
 
 %changelog
+* Thu Oct 27 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.2-1.1
+- add patch for upgrade from 1.3.x
+- restart apache
+
 * Sun Oct 23 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.2-1
 - update to 2.0.2
 
