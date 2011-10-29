@@ -249,20 +249,20 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-sqlite   \
 %endif
-%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
   | grep -v with-system-nspr       \
   | grep -v with-system-nss        \
 %endif
-%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
   | grep -v disable-necko-wifi     \
 %endif
-%if 0%{?fedora} < 13 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 13 && 0%{?rhel} <= 6
   | grep -v with-system-libvpx     \
 %endif
   | tee .mozconfig
@@ -279,7 +279,7 @@ echo "ac_add_options --enable-system-lcms" >> .mozconfig
 echo "ac_add_options --disable-tracejit" >> .mozconfig
 %endif
 
-%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
 echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
 
@@ -398,7 +398,7 @@ popd
   dist/bin/xpidl \
   $RPM_BUILD_ROOT/%{mozappdir}
 
-%if 0%{?fedora} < 13 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 13 && 0%{?rhel} <= 6
 %{__install} -D -p -m 755 \
    dist/sdk/bin/nspr-config \
    $RPM_BUILD_ROOT${MOZ_APP_SDK_DIR}/sdk/bin/nspr-config

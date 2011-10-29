@@ -137,14 +137,14 @@ cd %{tarballdir}
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-sqlite   \
 %endif
-%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
   | grep -v with-system-nspr       \
   | grep -v with-system-nss        \
 %endif
-%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
@@ -169,7 +169,7 @@ echo "ac_add_options --with-libxul-sdk=\
 echo "ac_add_options --disable-ipc" >> .mozconfig
 %endif
 
-%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
 echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
 

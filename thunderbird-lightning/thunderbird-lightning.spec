@@ -140,14 +140,14 @@ cd ..
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
-%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v system-sqlite 	\
 %endif
-%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
   | grep -v system-nss 		\
   | grep -v system-nspr 	\
 %endif
-%if 0%{?fedora} < 15 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
@@ -161,7 +161,7 @@ ac_add_options --enable-system-lcms
 %if 0%{?fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
-%if 0%{?fedora} < 14 || 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
 ac_add_options --disable-libjpeg-turbo
 %endif
 EOF
