@@ -26,6 +26,7 @@ Source1:     ocsinventory-reports.conf
 # http://bazaar.launchpad.net/~ocsinventory-core/ocsinventory-ocsreports/stable-2.0/revision/794
 Patch0:      %{name}-upgrade.patch
 # Use CONF_MYSQL everywhere
+# http://bazaar.launchpad.net/~ocsinventory-core/ocsinventory-ocsreports/stable-2.0/revision/796
 Patch1:      %{name}-dbconf.patch
 
 BuildArch:   noarch
