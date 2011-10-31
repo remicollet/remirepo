@@ -12,7 +12,7 @@ Name:        ocsinventory
 Summary:     Open Computer and Software Inventory Next Generation
 
 Version:     2.0.2
-Release:     1%{?dist}.1
+Release:     1%{?dist}.2
 
 Group:       Applications/Internet
 License:     GPLv2
@@ -23,7 +23,10 @@ Source0:     http://launchpad.net/ocsinventory-server/stable-2.0/%{version}/+dow
 Source1:     ocsinventory-reports.conf
 
 # Manage upgrade from 1.3.x
+# http://bazaar.launchpad.net/~ocsinventory-core/ocsinventory-ocsreports/stable-2.0/revision/794
 Patch0:      %{name}-upgrade.patch
+# Use CONF_MYSQL everywhere
+Patch1:      %{name}-dbconf.patch
 
 BuildArch:   noarch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -132,6 +135,7 @@ navigateur favori.
 %setup -q -n %{tarname}-%{version}
 
 %patch0 -p0
+%patch1 -p0
 
 chmod -x binutils/ocs-errors
 
@@ -193,9 +197,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/ocsinventory/ocsinventory-reports
 
 mv %{buildroot}%{_datadir}/ocsinventory-reports/ocsreports/dbconfig.inc.php \
    %{buildroot}%{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php
-
-ln -s %{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php \
-      %{buildroot}%{_datadir}/ocsinventory-reports/ocsreports/dbconfig.inc.php
 
 # Not usefull for now (path is harcoded)
 sed -i -e '/CONF_MYSQL/s;dbconfig.inc.php;%{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php;' \
@@ -290,7 +291,7 @@ fi
 %defattr(-, root, root, -)
 %doc LICENSE.txt README
 %dir %{_sysconfdir}/ocsinventory
-%dir %{_sysconfdir}/ocsinventory/ocsinventory-reports
+%attr(750,apache,root) %dir %{_sysconfdir}/ocsinventory/ocsinventory-reports
 %attr(640,apache,root) %config(noreplace) %{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/ocsinventory-reports.conf
 %{_datadir}/ocsinventory-reports
@@ -302,6 +303,11 @@ fi
 
 
 %changelog
+* Mon Oct 31 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.2-1.2
+- add patch to use CONF_MYSQL (and avoid link to dbconfig)
+- comment /snmp alias for security
+- give apache right to create dbconfig.php
+
 * Thu Oct 27 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.2-1.1
 - add patch for upgrade from 1.3.x
 - restart apache
