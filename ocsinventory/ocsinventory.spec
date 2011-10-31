@@ -12,7 +12,7 @@ Name:        ocsinventory
 Summary:     Open Computer and Software Inventory Next Generation
 
 Version:     2.0.2
-Release:     1%{?dist}.2
+Release:     1%{?dist}.3
 
 Group:       Applications/Internet
 License:     GPLv2
@@ -140,6 +140,16 @@ navigateur favori.
 
 chmod -x binutils/ocs-errors
 
+cat >external-agents.conf <<EOF
+# allowed external useragents list
+# WARNING may not be supported by OCS NG Community !
+# 1 line per agent, with full name (including version)
+
+# Ex, to allow fusioninventory_agent, uncomment next line
+#FusionInventory-Agent_v2.1.9
+EOF
+
+
 %build
 cd Apache
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -184,8 +194,12 @@ mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
     -e "s;VERSION_MP;2;g" \
 %endif
     -e "s;PATH_TO_LOG_DIRECTORY;%{_localstatedir}/log/ocsinventory-server;g" \
-    ./etc/ocsinventory/ocsinventory-server.conf | \
+    -e '/OCS_OPT_EXT_USERAGENTS_FILE_PATH/s;^.*$;  PerlSetEnv OCS_OPT_EXT_USERAGENTS_FILE_PATH %{_sysconfdir}/ocsinventory/ocsinventory-server/external-agents.conf;' \
+    etc/ocsinventory/ocsinventory-server.conf | \
     grep -v IfModule >%{buildroot}%{_sysconfdir}/httpd/conf.d/ocsinventory-server.conf
+
+install -Dm 644 external-agents.conf \
+        %{buildroot}%{_sysconfdir}/ocsinventory/ocsinventory-server/external-agents.conf
 
 # --- ocsinventory-reports --- administration console
 
@@ -280,6 +294,8 @@ fi
 %doc LICENSE.txt README Apache/Changes
 %doc binutils/*.README
 %doc binutils/{ocs-errors,soap-client.pl}
+%dir %{_sysconfdir}/ocsinventory/ocsinventory-server
+%config(noreplace) %{_sysconfdir}/ocsinventory/ocsinventory-server/external-agents.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/ocsinventory-server
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/ocsinventory-server.conf
 %attr(755,apache,root) %{_localstatedir}/log/ocsinventory-server
@@ -304,6 +320,9 @@ fi
 
 
 %changelog
+* Mon Oct 31 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.2-1.3
+- provides external-agents.conf (OCS_OPT_EXT_USERAGENTS_FILE_PATH)
+
 * Mon Oct 31 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.2-1.2
 - add patch to use CONF_MYSQL (and avoid link to dbconfig)
 - comment /snmp alias for security
