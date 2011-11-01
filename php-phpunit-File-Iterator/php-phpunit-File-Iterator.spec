@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-File-Iterator
-Version:        1.2.6
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
@@ -39,7 +39,7 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT docdir
+%{__rm} -rf $RPM_BUILD_ROOT
 
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
@@ -69,10 +69,14 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/File
 
 %changelog
+* Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- upstream 1.3.0
+
 * Fri Mar  4 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.6-1
 - upstream 1.2.6
 - rebuild for remi repository
