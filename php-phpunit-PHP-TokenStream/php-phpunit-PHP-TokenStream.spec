@@ -3,7 +3,7 @@
 %global channel       pear.phpunit.de
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.0.1
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
@@ -14,7 +14,7 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.1
+BuildRequires:  php-pear >= 1:1.9.4
 BuildRequires:  php-channel(%{channel})
 Requires:       php-channel(%{channel})
 Requires:       php-common >= 5.2.7
@@ -36,9 +36,6 @@ Wrapper around PHP tokenizer extension.
 
 cd %{pear_name}-%{version}
 
-# Create a "localized" php.ini to avoid build warning
-cp /etc/php.ini .
-echo "date.timezone=UTC" >>php.ini
 
 %build
 cd %{pear_name}-%{version}
@@ -46,20 +43,20 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT docdir
-PHPRC=./php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-%{__rm} -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 
 # Install XML package description
-%{__mkdir} -p $RPM_BUILD_ROOT%{pear_xmldir}
-%{__install} -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
+install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 
 %clean
-%{__rm} -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 
 %post
@@ -76,11 +73,15 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/PHP
-%{_bindir}/phptok
 
 %changelog
+* Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- upstream 1.1.0
+- no more phptok script in bindir
+
 * Sun Dec  5 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
 - rebuild for remi repository
 
