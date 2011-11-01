@@ -3,7 +3,7 @@
 %global channel pear.phpmd.org
 
 Name:           php-phpmd-PHP-PMD
-Version:        1.1.1
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -46,7 +46,7 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT docdir
+%{__rm} -rf $RPM_BUILD_ROOT
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
@@ -56,9 +56,6 @@ cd %{pear_name}-%{version}
 %{__mkdir} -p $RPM_BUILD_ROOT%{pear_xmldir}
 %{__install} -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
-# Move documentation
-%{__mkdir} -p docdir
-%{__mv} $RPM_BUILD_ROOT%{pear_docdir}/* docdir
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -78,14 +75,21 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/PHP/PMD.php
 %{pear_phpdir}/PHP/PMD
 %{pear_datadir}/PHP_PMD
 %{_bindir}/phpmd
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/*
 
 %changelog
+* Tue Nov 01 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-1
+- upstream 1.2.0, rebuild for remi repository
+- doc in /usr/share/doc/pear
+
+* Fri Oct 28 2011 Christof Damian <christof@damian.net> - 1.2.0-1
+- upstream 1.2.0
+
 * Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.1.1-1
 - rebuild for remi repository
 
