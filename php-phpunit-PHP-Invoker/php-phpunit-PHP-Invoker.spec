@@ -5,12 +5,10 @@
 
 Name:           php-phpunit-PHP-Invoker
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Utility class for invoking callables with a timeout
 
 Group:          Development/Libraries
-# Ask for license file
-# https://github.com/sebastianbergmann/php-invoker/issues/1
 License:        BSD
 URL:            https://github.com/sebastianbergmann/php-invoker
 Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
@@ -75,11 +73,15 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/PHP
 
 
 %changelog
+* Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- new tarball, with documentation
+
 * Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial generated RPM by pear make-rpm-spec + cleanups
 
