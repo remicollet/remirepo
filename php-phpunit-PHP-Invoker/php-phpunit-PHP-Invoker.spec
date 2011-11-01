@@ -5,7 +5,7 @@
 
 Name:           php-phpunit-PHP-Invoker
 Version:        1.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Utility class for invoking callables with a timeout
 
 Group:          Development/Libraries
@@ -25,7 +25,7 @@ Requires:       php-channel(%{channel})
 # merge php-cntl + php >= 5.2.7, php-cli provides php-pcntl
 Requires:       php-cli >= 5.2.7
 
-Provides:       php-pear(%{pear_name}) = %{version}
+Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
 %description
 Utility class for invoking callables with a timeout.
@@ -79,6 +79,9 @@ fi
 
 
 %changelog
+* Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
+- fix provides
+
 * Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - new tarball, with documentation
 
