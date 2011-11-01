@@ -3,7 +3,7 @@
 %global channel pear.pdepend.org
 
 Name:           php-pdepend-PHP-Depend
-Version:        0.10.5
+Version:        0.10.6
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -44,7 +44,7 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT docdir
+%{__rm} -rf $RPM_BUILD_ROOT
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
@@ -78,6 +78,12 @@ fi
 %{_bindir}/pdepend
 
 %changelog
+* Tue Nov 01 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.10.6-1
+- upstream 0.10.6, rebuild for remi repository
+
+* Sun Oct 30 2011 Christof Damian <christof@damian.net> - 0.10.6-1
+- upstream 0.10.6
+
 * Fri May 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.10.5-1
 - upstream 0.10.5
 - rebuild for remi repository
