@@ -2,7 +2,7 @@
 %global pear_name Swift
 
 Name:           php-swift-Swift
-Version:        4.1.1
+Version:        4.1.3
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -83,6 +83,12 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Tue Nov 01 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.1.3-1
+- rebuild for remi repository
+
+* Fri Oct 28 2011 Christof Damian <christof@damian.net> - 4.1.3-1
+- upstream 4.1.3
+
 * Sat Jul 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.1.1-1
 - rebuild for remi repository
 - doc in /usr/share/doc/pear
