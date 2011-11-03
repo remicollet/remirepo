@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-CodeBrowser
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        PHP_CodeBrowser for integration in Hudson and CruiseControl
 
@@ -21,7 +21,7 @@ Requires:       php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(Console_CommandLine) >= 1.1.3
-Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.2.1
+Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.3.0
 Requires:       php-pear(Log) >= 1.12.1
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.4.0
 Requires:       php-pear(PHP_CodeSniffer) >= 1.2.0
@@ -94,6 +94,12 @@ fi
 
 
 %changelog
+* Thu Nov 03 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
+- upstream 1.0.1, rebuild for remi repository
+
+* Wed Nov  2 2011 Christof Damian <christof@damian.net> - 1.0.1-1
+- upstream 1.0.1
+
 * Mon Dec 20 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
 - rebuild for remi repository
 
