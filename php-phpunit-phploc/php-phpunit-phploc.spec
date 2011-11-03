@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phploc
-Version:        1.6.1
+Version:        1.6.2
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -14,13 +14,13 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.0
+BuildRequires:  php-pear >= 1:1.9.4
 BuildRequires:  php-channel(%{channel})
 Requires:       php-common >= 5.2.7
 Requires:       php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.2.0
+Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.3.0
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
@@ -82,6 +82,12 @@ fi
 
 
 %changelog
+* Thu Nov 03 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-1
+- upstream 1.6.2, rebuild for remi repository
+
+* Tue Nov  1 2011 Christof Damian <christof@damian.net> - 1.6.2-1
+- upstream 1.6.2
+
 * Sat Feb 12 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.6.1-1
 - rebuild for remi repository
 
