@@ -4,7 +4,7 @@
 
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
-Version:	2.4.6
+Version:	2.4.8
 Release:	1%{?dist}
 
 License:	LGPLv2
@@ -23,7 +23,7 @@ Requires:	php-pear >= 1.8.0
 Requires:	php-pecl-xdebug >= 2.0.5
 Requires:	php-channel(pear.phing.info)
 
-Requires:	php-pear(pear.phpunit.de/PHPUnit) >= 3.4.0
+Requires:	php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 
 Requires(post):	%{__pear}
 Requires(postun): %{__pear}
@@ -53,13 +53,10 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT docdir
+%{__rm} -rf $RPM_BUILD_ROOT
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
 
 # not in the archive dos2unix $RPM_BUILD_ROOT/%{pear_docdir}/%{pear_name}/UPGRADE
-
-%{__mkdir_p} docdir
-%{__mv} $RPM_BUILD_ROOT%{pear_docdir}/* docdir
 
 %{__rm} -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 
@@ -84,7 +81,7 @@ fi
 %files
 %defattr(-,root,root,-)
 %{_bindir}/phing
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/*
+%doc %{pear_docdir}/%{pear_name}
 %{pear_datadir}/%{pear_name}
 %{pear_phpdir}/%{pear_name}
 %{pear_phpdir}/%{pear_name}.php
@@ -92,6 +89,13 @@ fi
 
 
 %changelog
+* Fri Nov 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.4.8-1
+- upstream 2.4.8, rebuild for remi repository
+- doc in /usr/share/doc/pear
+
+* Thu Nov  3 2011 Christof Damian <christof@damian.net> - 2.4.8-1
+- upstream 2.4.8
+
 * Sat Jul 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.4.6-1
 - rebuild for remi repository
 
