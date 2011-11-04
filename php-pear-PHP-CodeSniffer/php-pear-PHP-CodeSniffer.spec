@@ -1,9 +1,9 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name     PHP_CodeSniffer
-%global pear_version  1.3.0
+%global pear_version  1.3.1
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        %{pear_version}final
+Version:        %{pear_version}
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -11,7 +11,7 @@ Group:          Development/Tools
 License:        BSD
 URL:            http://pear.php.net/package/PHP_CodeSniffer
 Source0:        http://pear.php.net/get/%{pear_name}-%{pear_version}.tgz
-Source1:        PHP_CodeSniffer-licence.txt
+#Source1:        PHP_CodeSniffer-licence.txt
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -59,7 +59,7 @@ mv  -f $RPM_BUILD_ROOT%{_bindir}/scripts/phpcs-svn-pre-commit .
 chmod 0644 phpcs-svn-pre-commit
 rm -rf $RPM_BUILD_ROOT%{_bindir}/scripts
 
-cp %{SOURCE1} .
+#cp %{SOURCE1} .
 
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
@@ -85,7 +85,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_name}-%{pear_version}/PHP_CodeSniffer-licence.txt 
+#%doc %{pear_name}-%{pear_version}/PHP_CodeSniffer-licence.txt 
 %doc %{pear_name}-%{pear_version}/phpcs-svn-pre-commit
 %doc %{pear_name}-%{pear_version}/docdir/*
 %{pear_xmldir}/%{pear_name}.xml
@@ -95,6 +95,12 @@ fi
 %{_bindir}/phpcs
 
 %changelog
+* Fri Nov 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.1-1
+- upstream 1.3.1, rebuild for remi repository
+
+* Thu Nov  3 2011 Christof Damian <christof@damian.net> - 1.3.1-1
+- upstream 1.3.1
+
 * Thu Mar 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.0final-1
 - rebuild for remi repository
 
