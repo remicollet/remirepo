@@ -4,18 +4,20 @@
 
 Name:           php-pear-PHP-CodeSniffer
 Version:        %{pear_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP coding standards enforcement tool
 
 Group:          Development/Tools
 License:        BSD
 URL:            http://pear.php.net/package/PHP_CodeSniffer
 Source0:        http://pear.php.net/get/%{pear_name}-%{pear_version}.tgz
-#Source1:        PHP_CodeSniffer-licence.txt
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.4.9-1.2
+# to run test suite
+BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
+
 Requires:       php-pear(PEAR)
 Requires:       php-common >= 5.1.2
 Requires(post): %{__pear}
@@ -36,9 +38,6 @@ mv package2.xml %{pear_name}-%{pear_version}/%{pear_name}.xml
 
 cd %{pear_name}-%{pear_version}
 
-# Create a "localized" php.ini to avoid build warning
-cp /etc/php.ini .
-echo "date.timezone=UTC" >>php.ini
 
 %build
 # Empty build section, 
@@ -46,20 +45,15 @@ echo "date.timezone=UTC" >>php.ini
 
 %install
 cd %{pear_name}-%{pear_version}
-rm -rf $RPM_BUILD_ROOT docdir
+rm -rf $RPM_BUILD_ROOT
 
-PHPRC=./php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
 
-# Move documentation
-mkdir -p docdir
-mv $RPM_BUILD_ROOT%{pear_datadir}/%{pear_name}/*.sample.conf docdir/
 
 # Remove phpcs-svn-pre-commit: we'll add it to docs
-mv  -f $RPM_BUILD_ROOT%{_bindir}/scripts/phpcs-svn-pre-commit .
-chmod 0644 phpcs-svn-pre-commit
+mv  -f $RPM_BUILD_ROOT%{_bindir}/scripts/phpcs-svn-pre-commit ..
+chmod 0644 ../phpcs-svn-pre-commit
 rm -rf $RPM_BUILD_ROOT%{_bindir}/scripts
-
-#cp %{SOURCE1} .
 
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
@@ -67,6 +61,15 @@ rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%check
+cd %{pear_name}-%{version}/tests
+
+# Version 1.3.1 : Tests: 209, Assertions: 150, Skipped: 3.
+%{_bindir}/phpunit \
+  -d date.timezone=UTC \
+  AllTests.php
 
 
 %clean
@@ -85,9 +88,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-#%doc %{pear_name}-%{pear_version}/PHP_CodeSniffer-licence.txt 
-%doc %{pear_name}-%{pear_version}/phpcs-svn-pre-commit
-%doc %{pear_name}-%{pear_version}/docdir/*
+%doc phpcs-svn-pre-commit
 %{pear_xmldir}/%{pear_name}.xml
 %{pear_testdir}/%{pear_name}
 %{pear_datadir}/%{pear_name}
@@ -95,6 +96,10 @@ fi
 %{_bindir}/phpcs
 
 %changelog
+* Fri Nov 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.1-2
+- run test suite in %%check
+- remove license as not provided by upstream
+
 * Fri Nov 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.1-1
 - upstream 1.3.1, rebuild for remi repository
 
