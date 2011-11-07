@@ -11,13 +11,15 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://github.com/sebastianbergmann/bytekit-cli
 Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.0
+BuildRequires:  php-pear >= 1:1.9.4
 BuildRequires:  php-channel(%{channel})
+
+Requires:       php-common >= 5.2.7
 Requires:       php-channel(%{channel})
-Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.1.0
+Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.3.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
@@ -47,7 +49,7 @@ cd %{pear_name}-%{version}
 %install
 cd %{pear_name}-%{version}
 rm -rf %{buildroot} docdir
-pear install --nodeps --packagingroot %{buildroot} %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
 rm -rf %{buildroot}%{pear_phpdir}/.??*
@@ -62,13 +64,13 @@ rm -rf %{buildroot}
 
 
 %post
-pear install --nodeps --soft --force --register-only \
+%{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
 
 
 %postun
 if [ $1 -eq 0 ] ; then
-    pear uninstall --nodeps --ignore-errors --register-only \
+    %{__pear} uninstall --nodeps --ignore-errors --register-only \
         pear.phpunit.de/%{pear_name} >/dev/null || :
 fi
 
@@ -81,6 +83,9 @@ fi
 
 
 %changelog
+* Mon Nov 07 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.1.2-2
+- upstream 1.1.2, rebuild for remi repository
+
 * Sun Nov 06 2011 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.1.2-2
 - Fix search and replace issue
 
