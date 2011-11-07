@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phpcpd
-Version:        1.3.2
+Version:        1.3.3
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -14,15 +14,15 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.0
+BuildRequires:  php-pear >= 1:1.9.4
 BuildRequires:  php-channel(%{channel})
 Requires:       php-common >= 5.2.7
 Requires:       php-tokenizer
 Requires:       php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.2.2
-Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
+Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.3.0
+Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.2
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6 
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
@@ -39,7 +39,7 @@ need to get a quick overview of duplicated code in a project.
 %prep
 %setup -q -c
 [ -f package2.xml ] || mv package.xml package2.xml
-%{__mv} package2.xml %{pear_name}-%{version}/%{name}.xml
+mv package2.xml %{pear_name}-%{version}/%{name}.xml
 cd %{pear_name}-%{version}
 
 
@@ -50,15 +50,15 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT docdir
+rm -rf $RPM_BUILD_ROOT
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-%{__rm} -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 
 # Install XML package description
-%{__mkdir} -p $RPM_BUILD_ROOT%{pear_xmldir}
-%{__install} -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
+install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 
 %clean
@@ -85,6 +85,12 @@ fi
 
 
 %changelog
+* Mon Nov 07 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.3-1
+- upstream 1.3.3, rebuild for remi repository
+
+* Sat Nov 05 2011 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.3.3-1
+- upstream 1.3.3
+
 * Sun Oct 17 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.3.2-1
 - rebuild for remi repository
 
