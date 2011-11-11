@@ -110,7 +110,9 @@ compliance, performance and portability.
 
 %prep
 echo TARGET = %{name}-%{version}-%{release}%{?dist}
+%if %{build_langpacks}
 [ -f %{SOURCE1} ] || exit 1
+%endif
 %setup -q -c
 cd %{tarballdir}
 
@@ -135,14 +137,14 @@ cd %{tarballdir}
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if %{fedora} < 15
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-sqlite   \
 %endif
-%if %{fedora} < 14
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
   | grep -v with-system-nspr       \
   | grep -v with-system-nss        \
 %endif
-%if %{fedora} < 15
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
@@ -167,7 +169,7 @@ echo "ac_add_options --with-libxul-sdk=\
 echo "ac_add_options --disable-ipc" >> .mozconfig
 %endif
 
-%if %{fedora} < 14
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
 echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
 
@@ -388,6 +390,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Oct 12 2011 Georgi Georgiev <chutzimir@gmail.com> - 7.0.1-1
+- Make it work on RHEL
+
 * Fri Sep 30 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.0.1-1
 - update to 7.0.1
 

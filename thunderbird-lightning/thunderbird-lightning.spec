@@ -1,3 +1,4 @@
+%define build_langpacks 1
 %global nspr_version 4.8.8
 %global nss_version 3.12.10
 %global cairo_version 1.10.0
@@ -38,7 +39,9 @@ Source0:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/r
 #Source0:        http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/%{thunderbird_version}/source/thunderbird-%{thunderbird_version}.source.tar.bz2
 # This script will generate the language source below
 Source1:        mklangsource.sh
+%if %{build_langpacks}
 Source2:        l10n-miramar.tar.bz2
+%endif
 # Config file for compilation
 Source10:       thunderbird-mozconfig
 # Finds requirements provided outside of the current file set
@@ -58,7 +61,7 @@ BuildRequires:  nss-devel >= %{nss_version}
 %if 0%{?fedora} > 15
 BuildRequires:  nss-static
 %endif
-%if %{fedora} >= 15
+%if 0%{?fedora} >= 15
 # Library requirements (cairo-tee >= 1.10)
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
@@ -114,7 +117,11 @@ calendaring tasks.
 
 %prep
 echo TARGET = %{name}-%{version}-%{release}
+%if %{build_langpacks}
 %setup -q -c -a 2
+%else
+%setup -q -c
+%endif
 
 cd %{tarballdir}
 
@@ -133,14 +140,14 @@ cd ..
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
-%if %{fedora} < 15
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v system-sqlite 	\
 %endif
-%if %{fedora} < 14
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
   | grep -v system-nss 		\
   | grep -v system-nspr 	\
 %endif
-%if %{fedora} < 15
+%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
@@ -151,10 +158,10 @@ cat %{SOURCE10} 		\
 cat <<EOF | tee -a .mozconfig
 ac_add_options --enable-libnotify
 ac_add_options --enable-system-lcms
-%if %{fedora} >= 15
+%if 0%{?fedora} >= 15
 ac_add_options --enable-system-sqlite
 %endif
-%if %{fedora} < 14
+%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
 ac_add_options --disable-libjpeg-turbo
 %endif
 EOF
@@ -197,12 +204,14 @@ export MAKE="gmake %{moz_make_flags}"
 make -f client.mk build STRIP=/bin/true
 
 # Package l10n files
+%if %{build_langpacks}
 cd objdir-tb/calendar/lightning
 make AB_CD=all L10N_XPI_NAME=lightning-all repack-clobber-all
 grep -v 'osx' ../../../calendar/locales/shipped-locales | while read lang x
 do
    make AB_CD=all L10N_XPI_NAME=lightning-all libs-$lang
 done
+%endif
 
 #===============================================================================
 
@@ -217,7 +226,11 @@ mkdir -p $RPM_BUILD_ROOT%{gdata_extname}
 touch $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
 
 # Lightning and GData provider for it
+%if %{build_langpacks}
 unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning-all.xpi
+%else
+unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning.xpi
+%endif
 unzip -qod $RPM_BUILD_ROOT%{gdata_extname} objdir-tb/mozilla/dist/xpi-stage/gdata-provider.xpi
 
 # Fix up permissions
@@ -239,6 +252,9 @@ find $RPM_BUILD_ROOT -name \*.so | xargs chmod 0755
 #===============================================================================
 
 %changelog
+* Wed Oct 12 2011 Georgi Georgiev <chutzimir@gmail.com> - 1.0-0.50.b7
+- Make it work on RHEL
+
 * Sat Oct 01 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.50.b7
 - Use lightning 1.0b7 source for TB 7
 - sync with rawhide
