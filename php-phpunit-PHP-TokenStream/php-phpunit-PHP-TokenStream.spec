@@ -3,7 +3,7 @@
 %global channel       pear.phpunit.de
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
@@ -78,6 +78,12 @@ fi
 %{pear_phpdir}/PHP
 
 %changelog
+* Fri Nov 11 2011 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- upstream 1.1.1, rebuild for remi repository
+
+* Thu Nov 10 2011 Christof Damian <christof@damian.net> - 1.1.1-1
+- upstream 1.1.1
+
 * Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - upstream 1.1.0
 - no more phptok script in bindir
