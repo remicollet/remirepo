@@ -97,7 +97,6 @@ BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
 BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
-BuildRequires:  autoconf213
 BuildRequires:  desktop-file-utils
 BuildRequires:  libcurl-devel
 BuildRequires:  yasm
