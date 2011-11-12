@@ -1,0 +1,51 @@
+https://bugzilla.mozilla.org/show_bug.cgi?id=639959
+
+--- source/toolkit/system/dbus/nsNetworkManagerListener.cpp.foo	2011-03-08 14:26:28.167074923 -0600
++++ source/toolkit/system/dbus/nsNetworkManagerListener.cpp	2011-03-08 14:30:54.260748294 -0600
+@@ -51,15 +51,13 @@
+ #define NM_DBUS_SERVICE                 "org.freedesktop.NetworkManager"
+ #define NM_DBUS_PATH                            "/org/freedesktop/NetworkManager"
+ #define NM_DBUS_INTERFACE                       "org.freedesktop.NetworkManager"
+-#define NM_DBUS_SIGNAL_STATE_CHANGE             "StateChange"
+-typedef enum NMState
+-{
+-        NM_STATE_UNKNOWN = 0,
+-        NM_STATE_ASLEEP,
+-        NM_STATE_CONNECTING,
+-        NM_STATE_CONNECTED,
+-        NM_STATE_DISCONNECTED
+-} NMState;
++#define NM_DBUS_SIGNAL_STATE_CHANGE             "StateChange"  /* Deprecated in 0.7.x */
++#define NM_DBUS_SIGNAL_STATE_CHANGED            "StateChanged"
++
++#define NM_STATE_CONNECTED_OLD    3
++#define NM_STATE_CONNECTED_LOCAL  50
++#define NM_STATE_CONNECTED_SITE   60
++#define NM_STATE_CONNECTED_GLOBAL 70
+ 
+ nsNetworkManagerListener::nsNetworkManagerListener() :
+     mLinkUp(PR_TRUE), mNetworkManagerActive(PR_FALSE),
+@@ -174,7 +172,9 @@
+ PRBool
+ nsNetworkManagerListener::HandleMessage(DBusMessage* message) {
+   if (dbus_message_is_signal(message, NM_DBUS_INTERFACE,
+-                             NM_DBUS_SIGNAL_STATE_CHANGE)) {
++                             NM_DBUS_SIGNAL_STATE_CHANGE) ||
++      dbus_message_is_signal(message, NM_DBUS_INTERFACE,
++                             NM_DBUS_SIGNAL_STATE_CHANGED)) {
+     UpdateNetworkStatus(message);
+     return PR_TRUE;
+   }
+@@ -191,7 +191,10 @@
+   mNetworkManagerActive = PR_TRUE;
+   
+   PRBool wasUp = mLinkUp;
+-  mLinkUp = result == NM_STATE_CONNECTED;
++  mLinkUp = (result == NM_STATE_CONNECTED_OLD) ||
++            (result == NM_STATE_CONNECTED_LOCAL) ||
++            (result == NM_STATE_CONNECTED_SITE) ||
++            (result == NM_STATE_CONNECTED_GLOBAL);
+   if (wasUp == mLinkUp)
+     return;
+ 
+
