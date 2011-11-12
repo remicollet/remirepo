@@ -23,7 +23,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        7.0.1
+Version:        8.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -35,7 +35,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20111001.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20111112.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -50,6 +50,12 @@ Source100:      find-external-requires
 Patch0:         thunderbird-install-dir.patch
 Patch7:         crashreporter-remove-static.patch
 Patch8:         xulrunner-6.0-secondary-ipc.patch
+Patch9:         mozilla-670719.patch
+Patch10:        xulrunner-2.0-network-link-service.patch
+Patch11:        xulrunner-2.0-NetworkManager09.patch
+
+# Build patches
+Patch100:       xulrunner-install.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -98,9 +104,6 @@ BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  GConf2-devel
 BuildRequires:  lcms-devel >= %{lcms_version}
-%ifarch %{ix86} x86_64
-BuildRequires:  wireless-tools-devel
-%endif
 
 Requires:       mozilla-filesystem
 %if 0%{?fedora} >= 14
@@ -156,6 +159,10 @@ cd %{tarballdir}
 cd mozilla
 %patch7 -p2 -b .static
 %patch8 -p2 -b .secondary-ipc
+%patch9 -p1 -b .moz670719
+%patch10 -p1 -b .link-service
+%patch11 -p1 -b .NetworkManager09
+%patch100 -p2 -b .install
 cd ..
 
 %if %{official_branding}
@@ -179,16 +186,13 @@ cat %{SOURCE10} 		\
 %if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-cairo    \
 %endif
-%ifarch %{ix86} x86_64
-  | grep -v disable-necko-wifi 	\
-%endif
   | tee .mozconfig
 
 cat <<EOF | tee -a .mozconfig
-ac_add_options --enable-libnotify
-ac_add_options --enable-system-lcms
+#ac_add_options --enable-libnotify
+#ac_add_options --enable-system-lcms
 %if 0%{?fedora} >= 15
-ac_add_options --enable-system-sqlite
+#ac_add_options --enable-system-sqlite
 %endif
 %if 0%{?fedora} < 14 && 0%{?rhel} <= 6
 ac_add_options --disable-libjpeg-turbo
@@ -222,16 +226,17 @@ export CXXFLAGS=$MOZ_OPT_FLAGS
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
 
-%define moz_make_flags -j1
-%ifarch ppc ppc64 s390 s390x
-%define moz_make_flags -j1
-%else
-%define moz_make_flags %{?_smp_mflags}
+MOZ_SMP_FLAGS=-j1
+# On x86 architectures, Mozilla can build up to 4 jobs at once in parallel,
+# however builds tend to fail on other arches when building in parallel.
+%ifarch %{ix86} x86_64
+[ -z "$RPM_BUILD_NCPUS" ] && \
+     RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
+[ "$RPM_BUILD_NCPUS" -ge 2 ] && MOZ_SMP_FLAGS=-j2
+[ "$RPM_BUILD_NCPUS" -ge 4 ] && MOZ_SMP_FLAGS=-j4
 %endif
 
-export LDFLAGS="-Wl,-rpath,%{mozappdir}"
-export MAKE="gmake %{moz_make_flags}"
-make -f client.mk build
+make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 
 # create debuginfo for crash-stats.mozilla.com
 %if %{enable_mozilla_crashreporter}
@@ -340,8 +345,8 @@ rm -rf $RPM_BUILD_ROOT%{mozappdir}/*.chk
 #===============================================================================
 
 %pre
-echo -e "\nWARNING : This %{name} RPM is not an official Fedora build and it"
-echo -e "overrides the official one. Don't file bugs on Fedora Project."
+echo -e "\nWARNING : This %{name} RPM is not an official Fedora/Redhat build and it"
+echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
 %if %{?fedora}%{!?fedora:99} <= 13
@@ -400,7 +405,6 @@ fi
 %{mozappdir}/thunderbird-bin
 %{mozappdir}/thunderbird
 %{mozappdir}/*.so
-%{mozappdir}/README.txt
 %{mozappdir}/platform.ini
 %{mozappdir}/application.ini
 %{mozappdir}/blocklist.xml
@@ -411,6 +415,7 @@ fi
 %{_datadir}/icons/hicolor/256x256/apps/thunderbird.png
 %{_datadir}/icons/hicolor/32x32/apps/thunderbird.png
 %{_datadir}/icons/hicolor/48x48/apps/thunderbird.png
+%{mozappdir}/hyphenation
 %if %{enable_mozilla_crashreporter}
 %{mozappdir}/crashreporter
 %{mozappdir}/crashreporter.ini
@@ -420,11 +425,22 @@ fi
 %exclude %{_includedir}/%{name}-%{version}
 %exclude %{_libdir}/%{name}-devel-%{version}
 %{mozappdir}/chrome.manifest
-%{mozappdir}/hyphenation
 
 #===============================================================================
 
 %changelog
+* Sat Nov 12 2011 Remi Collet <rpms@famillecollet.com> 8.0-1
+- Thunderbird 8.0, sync with rawhide
+
+* Tue Nov  8 2011 Jan Horak <jhorak@redhat.com> - 8.0-1
+- Update to 8.0
+
+* Tue Oct 18 2011 Martin Stransky <stransky@redhat.com> - 7.0.1-3
+- Added NM patches (mozbz#627672, mozbz#639959)
+
+* Wed Oct 12 2011 Dan Horák <dan[at]danny.cz> - 7.0.1-2
+- fix build on secondary arches (copied from xulrunner)
+
 * Wed Oct 12 2011 Georgi Georgiev <chutzimir@gmail.com> - 7.0.1-1
 - Make it work on RHEL
 
