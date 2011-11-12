@@ -312,7 +312,8 @@ sed -i -e "s/\[Crash Reporter\]/[Crash Reporter]\nEnabled=1/" $RPM_BUILD_ROOT/%{
 
 %pre
 echo -e "\nWARNING : This %{name} %{version} %{?mycomment} RPM is not an official"
-echo -e "Fedora build and it overrides the official one. Don't file bugs on Fedora Project.\n"
+echo -e "Fedora/Redhat build and it overrides the official one."
+echo -e "Don't file bugs on Fedora Project nor Redhat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
 %if %{?fedora}%{!?fedora:99} <= 13
