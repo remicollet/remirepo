@@ -1,0 +1,34 @@
+diff -up xulrunner-2.0/mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp.jpeg-turbo xulrunner-2.0/mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp
+--- xulrunner-2.0/mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp.jpeg-turbo	2010-11-04 21:06:43.000000000 +0100
++++ xulrunner-2.0/mozilla-central/modules/libpr0n/decoders/nsJPEGDecoder.cpp	2010-11-12 12:39:08.047171412 +0100
+@@ -411,14 +411,6 @@ nsJPEGDecoder::WriteInternal(const char 
+       return; /* I/O suspension */
+     }
+ 
+-    /* Force to use our YCbCr to Packed RGB converter when possible */
+-    if (!mTransform && (mCMSMode != eCMSMode_All) &&
+-        mInfo.jpeg_color_space == JCS_YCbCr && mInfo.out_color_space == JCS_RGB) {
+-      /* Special case for the most common case: transform from YCbCr direct into packed ARGB */
+-      mInfo.out_color_components = 4; /* Packed ARGB pixels are always 4 bytes...*/
+-      mInfo.cconvert->color_convert = ycc_rgb_convert_argb;
+-    }
+-
+     /* If this is a progressive JPEG ... */
+     mState = mInfo.buffered_image ? JPEG_DECOMPRESS_PROGRESSIVE : JPEG_DECOMPRESS_SEQUENTIAL;
+   }
+@@ -563,15 +555,6 @@ nsJPEGDecoder::OutputScanlines(PRBool* s
+       PRUint32 *imageRow = ((PRUint32*)mImageData) +
+                            (mInfo.output_scanline * mInfo.output_width);
+ 
+-      if (mInfo.cconvert->color_convert == ycc_rgb_convert_argb) {
+-        /* Special case: scanline will be directly converted into packed ARGB */
+-        if (jpeg_read_scanlines(&mInfo, (JSAMPARRAY)&imageRow, 1) != 1) {
+-          *suspend = PR_TRUE; /* suspend */
+-          break;
+-        }
+-        continue; /* all done for this row! */
+-      }
+-
+       JSAMPROW sampleRow = (JSAMPROW)imageRow;
+       if (mInfo.output_components == 3) {
+         /* Put the pixels at end of row to enable in-place expansion */

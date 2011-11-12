@@ -1,0 +1,25 @@
+# HG changeset patch
+# Parent f2a2adaaacba0f0b1d470430c4fb8f6fb6125fbf
+# User Luke Wagner <luke@mozilla.com>
+Add in a const-stripper in order to resolve ambiguities
+
+diff --git a/js/src/jsutil.h b/js/src/jsutil.h
+--- a/js/src/jsutil.h
++++ b/js/src/jsutil.h
+@@ -819,13 +819,16 @@ class MoveRef {
+     operator T &()  const { return *pointer; }
+   private:
+     T *pointer;
+ };
+ 
+ template<typename T>
+ MoveRef<T> Move(T &t) { return MoveRef<T>(t); }
+ 
++template<typename T>
++MoveRef<T> Move(const T &t) { return MoveRef<T>(const_cast<T &>(t)); }
++
+ } /* namespace js */
+ 
+ #endif /* defined(__cplusplus) */
+ 
+ #endif /* jsutil_h___ */

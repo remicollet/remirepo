@@ -66,6 +66,8 @@ donexpi() {
 			--exclude tmp firefox-langpacks
 	else 	
 	        case $1 in
+	                8*)     dest=firefox8
+	                        ;;
 	                7*)     dest=firefox7
 	                        ;;
 	                6*)     dest=firefox6
