@@ -137,7 +137,7 @@ Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
 Obsoletes:      xulrunner2
 Obsoletes:      xulrunner5
 Obsoletes:      xulrunner6
-#Obsoletes:      xulrunner7
+Obsoletes:      xulrunner7
 
 
 %description
