@@ -7,12 +7,12 @@
 %global sqlite_version 3.6.22
 %global libnotify_version 0.4
 # Update these two as a pair
-%global thunderbird_version 7.0
-%global thunderbird_next_version 8.0
-%global lightprever b7
+%global thunderbird_version 8.0
+%global thunderbird_next_version 9.0
+%global lightprever rc2
 # Compatible versions are listed in:
-# comm-release/calendar/lightning/install.rdf.rej
-# comm-release/calendar/providers/gdata/install.rdf.rej
+# comm-beta/calendar/lightning/install.rdf
+# comm-beta/calendar/providers/gdata/install.rdf
 %global moz_objdir objdir-tb
 %global lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
 %global gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
@@ -23,19 +23,19 @@
 # IMPORTANT: If there is no top level directory, this should be
 # set to the cwd, ie: '.'
 #define tarballdir .
-%global tarballdir comm-release
+%global tarballdir comm-beta
 
 %global mozappdir         %{_libdir}/%{name}
 
 Name:           thunderbird-lightning
 Summary:        The calendar extension to Thunderbird
 Version:        1.0
-Release:        0.50.%{lightprever}%{?dist}
+Release:        0.52.%{lightprever}%{?dist}
 URL:            http://www.mozilla.org/projects/calendar/lightning/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Productivity
 #Someday lightning will produce a release we can use
-Source0:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0b7/source/lightning-1.0b7.source.tar.bz2
+Source0:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0rc2/source/lightning-1.0rc2.source.tar.bz2
 #Source0:        http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/%{thunderbird_version}/source/thunderbird-%{thunderbird_version}.source.tar.bz2
 # This script will generate the language source below
 Source1:        mklangsource.sh
@@ -50,7 +50,9 @@ Source100:      find-external-requires
 
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
-Patch8:         xulrunner-6.0-secondary-ipc.patch
+# Fix build on secondary arches (patches copied from xulrunner)
+Patch2:         xulrunner-6.0-secondary-ipc.patch
+Patch3:         mozilla-670719.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -96,9 +98,6 @@ BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  GConf2-devel
 BuildRequires:  lcms-devel >= %{lcms_version}
-%ifarch %{ix86} x86_64
-BuildRequires:  wireless-tools-devel
-%endif
 
 Requires:       thunderbird >= %{thunderbird_version}
 Obsoletes:      thunderbird-lightning-wcap <= 0.8
@@ -134,7 +133,8 @@ fi
 %patch0  -p2 -b .dir
 # Mozilla (XULRunner) patches
 cd mozilla
-%patch8 -p2 -b .secondary-ipc
+%patch2 -p2 -b .secondary-ipc
+%patch3 -p1 -b .moz670719
 cd ..
 
 %{__rm} -f .mozconfig
@@ -150,16 +150,13 @@ cat %{SOURCE10} 		\
 %if 0%{?fedora} < 15 && 0%{?rhel} <= 6
   | grep -v enable-system-cairo    \
 %endif
-%ifarch %{ix86} x86_64
-  | grep -v disable-necko-wifi 	\
-%endif
   | tee .mozconfig
 
 cat <<EOF | tee -a .mozconfig
-ac_add_options --enable-libnotify
-ac_add_options --enable-system-lcms
+#ac_add_options --enable-libnotify
+#ac_add_options --enable-system-lcms
 %if 0%{?fedora} >= 15
-ac_add_options --enable-system-sqlite
+#ac_add_options --enable-system-sqlite
 %endif
 %if 0%{?fedora} < 14 && 0%{?rhel} <= 6
 ac_add_options --disable-libjpeg-turbo
@@ -252,6 +249,16 @@ find $RPM_BUILD_ROOT -name \*.so | xargs chmod 0755
 #===============================================================================
 
 %changelog
+* Sat Nov 12 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.52.rc2
+- Use lightning 1.0rc2 source for TB 8, sync with rawhide
+
+* Wed Nov  9 2011 Jan Horak <jhorak@redhat.com> - 1.0-0.52.r2
+- Use lightning 1.0rc2 source for TB 8
+- Update l10n source
+
+* Wed Oct 12 2011 Dan Horák <dan[at]danny.cz> - 1.0-0.51.b7
+- sync secondary arches support with xulrunner/thunderbird
+
 * Wed Oct 12 2011 Georgi Georgiev <chutzimir@gmail.com> - 1.0-0.50.b7
 - Make it work on RHEL
 

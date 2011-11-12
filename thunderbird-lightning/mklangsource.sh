@@ -1,7 +1,7 @@
 #!/bin/bash
 # This checks out and builds the language sources.  The lightning source needs
 # to already be unpacked
-locales=$PWD/thunderbird-lightning-1.0/comm-release/calendar/locales/shipped-locales
+locales=$PWD/thunderbird-lightning-1.0/comm-beta/calendar/locales/shipped-locales
 if [ ! -f $locale ]
 then
   echo "ERROR: missing $locales, try fedpkg prep first"
