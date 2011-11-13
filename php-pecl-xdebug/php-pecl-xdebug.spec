@@ -2,16 +2,23 @@
 %{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
+%global gitver 535df90
+%global prever -dev
 
 Name:           %{phpname}-pecl-xdebug
-Version:        2.1.2
+Version:        2.2.0
+%if %{?gitver:1}
+Release:        0.1.git%{gitver}%{?dist}
+Source0:        derickr-xdebug-XDEBUG_2_1_2-188-g535df90.tar.gz
+%else
 Release:        2%{?dist}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 Summary:        PECL package for debugging PHP scripts
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://xdebug.org/
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{phpname}-pear  >= 1:1.4.9-1.2
@@ -58,6 +65,11 @@ Xdebug also provides:
 %prep
 %setup -qc
 
+%if %{?gitver:1}
+cp derickr-xdebug-%{gitver}/package2.xml .
+mv derickr-xdebug-%{gitver} %{pecl_name}-%{version}
+%endif
+
 cd %{pecl_name}-%{version}
 
 # fix rpmlint warnings
@@ -66,7 +78,7 @@ chmod -x *.[ch]
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
-if test "$ver" != "%{version}"; then
+if test "$ver" != "%{version}%{?prever}"; then
    : Error: Upstream XDEBUG_VERSION version is ${ver}, expecting %{version}.
    exit 1
 fi
@@ -83,7 +95,7 @@ make %{?_smp_mflags}
 
 # Build debugclient
 pushd debugclient
-#cp %{_datadir}/automake-1.??/depcomp .
+[ -f configure ] || ./buildconf
 %configure --with-libedit
 make %{?_smp_mflags}
 popd
@@ -154,7 +166,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc  %{pecl_name}-%{version}/{Changelog,CREDITS,LICENSE,NEWS,README}
+%doc  %{pecl_name}-%{version}/{CREDITS,LICENSE,NEWS,README}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -164,6 +176,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.git535df90
+- update to 2.2.0-dev, build against php 5.4
+
 * Tue Oct 04 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.2-2
 - ZTS extension
 - spec cleanups

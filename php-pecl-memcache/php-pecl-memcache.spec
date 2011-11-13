@@ -7,13 +7,16 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{phpname}-pecl-memcache
 Version:      3.0.6
-Release:      2%{?dist}
+Release:      3%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
+
+# https://bugs.php.net/60284
+Patch0:       memcache-php54.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{phpname}-devel >= 4.3.11, %{phpname}-pear, zlib-devel
@@ -48,6 +51,9 @@ Memcache can be used as a PHP session handler.
 
 %prep 
 %setup -c -q
+
+%patch0 -p0 -b .php54
+
 %{__php} -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
 
 cat >%{pecl_name}.ini << 'EOF'
@@ -157,6 +163,10 @@ fi
 
 
 %changelog
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.0.6-3
+- build against php 5.4
+- add patch for ZTS build, see https://bugs.php.net/60284
+
 * Mon Oct 03 2011 Remi Collet <Fedora@FamilleCollet.com> 3.0.6-2
 - clean spec for latest macros
 - build zts extension

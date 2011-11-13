@@ -5,7 +5,7 @@
 Summary:      Terminal screen handling and optimization package
 Name:         php-pecl-ncurses
 Version:      1.0.1
-Release:      3%{?dist}
+Release:      4%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/ncurses
@@ -124,6 +124,9 @@ fi
 
 
 %changelog
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-4
+- build against php 5.4
+
 * Thu Oct 06 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.1-3
 - ZTS extension
 - spec cleanups

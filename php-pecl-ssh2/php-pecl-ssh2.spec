@@ -4,7 +4,7 @@
 
 Name:           php-pecl-ssh2
 Version:        0.11.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Bindings for the libssh2 library
 
 # http://pecl.php.net/bugs/bug.php?id=24364
@@ -126,6 +126,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 0.11.3-2
+- build against php 5.4
+
 * Sat Oct 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.11.3-1
 - update to 0.11.3
 - zts extension
