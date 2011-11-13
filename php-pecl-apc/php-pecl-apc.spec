@@ -4,14 +4,23 @@
 %global php_version %((echo 0; php-config --version 2>/dev/null) | tail -1)
 %global pecl_name APC
 
+%global svnver 316786
+
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
 Version:       3.1.9
-Release:       3%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
+%if 0%{?svnver}
+# svn co -r 316786 https://svn.php.net/repository/pecl/apc/trunk apc-svn316786
+# tar czf apc-svn316786.tgz apc-svn316786
+Source:        apc-svn%{svnver}.tgz
+Release:       4.svn%{svnver}%{?dist}
+%else
+Release:       3%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
+%endif
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 Conflicts:     %{phpname}-mmcache %{phpname}-eaccelerator
@@ -62,6 +71,11 @@ These are the files needed to compile programs using APC serializer.
 
 %prep
 %setup -q -c 
+
+%if 0%{?svnver}
+mv apc-svn%{svnver}/package.xml .
+mv apc-svn%{svnver} APC-%{version}
+%endif
 
 # Check than upstream version is correct, http://pecl.php.net/bugs/19590
 grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
@@ -218,6 +232,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.0.6-4.svn316786
+- pull changes from SVN revision 316786
+- build against php 5.4
+
 * Sat Sep 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.9-3
 - rebuild using latest php version and macro
 

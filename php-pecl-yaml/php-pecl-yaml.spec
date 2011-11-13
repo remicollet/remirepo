@@ -5,7 +5,7 @@
 Summary:       PHP Bindings for yaml
 Name:          php-pecl-yaml
 Version:       1.0.1
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -143,6 +143,9 @@ fi
 
 
 %changelog
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-5
+- build against php 5.4
+
 * Wed Oct 05 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.1-4
 - ZTS extension
 - spec cleanups
