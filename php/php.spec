@@ -1401,7 +1401,7 @@ fi
 %{_includedir}/php
 %{_origincludedir}/%{phpname}-zts
 %{_libdir}/%{phpname}/build
-%{_libdir}/%{phpname}-zts//build
+%{_libdir}/%{phpname}-zts/build
 %if %{phpname} == php
 %{_mandir}/man1/php-config.1*
 %else

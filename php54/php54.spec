@@ -10,7 +10,7 @@
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
-%global oci8ver     1.4.6
+%global oci8ver     1.4.7
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
@@ -27,8 +27,8 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.4.0beta1-dev
-%global snapdate   201109081430
+%global phpversion 5.4.0RC2-dev
+%global snapdate   201111130730
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -62,7 +62,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.4.0
 %if 0%{?snapdate}
-Release: 0.2.%{snapdate}%{?dist}
+Release: 0.3.%{snapdate}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -77,7 +77,11 @@ Source0: http://www.php.net/distributions/php-%{version}.tar.bz2
 %endif
 Source1: php.conf
 Source2: php.ini
+%if %{phpname} == php
 Source3: macros.php
+%else
+Source3: macros.phpname
+%endif
 Source4: php-fpm.conf
 Source5: php-fpm-www.conf
 Source6: php-fpm.init
@@ -91,7 +95,8 @@ Source7: php-fpm.logrotate
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.4.0-fpmstatus.patch
+# fix harcoded mysql.sock path
+Patch9: php-5.4.0-sock.patch
 
 # Fixes for extension modules
 #Patch20: php-4.3.11-shutdown.patch
@@ -153,6 +158,7 @@ Requires(pre): httpd
 
 %{expand: %%define _origbindir %{_bindir}}
 %{expand: %%define _originitdir %{_initrddir}}
+%{expand: %%define _origincludedir %{_includedir}}
 %{expand: %%define _origsysconfdir %{_sysconfdir}}
 %if %{phpname} == php
 %global peardir      %{_datadir}/pear
@@ -165,11 +171,11 @@ Requires(pre): httpd
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules-zts/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}-zts/modules/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/%{phpname}/modules/.*\\.so$
-%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/%{phpname}/modules-zts/.*\\.so$
+%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/%{phpname}-zts/modules/.*\\.so$
 
 
 %description
@@ -333,10 +339,12 @@ Summary: A module for PHP applications that use MySQL databases
 Group: Development/Languages
 Requires: %{phpname}-pdo%{?_isa} = %{version}-%{release}
 Provides: %{phpname}_database
-Provides: %{phpname}-mysqli, %{phpname}-mysqli%{?_isa}
+Provides: %{phpname}-mysqli = %{version}-%{release}
+Provides: %{phpname}-mysqli%{?_isa} = %{version}-%{release}
 Provides: %{phpname}-pdo_mysql, %{phpname}-pdo_mysql%{?_isa}
 Obsoletes: mod_php3-mysql, stronghold-php-mysql
 BuildRequires: mysql-devel >= 4.1.0
+Conflicts: %{phpname}-mysqlnd
 
 %description mysql
 The %{phpname}-mysql package contains a dynamic shared object that will add
@@ -351,12 +359,12 @@ Group: Development/Languages
 Requires: %{phpname}-pdo%{?_isa} = %{version}-%{release}
 Provides: %{phpname}_database
 Provides: %{phpname}-mysql, %{phpname}-mysql%{?_isa}
-Provides: %{phpname}-mysqli, %{phpname}-mysqli%{?_isa}
+Provides: %{phpname}-mysqli = %{version}-%{release}
+Provides: %{phpname}-mysqli%{?_isa} = %{version}-%{release}
 Provides: %{phpname}-pdo_mysql, %{phpname}-pdo_mysql%{?_isa}
-Conflicts: %{phpname}-mysql
 
 %description mysqlnd
-The %{phpname}-mysql package contains a dynamic shared object that will add
+The %{phpname}-mysqlnd package contains a dynamic shared object that will add
 MySQL database support to PHP. MySQL is an object-relational database
 management system. PHP is an HTML-embeddable scripting language. If
 you need MySQL support for PHP applications, you will need to install
@@ -649,8 +657,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
-# https://bugs.php.net/55577
-%patch8 -p1 -b .fpmstatus
+%patch9 -p1 -b .sock
 
 #%patch20 -p1 -b .shutdown
 #%patch21 -p1 -b .macropen
@@ -669,15 +676,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 #%patch92 -p1 -b .libedit
 #%patch93 -p1 -b .mysqli
 
-
-%if %{phpname} != php
-%{__sed} -i -e '/^phpbuilddir/s,/php/,/%{phpname}/,' scripts/Makefile.frag
-%{__sed} -i -e '/^phpdir/s,/php/,/%{phpname}/,' scripts/phpize.in
-%endif
-
-# Awful hack for mysqlnd driver default mysql socket patch
-sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/pdo_mysql/pdo_mysql.c
-sed -i -e s#/tmp/mysql.sock#%{_localstatedir}/lib/mysql/mysql.sock# ext/mysqlnd/mysqlnd.c
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -866,7 +864,7 @@ make %{?_smp_mflags}
 pushd build-cgi
 
 build --enable-force-cgi-redirect \
-      --libdir=%{_libdir}/php \
+      --libdir=%{_libdir}/%{phpname} \
       --enable-pcntl \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
@@ -933,7 +931,7 @@ popd
 without_shared="--without-gd \
       --disable-dom --disable-dba --without-unixODBC \
       --disable-xmlreader --disable-xmlwriter \
-      --disable-phar --disable-fileinfo \
+      --without-sqlite3 --disable-phar --disable-fileinfo \
       --disable-json --without-pspell --disable-wddx \
       --without-curl --disable-posix \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
@@ -941,7 +939,7 @@ without_shared="--without-gd \
 # Build Apache module, and the CLI SAPI, /usr/bin/php
 pushd build-apache
 build --with-apxs2=%{_sbindir}/apxs \
-      --libdir=%{_libdir}/php \
+      --libdir=%{_libdir}/%{phpname} \
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
@@ -954,8 +952,8 @@ popd
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
-      --without-mysql --disable-pdo --without-sqlite3 \
-      --libdir=%{_libdir}/php \
+      --libdir=%{_libdir}/%{phpname} \
+      --without-mysql --disable-pdo \
       ${without_shared}
 popd
 %endif
@@ -963,8 +961,8 @@ popd
 # Build for inclusion as embedded script language into applications,
 # /usr/lib[64]/libphp5.so
 pushd build-embedded
-build --enable-embed --disable-pdo --without-sqlite3 \
-      --without-mysql \
+build --enable-embed \
+      --without-mysql --disable-pdo \
       ${without_shared}
 popd
 
@@ -973,9 +971,9 @@ pushd build-zts
 
 EXTENSION_DIR=%{_libdir}/%{phpname}-zts/modules
 build --with-apxs2=%{_sbindir}/apxs \
-      --bindir=%{_bindir}/php-zts \
-      --includedir=%{_includedir}/php-zts \
-      --libdir=%{_libdir}/php-zts \
+      --bindir=%{_origbindir}/%{phpname}-zts \
+      --includedir=%{_origincludedir}/%{phpname}-zts \
+      --libdir=%{_libdir}/%{phpname}-zts \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
       --enable-force-cgi-redirect \
@@ -1072,6 +1070,14 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 make -C build-zts install-build install-programs install-headers install-modules \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 
+# rename extensions build with mysqlnd
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqlnd_mysql.so
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqli.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqlnd_mysqli.so
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/pdo_mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/pdo_mysqlnd.so
+
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
      INSTALL_ROOT=$RPM_BUILD_ROOT
@@ -1087,9 +1093,12 @@ make -C build-cgi install \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # rename extensions build with mysqlnd
-for ext in mysql mysqli pdo_mysql; do
-  mv $RPM_BUILD_ROOT%{_libdir}/php/modules/$ext.so $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_$ext.so
-done
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/mysqlnd_mysql.so
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/mysqli.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/mysqlnd_mysqli.so
+mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/pdo_mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/pdo_mysqlnd.so
 
 # Install the mysql extension build with libmysql
 make -C build-apache install-modules \
@@ -1161,7 +1170,8 @@ install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
 
 # Generate files lists and stub .ini files for each subpackage
-for mod in pgsql mysqlnd mysql mysqli odbc ldap snmp xmlrpc imap \
+for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
+    mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} %{?_with_ibase:interbase} %{?_with_ibase:pdo_firebird} \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json zip \
@@ -1178,28 +1188,25 @@ for mod in pgsql mysqlnd mysql mysqli odbc ldap snmp xmlrpc imap \
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
+    cat > files.${mod} <<EOF
+%attr(755,root,root) %{_libdir}/%{phpname}/modules/${mod}.so
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
+EOF
+
+if [ -f $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/${mod}.so ]
+then
     cat > $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${mod}.ini <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
-    cat > files.${mod} <<EOF
-%attr(755,root,root) %{_libdir}/%{phpname}/modules/${mod}.so
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
+    cat >> files.${mod} <<EOF
 %attr(755,root,root) %{_libdir}/%{phpname}-zts/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${mod}.ini
 EOF
-done
+else
+    echo "** Extension ${mod} not available for ZTS build"
+fi
 
-# This extension are build only for NTS
-for mod in mysqlnd_mysql mysqlnd_mysqli mysqlnd_pdo_mysql; do
-    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
-; Enable ${mod} extension module
-extension=${mod}.so
-EOF
-    cat > files.${mod} <<EOF
-%attr(755,root,root) %{_libdir}/%{phpname}/modules/${mod}.so
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
-EOF
 done
 
 # The dom, xsl and xml* modules are all packaged in php-xml
@@ -1210,7 +1217,7 @@ cat files.mysqli >> files.mysql
 # mysqlnd
 cat files.mysqlnd_mysql \
     files.mysqlnd_mysqli \
-    files.mysqlnd_pdo_mysql \
+    files.pdo_mysqlnd \
     >> files.mysqlnd
 
 # Split out the PDO modules
@@ -1247,7 +1254,7 @@ install -d $RPM_BUILD_ROOT%{_origsysconfdir}/rpm
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
     -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
-    -e "s,/php/,/%{phpname}/," \
+    -e "s/@PHPNAME@/%{phpname}/" \
     < %{SOURCE3} > macros.php
 install -m 644 -c macros.php \
            $RPM_BUILD_ROOT%{_origsysconfdir}/rpm/macros.%{phpname}
@@ -1358,10 +1365,11 @@ fi
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
-%{_bindir}/php-zts/php-config
-%{_bindir}/php-zts/phpize
+%{_origbindir}/%{phpname}-zts/php-config
+%{_origbindir}/%{phpname}-zts/phpize
+%dir %{_origincludedir}/%{phpname}
 %{_includedir}/php
-%{_includedir}/php-zts
+%{_origincludedir}/%{phpname}-zts
 %{_libdir}/%{phpname}/build
 %{_libdir}/%{phpname}-zts/build
 %if %{phpname} == php
@@ -1413,6 +1421,10 @@ fi
 %endif
 
 %changelog
+* Sun Nov 13 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.3.201111130730
+- new snapshot (5.4.0RC2-dev)
+- sync with latest changes in 5.3 spec
+
 * Thu Sep 08 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.2.201109081430
 - new snapshot
 - build mysql/mysqli against both libmysql and mysqlnd (new mysqlnd sub-package)
