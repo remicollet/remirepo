@@ -221,10 +221,7 @@ any size, especially busier sites.
 %package common
 Group: Development/Languages
 Summary: Common files for PHP
-# Remove this when value change
-Provides: %{phpname}-api = %{apiver}, %{phpname}-zend-abi = %{zendver}
-Provides: %{phpname}(api) = %{apiver}, %{phpname}(zend-abi) = %{zendver}
-# New ABI/API check - Arch specific
+# ABI/API check - Arch specific
 Provides: %{phpname}-api = %{apiver}%{isasuffix}, %{phpname}-zend-abi = %{zendver}%{isasuffix}
 Provides: %{phpname}(api) = %{apiver}%{isasuffix}, %{phpname}(zend-abi) = %{zendver}%{isasuffix}
 # Provides for all builtin/shared modules:
@@ -321,9 +318,7 @@ Summary: A database access abstraction module for PHP applications
 Group: Development/Languages
 Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
 Obsoletes: %{phpname}-pecl-pdo-sqlite, %{phpname}-pecl-pdo
-# Remove this when value change
-Provides: %{phpname}-pdo-abi = %{pdover}
-# New ABI/API check - Arch specific
+# ABI/API check - Arch specific
 Provides: %{phpname}-pdo-abi = %{pdover}%{isasuffix}
 Provides: %{phpname}-sqlite3, %{phpname}-sqlite3%{?_isa}
 Provides: %{phpname}-pdo_sqlite, %{phpname}-pdo_sqlite%{?_isa}
