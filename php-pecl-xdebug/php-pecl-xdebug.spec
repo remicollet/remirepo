@@ -10,6 +10,7 @@ Version:        2.2.0
 %if %{?gitver:1}
 Release:        0.1.git%{gitver}%{?dist}
 Source0:        derickr-xdebug-XDEBUG_2_1_2-188-g535df90.tar.gz
+BuildRequires:  libtool
 %else
 Release:        2%{?dist}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
@@ -95,6 +96,7 @@ make %{?_smp_mflags}
 
 # Build debugclient
 pushd debugclient
+# buildconf only required when build from git snapshot
 [ -f configure ] || ./buildconf
 %configure --with-libedit
 make %{?_smp_mflags}
