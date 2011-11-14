@@ -3,21 +3,31 @@
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 %{!?php_extdir: %{expand: %%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php/modules)}}
 
-%global    extname   igbinary
+%global extname   igbinary
+%global gitver    3b8ab7e
 
 
 Summary:        Replacement for the standard PHP serializer
 Name:           %{phpname}-pecl-igbinary
 Version:        1.1.1
+%if 0%{?gitver:1}
+Release:	3.git%{gitver}%{?dist}
+Source0:	igbinary-igbinary-1.1.1-15-g3b8ab7e.tar.gz
+%else
 Release:        2%{?dist}
+Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
+# http://pecl.php.net/bugs/22598
+Source1:        %{extname}-tests.tgz
+%endif
 # http://pecl.php.net/bugs/22599
 License:        BSD
 Group:          System Environment/Libraries
 
 URL:            http://pecl.php.net/package/igbinary
-Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
-# http://pecl.php.net/bugs/22598
-Source1:        %{extname}-tests.tgz
+
+# https://bugs.php.net/60298
+Patch0:         igbinary-php54.patch
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  %{phpname}-pecl-apc-devel >= 3.1.7
@@ -68,9 +78,19 @@ These are the files needed to compile programs using Igbinary
 %prep
 %setup -q -c
 
+%if 0%{?gitver:1}
+mv igbinary-igbinary-%{gitver}/package.xml .
+mv igbinary-igbinary-%{gitver} %{extname}-%{version}
 cd %{extname}-%{version}
-%{__tar} xzf %{SOURCE1}
+%patch0 -p0 -b .php54
 cd ..
+
+%else
+cd %{extname}-%{version}
+tar xzf %{SOURCE1}
+cd ..
+
+%endif
 
 cp -r %{extname}-%{version} %{extname}-%{version}-zts
 
@@ -130,7 +150,8 @@ cd %{extname}-%{version}
 # APC required for test 045
 ln -s %{php_extdir}/apc.so modules/
 
-NO_INTERACTION=1 %{__make} test | tee rpmtests.log
+NO_INTERACTION=1 REPORT_EXIT_STATUS=1 \
+make test | tee rpmtests.log
 grep -q "FAILED TEST" rpmtests.log && exit 1
 
 
@@ -170,6 +191,10 @@ fi
 
 
 %changelog
+* Mon Nov 14 2011 Remi Collet <remi@fedoraproject.org> - 1.1.1-3.git3b8ab7e
+- latest git against php 5.4
+- partial patch for https://bugs.php.net/60298
+
 * Sat Sep 17 2011 Remi Collet <rpms@famillecollet.com> 1.1.1-2
 - use latest macro
 - build zts extension

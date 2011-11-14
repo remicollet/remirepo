@@ -6,7 +6,7 @@
 Summary:      BBCode parsing Extension
 Name:         php-pecl-bbcode
 Version:      1.0.3
-Release:      0.1.%{pre}%{?dist}
+Release:      0.2.%{pre}%{?dist}
 # pecl extension is PHP, bbcode2 is BSD, bstrlib (from bstring) is BSD
 License:      PHP and BSD
 Group:        Development/Languages
@@ -115,6 +115,9 @@ fi
 
 
 %changelog
+* Mon Nov 14 2011 Remi Collet <remi@fedoraproject.org> - 1.0.3-0.2.b1
+- build against php 5.4
+
 * Wed Oct 05 2011 Remi Collet <remi@fedoraproject.org> 1.0.3-0.1.b1
 - initial RPM
 

@@ -1,0 +1,12 @@
+diff -up tests/igbinary_024.phpt.old tests/igbinary_024.phpt
+--- tests/igbinary_024.phpt.old	2011-11-14 18:47:29.800802812 +0100
++++ tests/igbinary_024.phpt	2011-11-14 18:47:39.017832456 +0100
+@@ -81,7 +81,7 @@ $o3 = new Obj3(0, 1, 4);
+ test('objectrecarr', $o3, false);
+ 
+ $o4 = new Obj4(100);
+-$o4->set(&$o4);
++$o4->set($o4);
+ test('objectselfrec', $o4, true);
+ 
+ /*

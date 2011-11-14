@@ -1,10 +1,11 @@
 %{!?__pecl:	%{expand: %%global __pecl	%{_bindir}/pecl}}
 
-%define pecl_name gearman
+%global pecl_name gearman
+
 
 Name:		php-pecl-gearman
 Version:	0.8.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -119,6 +120,9 @@ fi
 
 
 %changelog
+* Mon Nov 14 2011 Remi Collet <remi@fedoraproject.org> - 0.8.0-2
+- build against php 5.4
+
 * Sat Oct 15 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.8.0-1
 - update to 0.8.0
 - ZTS extension
