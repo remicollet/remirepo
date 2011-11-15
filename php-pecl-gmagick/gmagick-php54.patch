@@ -1,0 +1,95 @@
+diff -up gmagick-1.0.9b1/gmagick.c.php54 gmagick-1.0.9b1/gmagick.c
+--- gmagick-1.0.9b1/gmagick.c.php54	2011-11-15 18:00:02.235451968 +0100
++++ gmagick-1.0.9b1/gmagick.c	2011-11-15 18:09:11.826977495 +0100
+@@ -78,7 +78,11 @@ static zend_object_value php_gmagick_obj
+ 	}
+ 
+ 	zend_object_std_init(&intern->zo, class_type TSRMLS_CC);
++#if PHP_VERSION_ID < 50399
+ 	zend_hash_copy(intern->zo.properties, &class_type->default_properties, (copy_ctor_func_t) zval_add_ref,(void *) &tmp, sizeof(zval *));
++#else
++        object_properties_init( (zend_object*)intern, class_type );
++#endif
+ 
+ 	retval.handle = zend_objects_store_put(intern, NULL, (zend_objects_free_object_storage_t) php_gmagick_object_free_storage, NULL TSRMLS_CC);
+ 	retval.handlers = (zend_object_handlers *) &gmagick_object_handlers;
+@@ -158,7 +162,11 @@ static zend_object_value php_gmagickdraw
+ 	/* ALLOC_HASHTABLE(intern->zo.properties); */
+ 
+ 	zend_object_std_init(&intern->zo, class_type TSRMLS_CC);
++#if PHP_VERSION_ID < 50399
+ 	zend_hash_copy(intern->zo.properties, &class_type->default_properties, (copy_ctor_func_t) zval_add_ref,(void *) &tmp, sizeof(zval *));
++#else
++        object_properties_init( (zend_object*)intern, class_type );
++#endif
+ 
+ 	retval.handle = zend_objects_store_put(intern, NULL, (zend_objects_free_object_storage_t) php_gmagickdraw_object_free_storage, NULL TSRMLS_CC);
+ 	retval.handlers = (zend_object_handlers *) &gmagickdraw_object_handlers;
+@@ -219,7 +227,11 @@ static zend_object_value php_gmagickpixe
+ 	/* ALLOC_HASHTABLE(intern->zo.properties); */
+ 
+ 	zend_object_std_init(&intern->zo, class_type TSRMLS_CC);
++#if PHP_VERSION_ID < 50399
+ 	zend_hash_copy(intern->zo.properties, &class_type->default_properties, (copy_ctor_func_t) zval_add_ref,(void *) &tmp, sizeof(zval *));
++#else
++        object_properties_init( (zend_object*)intern, class_type );
++#endif
+ 
+ 	retval.handle = zend_objects_store_put(intern, NULL, (zend_objects_free_object_storage_t) php_gmagickpixel_object_free_storage, NULL TSRMLS_CC);
+ 	retval.handlers = (zend_object_handlers *) &gmagickpixel_object_handlers;
+diff -up gmagick-1.0.9b1/gmagick_methods.c.php54 gmagick-1.0.9b1/gmagick_methods.c
+diff -up gmagick-1.0.9b1/php_gmagick_macros.h.php54 gmagick-1.0.9b1/php_gmagick_macros.h
+--- gmagick-1.0.9b1/php_gmagick_macros.h.php54	2011-11-15 17:56:46.502738111 +0100
++++ gmagick-1.0.9b1/php_gmagick_macros.h	2011-11-15 18:14:56.532689171 +0100
+@@ -243,6 +243,18 @@
+ /* }}} */
+ 
+ /* {{{ GMAGICK_CLONE_PIXELWAND(source, target) */
++#if PHP_VERSION_ID > 50399
++#define GMAGICK_SAFE_MODE_CHECK(filename, status)\
++	if (filename) { \
++		if (strlen(filename) > MAXPATHLEN) { \
++			status = GMAGICK_READ_WRITE_FILENAME_TOO_LONG; \
++		} \
++		if (php_check_open_basedir_ex(filename, 0 TSRMLS_CC)) { \
++			status = GMAGICK_READ_WRITE_OPEN_BASEDIR_ERROR; \
++		} \
++	} \
++
++#else
+ #define GMAGICK_SAFE_MODE_CHECK(filename, status)\
+ 	if (filename) { \
+ 		if (strlen(filename) > MAXPATHLEN) { \
+@@ -255,6 +267,8 @@
+ 			status = GMAGICK_READ_WRITE_OPEN_BASEDIR_ERROR; \
+ 		} \
+ 	} \
++
++#endif
+ /* }}} */
+ 
+ #define GMAGICKDRAW_CHECK_READ_OR_WRITE_ERROR(internd, filename, error, free)\
+@@ -316,6 +330,14 @@
+ /* }}} */
+ 
+ /* {{{ GMAGICK_SAFEMODE_OPENBASEDIR_CHECK(filename) */
++#if PHP_VERSION_ID > 50399
++#define GMAGICK_SAFEMODE_OPENBASEDIR_CHECK(filename) \
++	if (php_check_open_basedir_ex(filename, 0 TSRMLS_CC)) { \
++		zend_error(E_WARNING, "open_basedir restriction in effect "); \
++		return;	\
++	}\
++
++#else
+ #define GMAGICK_SAFEMODE_OPENBASEDIR_CHECK(filename) \
+ 	if (PG(safe_mode) && (!php_checkuid_ex(filename, NULL, CHECKUID_CHECK_FILE_AND_DIR, CHECKUID_NO_ERRORS))) { \
+ 		zend_error(E_WARNING, "SAFE MODE restriction in effect "); \
+@@ -325,6 +347,8 @@
+ 		zend_error(E_WARNING, "open_basedir restriction in effect "); \
+ 		return;	\
+ 	}\
++
++#endif
+ /* }}} */
+ 
+ /* {{{ GMAGICK_SAFEMODE_OPENBASEDIR_CONFIRMACCESS(filename) */

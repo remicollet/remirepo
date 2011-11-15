@@ -6,11 +6,14 @@
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
 Version:        1.0.9
-Release:        0.1.%{prever}%{?dist}
+Release:        0.2.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
 Source0:        http://pecl.php.net/get/gmagick-%{version}%{?prever}.tgz
+
+# https://bugs.php.net/60308
+Patch0:         gmagick-php54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  php-pear >= 1.4.7
@@ -43,6 +46,8 @@ of images using the GraphicsMagick API.
 
 %prep
 %setup -qc
+
+%patch0 -p0 -b .php54
 
 # Create configuration file
 cat >%{pecl_name}.ini << 'EOF'
@@ -124,6 +129,10 @@ cd %{pecl_name}-%{version}%{?prever}
 
 
 %changelog
+* Tue Nov 15 2011 Remi Collet <remi@fedoraproject.org> - 1.0.9-0.2.b1
+- build against php 5.4
+- add patch for php 5.4, see https://bugs.php.net/60308
+
 * Sun Oct 02 2011 Remi Collet <rpms@famillecollet.com> 1.0.9-0.1.b1
 - Update to 1.0.9b1
 - build zts extension
