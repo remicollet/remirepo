@@ -1,23 +1,22 @@
 %{!?phpname:  %{expand: %%global phpname     php}}
 %{!?__pecl:   %{expand: %%global __pecl     %{_bindir}/pecl}}
+
 %global pecl_name memcached
+%global gitver    1736623
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{phpname}-pecl-memcached
-Version:      1.0.2
-Release:      10%{?dist}
+Version:      2.0.0
+%if 0%{?gitver:1}
+Release:      0.1.git%{gitver}%{?dist}
+Source:       php-memcached-dev-php-memcached-v2.0.0b2-14-g%{gitver}.tar.gz
+%else
+Release:      11%{?dist}
+Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
-
-Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# http://pecl.php.net/bugs/bug.php?id=24362
-Patch0:       memcached-incl.patch
-
-# Fix ZTS build with igbinary support
-# https://github.com/php-memcached-dev/php-memcached/commit/5beaeedefe5c1eea6d637e3eeeeaf0957a5660ac
-Patch1:       memcached-zts.patch
 
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -63,6 +62,12 @@ It also provides a session handler (memcached).
 %prep 
 %setup -c -q
 
+%if 0%{?gitver:1}
+mv php-memcached-dev-php-memcached-%{gitver}/package.xml .
+mv php-memcached-dev-php-memcached-%{gitver} %{pecl_name}-%{version}
+%endif
+
+
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
@@ -75,11 +80,6 @@ extension=%{pecl_name}.so
 ;session.save_path="localhost:11211"
 EOF
 
-cd %{pecl_name}-%{version}
-%patch0 -p1 -b .incl
-%patch1 -p1 -b .zts
-cd ..
-
 cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 
@@ -87,12 +87,14 @@ cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 cd %{pecl_name}-%{version}
 %{php_bindir}/phpize
 %configure --enable-memcached-igbinary \
+           --enable-memcached-json \
            --with-php-config=%{php_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-%{version}-zts
 %{php_ztsbindir}/phpize
 %configure --enable-memcached-igbinary \
+           --enable-memcached-json \
            --with-php-config=%{php_ztsbindir}/php-config
 make %{?_smp_mflags}
 
@@ -148,6 +150,9 @@ ln -s %{php_extdir}/igbinary.so modules/
 
 
 %changelog
+* Wed Nov 16 2011  Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.1736623
+- update to git snapshot (post 2.0.0b2) for php 5.4 build
+
 * Sun Oct 16 2011  Remi Collet <remi@fedoraproject.org> - 1.0.2-10
 - rebuild against latest libmemcached (f16 only)
 
