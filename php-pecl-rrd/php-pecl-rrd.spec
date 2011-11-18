@@ -1,13 +1,13 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name rrd
-%global pre       RC2
+
 
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
 Version:      1.0.5
-Release:      0.3.%{pre}%{?dist}
-License:      PHP
+Release:      1%{?dist}
+License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
 
@@ -133,6 +133,10 @@ fi
 
 
 %changelog
+* Fri Nov 18 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.5-1
+- update to 1.0.5
+- change license from PHP to BSD
+
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 1.0.5-0.3.RC2
 - build against php 5.4
 
