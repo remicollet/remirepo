@@ -4,13 +4,16 @@
 
 Name:           php-pecl-radius
 Version:        1.2.5
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Radius client library
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/radius
 Source0:        http://pecl.php.net/get/radius-%{version}.tgz
+
+# http://svn.php.net/viewvc/pecl/radius/trunk/radius.c?r1=256497&r2=297236&sortby=date
+Patch0:         radius-php54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel php-pear >= 1:1.4.9-1.2
@@ -42,11 +45,14 @@ OS (for example against Windows Active-Directory via IAS).
 %prep
 %setup -qc
 
+cd %{pecl_name}-%{version}
+%patch0 -p3 -b .php54
+cd ..
+
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
-
 cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 
@@ -113,6 +119,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 18 2011 Remi Collet <rpms@famillecollet.com> 1.2.5-12
+- php 5.4 build
+
 * Thu Oct 06 2011 Remi Collet <rpms@famillecollet.com> 1.2.5-11
 - ZTS extension
 - spec cleanups
