@@ -5,11 +5,14 @@
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      php-pecl-mailparse
 Version:   2.1.5
-Release:   4%{?dist}
+Release:   5%{?dist}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
 Source0:   http://pecl.php.net/get/mailparse-%{version}.tgz
+
+# https://bugs.php.net/60331
+Patch0:    mailparse-php54.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel, php-pear
@@ -55,6 +58,8 @@ extension = mailparse.so
 ; Set the default charset
 ;mailparse.def_charset = us-ascii
 EOF
+
+%patch0 -p0 -b .php54
 
 chmod -x %{pecl_name}-%{version}/*.{php,c,h}
 
@@ -129,6 +134,9 @@ fi
 
 
 %changelog
+* Fri Nov 18 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.5-5
+- php 5.4 build with patch for https://bugs.php.net/60331
+
 * Sun Oct 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.5-4
 - ZTS extension
 - spec cleanups
