@@ -1,16 +1,17 @@
 %{!?__pecl:  %{expand: %%global __pecl %{_bindir}/pecl}}
 %{!?phpname: %{expand: %%global phpname php}}
 
-%global pecl_name imagick
+%global pecl_name   imagick
+%global prever      RC1
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{phpname}-pecl-imagick
-Version:       3.0.1
-Release:       3%{?dist}.1
+Version:       3.1.0
+Release:       0.1.%{prever}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
-Source:        http://pecl.php.net/get/imagick-%{version}.tgz
+Source:        http://pecl.php.net/get/imagick-%{version}%{?prever}.tgz
 
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -22,7 +23,7 @@ BuildRequires: ImageMagick2-devel >= 6.6.0
 %endif
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}
+Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}%{?prever}
 
 Conflicts:     %{phpname}-pecl-gmagick
 
@@ -57,7 +58,7 @@ extension = %{pecl_name}.so
 ;imagick.progress_monitor=0
 EOF
 
-cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-%{version}-zts
 
 
 %build
@@ -68,7 +69,7 @@ cd %{pecl_name}-%{version}-zts
 make %{?_smp_mflags}
 
 # Standard build
-cd ../%{pecl_name}-%{version}
+cd ../%{pecl_name}-%{version}%{?prever}
 %{php_bindir}/phpize
 %configure --with-imagick=%{prefix} --with-php-config=%{php_bindir}/php-config
 make %{?_smp_mflags}
@@ -78,7 +79,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 
 make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}-zts
-make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}
+make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}%{?prever}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
@@ -101,7 +102,7 @@ fi
 
 %check
 # simple module load test
-pushd %{pecl_name}-%{version}
+pushd %{pecl_name}-%{version}%{?prever}
 %{__php} --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
@@ -114,7 +115,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc %{pecl_name}-%{version}/{CREDITS,ChangeLog,examples}
+%doc %{pecl_name}-%{version}%{?prever}/{CREDITS,ChangeLog,examples}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -125,6 +126,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 18 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.0-0.1.RC1
+- update to 3.1.0RC1 for php 5.4
+
 * Mon Oct 03 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.0.1-3.1
 - spec cleanup
 
