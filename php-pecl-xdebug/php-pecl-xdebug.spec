@@ -69,6 +69,10 @@ Xdebug also provides:
 %if %{?gitver:1}
 cp derickr-xdebug-%{gitver}/package2.xml .
 mv derickr-xdebug-%{gitver} %{pecl_name}-%{version}
+
+# https://bugs.php.net/60330
+sed -i -e '/AC_PREREQ/s/2.60/2.59/' %{pecl_name}-%{version}/debugclient/configure.in
+grep AC_PREREQ %{pecl_name}-%{version}/debugclient/configure.in
 %endif
 
 cd %{pecl_name}-%{version}
