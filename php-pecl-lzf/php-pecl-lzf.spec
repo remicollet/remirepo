@@ -4,12 +4,16 @@
 
 Name:		php-pecl-lzf
 Version:	1.5.2
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	Extension to handle LZF de/compression
 Group:		Development/Languages
 License:	PHP
 URL:		http://pecl.php.net/package/%{pecl_name}
 Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# http://svn.php.net/viewvc/pecl/lzf/trunk/lzf.c?r1=297236&r2=297235&pathrev=297236
+Patch0:         lzf-php54.patch
+
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	php-devel
@@ -40,6 +44,8 @@ slight speed cost.
 
 %prep
 %setup -c -q
+
+%patch0 -p0 -b .php54
 
 cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
@@ -113,6 +119,9 @@ fi
 
 
 %changelog
+* Fri Nov 18 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.5.2-8
+- php 5.4 build
+
 * Sat Oct 15 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.5.2-7
 - zts extension
 - spec cleanup
