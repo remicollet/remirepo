@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phpcpd
-Version:        1.3.3
+Version:        1.3.4
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -85,6 +85,12 @@ fi
 
 
 %changelog
+* Mon Nov 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.4-1
+- upstream 1.3.4, rebuild for remi repository
+
+* Sun Nov 20 2011 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.3.4-1
+- upstream 1.3.4
+
 * Mon Nov 07 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.3-1
 - upstream 1.3.3, rebuild for remi repository
 
