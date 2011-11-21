@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.17
+Version: 5.5.18
 Release: 1%{?dist}
 # NOTE: Our convention for the life of F15 is that sysv packages will be
 # numbered 1dist.n while systemd packages will be 2dist and higher.
@@ -687,6 +687,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Mon Nov 21 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.18-1
+- update to MySQL 5.5.18 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-18.html
+
 * Sat Oct 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.17-1
 - update to MySQL 5.5.17 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-17.html
