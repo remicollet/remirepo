@@ -1,6 +1,6 @@
 Summary:    A portable abstraction library for DVD decryption
 Name:       libdvdcss
-Version:    1.2.10
+Version:    1.2.11
 Release:    1%{?dist}
 License:    GPLv2+
 Group:      System Environment/Libraries
@@ -35,16 +35,16 @@ you will need to install %{name}-devel.
 
 %build
 %configure
-%{__make} %{_smp_mflags}
+make %{_smp_mflags}
 
 
 %install
-%{__rm} -rf %{buildroot}
-%{__make}  install DESTDIR=%{buildroot}
+rm -rf %{buildroot}
+make  install DESTDIR=%{buildroot}
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %files
@@ -62,7 +62,10 @@ you will need to install %{name}-devel.
 
 
 %changelog
-* Sat Oct 16 2010 Remi Collet <Fedora@famillecollet.com> - 1.2.10-1
+* Mon Nov 22 2011 Remi Collet <RPMS@famillecollet.com> - 1.2.11-1
+- Update to 1.2.11
+
+* Sat Oct 16 2010 Remi Collet <RPMS@famillecollet.com> - 1.2.10-1
 - F-14 rebuild
 
 * Sun Sep 28 2008 Axel Thimm <Axel.Thimm@ATrpms.net> - 1.2.10-4
