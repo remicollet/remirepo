@@ -1,0 +1,21 @@
+diff -up sphinx-1.1.0/sphinx.c.php54 sphinx-1.1.0/sphinx.c
+--- sphinx-1.1.0/sphinx.c.php54	2011-11-21 19:28:29.115294066 +0100
++++ sphinx-1.1.0/sphinx.c	2011-11-21 19:28:45.778340480 +0100
+@@ -83,7 +83,7 @@ static zend_object_value php_sphinx_clie
+ }
+ /* }}} */
+ 
+-static zval *php_sphinx_client_read_property(zval *object, zval *member, int type TSRMLS_DC) /* {{{ */
++static zval *php_sphinx_client_read_property(zval *object, zval *member, int type, const zend_literal *key TSRMLS_DC) /* {{{ */
+ {
+ 	php_sphinx_client *c;
+ 	zval tmp_member;
+@@ -102,7 +102,7 @@ static zval *php_sphinx_client_read_prop
+ 	/* XXX we can either create retval ourselves (for custom properties) or use standard handlers */
+ 
+ 	std_hnd = zend_get_std_object_handlers();
+-	retval = std_hnd->read_property(object, member, type TSRMLS_CC);
++	retval = std_hnd->read_property(object, member, type, key TSRMLS_CC);
+ 
+ 	if (member == &tmp_member) {
+ 		zval_dtor(member);

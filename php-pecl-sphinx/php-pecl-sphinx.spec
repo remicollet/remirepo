@@ -4,12 +4,15 @@
 
 Name:           php-pecl-sphinx
 Version:        1.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://bugs.php.net/60349
+Patch0:         sphinx-php54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libsphinxclient-devel
@@ -40,6 +43,8 @@ client library for Sphinx the SQL full-text search engine.
 
 %prep
 %setup -q -c
+
+%patch0 -p0 -b .php54
 
 extver=$(sed -n '/#define PHP_SPHINX_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_sphinx.h)
 if test "x${extver}" != "x%{version}"; then
@@ -118,6 +123,9 @@ fi
 
 
 %changelog
+* Mon Nov 21 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.0-3
+- add patch for php 5.4, see https://bugs.php.net/60349
+
 * Wed Oct 05 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.0-2
 - ZTS extension
 - spec cleanups
