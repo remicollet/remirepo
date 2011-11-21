@@ -1268,7 +1268,7 @@ rm -f README.{Zeus,QNX,CVS-RULES}
 rm files.* macros.php
 
 %pre common
-echo -e "\nWARNING : This %{name}-* RPM are not official Fedora/Redhat build and"
+echo -e "\nWARNING : These %{name}-* RPM are not official Fedora/Redhat build and"
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Redhat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
