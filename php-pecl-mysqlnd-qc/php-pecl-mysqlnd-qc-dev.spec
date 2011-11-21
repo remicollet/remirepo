@@ -1,6 +1,8 @@
 %{!?phpname:  %{expand: %%global phpname     php}}
 %{!?__pecl:   %{expand: %%global __pecl     %{_bindir}/pecl}}
+
 %global pecl_name mysqlnd_qc
+%global svnver    318164
 
 %if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
 %global withsqlite 1
@@ -11,13 +13,19 @@
 Summary:      A query cache plugin for mysqlnd
 Name:         %{phpname}-pecl-mysqlnd-qc
 Version:      1.0.1
+%if 0%{?svnver}
+# svn co -r 318164 https://svn.php.net/repository/pecl/mysqlnd_qc/trunk mysqlnd_qc-svn318164
+# tar czf mysqlnd_qc-svn318164.tgz mysqlnd_qc-svn318164
+Source:       mysqlnd_qc-svn318164.tgz
+Release:      3.svn%{svnver}%{?dist}
+%else
+Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Release:      2%{?dist}
-# http://pecl.php.net/bugs/bug.php?id=24364
+%endif
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/mysqlnd_qc
 
-Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # From http://www.php.net/manual/en/mysqlnd-qc.configuration.php
 Source1:      mysqlnd_qc.ini
@@ -65,6 +73,11 @@ Documentation : http://www.php.net/mysqlnd_qc
 
 %prep 
 %setup -c -q
+
+%if 0%{?svnver}
+mv %{pecl_name}-svn%{svnver}/package.xml .
+mv %{pecl_name}-svn%{svnver} %{pecl_name}-%{version}
+%endif
 
 cp %{SOURCE1} %{pecl_name}.ini
 
@@ -154,6 +167,7 @@ ln -s %{php_extdir}/sqlite3.so modules/
 
 %files
 %defattr(-, root, root, -)
+%doc %{pecl_name}-%{version}/license
 %doc %{pecl_name}-%{version}/web
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
@@ -163,6 +177,9 @@ ln -s %{php_extdir}/sqlite3.so modules/
 
 
 %changelog
+* Mon Nov 21 2011  Remi Collet <remi@fedoraproject.org> - 1.0.1-3.svn318164
+- fix from svn, build against php 5.4
+
 * Sun Sep 18 2011  Remi Collet <remi@fedoraproject.org> - 1.0.1-2
 - enable relocation
 - build zts extension
