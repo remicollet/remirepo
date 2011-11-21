@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phploc
-Version:        1.6.2
+Version:        1.6.4
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -82,6 +82,12 @@ fi
 
 
 %changelog
+* Mon Nov 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.6.4-1
+- upstream 1.6.4, rebuild for remi repository
+
+* Sun Nov 20 2011 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.6.4-1
+- upstream 1.6.4
+
 * Thu Nov 03 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-1
 - upstream 1.6.2, rebuild for remi repository
 
