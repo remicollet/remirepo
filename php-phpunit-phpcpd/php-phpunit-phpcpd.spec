@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phpcpd
-Version:        1.3.4
+Version:        1.3.5
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -18,6 +18,7 @@ BuildRequires:  php-pear >= 1:1.9.4
 BuildRequires:  php-channel(%{channel})
 Requires:       php-common >= 5.2.7
 Requires:       php-tokenizer
+Requires:       php-xml
 Requires:       php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -49,20 +50,20 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_phpdir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-%{__rm} -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -85,6 +86,9 @@ fi
 
 
 %changelog
+* Sat Nov 26 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.5-1
+- Update to 1.3.5
+
 * Mon Nov 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.4-1
 - upstream 1.3.4, rebuild for remi repository
 
