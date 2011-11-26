@@ -45,6 +45,16 @@ functionality and progress monitoring.
 
 %patch0 -p0 -b .php54
 
+# fix version
+sed -i -e /MAGICKWAND_VERSION/s/1.0.8/1.0.9/ MagickWandForPHP-%{version}/magickwand.h
+
+# Check version
+extver=$(sed -n '/#define MAGICKWAND_VERSION/{s/.* "//;s/".*$//;p}' MagickWandForPHP-%{version}/magickwand.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
+
 # Fix incorrect end-of-line encoding
 sed -i 's/\r//' MagickWandForPHP-%{version}/README
 
