@@ -27,8 +27,8 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.4.0RC2-dev
-%global snapdate   201111130730
+%global phpversion 5.4.0RC3-dev
+%global snapdate   201111260730
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -97,6 +97,8 @@ Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 # fix harcoded mysql.sock path
 Patch9: php-5.4.0-sock.patch
+# https://bugs.php.net/60392 (old libicu on EL-5)
+Patch10: php-5.4.0-intl.patch
 
 # Fixes for extension modules
 #Patch20: php-4.3.11-shutdown.patch
@@ -653,6 +655,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch9 -p1 -b .sock
+%patch10 -p0 -b .oldicu
 
 #%patch20 -p1 -b .shutdown
 #%patch21 -p1 -b .macropen
@@ -1416,6 +1419,10 @@ fi
 %endif
 
 %changelog
+* Sun Nov 13 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.3.201111260730
+- new snapshot (5.4.0RC3-dev)
+- patch for https://bugs.php.net/60392 (old libicu on EL-5)
+
 * Sun Nov 13 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.3.201111130730
 - new snapshot (5.4.0RC2-dev)
 - sync with latest changes in 5.3 spec
