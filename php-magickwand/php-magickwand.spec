@@ -2,14 +2,17 @@
 
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
-Version:       1.0.8
-Release:       10%{?dist}
+Version:       1.0.9
+Release:       1%{?dist}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
 # Only latest version is always kept on: http://www.magickwand.org/download/php/
 Source0:       http://image_magick.veidrodis.com/image_magick/php/MagickWandForPHP-%{version}.tar.bz2
 Source1:       magickwand.ini
+
+Patch0:        magickwand-php54.patch
+
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 4.3.0, autoconf, automake, libtool
@@ -39,6 +42,8 @@ functionality and progress monitoring.
 
 %prep
 %setup -q -c
+
+%patch0 -p0 -b .php54
 
 # Fix incorrect end-of-line encoding
 sed -i 's/\r//' MagickWandForPHP-%{version}/README
@@ -92,6 +97,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 26 2011 Remi Collet <rpms@famillecollet.com> 1.0.9-1
+- update to 1.0.9
+- patch for php 5.4 and ZTS build
+
 * Thu Oct 06 2011 Remi Collet <rpms@famillecollet.com> 1.0.8-10
 - ZTS extension
 - spec cleanups
