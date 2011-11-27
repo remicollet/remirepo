@@ -1,25 +1,30 @@
-%define		req_libvirt_version 0.6.2
-%define		php_confdir %{_sysconfdir}/php.d 
-%define		php_extdir  %{_libdir}/php/modules
+%global		req_libvirt_version 0.6.2
+%global		php_confdir %{_sysconfdir}/php.d
+%global		php_extdir  %{_libdir}/php/modules
+
+%global         extname   libvirt-php
 
 Name:		php-libvirt
-Version:	0.4.4
+Version:	0.4.5
 Release:	1%{?dist}%{?extra_release}
 Summary:	PHP language binding for Libvirt
 
 Group:		Development/Libraries
-License:	LGPLv2+
+License:	PHP
 URL:		http://libvirt.org/php
-Source0:	http://libvirt.org/sources/php/php-libvirt-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
+Source0:	http://libvirt.org/sources/php/libvirt-php-%{version}.tar.gz
 
+# https://www.redhat.com/archives/libvir-list/2011-November/msg01476.html
+Patch0:         libvirt-php54.patch
+
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:	php-devel
 BuildRequires:	libvirt-devel >= %{req_libvirt_version}
 BuildRequires:	libxml2-devel
 BuildRequires:	libxslt
 BuildRequires:	xhtml1-dtds
+
 Requires:	libvirt >= %{req_libvirt_version}
-# Remi dont want this Requires:	php
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
 
@@ -45,15 +50,28 @@ For more details see: http://www.libvirt.org/php/ http://www.php.net/
 This package contain the document for php-libvirt.
 
 %prep
-%setup -q -n php-libvirt-%{version}
+%setup -q -n libvirt-php-%{version}
+
+%patch0 -p1 -b .php54
+
 
 %build
-%configure --with-html-dir=%{_datadir}/doc --with-html-subdir=%{name}-%{version}/html --libdir=%{php_extdir}
+%configure --with-html-dir=%{_datadir}/doc \
+           --with-html-subdir=%{name}-%{version}/html \
+           --libdir=%{php_extdir}
 make %{?_smp_mflags}
+
 
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
+
+# simple module load test
+%{__php} --no-php-ini \
+    --define extension_dir=src \
+    --define extension=%{extname}.so \
+    --modules | grep libvirt
+
 
 %clean
 rm -rf %{buildroot}
@@ -61,8 +79,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc
-%{php_extdir}/php-libvirt.so
-%config(noreplace) %{php_confdir}/php-libvirt.ini
+%{php_extdir}/%{extname}.so
+%config(noreplace) %{php_confdir}/%{extname}.ini
 
 %files -n php-libvirt-doc
 %defattr(-,root,root,-)
@@ -70,7 +88,13 @@ rm -rf %{buildroot}
 %dir %{_datadir}/doc/%{name}-%{version}
 %{_datadir}/doc/%{name}-%{version}/html
 
+
 %changelog
+* Sun Nov 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.4.5-1
+- update to 0.4.5
+- fix for php 5.4 (and some of compiler warnings)
+  https://www.redhat.com/archives/libvir-list/2011-November/msg01476.html
+
 * Tue Aug 23 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.4.4-1
 - rebuild for remi repo
 
