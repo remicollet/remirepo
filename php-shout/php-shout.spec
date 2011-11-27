@@ -3,7 +3,7 @@
 
 Name:           php-shout
 Version:        0.9.2
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        PHP module for communicating with Icecast servers
 
 Group:          Development/Languages
@@ -24,10 +24,13 @@ Requires:       php(api) = %{php_core_api}
 Requires: php-api = %{php_apiver}
 %endif
 
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -44,24 +47,43 @@ details of the server communication.
 
 
 %prep
-%setup -q -n phpShout-%{version}
+%setup -q -c
+
+cp -r phpShout-%{version} phpShout-zts
+
+cd phpShout-%{version}
 chmod a-x *.[ch] TODO README INSTALL LICENSE
 
 
+
 %build
-phpize --clean
-phpize
-%configure
+cd phpShout-%{version}
+%{php_bindir}/phpize
+%configure --with-php-config=%{php_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../phpShout-zts
+%{php_ztsbindir}/phpize
+%configure --with-php-config=%{php_ztsbindir}/php-config
 make %{?_smp_mflags}
 
 
 %install
 rm -rf %{buildroot}
-install -D -p -m 0755 modules/shout.so %{buildroot}%{php_extdir}/shout.so
-install -D -p -m 0644 shout.ini %{buildroot}%{_sysconfdir}/php.d/shout.ini
+install -D -p -m 0755 phpShout-%{version}/modules/shout.so \
+                      %{buildroot}%{php_extdir}/shout.so
+install -D -p -m 0755 phpShout-zts/modules/shout.so \
+                      %{buildroot}%{php_ztsextdir}/shout.so
+
+install -D -p -m 0644 phpShout-%{version}/shout.ini \
+                      %{buildroot}%{php_inidir}/shout.ini
+install -D -p -m 0644 phpShout-zts/shout.ini \
+                      %{buildroot}%{php_ztsinidir}/shout.ini
 
 
 %check
+cd phpShout-%{version}
+
 # simple module load test
 php --no-php-ini \
     --define extension_dir=modules \
@@ -75,12 +97,17 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README TODO
-%config(noreplace) %{_sysconfdir}/php.d/shout.ini
+%doc phpShout-%{version}/{LICENSE,README,TODO}
+%config(noreplace) %{php_inidir}/shout.ini
+%config(noreplace) %{php_ztsinidir}/shout.ini
 %{php_extdir}/shout.so
+%{php_ztsextdir}/shout.so
 
 
 %changelog
+* Sat Nov 26 2011  Remi Collet <Fedora@FamilleCollet.com> - 0.9.2-9
+- php 5.4 + zts build
+
 * Wed Jul  6 2011  Remi Collet <Fedora@FamilleCollet.com> - 0.9.2-8
 - fix php_zend_api usage, fix FTBFS #715846
 - add filter_provides to avoid private-shared-object-provides shout.so
