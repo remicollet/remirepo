@@ -1,0 +1,34 @@
+CURRENT
+--------------------------------------
+- Discuss the pdo_sqlite2 situation. Either split into two extensions,
+  or research/implement alternatives. Currently configure does not
+  implement this pdo driver. sqlite_*() should always exist/work
+
+- Update notes/changelog to reflect (or inform) users of php-src changes
+  since version 1.0.3
+
+- Clarify that this extension exists for BC reasons, and is barely maintained
+
+- Consider moving ext/sqlite bugs to the PECL bug tracker
+
+OLD
+--------------------------------------
+- Implement a PDO driver, called sqlite2
+
+- Transparent binary encoding of return values from PHP callback functions.
+
+- Add user-space callback for the authorizer function (this is potentially
+  very slow, so it needs to be implemented carefully).
+
+- Add user-space callback to handle busy databases.
+
+  o Test how robust we are when a user-space function is registered as
+    a callback for a persistent connection in script A, then script B is
+	called that doesn't register the callback but does make use of the
+	function in an SQL query.
+	--> Our test suite doesn't allow us to test persistent connections
+	    at this time :/
+
+- Use later version of built-in library
+
+vim:tw=78
