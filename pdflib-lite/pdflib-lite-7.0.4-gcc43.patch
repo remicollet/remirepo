@@ -1,0 +1,11 @@
+--- bind/pdflib/cpp/pdflib.hpp.gcc43	2009-03-18 15:10:11.000000000 +0100
++++ bind/pdflib/cpp/pdflib.hpp	2009-03-19 20:12:45.000000000 +0100
+@@ -22,6 +22,8 @@
+ #define PDFLIB_HPP
+ 
+ #include <string>
++#include <cstring>
++#include <cstdlib>
+ #include "pdflib.h"
+ 
+ #if defined(_MSC_VER) && defined(_MANAGED)
