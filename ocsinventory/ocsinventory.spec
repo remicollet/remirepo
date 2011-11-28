@@ -11,8 +11,8 @@
 Name:        ocsinventory
 Summary:     Open Computer and Software Inventory Next Generation
 
-Version:     2.0.2
-Release:     1%{?dist}.3
+Version:     2.0.3
+Release:     1%{?dist}
 
 Group:       Applications/Internet
 License:     GPLv2
@@ -22,12 +22,8 @@ URL:         http://www.ocsinventory-ng.org/
 Source0:     http://launchpad.net/ocsinventory-server/stable-2.0/%{version}/+download/%{tarname}-%{version}.tar.gz
 Source1:     ocsinventory-reports.conf
 
-# Manage upgrade from 1.3.x
-# http://bazaar.launchpad.net/~ocsinventory-core/ocsinventory-ocsreports/stable-2.0/revision/794
-Patch0:      %{name}-upgrade.patch
-# Use CONF_MYSQL everywhere
-# http://bazaar.launchpad.net/~ocsinventory-core/ocsinventory-ocsreports/stable-2.0/revision/796
-Patch1:      %{name}-dbconf.patch
+# s/mysql_escape_string/mysql_real_escape_string/
+Patch0:      %{name}-deprecated.patch
 
 BuildArch:   noarch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -136,7 +132,6 @@ navigateur favori.
 %setup -q -n %{tarname}-%{version}
 
 %patch0 -p0
-%patch1 -p0
 
 chmod -x binutils/ocs-errors
 
@@ -320,6 +315,11 @@ fi
 
 
 %changelog
+* Mon Nov 28 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.3-1
+- update to 2.0.3
+- drop patches merged upstream
+- add patch for mysql_escape_string calls
+
 * Mon Oct 31 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.2-1.3
 - provides external-agents.conf (OCS_OPT_EXT_USERAGENTS_FILE_PATH)
 

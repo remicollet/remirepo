@@ -1,0 +1,78 @@
+diff -up ocsreports/plugins/main_sections/ms_dict/ms_dict.php.orig ocsreports/plugins/main_sections/ms_dict/ms_dict.php
+--- ocsreports/plugins/main_sections/ms_dict/ms_dict.php.orig	2011-11-28 17:54:50.000000000 +0100
++++ ocsreports/plugins/main_sections/ms_dict/ms_dict.php	2011-11-28 17:55:45.000000000 +0100
+@@ -37,8 +37,8 @@ if ($protectedPost['RESET']=="RESET")
+ unset($protectedPost['search']);
+ //filtre
+ if ($protectedPost['search']){
+-	$search_cache=" and cache.name like '%".mysql_escape_string($protectedPost['search'])."%' ";
+-	$search_count=" and extracted like '%".mysql_escape_string($protectedPost['search'])."%' ";
++	$search_cache=" and cache.name like '%".mysql_real_escape_string($protectedPost['search'])."%' ";
++	$search_count=" and extracted like '%".mysql_real_escape_string($protectedPost['search'])."%' ";
+ }
+ else{
+ 	$search="";
+@@ -123,7 +123,7 @@ if ($protectedPost['onglet'] == 'CAT'){
+ 		} 
+ 		$querydico=substr($querydico,0,-1);
+ 		$querydico .= " from dico_soft left join ".$table." cache on dico_soft.extracted=cache.name
+-				 where formatted='".mysql_escape_string($list_cat[$protectedPost['onglet_soft']])."' ".$search_count." group by EXTRACTED";
++				 where formatted='".mysql_real_escape_string($list_cat[$protectedPost['onglet_soft']])."' ".$search_count." group by EXTRACTED";
+ }
+ /*******************************************************CAS OF NEW*******************************************************/
+ if ($protectedPost['onglet'] == 'NEW'){
+@@ -311,4 +311,4 @@ echo "<input type='hidden' name='RESET' 
+ echo "<input type='hidden' name='TRANS' id='TRANS' value=''>";
+ echo "<input type='hidden' name='SUP_CAT' id='SUP_CAT' value=''>";
+ echo "</form>";
+-?>
+\ Pas de fin de ligne à la fin du fichier.
++?>
+diff -up ocsreports/require/function_dico.php.orig ocsreports/require/function_dico.php
+--- ocsreports/require/function_dico.php.orig	2011-11-28 17:56:55.000000000 +0100
++++ ocsreports/require/function_dico.php	2011-11-28 17:57:01.000000000 +0100
+@@ -46,7 +46,7 @@ function trans($onglet,$list_soft,$affec
+ 	$table="softwares";
+ 	//verif is this cat exist
+ 	if ($new_cat != ''){
+-		$sql_verif="select extracted from dico_soft where formatted ='".mysql_escape_string($new_cat)."'";
++		$sql_verif="select extracted from dico_soft where formatted ='".mysql_real_escape_string($new_cat)."'";
+ 		$result_search_soft = mysql_query( $sql_verif, $_SESSION['OCS']["readServer"]);
+ 	 	$item_search_soft = mysql_fetch_object($result_search_soft);
+ 	 	if (isset($item_search_soft->extracted) or $new_cat == "IGNORED" or $new_cat == "UNCHANGED"){
+@@ -71,10 +71,10 @@ function trans($onglet,$list_soft,$affec
+ 				}elseif($exist_cat == "UNCHANGED"){
+ 					$sql="insert dico_soft (extracted,formatted) select distinct NAME,NAME from ".$table." where ID in (".implode(",",$list_soft).")";			
+ 				}else
+-					$sql="insert dico_soft (extracted,formatted) select distinct NAME,'".mysql_escape_string($exist_cat)."' from ".$table." where ID in (".implode(",",$list_soft).")";
++					$sql="insert dico_soft (extracted,formatted) select distinct NAME,'".mysql_real_escape_string($exist_cat)."' from ".$table." where ID in (".implode(",",$list_soft).")";
+ 		}else{
+ 		 	if (!isset($already_exist)){
+-		 		$sql="insert dico_soft (extracted,formatted) select distinct NAME,'".mysql_escape_string($new_cat)."' from ".$table." where ID in (".implode(",",$list_soft).")";
++		 		$sql="insert dico_soft (extracted,formatted) select distinct NAME,'".mysql_real_escape_string($new_cat)."' from ".$table." where ID in (".implode(",",$list_soft).")";
+ 		 	}else
+ 		 		echo "<script>alert('".$l->g(771)."')</script>";			
+ 		}
+diff -up ocsreports/require/function_table_html.php.orig ocsreports/require/function_table_html.php
+--- ocsreports/require/function_table_html.php.orig	2011-11-28 17:57:10.000000000 +0100
++++ ocsreports/require/function_table_html.php	2011-11-28 17:57:38.000000000 +0100
+@@ -163,7 +163,7 @@ function escape_string($array){
+ function xml_escape_string($array){
+ 	foreach ($array as $key=>$value){
+ 		$trait_array[$key]=xml_encode($value);
+-		//$trait_array[$key]=mysql_escape_string($value);
++		//$trait_array[$key]=mysql_real_escape_string($value);
+ 	}
+ 	return ($trait_array);
+ }
+@@ -801,8 +801,8 @@ function onglet($def_onglets,$form_name,
+ 	 		 $current=1;
+ 			}
+ 	  	}else{
+-	  		//echo "<script>alert('".mysql_escape_string(stripslashes($protectedPost[$post_name]))." => ".$key."')</script>";
+-			if (mysql_escape_string(stripslashes($protectedPost[$post_name])) === mysql_escape_string(stripslashes($key)) or (!isset($protectedPost[$post_name]) and $current != 1)){
++	  		//echo "<script>alert('".mysql_real_escape_string(stripslashes($protectedPost[$post_name]))." => ".$key."')</script>";
++			if (mysql_real_escape_string(stripslashes($protectedPost[$post_name])) === mysql_real_escape_string(stripslashes($key)) or (!isset($protectedPost[$post_name]) and $current != 1)){
+ 				 echo "id='current'";  
+ 	 			 $current=1;
+ 			}
