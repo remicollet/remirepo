@@ -1,17 +1,24 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name solr
+%global svnver    320130
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           php-pecl-solr
 Version:        1.0.1
-Release:        3%{?dist}
+Release:        4.svn%{?svnver}%{?dist}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
 
+%if 0%{?svnver}
+# svn export -r 320130 https://svn.php.net/repository/pecl/solr/trunk solr
+# tar czf solr-svn320130.tgz solr
+Source0:        solr-svn320130.tgz
+%else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 Source2:        xml2changelog
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -79,6 +86,12 @@ http://www.php.net/manual/fr/book.solr.php
 
 %prep
 %setup -c -q
+
+%if 0%{?svnver}
+mv %{pecl_name}/package.xml .
+mv %{pecl_name} %{pecl_name}-%{version}
+%endif
+
 %{__php} -n %{SOURCE2} package.xml >CHANGELOG
 
 cd %{pecl_name}-%{version}
@@ -153,13 +166,13 @@ cd %{pecl_name}-%{version}
 ln -s %{php_extdir}/curl.so modules/
 ln -s %{php_extdir}/json.so modules/
 
-# REPORT_EXIT_STATUS => https://bugs.php.net/60313
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=curl.so -d extension=json.so -d extension=%{pecl_name}.so" \
-   REPORT_EXIT_STATUS=0 \
+   REPORT_EXIT_STATUS=1 \
    NO_INTERACTION=1 \
    TEST_PHP_EXECUTABLE=%{_bindir}/php \
    %{_bindir}/php \
    run-tests.php
+
 
 %files
 %defattr(-, root, root, -)
@@ -180,6 +193,9 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=curl.so -d extensio
 
 
 %changelog
+* Mon Nov 28 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-4.svn320130
+- svn snapshot (test suite is now ok)
+
 * Wed Nov 16 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-3
 - build against php 5.4
 - ignore test result because of https://bugs.php.net/60313
