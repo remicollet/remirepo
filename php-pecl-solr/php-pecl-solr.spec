@@ -1,13 +1,13 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name solr
-%global svnver    320130
+#global svnver    320130
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           php-pecl-solr
-Version:        1.0.1
-Release:        4.svn%{?svnver}%{?dist}
+Version:        1.0.2
+Release:        1%{?dist}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -95,6 +95,10 @@ mv %{pecl_name} %{pecl_name}-%{version}
 %{__php} -n %{SOURCE2} package.xml >CHANGELOG
 
 cd %{pecl_name}-%{version}
+# Fix version
+sed -i -e '/PHP_SOLR_DOTTED_VERSION/s/1.0.1/1.0.2/' php_solr_version.h
+
+# Check version
 extver=$(sed -n '/#define PHP_SOLR_DOTTED_VERSION/{s/.* "//;s/".*$//;p}' php_solr_version.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
@@ -193,6 +197,9 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=curl.so -d extensio
 
 
 %changelog
+* Tue Nov 29 2011 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- update to 1.0.2
+
 * Mon Nov 28 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-4.svn320130
 - svn snapshot (test suite is now ok)
 
