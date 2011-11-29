@@ -23,6 +23,7 @@ Source0:     http://launchpad.net/ocsinventory-server/stable-2.0/%{version}/+dow
 Source1:     ocsinventory-reports.conf
 
 # s/mysql_escape_string/mysql_real_escape_string/
+# http://bazaar.launchpad.net/~ocsinventory-core/ocsinventory-ocsreports/stable-2.0/revision/800
 Patch0:      %{name}-deprecated.patch
 
 BuildArch:   noarch
