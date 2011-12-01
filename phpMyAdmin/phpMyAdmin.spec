@@ -1,6 +1,6 @@
 Name: phpMyAdmin
-Version: 3.4.7.1
-Release: 2%{?dist}
+Version: 3.4.8
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -13,10 +13,6 @@ Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/darkblue_orang
 Source11: http://downloads.sourceforge.net/sourceforge/phpmyadmin/graphite-1.0.zip
 Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/toba-0.2.zip
 Source13: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.4.zip
-
-# Avoid Array to string conversion notice
-# https://sourceforge.net/tracker/?func=detail&aid=3437354&group_id=23067&atid=377408
-Patch0:   pma-php54.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -40,8 +36,6 @@ is available in 50 languages
 
 %prep
 %setup -qn phpMyAdmin-%{version}-all-languages
-
-%patch0 -p0
 
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
@@ -121,6 +115,11 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Thu Dec 01 2011 Remi Collet <rpms@famillecollet.com> 3.4.8-1
+- Upstream released 3.4.8 (security)
+  Fix PMASA-2011-18
+- remove patch merged upstream
+
 * Sun Nov 13 2011 Remi Collet <rpms@famillecollet.com> 3.4.7.1-2
 - add patch to avoid notice with php 5.4
 
