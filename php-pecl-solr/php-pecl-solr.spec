@@ -105,6 +105,7 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
+# Fix rights
 chmod -x README.* \
          CREDITS \
          LICENSE \
@@ -114,6 +115,7 @@ chmod -x README.* \
          *.h
 cd ..
 
+# Create configuration file
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable Solr extension module
 extension=%{pecl_name}.so
@@ -144,11 +146,11 @@ make -C %{pecl_name}-%{version}-zts \
      install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
-install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 
 %post
@@ -159,10 +161,6 @@ install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-
-
-%clean
-rm -rf %{buildroot}
 
 
 %check
@@ -176,6 +174,10 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=curl.so -d extensio
    TEST_PHP_EXECUTABLE=%{_bindir}/php \
    %{_bindir}/php \
    run-tests.php
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
