@@ -6,7 +6,7 @@
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
 Version:        1.0.10
-Release:        0.1.%{prever}%{?dist}
+Release:        0.2.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
@@ -112,7 +112,10 @@ cd %{pecl_name}-%{version}%{?prever}
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-# gmagick-006-annotateimage.phpt fails because of fonts
+# Remove know to fail tests (font issue)
+rm tests/gmagick-006-annotateimage.phpt
+
+# Still ignore test result as some fail on old version
 TEST_PHP_EXECUTABLE=%{__php} \
 REPORT_EXIT_STATUS=0 \
 NO_INTERACTION=1 \
@@ -133,6 +136,9 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Mon Dec 05 2011 Remi Collet <remi@fedoraproject.org> - 1.0.10-0.2.b1
+- build against php 5.4
+
 * Mon Dec 05 2011 Remi Collet <remi@fedoraproject.org> - 1.0.10-0.1.b1
 - Update to 1.0.10b1
 - run tests
