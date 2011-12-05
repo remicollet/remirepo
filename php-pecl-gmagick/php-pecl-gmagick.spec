@@ -5,15 +5,12 @@
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.9
-Release:        0.2.%{prever}%{?dist}
+Version:        1.0.10
+Release:        0.1.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
 Source0:        http://pecl.php.net/get/gmagick-%{version}%{?prever}.tgz
-
-# https://bugs.php.net/60308
-Patch0:         gmagick-php54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  php-pear >= 1.4.7
@@ -46,8 +43,6 @@ of images using the GraphicsMagick API.
 
 %prep
 %setup -qc
-
-%patch0 -p0 -b .php54
 
 # Create configuration file
 cat >%{pecl_name}.ini << 'EOF'
@@ -117,6 +112,15 @@ cd %{pecl_name}-%{version}%{?prever}
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+# gmagick-006-annotateimage.phpt fails because of fonts
+TEST_PHP_EXECUTABLE=%{__php} \
+REPORT_EXIT_STATUS=0 \
+NO_INTERACTION=1 \
+%{__php} run-tests.php \
+    -n -q \
+    -d extension_dir=modules \
+    -d extension=%{pecl_name}.so \
+
 
 %files
 %defattr(-,root,root,-)
@@ -129,6 +133,10 @@ cd %{pecl_name}-%{version}%{?prever}
 
 
 %changelog
+* Mon Dec 05 2011 Remi Collet <remi@fedoraproject.org> - 1.0.10-0.1.b1
+- Update to 1.0.10b1
+- run tests
+
 * Tue Nov 15 2011 Remi Collet <remi@fedoraproject.org> - 1.0.9-0.2.b1
 - build against php 5.4
 - add patch for php 5.4, see https://bugs.php.net/60308
