@@ -5,7 +5,7 @@
 
 Name:		php-pecl-gearman
 Version:	1.0.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- update to 1.0.1, build against php 5.4
+
 * Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
 
