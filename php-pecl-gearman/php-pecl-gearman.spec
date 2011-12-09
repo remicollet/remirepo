@@ -4,8 +4,8 @@
 
 
 Name:		php-pecl-gearman
-Version:	1.0.1
-Release:	2%{?dist}
+Version:	0.8.1
+Release:	1%{?dist}
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -15,7 +15,7 @@ Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	php-devel, libgearman-devel > 0.21
+BuildRequires:	php-devel, libgearman-devel > 0.10
 BuildRequires:	php-pear
 # Required by phpize
 BuildRequires: autoconf, automake, libtool
@@ -120,18 +120,8 @@ fi
 
 
 %changelog
-* Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
-- update to 1.0.1, build against php 5.4
-
-* Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
-- update to 1.0.1
-
-* Mon Dec 05 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
-- build against php 5.4
-
-* Mon Dec 05 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
-- update to 1.0.0
-- raise dependency to libgearman 0.21 (si f16 only)
+* Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 0.8.1-1
+- update to 0.8.1
 
 * Mon Nov 14 2011 Remi Collet <remi@fedoraproject.org> - 0.8.0-2
 - build against php 5.4
