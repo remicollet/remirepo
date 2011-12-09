@@ -4,8 +4,8 @@
 
 
 Name:		php-pecl-gearman
-Version:	1.0.0
-Release:	2%{?dist}
+Version:	1.0.1
+Release:	1%{?dist}
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -41,9 +41,6 @@ communicating with gearmand, and writing clients and workers
 
 %prep
 %setup -q -c
-
-# https://bugs.php.net/60438
-sed -i -e '/PHP_GEARMAN_VERSION/s/0.8.0/1.0.0/' %{pecl_name}-%{version}/php_gearman.h
 
 extver=$(sed -n '/#define PHP_GEARMAN_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_gearman.h)
 if test "x${extver}" != "x%{version}"; then
@@ -123,6 +120,9 @@ fi
 
 
 %changelog
+* Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1
+
 * Mon Dec 05 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - build against php 5.4
 
