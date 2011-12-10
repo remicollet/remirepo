@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.18
+Version: 5.5.19
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -764,6 +764,11 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Dec 10 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.19-1
+- update to MySQL 5.5.19 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-19.html
+- switch to systemd on fedora >= 15 (from rawhide)
+
 * Mon Nov 21 2011 Tom Lane <tgl@redhat.com> 5.5.18-1
 - Update to MySQL 5.5.18, for various fixes described at
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-18.html
