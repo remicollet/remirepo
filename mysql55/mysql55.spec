@@ -1,8 +1,6 @@
 Name: mysql
 Version: 5.5.18
 Release: 1%{?dist}
-# NOTE: Our convention for the life of F15 is that sysv packages will be
-# numbered 1dist.n while systemd packages will be 2dist and higher.
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -33,6 +31,10 @@ Source7: README.mysql-license
 Source8: libmysql.version
 Source9: mysql-embedded-check.c
 Source10: mysql.tmpfiles.d
+# systemd files
+Source11: mysqld.service
+Source12: mysqld-prepare-db-dir
+Source13: mysqld-wait-ready
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh
 
@@ -49,6 +51,9 @@ Patch8: mysql-dubious-exports.patch
 Patch10: mysql-plugin-bool.patch
 Patch11: mysql-s390-tsc.patch
 Patch12: mysql-openssl-test.patch
+Patch13: mysqld-nowatch.patch
+Patch14: mysql-va-list.patch
+Patch15: mysql-netdevname.patch
 
 # RC patch for backports
 Patch21: mysql-readline.patch
@@ -63,6 +68,9 @@ BuildRequires: systemtap-sdt-devel >= 1.3
 BuildRequires: time procps
 # Socket and Time::HiRes are needed to run regression tests
 BuildRequires: perl(Socket), perl(Time::HiRes)
+%if 0%{?fedora} >= 15
+BuildRequires: systemd-units
+%endif
 # This is required old EL4
 BuildRequires: bison
 
@@ -108,12 +116,21 @@ Requires: sh-utils
 Requires(pre): /usr/sbin/useradd
 Requires(post): chkconfig
 Requires(preun): chkconfig
+%if 0%{?fedora} >= 15
+# We require this to be present for /etc/tmpfiles.d
+Requires: systemd-units
+# Make sure it's there when scriptlets run, too
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+# This is actually needed for the %%triggerun script but Requires(triggerun)
+# is not valid.  We can use %%post because this particular %%triggerun script
+# should fire just after this package is installed.
+Requires(post): systemd-sysv
+%else
 # This is for /sbin/service
 Requires(preun): initscripts
 Requires(postun): initscripts
-%if 0%{?fedora} >= 15
-# This is for /etc/tmpfiles.d
-Requires: systemd-units
 %endif
 # mysqlhotcopy needs DBI/DBD support
 Requires: perl-DBI, perl-DBD-MySQL
@@ -209,7 +226,14 @@ rm -f Docs/mysql.info
 # When build with system openssl
 %patch12 -p1
 %endif
-# Backports specific patches
+%if 0%{?fedora} >= 15
+# for systemd
+%patch13 -p1
+%endif
+%patch14 -p1
+%patch15 -p1
+
+# Remi specific patches
 %patch21 -p1 -b .readline
 
 # workaround for upstream bug #56342
@@ -378,17 +402,29 @@ chmod 755 ${RPM_BUILD_ROOT}%{_bindir}/mysql_config
 mkdir -p $RPM_BUILD_ROOT/var/log
 touch $RPM_BUILD_ROOT/var/log/mysqld.log
 
-mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
 mkdir -p $RPM_BUILD_ROOT/var/run/mysqld
-mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
 install -m 0755 -d $RPM_BUILD_ROOT/var/lib/mysql
-install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mysqld
-install -m 0755 %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mysqld
+
+mkdir -p $RPM_BUILD_ROOT/etc
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
 
 %if 0%{?fedora} >= 15
+# install systemd unit files and scripts for handling server startup
+mkdir -p ${RPM_BUILD_ROOT}%{_unitdir}
+install -m 644 %{SOURCE11} ${RPM_BUILD_ROOT}%{_unitdir}/
+install -m 755 %{SOURCE12} ${RPM_BUILD_ROOT}%{_libexecdir}/
+install -m 755 %{SOURCE13} ${RPM_BUILD_ROOT}%{_libexecdir}/
+
 mkdir -p $RPM_BUILD_ROOT/etc/tmpfiles.d
 install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/tmpfiles.d/mysql.conf
+
+%else
+mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
+install -m 0755 %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mysqld
+
+# sysconfig is only provided by remi
+mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
+install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mysqld
 %endif
 
 # Fix funny permissions that cmake build scripts apply to config files
@@ -429,6 +465,7 @@ rm -f ${RPM_BUILD_ROOT}/usr/data/mysql/.empty
 rm -f ${RPM_BUILD_ROOT}/usr/data/test/.empty
 # should move this to /etc/ ?
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/mysqlaccess.conf
+rm -f ${RPM_BUILD_ROOT}%{_bindir}/mysql_embedded
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/mysql/*.a
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/binary-configure
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/magic
@@ -455,7 +492,7 @@ echo -e "\nWARNING : This MySQL RPM is not an official Fedora/Redhat build and i
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 13
+%if %{?fedora}%{!?fedora:99} <= 14
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -477,15 +514,43 @@ echo -e "You should consider upgrading to a supported release.\n"
 
 %post server
 if [ $1 = 1 ]; then
+    # Initial installation
+%if 0%{?fedora} >= 15
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+%else
     /sbin/chkconfig --add mysqld
+%endif
 fi
 /bin/chmod 0755 /var/lib/mysql
 /bin/touch /var/log/mysqld.log
 
+# Handle upgrading from SysV initscript to native systemd unit.
+# We can tell if a SysV version of mysql was previously installed by
+# checking to see if the initscript is present.
+%triggerun server -- mysql-server
+%if 0%{?fedora} >= 15
+if [ -f /etc/rc.d/init.d/mysqld ]; then
+    # Save the current service runlevel info
+    # User must manually run systemd-sysv-convert --apply mysqld
+    # to migrate them to systemd targets
+    /usr/bin/systemd-sysv-convert --save mysqld >/dev/null 2>&1 || :
+
+    # Run these because the SysV package being removed won't do them
+    /sbin/chkconfig --del mysqld >/dev/null 2>&1 || :
+    /bin/systemctl try-restart mysqld.service >/dev/null 2>&1 || :
+fi
+%endif
+
 %preun server
 if [ $1 = 0 ]; then
+    # Package removal, not upgrade
+%if 0%{?fedora} >= 15
+    /bin/systemctl --no-reload disable mysqld.service >/dev/null 2>&1 || :
+    /bin/systemctl stop mysqld.service >/dev/null 2>&1 || :
+%else
     /sbin/service mysqld stop >/dev/null 2>&1
     /sbin/chkconfig --del mysqld
+%endif
 fi
 
 %postun libs
@@ -494,9 +559,17 @@ if [ $1 = 0 ] ; then
 fi
 
 %postun server
+%if 0%{?fedora} >= 15
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ]; then
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart mysqld.service >/dev/null 2>&1 || :
+fi
+%else
 if [ $1 -ge 1 ]; then
     /sbin/service mysqld condrestart >/dev/null 2>&1 || :
 fi
+%endif
 
 
 %files
@@ -580,6 +653,7 @@ fi
 %{_bindir}/mysql_convert_table_format
 %{_bindir}/mysql_fix_extensions
 %{_bindir}/mysql_install_db
+%{_bindir}/mysql_plugin
 %{_bindir}/mysql_secure_installation
 %{_bindir}/mysql_setpermission
 %{_bindir}/mysql_tzinfo_to_sql
@@ -596,7 +670,6 @@ fi
 %{_bindir}/replace
 %{_bindir}/resolve_stack_dump
 %{_bindir}/resolveip
-%{_bindir}/mysql_plugin
 
 /usr/libexec/mysqld
 
@@ -613,6 +686,7 @@ fi
 %{_mandir}/man1/mysql.server.1*
 %{_mandir}/man1/mysql_fix_extensions.1*
 %{_mandir}/man1/mysql_install_db.1*
+%{_mandir}/man1/mysql_plugin.1*
 %{_mandir}/man1/mysql_secure_installation.1*
 %{_mandir}/man1/mysql_upgrade.1*
 %{_mandir}/man1/mysql_zap.1*
@@ -633,7 +707,6 @@ fi
 %{_mandir}/man1/resolve_stack_dump.1*
 %{_mandir}/man1/resolveip.1*
 %{_mandir}/man1/mysql_tzinfo_to_sql.1*
-%{_mandir}/man1/mysql_plugin.1*
 %{_mandir}/man8/mysqld.8*
 
 %{_datadir}/mysql/errmsg-utf8.txt
@@ -644,14 +717,19 @@ fi
 %{_datadir}/mysql/my-*.cnf
 %{_datadir}/mysql/config.*.ini
 
-/etc/rc.d/init.d/mysqld
 %if 0%{?fedora} >= 15
+%{_unitdir}/mysqld.service
+%{_libexecdir}/mysqld-prepare-db-dir
+%{_libexecdir}/mysqld-wait-ready
+
 /etc/tmpfiles.d/mysql.conf
+%else
+/etc/rc.d/init.d/mysqld
+%config(noreplace) /etc/sysconfig/mysqld
 %endif
 %attr(0755,mysql,mysql) %dir /var/run/mysqld
 %attr(0755,mysql,mysql) %dir /var/lib/mysql
 %attr(0640,mysql,mysql) %config(noreplace) %verify(not md5 size mtime) /var/log/mysqld.log
-%config(noreplace) /etc/sysconfig/mysqld
 
 %files devel
 %defattr(-,root,root)
@@ -663,7 +741,6 @@ fi
 %files embedded
 %defattr(-,root,root)
 %doc README COPYING README.mysql-license
-%{_bindir}/mysql_embedded
 %{_libdir}/mysql/libmysqld.so.*
 
 %files embedded-devel
@@ -687,6 +764,12 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Mon Nov 21 2011 Tom Lane <tgl@redhat.com> 5.5.18-1
+- Update to MySQL 5.5.18, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-18.html
+- Don't assume all ethernet devices are named ethX
+Resolves: #682365
+
 * Mon Nov 21 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.18-1
 - update to MySQL 5.5.18 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-18.html
@@ -694,6 +777,10 @@ fi
 * Sat Oct 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.17-1
 - update to MySQL 5.5.17 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-17.html
+
+* Sun Oct 16 2011 Tom Lane <tgl@redhat.com> 5.5.15-1.1
+- Fix unportable usage associated with va_list arguments
+Resolves: #744707
 
 * Fri Sep 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.16-1
 - update to MySQL 5.5.16 Community Server GA
