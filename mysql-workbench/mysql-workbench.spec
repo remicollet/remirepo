@@ -1,8 +1,8 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%global mw_version 5.2.35
-%global tarversion gpl-5.2.35-src
-%global srcversion gpl-5.2.35-src
+%global mw_version 5.2.36
+%global tarversion gpl-5.2.36-src
+%global srcversion gpl-5.2.36-src
 
 # Use system cppconn if a compatible upstream version exists
 #global cppconnver 1.1.0-0.3.bzr895
@@ -27,7 +27,7 @@ Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tar
 # !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
 Patch1:    %{name}-5.2.28-cppconn.patch
 Patch2:    %{name}-5.2.32-ctemplate.patch
-Patch3:    %{name}-5.2.34-tinyxml.patch
+Patch3:    %{name}-5.2.36-tinyxml.patch
 # redirect man page to /usr/share
 Patch5:    %{name}-5.2.34-man.patch
 
@@ -100,7 +100,7 @@ an integrated tools environment for:
 Summary:        Scripts for managing and administering MySQL servers
 # Not yet published (else will be package separatly)
 # see ext/mysql-utilities/CHANGES.txt
-Version:        1.0.1
+Version:        1.0.3
 Release:        0.%{mw_version}%{?dist}
 
 BuildArch:      noarch
@@ -215,6 +215,7 @@ update-desktop-database &> /dev/null || :
 %files -n mysql-utilities
 %defattr(-, root, root, -)
 %doc ext/mysql-utilities/*.txt
+%{_bindir}/mysqldbcompare
 %{_bindir}/mysqldbcopy
 %{_bindir}/mysqldbexport
 %{_bindir}/mysqldbimport
@@ -224,6 +225,7 @@ update-desktop-database &> /dev/null || :
 %{_bindir}/mysqlmetagrep
 %{_bindir}/mysqlprocgrep
 %{_bindir}/mysqlreplicate
+%{_bindir}/mysqlrplcheck
 %{_bindir}/mysqlserverclone
 %{_bindir}/mysqlserverinfo
 %{_bindir}/mysqluserclone
@@ -237,6 +239,11 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sat Dec 10 2011 Remi Collet <remi@fedoraproject.org> 5.2.36-1
+- update to 5.2.36 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-36.html
+- mysql-utilities 1.0.3
+
 * Fri Sep 23 2011 Remi Collet <remi@fedoraproject.org> 5.2.35-1
 - update to 5.2.35 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-35.html
