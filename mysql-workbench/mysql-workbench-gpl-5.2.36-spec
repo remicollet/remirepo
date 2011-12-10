@@ -1,5 +1,5 @@
 %if !%{defined version}
-%define version		5.2.35
+%define version		5.2.36
 %endif
 %define release 1
 %define edition   gpl
@@ -25,9 +25,12 @@ BuildRequires: gnome-keyring-devel
 BuildRequires: boost-devel
 
 %if %_vendor == suse
-BuildRequires: libmysqlclient-devel
+BuildRequires: libmysqlclient-devel, libctemplate-devel
 BuildRequires: Mesa
 %else
+%if %targos == fc15
+BuildRequires: ctemplate-devel
+%endif
 BuildRequires: mysql-devel >= 5.1
 BuildRequires: gtkmm24-devel
 BuildRequires: mesa-libGL-devel
@@ -63,7 +66,11 @@ and execute SQL queries.
 
 NOCONFIGURE=yes ./autogen.sh
 %if %{have_python26}
+%if %targos == el6
+%configure --disable-debug  --enable-mysql-utilities --disable-dependency-tracking --with-bundled-ctemplate
+%else
 %configure --disable-debug  --enable-mysql-utilities --disable-dependency-tracking
+%endif
 %else
 %configure --disable-debug  --disable-dependency-tracking
 %endif
@@ -100,7 +107,6 @@ rm -rf %{_builddir}/%{name}-%{version}-src
 %{_datadir}/applications/*.desktop
 %dir %{_datadir}/mysql-workbench
 %{_datadir}/mysql-workbench/*
-%{py_sitedir}/*
 
 %changelog
 
