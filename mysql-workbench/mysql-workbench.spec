@@ -36,7 +36,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
 BuildRequires: libglade2-devel >= 2.0.0
 BuildRequires: lua-devel >= 5.1
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 12
 BuildRequires: ctemplate-devel
 %endif
 BuildRequires: libgnome-devel >= 2
@@ -124,7 +124,7 @@ and administering MySQL servers.
 rm -rf ext/cppconn
 %endif
 
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 12
 %patch2 -p1 -b .ctemplate
 rm -rf ext/ctemplate
 %endif
@@ -154,7 +154,12 @@ touch po/POTFILES.in
 %build
 NOCONFIGURE=yes ./autogen.sh
 export CXXFLAGS="$RPM_OPT_FLAGS -fpermissive"
-%configure --disable-debug --enable-mysql-utilities
+%configure \
+    --disable-debug \
+%if 0%{?fedora} < 12 && 0%{?rhel} < 7
+    --with-bundled-ctemplate \
+%endif
+    --enable-mysql-utilities
 
 make %{?_smp_mflags}
 
