@@ -2,14 +2,14 @@
 %{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global gitver 535df90
+%global gitver d076740
 %global prever -dev
 
 Name:           %{phpname}-pecl-xdebug
 Version:        2.2.0
 %if %{?gitver:1}
-Release:        0.1.git%{gitver}%{?dist}
-Source0:        derickr-xdebug-XDEBUG_2_1_2-188-g535df90.tar.gz
+Release:        0.2.git%{gitver}%{?dist}
+Source0:        derickr-xdebug-XDEBUG_2_1_2-193-gd076740.tar.gz
 BuildRequires:  libtool
 %else
 Release:        2%{?dist}
@@ -182,6 +182,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 11 2011 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.gitd076740
+- new git snapshot
+
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.git535df90
 - update to 2.2.0-dev, build against php 5.4
 
