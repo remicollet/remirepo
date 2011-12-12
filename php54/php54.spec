@@ -28,7 +28,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 %global phpversion 5.4.0RC4-dev
-%global snapdate   201112091730
+%global snapdate   201112121330
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -62,9 +62,9 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.4.0
 %if 0%{?snapdate}
-Release: 0.3.%{snapdate}%{?dist}
+Release: 0.4.%{snapdate}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -86,6 +86,7 @@ Source4: php-fpm.conf
 Source5: php-fpm-www.conf
 Source6: php-fpm.init
 Source7: php-fpm.logrotate
+Source8: php-fpm.service
 
 # Build fixes
 #Patch1: php-5.3.7-gnusrc.patch
@@ -208,6 +209,7 @@ Group: Development/Languages
 Summary: PHP FastCGI Process Manager
 Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
 %if 0%{?fedora} >= 15
+BuildRequires: systemd-units
 Requires: systemd-units
 %endif
 BuildRequires: libevent-devel >= 1.4.11
@@ -1148,17 +1150,21 @@ install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/php-fpm.d
 install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
 install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_origsysconfdir}/php-fpm.d/www.conf
 mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
-# Service
-install -m 755 -d $RPM_BUILD_ROOT%{_originitdir}
-install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
-# LogRotate
-install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
-install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 %if 0%{?fedora} >= 15
 # tmpfiles.d
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
 install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm.conf
+# install systemd unit files and scripts for handling server startup
+mkdir -p ${RPM_BUILD_ROOT}%{_unitdir}
+install -m 644 %{SOURCE8} ${RPM_BUILD_ROOT}%{_unitdir}/
+%else
+# Service
+install -m 755 -d $RPM_BUILD_ROOT%{_originitdir}
+install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
 %endif
+# LogRotate
+install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
+install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 %endif
 
 # Fix the link
@@ -1280,13 +1286,56 @@ echo -e "You should consider upgrading to a supported release.\n"
 
 %if %{with_fpm}
 %post fpm
-/sbin/chkconfig --add php-fpm
+if [ $1 = 1 ]; then
+    # Initial installation
+%if 0%{?fedora} >= 15
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+%else
+    /sbin/chkconfig --add php-fpm
+%endif
+fi
 
 %preun fpm
-if [ "$1" = 0 ] ; then
+if [ $1 = 0 ]; then
+    # Package removal, not upgrade
+%if 0%{?fedora} >= 15
+    /bin/systemctl --no-reload disable php-fpm.service >/dev/null 2>&1 || :
+    /bin/systemctl stop php-fpm.service >/dev/null 2>&1 || :
+%else
     /sbin/service php-fpm stop >/dev/null 2>&1
     /sbin/chkconfig --del php-fpm
+%endif
 fi
+
+%postun fpm
+%if 0%{?fedora} >= 15
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ]; then
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart php-fpm.service >/dev/null 2>&1 || :
+fi
+%else
+if [ $1 -ge 1 ]; then
+    /sbin/service php-fpm condrestart >/dev/null 2>&1 || :
+fi
+%endif
+
+# Handle upgrading from SysV initscript to native systemd unit.
+# We can tell if a SysV version of php-fpm was previously installed by
+# checking to see if the initscript is present.
+%triggerun fpm -- php-fpm
+%if 0%{?fedora} >= 15
+if [ -f /etc/rc.d/init.d/php-fpm ]; then
+    # Save the current service runlevel info
+    # User must manually run systemd-sysv-convert --apply php-fpm
+    # to migrate them to systemd targets
+    /usr/bin/systemd-sysv-convert --save php-fpm >/dev/null 2>&1 || :
+
+    # Run these because the SysV package being removed won't do them
+    /sbin/chkconfig --del php-fpm >/dev/null 2>&1 || :
+    /bin/systemctl try-restart php-fpm.service >/dev/null 2>&1 || :
+fi
+%endif
 %endif
 
 %post embedded -p /sbin/ldconfig
@@ -1346,9 +1395,11 @@ fi
 %config(noreplace) %{_origsysconfdir}/logrotate.d/php-fpm
 %if 0%{?fedora} >= 15
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/php-fpm.conf
+%{_unitdir}/php-fpm.service
+%else
+%{_originitdir}/php-fpm
 %endif
 %{_sbindir}/php-fpm
-%{_originitdir}/php-fpm
 %dir %{_origsysconfdir}/php-fpm.d
 # log owned by apache for log
 %attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
@@ -1416,6 +1467,10 @@ fi
 %endif
 
 %changelog
+* Fri Dec 09 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.4.201112121330
+- new snapshot (5.4.0RC4-dev)
+- switch to systemd
+
 * Fri Dec 09 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.3.201112091730
 - new snapshot (5.4.0RC4-dev)
 - removed patch merged upstream for https://bugs.php.net/60392
