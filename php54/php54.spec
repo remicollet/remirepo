@@ -211,6 +211,18 @@ Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
 %if 0%{?fedora} >= 15
 BuildRequires: systemd-units
 Requires: systemd-units
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+%else
+# This is actually needed for the %%triggerun script but Requires(triggerun)
+# is not valid.  We can use %%post because this particular %%triggerun script
+# should fire just after this package is installed.
+Requires(post): systemd-sysv
+%else
+# This is for /sbin/service
+Requires(preun): initscripts
+Requires(postun): initscripts
 %endif
 BuildRequires: libevent-devel >= 1.4.11
 
