@@ -208,6 +208,7 @@ executing PHP scripts, /usr/bin/php, and the CGI interface.
 Group: Development/Languages
 Summary: PHP FastCGI Process Manager
 Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
+BuildRequires: libevent-devel >= 1.4.11
 %if 0%{?fedora} >= 15
 BuildRequires: systemd-units
 Requires: systemd-units
@@ -223,7 +224,6 @@ Requires(post): systemd-sysv
 Requires(preun): initscripts
 Requires(postun): initscripts
 %endif
-BuildRequires: libevent-devel >= 1.4.11
 
 %description fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
