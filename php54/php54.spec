@@ -214,7 +214,6 @@ Requires: systemd-units
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
-%else
 # This is actually needed for the %%triggerun script but Requires(triggerun)
 # is not valid.  We can use %%post because this particular %%triggerun script
 # should fire just after this package is installed.
