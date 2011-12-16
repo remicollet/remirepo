@@ -1,0 +1,24 @@
+diff -up mysql-workbench-gpl-5.2.36-src/res/mysql.profiles/Fedora_Linux_(MySQL_Package).xml.orig mysql-workbench-gpl-5.2.36-src/res/mysql.profiles/Fedora_Linux_(MySQL_Package).xml
+diff -up mysql-workbench-gpl-5.2.36-src/res/mysql.profiles/Fedora_Linux_(Vendor_Package).xml.orig mysql-workbench-gpl-5.2.36-src/res/mysql.profiles/Fedora_Linux_(Vendor_Package).xml
+--- mysql-workbench-gpl-5.2.36-src/res/mysql.profiles/Fedora_Linux_(Vendor_Package).xml.orig	2011-12-16 17:35:19.669703414 +0100
++++ mysql-workbench-gpl-5.2.36-src/res/mysql.profiles/Fedora_Linux_(Vendor_Package).xml	2011-12-16 17:38:25.583707861 +0100
+@@ -5,15 +5,15 @@
+     <value type="string" key="sys.config.path">/etc/my.cnf</value>
+     <value type="string" key="sys.config.section">mysqld</value>
+       
+-    <value type="string" key="sys.mysqld.start">/etc/init.d/mysqld start</value>
+-    <value type="string" key="sys.mysqld.stop">/etc/init.d/mysqld stop</value>
++    <value type="string" key="sys.mysqld.start">/sbin/service mysqld start</value>
++    <value type="string" key="sys.mysqld.stop">/sbin/service mysqld stop</value>
+     <value type="string" key="sys.mysqld.status">ps -C mysqld -o pid=</value>
+     <value type="int" key="sys.usesudo">1</value>
+     <value type="int" key="sys.usesudostatus">0</value>
+     <value type="string" key="sys.sudo">/usr/bin/sudo -p EnterPasswordHere /bin/sh -c</value>
+ 
+-    <value type="string" key="sys.system">Linux</value>
+-    <value type="string" key="serverVersion">5.1</value>
++    <value type="string" key="sys.system">Linux</value>
++    <value type="string" key="serverVersion">5.5</value>
+   </value>
+ </data>
+   

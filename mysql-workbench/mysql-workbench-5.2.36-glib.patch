@@ -1,0 +1,79 @@
+diff -up mysql-workbench-gpl-5.2.36-src/backend/wbprivate/sqlide/wb_live_schema_tree.h.glib mysql-workbench-gpl-5.2.36-src/backend/wbprivate/sqlide/wb_live_schema_tree.h
+--- mysql-workbench-gpl-5.2.36-src/backend/wbprivate/sqlide/wb_live_schema_tree.h.glib	2011-12-10 10:18:15.000000000 +0100
++++ mysql-workbench-gpl-5.2.36-src/backend/wbprivate/sqlide/wb_live_schema_tree.h	2011-12-10 10:18:32.000000000 +0100
+@@ -24,7 +24,7 @@
+ #include "grtpp.h"
+ #include "workbench/wb_backend_public_interface.h"
+ #include "base/string_utilities.h"
+-#include <glib/gpattern.h>
++#include <glib.h>
+ 
+ namespace wb
+ {
+diff -up mysql-workbench-gpl-5.2.36-src/library/canvas/src/mdc_canvas_view.h.glib mysql-workbench-gpl-5.2.36-src/library/canvas/src/mdc_canvas_view.h
+--- mysql-workbench-gpl-5.2.36-src/library/canvas/src/mdc_canvas_view.h.glib	2011-12-10 09:45:33.000000000 +0100
++++ mysql-workbench-gpl-5.2.36-src/library/canvas/src/mdc_canvas_view.h	2011-12-10 09:45:40.000000000 +0100
+@@ -28,7 +28,7 @@
+ #include "mdc_selection.h"
+ 
+ #ifndef _WIN32
+-#include <glib/gthread.h>
++#include <glib.h>
+ #endif
+ 
+ BEGIN_MDC_DECLS
+diff -up mysql-workbench-gpl-5.2.36-src/library/canvas/src/mdc_canvas_view_printing.cpp.glib mysql-workbench-gpl-5.2.36-src/library/canvas/src/mdc_canvas_view_printing.cpp
+--- mysql-workbench-gpl-5.2.36-src/library/canvas/src/mdc_canvas_view_printing.cpp.glib	2011-12-10 09:46:27.000000000 +0100
++++ mysql-workbench-gpl-5.2.36-src/library/canvas/src/mdc_canvas_view_printing.cpp	2011-12-10 09:46:36.000000000 +0100
+@@ -21,7 +21,7 @@
+ 
+ #include "mdc_canvas_view.h"
+ #include "mdc_canvas_view_printing.h"
+-#include <glib/gmessages.h>
++#include <glib.h>
+ 
+ #ifdef _WIN32
+ #include <cairo/cairo-win32.h>
+diff -up mysql-workbench-gpl-5.2.36-src/library/grt/src/grtpp_util.cpp.glib mysql-workbench-gpl-5.2.36-src/library/grt/src/grtpp_util.cpp
+--- mysql-workbench-gpl-5.2.36-src/library/grt/src/grtpp_util.cpp.glib	2011-12-10 09:48:51.000000000 +0100
++++ mysql-workbench-gpl-5.2.36-src/library/grt/src/grtpp_util.cpp	2011-12-10 09:49:00.000000000 +0100
+@@ -25,7 +25,7 @@
+ #include "grtpp_util.h"
+ #include "base/string_utilities.h"
+ 
+-#include <glib/gbase64.h>
++#include <glib.h>
+ #include <functional>
+ 
+ using namespace grt;
+diff -up mysql-workbench-gpl-5.2.36-src/modules/db.mysql.sqlparser/src/mysql_sql_parser_fe.cpp.glib mysql-workbench-gpl-5.2.36-src/modules/db.mysql.sqlparser/src/mysql_sql_parser_fe.cpp
+--- mysql-workbench-gpl-5.2.36-src/modules/db.mysql.sqlparser/src/mysql_sql_parser_fe.cpp.glib	2011-12-10 10:28:39.000000000 +0100
++++ mysql-workbench-gpl-5.2.36-src/modules/db.mysql.sqlparser/src/mysql_sql_parser_fe.cpp	2011-12-10 10:29:11.000000000 +0100
+@@ -20,7 +20,7 @@
+ 
+ #include "stdafx.h"
+ 
+-#include <glib/gunicode.h>
++#include <glib.h>
+ #include "grt/common.h"
+ #include "grt/grt_manager.h"
+ #include "grtdb/charset_utils.h"
+@@ -651,4 +651,4 @@ std::string Mysql_sql_parser_fe::get_fir
+     return versioning_comment_subst_token;
+   else
+     return token;
+-}
+\ No newline at end of file
++}
+diff -up mysql-workbench-gpl-5.2.36-src/plugins/db.mysql/backend/db_plugin_be.cpp.glib mysql-workbench-gpl-5.2.36-src/plugins/db.mysql/backend/db_plugin_be.cpp
+--- mysql-workbench-gpl-5.2.36-src/plugins/db.mysql/backend/db_plugin_be.cpp.glib	2011-12-10 10:38:08.000000000 +0100
++++ mysql-workbench-gpl-5.2.36-src/plugins/db.mysql/backend/db_plugin_be.cpp	2011-12-10 10:38:22.000000000 +0100
+@@ -31,7 +31,7 @@
+ #include "grts/structs.db.h"
+ #include "base/string_utilities.h"
+ 
+-#include <glib/gunicode.h>
++#include <glib.h>
+ 
+ void Db_plugin::grtm(bec::GRTManager *grtm)
+ {

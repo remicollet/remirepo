@@ -13,7 +13,8 @@
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   %{mw_version}
-Release:   1%{?dist}
+# also check mysq-utilities release
+Release:   3%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -30,7 +31,12 @@ Patch2:    %{name}-5.2.32-ctemplate.patch
 Patch3:    %{name}-5.2.36-tinyxml.patch
 # redirect man page to /usr/share
 Patch5:    %{name}-5.2.34-man.patch
-
+# http://bugs.mysql.com/63705
+# Only <glib.h> can be included directly
+Patch6:    %{name}-5.2.36-glib.patch
+# http://bugs.mysql.com/63777
+# service startup/shutdown command
+Patch7:    %{name}-5.2.36-profiles.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -101,7 +107,7 @@ Summary:        Scripts for managing and administering MySQL servers
 # Not yet published (else will be package separatly)
 # see ext/mysql-utilities/CHANGES.txt
 Version:        1.0.3
-Release:        0.%{mw_version}%{?dist}
+Release:        0.%{mw_version}%{?dist}.1
 
 BuildArch:      noarch
 BuildRequires:  python-devel >= 2.4
@@ -135,6 +141,8 @@ rm -rf library/tinyxml
 %endif
 
 %patch5 -p1 -b .man
+%patch6 -p1 -b .glib
+%patch7 -p1 -b .profiles
 
 
 touch -r COPYING .timestamp4rpm
@@ -244,6 +252,13 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Dec 16 2011 Remi Collet <remi@fedoraproject.org> 5.2.36-3
+- patch for server startup/shutdown command
+  fixes bug #767391, upstream http://bugs.mysql.com/63777
+
+* Sat Dec 10 2011 Remi Collet <remi@fedoraproject.org> 5.2.36-2
+- patch for http://bugs.mysql.com/63705 (only include glib.h)
+
 * Sat Dec 10 2011 Remi Collet <remi@fedoraproject.org> 5.2.36-1
 - update to 5.2.36 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-36.html
