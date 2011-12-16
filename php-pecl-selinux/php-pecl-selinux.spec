@@ -5,7 +5,7 @@
 Summary: SELinux binding for PHP scripting language
 Name: php-pecl-selinux
 Version: 0.3.1
-Release: 7%{?dist}
+Release: 7%{?dist}.1
 License: PHP
 Group: Development/Languages
 URL: http://pecl.php.net/package/%{pecl_name}
@@ -107,6 +107,9 @@ fi
 
 
 %changelog
+* Mon Dec 12 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.3.1-7.1
+- bump release (f16 rebuild)
+
 * Sun Nov 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.3.1-7
 - php 5.4 and ZTS build
 
