@@ -28,7 +28,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 %global phpversion 5.4.0RC4-dev
-%global snapdate   201112121330
+%global snapdate   201112170630
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -62,7 +62,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.4.0
 %if 0%{?snapdate}
-Release: 0.4.%{snapdate}%{?dist}
+Release: 0.5.%{snapdate}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -813,7 +813,7 @@ PEAR_INSTALLDIR=%{peardir}; export PEAR_INSTALLDIR
 # Shell function to configure and build a PHP tree.
 build() {
 # bison-1.875-2 seems to produce a broken parser; workaround.
-mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
+#mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 ln -sf ../configure
 %configure \
 	--cache-file=../config.cache \
@@ -1478,7 +1478,10 @@ fi
 %endif
 
 %changelog
-* Fri Dec 09 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.4.201112121330
+* Sat Dec 17 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.5.201112170630
+- new snapshot (5.4.0RC4-dev)
+
+* Mon Dec 12 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.4.201112121330
 - new snapshot (5.4.0RC4-dev)
 - switch to systemd
 
