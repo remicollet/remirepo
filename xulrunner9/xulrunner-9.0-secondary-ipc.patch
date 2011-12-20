@@ -1,0 +1,60 @@
+diff -up xulrunner-9.0/mozilla-beta/ipc/chromium/src/base/data_pack.cc.secondary-ipc xulrunner-9.0/mozilla-beta/ipc/chromium/src/base/data_pack.cc
+--- xulrunner-9.0/mozilla-beta/ipc/chromium/src/base/data_pack.cc.secondary-ipc	2011-12-07 07:27:43.000000000 +0100
++++ xulrunner-9.0/mozilla-beta/ipc/chromium/src/base/data_pack.cc	2011-12-09 14:35:50.397220865 +0100
+@@ -91,14 +91,7 @@ bool DataPack::Load(const FilePath& path
+ bool DataPack::Get(uint32_t resource_id, StringPiece* data) {
+   // It won't be hard to make this endian-agnostic, but it's not worth
+   // bothering to do right now.
+-#if defined(__BYTE_ORDER)
+-  // Linux check
+-  COMPILE_ASSERT(__BYTE_ORDER == __LITTLE_ENDIAN,
+-                 datapack_assumes_little_endian);
+-#elif defined(__BIG_ENDIAN__)
+-  // Mac check
+-  #error DataPack assumes little endian
+-#endif
++#warning DoTheRightThingMakingThisEndianAgnostic!
+ 
+   DataPackEntry* target = reinterpret_cast<DataPackEntry*>(
+       bsearch(&resource_id, mmap_->data() + kHeaderLength, resource_count_,
+diff -up xulrunner-9.0/mozilla-beta/ipc/chromium/src/build/build_config.h.secondary-ipc xulrunner-9.0/mozilla-beta/ipc/chromium/src/build/build_config.h
+--- xulrunner-9.0/mozilla-beta/ipc/chromium/src/build/build_config.h.secondary-ipc	2011-12-07 07:27:43.000000000 +0100
++++ xulrunner-9.0/mozilla-beta/ipc/chromium/src/build/build_config.h	2011-12-09 14:39:44.922231601 +0100
+@@ -59,11 +59,23 @@
+ #define ARCH_CPU_ARMEL 1
+ #define ARCH_CPU_32_BITS 1
+ #define WCHAR_T_IS_UNSIGNED 1
++#elif defined(__powerpc64__)
++#define ARCH_CPU_PPC64 1
++#define ARCH_CPU_64_BITS 1
+ #elif defined(__ppc__) || defined(__powerpc__)
+ #define ARCH_CPU_PPC 1
+ #define ARCH_CPU_32_BITS 1
+-#elif defined(__sparc64__)
++#elif defined(__s390x__)
++#define ARCH_CPU_S390X 1
++#define ARCH_CPU_64_BITS 1
++#elif defined(__s390__)
++#define ARCH_CPU_S390 1
++#define ARCH_CPU_32_BITS 1
++#elif defined(__sparc__) && !defined(__arch64)
+ #define ARCH_CPU_SPARC 1
++#define ARCH_CPU_32_BITS 1
++#elif defined(__sparc__) && defined(__arch64)
++#define ARCH_CPU_SPARC64 1
+ #define ARCH_CPU_64_BITS 1
+ #else
+ #error Please add support for your architecture in build/build_config.h
+diff -up xulrunner-9.0/mozilla-beta/ipc/chromium/src/chrome/common/ipc_message_utils.h.secondary-ipc xulrunner-9.0/mozilla-beta/ipc/chromium/src/chrome/common/ipc_message_utils.h
+--- xulrunner-9.0/mozilla-beta/ipc/chromium/src/chrome/common/ipc_message_utils.h.secondary-ipc	2011-12-07 07:27:43.000000000 +0100
++++ xulrunner-9.0/mozilla-beta/ipc/chromium/src/chrome/common/ipc_message_utils.h	2011-12-09 14:40:59.602679278 +0100
+@@ -195,7 +195,8 @@ struct ParamTraits<unsigned long long> {
+ };
+ #endif
+ 
+-#if !(defined(OS_MACOSX) || defined(OS_OPENBSD) || defined(OS_WIN) || (defined(OS_LINUX) && defined(ARCH_CPU_64_BITS)))
++// Although s390 is a 32-bit system it defines size_t as unsigned long
++#if !(defined(OS_MACOSX) || defined(OS_OPENBSD) || defined(OS_WIN) || (defined(OS_LINUX) && (defined(ARCH_CPU_64_BITS) || defined(ARCH_CPU_S390))))
+ // There size_t is a synonym for |unsigned long| ...
+ template <>
+ struct ParamTraits<size_t> {
