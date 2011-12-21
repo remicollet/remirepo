@@ -1,12 +1,20 @@
+### TODO use system nss when 3.13.1 pushed to stable (f >= 15)
+
 %define nspr_version 4.8.8
-%define nss_version 3.12.10
+%define nss_version 3.13.1
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
 %define lcms_version 1.19
-%define sqlite_version 3.6.22
+%define sqlite_version 3.7.7.1
 %define libnotify_version 0.4
 %define build_langpacks 1
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
+
+%if 0%{?fedora} <= 15
+%define system_sqlite 0
+%else
+%define system_sqlite 1
+%endif
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -23,7 +31,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        8.0
+Version:        9.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -35,7 +43,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20111112.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20111221.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -49,13 +57,15 @@ Source100:      find-external-requires
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
 Patch7:         crashreporter-remove-static.patch
-Patch8:         xulrunner-6.0-secondary-ipc.patch
-Patch9:         mozilla-670719.patch
+Patch8:         xulrunner-9.0-secondary-ipc.patch
 Patch10:        xulrunner-2.0-network-link-service.patch
 Patch11:        xulrunner-2.0-NetworkManager09.patch
+Patch12:        mozilla-696393.patch
 
 # Build patches
-Patch100:       xulrunner-install.patch
+
+# Linux specific
+Patch200:       thunderbird-8.0-enable-addons.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -66,8 +76,10 @@ Patch100:       xulrunner-install.patch
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 14
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 BuildRequires:  nspr-devel >= %{nspr_version}
+%endif
+%if 0%{?fedora} >= 17
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if 0%{?fedora} >= 15
@@ -91,12 +103,12 @@ BuildRequires:  freetype-devel >= %{freetype_version}
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
 BuildRequires:  hunspell-devel
-%if 0%{?fedora} >= 15
-# Need SQLITE_SECURE_DELETE option
+%if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
 BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
+#BuildRequires:  autoconf213
 BuildRequires:  desktop-file-utils
 BuildRequires:  libcurl-devel
 BuildRequires:  yasm
@@ -105,11 +117,13 @@ BuildRequires:  GConf2-devel
 BuildRequires:  lcms-devel >= %{lcms_version}
 
 Requires:       mozilla-filesystem
-%if 0%{?fedora} >= 14
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 Requires:       nspr >= %{nspr_version}
+%endif
+%if 0%{?fedora} >= 17
 Requires:       nss >= %{nss_version}
 %endif
-%if 0%{?fedora} >= 15
+%if %{?system_sqlite}
 Requires:       sqlite >= %{sqlite_version}
 %endif
 
@@ -158,11 +172,12 @@ cd %{tarballdir}
 cd mozilla
 %patch7 -p2 -b .static
 %patch8 -p2 -b .secondary-ipc
-%patch9 -p1 -b .moz670719
 %patch10 -p1 -b .link-service
 %patch11 -p1 -b .NetworkManager09
-%patch100 -p2 -b .install
+%patch12 -p2 -b .696393
 cd ..
+
+%patch200 -p1 -b .addons
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -175,34 +190,32 @@ cd ..
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
-%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
-  | grep -v system-sqlite 	\
-%endif
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 17
   | grep -v system-nss 		\
+%endif
+%if 0%{?fedora} < 14 && 0%{?rhel} < 6
   | grep -v system-nspr 	\
 %endif
-%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 15
   | grep -v enable-system-cairo    \
 %endif
   | tee .mozconfig
 
-cat <<EOF | tee -a .mozconfig
-#ac_add_options --enable-libnotify
-#ac_add_options --enable-system-lcms
-%if 0%{?fedora} >= 15
-#ac_add_options --enable-system-sqlite
-%endif
 %if 0%{?fedora} < 14 && 0%{?rhel} <= 6
-ac_add_options --disable-libjpeg-turbo
+echo "ac_add_options --disable-libjpeg-turbo"  >> .mozconfig
 %endif
-EOF
 
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
 %endif
 %if %{enable_mozilla_crashreporter}
 %{__cat} %{SOURCE13} >> .mozconfig
+%endif
+
+%if %{?system_sqlite}
+echo "ac_add_options --enable-system-sqlite"  >> .mozconfig
+%else
+echo "ac_add_options --disable-system-sqlite" >> .mozconfig
 %endif
 
 #===============================================================================
@@ -348,7 +361,7 @@ echo -e "\nWARNING : This %{name} RPM is not an official Fedora/Redhat build and
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 13
+%if %{?fedora}%{!?fedora:99} <= 14
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -424,12 +437,33 @@ fi
 %exclude %{_includedir}/%{name}-%{version}
 %exclude %{_libdir}/%{name}-devel-%{version}
 %{mozappdir}/chrome.manifest
+%{mozappdir}/distribution/extensions
 
 #===============================================================================
 
 %changelog
+* Wed Dec 21 2011 Remi Collet <rpms@famillecollet.com> 9.0-1
+- Thunderbird 9.0, sync with rawhide
+
+* Wed Dec 21 2011 Jan Horak <jhorak@redhat.com> - 9.0-3
+- Update to 9.0
+
+* Tue Dec 20 2011 Jan Horak <jhorak@redhat.com> - 9.0-1
+- Update to 9.0
+
+* Fri Dec 9 2011 Martin Stransky <stransky@redhat.com> - 8.0-4
+- enabled gio support (#760644)
+
+* Tue Nov 29 2011 Jan Horak <jhorak@redhat.com> - 8.0-3
+- Fixed s390x issues
+
 * Sat Nov 12 2011 Remi Collet <rpms@famillecollet.com> 8.0-1
 - Thunderbird 8.0, sync with rawhide
+
+* Thu Nov 10 2011 Jan Horak <jhorak@redhat.com> - 8.0-2
+- Enable Mozilla's crash reporter again for all archs
+- Temporary workaround for langpacks
+- Disabled addon check UI (#753551)
 
 * Tue Nov  8 2011 Jan Horak <jhorak@redhat.com> - 8.0-1
 - Update to 8.0

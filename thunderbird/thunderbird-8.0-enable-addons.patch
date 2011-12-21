@@ -1,0 +1,26 @@
+diff -up comm-release/mail/app/profile/all-thunderbird.js.addons comm-release/mail/app/profile/all-thunderbird.js
+--- comm-release/mail/app/profile/all-thunderbird.js.addons	2011-11-15 10:36:03.868551158 +0100
++++ comm-release/mail/app/profile/all-thunderbird.js	2011-11-15 10:36:20.555397903 +0100
+@@ -138,7 +138,7 @@ pref("extensions.update.autoUpdateDefaul
+ // Disable add-ons installed into the shared user and shared system areas by
+ // default. This does not include the application directory. See the SCOPE
+ // constants in AddonManager.jsm for values to use here
+-pref("extensions.autoDisableScopes", 15);
++pref("extensions.autoDisableScopes", 0);
+ 
+ // Preferences for AMO integration
+ pref("extensions.getAddons.cache.enabled", true);
+diff -up comm-release/mozilla/toolkit/mozapps/extensions/XPIProvider.jsm.addons comm-release/mozilla/toolkit/mozapps/extensions/XPIProvider.jsm
+--- comm-release/mozilla/toolkit/mozapps/extensions/XPIProvider.jsm.addons	2011-11-15 11:15:06.518905245 +0100
++++ comm-release/mozilla/toolkit/mozapps/extensions/XPIProvider.jsm	2011-11-15 11:15:40.399934236 +0100
+@@ -1591,8 +1591,8 @@ var XPIProvider = {
+       this.showUpgradeUI();
+       flushCaches = true;
+     }
+-    else if (aAppChanged === undefined) {
+-      // For new profiles we will never need to show the add-on selection UI
++    else {
++      // For all profiles we will never need to show the add-on selection UI
+       Services.prefs.setBoolPref(PREF_SHOWN_SELECTION_UI, true);
+     }
+ 

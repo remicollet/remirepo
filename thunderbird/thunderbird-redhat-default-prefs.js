@@ -14,3 +14,5 @@ pref("mailnews.database.global.indexer.enabled", false);
 
 # Do not switch to Smart Folders after upgrade to 3.0b4
 pref("mail.folder.views.version", "1")
+pref("extensions.shownSelectionUI", true);
+pref("extensions.autoDisableScope", 0);
