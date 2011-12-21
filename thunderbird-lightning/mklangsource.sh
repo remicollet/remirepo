@@ -1,20 +1,20 @@
 #!/bin/bash
 # This checks out and builds the language sources.  The lightning source needs
 # to already be unpacked
-locales=$PWD/thunderbird-lightning-1.0/comm-beta/calendar/locales/shipped-locales
+locales=$PWD/thunderbird-lightning-1.1/comm-beta/calendar/locales/shipped-locales
 if [ ! -f $locale ]
 then
   echo "ERROR: missing $locales, try fedpkg prep first"
   exit 1
 fi
-rm -rf l10n-miramar
-mkdir l10n-miramar
-cd l10n-miramar
+rm -rf l10n
+mkdir l10n
+cd l10n
 for lang in $(<$locales)
 do
-  hg clone http://hg.mozilla.org/releases/l10n-miramar/$lang
+  hg clone http://hg.mozilla.org/releases/l10n/mozilla-aurora/$lang
 done
 
 # Tar up, minus the mercurial files
 cd ..
-tar cjf l10n-miramar.tar.bz2 --exclude='.hg*'  l10n-miramar
+tar caf l10n.tar.xz --exclude='.hg*'  l10n

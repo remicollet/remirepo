@@ -1,18 +1,16 @@
-%define build_langpacks 1
 %global nspr_version 4.8.8
-%global nss_version 3.12.10
+%global nss_version 3.13.1
 %global cairo_version 1.10.0
 %global freetype_version 2.1.9
 %global lcms_version 1.19
-%global sqlite_version 3.6.22
+%global sqlite_version 3.7.7.1
 %global libnotify_version 0.4
-# Update these two as a pair
-%global thunderbird_version 8.0
-%global thunderbird_next_version 9.0
-%global lightprever rc2
+# Update these two as a pair - see calendar/lightning/install.rdf
+%global thunderbird_version 9.0
+%global thunderbird_next_version 10.0
 # Compatible versions are listed in:
-# comm-beta/calendar/lightning/install.rdf
-# comm-beta/calendar/providers/gdata/install.rdf
+# comm-release/calendar/lightning/install.rdf.rej
+# comm-release/calendar/providers/gdata/install.rdf.rej
 %global moz_objdir objdir-tb
 %global lightning_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{e2fda1a4-762b-4020-b5ad-a41df1933103}
 %global gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
@@ -25,42 +23,42 @@
 #define tarballdir .
 %global tarballdir comm-beta
 
+%global version_internal  5
 %global mozappdir         %{_libdir}/%{name}
+# Remi specific for check
+#global lightprever rc1
 
 Name:           thunderbird-lightning
 Summary:        The calendar extension to Thunderbird
-Version:        1.0
-Release:        0.52.%{lightprever}%{?dist}
+Version:        1.1
+Release:        0.1.rc1%{?dist}
 URL:            http://www.mozilla.org/projects/calendar/lightning/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Productivity
 #Someday lightning will produce a release we can use
-Source0:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0rc2/source/lightning-1.0rc2.source.tar.bz2
+Source0:        https://ftp.mozilla.org/pub/mozilla.org/calendar/lightning/nightly/1.1-candidates/build1/source/lightning-1.1.source.tar.bz2
+#Source0:        http://releases.mozilla.org/pub/mozilla.org/calendar/lightning/releases/1.0/source/lightning-1.0.source.tar.bz2
 #Source0:        http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/%{thunderbird_version}/source/thunderbird-%{thunderbird_version}.source.tar.bz2
 # This script will generate the language source below
 Source1:        mklangsource.sh
-%if %{build_langpacks}
-Source2:        l10n-miramar.tar.bz2
-%endif
+Source2:        l10n.tar.bz2
 # Config file for compilation
 Source10:       thunderbird-mozconfig
 # Finds requirements provided outside of the current file set
 Source100:      find-external-requires
 
-
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
 # Fix build on secondary arches (patches copied from xulrunner)
-Patch2:         xulrunner-6.0-secondary-ipc.patch
-Patch3:         mozilla-670719.patch
+Patch2:         xulrunner-9.0-secondary-ipc.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 14
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 BuildRequires:  nspr-devel >= %{nspr_version}
-BuildRequires:  nss-devel >= %{nss_version}
 %endif
-%if 0%{?fedora} > 15
+%if 0%{?fedora} >= 17
+BuildRequires:  nss-devel >= %{nss_version}
 BuildRequires:  nss-static
 %endif
 %if 0%{?fedora} >= 15
@@ -84,8 +82,7 @@ BuildRequires:  freetype-devel >= %{freetype_version}
 BuildRequires:  libXt-devel
 BuildRequires:  libXrender-devel
 BuildRequires:  hunspell-devel
-%if 0%{?fedora} >= 15
-# Need SQLITE_SECURE_DELETE option
+%if 0%{?fedora} >= 16
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
 BuildRequires:  startup-notification-devel
@@ -115,17 +112,13 @@ calendaring tasks.
 
 %prep
 echo TARGET = %{name}-%{version}-%{release}
-%if %{build_langpacks}
 %setup -q -c -a 2
-%else
-%setup -q -c
-%endif
 
 cd %{tarballdir}
 
 lightprever=$(cat calendar/sunbird/config/version.txt)
-if [ "$lightprever" != "%{version}%{lightprever}" ]; then
-  echo Bad version, detected=$lightprever, expected=%{version}%{lightprever}
+if [ "$lightprever" != "%{version}%{?lightprever}" ]; then
+  echo Bad version, detected=$lightprever, expected=%{version}%{?lightprever}
   exit 1
 fi
 
@@ -133,31 +126,30 @@ fi
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch2 -p2 -b .secondary-ipc
-%patch3 -p1 -b .moz670719
 cd ..
 
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
-%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 16
   | grep -v system-sqlite 	\
 %endif
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 17
   | grep -v system-nss 		\
+%endif
+%if 0%{?fedora} < 14 && 0%{?rhel} < 6
   | grep -v system-nspr 	\
 %endif
-%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 15
   | grep -v enable-system-cairo    \
 %endif
   | tee .mozconfig
 
 cat <<EOF | tee -a .mozconfig
-#ac_add_options --enable-libnotify
-#ac_add_options --enable-system-lcms
-%if 0%{?fedora} >= 15
+%if 0%{?fedora} >= 16
 #ac_add_options --enable-system-sqlite
 %endif
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 14
 ac_add_options --disable-libjpeg-turbo
 %endif
 EOF
@@ -200,14 +192,14 @@ export MAKE="gmake %{moz_make_flags}"
 make -f client.mk build STRIP=/bin/true
 
 # Package l10n files
-%if %{build_langpacks}
 cd objdir-tb/calendar/lightning
 make AB_CD=all L10N_XPI_NAME=lightning-all repack-clobber-all
 grep -v 'osx' ../../../calendar/locales/shipped-locales | while read lang x
 do
+   #Skip eu local for now
+   [ "$lang" = eu ] && continue
    make AB_CD=all L10N_XPI_NAME=lightning-all libs-$lang
 done
-%endif
 
 #===============================================================================
 
@@ -222,11 +214,7 @@ mkdir -p $RPM_BUILD_ROOT%{gdata_extname}
 touch $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
 
 # Lightning and GData provider for it
-%if %{build_langpacks}
 unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning-all.xpi
-%else
-unzip -qod $RPM_BUILD_ROOT%{lightning_extname} objdir-tb/mozilla/dist/xpi-stage/lightning.xpi
-%endif
 unzip -qod $RPM_BUILD_ROOT%{gdata_extname} objdir-tb/mozilla/dist/xpi-stage/gdata-provider.xpi
 
 # Fix up permissions
@@ -248,6 +236,21 @@ find $RPM_BUILD_ROOT -name \*.so | xargs chmod 0755
 #===============================================================================
 
 %changelog
+* Wed Dec 21 2011 Remi Collet <rpms@famillecollet.com> 1.1-0.1.rc1
+- Update to lightning 1.1 rc1, sync with rawhide
+
+* Tue Dec 20 2011 Orion Poplawski <orion@cora.nwra.com> - 1.1-0.1.rc1
+- Update to lightning 1.1 rc1
+- Update l10n source
+- Skip eu locale for now
+
+* Tue Dec 20 2011 Jan Horak <jhorak@redhat.com> - 1.0-2
+- Rebuild due to Thunderbird 9.0
+
+* Mon Nov 14 2011 Orion Poplawski <orion@cora.nwra.com> - 1.0-1
+- Update to lightning 1.0
+- Update l10n source
+
 * Sat Nov 12 2011 Remi Collet <rpms@famillecollet.com> 1.0-0.52.rc2
 - Use lightning 1.0rc2 source for TB 8, sync with rawhide
 
