@@ -171,6 +171,8 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
     if [ -f $FEDORA_LANGPACK_CONFIG ]; then
         rm `cat $FEDORA_LANGPACK_CONFIG` > /dev/null 2>&1
         rm $FEDORA_LANGPACK_CONFIG > /dev/null 2>&1
+        # remove all empty langpacks dirs while they block installation of langpacks
+        rmdir $MOZ_EXTENSIONS_PROFILE_DIR/langpack* > /dev/null 2>&1
     fi
 
     # Get locale from system

@@ -12,12 +12,12 @@
 %global shortname       firefox
 #global mycomment       Beta 4
 %global firefox_dir_ver 9
-%global gecko_version   9.0
+%global gecko_version   9.0.1
 %global gecko_release   1
 %global alpha_version   0
 %global beta_version    0
 %global rc_version      0
-%global datelang        20111220
+%global datelang        20111222
 
 %global mozappdir     %{_libdir}/%{shortname}
 %global langpackdir   %{mozappdir}/langpacks
@@ -48,7 +48,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        9.0
+Version:        9.0.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -140,16 +140,16 @@ cd %{tarballdir}
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if 0%{?fedora} < 16 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 16
   | grep -v enable-system-sqlite   \
 %endif
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} < 6
   | grep -v with-system-nspr       \
 %endif
-%if 0%{?fedora} < 17 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 17
   | grep -v with-system-nss        \
 %endif
-%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 15
   | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
@@ -398,6 +398,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Dec 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 9.0.1-1
+- update to 9.0.1
+
 * Tue Dec 20 2011 Remi Collet <RPMS@FamilleCollet.com> - 9.0-1
 - update to 9.0, sync with rawhide
 
