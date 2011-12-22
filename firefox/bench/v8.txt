@@ -1,0 +1,87 @@
+==============================================================================
+http://v8.googlecode.com/svn/data/benchmarks
+http://v8.googlecode.com/svn/data/benchmarks/v6/run.html
+==============================================================================
+
+Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz
+
+	Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.12) Gecko/20101028 Remi/fc14 Firefox/3.6.12	 255
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b6) Gecko/20100101 Firefox/4.0b6 Remi/fc14		 874
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7				2328
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8				2772
+
+Intel(R) Core(TM) i5 CPU         760  @ 2.80GHz
+
+	Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.10) Gecko/20101005 Fedora/3.6.10-1.fc14 Firefox/3.6.10	 382
+	Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:1.9.2.13) Gecko/20110103 Fedora/3.6.13-1.fc14 Firefox/3.6.13	 394
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7					4010
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b8) Gecko/20100101 Firefox/4.0b8					4634
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b9) Gecko/20100101 Firefox/4.0b9					5158
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b10) Gecko/20100101 Firefox/4.0b10				5099
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b11) Gecko/20110203 Firefox/4.0b11				5050
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b12) Gecko/20100101 Firefox/4.0b12				5090
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0) Gecko/20100101 Firefox/4.0 (rc1)				5132
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0) Gecko/20100101 Firefox/4.0 (rc1)				5105
+        Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1                                  5266
+        Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b5                                    4989
+        Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b7                                    5050
+        Mozilla/5.0 (X11; Linux x86_64; rv:6.0) Gecko/20100101 Firefox/6.0                                      5236
+        Mozilla/5.0 (X11; Linux x86_64; rv:7.0) Gecko/20100101 Firefox/7.0                                      5345
+        
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:7.0) Gecko/20100101 Firefox/7.0
+==============================================================================
+Score: 5345
+Richards: 7812
+DeltaBlue: 4238
+Crypto: 8105
+RayTrace: 4218
+EarleyBoyer: 5775
+RegExp: 2500
+Splay: 7624
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:6.0) Gecko/20100101 Firefox/6.0
+==============================================================================
+Score: 5236
+Richards: 7622
+DeltaBlue: 5237
+Crypto: 8119
+RayTrace: 4374
+EarleyBoyer: 5211
+RegExp: 1971
+Splay: 7408
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b7
+==============================================================================
+Score: 5050
+Richards: 7774
+DeltaBlue: 5079
+Crypto: 8122
+RayTrace: 4075
+EarleyBoyer: 5003
+RegExp: 1972
+Splay: 6495
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b5
+==============================================================================
+Score: 4989
+Richards: 7555
+DeltaBlue: 4754
+Crypto: 8143
+RayTrace: 4111
+EarleyBoyer: 5077
+RegExp: 1865
+Splay: 6756
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1
+==============================================================================       
+Score: 5266
+Richards: 7869
+DeltaBlue: 5977
+Crypto: 8290
+RayTrace: 4103
+EarleyBoyer: 5268
+RegExp: 2118
+Splay: 6291
+==============================================================================
+
