@@ -57,7 +57,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        9.0
+Version:        9.0.1
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -93,7 +93,7 @@ Patch40:        mozilla-682832-proxy.patch
 # ---------------------------------------------------
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-%if 0%{?fedora} >= 14
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
 %if 0%{?fedora} >= 17
@@ -133,7 +133,7 @@ BuildRequires:  libvpx-devel
 %endif
 
 Requires:       mozilla-filesystem
-%if 0%{?fedora} >= 14
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 Requires:       nspr >= %{nspr_version}
 %endif
 %if 0%{?fedora} >= 17
@@ -170,7 +170,7 @@ Provides: gecko-devel-unstable = %{gecko_verrel}
 Provides: gecko-devel-unstable%{?_isa} = %{gecko_verrel}
 
 Requires: %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} >= 14
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 Requires: nspr-devel >= %{nspr_version}
 %endif
 %if 0%{?fedora} >= 17
@@ -264,22 +264,22 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if 0%{?fedora} < 16 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 16
   | grep -v enable-system-sqlite   \
 %endif
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} < 6
   | grep -v with-system-nspr       \
 %endif
-%if 0%{?fedora} < 17 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 17
   | grep -v with-system-nss        \
 %endif
-%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 15
   | grep -v enable-system-cairo    \
 %endif
 %ifarch %{ix86} x86_64
   | grep -v disable-necko-wifi     \
 %endif
-%if 0%{?fedora} < 13 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 13
   | grep -v with-system-libvpx     \
 %endif
   | tee .mozconfig
@@ -416,7 +416,7 @@ popd
 %{__install} -p -c -m 755 dist/bin/xpcshell \
   $RPM_BUILD_ROOT/%{mozappdir}
 
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} < 6
 %{__install} -D -p -m 755 \
    dist/sdk/bin/nspr-config \
    $RPM_BUILD_ROOT${MOZ_APP_SDK_DIR}/sdk/bin/nspr-config
@@ -550,6 +550,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Dec 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 9.0.1-1
+- update to 9.0.1
+
 * Tue Dec 20 2011 Remi Collet <RPMS@FamilleCollet.com> - 9.0-1
 - update to 9.0, sync with rawhide
 
