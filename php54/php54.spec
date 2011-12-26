@@ -145,6 +145,7 @@ BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 %if 0%{?rhel}%{?fedora} > 4
 BuildRequires: libtool-ltdl-devel
 %endif
+BuildRequires: bison
 
 Obsoletes: %{phpname}-dbg, php3, phpfi, stronghold-php, %{phpname}-zts
 Provides: %{phpname}-zts = %{version}-%{release}
@@ -814,8 +815,6 @@ PEAR_INSTALLDIR=%{peardir}; export PEAR_INSTALLDIR
 
 # Shell function to configure and build a PHP tree.
 build() {
-# bison-1.875-2 seems to produce a broken parser; workaround.
-#mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 ln -sf ../configure
 %configure \
 	--cache-file=../config.cache \
@@ -1481,7 +1480,7 @@ fi
 
 %changelog
 * Mon Dec 26 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.6.201112261030
-- new snapshot (5.4.0RC4-dev)
+- new snapshot (5.4.0RC5-dev)
 
 * Sat Dec 17 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.5.201112170630
 - new snapshot (5.4.0RC4-dev)
