@@ -1,0 +1,20 @@
+diff -up php5.4-201112261030/ext/zlib/zlib.c.build php5.4-201112261030/ext/zlib/zlib.c
+--- php5.4-201112261030/ext/zlib/zlib.c.build	2011-12-26 09:31:53.000000000 +0100
++++ php5.4-201112261030/ext/zlib/zlib.c	2011-12-26 16:55:50.553641388 +0100
+@@ -432,7 +432,7 @@ static void php_zlib_cleanup_ob_gzhandle
+ {
+ 	if (ZLIBG(ob_gzhandler)) {
+ 		deflateEnd(&(ZLIBG(ob_gzhandler)->Z));
+-		php_zlib_output_handler_context_dtor(ZLIBG(ob_gzhandler));
++		php_zlib_output_handler_context_dtor(ZLIBG(ob_gzhandler) TSRMLS_CC);
+ 		ZLIBG(ob_gzhandler) = NULL;
+ 	}
+ }
+@@ -938,6 +938,7 @@ static PHP_MINIT_FUNCTION(zlib)
+ 	REGISTER_LONG_CONSTANT("ZLIB_ENCODING_GZIP", PHP_ZLIB_ENCODING_GZIP, CONST_CS|CONST_PERSISTENT);
+ 	REGISTER_LONG_CONSTANT("ZLIB_ENCODING_DEFLATE", PHP_ZLIB_ENCODING_DEFLATE, CONST_CS|CONST_PERSISTENT);
+ 	REGISTER_INI_ENTRIES();
++	ZLIBG(ob_gzhandler) = NULL;
+ 
+ 	return SUCCESS;
+ }

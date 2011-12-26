@@ -27,8 +27,8 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.4.0RC4-dev
-%global snapdate   201112170630
+%global phpversion 5.4.0RC5-dev
+%global snapdate   201112261030
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -62,7 +62,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.4.0
 %if 0%{?snapdate}
-Release: 0.5.%{snapdate}%{?dist}
+Release: 0.6.%{snapdate}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -98,6 +98,7 @@ Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 # fix harcoded mysql.sock path
 Patch9: php-5.4.0-sock.patch
+Patch10: php-5.4.0-build.patch
 
 # Fixes for extension modules
 #Patch20: php-4.3.11-shutdown.patch
@@ -666,6 +667,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch9 -p1 -b .sock
+%patch10 -p1 -b .build
 
 #%patch20 -p1 -b .shutdown
 #%patch21 -p1 -b .macropen
@@ -1478,6 +1480,9 @@ fi
 %endif
 
 %changelog
+* Mon Dec 26 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.6.201112261030
+- new snapshot (5.4.0RC4-dev)
+
 * Sat Dec 17 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.5.201112170630
 - new snapshot (5.4.0RC4-dev)
 

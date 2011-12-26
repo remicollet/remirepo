@@ -347,6 +347,10 @@ disable_classes =
 ; http://php.net/realpath-cache-ttl
 ;realpath_cache_ttl = 120
 
+; Enables or disables the circular reference collector.
+; http://php.net/zend.enable-gc
+zend.enable_gc = On
+
 ; If enabled, scripts may be written in encodings that are incompatible with
 ; the scanner.  CP936, Big5, CP949 and Shift_JIS are the examples of such
 ; encodings.  To use this feature, mbstring extension must be enabled.
@@ -392,6 +396,9 @@ max_input_time = 60
 ; Maximum input variable nesting level
 ; http://php.net/max-input-nesting-level
 ;max_input_nesting_level = 64
+
+; How many GET/POST/COOKIE input variables may be accepted
+; max_input_vars = 1000
 
 ; Maximum amount of memory a script may consume (128MB)
 ; http://php.net/memory-limit
@@ -578,6 +585,11 @@ html_errors = On
 ; Log errors to syslog (Event Log on NT, not valid in Windows 95).
 ;error_log = syslog
 
+;windows.show_crt_warning
+; Default value: 0
+; Development value: 0
+; Production value: 0
+
 ;;;;;;;;;;;;;;;;;
 ; Data Handling ;
 ;;;;;;;;;;;;;;;;;
@@ -598,7 +610,7 @@ html_errors = On
 ; This directive determines which super global arrays are registered when PHP
 ; starts up. G,P,C,E & S are abbreviations for the following respective super
 ; globals: GET, POST, COOKIE, ENV and SERVER. There is a performance penalty
-: paid for the registration of these arrays and because ENV is not as commonly
+; paid for the registration of these arrays and because ENV is not as commonly
 ; used as the others, ENV is not recommended on productions servers. You
 ; can still get access to the environment variables through getenv() should you
 ; need to.
@@ -868,7 +880,7 @@ default_socket_timeout = 60
 ;extension=php_mysql.dll
 ;extension=php_mysqli.dll
 ;extension=php_oci8.dll      ; Use with Oracle 10gR2 Instant Client
-;extension=php_oci8_11g.dll  ; Use with Oracle 11g Instant Client
+;extension=php_oci8_11g.dll  ; Use with Oracle 11gR2 Instant Client
 ;extension=php_openssl.dll
 ;extension=php_pdo_firebird.dll
 ;extension=php_pdo_mysql.dll
@@ -1561,7 +1573,7 @@ session.hash_bits_per_character = 5
 ; http://php.net/url-rewriter.tags
 url_rewriter.tags = "a=href,area=href,frame=src,input=src,form=fakeentry"
 
-; Enable upload procgress tracking in $_SESSION
+; Enable upload progress tracking in $_SESSION
 ; Default Value: On
 ; Development Value: On
 ; Production Value: On
@@ -1605,6 +1617,7 @@ url_rewriter.tags = "a=href,area=href,frame=src,input=src,form=fakeentry"
 ; Production Value: 1
 ; http://php.net/session.upload-progress.min-freq
 ;session.upload_progress.min_freq = "1"
+
 [MSSQL]
 ; Allow or prevent persistent links.
 mssql.allow_persistent = On
@@ -1653,7 +1666,7 @@ mssql.secure_connection = Off
 ;mssql.max_procs = -1
 
 ; Specify client character set.
-; If empty or not set the client charset from freetds.comf is used
+; If empty or not set the client charset from freetds.conf is used
 ; This is only used when compiled with FreeTDS
 ;mssql.charset = "ISO-8859-1"
 
