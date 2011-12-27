@@ -1,0 +1,12 @@
+diff -up uuid-1.6.2/php/uuid.c.php54 uuid-1.6.2/php/uuid.c
+--- uuid-1.6.2/php/uuid.c.php54	2011-12-27 17:23:00.948400710 +0100
++++ uuid-1.6.2/php/uuid.c	2011-12-27 17:23:16.668401029 +0100
+@@ -496,7 +496,7 @@ PHP_FUNCTION(uuid_version)
+ }
+ 
+ /* module function table */
+-static function_entry uuid_functions[] = {
++static zend_function_entry uuid_functions[] = {
+     PHP_FE(uuid_create,  NULL)
+     PHP_FE(uuid_destroy, NULL)
+     PHP_FE(uuid_clone,   NULL)
