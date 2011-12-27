@@ -1,0 +1,13 @@
+diff -up cups-1.5.0/cups/ppd-cache.c.ps-command-filter cups-1.5.0/cups/ppd-cache.c
+--- cups-1.5.0/cups/ppd-cache.c.ps-command-filter	2011-11-04 13:10:34.405729542 +0000
++++ cups-1.5.0/cups/ppd-cache.c	2011-11-04 13:11:58.502184096 +0000
+@@ -1272,7 +1272,8 @@ _ppdCacheCreateWithPPD(ppd_file_t *ppd)
+ 
+     if (filter)
+       cupsArrayAdd(pc->filters,
+-                   "application/vnd.cups-command application/postscript 0 -");
++                   "application/vnd.cups-command application/postscript 100 "
++		   "commandtops");
+   }
+ 
+   if ((ppd_attr = ppdFindAttr(ppd, "cupsPreFilter", NULL)) != NULL)

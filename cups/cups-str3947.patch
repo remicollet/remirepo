@@ -1,0 +1,26 @@
+diff -up cups-1.5.0/notifier/dbus.c.str3947 cups-1.5.0/notifier/dbus.c
+--- cups-1.5.0/notifier/dbus.c.str3947	2011-03-04 16:55:59.000000000 +0000
++++ cups-1.5.0/notifier/dbus.c	2011-09-28 10:42:56.298760622 +0100
+@@ -4,7 +4,7 @@
+  *   D-Bus notifier for CUPS.
+  *
+  *   Copyright 2008-2010 by Apple Inc.
+- *   Copyright (C) 2007 Red Hat, Inc.
++ *   Copyright (C) 2011 Red Hat, Inc.
+  *   Copyright (C) 2007 Tim Waugh <twaugh@redhat.com>
+  *   Copyright 1997-2005 by Easy Software Products.
+  *
+@@ -423,10 +423,11 @@ main(int  argc,				/* I - Number of comm
+ 	  p = printer_reasons;
+ 	  for (i = 0; i < attr->num_values; i++)
+ 	  {
+-	    strcpy(p, attr->values[i].string.text);
+-	    p += strlen(p);
+ 	    if (i)
+ 	      *p++ = ',';
++
++	    strcpy(p, attr->values[i].string.text);
++	    p += strlen(p);
+ 	  }
+ 	  dbus_message_iter_append_string(&iter, &printer_reasons);
+ 	}

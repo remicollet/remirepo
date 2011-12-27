@@ -1,0 +1,8 @@
+#!/bin/sh
+for d in /var/spool/cups/tmp
+do
+    if [ -d "$d" ]; then
+	/usr/sbin/tmpwatch -f 720 "$d"
+    fi
+done
+exit 0
