@@ -1,6 +1,7 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 %global mw_version 5.2.37
+%global mw_release 2
 %global tarversion gpl-5.2.37-src
 %global srcversion gpl-5.2.37-src
 
@@ -13,8 +14,7 @@
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   %{mw_version}
-# also check mysq-utilities release
-Release:   1%{?dist}
+Release:   %{mw_release}%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -50,7 +50,11 @@ BuildRequires: automake autoconf libtool
 BuildRequires: libzip-devel libxml2-devel
 BuildRequires: readline-devel
 BuildRequires: python-devel >= 2.4
+%if 0%{?fedora} > 15
+BuildRequires: libgnome-keyring-devel
+%else
 BuildRequires: gnome-keyring-devel
+%endif
 BuildRequires: boost-devel >= 1.37
 BuildRequires: libsigc++20-devel
 BuildRequires: curl-devel
@@ -107,7 +111,7 @@ Summary:        Scripts for managing and administering MySQL servers
 # Not yet published (else will be package separatly)
 # see ext/mysql-utilities/CHANGES.txt
 Version:        1.0.3
-Release:        0.%{mw_version}%{?dist}
+Release:        0.%{mw_version}%{?dist}.%{mw_release}
 
 BuildArch:      noarch
 BuildRequires:  python-devel >= 2.4
@@ -252,6 +256,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Tue Dec 27 2011 Remi Collet <remi@fedoraproject.org> 5.2.37-1.1
+- Fix BR (lib)gnome-keyring-devel
+
 * Tue Dec 27 2011 Remi Collet <remi@fedoraproject.org> 5.2.37-1
 - update to 5.2.37 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-37.html
