@@ -1,0 +1,22 @@
+--- graphviz-2.26.0/rtest/rtest.sh.old	2009-12-06 00:27:49.000000000 +0100
++++ graphviz-2.26.0/rtest/rtest.sh	2010-10-22 10:37:42.952893435 +0200
+@@ -279,14 +279,16 @@
+     $testcmd 2> errout
+     RVAL=$?
+ 
++    if [[ -s errout ]]
++    then
++      cat errout
++    fi
++    
+     if [[ $RVAL != 0 || ! -s $OUTPATH ]]
+     then
+       (( CRASH_CNT+=1 ))
+       print -u 2 "Test $TESTNAME:$i : == Layout failed =="
+       print -u 2 "  $testcmd"
+-    elif [[ -s errout ]]
+-    then
+-      cat errout
+     elif [[ $GENERATE == 1 ]]
+     then
+       continue

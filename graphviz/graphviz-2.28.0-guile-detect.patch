@@ -1,0 +1,31 @@
+diff -up ./graphviz-2.28.0/configure.xorig ./graphviz-2.28.0/configure
+--- graphviz-2.28.0/configure.xorig	2011-05-07 05:27:36.000000000 +0200
++++ graphviz-2.28.0/configure	2011-05-19 13:45:26.026395747 +0200
+@@ -20066,7 +20066,7 @@ fi
+       if test "x$GUILE" = "x"; then
+         use_guile="No (guile not available)"
+       else
+-        GUILE_VERSION=`$GUILE --version | head -1 | cut -d ' ' -f 2`
++        GUILE_VERSION=`$GUILE --version | sed -n '1 s/^.* \+\([0-9\.]\+\)$/\1/ p'`
+         GUILE_VERSION_MAJOR=`echo $GUILE_VERSION | cut -d '.' -f 1`
+         GUILE_VERSION_MINOR=`echo $GUILE_VERSION | cut -d '.' -f 2`
+         if test $GUILE_VERSION_MAJOR -lt 2; then
+@@ -20081,9 +20081,16 @@ fi
+         if test "x$GUILE" = "x"; then
+ 	  use_guile="No (guile is too old)"
+         else
+-          GUILE_INCLUDES=
+-          GUILE_LIBS=
++          GUILE_INCLUDES=`$PKG_CONFIG --cflags "guile-$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR" 2>/dev/null`
++          GUILE_LIBS=`$PKG_CONFIG --libs "guile-$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR" 2>/dev/null`
++
++          ac_save_CFLAGS="$CFLAGS"
++          ac_save_CPPFLAGS="$CPPFLAGS"
++          CFLAGS="$CFLAGS $GUILE_INCLUDES"
++          CPPFLAGS="$CPPFLAGS $GUILE_INCLUDES"
+           ac_fn_c_check_header_mongrel "$LINENO" "libguile.h" "ac_cv_header_libguile_h" "$ac_includes_default"
++          CFLAGS="$ac_save_CFLAGS"
++          CPPFLAGS="$ac_save_CPPFLAGS"
+ if test "x$ac_cv_header_libguile_h" = x""yes; then :
+ 
+ else
