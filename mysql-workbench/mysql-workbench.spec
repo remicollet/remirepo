@@ -1,8 +1,8 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%global mw_version 5.2.36
-%global tarversion gpl-5.2.36-src
-%global srcversion gpl-5.2.36-src
+%global mw_version 5.2.37
+%global tarversion gpl-5.2.37-src
+%global srcversion gpl-5.2.37-src
 
 # Use system cppconn if a compatible upstream version exists
 #global cppconnver 1.1.0-0.3.bzr895
@@ -14,7 +14,7 @@ Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   %{mw_version}
 # also check mysq-utilities release
-Release:   3%{?dist}
+Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -107,7 +107,7 @@ Summary:        Scripts for managing and administering MySQL servers
 # Not yet published (else will be package separatly)
 # see ext/mysql-utilities/CHANGES.txt
 Version:        1.0.3
-Release:        0.%{mw_version}%{?dist}.1
+Release:        0.%{mw_version}%{?dist}
 
 BuildArch:      noarch
 BuildRequires:  python-devel >= 2.4
@@ -252,6 +252,10 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Tue Dec 27 2011 Remi Collet <remi@fedoraproject.org> 5.2.37-1
+- update to 5.2.37 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-37.html
+
 * Fri Dec 16 2011 Remi Collet <remi@fedoraproject.org> 5.2.36-3
 - patch for server startup/shutdown command
   fixes bug #767391, upstream http://bugs.mysql.com/63777
