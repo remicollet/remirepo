@@ -1,0 +1,12 @@
+diff -up cups-1.5.0/scripting/php/phpcups.c.orig cups-1.5.0/scripting/php/phpcups.c
+--- cups-1.5.0/scripting/php/phpcups.c.orig	2011-12-27 16:54:21.520359399 +0100
++++ cups-1.5.0/scripting/php/phpcups.c	2011-12-27 16:54:55.461360314 +0100
+@@ -40,7 +40,7 @@
+  * PHP function list...
+  */
+ 
+-function_entry phpcups_functions[] =
++zend_function_entry phpcups_functions[] =
+ {
+   PHP_FE(cups_cancel_job, NULL)
+   PHP_FE(cups_get_dests, NULL)

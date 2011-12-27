@@ -77,6 +77,10 @@ Patch39: cups-ps-command-filter.patch
 
 Patch100: cups-lspp.patch
 
+# http://www.cups.org/str.php?L3999
+Patch101: cups-php54.patch
+
+
 Epoch: 1
 Url: http://www.cups.org/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -309,6 +313,9 @@ Sends IPP requests to the specified URI and tests and/or displays the results.
 # LSPP support.
 %patch100 -p1 -b .lspp
 %endif
+
+%patch101 -p1 -b .php54
+
 
 sed -i -e '1iMaxLogSize 0' conf/cupsd.conf.in
 
@@ -660,6 +667,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/ipptool.1.gz
 
 %changelog
+* Tue Dec 27 2011 Remi Collet <remi@fedoraproject.org> 1:1.5.0-22
+- build against php 5.4
+- add patch for http://www.cups.org/str.php?L3999
+
 * Fri Nov 11 2011 Tim Waugh <twaugh@redhat.com> 1:1.5.0-22
 - Fixed trigger (bug #748841).
 
