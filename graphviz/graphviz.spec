@@ -251,7 +251,7 @@ find -type f -regex '.*\.\(c\|h\)$' -exec chmod a-x {} ';'
 # %%define NO_IO --disable-io
 
 # XXX ix86 only used to have -ffast-math, let's use everywhere
-%{expand: %%define optflags %{optflags} -ffast-math}
+%{expand: %%define optflags %{optflags} -ffast-math -fpermissive}
 # Hack in the java includes we need
 sed -i '/JavaVM.framework/!s/JAVA_INCLUDES=/JAVA_INCLUDES=\"_MY_JAVA_INCLUDES_\"/g' configure
 sed -i 's|_MY_JAVA_INCLUDES_|-I%{java_home}/include/ -I%{java_home}/include/linux/|g' configure
@@ -480,6 +480,9 @@ fi
 
 
 %changelog
+* Tue Dec 27 2011 Remi Collet <remi@fedoraproject.org> - 2.28.0-11
+- build against php 5.4
+
 * Thu Dec  8 2011 Jaroslav Škarvada <jskarvad@redhat.com> - 2.28.0-11
 - Added conditionals for ARRRR, DEVIL, QTAPPS (gvedit), GTS, LASI
 - Fixed conditionals for SHARP, OCAML
