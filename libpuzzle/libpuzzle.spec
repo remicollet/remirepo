@@ -91,6 +91,15 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 %postun -p /sbin/ldconfig
 
+%check
+# No test provided by upstream, so
+# minimal load test for the PHP extension
+LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
+    -d extension_dir=%{buildroot}%{php_extdir} \
+    -d extension=libpuzzle.so -m \
+    | grep libpuzzle
+
+
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README THANKS
@@ -111,6 +120,10 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_mandir}/man3/*
 
 %changelog
+* Wed Dec 28 2011 Remi Collet <remi@fedoraproject.org> - 0.11-9
+- build with php 5.4
+- add minimal load test for PHP extension
+
 * Fri Jul 15 2011 Andrew Colin Kissa <andrew@topdog.za.net> - 0.11-9
 - Fix bugzilla #716003
 
