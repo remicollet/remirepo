@@ -177,6 +177,9 @@ make install DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
 
 
 %changelog
+* Wed Dec 28 2011 Remi Collet <remi@fedoraproject.org> - 0.3.0-9
+- build against php 5.4
+
 * Mon Jun 20 2011 Petr Sabata <contyk@redhat.com> - 0.3.0-9
 - Perl mass rebuild
 - Removing now obsolete Buildroot and defattr
