@@ -13,6 +13,10 @@ Source0:	http://www.xarg.org/download/facedetect-%{version}.tar.gz
 Patch1:		facedetect-dso-link-workaround.patch
 # Fix code to work with opencv 2.2.0
 Patch2:		facedetect-1.0.1-opencv-2.2.0.patch
+# https://github.com/infusion/PHP-Facedetect/pull/5
+Patch3:         facedetect-php54.patch
+
+
 BuildRequires:	php-devel opencv-devel >= 2.2.0
 Requires:	opencv
 Requires:	php(zend-abi) = %{php_zend_api}
@@ -30,6 +34,8 @@ of their coordinates.
 %setup -q -n facedetect
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1 -b .php54
+
 %{__cat} <<'EOF' >facedetect.ini
 extension=facedetect.so
 EOF
@@ -44,12 +50,25 @@ make %{?_smp_mflags}
 make install INSTALL_ROOT=$RPM_BUILD_ROOT INSTALL="install -p" 
 install -p -D -m0644 facedetect.ini $RPM_BUILD_ROOT%{_sysconfdir}/php.d/facedetect.ini
 
+%check
+# No test provided by upstream, so
+# minimal load test for the PHP extension
+php -n \
+    -d extension_dir=modules \
+    -d extension=facedetect.so -m \
+    | grep facedetect
+
 %files
 %doc CREDITS
 %config(noreplace) %{_sysconfdir}/php.d/facedetect.ini
 %{php_extdir}/facedetect.so
 
 %changelog
+* Wed Dec 28 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-4
+- build against php 5.4
+- add patch for php 5.4
+- add minimal load test
+
 * Wed Aug 31 2011 Rex Dieter <rdieter@fedoraproject.org> 1.0.1-4
 - rebuild (opencv)
 
