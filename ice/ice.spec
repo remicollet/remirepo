@@ -39,6 +39,8 @@ Patch2:         Ice-3.4.0-s390.patch
 Patch3:         Ice-3.3-dont-build-demo-test.patch
 # disable the CSharp interface
 Patch4:         ice-3.4.1-no-mono.patch
+# PHP 5.4 compatibility
+Patch5:         ice-3.4.2-php54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -205,6 +207,7 @@ Tools for developing Ice applications in PHP.
 %if ! 0%{?with_mono}
 %patch4 -p1
 %endif
+%patch5 -p1 -b .php54
 %setup -q -n ice-3.4.2-man-pages -T -b 1
 rm -f slice2docbook.1
 
@@ -388,6 +391,11 @@ cp CHANGES RELEASE_NOTES  ${RPM_BUILD_ROOT}%{_defaultdocdir}/Ice-%{version}/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+
+%check
+# Minimum check for php extension
+php -n -d extension_dir=$RPM_BUILD_DIR/Ice-%{version}/php/lib -d extension=IcePHP.so -m | grep ice
 
 
 %files
@@ -576,6 +584,10 @@ fi
 
 
 %changelog
+* Wed Dec 28 2011 Remi Collet <remi@fedoraproject.org> - 3.4.2-3
+- build against php 5.4
+- patch for php 5.4
+
 * Wed Aug 31 2011 Haïkel Guémar <hguemar@fedoraproject.org> - 3.4.2-3
 - remove arch-dependency on java requires
 

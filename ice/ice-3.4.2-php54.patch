@@ -1,0 +1,272 @@
+diff -up Ice-3.4.2/php/src/IcePHP/Communicator.cpp.php54 Ice-3.4.2/php/src/IcePHP/Communicator.cpp
+--- Ice-3.4.2/php/src/IcePHP/Communicator.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Communicator.cpp	2011-12-28 09:07:57.231738495 +0100
+@@ -1092,11 +1092,11 @@ ZEND_FUNCTION(Ice_getProperties)
+ //
+ // Predefined methods for Communicator.
+ //
+-static function_entry _interfaceMethods[] =
++static zend_function_entry _interfaceMethods[] =
+ {
+     {0, 0, 0}
+ };
+-static function_entry _classMethods[] =
++static zend_function_entry _classMethods[] =
+ {
+     ZEND_ME(Ice_Communicator, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+     ZEND_ME(Ice_Communicator, destroy, NULL, ZEND_ACC_PUBLIC)
+diff -up Ice-3.4.2/php/src/IcePHP/Connection.cpp.php54 Ice-3.4.2/php/src/IcePHP/Connection.cpp
+--- Ice-3.4.2/php/src/IcePHP/Connection.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Connection.cpp	2011-12-28 09:07:57.231738495 +0100
+@@ -271,11 +271,11 @@ handleConnectionCompare(zval* zobj1, zva
+ //
+ // Predefined methods for Connection.
+ //
+-static function_entry _interfaceMethods[] =
++static zend_function_entry _interfaceMethods[] =
+ {
+     {0, 0, 0}
+ };
+-static function_entry _connectionClassMethods[] =
++static zend_function_entry _connectionClassMethods[] =
+ {
+     ZEND_ME(Ice_Connection, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+     ZEND_ME(Ice_Connection, __toString, NULL, ZEND_ACC_PUBLIC)
+@@ -297,7 +297,7 @@ ZEND_METHOD(Ice_ConnectionInfo, __constr
+ //
+ // Predefined methods for ConnectionInfo.
+ //
+-static function_entry _connectionInfoClassMethods[] =
++static zend_function_entry _connectionInfoClassMethods[] =
+ {
+     ZEND_ME(Ice_ConnectionInfo, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+     {0, 0, 0}
+diff -up Ice-3.4.2/php/src/IcePHP/Endpoint.cpp.php54 Ice-3.4.2/php/src/IcePHP/Endpoint.cpp
+--- Ice-3.4.2/php/src/IcePHP/Endpoint.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Endpoint.cpp	2011-12-28 09:07:57.232738495 +0100
+@@ -216,7 +216,7 @@ handleEndpointInfoFreeStorage(void* p TS
+     zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
+ }
+ 
+-static function_entry _interfaceMethods[] =
++static zend_function_entry _interfaceMethods[] =
+ {
+     {0, 0, 0}
+ };
+@@ -224,7 +224,7 @@ static function_entry _interfaceMethods[
+ //
+ // Predefined methods for Endpoint.
+ //
+-static function_entry _endpointMethods[] =
++static zend_function_entry _endpointMethods[] =
+ {
+     ZEND_ME(Ice_Endpoint, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+     ZEND_ME(Ice_Endpoint, __toString, NULL, ZEND_ACC_PUBLIC)
+@@ -236,7 +236,7 @@ static function_entry _endpointMethods[]
+ //
+ // Predefined methods for EndpointInfo.
+ //
+-static function_entry _endpointInfoMethods[] =
++static zend_function_entry _endpointInfoMethods[] =
+ {
+     ZEND_ME(Ice_EndpointInfo, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+     ZEND_ME(Ice_EndpointInfo, type, NULL, ZEND_ACC_PUBLIC)
+diff -up Ice-3.4.2/php/src/IcePHP/Init.cpp.php54 Ice-3.4.2/php/src/IcePHP/Init.cpp
+--- Ice-3.4.2/php/src/IcePHP/Init.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Init.cpp	2011-12-28 09:07:57.233738495 +0100
+@@ -25,7 +25,7 @@ ZEND_DECLARE_MODULE_GLOBALS(ice)
+ //
+ // Entries for all global functions.
+ //
+-function_entry ice_functions[] =
++zend_function_entry ice_functions[] =
+ {
+     ICEPHP_COMMUNICATOR_FUNCTIONS
+     ICEPHP_COMMUNICATOR_NS_FUNCTIONS
+diff -up Ice-3.4.2/php/src/IcePHP/Logger.cpp.php54 Ice-3.4.2/php/src/IcePHP/Logger.cpp
+--- Ice-3.4.2/php/src/IcePHP/Logger.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Logger.cpp	2011-12-28 09:07:57.233738495 +0100
+@@ -226,11 +226,11 @@ handleClone(zval* zv TSRMLS_DC)
+ //
+ // Predefined methods for Logger.
+ //
+-static function_entry _interfaceMethods[] =
++static zend_function_entry _interfaceMethods[] =
+ {
+     {0, 0, 0}
+ };
+-static function_entry _classMethods[] =
++static zend_function_entry _classMethods[] =
+ {
+     ZEND_ME(Ice_Logger, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+     ZEND_ME(Ice_Logger, __toString, NULL, ZEND_ACC_PUBLIC)
+diff -up Ice-3.4.2/php/src/IcePHP/Operation.cpp.php54 Ice-3.4.2/php/src/IcePHP/Operation.cpp
+--- Ice-3.4.2/php/src/IcePHP/Operation.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Operation.cpp	2011-12-28 09:17:24.728752077 +0100
+@@ -218,7 +218,7 @@ IcePHP::OperationI::~OperationI()
+     if(_zendFunction)
+     {
+         delete []_zendFunction->arg_info;
+-        efree(_zendFunction->function_name);
++        efree(const_cast<char *>(_zendFunction->function_name));
+         efree(_zendFunction);
+     }
+ }
+@@ -238,12 +238,18 @@ IcePHP::OperationI::function()
+         for(p = inParams.begin(); p != inParams.end(); ++p, ++i)
+         {
+             getArgInfo(argInfo[i], *p, false);
++#if PHP_VERSION_ID < 50399
++            // php 5.4 : zend_arg_info.required_num_args removed.
+             argInfo[i].required_num_args = static_cast<zend_uint>(numParams);
++#endif
+         }
+         for(p = outParams.begin(); p != outParams.end(); ++p, ++i)
+         {
+             getArgInfo(argInfo[i], *p, true);
++#if PHP_VERSION_ID < 50399
++            // php 5.4 : zend_arg_info.required_num_args removed.
+             argInfo[i].required_num_args = static_cast<zend_uint>(numParams);
++#endif
+         }
+ 
+         string fixed = fixIdent(name);
+@@ -255,9 +261,12 @@ IcePHP::OperationI::function()
+         _zendFunction->prototype = 0;
+         _zendFunction->num_args = static_cast<zend_uint>(numParams);
+         _zendFunction->arg_info = argInfo;
++#if PHP_VERSION_ID < 50399
++        // php 5.4 use fn_flags ZEND_ACC_PASS_REST_BY_REFERENCE, ZEND_ACC_RETURN_REFERENCE
+         _zendFunction->pass_rest_by_reference = 0;
+-        _zendFunction->required_num_args = _zendFunction->num_args;
+         _zendFunction->return_reference = 0;
++#endif
++        _zendFunction->required_num_args = _zendFunction->num_args;
+         _zendFunction->handler = ZEND_FN(IcePHP_Operation_call);
+     }
+ 
+@@ -295,13 +304,22 @@ IcePHP::OperationI::getArgInfo(zend_arg_
+     arg.allow_null = 1;
+     if(SequenceInfoPtr::dynamicCast(info) || DictionaryInfoPtr::dynamicCast(info))
+     {
++#if PHP_VERSION_ID < 50399
+         arg.array_type_hint = 1;
++        arg.return_reference = 0;
++#else
++        arg.type_hint = IS_ARRAY;
++#endif
+     }
+     else
+     {
++#if PHP_VERSION_ID < 50399
+         arg.array_type_hint = 0;
++        arg.return_reference = 0;
++#else
++        arg.type_hint = 0;
++#endif
+     }
+-    arg.return_reference = 0;
+     arg.pass_by_reference = out ? 1 : 0;
+ }
+ 
+diff -up Ice-3.4.2/php/src/IcePHP/Properties.cpp.php54 Ice-3.4.2/php/src/IcePHP/Properties.cpp
+--- Ice-3.4.2/php/src/IcePHP/Properties.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Properties.cpp	2011-12-28 09:07:57.234738495 +0100
+@@ -589,11 +589,11 @@ ZEND_FUNCTION(Ice_createProperties)
+ //
+ // Predefined methods for Properties.
+ //
+-static function_entry _interfaceMethods[] =
++static zend_function_entry _interfaceMethods[] =
+ {
+     {0, 0, 0}
+ };
+-static function_entry _classMethods[] =
++static zend_function_entry _classMethods[] =
+ {
+     ZEND_ME(Ice_Properties, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+     ZEND_ME(Ice_Properties, __toString, NULL, ZEND_ACC_PUBLIC)
+diff -up Ice-3.4.2/php/src/IcePHP/Proxy.cpp.php54 Ice-3.4.2/php/src/IcePHP/Proxy.cpp
+--- Ice-3.4.2/php/src/IcePHP/Proxy.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Proxy.cpp	2011-12-28 09:07:57.235738495 +0100
+@@ -59,7 +59,11 @@ extern "C"
+ static zend_object_value handleAlloc(zend_class_entry* TSRMLS_DC);
+ static void handleFreeStorage(void* TSRMLS_DC);
+ static zend_object_value handleClone(zval* TSRMLS_DC);
++#if PHP_VERSION_ID < 50399
+ static union _zend_function* handleGetMethod(zval**, char*, int TSRMLS_DC);
++#else
++static union _zend_function* handleGetMethod(zval**, char*, int, const _zend_literal* TSRMLS_DC);
++#endif
+ static int handleCompare(zval*, zval* TSRMLS_DC);
+ }
+ 
+@@ -1461,7 +1465,11 @@ handleClone(zval* zv TSRMLS_DC)
+ extern "C"
+ #endif
+ static union _zend_function*
++#if PHP_VERSION_ID < 50399
+ handleGetMethod(zval** zv, char* method, int len TSRMLS_DC)
++#else
++handleGetMethod(zval** zv, char* method, int len, const _zend_literal* literal TSRMLS_DC)
++#endif
+ {
+     zend_function* result;
+ 
+@@ -1470,7 +1478,11 @@ handleGetMethod(zval** zv, char* method,
+     // any of our predefined proxy methods. If it returns 0, then we return a
+     // function that will check the class definition.
+     //
++#if PHP_VERSION_ID < 50399
+     result = zend_get_std_object_handlers()->get_method(zv, method, len TSRMLS_CC);
++#else
++    result = zend_get_std_object_handlers()->get_method(zv, method, len, literal TSRMLS_CC);
++#endif
+     if(!result)
+     {
+         Wrapper<ProxyPtr>* obj = Wrapper<ProxyPtr>::extract(*zv TSRMLS_CC);
+@@ -1532,7 +1544,7 @@ handleCompare(zval* zobj1, zval* zobj2 T
+ //
+ // Predefined methods for ObjectPrx.
+ //
+-static function_entry _proxyMethods[] =
++static zend_function_entry _proxyMethods[] =
+ {
+     ZEND_ME(Ice_ObjectPrx, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+     ZEND_ME(Ice_ObjectPrx, __toString, NULL, ZEND_ACC_PUBLIC)
+diff -up Ice-3.4.2/php/src/IcePHP/Types.cpp.php54 Ice-3.4.2/php/src/IcePHP/Types.cpp
+--- Ice-3.4.2/php/src/IcePHP/Types.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Types.cpp	2011-12-28 09:07:57.236738495 +0100
+@@ -2853,7 +2853,7 @@ ZEND_FUNCTION(IcePHP_stringifyException)
+ //
+ // Predefined methods for IcePHP_TypeInfo.
+ //
+-static function_entry _typeInfoMethods[] =
++static zend_function_entry _typeInfoMethods[] =
+ {
+     {0, 0, 0}
+ };
+@@ -2861,7 +2861,7 @@ static function_entry _typeInfoMethods[]
+ //
+ // Predefined methods for IcePHP_ExceptionInfo.
+ //
+-static function_entry _exceptionInfoMethods[] =
++static zend_function_entry _exceptionInfoMethods[] =
+ {
+     {0, 0, 0}
+ };
+diff -up Ice-3.4.2/php/src/IcePHP/Util.cpp.php54 Ice-3.4.2/php/src/IcePHP/Util.cpp
+--- Ice-3.4.2/php/src/IcePHP/Util.cpp.php54	2011-06-15 21:44:00.000000000 +0200
++++ Ice-3.4.2/php/src/IcePHP/Util.cpp	2011-12-28 09:07:57.237738495 +0100
+@@ -38,7 +38,11 @@ IcePHP::createWrapper(zend_class_entry*
+ 
+     obj->properties = static_cast<HashTable*>(emalloc(sizeof(HashTable)));
+     zend_hash_init(obj->properties, 0, 0, dtor_wrapper, 0);
++#if PHP_VERSION_ID < 50399
+     zend_hash_copy(obj->properties, &ce->default_properties, (copy_ctor_func_t)zval_add_ref, &tmp, sizeof(zval*));
++#else
++    object_properties_init( (zend_object*)obj, ce );
++#endif
+ 
+     return obj;
+ }
