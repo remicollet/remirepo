@@ -139,6 +139,14 @@ make %{?_smp_mflags} -C %{_target_platform}
 make install DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
 
 
+%check
+# Minimal load test for the PHP extension
+php -n \
+    -d extension_dir=%{_target_platform}/src/php \
+    -d extension=digidoc.so -m \
+    | grep digidoc
+
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
