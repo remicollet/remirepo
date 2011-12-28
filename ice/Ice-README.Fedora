@@ -1,0 +1,283 @@
+======================================================================
+The Internet Communications Engine
+======================================================================
+
+Ice is a modern alternative to object middleware such as CORBA or
+COM/DCOM/COM+. It is easy to learn, yet provides a powerful network
+infrastructure for demanding technical applications. It features an
+object-oriented specification language, easy to use C++, C#, Java,
+Python, Ruby, PHP, and Visual Basic mappings, a highly efficient
+protocol, asynchronous method invocation and dispatch, dynamic
+transport plug-ins, TCP/IP and UDP/IP support, SSL-based security, a
+firewall solution, and much more.
+
+Ice is available under the terms of the GNU General Public License
+(GPL) (see LICENSE file). Commercial licenses are available for
+customers who wish to use Ice with proprietary products. Please
+contact sales@zeroc.com for more information about licensing Ice.
+
+
+======================================================================
+About this distribution
+======================================================================
+
+This distribution is an RPM release of the Ice 3.3.1 run time for
+Fedora and includes executables for the Ice services, HTML
+documentation, Slice files, and the C++ runtime libraries. It has been
+modified from the RPM distribution provided through
+http://www.zeroc.com/download.html to meet Fedora packaging standards.
+
+Additional Ice components are provided in separate RPM packages:
+
+- Run time libraries for Java, Python, PHP, Ruby and C# (Mono). These
+  libraries enable you to execute Ice applications. (ice-java,
+  ice-python, ice-php, ice-ruby, ice-csharp)
+
+- Development kits for C++, Java, Python, Ruby, and C# (Mono). A
+  development kit is required for building Ice applications using a
+  supported language mapping. (ice-devel, ice-java-devel,
+  ice-python-devel, ice-ruby-devel, ice-csharp-devel)
+
+- Sample /etc/init.d scripts. (ice-servers)
+
+- The graphical IceGrid administrative tool. (icegrid-gui)
+
+These RPMS can all also be installed through yum.
+
+
+======================================================================
+Setting up your environment to use Ice
+======================================================================
+
+
+C++
+---
+
+No additional compiler or linker options are required for an RPM
+installation of the Ice for C++ development kit.
+
+
+Java
+----
+
+To use Ice for Java with Java5 or Java6, add Ice.jar to your CLASSPATH,
+as shown in the following bash command:
+
+$ export CLASSPATH=`build-classpath Ice`:$CLASSPATH
+
+Note that the Freeze component of Ice for Java requires Berkeley DB.
+In order to use Freeze, you must add db.jar to your CLASSPATH. In
+addition, the JVM requires the directory containing the Berkeley DB
+libraries to be listed in java.library.path, therefore you must add
+this directory to your LD_LIBRARY_PATH. Assuming you are using the RPM
+installation of Berkeley DB, the bash command is shown below:
+
+$ export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+
+On a x86_64 system with a 64-bit JVM, the 64-bit Berkeley DB libraries
+are installed in /usr/lib64, so use instead:
+
+$ export LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
+
+When using the Ice for Java SSL plugin (IceSSL), you may experience
+occasional hangs. The most likely reason is that your system's entropy
+pool is empty. If you have sufficient system privileges, you can solve
+this issue by editing the following file
+
+<java.home>/jre/lib/security/java.security
+
+and changing it to use /dev/urandom instead of /dev/random. If you do
+not have permission to modify the security file, you can also use the
+command-line option shown below:
+
+$ java -Djava.security.egd=file:/dev/urandom MyClass ...
+
+On SuSE Linux Enterprise Server, you may experience occasional hangs 
+the first time an Ice object adapter is activated within a JVM. A 
+work-around is to disable IPv6 support by setting the Java property 
+java.net.preferIPv4Stack to true. For example:
+
+$ java -Djava.net.preferIPv4Stack=true MyClass ...
+
+For more information on this issue, refer to Sun's bug database:
+
+  http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6483406
+
+
+Python
+------
+
+The RPM installation puts the Python libraries into the correct
+sitelib directories; there is no need for any additional configuration
+to use them.
+
+
+C#/Mono
+-------
+
+The RPM installation adds the C# runtime libraries to the global
+assembly cache (GAC), so that no changes to your environment are
+necessary to locate the assemblies.
+
+The instructions for running the demos assume that you have configured
+your kernel to automatically execute the Mono interpreter. To do this,
+run the following commands as root (replace /usr/bin/mono with the
+location of your mono interpreter):
+
+    if [ ! -e /proc/sys/fs/binfmt_misc/register ]; then
+        /sbin/modprobe binfmt_misc 
+        mount -t binfmt_misc none /proc/sys/fs/binfmt_misc
+    fi 
+    if [ -e /proc/sys/fs/binfmt_misc/register ]; then
+        echo ':CLR:M::MZ::/usr/bin/mono:' > /proc/sys/fs/binfmt_misc/register
+    else
+        echo "No binfmt_misc support" exit 1
+    fi 
+
+If you don't want to do this you need to run the executable with
+mono. For example,
+
+$ mono server.exe
+
+
+Ruby
+----
+
+The RPM installation puts the Ruby libraries into the correct
+sitelib directories; there is no need for any additional configuration
+to use them.
+
+
+PHP
+---
+
+The Ice extension for PHP is loaded automatically when the interpreter
+loads the contents of the file /etc/php.d/ice.ini.
+
+extension=IcePHP.so
+
+You can modify this file to include additional configuration 
+directives, such as those used by the Ice extension.
+
+At run time, the PHP interpreter requires the Ice shared libraries as 
+well as the Slice preprocessor (icecpp).
+
+You can verify that the Ice extension is installed properly by 
+examining the output of the "php -m" command, or by calling the
+phpinfo() function from a script.
+
+
+SELinux Notes
+--------------------------------------------------
+
+SELinux augments the traditional Unix permissions with a number of
+new features. In particular, SELinux can prevent the httpd daemon from
+opening network connections and reading files without the proper
+SELinux types.
+
+If you suspect that your IcePHP application does not work due to
+SELinux restrictions, we recommend that you first try it with SELinux
+disabled. As root, run:
+
+# setenforce 0
+
+to disable SELinux until the next reboot of your computer.
+
+If you want to run httpd with IcePHP and SELinux enabled, you must do
+the following:
+
+- Allow httpd to open network connections:
+
+  # setsebool httpd_can_network_connect=1 
+
+  (add the -P option to make this setting persistent across reboots)
+
+- Make sure any .ice file used by your PHP scripts can be read by 
+  httpd. The enclosing directory also needs to be accessible. For
+  example:
+
+  # chcon -R -t httpd_sys_content_t /opt/MyApp/slice 
+
+For more information on SELinux, refer to the link below:
+
+  http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/selinux-guide/
+
+
+======================================================================
+/etc/init.d scripts
+======================================================================
+
+The ice-servers includes the following sample /etc/init.d scripts and
+associated configuration files:
+
+- /etc/init.d/icegridregistry and /etc/icegridregistry.conf
+- /etc/init.d/icegridnode and /etc/icegridnode.conf
+- /etc/init.d/glacier2router and /etc/glacier2router.conf
+
+This RPM also creates an "iceuser" account to run the services.
+
+None of these services are enabled during the RPM installation; you 
+need to manually enable the desired service(s) using the chkconfig
+command, for example:
+
+# chkconfig --add icegridregistry
+
+Before doing so, please review the script itself and its associated
+configuration file. For icegridregistry and icegridnode, you also need
+to create 'data' directories with the proper permissions (refer to the
+.conf files).
+
+
+======================================================================
+Using the IceGrid Administrative Console
+======================================================================
+
+The Java-based graphical tool for administering IceGrid applications
+can be run as follows:
+
+$ icegridgui
+
+Full documentation of this tool is at the following URL:
+
+    http://www.zeroc.com/doc/latest/IceGridAdmin/
+
+
+======================================================================
+Demos and documentation
+======================================================================
+
+Sample programs are provided in the Ice-3.3.1-demos.tar.gz package,
+which can be downloaded from the ZeroC web site at
+
+  http://www.zeroc.com/download.html
+
+Please refer to the README.DEMOS file included in that package for
+more information.
+
+See doc/README.html for information on the documentation included with
+this distribution.
+
+
+======================================================================
+Binary compatibility
+======================================================================
+
+Patch releases of Ice are binary compatible. For example, version
+<x>.<y>.1 is compatible with <x>.<y>.0, so you can run applications
+compiled with <x>.<y>.0 with the <x>.<y>.1 runtime without having to
+recompile.
+
+With the binary installers, simply uninstall the previous version of
+Ice and install the new one. Already deployed applications that were
+compiled against the <x>.<y>.0 runtime will automatically use the
+<x>.<y>.1 runtime.
+
+Note: Under Mono, binary compatibility currently does not work due to
+      issues with Mono. Until this problem in Mono is fixed, you
+      cannot run applications compiled with previous minor versions of
+      Ice against a newer version of the Ice assemblies. For example,
+      an application compiled with version <x>.<y>.0 of Ice cannot run
+      with the <x>.<y>.1 Ice assemblies.
+
+[ This file was modified by Mary Ellen Foster from the original
+README.Linux-RPM distributed by ZeroC. ]

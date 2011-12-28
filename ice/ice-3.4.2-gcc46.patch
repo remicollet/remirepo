@@ -1,0 +1,100 @@
+diff --git a/cpp/include/Freeze/Map.h b/cpp/include/Freeze/Map.h
+index 2ec759d..d8ef692 100644
+--- a/cpp/include/Freeze/Map.h
++++ b/cpp/include/Freeze/Map.h
+@@ -15,7 +15,7 @@
+ #include <Freeze/DB.h>
+ #include <Freeze/Exception.h>
+ #include <Freeze/Connection.h>
+-
++#include <cstddef>
+ //
+ // Berkeley DB's DbEnv
+ //
+diff --git a/cpp/include/Ice/Buffer.h b/cpp/include/Ice/Buffer.h
+index 6f7ebab..9501f08 100644
+--- a/cpp/include/Ice/Buffer.h
++++ b/cpp/include/Ice/Buffer.h
+@@ -12,6 +12,8 @@
+ 
+ #include <Ice/Config.h>
+ 
++#include <cstddef>
++
+ namespace IceInternal
+ {
+ 
+diff --git a/cpp/src/Ice/ConnectionFactory.cpp b/cpp/src/Ice/ConnectionFactory.cpp
+index ee201fd..c5cfae1 100644
+--- a/cpp/src/Ice/ConnectionFactory.cpp
++++ b/cpp/src/Ice/ConnectionFactory.cpp
+@@ -26,6 +26,7 @@
+ #include <Ice/Functional.h>
+ #include <IceUtil/Random.h>
+ #include <iterator>
++#include <cstddef>
+ 
+ using namespace std;
+ using namespace Ice;
+diff --git a/cpp/src/Ice/ConnectionI.cpp b/cpp/src/Ice/ConnectionI.cpp
+index 2d942ca..a864509 100644
+--- a/cpp/src/Ice/ConnectionI.cpp
++++ b/cpp/src/Ice/ConnectionI.cpp
+@@ -26,6 +26,7 @@
+ #include <Ice/ReferenceFactory.h> // For createProxy().
+ #include <Ice/ProxyFactory.h> // For createProxy().
+ #include <bzlib.h>
++#include <cstddef>
+ 
+ using namespace std;
+ using namespace Ice;
+diff --git a/cpp/src/Ice/Reference.cpp b/cpp/src/Ice/Reference.cpp
+index 875b64e..6f84069 100644
+--- a/cpp/src/Ice/Reference.cpp
++++ b/cpp/src/Ice/Reference.cpp
+@@ -28,7 +28,7 @@
+ #include <IceUtil/StringUtil.h>
+ #include <IceUtil/Random.h>
+ #include <IceUtil/MutexPtrLock.h>
+-
++#include <cstddef>
+ #include <functional>
+ 
+ using namespace std;
+diff --git a/cpp/src/IceGrid/Util.h b/cpp/src/IceGrid/Util.h
+index 72ffded..0047e57 100644
+--- a/cpp/src/IceGrid/Util.h
++++ b/cpp/src/IceGrid/Util.h
+@@ -16,6 +16,7 @@
+ #include <IceUtil/Random.h>
+ #include <functional>
+ #include <iterator>
++#include <cstddef>
+ 
+ namespace IceGrid
+ {
+diff --git a/cpp/src/slice2freeze/Main.cpp b/cpp/src/slice2freeze/Main.cpp
+index 7e2afb2..af68a7d 100644
+--- a/cpp/src/slice2freeze/Main.cpp
++++ b/cpp/src/slice2freeze/Main.cpp
+@@ -19,6 +19,7 @@
+ #include <IceUtil/OutputUtil.h>
+ #include <IceUtil/StringUtil.h>
+ #include <cstring>
++#include <cstddef>
+ 
+ using namespace std;
+ using namespace IceUtil;
+diff --git a/cpp/test/Ice/binding/AllTests.cpp b/cpp/test/Ice/binding/AllTests.cpp
+index f4da896..912aed1 100644
+--- a/cpp/test/Ice/binding/AllTests.cpp
++++ b/cpp/test/Ice/binding/AllTests.cpp
+@@ -12,7 +12,7 @@
+ #include <TestCommon.h>
+ #include <Test.h>
+ #include <set>
+-
++#include <cstddef>
+ #include <functional>
+ 
+ using namespace std;

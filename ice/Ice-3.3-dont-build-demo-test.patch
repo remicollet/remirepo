@@ -1,0 +1,24 @@
+diff -ur Ice-3.3.0.orig/cpp/Makefile Ice-3.3.0/cpp/Makefile
+--- Ice-3.3.0.orig/cpp/Makefile	2008-05-16 18:24:00.000000000 +0100
++++ Ice-3.3.0/cpp/Makefile	2008-05-21 11:18:17.000000000 +0100
+@@ -11,7 +11,7 @@
+ 
+ include $(top_srcdir)/config/Make.rules
+ 
+-SUBDIRS		= config src include test demo
++SUBDIRS		= config src include
+ 
+ INSTALL_SUBDIRS	= $(install_bindir) $(install_libdir) $(install_includedir) $(install_configdir)
+ 
+diff -ur Ice-3.3.0.orig/cs/Makefile Ice-3.3.0/cs/Makefile
+--- Ice-3.3.0.orig/cs/Makefile	2008-05-16 18:24:01.000000000 +0100
++++ Ice-3.3.0/cs/Makefile	2008-05-21 11:18:22.000000000 +0100
+@@ -11,7 +11,7 @@
+ 
+ include $(top_srcdir)/config/Make.rules.cs
+ 
+-SUBDIRS		= src test demo
++SUBDIRS		= src
+ 
+ install:: install-common
+ 	@if test ! -d $(install_bindir) ; \

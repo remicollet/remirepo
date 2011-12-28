@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=IceGrid Admin
+GenericName=IceGrid Admin
+Comment=Graphical administration tool for IceGrid
+Exec=icegridgui
+Icon=icegrid
+Terminal=false
+Type=Application
+Categories=Development;

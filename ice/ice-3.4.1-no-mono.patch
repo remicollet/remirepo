@@ -1,0 +1,16 @@
+diff -up Ice-3.4.1/Makefile.no-mono Ice-3.4.1/Makefile
+--- Ice-3.4.1/Makefile.no-mono	2011-03-21 18:55:22.000000000 +0100
++++ Ice-3.4.1/Makefile	2011-03-21 18:55:36.000000000 +0100
+@@ -7,10 +7,10 @@
+ #
+ # **********************************************************************
+ 
+-SUBDIRS			= cpp java cs py rb php
++SUBDIRS			= cpp java py rb php
+ CLEAN_SUBDIRS		= java cs py rb php cpp
+ DEPEND_SUBDIRS		= cpp cs py rb php
+-INSTALL_SUBDIRS		= cpp java cs py rb php
++INSTALL_SUBDIRS		= cpp java py rb php
+ 
+ all::
+ 	@for subdir in $(SUBDIRS); \
