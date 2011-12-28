@@ -8,6 +8,9 @@ License:	GPLv2+
 Group:		Development/Languages
 Source0:	http://php-idn.bayour.com/idn_%{version}.tar.gz
 Source1:	idn.ini
+
+Patch0:         idn-php54.patch
+
 URL:		http://php-idn.bayour.com/
 BuildRequires:	php-devel >= 4.3.0, libidn-devel >= 0.4.0, autoconf, automake, libtool
 %if 0%{?rhel}%{?fedora} > 4
@@ -29,6 +32,8 @@ have international characters in the DNS system.
 
 %prep
 %setup -q -n idn-%{version}
+%patch0 -p1 -b .php54
+
 export PHP_RPATH=no
 phpize
 %configure
@@ -40,6 +45,15 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install-modules INSTALL_ROOT=$RPM_BUILD_ROOT
 install -D -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/idn.ini
+
+%check
+# No test provided by upstream, so
+# minimal load test for the PHP extension
+php -n \
+    -d extension_dir=modules \
+    -d extension=idn.so -m \
+    | grep idn
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -55,6 +69,10 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/php.d/idn.ini
 
 %changelog
+* Wed Dec 28 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-4
+- build against php 5.4 with patch
+- add minimal load test
+
 * Sat Jun 25 2011 Robert Scheck <robert@fedoraproject.org> 1.2c-3
 - Changed %%php_zend_api macro usage (#716054)
 
