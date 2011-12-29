@@ -25,6 +25,7 @@ Source1:	syck.ini
 
 Patch0:		syck-0.55-libtool.patch
 Patch1:		syck-nan.patch
+# https://github.com/indeyets/syck/pull/7
 Patch2:         syck-php54.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -215,7 +216,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/php.d/syck.ini
 
 %changelog
-* Thu Dec 29 2011 Remi Collet <remi@fedoraproject.org> - 7.0.3-1
+* Thu Dec 29 2011 Remi Collet <remi@fedoraproject.org> - 0.61-13
 - build with php 5.4, with patch
 - add minimal load test for PHP extension
 - add provides filters
