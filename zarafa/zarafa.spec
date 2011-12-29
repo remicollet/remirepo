@@ -42,6 +42,7 @@ Source2:            %{name}.logrotate
 Source3:            %{name}-webaccess.conf
 
 Patch0:             zarafa-6.40.5-rpath.patch
+Patch1:             zarafa-7.0.3-php54.patch
 
 BuildRequires:      bison
 BuildRequires:      gcc-c++
@@ -365,6 +366,7 @@ to interact with Zarafa.
 %prep
 %setup -q
 %patch0 -p1 -b .rpath
+%patch1 -p1 -b .php54
 touch -c -r aclocal.m4.rpath aclocal.m4
 
 %build
@@ -522,6 +524,14 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}-webaccess/client/widgets/swfupload/
 %endif
 
 %find_lang %{name}
+
+%check
+# minimal load test for the PHP extension
+LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
+    -d extension_dir=%{buildroot}%{php_extdir} \
+    -d extension=mapi.so -m \
+    | grep mapi
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -870,6 +880,10 @@ fi
 %endif
 
 %changelog
+* Thu Dec 29 2011 Remi Collet <remi@fedoraproject.org> - 7.0.3-1
+- build with php 5.4
+- add minimal load test for PHP extension
+
 * Sun Nov 20 2011 Robert Scheck <robert@fedoraproject.org> 7.0.3-1
 - Upgrade to 7.0.3
 

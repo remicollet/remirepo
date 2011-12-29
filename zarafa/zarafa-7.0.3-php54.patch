@@ -1,0 +1,123 @@
+diff -up zarafa-7.0.3/php-ext/ECImportContentsChangesProxy.cpp.php54 zarafa-7.0.3/php-ext/ECImportContentsChangesProxy.cpp
+--- zarafa-7.0.3/php-ext/ECImportContentsChangesProxy.cpp.php54	2011-12-29 07:57:08.047623136 +0100
++++ zarafa-7.0.3/php-ext/ECImportContentsChangesProxy.cpp	2011-12-29 07:58:57.717628057 +0100
+@@ -150,9 +150,9 @@ HRESULT ECImportContentsChangesProxy::Ge
+ HRESULT ECImportContentsChangesProxy::Config(LPSTREAM lpStream, ULONG ulFlags) {
+     HRESULT hr = hrSuccess;
+     
+-    pval *pvalFuncName;
+-    pval *pvalReturn;
+-    pval *pvalArgs[2];
++    zval *pvalFuncName;
++    zval *pvalReturn;
++    zval *pvalArgs[2];
+     
+     MAKE_STD_ZVAL(pvalFuncName);
+     MAKE_STD_ZVAL(pvalReturn);
+@@ -192,9 +192,9 @@ exit:
+ HRESULT ECImportContentsChangesProxy::UpdateState(LPSTREAM lpStream) {
+     HRESULT hr = hrSuccess;
+     
+-    pval *pvalFuncName;
+-    pval *pvalReturn;
+-    pval *pvalArgs[1];
++    zval *pvalFuncName;
++    zval *pvalReturn;
++    zval *pvalArgs[1];
+     
+     MAKE_STD_ZVAL(pvalFuncName);
+     MAKE_STD_ZVAL(pvalReturn);
+@@ -228,9 +228,9 @@ exit:
+ }
+ 
+ HRESULT ECImportContentsChangesProxy::ImportMessageChange(ULONG cValues, LPSPropValue lpPropArray, ULONG ulFlags, LPMESSAGE * lppMessage)  {
+-    pval *pvalFuncName;
+-    pval *pvalReturn;
+-    pval *pvalArgs[3];
++    zval *pvalFuncName;
++    zval *pvalReturn;
++    zval *pvalArgs[3];
+     IMessage *lpMessage = NULL;
+     HRESULT hr = hrSuccess;
+     
+@@ -287,9 +287,9 @@ exit:
+ HRESULT ECImportContentsChangesProxy::ImportMessageDeletion(ULONG ulFlags, LPENTRYLIST lpSourceEntryList) {
+     HRESULT hr = hrSuccess;
+     
+-    pval *pvalFuncName;
+-    pval *pvalReturn;
+-    pval *pvalArgs[2];
++    zval *pvalFuncName;
++    zval *pvalReturn;
++    zval *pvalArgs[2];
+     
+     MAKE_STD_ZVAL(pvalFuncName);
+     MAKE_STD_ZVAL(pvalReturn);
+@@ -323,9 +323,9 @@ exit:
+ HRESULT ECImportContentsChangesProxy::ImportPerUserReadStateChange(ULONG cElements, LPREADSTATE lpReadState) {
+     HRESULT hr = hrSuccess;
+     
+-    pval *pvalFuncName;
+-    pval *pvalReturn;
+-    pval *pvalArgs[1];
++    zval *pvalFuncName;
++    zval *pvalReturn;
++    zval *pvalArgs[1];
+     
+     MAKE_STD_ZVAL(pvalFuncName);
+     MAKE_STD_ZVAL(pvalReturn);
+diff -up zarafa-7.0.3/php-ext/ECImportHierarchyChangesProxy.cpp.php54 zarafa-7.0.3/php-ext/ECImportHierarchyChangesProxy.cpp
+--- zarafa-7.0.3/php-ext/ECImportHierarchyChangesProxy.cpp.php54	2011-12-29 07:59:13.901628896 +0100
++++ zarafa-7.0.3/php-ext/ECImportHierarchyChangesProxy.cpp	2011-12-29 07:59:42.559630070 +0100
+@@ -147,9 +147,9 @@ HRESULT ECImportHierarchyChangesProxy::G
+ HRESULT ECImportHierarchyChangesProxy::Config(LPSTREAM lpStream, ULONG ulFlags) {
+     HRESULT hr = hrSuccess;
+     
+-    pval *pvalFuncName;
+-    pval *pvalReturn;
+-    pval *pvalArgs[2];
++    zval *pvalFuncName;
++    zval *pvalReturn;
++    zval *pvalArgs[2];
+     
+     MAKE_STD_ZVAL(pvalFuncName);
+     MAKE_STD_ZVAL(pvalReturn);
+@@ -189,9 +189,9 @@ exit:
+ HRESULT ECImportHierarchyChangesProxy::UpdateState(LPSTREAM lpStream) {
+     HRESULT hr = hrSuccess;
+     
+-    pval *pvalFuncName;
+-    pval *pvalReturn;
+-    pval *pvalArgs[1];
++    zval *pvalFuncName;
++    zval *pvalReturn;
++    zval *pvalArgs[1];
+     
+     MAKE_STD_ZVAL(pvalFuncName);
+     MAKE_STD_ZVAL(pvalReturn);
+@@ -225,9 +225,9 @@ exit:
+ }
+ 
+ HRESULT ECImportHierarchyChangesProxy::ImportFolderChange(ULONG cValues, LPSPropValue lpPropArray)  {
+-    pval *pvalFuncName;
+-    pval *pvalReturn;
+-    pval *pvalArgs[1];
++    zval *pvalFuncName;
++    zval *pvalReturn;
++    zval *pvalArgs[1];
+     HRESULT hr = hrSuccess;
+     
+     MAKE_STD_ZVAL(pvalFuncName);
+@@ -265,9 +265,9 @@ exit:
+ HRESULT ECImportHierarchyChangesProxy::ImportFolderDeletion(ULONG ulFlags, LPENTRYLIST lpSourceEntryList) {
+     HRESULT hr = hrSuccess;
+     
+-    pval *pvalFuncName;
+-    pval *pvalReturn;
+-    pval *pvalArgs[2];
++    zval *pvalFuncName;
++    zval *pvalReturn;
++    zval *pvalArgs[2];
+     
+     MAKE_STD_ZVAL(pvalFuncName);
+     MAKE_STD_ZVAL(pvalReturn);
