@@ -7,6 +7,14 @@
 %define svnrev r1190
 #define pretag 1.2.99908020600
 
+# Private libraries are not be exposed globally by RPM
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+
+
 Summary: Round Robin Database Tool to store and display time-series data
 Name: rrdtool
 Version: 1.4.4
@@ -18,6 +26,8 @@ Source0: http://oss.oetiker.ch/%{name}/pub/%{name}-%{version}.tar.gz
 Source1: php4-%{svnrev}.tar.gz
 # Fix tcl-site configure option (upstream ticket #281)
 Patch0: rrdtool-1.4.4-fix-tcl-site-option.patch
+Patch1: rrdtool-php54.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: dejavu-sans-mono-fonts, dejavu-lgc-sans-mono-fonts
 BuildRequires: gcc-c++, openssl-devel, freetype-devel
@@ -155,6 +165,9 @@ The %{name}-lua package includes RRDtool bindings for Lua.
 %prep
 %setup -q -n %{name}-%{version} %{?with_php: -a 1}
 %patch0 -p1 -b .fix-tcl-site-option
+%if %{with_php}
+%patch1 -p1 -b .php54
+%endif
 
 # Fix to find correct python dir on lib64
 %{__perl} -pi -e 's|get_python_lib\(0,0,prefix|get_python_lib\(1,0,prefix|g' \
@@ -281,6 +294,16 @@ find examples/ -type f -exec chmod 0644 {} \;
         $RPM_BUILD_ROOT%{_datadir}/%{name}/examples \
         $RPM_BUILD_ROOT%{perl_vendorarch}/auto/*/{.packlist,*.bs}
 
+%check
+# minimal load test for the PHP extension
+%if %{with_php}
+LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
+    -d extension_dir=%{buildroot}%{php_extdir} \
+    -d extension=rrdtool.so -m \
+    | grep rrdtool
+%endif
+
+
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
@@ -353,6 +376,11 @@ find examples/ -type f -exec chmod 0644 {} \;
 %endif
 
 %changelog
+* Thu Dec 29 2011 Remi Collet <remi@fedoraproject.org> - 7.0.3-1
+- build with php 5.4
+- add minimal load test for PHP extension
+- add provides filters
+
 * Fri Jun 17 2011 Marcela Mašláňová <mmaslano@redhat.com> - 1.4.4-6
 - Perl mass rebuild
 
