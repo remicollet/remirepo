@@ -1,0 +1,23 @@
+--- rrdtool-1.4.4/configure.old	2010-11-23 14:39:42.000000000 +0100
++++ rrdtool-1.4.4/configure	2010-11-23 14:40:32.656140783 +0100
+@@ -1036,6 +1036,7 @@
+ enable_lua_site_install
+ enable_tcl
+ with_tcllib
++enable_tcl_site
+ enable_python
+ '
+       ac_precious_vars='build_alias
+@@ -28584,9 +28585,9 @@
+ 	  TCL_INCLUDE_SPEC="$TCL_INCLUDE_SPEC -I$TCL_INC_DIR"
+ 	fi
+   fi
+-  # Check whether --enable-tcl was given.
+-if test "${enable_tcl+set}" = set; then
+-  enableval=$enable_tcl;
++  # Check whether --enable-tcl-site was given.
++if test "${enable_tcl_site+set}" = set; then
++  enableval=$enable_tcl_site;
+ else
+   enable_tcl_site=yes
+ fi
