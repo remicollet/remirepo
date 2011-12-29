@@ -1,0 +1,100 @@
+/var/log/zarafa/archiver.log {
+	weekly
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+	create 0644 zarafa zarafa
+}
+
+/var/log/zarafa/dagent.log {
+	weekly
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+	postrotate
+			killall -HUP zarafa-dagent 2> /dev/null || true
+	endscript
+	create 0644 zarafa zarafa
+}
+
+/var/log/zarafa/gateway.log {
+	weekly
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+	postrotate
+			killall -HUP zarafa-gateway 2> /dev/null || true
+	endscript
+	create 0644 zarafa zarafa
+}
+
+/var/log/zarafa/ical.log {
+	weekly
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+	postrotate
+			killall -HUP zarafa-ical 2> /dev/null || true
+	endscript
+	create 0644 zarafa zarafa
+}
+
+/var/log/zarafa/indexer.log {
+	weekly
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+	postrotate
+			killall -HUP zarafa-indexer 2> /dev/null || true
+	endscript
+	create 0644 zarafa zarafa
+}
+
+/var/log/zarafa/monitor.log {
+	weekly
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+	postrotate
+			killall -HUP zarafa-monitor 2> /dev/null || true
+	endscript
+	create 0644 zarafa zarafa
+}
+
+/var/log/zarafa/server.log /var/log/zarafa/audit.log {
+	weekly
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+	postrotate
+			killall -HUP zarafa-server 2> /dev/null || true
+	endscript
+	create 0644 zarafa zarafa
+}
+
+/var/log/zarafa/spooler.log {
+	weekly
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+	postrotate
+			killall -HUP zarafa-spooler 2> /dev/null || true
+	endscript
+	create 0644 zarafa zarafa
+}
