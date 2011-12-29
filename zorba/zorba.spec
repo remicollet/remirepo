@@ -229,6 +229,9 @@ rm -f doc.tmp/*.txt
 
 
 %changelog
+* Thu Dec 29 2011 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- build with php 5.4
+
 * Sat Dec 10 2011 Martin Gieseking <martin.gieseking@uos.de> 2.1.0-1
 - updated to new upstream release
 
