@@ -1,0 +1,22 @@
+diff -up ext/php/phpext.c.php53 ext/php/phpext.c
+--- ext/php/phpext.c.php53	2009-07-14 08:03:44.000000000 +0200
++++ ext/php/phpext.c	2009-07-14 08:08:36.000000000 +0200
+@@ -21,7 +21,7 @@
+ static double zero()    { return 0.0; }
+ static double one() { return 1.0; }
+ static double inf() { return one() / zero(); }
+-static double nan() { return zero() / zero(); }
++static double mynan() { return zero() / zero(); }
+ 
+ /* {{{ syck_functions[]
+  *
+@@ -220,7 +220,7 @@ php_syck_handler(p, n)
+             }
+             else if ( strcmp( n->type_id, "float#nan" ) == 0 )
+             {
+-                ZVAL_DOUBLE( o, nan() );
++                ZVAL_DOUBLE( o, mynan() );
+             }
+             else if ( strcmp( n->type_id, "float#inf" ) == 0 )
+             {
+diff -up ext/php/php_syck.h.php53 ext/php/php_syck.h
