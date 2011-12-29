@@ -1,0 +1,12 @@
+diff -up syck-0.61+svn231+patches/ext/php/phpext.c.php54 syck-0.61+svn231+patches/ext/php/phpext.c
+--- syck-0.61+svn231+patches/ext/php/phpext.c.php54	2011-12-29 09:37:51.361894355 +0100
++++ syck-0.61+svn231+patches/ext/php/phpext.c	2011-12-29 09:48:41.682923536 +0100
+@@ -27,7 +27,7 @@ static double mynan() { return zero() /
+  *
+  * Every user visible function must have an entry in syck_functions[].
+  */
+-function_entry syck_functions[] = {
++zend_function_entry syck_functions[] = {
+ 	PHP_FE(syck_load,				NULL)
+ 	{NULL, NULL, NULL}	/* Must be the last line in syck_functions[] */
+ };

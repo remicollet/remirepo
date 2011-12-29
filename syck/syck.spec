@@ -2,6 +2,14 @@
 %{!?php_version:%define php_version %(php-config --version || echo bad)}
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
+# Private libraries are not be exposed globally by RPM
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+
+
 Name:		syck
 Summary:	YAML for C, Python, and PHP
 
@@ -17,6 +25,7 @@ Source1:	syck.ini
 
 Patch0:		syck-0.55-libtool.patch
 Patch1:		syck-nan.patch
+Patch2:         syck-php54.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	gawk bison flex libtool
@@ -42,7 +51,7 @@ filtering.
 %package	php
 Summary:	YAML module for php
 Group:		Development/Languages
-%if %{?php_zend_api}0
+%if %{?php_zend_api:1}0
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
 %else
@@ -111,6 +120,7 @@ Syck.
 %setup -q -n syck-0.61+svn231+patches
 %patch0 -p1 -b .libtool
 %patch1 -p0 -b .nan
+%patch2 -p1 -b .php54
 
 %build
 # Rebuild all
@@ -169,6 +179,14 @@ popd # End python extension
 # Get out of extension
 popd
 
+%check
+# minimal load test for the PHP extension
+LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
+    -d extension_dir=%{buildroot}%{php_extdir} \
+    -d extension=syck.so -m \
+    | grep syck
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -197,6 +215,11 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/php.d/syck.ini
 
 %changelog
+* Thu Dec 29 2011 Remi Collet <remi@fedoraproject.org> - 7.0.3-1
+- build with php 5.4, with patch
+- add minimal load test for PHP extension
+- add provides filters
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.61-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
