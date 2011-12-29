@@ -40,6 +40,7 @@ Patch3:         Ice-3.3-dont-build-demo-test.patch
 # disable the CSharp interface
 Patch4:         ice-3.4.1-no-mono.patch
 # PHP 5.4 compatibility
+# http://www.zeroc.com/forums/patches/5603-ice-php-php-5-4-patch.html
 Patch5:         ice-3.4.2-php54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -394,8 +395,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %check
-# Minimum check for php extension
-php -n -d extension_dir=$RPM_BUILD_DIR/Ice-%{version}/php/lib -d extension=IcePHP.so -m | grep ice
+# No test provided by upstream, so
+# minimal load test for the PHP extension
+LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
+    -d extension_dir=%{buildroot}%{php_extdir} \
+    -d extension=IcePHP.so -m \
+    | grep ice
 
 
 %files
