@@ -7,14 +7,15 @@
 %global no_multiupload  1
 %global php_apiver      %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")
+%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 # Private libraries are not be exposed globally by RPM
-%if 0%{?rhel}%{?fedora} > 4
-%{?filter_setup:
-%filter_provides_in %{_libdir}/%{name}/.*\.so$
-%filter_setup
-}
-%endif
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+
 
 Summary:            Open Source Edition of the Zarafa Collaboration Platform
 Name:               zarafa
@@ -42,6 +43,7 @@ Source2:            %{name}.logrotate
 Source3:            %{name}-webaccess.conf
 
 Patch0:             zarafa-6.40.5-rpath.patch
+# http://forums.zarafa.com/viewtopic.php?f=22&t=7826
 Patch1:             zarafa-7.0.3-php54.patch
 
 BuildRequires:      bison
@@ -883,6 +885,8 @@ fi
 * Thu Dec 29 2011 Remi Collet <remi@fedoraproject.org> - 7.0.3-1
 - build with php 5.4
 - add minimal load test for PHP extension
+- add patch for php 5.4 + link to upstream bug
+- fix provides filters
 
 * Sun Nov 20 2011 Robert Scheck <robert@fedoraproject.org> 7.0.3-1
 - Upgrade to 7.0.3
