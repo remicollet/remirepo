@@ -1,7 +1,50 @@
-diff -up Ice-3.4.2/php/src/IcePHP/Communicator.cpp.php54 Ice-3.4.2/php/src/IcePHP/Communicator.cpp
---- Ice-3.4.2/php/src/IcePHP/Communicator.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Communicator.cpp	2011-12-28 09:07:57.231738495 +0100
-@@ -1092,11 +1092,11 @@ ZEND_FUNCTION(Ice_getProperties)
+diff --git a/php/src/IcePHP/Communicator.cpp b/php/src/IcePHP/Communicator.cpp
+index fced1eb..781e175 100644
+--- a/php/src/IcePHP/Communicator.cpp
++++ b/php/src/IcePHP/Communicator.cpp
+@@ -716,7 +716,8 @@ handleFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<CommunicatorInfoIPtr>* obj = static_cast<Wrapper<CommunicatorInfoIPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
+ }
+ 
+ #ifdef _WIN32
+@@ -834,6 +835,7 @@ ZEND_FUNCTION(Ice_initialize)
+ 
+     Ice::StringSeq seq;
+     Ice::InitializationData initData;
++    zval* zvargs = 0;
+     zval* zvinit = 0;
+ 
+     //
+@@ -853,6 +855,7 @@ ZEND_FUNCTION(Ice_initialize)
+             {
+                 RETURN_NULL();
+             }
++            zvargs = *args[0];
+             hasArgs = true;
+             if(ZEND_NUM_ARGS() > 1)
+             {
+@@ -913,6 +916,15 @@ ZEND_FUNCTION(Ice_initialize)
+     {
+         RETURN_NULL();
+     }
++
++    if(zvargs && PZVAL_IS_REF(zvargs))
++    {
++        zval_dtor(zvargs);
++        if(!createStringArray(zvargs, seq TSRMLS_CC))
++        {
++            RETURN_NULL();
++        }
++    }
+ }
+ 
+ ZEND_FUNCTION(Ice_register)
+@@ -1092,11 +1104,11 @@ ZEND_FUNCTION(Ice_getProperties)
  //
  // Predefined methods for Communicator.
  //
@@ -15,10 +58,50 @@ diff -up Ice-3.4.2/php/src/IcePHP/Communicator.cpp.php54 Ice-3.4.2/php/src/IcePH
  {
      ZEND_ME(Ice_Communicator, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
      ZEND_ME(Ice_Communicator, destroy, NULL, ZEND_ACC_PUBLIC)
-diff -up Ice-3.4.2/php/src/IcePHP/Connection.cpp.php54 Ice-3.4.2/php/src/IcePHP/Connection.cpp
---- Ice-3.4.2/php/src/IcePHP/Connection.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Connection.cpp	2011-12-28 09:07:57.231738495 +0100
-@@ -271,11 +271,11 @@ handleConnectionCompare(zval* zobj1, zva
+diff --git a/php/src/IcePHP/Communicator.h b/php/src/IcePHP/Communicator.h
+index c3b928d..02610d0 100644
+--- a/php/src/IcePHP/Communicator.h
++++ b/php/src/IcePHP/Communicator.h
+@@ -25,24 +25,6 @@ ZEND_FUNCTION(Ice_find);
+ ZEND_FUNCTION(Ice_getProperties);
+ }
+ 
+-#define ICEPHP_COMMUNICATOR_FUNCTIONS \
+-    ZEND_FE(Ice_initialize, NULL) \
+-    ZEND_FE(Ice_register, NULL) \
+-    ZEND_FE(Ice_unregister, NULL) \
+-    ZEND_FE(Ice_find, NULL) \
+-    ZEND_FE(Ice_getProperties, NULL)
+-
+-#ifdef ICEPHP_USE_NAMESPACES
+-#   define ICEPHP_COMMUNICATOR_NS_FUNCTIONS \
+-    ZEND_NS_FALIAS("Ice", initialize, Ice_initialize, NULL) \
+-    ZEND_NS_FALIAS("Ice", register, Ice_register, NULL) \
+-    ZEND_NS_FALIAS("Ice", unregister, Ice_unregister, NULL) \
+-    ZEND_NS_FALIAS("Ice", find, Ice_find, NULL) \
+-    ZEND_NS_FALIAS("Ice", getProperties, Ice_getProperties, NULL)
+-#else
+-#   define ICEPHP_COMMUNICATOR_NS_FUNCTIONS
+-#endif
+-
+ namespace IcePHP
+ {
+ 
+diff --git a/php/src/IcePHP/Connection.cpp b/php/src/IcePHP/Connection.cpp
+index cd1784a..407a6fa 100644
+--- a/php/src/IcePHP/Connection.cpp
++++ b/php/src/IcePHP/Connection.cpp
+@@ -236,7 +236,8 @@ handleConnectionFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<Ice::ConnectionPtr>* obj = static_cast<Wrapper<Ice::ConnectionPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
+ }
+ 
+ #ifdef _WIN32
+@@ -271,11 +272,11 @@ handleConnectionCompare(zval* zobj1, zval* zobj2 TSRMLS_DC)
  //
  // Predefined methods for Connection.
  //
@@ -32,7 +115,7 @@ diff -up Ice-3.4.2/php/src/IcePHP/Connection.cpp.php54 Ice-3.4.2/php/src/IcePHP/
  {
      ZEND_ME(Ice_Connection, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
      ZEND_ME(Ice_Connection, __toString, NULL, ZEND_ACC_PUBLIC)
-@@ -297,7 +297,7 @@ ZEND_METHOD(Ice_ConnectionInfo, __constr
+@@ -297,7 +298,7 @@ ZEND_METHOD(Ice_ConnectionInfo, __construct)
  //
  // Predefined methods for ConnectionInfo.
  //
@@ -41,11 +124,37 @@ diff -up Ice-3.4.2/php/src/IcePHP/Connection.cpp.php54 Ice-3.4.2/php/src/IcePHP/
  {
      ZEND_ME(Ice_ConnectionInfo, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
      {0, 0, 0}
-diff -up Ice-3.4.2/php/src/IcePHP/Endpoint.cpp.php54 Ice-3.4.2/php/src/IcePHP/Endpoint.cpp
---- Ice-3.4.2/php/src/IcePHP/Endpoint.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Endpoint.cpp	2011-12-28 09:07:57.232738495 +0100
-@@ -216,7 +216,7 @@ handleEndpointInfoFreeStorage(void* p TS
-     zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
+@@ -329,7 +330,8 @@ handleConnectionInfoFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<Ice::ConnectionInfoPtr>* obj = static_cast<Wrapper<Ice::ConnectionInfoPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
+ }
+ 
+ bool
+diff --git a/php/src/IcePHP/Endpoint.cpp b/php/src/IcePHP/Endpoint.cpp
+index de5fe61..4da2aff 100644
+--- a/php/src/IcePHP/Endpoint.cpp
++++ b/php/src/IcePHP/Endpoint.cpp
+@@ -115,7 +115,8 @@ handleEndpointFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<Ice::EndpointPtr>* obj = static_cast<Wrapper<Ice::EndpointPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
+ }
+ 
+ ZEND_METHOD(Ice_EndpointInfo, __construct)
+@@ -213,10 +214,11 @@ handleEndpointInfoFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<Ice::EndpointInfoPtr>* obj = static_cast<Wrapper<Ice::EndpointInfoPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
  }
  
 -static function_entry _interfaceMethods[] =
@@ -53,7 +162,7 @@ diff -up Ice-3.4.2/php/src/IcePHP/Endpoint.cpp.php54 Ice-3.4.2/php/src/IcePHP/En
  {
      {0, 0, 0}
  };
-@@ -224,7 +224,7 @@ static function_entry _interfaceMethods[
+@@ -224,7 +226,7 @@ static function_entry _interfaceMethods[] =
  //
  // Predefined methods for Endpoint.
  //
@@ -62,7 +171,7 @@ diff -up Ice-3.4.2/php/src/IcePHP/Endpoint.cpp.php54 Ice-3.4.2/php/src/IcePHP/En
  {
      ZEND_ME(Ice_Endpoint, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
      ZEND_ME(Ice_Endpoint, __toString, NULL, ZEND_ACC_PUBLIC)
-@@ -236,7 +236,7 @@ static function_entry _endpointMethods[]
+@@ -236,7 +238,7 @@ static function_entry _endpointMethods[] =
  //
  // Predefined methods for EndpointInfo.
  //
@@ -71,10 +180,77 @@ diff -up Ice-3.4.2/php/src/IcePHP/Endpoint.cpp.php54 Ice-3.4.2/php/src/IcePHP/En
  {
      ZEND_ME(Ice_EndpointInfo, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
      ZEND_ME(Ice_EndpointInfo, type, NULL, ZEND_ACC_PUBLIC)
-diff -up Ice-3.4.2/php/src/IcePHP/Init.cpp.php54 Ice-3.4.2/php/src/IcePHP/Init.cpp
---- Ice-3.4.2/php/src/IcePHP/Init.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Init.cpp	2011-12-28 09:07:57.233738495 +0100
-@@ -25,7 +25,7 @@ ZEND_DECLARE_MODULE_GLOBALS(ice)
+diff --git a/php/src/IcePHP/Init.cpp b/php/src/IcePHP/Init.cpp
+index e6c5f49..918d822 100644
+--- a/php/src/IcePHP/Init.cpp
++++ b/php/src/IcePHP/Init.cpp
+@@ -22,10 +22,73 @@ using namespace IcePHP;
+ 
+ ZEND_DECLARE_MODULE_GLOBALS(ice)
+ 
++ZEND_BEGIN_ARG_INFO(Ice_initialize_arginfo, 1)
++ZEND_END_ARG_INFO()
++
++ZEND_BEGIN_ARG_INFO(Ice_createProperties_arginfo, 1)
++ZEND_END_ARG_INFO()
++
++#define ICEPHP_COMMUNICATOR_FUNCTIONS \
++    ZEND_FE(Ice_initialize, Ice_initialize_arginfo) \
++    ZEND_FE(Ice_register, NULL) \
++    ZEND_FE(Ice_unregister, NULL) \
++    ZEND_FE(Ice_find, NULL) \
++    ZEND_FE(Ice_getProperties, NULL)
++
++#ifdef ICEPHP_USE_NAMESPACES
++#   define ICEPHP_COMMUNICATOR_NS_FUNCTIONS \
++    ZEND_NS_FALIAS("Ice", initialize, Ice_initialize, Ice_initialize_arginfo) \
++    ZEND_NS_FALIAS("Ice", register, Ice_register, NULL) \
++    ZEND_NS_FALIAS("Ice", unregister, Ice_unregister, NULL) \
++    ZEND_NS_FALIAS("Ice", find, Ice_find, NULL) \
++    ZEND_NS_FALIAS("Ice", getProperties, Ice_getProperties, NULL)
++#else
++#   define ICEPHP_COMMUNICATOR_NS_FUNCTIONS
++#endif
++
++#define ICEPHP_OPERATION_FUNCTIONS \
++    ZEND_FE(IcePHP_defineOperation,  NULL)
++
++#define ICEPHP_PROPERTIES_FUNCTIONS \
++    ZEND_FE(Ice_createProperties, Ice_createProperties_arginfo)
++
++#ifdef ICEPHP_USE_NAMESPACES
++#   define ICEPHP_PROPERTIES_NS_FUNCTIONS \
++    ZEND_NS_FALIAS("Ice", createProperties, Ice_createProperties, Ice_createProperties_arginfo)
++#else
++#   define ICEPHP_PROPERTIES_NS_FUNCTIONS
++#endif
++
++#define ICEPHP_TYPE_FUNCTIONS \
++    ZEND_FE(IcePHP_defineEnum,          NULL) \
++    ZEND_FE(IcePHP_defineStruct,        NULL) \
++    ZEND_FE(IcePHP_defineSequence,      NULL) \
++    ZEND_FE(IcePHP_defineDictionary,    NULL) \
++    ZEND_FE(IcePHP_defineProxy,         NULL) \
++    ZEND_FE(IcePHP_declareClass,        NULL) \
++    ZEND_FE(IcePHP_defineClass,         NULL) \
++    ZEND_FE(IcePHP_defineException,     NULL) \
++    ZEND_FE(IcePHP_stringify,           NULL) \
++    ZEND_FE(IcePHP_stringifyException,  NULL)
++
++#define ICEPHP_UTIL_FUNCTIONS \
++    ZEND_FE(Ice_stringVersion, NULL) \
++    ZEND_FE(Ice_intVersion, NULL) \
++    ZEND_FE(Ice_generateUUID, NULL)
++
++#ifdef ICEPHP_USE_NAMESPACES
++#   define ICEPHP_UTIL_NS_FUNCTIONS \
++    ZEND_NS_FALIAS("Ice", stringVersion, Ice_stringVersion, NULL) \
++    ZEND_NS_FALIAS("Ice", intVersion, Ice_intVersion, NULL) \
++    ZEND_NS_FALIAS("Ice", generateUUID, Ice_generateUUID, NULL)
++#else
++#   define ICEPHP_UTIL_NS_FUNCTIONS
++#endif
++
  //
  // Entries for all global functions.
  //
@@ -83,10 +259,21 @@ diff -up Ice-3.4.2/php/src/IcePHP/Init.cpp.php54 Ice-3.4.2/php/src/IcePHP/Init.c
  {
      ICEPHP_COMMUNICATOR_FUNCTIONS
      ICEPHP_COMMUNICATOR_NS_FUNCTIONS
-diff -up Ice-3.4.2/php/src/IcePHP/Logger.cpp.php54 Ice-3.4.2/php/src/IcePHP/Logger.cpp
---- Ice-3.4.2/php/src/IcePHP/Logger.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Logger.cpp	2011-12-28 09:07:57.233738495 +0100
-@@ -226,11 +226,11 @@ handleClone(zval* zv TSRMLS_DC)
+diff --git a/php/src/IcePHP/Logger.cpp b/php/src/IcePHP/Logger.cpp
+index f9514a3..e6d52d0 100644
+--- a/php/src/IcePHP/Logger.cpp
++++ b/php/src/IcePHP/Logger.cpp
+@@ -210,7 +210,8 @@ handleFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<Ice::LoggerPtr>* obj = static_cast<Wrapper<Ice::LoggerPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
+ }
+ 
+ #ifdef _WIN32
+@@ -226,11 +227,11 @@ handleClone(zval* zv TSRMLS_DC)
  //
  // Predefined methods for Logger.
  //
@@ -100,79 +287,103 @@ diff -up Ice-3.4.2/php/src/IcePHP/Logger.cpp.php54 Ice-3.4.2/php/src/IcePHP/Logg
  {
      ZEND_ME(Ice_Logger, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
      ZEND_ME(Ice_Logger, __toString, NULL, ZEND_ACC_PUBLIC)
-diff -up Ice-3.4.2/php/src/IcePHP/Operation.cpp.php54 Ice-3.4.2/php/src/IcePHP/Operation.cpp
---- Ice-3.4.2/php/src/IcePHP/Operation.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Operation.cpp	2011-12-28 09:17:24.728752077 +0100
+diff --git a/php/src/IcePHP/Operation.cpp b/php/src/IcePHP/Operation.cpp
+index 8a6fafe..3e062be 100644
+--- a/php/src/IcePHP/Operation.cpp
++++ b/php/src/IcePHP/Operation.cpp
 @@ -218,7 +218,7 @@ IcePHP::OperationI::~OperationI()
      if(_zendFunction)
      {
          delete []_zendFunction->arg_info;
 -        efree(_zendFunction->function_name);
-+        efree(const_cast<char *>(_zendFunction->function_name));
++        efree(const_cast<char*>(_zendFunction->function_name));
          efree(_zendFunction);
      }
  }
-@@ -238,12 +238,18 @@ IcePHP::OperationI::function()
+@@ -238,12 +238,16 @@ IcePHP::OperationI::function()
          for(p = inParams.begin(); p != inParams.end(); ++p, ++i)
          {
              getArgInfo(argInfo[i], *p, false);
-+#if PHP_VERSION_ID < 50399
-+            // php 5.4 : zend_arg_info.required_num_args removed.
++#if PHP_VERSION_ID < 50400
              argInfo[i].required_num_args = static_cast<zend_uint>(numParams);
 +#endif
          }
          for(p = outParams.begin(); p != outParams.end(); ++p, ++i)
          {
              getArgInfo(argInfo[i], *p, true);
-+#if PHP_VERSION_ID < 50399
-+            // php 5.4 : zend_arg_info.required_num_args removed.
++#if PHP_VERSION_ID < 50400
              argInfo[i].required_num_args = static_cast<zend_uint>(numParams);
 +#endif
          }
  
          string fixed = fixIdent(name);
-@@ -255,9 +261,12 @@ IcePHP::OperationI::function()
+@@ -255,9 +259,11 @@ IcePHP::OperationI::function()
          _zendFunction->prototype = 0;
          _zendFunction->num_args = static_cast<zend_uint>(numParams);
          _zendFunction->arg_info = argInfo;
-+#if PHP_VERSION_ID < 50399
-+        // php 5.4 use fn_flags ZEND_ACC_PASS_REST_BY_REFERENCE, ZEND_ACC_RETURN_REFERENCE
-         _zendFunction->pass_rest_by_reference = 0;
--        _zendFunction->required_num_args = _zendFunction->num_args;
+-        _zendFunction->pass_rest_by_reference = 0;
+         _zendFunction->required_num_args = _zendFunction->num_args;
++#if PHP_VERSION_ID < 50400
++        _zendFunction->pass_rest_by_reference = 0;
          _zendFunction->return_reference = 0;
 +#endif
-+        _zendFunction->required_num_args = _zendFunction->num_args;
          _zendFunction->handler = ZEND_FN(IcePHP_Operation_call);
      }
  
-@@ -295,13 +304,22 @@ IcePHP::OperationI::getArgInfo(zend_arg_
+@@ -293,15 +299,16 @@ IcePHP::OperationI::getArgInfo(zend_arg_info& arg, const TypeInfoPtr& info, bool
+     arg.name = 0;
+     arg.class_name = 0;
      arg.allow_null = 1;
-     if(SequenceInfoPtr::dynamicCast(info) || DictionaryInfoPtr::dynamicCast(info))
-     {
-+#if PHP_VERSION_ID < 50399
-         arg.array_type_hint = 1;
-+        arg.return_reference = 0;
+-    if(SequenceInfoPtr::dynamicCast(info) || DictionaryInfoPtr::dynamicCast(info))
+-    {
+-        arg.array_type_hint = 1;
+-    }
+-    else
+-    {
+-        arg.array_type_hint = 0;
+-    }
++
++    const bool isArray = SequenceInfoPtr::dynamicCast(info) || DictionaryInfoPtr::dynamicCast(info);
++
++#if PHP_VERSION_ID < 50400
++    arg.array_type_hint = isArray ? 1 : 0;
+     arg.return_reference = 0;
 +#else
-+        arg.type_hint = IS_ARRAY;
++    arg.type_hint = isArray ? IS_ARRAY : 0;
 +#endif
-     }
-     else
-     {
-+#if PHP_VERSION_ID < 50399
-         arg.array_type_hint = 0;
-+        arg.return_reference = 0;
-+#else
-+        arg.type_hint = 0;
-+#endif
-     }
--    arg.return_reference = 0;
++
      arg.pass_by_reference = out ? 1 : 0;
  }
  
-diff -up Ice-3.4.2/php/src/IcePHP/Properties.cpp.php54 Ice-3.4.2/php/src/IcePHP/Properties.cpp
---- Ice-3.4.2/php/src/IcePHP/Properties.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Properties.cpp	2011-12-28 09:07:57.234738495 +0100
-@@ -589,11 +589,11 @@ ZEND_FUNCTION(Ice_createProperties)
+diff --git a/php/src/IcePHP/Operation.h b/php/src/IcePHP/Operation.h
+index a1bb0eb..265cd6f 100644
+--- a/php/src/IcePHP/Operation.h
++++ b/php/src/IcePHP/Operation.h
+@@ -20,9 +20,6 @@ extern "C"
+ ZEND_FUNCTION(IcePHP_defineOperation);
+ }
+ 
+-#define ICEPHP_OPERATION_FUNCTIONS \
+-    ZEND_FE(IcePHP_defineOperation,  NULL)
+-
+ namespace IcePHP
+ {
+ 
+diff --git a/php/src/IcePHP/Properties.cpp b/php/src/IcePHP/Properties.cpp
+index 9e7a67a..2c91abe 100644
+--- a/php/src/IcePHP/Properties.cpp
++++ b/php/src/IcePHP/Properties.cpp
+@@ -493,7 +493,8 @@ handleFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<Ice::PropertiesPtr>* obj = static_cast<Wrapper<Ice::PropertiesPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
+ }
+ 
+ #ifdef _WIN32
+@@ -589,11 +590,11 @@ ZEND_FUNCTION(Ice_createProperties)
  //
  // Predefined methods for Properties.
  //
@@ -186,14 +397,36 @@ diff -up Ice-3.4.2/php/src/IcePHP/Properties.cpp.php54 Ice-3.4.2/php/src/IcePHP/
  {
      ZEND_ME(Ice_Properties, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
      ZEND_ME(Ice_Properties, __toString, NULL, ZEND_ACC_PUBLIC)
-diff -up Ice-3.4.2/php/src/IcePHP/Proxy.cpp.php54 Ice-3.4.2/php/src/IcePHP/Proxy.cpp
---- Ice-3.4.2/php/src/IcePHP/Proxy.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Proxy.cpp	2011-12-28 09:07:57.235738495 +0100
+diff --git a/php/src/IcePHP/Properties.h b/php/src/IcePHP/Properties.h
+index 797edb5..001e288 100644
+--- a/php/src/IcePHP/Properties.h
++++ b/php/src/IcePHP/Properties.h
+@@ -20,16 +20,6 @@ extern "C"
+ ZEND_FUNCTION(Ice_createProperties);
+ }
+ 
+-#define ICEPHP_PROPERTIES_FUNCTIONS \
+-    ZEND_FE(Ice_createProperties, NULL)
+-
+-#ifdef ICEPHP_USE_NAMESPACES
+-#   define ICEPHP_PROPERTIES_NS_FUNCTIONS \
+-    ZEND_NS_FALIAS("Ice", createProperties, Ice_createProperties, NULL)
+-#else
+-#   define ICEPHP_PROPERTIES_NS_FUNCTIONS
+-#endif
+-
+ namespace IcePHP
+ {
+ 
+diff --git a/php/src/IcePHP/Proxy.cpp b/php/src/IcePHP/Proxy.cpp
+index 6aa8d38..89952c4 100644
+--- a/php/src/IcePHP/Proxy.cpp
++++ b/php/src/IcePHP/Proxy.cpp
 @@ -59,7 +59,11 @@ extern "C"
  static zend_object_value handleAlloc(zend_class_entry* TSRMLS_DC);
  static void handleFreeStorage(void* TSRMLS_DC);
  static zend_object_value handleClone(zval* TSRMLS_DC);
-+#if PHP_VERSION_ID < 50399
++#if PHP_VERSION_ID < 50400
  static union _zend_function* handleGetMethod(zval**, char*, int TSRMLS_DC);
 +#else
 +static union _zend_function* handleGetMethod(zval**, char*, int, const _zend_literal* TSRMLS_DC);
@@ -201,31 +434,41 @@ diff -up Ice-3.4.2/php/src/IcePHP/Proxy.cpp.php54 Ice-3.4.2/php/src/IcePHP/Proxy
  static int handleCompare(zval*, zval* TSRMLS_DC);
  }
  
-@@ -1461,7 +1465,11 @@ handleClone(zval* zv TSRMLS_DC)
+@@ -1418,7 +1422,8 @@ handleFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<ProxyPtr>* obj = static_cast<Wrapper<ProxyPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
+ }
+ 
+ #ifdef _WIN32
+@@ -1461,7 +1466,11 @@ handleClone(zval* zv TSRMLS_DC)
  extern "C"
  #endif
  static union _zend_function*
-+#if PHP_VERSION_ID < 50399
++#if PHP_VERSION_ID < 50400
  handleGetMethod(zval** zv, char* method, int len TSRMLS_DC)
 +#else
-+handleGetMethod(zval** zv, char* method, int len, const _zend_literal* literal TSRMLS_DC)
++handleGetMethod(zval** zv, char* method, int len, const _zend_literal* key TSRMLS_DC)
 +#endif
  {
      zend_function* result;
  
-@@ -1470,7 +1478,11 @@ handleGetMethod(zval** zv, char* method,
+@@ -1470,7 +1479,11 @@ handleGetMethod(zval** zv, char* method, int len TSRMLS_DC)
      // any of our predefined proxy methods. If it returns 0, then we return a
      // function that will check the class definition.
      //
-+#if PHP_VERSION_ID < 50399
++#if PHP_VERSION_ID < 50400
      result = zend_get_std_object_handlers()->get_method(zv, method, len TSRMLS_CC);
 +#else
-+    result = zend_get_std_object_handlers()->get_method(zv, method, len, literal TSRMLS_CC);
++    result = zend_get_std_object_handlers()->get_method(zv, method, len, key TSRMLS_CC);
 +#endif
      if(!result)
      {
          Wrapper<ProxyPtr>* obj = Wrapper<ProxyPtr>::extract(*zv TSRMLS_CC);
-@@ -1532,7 +1544,7 @@ handleCompare(zval* zobj1, zval* zobj2 T
+@@ -1532,7 +1545,7 @@ handleCompare(zval* zobj1, zval* zobj2 TSRMLS_DC)
  //
  // Predefined methods for ObjectPrx.
  //
@@ -234,10 +477,31 @@ diff -up Ice-3.4.2/php/src/IcePHP/Proxy.cpp.php54 Ice-3.4.2/php/src/IcePHP/Proxy
  {
      ZEND_ME(Ice_ObjectPrx, __construct, NULL, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
      ZEND_ME(Ice_ObjectPrx, __toString, NULL, ZEND_ACC_PUBLIC)
-diff -up Ice-3.4.2/php/src/IcePHP/Types.cpp.php54 Ice-3.4.2/php/src/IcePHP/Types.cpp
---- Ice-3.4.2/php/src/IcePHP/Types.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Types.cpp	2011-12-28 09:07:57.236738495 +0100
-@@ -2853,7 +2853,7 @@ ZEND_FUNCTION(IcePHP_stringifyException)
+diff --git a/php/src/IcePHP/Types.cpp b/php/src/IcePHP/Types.cpp
+index 464336f..6df610a 100644
+--- a/php/src/IcePHP/Types.cpp
++++ b/php/src/IcePHP/Types.cpp
+@@ -2405,7 +2405,8 @@ handleTypeInfoFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<TypeInfoPtr>* obj = static_cast<Wrapper<TypeInfoPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
+ }
+ 
+ static bool
+@@ -2718,7 +2719,8 @@ handleExceptionInfoFreeStorage(void* p TSRMLS_DC)
+ {
+     Wrapper<ExceptionInfoPtr>* obj = static_cast<Wrapper<ExceptionInfoPtr>*>(p);
+     delete obj->ptr;
+-    zend_objects_free_object_storage(static_cast<zend_object*>(p) TSRMLS_CC);
++    zend_object_std_dtor(static_cast<zend_object*>(p) TSRMLS_CC);
++    efree(p);
+ }
+ 
+ 
+@@ -2853,7 +2855,7 @@ ZEND_FUNCTION(IcePHP_stringifyException)
  //
  // Predefined methods for IcePHP_TypeInfo.
  //
@@ -246,7 +510,7 @@ diff -up Ice-3.4.2/php/src/IcePHP/Types.cpp.php54 Ice-3.4.2/php/src/IcePHP/Types
  {
      {0, 0, 0}
  };
-@@ -2861,7 +2861,7 @@ static function_entry _typeInfoMethods[]
+@@ -2861,7 +2863,7 @@ static function_entry _typeInfoMethods[] =
  //
  // Predefined methods for IcePHP_ExceptionInfo.
  //
@@ -255,18 +519,261 @@ diff -up Ice-3.4.2/php/src/IcePHP/Types.cpp.php54 Ice-3.4.2/php/src/IcePHP/Types
  {
      {0, 0, 0}
  };
-diff -up Ice-3.4.2/php/src/IcePHP/Util.cpp.php54 Ice-3.4.2/php/src/IcePHP/Util.cpp
---- Ice-3.4.2/php/src/IcePHP/Util.cpp.php54	2011-06-15 21:44:00.000000000 +0200
-+++ Ice-3.4.2/php/src/IcePHP/Util.cpp	2011-12-28 09:07:57.237738495 +0100
-@@ -38,7 +38,11 @@ IcePHP::createWrapper(zend_class_entry*
+diff --git a/php/src/IcePHP/Types.h b/php/src/IcePHP/Types.h
+index 7a1352e..b21af72 100644
+--- a/php/src/IcePHP/Types.h
++++ b/php/src/IcePHP/Types.h
+@@ -33,18 +33,6 @@ ZEND_FUNCTION(IcePHP_stringify);
+ ZEND_FUNCTION(IcePHP_stringifyException);
+ }
  
+-#define ICEPHP_TYPE_FUNCTIONS \
+-    ZEND_FE(IcePHP_defineEnum,          NULL) \
+-    ZEND_FE(IcePHP_defineStruct,        NULL) \
+-    ZEND_FE(IcePHP_defineSequence,      NULL) \
+-    ZEND_FE(IcePHP_defineDictionary,    NULL) \
+-    ZEND_FE(IcePHP_defineProxy,         NULL) \
+-    ZEND_FE(IcePHP_declareClass,        NULL) \
+-    ZEND_FE(IcePHP_defineClass,         NULL) \
+-    ZEND_FE(IcePHP_defineException,     NULL) \
+-    ZEND_FE(IcePHP_stringify,           NULL) \
+-    ZEND_FE(IcePHP_stringifyException,  NULL)
+-
+ namespace IcePHP
+ {
+ 
+diff --git a/php/src/IcePHP/Util.cpp b/php/src/IcePHP/Util.cpp
+index 27abfb5..ef5f371 100644
+--- a/php/src/IcePHP/Util.cpp
++++ b/php/src/IcePHP/Util.cpp
+@@ -17,6 +17,7 @@ using namespace std;
+ using namespace IcePHP;
+ using namespace Slice::PHP;
+ 
++#if PHP_VERSION_ID < 50400
+ #ifdef _WIN32
+ extern "C"
+ #endif
+@@ -25,20 +26,25 @@ dtor_wrapper(void* p)
+ {
+     zval_ptr_dtor(static_cast<zval**>(p));
+ }
++#endif
+ 
+ void*
+ IcePHP::createWrapper(zend_class_entry* ce, size_t sz TSRMLS_DC)
+ {
+     zend_object* obj;
+-    zval* tmp;
+ 
+     obj = static_cast<zend_object*>(emalloc(sz));
+-    obj->ce = ce;
+-    obj->guards = 0;
+ 
++    zend_object_std_init(obj, ce TSRMLS_CC);
++
++#if PHP_VERSION_ID < 50400
++    zval* tmp;
      obj->properties = static_cast<HashTable*>(emalloc(sizeof(HashTable)));
      zend_hash_init(obj->properties, 0, 0, dtor_wrapper, 0);
-+#if PHP_VERSION_ID < 50399
      zend_hash_copy(obj->properties, &ce->default_properties, (copy_ctor_func_t)zval_add_ref, &tmp, sizeof(zval*));
 +#else
-+    object_properties_init( (zend_object*)obj, ce );
++    object_properties_init(obj, ce);
 +#endif
  
      return obj;
  }
+diff --git a/php/src/IcePHP/Util.h b/php/src/IcePHP/Util.h
+index fbe4756..925c0ea 100644
+--- a/php/src/IcePHP/Util.h
++++ b/php/src/IcePHP/Util.h
+@@ -22,20 +22,6 @@ ZEND_FUNCTION(Ice_intVersion);
+ ZEND_FUNCTION(Ice_generateUUID);
+ }
+ 
+-#define ICEPHP_UTIL_FUNCTIONS \
+-    ZEND_FE(Ice_stringVersion, NULL) \
+-    ZEND_FE(Ice_intVersion, NULL) \
+-    ZEND_FE(Ice_generateUUID, NULL)
+-
+-#ifdef ICEPHP_USE_NAMESPACES
+-#   define ICEPHP_UTIL_NS_FUNCTIONS \
+-    ZEND_NS_FALIAS("Ice", stringVersion, Ice_stringVersion, NULL) \
+-    ZEND_NS_FALIAS("Ice", intVersion, Ice_intVersion, NULL) \
+-    ZEND_NS_FALIAS("Ice", generateUUID, Ice_generateUUID, NULL)
+-#else
+-#   define ICEPHP_UTIL_NS_FUNCTIONS
+-#endif
+-
+ namespace IcePHP
+ {
+ 
+diff --git a/php/test/Ice/binding/Client.php b/php/test/Ice/binding/Client.php
+index 1a36376..e4fcc58 100644
+--- a/php/test/Ice/binding/Client.php
++++ b/php/test/Ice/binding/Client.php
+@@ -525,7 +525,7 @@ function allTests($communicator)
+     $com->shutdown();
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ allTests($communicator);
+ $communicator->destroy();
+ exit();
+diff --git a/php/test/Ice/checksum/Client.php b/php/test/Ice/checksum/Client.php
+index 2de5055..4b514a8 100755
+--- a/php/test/Ice/checksum/Client.php
++++ b/php/test/Ice/checksum/Client.php
+@@ -88,7 +88,7 @@ function allTests($communicator)
+     return $checksum;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ $checksum = allTests($communicator);
+ $checksum->shutdown();
+ $communicator->destroy();
+diff --git a/php/test/Ice/exceptions/Client.php b/php/test/Ice/exceptions/Client.php
+index f587cb4..543d5c9 100644
+--- a/php/test/Ice/exceptions/Client.php
++++ b/php/test/Ice/exceptions/Client.php
+@@ -378,7 +378,7 @@ function allTests($communicator)
+     return $thrower;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ $thrower = allTests($communicator);
+ $thrower->shutdown();
+ $communicator->destroy();
+diff --git a/php/test/Ice/facets/Client.php b/php/test/Ice/facets/Client.php
+index 00a16dc..6fcdb60 100644
+--- a/php/test/Ice/facets/Client.php
++++ b/php/test/Ice/facets/Client.php
+@@ -89,7 +89,7 @@ function allTests($communicator)
+     return $gf;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ $g = allTests($communicator);
+ $g->shutdown();
+ $communicator->destroy();
+diff --git a/php/test/Ice/info/Client.php b/php/test/Ice/info/Client.php
+index 719de4a..4679f1e 100644
+--- a/php/test/Ice/info/Client.php
++++ b/php/test/Ice/info/Client.php
+@@ -129,7 +129,7 @@ function allTests($communicator)
+     return $testIntf;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ $server = allTests($communicator);
+ $server->shutdown();
+ $communicator->destroy();
+diff --git a/php/test/Ice/inheritance/Client.php b/php/test/Ice/inheritance/Client.php
+index e3d9423..a086e24 100644
+--- a/php/test/Ice/inheritance/Client.php
++++ b/php/test/Ice/inheritance/Client.php
+@@ -236,7 +236,7 @@ function allTests($communicator)
+     return $initial;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ $initial = allTests($communicator);
+ $initial->shutdown();
+ $communicator->destroy();
+diff --git a/php/test/Ice/objects/Client.php b/php/test/Ice/objects/Client.php
+index 68b517d..e4589fd 100644
+--- a/php/test/Ice/objects/Client.php
++++ b/php/test/Ice/objects/Client.php
+@@ -391,7 +391,7 @@ function allTests($communicator)
+     return $initial;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ $factory = new MyObjectFactory();
+ $communicator->addObjectFactory($factory, "::Test::B");
+ $communicator->addObjectFactory($factory, "::Test::C");
+diff --git a/php/test/Ice/operations/Client.php b/php/test/Ice/operations/Client.php
+index 90d73a8..6dc88f2 100644
+--- a/php/test/Ice/operations/Client.php
++++ b/php/test/Ice/operations/Client.php
+@@ -484,7 +484,7 @@ function allTests($communicator)
+     return $cl;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ 
+ $myClass = allTests($communicator);
+ 
+diff --git a/php/test/Ice/proxy/Client.php b/php/test/Ice/proxy/Client.php
+index bb4df33..bb9b104 100644
+--- a/php/test/Ice/proxy/Client.php
++++ b/php/test/Ice/proxy/Client.php
+@@ -722,7 +722,7 @@ function allTests($communicator)
+     return $cl;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ $myClass = allTests($communicator);
+ $myClass->shutdown();
+ $communicator->destroy();
+diff --git a/php/test/Ice/slicing/exceptions/Client.php b/php/test/Ice/slicing/exceptions/Client.php
+index 5c671f6..ff114ac 100644
+--- a/php/test/Ice/slicing/exceptions/Client.php
++++ b/php/test/Ice/slicing/exceptions/Client.php
+@@ -315,7 +315,7 @@ function allTests($communicator)
+     return $test;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ $test = allTests($communicator);
+ $test->shutdown();
+ $communicator->destroy();
+diff --git a/php/test/Ice/slicing/objects/Client.php b/php/test/Ice/slicing/objects/Client.php
+index 6b96933..55d5ac1 100644
+--- a/php/test/Ice/slicing/objects/Client.php
++++ b/php/test/Ice/slicing/objects/Client.php
+@@ -830,7 +830,7 @@ function allTests($communicator)
+     return $test;
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ $test = allTests($communicator);
+ $test->shutdown();
+ $communicator->destroy();
+diff --git a/php/test/Slice/keyword/Client.php b/php/test/Slice/keyword/Client.php
+index a88749f..b048543 100644
+--- a/php/test/Slice/keyword/Client.php
++++ b/php/test/Slice/keyword/Client.php
+@@ -96,7 +96,7 @@ function allTests($communicator)
+     echo "ok\n";
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ allTests($communicator);
+ $communicator->destroy();
+ 
+diff --git a/php/test/Slice/structure/Client.php b/php/test/Slice/structure/Client.php
+index 8cb1c03..0c73fae 100644
+--- a/php/test/Slice/structure/Client.php
++++ b/php/test/Slice/structure/Client.php
+@@ -225,7 +225,7 @@ function allTests($communicator)
+     echo "ok\n";
+ }
+ 
+-$communicator = Ice_initialize(&$argv);
++$communicator = Ice_initialize($argv);
+ allTests($communicator);
+ $communicator->destroy();
+ 

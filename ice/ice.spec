@@ -5,9 +5,15 @@
 %global php_extdir %(php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)
 %global php_apiver %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+
 Name:           ice
 Version:        3.4.2
-Release:        3%{?dist}
+Release:        3%{?dist}.1
 Summary:        ZeroC Object-Oriented middleware
 
 Group:          System Environment/Libraries
@@ -589,6 +595,10 @@ fi
 
 
 %changelog
+* Fri Dec 30 2011 Remi Collet <remi@fedoraproject.org> - 3.4.2-3.1
+- update php 5.4 from upstream
+- add private so filters
+
 * Wed Dec 28 2011 Remi Collet <remi@fedoraproject.org> - 3.4.2-3
 - build against php 5.4
 - patch for php 5.4
