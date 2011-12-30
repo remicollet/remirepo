@@ -28,7 +28,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 %global phpversion 5.4.0RC5-dev
-%global snapdate   201112261030
+%global snapdate   201112300630
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -98,7 +98,6 @@ Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 # fix harcoded mysql.sock path
 Patch9: php-5.4.0-sock.patch
-Patch10: php-5.4.0-build.patch
 
 # Fixes for extension modules
 #Patch20: php-4.3.11-shutdown.patch
@@ -107,7 +106,7 @@ Patch10: php-5.4.0-build.patch
 # Functional changes
 #Patch40: php-5.0.4-dlopen.patch
 #Patch41: php-5.3.0-easter.patch
-#Patch42: php-5.3.1-systzdata-v7.patch
+Patch42: php-5.3.1-systzdata-v7.patch
 # See http://bugs.php.net/53436
 #Patch43: php-5.3.4-phpize.patch
 
@@ -668,15 +667,14 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch9 -p1 -b .sock
-%patch10 -p1 -b .build
 
 #%patch20 -p1 -b .shutdown
 #%patch21 -p1 -b .macropen
 
 #%patch40 -p1 -b .dlopen
 #%patch41 -p1 -b .easter
-%if %{?fedora}%{?rhel:99} >= 13
-#%patch42 -p1 -b .systzdata
+%if %{?fedora}%{?rhel:99} >= 15
+%patch42 -p1 -b .systzdata
 %endif
 #%patch43 -p0 -b .headers
 
@@ -1479,6 +1477,9 @@ fi
 %endif
 
 %changelog
+* Fri Dec 30 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.6.201112300630
+- new snapshot (5.4.0RC5-dev)
+
 * Mon Dec 26 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.6.201112261030
 - new snapshot (5.4.0RC5-dev)
 
