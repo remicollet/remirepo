@@ -28,7 +28,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 %global phpversion 5.4.0RC5-dev
-%global snapdate   201112300630
+%global snapdate   201201041830
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -62,7 +62,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.4.0
 %if 0%{?snapdate}
-Release: 0.6.%{snapdate}%{?dist}
+Release: 0.7.%{snapdate}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1477,6 +1477,9 @@ fi
 %endif
 
 %changelog
+* Wed Jan 04 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.7.201201041830
+- new snapshot (5.4.0RC5-dev) with fix for https://bugs.php.net/60627
+
 * Fri Dec 30 2011 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.6.201112300630
 - new snapshot (5.4.0RC5-dev)
 
