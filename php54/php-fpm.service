@@ -7,7 +7,6 @@ Type=forking
 PIDFile=/var/run/php-fpm/php-fpm.pid
 ExecStart=/usr/sbin/php-fpm
 ExecReload=/bin/kill -USR2 $MAINPID
-ExecStop=/usr/sbin/httpd $OPTIONS -k stop
 
 [Install]
 WantedBy=multi-user.target
