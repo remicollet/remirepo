@@ -1,0 +1,25 @@
+diff -up php-5.3.9/ext/mysqlnd/config9.m4.mysqlnd php-5.3.9/ext/mysqlnd/config9.m4
+diff -up php-5.3.9/ext/mysqlnd/mysqlnd.c.mysqlnd php-5.3.9/ext/mysqlnd/mysqlnd.c
+--- php-5.3.9/ext/mysqlnd/mysqlnd.c.mysqlnd	2012-01-01 14:15:04.000000000 +0100
++++ php-5.3.9/ext/mysqlnd/mysqlnd.c	2012-01-10 19:12:06.813933986 +0100
+@@ -620,7 +620,7 @@ MYSQLND_METHOD(mysqlnd_conn, connect)(MY
+ 		if (host_len == sizeof("localhost") - 1 && !strncasecmp(host, "localhost", host_len)) {
+ 			DBG_INF_FMT("socket=%s", socket_or_pipe? socket_or_pipe:"n/a");
+ 			if (!socket_or_pipe) {
+-				socket_or_pipe = "/tmp/mysql.sock";
++				socket_or_pipe = "/var/lib/mysql/mysql.sock";
+ 			}
+ 			transport_len = spprintf(&transport, 0, "unix://%s", socket_or_pipe);
+ 			unix_socket = TRUE;
+diff -up php-5.3.9/ext/pdo_mysql/pdo_mysql.c.mysqlnd php-5.3.9/ext/pdo_mysql/pdo_mysql.c
+--- php-5.3.9/ext/pdo_mysql/pdo_mysql.c.mysqlnd	2012-01-01 14:15:04.000000000 +0100
++++ php-5.3.9/ext/pdo_mysql/pdo_mysql.c	2012-01-10 19:17:51.608942238 +0100
+@@ -50,7 +50,7 @@ ZEND_DECLARE_MODULE_GLOBALS(pdo_mysql);
+ #  define PDO_MYSQL_UNIX_ADDR PHP_MYSQL_UNIX_SOCK_ADDR
+ # else
+ #  if !PHP_WIN32
+-#   define PDO_MYSQL_UNIX_ADDR "/tmp/mysql.sock"
++#   define PDO_MYSQL_UNIX_ADDR "/var/lib/mysql/mysql.sock"
+ #  else
+ #   define PDO_MYSQL_UNIX_ADDR NULL
+ #  endif

@@ -1,6 +1,6 @@
-diff -up php-5.3.8/build/buildcheck.sh.aconf259 php-5.3.8/build/buildcheck.sh
---- php-5.3.8/build/buildcheck.sh.aconf259	2011-05-18 21:55:34.000000000 +0200
-+++ php-5.3.8/build/buildcheck.sh	2011-09-12 17:42:17.016672712 +0200
+diff -up php-5.3.9/build/buildcheck.sh.aconf259 php-5.3.9/build/buildcheck.sh
+--- php-5.3.9/build/buildcheck.sh.aconf259	2011-05-18 21:55:34.000000000 +0200
++++ php-5.3.9/build/buildcheck.sh	2012-01-10 19:05:11.754924053 +0100
 @@ -28,33 +28,23 @@ if test -z "$PHP_AUTOCONF"; then
    PHP_AUTOCONF='autoconf'
  fi
@@ -40,11 +40,11 @@ diff -up php-5.3.8/build/buildcheck.sh.aconf259 php-5.3.8/build/buildcheck.sh
  
  if test "$1" = "2" -a "$2" -ge "50"; then
    ./vcsclean
-diff -up php-5.3.8/configure.in.aconf259 php-5.3.8/configure.in
---- php-5.3.8/configure.in.aconf259	2011-09-12 17:42:17.008672708 +0200
-+++ php-5.3.8/configure.in	2011-09-12 17:42:17.017672713 +0200
+diff -up php-5.3.9/configure.in.aconf259 php-5.3.9/configure.in
+--- php-5.3.9/configure.in.aconf259	2012-01-10 19:05:44.787924857 +0100
++++ php-5.3.9/configure.in	2012-01-10 19:06:55.260926529 +0100
 @@ -1,28 +1,6 @@
- ## $Id: configure.in 315343 2011-08-23 08:56:29Z johannes $ -*- autoconf -*-
+ ## $Id: configure.in 322014 2012-01-10 11:21:57Z johannes $ -*- autoconf -*-
  dnl ## Process this file with autoconf to produce a configure script.
  
 -divert(1)
@@ -72,7 +72,7 @@ diff -up php-5.3.8/configure.in.aconf259 php-5.3.8/configure.in
  dnl include Zend specific macro definitions first
  dnl -------------------------------------------------------------------------
  sinclude(Zend/acinclude.m4)
-@@ -30,8 +8,10 @@ sinclude(Zend/acinclude.m4)
+@@ -30,8 +8,9 @@ sinclude(Zend/acinclude.m4)
  dnl Basic autoconf + automake initialization, generation of config.nice.
  dnl -------------------------------------------------------------------------
  
@@ -80,11 +80,10 @@ diff -up php-5.3.8/configure.in.aconf259 php-5.3.8/configure.in
 +AC_PREREQ(2.59)
  AC_INIT(README.SVN-RULES)
 +ifdef([AC_PRESERVE_HELP_ORDER], [AC_PRESERVE_HELP_ORDER], [])
-+
  
  PHP_CONFIG_NICE(config.nice)
  
-@@ -292,14 +272,6 @@ sinclude(TSRM/threads.m4)
+@@ -292,14 +271,6 @@ sinclude(TSRM/threads.m4)
  sinclude(TSRM/tsrm.m4)
  
  
@@ -99,7 +98,7 @@ diff -up php-5.3.8/configure.in.aconf259 php-5.3.8/configure.in
  dnl .
  dnl -------------------------------------------------------------------------
  
-@@ -331,13 +303,6 @@ if test "$enable_maintainer_zts" = "yes"
+@@ -331,13 +302,6 @@ if test "$enable_maintainer_zts" = "yes"
    PTHREADS_FLAGS
  fi
  
@@ -113,7 +112,7 @@ diff -up php-5.3.8/configure.in.aconf259 php-5.3.8/configure.in
  dnl Starting system checks.
  dnl -------------------------------------------------------------------------
  
-@@ -677,10 +642,6 @@ if test "x$php_crypt_r" = "x1"; then
+@@ -685,10 +649,6 @@ if test "x$php_crypt_r" = "x1"; then
    PHP_CRYPT_R_STYLE
  fi
  
@@ -124,7 +123,7 @@ diff -up php-5.3.8/configure.in.aconf259 php-5.3.8/configure.in
  dnl General settings.
  dnl -------------------------------------------------------------------------
  PHP_CONFIGURE_PART(General settings)
-@@ -918,11 +879,6 @@ else
+@@ -926,11 +886,6 @@ else
    AC_MSG_RESULT([using system default])
  fi
  
@@ -136,9 +135,9 @@ diff -up php-5.3.8/configure.in.aconf259 php-5.3.8/configure.in
  dnl Extension configuration.
  dnl -------------------------------------------------------------------------
  
-diff -up php-5.3.8/ext/standard/config.m4.aconf259 php-5.3.8/ext/standard/config.m4
---- php-5.3.8/ext/standard/config.m4.aconf259	2010-06-17 12:22:03.000000000 +0200
-+++ php-5.3.8/ext/standard/config.m4	2011-09-12 17:42:17.018672714 +0200
+diff -up php-5.3.9/ext/standard/config.m4.aconf259 php-5.3.9/ext/standard/config.m4
+--- php-5.3.9/ext/standard/config.m4.aconf259	2012-01-10 19:09:03.896929612 +0100
++++ php-5.3.9/ext/standard/config.m4	2012-01-10 19:09:54.290930815 +0100
 @@ -1,7 +1,5 @@
  dnl $Id: config.m4 300511 2010-06-17 10:22:03Z pajoye $ -*- autoconf -*-
  
@@ -156,9 +155,9 @@ diff -up php-5.3.8/ext/standard/config.m4.aconf259 php-5.3.8/ext/standard/config
  dnl
  dnl Check if there is a support means of creating a new process
  dnl and defining which handles it receives
-diff -up php-5.3.8/scripts/php-config.in.aconf259 php-5.3.8/scripts/php-config.in
---- php-5.3.8/scripts/php-config.in.aconf259	2011-04-18 13:13:37.000000000 +0200
-+++ php-5.3.8/scripts/php-config.in	2011-09-12 17:42:17.019672714 +0200
+diff -up php-5.3.9/scripts/php-config.in.aconf259 php-5.3.9/scripts/php-config.in
+--- php-5.3.9/scripts/php-config.in.aconf259	2011-04-18 13:13:37.000000000 +0200
++++ php-5.3.9/scripts/php-config.in	2012-01-10 19:05:11.755924053 +0100
 @@ -2,6 +2,7 @@
  
  SED="@SED@"
@@ -167,9 +166,9 @@ diff -up php-5.3.8/scripts/php-config.in.aconf259 php-5.3.8/scripts/php-config.i
  exec_prefix="@exec_prefix@"
  version="@PHP_VERSION@"
  vernum="@PHP_VERSION_ID@"
-diff -up php-5.3.8/scripts/phpize.in.aconf259 php-5.3.8/scripts/phpize.in
---- php-5.3.8/scripts/phpize.in.aconf259	2009-06-24 09:42:33.000000000 +0200
-+++ php-5.3.8/scripts/phpize.in	2011-09-12 17:43:12.706714796 +0200
+diff -up php-5.3.9/scripts/phpize.in.aconf259 php-5.3.9/scripts/phpize.in
+--- php-5.3.9/scripts/phpize.in.aconf259	2009-06-24 09:42:33.000000000 +0200
++++ php-5.3.9/scripts/phpize.in	2012-01-10 19:05:11.755924053 +0100
 @@ -2,6 +2,7 @@
  
  # Variable declaration
@@ -178,9 +177,9 @@ diff -up php-5.3.8/scripts/phpize.in.aconf259 php-5.3.8/scripts/phpize.in
  exec_prefix="`eval echo @exec_prefix@`"
  phpdir="`eval echo @libdir@`/build"
  includedir="`eval echo @includedir@`/php"
-diff -up php-5.3.8/scripts/phpize.m4.aconf259 php-5.3.8/scripts/phpize.m4
---- php-5.3.8/scripts/phpize.m4.aconf259	2010-11-02 10:58:08.000000000 +0100
-+++ php-5.3.8/scripts/phpize.m4	2011-09-12 17:42:17.020672715 +0200
+diff -up php-5.3.9/scripts/phpize.m4.aconf259 php-5.3.9/scripts/phpize.m4
+--- php-5.3.9/scripts/phpize.m4.aconf259	2010-11-02 10:58:08.000000000 +0100
++++ php-5.3.9/scripts/phpize.m4	2012-01-10 19:05:11.755924053 +0100
 @@ -1,9 +1,8 @@
  dnl This file becomes configure.in for self-contained extensions.
  

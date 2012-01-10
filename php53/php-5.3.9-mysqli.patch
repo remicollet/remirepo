@@ -1,0 +1,184 @@
+diff -up php-5.3.9/ext/mysqli/mysqli_api.c.incl php-5.3.9/ext/mysqli/mysqli_api.c
+--- php-5.3.9/ext/mysqli/mysqli_api.c.incl	2012-01-10 20:27:59.643042949 +0100
++++ php-5.3.9/ext/mysqli/mysqli_api.c	2012-01-10 20:28:22.447043495 +0100
+@@ -24,8 +24,6 @@
+ #include "config.h"
+ #endif
+ 
+-#include <signal.h>
+-
+ #include "php.h"
+ #include "php_ini.h"
+ #include "php_globals.h"
+@@ -33,6 +31,8 @@
+ #include "php_mysqli_structs.h"
+ #include "mysqli_priv.h"
+ 
++#include <signal.h>
++
+ /* {{{ proto mixed mysqli_affected_rows(object link)
+    Get number of affected rows in previous MySQL operation */
+ PHP_FUNCTION(mysqli_affected_rows)
+diff -up php-5.3.9/ext/mysqli/mysqli.c.incl php-5.3.9/ext/mysqli/mysqli.c
+--- php-5.3.9/ext/mysqli/mysqli.c.incl	2012-01-10 20:27:33.087042313 +0100
++++ php-5.3.9/ext/mysqli/mysqli.c	2012-01-10 20:28:38.944043890 +0100
+@@ -24,8 +24,6 @@
+ #include "config.h"
+ #endif
+ 
+-#include <signal.h>
+-
+ #include "php.h"
+ #include "php_ini.h"
+ #include "ext/standard/info.h"
+@@ -34,6 +32,8 @@
+ #include "mysqli_priv.h"
+ #include "zend_exceptions.h"
+ 
++#include <signal.h>
++
+ ZEND_DECLARE_MODULE_GLOBALS(mysqli)
+ static PHP_GINIT_FUNCTION(mysqli);
+ 
+diff -up php-5.3.9/ext/mysqli/mysqli_driver.c.incl php-5.3.9/ext/mysqli/mysqli_driver.c
+--- php-5.3.9/ext/mysqli/mysqli_driver.c.incl	2012-01-10 20:27:28.476042203 +0100
++++ php-5.3.9/ext/mysqli/mysqli_driver.c	2012-01-10 20:28:43.822044006 +0100
+@@ -20,8 +20,6 @@
+ #include "config.h"
+ #endif
+ 
+-#include <signal.h>
+-
+ #include "php.h"
+ #include "php_ini.h"
+ #include "ext/standard/info.h"
+@@ -29,6 +27,8 @@
+ #include "zend_exceptions.h"
+ #include "mysqli_fe.h"
+ 
++#include <signal.h>
++
+ #define MAP_PROPERTY_MYG_BOOL_READ(name, value) \
+ static int name(mysqli_object *obj, zval **retval TSRMLS_DC) \
+ { \
+diff -up php-5.3.9/ext/mysqli/mysqli_embedded.c.incl php-5.3.9/ext/mysqli/mysqli_embedded.c
+--- php-5.3.9/ext/mysqli/mysqli_embedded.c.incl	2012-01-10 20:27:18.844041973 +0100
++++ php-5.3.9/ext/mysqli/mysqli_embedded.c	2012-01-10 20:28:56.059044300 +0100
+@@ -20,13 +20,13 @@
+ #include "config.h"
+ #endif
+ 
+-#include <signal.h>
+-
+ #include "php.h"
+ #include "php_ini.h"
+ #include "ext/standard/info.h"
+ #include "php_mysqli_structs.h"
+ 
++#include <signal.h>
++
+ /* {{{ proto bool mysqli_embedded_server_start(bool start, array arguments, array groups)
+    initialize and start embedded server */
+ PHP_FUNCTION(mysqli_embedded_server_start)
+diff -up php-5.3.9/ext/mysqli/mysqli_exception.c.incl php-5.3.9/ext/mysqli/mysqli_exception.c
+--- php-5.3.9/ext/mysqli/mysqli_exception.c.incl	2012-01-10 20:27:50.753042737 +0100
++++ php-5.3.9/ext/mysqli/mysqli_exception.c	2012-01-10 20:28:14.808043313 +0100
+@@ -20,8 +20,6 @@
+ #include "config.h"
+ #endif
+ 
+-#include <signal.h>
+-
+ #include "php.h"
+ #include "php_ini.h"
+ #include "ext/standard/info.h"
+@@ -29,6 +27,8 @@
+ #include "mysqli_priv.h"
+ #include "zend_exceptions.h"
+ 
++#include <signal.h>
++
+ /* {{{ mysqli_exception_methods[]
+  */
+ const zend_function_entry mysqli_exception_methods[] = {
+diff -up php-5.3.9/ext/mysqli/mysqli_fe.c.incl php-5.3.9/ext/mysqli/mysqli_fe.c
+--- php-5.3.9/ext/mysqli/mysqli_fe.c.incl	2012-01-10 20:27:37.755042425 +0100
++++ php-5.3.9/ext/mysqli/mysqli_fe.c	2012-01-10 20:28:33.556043762 +0100
+@@ -24,8 +24,6 @@
+ #include "config.h"
+ #endif
+ 
+-#include <signal.h>
+-
+ #include "php.h"
+ #include "php_ini.h"
+ #include "ext/standard/info.h"
+@@ -33,6 +31,8 @@
+ #include "mysqli_fe.h"
+ #include "mysqli_priv.h"
+ 
++#include <signal.h>
++
+ #if PHP_VERSION_ID >= 50399
+ #define MYSQLI_ZEND_ARG_OBJ_INFO_LINK() ZEND_ARG_OBJ_INFO(0, link, mysqli, 0)
+ #define MYSQLI_ZEND_ARG_OBJ_INFO_RESULT() ZEND_ARG_OBJ_INFO(0, result, mysqli_result, 0)
+diff -up php-5.3.9/ext/mysqli/mysqli_nonapi.c.incl php-5.3.9/ext/mysqli/mysqli_nonapi.c
+--- php-5.3.9/ext/mysqli/mysqli_nonapi.c.incl	2012-01-10 20:27:23.883042093 +0100
++++ php-5.3.9/ext/mysqli/mysqli_nonapi.c	2012-01-10 20:28:50.658044170 +0100
+@@ -24,14 +24,14 @@
+ #include "config.h"
+ #endif
+ 
+-#include <signal.h>
+-
+ #include "php.h"
+ #include "php_ini.h"
+ #include "ext/standard/info.h"
+ #include "php_mysqli_structs.h"
+ #include "mysqli_priv.h"
+ 
++#include <signal.h>
++
+ #define SAFE_STR(a) ((a)?a:"")
+ 
+ #ifndef zend_parse_parameters_none
+diff -up php-5.3.9/ext/mysqli/mysqli_prop.c.incl php-5.3.9/ext/mysqli/mysqli_prop.c
+--- php-5.3.9/ext/mysqli/mysqli_prop.c.incl	2012-01-10 20:27:44.023042575 +0100
++++ php-5.3.9/ext/mysqli/mysqli_prop.c	2012-01-10 20:28:27.766043623 +0100
+@@ -22,14 +22,14 @@
+ #include "config.h"
+ #endif
+ 
+-#include <signal.h>
+-
+ #include "php.h"
+ #include "php_ini.h"
+ #include "ext/standard/info.h"
+ #include "php_mysqli_structs.h"
+ #include "mysqli_priv.h"
+ 
++#include <signal.h>
++
+ #define CHECK_STATUS(value) \
+ 	if (!obj->ptr || ((MYSQLI_RESOURCE *)obj->ptr)->status < value ) { \
+ 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Property access is not allowed yet"); \
+diff -up php-5.3.9/ext/mysqli/mysqli_warning.c.incl php-5.3.9/ext/mysqli/mysqli_warning.c
+--- php-5.3.9/ext/mysqli/mysqli_warning.c.incl	2012-01-10 20:28:07.855043147 +0100
++++ php-5.3.9/ext/mysqli/mysqli_warning.c	2012-01-10 20:29:01.012044418 +0100
+@@ -20,14 +20,14 @@
+ #include "config.h"
+ #endif
+ 
+-#include <signal.h>
+-
+ #include "php.h"
+ #include "php_ini.h"
+ #include "ext/standard/info.h"
+ #include "php_mysqli_structs.h"
+ #include "mysqli_priv.h"
+ 
++#include <signal.h>
++
+ /* Define these in the PHP5 tree to make merging easy process */
+ #define ZSTR_DUPLICATE (1<<0)
+ #define ZSTR_AUTOFREE  (1<<1)

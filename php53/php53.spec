@@ -10,7 +10,7 @@
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
-%global oci8ver     1.4.6
+%global oci8ver     1.4.7
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 
@@ -27,7 +27,7 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.3.8
+%global phpversion 5.3.9
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -59,8 +59,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.8
-Release: 5%{?dist}.1
+Version: 5.3.9
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -79,7 +79,7 @@ Source6: php-fpm.init
 Source7: php-fpm.logrotate
 
 # Build fixes
-Patch1: php-5.3.7-gnusrc.patch
+Patch1: php-5.3.9-gnusrc.patch
 Patch2: php-5.3.0-install.patch
 Patch3: php-5.2.4-norpath.patch
 Patch5: php-5.2.0-includedir.patch
@@ -87,10 +87,9 @@ Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 # from http://svn.php.net/viewvc?view=revision&revision=311042
 # and  http://svn.php.net/viewvc?view=revision&revision=311908
-Patch8: php-5.3.8-aconf259.patch
-# from http://svn.php.net/viewvc?view=revision&revision=316281
-# + fix harcoded mysql.sock path
-Patch9: php-5.3.8-mysqlnd.patch
+Patch8: php-5.3.9-aconf259.patch
+# fix harcoded mysql.sock path
+Patch9: php-5.3.9-mysqlnd.patch
 
 # Fixes for extension modules
 Patch20: php-4.3.11-shutdown.patch
@@ -102,8 +101,6 @@ Patch41: php-5.3.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.3.4-phpize.patch
-# http://svn.php.net/viewvc?view=revision&revision=317183
-Patch44: php-5.3.8-isa.patch
 
 # Fixes for tests
 Patch61: php-5.0.4-tests-wddx.patch
@@ -117,7 +114,7 @@ Patch91: php-5.3.7-oci8conf.patch
 Patch92: php-5.3.7-readline.patch
 
 # On EL4, include order breaks build against MySQL 5.5
-Patch93: php-5.3.6-mysqli.patch
+Patch93: php-5.3.9-mysqli.patch
 
 # backport for http://bugs.php.net/50755  (multiple rowset in pdo_dblib)
 # http://svn.php.net/viewvc?view=revision&revision=300002
@@ -685,14 +682,15 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p0 -b .headers
-%patch44 -p4 -b .isa
 
 %patch61 -p1 -b .tests-wddx
 %patch62 -p0 -b .tests
 
 %patch91 -p1 -b .remi-oci8
 %patch92 -p1 -b .libedit
+%if 0%{?rhel} == 4
 %patch93 -p1 -b .mysqli
+%endif
 %patch94 -p1 -b .50755
 
 
@@ -1390,6 +1388,7 @@ fi
 %attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
 %dir %{_localstatedir}/run/php-fpm
 %{_mandir}/man8/php-fpm.8*
+%{_datadir}/fpm/status.html
 %endif
 
 %files devel
@@ -1452,6 +1451,10 @@ fi
 %endif
 
 %changelog
+* Tue Jan 10 2012 Remi Collet <Fedora@famillecollet.com> 5.3.9-1
+- update to 5.3.9
+  http://www.php.net/ChangeLog-5.php#5.3.9
+
 * Fri Sep 30 2011 Remi Collet <Fedora@famillecollet.com> 5.3.8-5.1
 - EL-5 rebuild (with standard curl 7.15)
 
