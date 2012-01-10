@@ -17,24 +17,18 @@
 # on ppc since spinlock is not detected (not supported?)
 # We also use it for the default ownership of the cache directory
 %global apache 48
-#global svn   358
 
 Summary: PHP accelerator, optimizer, encoder and dynamic content cacher
 Name: %{phpname}-eaccelerator
 Version: 0.9.6.1
-#Release: 0.2%{?svn:.svn%{svn}}%{?dist}
-Release: 9%{?dist}
+Release: 10%{?dist}
 Epoch: 1
 # The eaccelerator module itself is GPLv2+
 # The PHP control panel is under the Zend license (control.php and dasm.php)
 License: GPLv2+ and Zend
 Group: Development/Languages
 URL: http://eaccelerator.net/
-%if 0%{?svn}
-Source0: http://snapshots.eaccelerator.net/eaccelerator-svn%{svn}.tar.gz
-%else
 Source0: http://bart.eaccelerator.net/source/%{version}/eaccelerator-%{version}.tar.bz2
-%endif
 Source1: php-eaccelerator.cron
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -51,9 +45,11 @@ BuildRequires: autoconf, automake, libtool
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -63,26 +59,41 @@ that the overhead of compiling is almost completely eliminated.
 
 
 %prep
-%if 0%{?svn}
-%setup -q -n eaccelerator-svn%{svn}
-%else
-%setup -q -n eaccelerator-%{version}
-%endif
-
-
-# Change paths in the example config, other values are changed by a patch
-sed -i 's|/usr/lib/php4/|%{php_extdir}/|g;
-        s|/tmp/eaccelerator|%{_var}/cache/%{phpname}-eaccelerator|g' \
-    eaccelerator.ini
+%setup -q -c
 
 sed -e 's|php-eaccelerator|%{phpname}-eaccelerator|g' \
     %{SOURCE1} >%{phpname}-eaccelerator
 
+cp -r eaccelerator-%{version} eaccelerator-zts
+
+cd eaccelerator-%{version}
+# Change paths in the example config
+sed -i 's|/usr/lib/php/modules/|%{php_extdir}/|g;
+        s|/tmp/eaccelerator|%{_var}/cache/%{phpname}-eaccelerator|g' \
+    eaccelerator.ini
+
+cd ../eaccelerator-zts
+# Change paths in the example config
+sed -i 's|/usr/lib/php/modules/|%{php_ztsextdir}/|g;
+        s|/tmp/eaccelerator|%{_var}/cache/%{phpname}-eaccelerator|g' \
+    eaccelerator.ini
+
 
 %build
-%{phpbindir}/phpize
+cd eaccelerator-%{version}
+%{php_bindir}/phpize
 %configure \
-    --with-php-config=%{phpbindir}/php-config \
+    --with-php-config=%{php_bindir}/php-config \
+%ifnarch %{ix86} x86_64
+    --with-eaccelerator-userid="%{apache}"
+%endif
+
+make %{?_smp_mflags}
+
+cd ../eaccelerator-zts
+%{php_ztsbindir}/phpize
+%configure \
+    --with-php-config=%{php_ztsbindir}/php-config \
 %ifnarch %{ix86} x86_64
     --with-eaccelerator-userid="%{apache}"
 %endif
@@ -92,14 +103,20 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-make install INSTALL_ROOT=%{buildroot}
+make -C eaccelerator-%{version} \
+     install INSTALL_ROOT=%{buildroot}
+
+make -C eaccelerator-zts \
+     install INSTALL_ROOT=%{buildroot}
 
 # The cache directory where pre-compiled files will reside
 mkdir -p %{buildroot}%{_var}/cache/%{phpname}-eaccelerator
 
 # Drop in the bit of configuration
-install -D -m 0644 eaccelerator.ini \
-    %{buildroot}%{phpconfdir}/php.d/eaccelerator.ini
+install -D -m 0644 eaccelerator-%{version}/eaccelerator.ini \
+    %{buildroot}%{php_inidir}/eaccelerator.ini
+install -D -m 0644 eaccelerator-zts/eaccelerator.ini \
+    %{buildroot}%{php_ztsinidir}/eaccelerator.ini
 
 # Cache removal cron job
 install -D -m 0755 -p %{phpname}-eaccelerator \
@@ -135,19 +152,25 @@ fi
 
 %check
 # Check if the built extension can be loaded
-%{phpbindir}/php \
-    -n -q -d extension_dir=modules \
+%{__php} \
+    -n -q -d extension_dir=eaccelerator-%{version}/modules \
     -d extension=eaccelerator.so \
     --modules | grep eAccelerator
 
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING NEWS README*
-%doc eaccelerator.ini *.php
+%doc eaccelerator-%{version}/AUTHORS
+%doc eaccelerator-%{version}/ChangeLog
+%doc eaccelerator-%{version}/COPYING
+%doc eaccelerator-%{version}/NEWS
+%doc eaccelerator-%{version}/README*
+%doc eaccelerator-%{version}/*.php
 %{_sysconfdir}/cron.daily/%{phpname}-eaccelerator
-%config(noreplace) %{phpconfdir}/php.d/eaccelerator.ini
+%config(noreplace) %{php_inidir}/eaccelerator.ini
+%config(noreplace) %{php_ztsinidir}/eaccelerator.ini
 %{php_extdir}/eaccelerator.so
+%{php_ztsextdir}/eaccelerator.so
 # We need this hack, as otherwise rpm resets ownership upon package upgrade
 #attr(0750,apache,apache) %{_var}/cache/php-eaccelerator/
 #attr(0750,root,root) %verify(not user group) %{_var}/cache/php-eaccelerator/
@@ -155,6 +178,10 @@ fi
 
 
 %changelog
+* Tue Jan 10 2012 Remi Collet <remi@fedoraproject.org> - 1:0.9.6.1-10
+- rebuild against PHP 5.3.9
+- add ZTS build
+
 * Tue Aug 23 2011 Remi Collet <remi@fedoraproject.org> - 1:0.9.6.1-9
 - rebuild against PHP 5.3.8
 
