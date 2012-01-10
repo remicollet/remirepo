@@ -1,20 +1,25 @@
+%global  glpi_version  0.80.0
+%global  plug_version  1.1
+
 Name:           glpi-fusioninventory
-Version:        2.4.0
+# New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
+Epoch:          1
+Version:        %{glpi_version}.%{plug_version}
 Release:        1%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
 Group:          Applications/Internet
-License:        GPLv2+
+License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/456/fusioninventory-for-glpi-metapackage_2.4.0.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/515/fusioninventory-for-glpi-metapackage_0.80_1.1.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.80
+Requires:       glpi >= %{glpi_version}
 Requires:       glpi <  0.81
 Requires:       glpi-reports
 
@@ -74,8 +79,11 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 # fusioninventory
 %doc fusioninventory-docs/*
+%doc fusinvinventory/LICENSE
 %dir %{_datadir}/glpi/plugins/fusioninventory
 %dir %{_datadir}/glpi/plugins/fusioninventory/locales
+# LICENSE file required by installation process
+%{_datadir}/glpi/plugins/fusioninventory/LICENSE
 %{_datadir}/glpi/plugins/fusioninventory/*.php
 %{_datadir}/glpi/plugins/fusioninventory/*.js
 %{_datadir}/glpi/plugins/fusioninventory/ajax
@@ -83,9 +91,11 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusioninventory/inc
 %{_datadir}/glpi/plugins/fusioninventory/install
 %{_datadir}/glpi/plugins/fusioninventory/pics
+%{_datadir}/glpi/plugins/fusioninventory/tools
 # fusinvinventory
 %dir %{_datadir}/glpi/plugins/fusinvinventory
 %dir %{_datadir}/glpi/plugins/fusinvinventory/locales
+%{_datadir}/glpi/plugins/fusinvinventory/LICENSE
 %{_datadir}/glpi/plugins/fusinvinventory/*.php
 %{_datadir}/glpi/plugins/fusinvinventory/ajax
 %{_datadir}/glpi/plugins/fusinvinventory/b
@@ -97,6 +107,7 @@ rm -rf %{buildroot}
 %doc fusinvsnmp-docs
 %dir %{_datadir}/glpi/plugins/fusinvsnmp
 %dir %{_datadir}/glpi/plugins/fusinvsnmp/locales
+%{_datadir}/glpi/plugins/fusinvsnmp/LICENSE
 %{_datadir}/glpi/plugins/fusinvsnmp/*.php
 %{_datadir}/glpi/plugins/fusinvsnmp/*.js
 %{_datadir}/glpi/plugins/fusinvsnmp/ajax
@@ -110,6 +121,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 10 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.1
+- update to 0.80+1.1 (new version scheme)
+  http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/versions/105
+- switch from GPLv2+ to AGPLv3+
+
 * Sun Sep 18 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.4.0-1
 - update to 2.4.0 finale
 
