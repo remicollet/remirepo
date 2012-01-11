@@ -1384,8 +1384,7 @@ fi
 %{_sbindir}/php-fpm
 %{_originitdir}/php-fpm
 %dir %{_origsysconfdir}/php-fpm.d
-# log owned by apache for log
-%attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
+%attr(0700,root,root) %dir %{_localstatedir}/log/php-fpm
 %dir %{_localstatedir}/run/php-fpm
 %{_mandir}/man8/php-fpm.8*
 %{_datadir}/fpm/status.html
@@ -1451,6 +1450,9 @@ fi
 %endif
 
 %changelog
+* Wed Jan 11 2012 Remi Collet <Fedora@famillecollet.com> 5.3.9-1.1
+- fix owner of /var/log/php-fpm (bug #773077)
+
 * Tue Jan 10 2012 Remi Collet <Fedora@famillecollet.com> 5.3.9-1
 - update to 5.3.9
   http://www.php.net/ChangeLog-5.php#5.3.9
