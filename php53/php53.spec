@@ -1452,6 +1452,7 @@ fi
 %changelog
 * Wed Jan 11 2012 Remi Collet <Fedora@famillecollet.com> 5.3.9-1.1
 - fix owner of /var/log/php-fpm (bug #773077)
+- add max_input_vars, max_file_uploads, zend.enable_gc to php.ini
 
 * Tue Jan 10 2012 Remi Collet <Fedora@famillecollet.com> 5.3.9-1
 - update to 5.3.9
