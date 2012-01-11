@@ -1384,7 +1384,8 @@ fi
 %{_sbindir}/php-fpm
 %{_originitdir}/php-fpm
 %dir %{_origsysconfdir}/php-fpm.d
-%attr(0700,root,root) %dir %{_localstatedir}/log/php-fpm
+# log owned by apache for log of vhost
+%attr(0770,apache,root) %dir %{_localstatedir}/log/php-fpm
 %dir %{_localstatedir}/run/php-fpm
 %{_mandir}/man8/php-fpm.8*
 %{_datadir}/fpm/status.html
