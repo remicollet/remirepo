@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.19
+Version: 5.5.20
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -764,6 +764,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Thu Jan 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.20-1
+- update to MySQL 5.5.20 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-20.html
+
 * Sat Dec 10 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.19-1
 - update to MySQL 5.5.19 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-19.html
