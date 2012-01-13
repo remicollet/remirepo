@@ -27,8 +27,9 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.4.0RC5-dev
-%global snapdate   201201041830
+%global phpversion 5.4.0RC5
+#global snapdate   201201041830
+%global rcver      RC5
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -64,7 +65,7 @@ Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 0.8.%{rcver}%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -73,7 +74,7 @@ URL: http://www.php.net/
 %if 0%{?snapdate}
 Source0: http://www.php.net/distributions/php5.4-%{snapdate}.tar.bz2
 %else
-Source0: http://www.php.net/distributions/php-%{version}.tar.bz2
+Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.bz2
 %endif
 Source1: php.conf
 Source2: php.ini
@@ -96,7 +97,7 @@ Source8: php-fpm.service
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-# fix harcoded mysql.sock path
+# fix harcoded mysql.sock path, see https://bugs.php.net/60748
 Patch9: php-5.4.0-sock.patch
 
 # Fixes for extension modules
@@ -656,7 +657,7 @@ echo CIBLE = %{name}-%{version}-%{release}
 %if 0%{?snapdate}
 %setup -q -n php5.4-%{snapdate}
 %else
-%setup -q -n php-%{version}
+%setup -q -n php-%{version}%{?rcver}
 %endif
 
 #%patch1 -p1 -b .gnusrc
@@ -693,7 +694,7 @@ cp ext/ereg/regex/COPYRIGHT regex_COPYRIGHT
 cp ext/gd/libgd/README gd_README
 
 # Multiple builds for multiple SAPIs
-mkdir build-cgi build-apache build-embedded build-zts \
+mkdir build-cgi build-apache build-embedded build-zts build-ztscli \
 %if %{with_fpm}
     build-fpm
 %endif
@@ -884,6 +885,7 @@ build --enable-force-cgi-redirect \
       --enable-mysqlnd=shared \
       --with-mysql=shared,mysqlnd \
       --with-mysqli=shared,mysqlnd \
+      --with-mysql-sock=/var/lib/mysql/mysql.sock \
 %ifarch x86_64
       %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever}} \
 %else
@@ -950,6 +952,7 @@ build --with-apxs2=%{_sbindir}/apxs \
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
+      --with-mysql-sock=/var/lib/mysql/mysql.sock \
       --with-pdo-mysql=shared,%{mysql_config} \
       --with-pdo-sqlite=shared,%{_prefix} \
       ${without_shared}
@@ -973,17 +976,16 @@ build --enable-embed \
       ${without_shared}
 popd
 
-# Build a special thread-safe Apache SAPI
-pushd build-zts
+# Build a special thread-safe (mainly for modules)
+pushd build-ztscli
 
 EXTENSION_DIR=%{_libdir}/%{phpname}-zts/modules
-build --with-apxs2=%{_sbindir}/apxs \
+build --enable-force-cgi-redirect \
       --bindir=%{_origbindir}/%{phpname}-zts \
       --includedir=%{_origincludedir}/%{phpname}-zts \
       --libdir=%{_libdir}/%{phpname}-zts \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
-      --enable-force-cgi-redirect \
       --enable-pcntl \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
@@ -996,6 +998,7 @@ build --with-apxs2=%{_sbindir}/apxs \
       --enable-mysqlnd=shared \
       --with-mysql=shared,mysqlnd \
       --with-mysqli=shared,mysqlnd \
+      --with-mysql-sock=/var/lib/mysql/mysql.sock \
       --enable-mysqlnd-threading \
 %ifarch x86_64
       %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever}} \
@@ -1048,6 +1051,23 @@ build --with-apxs2=%{_sbindir}/apxs \
       --with-recode=shared,%{_prefix}
 popd
 
+# Build a special thread-safe Apache SAPI
+pushd build-zts
+build --with-apxs2=%{_sbindir}/apxs \
+      --bindir=%{_origbindir}/%{phpname}-zts \
+      --includedir=%{_origincludedir}/%{phpname}-zts \
+      --libdir=%{_libdir}/%{phpname}-zts \
+      --enable-maintainer-zts \
+      --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
+      --enable-pdo=shared \
+      --with-mysql=shared,%{_prefix} \
+      --with-mysqli=shared,%{mysql_config} \
+      --with-mysql-sock=/var/lib/mysql/mysql.sock \
+      --with-pdo-mysql=shared,%{mysql_config} \
+      --with-pdo-sqlite=shared,%{_prefix} \
+      ${without_shared}
+popd
+
 ### NOTE!!! EXTENSION_DIR was changed for the -zts build, so it must remain
 ### the last SAPI to be built.
 
@@ -1074,7 +1094,7 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 # Install the extensions for the ZTS version
-make -C build-zts install-build install-programs install-headers install-modules \
+make -C build-ztscli install \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # rename extensions build with mysqlnd
@@ -1084,6 +1104,10 @@ mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqli.so \
    $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqlnd_mysqli.so
 mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/pdo_mysql.so \
    $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/pdo_mysqlnd.so
+
+# Install the extensions for the ZTS version modules for libmysql
+make -C build-zts install-modules \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
@@ -1204,8 +1228,6 @@ EOF
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
 EOF
 
-if [ -f $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/${mod}.so ]
-then
     cat > $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${mod}.ini <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
@@ -1214,9 +1236,6 @@ EOF
 %attr(755,root,root) %{_libdir}/%{phpname}-zts/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${mod}.ini
 EOF
-else
-    echo "** Extension ${mod} not available for ZTS build"
-fi
 
 done
 
@@ -1272,7 +1291,10 @@ install -m 644 -c macros.php \
 
 # Remove unpackaged files
 rm -rf $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/*.a \
+       $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/*.a \
        $RPM_BUILD_ROOT%{_bindir}/{phptar} \
+       $RPM_BUILD_ROOT%{_bindir}/%{phpname}-zts/phar* \
+       $RPM_BUILD_ROOT%{_bindir}/%{phpname}-zts/php-cgi \
        $RPM_BUILD_ROOT%{peardir} \
        $RPM_BUILD_ROOT%{_libdir}/libphp5.la
 
@@ -1423,6 +1445,8 @@ fi
 %{_bindir}/php-config
 %{_origbindir}/%{phpname}-zts/php-config
 %{_origbindir}/%{phpname}-zts/phpize
+# usefull only to test other module during build
+%{_origbindir}/%{phpname}-zts/php
 %dir %{_origincludedir}/%{phpname}
 %{_includedir}/php
 %{_origincludedir}/%{phpname}-zts
@@ -1477,6 +1501,13 @@ fi
 %endif
 
 %changelog
+* Fri Jan 13 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.8.RC5
+- update to 5.4.0RC5
+- patch for https://bugs.php.net/60748 (mysql.sock hardcoded)
+- move session.path from php.ini to httpd/conf.d/php.conf
+- provides both ZTS mysql extensions (libmysql/mysqlnd)
+- build php cli ZTS binary, in -devel, mainly for test
+
 * Wed Jan 04 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.7.201201041830
 - new snapshot (5.4.0RC5-dev) with fix for https://bugs.php.net/60627
 
