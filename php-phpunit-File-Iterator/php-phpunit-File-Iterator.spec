@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-File-Iterator
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
@@ -74,6 +74,9 @@ fi
 %{pear_phpdir}/File
 
 %changelog
+* Mon Jan 16 2012 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- upstream 1.3.1
+
 * Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - upstream 1.3.0
 
