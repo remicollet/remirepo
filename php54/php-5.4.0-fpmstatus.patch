@@ -1,9 +1,0 @@
-diff -up php5.4-201109031230/sapi/fpm/Makefile.frag.orig php5.4-201109031230/sapi/fpm/Makefile.frag
---- php5.4-201109031230/sapi/fpm/Makefile.frag.orig	2011-09-03 15:50:04.824952240 +0200
-+++ php5.4-201109031230/sapi/fpm/Makefile.frag	2011-09-03 15:50:07.898962196 +0200
-@@ -20,4 +20,4 @@ install-fpm: $(SAPI_FPM_PATH)
- 
- 	@echo "Installing PHP FPM status page:      $(INSTALL_ROOT)$(datadir)/fpm/"
- 	@$(mkinstalldirs) $(INSTALL_ROOT)$(datadir)/fpm
--	@$(INSTALL_DATA) sapi/fpm/status.html $(INSTALL_ROOT)$(datadir)/fpm/status.html
-+	@$(INSTALL_DATA) $(top_srcdir)/sapi/fpm/status.html $(INSTALL_ROOT)$(datadir)/fpm/status.html

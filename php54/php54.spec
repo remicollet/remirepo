@@ -13,6 +13,7 @@
 %global oci8ver     1.4.7
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
+%global mysql_sock %(mysql_config --socket || echo /var/lib/mysql/mysql.sock)
 
 %ifarch ppc ppc64
 %global oraclever 10.2.0.2
@@ -34,11 +35,6 @@
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
 %global with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
-%if 0%{?rhel}%{?fedora} > 4
-%global with_enchant 1
-%else
-%global with_enchant 0
-%endif
 %if 0%{?rhel} >= 5 || 0%{?fedora} >= 12
 %ifarch %{ix86} x86_64
 %global with_fpm 1
@@ -65,7 +61,7 @@ Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.8.%{rcver}%{?dist}
+Release: 0.9.%{rcver}%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -97,8 +93,6 @@ Source8: php-fpm.service
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-# fix harcoded mysql.sock path, see https://bugs.php.net/60748
-Patch9: php-5.4.0-sock.patch
 
 # Fixes for extension modules
 #Patch20: php-4.3.11-shutdown.patch
@@ -639,7 +633,6 @@ BuildRequires: libicu-devel >= 3.6
 The %{phpname}-intl package contains a dynamic shared object that will add
 support for using the ICU library to PHP.
 
-%if %{with_enchant}
 %package enchant
 Summary: Human Language and Character Encoding Support
 Group: System Environment/Libraries
@@ -649,7 +642,6 @@ BuildRequires: enchant-devel >= 1.2.4
 %description enchant
 The %{phpname}-intl package contains a dynamic shared object that will add
 support for using the enchant library to PHP.
-%endif
 
 
 %prep
@@ -667,7 +659,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
-%patch9 -p1 -b .sock
 
 #%patch20 -p1 -b .shutdown
 #%patch21 -p1 -b .macropen
@@ -885,7 +876,7 @@ build --enable-force-cgi-redirect \
       --enable-mysqlnd=shared \
       --with-mysql=shared,mysqlnd \
       --with-mysqli=shared,mysqlnd \
-      --with-mysql-sock=/var/lib/mysql/mysql.sock \
+      --with-mysql-sock=%{mysql_sock} \
 %ifarch x86_64
       %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever}} \
 %else
@@ -931,9 +922,7 @@ build --enable-force-cgi-redirect \
       --enable-fileinfo=shared \
       --enable-intl=shared \
       --with-icu-dir=%{_prefix} \
-%if %{with_enchant}
       --with-enchant=shared,%{_prefix} \
-%endif
       --with-recode=shared,%{_prefix}
 popd
 
@@ -952,7 +941,6 @@ build --with-apxs2=%{_sbindir}/apxs \
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
-      --with-mysql-sock=/var/lib/mysql/mysql.sock \
       --with-pdo-mysql=shared,%{mysql_config} \
       --with-pdo-sqlite=shared,%{_prefix} \
       ${without_shared}
@@ -998,7 +986,7 @@ build --enable-force-cgi-redirect \
       --enable-mysqlnd=shared \
       --with-mysql=shared,mysqlnd \
       --with-mysqli=shared,mysqlnd \
-      --with-mysql-sock=/var/lib/mysql/mysql.sock \
+      --with-mysql-sock=%{mysql_sock} \
       --enable-mysqlnd-threading \
 %ifarch x86_64
       %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever}} \
@@ -1045,9 +1033,7 @@ build --enable-force-cgi-redirect \
       --enable-fileinfo=shared \
       --enable-intl=shared \
       --with-icu-dir=%{_prefix} \
-%if %{with_enchant}
       --with-enchant=shared,%{_prefix} \
-%endif
       --with-recode=shared,%{_prefix}
 popd
 
@@ -1062,7 +1048,6 @@ build --with-apxs2=%{_sbindir}/apxs \
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
-      --with-mysql-sock=/var/lib/mysql/mysql.sock \
       --with-pdo-mysql=shared,%{mysql_config} \
       --with-pdo-sqlite=shared,%{_prefix} \
       ${without_shared}
@@ -1213,10 +1198,7 @@ for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
 %if 0%{?fedora} >= 9  || 0%{?rhel} >= 6
     sqlite3 \
 %endif
-%if %{with_enchant}
-    enchant \
-%endif
-    phar fileinfo intl \
+    enchant phar fileinfo intl \
     mcrypt tidy pdo_dblib mssql pspell curl wddx \
     posix sysvshm sysvsem sysvmsg recode; do
     cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
@@ -1487,9 +1469,7 @@ fi
 %files intl -f files.intl
 %files process -f files.process
 %files recode -f files.recode
-%if %{with_enchant}
 %files enchant -f files.enchant
-%endif
 %files mysqlnd -f files.mysqlnd
 
 %if %{with_oci8}
@@ -1501,6 +1481,9 @@ fi
 %endif
 
 %changelog
+* Mon Jan 16 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.9.RC5
+- improves mysql.sock default path
+
 * Fri Jan 13 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.8.RC5
 - update to 5.4.0RC5
 - patch for https://bugs.php.net/60748 (mysql.sock hardcoded)
