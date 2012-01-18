@@ -28,7 +28,6 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.4.0RC5
 #global snapdate   201201041830
 %global rcver      RC5
 
@@ -61,7 +60,7 @@ Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.9.%{rcver}%{?dist}
+Release: 0.10.%{rcver}%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -81,43 +80,28 @@ Source3: macros.phpname
 %endif
 Source4: php-fpm.conf
 Source5: php-fpm-www.conf
-Source6: php-fpm.init
+Source6: php-fpm.service
 Source7: php-fpm.logrotate
-Source8: php-fpm.service
+Source8: php-fpm.init
 
 # Build fixes
-#Patch1: php-5.3.7-gnusrc.patch
-#Patch2: php-5.3.0-install.patch
-#Patch3: php-5.2.4-norpath.patch
-#Patch4: php-5.3.0-phpize64.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 
 # Fixes for extension modules
-#Patch20: php-4.3.11-shutdown.patch
-#Patch21: php-5.3.3-macropen.patch
 
 # Functional changes
-#Patch40: php-5.0.4-dlopen.patch
-#Patch41: php-5.3.0-easter.patch
+Patch40: php-5.4.0-dlopen.patch
+Patch41: php-5.4.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
 # See http://bugs.php.net/53436
-#Patch43: php-5.3.4-phpize.patch
+Patch43: php-5.4.0-phpize.patch
 
 # Fixes for tests
-#Patch61: php-5.0.4-tests-wddx.patch
-#Patch62: php-5.3.3-tests.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
-
-# Missing functions when build with libedit
-# See http://bugs.php.net/54450
-#Patch92: php-5.3.7-readline.patch
-
-# On EL4, include order breaks build against MySQL 5.5
-#Patch93: php-5.3.6-mysqli.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -125,9 +109,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: bzip2-devel, curl-devel >= 7.9, db4-devel, gmp-devel
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 BuildRequires: libstdc++-devel, openssl-devel
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 # For Sqlite3 extension
-BuildRequires: sqlite-devel >= 3.5.9
+BuildRequires: sqlite-devel >= 3.6.0
 %else
 BuildRequires: sqlite-devel >= 3.0.0
 %endif
@@ -136,14 +120,13 @@ BuildRequires: zlib-devel, smtpdaemon, libedit-devel
 BuildRequires: pcre-devel >= 7.8
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
-%if 0%{?rhel}%{?fedora} > 4
 BuildRequires: libtool-ltdl-devel
-%endif
 BuildRequires: bison
 
 Obsoletes: %{phpname}-dbg, php3, phpfi, stronghold-php, %{phpname}-zts
 Provides: %{phpname}-zts = %{version}-%{release}
 Provides: %{phpname}-zts%{?_isa} = %{version}-%{release}
+
 Requires: httpd-mmn = %{httpd_mmn}
 Provides: mod_php = %{version}-%{release}
 Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
@@ -166,6 +149,7 @@ Requires(pre): httpd
 %global peardir      %{_datadir}/%{phpname}/pear
 %endif
 
+# Don't provides extensions, which are not shared library, as .so
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}-zts/modules/.*\.so$}
@@ -362,7 +346,8 @@ Summary: A module for PHP applications that use MySQL databases
 Group: Development/Languages
 Requires: %{phpname}-pdo%{?_isa} = %{version}-%{release}
 Provides: %{phpname}_database
-Provides: %{phpname}-mysql, %{phpname}-mysql%{?_isa}
+Provides: %{phpname}-mysql = %{version}-%{release}
+Provides: %{phpname}-mysql%{?_isa} = %{version}-%{release}
 Provides: %{phpname}-mysqli = %{version}-%{release}
 Provides: %{phpname}-mysqli%{?_isa} = %{version}-%{release}
 Provides: %{phpname}-pdo_mysql, %{phpname}-pdo_mysql%{?_isa}
@@ -530,11 +515,7 @@ Group: Development/Languages
 Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
 # Required to build the bundled GD library
 BuildRequires: libjpeg-devel, libpng-devel, freetype-devel
-%if 0%{?rhel}%{?fedora} > 4
 BuildRequires: libXpm-devel, t1lib-devel
-%else
-BuildRequires: xorg-x11-devel
-%endif
 
 %description gd
 The %{phpname}-gd package contains a dynamic shared object that will add
@@ -652,30 +633,18 @@ echo CIBLE = %{name}-%{version}-%{release}
 %setup -q -n php-%{version}%{?rcver}
 %endif
 
-#%patch1 -p1 -b .gnusrc
-#%patch2 -p1 -b .install
-#%patch3 -p1 -b .norpath
-#%patch4 -p1 -b .phpize64
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 
-#%patch20 -p1 -b .shutdown
-#%patch21 -p1 -b .macropen
-
-#%patch40 -p1 -b .dlopen
-#%patch41 -p1 -b .easter
+%patch40 -p1 -b .dlopen
+%patch41 -p1 -b .easter
 %if %{?fedora}%{?rhel:99} >= 15
 %patch42 -p1 -b .systzdata
 %endif
-#%patch43 -p0 -b .headers
-
-#%patch61 -p1 -b .tests-wddx
-#%patch62 -p0 -b .tests
+%patch43 -p1 -b .headers
 
 %patch91 -p1 -b .remi-oci8
-#%patch92 -p1 -b .libedit
-#%patch93 -p1 -b .mysqli
 
 
 # Prevent %%doc confusion over LICENSE files
@@ -702,9 +671,9 @@ rm -f ext/standard/tests/file/bug22414.phpt \
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
-if test "x${pver}" != "x%{phpversion}"; then
-   : Error: Upstream PHP version is now ${pver}, expecting %{phpversion}.
-   : Update the phpversion macro and rebuild.
+if test "x${pver}" != "x%{version}%{?rcver}"; then
+   : Error: Upstream PHP version is now ${pver}, expecting %{version}%{?rcver}.
+   : Update the version/rcver macros and rebuild.
    exit 1
 fi
 
@@ -790,9 +759,6 @@ cat `aclocal --print-ac-dir`/libtool.m4 > build/libtool.m4
 touch configure.in
 ./buildconf --force
 CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-pointer-sign"
-%if 0%{?rhel} < 5
-	CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
-%endif
 export CFLAGS
 
 # Install extension modules in %{_libdir}/php/modules.
@@ -821,9 +787,7 @@ ln -sf ../configure
 	--with-png-dir=%{_prefix} \
 	--with-xpm-dir=%{_prefix} \
 	--enable-gd-native-ttf \
-%if 0%{?rhel}%{?fedora} > 4
 	--with-t1lib=%{_prefix} \
-%endif
 	--without-gdbm \
 	--with-gettext \
 	--with-gmp \
@@ -900,7 +864,7 @@ build --enable-force-cgi-redirect \
       --with-pdo-pgsql=shared,%{_prefix} \
       --with-pdo-sqlite=shared,%{_prefix} \
       --with-pdo-dblib=shared,%{_prefix} \
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
       --with-sqlite3=shared,%{_prefix} \
 %else
       --without-sqlite3 \
@@ -1011,7 +975,7 @@ build --enable-force-cgi-redirect \
       --with-pdo-pgsql=shared,%{_prefix} \
       --with-pdo-sqlite=shared,%{_prefix} \
       --with-pdo-dblib=shared,%{_prefix} \
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
       --with-sqlite3=shared,%{_prefix} \
 %else
       --without-sqlite3 \
@@ -1146,9 +1110,9 @@ install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules
 %endif
 
 # Apache config fragment
-install -m 755 -d $RPM_BUILD_ROOT/%{_origsysconfdir}/httpd/conf.d
+install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/httpd/conf.d
 %if %{phpname} == php
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{_origsysconfdir}/httpd/conf.d
+install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_origsysconfdir}/httpd/conf.d
 %else
 %{__sed} -e s'/libphp5/lib%{phpname}/' %{SOURCE1} \
   >$RPM_BUILD_ROOT/%{_origsysconfdir}/httpd/conf.d/%{phpname}.conf
@@ -1174,12 +1138,12 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
 install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm.conf
 # install systemd unit files and scripts for handling server startup
-mkdir -p ${RPM_BUILD_ROOT}%{_unitdir}
-install -m 644 %{SOURCE8} ${RPM_BUILD_ROOT}%{_unitdir}/
+install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
+install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
 %else
 # Service
 install -m 755 -d $RPM_BUILD_ROOT%{_originitdir}
-install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
+install -m 755 %{SOURCE8} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
 %endif
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
@@ -1193,9 +1157,9 @@ install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
+    pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} %{?_with_ibase:interbase} %{?_with_ibase:pdo_firebird} \
-    pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json zip \
-%if 0%{?fedora} >= 9  || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
     sqlite3 \
 %endif
     enchant phar fileinfo intl \
@@ -1247,11 +1211,10 @@ cat files.pdo_firebird >> files.interbase
 # sysv* and posix in packaged in php-process
 cat files.sysv* files.posix > files.process
 
-# Package sqlite and pdo_sqlite with pdo; isolating the sqlite dependency
+# Package sqlite3 and pdo_sqlite with pdo; isolating the sqlite dependency
 # isn't useful at this time since rpm itself requires sqlite.
-#cat files.sqlite >> files.pdo
 cat files.pdo_sqlite >> files.pdo
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 cat files.sqlite3 >> files.pdo
 %endif
 
@@ -1444,7 +1407,7 @@ fi
 %files embedded
 %defattr(-,root,root,-)
 %{_libdir}/libphp5.so
-%{_libdir}/libphp5-%{phpversion}.so
+%{_libdir}/libphp5-%{version}%{?rcver}.so
 
 %files pgsql -f files.pgsql
 %files mysql -f files.mysql
@@ -1481,6 +1444,9 @@ fi
 %endif
 
 %changelog
+* Wed Jan 18 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.10.RC5
+- add some fedora patches back (dlopen, easter, phpize)
+
 * Mon Jan 16 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.9.RC5
 - improves mysql.sock default path
 
