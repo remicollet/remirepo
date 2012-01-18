@@ -123,14 +123,22 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %check
 cd %{pecl_name}-%{version}
-
 TEST_PHP_EXECUTABLE=%{__php} \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 %{__php} run-tests.php \
     -n -q \
     -d extension_dir=modules \
-    -d extension=%{pecl_name}.so \
+    -d extension=%{pecl_name}.so
+
+cd ../%{pecl_name}-zts
+TEST_PHP_EXECUTABLE=%{php_ztsbindir}/php \
+REPORT_EXIT_STATUS=1 \
+NO_INTERACTION=1 \
+%{php_ztsbindir}/php run-tests.php \
+    -n -q \
+    -d extension_dir=modules \
+    -d extension=%{pecl_name}.so
 
 
 %clean
