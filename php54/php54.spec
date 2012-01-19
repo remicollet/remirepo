@@ -29,7 +29,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-%global rcver      RC5
+%global rcver      RC6
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -60,7 +60,7 @@ Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.10.%{rcver}%{?dist}
+Release: 0.11.%{rcver}%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -1444,6 +1444,9 @@ fi
 %endif
 
 %changelog
+* Thu Jan 19 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.11.RC6
+- update to 5.4.0RC6
+
 * Wed Jan 18 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.10.RC5
 - add some fedora patches back (dlopen, easter, phpize)
 
