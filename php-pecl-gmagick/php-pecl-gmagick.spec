@@ -1,12 +1,12 @@
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name  gmagick
-%global prever     b1
+%global prever     RC1
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.10
-Release:        0.2.%{prever}%{?dist}
+Version:        1.1.0
+Release:        0.1.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
@@ -50,6 +50,9 @@ cat >%{pecl_name}.ini << 'EOF'
 extension=%{pecl_name}.so
 EOF
 
+# https://bugs.php.net/bug.php?id=60807
+sed -i -e /PHP_GMAGICK_VERSION/s/1.0.10b1/1.1.0RC1/ %{pecl_name}-%{version}%{?prever}/php_gmagick.h
+
 # Check extension version
 extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}%{?prever}/php_gmagick.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -58,7 +61,7 @@ if test "x${extver}" != "x%{version}%{?prever}"; then
 fi
 
 # Duplicate build tree for nts/zts
-cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-%{version}%{?prever}-zts
+cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-zts
 
 
 %build
@@ -67,7 +70,7 @@ cd %{pecl_name}-%{version}%{?prever}
 %{configure} --with-%{pecl_name}  --with-php-config=%{php_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}%{?prever}-zts
+cd ../%{pecl_name}-zts
 %{php_ztsbindir}/phpize
 %{configure} --with-%{pecl_name}  --with-php-config=%{php_ztsbindir}/php-config
 make %{?_smp_mflags}
@@ -79,7 +82,7 @@ rm -rf %{buildroot}
 make -C %{pecl_name}-%{version}%{?prever} \
      install INSTALL_ROOT=%{buildroot}
 
-make -C %{pecl_name}-%{version}%{?prever}-zts \
+make -C %{pecl_name}-zts \
      install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
@@ -113,7 +116,7 @@ cd %{pecl_name}-%{version}%{?prever}
     --modules | grep %{pecl_name}
 
 # Remove know to fail tests (font issue)
-rm tests/gmagick-006-annotateimage.phpt
+rm -f tests/gmagick-006-annotateimage.phpt
 
 # Still ignore test result as some fail on old version
 TEST_PHP_EXECUTABLE=%{__php} \
@@ -123,6 +126,27 @@ NO_INTERACTION=1 \
     -n -q \
     -d extension_dir=modules \
     -d extension=%{pecl_name}.so \
+
+cd ../%{pecl_name}-zts
+
+# simple module load test
+%{php_ztsbindir}/php --no-php-ini \
+    --define extension_dir=modules \
+    --define extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
+# Remove know to fail tests (font issue)
+rm -f tests/gmagick-006-annotateimage.phpt
+
+# Still ignore test result as some fail on old version
+TEST_PHP_EXECUTABLE=%{php_ztsbindir}/php \
+REPORT_EXIT_STATUS=0 \
+NO_INTERACTION=1 \
+%{php_ztsbindir}/php run-tests.php \
+    -n -q \
+    -d extension_dir=modules \
+    -d extension=%{pecl_name}.so \
+
 
 
 %files
@@ -136,6 +160,9 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Thu Jan 19 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.1.RC1
+- Update to 1.1.0RC1
+
 * Mon Dec 05 2011 Remi Collet <remi@fedoraproject.org> - 1.0.10-0.2.b1
 - build against php 5.4
 
