@@ -1,12 +1,12 @@
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name  gmagick
-%global prever     RC1
+%global prever     RC2
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        0.1.%{prever}%{?dist}
+Release:        0.2.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
@@ -49,9 +49,6 @@ cat >%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
-
-# https://bugs.php.net/bug.php?id=60807
-sed -i -e /PHP_GMAGICK_VERSION/s/1.0.10b1/1.1.0RC1/ %{pecl_name}-%{version}%{?prever}/php_gmagick.h
 
 # Check extension version
 extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}%{?prever}/php_gmagick.h)
@@ -125,10 +122,11 @@ NO_INTERACTION=1 \
 %{__php} run-tests.php \
     -n -q \
     -d extension_dir=modules \
-    -d extension=%{pecl_name}.so \
+    -d extension=%{pecl_name}.so
 
 cd ../%{pecl_name}-zts
 
+if [ -f %{php_ztsbindir}/php ]; then
 # simple module load test
 %{php_ztsbindir}/php --no-php-ini \
     --define extension_dir=modules \
@@ -145,8 +143,8 @@ NO_INTERACTION=1 \
 %{php_ztsbindir}/php run-tests.php \
     -n -q \
     -d extension_dir=modules \
-    -d extension=%{pecl_name}.so \
-
+    -d extension=%{pecl_name}.so
+fi
 
 
 %files
@@ -160,6 +158,10 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Fri Jan 20 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.2.RC2
+- Update to 1.1.0RC2
+  fix https://bugs.php.net/60807
+
 * Thu Jan 19 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.1.RC1
 - Update to 1.1.0RC1
 
