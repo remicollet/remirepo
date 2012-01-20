@@ -2,14 +2,14 @@
 %{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global gitver d076740
+%global gitver 758d962
 %global prever -dev
 
 Name:           %{phpname}-pecl-xdebug
 Version:        2.2.0
 %if %{?gitver:1}
-Release:        0.2.git%{gitver}%{?dist}
-Source0:        derickr-xdebug-XDEBUG_2_1_2-193-gd076740.tar.gz
+Release:        0.3.git%{gitver}%{?dist}
+Source0:        derickr-xdebug-XDEBUG_2_1_2-197-g758d962.tar.gz
 BuildRequires:  libtool
 %else
 Release:        2%{?dist}
@@ -89,7 +89,7 @@ if test "$ver" != "%{version}%{?prever}"; then
 fi
 
 cd ..
-cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+cp -r %{pecl_name}-%{version} %{pecl_name}-zts
 
 
 %build
@@ -106,7 +106,7 @@ pushd debugclient
 make %{?_smp_mflags}
 popd
 
-cd ../%{pecl_name}-%{version}-zts
+cd ../%{pecl_name}-zts
 %{php_ztsbindir}/phpize
 %configure --enable-xdebug  --with-php-config=%{php_ztsbindir}/php-config
 make %{?_smp_mflags}
@@ -118,7 +118,7 @@ rm -rf %{buildroot}
 make -C %{pecl_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
 
-make -C %{pecl_name}-%{version}-zts \
+make -C %{pecl_name}-zts \
      install INSTALL_ROOT=%{buildroot}
 
 # install debugclient
@@ -148,11 +148,15 @@ EOF
 
 
 %check
-cd %{pecl_name}-%{version}
 # only check if build extension can be loaded
 %{__php} \
     --no-php-ini \
-    --define zend_extension=modules/%{pecl_name}.so \
+    --define zend_extension=%{pecl_name}-%{version}/modules/%{pecl_name}.so \
+    --modules | grep Xdebug
+
+%{php_ztsbindir}/php \
+    --no-php-ini \
+    --define zend_extension=%{pecl_name}-zts/modules/%{pecl_name}.so \
     --modules | grep Xdebug
 
 
@@ -182,7 +186,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun Dec 11 2011 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.gitd076740
+* Fri Jan 20 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.3.git758d962
+- new git snapshot
+
+* Sun Dec 11 2011 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.2.gitd076740
 - new git snapshot
 
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.git535df90
