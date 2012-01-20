@@ -6,7 +6,7 @@
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        0.2.%{prever}%{?dist}
+Release:        0.3.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
@@ -158,6 +158,9 @@ fi
 
 
 %changelog
+* Fri Jan 20 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.3.RC2
+- build against php 5.4
+
 * Fri Jan 20 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.2.RC2
 - Update to 1.1.0RC2
   fix https://bugs.php.net/60807
