@@ -4,7 +4,7 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
 Version:      1.1.2
-Release:      1%{?dist}
+Release:      4%{?dist}
 
 License:      PHP
 Group:        Development/Languages
@@ -30,12 +30,7 @@ Requires:     php(api) = %{php_core_api}
 Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
 
-
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
 
 
 %description
@@ -55,25 +50,46 @@ Documentation : http://www.php.net/mysqlnd_ms
 
 cp %{SOURCE1} %{pecl_name}.ini
 
+%if 0%{?php_ztsbindir:1}
+# Build ZTS extension if ZTS devel available (fedora >= 17)
+cp -r %{pecl_name}-%{version} %{pecl_name}-zts
+%endif
+
 
 %build
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
-
-# Don't use --enable-mysqlnd-ms-table-filter
-# See # http://pecl.php.net/bugs/bug.php?id=24391
 %configure \
     --with-libdir=%{_lib} \
     --enable-mysqlnd-ms \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if 0%{?php_ztsbindir:1}
+cd ../%{pecl_name}-zts
+%{php_ztsbindir}/phpize
+%configure \
+    --with-libdir=%{_lib} \
+    --enable-mysqlnd-ms \
+    --with-php-config=%{php_ztsbindir}/php-config
+make %{?_smp_mflags}
+%endif
 
 %install
 rm -rf %{buildroot}
-make install -C %{pecl_name}-%{version}     INSTALL_ROOT=%{buildroot}
+# for short-circuit
+rm -rf %{pecl_name}-*/modules/{json,mysqlnd}.so
+
+make install -C %{pecl_name}-%{version} \
+     INSTALL_ROOT=%{buildroot}
+
+%if 0%{?php_ztsbindir:1}
+make install -C %{pecl_name}-zts \
+     INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
 
 # Install XML package description
@@ -107,16 +123,46 @@ php -n -q \
     -d extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+if [ -f %{?php_ztsbindir}/php ]; then
+cd ../%{pecl_name}-zts
+ln -sf %{php_ztsextdir}/mysqlnd.so modules/
+ln -sf %{php_ztsextdir}/json.so modules/
+
+# only check if build extension can be loaded
+%{php_ztsbindir}/php -n -q \
+    -d extension_dir=modules \
+    -d extension=json.so \
+    -d extension=mysqlnd.so \
+    -d extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+fi
+
 
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_name}-%{version}/{CHANGES,CREDITS,LICENSE,README}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
+
+%if 0%{?php_ztsbindir:1}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Sun Jan 21 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-4
+- merge ZTS change for fedora 17
+- filter_setup is enough
+
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 1.1.2-3
+- build against php 5.4
+
+* Mon Nov 07 2011 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
+- update to 1.1.2 (stable) with zts extension
+
 * Mon Nov 07 2011 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - update to 1.1.2 (stable)
 
