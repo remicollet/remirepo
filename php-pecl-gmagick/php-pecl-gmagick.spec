@@ -6,11 +6,14 @@
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        0.3.%{prever}%{?dist}
+Release:        0.4.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
 Source0:        http://pecl.php.net/get/gmagick-%{version}%{?prever}.tgz
+
+# https://bugs.php.net/60829  getColor don't accept second option
+Patch0:         gmagick.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  php-pear >= 1.4.7
@@ -43,6 +46,8 @@ of images using the GraphicsMagick API.
 
 %prep
 %setup -qc
+
+%patch0 -p0 -b .options
 
 # Create configuration file
 cat >%{pecl_name}.ini << 'EOF'
@@ -116,6 +121,7 @@ cd %{pecl_name}-%{version}%{?prever}
 rm -f tests/gmagick-006-annotateimage.phpt
 
 # Still ignore test result as some fail on old version
+# And in fedora > 15 https://bugs.php.net/60830
 TEST_PHP_EXECUTABLE=%{__php} \
 REPORT_EXIT_STATUS=0 \
 NO_INTERACTION=1 \
@@ -158,6 +164,9 @@ fi
 
 
 %changelog
+* Sat Jan 21 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.4.RC2
+- add patch for getColor options https://bugs.php.net/60829
+
 * Fri Jan 20 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.3.RC2
 - build against php 5.4
 
