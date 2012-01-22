@@ -34,7 +34,8 @@ BuildRequires:  curl-devel >= 7.18.2
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides:       php-pecl(%{proj_name}) = %{version}%{prever}
+Provides:       php-pecl(%{proj_name}) = %{version}%{devver}
+Provides:       php-pecl(%{pecl_name}) = %{version}%{devver}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 
