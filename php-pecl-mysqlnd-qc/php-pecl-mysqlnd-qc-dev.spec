@@ -2,7 +2,8 @@
 %{!?__pecl:   %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name mysqlnd_qc
-%global svnver    318164
+%global svnver    322628
+%global prever    alpha
 
 %if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
 %global withsqlite 1
@@ -12,12 +13,12 @@
 
 Summary:      A query cache plugin for mysqlnd
 Name:         %{phpname}-pecl-mysqlnd-qc
-Version:      1.0.1
+Version:      1.0.2
 %if 0%{?svnver}
-# svn co -r 318164 https://svn.php.net/repository/pecl/mysqlnd_qc/trunk mysqlnd_qc-svn318164
-# tar czf mysqlnd_qc-svn318164.tgz mysqlnd_qc-svn318164
+# svn export -r 322628 https://svn.php.net/repository/pecl/mysqlnd_qc/trunk mysqlnd_qc-svn322628
+# tar czf mysqlnd_qc-svn322628.tgz mysqlnd_qc-svn322628
 Source:       mysqlnd_qc-svn318164.tgz
-Release:      3.svn%{svnver}%{?dist}
+Release:      0.1.%{prever}.svn%{svnver}%{?dist}
 %else
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Release:      2%{?dist}
@@ -54,11 +55,7 @@ Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
 Provides:     %{phpname}-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
 
 
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+#{?filter_setup}
 
 
 %description
@@ -122,6 +119,9 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+# for short-circuit
+rm -rf %{pecl_name}-*/modules/{sqlite3,mysqlnd}.so
+
 make install -C %{pecl_name}-%{version}     INSTALL_ROOT=%{buildroot}
 make install -C %{pecl_name}-%{version}-zts INSTALL_ROOT=%{buildroot}
 
