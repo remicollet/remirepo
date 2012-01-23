@@ -1,0 +1,92 @@
+diff -up plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpdt/internal/compiler/parser/Parser.java.old plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpdt/internal/compiler/parser/Parser.java
+--- plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpdt/internal/compiler/parser/Parser.java.old	2012-01-23 17:11:21.572233318 +0100
++++ plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpdt/internal/compiler/parser/Parser.java	2012-01-23 17:18:00.837251237 +0100
+@@ -3040,7 +3040,7 @@ public class Parser implements ITerminal
+ 			System.out.println("TRACE: dynamic_class_name_reference()");
+ 		}
+ 		base_variable(true);
+-		if (token == TokenNameMINUS_GREATER) {
++		if (token == TokenNameMINUS_GREATER || token == TokenNamePAAMAYIM_NEKUDOTAYIM) {
+ 			getNextToken();
+ 			object_property();
+ 			dynamic_class_name_variable_properties();
+@@ -3056,7 +3056,7 @@ public class Parser implements ITerminal
+ 			System.out
+ 					.println("TRACE: dynamic_class_name_variable_properties()");
+ 		}
+-		while (token == TokenNameMINUS_GREATER) {
++		while (token == TokenNameMINUS_GREATER || token == TokenNamePAAMAYIM_NEKUDOTAYIM) {
+ 			dynamic_class_name_variable_property();
+ 		}
+ 	}
+@@ -3067,7 +3067,7 @@ public class Parser implements ITerminal
+ 		if (Scanner.TRACE) {
+ 			System.out.println("TRACE: dynamic_class_name_variable_property()");
+ 		}
+-		if (token == TokenNameMINUS_GREATER) {
++		if (token == TokenNameMINUS_GREATER || token == TokenNamePAAMAYIM_NEKUDOTAYIM) {
+ 			getNextToken();
+ 			object_property();
+ 		}
+@@ -3584,7 +3584,7 @@ public class Parser implements ITerminal
+ 		// | base_variable_with_function_calls
+ 		Expression ref = base_variable_with_function_calls(lefthandside,
+ 				ignoreVar);
+-		if (token == TokenNameMINUS_GREATER) {
++		if (token == TokenNameMINUS_GREATER  || token == TokenNamePAAMAYIM_NEKUDOTAYIM) {
+ 			ref = null;
+ 			getNextToken();
+ 			object_property();
+@@ -3598,7 +3598,7 @@ public class Parser implements ITerminal
+ 		// variable_properties:
+ 		// variable_properties variable_property
+ 		// | /* empty */
+-		while (token == TokenNameMINUS_GREATER) {
++		while (token == TokenNameMINUS_GREATER || token == TokenNamePAAMAYIM_NEKUDOTAYIM) {
+ 			variable_property();
+ 		}
+ 	}
+@@ -3609,7 +3609,7 @@ public class Parser implements ITerminal
+ 		if (Scanner.TRACE) {
+ 			System.out.println("TRACE: variable_property()");
+ 		}
+-		if (token == TokenNameMINUS_GREATER) {
++		if (token == TokenNameMINUS_GREATER || token == TokenNamePAAMAYIM_NEKUDOTAYIM) {
+ 			getNextToken();
+ 			object_property();
+ 			method_or_not();
+@@ -3740,7 +3740,7 @@ public class Parser implements ITerminal
+ 				getNextToken();
+ 			}
+ 		}
+-		if (token == TokenNameMINUS_GREATER) {
++		if (token == TokenNameMINUS_GREATER || token == TokenNamePAAMAYIM_NEKUDOTAYIM) {
+ 			ref = null;
+ 			getNextToken();
+ 			object_property();
+@@ -5124,4 +5124,4 @@ public class Parser implements ITerminal
+ 		}
+ 		return true;
+ 	}
+-}
+\ Pas de fin de ligne à la fin du fichier
++}
+diff -up plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpdt/internal/compiler/parser/Scanner.java.old plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpdt/internal/compiler/parser/Scanner.java
+--- plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpdt/internal/compiler/parser/Scanner.java.old	2012-01-23 17:08:34.779225813 +0100
++++ plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpdt/internal/compiler/parser/Scanner.java	2012-01-23 17:09:19.811227854 +0100
+@@ -4266,6 +4266,8 @@ public class Scanner implements IScanner
+ 			return "( object )"; //$NON-NLS-1$
+ 		case TokenNamestringCAST:
+ 			return "( string )"; //$NON-NLS-1$
++		case TokenNamePAAMAYIM_NEKUDOTAYIM:
++			return "::";
+ 		default:
+ 			return "not-a-token(" + (new Integer(act)) + ") " + new String(getCurrentTokenSource()); //$NON-NLS-1$
+ 		}
+@@ -4697,4 +4699,4 @@ public class Scanner implements IScanner
+ 	// this.foundTaskMessages[i] = message;
+ 	// }
+ 	// }
+-}
+\ Pas de fin de ligne à la fin du fichier
++}

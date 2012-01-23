@@ -35,6 +35,9 @@ Patch7:    %{name}-fix-phpmanual-view.patch
 # Remove a reference that was causing a build failure on Eclipse 3.6+
 Patch8:    %{name}-remove-internal-eclipse-ref.patch
 
+# Try to fix PHP 5.3.0 parser
+Patch9:    %{name}-php53.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:        noarch
@@ -68,6 +71,7 @@ templates and support for the XDebug and DBG debuggers.
 %patch6 -p0 -b .orig
 %patch7 -p0 -b .orig
 %patch8 -p0 -b .orig
+%patch9 -p0 -b .php54
 
 #remove bundled jars
 find -name '*.class' -exec rm -f '{}' \;
@@ -114,6 +118,9 @@ rm -rf %{buildroot}
 %{eclipse_dropin}/phpeclipse-xdebug
 
 %changelog
+* Mon Jan 23 2012  Remi Collet <remi@fedoraproject.org> - 1.2.3-3
+- try to patch parser for php >= 5.3
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
