@@ -3,12 +3,12 @@
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global prever    dev3
+%global prever    dev4
 %global devver    dev
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.1.%{prever}%{?dist}
+Release:        0.2.%{prever}%{?dist}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -18,10 +18,6 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
-
-# https://bugs.php.net/60839
-# http://svn.php.net/viewvc/pecl/http/branches/DEV_2/php_http_serf.h?revision=318841&view=co
-Source2:        php_http_serf.h
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.4.0
@@ -80,7 +76,6 @@ if test "x${extver}" != "x%{version}%{?devver}"; then
 fi
 
 cp %{SOURCE1} %{pecl_name}.ini
-cp %{SOURCE2} %{proj_name}-%{version}%{?prever}
 
 cp -pr %{proj_name}-%{version}%{?prever} %{proj_name}-zts
 
@@ -158,6 +153,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 23 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.dev4
+- update to 2.0.0dev4
+- fix missing file https://bugs.php.net/60839
+
 * Sun Jan 22 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.dev3
 - initial package
 
