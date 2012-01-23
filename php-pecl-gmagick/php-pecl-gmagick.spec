@@ -49,6 +49,12 @@ of images using the GraphicsMagick API.
 
 %patch0 -p0 -b .options
 
+%if 0%{?fedora} <= 15   &&   0%{?rhel} <= 6
+# Remove know to fail tests (GM font config issue)
+# https://bugzilla.redhat.com/783906
+rm -f %{pecl_name}-%{version}%{?prever}/tests/gmagick-006-annotateimage.phpt
+%endif
+
 # Create configuration file
 cat >%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -113,13 +119,9 @@ cd %{pecl_name}-%{version}%{?prever}
 
 # simple module load test
 %{__php} --no-php-ini \
-    --define extension_dir=modules \
+    --define extension_dir=%{buildroot}%{php_extdir} \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
-
-# Remove know to fail tests (GM font config issue)
-# https://bugzilla.redhat.com/783906
-rm -f tests/gmagick-006-annotateimage.phpt
 
 # Still ignore test result as some fail on old version
 # And in fedora > 15 https://bugs.php.net/60830
@@ -128,7 +130,7 @@ REPORT_EXIT_STATUS=0 \
 NO_INTERACTION=1 \
 %{__php} run-tests.php \
     -n -q \
-    -d extension_dir=modules \
+    -d extension_dir=%{buildroot}%{php_extdir} \
     -d extension=%{pecl_name}.so
 
 cd ../%{pecl_name}-zts
@@ -136,12 +138,9 @@ cd ../%{pecl_name}-zts
 if [ -f %{php_ztsbindir}/php ]; then
 # simple module load test
 %{php_ztsbindir}/php --no-php-ini \
-    --define extension_dir=modules \
+    --define extension_dir=%{buildroot}%{php_ztsextdir} \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
-
-# Remove know to fail tests (font issue)
-rm -f tests/gmagick-006-annotateimage.phpt
 
 # Still ignore test result as some fail on old version
 TEST_PHP_EXECUTABLE=%{php_ztsbindir}/php \
@@ -149,7 +148,7 @@ REPORT_EXIT_STATUS=0 \
 NO_INTERACTION=1 \
 %{php_ztsbindir}/php run-tests.php \
     -n -q \
-    -d extension_dir=modules \
+    -d extension_dir=%{buildroot}%{php_ztsextdir} \
     -d extension=%{pecl_name}.so
 fi
 
