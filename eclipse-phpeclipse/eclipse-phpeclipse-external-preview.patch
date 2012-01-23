@@ -1,0 +1,54 @@
+Index: ./plugins/net.sourceforge.phpeclipse.ui/src/net/sourceforge/phpeclipse/ui/editor/ShowExternalPreviewAction.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.ui/src/net/sourceforge/phpeclipse/ui/editor/ShowExternalPreviewAction.java	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.ui/src/net/sourceforge/phpeclipse/ui/editor/ShowExternalPreviewAction.java	(working copy)
+@@ -145,30 +145,26 @@
+ 			if (store == null) {
+ 				store = WebUI.getDefault().getPreferenceStore();
+ 			}
+-			// IPath path = file.getFullPath();
+-			String localhostURL = file.getFullPath().toString();
+-			String lowerCaseFileName = localhostURL.toLowerCase();
+-			//removed by ed_mann for RSE fixes testing
+-			// String documentRoot =
+-			// store.getString(PHPeclipsePlugin.DOCUMENTROOT_PREF);
+-			//IPath documentRootPath = ProjectPrefUtil.getDocumentRoot(file
+-			//		.getProject());
+-			IPath documentRootPath = file.getProject().getFullPath();
+-			String documentRoot = documentRootPath.toString().toLowerCase();
+-			if (lowerCaseFileName.startsWith(documentRoot)) {
+-				localhostURL = localhostURL.substring(documentRoot.length());
+-			} else {
+-				return null;
+-			}
+-			// return store.getString(PHPeclipsePlugin.LOCALHOST_PREF) +
+-			// localhostURL;
+-			String projectPath = ProjectPrefUtil.getMiscProjectsPreferenceValue(file
++			IPath path = file.getLocation();
++			if(path == null)
++				path = file.getFullPath();
++			
++			String filePath = path.toString();
++			String projectURI = ProjectPrefUtil.getMiscProjectsPreferenceValue(file
+                     .getProject(), IPreferenceConstants.PHP_LOCALHOST_PREF);
+-			if(projectPath.endsWith("/") && localhostURL.startsWith("/")) {
+-			    localhostURL = localhostURL.substring(1);
++			String projectDocRoot = ProjectPrefUtil.getMiscProjectsPreferenceValue(file
++                    .getProject(), IPreferenceConstants.PHP_DOCUMENTROOT_PREF);
++
++			if (filePath.startsWith(projectDocRoot)) {
++				filePath = filePath.substring(projectDocRoot.length());
+ 			}
+-			return projectPath + localhostURL;
++			if(projectURI.endsWith("/") && filePath.startsWith("/")) {
++				filePath = filePath.substring(1);
++			}
++			
++			return projectURI + filePath;
+ 		}
+-		return "http://localhost";
++		return ProjectPrefUtil.getMiscProjectsPreferenceValue(file
++                .getProject(), IPreferenceConstants.PHP_LOCALHOST_PREF);
+ 	}
+ }
+\ No newline at end of file

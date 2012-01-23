@@ -1,0 +1,38 @@
+Index: ./plugins/net.sourceforge.phpeclipse.phpmanual/src/net/sourceforge/phpeclipse/phpmanual/views/PHPManualView.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.phpmanual/src/net/sourceforge/phpeclipse/phpmanual/views/PHPManualView.java	(revision 1643)
++++ ./plugins/net.sourceforge.phpeclipse.phpmanual/src/net/sourceforge/phpeclipse/phpmanual/views/PHPManualView.java	(working copy)
+@@ -181,7 +181,8 @@
+ 				Display.getDefault().asyncExec(new Runnable() {
+ 					public void run() {
+ 						String html = getHtmlSource(funcName);
+-						browser.setText(html);
++						if (html != null)
++							browser.setText(html);
+ 					}
+ 				});
+ 			}
+Index: ./plugins/net.sourceforge.phpeclipse.phpmanual/plugin.xml
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.phpmanual/plugin.xml	(revision 1643)
++++ ./plugins/net.sourceforge.phpeclipse.phpmanual/plugin.xml	(working copy)
+@@ -13,16 +13,16 @@
+             icon="icons/phpmanual.png"
+             category="net.sourceforge.phpeclipse.views.category"
+             class="net.sourceforge.phpeclipse.phpmanual.views.PHPManualView"
+-            id="net.sourceforge.phpeclipse.phpmanual.views.PHPManualViewz">
++            id="net.sourceforge.phpeclipse.phpmanual.views.PHPManualView">
+       </view>
+    </extension>
+    <extension
+          point="org.eclipse.ui.perspectiveExtensions">
+       <perspectiveExtension
+-            targetID="org.eclipse.ui.resourcePerspective">
++            targetID="net.sourceforge.phpeclipse.PHPPerspective">
+          <view
+                ratio="0.5"
+-               relative="org.eclipse.ui.views.TaskList"
++               relative="net.sourceforge.phpeclipse.webbrowser.views"
+                relationship="right"
+                id="net.sourceforge.phpeclipse.phpmanual.views.PHPManualView">
+          </view>

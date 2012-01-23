@@ -1,0 +1,12 @@
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/internal/model/VariableContextManager.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/internal/model/VariableContextManager.java
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/internal/model/VariableContextManager.java
+@@ -27,7 +27,6 @@
+ import org.eclipse.ui.IWorkbenchPart;
+ import org.eclipse.ui.IWorkbenchWindow;
+ import org.eclipse.ui.PlatformUI;
+-import org.eclipse.ui.externaltools.internal.model.ExternalToolBuilder;
+ 
+ /**
+  * Maintains the context used to expand variables. The context is based on the

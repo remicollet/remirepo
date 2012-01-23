@@ -1,0 +1,17 @@
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/ExternalPHPParser.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/ExternalPHPParser.java	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/ExternalPHPParser.java	(working copy)
+@@ -50,11 +50,9 @@
+ 	 *            the file that will be parsed
+ 	 */
+ 	public void phpExternalParse() {
+-		// IFile file = (IFile) resource;
+-		// final IPath path = file.getFullPath();
+ 		final IPreferenceStore store = ExternalToolsPlugin.getDefault()
+ 				.getPreferenceStore();
+-		final String filename = fFileToParse.getFullPath().toString();
++		final String filename = fFileToParse.getLocation().toString();
+ 
+ 		final String[] arguments = { filename };
+ 		final MessageFormat form = new MessageFormat(store

@@ -1,0 +1,17 @@
+Index: ./plugins/net.sourceforge.phpeclipse.phphelp/plugin.xml
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.phphelp/plugin.xml	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.phphelp/plugin.xml	(working copy)
+@@ -65,12 +65,6 @@
+    <extension
+          point="org.eclipse.ui.preferencePages">
+       <page
+-            name="%phphelpFormat"
+-            category="net.sourceforge.phpeclipse.preferences.PHPPreferencePage"
+-            class="net.sourceforge.phpdt.phphelp.PHPHelpPreferencePage"
+-            id="net.sourceforge.phpdt.phphelp.PHPHelpPreferencePage">
+-      </page>
+-      <page
+            name="%httpQuery"
+            category="net.sourceforge.phpeclipse.preferences.PHPPreferencePage"
+            class="net.sourceforge.phpdt.httpquery.preferences.ConfigurationPreferencePage"

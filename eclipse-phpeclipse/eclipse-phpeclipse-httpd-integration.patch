@@ -1,0 +1,361 @@
+Index: ./plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpeclipse/PHPeclipsePlugin.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpeclipse/PHPeclipsePlugin.java	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse/src/net/sourceforge/phpeclipse/PHPeclipsePlugin.java	(working copy)
+@@ -52,6 +52,7 @@
+ import net.sourceforge.phpeclipse.builder.ExternalStorageDocumentProvider;
+ import net.sourceforge.phpeclipse.builder.FileStorage;
+ import net.sourceforge.phpeclipse.builder.IdentifierIndexManager;
++import net.sourceforge.phpeclipse.externaltools.ExternalToolsPlugin;
+ import net.sourceforge.phpeclipse.phpeditor.CustomBufferFactory;
+ import net.sourceforge.phpeclipse.phpeditor.DocumentAdapter;
+ import net.sourceforge.phpeclipse.phpeditor.ICompilationUnitDocumentProvider;
+@@ -989,6 +990,8 @@
+ 
+ 			// RefactoringCore.getUndoManager().shutdown();
+ 		} finally {
++			if(ExternalToolsPlugin.getDefault() != null) 
++				ExternalToolsPlugin.getDefault().stopHttpd();
+ 			super.stop(context);
+ 		}
+ 	}
+Index: ./plugins/net.sourceforge.phpeclipse.ui/src/net/sourceforge/phpeclipse/ui/WebUI.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.ui/src/net/sourceforge/phpeclipse/ui/WebUI.java	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.ui/src/net/sourceforge/phpeclipse/ui/WebUI.java	(working copy)
+@@ -15,16 +15,19 @@
+ 
+ import java.io.IOException;
+ import java.net.URL;
++import java.net.ServerSocket;
+ 
+ import net.sourceforge.phpeclipse.ui.templates.template.HTMLContextType;
+ import net.sourceforge.phpeclipse.ui.templates.template.JSContextType;
+ import net.sourceforge.phpeclipse.ui.templates.template.SmartyContextType;
+ import net.sourceforge.phpeclipse.ui.templates.template.XMLContextType;
+ 
++import org.eclipse.core.internal.utils.FileUtil;
+ import org.eclipse.core.resources.IWorkspace;
+ import org.eclipse.core.resources.ResourcesPlugin;
+ import org.eclipse.core.runtime.IStatus;
+ import org.eclipse.core.runtime.Status;
++import org.eclipse.core.runtime.Platform;
+ import org.eclipse.jface.preference.IPreferenceStore;
+ import org.eclipse.jface.resource.ImageDescriptor;
+ import org.eclipse.jface.resource.ImageRegistry;
+@@ -56,6 +59,7 @@
+ 
+ 	/** The shared instance. */
+ 	private static WebUI plugin;
++	private int port = 0;
+ 
+ 	public static IWorkbenchPage getActivePage() {
+ 		return getDefault().internalGetActivePage();
+@@ -165,10 +169,42 @@
+ 		return fStore;
+ 	}
+ 
++	public int getHttpdPort() {
++		if (port == 0) {
++			port = findFreePort();
++		}
++		return port;
++	}
++
++	private int findFreePort() {
++		ServerSocket socket = null;
++		try {
++			socket = new ServerSocket(0);
++			socket.setReuseAddress(true);
++			return socket.getLocalPort();
++		} catch(IOException e) {
++			IStatus status = new Status(IStatus.ERROR, "net.sourceforge.phpeclipse.ui", IStatus.OK, "Error finding free port.", e);
++			plugin.getLog().log(status);
++		} finally {
++			if(socket != null) {
++				try {
++					socket.close();
++				} catch(IOException e) {
++					IStatus status = new Status(IStatus.ERROR, "net.sourceforge.phpeclipse.ui", IStatus.OK, "Error finding free port.", e);
++					plugin.getLog().log(status);
++				}
++			}
++		}
++		return -1;
++	}
++
+ 	protected void initializeDefaultPreferences(IPreferenceStore store) {
+-		store.setDefault(PHP_LOCALHOST_PREF, "http://localhost");
+-		store.setDefault(PHP_DOCUMENTROOT_PREF, getWorkspace().getRoot()
+-				.getFullPath().toString());
++		if (port ==  0) {
++			port = findFreePort();
++		}
++		store.setDefault(PHP_LOCALHOST_PREF, "http://localhost" + ":" + port);
++		store.setDefault(PHP_DOCUMENTROOT_PREF,
++				FileUtil.canonicalPath(Platform.getLocation()).removeTrailingSeparator().toOSString());
+ 		// store.setDefault(PHP_BOOKMARK_DEFAULT, "");
+ 
+ 		store.setDefault(PHP_AUTO_PREVIEW_DEFAULT, "false");
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/prefs/default_linux.properties
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/prefs/default_linux.properties	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/prefs/default_linux.properties	(working copy)
+@@ -1,13 +1,13 @@
+-_php_run_pref=/opt/lamp/php/php
+-_external_parser=/opt/lamp/php/php -l -f {0}
+-_mysql_run_pref=/opt/lampp/lampp startmysql
+-_apache_run_pref=/opt/lampp/lampp
+-_xampp_start_pref=/opt/lampp/lampp start
+-_xampp_stop_pref=/opt/lampp/lampp stop
+-__mysql_start=startmysql
+-__apache_start=startapache -c \"DocumentRoot {0}\"
+-__apache_stop=stop
+-__apache_restart=restart
++_php_run_pref=/usr/bin/php
++_external_parser=/usr/bin/php -l -f {0}
++_mysql_run_pref=
++_apache_run_pref=/usr/sbin/httpd
++_xampp_start_pref=
++_xampp_stop_pref=
++__mysql_start=
++__apache_start=-f /usr/share/eclipse/dropins/phpeclipse/eclipse/plugins/net.sourceforge.phpeclipse.externaltools_1.2.3.200910091456PRD/conf/httpd.conf -c "ErrorLog {0}/.metadata/phpeclipse-httpd-error_log" -c "DocumentRoot {0}" -c "PidFile {0}/.metadata/phpeclipse-httpd.pid" -c "Listen {1}"
++__apache_stop=-f /usr/share/eclipse/dropins/phpeclipse/eclipse/plugins/net.sourceforge.phpeclipse.externaltools_1.2.3.200910091456PRD/conf/httpd.conf -c "ErrorLog {0}/.metadata/phpeclipse-httpd-error_log" -c "DocumentRoot {0}" -c "PidFile {0}/.metadata/phpeclipse-httpd.pid" -c "Listen {1}" -k stop
++__apache_restart=-f /usr/share/eclipse/dropins/phpeclipse/eclipse/plugins/net.sourceforge.phpeclipse.externaltools_1.2.3.200910091456PRD/conf/httpd.conf -c "ErrorLog {0}/.metadata/phpeclipse-httpd-error_log" -c "DocumentRoot {0}" -c "PidFile {0}/.metadata/phpeclipse-httpd.pid" -c "Listen {1}" -k restart
+ _mysql_start_background=true
+ _apache_start_background=true
+ _apache_stop_background=true
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/conf/httpd.conf
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/conf/httpd.conf	(revision 0)
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/conf/httpd.conf	(revision 0)
+@@ -0,0 +1,23 @@
++# minimal httpd conf file for use with PHPEclipse
++StartServers 1
++MinSpareServers 1
++MaxSpareServers 1
++MaxClients 3
++
++# modules
++LoadModule mime_module modules/mod_mime.so
++LoadModule dir_module modules/mod_dir.so
++LoadModule autoindex_module modules/mod_autoindex.so
++
++TypesConfig /etc/mime.types
++DirectoryIndex index.html index.php default.html default.php
++DirectorySlash On
++
++IndexOptions FoldersFirst VersionSort IgnoreCase NameWidth=* HTMLTable
++IndexIgnore RECYCLER .??* *~ *# HEADER* README* RCS CVS *,v *,t
++HeaderName HEADER.html
++ReadmeName README.html
++
++# PHP settings
++LoadModule php5_module modules/libphp5.so
++AddHandler php5-script .php
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/PHPStartApacheAction.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/PHPStartApacheAction.java	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/PHPStartApacheAction.java	(working copy)
+@@ -32,7 +32,7 @@
+ 
+ 		// replace backslash with slash in the DocumentRoot under Windows
+ 		documentRoot = documentRoot.replace('\\', '/');
+-		String[] arguments = { documentRoot };
++		String[] arguments = { documentRoot, new Integer(WebUI.getDefault().getHttpdPort()).toString() };
+ 		MessageFormat form = new MessageFormat(store
+ 				.getString(ExternalToolsPlugin.APACHE_START_PREF));
+ 		execute("apache_start", store
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/PHPRestartApacheAction.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/PHPRestartApacheAction.java	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/PHPRestartApacheAction.java	(working copy)
+@@ -11,20 +11,31 @@
+  **********************************************************************/
+ package net.sourceforge.phpdt.externaltools.actions;
+ 
++import java.text.MessageFormat;
++
+ import net.sourceforge.phpeclipse.externaltools.ExternalToolsPlugin;
++import net.sourceforge.phpeclipse.ui.WebUI;
+ 
+ import org.eclipse.jface.action.IAction;
+ import org.eclipse.jface.preference.IPreferenceStore;
+ 
+ public class PHPRestartApacheAction extends PHPStartApacheAction {
+ 	public void run(IAction action) {
++		final IPreferenceStore webUIStore = WebUI.getDefault()
++		.getPreferenceStore();
++
++		String documentRoot = webUIStore.getString(WebUI.PHP_DOCUMENTROOT_PREF);
+ 		final IPreferenceStore store = ExternalToolsPlugin.getDefault()
+ 				.getPreferenceStore();
+-		// execute(store.getString(PHPeclipsePlugin.APACHE_RESTART_PREF),
+-		// "Restart Apache: ");
++
++		// replace backslash with slash in the DocumentRoot under Windows
++		documentRoot = documentRoot.replace('\\', '/');
++		String[] arguments = { documentRoot, new Integer(WebUI.getDefault().getHttpdPort()).toString() };
++		MessageFormat form = new MessageFormat(store
++				.getString(ExternalToolsPlugin.APACHE_RESTART_PREF));
+ 		execute("apache_restart", store
+-				.getString(ExternalToolsPlugin.APACHE_RUN_PREF), store
+-				.getString(ExternalToolsPlugin.APACHE_RESTART_PREF), store
++				.getString(ExternalToolsPlugin.APACHE_RUN_PREF), form
++				.format(arguments), store
+ 				.getBoolean(ExternalToolsPlugin.APACHE_RESTART_BACKGROUND));
+ 	}
+ }
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/PHPStopApacheAction.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/PHPStopApacheAction.java	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpdt/externaltools/actions/PHPStopApacheAction.java	(working copy)
+@@ -11,20 +11,31 @@
+  **********************************************************************/
+ package net.sourceforge.phpdt.externaltools.actions;
+ 
++import java.text.MessageFormat;
++
+ import net.sourceforge.phpeclipse.externaltools.ExternalToolsPlugin;
++import net.sourceforge.phpeclipse.ui.WebUI;
+ 
+ import org.eclipse.jface.action.IAction;
+ import org.eclipse.jface.preference.IPreferenceStore;
+ 
+ public class PHPStopApacheAction extends PHPStartApacheAction {
+ 	public void run(IAction action) {
++		final IPreferenceStore webUIStore = WebUI.getDefault()
++		.getPreferenceStore();
++
++		String documentRoot = webUIStore.getString(WebUI.PHP_DOCUMENTROOT_PREF);
+ 		final IPreferenceStore store = ExternalToolsPlugin.getDefault()
+ 				.getPreferenceStore();
+-		// execute(store.getString(PHPeclipsePlugin.APACHE_STOP_PREF), "Stop
+-		// Apache: ");
++
++		// replace backslash with slash in the DocumentRoot under Windows
++		documentRoot = documentRoot.replace('\\', '/');
++		String[] arguments = { documentRoot, new Integer(WebUI.getDefault().getHttpdPort()).toString() };
++		MessageFormat form = new MessageFormat(store
++				.getString(ExternalToolsPlugin.APACHE_STOP_PREF));
+ 		execute("apache_stop", store
+-				.getString(ExternalToolsPlugin.APACHE_RUN_PREF), store
+-				.getString(ExternalToolsPlugin.APACHE_STOP_PREF), store
++				.getString(ExternalToolsPlugin.APACHE_RUN_PREF), form
++				.format(arguments), store
+ 				.getBoolean(ExternalToolsPlugin.APACHE_STOP_BACKGROUND));
+ 	}
+ }
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpeclipse/externaltools/ExternalToolsPlugin.java
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpeclipse/externaltools/ExternalToolsPlugin.java	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/src/net/sourceforge/phpeclipse/externaltools/ExternalToolsPlugin.java	(working copy)
+@@ -15,6 +15,7 @@
+ import java.util.Enumeration;
+ import java.util.PropertyResourceBundle;
+ 
++import net.sourceforge.phpdt.externaltools.actions.PHPStopApacheAction;
+ import net.sourceforge.phpdt.externaltools.internal.model.ExternalToolsImages;
+ import net.sourceforge.phpdt.externaltools.internal.model.IPreferenceConstants;
+ import net.sourceforge.phpdt.externaltools.internal.model.VariableContextManager;
+@@ -28,6 +29,7 @@
+ import org.eclipse.core.runtime.Path;
+ import org.eclipse.core.runtime.Platform;
+ import org.eclipse.core.runtime.Status;
++import org.eclipse.jface.action.Action;
+ import org.eclipse.jface.preference.IPreferenceStore;
+ import org.eclipse.jface.preference.PreferenceConverter;
+ import org.eclipse.jface.resource.ImageDescriptor;
+@@ -310,4 +312,17 @@
+ 			}
+ 		});
+ 	}
++
++	/**
++	 * @throws Exception
++	 * @see org.eclipse.core.runtime.Plugin#stop(BundleContext context)
++	 */
++	public void stop(BundleContext context) throws Exception {
++		super.stop(context);
++	}
++
++	public void stopHttpd() {
++		// stop httpd 
++		new PHPStopApacheAction().run(new Action(){});
++	}
+ }
+\ No newline at end of file
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/build.properties
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/build.properties	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/build.properties	(working copy)
+@@ -5,6 +5,7 @@
+                icons/,\
+                META-INF/,\
+                plugin.properties,\
++               conf/,\
+                prefs/
+ src.includes = src/,\
+                build.properties,\
+@@ -15,4 +16,9 @@
+                .cvsignore,\
+                .project,\
+                META-INF/,\
++               conf/,\
+                prefs/
++bin.excludes = prefs/default_macosx.properties,\
++               prefs/default_win32.properties
++src.excludes = prefs/default_macosx.properties,\
++               prefs/default_win32.properties
+Index: ./plugins/net.sourceforge.phpeclipse.externaltools/plugin.xml
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.externaltools/plugin.xml	(revision 1643)
++++ ./plugins/net.sourceforge.phpeclipse.externaltools/plugin.xml	(working copy)
+@@ -192,11 +192,6 @@
+ 	  </page>
+ 	  <page
+ 			category="net.sourceforge.phpdt.externaltools.preferences"
+-			class="net.sourceforge.phpdt.externaltools.preferences.XamppPrefencePage"
+-			id="net.sourceforge.phpeclipse.externaltools.xampp.preferences"
+-			name="XAMPP"/>
+-	  <page
+-			category="net.sourceforge.phpdt.externaltools.preferences"
+ 			class="net.sourceforge.phpdt.externaltools.preferences.MySQLPreferencePage"
+ 			id="net.sourceforge.phpeclipse.externaltools.mysql.preferences"
+ 			name="MySQL"/>
+@@ -213,10 +208,6 @@
+ 			targetID="net.sourceforge.phpeclipse.PHPPerspective">
+ 		 <actionSet id="net.sourceforge.phpeclipse.PHPActionSet"/>
+ 	  </perspectiveExtension>
+-	  <perspectiveExtension
+-		   targetID="net.sourceforge.phpeclipse.PHPPerspective">
+-			  <actionSet id="net.sf.eclipsetidy.ActionSet"/>
+-		  </perspectiveExtension>
+    </extension>
+ 
+    <extension
+@@ -268,24 +259,6 @@
+ 			   toolbarPath="Normal"
+ 			   id="net.sourceforge.phpdt.externaltools.actions.PHPStartMySQLAction">
+ 		 </action>
+-		 <action
+-			   label="Stop XAMPP"
+-			   icon="icons/obj16/xampp_stop.gif"
+-			   tooltip="Stop XAMPP"
+-			   class="net.sourceforge.phpdt.externaltools.actions.PHPStopXAMPPAction"
+-			   menubarPath="net.sourceforge.phpeclipse.PHPMenu/phpeclipse"
+-			   toolbarPath="Normal"
+-			   id="net.sourceforge.phpdt.externaltools.actions.PHPStopXAMPPAction">
+-		 </action>
+-		 <action
+-			   label="Start XAMPP"
+-			   icon="icons/obj16/xampp_start.gif"
+-			   tooltip="Start XAMPP"
+-			   class="net.sourceforge.phpdt.externaltools.actions.PHPStartXAMPPAction"
+-			   menubarPath="net.sourceforge.phpeclipse.PHPMenu/phpeclipse"
+-			   toolbarPath="Normal"
+-			   id="net.sourceforge.phpdt.externaltools.actions.PHPStartXAMPPAction">
+-		 </action>
+ 	  </actionSet>
+ 	</extension>
+ 

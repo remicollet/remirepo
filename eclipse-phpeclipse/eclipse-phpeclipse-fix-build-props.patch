@@ -1,0 +1,12 @@
+Index: ./plugins/net.sourceforge.phpeclipse.ui/build.properties
+===================================================================
+--- ./plugins/net.sourceforge.phpeclipse.ui/build.properties	(revision 1625)
++++ ./plugins/net.sourceforge.phpeclipse.ui/build.properties	(working copy)
+@@ -4,7 +4,6 @@
+                plugin.properties,\
+                templates/,\
+                ui.jar,\
+-               .project,\
+                META-INF/
+ source.ui.jar = src/
+ src.includes = src/,\
