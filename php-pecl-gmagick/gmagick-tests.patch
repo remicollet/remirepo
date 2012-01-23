@@ -1,0 +1,32 @@
+--- tests.orig/gmagick-054-getquantumdepth.phpt	2012-01-23 08:06:35.694766376 +0100
++++ tests/gmagick-054-getquantumdepth.phpt	2012-01-23 08:17:58.499797061 +0100
+@@ -9,11 +9,22 @@
+ <?php
+ $gm = new Gmagick();
+ $gm->read("magick:rose");
+-print_r($gm->getQuantumDepth());
++$q=$gm->getQuantumDepth();
++if (is_array($q) && count($q)==2 && isset($q['quantumDepthLong']) && isset($q['quantumDepthString'])) {
++	echo "Struct OK\n";
++	if ($q['quantumDepthLong']=='8' && $q['quantumDepthString']=='Q8') {
++		echo "Quantum OK\n";
++	} else if ($q['quantumDepthLong']=='16' && $q['quantumDepthString']=='Q16') {
++		echo "Quantum OK\n";
++	} else {
++		echo "Quantum KO\n";
++		print_r($q);
++	}
++} else {
++	echo "Struct KO\n";
++	print_r($q);
++}
+ ?>
+ --EXPECTF--
+-Array
+-(
+-    [quantumDepthLong] => 8
+-    [quantumDepthString] => Q8
+-)
+\ Pas de fin de ligne à la fin du fichier
++Struct OK
++Quantum OK

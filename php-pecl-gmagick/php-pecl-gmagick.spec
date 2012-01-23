@@ -117,7 +117,8 @@ cd %{pecl_name}-%{version}%{?prever}
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-# Remove know to fail tests (font issue)
+# Remove know to fail tests (GM font config issue)
+# https://bugzilla.redhat.com/783906
 rm -f tests/gmagick-006-annotateimage.phpt
 
 # Still ignore test result as some fail on old version
