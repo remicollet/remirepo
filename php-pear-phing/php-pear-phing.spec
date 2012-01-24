@@ -4,7 +4,7 @@
 
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
-Version:	2.4.8
+Version:	2.4.9
 Release:	1%{?dist}
 
 License:	LGPLv2
@@ -14,12 +14,12 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL:		http://phing.info/trac/
 
 BuildArch:	noarch
-
-BuildRequires:	php-pear
+BuildRequires:	php-pear(PEAR) >= 1.8.0
 BuildRequires:	php-channel(pear.phing.info)
 BuildRequires:	dos2unix
+
 Requires:	php-cli >= 5.2.0
-Requires:	php-pear >= 1.8.0
+Requires:	php-pear(PEAR) >= 1.8.0
 Requires:	php-pecl-xdebug >= 2.0.5
 Requires:	php-channel(pear.phing.info)
 
@@ -29,6 +29,7 @@ Requires(post):	%{__pear}
 Requires(postun): %{__pear}
 
 Provides:	php-pear(%{channel}/%{pear_name}) = %{version}
+
 
 %description
 PHing Is Not GNU make; it's a project build system based on Apache Ant.
@@ -89,6 +90,9 @@ fi
 
 
 %changelog
+* Tue Jan 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.9-1
+- upstream 2.4.9
+
 * Fri Nov 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.4.8-1
 - upstream 2.4.8, rebuild for remi repository
 - doc in /usr/share/doc/pear
