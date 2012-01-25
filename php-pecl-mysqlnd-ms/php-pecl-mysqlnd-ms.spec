@@ -4,7 +4,7 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
 Version:      1.1.2
-Release:      4%{?dist}
+Release:      5%{?dist}
 
 License:      PHP
 Group:        Development/Languages
@@ -50,7 +50,7 @@ Documentation : http://www.php.net/mysqlnd_ms
 
 cp %{SOURCE1} %{pecl_name}.ini
 
-%if 0%{?php_ztsbindir:1}
+%if 0%{?__ztsphp:1}
 # Build ZTS extension if ZTS devel available (fedora >= 17)
 cp -r %{pecl_name}-%{version} %{pecl_name}-zts
 %endif
@@ -65,13 +65,13 @@ cd %{pecl_name}-%{version}
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if 0%{?php_ztsbindir:1}
+%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
-%{php_ztsbindir}/phpize
+%{_bindir}/phpize-zts
 %configure \
     --with-libdir=%{_lib} \
     --enable-mysqlnd-ms \
-    --with-php-config=%{php_ztsbindir}/php-config
+    --with-php-config=%{_bindir}/php-config-zts
 make %{?_smp_mflags}
 %endif
 
@@ -83,7 +83,7 @@ rm -rf %{pecl_name}-*/modules/{json,mysqlnd}.so
 make install -C %{pecl_name}-%{version} \
      INSTALL_ROOT=%{buildroot}
 
-%if 0%{?php_ztsbindir:1}
+%if 0%{?__ztsphp:1}
 make install -C %{pecl_name}-zts \
      INSTALL_ROOT=%{buildroot}
 
@@ -116,26 +116,26 @@ ln -sf %{php_extdir}/mysqlnd.so modules/
 ln -sf %{php_extdir}/json.so modules/
 
 # only check if build extension can be loaded
-php -n -q \
+%{__php} -n -q \
     -d extension_dir=modules \
     -d extension=json.so \
     -d extension=mysqlnd.so \
     -d extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-if [ -f %{?php_ztsbindir}/php ]; then
+%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
 ln -sf %{php_ztsextdir}/mysqlnd.so modules/
 ln -sf %{php_ztsextdir}/json.so modules/
 
 # only check if build extension can be loaded
-%{php_ztsbindir}/php -n -q \
+%{__ztsphp} -n -q \
     -d extension_dir=modules \
     -d extension=json.so \
     -d extension=mysqlnd.so \
     -d extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
-fi
+%endif
 
 
 %files
@@ -146,13 +146,16 @@ fi
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
-%if 0%{?php_ztsbindir:1}
+%if 0%{?__ztsphp:1}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Wed Jan 25 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-5
+- zts binary in /usr/bin with -zts suffix
+
 * Sun Jan 21 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-4
 - merge ZTS change for fedora 17
 - filter_setup is enough
