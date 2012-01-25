@@ -8,7 +8,7 @@
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.2.%{prever}%{?dist}
+Release:        0.3.%{prever}%{?dist}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -82,13 +82,13 @@ cp -pr %{proj_name}-%{version}%{?prever} %{proj_name}-zts
 
 %build
 cd %{proj_name}-%{version}%{?prever}
-%{php_bindir}/phpize
-%configure  --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{proj_name}-zts
-%{php_ztsbindir}/phpize
-%configure  --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/phpize-zts
+%configure  --with-php-config=%{_bindir}/php-config-zts
 make %{?_smp_mflags}
 
 
@@ -117,7 +117,7 @@ install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
     --modules | grep %{pecl_name}
 
 # Minimal load test for ZTS extension
-%{php_ztsbindir}/php --no-php-ini \
+%{__ztsphp} --no-php-ini \
     --define extension_dir=%{proj_name}-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -153,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 25 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.dev4
+- zts binary in /usr/bin with -zts suffix
+
 * Mon Jan 23 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.dev4
 - update to 2.0.0dev4
 - fix missing file https://bugs.php.net/60839
