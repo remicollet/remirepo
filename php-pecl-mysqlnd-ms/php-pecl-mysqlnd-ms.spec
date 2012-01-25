@@ -67,11 +67,11 @@ make %{?_smp_mflags}
 
 %if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
-%{_bindir}/phpize-zts
+%{_bindir}/zts-phpize
 %configure \
     --with-libdir=%{_lib} \
     --enable-mysqlnd-ms \
-    --with-php-config=%{_bindir}/php-config-zts
+    --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
 
@@ -154,7 +154,7 @@ ln -sf %{php_ztsextdir}/json.so modules/
 
 %changelog
 * Wed Jan 25 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-5
-- zts binary in /usr/bin with -zts suffix
+- zts binary in /usr/bin with zts prefix
 
 * Sun Jan 21 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-4
 - merge ZTS change for fedora 17
