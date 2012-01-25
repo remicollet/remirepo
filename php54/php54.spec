@@ -1057,9 +1057,9 @@ make -C build-zts install-modules \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # rename binary
-mv $RPM_BUILD_ROOT%{_bindir}/php        $RPM_BUILD_ROOT%{_bindir}/php-zts
-mv $RPM_BUILD_ROOT%{_bindir}/phpize     $RPM_BUILD_ROOT%{_bindir}/phpize-zts
-mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/php-config-zts
+mv $RPM_BUILD_ROOT%{_bindir}/php        $RPM_BUILD_ROOT%{_bindir}/zts-php
+mv $RPM_BUILD_ROOT%{_bindir}/phpize     $RPM_BUILD_ROOT%{_bindir}/zts-phpize
+mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/zts-php-config
 
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
@@ -1355,7 +1355,6 @@ fi
 %{_bindir}/phar
 # provides phpize here (not in -devel) for pecl command
 %{_bindir}/phpize
-%{_bindir}/phpize-zts
 %if %{phpname} == php
 %{_mandir}/man1/php.1*
 %{_mandir}/man1/phpize.1*
@@ -1390,9 +1389,10 @@ fi
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
-%{_bindir}/php-config-zts
+%{_bindir}/zts-php-config
+%{_bindir}/zts-phpize
 # usefull only to test other module during build
-%{_bindir}/php-zts
+%{_bindir}/zts-php
 %dir %{_origincludedir}/%{phpname}
 %{_includedir}/php
 %{_origincludedir}/%{phpname}-zts
@@ -1446,7 +1446,7 @@ fi
 
 %changelog
 * Wed Jan 25 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.12.RC6
-- keep all ZTS binaries in /usr/bin (with -zts suffix)
+- keep all ZTS binaries in /usr/bin (with zts prefix)
 
 * Thu Jan 19 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.11.RC6
 - update to 5.4.0RC6
