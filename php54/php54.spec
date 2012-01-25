@@ -1,4 +1,4 @@
-%{!?phpname:		%{expand: %%global phpname     php}}
+%{!?phpname: %{expand: %%global phpname php}}
 
 %global contentdir  /var/www
 # API/ABI check
@@ -60,7 +60,7 @@ Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.11.%{rcver}%{?dist}
+Release: 0.12.%{rcver}%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -933,7 +933,6 @@ pushd build-ztscli
 
 EXTENSION_DIR=%{_libdir}/%{phpname}-zts/modules
 build --enable-force-cgi-redirect \
-      --bindir=%{_origbindir}/%{phpname}-zts \
       --includedir=%{_origincludedir}/%{phpname}-zts \
       --libdir=%{_libdir}/%{phpname}-zts \
       --enable-maintainer-zts \
@@ -1004,7 +1003,6 @@ popd
 # Build a special thread-safe Apache SAPI
 pushd build-zts
 build --with-apxs2=%{_sbindir}/apxs \
-      --bindir=%{_origbindir}/%{phpname}-zts \
       --includedir=%{_origincludedir}/%{phpname}-zts \
       --libdir=%{_libdir}/%{phpname}-zts \
       --enable-maintainer-zts \
@@ -1057,6 +1055,11 @@ mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/pdo_mysql.so \
 # Install the extensions for the ZTS version modules for libmysql
 make -C build-zts install-modules \
      INSTALL_ROOT=$RPM_BUILD_ROOT
+
+# rename binary
+mv $RPM_BUILD_ROOT%{_bindir}/php        $RPM_BUILD_ROOT%{_bindir}/php-zts
+mv $RPM_BUILD_ROOT%{_bindir}/phpize     $RPM_BUILD_ROOT%{_bindir}/phpize-zts
+mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/php-config-zts
 
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
@@ -1238,8 +1241,6 @@ install -m 644 -c macros.php \
 rm -rf $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/*.a \
        $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/*.a \
        $RPM_BUILD_ROOT%{_bindir}/{phptar} \
-       $RPM_BUILD_ROOT%{_bindir}/%{phpname}-zts/phar* \
-       $RPM_BUILD_ROOT%{_bindir}/%{phpname}-zts/php-cgi \
        $RPM_BUILD_ROOT%{peardir} \
        $RPM_BUILD_ROOT%{_libdir}/libphp5.la
 
@@ -1354,6 +1355,7 @@ fi
 %{_bindir}/phar
 # provides phpize here (not in -devel) for pecl command
 %{_bindir}/phpize
+%{_bindir}/phpize-zts
 %if %{phpname} == php
 %{_mandir}/man1/php.1*
 %{_mandir}/man1/phpize.1*
@@ -1388,10 +1390,9 @@ fi
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
-%{_origbindir}/%{phpname}-zts/php-config
-%{_origbindir}/%{phpname}-zts/phpize
+%{_bindir}/php-config-zts
 # usefull only to test other module during build
-%{_origbindir}/%{phpname}-zts/php
+%{_bindir}/php-zts
 %dir %{_origincludedir}/%{phpname}
 %{_includedir}/php
 %{_origincludedir}/%{phpname}-zts
@@ -1444,6 +1445,9 @@ fi
 %endif
 
 %changelog
+* Wed Jan 25 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.12.RC6
+- keep all ZTS binaries in /usr/bin (with -zts suffix)
+
 * Thu Jan 19 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.11.RC6
 - update to 5.4.0RC6
 
