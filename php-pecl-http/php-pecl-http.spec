@@ -87,8 +87,8 @@ cd %{proj_name}-%{version}%{?prever}
 make %{?_smp_mflags}
 
 cd ../%{proj_name}-zts
-%{_bindir}/phpize-zts
-%configure  --with-php-config=%{_bindir}/php-config-zts
+%{_bindir}/zts-phpize
+%configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -154,7 +154,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Wed Jan 25 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.dev4
-- zts binary in /usr/bin with -zts suffix
+- zts binary in /usr/bin with zts prefix
 
 * Mon Jan 23 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.dev4
 - update to 2.0.0dev4
