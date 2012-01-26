@@ -60,7 +60,7 @@ Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.12.%{rcver}%{?dist}
+Release: 0.13.%{rcver}%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -82,7 +82,8 @@ Source4: php-fpm.conf
 Source5: php-fpm-www.conf
 Source6: php-fpm.service
 Source7: php-fpm.logrotate
-Source8: php-fpm.init
+Source8: php-fpm.sysconfig
+Source9: php-fpm.init
 
 # Build fixes
 Patch5: php-5.2.0-includedir.patch
@@ -1146,12 +1147,15 @@ install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
 %else
 # Service
 install -m 755 -d $RPM_BUILD_ROOT%{_originitdir}
-install -m 755 %{SOURCE8} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
+install -m 755 %{SOURCE9} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
 %endif
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 %endif
+# Environment file
+install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig
+install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig.d/php-fpm
 
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
@@ -1371,6 +1375,7 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_origsysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_origsysconfdir}/logrotate.d/php-fpm
+%config(noreplace) %{_origsysconfdir}/sysconfig/php-fpm
 %if 0%{?fedora} >= 15
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
@@ -1445,6 +1450,9 @@ fi
 %endif
 
 %changelog
+* Thu Jan 26 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.13.RC6
+- add /etc/sysconfig/php-fpm environment file (#784770)
+
 * Wed Jan 25 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.12.RC6
 - keep all ZTS binaries in /usr/bin (with zts prefix)
 
