@@ -60,7 +60,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.9
-Release: 1%{?dist}
+Release: 1%{?dist}.2
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -77,6 +77,7 @@ Source4: php-fpm.conf
 Source5: php-fpm-www.conf
 Source6: php-fpm.init
 Source7: php-fpm.logrotate
+Source8: php-fpm.sysconfig
 
 # Build fixes
 Patch1: php-5.3.9-gnusrc.patch
@@ -1187,6 +1188,9 @@ install -m 755 %{SOURCE6} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
+# Environment file
+install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig
+install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig.d/php-fpm
 %if 0%{?fedora} >= 15
 # tmpfiles.d
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
@@ -1378,6 +1382,7 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_origsysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_origsysconfdir}/logrotate.d/php-fpm
+%config(noreplace) %{_origsysconfdir}/sysconfig/php-fpm
 %if 0%{?fedora} >= 15
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/php-fpm.conf
 %endif
@@ -1451,6 +1456,9 @@ fi
 %endif
 
 %changelog
+* Thu Jan 26 2012 Remi Collet <Fedora@famillecollet.com> 5.3.9-1.2
+- add /etc/sysconfig/php-fpm environment file (#784770)
+
 * Wed Jan 11 2012 Remi Collet <Fedora@famillecollet.com> 5.3.9-1.1
 - fix owner of /var/log/php-fpm (bug #773077)
 - add max_input_vars, max_file_uploads, zend.enable_gc to php.ini
