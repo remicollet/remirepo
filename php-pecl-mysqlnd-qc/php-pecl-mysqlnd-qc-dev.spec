@@ -2,7 +2,7 @@
 %{!?__pecl:   %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name mysqlnd_qc
-%global svnver    322628
+%global svnver    322823
 %global prever    alpha
 
 %if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
@@ -15,9 +15,9 @@ Summary:      A query cache plugin for mysqlnd
 Name:         %{phpname}-pecl-mysqlnd-qc
 Version:      1.0.2
 %if 0%{?svnver}
-# svn export -r 322628 https://svn.php.net/repository/pecl/mysqlnd_qc/trunk mysqlnd_qc-svn322628
-# tar czf mysqlnd_qc-svn322628.tgz mysqlnd_qc-svn322628
-Source:       mysqlnd_qc-svn318164.tgz
+# svn export -r 322823 https://svn.php.net/repository/pecl/mysqlnd_qc/trunk mysqlnd_qc-svn322823
+# tar czf mysqlnd_qc-svn322823.tgz mysqlnd_qc-svn322823
+Source:       mysqlnd_qc-svn322823.tgz
 Release:      0.1.%{prever}.svn%{svnver}%{?dist}
 %else
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
@@ -75,6 +75,13 @@ Documentation : http://www.php.net/mysqlnd_qc
 mv %{pecl_name}-svn%{svnver}/package.xml .
 mv %{pecl_name}-svn%{svnver} %{pecl_name}-%{version}
 %endif
+
+extver=$(sed -n '/#define MYSQLND_QC_VERSION_STR/{s/.* "//;s/".*$//;p}' %{pecl_name}-*/php_mysqlnd_qc.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream %{pecl_name} version is now ${extver}, expecting %{version}%{?prever}.
+   : Update the pdover macro and rebuild.
+   exit 1
+fi
 
 cp %{SOURCE1} %{pecl_name}.ini
 
