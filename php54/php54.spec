@@ -34,6 +34,7 @@
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
 %global with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
+%global with_libzip 	%{?_with_libzip:1}%{!?_with_libzip:0}
 %if 0%{?rhel} >= 5 || 0%{?fedora} >= 12
 %ifarch %{ix86} x86_64
 %global with_fpm 1
@@ -50,17 +51,13 @@
 %global isasuffix %nil
 %endif
 
-# Flip these to 1 and zip respectively to enable zip support again
-%global with_zip 1
-%global zipmod zip
-
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.13.%{rcver}%{?dist}
+Release: 0.14.%{rcver}%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -98,6 +95,7 @@ Patch41: php-5.4.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
+Patch44: php-5.4.0RC6-system-libzip.patch
 
 # Fixes for tests
 
@@ -121,6 +119,9 @@ BuildRequires: zlib-devel, smtpdaemon, libedit-devel
 BuildRequires: pcre-devel >= 7.8
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
+%if %{with_libzip}
+BuildRequires: libzip-devel >= 0.10
+%endif
 BuildRequires: libtool-ltdl-devel
 BuildRequires: bison
 
@@ -150,14 +151,7 @@ Requires(pre): httpd
 %global peardir      %{_datadir}/%{phpname}/pear
 %endif
 
-# Don't provides extensions, which are not shared library, as .so
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}/modules/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{_libdir}/%{phpname}-zts/modules/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/%{phpname}/modules/.*\\.so$
-%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/%{phpname}-zts/modules/.*\\.so$
 
 
 %description
@@ -249,12 +243,10 @@ Provides: %{phpname}-simplexml, %{phpname}-simplexml%{?_isa}
 Provides: %{phpname}-sockets, %{phpname}-sockets%{?_isa}
 Provides: %{phpname}-spl, %{phpname}-spl%{?_isa}
 Provides: %{phpname}-tokenizer, %{phpname}-tokenizer%{?_isa}
-%if %{with_zip}
 Provides: %{phpname}-zip, %{phpname}-zip%{?_isa}
 Provides: %{phpname}-pecl-zip = %{zipver}, %{phpname}-pecl-zip%{?_isa} = %{zipver}
 Provides: %{phpname}-pecl(zip) = %{zipver}, %{phpname}-pecl(zip)%{?_isa} = %{zipver}
 Obsoletes: %{phpname}-pecl-zip
-%endif
 Provides: %{phpname}-zlib, %{phpname}-zlib%{?_isa}
 Obsoletes: %{phpname}-openssl, %{phpname}-pecl-json, %{phpname}-json, %{phpname}-pecl-phar, %{phpname}-pecl-Fileinfo
 Obsoletes: %{phpname}-mhash < 5.3.0
@@ -627,7 +619,7 @@ support for using the enchant library to PHP.
 
 
 %prep
-echo CIBLE = %{name}-%{version}-%{release}
+echo CIBLE = %{name}-%{version}-%{release} oci8=%{with_oci8} ibase=%{with_ibase} fpm=%{with_fpm} libzip=%{with_libzip}
 %if 0%{?snapdate}
 %setup -q -n php5.4-%{snapdate}
 %else
@@ -644,6 +636,9 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .headers
+%if %{with_libzip}
+%patch44 -p1 -b .systzip
+%endif
 
 %patch91 -p1 -b .remi-oci8
 
@@ -871,8 +866,9 @@ build --enable-force-cgi-redirect \
       --without-sqlite3 \
 %endif
       --enable-json=shared \
-%if %{with_zip}
       --enable-zip=shared \
+%if %{with_libzip}
+      --with-libzip \
 %endif
       --without-readline \
       --with-libedit \
@@ -981,8 +977,9 @@ build --enable-force-cgi-redirect \
       --without-sqlite3 \
 %endif
       --enable-json=shared \
-%if %{with_zip}
       --enable-zip=shared \
+%if %{with_libzip}
+      --with-libzip \
 %endif
       --without-readline \
       --with-libedit \
@@ -1155,7 +1152,7 @@ install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 %endif
 # Environment file
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig
-install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig.d/php-fpm
+install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig/php-fpm
 
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
@@ -1164,7 +1161,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig.d/php-fpm
 for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
-    pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
+    pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json zip \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} %{?_with_ibase:interbase} %{?_with_ibase:pdo_firebird} \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
     sqlite3 \
@@ -1227,9 +1224,7 @@ cat files.sqlite3 >> files.pdo
 
 # Package json, zip, curl, phar and fileinfo in -common.
 cat files.json files.curl files.phar files.fileinfo > files.common
-%if %{with_zip}
 cat files.zip >> files.common
-%endif
 
 # Install the macros file:
 install -d $RPM_BUILD_ROOT%{_origsysconfdir}/rpm
@@ -1338,7 +1333,7 @@ fi
 
 %files common -f files.common
 %defattr(-,root,root)
-%doc CODING_STANDARDS CREDITS EXTENSIONS INSTALL LICENSE NEWS README*
+%doc CODING_STANDARDS CREDITS EXTENSIONS LICENSE NEWS README*
 %doc Zend/ZEND_* TSRM_LICENSE regex_COPYRIGHT
 %doc php.ini-*
 %config(noreplace) %{_sysconfdir}/php.ini
@@ -1450,6 +1445,9 @@ fi
 %endif
 
 %changelog
+* Fri Jan 27 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.14.RC6
+- build against system libzip (fedora >= 17), patch from spot
+
 * Thu Jan 26 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.13.RC6
 - add /etc/sysconfig/php-fpm environment file (#784770)
 
