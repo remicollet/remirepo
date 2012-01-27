@@ -1,6 +1,3 @@
-# Fedora Review Request #393041
-# https://bugzilla.redhat.com/show_bug.cgi?id=393041
-
 Name:           libzip2
 Version:        0.10
 Release:        1%{?dist}
@@ -11,10 +8,9 @@ License:        BSD
 URL:            http://www.nih.at/libzip/index.html
 Source0:        http://www.nih.at/libzip/libzip-%{version}.tar.bz2
 
-Patch0:         libzip-php.patch
+Patch0:         libzip-0.10-php.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildRequires:  automake libtool
 BuildRequires:  zlib-devel
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
@@ -66,9 +62,6 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
-# Need to check this, for multilib
-mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h $RPM_BUILD_ROOT%{_includedir}
-
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -93,8 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/zip*.h
+%{_includedir}/zip.h
 %{_libdir}/libzip.so
+%{_libdir}/libzip/include/zipconf.h
 %{_libdir}/pkgconfig/libzip.pc
 %{_mandir}/man3/*zip*
 
