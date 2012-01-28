@@ -2,17 +2,17 @@
 %{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global gitver 758d962
+%global gitver 7e971c4
 %global prever -dev
 
 Name:           %{phpname}-pecl-xdebug
 Version:        2.2.0
 %if %{?gitver:1}
-Release:        0.3.git%{gitver}%{?dist}
-Source0:        derickr-xdebug-XDEBUG_2_1_2-197-g758d962.tar.gz
+Release:        0.4.git%{gitver}%{?dist}
+Source0:        derickr-xdebug-XDEBUG_2_1_2-206-g7e971c4.tar.gz
 BuildRequires:  libtool
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Summary:        PECL package for debugging PHP scripts
@@ -34,14 +34,7 @@ Requires:       %{phpname}(api) = %{php_core_api}
 Provides:       %{phpname}-pecl(Xdebug) = %{version}
 Provides:       %{phpname}-pecl(Xdebug)%{?_isa} = %{version}
 
-
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -68,6 +61,15 @@ Xdebug also provides:
 
 %if %{?gitver:1}
 cp derickr-xdebug-%{gitver}/package2.xml .
+%{_bindir}/php <<EOF
+<?php
+\$xml = simplexml_load_file("package2.xml");
+\$xml->version->release="%{version}dev";
+\$xml->version->api="%{version}";
+\$xml->stability->release="devel";
+\$xml->stability->api="devel";
+file_put_contents("package2.xml",\$xml->asXML());
+EOF
 mv derickr-xdebug-%{gitver} %{pecl_name}-%{version}
 
 # https://bugs.php.net/60330
@@ -94,8 +96,8 @@ cp -r %{pecl_name}-%{version} %{pecl_name}-zts
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
-%configure --enable-xdebug  --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure --enable-xdebug  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 # Build debugclient
@@ -107,8 +109,8 @@ make %{?_smp_mflags}
 popd
 
 cd ../%{pecl_name}-zts
-%{php_ztsbindir}/phpize
-%configure --enable-xdebug  --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure --enable-xdebug  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -123,7 +125,7 @@ make -C %{pecl_name}-zts \
 
 # install debugclient
 install -Dpm 755 %{pecl_name}-%{version}/debugclient/debugclient \
-        %{buildroot}%{php_bindir}/debugclient
+        %{buildroot}%{_bindir}/debugclient
 
 # Install XML package description
 # package.xml is V1, package2.xml is V2
@@ -154,7 +156,7 @@ EOF
     --define zend_extension=%{pecl_name}-%{version}/modules/%{pecl_name}.so \
     --modules | grep Xdebug
 
-%{php_ztsbindir}/php \
+%{_bindir}/zts-php \
     --no-php-ini \
     --define zend_extension=%{pecl_name}-zts/modules/%{pecl_name}.so \
     --modules | grep Xdebug
@@ -181,11 +183,15 @@ rm -rf %{buildroot}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{php_ztsextdir}/%{pecl_name}.so
-%{php_bindir}/debugclient
+%{_bindir}/debugclient
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Sat Jan 28 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.4.git7e971c4
+- new git snapshot
+- fix version reported by pecl list
+
 * Fri Jan 20 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.3.git758d962
 - new git snapshot
 
