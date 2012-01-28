@@ -1,0 +1,13 @@
+diff -up gnupg-1.3.2/gnupg.c.orig gnupg-1.3.2/gnupg.c
+--- gnupg-1.3.2/gnupg.c.orig	2012-01-28 10:24:09.763192106 +0100
++++ gnupg-1.3.2/gnupg.c	2012-01-28 10:25:36.644195977 +0100
+@@ -137,6 +137,9 @@ static void gnupg_res_init(gnupg_object
+ 	gpgme_ctx_t	ctx;
+ 	gpgme_check_version			(NULL);
+ 	gpgme_new					(&ctx);
++#ifdef GNUPG_PATH
++	gpgme_ctx_set_engine_info(ctx, GPGME_PROTOCOL_OpenPGP, GNUPG_PATH, NULL);
++#endif
+ 	gpgme_set_armor				(ctx,1);
+ 	intern->ctx				=	ctx;
+ 	intern->encryptkeys		=	NULL;

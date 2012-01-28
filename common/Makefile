@@ -35,6 +35,9 @@ devsrpm53:
 build:
 	time rpmbuild $(RPMDEFINES) -bb $(NAME).spec
 
+buildtest:
+	time rpmbuild $(RPMDEFINES) -bb --with tests $(NAME).spec
+
 buildmini:
 	time rpmbuild $(RPMDEFINES) --define "runselftest 0" -bb $(NAME).spec
 
