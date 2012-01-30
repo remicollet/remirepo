@@ -116,7 +116,7 @@ ln -sf %{php_extdir}/mysqlnd.so modules/
 ln -sf %{php_extdir}/json.so modules/
 
 # only check if build extension can be loaded
-%{__php} -n -q \
+php -n -q \
     -d extension_dir=modules \
     -d extension=json.so \
     -d extension=mysqlnd.so \
