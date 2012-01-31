@@ -14,7 +14,8 @@
 %define system_sqlite 1
 %endif
 
-%global thunver  9.0
+%global thunver  10.0
+%global thunmax  11.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -32,7 +33,7 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.3.4
+Version:        1.3.5
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
@@ -65,12 +66,12 @@ Source101:      enigmail-fixlang.php
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
 Patch7:         crashreporter-remove-static.patch
-Patch8:         xulrunner-9.0-secondary-ipc.patch
-Patch10:        xulrunner-2.0-network-link-service.patch
-Patch11:        xulrunner-2.0-NetworkManager09.patch
-Patch12:        mozilla-696393.patch
+Patch8:         xulrunner-10.0-secondary-ipc.patch
+# # cherry-picked from 13afcd4c097c
+Patch13:        xulrunner-9.0-secondary-build-fix.patch
 
 # Build patches
+Patch100:       xulrunner-10.0-gcc47.patch
 
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
@@ -90,7 +91,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
-%if 0%{?fedora} >= 17
+%if 0%{?fedora} >= 15
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if 0%{?fedora} >= 15
@@ -135,7 +136,9 @@ BuildRequires:  dos2unix, php-cli
 # because provided by xulrunner). 
 AutoReq:  0
 # All others deps already required by thunderbird
-Requires: gnupg, thunderbird >= %{thunver}
+Requires: gnupg
+Requires: thunderbird >= %{thunver}
+Requires: thunderbird <  %{thunmax}
 
 # Nothing usefull provided
 AutoProv: 0
@@ -156,10 +159,11 @@ cd %{tarballdir}
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch7 -p2 -b .static
-%patch8 -p2 -b .secondary-ipc
-%patch10 -p1 -b .link-service
-%patch11 -p1 -b .NetworkManager09
-%patch12 -p2 -b .696393
+%patch8 -p3 -b .secondary-ipc
+%patch13 -p2 -b .secondary-build
+%if 0%{?fedora} >= 17
+%patch100 -p1 -b .gcc47
+%endif
 cd ..
 
 %patch200 -p1 -b .addons
@@ -175,7 +179,7 @@ cd ..
 
 %{__rm} -f .mozconfig
 cat %{SOURCE10} 		\
-%if 0%{?fedora} < 17
+%if 0%{?fedora} < 15
   | grep -v system-nss 		\
 %endif
 %if 0%{?fedora} < 14 && 0%{?rhel} < 6
@@ -192,6 +196,11 @@ echo "ac_add_options --disable-libjpeg-turbo"  >> .mozconfig
 
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
+%endif
+
+# s390(x) fails to start with jemalloc enabled
+%ifarch s390 s390x
+echo "ac_add_options --disable-jemalloc" >> .mozconfig
 %endif
 
 %if %{?system_sqlite}
@@ -212,7 +221,7 @@ pushd mailnews/extensions/enigmail
 # All tarballs (as well as CVS) will *always* report as 1.4a1pre (or whatever
 # the next major version would be). This is because I create builds from trunk
 # and simply label the result as 1.3.x.
-sed -i -e '/em:version/s/1.4a1pre/%{version}/' package/install.rdf
+# sed -i -e '/em:version/s/1.4a1pre/%{version}/' package/install.rdf
 grep '<em:version>%{version}</em:version>' package/install.rdf || exit 1
 # Apply Enigmail patch here
 popd
@@ -295,6 +304,9 @@ cd %{tarballdir}
 #===============================================================================
 
 %changelog
+* Tue Jan 31 2012 Remi Collet <remi@fedoraproject.org> 1.3.5-1
+- Enigmail 1.3.5 for Thunderbird 10.0
+
 * Wed Dec 21 2011 Remi Collet <remi@fedoraproject.org> 1.3.4-1
 - Enigmail 1.3.4 for Thunderbird 9.0
 

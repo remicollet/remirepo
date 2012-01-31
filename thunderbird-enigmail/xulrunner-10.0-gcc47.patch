@@ -1,0 +1,25 @@
+diff -up mozilla-beta/ipc/chromium/src/base/time_posix.cc.gcc47 mozilla-beta/ipc/chromium/src/base/time_posix.cc
+--- mozilla-beta/ipc/chromium/src/base/time_posix.cc.gcc47	2012-01-24 03:00:00.000000000 -0500
++++ mozilla-beta/ipc/chromium/src/base/time_posix.cc	2012-01-30 14:12:49.198472212 -0500
+@@ -14,6 +14,8 @@
+ #include <time.h>
+ #endif
+ 
++#include <unistd.h>
++
+ #include <limits>
+ 
+ #include "base/basictypes.h"
+diff -up mozilla-beta/toolkit/crashreporter/client/Makefile.in.gcc47 mozilla-beta/toolkit/crashreporter/client/Makefile.in
+--- mozilla-beta/toolkit/crashreporter/client/Makefile.in.gcc47	2012-01-30 14:41:14.475441039 -0500
++++ mozilla-beta/toolkit/crashreporter/client/Makefile.in	2012-01-30 14:43:03.587646656 -0500
+@@ -69,6 +69,9 @@ CPPSRCS = \
+   $(STDCXX_COMPAT) \
+   $(NULL)
+ 
++# Needed for moz_free
++LIBS += -L$(LIBXUL_DIST)/lib -lmozalloc
++
+ ifeq ($(OS_ARCH),WINNT)
+ CPPSRCS += crashreporter_win.cpp
+ LIBS += \
