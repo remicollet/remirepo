@@ -1,5 +1,3 @@
-### TODO use system nss when 3.13.1 pushed to stable (f >= 15)
-
 %define nspr_version 4.8.8
 %define nss_version 3.13.1
 %define cairo_version 1.10.0
@@ -31,7 +29,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        9.0
+Version:        10.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -43,7 +41,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20111221.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20120131.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -57,12 +55,12 @@ Source100:      find-external-requires
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
 Patch7:         crashreporter-remove-static.patch
-Patch8:         xulrunner-9.0-secondary-ipc.patch
-Patch10:        xulrunner-2.0-network-link-service.patch
-Patch11:        xulrunner-2.0-NetworkManager09.patch
-Patch12:        mozilla-696393.patch
+Patch8:         xulrunner-10.0-secondary-ipc.patch
+# # cherry-picked from 13afcd4c097c
+Patch13:        xulrunner-9.0-secondary-build-fix.patch
 
 # Build patches
+Patch100:       xulrunner-10.0-gcc47.patch
 
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
@@ -79,7 +77,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
-%if 0%{?fedora} >= 17
+%if 0%{?fedora} >= 15
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if 0%{?fedora} >= 15
@@ -120,7 +118,7 @@ Requires:       mozilla-filesystem
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 Requires:       nspr >= %{nspr_version}
 %endif
-%if 0%{?fedora} >= 17
+%if 0%{?fedora} >= 15
 Requires:       nss >= %{nss_version}
 %endif
 %if %{?system_sqlite}
@@ -171,10 +169,11 @@ cd %{tarballdir}
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch7 -p2 -b .static
-%patch8 -p2 -b .secondary-ipc
-%patch10 -p1 -b .link-service
-%patch11 -p1 -b .NetworkManager09
-%patch12 -p2 -b .696393
+%patch8 -p3 -b .secondary-ipc
+%patch13 -p2 -b .secondary-build
+%if 0%{?fedora} >= 17
+%patch100 -p1 -b .gcc47
+%endif
 cd ..
 
 %patch200 -p1 -b .addons
@@ -190,7 +189,7 @@ cd ..
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
-%if 0%{?fedora} < 17
+%if 0%{?fedora} < 15
   | grep -v system-nss 		\
 %endif
 %if 0%{?fedora} < 14 && 0%{?rhel} < 6
@@ -210,6 +209,11 @@ echo "ac_add_options --disable-libjpeg-turbo"  >> .mozconfig
 %endif
 %if %{enable_mozilla_crashreporter}
 %{__cat} %{SOURCE13} >> .mozconfig
+%endif
+
+# s390(x) fails to start with jemalloc enabled
+%ifarch s390 s390x
+echo "ac_add_options --disable-jemalloc" >> .mozconfig
 %endif
 
 %if %{?system_sqlite}
@@ -401,7 +405,7 @@ fi
 %{mozappdir}/components/binary.manifest
 %{mozappdir}/components/libdbusservice.so
 %{mozappdir}/components/libmozgnome.so
-%{mozappdir}/omni.jar
+%{mozappdir}/omni.ja
 %{mozappdir}/plugin-container
 %{mozappdir}/defaults
 %{mozappdir}/dictionaries
@@ -427,7 +431,6 @@ fi
 %{_datadir}/icons/hicolor/256x256/apps/thunderbird.png
 %{_datadir}/icons/hicolor/32x32/apps/thunderbird.png
 %{_datadir}/icons/hicolor/48x48/apps/thunderbird.png
-%{mozappdir}/hyphenation
 %if %{enable_mozilla_crashreporter}
 %{mozappdir}/crashreporter
 %{mozappdir}/crashreporter.ini
@@ -437,11 +440,17 @@ fi
 %exclude %{_includedir}/%{name}-%{version}
 %exclude %{_libdir}/%{name}-devel-%{version}
 %{mozappdir}/chrome.manifest
-%{mozappdir}/distribution/extensions
+%{mozappdir}/searchplugins
 
 #===============================================================================
 
 %changelog
+* Tue Jan 31 2012 Remi Collet <rpms@famillecollet.com> 10.0-1
+- Thunderbird 10.0, sync with rawhide
+
+* Tue Jan 31 2012 Jan Horak <jhorak@redhat.com> - 10.0-1
+- Update to 10.0
+
 * Wed Dec 21 2011 Remi Collet <rpms@famillecollet.com> 9.0-1
 - Thunderbird 9.0, sync with rawhide
 
