@@ -30,7 +30,7 @@ URL:          http://pecl.php.net/package/mysqlnd_qc
 # From http://www.php.net/manual/en/mysqlnd-qc.configuration.php
 Source1:      mysqlnd_qc.ini
 
-# http://pecl.php.net/bugs/bug.php?id=24365
+# https://bugs.php.net/59959
 Patch0:       mysqlnd_qc-1.1.0-build.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
