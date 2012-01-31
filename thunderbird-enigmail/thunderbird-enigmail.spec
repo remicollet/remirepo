@@ -1,4 +1,4 @@
-%define nspr_version 4.8.8
+%define nspr_version 4.8.9
 %define nss_version 3.13.1
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
@@ -88,7 +88,7 @@ Patch200:       thunderbird-8.0-enable-addons.patch
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 15
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
 %if 0%{?fedora} >= 15
@@ -182,7 +182,7 @@ cat %{SOURCE10} 		\
 %if 0%{?fedora} < 15
   | grep -v system-nss 		\
 %endif
-%if 0%{?fedora} < 14 && 0%{?rhel} < 6
+%if 0%{?fedora} < 15
   | grep -v system-nspr 	\
 %endif
 %if 0%{?fedora} < 15 && 0%{?rhel} <= 6
