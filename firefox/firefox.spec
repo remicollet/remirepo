@@ -399,7 +399,7 @@ fi
 
 %changelog
 * Wed Feb 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0-1
-- update to 9.0.1
+- update to 10.0
 
 * Thu Dec 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 9.0.1-1
 - update to 9.0.1

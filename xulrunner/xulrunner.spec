@@ -282,7 +282,9 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 
 %patch38 -p2 -b .696393
 %patch39 -p1 -b .707993
+%if 0%{?fedora} >= 14
 %patch40 -p2 -b .682832
+%endif
 %patch41 -p2 -b .secondary-build
 %patch42 -p1 -b .706724
 %patch43 -p1 -b .file
