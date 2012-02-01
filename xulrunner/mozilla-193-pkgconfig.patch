@@ -1,24 +1,3 @@
-diff -up xulrunner-1.9.3.0/mozilla-central/config/autoconf.mk.in.pk xulrunner-1.9.3.0/mozilla-central/config/autoconf.mk.in
---- xulrunner-1.9.3.0/mozilla-central/config/autoconf.mk.in.pk	2010-08-06 03:09:27.000000000 +0200
-+++ xulrunner-1.9.3.0/mozilla-central/config/autoconf.mk.in	2010-08-16 11:07:52.000000000 +0200
-@@ -58,14 +58,14 @@ MOZ_PKG_SPECIAL = @MOZ_PKG_SPECIAL@
- prefix		= @prefix@
- exec_prefix	= @exec_prefix@
- bindir		= @bindir@
--includedir	= @includedir@/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
-+includedir	= @includedir@/$(MOZ_APP_NAME)-sdk-$(MOZ_APP_VERSION)
- libdir		= @libdir@
- datadir		= @datadir@
- mandir		= @mandir@
--idldir		= $(datadir)/idl/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
-+idldir		= $(datadir)/idl/$(MOZ_APP_NAME)-sdk-$(MOZ_APP_VERSION)
- 
- installdir	= $(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
--sdkdir		= $(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION)
-+sdkdir		= $(libdir)/$(MOZ_APP_NAME)-sdk-$(MOZ_APP_VERSION)
- 
- DIST		= $(DEPTH)/dist
- LIBXUL_SDK      = @LIBXUL_SDK@
 diff -up xulrunner-1.9.3.0/mozilla-central/xulrunner/installer/libxul-embedding.pc.in.pk xulrunner-1.9.3.0/mozilla-central/xulrunner/installer/libxul-embedding.pc.in
 --- xulrunner-1.9.3.0/mozilla-central/xulrunner/installer/libxul-embedding.pc.in.pk	2010-08-06 03:09:24.000000000 +0200
 +++ xulrunner-1.9.3.0/mozilla-central/xulrunner/installer/libxul-embedding.pc.in	2010-08-16 11:12:32.000000000 +0200
