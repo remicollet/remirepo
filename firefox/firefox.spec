@@ -11,13 +11,13 @@
 
 %global shortname       firefox
 #global mycomment       Beta 4
-%global firefox_dir_ver 9
-%global gecko_version   9.0.1
+%global firefox_dir_ver 10
+%global gecko_version   10.0
 %global gecko_release   1
 %global alpha_version   0
 %global beta_version    0
 %global rc_version      0
-%global datelang        20111222
+%global datelang        20120201
 
 %global mozappdir     %{_libdir}/%{shortname}
 %global langpackdir   %{mozappdir}/langpacks
@@ -48,7 +48,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        9.0.1
+Version:        10.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -143,10 +143,10 @@ cd %{tarballdir}
 %if 0%{?fedora} < 16
   | grep -v enable-system-sqlite   \
 %endif
-%if 0%{?fedora} < 14 && 0%{?rhel} < 6
+%if 0%{?fedora} < 15
   | grep -v with-system-nspr       \
 %endif
-%if 0%{?fedora} < 17
+%if 0%{?fedora} < 15
   | grep -v with-system-nss        \
 %endif
 %if 0%{?fedora} < 15
@@ -174,7 +174,7 @@ echo "ac_add_options --with-libxul-sdk=\
 echo "ac_add_options --disable-ipc" >> .mozconfig
 %endif
 
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 14
 echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
 
@@ -374,7 +374,7 @@ fi
 %if %{build_langpacks}
 %dir %{langpackdir}
 %endif
-%{mozappdir}/omni.jar
+%{mozappdir}/omni.ja
 %{mozappdir}/icons
 %{mozappdir}/searchplugins
 %{mozappdir}/run-mozilla.sh
@@ -398,6 +398,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Feb 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0-1
+- update to 9.0.1
+
 * Thu Dec 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 9.0.1-1
 - update to 9.0.1
 
