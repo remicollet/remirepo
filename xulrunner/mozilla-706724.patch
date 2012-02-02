@@ -1,0 +1,12 @@
+diff -up mozilla-beta/ipc/chromium/src/base/file_util.cc.old mozilla-beta/ipc/chromium/src/base/file_util.cc
+--- mozilla-beta/ipc/chromium/src/base/file_util.cc.old	2012-01-25 13:48:11.000000000 +0100
++++ mozilla-beta/ipc/chromium/src/base/file_util.cc	2012-01-25 13:52:25.096659244 +0100
+@@ -8,7 +8,7 @@
+ #include <io.h>
+ #endif
+ #include <stdio.h>
+-#if defined(ANDROID)
++#if defined(ANDROID) || defined(OS_POSIX)
+ #include <unistd.h>
+ #endif
+ 
