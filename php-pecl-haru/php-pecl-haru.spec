@@ -17,6 +17,8 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel
 BuildRequires: php-pear
 BuildRequires: libharu-devel
+BuildRequires: libpng-devel
+BuildRequires: zlib-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
