@@ -4,7 +4,7 @@
 Summary:      Haru PDF functions
 Name:         php-pecl-haru
 Version:      1.0.3
-Release:      1%{?dist}
+Release:      2%{?dist}
 
 # https://bugs.php.net/60958 - Please Provides LICENSE file
 License:      PHP
@@ -153,6 +153,9 @@ cd ../%{pecl_name}-zts
 
 
 %changelog
+* Thu Feb 02 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
+- build against php 5.4
+
 * Thu Feb 02 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Initial RPM
 - https://bugs.php.net/60958 - Please Provides LICENSE file
