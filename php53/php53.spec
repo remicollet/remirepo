@@ -27,8 +27,6 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-%global phpversion 5.3.9
-
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
 %global with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
@@ -59,8 +57,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.9
-Release: 1%{?dist}.2
+Version: 5.3.10
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -702,7 +700,7 @@ cp ext/ereg/regex/COPYRIGHT regex_COPYRIGHT
 cp ext/gd/libgd/README gd_README
 
 # Multiple builds for multiple SAPIs
-mkdir build-cgi build-apache build-embedded build-zts \
+mkdir build-cgi build-apache build-embedded build-zts build-ztscli \
 %if %{with_fpm}
     build-fpm
 %endif
@@ -719,9 +717,9 @@ rm -f ext/standard/tests/file/bug22414.phpt \
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
-if test "x${pver}" != "x%{phpversion}"; then
-   : Error: Upstream PHP version is now ${pver}, expecting %{phpversion}.
-   : Update the phpversion macro and rebuild.
+if test "x${pver}" != "x%{version}"; then
+   : Error: Upstream PHP version is now ${pver}, expecting %{version}.
+   : Update the version macro and rebuild.
    exit 1
 fi
 
@@ -899,6 +897,7 @@ build --enable-force-cgi-redirect \
       --enable-mysqlnd=shared \
       --with-mysql=shared,mysqlnd \
       --with-mysqli=shared,mysqlnd \
+      --with-mysql-sock=%{mysql_sock} \
 %ifarch x86_64
       %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever}} \
 %else
@@ -990,21 +989,19 @@ build --enable-embed \
       ${without_shared}
 popd
 
-# Build a special thread-safe Apache SAPI
-pushd build-zts
+# Build a special thread-safe (mainly for modules)
+pushd build-ztscli
 
 # RC patch ??? (only for EL-5 ??)
 mkdir -p ext/sqlite/libsqlite/src
 cp ../ext/sqlite/libsqlite/src/encode.c ext/sqlite/libsqlite/src/
 
 EXTENSION_DIR=%{_libdir}/%{phpname}-zts/modules
-build --with-apxs2=%{_sbindir}/apxs \
-      --bindir=%{_origbindir}/%{phpname}-zts \
+build --enable-force-cgi-redirect \
       --includedir=%{_origincludedir}/%{phpname}-zts \
       --libdir=%{_libdir}/%{phpname}-zts \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
-      --enable-force-cgi-redirect \
       --enable-pcntl \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
@@ -1017,6 +1014,7 @@ build --with-apxs2=%{_sbindir}/apxs \
       --enable-mysqlnd=shared \
       --with-mysql=shared,mysqlnd \
       --with-mysqli=shared,mysqlnd \
+      --with-mysql-sock=%{mysql_sock} \
       --enable-mysqlnd-threading \
 %ifarch x86_64
       %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever}} \
@@ -1070,6 +1068,21 @@ build --with-apxs2=%{_sbindir}/apxs \
       --with-recode=shared,%{_prefix}
 popd
 
+# Build a special thread-safe Apache SAPI
+pushd build-zts
+build --with-apxs2=%{_sbindir}/apxs \
+      --includedir=%{_origincludedir}/%{phpname}-zts \
+      --libdir=%{_libdir}/%{phpname}-zts \
+      --enable-maintainer-zts \
+      --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
+      --enable-pdo=shared \
+      --with-mysql=shared,%{_prefix} \
+      --with-mysqli=shared,%{mysql_config} \
+      --with-pdo-mysql=shared,%{mysql_config} \
+      --with-pdo-sqlite=shared,%{_prefix} \
+      ${without_shared}
+popd
+
 ### NOTE!!! EXTENSION_DIR was changed for the -zts build, so it must remain
 ### the last SAPI to be built.
 
@@ -1096,7 +1109,7 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 # Install the extensions for the ZTS version
-make -C build-zts install-build install-programs install-headers install-modules \
+make -C build-ztscli install \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # rename extensions build with mysqlnd
@@ -1106,6 +1119,15 @@ mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqli.so \
    $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/mysqlnd_mysqli.so
 mv $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/pdo_mysql.so \
    $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/pdo_mysqlnd.so
+
+# Install the extensions for the ZTS version modules for libmysql
+make -C build-zts install-modules \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
+
+# rename binary
+mv $RPM_BUILD_ROOT%{_bindir}/php        $RPM_BUILD_ROOT%{_bindir}/zts-php
+mv $RPM_BUILD_ROOT%{_bindir}/phpize     $RPM_BUILD_ROOT%{_bindir}/zts-phpize
+mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/zts-php-config
 
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
@@ -1190,7 +1212,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 # Environment file
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig
-install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig.d/php-fpm
+install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig/php-fpm
 %if 0%{?fedora} >= 15
 # tmpfiles.d
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
@@ -1294,6 +1316,7 @@ install -m 644 -c macros.php \
 
 # Remove unpackaged files
 rm -rf $RPM_BUILD_ROOT%{_libdir}/%{phpname}/modules/*.a \
+       $RPM_BUILD_ROOT%{_libdir}/%{phpname}-zts/modules/*.a \
        $RPM_BUILD_ROOT%{_bindir}/{phptar} \
        $RPM_BUILD_ROOT%{peardir} \
        $RPM_BUILD_ROOT%{_libdir}/libphp5.la
@@ -1399,8 +1422,10 @@ fi
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
-%{_origbindir}/%{phpname}-zts/php-config
-%{_origbindir}/%{phpname}-zts/phpize
+%{_bindir}/zts-php-config
+%{_bindir}/zts-phpize
+# usefull only to test other module during build
+%{_bindir}/zts-php
 %dir %{_origincludedir}/%{phpname}
 %{_includedir}/php
 %{_origincludedir}/%{phpname}-zts
@@ -1416,7 +1441,7 @@ fi
 %files embedded
 %defattr(-,root,root,-)
 %{_libdir}/libphp5.so
-%{_libdir}/libphp5-%{phpversion}.so
+%{_libdir}/libphp5-%{version}.so
 
 %files pgsql -f files.pgsql
 %files mysql -f files.mysql
@@ -1456,6 +1481,11 @@ fi
 %endif
 
 %changelog
+* Fri Feb 03 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-1
+- update to 5.4.0
+  http://www.php.net/ChangeLog-5.php#5.4.0
+- latest changes from rawhide (zts binary with zts- prefix)
+
 * Thu Jan 26 2012 Remi Collet <Fedora@famillecollet.com> 5.3.9-1.2
 - add /etc/sysconfig/php-fpm environment file (#784770)
 

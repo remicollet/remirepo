@@ -43,8 +43,7 @@ diff -up php-5.3.9/build/buildcheck.sh.aconf259 php-5.3.9/build/buildcheck.sh
 diff -up php-5.3.9/configure.in.aconf259 php-5.3.9/configure.in
 --- php-5.3.9/configure.in.aconf259	2012-01-10 19:05:44.787924857 +0100
 +++ php-5.3.9/configure.in	2012-01-10 19:06:55.260926529 +0100
-@@ -1,28 +1,6 @@
- ## $Id: configure.in 322014 2012-01-10 11:21:57Z johannes $ -*- autoconf -*-
+@@ -2,27 +2,5 @@
  dnl ## Process this file with autoconf to produce a configure script.
  
 -divert(1)
