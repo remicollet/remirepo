@@ -21,7 +21,7 @@
 Summary: PHP accelerator, optimizer, encoder and dynamic content cacher
 Name: %{phpname}-eaccelerator
 Version: 0.9.6.1
-Release: 10%{?dist}
+Release: 11%{?dist}
 Epoch: 1
 # The eaccelerator module itself is GPLv2+
 # The PHP control panel is under the Zend license (control.php and dasm.php)
@@ -42,14 +42,7 @@ BuildRequires: %{phpname}-devel >= 5.1.0
 # Required by phpize
 BuildRequires: autoconf, automake, libtool
 
-
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -81,9 +74,9 @@ sed -i 's|/usr/lib/php/modules/|%{php_ztsextdir}/|g;
 
 %build
 cd eaccelerator-%{version}
-%{php_bindir}/phpize
+%{phpbindir}/phpize
 %configure \
-    --with-php-config=%{php_bindir}/php-config \
+    --with-php-config=%{phpbindir}/php-config \
 %ifnarch %{ix86} x86_64
     --with-eaccelerator-userid="%{apache}"
 %endif
@@ -91,9 +84,9 @@ cd eaccelerator-%{version}
 make %{?_smp_mflags}
 
 cd ../eaccelerator-zts
-%{php_ztsbindir}/phpize
+%{phpbindir}/zts-phpize
 %configure \
-    --with-php-config=%{php_ztsbindir}/php-config \
+    --with-php-config=%{phpbindir}/zts-php-config \
 %ifnarch %{ix86} x86_64
     --with-eaccelerator-userid="%{apache}"
 %endif
@@ -178,6 +171,9 @@ fi
 
 
 %changelog
+* Fri Feb 03 2012 Remi Collet <remi@fedoraproject.org> - 1:0.9.6.1-11
+- rebuild against PHP 5.3.10
+
 * Tue Jan 10 2012 Remi Collet <remi@fedoraproject.org> - 1:0.9.6.1-10
 - rebuild against PHP 5.3.9
 - add ZTS build
