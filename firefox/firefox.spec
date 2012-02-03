@@ -49,7 +49,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
 Version:        10.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -73,6 +73,8 @@ Patch14:        firefox-5.0-asciidel.patch
 Patch15:        firefox-8.0-enable-addons.patch
 
 # Upstream patches
+# fixes non functional web development tools, obsolete by version 11
+Patch100:       mozilla-703633.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -129,6 +131,7 @@ cd %{tarballdir}
 %patch15 -p2 -b .addons
 
 # Upstream patches
+%patch100 -p1 -b .703633
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -398,8 +401,17 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Feb 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0-2
+- fixes non functional web development tools (from rawhide)
+
+* Fri Feb  3 2012 Jan Horak <jhorak@redhat.com> - 10.0-2
+- Fixed rhbz#786983
+
 * Wed Feb 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0-1
 - update to 10.0
+
+* Tue Jan 31 2012 Jan Horak <jhorak@redhat.com> - 10.0-1
+- Update to 10.0
 
 * Thu Dec 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 9.0.1-1
 - update to 9.0.1
