@@ -1,12 +1,14 @@
 Name:           libzip2
 Version:        0.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          Applications/File
 License:        BSD
 URL:            http://www.nih.at/libzip/index.html
 Source0:        http://www.nih.at/libzip/libzip-%{version}.tar.bz2
+# to handle multiarch heder, ex from mysql-devel package
+Source1:        zipconf.h
 
 Patch0:         libzip-0.10-php.patch
 
@@ -62,6 +64,10 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
+# Handle multiarch headers
+mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h \
+   $RPM_BUILD_ROOT%{_includedir}/zipconf_$(uname -i).h
+install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_includedir}/zipconf.h
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -86,14 +92,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/zip.h
+%{_includedir}/zip*.h
 %{_libdir}/libzip.so
-%{_libdir}/libzip/include/zipconf.h
 %{_libdir}/pkgconfig/libzip.pc
 %{_mandir}/man3/*zip*
 
 
 %changelog
+* Sat Feb 04 2012 Remi Collet <Fedora@FamilleCollet.com> 0.10-2
+- improves multiarch headers (ex from MySQL)
+
 * Sun Mar 20 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10-1
 - update to 0.10
 - rename to libzip2 and split libs in sub package
