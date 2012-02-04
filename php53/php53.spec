@@ -13,6 +13,7 @@
 %global oci8ver     1.4.7
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
+%global mysql_sock %(mysql_config --socket || echo /var/lib/mysql/mysql.sock)
 
 %ifarch ppc ppc64
 %global oraclever 10.2.0.2
@@ -58,7 +59,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -1481,6 +1482,10 @@ fi
 %endif
 
 %changelog
+* Sat Feb 04 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-2
+- fix mysql.sock default path
+- missing %%__ztsphp macro
+
 * Fri Feb 03 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-1
 - update to 5.4.0
   http://www.php.net/ChangeLog-5.php#5.4.0

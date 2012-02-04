@@ -15,5 +15,4 @@
 %php_ztsincldir %{_includedir}/@PHPNAME@-zts/php
 
 %__php         %{_bindir}/@PHPNAME@/php
-%php_bindir    %{_bindir}/@PHPNAME@
-%php_ztsbindir %{_bindir}/@PHPNAME@-zts
+%__ztsphp      %{_bindir}/@PHPNAME@/zts-php
