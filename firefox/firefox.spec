@@ -12,12 +12,12 @@
 %global shortname       firefox
 #global mycomment       Beta 4
 %global firefox_dir_ver 10
-%global gecko_version   10.0
+%global gecko_version   10.0.1
 %global gecko_release   1
 %global alpha_version   0
 %global beta_version    0
 %global rc_version      0
-%global datelang        20120201
+%global datelang        20120209
 
 %global mozappdir     %{_libdir}/%{shortname}
 %global langpackdir   %{mozappdir}/langpacks
@@ -48,8 +48,8 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        10.0
-Release:        2%{?dist}
+Version:        10.0.1
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -401,6 +401,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Feb 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0.1-1
+- update to 10.0.1, sync with rawhide
+
+* Thu Feb  9 2012 Jan Horak <jhorak@redhat.com> - 10.0.1-1
+- Update to 10.0.1
+
 * Fri Feb 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0-2
 - fixes non functional web development tools (from rawhide)
 
