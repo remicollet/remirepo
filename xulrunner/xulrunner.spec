@@ -1,5 +1,5 @@
 # Use system libvpx
-%if 0%{?fedora} < 17
+%if 0%{?fedora} < 16
 %define system_vpx        0
 %else
 %define system_vpx        1
@@ -81,7 +81,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        10.0
+Version:        10.0.1
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -562,6 +562,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Feb 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0.1-1
+- update to 10.0.1, sync with rawhide
+
+* Thu Feb  9 2012 Jan Horak <jhorak@redhat.com> - 10.0.1-1
+- Update to 10.0.1
+
 * Wed Feb 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0-1
 - update to 10.0, sync with rawhide
 
