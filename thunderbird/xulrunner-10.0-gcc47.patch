@@ -23,3 +23,41 @@ diff -up mozilla-beta/toolkit/crashreporter/client/Makefile.in.gcc47 mozilla-bet
  ifeq ($(OS_ARCH),WINNT)
  CPPSRCS += crashreporter_win.cpp
  LIBS += \
+diff -up mozilla-beta/ipc/chromium/src/base/file_util_linux.cc.file mozilla-beta/ipc/chromium/src/base/file_util_linux.cc
+--- mozilla-beta/ipc/chromium/src/base/file_util_linux.cc.file	2012-01-24 09:00:00.000000000 +0100
++++ mozilla-beta/ipc/chromium/src/base/file_util_linux.cc	2012-01-25 15:30:43.707796295 +0100
+@@ -5,6 +5,9 @@
+ #include "base/file_util.h"
+ 
+ #include <fcntl.h>
++#if defined(ANDROID) || defined(OS_POSIX)
++#include <unistd.h>
++#endif
+ 
+ #include <string>
+ #include <vector>
+diff -up mozilla-beta/ipc/chromium/src/base/message_pump_libevent.cc.file mozilla-beta/ipc/chromium/src/base/message_pump_libevent.cc
+--- mozilla-beta/ipc/chromium/src/base/message_pump_libevent.cc.file	2012-01-24 09:00:00.000000000 +0100
++++ mozilla-beta/ipc/chromium/src/base/message_pump_libevent.cc	2012-01-25 15:13:11.947771212 +0100
+@@ -6,6 +6,9 @@
+ 
+ #include <errno.h>
+ #include <fcntl.h>
++#if defined(ANDROID) || defined(OS_POSIX)
++#include <unistd.h>
++#endif
+ 
+ #include "eintr_wrapper.h"
+ #include "base/logging.h"
+diff -up mozilla-beta/ipc/chromium/src/base/file_util.cc.old mozilla-beta/ipc/chromium/src/base/file_util.cc
+--- mozilla-beta/ipc/chromium/src/base/file_util.cc.old	2012-01-25 13:48:11.000000000 +0100
++++ mozilla-beta/ipc/chromium/src/base/file_util.cc	2012-01-25 13:52:25.096659244 +0100
+@@ -8,7 +8,7 @@
+ #include <io.h>
+ #endif
+ #include <stdio.h>
+-#if defined(ANDROID)
++#if defined(ANDROID) || defined(OS_POSIX)
+ #include <unistd.h>
+ #endif
+ 
