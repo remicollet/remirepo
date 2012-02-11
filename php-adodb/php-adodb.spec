@@ -2,7 +2,7 @@
 
 Name:           php-adodb
 Summary:        Database abstraction layer for PHP
-Version:        5.12
+Version:        5.15
 Release:        1%{?dist}
 
 License:        BSD or LGPLv2+
@@ -59,6 +59,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_var}/www/icons/*
 
 %changelog
+* Sat Feb 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.15-1
+- upstream 5.15, rebuild for remi repository
+
+* Wed Feb  8 2012 Gianluca Sforna <giallu@gmail.com> - 5.15-1
+- New upstream release
+
 * Sat Aug 06 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.12-1
 - rebuild for remi repository
 
