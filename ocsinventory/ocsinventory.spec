@@ -11,7 +11,7 @@
 Name:        ocsinventory
 Summary:     Open Computer and Software Inventory Next Generation
 
-Version:     2.0.3
+Version:     2.0.4
 Release:     1%{?dist}
 
 Group:       Applications/Internet
@@ -21,10 +21,6 @@ URL:         http://www.ocsinventory-ng.org/
 # This change for each version... thanks launchpad :(
 Source0:     http://launchpad.net/ocsinventory-server/stable-2.0/%{version}/+download/%{tarname}-%{version}.tar.gz
 Source1:     ocsinventory-reports.conf
-
-# s/mysql_escape_string/mysql_real_escape_string/
-# http://bazaar.launchpad.net/~ocsinventory-core/ocsinventory-ocsreports/stable-2.0/revision/800
-Patch0:      %{name}-deprecated.patch
 
 BuildArch:   noarch
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -103,12 +99,9 @@ de données.
 %package reports
 Group:    Applications/Internet
 Summary:  OCS Inventory NG - Communication server
-# From PHP_Compat : date, mysql, ereg, pcre, zip, hash, xml, gd, zlib 
+# From phpci : curl, date, dom, imap, ldap, mysql, openssl, pcre, session, xml, zlib
 Requires: php
-Requires: php-mysql php-gd php-domxml
-%if 0%{?fedora} < 16
-Requires: php-zip
-%endif
+Requires: php-mysql php-gd php-xml php-imap php-ldap
 # Required by the original setup script, but not detected automatically :
 Requires: perl(DBD::mysql)
 # Required by ipdiscover-util.pl (nmap and nmblookup)
@@ -132,8 +125,6 @@ navigateur favori.
 %prep
 %setup -q -n %{tarname}-%{version}
 
-%patch0 -p0
-
 chmod -x binutils/ocs-errors
 
 cat >external-agents.conf <<EOF
@@ -141,8 +132,12 @@ cat >external-agents.conf <<EOF
 # WARNING may not be supported by OCS NG Community !
 # 1 line per agent, with full name (including version)
 
-# Ex, to allow fusioninventory_agent, uncomment next line
+# Ex, to allow fusioninventory_agent, uncomment next lines
 #FusionInventory-Agent_v2.1.9
+#FusionInventory-Agent_v2.1.10
+#FusionInventory-Agent_v2.1.11
+#FusionInventory-Agent_v2.1.12
+#FusionInventory-Agent_v2.1.13
 EOF
 
 
@@ -316,6 +311,9 @@ fi
 
 
 %changelog
+* Sat Feb 11 2012 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- update to 2.0.4
+
 * Mon Nov 28 2011 Remi Collet <Fedora@famillecollet.com> - 2.0.3-1
 - update to 2.0.3
 - drop patches merged upstream
