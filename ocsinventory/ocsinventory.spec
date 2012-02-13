@@ -177,7 +177,7 @@ sed -e 's;PATH_TO_LOG_DIRECTORY;%{_localstatedir}/log/ocsinventory-server;' \
 
 # default configuration (localhost) should work on "simple" installation
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
-%{__sed} -e "s;DATABASE_SERVER;localhost;g" \
+sed -e "s;DATABASE_SERVER;localhost;g" \
     -e "s;DATABASE_PORT;3306;g" \
 %if 0%{?rhel} == 4
     -e "s;VERSION_MP;1;g" \
@@ -204,7 +204,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/ocsinventory/ocsinventory-reports
 mv %{buildroot}%{_datadir}/ocsinventory-reports/ocsreports/dbconfig.inc.php \
    %{buildroot}%{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php
 
-# Not usefull for now (path is harcoded)
 sed -i -e '/CONF_MYSQL/s;dbconfig.inc.php;%{_sysconfdir}/ocsinventory/ocsinventory-reports/dbconfig.inc.php;' \
     %{buildroot}%{_datadir}/ocsinventory-reports/ocsreports/var.php
 
@@ -222,8 +221,6 @@ sed -e "s;OCSREPORTS_ALIAS;/ocsreports;g" \
     -e "s;PATH_TO_OCSREPORTS_DIR;%{_datadir}/ocsinventory-reports/ocsreports;g" \
     -e "s;PACKAGES_ALIAS;/download;g" \
     -e "s;PATH_TO_PACKAGES_DIR;%{_localstatedir}/lib/ocsinventory-reports/download;g" \
-    -e "s;SNMP_ALIAS;/snmp;g" \
-    -e "s;PATH_TO_SNMP_DIR;%{_localstatedir}/lib/ocsinventory-reports/snmp;g" \
     %{SOURCE1} >%{buildroot}%{_sysconfdir}/httpd/conf.d/ocsinventory-reports.conf
 
 
