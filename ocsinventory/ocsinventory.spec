@@ -12,7 +12,7 @@ Name:        ocsinventory
 Summary:     Open Computer and Software Inventory Next Generation
 
 Version:     2.0.4
-Release:     1%{?dist}
+Release:     2%{?dist}
 
 Group:       Applications/Internet
 License:     GPLv2
@@ -101,7 +101,7 @@ Group:    Applications/Internet
 Summary:  OCS Inventory NG - Communication server
 # From phpci : curl, date, dom, imap, ldap, mysql, openssl, pcre, session, xml, zlib
 Requires: php
-Requires: php-mysql php-gd php-xml php-imap php-ldap
+Requires: php-mysql php-gd php-xml php-imap php-ldap php-mbstring
 # Required by the original setup script, but not detected automatically :
 Requires: perl(DBD::mysql)
 # Required by ipdiscover-util.pl (nmap and nmblookup)
@@ -311,6 +311,9 @@ fi
 
 
 %changelog
+* Mon Feb 13 2012 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
+- missing dep on php-mbstring
+
 * Sat Feb 11 2012 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - update to 2.0.4
 
