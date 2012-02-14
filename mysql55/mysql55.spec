@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.5.20
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -35,6 +35,8 @@ Source10: mysql.tmpfiles.d
 Source11: mysqld.service
 Source12: mysqld-prepare-db-dir
 Source13: mysqld-wait-ready
+Source14: rh-skipped-tests-base.list
+Source15: rh-skipped-tests-arm.list
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh
 
@@ -47,13 +49,13 @@ Patch5: mysql-stack-guard.patch
 Patch6: mysql-chain-certs.patch
 Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
-# Patch9: mysql-disable-test.patch
 Patch10: mysql-plugin-bool.patch
 Patch11: mysql-s390-tsc.patch
 Patch12: mysql-openssl-test.patch
 Patch13: mysqld-nowatch.patch
 Patch14: mysql-va-list.patch
 Patch15: mysql-netdevname.patch
+Patch16: mysql-logrotate.patch
 
 # RC patch for backports
 Patch21: mysql-readline.patch
@@ -82,6 +84,8 @@ Requires: bash
 Conflicts: MySQL
 # mysql-cluster used to be built from this SRPM, but no more
 Obsoletes: mysql-cluster < 5.1.44
+# Virtual provides present in upstream's RPM (used by some app)
+Provides: mysql-client = %{version}-%{release}
 
 # When rpm 4.9 is universal, this could be cleaned up:
 %global __perl_requires %{SOURCE999}
@@ -99,6 +103,11 @@ Summary: The shared libraries required for MySQL clients
 Group: Applications/Databases
 Requires: /sbin/ldconfig
 Obsoletes: compat-mysql55 <= %{version}
+%if 0%{?rhel} == 5
+# EL-5 mysql 5.0.x have no mysql/mysql-libs
+# This circular dep. should make update simpler
+Requires: %{name}%{?_isa} = %{version}-%{release}
+%endif
 
 %description libs
 The mysql-libs package provides the essential shared libraries for any 
@@ -219,7 +228,6 @@ rm -f Docs/mysql.info
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-# si below %patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %if 0%{?fedora} >= 9 || 0%{?rhel} >= 5
@@ -232,6 +240,7 @@ rm -f Docs/mysql.info
 %endif
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 # Remi specific patches
 %patch21 -p1 -b .readline
@@ -242,15 +251,12 @@ rm -f mysql-test/t/ssl_8k_key-master.opt
 # upstream has fallen down badly on symbol versioning, do it ourselves
 cp %{SOURCE8} libmysql/libmysql.version
 
-# Instead of Pach 9 - Simpler way
-cat <<EOF >>mysql-test/t/disabled.def
-#
-outfile_loaddata         : bug#46895 code wrong, expected results wrong too
-sys_vars.plugin_dir_basic : bug#52223 fails for lib64 library directory
-innodb.innodb            : bug#60155 has platform-dependent results
-main.information_schema  : fails in mock, ok after install :(
-EOF
-
+# generate a list of tests that fail, but are not disabled by upstream
+cat %{SOURCE14} > mysql-test/rh-skipped-tests.list
+# disable some tests failing on ARM architectures
+%ifarch %{arm}
+cat %{SOURCE15} >> mysql-test/rh-skipped-tests.list
+%endif
 
 %build
 
@@ -351,7 +357,7 @@ cd ../..
   LD_LIBRARY_PATH=$PWD/libservices
   export LD_LIBRARY_PATH
 
-#  make test
+  make test
 
   # The cmake build scripts don't provide any simple way to control the
   # options for mysql-test-run, so ignore the make target and just call it
@@ -359,16 +365,18 @@ cd ../..
   # --force to continue tests after a failure
   # no retries please
   # test SSL with --ssl
+  # skip tests that are listed in rh-skipped-tests.list
   # avoid redundant test runs with --binlog-format=mixed
   # increase timeouts to prevent unwanted failures during mass rebuilds
-  cd mysql-test
   (
-    # perl ./mysql-test-run.pl --force --retry=0 --mysqld=--binlog-format=mixed --suite-timeout=720 --testcase-timeout=30
-    # Run less test to speed up build process
-    %{__perl} ./mysql-test-run.pl --force --ssl --mysqld=--binlog-format=mixed --suite=main
+    cd mysql-test
+    perl ./mysql-test-run.pl --force --retry=0 --ssl \
+	--skip-test-list=rh-skipped-tests.list \
+	--mysqld=--binlog-format=mixed \
+	--suite-timeout=720 --testcase-timeout=30 --suite=main
+    # cmake build scripts will install the var cruft if left alone :-(
+    rm -rf var
   ) 
-  # cmake build scripts will install the var cruft if left alone :-(
-  rm -rf var
 %endif
 
 %install
@@ -472,10 +480,14 @@ rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/magic
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/ndb-config-2-node.ini
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql.server
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysqld_multi.server
-rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql-log-rotate
 rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/comp_err.1*
 rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/mysql-stress-test.pl.1*
 rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/mysql-test-run.pl.1*
+
+# put logrotate script where it needs to be
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
+mv ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql-log-rotate $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/mysqld
+chmod 644 $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/mysqld
 
 mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 echo "%{_libdir}/mysql" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
@@ -483,6 +495,9 @@ echo "%{_libdir}/mysql" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
 # copy additional docs into build tree so %%doc will find them
 cp %{SOURCE6} README.mysql-docs
 cp %{SOURCE7} README.mysql-license
+
+# install the list of skipped tests to be available for user runs
+install -m 0644 mysql-test/rh-skipped-tests.list ${RPM_BUILD_ROOT}%{_datadir}/mysql-test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -730,6 +745,7 @@ fi
 %attr(0755,mysql,mysql) %dir /var/run/mysqld
 %attr(0755,mysql,mysql) %dir /var/lib/mysql
 %attr(0640,mysql,mysql) %config(noreplace) %verify(not md5 size mtime) /var/log/mysqld.log
+%config(noreplace) %{_sysconfdir}/logrotate.d/mysqld
 
 %files devel
 %defattr(-,root,root)
@@ -764,6 +780,30 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Tue Feb 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.20-2
+- sync with rawhide
+- circular dep for mysql / mysql-libs to fix EL5 update
+- provides mysql-client (per user request)
+
+* Fri Feb 10 2012 Tom Lane <tgl@redhat.com> 5.5.20-2
+- Revise our test-disabling method to make it possible to disable tests on a
+  platform-specific basis, and also to get rid of mysql-disable-test.patch,
+  which broke in just about every upstream update (Honza Horak)
+- Disable cycle-counter-dependent regression tests on ARM, since there is
+  not currently any support for that in Fedora ARM kernels
+Resolves: #773116
+- Add some comments to mysqld.service documenting how to customize it
+Resolves: #785243
+
+* Fri Jan 27 2012 Tom Lane <tgl@redhat.com> 5.5.20-1
+- Update to MySQL 5.5.20, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-20.html
+  as well as security fixes described at
+  http://www.oracle.com/technetwork/topics/security/cpujan2012-366304.html
+Resolves: #783828
+- Re-include the mysqld logrotate script, now that it's not so bogus
+Resolves: #547007
+
 * Thu Jan 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.20-1
 - update to MySQL 5.5.20 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-20.html
