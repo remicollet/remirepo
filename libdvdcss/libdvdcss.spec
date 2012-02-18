@@ -1,11 +1,17 @@
 Summary:    A portable abstraction library for DVD decryption
 Name:       libdvdcss
 Version:    1.2.11
-Release:    1%{?dist}
+Release:    2%{?dist}
 License:    GPLv2+
 Group:      System Environment/Libraries
 Source:     http://www.videolan.org/pub/videolan/libdvdcss/%{version}/libdvdcss-%{version}.tar.bz2
 URL:        http://www.videolan.org/libdvdcss/
+
+# http://svn.videolan.org/revision.php?repname=libdvdcss&path=%2F&rev=249&peg=249
+# If unsure, assume the drive is of RPC-I type
+# This can happen when patched drives do not answer to ioctl_ReportRPC correctly
+Patch0:     %{name}-rpc.patch
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -31,6 +37,8 @@ you will need to install %{name}-devel.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .rpc1
 
 
 %build
@@ -62,6 +70,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 18 2012 Remi Collet <RPMS@famillecollet.com> - 1.2.11-2
+- If unsure, assume the drive is of RPC-I type
+
 * Mon Nov 22 2011 Remi Collet <RPMS@famillecollet.com> - 1.2.11-1
 - Update to 1.2.11
 
