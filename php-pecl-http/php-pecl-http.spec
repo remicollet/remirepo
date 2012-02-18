@@ -3,17 +3,20 @@
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global prever    dev4
+%global prever    dev5
 %global devver    dev
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.3.%{prever}%{?dist}
+Release:        0.4.%{prever}%{?dist}
 Summary:        Extended HTTP support
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/pecl_http
+# upstream tarball is broken, regenerated using
+# star -x -f pecl_http-2.0.0dev5.tgz
+# tar czf pecl_http-2.0.0dev5.tgz package.xml pecl_http-2.0.0dev5
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
@@ -35,7 +38,13 @@ Provides:       php-pecl(%{pecl_name}) = %{version}%{devver}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -153,6 +162,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 18 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.dev5
+- update to 2.0.0dev5
+- fix filters
+
 * Wed Jan 25 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.dev4
 - zts binary in /usr/bin with zts prefix
 
