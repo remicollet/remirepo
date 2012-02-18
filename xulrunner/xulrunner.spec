@@ -1,27 +1,21 @@
-# Use system libvpx
-%if 0%{?fedora} < 16
-%define system_vpx        0
-%else
-%define system_vpx        1
-%endif
 # Use system sqlite?
 %if 0%{?fedora} < 16
 %define system_sqlite     0
 %else
 %define system_sqlite     1
 %endif
-# Use system nspr/nss/cairo
+# Use system nspr/nss/cairo/libvpx
 %if 0%{?fedora} < 15
 %define system_nspr       0
 %define system_nss        0
 %define system_cairo      0
+%define system_vpx        0
 %else
 %define system_nspr       1
 %define system_nss        1
 %define system_cairo      1
+%define system_vpx        1
 %endif
-
-# TODO low requirement for libvpx when 1.0.0 available in stable
 
 %global shortname         xulrunner
 
@@ -81,7 +75,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        10.0.1
+Version:        10.0.2
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -562,6 +556,15 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Feb 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0.2-1
+- update to 10.0.2
+
+* Tue Feb 16 2012 Martin Stransky <stransky@redhat.com> - 10.0.1-3
+- Added fix for mozbz#727401
+
+* Tue Feb 14 2012 Martin Stransky <stransky@redhat.com> - 10.0.1-2
+- Allow network manager to handle the offline status
+
 * Thu Feb 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0.1-1
 - update to 10.0.1, sync with rawhide
 
