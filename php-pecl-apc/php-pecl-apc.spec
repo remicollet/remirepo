@@ -4,7 +4,7 @@
 %global php_version %((echo 0; php-config --version 2>/dev/null) | tail -1)
 %global pecl_name APC
 
-%global svnver 316786
+%global svnver 322617
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
@@ -13,10 +13,10 @@ License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 %if 0%{?svnver}
-# svn co -r 316786 https://svn.php.net/repository/pecl/apc/trunk apc-svn316786
-# tar czf apc-svn316786.tgz apc-svn316786
+# svn co -r 322617 https://svn.php.net/repository/pecl/apc/trunk apc-svn322617
+# tar czf apc-svn322617.tgz apc-svn322617
 Source:        apc-svn%{svnver}.tgz
-Release:       4.svn%{svnver}%{?dist}
+Release:       5.svn%{svnver}%{?dist}
 %else
 Release:       3%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
@@ -85,13 +85,13 @@ cp -pr APC-%{version} APC-%{version}-zts
 
 %build
 cd APC-%{version}-zts
-%{php_ztsbindir}/phpize
-%configure --enable-apc-mmap --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure --enable-apc-mmap --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 cd ../APC-%{version}
-%{php_bindir}/phpize
-%configure --enable-apc-mmap --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure --enable-apc-mmap --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 
@@ -195,6 +195,11 @@ TEST_PHP_EXECUTABLE=%{__php} %{__php} run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=apc.so
 
+cd ../%{pecl_name}-%{version}-zts
+TEST_PHP_EXECUTABLE=%{__ztsphp} %{__ztsphp} run-tests.php \
+    -n -q -d extension_dir=modules \
+    -d extension=apc.so
+
 
 %if 0%{?pecl_install:1}
 %post
@@ -232,6 +237,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.0.6-5.svn322617
+- pull changes from SVN revision 322617
+
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.0.6-4.svn316786
 - pull changes from SVN revision 316786
 - build against php 5.4
