@@ -29,7 +29,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-%global rcver      RC7
+%global rcver      RC8
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -57,7 +57,7 @@ Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.15.%{rcver}%{?dist}
+Release: 0.16.%{rcver}%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -1445,6 +1445,9 @@ fi
 %endif
 
 %changelog
+* Sat Feb 18 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.16.RC8
+- update to 5.4.0RC8
+
 * Sat Feb 04 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.15.RC7
 - update to 5.4.0RC7
 
