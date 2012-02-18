@@ -151,7 +151,14 @@ Requires(pre): httpd
 %global peardir      %{_datadir}/%{phpname}/pear
 %endif
 
+# Don't provides extensions, which are not shared library, as .so
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/php-zts/modules/.*\.so$}
 %{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/php/modules/.*\\.so$
+%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/php-zts/modules/.*\\.so$
 
 
 %description
