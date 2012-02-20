@@ -23,6 +23,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-channel(pear.horde.org)
 Requires:       php-common >= 5.2.0
+Requires:       php-pear(PEAR) >= 1.7.0
 
 Provides:       php-pear(pear.horde.org/Horde_Translation) = %{version}
 
