@@ -2,7 +2,7 @@
 %global pear_name Horde_Nls
 
 Name:           php-horde-Horde-Nls
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        Native Language Support (NLS)
 
@@ -10,16 +10,23 @@ Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+# /usr/lib/rpm/find-lang.sh from fedora 16
+Source1:        find-lang.sh
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.4.9-1.2
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-channel(pear.horde.org)
 BuildRequires:  gettext
+
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php-pear(pear.horde.org/Horde_Util) >= 1.0.0
 Requires:       php-pear(pear.horde.org/Horde_Util) < 2.0.0
-Requires:       php-pear(PEAR) >= 1.7.0
+# Optionnal
+Requires:       php-pecl(geoip)
+
 Provides:       php-pear(pear.horde.org/Horde_Nls) = %{version}
-BuildRequires:  php-channel(pear.horde.org)
 
 %description
 Common methods for handling language data, timezones, and hostname->country
@@ -55,7 +62,17 @@ rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+%if 0%{?fedora} > 13
 %find_lang %{pear_name}
+%else
+sh %{SOURCE1} $RPM_BUILD_ROOT %{pear_name}
+%endif
+head %{pear_name}.lang
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -69,6 +86,7 @@ fi
 
 
 %files -f %{pear_name}-%{version}/%{pear_name}.lang
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Nls
@@ -80,5 +98,10 @@ fi
 %dir %{pear_datadir}/Horde_Nls/locale/*/LC_MESSAGES
 
 %changelog
+* Mon Feb 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.4-1
+- update to 1.1.4
+- backport for remi repo
+- hack for find_lang on old distro
+
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.1.3-1
 - Initial package
