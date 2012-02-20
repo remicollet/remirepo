@@ -11,6 +11,7 @@ License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(pear.horde.org)
@@ -19,14 +20,10 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(pear.horde.org/Horde_Url) >= 1.0.0
 Requires:       php-pear(pear.horde.org/Horde_Url) < 2.0.0
-Requires:       php-pear(pear.horde.org/Horde_Exception) >= 1.0.0
-Requires:       php-pear(pear.horde.org/Horde_Exception) < 2.0.0
-Requires:       php-pear(PEAR) >= 1.7.0
-Requires:       php-common >= 5.2.0
 Requires:       php-xml >= 5.2.0
 Requires:       php-mbstring >= 5.2.0
+
 Provides:       php-pear(pear.horde.org/%{pear_name}) = %{version}
-Requires:       php-channel(pear.horde.org)
 
 %description
 These classes provide functionality useful for all kind of applications.
@@ -56,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -68,6 +68,7 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Array
@@ -79,5 +80,8 @@ fi
 %{pear_testdir}/Horde_Util
 
 %changelog
+* Mon Feb 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-1
+- backport for remi repo
+
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.2.0-1
 - Initial package
