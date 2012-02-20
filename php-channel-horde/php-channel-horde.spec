@@ -8,11 +8,14 @@ License:        Public Domain
 URL:            http://pear.horde.org/
 Source0:        http://pear.horde.org/channel.xml
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.4.9-1.2
+
 Requires:       php-pear(PEAR)
 Requires(post): /usr/bin/pear
 Requires(postun): /usr/bin/pear
+
 Provides:       php-channel(pear.horde.org)
 
 %description
@@ -53,8 +56,12 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %{pear_xmldir}/pear.horde.org.xml
 
 %changelog
+* Mon Feb 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0-1
+- backport for remi repo
+
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.0-1
 - Initial package
