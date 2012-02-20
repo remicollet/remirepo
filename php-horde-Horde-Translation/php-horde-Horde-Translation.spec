@@ -10,11 +10,14 @@ Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+# /usr/lib/rpm/find-lang.sh from fedora 16
+Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(pear.horde.org)
+BuildRequires:  gettext
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -42,7 +45,7 @@ sed -e '/%{pear_name}.po/d' \
 cd %{pear_name}-%{version}
 
 # Regenerate the locales
-for po in $(find locale -name \*.po)
+for po in $(find test -name \*.po)
 do
    msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
@@ -58,9 +61,16 @@ rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+%if 0%{?fedora} > 13
 %find_lang %{pear_name}
 %find_lang Horde_Other
+%else
+sh %{SOURCE1} $RPM_BUILD_ROOT %{pear_name}
+sh %{SOURCE1} $RPM_BUILD_ROOT Horde_Other
+%endif
 cat Horde_Other.lang >> %{pear_name}.lang
+cat %{pear_name}.lang
 
 %clean
 rm -rf $RPM_BUILD_ROOT
