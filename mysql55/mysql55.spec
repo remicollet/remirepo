@@ -1,6 +1,6 @@
 Name: mysql
-Version: 5.5.20
-Release: 2%{?dist}
+Version: 5.5.21
+Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -780,6 +780,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Tue Feb 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.21-1
+- update to MySQL 5.5.21 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-21.html
+
 * Tue Feb 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.20-2
 - sync with rawhide
 - circular dep for mysql / mysql-libs to fix EL5 update
