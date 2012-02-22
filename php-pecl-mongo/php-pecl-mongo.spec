@@ -1,6 +1,5 @@
 %{!?phpname:    %{expand: %%global phpname     php}}
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global pecl_name mongo
 
@@ -15,13 +14,16 @@
 
 Summary:      PHP MongoDB database driver
 Name:         %{phpname}-pecl-mongo
-Version:      1.2.7
-Release:      2%{?dist}
+Version:      1.2.8
+Release:      1%{?dist}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# Fix ZTS build, from github
+Patch0:       925acee56230e4fbe91897803bf9d2dc7493464e.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{phpname}-devel >= 5.1.0
@@ -42,6 +44,18 @@ in PHP.
 
 %prep 
 %setup -c -q
+cd %{pecl_name}-%{version}
+
+sed -i -e '/PHP_MONGO_VERSION/s/1.2.9dev/1.2.8/' php_mongo.h
+
+extver=$(sed -n '/#define PHP_MONGO_VERSION/{s/.* "//;s/".*$//;p}' php_mongo.h)
+if test "x${extver}" != "x%{version}%{?pre}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
+
+%patch0 -p1 -b .build
+cd ..
 
 cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
@@ -86,13 +100,13 @@ EOF
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
-%configure  --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure  --with-php-config=%{_bindir}/php-config
 %{__make} %{?_smp_mflags}
 
 cd ../%{pecl_name}-%{version}-zts
-%{php_ztsbindir}/phpize
-%configure  --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure  --with-php-config=%{_bindir}/zts-php-config
 %{__make} %{?_smp_mflags}
 
 
@@ -128,11 +142,15 @@ fi
 
 
 %check
-cd %{pecl_name}-%{version}
 # only check if build extension can be loaded
 
 %{__php} -n \
-    -d extension_dir=modules \
+    -d extension_dir=%{pecl_name}-%{version}/modules \
+    -d extension=%{pecl_name}.so \
+    -i | grep "MongoDB Support => enabled"
+
+%{__ztsphp} -n \
+    -d extension_dir=%{pecl_name}-%{version}-zts/modules \
     -d extension=%{pecl_name}.so \
     -i | grep "MongoDB Support => enabled"
 
@@ -148,6 +166,9 @@ cd %{pecl_name}-%{version}
 
 
 %changelog
+* Wed Feb 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.8-1
+- update to 1.2.7, php 5.3 build
+
 * Thu Jan 05 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.7-2
 - php 5.4 build
 
