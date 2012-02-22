@@ -1,0 +1,107 @@
+From 925acee56230e4fbe91897803bf9d2dc7493464e Mon Sep 17 00:00:00 2001
+From: Derick Rethans <github@derickrethans.nl>
+Date: Wed, 22 Feb 2012 17:43:25 +0000
+Subject: [PATCH] Fixed ZTS issues.
+
+---
+ gridfs.c    |    6 +++---
+ util/pool.c |   10 +++++-----
+ util/pool.h |    2 +-
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/gridfs.c b/gridfs.c
+index c419b73..8b3d07c 100644
+--- a/gridfs.c
++++ b/gridfs.c
+@@ -337,7 +337,7 @@ static void add_md5(zval *zfile, zval *zid, mongo_collection *c TSRMLS_DC) {
+   }
+ }
+ 
+-static cleanup_broken_insert(INTERNAL_FUNCTION_PARAMETERS, zval *zid TSRMLS_CC)
++static cleanup_broken_insert(INTERNAL_FUNCTION_PARAMETERS, zval *zid)
+ {
+ 	zval *chunks, *files, *criteria_chunks, *criteria_files;
+ 	char *message = NULL;
+@@ -474,7 +474,7 @@ static cleanup_broken_insert(INTERNAL_FUNCTION_PARAMETERS, zval *zid TSRMLS_CC)
+ 	if (!revert) {
+ 		RETVAL_ZVAL(zid, 1, 1);
+ 	} else {
+-		cleanup_broken_insert(INTERNAL_FUNCTION_PARAM_PASSTHRU, zid TSRMLS_CC);
++		cleanup_broken_insert(INTERNAL_FUNCTION_PARAM_PASSTHRU, zid);
+ 		RETVAL_FALSE;
+ 	}
+ 
+@@ -750,7 +750,7 @@ static int insert_chunk(zval *chunks, zval *zid, int chunk_num, char *buf, int c
+ cleanup_on_failure:
+ 	// remove all inserted chunks and main file document
+ 	if (revert) {
+-		cleanup_broken_insert(INTERNAL_FUNCTION_PARAM_PASSTHRU, zid TSRMLS_DC);
++		cleanup_broken_insert(INTERNAL_FUNCTION_PARAM_PASSTHRU, zid);
+ 		RETVAL_FALSE;
+ 	}
+ 
+diff --git a/util/pool.c b/util/pool.c
+index c5244ba..6cabdc8 100644
+--- a/util/pool.c
++++ b/util/pool.c
+@@ -151,7 +151,7 @@ void mongo_util_pool_close(mongo_server *server, int check_conns TSRMLS_DC) {
+ 
+   mongo_log(MONGO_LOG_POOL, MONGO_LOG_FINE TSRMLS_CC, "%s: pool close (%p)", server->label, monitor);
+ 
+-  mongo_util_pool__disconnect(monitor, server);
++  mongo_util_pool__disconnect(monitor, server TSRMLS_CC);
+ 
+   // clean up reference to server (nothing needs to be freed)
+   mongo_util_pool__rm_server_ptr(monitor, server);
+@@ -206,7 +206,7 @@ int mongo_util_pool_failed(mongo_server *server TSRMLS_DC) {
+ 
+   mongo_util_pool__close_connections(monitor TSRMLS_CC);
+   // just to be sure
+-  mongo_util_pool__disconnect(monitor, server);
++  mongo_util_pool__disconnect(monitor, server TSRMLS_CC);
+ 
+   MAKE_STD_ZVAL(errmsg);
+   ZVAL_NULL(errmsg);
+@@ -340,7 +340,7 @@ void mongo_util_pool__stack_clear(stack_monitor *monitor TSRMLS_DC) {
+   temp.owner = getpid();
+ 
+   while (mongo_util_pool__stack_pop(monitor, &temp TSRMLS_CC) == SUCCESS) {
+-    mongo_util_pool__disconnect(monitor, &temp);
++    mongo_util_pool__disconnect(monitor, &temp TSRMLS_CC);
+   }
+   monitor->top = 0;
+ }
+@@ -415,7 +415,7 @@ void mongo_util_pool__close_connections(stack_monitor *monitor TSRMLS_DC) {
+   // close all open connections
+   current = monitor->servers;
+   while (current) {
+-    mongo_util_pool__disconnect(monitor, current);
++    mongo_util_pool__disconnect(monitor, current TSRMLS_CC);
+     monitor->num.in_use--;
+     current = current->next_in_pool;
+   }
+@@ -427,7 +427,7 @@ void mongo_util_pool__close_connections(stack_monitor *monitor TSRMLS_DC) {
+   mongo_util_pool__stack_clear(monitor TSRMLS_CC);
+ }
+ 
+-void mongo_util_pool__disconnect(stack_monitor *monitor, mongo_server *server) {
++void mongo_util_pool__disconnect(stack_monitor *monitor, mongo_server *server TSRMLS_DC) {
+   int was_connected = server->connected;
+ 
+   // kill any cursor associated with this connection before deleting it
+diff --git a/util/pool.h b/util/pool.h
+index 01d21c2..40ff960 100644
+--- a/util/pool.h
++++ b/util/pool.h
+@@ -204,7 +204,7 @@
+ /**
+  * Close a connection. Increments monitor's num.remaining
+  */
+-void mongo_util_pool__disconnect(stack_monitor *monitor, mongo_server *server);
++void mongo_util_pool__disconnect(stack_monitor *monitor, mongo_server *server TSRMLS_DC);
+ 
+ /**
+  * Get this monitor for this server.
+-- 
+1.7.5.4
+
