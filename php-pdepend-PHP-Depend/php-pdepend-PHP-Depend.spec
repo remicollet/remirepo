@@ -3,7 +3,7 @@
 %global channel pear.pdepend.org
 
 Name:           php-pdepend-PHP-Depend
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -17,8 +17,7 @@ BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.6.0
 BuildRequires:  php-channel(%{channel})
 Requires:       php-channel(%{channel})
-Requires:       php-common >= 5.2.3
-Requires:       php-xml
+Requires:       php-xml >= 5.2.3
 Requires:       php-pecl(imagick) >= 2.2.0b2
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -79,6 +78,9 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 
 %changelog
+* Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
+- upstream 1.0.2
+
 * Sat Feb 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
 - upstream 1.0.1, rebuild for remi repository
 
