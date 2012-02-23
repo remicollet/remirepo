@@ -14,16 +14,13 @@
 
 Summary:      PHP MongoDB database driver
 Name:         %{phpname}-pecl-mongo
-Version:      1.2.8
-Release:      2%{?dist}
+Version:      1.2.9
+Release:      1%{?dist}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# Fix ZTS build, from github
-Patch0:       925acee56230e4fbe91897803bf9d2dc7493464e.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{phpname}-devel >= 5.1.0
@@ -46,15 +43,12 @@ in PHP.
 %setup -c -q
 cd %{pecl_name}-%{version}
 
-sed -i -e '/PHP_MONGO_VERSION/s/1.2.9dev/1.2.8/' php_mongo.h
-
 extver=$(sed -n '/#define PHP_MONGO_VERSION/{s/.* "//;s/".*$//;p}' php_mongo.h)
 if test "x${extver}" != "x%{version}%{?pre}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
 fi
 
-%patch0 -p1 -b .build
 cd ..
 
 cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
@@ -166,11 +160,14 @@ fi
 
 
 %changelog
+* Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.9-1
+- update to 1.2.9, php 5.3 build
+
 * Wed Feb 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.8-2
-- update to 1.2.7, php 5.4 build
+- update to 1.2.8, php 5.4 build
 
 * Wed Feb 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.8-1
-- update to 1.2.7, php 5.3 build
+- update to 1.2.8, php 5.3 build
 
 * Thu Jan 05 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.7-2
 - php 5.4 build
