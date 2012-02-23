@@ -3,8 +3,8 @@
 
 Summary:          The complete documentation solution for PHP
 Name:             php-pear-PhpDocumentor
-Version:          1.4.3
-Release:          4%{?dist}
+Version:          1.4.4
+Release:          1%{?dist}
 License:          LGPLv2+
 Group:            Development/Libraries
 URL:              http://www.phpdoc.org/
@@ -13,12 +13,19 @@ BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:        noarch
 BuildRequires:    php-pear >= 1:1.4.9
+
 Requires:         php-pear(PEAR)
 Requires:         php-Smarty >= 2.6.0
-Requires:         php-pear-XML-Beautifier >= 1.1
+Requires:         php-pear(XML_Beautifier) >= 1.1
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 Provides:         php-pear(%{pear_name}) = %{version}
+
+Provides:         phpdoc = %{version}
+Obsoletes:        phpdoc < %{version}
+Provides:         php-pear-PhpDocumentor-docs = %{version}
+Obsoletes:        php-pear-PhpDocumentor-docs < %{version}
+
 
 %description
 phpDocumentor is the current standard auto-documentation tool for the 
@@ -34,24 +41,6 @@ pre-designed HTML versions, PDF format, Windows Helpfile CHM format, and
 in Docbook XML. 
 
 
-%package -n phpdoc
-Summary:    Command-line utility for PhpDocumentor
-Group:      Development/Tools
-Requires:   %{name} = %{version}-%{release}
-
-%description -n phpdoc
-This package includes a utility to run PhpDocumentor from the command-line
-interface.
-
-
-%package docs
-Summary:    Documentation for PhpDocumentor
-Group:      Documentation
-Requires:   %{name} = %{version}-%{release}
-
-%description docs
-This package includes the documentation for PhpDocumentor.
-
 %prep
 %setup -q -c
 [ -f package2.xml ] || mv package.xml package2.xml
@@ -59,7 +48,10 @@ mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
 cd %{pear_name}-%{version}
 
 # don't install our own php-Smarty
-sed -i -e '/Smarty-2/d' %{pear_name}.xml
+# don't install scripts in bin, but in doc
+sed -e '/Smarty-2/d' \
+    -e '/name="scripts/s/role="php"/role="doc"/' \
+    -i %{pear_name}.xml
 
 
 %build
@@ -69,9 +61,6 @@ sed -i -e '/Smarty-2/d' %{pear_name}.xml
 cd %{pear_name}-%{version}
 rm -rf $RPM_BUILD_ROOT
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
-# Move documentation
-mkdir -p docdir
-mv $RPM_BUILD_ROOT%{pear_docdir}/* docdir
 
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
@@ -79,12 +68,6 @@ rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
-
-# make example script non executable
-chmod -x scripts/makedoc.sh
-
-# Remove scripts out of bindir
-rm -rf $RPM_BUILD_ROOT%{_bindir}/scripts 
 
 # Point to the system php-Smarty
 sed -i -e "s|phpDocumentor/Smarty-2.6.0/libs|Smarty|" \
@@ -108,24 +91,20 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/LICENSE
+%doc %{pear_docdir}/%{pear_name}
 %{pear_phpdir}/%{pear_name}
 %{pear_datadir}/%{pear_name}
 %{pear_testdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
-
-%files -n phpdoc
-%defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/LICENSE 
-%doc %{pear_name}-%{version}/scripts/makedoc.sh
-%{_bindir}/*
-
-%files docs
-%defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/*
+%{_bindir}/phpdoc
 
 
 %changelog
+* Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.4-1
+- update to 1.4.4
+- merge in a single package
+- doc in /usr/share/doc/pear
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
