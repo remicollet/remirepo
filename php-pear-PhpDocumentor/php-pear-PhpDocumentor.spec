@@ -4,7 +4,7 @@
 Summary:          The complete documentation solution for PHP
 Name:             php-pear-PhpDocumentor
 Version:          1.4.4
-Release:          1%{?dist}
+Release:          2%{?dist}
 License:          LGPLv2+
 Group:            Development/Libraries
 URL:              http://www.phpdoc.org/
@@ -13,6 +13,8 @@ BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:        noarch
 BuildRequires:    php-pear >= 1:1.4.9
+# to run test suite
+BuildRequires:    php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 
 Requires:         php-pear(PEAR)
 Requires:         php-Smarty >= 2.6.0
@@ -74,6 +76,21 @@ sed -i -e "s|phpDocumentor/Smarty-2.6.0/libs|Smarty|" \
     $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/phpDocumentor/Converter.inc
 
 
+%check
+cd %{pear_name}-%{version}/tests
+
+# quick hack for phpunit 3.6.0 compatibility
+for i in *php
+do
+  sed -i -e '/PHPUnit\/Framework.php/d' $i
+done
+
+# Version 1.4.4 : OK (125 tests, 244 assertions)
+%{_bindir}/phpunit \
+  -d date.timezone=UTC \
+  AllTests.php
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -100,6 +117,9 @@ fi
 
 
 %changelog
+* Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.4-2
+- run test suite during build
+
 * Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.4-1
 - update to 1.4.4
 - merge in a single package
