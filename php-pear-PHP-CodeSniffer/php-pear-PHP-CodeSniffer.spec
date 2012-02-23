@@ -1,16 +1,15 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name     PHP_CodeSniffer
-%global pear_version  1.3.1
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        %{pear_version}
-Release:        2%{?dist}
+Version:        1.3.3
+Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
 Group:          Development/Tools
 License:        BSD
 URL:            http://pear.php.net/package/PHP_CodeSniffer
-Source0:        http://pear.php.net/get/%{pear_name}-%{pear_version}.tgz
+Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -34,9 +33,9 @@ certain standards, such as PEAR, or user-defined.
 %prep
 %setup -q -c
 [ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{pear_version}/%{pear_name}.xml
+mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
 
-cd %{pear_name}-%{pear_version}
+cd %{pear_name}-%{version}
 
 
 %build
@@ -44,7 +43,7 @@ cd %{pear_name}-%{pear_version}
 
 
 %install
-cd %{pear_name}-%{pear_version}
+cd %{pear_name}-%{version}
 rm -rf $RPM_BUILD_ROOT
 
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
@@ -96,6 +95,9 @@ fi
 %{_bindir}/phpcs
 
 %changelog
+* Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.3-1
+- upstream 1.3.3
+
 * Fri Nov 04 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.1-2
 - run test suite in %%check
 - remove license as not provided by upstream
