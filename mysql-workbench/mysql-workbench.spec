@@ -1,9 +1,9 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%global mw_version 5.2.37
-%global mw_release 2
-%global tarversion gpl-5.2.37-src
-%global srcversion gpl-5.2.37-src
+%global mw_version 5.2.38
+%global mw_release 1
+%global tarversion gpl-%{mw_version}-src
+%global srcversion gpl-%{mw_version}-src
 
 # Use system cppconn if a compatible upstream version exists
 #global cppconnver 1.1.0-0.3.bzr895
@@ -31,12 +31,12 @@ Patch2:    %{name}-5.2.32-ctemplate.patch
 Patch3:    %{name}-5.2.36-tinyxml.patch
 # redirect man page to /usr/share
 Patch5:    %{name}-5.2.34-man.patch
-# http://bugs.mysql.com/63705
-# Only <glib.h> can be included directly
+# http://bugs.mysql.com/63705 - Only <glib.h> can be included directly
 Patch6:    %{name}-5.2.36-glib.patch
-# http://bugs.mysql.com/63777
-# service startup/shutdown command
+# http://bugs.mysql.com/63777 - service startup/shutdown command
 Patch7:    %{name}-5.2.36-profiles.patch
+# http://bugs.mysql.com/63898 - fix for automake >= 1.11.2
+Patch8:    %{name}-5.2.37-automake.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -76,7 +76,10 @@ BuildRequires: desktop-file-utils
 BuildRequires: tinyxml-devel >= 2.6.0
 %endif
 
-Requires: python-paramiko pexpect python-sqlite2
+Requires: python-paramiko pexpect
+%if 0%{?fedora} < 17
+Requires: python-sqlite2
+%endif
 Requires: mysql-utilities
 # requires mysql client pkg (for mysqldump and mysql cmdline client)
 Requires: mysql gnome-keyring
@@ -147,10 +150,11 @@ rm -rf library/tinyxml
 %patch5 -p1 -b .man
 %patch6 -p1 -b .glib
 %patch7 -p1 -b .profiles
+%patch8 -p1 -b .automake
 
 
 touch -r COPYING .timestamp4rpm
-%{__sed} -i -e 's/\r//g' COPYING
+sed -i -e 's/\r//g' COPYING
 touch -r .timestamp4rpm COPYING
 
 # we use System provided libraries
@@ -164,7 +168,7 @@ touch po/POTFILES.in
 
 
 %build
-NOCONFIGURE=yes ./autogen.sh
+#NOCONFIGURE=yes ./autogen.sh
 export CXXFLAGS="$RPM_OPT_FLAGS -fpermissive"
 %configure \
     --disable-debug \
@@ -187,7 +191,7 @@ rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 
 pushd ext/mysql-utilities
-%{__install} --directory %{buildroot}%{_mandir}/man1
+install --directory %{buildroot}%{_mandir}/man1
 %{__python} setup.py install --skip-profile --root %{buildroot}
 popd
 
@@ -197,7 +201,7 @@ find %{buildroot}%{_libdir}/%{name} -name \*.a  -exec rm {} \; -print
 find %{buildroot}%{_libdir}/%{name} -name \*.la -exec rm {} \; -print
 
 # fix perms
-%{__chmod} +x %{buildroot}%{_datadir}/%{name}/sshtunnel.py
+chmod +x %{buildroot}%{_datadir}/%{name}/sshtunnel.py
 
 #desktop file
 desktop-file-install --vendor="" \
@@ -210,11 +214,18 @@ rm -rf %{buildroot}
 
 
 %post
-update-desktop-database &> /dev/null || :
-
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+/usr/bin/update-desktop-database &> /dev/null || :
+/usr/bin/update-mime-database %{_datadir}/mime &> /dev/null || :
 
 %postun
-update-desktop-database &> /dev/null || :
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+    /usr/bin/update-desktop-database &> /dev/null || :
+    /usr/bin/update-mime-database %{_datadir}/mime &> /dev/null || :
+fi
 
 
 %files
@@ -224,6 +235,10 @@ update-desktop-database &> /dev/null || :
 %{_bindir}/%{name}
 %{_bindir}/%{name}-bin
 %{_datadir}/applications/MySQLWorkbench.desktop
+%{_datadir}/icons/hicolor/*/mimetypes/*%{name}*.png
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_datadir}/mime-info/%{name}.mime
+%{_datadir}/mime/packages/%{name}.xml
 %{_libdir}/%{name}
 %{_datadir}/%{name}
 %exclude %{_datadir}/doc/%{name}
@@ -256,6 +271,18 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Feb 24 2012 Remi Collet <remi@fedoraproject.org> 5.2.38-1
+- update to 5.2.38 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-38.html
+
+* Wed Feb  8 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 5.2.37-4
+- Remove the python-sqlite2 dep as mysql-workbench will work with sqlite3 from
+  the stdlib
+
+* Sat Feb 04 2012 Remi Collet <remi@fedoraproject.org> 5.2.37-3
+- rebuild for new libzip
+- add patch for automake > 1.11.2
+
 * Tue Dec 27 2011 Remi Collet <remi@fedoraproject.org> 5.2.37-1.1
 - Fix BR (lib)gnome-keyring-devel
 

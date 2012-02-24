@@ -1,5 +1,5 @@
 %if !%{defined version}
-%define version		5.2.37
+%define version		5.2.38
 %endif
 %define release 1
 %define edition   gpl
@@ -94,6 +94,35 @@ cp %{_libdir}/$l %{buildroot}/%{_libdir}/mysql-workbench
 done
 %endif
 
+%post
+touch --no-create %{_datadir}/icons/hicolor || :
+if [ -x %{_bindir}/gtk-update-icon-cache ]; then
+   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+fi
+
+if [ -x %{_bindir}/update-desktop-database ]; then
+    %{_bindir}/update-desktop-database
+fi
+
+if [ -x %{_bindir}/update-mime-database ]; then
+    %{_bindir}/update-mime-database %{_datadir}/mime
+fi
+
+%postun
+touch --no-create %{_datadir}/icons/hicolor || :
+if [ -x %{_bindir}/gtk-update-icon-cache ]; then
+   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+fi
+
+if [ -x %{_bindir}/update-desktop-database ]; then
+    %{_bindir}/update-desktop-database 
+fi
+
+if [ -x %{_bindir}/update-mime-database ]; then
+    %{_bindir}/update-mime-database %{_datadir}/mime
+fi
+
+
 %clean
 rm -rf %{buildroot}
 rm -rf %{_builddir}/%{name}-%{version}-src
@@ -104,6 +133,10 @@ rm -rf %{_builddir}/%{name}-%{version}-src
 %attr(0755,root,root) %{_bindir}/mysql*
 %dir %{_libdir}/mysql-workbench
 %{_libdir}/mysql-workbench/*
+%{_datadir}/icons/hicolor/*/mimetypes/*
+%{_datadir}/icons/hicolor/*/apps/*
+%{_datadir}/mime-info/*
+%{_datadir}/mime/packages/*
 %{_datadir}/applications/*.desktop
 %dir %{_datadir}/mysql-workbench
 %{_datadir}/mysql-workbench/*
