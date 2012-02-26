@@ -1,10 +1,10 @@
 %global pluginname   webservices
-#global svnrelease   290
+%global svnrelease   322
 
 Name:           glpi-webservices
-Version:        1.2.0
+Version:        1.3.0
 %if 0%{?svnrelease}
-Release:        0.2.svn%{svnrelease}%{?dist}
+Release:        0.1.svn%{svnrelease}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -16,8 +16,8 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/webservices
 
 %if 0%{?svnrelease}
-# svn export -r 290 https://forge.indepnet.net/svn/webservices/branches/1.2-bugfixes webservices
-# tar czf glpi-webservices-1.2.0-290.tar.gz webservices
+# svn export -r 322 https://forge.indepnet.net/svn/webservices/trunk webservices
+# tar czf glpi-webservices-1.3.0-322.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
 Source0:        https://forge.indepnet.net/attachments/download/980/glpi-webservices-1.2.0.tar.gz
@@ -27,8 +27,8 @@ Source0:        https://forge.indepnet.net/attachments/download/980/glpi-webserv
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.80
-Requires:       glpi <  0.81
+Requires:       glpi >= 0.83
+Requires:       glpi <  0.84
 Requires:       php-xmlrpc php-soap
 
 %description
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.0-0.1.svn322
+- update to 1.3.0 for glpi 0.83 RC (svn snapshot)
+
 * Sun Oct 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.2.0-1
 - update to 1.2.0 finale version
 
