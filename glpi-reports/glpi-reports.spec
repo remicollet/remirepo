@@ -1,8 +1,8 @@
 %global pluginname   reports
-#global svnrelease   100
+#global svnrelease   158
 
 Name:           glpi-reports
-Version:        1.4.0
+Version:        1.5.0
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -16,18 +16,19 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/reports
 
 %if 0%{?svnrelease}
-# svn export -r 100 https://forge.indepnet.net/svn/reports/trunk reports
-# tar czf glpi-reports-1.4.0-100.tar.gz reports
+# svn export -r 158 https://forge.indepnet.net/svn/reports/trunk reports
+# tar czf glpi-reports-1.5.0-158.tar.gz reports
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/661/glpi-reports-1.4.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/926/glpi-reports-1.5.0.tar.gz
 %endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.78
+Requires:       glpi >= 0.80
+Requires:       glpi <  0.81
 
 
 %description
@@ -82,6 +83,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.0-1
+- version 1.5.0 released
+
+* Tue Jun 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.0-0.1.svn158
+- version 1.5.0 for glpi 0.80 (svn snapshot)
+
 * Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.4.0-1
 - version 1.4.0 and GLPI 0.78 released
 
