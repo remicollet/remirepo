@@ -1,8 +1,8 @@
 %global pluginname   pdf
-#global svnrelease   259
+%global svnrelease   315
 
 Name:           glpi-pdf
-Version:        0.80.3
+Version:        0.83
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -16,9 +16,9 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/pdf
 
 %if 0%{?svnrelease}
-# svn export -r 259 https://forge.indepnet.net/svn/pdf/trunk pdf
-# tar czf glpi-pdf-0.8.0-259.tar.gz pdf
-Source0:        glpi-pdf-0.8.0-%{svnrelease}.tar.gz
+# svn export -r 315 https://forge.indepnet.net/svn/pdf/trunk pdf
+# tar czf glpi-pdf-0.83-315.tar.gz pdf
+Source0:        glpi-pdf-0.83-%{svnrelease}.tar.gz
 %else
 Source0:        https://forge.indepnet.net/attachments/download/966/glpi-pdf-0.80.3.tar.gz
 %endif
@@ -26,8 +26,8 @@ Source0:        https://forge.indepnet.net/attachments/download/966/glpi-pdf-0.8
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.80.3
-Requires:       glpi <  0.81
+Requires:       glpi >= 0.83
+Requires:       glpi <  0.84
 
 
 %description
@@ -82,9 +82,14 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/front
 %{_datadir}/glpi/plugins/%{pluginname}/inc
 %{_datadir}/glpi/plugins/%{pluginname}/pics
+# Keep here as required from interface
+%{_datadir}/glpi/plugins/%{pluginname}/LICENSE
 
 
 %changelog
+* Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-0.1.svn315
+- update to 0.83 for glpi 0.83 RC (svn snapshot)
+
 * Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.3-1
 - version 0.80.3
   https://forge.indepnet.net/projects/pdf/versions/617

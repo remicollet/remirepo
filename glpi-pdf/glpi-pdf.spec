@@ -1,8 +1,8 @@
 %global pluginname   pdf
-#global svnrelease   194
+#global svnrelease   259
 
 Name:           glpi-pdf
-Version:        0.7.2
+Version:        0.80.3
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -16,17 +16,19 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/pdf
 
 %if 0%{?svnrelease}
-# svn export -r 194 https://forge.indepnet.net/svn/pdf/trunk pdf
-# tar czf glpi-pdf-0.7.0-194.tar.gz pdf
-Source0:        glpi-pdf-0.7.0-%{svnrelease}.tar.gz
+# svn export -r 259 https://forge.indepnet.net/svn/pdf/trunk pdf
+# tar czf glpi-pdf-0.8.0-259.tar.gz pdf
+Source0:        glpi-pdf-0.8.0-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/897/glpi-pdf-0.7.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/966/glpi-pdf-0.80.3.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.78
+Requires:       glpi >= 0.80.3
+Requires:       glpi <  0.81
+
 
 %description
 This GLPI plugin enables you to print, in pdf format, the information 
@@ -83,6 +85,16 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.3-1
+- version 0.80.3
+  https://forge.indepnet.net/projects/pdf/versions/617
+
+* Tue Jul 19 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80-1
+- update to 0.80 (version have change from 0.8.0)
+
+* Tue Jun 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.8.0-0.1.svn259
+- update to 0.8.0 for glpi 0.80 RC (svn snapshot)
+
 * Sat Jun 11 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.7.2-1
 - version 0.7.2
   https://forge.indepnet.net/projects/pdf/versions/550
