@@ -1,9 +1,9 @@
 %global pluginname   massocsimport
 %global lockname     massocsimport.lock
-#global svnrelease   60
+#global svnrelease   108
 
 Name:           glpi-mass-ocs-import
-Version:        1.4.2
+Version:        1.5.2
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -17,18 +17,19 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/massocsimport
 
 %if 0%{?svnrelease}
-# svn export -r 60 https://forge.indepnet.net/svn/massocsimport/trunk massocsimport
-# tar czf glpi-massocsimport-1.4.0-60.tar.gz massocsimport
-Source0:        glpi-massocsimport-1.4.0-%{svnrelease}.tar.gz
+# svn export -r 108 https://forge.indepnet.net/svn/massocsimport/trunk massocsimport
+# tar czf glpi-massocsimport-1.5.0-108.tar.gz massocsimport
+Source0:        glpi-massocsimport-1.5.0-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/898/glpi-massocsimport-1.4.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/975/glpi-massocsimport-1.5.2.tar.gz
 %endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.78
+Requires:       glpi >= 0.80.4
+Requires:       glpi <  0.81
 Requires:       php-cli
 Requires:       %{_sysconfdir}/cron.d
 
@@ -50,6 +51,9 @@ synchronisation.
 
 %prep
 %setup -q -c 
+
+# Temporary
+sed -i -e s/1.5.0/1.5.1/ %{pluginname}/setup.php
 
 # fix wrong-file-end-of-line-encoding, preserving timestamp
 mv %{pluginname}/docs docs
@@ -139,6 +143,19 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 27 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.2-1
+- version 1.5.1 released
+  https://forge.indepnet.net/projects/massocsimport/versions/618
+
+* Tue Jul 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.1-1
+- version 1.5.1 released
+
+* Thu Jun 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.0-1
+- version 1.5.0 released
+
+* Tue Jun 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.0-0.1.svn108
+- update to 1.5.0 for glpi 0.80 (svn snapshot)
+
 * Sat Jun 11 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.4.2-1
 - version 1.4.2
   https://forge.indepnet.net/projects/massocsimport/versions/534

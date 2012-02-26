@@ -1,9 +1,9 @@
 %global pluginname   massocsimport
 %global lockname     massocsimport.lock
-#global svnrelease   108
+%global svnrelease   138
 
 Name:           glpi-mass-ocs-import
-Version:        1.5.2
+Version:        1.6.0
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -17,9 +17,9 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/massocsimport
 
 %if 0%{?svnrelease}
-# svn export -r 108 https://forge.indepnet.net/svn/massocsimport/trunk massocsimport
-# tar czf glpi-massocsimport-1.5.0-108.tar.gz massocsimport
-Source0:        glpi-massocsimport-1.5.0-%{svnrelease}.tar.gz
+# svn export -r 138 https://forge.indepnet.net/svn/massocsimport/trunk massocsimport
+# tar czf glpi-massocsimport-1.6.0-138.tar.gz massocsimport
+Source0:        glpi-massocsimport-1.6.0-%{svnrelease}.tar.gz
 %else
 Source0:        https://forge.indepnet.net/attachments/download/975/glpi-massocsimport-1.5.2.tar.gz
 %endif
@@ -28,12 +28,12 @@ Source0:        https://forge.indepnet.net/attachments/download/975/glpi-massocs
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.80.4
-Requires:       glpi <  0.81
+Requires:       glpi >= 0.83
+Requires:       glpi <  0.84
 Requires:       php-cli
 Requires:       %{_sysconfdir}/cron.d
 
-# This plugin is going to be renamed (for 0.72)
+# This plugin is going have been renamed
 Provides:       glpi-massocsimport = %{version}-%{release}
 
 
@@ -51,9 +51,6 @@ synchronisation.
 
 %prep
 %setup -q -c 
-
-# Temporary
-sed -i -e s/1.5.0/1.5.1/ %{pluginname}/setup.php
 
 # fix wrong-file-end-of-line-encoding, preserving timestamp
 mv %{pluginname}/docs docs
@@ -143,6 +140,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-0.1.svn138
+- update to 1.6.0 for glpi 0.83 RC (svn snapshot)
+
 * Tue Sep 27 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.2-1
 - version 1.5.1 released
   https://forge.indepnet.net/projects/massocsimport/versions/618
