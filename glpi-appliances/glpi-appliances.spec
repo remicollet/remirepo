@@ -1,8 +1,8 @@
 %global pluginname   appliances
-#global svnrelease   114
+#global svnrelease   136
 
 Name:           glpi-appliances
-Version:        1.6.0
+Version:        1.7.0
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -16,18 +16,19 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/appliances
 
 %if 0%{?svnrelease}
-# svn export -r 114 https://forge.indepnet.net/svn/appliances/trunk appliances
-# tar czf glpi-appliances-1.6.0-114.tar.gz appliances
+# svn export -r 136 https://forge.indepnet.net/svn/appliances/trunk appliances
+# tar czf glpi-appliances-1.7.0-136.tar.gz appliances
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/663/glpi-appliances-1.6.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/924/glpi-appliances-1.7.0.tar.gz
 %endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.78
+Requires:       glpi >= 0.80
+Requires:       glpi <  0.81
 Requires:       php-xmlrpc php-soap
 
 %description
@@ -80,6 +81,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.7.0-1
+- version 1.7.0 released
+
+* Tue Jun 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.7.0-0.1.svn136
+- version 1.7.0 for glpi 0.80 (svn snapshot)
+
 * Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-1
 - version 1.6.0 and GLPI 0.78 released
 
