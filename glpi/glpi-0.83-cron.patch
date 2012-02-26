@@ -1,0 +1,34 @@
+diff -up install/install.php.orig install/install.php
+--- install/install.php.orig	2012-01-24 12:22:16.000000000 +0100
++++ install/install.php	2012-02-26 10:04:57.482199413 +0100
+@@ -351,6 +351,15 @@ function step4 ($host, $user, $password,
+       $query = "UPDATE `glpi_users`
+                 SET `language` = NULL";
+       $DB->query($query) or die("4203 ".$LANG['update'][90].$DB->error());
++      
++      // RPM provides a good system cron
++      $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1";
++      $DB->query($query)
++      or die("RPM update of glpi_crontasks. " . $LANG['update'][90] . $DB->error());
++
++      $query = "UPDATE `glpi_configs` SET `cron_limit` = '3'";
++      $DB->query($query)
++      or die("RPM update of glpi_configs. " . $LANG['update'][90] . $DB->error());
+    }
+ 
+ 
+diff -up install/update.php.orig install/update.php
+--- install/update.php.orig	2012-02-09 21:19:30.000000000 +0100
++++ install/update.php	2012-02-26 10:07:24.899206029 +0100
+@@ -770,6 +770,11 @@ function updateDbUpTo031() {
+    $plugin = new Plugin();
+    $plugin->unactivateAll();
+ 
++   // RPM provides a good system cron
++   $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1";
++   $DB->query($query)
++   or die("RPM update of glpi_crontasks. " . $LANG['update'][90] . $DB->error());
++
+    DBmysql::optimize_tables($migration);
+ 
+    return $ret;
