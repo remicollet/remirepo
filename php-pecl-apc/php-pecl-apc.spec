@@ -1,10 +1,8 @@
-%{!?phpname:		%{expand: %%global phpname     php}}
+%{!?phpname:	%{expand: %%global phpname   php}}
+%{!?__pecl:	%{expand: %%global __pecl    %{_bindir}/pecl}}
 
-%global php_zendabiver %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP Extension => //p') | tail -1)
-%global php_version %((echo 0; php-config --version 2>/dev/null) | tail -1)
 %global pecl_name APC
-
-%global svnver 322617
+%global svnver    323587
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
@@ -13,10 +11,10 @@ License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 %if 0%{?svnver}
-# svn co -r 322617 https://svn.php.net/repository/pecl/apc/trunk apc-svn322617
-# tar czf apc-svn322617.tgz apc-svn322617
+# svn co -r 323587 https://svn.php.net/repository/pecl/apc/trunk apc-svn323587
+# tar czf apc-svn323587.tgz apc-svn323587
 Source:        apc-svn%{svnver}.tgz
-Release:       5.svn%{svnver}%{?dist}
+Release:       6.svn%{svnver}%{?dist}
 %else
 Release:       3%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
@@ -25,25 +23,12 @@ Source:        http://pecl.php.net/get/APC-%{version}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 Conflicts:     %{phpname}-mmcache %{phpname}-eaccelerator
 BuildRequires: %{phpname}-devel >= 5.1.0, httpd-devel, %{phpname}-pear, pcre-devel
-%if 0%{?php_zend_api:1}
-# Require clean ABI/API versions if available (Fedora)
 Requires:      %{phpname}(zend-abi) = %{php_zend_api}
 Requires:      %{phpname}(api) = %{php_core_api}
-%else
-%if "%{rhel}" == "5"
-# RHEL5 where we have php-common providing the Zend ABI the "old way"
-Requires:      php-zend-abi = %{php_zendabiver}
-%else
-# RHEL4 where we have no php-common and nothing providing the Zend ABI...
-Requires:      php = %{php_version}
-%endif
-%endif
 Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}
 
-%if 0%{?pecl_install:1}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-%endif
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
@@ -201,18 +186,14 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} %{__ztsphp} run-tests.php \
     -d extension=apc.so
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %clean
@@ -237,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 27 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-6.svn323587
+- pull changes from SVN revision 323587
+
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.0.6-5.svn322617
 - pull changes from SVN revision 322617
 
