@@ -3,7 +3,7 @@
 %global channel pear.phpmd.org
 
 Name:           php-phpmd-PHP-PMD
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -19,7 +19,7 @@ BuildRequires:  php-channel(%{channel})
 
 Requires:       php-channel(%{channel})
 Requires:       php-xml >= 5.2.3
-Requires:       php-pear(pear.pdepend.org/PHP_Depend) >= 1.0.2
+Requires:       php-pear(pear.pdepend.org/PHP_Depend) >= 1.0.3
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
@@ -83,6 +83,9 @@ fi
 %{_bindir}/phpmd
 
 %changelog
+* Tue Feb 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.2-1
+- upstream 1.3.2
+
 * Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.1-1
 - upstream 1.3.1
 
