@@ -3,7 +3,7 @@
 %global channel pear.pdepend.org
 
 Name:           php-pdepend-PHP-Depend
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -11,11 +11,12 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://www.pdepend.org/
 Source0:        http://pear.pdepend.org/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.6.0
 BuildRequires:  php-channel(%{channel})
+
 Requires:       php-channel(%{channel})
 Requires:       php-xml >= 5.2.3
 Requires:       php-pecl(imagick) >= 2.2.0b2
@@ -78,6 +79,9 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 
 %changelog
+* Tue Feb 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.3-1
+- upstream 1.0.3
+
 * Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
 - upstream 1.0.2
 
