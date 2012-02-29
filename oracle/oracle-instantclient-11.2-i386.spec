@@ -12,31 +12,33 @@
 
 Summary: 	Instant Client for Oracle Database 11g
 Name: 		oracle-instantclient-i386
-Version: 	11.2.0.2.0
+Version: 	11.2.0.3.0
 Release:	1%{?dist}
 License:	Oracle
 Group:		Applications/File
 Url:		http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
 
-Source0:	instantclient-basic-linux32-%{version}.zip
-Source1:	instantclient-jdbc-linux32-%{version}.zip
-Source2:	instantclient-odbc-linux32-%{version}.zip
-Source3:	instantclient-sdk-linux32-%{version}.zip
-Source4:	instantclient-sqlplus-linux32-%{version}.zip
-Source5:	instantclient-tools-linux32-%{version}.zip
+Source0:	instantclient-basic-linux-%{version}.zip
+Source1:	instantclient-jdbc-linux-%{version}.zip
+Source2:	instantclient-odbc-linux-%{version}.zip
+Source3:	instantclient-sdk-linux-%{version}.zip
+Source4:	instantclient-sqlplus-linux-%{version}.zip
+Source5:	instantclient-tools-linux-%{version}.zip
+Source6:	instantclient-precomp-linux-%{version}.zip
 NoSource:       0
 NoSource:       1
 NoSource:       2
 NoSource:       3
 NoSource:       4
 NoSource:       5
+NoSource:       6
 
 Buildroot: 	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 #BuildArch:      i386
 
-%define topdir	instantclient_11_2
-%define oradir	%{_libdir}/oracle/%{mainver}/client
-%define incdir	%{_includedir}/oracle/%{mainver}/client
+%global topdir	instantclient_11_2
+%global oradir	%{_libdir}/oracle/%{mainver}/client
+%global incdir	%{_includedir}/oracle/%{mainver}/client
 
 %description
 Base files for Instant Client.  Support for OCI, OCCI, 
@@ -98,6 +100,20 @@ This package provides tools to be used with the Oracle Database.
 It currently includes
 - wrc : a client to be used with the Database Replay feature
 
+%package -n oracle-instantclient-precomp
+Summary:	Oracle Precompilers for Pro*C and Pro*COBOL
+Group:		Applications/File
+Requires: 	oracle-instantclient-devel = %version
+
+%description -n oracle-instantclient-precomp
+PRECOMP Instant Client (IC) Package contains following
+components:
+  i) "proc" binary to precompile a Pro*C application
+ ii) "procob" binary to precompile a Pro*COBOL application
+iii) sample configuration files, demo programs and demo
+     make files for building proc and procob demos and
+     in general any Pro*C/Pro*COBOL application.
+
 %prep
 rm -rf %{topdir}
 
@@ -107,58 +123,74 @@ unzip %{SOURCE2}
 unzip %{SOURCE3}
 unzip %{SOURCE4}
 unzip %{SOURCE5}
+unzip %{SOURCE6}
 
 %install
 rm -rf %{buildroot}
 cd %{topdir}
 
-%{__mkdir_p} %{buildroot}%{_bindir} 
-%{__mkdir_p} %{buildroot}%{oradir}/bin 
-%{__mkdir_p} %{buildroot}%{oradir}/lib 
-%{__mkdir_p} %{buildroot}%{incdir}
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/ld.so.conf.d
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{oradir}/{bin,lib,precomp/admin}
+mkdir -p %{buildroot}%{oradir}/lib
+mkdir -p %{buildroot}%{incdir}
+mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
 
 # Basic
-%__install adrci		%{buildroot}%{oradir}/bin
-%__install genezi		%{buildroot}%{oradir}/bin
-%__install uidrvci		%{buildroot}%{oradir}/bin
-%__install libclntsh.so.11.1	%{buildroot}%{oradir}/lib
-%__install libnnz11.so		%{buildroot}%{oradir}/lib
-%__install libocci.so.11.1	%{buildroot}%{oradir}/lib
-%__install libociei.so		%{buildroot}%{oradir}/lib
-%__install libocijdbc11.so	%{buildroot}%{oradir}/lib
-%__install ojdbc5.jar		%{buildroot}%{oradir}/lib
-%__install ojdbc6.jar		%{buildroot}%{oradir}/lib
-%__install xstreams.jar		%{buildroot}%{oradir}/lib
+install -p adrci		%{buildroot}%{oradir}/bin
+install -p genezi		%{buildroot}%{oradir}/bin
+install -p uidrvci		%{buildroot}%{oradir}/bin
+install -p libclntsh.so.11.1	%{buildroot}%{oradir}/lib
+install -p libnnz11.so		%{buildroot}%{oradir}/lib
+install -p libocci.so.11.1	%{buildroot}%{oradir}/lib
+install -p libociei.so		%{buildroot}%{oradir}/lib
+install -p libocijdbc11.so	%{buildroot}%{oradir}/lib
+install -p ojdbc5.jar		%{buildroot}%{oradir}/lib
+install -p ojdbc6.jar		%{buildroot}%{oradir}/lib
+install -p xstreams.jar		%{buildroot}%{oradir}/lib
 
 echo %{oradir}/lib >%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}.conf
 
 # Devel
-%__install -m 644 sdk/include/*.h 	%{buildroot}%{incdir}
-%__install sdk/ottclasses.zip		%{buildroot}%{oradir}/lib
+install -p -m 644 sdk/include/*.h 	%{buildroot}%{incdir}
+install -p sdk/ottclasses.zip		%{buildroot}%{oradir}/lib
+install -p -m 755 sdk/ott		%{buildroot}%{oradir}/bin
 
+ln -s %{oradir}/bin/ott %{buildroot}%{_bindir}/ott
 ln -s libocci.so.11.1   %{buildroot}%{oradir}/lib/libocci.so
 ln -s libclntsh.so.11.1 %{buildroot}%{oradir}/lib/libclntsh.so
 
 # SQL*Plus
-%__install sqlplus 		%{buildroot}%{oradir}/bin
-%__install glogin.sql 		%{buildroot}%{oradir}/lib
-%__install libsqlplus.so 	%{buildroot}%{oradir}/lib
-%__install libsqlplusic.so 	%{buildroot}%{oradir}/lib
+install -p sqlplus 		%{buildroot}%{oradir}/bin
+install -p glogin.sql 		%{buildroot}%{oradir}/lib
+install -p libsqlplus.so 	%{buildroot}%{oradir}/lib
+install -p libsqlplusic.so 	%{buildroot}%{oradir}/lib
 
 ln -sf %{oradir}/bin/sqlplus %{buildroot}%{_bindir}/sqlplus
 
 # JDBC
-%__install libheteroxa11.so	%{buildroot}%{oradir}/lib
-%__install orai18n-mapping.jar	%{buildroot}%{oradir}/lib
-%__install orai18n.jar		%{buildroot}%{oradir}/lib
+install -p libheteroxa11.so	%{buildroot}%{oradir}/lib
+install -p orai18n-mapping.jar	%{buildroot}%{oradir}/lib
+install -p orai18n.jar		%{buildroot}%{oradir}/lib
 
 # ODBC
-%__install libsqora.so.11.1	%{buildroot}%{oradir}/lib
+install -p libsqora.so.11.1	%{buildroot}%{oradir}/lib
 
 # Tools
-%__install wrc 		%{buildroot}%{oradir}/bin
+install -p wrc 		%{buildroot}%{oradir}/bin
 ln -sf %{oradir}/bin/wrc %{buildroot}%{_bindir}/wrc
+
+# Precomp
+install -p -m 755 sdk/{proc,procob,rtsora}	%{buildroot}%{oradir}/bin
+install -p -m 755 cobsqlintf.o		%{buildroot}%{oradir}/lib
+install -p -m 644 precomp/admin/*	%{buildroot}%{oradir}/precomp/admin
+
+ln -s %{oradir}/bin/proc %{buildroot}%{_bindir}/proc
+ln -s %{oradir}/bin/procob %{buildroot}%{_bindir}/procob
+ln -s %{oradir}/bin/rtsora %{buildroot}%{_bindir}/rtsora
+
+# Precomp-Devel
+install -p -m 644 sdk/include/*.h     %{buildroot}%{incdir}
+
 
 %clean
 rm -rf %{buildroot}
@@ -195,6 +227,8 @@ rm -rf %{buildroot}
 %{oradir}/lib/libocci.so
 %{oradir}/lib/ottclasses.zip
 %{incdir}
+%{_bindir}/ott
+%{oradir}/bin/ott
 
 %post -n oracle-instantclient-sqlplus
 /sbin/ldconfig 
@@ -230,7 +264,29 @@ rm -rf %{buildroot}
 %{_bindir}/wrc
 %{oradir}/bin/wrc
 
+%files -n oracle-instantclient-precomp
+%defattr(-,root,root)
+%doc %{topdir}/sdk/demo %{topdir}/PRECOMP_README
+%dir %{oradir}/precomp
+%dir %{oradir}/precomp/admin
+%config  %{oradir}/precomp/admin/pcbcfg.cfg
+%config  %{oradir}/precomp/admin/pcscfg.cfg
+%{oradir}/lib/cobsqlintf.o
+%{oradir}/bin/proc
+%{oradir}/bin/procob
+%{oradir}/bin/rtsora
+%{_bindir}/proc
+%{_bindir}/procob
+%{_bindir}/rtsora
+
+
 %changelog
+* Wed Feb 29 2012 Remi Collet <RPMS@famillecollet.com> 11.2.0.3.0-1
+- update to 11.2.0.3.0
+- add precomp subpackage
+- merge some changes from  Ciro Iriarte <ciro.iriarte@gmail.com>
+  http://track.itsolutions.com.py/pub/oracle/oracle-instantclient.spec
+
 * Thu Nov 11 2010 Remi Collet <RPMS@famillecollet.com> 11.2.0.2.0-1
 - update to 11.2.0.2.0
 
