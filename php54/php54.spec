@@ -6,7 +6,7 @@
 %global zendver     20100525
 %global pdover      20080721
 # Extension version
-%global fileinfover 1.0.5-dev
+%global fileinfover 1.0.5
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
@@ -29,7 +29,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-%global rcver      RC8
+#global rcver      RC8
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -57,7 +57,7 @@ Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.16.%{rcver}%{?dist}
+Release: 1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -1452,6 +1452,9 @@ fi
 %endif
 
 %changelog
+* Fri Mar 02 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-1
+- update to PHP 5.4.0 finale
+
 * Sat Feb 18 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-0.16.RC8
 - update to 5.4.0RC8
 
