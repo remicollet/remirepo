@@ -2,7 +2,7 @@
 %{!?__pecl:   %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name memcached
-%global gitver    1736623
+#global gitver    1736623
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{phpname}-pecl-memcached
@@ -11,10 +11,11 @@ Version:      2.0.0
 Release:      0.1.git%{gitver}%{?dist}
 Source:       php-memcached-dev-php-memcached-v2.0.0b2-14-g%{gitver}.tar.gz
 %else
-Release:      11%{?dist}
+Release:      1%{?dist}
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
-License:      PHP
+# memcached is PHP, FastLZ is MIT
+License:      PHP and MIT
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
@@ -26,6 +27,7 @@ BuildRequires: %{phpname}-pear
 BuildRequires: %{phpname}-pecl-igbinary-devel
 BuildRequires: libmemcached-devel
 BuildRequires: zlib-devel
+BuildRequires: cyrus-sasl-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -67,6 +69,18 @@ mv php-memcached-dev-php-memcached-%{gitver}/package.xml .
 mv php-memcached-dev-php-memcached-%{gitver} %{pecl_name}-%{version}
 %endif
 
+# https://bugs.php.net/61261
+sed -i -e '/PHP_MEMCACHED_VERSION/s/2.0.0-dev/%{version}/' %{pecl_name}-%{version}/php_memcached.h
+
+# Chech version as upstream often forget to update this
+extver=$(sed -n '/#define PHP_MEMCACHED_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_memcached.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream HTTP version is now ${extver}, expecting %{version}.
+   : Update the pdover macro and rebuild.
+   exit 1
+fi
+
+cp %{pecl_name}-%{version}/fastlz/LICENSE LICENSE-FastLZ
 
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -85,17 +99,19 @@ cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
+%{_bindir}/phpize
 %configure --enable-memcached-igbinary \
            --enable-memcached-json \
-           --with-php-config=%{php_bindir}/php-config
+           --enable-memcached-sasl \
+           --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-%{version}-zts
-%{php_ztsbindir}/phpize
+%{_bindir}/zts-phpize
 %configure --enable-memcached-igbinary \
            --enable-memcached-json \
-           --with-php-config=%{php_ztsbindir}/php-config
+           --enable-memcached-sasl \
+           --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -138,10 +154,22 @@ ln -s %{php_extdir}/igbinary.so modules/
     -d extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+cd ../%{pecl_name}-%{version}-zts
+# only check if build extension can be loaded
+ln -s %{php_ztsextdir}/json.so modules/
+ln -s %{php_ztsextdir}/igbinary.so modules/
+%{__ztsphp} -n -q \
+    -d extension_dir=modules \
+    -d extension=json.so \
+    -d extension=igbinary.so \
+    -d extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
 
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_name}-%{version}/{CREDITS,LICENSE,README.markdown,ChangeLog}
+%doc LICENSE-FastLZ
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -150,6 +178,9 @@ ln -s %{php_extdir}/igbinary.so modules/
 
 
 %changelog
+* Sat Mar 03 2012  Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+
 * Wed Nov 16 2011  Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.1736623
 - update to git snapshot (post 2.0.0b2) for php 5.4 build
 
