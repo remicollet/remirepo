@@ -12,7 +12,7 @@ Summary:        Replacement for the standard PHP serializer
 Name:           %{phpname}-pecl-igbinary
 Version:        1.1.2
 %if 0%{?gitver:1}
-Release:	0.1.git%{gitver}%{?dist}
+Release:	0.2.git%{gitver}%{?dist}
 Source0:	igbinary-igbinary-1.1.1-15-g3b8ab7e.tar.gz
 %else
 Release:        2%{?dist}
@@ -118,13 +118,13 @@ EOF
 
 %build
 cd %{extname}-%{version}
-%{php_bindir}/phpize
-%configure --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{extname}-%{version}-zts
-%{php_ztsbindir}/phpize
-%configure --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -198,7 +198,10 @@ fi
 
 
 %changelog
-* Mon Nov 14 2011 Remi Collet <remi@fedoraproject.org> - 1.1.1-3.git3b8ab7e
+* Sat Mar 03 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.2.git3b8ab7e
+- macro usage for latest PHP
+
+* Mon Nov 14 2011 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.1.git3b8ab7e
 - latest git against php 5.4
 - partial patch for https://bugs.php.net/60298
 - ignore test result because of above bug
