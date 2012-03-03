@@ -6,12 +6,12 @@
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{phpname}-pecl-memcached
-Version:      2.0.0
+Version:      2.0.1
 %if 0%{?gitver:1}
 Release:      0.1.git%{gitver}%{?dist}
 Source:       php-memcached-dev-php-memcached-v2.0.0b2-14-g%{gitver}.tar.gz
 %else
-Release:      2%{?dist}
+Release:      1%{?dist}
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 # memcached is PHP, FastLZ is MIT
@@ -42,12 +42,10 @@ Provides:     %{phpname}-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
 
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -68,9 +66,6 @@ It also provides a session handler (memcached).
 mv php-memcached-dev-php-memcached-%{gitver}/package.xml .
 mv php-memcached-dev-php-memcached-%{gitver} %{pecl_name}-%{version}
 %endif
-
-# https://bugs.php.net/61261
-sed -i -e '/PHP_MEMCACHED_VERSION/s/2.0.0-dev/%{version}/' %{pecl_name}-%{version}/php_memcached.h
 
 # Chech version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_MEMCACHED_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_memcached.h)
@@ -178,6 +173,9 @@ ln -s %{php_ztsextdir}/igbinary.so modules/
 
 
 %changelog
+* Sat Mar 03 2012  Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1 for PHP 5.3
+
 * Sat Mar 03 2012  Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - update to 2.0.0 for PHP 5.4
 
