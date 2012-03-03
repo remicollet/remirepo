@@ -1,10 +1,10 @@
-%{!?__pecl:  %{expand: %%global __pecl %{_bindir}/pecl}}
+%{!?__pecl:         %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %define pecl_name xhprof
 
 Name:           php-pecl-xhprof
 Version:        0.9.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
 License:        ASL 2.0
@@ -15,6 +15,8 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Patch0:         0b3d4054d86b5a52d258623be1497c0c1c3f9a54.patch
 Patch1:         a6bae51236677d95cb329d5b20806465c0260394.patch
 
+# https://bugs.php.net/61262
+ExcludeArch:    ppc64
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.2.0
@@ -27,12 +29,10 @@ Requires(postun): %{__pecl}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -78,7 +78,11 @@ Documentation : %{_datadir}/doc/%{name}-%{version}/docs/index.html
 # Extension configuration file
 cat >%{pecl_name}.ini <<EOF
 ; Enable %{pecl_name} extension module
-extension=xhprof.so
+extension = xhprof.so
+
+; You can either pass the directory location as an argument to the constructor
+; for XHProfRuns_Default() or set xhprof.output_dir ini param.
+xhprof.output_dir = /tmp
 EOF
 
 # Apache configuration file
@@ -96,8 +100,10 @@ cd %{pecl_name}-%{version}
 %patch0 -p1 -b .refl
 %patch1 -p1 -b .php54
 
+%if 0%{?__ztsphp:1}
 # duplicate for ZTS build
 cp -r extension ext-zts
+%endif
 
 # not to be installed
 mv xhprof_html/docs ../docs
@@ -110,21 +116,24 @@ cd %{pecl_name}-%{version}/extension
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if 0%{?__ztsphp:1}
 cd ../ext-zts
 %{_bindir}/zts-phpize
 %configure \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 make install -C %{pecl_name}-%{version}/extension  INSTALL_ROOT=%{buildroot}
-make install -C %{pecl_name}-%{version}/ext-zts    INSTALL_ROOT=%{buildroot}
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
 
-# Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+%if 0%{?__ztsphp:1}
+make install -C %{pecl_name}-%{version}/ext-zts    INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -139,15 +148,17 @@ cp -pr %{pecl_name}-%{version}/xhprof_lib  %{buildroot}%{_datadir}/xhprof_lib
 
 %check
 # simple module load test
-%{__php} --no-php-ini \
+php --no-php-ini \
     --define extension_dir=%{pecl_name}-%{version}/extension/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if 0%{?__ztsphp:1}
 %{__ztsphp} --no-php-ini \
     --define extension_dir=%{pecl_name}-%{version}/ext-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
 
 %clean
@@ -167,11 +178,15 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_name}-%{version}/{CHANGELOG,CREDITS,README,LICENSE,examples}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%if 0%{?__ztsphp:1}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
+
 
 %files -n xhprof
 %defattr(-,root,root,-)
@@ -182,9 +197,15 @@ fi
 
 
 %changelog
-* Thu Feb 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.9.2-2
+* Sat Mar 03 2012 Remi Collet <remi@fedoraproject.org> - 0.9.2-3
+- prepare for review
+- make ZTS build conditionnal (for PHP 5.3)
+- add xhprof.output_dir in configuration file
+- open https://bugs.php.net/61262 for ppc64
+
+* Thu Mar 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.9.2-2
 - split web interace in xhprof sub-package
 
-* Thu Feb 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.9.2-1
+* Thu Mar 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.9.2-1
 - Initial RPM package
 
