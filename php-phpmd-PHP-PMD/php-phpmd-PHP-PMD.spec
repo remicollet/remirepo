@@ -3,7 +3,7 @@
 %global channel pear.phpmd.org
 
 Name:           php-phpmd-PHP-PMD
-Version:        1.3.2
+Version:        1.3.3
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -83,6 +83,9 @@ fi
 %{_bindir}/phpmd
 
 %changelog
+* Sat Mar 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.3-1
+- upstream 1.3.3
+
 * Tue Feb 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.2-1
 - upstream 1.3.2
 
