@@ -14,7 +14,7 @@
 %define system_sqlite 1
 %endif
 
-%global thunver  10.0
+%global thunver  10.0.2
 %global thunmax  11.0
 
 # The tarball is pretty inconsistent with directory structure.
@@ -33,7 +33,7 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.3.5
+Version:        1.4
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
@@ -58,9 +58,6 @@ Source100:      enigmail-%{CVS}.tgz
 %else
 Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{version}%{?prever}.tar.gz
 %endif
-
-# http://www.mozdev.org/pipermail/enigmail/2009-April/011018.html
-Source101:      enigmail-fixlang.php
 
 
 # Mozilla (XULRunner) patches
@@ -128,7 +125,7 @@ BuildRequires:  GConf2-devel
 BuildRequires:  lcms-devel >= %{lcms_version}
 
 ## For fixing lang
-BuildRequires:  dos2unix, php-cli
+BuildRequires:  perl
 
 
 # Without this enigmmail will require libxpcom.so and other .so  
@@ -231,9 +228,7 @@ popd
 pushd mailnews/extensions/enigmail
 for rep in $(cat lang/current-languages.txt)
 do
-   dos2unix lang/$rep/enigmail.dtd
-   dos2unix lang/$rep/enigmail.properties
-   php %{SOURCE101} ui/locale/en-US lang/$rep
+   perl util/fixlang.pl ui/locale/en-US lang/$rep
 done
 popd
 
@@ -284,16 +279,16 @@ popd
 
 %install
 cd %{tarballdir}
-%{__rm} -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
-%{__mkdir_p} $RPM_BUILD_ROOT%{enigmail_extname}
+mkdir -p $RPM_BUILD_ROOT%{enigmail_extname}
 
-%{__unzip} -q mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enigmail_extname}
-%{__chmod} +x $RPM_BUILD_ROOT%{enigmail_extname}/wrappers/*.sh
+unzip -q mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enigmail_extname}
+chmod +x $RPM_BUILD_ROOT%{enigmail_extname}/wrappers/*.sh
 
 
 %clean
-%{__rm} -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 
 %files
@@ -304,6 +299,10 @@ cd %{tarballdir}
 #===============================================================================
 
 %changelog
+* Sat Mar 03 2012 Remi Collet <remi@fedoraproject.org> 1.4-1
+- Enigmail 1.4 for Thunderbird 10.0.2
+- using upstream fixlang.pl instead of our fixlang.php
+
 * Tue Jan 31 2012 Remi Collet <remi@fedoraproject.org> 1.3.5-1
 - Enigmail 1.3.5 for Thunderbird 10.0
 
