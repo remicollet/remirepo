@@ -3,7 +3,7 @@
 %global channel pear.pdepend.org
 
 Name:           php-pdepend-PHP-Depend
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -79,6 +79,9 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 
 %changelog
+* Sat Mar 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.4-1
+- upstream 1.0.4
+
 * Tue Feb 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.3-1
 - upstream 1.0.3
 
