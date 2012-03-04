@@ -2,7 +2,7 @@
 %global pear_name Swift
 
 Name:           php-swift-Swift
-Version:        4.1.3
+Version:        4.1.5
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -15,8 +15,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-channel(pear.swiftmailer.org)
 BuildRequires:  php-pear(PEAR)
-Requires:       php >= 5.2.4
-Requires:       php-pear(PEAR) >= 1.3.6
+Requires:       php-common >= 5.2.4
+Requires:       php-pear(PEAR) >= 1.4.0
 Requires:       php-channel(pear.swiftmailer.org)
 Requires:       php-pdo
 Requires(post): %{__pear}
@@ -83,6 +83,12 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Sun Mar 04 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.1.5-1
+- upstream 4.1.5, rebuild for remi repository
+
+* Sat Mar  3 2012 Christof Damian <christof@damian.net> - 4.1.5-1
+- upstream 4.1.5
+
 * Tue Nov 01 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.1.3-1
 - rebuild for remi repository
 
