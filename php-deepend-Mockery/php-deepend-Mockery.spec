@@ -3,8 +3,8 @@
 %global channel pear.survivethedeepend.com
 
 Name:           php-deepend-Mockery
-Version:        0.6.3
-Release:        2%{?dist}
+Version:        0.7.2
+Release:        1%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
 Group:          Development/Libraries
@@ -83,6 +83,12 @@ fi
 %doc %{pear_name}-%{version}/docdir/*
 
 %changelog
+* Sun Mar 04 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.7.2-1
+- upstream 0.7.2, rebuild for remi repository
+
+* Sun Mar  4 2012 Christof Damian <christof@damian.net> - 0.7.2-1
+- upstream 0.7.2
+
 * Wed Jul 27 2010 Remi Collet <RPMS@FamilleCollet.com> - 0.6.3-2
 - rebuild for remi repository
 
