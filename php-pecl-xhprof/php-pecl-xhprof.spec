@@ -4,7 +4,7 @@
 
 Name:           php-pecl-xhprof
 Version:        0.9.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
 License:        ASL 2.0
@@ -12,8 +12,8 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # From github
-Patch0:         0b3d4054d86b5a52d258623be1497c0c1c3f9a54.patch
-Patch1:         a6bae51236677d95cb329d5b20806465c0260394.patch
+Patch0:         %{pecl_name}-arginfo.patch
+Patch1:         %{pecl_name}-php54.patch
 
 # https://bugs.php.net/61262
 ExcludeArch:    ppc64
@@ -87,8 +87,8 @@ EOF
 
 # Apache configuration file
 cat >httpd.conf <<EOF
-Alias /xhprof /usr/share/xhprof_html
-<Directory /usr/share/xhprof_html>
+Alias /xhprof /usr/share/xhprof/xhprof_html
+<Directory /usr/share/xhprof/xhprof_html>
    order deny,allow
    deny from all
    allow from 127.0.0.1
@@ -141,9 +141,9 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 # Install the web interface
 install -D -m 644 httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/xhprof.conf
 
-mkdir -p %{buildroot}%{_datadir}
-cp -pr %{pecl_name}-%{version}/xhprof_html %{buildroot}%{_datadir}/xhprof_html
-cp -pr %{pecl_name}-%{version}/xhprof_lib  %{buildroot}%{_datadir}/xhprof_lib
+mkdir -p %{buildroot}%{_datadir}/xhprof
+cp -pr %{pecl_name}-%{version}/xhprof_html %{buildroot}%{_datadir}/xhprof/xhprof_html
+cp -pr %{pecl_name}-%{version}/xhprof_lib  %{buildroot}%{_datadir}/xhprof/xhprof_lib
 
 
 %check
@@ -192,11 +192,14 @@ fi
 %defattr(-,root,root,-)
 %doc docs
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/xhprof.conf
-%{_datadir}/xhprof_html
-%{_datadir}/xhprof_lib
+%{_datadir}/xhprof
 
 
 %changelog
+* Mon Mar 05 2012 Remi Collet <remi@fedoraproject.org> - 0.9.2-4
+- rename patches
+- install html and lib under /usr/share/xhprof
+
 * Sat Mar 03 2012 Remi Collet <remi@fedoraproject.org> - 0.9.2-3
 - prepare for review
 - make ZTS build conditionnal (for PHP 5.3)
