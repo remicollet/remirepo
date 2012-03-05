@@ -1,0 +1,32 @@
+--- mulk-0.6.0/lib/mulk.c.old	2012-03-04 21:53:19.000000000 -0500
++++ mulk-0.6.0/lib/mulk.c	2012-03-04 21:53:15.000000000 -0500
+@@ -194,7 +194,7 @@
+ 					}
+ 					else
+ 						mime_type = NULL;
+-					MULK_NOTE((_("Url:\"%s\" Size:%" PRIdMAX "\n"), url ? url : "", (intmax_t) download_size));
++					MULK_NOTE((_("Url:\"%s\" Size:%d\n"), url ? url : "", (intmax_t) download_size));
+ 
+ 					if (write_download_info)
+ 						write_download_info(info_context, err_code, err_str, is_http, resp_code, mime_type,
+--- mulk-0.6.0/lib/mulk.c.old	2012-03-04 21:55:18.000000000 -0500
++++ mulk-0.6.0/lib/mulk.c	2012-03-04 21:55:30.000000000 -0500
+@@ -105,7 +105,6 @@
+ 	create_buffer_array();
+ 	curl_global_init(CURL_GLOBAL_ALL);
+ 	curl_obj = curl_multi_init();
+-	curl_multi_setopt(curl_obj, CURLMOPT_MAXCONNECTS, (long) option_values.max_sim_conns);
+ 
+ 	for (active_handles = 0; (active_handles < option_values.max_sim_conns) && (init_url(curl_obj) == MULK_RET_OK);
+ 		active_handles++);
+--- mulk-0.6.0/lib/mulk.c.old	2012-03-04 22:00:37.000000000 -0500
++++ mulk-0.6.0/lib/mulk.c	2012-03-04 22:00:04.000000000 -0500
+@@ -30,6 +30,8 @@
+  * files in the program, then also delete it here.
+  *---------------------------------------------------------------------------*/
+ 
++#include <stdint.h>
++
+ #include "m_malloc.h"
+ #include "buffer_array.h"
+ #include "url_list.h"
