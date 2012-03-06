@@ -4,8 +4,8 @@
 
 
 Name:		php-pecl-gearman
-Version:	1.0.1
-Release:	2%{?dist}
+Version:	1.0.2
+Release:	1%{?dist}
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -26,12 +26,10 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -58,13 +56,13 @@ cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
-%configure  --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-%{version}-zts
-%{php_ztsbindir}/phpize
-%configure  --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -86,11 +84,14 @@ install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 
 %check
-cd %{pecl_name}-%{version}
-
 # simple module load test
 %{__php} --no-php-ini \
-    --define extension_dir=modules \
+    --define extension_dir=%{pecl_name}-%{version}/modules \
+    --define extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
+%{__ztsphp} --no-php-ini \
+    --define extension_dir=%{pecl_name}-%{version}-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -120,6 +121,10 @@ fi
 
 
 %changelog
+* Tue Mar 06 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.2 for PHP 5.3
+- spec clean up
+
 * Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
 - update to 1.0.1, build against php 5.4
 
