@@ -2,7 +2,7 @@
 %{!?__pecl:	%{expand: %%global __pecl    %{_bindir}/pecl}}
 
 %global pecl_name APC
-%global svnver    323587
+%global svnver    323991
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
@@ -11,10 +11,10 @@ License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 %if 0%{?svnver}
-# svn co -r 323587 https://svn.php.net/repository/pecl/apc/trunk apc-svn323587
-# tar czf apc-svn323587.tgz apc-svn323587
+# svn co -r 323991 https://svn.php.net/repository/pecl/apc/trunk apc-svn323991
+# tar czf apc-svn323991.tgz apc-svn323991
 Source:        apc-svn%{svnver}.tgz
-Release:       6.svn%{svnver}%{?dist}
+Release:       7.svn%{svnver}%{?dist}
 %else
 Release:       3%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
@@ -31,12 +31,10 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -218,6 +216,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 07 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-7.svn323991
+- pull changes from SVN revision 323991
+
 * Mon Feb 27 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-6.svn323587
 - pull changes from SVN revision 323587
 
