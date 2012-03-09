@@ -19,6 +19,10 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
 
+# Fix RHEL build
+# http://svn.php.net/viewvc?view=revision&revision=324058
+Patch0:         %{proj_name}-build.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.4.0
 BuildRequires:  php-pear
@@ -71,6 +75,8 @@ These are the files needed to compile programs using HTTP extension.
 
 %prep
 %setup -c -q 
+
+%patch0 -p0 -b .build
 
 extver=$(sed -n '/#define PHP_HTTP_EXT_VERSION/{s/.* "//;s/".*$//;p}' %{proj_name}-%{version}%{?prever}/php_http.h)
 if test "x${extver}" != "x%{version}%{?devver}"; then
