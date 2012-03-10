@@ -3,13 +3,13 @@
 %global pecl_name amqp
 
 Summary:       Communicate with any AMQP compliant server
-Name:          php-pecl-ampq
+Name:          php-pecl-amqp
 Version:       1.0.1
-Release:       2%{?dist}
+Release:       1%{?dist}
 # https://bugs.php.net/61337 - missing LICENSE file
 License:       PHP
 Group:         Development/Languages
-URL:           http://pecl.php.net/package/ampq
+URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # http://svn.php.net/viewvc?view=revision&revision=324074
@@ -134,9 +134,6 @@ fi
 
 
 %changelog
-* Sat Mar 10 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
-- rebuild for PHP 5.4
-
 * Sat Mar 10 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Initial RPM release without ZTS extension
 - open request for LICENSE file https://bugs.php.net/61337
