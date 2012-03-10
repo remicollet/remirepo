@@ -2,29 +2,29 @@
 
 %global pecl_name amqp
 
-Summary:   BuildRequires: 
-Name:      php-pecl-ampq
-Version:   1.0.1
-Release:   2%{?dist}
+Summary:       Communicate with any AMQP compliant server
+Name:          php-pecl-ampq
+Version:       1.0.1
+Release:       2%{?dist}
 # https://bugs.php.net/61337 - missing LICENSE file
-License:   PHP
-Group:     Development/Languages
-URL:       http://pecl.php.net/package/ampq
-Source0:   http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+License:       PHP
+Group:         Development/Languages
+URL:           http://pecl.php.net/package/ampq
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # http://svn.php.net/viewvc?view=revision&revision=324074
-Patch0:    %{pecl_name}-php54.patch
+Patch0:        %{pecl_name}-php54.patch
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 BuildRequires: php-pear
 BuildRequires: librabbitmq-devel
 
-Requires: php(zend-abi) = %{php_zend_api}
-Requires: php(api) = %{php_core_api}
-Requires(post): %{__pecl}
+Requires:         php(zend-abi) = %{php_zend_api}
+Requires:         php(api) = %{php_core_api}
+Requires(post):   %{__pecl}
 Requires(postun): %{__pecl}
-Provides: php-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:         php-pecl(%{pecl_name}) = %{version}-%{release}
 
 
 # RPM 4.8
