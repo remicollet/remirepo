@@ -4,15 +4,13 @@
 
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      php-pecl-mailparse
-Version:   2.1.5
-Release:   5%{?dist}
+Version:   2.1.6
+Release:   1%{?dist}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
 Source0:   http://pecl.php.net/get/mailparse-%{version}.tgz
 
-# https://bugs.php.net/60331
-Patch0:    mailparse-php54.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel, php-pear
@@ -28,13 +26,12 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Provides: php-pecl(%{pecl_name}) = %{version}-%{release}
 
+
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -43,6 +40,8 @@ It can deal with rfc822 and rfc2045 (MIME) compliant messages.
 
 
 %prep
+# We need to create our working directory since the package*.xml files from
+# the sources extract straight to it
 %setup -q -c
 
 extver=$(sed -n '/#define PHP_MAILPARSE_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_mailparse.h)
@@ -59,87 +58,111 @@ extension = mailparse.so
 ;mailparse.def_charset = us-ascii
 EOF
 
-%patch0 -p0 -b .php54
-
 chmod -x %{pecl_name}-%{version}/*.{php,c,h}
 
+%if 0%{?__ztsphp:1}
 cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+%endif
 
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
-%configure  --with-php-config=%{php_bindir}/php-config
+phpize
+%configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-%{version}-zts
-%{php_ztsbindir}/phpize
-%configure  --with-php-config=%{php_ztsbindir}/php-config
+zts-phpize
+%configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
-
 make -C %{pecl_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
+# Drop in the bit of configuration
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/z-%{pecl_name}.ini
 
+%if 0%{?__ztsphp:1}
 make -C %{pecl_name}-%{version}-zts \
      install INSTALL_ROOT=%{buildroot}
+# Drop in the bit of configuration
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+%endif
 
 # Install XML package description
-install -Dpm 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
-
-# install config file
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %check
 cd %{pecl_name}-%{version}
 ln -s %{php_extdir}/mbstring.so modules
 
-TEST_PHP_EXECUTABLE=%{__php} \
-REPORT_EXIT_STATUS=1 \
+TEST_PHP_EXECUTABLE=$(which php) \
 NO_INTERACTION=1 \
-%{__php} run-tests.php \
+php run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=mbstring.so \
     -d extension=%{pecl_name}.so \
+
+%if 0%{?__ztsphp:1}
+cd ../%{pecl_name}-%{version}-zts
+ln -s %{php_ztsextdir}/mbstring.so modules
+
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+NO_INTERACTION=1 \
+php run-tests.php \
+    -n -q -d extension_dir=modules \
+    -d extension=mbstring.so \
+    -d extension=%{pecl_name}.so \
+%endif
 
 
 %clean
 rm -rf %{buildroot}
 
 
+%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%endif
 
 
+%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_name}-%{version}/{README,CREDITS,try.php}
 # We prefix the config file with "z-" so that it loads after mbstring.ini
-%config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
-%{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
+%config(noreplace) %{_sysconfdir}/php.d/z-mailparse.ini
+%{php_extdir}/mailparse.so
 %{pecl_xmldir}/%{name}.xml
 
+%if 0%{?__ztsphp:1}
+%config(noreplace) %{php_ztsinidir}/z-mailparse.ini
+%{php_ztsextdir}/mailparse.so
+%endif
 
 %changelog
-* Fri Nov 18 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.5-5
-- php 5.4 build with patch for https://bugs.php.net/60331
+* Sat Mar 10 2012 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
+- update to 2.1.6
+- enable ZTS build
 
-* Sun Oct 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.1.5-4
-- ZTS extension
-- spec cleanups
+* Thu Jan 19 2012 Remi Collet <remi@fedoraproject.org> - 2.1.5-6
+- rebuild against PHP 5.4, with patch
+- fix filters
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.5-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
