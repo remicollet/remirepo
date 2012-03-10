@@ -17,7 +17,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
 BuildRequires: python-simplejson
 # For tools
+%if 0%{?rhel} == 5
+BuildRequires: popt
+%else
 BuildRequires: popt-devel
+%endif
 # For man page
 BuildRequires: xmlto
 
