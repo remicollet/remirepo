@@ -4,7 +4,7 @@
 Name:      librabbitmq
 Summary:   Client library and command line tools for AMPQ
 Version:   0.1
-Release:   0.1.hg%{client_tag}%{?dist}
+Release:   0.2.hg%{client_tag}%{?dist}
 License:   MPLv1.1 or GPLv2+
 Group:     System Environment/Libraries
 URL:       http://www.rabbitmq.com/
@@ -75,6 +75,11 @@ make install  DESTDIR="%{buildroot}"
 rm %{buildroot}%{_libdir}/%{name}.{a,la}
 
 
+%check
+cd rabbitmq-c
+make check
+
+
 %clean
 rm -rf %{buildroot}
 
@@ -102,6 +107,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sat Mar 10 2012 Remi Collet <remi@fedoraproject.org> - 0.1-1
+* Sun Mar 11 2012 Remi Collet <remi@fedoraproject.org> - 0.1-0.2.hgfb6fca832fd2
+- add %%check (per review comment)
+
+* Sat Mar 10 2012 Remi Collet <remi@fedoraproject.org> - 0.1-0.1.hgfb6fca832fd2
 - Initial RPM
 
