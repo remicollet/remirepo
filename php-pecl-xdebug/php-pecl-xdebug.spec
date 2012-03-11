@@ -2,14 +2,14 @@
 %{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global gitver 7e971c4
-%global prever -dev
+%global gitver    8d9993b
+%global prever    -dev
 
 Name:           %{phpname}-pecl-xdebug
 Version:        2.2.0
 %if %{?gitver:1}
-Release:        0.4.git%{gitver}%{?dist}
-Source0:        derickr-xdebug-XDEBUG_2_1_2-206-g7e971c4.tar.gz
+Release:        0.5.git%{gitver}%{?dist}
+Source0:        derickr-xdebug-XDEBUG_2_1_2-250-g8d9993b.tar.gz
 BuildRequires:  libtool
 %else
 Release:        1%{?dist}
@@ -188,6 +188,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 11 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.5.git8d9993b
+- new git snapshot
+
 * Sat Jan 28 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.4.git7e971c4
 - new git snapshot
 - fix version reported by pecl list
