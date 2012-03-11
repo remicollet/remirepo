@@ -1,6 +1,8 @@
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?__pecl:   %{expand: %%global __pecl   %{_bindir}/pecl}}
+%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
+%global php_extver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP Extension => //p') | tail -1)
+%global pecl_name   amqp
 
-%global pecl_name amqp
 
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
@@ -20,8 +22,15 @@ BuildRequires: php-devel
 BuildRequires: php-pear
 BuildRequires: librabbitmq-devel
 
+%if 0%{?php_zend_api:1}
+# For Fedora and EL >= 6
 Requires:         php(zend-abi) = %{php_zend_api}
 Requires:         php(api) = %{php_core_api}
+%else
+# For EL = 5
+Requires:         php-zend-abi = %{php_extver}
+Requires:         php-api = %{php_apiver}
+%endif
 Requires(post):   %{__pecl}
 Requires(postun): %{__pecl}
 Provides:         php-pecl(%{pecl_name}) = %{version}-%{release}
@@ -104,7 +113,7 @@ install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 php --no-php-ini \
     --define extension_dir=%{pecl_name}-%{version}/modules \
     --define extension=%{pecl_name}.so \
-    --modules | grep %{pecl_name}
+    -m | grep %{pecl_name}
 
 
 %clean
