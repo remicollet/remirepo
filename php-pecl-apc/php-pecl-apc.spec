@@ -20,6 +20,9 @@ Release:       3%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
 %endif
 
+Patch0:        interned_string_double_free_fix2.patch
+
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 Conflicts:     %{phpname}-mmcache %{phpname}-eaccelerator
 BuildRequires: %{phpname}-devel >= 5.1.0, httpd-devel, %{phpname}-pear, pcre-devel
@@ -59,6 +62,10 @@ These are the files needed to compile programs using APC serializer.
 mv apc-svn%{svnver}/package.xml .
 mv apc-svn%{svnver} APC-%{version}
 %endif
+
+cd APC-%{version}
+%patch0 -p0 -b .doublefree
+cd ..
 
 # Check than upstream version is correct, http://pecl.php.net/bugs/19590
 grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
@@ -216,8 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Mar 08 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-7.svn324037
+* Sun Mar 11 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-7.svn324037
 - pull changes from SVN revision 324037
+- add patch from https://bugs.php.net/61238
 
 * Mon Feb 27 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-6.svn323587
 - pull changes from SVN revision 323587

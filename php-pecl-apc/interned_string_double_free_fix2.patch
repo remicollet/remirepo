@@ -1,0 +1,134 @@
+Index: apc_main.c
+===================================================================
+--- apc_main.c	(revision 324083)
++++ apc_main.c	(working copy)
+@@ -842,8 +842,10 @@
+ #endif
+ 
+ #ifdef ZEND_ENGINE_2_4
++#ifndef ZTS
+     apc_interned_strings_init(TSRMLS_C);
+ #endif
++#endif
+ 
+     APCG(initialized) = 1;
+     return 0;
+@@ -888,8 +890,10 @@
+     }
+ 
+ #ifdef ZEND_ENGINE_2_4
++#ifndef ZTS
+     apc_interned_strings_shutdown(TSRMLS_C);
+ #endif
++#endif
+ 
+     apc_cache_destroy(apc_cache TSRMLS_CC);
+     apc_cache_destroy(apc_user_cache TSRMLS_CC);
+Index: apc_zend.h
+===================================================================
+--- apc_zend.h	(revision 324083)
++++ apc_zend.h	(working copy)
+@@ -179,19 +179,6 @@
+ # define ZEND_CE_BUILTIN_FUNCTIONS(ce)  (ce)->builtin_functions
+ #endif
+ 
+-#ifdef ZEND_ENGINE_2_4
+-
+-#define ZEND_STR_INTERN_DUP(str, len) \
+-	do { \
+-		const char *tmp = (str); \
+-		tmp = apc_new_interned_string(tmp, len+1 TSRMLS_CC); \
+-		if ((str) == tmp) { \
+-			(str) = zend_strndup(tmp, len); \
+-		} \
+-	} while (0); \
+-
+-#endif
+-
+ #endif  /* APC_ZEND_H */
+ 
+ /*
+Index: apc_string.c
+===================================================================
+--- apc_string.c	(revision 324083)
++++ apc_string.c	(working copy)
+@@ -29,12 +29,12 @@
+ 
+ #include "apc.h"
+ #include "apc_globals.h"
+-#include "apc_zend.h"
+ #include "apc_php.h"
+ #include "apc_lock.h"
+ 
+ #ifdef ZEND_ENGINE_2_4
+ 
++#ifndef ZTS
+ typedef struct _apc_interned_strings_data_t {
+     char *interned_strings_start;
+     char *interned_strings_end;
+@@ -65,9 +65,11 @@
+ static void apc_dummy_interned_strings_restore_for_php(TSRMLS_D)
+ {
+ }
++#endif
+ 
+ const char *apc_new_interned_string(const char *arKey, int nKeyLength TSRMLS_DC)
+ {
++#ifndef ZTS
+     ulong h;
+     uint nIndex;
+     Bucket *p;
+@@ -125,8 +127,12 @@
+     APCSG(interned_strings).nNumOfElements++;
+ 
+     return p->arKey;
++#else
++    return zend_new_interned_string(arKey, nKeyLength, 0 TSRMLS_CC);
++#endif
+ }
+ 
++#ifndef ZTS
+ static void apc_copy_internal_strings(TSRMLS_D)
+ {
+     Bucket *p, *q;
+@@ -148,7 +154,7 @@
+         }
+ 
+ 		if (ce->name) {
+-			ZEND_STR_INTERN_DUP(ce->name, ce->name_length)
++            ce->name = apc_new_interned_string(ce->name, ce->name_length TSRMLS_CC);
+ 		}
+ 
+         q = ce->properties_info.pListHead;
+@@ -160,7 +166,7 @@
+             }
+ 
+             if (info->name) {
+-				ZEND_STR_INTERN_DUP(info->name, info->name_length)
++                info->name = apc_new_interned_string(info->name, info->name_length TSRMLS_CC);
+             }
+ 
+             q = q->pListNext;
+@@ -240,6 +246,7 @@
+ 
+     DESTROY_LOCK(APCSG(lock));
+ }
++#endif
+ 
+ #endif
+ 
+Index: apc_string.h
+===================================================================
+--- apc_string.h	(revision 324083)
++++ apc_string.h	(working copy)
+@@ -32,8 +32,10 @@
+ 
+ #include "apc.h"
+ 
++#ifndef ZTS
+ void apc_interned_strings_init(TSRMLS_D);
+ void apc_interned_strings_shutdown(TSRMLS_D);
++#endif
+ 
+ const char *apc_new_interned_string(const char *arKey, int nKeyLength TSRMLS_DC);
+ 
