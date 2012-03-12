@@ -2,7 +2,7 @@
 %{!?__pecl:	%{expand: %%global __pecl    %{_bindir}/pecl}}
 
 %global pecl_name APC
-%global svnver    324037
+%global svnver    324146
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
@@ -11,16 +11,14 @@ License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 %if 0%{?svnver}
-# svn co -r 324037 https://svn.php.net/repository/pecl/apc/trunk apc-svn324037
-# tar czf apc-svn324037.tgz apc-svn324037
+# svn co -r 324146 https://svn.php.net/repository/pecl/apc/trunk apc-svn324146
+# tar czf apc-svn324146.tgz apc-svn324146
 Source:        apc-svn%{svnver}.tgz
 Release:       7.svn%{svnver}%{?dist}
 %else
 Release:       3%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
 %endif
-
-Patch0:        interned_string_double_free_fix2.patch
 
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -62,10 +60,6 @@ These are the files needed to compile programs using APC serializer.
 mv apc-svn%{svnver}/package.xml .
 mv apc-svn%{svnver} APC-%{version}
 %endif
-
-cd APC-%{version}
-%patch0 -p0 -b .doublefree
-cd ..
 
 # Check than upstream version is correct, http://pecl.php.net/bugs/19590
 grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
@@ -223,6 +217,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 12 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-7.svn324146
+- pull changes from SVN revision 324146, fix https://bugs.php.net/60658
+
 * Sun Mar 11 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-7.svn324037
 - pull changes from SVN revision 324037
 - add patch from https://bugs.php.net/61238
