@@ -4,12 +4,12 @@
 %global useselinux 0
 %endif
 
-%global svnrelease 17620
+%global svnrelease 17842
 
 Name:           glpi
 Version:        0.83
 %if 0%{?svnrelease}
-Release:        0.1.svn%{svnrelease}%{?dist}
+Release:        0.2.svn%{svnrelease}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -246,6 +246,9 @@ fi
 
 
 %changelog
+* Wed Mar 14 2012 Remi Collet <remi@fedoraproject.org> - 0.83-0.2.svn17842
+- new SVN snapshot
+
 * Sun Feb 26 2012 Remi Collet <remi@fedoraproject.org> - 0.83-0.1.svn17620
 - version 0.83 post RC3
 
