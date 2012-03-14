@@ -2,21 +2,16 @@
 %{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global gitver    8d9993b
-%global prever    -dev
+%global prever    RC1
+%global devver    rc1
 
 Name:           %{phpname}-pecl-xdebug
-Version:        2.2.0
-%if %{?gitver:1}
-Release:        0.5.git%{gitver}%{?dist}
-Source0:        derickr-xdebug-XDEBUG_2_1_2-250-g8d9993b.tar.gz
-BuildRequires:  libtool
-%else
-Release:        1%{?dist}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-%endif
 Summary:        PECL package for debugging PHP scripts
+Version:        2.2.0
+Release:        0.6.%{prever}%{?dist}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
+# The Xdebug License, version 1.01 (BSD style)
 License:        BSD
 Group:          Development/Languages
 URL:            http://xdebug.org/
@@ -34,7 +29,11 @@ Requires:       %{phpname}(api) = %{php_core_api}
 Provides:       %{phpname}-pecl(Xdebug) = %{version}
 Provides:       %{phpname}-pecl(Xdebug)%{?_isa} = %{version}
 
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -59,25 +58,11 @@ Xdebug also provides:
 %prep
 %setup -qc
 
-%if %{?gitver:1}
-cp derickr-xdebug-%{gitver}/package2.xml .
-%{_bindir}/php <<EOF
-<?php
-\$xml = simplexml_load_file("package2.xml");
-\$xml->version->release="%{version}dev";
-\$xml->version->api="%{version}";
-\$xml->stability->release="devel";
-\$xml->stability->api="devel";
-file_put_contents("package2.xml",\$xml->asXML());
-EOF
-mv derickr-xdebug-%{gitver} %{pecl_name}-%{version}
+cd %{pecl_name}-%{version}%{?prever}
 
 # https://bugs.php.net/60330
-sed -i -e '/AC_PREREQ/s/2.60/2.59/' %{pecl_name}-%{version}/debugclient/configure.in
-grep AC_PREREQ %{pecl_name}-%{version}/debugclient/configure.in
-%endif
-
-cd %{pecl_name}-%{version}
+sed -i -e '/AC_PREREQ/s/2.60/2.59/' debugclient/configure.in
+grep AC_PREREQ debugclient/configure.in
 
 # fix rpmlint warnings
 iconv -f iso8859-1 -t utf-8 Changelog > Changelog.conv && mv -f Changelog.conv Changelog
@@ -85,17 +70,17 @@ chmod -x *.[ch]
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
-if test "$ver" != "%{version}%{?prever}"; then
-   : Error: Upstream XDEBUG_VERSION version is ${ver}, expecting %{version}.
+if test "$ver" != "%{version}%{?devver}"; then
+   : Error: Upstream XDEBUG_VERSION version is ${ver}, expecting %{version}%{?devver}.
    exit 1
 fi
 
 cd ..
-cp -r %{pecl_name}-%{version} %{pecl_name}-zts
+cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-zts
 
 
 %build
-cd %{pecl_name}-%{version}
+cd %{pecl_name}-%{version}%{?prever}
 %{_bindir}/phpize
 %configure --enable-xdebug  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
@@ -117,19 +102,17 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make -C %{pecl_name}-%{version} \
+make -C %{pecl_name}-%{version}%{?prever} \
      install INSTALL_ROOT=%{buildroot}
 
 make -C %{pecl_name}-zts \
      install INSTALL_ROOT=%{buildroot}
 
 # install debugclient
-install -Dpm 755 %{pecl_name}-%{version}/debugclient/debugclient \
+install -Dpm 755 %{pecl_name}-%{version}%{?prever}/debugclient/debugclient \
         %{buildroot}%{_bindir}/debugclient
 
-# Install XML package description
-# package.xml is V1, package2.xml is V2
-install -Dpm 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
 install -d %{buildroot}%{php_inidir}
@@ -153,7 +136,7 @@ EOF
 # only check if build extension can be loaded
 %{__php} \
     --no-php-ini \
-    --define zend_extension=%{pecl_name}-%{version}/modules/%{pecl_name}.so \
+    --define zend_extension=%{pecl_name}-%{version}%{?prever}/modules/%{pecl_name}.so \
     --modules | grep Xdebug
 
 %{_bindir}/zts-php \
@@ -178,7 +161,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc  %{pecl_name}-%{version}/{CREDITS,LICENSE,NEWS,README}
+%doc  %{pecl_name}-%{version}%{?prever}/{CREDITS,LICENSE,NEWS,README}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -188,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 14 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.6.RC1
+- Update to 2.2.0RC1
+
 * Sun Mar 11 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.5.git8d9993b
 - new git snapshot
 
