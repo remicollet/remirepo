@@ -1,11 +1,37 @@
-%define nspr_version 4.8.9
-%define nss_version 3.13.1
+%define debug_build       0
+
+# Use system Librairies ?
+%if 0%{?fedora} <= 15
+%define system_sqlite 0
+%else
+%define system_sqlite 1
+%endif
+%if 0%{?fedora} < 17
+%define system_nspr       0
+%define system_nss        0
+%else
+%define system_nspr       1
+%define system_nss        1
+%endif
+%if 0%{?fedora} < 15
+%define system_cairo      0
+%define system_vpx        0
+%else
+%define system_cairo      1
+%define system_vpx        1
+%endif
+
+%define build_langpacks 1
+
+%define nspr_version 4.9
+%define nss_version 3.13.3
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
 %define lcms_version 1.19
 %define sqlite_version 3.7.7.1
 %define libnotify_version 0.4
-%define build_langpacks 1
+%global libvpx_version 1.0.0
+
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 
 %if 0%{?fedora} <= 15
@@ -14,8 +40,8 @@
 %define system_sqlite 1
 %endif
 
-%global thunver  10.0.2
-%global thunmax  11.0
+%global thunver  11.0
+%global thunmax  12.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -37,7 +63,7 @@ Version:        1.4
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -64,11 +90,10 @@ Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{versi
 Patch0:         thunderbird-install-dir.patch
 Patch7:         crashreporter-remove-static.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
-# # cherry-picked from 13afcd4c097c
-Patch13:        xulrunner-9.0-secondary-build-fix.patch
 
 # Build patches
 Patch100:       xulrunner-10.0-gcc47.patch
+Patch101:       mozilla-722127.patch
 
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
@@ -85,13 +110,13 @@ Patch200:       thunderbird-8.0-enable-addons.patch
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 15
+%if %{system_nspr}
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
-%if 0%{?fedora} >= 15
+%if %{system_nss}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
-%if 0%{?fedora} >= 15
+%if %{system_cairo}
 # Library requirements (cairo-tee >= 1.10)
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
@@ -157,10 +182,10 @@ cd %{tarballdir}
 cd mozilla
 %patch7 -p2 -b .static
 %patch8 -p3 -b .secondary-ipc
-%patch13 -p2 -b .secondary-build
 %if 0%{?fedora} >= 17
 %patch100 -p1 -b .gcc47
 %endif
+%patch101 -p2 -b .722127
 cd ..
 
 %patch200 -p1 -b .addons
@@ -176,14 +201,17 @@ cd ..
 
 %{__rm} -f .mozconfig
 cat %{SOURCE10} 		\
-%if 0%{?fedora} < 15
+%if ! %{system_nss}
   | grep -v system-nss 		\
 %endif
-%if 0%{?fedora} < 15
+%if ! %{system_nspr}
   | grep -v system-nspr 	\
 %endif
-%if 0%{?fedora} < 15 && 0%{?rhel} <= 6
+%if ! %{system_cairo}
   | grep -v enable-system-cairo    \
+%endif
+%if ! %{system_vpx}
+  | grep -v with-system-libvpx     \
 %endif
   | tee .mozconfig
 
@@ -204,6 +232,18 @@ echo "ac_add_options --disable-jemalloc" >> .mozconfig
 echo "ac_add_options --enable-system-sqlite"  >> .mozconfig
 %else
 echo "ac_add_options --disable-system-sqlite" >> .mozconfig
+%endif
+
+%if %{?debug_build}
+echo "ac_add_options --enable-debug" >> .mozconfig
+echo "ac_add_options --disable-optimize" >> .mozconfig
+%else
+echo "ac_add_options --disable-debug" >> .mozconfig
+echo "ac_add_options --enable-optimize" >> .mozconfig
+%endif
+
+%ifarch %{arm}
+echo "ac_add_options --disable-elf-hack" >> .mozconfig
 %endif
 
 # ===== Enigmail work =====
@@ -260,6 +300,7 @@ MOZ_SMP_FLAGS=-j1
      RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
 [ "$RPM_BUILD_NCPUS" -ge 2 ] && MOZ_SMP_FLAGS=-j2
 [ "$RPM_BUILD_NCPUS" -ge 4 ] && MOZ_SMP_FLAGS=-j4
+[ "$RPM_BUILD_NCPUS" -ge 8 ] && MOZ_SMP_FLAGS=-j8
 %endif
 
 
@@ -299,6 +340,9 @@ rm -rf $RPM_BUILD_ROOT
 #===============================================================================
 
 %changelog
+* Thu Mar 15 2012 Remi Collet <remi@fedoraproject.org> 1.4-2
+- Enigmail 1.4 for Thunderbird 11.0
+
 * Sat Mar 03 2012 Remi Collet <remi@fedoraproject.org> 1.4-1
 - Enigmail 1.4 for Thunderbird 10.0.2
 - using upstream fixlang.pl instead of our fixlang.php

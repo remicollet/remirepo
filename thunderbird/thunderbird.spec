@@ -1,18 +1,40 @@
-%define nspr_version 4.8.9
-%define nss_version 3.13.1
-%define cairo_version 1.10.0
-%define freetype_version 2.1.9
-%define lcms_version 1.19
-%define sqlite_version 3.7.7.1
-%define libnotify_version 0.4
-%define build_langpacks 1
-%define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
+# Build as a debug package?
+%define debug_build       0
 
+# Use system Librairies ?
 %if 0%{?fedora} <= 15
 %define system_sqlite 0
 %else
 %define system_sqlite 1
 %endif
+%if 0%{?fedora} < 17
+%define system_nspr       0
+%define system_nss        0
+%else
+%define system_nspr       1
+%define system_nss        1
+%endif
+%if 0%{?fedora} < 15
+%define system_cairo      0
+%define system_vpx        0
+%else
+%define system_cairo      1
+%define system_vpx        1
+%endif
+
+%define build_langpacks 1
+
+%define nspr_version 4.9
+%define nss_version 3.13.3
+%define cairo_version 1.10.0
+%define freetype_version 2.1.9
+%define lcms_version 1.19
+%define sqlite_version 3.7.7.1
+%define libnotify_version 0.4
+%global libvpx_version 1.0.0
+
+%define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
+
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -29,7 +51,7 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        10.0.2
+Version:        11.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -41,7 +63,7 @@ Group:          Applications/Internet
 %endif
 Source0:        %{tarball}
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20120218.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20120315.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -56,11 +78,10 @@ Source100:      find-external-requires
 Patch0:         thunderbird-install-dir.patch
 Patch7:         crashreporter-remove-static.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
-# # cherry-picked from 13afcd4c097c
-Patch13:        xulrunner-9.0-secondary-build-fix.patch
 
 # Build patches
 Patch100:       xulrunner-10.0-gcc47.patch
+Patch101:       mozilla-722127.patch
 
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
@@ -74,13 +95,13 @@ Patch200:       thunderbird-8.0-enable-addons.patch
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if 0%{?fedora} >= 15
+%if %{system_nspr}
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
-%if 0%{?fedora} >= 15
+%if %{system_nss}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
-%if 0%{?fedora} >= 15
+%if %{system_cairo}
 # Library requirements (cairo-tee >= 1.10)
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
@@ -113,16 +134,22 @@ BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  GConf2-devel
 BuildRequires:  lcms-devel >= %{lcms_version}
+%if %{system_vpx}
+BuildRequires:  libvpx-devel >= %{libvpx_version}
+%endif
 
 Requires:       mozilla-filesystem
-%if 0%{?fedora} >= 15
+%if %{system_nspr}
 Requires:       nspr >= %{nspr_version}
 %endif
-%if 0%{?fedora} >= 15
+%if %{system_nss}
 Requires:       nss >= %{nss_version}
 %endif
 %if %{?system_sqlite}
 Requires:       sqlite >= %{sqlite_version}
+%endif
+%if %{system_vpx}
+Requires:       libvpx >= %{libvpx_version}
 %endif
 
 AutoProv: 0
@@ -170,10 +197,10 @@ cd %{tarballdir}
 cd mozilla
 %patch7 -p2 -b .static
 %patch8 -p3 -b .secondary-ipc
-%patch13 -p2 -b .secondary-build
 %if 0%{?fedora} >= 17
 %patch100 -p1 -b .gcc47
 %endif
+%patch101 -p2 -b .722127
 cd ..
 
 %patch200 -p1 -b .addons
@@ -189,14 +216,17 @@ cd ..
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
-%if 0%{?fedora} < 15
+%if ! %{system_nss}
   | grep -v system-nss 		\
 %endif
-%if 0%{?fedora} < 15
+%if ! %{system_nspr}
   | grep -v system-nspr 	\
 %endif
-%if 0%{?fedora} < 15
+%if ! %{system_cairo}
   | grep -v enable-system-cairo    \
+%endif
+%if ! %{system_vpx}
+  | grep -v with-system-libvpx     \
 %endif
   | tee .mozconfig
 
@@ -222,6 +252,18 @@ echo "ac_add_options --enable-system-sqlite"  >> .mozconfig
 echo "ac_add_options --disable-system-sqlite" >> .mozconfig
 %endif
 
+%if %{?debug_build}
+echo "ac_add_options --enable-debug" >> .mozconfig
+echo "ac_add_options --disable-optimize" >> .mozconfig
+%else
+echo "ac_add_options --disable-debug" >> .mozconfig
+echo "ac_add_options --enable-optimize" >> .mozconfig
+%endif
+
+%ifarch %{arm}
+echo "ac_add_options --disable-elf-hack" >> .mozconfig
+%endif
+
 #===============================================================================
 
 %build
@@ -236,6 +278,9 @@ cd %{tarballdir}
 # 
 MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
                       %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
+%if %{?debug_build}
+MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
+%endif
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
 
@@ -250,6 +295,7 @@ MOZ_SMP_FLAGS=-j1
      RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
 [ "$RPM_BUILD_NCPUS" -ge 2 ] && MOZ_SMP_FLAGS=-j2
 [ "$RPM_BUILD_NCPUS" -ge 4 ] && MOZ_SMP_FLAGS=-j4
+[ "$RPM_BUILD_NCPUS" -ge 8 ] && MOZ_SMP_FLAGS=-j8
 %endif
 
 make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
@@ -445,8 +491,26 @@ fi
 #===============================================================================
 
 %changelog
+* Thu Mar 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0-1
+- Update to 10.0.2
+
+* Wed Mar 14 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 11.0-4
+- Add ARM configuration options
+
+* Wed Mar 14 2012 Martin Stransky <stransky@redhat.com> - 11.0-3
+- Build with system libvpx
+
+* Tue Mar 13 2012 Martin Stransky <stransky@redhat.com> - 11.0-1
+- Update to 11.0
+
+* Thu Feb 23 2012 Jan Horak <jhorak@redhat.com> - 10.0.1-3
+- Added fix for proxy settings mozbz#682832
+
 * Sat Feb 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0.2-1
 - Update to 10.0.2
+
+* Thu Feb 16 2012 Martin Stransky <stransky@redhat.com> - 10.0.1-2
+- Added fix for mozbz#727401
 
 * Thu Feb 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0.1-1
 - update to 10.0.1, sync with rawhide
