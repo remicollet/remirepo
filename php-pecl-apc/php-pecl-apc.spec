@@ -66,36 +66,6 @@ grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
 
 cp -pr APC-%{version} APC-%{version}-zts
 
-
-%build
-cd APC-%{version}-zts
-%{_bindir}/zts-phpize
-%configure --enable-apc-mmap --with-php-config=%{_bindir}/zts-php-config
-make %{?_smp_mflags}
-
-cd ../APC-%{version}
-%{_bindir}/phpize
-%configure --enable-apc-mmap --with-php-config=%{_bindir}/php-config
-make %{?_smp_mflags}
-
-
-%install
-rm -rf %{buildroot}
-pushd APC-%{version}-zts
-make install INSTALL_ROOT=%{buildroot}
-popd
-
-pushd APC-%{version}
-make install INSTALL_ROOT=%{buildroot}
-
-# Fix the charset of NOTICE
-iconv -f iso-8859-1 -t utf8 NOTICE >NOTICE.utf8
-mv NOTICE.utf8 NOTICE
-popd
-
-# Install the package XML file
-install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
-
 # Drop in the bit of configuration
 cat > apc.ini << 'EOF'
 ; Enable apc extension module
@@ -111,10 +81,10 @@ apc.shm_segments=1
 ; The size of each shared memory segment, with M/G suffixe
 apc.shm_size=64M
 ; A "hint" about the number of distinct source files that will be included or 
-; requested on your web server. Set to zero or omit if you're not sure;
+; requested on your web server. Set to zero or omit if you are not sure;
 apc.num_files_hint=1024
 ; Just like num_files_hint, a "hint" about the number of distinct user cache
-; variables to store.  Set to zero or omit if you're not sure;
+; variables to store.  Set to zero or omit if you are not sure;
 apc.user_entries_hint=4096
 ; The number of seconds a cache entry is allowed to idle in a slot in case this
 ; cache entry slot is needed by another entry.
@@ -142,7 +112,7 @@ apc.max_file_size=1M
 ; Whether to stat the main script file and the fullpath includes.
 apc.stat=1
 ; Vertification with ctime will avoid problems caused by programs such as svn or rsync by making 
-; sure inodes havn't changed since the last stat. APC will normally only check mtime.
+; sure inodes have not changed since the last stat. APC will normally only check mtime.
 apc.stat_ctime=0
 ; Whether to canonicalize paths in stat=0 mode or fall back to stat behaviour
 apc.canonicalize=0
@@ -169,13 +139,45 @@ apc.file_md5=0
 ; not documented
 apc.preload_path
 EOF
+
+
+%build
+cd APC-%{version}
+%{_bindir}/phpize
+%configure --enable-apc-mmap --with-php-config=%{_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../APC-%{version}-zts
+%{_bindir}/zts-phpize
+%configure --enable-apc-mmap --with-php-config=%{_bindir}/zts-php-config
+make %{?_smp_mflags}
+
+
+%install
+rm -rf %{buildroot}
+# Install the NTS stuff
+pushd APC-%{version}
+make install INSTALL_ROOT=%{buildroot}
+
+# Fix the charset of NOTICE
+iconv -f iso-8859-1 -t utf8 NOTICE >NOTICE.utf8
+mv NOTICE.utf8 NOTICE
+popd
+install -D -m 644 apc.ini %{buildroot}%{_sysconfdir}/php.d/apc.ini
+
+# Install the ZTS stuff
+pushd APC-%{version}-zts
+make install INSTALL_ROOT=%{buildroot}
+popd
 install -D -m 644 apc.ini %{buildroot}%{php_ztsinidir}/apc.ini
-install -D -m 644 apc.ini %{buildroot}%{php_inidir}/apc.ini
+
+# Install the package XML file
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %check
 cd %{pecl_name}-%{version}
-TEST_PHP_EXECUTABLE=%{__php} %{__php} run-tests.php \
+TEST_PHP_EXECUTABLE=%{_bindir}/php %{_bindir}/php run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=apc.so
 
@@ -204,15 +206,15 @@ rm -rf %{buildroot}
 %doc APC-%{version}/TECHNOTES.txt APC-%{version}/CHANGELOG APC-%{version}/LICENSE
 %doc APC-%{version}/NOTICE        APC-%{version}/TODO      APC-%{version}/apc.php
 %doc APC-%{version}/INSTALL
-%config(noreplace) %{php_inidir}/apc.ini
-%config(noreplace) %{php_ztsinidir}/apc.ini
+%config(noreplace) %{_sysconfdir}/php.d/apc.ini
 %{php_extdir}/apc.so
-%{php_ztsextdir}/apc.so
 %{pecl_xmldir}/%{name}.xml
+%{php_ztsextdir}/apc.so
+%config(noreplace) %{php_ztsinidir}/apc.ini
 
 
 %files devel
-%{php_incldir}/ext/apc
+%{_includedir}/php/ext/apc
 %{php_ztsincldir}/ext/apc
 
 
