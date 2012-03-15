@@ -148,6 +148,9 @@ BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  GConf2-devel
 BuildRequires:  lcms-devel >= %{lcms_version}
+%if %{system_vpx}
+BuildRequires:  libvpx-devel >= %{libvpx_version}
+%endif
 
 ## For fixing lang
 BuildRequires:  perl
