@@ -63,7 +63,7 @@ Version:        1.4
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -94,6 +94,7 @@ Patch8:         xulrunner-10.0-secondary-ipc.patch
 # Build patches
 Patch100:       xulrunner-10.0-gcc47.patch
 Patch101:       mozilla-722127.patch
+Patch102:       mozilla-733867-x.patch
 
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
@@ -190,6 +191,7 @@ cd mozilla
 %endif
 %patch101 -p2 -b .722127
 cd ..
+%patch102 -p2 -b .733867
 
 %patch200 -p1 -b .addons
 
@@ -343,6 +345,9 @@ rm -rf $RPM_BUILD_ROOT
 #===============================================================================
 
 %changelog
+* Fri Mar 16 2012 Remi Collet <remi@fedoraproject.org> 1.4-2.1
+- latest patch from rawhide
+
 * Thu Mar 15 2012 Remi Collet <remi@fedoraproject.org> 1.4-2
 - Enigmail 1.4 for Thunderbird 11.0
 

@@ -52,7 +52,7 @@
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
 Version:        11.0
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -82,6 +82,7 @@ Patch8:         xulrunner-10.0-secondary-ipc.patch
 # Build patches
 Patch100:       xulrunner-10.0-gcc47.patch
 Patch101:       mozilla-722127.patch
+Patch102:       mozilla-733867-x.patch
 
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
@@ -202,6 +203,7 @@ cd mozilla
 %endif
 %patch101 -p2 -b .722127
 cd ..
+%patch102 -p2 -b .733867
 
 %patch200 -p1 -b .addons
 
@@ -491,6 +493,12 @@ fi
 #===============================================================================
 
 %changelog
+* Fri Mar 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0-1.1
+- latest patch from rawhide
+
+* Fri Mar 16 2012 Martin Stransky <stransky@redhat.com> - 11.0-5
+- gcc 4.7 build fixes
+
 * Thu Mar 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0-1
 - Update to 10.0.2
 
