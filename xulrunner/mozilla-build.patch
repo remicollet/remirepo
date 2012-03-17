@@ -1,7 +1,7 @@
-diff -up xulrunner-1.9.3.0/mozilla-central/security/manager/Makefile.in.build xulrunner-1.9.3.0/mozilla-central/security/manager/Makefile.in
---- xulrunner-1.9.3.0/mozilla-central/security/manager/Makefile.in.build	2010-08-06 03:09:27.000000000 +0200
-+++ xulrunner-1.9.3.0/mozilla-central/security/manager/Makefile.in	2010-08-16 10:49:10.000000000 +0200
-@@ -181,7 +181,6 @@ DEFAULT_GMAKE_FLAGS += NSPR_INCLUDE_DIR=
+diff -up mozilla-beta/security/manager/Makefile.in.build mozilla-beta/security/manager/Makefile.in
+--- mozilla-beta/security/manager/Makefile.in.build	2012-03-09 01:39:56.000000000 +0100
++++ mozilla-beta/security/manager/Makefile.in	2012-03-09 13:56:28.612328083 +0100
+@@ -174,7 +174,6 @@ DEFAULT_GMAKE_FLAGS += NSPR_INCLUDE_DIR=
  DEFAULT_GMAKE_FLAGS += NSPR_LIB_DIR=$(NSPR_LIB_DIR)
  DEFAULT_GMAKE_FLAGS += MOZILLA_CLIENT=1
  DEFAULT_GMAKE_FLAGS += NO_MDUPDATE=1
@@ -9,15 +9,14 @@ diff -up xulrunner-1.9.3.0/mozilla-central/security/manager/Makefile.in.build xu
  DEFAULT_GMAKE_FLAGS += NSINSTALL="$(NSINSTALL)"
  ifndef MOZ_NATIVE_SQLITE
  DEFAULT_GMAKE_FLAGS += SQLITE_LIB_NAME=mozsqlite3
-diff -up xulrunner-1.9.3.0/mozilla-central/security/manager/ssl/src/Makefile.in.build xulrunner-1.9.3.0/mozilla-central/security/manager/ssl/src/Makefile.in
---- xulrunner-1.9.3.0/mozilla-central/security/manager/ssl/src/Makefile.in.build	2010-08-06 03:09:17.000000000 +0200
-+++ xulrunner-1.9.3.0/mozilla-central/security/manager/ssl/src/Makefile.in	2010-08-16 10:46:22.000000000 +0200
-@@ -113,8 +113,6 @@ CSRCS += md4.c
- 
+diff -up mozilla-beta/security/manager/ssl/src/Makefile.in.build mozilla-beta/security/manager/ssl/src/Makefile.in
+--- mozilla-beta/security/manager/ssl/src/Makefile.in.build	2012-03-09 01:39:56.000000000 +0100
++++ mozilla-beta/security/manager/ssl/src/Makefile.in	2012-03-09 13:57:37.055657208 +0100
+@@ -116,7 +116,6 @@ CSRCS += md4.c
  EXTRA_DEPS = $(NSS_DEP_LIBS)
  
--DEFINES += -DNSS_ENABLE_ECC
--
- # Use local includes because they are inserted before INCLUDES
- # so that Mozilla's nss.h is used, not glibc's
- LOCAL_INCLUDES += $(NSS_CFLAGS)
+ DEFINES += \
+-  -DNSS_ENABLE_ECC \
+   -DDLL_PREFIX=\"$(DLL_PREFIX)\" \
+   -DDLL_SUFFIX=\"$(DLL_SUFFIX)\" \
+   $(NULL)

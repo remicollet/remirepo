@@ -1,32 +1,37 @@
-# Use system sqlite?
-%if 0%{?fedora} < 16
-%define system_sqlite     0
-%else
-%define system_sqlite     1
-%endif
-# Use system nspr/nss/cairo/libvpx
+# Use system nspr/nss?
 %if 0%{?fedora} < 15
-%define system_nspr       0
 %define system_nss        0
 %define system_cairo      0
 %define system_vpx        0
 %else
-%define system_nspr       1
 %define system_nss        1
 %define system_cairo      1
 %define system_vpx        1
 %endif
 
+# Use system sqlite?
+%if 0%{?fedora} <= 15
+%define system_sqlite     0
+%else
+%define system_sqlite     1
+%endif
+
 %global shortname         xulrunner
 
+# Build as a debug package?
+%define debug_build       0
+
 # Minimal required versions
-%global nspr_version 4.8.9
-%global nss_version 3.13.1
 %global cairo_version 1.10.2
 %global freetype_version 2.1.9
 %global libnotify_version 0.7.0
 %global libvpx_version 1.0.0
 %global lcms_version 1.18
+
+%if %{?system_nss}
+%global nspr_version 4.9
+%global nss_version 3.13.3
+%endif
 
 %if %{?system_sqlite}
 %global sqlite_version 3.7.7.1
@@ -38,13 +43,13 @@
 # alpha_version should be set to the alpha number if using an alpha, 0 otherwise
 # beta_version  should be set to the beta number if using a beta, 0 otherwise
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
-%global gecko_dir_ver 10
+%global gecko_dir_ver 11
 %global alpha_version 0
 %global beta_version  0
 %global rc_version    0
 
-%global mozappdir         %{_libdir}/%{shortname}-%{gecko_dir_ver}
-%global tarballdir  mozilla-release
+%global mozappdir     %{_libdir}/%{shortname}-%{gecko_dir_ver}
+%global tarballdir    mozilla-release
 
 # crash reporter work only on x86/x86_64
 #%ifarch %{ix86} x86_64
@@ -75,7 +80,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        10.0.2
+Version:        11.0
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -92,7 +97,7 @@ Source21:       %{shortname}.sh.in
 Patch0:         xulrunner-version.patch
 Patch1:         mozilla-build.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
-Patch17:	xulrunner-10.0-gcc47.patch
+Patch17:        xulrunner-10.0-gcc47.patch
 
 
 # Fedora specific patches
@@ -101,25 +106,21 @@ Patch23:        wmclass.patch
 Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
-Patch38:        mozilla-696393.patch
 # https://bugzilla.mozilla.org/show_bug.cgi?id=707993
 Patch39:        xulrunner-8.0-fix-maemo-checks-in-npapi.patch
-Patch40:        mozilla-682832-proxy.patch
-# cherry-picked from 13afcd4c097c
-Patch41:        xulrunner-9.0-secondary-build-fix.patch
 Patch42:        mozilla-706724.patch
 Patch43:        mozilla-file.patch
 # Needed to detect/use libvpx-1.0.0
 # https://bugzilla.mozilla.org/show_bug.cgi?id=722127
-Patch44:	mozilla-722127.patch
+Patch44:        mozilla-722127.patch
+Patch46:        mozilla-724615.patch
+Patch47:        mozilla-691898.patch
 
 # ---------------------------------------------------
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-%if %{system_nspr}
+%if %{?system_nss}
 BuildRequires:  nspr-devel >= %{nspr_version}
-%endif
-%if %{system_nss}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{system_cairo}
@@ -142,9 +143,9 @@ BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  libnotify-devel
 BuildRequires:  mesa-libGL-devel
+BuildRequires:  curl-devel
 BuildRequires:  lcms-devel >= %{lcms_version}
 BuildRequires:  yasm
-BuildRequires:  curl-devel
 %ifarch %{ix86} x86_64
 BuildRequires:  wireless-tools-devel
 %endif
@@ -153,10 +154,8 @@ BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
 
 Requires:       mozilla-filesystem
-%if %{system_nspr}
+%if %{?system_nss}
 Requires:       nspr >= %{nspr_version}
-%endif
-%if %{system_nspr}
 Requires:       nss >= %{nss_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
@@ -192,10 +191,8 @@ Provides: gecko-devel-unstable = %{gecko_verrel}
 Provides: gecko-devel-unstable%{?_isa} = %{gecko_verrel}
 
 Requires: %{name}%{?_isa} = %{version}-%{release}
-%if %{system_nspr}
+%if %{?system_nss}
 Requires: nspr-devel >= %{nspr_version}
-%endif
-%if %{system_nspr}
 Requires: nss-devel >= %{nss_version}
 %endif
 %if %{system_cairo}
@@ -221,16 +218,17 @@ Requires: startup-notification-devel
 Requires: alsa-lib-devel
 Requires: libnotify-devel
 Requires: mesa-libGL-devel
+Requires: libvpx-devel >= %{libvpx_version}
 Requires: lcms-devel
 Requires: yasm
 %ifarch %{ix86} x86_64
 Requires: wireless-tools-devel
 %endif
-Obsoletes: xulrunner2-devel
-Obsoletes: xulrunner5-devel
 Obsoletes: xulrunner6-devel
 Obsoletes: xulrunner7-devel
 Obsoletes: xulrunner8-devel
+Obsoletes: xulrunner9-devel
+Obsoletes: xulrunner10-devel
 
 %description devel
 This package contains the libraries amd header files that are needed
@@ -266,7 +264,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
     > version.patch
 %{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
 
-%patch1  -p2 -b .build
+%patch1  -p1 -b .build
 %patch14 -p1 -b .chromium-types
 %patch17 -p1 -b .gcc47
 
@@ -274,29 +272,17 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
-%patch38 -p2 -b .696393
 %patch39 -p1 -b .707993
-%if 0%{?fedora} >= 14
-%patch40 -p2 -b .682832
-%endif
-%patch41 -p2 -b .secondary-build
 %patch42 -p1 -b .706724
 %patch43 -p1 -b .file
 %if %{system_vpx}
 %patch44 -p2 -b .vpx1.0.0
 %endif
+%patch46 -p1 -b .724615
+#%patch47 -p1 -b .691898
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if ! %{system_sqlite}
-  | grep -v enable-system-sqlite   \
-%endif
-%if ! %{system_nspr}
-  | grep -v with-system-nspr       \
-%endif
-%if ! %{system_nspr}
-  | grep -v with-system-nss        \
-%endif
 %if ! %{system_cairo}
   | grep -v enable-system-cairo    \
 %endif
@@ -314,10 +300,26 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 
 echo "ac_add_options --enable-system-lcms" >> .mozconfig
 
+%if %{?system_nss}
+echo "ac_add_options --with-system-nspr" >> .mozconfig
+echo "ac_add_options --with-system-nss" >> .mozconfig
+%else
+echo "ac_add_options --without-system-nspr" >> .mozconfig
+echo "ac_add_options --without-system-nss" >> .mozconfig
+%endif
+
 %if %{?system_sqlite}
 echo "ac_add_options --enable-system-sqlite" >> .mozconfig
 %else
 echo "ac_add_options --disable-system-sqlite" >> .mozconfig
+%endif
+
+%if %{?debug_build}
+echo "ac_add_options --enable-debug" >> .mozconfig
+echo "ac_add_options --disable-optimize" >> .mozconfig
+%else
+echo "ac_add_options --disable-debug" >> .mozconfig
+echo "ac_add_options --enable-optimize" >> .mozconfig
 %endif
 
 # s390(x) fails to start with jemalloc enabled
@@ -329,15 +331,18 @@ echo "ac_add_options --disable-jemalloc" >> .mozconfig
 echo "ac_add_options --with-arch=armv7-a" >> .mozconfig
 echo "ac_add_options --with-float-abi=hard" >> .mozconfig
 echo "ac_add_options --with-fpu=vfpv3-d16" >> .mozconfig
+echo "ac_add_options --disable-elf-hack" >> .mozconfig
 %endif
 %ifarch armv7hnl
 echo "ac_add_options --with-arch=armv7-a" >> .mozconfig
 echo "ac_add_options --with-float-abi=hard" >> .mozconfig
 echo "ac_add_options --with-fpu=neon" >> .mozconfig
+echo "ac_add_options --disable-elf-hack" >> .mozconfig
 %endif
 %ifarch armv5tel
 echo "ac_add_options --with-arch=armv5te" >> .mozconfig
 echo "ac_add_options --with-float-abi=soft" >> .mozconfig
+echo "ac_add_options --disable-elf-hack" >> .mozconfig
 %endif
 
 %ifnarch %{ix86} x86_64
@@ -372,6 +377,9 @@ cd %{tarballdir}
 #
 MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
                       %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
+%if %{?debug_build}
+MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
+%endif
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
 
@@ -386,6 +394,7 @@ MOZ_SMP_FLAGS=-j1
      RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
 [ "$RPM_BUILD_NCPUS" -ge 2 ] && MOZ_SMP_FLAGS=-j2
 [ "$RPM_BUILD_NCPUS" -ge 4 ] && MOZ_SMP_FLAGS=-j4
+[ "$RPM_BUILD_NCPUS" -ge 8 ] && MOZ_SMP_FLAGS=-j8
 %endif
 
 export LDFLAGS="-Wl,-rpath,%{mozappdir}"
@@ -451,7 +460,7 @@ for i in *.so; do
 done
 popd
 
-%if ! %{system_nspr}
+%if ! %{system_nss}
 %{__install} -D -p -m 755 \
    dist/sdk/bin/nspr-config \
    $RPM_BUILD_ROOT%{_libdir}/%{shortname}-devel-%{gecko_dir_ver}/sdk/bin/nspr-config
@@ -486,7 +495,7 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 %{__cp} dist/%{symbols_file_name} $RPM_BUILD_ROOT/%{moz_debug_dir}
 %endif
 
-# Remi : this appears on Fedora <= 13
+# Remi : this appears when using bundled lib (nss, nspr, ...)
 %{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/*.chk
 
 
@@ -556,6 +565,22 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Mar 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0-1
+- update to 11.0, sync with rawhide
+
+* Tue Mar 13 2012 Martin Stransky <stransky@redhat.com> - 11.0-3
+- Update to 11.0
+- Fixed libvpx-devel dependency
+
+* Fri Mar 9 2012 Martin Stransky <stransky@redhat.com> - 11.0-1
+- Update to 11.0 Beta 7
+
+* Fri Mar 09 2012 Dan Horák <dan[at]danny.cz> - 10.0.1-5
+- Add fix for secondary arches from mozb#691898
+
+* Mon Feb 27 2012 Martin Stransky <stransky@redhat.com> - 10.0.1-4
+- Added fix from rhbz#796929 - xulrunner doesn't compile on ARM
+
 * Sat Feb 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0.2-1
 - update to 10.0.2
 

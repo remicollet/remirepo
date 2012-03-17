@@ -1,3 +1,14 @@
+# Use system nspr/nss?
+%if 0%{?fedora} < 15
+%define system_nss        0
+%define system_cairo      0
+%define system_vpx        0
+%else
+%define system_nss        1
+%define system_cairo      1
+%define system_vpx        1
+%endif
+
 # Separated plugins are supported on x86(64) only
 %ifarch %{ix86} x86_64
 %define separated_plugins 1
@@ -5,19 +16,22 @@
 %define separated_plugins 0
 %endif
 
+# Build as a debug package?
+%define debug_build       0
+
 %define homepage http://start.fedoraproject.org/
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global shortname       firefox
-#global mycomment       Beta 4
-%global firefox_dir_ver 10
-%global gecko_version   10.0.2
-%global gecko_release   1
-%global alpha_version   0
-%global beta_version    0
-%global rc_version      0
-%global datelang        20120218
+%global shortname              firefox
+#global mycomment              Beta 4
+%global firefox_dir_ver        11
+%global xulrunner_version      11.0
+%global xulrunner_release      1
+%global alpha_version          0
+%global beta_version           0
+%global rc_version             0
+%global datelang               20120317
 
 %global mozappdir     %{_libdir}/%{shortname}
 %global langpackdir   %{mozappdir}/langpacks
@@ -40,15 +54,15 @@
 %global pre_name    rc%{rc_version}
 %endif
 %if %{defined pre_version}
-%global gecko_verrel %{gecko_version}-%{gecko_release}%{pre_name}
+%global xulrunner_verrel %{xulrunner_version}-%{xulrunner_release}%{pre_name}
 %global pre_tag .%{pre_version}
 %else
-%global gecko_verrel %{gecko_version}-%{gecko_release}
+%global xulrunner_verrel %{xulrunner_version}-%{xulrunner_release}
 %endif
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        10.0.2
+Version:        11.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -73,8 +87,7 @@ Patch14:        firefox-5.0-asciidel.patch
 Patch15:        firefox-8.0-enable-addons.patch
 
 # Upstream patches
-# fixes non functional web development tools, obsolete by version 11
-Patch100:       mozilla-703633.patch
+Patch100:       mozilla-722127.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -90,12 +103,11 @@ Patch100:       mozilla-703633.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  system-bookmarks
-BuildRequires:  xulrunner%{firefox_dir_ver}-devel = %{version}
+BuildRequires:  xulrunner%{firefox_dir_ver}-devel >= %{xulrunner_verrel}
 # For WebM support
 BuildRequires:	yasm
 
-Requires:       xulrunner%{firefox_dir_ver}%{?_isa} = %{version}
-Requires:       gecko-libs%{?_isa} = %{gecko_verrel}
+Requires:       xulrunner%{firefox_dir_ver}%{?_isa} >= %{xulrunner_verrel}
 Requires:       system-bookmarks
 Obsoletes:      mozilla <= 37:1.7.13
 Provides:       webclient
@@ -131,7 +143,7 @@ cd %{tarballdir}
 %patch15 -p2 -b .addons
 
 # Upstream patches
-%patch100 -p1 -b .703633
+%patch100 -p2 -b .722127
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -143,17 +155,14 @@ cd %{tarballdir}
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if 0%{?fedora} < 16
-  | grep -v enable-system-sqlite   \
-%endif
-%if 0%{?fedora} < 15
-  | grep -v with-system-nspr       \
-%endif
-%if 0%{?fedora} < 15
-  | grep -v with-system-nss        \
-%endif
-%if 0%{?fedora} < 15
+%if ! %{system_cairo}
   | grep -v enable-system-cairo    \
+%endif
+%ifarch %{ix86} x86_64
+  | grep -v disable-necko-wifi     \
+%endif
+%if ! %{system_vpx}
+  | grep -v with-system-libvpx     \
 %endif
 %ifarch %{ix86} x86_64
   | grep -v disable-necko-wifi     \
@@ -169,6 +178,14 @@ cd %{tarballdir}
 
 echo "ac_add_options --enable-system-lcms" >> .mozconfig
 
+%if %{?system_nss}
+echo "ac_add_options --with-system-nspr" >> .mozconfig
+echo "ac_add_options --with-system-nss" >> .mozconfig
+%else
+echo "ac_add_options --without-system-nspr" >> .mozconfig
+echo "ac_add_options --without-system-nss" >> .mozconfig
+%endif
+
 # Set up SDK path
 echo "ac_add_options --with-libxul-sdk=\
 `pkg-config --variable=sdkdir libxul`" >> .mozconfig
@@ -179,6 +196,18 @@ echo "ac_add_options --disable-ipc" >> .mozconfig
 
 %if 0%{?fedora} < 14
 echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
+%endif
+
+%ifarch %{arm}
+echo "ac_add_options --disable-elf-hack" >> .mozconfig
+%endif
+
+%if %{?debug_build}
+echo "ac_add_options --enable-debug" >> .mozconfig
+echo "ac_add_options --disable-optimize" >> .mozconfig
+%else
+echo "ac_add_options --disable-debug" >> .mozconfig
+echo "ac_add_options --enable-optimize" >> .mozconfig
 %endif
 
 #---------------------------------------------------------------------
@@ -193,6 +222,9 @@ cd %{tarballdir}
 #
 MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
+%if %{?debug_build}
+MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
+%endif
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
 
@@ -401,6 +433,20 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Mar 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0-1
+- Update to 11.0, sync with rawhide
+
+* Thu Mar 15 2012 Martin Stransky <stransky@redhat.com> - 11.0-2
+- Switched dependency to xulrunner (rhbz#803471)
+
+* Tue Mar 13 2012 Martin Stransky <stransky@redhat.com> - 11.0-1
+- Update to 11.0
+- Fixed rhbz#800622 - make default home page of fedoraproject.org conditional
+- Fixed rhbz#801796 - enable debug build by some simple way
+
+* Mon Feb 27 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 10.0.1-2
+- Add ARM config options to fix compile
+
 * Sat Feb 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0.2-1
 - Update to 10.0.2
 

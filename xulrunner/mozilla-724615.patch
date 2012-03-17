@@ -1,0 +1,24 @@
+# HG changeset patch
+# Parent 6292e55419d1730a2e88a56fd30b2440ce0b393a
+# User Raúl Porcel <armin76@gentoo.org>
+Bug XXXXXX - Fix TARGET_CPU usage on ARM
+
+
+diff --git a/xpcom/glue/objs.mk b/xpcom/glue/objs.mk
+--- a/xpcom/glue/objs.mk
++++ b/xpcom/glue/objs.mk
+@@ -71,13 +71,13 @@ XPCOM_GLUENS_SRC_LCPPSRCS =      \
+   SSE.cpp                        \
+   unused.cpp                     \
+   nsProxyRelease.cpp             \
+   nsTextFormatter.cpp            \
+   GenericFactory.cpp             \
+   FileUtils.cpp                  \
+   $(NULL)
+ 
+-ifeq (arm,$(TARGET_CPU))
++ifneq (,$(filter arm%,$(TARGET_CPU)))
+ XPCOM_GLUENS_SRC_LCPPSRCS += arm.cpp
+ endif
+ 
+ XPCOM_GLUENS_SRC_CPPSRCS = $(addprefix $(topsrcdir)/xpcom/glue/,$(XPCOM_GLUENS_SRC_LCPPSRCS))
