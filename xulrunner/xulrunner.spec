@@ -218,7 +218,9 @@ Requires: startup-notification-devel
 Requires: alsa-lib-devel
 Requires: libnotify-devel
 Requires: mesa-libGL-devel
+%if %{system_vpx}
 Requires: libvpx-devel >= %{libvpx_version}
+%endif
 Requires: lcms-devel
 Requires: yasm
 %ifarch %{ix86} x86_64
