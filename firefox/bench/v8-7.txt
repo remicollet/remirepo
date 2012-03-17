@@ -1,0 +1,22 @@
+==============================================================================
+http://v8.googlecode.com/svn/data/benchmarks
+http://v8.googlecode.com/svn/data/benchmarks/v7/run.html
+==============================================================================
+
+Intel(R) Core(TM) i5 CPU         760  @ 2.80GHz
+
+	Mozilla/5.0 (X11; Linux x86_64; rv:11.0) Gecko/20100101 Firefox/11.0					7139
+
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:11.0) Gecko/20100101 Firefox/11.0
+Score: 7139
+Richards: 8310
+DeltaBlue: 8721
+Crypto: 12711
+RayTrace: 3524
+EarleyBoyer: 8377
+RegExp: 1801
+Splay: 11156
+NavierStokes: 12354
+==============================================================================
+
