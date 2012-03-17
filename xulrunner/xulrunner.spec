@@ -166,6 +166,7 @@ Obsoletes:      xulrunner6
 Obsoletes:      xulrunner7
 Obsoletes:      xulrunner8
 Obsoletes:      xulrunner9
+Obsoletes:      xulrunner10
 
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
