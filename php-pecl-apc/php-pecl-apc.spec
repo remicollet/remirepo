@@ -2,7 +2,7 @@
 %{!?__pecl:	%{expand: %%global __pecl    %{_bindir}/pecl}}
 
 %global pecl_name APC
-%global svnver    324146
+%global svnver    324329
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
@@ -11,10 +11,10 @@ License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 %if 0%{?svnver}
-# svn co -r 324146 https://svn.php.net/repository/pecl/apc/trunk apc-svn324146
-# tar czf apc-svn324146.tgz apc-svn324146
+# svn co -r 324329 https://svn.php.net/repository/pecl/apc/trunk apc-svn324329
+# tar czf apc-svn324329.tgz apc-svn324329
 Source:        apc-svn%{svnver}.tgz
-Release:       7.svn%{svnver}%{?dist}
+Release:       8.svn%{svnver}%{?dist}
 %else
 Release:       3%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
@@ -219,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 18 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-8.svn324329
+- pull changes from SVN revision 324329
+
 * Mon Mar 12 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-7.svn324146
 - pull changes from SVN revision 324146, fix https://bugs.php.net/60658
 
