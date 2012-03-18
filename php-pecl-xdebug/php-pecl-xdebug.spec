@@ -11,8 +11,9 @@ Version:        2.2.0
 Release:        0.6.%{prever}%{?dist}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-# The Xdebug License, version 1.01 (BSD style)
-License:        BSD
+# The Xdebug License, version 1.01
+# (Based on "The PHP License", version 3.0)
+License:        PHP
 Group:          Development/Languages
 URL:            http://xdebug.org/
 
@@ -102,26 +103,29 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
+# install NTS extension
 make -C %{pecl_name}-%{version}%{?prever} \
-     install INSTALL_ROOT=%{buildroot}
-
-make -C %{pecl_name}-zts \
      install INSTALL_ROOT=%{buildroot}
 
 # install debugclient
 install -Dpm 755 %{pecl_name}-%{version}%{?prever}/debugclient/debugclient \
         %{buildroot}%{_bindir}/debugclient
 
+# install package registration file
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -d %{buildroot}%{php_inidir}
-cat > %{buildroot}%{php_inidir}/%{pecl_name}.ini << 'EOF'
+install -d %{buildroot}%{_sysconfdir}/php.d
+cat > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
 ; Enable xdebug extension module
 zend_extension=%{php_extdir}/%{pecl_name}.so
 
 ; see http://xdebug.org/docs/all_settings
 EOF
+
+# Install ZTS extension
+make -C %{pecl_name}-zts \
+     install INSTALL_ROOT=%{buildroot}
 
 install -d %{buildroot}%{php_ztsinidir}
 cat > %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini << 'EOF'
@@ -134,7 +138,7 @@ EOF
 
 %check
 # only check if build extension can be loaded
-%{__php} \
+%{_bindir}/php \
     --no-php-ini \
     --define zend_extension=%{pecl_name}-%{version}%{?prever}/modules/%{pecl_name}.so \
     --modules | grep Xdebug
@@ -162,12 +166,13 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc  %{pecl_name}-%{version}%{?prever}/{CREDITS,LICENSE,NEWS,README}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{_bindir}/debugclient
 %{pecl_xmldir}/%{name}.xml
+
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
 
 
 %changelog
