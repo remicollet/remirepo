@@ -1,12 +1,11 @@
 Name:		php-PHPMailer
 Summary:	PHP email transport class with a lot of features
-Version:	5.1
-Release:	4%{?dist}
+Version:	5.2.1
+Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
-Source0:	http://downloads.sourceforge.net/phpmailer/PHPMailer_v%{version}.tar.gz
-Patch1:		PHPMailer-5.1-php53.patch
-Patch2:		PHPMailer-5.1-sign.patch
+Source0:	http://phpmailer.apache-extras.org.codespot.com/files/PHPMailer_%{version}.tgz
+Patch1:		PHPMailer-5.2.1-php53.patch
 URL:		http://phpmailer.worxware.com/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:	php-mbstring >= 5.1.0
@@ -40,10 +39,9 @@ Full Featured Email Transfer Class for PHP. PHPMailer features:
 %prep
 #-------------------------------------------------------------------------------
 
-%setup -q -n PHPMailer_v%{version}
+%setup -q -n PHPMailer_%{version}
 
 %patch1 -p 1
-%patch2 -p 1
 
 
 #-------------------------------------------------------------------------------
@@ -118,6 +116,12 @@ rm -rf "${RPM_BUILD_ROOT}"
 #-------------------------------------------------------------------------------
 %changelog
 #-------------------------------------------------------------------------------
+* Thu Mar 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.2.1-1
+- Update to 5.2.1, rebuild for remi repository
+
+* Tue Mar 20 2012 Johan Cwiklinski <johan AT x-tnd DOT be> - 5.2.1-1
+- Latest upstream release
+
 * Thu Jul 21 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.1.4
 - rebuild for remi repository
 - add BuildRoot for old version
