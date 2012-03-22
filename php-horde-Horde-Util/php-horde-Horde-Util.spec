@@ -2,7 +2,7 @@
 %global pear_name Horde_Util
 
 Name:           php-horde-Horde-Util
-Version:        1.2.0
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -80,6 +80,12 @@ fi
 %{pear_testdir}/Horde_Util
 
 %changelog
+* Thu Mar 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.0-1
+- update to 1.3.0, backport for remi repo
+
+* Wed Mar 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+
 * Mon Feb 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-1
 - backport for remi repo
 
