@@ -2,7 +2,7 @@
 %global pear_name Horde_Nls
 
 Name:           php-horde-Horde-Nls
-Version:        1.1.4
+Version:        1.1.5
 Release:        1%{?dist}
 Summary:        Native Language Support (NLS)
 
@@ -98,6 +98,13 @@ fi
 %dir %{pear_datadir}/Horde_Nls/locale/*/LC_MESSAGES
 
 %changelog
+%changelog
+* Thu Mar 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.5-1
+- update to 1.1.4, backport for remi repo
+
+* Wed Mar 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.1.5-1
+- Update to 1.1.5
+
 * Mon Feb 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.4-1
 - update to 1.1.4
 - backport for remi repo
