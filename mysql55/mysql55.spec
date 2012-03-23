@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.21
+Version: 5.5.22
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -56,6 +56,10 @@ Patch13: mysqld-nowatch.patch
 Patch14: mysql-va-list.patch
 Patch15: mysql-netdevname.patch
 Patch16: mysql-logrotate.patch
+Patch17: mysql-plugin-test.patch
+Patch18: mysql-cipherspec.patch
+Patch19: mysql-file-contents.patch
+Patch20: mysql-string-overflow.patch
 
 # RC patch for backports
 Patch21: mysql-readline.patch
@@ -241,6 +245,10 @@ rm -f Docs/mysql.info
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
 
 # Remi specific patches
 %patch21 -p1 -b .readline
@@ -406,6 +414,11 @@ sed -e 's/-lprobes_mysql//' -e 's/-lmysqlclient_r/-lmysqlclient/' \
 	${RPM_BUILD_ROOT}%{_bindir}/mysql_config >mysql_config.tmp
 cp -f mysql_config.tmp ${RPM_BUILD_ROOT}%{_bindir}/mysql_config
 chmod 755 ${RPM_BUILD_ROOT}%{_bindir}/mysql_config
+
+# install INFO_SRC, INFO_BIN into libdir (upstream thinks these are doc files,
+# but that's pretty wacko --- see also mysql-file-contents.patch)
+install -m 644 Docs/INFO_SRC ${RPM_BUILD_ROOT}%{_libdir}/mysql/
+install -m 644 Docs/INFO_BIN ${RPM_BUILD_ROOT}%{_libdir}/mysql/
 
 mkdir -p $RPM_BUILD_ROOT/var/log
 touch $RPM_BUILD_ROOT/var/log/mysqld.log
@@ -688,6 +701,9 @@ fi
 
 /usr/libexec/mysqld
 
+%{_libdir}/mysql/INFO_SRC
+%{_libdir}/mysql/INFO_BIN
+
 %{_libdir}/mysql/mysqlbug
 
 %{_libdir}/mysql/plugin
@@ -780,6 +796,28 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Mar 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.22-1
+- update to MySQL 5.5.22 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-22.html
+- sync with latest changes in rawhide for 5.5.21
+
+* Tue Mar 20 2012 Honza Horak <hhorak@redhat.com> 5.5.21-3
+- Revise mysql_plugin test patch which moves plugin files to 
+  a temporary directory now
+Resolves: #789530
+
+* Tue Mar 13 2012 Honza Horak <hhorak@redhat.com> 5.5.21-2
+- Fix ssl-related tests to specify expected cipher explicitly
+Related: #789600
+- Fix several strcpy calls to check destination size
+
+* Mon Feb 27 2012 Tom Lane <tgl@redhat.com> 5.5.21-1
+- Update to MySQL 5.5.21, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-21.html
+- Hack openssl regression test to still work with rawhide's openssl
+- Fix assorted failures in post-install regression tests (mysql-test RPM)
+Resolves: #789530
+
 * Tue Feb 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.21-1
 - update to MySQL 5.5.21 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-21.html
