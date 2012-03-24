@@ -1,0 +1,19 @@
+
+Link straight against .la files.
+
+Upstream-Status: vendor specific
+
+--- httpd-2.4.1/configure.in.deplibs
++++ httpd-2.4.1/configure.in
+@@ -707,9 +707,9 @@ APACHE_HELP_STRING(--with-suexec-umask,u
+ 
+ dnl APR should go after the other libs, so the right symbols can be picked up
+ if test x${apu_found} != xobsolete; then
+-  AP_LIBS="$AP_LIBS `$apu_config --avoid-ldap --link-libtool --libs`"
++  AP_LIBS="$AP_LIBS `$apu_config --avoid-ldap --link-libtool`"
+ fi
+-AP_LIBS="$AP_LIBS `$apr_config --link-libtool --libs`" 
++AP_LIBS="$AP_LIBS `$apr_config --link-libtool`" 
+ APACHE_SUBST(AP_LIBS)
+ APACHE_SUBST(AP_BUILD_SRCLIB_DIRS)
+ APACHE_SUBST(AP_CLEAN_SRCLIB_DIRS)

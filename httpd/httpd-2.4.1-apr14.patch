@@ -1,0 +1,22 @@
+--- httpd-2.4.1/support/rotatelogs.c.apr14
++++ httpd-2.4.1/support/rotatelogs.c
+@@ -52,6 +52,7 @@
+ #if APR_FILES_AS_SOCKETS
+ #include "apr_poll.h"
+ #endif
++#include "apr_version.h"
+ 
+ #if APR_HAVE_STDLIB_H
+ #include <stdlib.h>
+@@ -295,7 +296,11 @@ static void post_rotate(apr_pool_t *pool
+         if (config->verbose) {
+             fprintf(stderr,"Linking %s to %s\n", newlog->name, config->linkfile);
+         }
++#if APR_VERSION_AT_LEAST(1,4,0)
+         rv = apr_file_link(newlog->name, config->linkfile);
++#else
++        rv = APR_ENOTIMPL;
++#endif
+         if (rv != APR_SUCCESS) {
+             char error[120];
+             apr_strerror(rv, error, sizeof error);

@@ -1,0 +1,29 @@
+--- httpd-2.4.1/config.layout.layout
++++ httpd-2.4.1/config.layout
+@@ -347,3 +347,26 @@
+     proxycachedir: ${localstatedir}/proxy
+ </Layout>
+ 
++# Fedora/RHEL layout
++<Layout Fedora>
++    prefix:        /usr
++    exec_prefix:   ${prefix}
++    bindir:        ${prefix}/bin
++    sbindir:       ${prefix}/sbin
++    libdir:        ${prefix}/lib
++    libexecdir:    ${prefix}/libexec
++    mandir:        ${prefix}/man
++    sysconfdir:    /etc/httpd/conf
++    datadir:       ${prefix}/share/httpd
++    installbuilddir: ${libdir}/httpd/build
++    errordir:      ${datadir}/error
++    iconsdir:      ${datadir}/icons
++    htdocsdir:     /var/www/html
++    manualdir:     ${datadir}/manual
++    cgidir:        /var/www/cgi-bin
++    includedir:    ${prefix}/include/httpd
++    localstatedir: /var
++    runtimedir:    ${localstatedir}/run/httpd
++    logfiledir:    ${localstatedir}/log/httpd
++    proxycachedir: ${localstatedir}/cache/httpd
++</Layout>     

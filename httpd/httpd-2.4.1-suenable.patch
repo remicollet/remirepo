@@ -1,0 +1,18 @@
+Removes setuid check because we are now using capabilities to ensure proper
+suexec rights.
+
+Upstream-status: vendor specific.
+
+diff --git a/os/unix/unixd.c b/os/unix/unixd.c
+index 85d5a98..1ee1dfe 100644
+--- httpd-2.4.1/modules/arch/unix/mod_unixd.c.suenable
++++ httpd-2.4.1/modules/arch/unix/mod_unixd.c
+@@ -300,7 +300,7 @@ unixd_pre_config(apr_pool_t *pconf, apr_
+     ap_unixd_config.suexec_enabled = 0;
+     if ((apr_stat(&wrapper, SUEXEC_BIN, APR_FINFO_NORM, ptemp))
+          == APR_SUCCESS) {
+-        if ((wrapper.protection & APR_USETID) && wrapper.user == 0
++        if (wrapper.user == 0
+             && (access(SUEXEC_BIN, R_OK|X_OK) == 0)) {
+             ap_unixd_config.suexec_enabled = 1;
+             ap_unixd_config.suexec_disabled_reason = "";
