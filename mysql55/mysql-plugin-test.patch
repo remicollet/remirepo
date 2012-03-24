@@ -1,3 +1,11 @@
+mysql_plugin.test fails when run in mysql-test RPM, though the build-time
+regression test is OK.  This patch is from the pre-existing upstream bug
+report, except we also fix the part that tries to scribble on the
+read-only-to-us plugin directory.
+
+rhbz #789530, upstream at http://bugs.mysql.com/bug.php?id=62907
+
+
 diff -up mysql-5.5.21/mysql-test/t/mysql_plugin-master.opt.plugin mysql-5.5.21/mysql-test/t/mysql_plugin-master.opt
 --- mysql-5.5.21/mysql-test/t/mysql_plugin-master.opt.plugin	2012-01-31 12:28:15.000000000 +0100
 +++ mysql-5.5.21/mysql-test/t/mysql_plugin-master.opt	2012-03-14 16:54:19.060951822 +0100

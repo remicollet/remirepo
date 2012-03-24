@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.5.22
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -428,11 +428,18 @@ install -m 0755 -d $RPM_BUILD_ROOT/var/lib/mysql
 
 mkdir -p $RPM_BUILD_ROOT/etc
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
+%if 0%{?fedora} >= 15
+sed -i -e '/user=mysql/d' $RPM_BUILD_ROOT/etc/my.cnf
+%endif
 
 %if 0%{?fedora} >= 15
 # install systemd unit files and scripts for handling server startup
 mkdir -p ${RPM_BUILD_ROOT}%{_unitdir}
 install -m 644 %{SOURCE11} ${RPM_BUILD_ROOT}%{_unitdir}/
+%if 0%{?fedora} == 15
+# PrivateTmp only work on fedora >= 16
+sed -i -e '/PrivateTmp/s/true/false/' ${RPM_BUILD_ROOT}%{_unitdir}/mysqld.service
+%endif
 install -m 755 %{SOURCE12} ${RPM_BUILD_ROOT}%{_libexecdir}/
 install -m 755 %{SOURCE13} ${RPM_BUILD_ROOT}%{_libexecdir}/
 
@@ -796,6 +803,20 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Mar 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.22-1.1
+- sync patches with rawhide
+
+* Sat Mar 24 2012 Tom Lane <tgl@redhat.com> 5.5.22-1
+- Update to MySQL 5.5.22, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-22.html
+- Turn on PrivateTmp in service file
+Resolves: #782513
+- Comment out the contents of /etc/logrotate.d/mysqld, so that manual
+  action is needed to enable log rotation.  Given the multiple ways in
+  which the rotation script can fail, it seems imprudent to try to make
+  it run by default.
+Resolves: #799735
+
 * Fri Mar 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.22-1
 - update to MySQL 5.5.22 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-22.html

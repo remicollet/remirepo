@@ -1,10 +1,21 @@
-Adjust the mysql-log-rotate script to contain the correct log file
-name for Red Hat installations.
+Adjust the mysql-log-rotate script in several ways:
+
+* Use the correct log file pathname for Red Hat installations.
+* Enable creation of the log file by logrotate (needed since
+  /var/log/ isn't writable by mysql user).
+* Comment out the actual rotation commands, so that user must edit
+  the file to enable rotation.  This is unfortunate, but the fact
+  that the script will probably fail without manual configuration
+  (to set a root password) means that we can't really have it turned
+  on by default.  Fortunately, in most configurations the log file
+  is low-volume and so rotation is not critical functionality.
+
+See discussions at RH bugs 799735, 547007
 
 
-diff -Naur mysql-5.5.20.orig/support-files/mysql-log-rotate.sh mysql-5.5.20/support-files/mysql-log-rotate.sh
---- mysql-5.5.20.orig/support-files/mysql-log-rotate.sh	2011-12-16 14:52:06.000000000 -0500
-+++ mysql-5.5.20/support-files/mysql-log-rotate.sh	2012-01-26 23:24:54.402676177 -0500
+diff -Naur mysql-5.5.22.orig/support-files/mysql-log-rotate.sh mysql-5.5.22/support-files/mysql-log-rotate.sh
+--- mysql-5.5.22.orig/support-files/mysql-log-rotate.sh	2012-03-02 14:44:46.000000000 -0500
++++ mysql-5.5.22/support-files/mysql-log-rotate.sh	2012-03-23 22:33:29.092043705 -0400
 @@ -3,7 +3,7 @@
  # in the [safe_mysqld] section as follows:
  #
@@ -14,12 +25,41 @@ diff -Naur mysql-5.5.20.orig/support-files/mysql-log-rotate.sh mysql-5.5.20/supp
  #
  # If the root user has a password you have to create a
  # /root/.my.cnf configuration file with the following
-@@ -18,7 +18,7 @@
+@@ -18,19 +18,21 @@
  # ATTENTION: This /root/.my.cnf should be readable ONLY
  # for root !
  
 -@localstatedir@/mysqld.log {
-+/var/log/mysqld.log {
-         # create 600 mysql mysql
-         notifempty
- 	daily
+-        # create 600 mysql mysql
+-        notifempty
+-	daily
+-        rotate 3
+-        missingok
+-        compress
+-    postrotate
+-	# just if mysqld is really running
+-	if test -x @bindir@/mysqladmin && \
+-	   @bindir@/mysqladmin ping &>/dev/null
+-	then
+-	   @bindir@/mysqladmin flush-logs
+-	fi
+-    endscript
+-}
++# Then, un-comment the following lines to enable rotation of mysql's log file:
++
++#/var/log/mysqld.log {
++#        create 600 mysql mysql
++#        notifempty
++#	daily
++#        rotate 3
++#        missingok
++#        compress
++#    postrotate
++#	# just if mysqld is really running
++#	if test -x @bindir@/mysqladmin && \
++#	   @bindir@/mysqladmin ping &>/dev/null
++#	then
++#	   @bindir@/mysqladmin flush-logs
++#	fi
++#    endscript
++#}

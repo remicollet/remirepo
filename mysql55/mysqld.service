@@ -14,6 +14,9 @@
 #	[Service]
 #	LimitNOFILE=10000
 
+# Note: in F-17 and beyond, /usr/lib/... is recommended in the .include line
+# though /lib/... will still work.
+
 [Unit]
 Description=MySQL database server
 After=syslog.target
@@ -35,6 +38,9 @@ TimeoutSec=300
 
 # We rely on systemd, not mysqld_safe, to restart mysqld if it dies
 Restart=always
+
+# Place temp files in a secure directory, not /tmp
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target

@@ -1,6 +1,9 @@
 These issues were found by Coverity static analysis tool, for more info 
 see messages by particular fixes (messages belong to 5.1.61).
 
+Filed upstream at http://bugs.mysql.com/bug.php?id=64631
+
+
 Error: BUFFER_SIZE_WARNING:
 /builddir/build/BUILD/mysql-5.1.61/sql/sql_prepare.cc:2749: buffer_size_warning: Calling strncpy with a maximum size argument of 512 bytes on destination array "this->stmt->last_error" of size 512 bytes might leave the destination string unterminated.
 
