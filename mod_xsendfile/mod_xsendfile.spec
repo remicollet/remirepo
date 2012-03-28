@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 28 2012 Remi Collet <RPMS@FamilleCollet.com> 0.12-5
+- rebuild for remi repo and httpd 2.4
+
 * Tue Mar 27 2012 Orion Poplawski <orion@cora.nwra.com> 0.12-5
 - Rebuild for httpd 2.4, update for new module guidelines
 
