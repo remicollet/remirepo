@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 28 2012 Remi Collet <RPMS@FamilleCollet.com> 0.0.0-0.13.20070129svn713
+- rebuild for remi repo and httpd 2.4
+
 * Tue Mar 27 2012 Dmitry Butskoy <Dmitry@Butskoy.name> 0.0.0-0.13.20070129svn713
 - Rebuilt for new httpd
 
