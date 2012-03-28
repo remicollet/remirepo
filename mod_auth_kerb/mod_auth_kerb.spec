@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/*.so
 
 %changelog
+* Wed Mar 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-12
+- rebuild for remi repo and httpd 2.4
+
 * Tue Mar 27 2012 Joe Orton <jorton@redhat.com> - 5.4-12
 - rebuild for httpd 2.4
 
