@@ -3,6 +3,7 @@ Add support for use of the system timezone database, rather
 than embedding a copy.  Discussed upstream but was not desired.
 
 History:
+r8: fix compile error without --with-system-tzdata configured
 r7: improve check for valid timezone id to exclude directories
 r6: fix fd leak in r5, fix country code/BC flag use in 
     timezone_identifiers_list() using system db,

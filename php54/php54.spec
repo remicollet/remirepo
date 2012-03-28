@@ -12,7 +12,6 @@
 %global jsonver     1.2.1
 %global oci8ver     1.4.7
 
-%global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
 %global mysql_sock %(mysql_config --socket || echo /var/lib/mysql/mysql.sock)
 
 %ifarch ppc ppc64
@@ -51,13 +50,16 @@
 %global isasuffix %nil
 %endif
 
+%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
+%{!?_httpd_mmn:  %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.4.0
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 %endif
 License: PHP
 Group: Development/Languages
@@ -83,6 +85,7 @@ Source8: php-fpm.sysconfig
 Source9: php-fpm.init
 
 # Build fixes
+Patch1: php-5.4.0-httpd24.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
@@ -92,7 +95,7 @@ Patch7: php-5.3.0-recode.patch
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
 Patch41: php-5.4.0-easter.patch
-Patch42: php-5.3.1-systzdata-v7.patch
+Patch42: php-5.3.1-systzdata-v8.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 Patch44: php-5.4.0RC6-system-libzip.patch
@@ -129,7 +132,7 @@ Obsoletes: %{phpname}-dbg, php3, phpfi, stronghold-php, %{phpname}-zts
 Provides: %{phpname}-zts = %{version}-%{release}
 Provides: %{phpname}-zts%{?_isa} = %{version}-%{release}
 
-Requires: httpd-mmn = %{httpd_mmn}
+Requires: httpd-mmn = %{_httpd_mmn}
 Provides: mod_php = %{version}-%{release}
 Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
 # For backwards-compatibility, require php-cli for the time being:
@@ -633,6 +636,7 @@ echo CIBLE = %{name}-%{version}-%{release} oci8=%{with_oci8} ibase=%{with_ibase}
 %setup -q -n php-%{version}%{?rcver}
 %endif
 
+%patch1 -p1 -b .httpd24
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
@@ -904,7 +908,7 @@ without_shared="--without-gd \
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
 pushd build-apache
-build --with-apxs2=%{_sbindir}/apxs \
+build --with-apxs2=%{_httpd_apxs} \
       --libdir=%{_libdir}/%{phpname} \
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
@@ -1007,7 +1011,7 @@ popd
 
 # Build a special thread-safe Apache SAPI
 pushd build-zts
-build --with-apxs2=%{_sbindir}/apxs \
+build --with-apxs2=%{_httpd_apxs} \
       --includedir=%{_origincludedir}/%{phpname}-zts \
       --libdir=%{_libdir}/%{phpname}-zts \
       --enable-maintainer-zts \
@@ -1452,6 +1456,14 @@ fi
 %endif
 
 %changelog
+* Tue Mar 27 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-1.1
+- sync with rawhide (httpd 2.4 stuff)
+
+* Mon Mar 26 2012 Joe Orton <jorton@redhat.com> - 5.4.0-2
+- rebuild against httpd 2.4
+- use _httpd_mmn, _httpd_apxs macros
+- fix --without-system-tzdata build for Debian et al
+
 * Fri Mar 02 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-1
 - update to PHP 5.4.0 finale
 
