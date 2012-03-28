@@ -1,0 +1,39 @@
+diff -Nrbu mod_auth_ntlm_winbind/mod_auth_ntlm_winbind.c mod_auth_ntlm_winbind-OK/mod_auth_ntlm_winbind.c
+--- mod_auth_ntlm_winbind/mod_auth_ntlm_winbind.c	2007-06-22 17:47:51.000000000 +0400
++++ mod_auth_ntlm_winbind-OK/mod_auth_ntlm_winbind.c	2007-06-22 17:47:20.000000000 +0400
+@@ -495,7 +495,7 @@
+     char *newline;
+     char args_to_helper[HUGE_STRING_LEN];
+     char args_from_helper[HUGE_STRING_LEN];
+-    unsigned int bytes_written;
++    size_t bytes_written;
+     int bytes_read;
+ 
+     if (( global_ntlm_context.ntlm_plaintext_helper = get_auth_helper( r, global_ntlm_context.ntlm_plaintext_helper, crec->ntlm_plaintext_helper, CLEANUP(cleanup_ntlm_plaintext_helper))) == NULL ) {
+@@ -539,7 +539,7 @@
+ #endif
+ 
+     if ( bytes_written < strlen( args_to_helper )) {
+-        RDEBUG( "failed to write user/pass to helper - wrote %d bytes", bytes_written );
++        RDEBUG( "failed to write user/pass to helper - wrote %d bytes", (int) bytes_written );
+         apr_pool_destroy( global_ntlm_context.ntlm_plaintext_helper->pool );
+         apr_pool_destroy( ctxt->connected_user_authenticated->pool );
+         return HTTP_INTERNAL_SERVER_ERROR;
+@@ -624,7 +624,7 @@
+     char args_to_helper[HUGE_STRING_LEN];
+     char args_from_helper[HUGE_STRING_LEN];
+     ntlm_connection_context_t *ctxt = get_connection_context( r->connection );
+-    unsigned int bytes_written;
++    size_t bytes_written;
+     int bytes_read;
+     struct _ntlm_auth_helper *auth_helper;
+ 
+@@ -690,7 +690,7 @@
+     bytes_written = ap_bwrite(auth_helper->out_to_helper, args_to_helper, strlen(args_to_helper));
+ #endif
+     if (bytes_written < strlen(args_to_helper)) {
+-        RDEBUG("failed to write NTLMSSP string to helper - wrote %d bytes", bytes_written);
++        RDEBUG("failed to write NTLMSSP string to helper - wrote %d bytes", (int) bytes_written);
+         apr_pool_destroy(auth_helper->pool);
+         apr_pool_destroy(ctxt->connected_user_authenticated->pool);
+ 
