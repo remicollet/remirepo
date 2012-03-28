@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 3.3-5
+- rebuild for remi repo
+
 * Mon Mar 26 2012 Joe Orton <jorton@redhat.com> - 3.3-5
 - move wsgi.conf to conf.modules.d
 
