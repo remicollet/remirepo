@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Startup script for the fedora.us Thunderbird RPM
 # (based on the Mozilla RPM launch script)

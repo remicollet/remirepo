@@ -51,19 +51,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        11.0
-Release:        1%{?dist}.1
+Version:        11.0.1
+Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
-%if %{official_branding}
-%define tarball thunderbird-%{version}.source.tar.bz2
-%else
-%define tarball thunderbird-3.1rc1.source.tar.bz2
-%endif
-Source0:        %{tarball}
+Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20120315.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20120330.tar.bz2
 %endif
 
 Source10:       thunderbird-mozconfig
@@ -493,6 +488,15 @@ fi
 #===============================================================================
 
 %changelog
+* Fri Mar 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0.1-1
+- Update to 11.0.1
+
+* Thu Mar 29 2012 Jan Horak <jhorak@redhat.com> - 11.0.1-1
+- Update to 11.0.1
+
+* Thu Mar 22 2012 Jan Horak <jhorak@redhat.com> - 11.0-6
+- Added translations to thunderbird.desktop file
+
 * Fri Mar 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0-1.1
 - latest patch from rawhide
 
@@ -500,7 +504,7 @@ fi
 - gcc 4.7 build fixes
 
 * Thu Mar 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0-1
-- Update to 10.0.2
+- Update to 11.0
 
 * Wed Mar 14 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 11.0-4
 - Add ARM configuration options
