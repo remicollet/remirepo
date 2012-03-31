@@ -71,6 +71,9 @@ rm -fr %{_localstatedir}/cache/mod_gnutls
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_gnutls.conf
 
 %changelog
+* Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.5.10-6
+- rebuild for remi repo and httpd 2.4
+
 * Thu Mar 29 2012 Joe Orton <jorton@redhat.com> - 0.5.10-6
 - fix build w/httpd 2.4
 
