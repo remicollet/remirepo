@@ -26,6 +26,7 @@ an essential component of a reverse proxy.
 %prep
 %setup -q -n %{name}
 
+cp %{SOURCE1} README.selinux
 
 %build
 %{_httpd_apxs} -c -I . -I %{_includedir}/libxml2 -lxml2 mod_proxy_html.c
@@ -60,7 +61,7 @@ install -m 444 -D %{SOURCE1} %{buildroot}/%{_docdir}/%{name}-%{version}/
 %{modulesdir}/mod_xml2enc.so
 %config(noreplace) %lang(en) %{confdir}.d/proxy_html.conf
 %doc COPYING README
-%doc %{_docdir}/%{name}-%{version}/README.selinux
+%doc README.selinux
 
 
 %changelog
