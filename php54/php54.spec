@@ -28,7 +28,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-#global rcver      RC8
+%global rcver      RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -50,16 +50,18 @@
 %global isasuffix %nil
 %endif
 
-%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
-%{!?_httpd_mmn:  %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_apxs:       %{expand: %%global _httpd_apxs       %%{_sbindir}/apxs}}
+%{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.4.0
+Version: 5.4.1
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 1%{?dist}.1
+Release: 0.1.RC1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -82,10 +84,10 @@ Source5: php-fpm-www.conf
 Source6: php-fpm.service
 Source7: php-fpm.logrotate
 Source8: php-fpm.sysconfig
-Source9: php-fpm.init
+Source9: php.modconf
+Source99: php-fpm.init
 
 # Build fixes
-Patch1: php-5.4.0-httpd24.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
@@ -636,7 +638,6 @@ echo CIBLE = %{name}-%{version}-%{release} oci8=%{with_oci8} ibase=%{with_ibase}
 %setup -q -n php-%{version}%{?rcver}
 %endif
 
-%patch1 -p1 -b .httpd24
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
@@ -1122,13 +1123,20 @@ install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules
 %endif
 
 # Apache config fragment
-install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/httpd/conf.d
-%if %{phpname} == php
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_origsysconfdir}/httpd/conf.d
-%else
-%{__sed} -e s'/libphp5/lib%{phpname}/' %{SOURCE1} \
-  >$RPM_BUILD_ROOT/%{_origsysconfdir}/httpd/conf.d/%{phpname}.conf
+%if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
+install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_confdir}/%{phpname}.conf
+cat %{SOURCE1} >>$RPM_BUILD_ROOT%{_httpd_confdir}/%{phpname}.conf
+%if %{phpname} != php
+sed -i -e s'/libphp5/lib%{phpname}/' $RPM_BUILD_ROOT/%{_httpd_modconfdir}/10-%{phpname}.conf
 %endif
+%else
+install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-%{phpname}.conf
+install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/%{phpname}.conf
+%if %{phpname} != php
+sed -i -e s'/libphp5/lib%{phpname}/' $RPM_BUILD_ROOT/%{_httpd_modconfdir}/10-%{phpname}.conf
+%endif
+%endif
+
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
@@ -1155,7 +1163,7 @@ install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
 %else
 # Service
 install -m 755 -d $RPM_BUILD_ROOT%{_originitdir}
-install -m 755 %{SOURCE9} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
+install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
 %endif
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
@@ -1339,7 +1347,10 @@ fi
 %{_libdir}/httpd/modules/lib%{phpname}-zts.so
 %endif
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/%{phpname}/session
-%config(noreplace) %{_origsysconfdir}/httpd/conf.d/%{phpname}.conf
+%config(noreplace) %{_httpd_confdir}/%{phpname}.conf
+%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
+%config(noreplace) %{_httpd_modconfdir}/10-%{phpname}.conf
+%endif
 %{contentdir}/icons/%{phpname}.gif
 
 %files common -f files.common
@@ -1456,6 +1467,9 @@ fi
 %endif
 
 %changelog
+* Sat Mar 31 2012 Remi Collet <remi@fedoraproject.org> 5.4.1-0.1.RC1
+- update to 5.4.1RC1, split php conf when httpd 2.4
+
 * Tue Mar 27 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-1.1
 - sync with rawhide (httpd 2.4 stuff)
 
