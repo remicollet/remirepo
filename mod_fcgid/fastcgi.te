@@ -1,0 +1,71 @@
+# This policy module provides support for mod_fcgid using the httpd system script domain.
+# It provides "allow" rules that will overlap to varying degrees with selinux-policy
+# packages for Fedora 5 onwards, and is a stepping stone to the merged policy included
+# as updates for selinux-policy in Fedora 8, 9, and 10.
+#
+# Rules existing in selinux-policy 2.3.7 (FC5) have been stripped from this policy
+#
+# Previous versions of this policy module used a separate domain, httpd_fastcgi_script_t,
+# which is now an alias for httpd_sys_script_t.
+
+policy_module(fastcgi, 0.1.11)
+
+require {
+	type devpts_t;
+	type httpd_t;
+	type httpd_log_t;
+	type httpd_sys_content_t;
+	type httpd_sys_script_exec_t;
+	type httpd_sys_script_ra_t;
+	type httpd_sys_script_ro_t;
+	type httpd_sys_script_rw_t;
+	type httpd_sys_script_t;
+	type httpd_tmp_t;
+	type httpd_var_run_t;
+};
+
+# Type aliases for contexts used with older policy modules
+typealias httpd_sys_content_t     alias httpd_fastcgi_content_t;
+typealias httpd_sys_script_exec_t alias httpd_fastcgi_script_exec_t;
+typealias httpd_sys_script_ra_t   alias httpd_fastcgi_script_ra_t;
+typealias httpd_sys_script_ro_t   alias httpd_fastcgi_script_ro_t;
+typealias httpd_sys_script_rw_t   alias httpd_fastcgi_script_rw_t;
+typealias httpd_sys_script_t      alias httpd_fastcgi_script_t;
+typealias httpd_var_run_t         alias httpd_fastcgi_var_run_t;
+
+# ==========================================================
+# Re-use httpd_sys_script_t for mod_fcgid apps
+# ==========================================================
+
+# Allow web applications to call getpw* functions
+auth_use_nsswitch(httpd_sys_script_t)
+
+# Allow httpd to create and use files and sockets for communicating with mod_fcgid
+# Rules to do this are already in selinux-policy apart from dir setattr
+allow httpd_t httpd_var_run_t:dir setattr;
+
+# Allow FastCGI applications to listen for FastCGI requests on their
+# sockets and respond to them
+allow httpd_sys_script_t httpd_t:unix_stream_socket { rw_stream_socket_perms };
+
+# These are probably leaked file descriptors
+dontaudit httpd_t devpts_t:chr_file ioctl;
+dontaudit httpd_sys_script_t httpd_log_t:file ioctl;
+
+# Search automount filesystem to use automatically mounted filesystems
+fs_search_auto_mountpoints(httpd_sys_script_t)
+
+# PHP uploads a file to /tmp and then execs programs to action them
+allow httpd_sys_script_t httpd_tmp_t:dir manage_dir_perms;
+allow httpd_sys_script_t httpd_tmp_t:file manage_file_perms;
+files_tmp_filetrans(httpd_sys_script_t,httpd_sys_script_rw_t,{ dir file lnk_file sock_file fifo_file })
+
+# Support network home directories
+tunable_policy(`httpd_enable_homedirs && use_nfs_home_dirs',`
+	fs_read_nfs_files(httpd_sys_script_t)
+	fs_read_nfs_symlinks(httpd_sys_script_t)
+')
+tunable_policy(`httpd_enable_homedirs && use_samba_home_dirs',`
+	fs_read_cifs_files(httpd_sys_script_t)
+	fs_read_cifs_symlinks(httpd_sys_script_t)
+')
