@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/flvx.conf
 
 %changelog
+* Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 0-0.1.20100525git
+- rebuild for remi repo and httpd 2.4
+
 * Fri Mar 30 2012 Joe Orton <jorton@redhat.com> - 0-0.1.20100525git
 - fix build with httpd 2.4
 
