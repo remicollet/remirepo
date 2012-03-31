@@ -1,3 +1,4 @@
+%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
 %{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
 
 %global release_suffix .Final
@@ -45,18 +46,12 @@ find srclib -mindepth 1 -maxdepth 1 ! -name mod_cluster -print0|xargs -0 -r rm -
 CFLAGS="$RPM_OPT_FLAGS"
 export CFLAGS
 
-%if 0%{?fedora} >= 18
-apxs_path=/usr/bin/apxs
-%else
-apxs_path=/usr/sbin/apxs
-%endif
-
 module_dirs=( advertise mod_manager mod_proxy_cluster mod_slotmem )
 
 for dir in ${module_dirs[@]} ; do
     pushd srclib/%{name}/native/${dir}
         sh buildconf
-        ./configure --libdir=%{_libdir} --with-apxs=${apxs_path}
+        ./configure --libdir=%{_libdir} --with-apxs=%{_httpd_apxs}
         make %{?_smp_mflags}
     popd
 done
@@ -99,6 +94,9 @@ rm -Rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/*.conf
 
 %changelog
+* Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.1-4
+- rebuild for remi repo and httpd 2.4
+
 * Tue Mar 27 2012 Marek Goldmann <mgoldman@redhat.com> - 1.1.1-4
 - Require httpd-mmn RHBZ#803068
 
