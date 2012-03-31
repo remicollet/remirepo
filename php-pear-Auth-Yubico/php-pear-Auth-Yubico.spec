@@ -3,8 +3,8 @@
 %global channel		__uri
 
 Name:		php-pear-Auth-Yubico
-Version:	2.3
-Release:	2%{?dist}
+Version:	2.4
+Release:	1%{?dist}
 Summary:	Authentication class for verifying Yubico OTP tokens
 
 Group:		Development/Libraries
@@ -35,11 +35,6 @@ Yubikey into your existing PHP-based user authentication infrastructure.
 %setup -q -n Auth_Yubico-%{version}
 %patch1 -p 1
 
-#	Create a "localized" php.ini to avoid install warnings.
-
-cp /etc/php.ini .
-echo 'date.timezone=UTC' >> php.ini
-
 #	Fix end of line encoding.
 
 for file in Modhex_Calculator.php Modhex.php
@@ -60,7 +55,7 @@ done
 
 rm -rf "${RPM_BUILD_ROOT}"
 
-PHPRC=php.ini	%{__pear} install --nodeps				\
+%{__pear} install --nodeps				\
 				--packagingroot "${RPM_BUILD_ROOT}"	\
 				package.xml
 
@@ -113,6 +108,12 @@ fi
 #-------------------------------------------------------------------------------
 %changelog
 #-------------------------------------------------------------------------------
+* Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.1
+- upstream 2.4, rebuild for remi repository
+
+* Wed Mar 28 2012 Patrick Monnerat <pm@datasphere.ch> 2.4-1
+- New upstream release: dvorak keyboard support.
+
 * Thu Feb 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.3-2
 - rebuild for remi repo
 

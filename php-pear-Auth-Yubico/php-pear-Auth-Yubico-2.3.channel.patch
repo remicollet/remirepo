@@ -1,0 +1,22 @@
+diff -Naur Auth_Yubico-2.3.orig/package.xml Auth_Yubico-2.3.new/package.xml
+--- Auth_Yubico-2.3.orig/package.xml	2011-02-02 21:22:16.000000000 +0100
++++ Auth_Yubico-2.3.new/package.xml	2011-02-03 14:08:23.561533880 +0100
+@@ -4,7 +4,7 @@
+ http://pear.php.net/dtd/package-2.0
+ http://pear.php.net/dtd/package-2.0.xsd">
+   <name>Auth_Yubico</name>
+-  <channel>pear.php.net</channel>
++ <channel>__uri</channel>
+   <summary>Authentication class for verifying Yubico OTP tokens.</summary>
+   <description>PHP class to help you verify Yubico OTP tokens.
+   </description>
+@@ -40,6 +40,9 @@
+       <pearinstaller>
+ 	<min>1.4.0b1</min>
+       </pearinstaller>
++      <extension>
++       <name>curl</name>
++      </extension>
+     </required>
+   </dependencies>
+   <phprelease />
