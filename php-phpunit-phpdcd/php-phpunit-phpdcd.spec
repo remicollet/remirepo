@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phpdcd
-Version:        0.9.2
+Version:        0.9.3
 Release:        1%{?dist}
 Summary:        Dead Code Detector (DCD) for PHP code
 
@@ -14,14 +14,16 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.8.1
+BuildRequires:  php-pear >= 1:1.9.4
 BuildRequires:  php-channel(%{channel})
-Requires:       php-common >= 5.2.0
+Requires:       php-common >= 5.2.7
 Requires:       php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.1.0
-Requires:       php-pear(pear.phpunit.de/PHP_TokenStream) >= 0.9.1
+Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.3.0
+Requires:       php-pear(pear.phpunit.de/PHP_TokenStream) >= 1.1.0
+Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.1
+
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6 
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
@@ -80,6 +82,12 @@ fi
 
 
 %changelog
+* Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.9.3-1
+- upstream 0.9.3, rebuild for remi repository
+
+* Sat Mar 24 2012 Christof Damian <christof@damian.net> - 0.9.3-1
+- upstream 0.9.3
+
 * Tue Feb 23 2010 Remi Collet <RPMS@FamilleCollet.com> 0.9.2-1
 - rebuild for remi repository
 
