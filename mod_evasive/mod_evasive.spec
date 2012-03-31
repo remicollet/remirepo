@@ -1,6 +1,6 @@
 Name:           mod_evasive
 Version:        1.10.1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Denial of Service evasion module for Apache
 
 Group:          System Environment/Daemons
@@ -27,7 +27,10 @@ reports abuses via email and syslog facilities.
 
 
 %build
-apxs -Wc,"%{optflags}" -c mod_evasive20.c
+# create apache httpd-2.4 version and compile it
+sed 's/connection->remote_ip/connection->client_ip/' \
+  < mod_evasive20.c > mod_evasive24.c
+apxs -Wc,"%{optflags}" -c mod_evasive24.c
 
 
 %install
@@ -35,7 +38,7 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -pm 755 \
     $RPM_BUILD_ROOT%{_libdir}/httpd/modules \
     $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
-install -pm 755 .libs/mod_evasive20.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/
+install -pm 755 .libs/mod_evasive24.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/
 install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/
 
 
@@ -51,6 +54,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.1-4
+- rebuild for remi repo and httpd 2.4
+
+* Sat Mar 31 2012 Ján ONDREJ (SAL) <ondrejj(at)salstar.sk> - 1.10.1-13
+- adapt to httpd-2.4: changed remote_ip to client_ip
+
 * Thu Mar 29 2012 Ján ONDREJ (SAL) <ondrejj(at)salstar.sk> - 1.10.1-12
 - apxs moved to bindir, do not use sbindir macro
 
