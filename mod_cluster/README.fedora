@@ -1,0 +1,35 @@
+= Enabling mod_cluster =
+
+Detailed information about configuring mod_cluster can be found here:
+
+    http://docs.jboss.org/mod_cluster/1.1.0/html/native.config.html
+
+== Disable proxy_balancer_module (required) ==
+
+To enable mod_cluster you need to make sure you have proxy_balancer_module disabled. Please comment out the loading of
+proxy_balancer_module in /etc/httpd/conf/httpd.conf:
+
+# LoadModule proxy_balancer_module
+
+== Enable mod_cluster modules (required) ==
+
+Next step is to load all required mod_cluster modules. Uncomment all LoadModule directives from
+/etc/httpd/conf.d/mod_cluster.conf file:
+
+LoadModule slotmem_module modules/mod_slotmem.so
+LoadModule proxy_cluster_module modules/mod_proxy_cluster.so
+LoadModule advertise_module modules/mod_advertise.so
+LoadModule manager_module modules/mod_manager.so
+
+== Enabling mod_cluster manager (optional) ==
+
+Mod_cluster manager is a simple tool that displays useful information about the cluster. To enable it you need to
+load the mod_manager module and call SetHandler for the selected context:
+
+<Location /mod_cluster_manager>
+    SetHandler mod_cluster-manager
+</Location>
+
+== Restart ==
+
+Make sure you restart the htttpd server after you apply these changes.
