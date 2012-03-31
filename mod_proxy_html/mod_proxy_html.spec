@@ -1,3 +1,6 @@
+%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
+%{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+
 Summary: Output filter to rewrite HTML links in a proxy situation
 Name: mod_proxy_html
 Version: 3.1.2
@@ -8,7 +11,7 @@ URL: http://apache.webthing.com/mod_proxy_html/
 Source: http://apache.webthing.com/mod_proxy_html/mod_proxy_html-%{version}.tar.bz2
 Source1: README.selinux
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: httpd-mmn = %(cat %{_includedir}/httpd/.mmn || echo missing)
+Requires: httpd-mmn = %{_httpd_mmn}
 BuildRequires: libxml2-devel httpd-devel
 
 %description
@@ -25,15 +28,15 @@ an essential component of a reverse proxy.
 
 
 %build
-%{_sbindir}/apxs -c -I . -I %{_includedir}/libxml2 -lxml2 mod_proxy_html.c
-%{_sbindir}/apxs -c -I . -I %{_includedir}/libxml2 -lxml2 mod_xml2enc.c
+%{_httpd_apxs} -c -I . -I %{_includedir}/libxml2 -lxml2 mod_proxy_html.c
+%{_httpd_apxs} -c -I . -I %{_includedir}/libxml2 -lxml2 mod_xml2enc.c
 
 
 %install
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}/%{modulesdir} %{buildroot}/%{_docdir}/%{name}-%{version}
-%{_sbindir}/apxs -i -S LIBEXECDIR=%{buildroot}/%{modulesdir} -n mod_proxy_html mod_proxy_html.la
-%{_sbindir}/apxs -i -S LIBEXECDIR=%{buildroot}/%{modulesdir} -n mod_xml2enc mod_xml2enc.la
+%{_httpd_apxs} -i -S LIBEXECDIR=%{buildroot}/%{modulesdir} -n mod_proxy_html mod_proxy_html.la
+%{_httpd_apxs} -i -S LIBEXECDIR=%{buildroot}/%{modulesdir} -n mod_xml2enc mod_xml2enc.la
 install -m 644 -D proxy_html.conf %{buildroot}/%{confdir}.d/proxy_html.conf
 %{__sed} -i \
 	-e '/^# LoadFile	\/usr\/lib\/libxml2\.so/d' \
@@ -61,6 +64,9 @@ install -m 444 -D %{SOURCE1} %{buildroot}/%{_docdir}/%{name}-%{version}/
 
 
 %changelog
+* Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 3.1.2-9
+- rebuild httpd 2.4, use new macros.
+
 * Sat Jan 28 2012 Philip Prindeville <philipp@fedoraproject.org> - 3.1.2-9
 - Add README about settings required for running under selinux.
 
