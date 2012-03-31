@@ -25,7 +25,7 @@
 %global httpd24 1
 %global rundir /run
 %else
-%global httpd24 0
+%global httpd24 1
 %global rundir %{_localstatedir}/run
 %endif
 
@@ -225,6 +225,9 @@ exit 0
 %endif
 
 %changelog
+* Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> 2.3.6-6
+- rebuild httpd 2.4
+
 * Tue Mar 27 2012 Paul Howarth <paul@city-fan.org> 2.3.6-6
 - Fix compatibility with httpd 2.4 in F-18/RHEL-7 onwards
 - Use /run rather than /var/run from F-15/RHEL-7 onwards
