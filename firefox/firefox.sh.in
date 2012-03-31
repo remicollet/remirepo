@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # The contents of this file are subject to the Netscape Public
 # License Version 1.1 (the "License"); you may not use this file
