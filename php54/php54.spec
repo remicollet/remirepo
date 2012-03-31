@@ -61,7 +61,7 @@ Version: 5.4.1
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.1.RC1%{?dist}
+Release: 0.2.RC1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -632,6 +632,10 @@ support for using the enchant library to PHP.
 
 %prep
 echo CIBLE = %{name}-%{version}-%{release} oci8=%{with_oci8} ibase=%{with_ibase} fpm=%{with_fpm} libzip=%{with_libzip}
+
+# ensure than current httpd use prefork MPM.
+httpd -V  | grep -q 'threaded:.*yes' && exit 1
+
 %if 0%{?snapdate}
 %setup -q -n php5.4-%{snapdate}
 %else
@@ -1467,6 +1471,8 @@ fi
 %endif
 
 %changelog
+* Sat Mar 31 2012 Remi Collet <remi@fedoraproject.org> 5.4.1-0.2.RC1
+- rebuild
 * Sat Mar 31 2012 Remi Collet <remi@fedoraproject.org> 5.4.1-0.1.RC1
 - update to 5.4.1RC1, split php conf when httpd 2.4
 
