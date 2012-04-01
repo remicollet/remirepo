@@ -2,8 +2,8 @@
 %{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
 
 Name:           mod_bw
-Version:        0.8
-Release:        7%{?dist}
+Version:        0.92
+Release:        1%{?dist}
 Summary:        Bandwidth Limiter For Apache
 
 Group:          System Environment/Daemons
@@ -11,8 +11,10 @@ License:        ASL 2.0
 URL:            http://www.ivn.cl/apache
 Source0:        http://www.ivn.cl/apache/files/source/mod_bw-%{version}.tgz
 Source1:        mod_bw.conf
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+Patch0:         mod_bw-httpd24.patch
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  httpd-devel
 Requires:       httpd-mmn = %{_httpd_mmn}
 
@@ -23,7 +25,10 @@ mod_bw is a bandwidth administration module for Apache httpd 2.x
 * Limits the bandwidth for files on vhost/dir
 
 %prep
-%setup -q -n mod_bw
+%setup -q -c
+
+%patch0 -p1 -b .httpd24
+
 mv mod_bw.txt mod_bw.txt.iso8859
 iconv -f ISO-8859-1 -t UTF-8 mod_bw.txt.iso8859 > mod_bw.txt 
 
@@ -52,8 +57,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Apr 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.8-7
-- rebuild for remi repo and httpd 2.4
+* Sun Apr 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.92-1
+- update to 0.92 for remi repo and httpd 2.4
 
 * Wed Mar 14 2012 Jakub Hrozek <jhrozek@redhat.com> - 0.8-7
 - Do not require httpd itself

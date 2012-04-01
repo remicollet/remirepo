@@ -1,0 +1,30 @@
+diff -up mod_bw-0.92/mod_bw.c.orig mod_bw-0.92/mod_bw.c
+--- mod_bw-0.92/mod_bw.c.orig	2012-04-01 12:49:33.752599061 +0200
++++ mod_bw-0.92/mod_bw.c	2012-04-01 12:53:33.270604793 +0200
+@@ -564,7 +564,7 @@ static long get_bw_rate(request_rec * r,
+             return e[i].rate;
+ 
+         case T_IP:
+-            if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
++            if (apr_ipsubnet_test(e[i].x.ip, r->useragent_addr)) {
+                 return e[i].rate;
+             }
+             break;
+@@ -655,7 +655,7 @@ static int get_maxconn(request_rec * r,
+             return e[i].max;
+ 
+         case T_IP:
+-            if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
++            if (apr_ipsubnet_test(e[i].x.ip, r->useragent_addr)) {
+                 return e[i].max;
+             }
+             break;
+@@ -706,7 +706,7 @@ static int get_sid(request_rec * r, apr_
+             return e[i].sid;
+ 
+         case T_IP:
+-            if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
++            if (apr_ipsubnet_test(e[i].x.ip, r->useragent_addr)) {
+                 return e[i].sid;
+             }
+             break;
