@@ -1,30 +1,46 @@
-diff -up mod_bw-0.92/mod_bw.c.orig mod_bw-0.92/mod_bw.c
---- mod_bw-0.92/mod_bw.c.orig	2012-04-01 12:49:33.752599061 +0200
-+++ mod_bw-0.92/mod_bw.c	2012-04-01 12:53:33.270604793 +0200
-@@ -564,7 +564,7 @@ static long get_bw_rate(request_rec * r,
+diff -up mod_bw-0.92/mod_bw.c.httpd24 mod_bw-0.92/mod_bw.c
+--- mod_bw-0.92/mod_bw.c.httpd24	2010-07-20 18:14:30.000000000 +0200
++++ mod_bw-0.92/mod_bw.c	2012-04-01 13:32:30.840660738 +0200
+@@ -208,6 +208,15 @@ typedef struct
+ /* Module declaration */
+ module AP_MODULE_DECLARE_DATA bw_module;
+ 
++#if MODULE_MAGIC_NUMBER_MAJOR >= 20100606
++/* 2.4.x or later */
++#define client_ip(r) ((r)->useragent_ip)
++APLOG_USE_MODULE(bw);
++#else
++#define client_ip(r) ((r)->connection->remote_ip)
++#endif
++
++
+ /*---------------------------------------------------------------------*
+  * Configurations Directives                                           *
+  *---------------------------------------------------------------------*/
+@@ -564,7 +573,7 @@ static long get_bw_rate(request_rec * r,
              return e[i].rate;
  
          case T_IP:
 -            if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
-+            if (apr_ipsubnet_test(e[i].x.ip, r->useragent_addr)) {
++            if (apr_ipsubnet_test(e[i].x.ip, client_ip(r))) {
                  return e[i].rate;
              }
              break;
-@@ -655,7 +655,7 @@ static int get_maxconn(request_rec * r,
+@@ -655,7 +664,7 @@ static int get_maxconn(request_rec * r,
              return e[i].max;
  
          case T_IP:
 -            if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
-+            if (apr_ipsubnet_test(e[i].x.ip, r->useragent_addr)) {
++            if (apr_ipsubnet_test(e[i].x.ip, client_ip(r))) {
                  return e[i].max;
              }
              break;
-@@ -706,7 +706,7 @@ static int get_sid(request_rec * r, apr_
+@@ -706,7 +715,7 @@ static int get_sid(request_rec * r, apr_
              return e[i].sid;
  
          case T_IP:
 -            if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
-+            if (apr_ipsubnet_test(e[i].x.ip, r->useragent_addr)) {
++            if (apr_ipsubnet_test(e[i].x.ip, client_ip(r))) {
                  return e[i].sid;
              }
              break;
