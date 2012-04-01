@@ -1,3 +1,4 @@
+%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
 %{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
 
 Name:           mod_bw
@@ -28,7 +29,7 @@ iconv -f ISO-8859-1 -t UTF-8 mod_bw.txt.iso8859 > mod_bw.txt
 
 
 %build
-%{_sbindir}/apxs -Wc,"%{optflags}" -c mod_bw.c
+%{_httpd_apxs} -Wc,"%{optflags}" -c mod_bw.c
 
 
 %install
@@ -51,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.8-7
+- rebuild for remi repo and httpd 2.4
+
 * Wed Mar 14 2012 Jakub Hrozek <jhrozek@redhat.com> - 0.8-7
 - Do not require httpd itself
 
