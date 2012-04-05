@@ -4,12 +4,12 @@
 %global useselinux 0
 %endif
 
-#global svnrelease 12930
+%global svnrelease 17842
 
 Name:           glpi
-Version:        0.80.5
+Version:        0.83
 %if 0%{?svnrelease}
-Release:        2.svn%{svnrelease}%{?dist}
+Release:        0.2.svn%{svnrelease}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -21,7 +21,7 @@ License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
 %if 0%{?svnrelease}
 # launch mktar %{svnrelease} to create
-Source0:        glpi-0.78-%{svnrelease}.tar.gz
+Source0:        glpi-0.83-%{svnrelease}.tar.gz
 Source99:       mktar.sh
 %else
 Source0:        https://forge.indepnet.net/attachments/download/995/glpi-0.80.5.tar.gz
@@ -32,7 +32,7 @@ Source2:        glpi-config_path.php
 Source3:        glpi-logrotate
 
 # Switch all internal cron tasks to system
-Patch0:         glpi-cron.patch
+Patch0:         glpi-0.83-cron.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -81,7 +81,7 @@ techniciens grâce à une maintenance plus cohérente.
 %prep
 %setup -q -n glpi
 
-%patch0 -p1
+%patch0 -p0
 find . -name \*.orig -exec rm {} \; -print
 
 # Use system lib
@@ -246,6 +246,12 @@ fi
 
 
 %changelog
+* Wed Mar 14 2012 Remi Collet <remi@fedoraproject.org> - 0.83-0.2.svn17842
+- new SVN snapshot
+
+* Sun Feb 26 2012 Remi Collet <remi@fedoraproject.org> - 0.83-0.1.svn17620
+- version 0.83 post RC3
+
 * Tue Oct 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.5-1
 - version 0.80.5 released (bugfix)
   https://forge.indepnet.net/projects/glpi/versions/643
