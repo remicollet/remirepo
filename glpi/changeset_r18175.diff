@@ -1,0 +1,35 @@
+Index: branches/0.83-bugfixes/inc/autoload.function.php
+===================================================================
+--- branches/0.83-bugfixes/inc/autoload.function.php	(revision 18174)
++++ branches/0.83-bugfixes/inc/autoload.function.php	(revision 18175)
+@@ -82,7 +82,7 @@
+ 
+ function glpi_autoload($classname) {
+    global $DEBUG_AUTOLOAD, $CFG_GLPI;
+-   static $notfound = array();
++   static $notfound = array('xStates' => true);
+ 
+    // empty classname or non concerted plugin
+    if (empty($classname) || is_numeric($classname)) {
+@@ -120,7 +120,7 @@
+       if (preg_match('/^CAS_.*/', $classname)) {
+          return false;
+       }
+-      
++
+       $item = strtolower($classname);
+    }
+ 
+Index: branches/0.83-bugfixes/inc/dropdown.class.php
+===================================================================
+--- branches/0.83-bugfixes/inc/dropdown.class.php.orig	2012-04-04 20:41:11.000000000 +0200
++++ branches/0.83-bugfixes/inc/dropdown.class.php	2012-04-05 20:18:01.049747019 +0200
+@@ -1361,7 +1361,7 @@
+       /// for specific actions (return a array of action name and title)
+ 
+       if (!($item = getItemForItemtype($itemtype))) {
+-         return false;
++         return array();
+       }
+       $actions = array();
+       
