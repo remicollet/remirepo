@@ -81,7 +81,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
+%doc %{pluginname}/LICENSE
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/glpi/plugins/%{pluginname}
 
