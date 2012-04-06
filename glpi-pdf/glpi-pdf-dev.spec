@@ -1,5 +1,5 @@
 %global pluginname   pdf
-%global svnrelease   315
+#global svnrelease   315
 
 Name:           glpi-pdf
 Version:        0.83
@@ -20,8 +20,11 @@ URL:            https://forge.indepnet.net/projects/pdf
 # tar czf glpi-pdf-0.83-315.tar.gz pdf
 Source0:        glpi-pdf-0.83-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/966/glpi-pdf-0.80.3.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1095/glpi-pdf-0.83.tar.gz
 %endif
+
+# https://forge.indepnet.net/issues/3455
+Patch0:         changeset_r322.diff
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -50,6 +53,7 @@ for doc in docs/* ; do
 done
 
 cd %{pluginname}
+%patch0 -p1
 
 
 %build
@@ -74,7 +78,7 @@ rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc docs/*
+%doc docs/* %{pluginname}/LICENSE
 %dir %{_datadir}/glpi/plugins/%{pluginname}
 %dir %{_datadir}/glpi/plugins/%{pluginname}/locales
 %{_datadir}/glpi/plugins/%{pluginname}/*.php
@@ -87,6 +91,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-1
+- version 0.83
+  https://forge.indepnet.net/projects/pdf/versions/615
+
 * Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-0.1.svn315
 - update to 0.83 for glpi 0.83 RC (svn snapshot)
 
