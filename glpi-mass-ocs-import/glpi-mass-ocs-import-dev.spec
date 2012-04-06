@@ -1,6 +1,6 @@
 %global pluginname   massocsimport
 %global lockname     massocsimport.lock
-%global svnrelease   138
+#global svnrelease   138
 
 Name:           glpi-mass-ocs-import
 Version:        1.6.0
@@ -21,7 +21,7 @@ URL:            https://forge.indepnet.net/projects/massocsimport
 # tar czf glpi-massocsimport-1.6.0-138.tar.gz massocsimport
 Source0:        glpi-massocsimport-1.6.0-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/975/glpi-massocsimport-1.5.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1132/glpi-massocsimport-1.6.0.tar.gz
 %endif
 
 
@@ -68,8 +68,13 @@ EOF
 
 cat >%{name}.httpd <<EOF
 <Directory /usr/share/glpi/plugins/%{pluginname}/scripts>
-    Order Allow,Deny
-    Deny from all
+    <IfModule mod_authz_core.c>
+       Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+       Order deny,allow
+       Allow from all
+    </IfModule>
 </Directory>
 EOF
 
@@ -131,7 +136,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc README-RPM-POSTINTALL.txt docs/*
+%doc README-RPM-POSTINTALL.txt docs/* %{pluginname}/LICENSE
 %config(noreplace) %{_sysconfdir}/cron.d/%{name}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/glpi/plugins/%{pluginname}
@@ -140,6 +145,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-1
+- version 1.6.0
+  https://forge.indepnet.net/projects/massocsimport/versions/639
+- fix config for httpd 2.4
+
 * Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-0.1.svn138
 - update to 1.6.0 for glpi 0.83 RC (svn snapshot)
 
