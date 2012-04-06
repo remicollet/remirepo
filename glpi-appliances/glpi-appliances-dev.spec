@@ -50,13 +50,13 @@ Cette extension permet la gestion des applicatifs dans GLPI
 
 cat >httpd <<EOF
 <Directory /usr/share/glpi/plugins/%{pluginname}/sql>
-    <IfModule mod_authz_core.c>
-       Require all granted
-    </IfModule>
-    <IfModule !mod_authz_core.c>
-       Order deny,allow
-       Allow from all
-    </IfModule>
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order Allow,Deny
+		Deny from all
+	</IfModule>
 </Directory>
 EOF
 
