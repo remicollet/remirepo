@@ -1,5 +1,5 @@
 %global pluginname   appliances
-%global svnrelease   184
+#global svnrelease   184
 
 Name:           glpi-appliances
 Version:        1.8.0
@@ -20,7 +20,7 @@ URL:            https://forge.indepnet.net/projects/appliances
 # tar czf glpi-appliances-1.8.0-184.tar.gz appliances
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/924/glpi-appliances-1.7.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1114/glpi-appliances-1.8.0.tar.gz
 %endif
 
 
@@ -50,8 +50,13 @@ Cette extension permet la gestion des applicatifs dans GLPI
 
 cat >httpd <<EOF
 <Directory /usr/share/glpi/plugins/%{pluginname}/sql>
-    Order Allow,Deny
-    Deny from all
+    <IfModule mod_authz_core.c>
+       Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+       Order deny,allow
+       Allow from all
+    </IfModule>
 </Directory>
 EOF
 
@@ -76,11 +81,17 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%doc LICENSE
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/glpi/plugins/%{pluginname}
 
 
 %changelog
+* Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.8.0-1
+- version 1.8.0
+  https://forge.indepnet.net/projects/appliances/versions/614
+- fix config for httpd 2.4
+
 * Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.8.0-0.1.svn184
 - version 1.8.0 for glpi 0.83RC (svn snapshot)
 
