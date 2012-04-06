@@ -23,6 +23,10 @@ Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 Source0:        https://forge.indepnet.net/attachments/download/1114/glpi-appliances-1.8.0.tar.gz
 %endif
 
+# PHP 5.4.0 patch
+Patch0:         changeset_r189.diff
+# https://forge.indepnet.net/issues/3456
+Patch1:         changeset_r190.diff
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -60,6 +64,10 @@ cat >httpd <<EOF
 </Directory>
 EOF
 
+cd %{pluginname}
+%patch0 -p1
+%patch1 -p1
+
 
 %build
 # empty build
@@ -91,6 +99,7 @@ rm -rf %{buildroot}
 - version 1.8.0
   https://forge.indepnet.net/projects/appliances/versions/614
 - fix config for httpd 2.4
+- add 2 patches from SVN (php 5.4.0 + missing tab)
 
 * Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.8.0-0.1.svn184
 - version 1.8.0 for glpi 0.83RC (svn snapshot)
