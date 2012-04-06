@@ -1,5 +1,5 @@
 %global pluginname   webservices
-%global svnrelease   322
+#global svnrelease   322
 
 Name:           glpi-webservices
 Version:        1.3.0
@@ -20,7 +20,7 @@ URL:            https://forge.indepnet.net/projects/webservices
 # tar czf glpi-webservices-1.3.0-322.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/980/glpi-webservices-1.2.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1098/glpi-webservices-1.3.0.tar.gz
 %endif
 
 
@@ -45,8 +45,13 @@ Cette extension fournit un serveur de services web permettant
 
 cat >httpd <<EOF
 <Directory /usr/share/glpi/plugins/%{pluginname}/scripts>
-    Order Allow,Deny
-    Deny from all
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order Allow,Deny
+		Deny from all
+	</IfModule>
 </Directory>
 
 <Directory /usr/share/glpi/plugins/%{pluginname}>
@@ -79,11 +84,17 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%doc %{pluginname}/LICENSE
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/glpi/plugins/%{pluginname}
 
 
 %changelog
+* Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.0-1
+- version 1.3.0
+  https://forge.indepnet.net/projects/webservices/versions/635
+- fix config for httpd 2.4
+
 * Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.0-0.1.svn322
 - update to 1.3.0 for glpi 0.83 RC (svn snapshot)
 
