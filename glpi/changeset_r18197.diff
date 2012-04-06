@@ -1,0 +1,31 @@
+Index: branches/0.83-bugfixes/config/config.php
+===================================================================
+--- branches/0.83-bugfixes/config/config.php	(revision 18196)
++++ branches/0.83-bugfixes/config/config.php	(revision 18197)
+@@ -174,7 +174,13 @@
+          $error = Toolbox::commonCheckForUseGLPI();
+          echo "</table><br>";
+ 
+-         if (!$error) {
++         if ($error) {
++            echo "<form action='".$CFG_GLPI["root_doc"]."/index.php' method='post'>";
++            echo "<input type='submit' name='submit' class='submit' value=\"".
++                   $LANG['install'][27]."\">";
++            echo "</form>";
++         }
++         if ($error < 2) {
+             if (!isset($CFG_GLPI["version"]) || trim($CFG_GLPI["version"])<GLPI_VERSION) {
+                echo "<form method='post' action='".$CFG_GLPI["root_doc"]."/install/update.php'>";
+                echo "<p class='red'>".$LANG['update'][88]."</p>";
+@@ -186,11 +192,6 @@
+                echo "<p class='red'>".$LANG['update'][89]."</p>";
+             }
+ 
+-         } else {
+-            echo "<form action='".$CFG_GLPI["root_doc"]."/index.php' method='post'>";
+-            echo "<input type='submit' name='submit' class='submit' value=\"".
+-                   $LANG['install'][27]."\">";
+-            echo "</form>";
+          }
+ 
+          echo "</div>";

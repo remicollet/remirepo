@@ -5,7 +5,7 @@ Version:        0.83
 %if 0%{?svnrelease}
 Release:        0.2.svn%{svnrelease}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
@@ -30,6 +30,8 @@ Patch0:         glpi-0.83-cron.patch
 # https://forge.indepnet.net/issues/3451
 Patch1:         changeset_r18173.diff
 Patch2:         changeset_r18175.diff
+# SElinux test blocks upgrade
+Patch3:         changeset_r18197.diff
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -81,6 +83,7 @@ techniciens grâce à une maintenance plus cohérente.
 %patch0 -p0
 %patch1 -p2
 %patch2 -p2
+%patch3 -p2
 find . -name \*.orig -exec rm {} \; -print
 
 # Use system lib
@@ -245,6 +248,9 @@ fi
 
 
 %changelog
+* Fri Apr 06 2012 Remi Collet <remi@fedoraproject.org> - 0.83-2
+- patch from upstream: selinux tests blocks upgrade
+
 * Thu Apr 05 2012 Remi Collet <remi@fedoraproject.org> - 0.83-1
 - version 0.83 released
   https://forge.indepnet.net/projects/glpi/versions/538
