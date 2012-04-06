@@ -2,7 +2,7 @@
 #global svnrelease   57
 
 Name:           glpi-loadentity
-Version:        1.2.0
+Version:        1.3.0
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,14 +20,15 @@ URL:            https://forge.indepnet.net/projects/loadentity
 # tar czf glpi-loadentity-1.2.0-57.tar.gz loadentity
 Source0:        glpi-loadentity-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/666/glpi-loadentity-1.2.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1112/glpi-loadentity-1.3.0.tar.gz
 %endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.78
+Requires:       glpi >= 0.83
+Requires:       glpi <  0.84
 Requires:       %{_sysconfdir}/cron.d
 
 %description
@@ -53,8 +54,13 @@ EOF
 
 cat >httpd <<EOF
 <Directory /usr/share/glpi/plugins/%{pluginname}/scripts>
-    Order Allow,Deny
-    Deny from all
+    <IfModule mod_authz_core.c>
+       Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+       Order deny,allow
+       Allow from all
+    </IfModule>
 </Directory>
 EOF
 
@@ -88,12 +94,16 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc docs/*
+%doc docs/* %{pluginname}/LICENSE
 %config(noreplace) %{_sysconfdir}/cron.d/%{name}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/glpi/plugins/%{pluginname}
 
 %changelog
+* Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.0-1
+- version 1.3.0 for GLPI 0.83
+  https://forge.indepnet.net/projects/loadentity/versions/653
+
 * Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.2.0-1
 - version 1.2.0 and GLPI 0.78 released
 
