@@ -4,18 +4,16 @@
 %global pecl_name mongo
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_libdir}/.*\\.so$
 
 
 Summary:      PHP MongoDB database driver
 Name:         %{phpname}-pecl-mongo
-Version:      1.2.9
-Release:      2%{?dist}
+Version:      1.2.10
+Release:      1%{?dist}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -160,6 +158,9 @@ fi
 
 
 %changelog
+* Tue Apr 10 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.10-1
+- update to 1.2.10, php 5.3 build
+
 * Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.9-2
 - update to 1.2.9, php 5.4 build
 
