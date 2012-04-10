@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.4.10.2
+Version: 3.5.0
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -104,7 +104,7 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README LICENSE CREDITS TODO Documentation.txt
+%doc ChangeLog README LICENSE Documentation.txt
 %{_datadir}/%{name}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
@@ -115,6 +115,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Apr 10 2012 Remi Collet <rpms@famillecollet.com> 3.5.0-1
+- Upstream released 3.5.0
+
 * Wed Mar 28 2012 Remi Collet <rpms@famillecollet.com> 3.4.10.2-1
 - Upstream released 3.4.10.2 (security)
   fix PMASA-2012-2
