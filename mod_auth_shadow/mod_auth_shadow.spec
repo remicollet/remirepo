@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CHANGES README COPYING
 
 %changelog
+* Tue Apr 10 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.3-1
+- rebuild for remi repo and httpd 2.4
+
 * Mon Apr 09 2012 Jan Klepek <jan.klepek at gmail.com> - 2.3-1
 - updated to latest version
 
