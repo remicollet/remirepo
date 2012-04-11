@@ -2,11 +2,11 @@
 %{!?__pecl:	%{expand: %%global __pecl    %{_bindir}/pecl}}
 
 %global pecl_name APC
-%global svnver    324329
+#global svnver    324329
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          %{phpname}-pecl-apc
-Version:       3.1.9
+Version:       3.1.10
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
@@ -16,7 +16,7 @@ URL:           http://pecl.php.net/package/APC
 Source:        apc-svn%{svnver}.tgz
 Release:       8.svn%{svnver}%{?dist}
 %else
-Release:       3%{?dist}
+Release:       1%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
 %endif
 
@@ -61,8 +61,15 @@ mv apc-svn%{svnver}/package.xml .
 mv apc-svn%{svnver} APC-%{version}
 %endif
 
-# Check than upstream version is correct, http://pecl.php.net/bugs/19590
-grep '"%{version}"' APC-%{version}/php_apc.h || exit 1
+# https://bugs.php.net/61696
+sed -i -e 's/"3.1.9"/"%{version}"/' APC-%{version}/php_apc.h
+
+# Sanity check, really often broken
+extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' APC-%{version}/php_apc.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}.
+   exit 1
+fi
 
 cp -pr APC-%{version} APC-%{version}-zts
 
@@ -219,23 +226,27 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun Mar 18 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-8.svn324329
+* Wed Apr 11 2012 Remi Collet <remi@fedoraproject.org> - 3.1.10-1
+- Update to 3.1.10 (beta) for PHP 5.3
+- fix reported version, https://bugs.php.net/61696
+
+* Sun Mar 18 2012 Remi Collet <remi@fedoraproject.org> - 3.1.9-8.svn324329
 - pull changes from SVN revision 324329
 
-* Mon Mar 12 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-7.svn324146
+* Mon Mar 12 2012 Remi Collet <remi@fedoraproject.org> - 3.1.9-7.svn324146
 - pull changes from SVN revision 324146, fix https://bugs.php.net/60658
 
-* Sun Mar 11 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-7.svn324037
+* Sun Mar 11 2012 Remi Collet <remi@fedoraproject.org> - 3.1.9-7.svn324037
 - pull changes from SVN revision 324037
 - add patch from https://bugs.php.net/61238
 
-* Mon Feb 27 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-6.svn323587
+* Mon Feb 27 2012 Remi Collet <remi@fedoraproject.org> - 3.1.9-6.svn323587
 - pull changes from SVN revision 323587
 
-* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.0.6-5.svn322617
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.1.9-5.svn322617
 - pull changes from SVN revision 322617
 
-* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.0.6-4.svn316786
+* Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.1.9-4.svn316786
 - pull changes from SVN revision 316786
 - build against php 5.4
 
