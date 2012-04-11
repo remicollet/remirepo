@@ -16,7 +16,7 @@ URL:           http://pecl.php.net/package/APC
 Source:        apc-svn%{svnver}.tgz
 Release:       8.svn%{svnver}%{?dist}
 %else
-Release:       1%{?dist}
+Release:       2%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
 %endif
 
@@ -226,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 11 2012 Remi Collet <remi@fedoraproject.org> - 3.1.10-2
+- Update to 3.1.10 (beta) for PHP 5.4
+
 * Wed Apr 11 2012 Remi Collet <remi@fedoraproject.org> - 3.1.10-1
 - Update to 3.1.10 (beta) for PHP 5.3
 - fix reported version, https://bugs.php.net/61696
