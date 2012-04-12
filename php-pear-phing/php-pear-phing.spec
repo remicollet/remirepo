@@ -4,7 +4,7 @@
 
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
-Version:	2.4.9
+Version:	2.4.12
 Release:	1%{?dist}
 
 License:	LGPLv2
@@ -90,6 +90,12 @@ fi
 
 
 %changelog
+* Thu Apr 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.12-1
+- upstream 2.4.9, backport for remi repo
+
+* Wed Apr 11 2012 Christof Damian <christof@damian.net> - 2.4.12-1
+- upstream 2.4.12
+
 * Tue Jan 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.9-1
 - upstream 2.4.9
 
