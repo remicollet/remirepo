@@ -142,4 +142,6 @@ libmysqlclient_18 {
 	mysql_net_realloc;
 # PHP's mysqli.so requires this (via the ER() macro)
 	mysql_client_errors;
+# mydumper requires this (added by remi)
+	my_net_read;
 };

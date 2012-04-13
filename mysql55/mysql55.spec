@@ -1,6 +1,6 @@
 Name: mysql
-Version: 5.5.22
-Release: 1%{?dist}.1
+Version: 5.5.23
+Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -803,7 +803,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
-* Sat Mar 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.22-1.1
+* Fri Apr 13 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.23-1
+- update to MySQL 5.5.23 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-23.html
+- export my_net_read for mydumper
 - sync patches with rawhide
 
 * Sat Mar 24 2012 Tom Lane <tgl@redhat.com> 5.5.22-1

@@ -37,19 +37,4 @@ diff -up mysql-5.5.21/sql/sql_trigger.cc.coverity mysql-5.5.21/sql/sql_trigger.c
  }
  
 
-Error: STRING_OVERFLOW:
-/builddir/build/BUILD/mysql-5.1.61/storage/innodb_plugin/handler/ha_innodb.cc:6544: fixed_size_dest: You might overrun the 512 byte fixed-size string "name2" by copying "name" without checking the length.
-/builddir/build/BUILD/mysql-5.1.61/storage/innodb_plugin/handler/ha_innodb.cc:6544: parameter_as_source: Note: This defect has an elevated risk because the source argument is a parameter of the current function.
 
-diff -up mysql-5.5.21/storage/innobase/handler/ha_innodb.cc.coverity mysql-5.5.21/storage/innobase/handler/ha_innodb.cc
---- mysql-5.5.21/storage/innobase/handler/ha_innodb.cc.coverity	2012-03-13 17:28:52.982738150 +0100
-+++ mysql-5.5.21/storage/innobase/handler/ha_innodb.cc	2012-03-13 17:29:14.952427553 +0100
-@@ -6926,7 +6926,7 @@ ha_innobase::create(
- 		DBUG_RETURN(HA_ERR_TO_BIG_ROW);
- 	}
- 
--	strcpy(name2, name);
-+	strncpy(name2, name, sizeof(name2)-1);
- 
- 	normalize_table_name(norm_name, name2);
- 
