@@ -1,5 +1,5 @@
 %global  glpi_version  0.80.0
-%global  plug_version  1.1
+%global  plug_version  1.2
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -13,7 +13,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/515/fusioninventory-for-glpi-metapackage_0.80_1.1.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/606/fusioninventory-for-glpi-metapackage_0.80_1.2.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -44,7 +44,9 @@ mv fusioninventory/docs fusioninventory-docs
 
 # .htaccess replaced by a httpd config file
 rm -f fusioninventory/install/mysql/.htaccess
+rm -f fusioninventory/tools/.htaccess
 rm -f fusinvsnmp/install/mysql/.htaccess
+rm -f fusinvsnmp/scripts/.htaccess
 
 
 %build
@@ -118,10 +120,15 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusinvsnmp/pics
 %{_datadir}/glpi/plugins/fusinvsnmp/report
 %{_datadir}/glpi/plugins/fusinvsnmp/tool
+%{_datadir}/glpi/plugins/fusinvsnmp/scripts
 
 
 %changelog
-* Tue Jan 10 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.1
+* Sat Apr 14 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.2-1
+- update to 0.80+1.2
+  http://forge.fusioninventory.org/versions/110
+
+* Tue Jan 10 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.1-1
 - update to 0.80+1.1 (new version scheme)
   http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/versions/105
 - switch from GPLv2+ to AGPLv3+
