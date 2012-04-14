@@ -28,7 +28,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-%global rcver      RC1
+%global rcver      RC2
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -61,7 +61,7 @@ Version: 5.4.1
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.2.RC1%{?dist}
+Release: 0.3.RC2%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -1471,8 +1471,12 @@ fi
 %endif
 
 %changelog
+* Fri Apr 13 2012 Remi Collet <remi@fedoraproject.org> 5.4.1-0.3.RC2
+- update to 5.4.1RC2
+
 * Sat Mar 31 2012 Remi Collet <remi@fedoraproject.org> 5.4.1-0.2.RC1
 - rebuild
+
 * Sat Mar 31 2012 Remi Collet <remi@fedoraproject.org> 5.4.1-0.1.RC1
 - update to 5.4.1RC1, split php conf when httpd 2.4
 
