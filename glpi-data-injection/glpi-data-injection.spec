@@ -2,7 +2,7 @@
 #global svnrelease   596
 
 Name:           glpi-data-injection
-Version:        2.1.4
+Version:        2.1.6
 %if 0%{?svnrelease}
 Release:        0.2.svn%{svnrelease}%{?dist}
 %else
@@ -21,7 +21,7 @@ URL:            https://forge.indepnet.net/projects/datainjection
 Source0:        glpi-datainjection-2.1.0-%{svnrelease}.tar.gz
 %else
 # This change for each new version
-Source0:        https://forge.indepnet.net/attachments/download/1038/glpi-datainjection-2.1.4.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1109/glpi-datainjection-2.1.6.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -109,6 +109,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 10 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.1.6-1
+- update to 2.1.6
+  https://forge.indepnet.net/projects/datainjection/versions/718
+
 * Tue Jan 10 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.1.4-1
 - update to 2.1.4
   https://forge.indepnet.net/projects/datainjection/versions/671
