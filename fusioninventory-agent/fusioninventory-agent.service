@@ -1,0 +1,11 @@
+[Unit]
+Description=FusionInventory agent
+After=syslog.target network.target
+
+[Service]
+EnvironmentFile=/etc/sysconfig/fusioninventory-agent
+ExecStart=/usr/bin/fusioninventory-agent $FUSINVOPT --logfile=/var/log/fusioninventory-agent/service.log --daemon-no-fork
+
+[Install]
+WantedBy=multi-user.target
+

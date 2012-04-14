@@ -1,5 +1,12 @@
+%if 0%{?fedora} >= 17
+%global  with_systemd  1
+%else
+%global  with_systemd  0
+%endif
+
 #global gitver 9bd1238
 #global prever _beta1
+
 
 Name:        fusioninventory-agent
 Summary:     FusionInventory agent
@@ -8,19 +15,20 @@ Group:       Applications/System
 License:     GPLv2+
 URL:         http://fusioninventory.org/
 
-Version:     2.1.14
+Version:     2.2.0
 
 %if 0%{?gitver:1}
 Release:   0.2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1.8-95-g9bd1238.tar.gz
 %else
-Release:   2%{?dist}
+Release:   1%{?dist}
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
 Source1:   %{name}.cron
 Source2:   %{name}.init
+Source3:   %{name}.service
 
 
 BuildArch: noarch
@@ -28,8 +36,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: perl(Module::Install)
 # For tests 
-BuildRequires: perl(Time::HiRes) perl(XML::Simple) perl(UNIVERSAL::require) perl(Test::More)
+BuildRequires: perl(Time::HiRes) perl(UNIVERSAL::require) perl(Test::More)
 BuildRequires: perl(Class::Accessor::Fast) perl(Class::Data::Inheritable) perl(Test::Exception)
+BuildRequires: perl(File::Which) perl(IPC::Run) perl(Test::MockModule) perl(Text::Template)
+BuildRequires: perl(IO::Capture::Stderr) perl(Net::IP) perl(YAML)
 %if 0%{?fedora} >= 14
 BuildRequires: perl(LWP::Protocol::https) perl(IO::Socket::SSL)
 BuildRequires: perl(HTTP::Server::Simple::Authen) perl(CGI)
@@ -41,7 +51,10 @@ BuildRequires: perl(XML::TreePP)
 BuildRequires: perl(JSON)
 %endif
 %if 0%{?fedora} >= 11
-BuildRequires: perl(Test::Compile)
+BuildRequires: perl(Test::Compile) perl(HTTP::Proxy)
+%endif
+%if %{with_systemd}
+BuildRequires: systemd-units
 %endif
 
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -51,10 +64,21 @@ Requires:  perl(Proc::Daemon) perl(Proc::PID::File)
 Requires:  perl(Archive::Extract)
 Requires:  perl(Net::CUPS)
 %endif
+%if %{with_systemd}
+# We require this to be present for /etc/tmpfiles.d
+Requires: systemd-units
+# Make sure it's there when scriptlets run, too
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+%else
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): /sbin/service
+%endif
 
+# OCS Software deployment is no more supported
+#Conflicts: perl-FusionInventory-Agent-Task-OcsDeploy
 
 # RPM 4.8
 %{?filter_from_requires: %filter_from_requires /perl(Win32/d}
@@ -73,12 +97,12 @@ or GLPI server with the FusionInventory for GLPI plugin.
 
 You can add additional packages for optional tasks:
 
-* perl-FusionInventory-Agent-Task-OcsDeploy
-    OCS Inventory Software deployment support
 * perl-FusionInventory-Agent-Task-NetDiscovery
     Network Discovery support
-* perl-FusionInventory-Agent-Task-SNMPQuery
-    SNMP Query support
+* perl-FusionInventory-Agent-Task-NetInventory
+    Network Inventory support
+* perl-FusionInventory-Agent-Task-Deploy
+    Software deployment support
 * perl-FusionInventory-Agent-Task-ESX
     vCenter/ESX/ESXi remote inventory
 
@@ -168,12 +192,15 @@ cat <<EOF | tee %{name}.conf
 # Add tools directory if needed (tw_cli, hpacucli, ipssend, ...)
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 # Global options (debug for verbose log, rpc-trust-localhost for yum-plugin)
-FUSINVOPT='--debug --rpc-trust-localhost'
+FUSINVOPT="--debug --rpc-trust-localhost"
 # Mode, change to "cron" or "daemon" to activate
 # - none (default on install) no activity
 # - cron (inventory only) use the cron.hourly
+%if %{with_systemd}
+# NB systemd service launcher only use FUSINVOPT and agent.cfg
+%else
 # - daemon (recommanded) use the service
-#   DON'T FORGET to enable the service
+%endif
 OCSMODE[0]=none
 # OCS Inventory or FusionInventory server URI
 # OCSSERVER[0]=your.ocsserver.name
@@ -187,38 +214,35 @@ OCSPAUSE[0]=120
 OCSTAG[0]=
 EOF
 
-cat <<EOF | tee agent.cfg
-# This file provides global and command line settings
-# For CRON or DAEMON configuration, see %{_sysconfdir}/sysconfig/%{name}
-share-dir=%{perl_vendorlib}/auto/share/dist/FusionInventory-Agent
-basevardir=%{_localstatedir}/lib/%{name}
-logger=Stderr
-server=""
-EOF
-
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL \
+     PREFIX=%{_prefix} \
+     SYSCONFDIR=%{_sysconfdir}/fusioninventory \
+     LOCALSTATEDIR=%{_localstatedir}/lib/%{name}
+
 make %{?_smp_mflags}
 
 
 %install
 rm -rf %{buildroot}
 
-make pure_install DESTDIR=%{buildroot}
+make install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
 
-
 mkdir -p %{buildroot}%{_localstatedir}/{log,lib}/%{name}
 
-install -m 644 -D  logrotate    %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-install -m 644 -D  %{name}.conf %{buildroot}%{_sysconfdir}/sysconfig/%{name}
-install -m 644 -D  agent.cfg    %{buildroot}%{_sysconfdir}/fusioninventory/agent.cfg
-install -m 755 -Dp %{SOURCE1}   %{buildroot}%{_sysconfdir}/cron.hourly/%{name}
-install -m 755 -Dp %{SOURCE2}   %{buildroot}%{_initrddir}/%{name}
+install -m 644 -D  logrotate     %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+install -m 644 -D  %{name}.conf  %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -m 755 -Dp %{SOURCE1}    %{buildroot}%{_sysconfdir}/cron.hourly/%{name}
+%if %{with_systemd}
+install -m 644 -Dp %{SOURCE3}    %{buildroot}%{_unitdir}/%{name}.service
+%else
+install -m 755 -Dp %{SOURCE2}    %{buildroot}%{_initrddir}/%{name}
+%endif
 
 # Yum plugin installation
 install -m 644 -D contrib/yum-plugin/%{name}.py   %{buildroot}%{_prefix}/lib/yum-plugins/%{name}.py
@@ -234,38 +258,61 @@ rm -rf %{buildroot} %{buildroot}%{_datarootdir}
 
 
 %post
-/sbin/chkconfig --add %{name}
-
+%if %{with_systemd}
+/sbin/chkconfig --del %{name} &>/dev/null || :
+/bin/systemctl daemon-reload &>/dev/null || :
+%else
+if [ $1 = 1 ]; then
+    # Initial installation
+    /sbin/chkconfig --add %{name} || :
+fi
+%endif
+exit 0
 
 %preun
 if [ $1 -eq 0 ] ; then
+%if %{with_systemd}
+    /bin/systemctl --no-reload disable %{name}.service &>/dev/null
+    /bin/systemctl stop %{name}.service &>/dev/null
+%else
     /sbin/service %{name} stop &>/dev/null
     /sbin/chkconfig --del %{name}
+%endif
 fi
 exit 0
 
 
 %postun
+%if %{with_systemd}
+/bin/systemctl daemon-reload &>/dev/null
+if [ $1 -ge 1 ]; then
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart %{name}.service &>/dev/null
+fi
+%else
 if [ $1 -ge 1 ]; then
     /sbin/service %{name} condrestart &>/dev/null
 fi
+%endif
 exit 0
 
 
 %files
 %defattr(-, root, root, -)
-%doc AUTHORS Changes LICENSE THANKS
+%doc Changes LICENSE THANKS
 %dir %{_sysconfdir}/fusioninventory
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/fusioninventory/agent.cfg
 %{_sysconfdir}/cron.hourly/%{name}
+%if %{with_systemd}
+%{_unitdir}/%{name}.service
+%else
 %{_initrddir}/%{name}
-%{perl_vendorlib}/FusionInventory
-%{perl_vendorlib}/auto
+%endif
+%{_datadir}/fusioninventory
 %{_bindir}/fusioninventory-agent
 %{_bindir}/fusioninventory-injector
-%exclude %{_bindir}/%{name}-config
 %{_mandir}/man1/fusioninventory-agent*
 %{_mandir}/man1/fusioninventory-injector*
 %{_mandir}/man3/Fusion*
@@ -279,6 +326,10 @@ exit 0
 
 
 %changelog
+* Sat Apr 14 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0
+  http://search.cpan.org/src/FUSINV/FusionInventory-Agent-2.2.0/Changes
+
 * Sun Feb 26 2012 Remi Collet <remi@fedoraproject.org> - 2.1.14-1
 - update to 2.1.14
   http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.14/Changes
