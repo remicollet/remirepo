@@ -8,19 +8,20 @@ Group:       Applications/System
 License:     GPLv2+
 URL:         http://fusioninventory.org/
 
-Version:     2.1.9
+Version:     2.1.14
 
 %if 0%{?gitver:1}
-Release:   0.1.git%{gitver}%{?dist}
+Release:   0.2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1.8-95-g9bd1238.tar.gz
 %else
-Release:   1%{?dist}
+Release:   2%{?dist}
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
 Source1:   %{name}.cron
 Source2:   %{name}.init
+
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -28,6 +29,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: perl(Module::Install)
 # For tests 
 BuildRequires: perl(Time::HiRes) perl(XML::Simple) perl(UNIVERSAL::require) perl(Test::More)
+BuildRequires: perl(Class::Accessor::Fast) perl(Class::Data::Inheritable) perl(Test::Exception)
+%if 0%{?fedora} >= 14
+BuildRequires: perl(LWP::Protocol::https) perl(IO::Socket::SSL)
+BuildRequires: perl(HTTP::Server::Simple::Authen) perl(CGI)
+%endif
 %if 0%{?fedora}>= 12 || 0%{?rhel} >= 5
 BuildRequires: perl(XML::TreePP)
 %endif
@@ -50,15 +56,11 @@ Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): /sbin/service
 
 
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-# This work only on recent fedora
-%{?filter_setup:
-%filter_from_requires /perl(Win32/d
-%?perl_default_filter
-}
-%else 
+# RPM 4.8
+%{?filter_from_requires: %filter_from_requires /perl(Win32/d}
 %{?perl_default_filter}
-%endif
+# RPM 4.9
+%global __requires_exclude %{?__requires_exclude:__requires_exclude|}^perl\\(Win32
 
 
 %description
@@ -253,9 +255,6 @@ exit 0
 %files
 %defattr(-, root, root, -)
 %doc AUTHORS Changes LICENSE THANKS
-%if ! 0%{?gitver:1}
-%doc README*
-%endif
 %dir %{_sysconfdir}/fusioninventory
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
@@ -280,6 +279,24 @@ exit 0
 
 
 %changelog
+* Sun Feb 26 2012 Remi Collet <remi@fedoraproject.org> - 2.1.14-1
+- update to 2.1.14
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.14/Changes
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Nov 28 2011 Remi Collet <remi@fedoraproject.org> - 2.1.12-1
+- update to 2.1.12
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-2.1.12/Changes
+- upstream patch for http://forge.fusioninventory.org/issues/1161
+
+* Sat Aug 06 2011 Remi Collet <remi@fedoraproject.org> - 2.1.9-3
+- adapt filter
+
+* Fri Jul 25 2011 Petr Sabata <contyk@redhat.com> - 2.1.9-2
+- Perl mass rebuild
+
 * Sun Jun 26 2011 Remi Collet <Fedora@famillecollet.com> 2.1.9-1
 - missing dist tag
 
