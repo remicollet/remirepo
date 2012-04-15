@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-ESX
-Version:        1.1.2
-Release:        2%{?dist}
+Version:        2.1.0
+Release:        1%{?dist}
 Summary:        vCenter/ESX/ESXi remote inventory for FusionInventory Agent
 License:        GPLv2+
 Group:          Development/Libraries
@@ -12,15 +12,17 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl >= 1:5.8.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(FusionInventory::Agent) >= 2.1.9
+BuildRequires:  perl(FusionInventory::Agent) >= 2.2.0
 BuildRequires:  perl(HTTP::Cookies)
 BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::MockModule)
+BuildRequires:  perl(Test::MockObject)
 BuildRequires:  perl(XML::TreePP)
 BuildRequires:  perl(LWP::Protocol::https)
 
-Requires:       perl(FusionInventory::Agent) >= 2.1.9
+Requires:       perl(FusionInventory::Agent) >= 2.2.0
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
@@ -38,9 +40,15 @@ You can import the generated files in:
 %prep
 %setup -q -n FusionInventory-Agent-Task-ESX-%{version}
 
+
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL \
+     PREFIX=%{_prefix} \
+     SYSCONFDIR=%{_sysconfdir}/fusioninventory \
+     LOCALSTATEDIR=%{_localstatedir}/lib/%{name}
+
 make %{?_smp_mflags}
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -52,22 +60,36 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
+
 %check
 make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+
 %files
 %defattr(-,root,root,-)
-%doc AUTHOR Changes README LICENSE
+%doc Changes README LICENSE
 %{_bindir}/fusioninventory-esx
-%{perl_vendorlib}/FusionInventory/Agent/Task/ESX*
-%{perl_vendorlib}/FusionInventory/VMware
+%{_datadir}/fusioninventory/lib/FusionInventory/Agent/Task/ESX.pm
+%{_datadir}/fusioninventory/lib/FusionInventory/VMware
 %{_mandir}/man1/fusioninventory-esx.*
 
 
 %changelog
+* Sun Apr 15 2012 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0 for agent 2.2.0
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-ESX-2.1.0/Changes
+
+* Sun Feb 26 2012 Remi Collet <Fedora@famillecollet.com> 1.1.3-1
+- update to 1.1.3
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-ESX-1.1.3/Changes
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Aug 08 2011 Remi Collet <Fedora@famillecollet.com> 1.1.2-2
 - add BR perl(LWP::Protocol::https)
 
