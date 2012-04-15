@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-NetDiscovery
-Version:        1.5
-Release:        2%{?dist}
+Version:        2.1
+Release:        1%{?dist}
 Summary:        Network discovery support for FusionInventory Agent
 License:        GPLv2+
 Group:          Development/Libraries
@@ -12,15 +12,16 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker) perl(Module::Install)
 # For tests
-BuildRequires:  perl(FusionInventory::Agent) >= 2.0
+BuildRequires:  perl(FusionInventory::Agent) >= 2.2.0
+BuildRequires:  perl(Net::SNMP)
 BuildRequires:  perl(Test::More)
-BuildRequires:  perl(XML::TreePP)
+BuildRequires:  perl(Test::Exception)
+BuildRequires:  perl(Test::Compile)
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:       perl(FusionInventory::Agent) >= 2.0
+Requires:       perl(FusionInventory::Agent) >= 2.2.0
 Requires:       perl(XML::SAX)
 # Optional (but recommended) dependencies
-Requires:       perl(Parallel::ForkManager)
 Requires:       perl(Net::SNMP)
 Requires:       perl(Net::NBName)
 Requires:       nmap
@@ -38,7 +39,11 @@ SNMP protocol.
 
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL \
+     PREFIX=%{_prefix} \
+     SYSCONFDIR=%{_sysconfdir}/fusioninventory \
+     LOCALSTATEDIR=%{_localstatedir}/lib/%{name}
+
 make %{?_smp_mflags}
 
 
@@ -63,12 +68,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS Changes LICENSE README THANKS
-%{perl_vendorlib}/FusionInventory/Agent/Task/NetDiscovery*
+%doc Changes LICENSE README THANKS
+%{_datadir}/fusioninventory/lib/FusionInventory/Agent/SNMP.pm
+%{_datadir}/fusioninventory/lib/FusionInventory/Agent/Task/NetDiscovery.pm
+%{_datadir}/fusioninventory/lib/FusionInventory/Agent/Task/NetDiscovery
 %{_mandir}/man3/FusionInventory*
 
 
 %changelog
+* Sun Apr 15 2012 Remi Collet <remi@fedoraproject.org> - 2.1-1
+- update to 2.1 for agent 2.2.0
+  http://cpansearch.perl.org/src/FUSINV/FusionInventory-Agent-Task-NetDiscovery-2.1/Changes
+
 * Sat May 28 2011 Remi Collet <Fedora@famillecollet.com> 1.5-2
 - add dependency on perl(XML::SAX)
 
