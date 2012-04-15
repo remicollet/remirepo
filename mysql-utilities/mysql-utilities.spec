@@ -12,7 +12,7 @@
 
 Name:           mysql-utilities
 Version:        1.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MySQL Utilities
 
 Group:          Applications/Databases
@@ -26,7 +26,7 @@ Patch0:         %{name}-man.patch
 
 
 BuildArch:      noarch
-BuildRequires:  python-devel >= 2.6
+BuildRequires:  python2-devel >= 2.6
 %if %{with_man}
 BuildRequires:  python-sphinx >= 1.0
 %endif
@@ -97,13 +97,21 @@ rm -rf build
 %{python_sitelib}/mysql/utilities
 %{python_sitelib}/mysql_utilities*
 %if %{with_man}
-%{_mandir}/man1/m*
+%{_mandir}/man1/mysql*
+# mut command is not installed.
+%exclude %{_mandir}/man1/mut*
 %endif
 # empty file already provided by mysql-connector-python
 %exclude %{python_sitelib}/mysql/__init*
 
 
 %changelog
+* Sun Apr 15 2012 Remi Collet <remi@fedoraproject.org> - 1.0.5-2
+- fix BR to python2-devel
+- incorrect-fsf-address and non-executable-script referenced as
+  Oracle BUG#13956819
+- remove mut man page (command not installed)
+
 * Thu Apr 11 2012 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - initial RPM
 
