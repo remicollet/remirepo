@@ -28,8 +28,11 @@ Provides:       perl-FusionInventory-Agent-Task-SNMPQuery = %{version}-%{release
 
 
 %description
-This task extracts various information from remote hosts through
-SNMP protocol:
+This task allows the FusionInventory agent to extracts various informations
+from remote hosts through SNMP protocol:
+* printer cartridges and counters status
+* router/switch ports status
+* relations between devices and router/switch ports
 
 
 %prep
