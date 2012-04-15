@@ -6,7 +6,7 @@ License:        GPLv2+
 Group:          Development/Libraries
 
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-agent-task-snmpquery
-Source0:        http://www.cpan.org/modules/by-module/FusionInventory/FusionInventory-Agent-Task-NetInventory-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-Task-NetInventory-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
