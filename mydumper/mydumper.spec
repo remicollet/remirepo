@@ -4,6 +4,11 @@
 %global with_doc 0
 %endif
 
+# Not suitable for fedora / EPEL because of not exported my_read_net
+# See https://bugs.launchpad.net/mydumper/+bug/803982
+# And https://bugzilla.redhat.com/show_bug.cgi?id=728634
+
+
 Name:           mydumper
 Version:        0.2.3
 Release:        1%{?dist}
