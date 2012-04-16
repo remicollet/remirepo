@@ -122,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.6.3-9
+- rebuild for remi repo and httpd 2.4
+
 * Thu Apr 05 2012 Jan Kaluza <jkaluza@redhat.com> - 0.6.3-9
 - Fix compilation issues with httpd-2.4 (#809750)
 
