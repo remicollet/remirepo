@@ -1,0 +1,65 @@
+--- a/mod_log_post.c	
++++ a/mod_log_post.c	
+@@ -1045,7 +1045,7 @@ const char *get_variable(modsec_rec *msr, variable *v, int var_type) {
+             break;
+ 
+         case VAR_REMOTE_ADDR :
+-            result = r->connection->remote_ip;
++            result = r->useragent_ip;
+             break;
+ 
+         case VAR_REMOTE_HOST :
+@@ -1108,7 +1108,7 @@ const char *get_variable(modsec_rec *msr, variable *v, int var_type) {
+             break;
+ 
+         case VAR_SERVER_SOFTWARE :
+-            result = ap_get_server_version();
++            result = ap_get_server_banner();
+             break;
+ 
+         case VAR_API_VERSION :
+@@ -1973,7 +1973,7 @@ static int read_post_payload(modsec_rec *msr) {
+ 
+         folder = get_temp_folder(r->pool);
+ 
+-        ctx->tmp_file_name = apr_psprintf(r->pool, "%s/%s-%s-request_body-XXXXXX", folder, current_filetime(r), r->connection->remote_ip);
++        ctx->tmp_file_name = apr_psprintf(r->pool, "%s/%s-%s-request_body-XXXXXX", folder, current_filetime(r), r->useragent_ip);
+         if (ctx->tmp_file_name == NULL) {
+             msr->_post_payload = NULL;
+             sec_debug_log(r, 1, "read_post_payload: Memory allocation failed");
+@@ -3064,7 +3064,7 @@ static char *construct_log_vcombinedus(request_rec *r, request_rec *origr) {
+     if (user_agent == NULL) user_agent = "-";
+ 
+     return apr_psprintf(r->pool, "%s %s %s %s [%s] \"%s\" %i %" APR_OFF_T_FMT " \"%s\" \"%s\" %s \"%s\"",
+-        ap_get_server_name(r), r->connection->remote_ip, log_escape(r->pool, remote_user),
++        ap_get_server_name(r), r->useragent_ip, log_escape(r->pool, remote_user),
+         log_escape(r->pool, local_user), current_logtime(r),
+         ((origr->the_request == NULL) ? "" : log_escape(r->pool, origr->the_request)),
+         origr->status, r->bytes_sent, log_escape(r->pool, referer), log_escape(r->pool, user_agent),
+@@ -3477,7 +3477,7 @@ static void sec_debug_log(request_rec *r, int level, const char *text, ...) {
+         if (hostname != NULL) hostname = apr_psprintf(r->pool, " [hostname \"%s\"]", log_escape(r->pool, hostname));
+         else hostname = "";
+ 
+-        ap_log_error(APLOG_MARK, APLOG_ERR | APLOG_NOERRNO, 0, r->server, "[client %s] mod_log_post: %s%s [uri \"%s\"]%s", r->connection->remote_ip, str1, hostname, log_escape(r->pool, r->unparsed_uri), unique_id);
++        ap_log_error(APLOG_MARK, APLOG_ERR | APLOG_NOERRNO, 0, r->server, "[client %s] mod_log_post: %s%s [uri \"%s\"]%s", r->useragent_ip, str1, hostname, log_escape(r->pool, r->unparsed_uri), unique_id);
+     }
+ 
+     va_end(ap);
+@@ -3592,7 +3592,7 @@ char *construct_put_filename(modsec_rec *msr) {
+ 
+     tmp_dir = get_temp_folder(msr->r->pool);
+ 
+-    return apr_psprintf(msr->r->pool, "%s/%s-%s-%s", tmp_dir, current_filetime(msr->r), msr->r->connection->remote_ip, put_file_name);
++    return apr_psprintf(msr->r->pool, "%s/%s-%s-%s", tmp_dir, current_filetime(msr->r), msr->r->useragent_ip, put_file_name);
+ }
+ 
+ apr_status_t request_body_file_cleanup(void *data) {
+@@ -4546,7 +4546,7 @@ static int sec_init(apr_pool_t *p, apr_pool_t *plog, apr_pool_t *ptemp, server_r
+     }
+ 
+     #ifdef __SET_MUTEX_PERMS
+-    rv = unixd_set_global_mutex_perms(modsec_auditlog_lock);
++    rv = ap_unixd_set_global_mutex_perms(modsec_auditlog_lock);
+     if (rv != APR_SUCCESS) {
+         ap_log_error(APLOG_MARK, APLOG_ERR, rv, s, "mod_log_post: Could not set permissions on modsec_auditlog_lock; check User and Group directives");
+         return HTTP_INTERNAL_SERVER_ERROR;
