@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_httpd_confdir}/log_post.conf
 
 %changelog
+* Mon Apr 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.1.0-5
+- rebuild for remi repo and httpd 2.4
+
 * Mon Apr 16 2012 Joe Orton <jorton@redhat.com> - 0.1.0-5
 - update for httpd 2.4 (patch by Jan Kaluza, #809714)
 
