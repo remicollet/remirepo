@@ -1,0 +1,217 @@
+--- suphp-0.6.3/doc/suphp.conf-example.userdir	2005-11-26 20:29:02.000000000 +0100
++++ suphp-0.6.3/doc/suphp.conf-example	2008-03-31 02:08:13.000000000 +0200
+@@ -38,6 +38,8 @@
+ ; Minimum GID
+ min_gid=100
+ 
++; Use correct permissions for mod_userdir sites
++handle_userdir=true
+ 
+ [handlers]
+ ;Handler for php-scripts
+--- suphp-0.6.3/doc/CONFIG.userdir	2005-11-26 20:29:02.000000000 +0100
++++ suphp-0.6.3/doc/CONFIG	2008-03-31 02:08:13.000000000 +0200
+@@ -95,6 +95,11 @@
+   Minimum GID allowed to execute scripts.
+   Defaults to compile-time value.
+ 
++handle_userdir:
++  Handle sites created by mod_userdir.
++  Scripts on userdir sites will be executed with the permissions
++  of the owner of the site. This option only affects force and paranoid mode.
++  This option is enabled by default.
+ 
+ 3. Handlers
+ 
+--- suphp-0.6.3/src/Configuration.cpp.userdir	2006-03-15 21:21:52.000000000 +0100
++++ suphp-0.6.3/src/Configuration.cpp	2008-03-31 02:08:13.000000000 +0200
+@@ -112,6 +112,7 @@
+ #endif
+     this->umask = 0077;
+     this->chroot_path = "";
++    this->handle_userdir = true;
+ }
+ 
+ void suPHP::Configuration::readFromFile(File& file) 
+@@ -157,6 +158,8 @@
+ 		this->umask = Util::octalStrToInt(value);
+ 	    else if (key == "chroot")
+ 		this->chroot_path = value;
++	    else if (key == "handle_userdir")
++		this->handle_userdir = this->strToBool(value);
+ 	    else 
+ 		throw ParsingException("Unknown option \"" + key + 
+ 				       "\" in section [global]", 
+@@ -250,3 +253,7 @@
+ std::string suPHP::Configuration::getChrootPath() const {
+     return this->chroot_path;
+ }
++
++bool suPHP::Configuration::getHandleUserdir() const {
++    return this->handle_userdir;
++}
+--- suphp-0.6.3/src/apache2/mod_suphp.c.userdir	2006-11-06 01:57:12.000000000 +0100
++++ suphp-0.6.3/src/apache2/mod_suphp.c	2008-03-31 02:08:13.000000000 +0200
+@@ -656,6 +656,10 @@
+         }
+     }
+     
++    /* for mod_userdir checking */
++    apr_table_setn(r->subprocess_env, "SUPHP_URI", 
++		    	apr_pstrdup(r->pool, r->uri));
++    
+     if (auth_user && auth_pass)
+     {
+         apr_table_setn(r->subprocess_env, "SUPHP_AUTH_USER", auth_user);
+--- suphp-0.6.3/src/Configuration.hpp.userdir	2005-11-26 20:29:02.000000000 +0100
++++ suphp-0.6.3/src/Configuration.hpp	2008-03-31 02:08:13.000000000 +0200
+@@ -57,7 +57,8 @@
+ 	int min_gid;
+ 	int umask;
+ 	std::string chroot_path;
+-
++	bool handle_userdir;
++	
+ 	/**
+ 	 * Converts string to bool
+ 	 */
+@@ -165,6 +166,12 @@
+ 	 * Return chroot path
+ 	 */
+ 	std::string getChrootPath() const;
++
++	/**
++	 * Return whether to correctly handle mod_userdir sites
++	 */
++	bool getHandleUserdir() const;
++	
+     };
+ };
+ 
+--- suphp-0.6.3/src/Application.hpp.userdir	2008-03-29 23:58:58.000000000 +0100
++++ suphp-0.6.3/src/Application.hpp	2008-03-31 02:09:27.000000000 +0200
+@@ -39,6 +39,7 @@
+ #include "SystemException.hpp"
+ #include "SoftException.hpp"
+ #include "SecurityException.hpp"
++#include "UserInfo.hpp"
+ 
+ namespace suPHP {
+     /**
+@@ -116,6 +117,13 @@
+                                      const Configuration& config) const
+              throw (SoftException);
+ 
++	/**
++	 * Checks if a given URL is a userdir
++	 * associated user is assigned to the user parameter
++	*/
++	bool checkUserDir(const std::string& url, 
++			  UserInfo& user) const;
++
+     public:
+ 	/**
+ 	 * Constructer
+--- suphp-0.6.3/src/apache/mod_suphp.c.userdir	2006-09-23 19:04:36.000000000 +0200
++++ suphp-0.6.3/src/apache/mod_suphp.c	2008-03-31 02:08:13.000000000 +0200
+@@ -491,7 +491,10 @@
+ 	    }
+ 	}
+     }
+-    
++
++    /* for mod_userdir checking */
++    apr_table_setn(r->subprocess_env, "SUPHP_URI", apr_pstrdup(p, r->uri));
++   
+     if (auth_user && auth_pass) {
+ 	ap_table_setn(r->subprocess_env, "SUPHP_AUTH_USER", auth_user);
+ 	ap_table_setn(r->subprocess_env, "SUPHP_AUTH_PW", auth_pass);
+--- suphp-0.6.3/src/Application.cpp.userdir	2008-03-30 13:43:38.000000000 +0200
++++ suphp-0.6.3/src/Application.cpp	2008-03-31 02:08:13.000000000 +0200
+@@ -19,6 +19,7 @@
+ */
+ 
+ #include <iostream>
++#include <sstream>
+ 
+ #include "config.h"
+ 
+@@ -305,29 +306,33 @@
+     // Paranoid and force mode
+ 
+ #if (defined(OPT_USERGROUP_PARANOID) || defined(OPT_USERGROUP_FORCE))
+-    std::string targetUsername, targetGroupname;
+-    try {
+-	targetUsername = environment.getVar("SUPHP_USER");
+-	targetGroupname = environment.getVar("SUPHP_GROUP");
+-    } catch (KeyNotFoundException& e) {
+-	throw SecurityException(
++    if (config.getHandleUserdir() && checkUserDir(environment.getVar("SUPHP_URI"),targetUser)) {
++		    targetGroup = targetUser.getGroupInfo();
++    } else {
++	std::string targetUsername, targetGroupname;
++	try {
++	    targetUsername = environment.getVar("SUPHP_USER");
++	    targetGroupname = environment.getVar("SUPHP_GROUP");
++	} catch (KeyNotFoundException& e) {
++	    throw SecurityException(
+ 	    "Environment variable SUPHP_USER or SUPHP_GROUP not set", 
+ 	    __FILE__, __LINE__);
+-    }
++        }
+     
+-    if (targetUsername[0] == '#' && targetUsername.find_first_not_of(
++	if (targetUsername[0] == '#' && targetUsername.find_first_not_of(
+ 	    "0123456789", 1) == std::string::npos) {
+-	targetUser = api.getUserInfo(Util::strToInt(targetUsername.substr(1)));
+-    } else {
+-	targetUser = api.getUserInfo(targetUsername);
+-    }
++	    targetUser = api.getUserInfo(Util::strToInt(targetUsername.substr(1)));
++	} else {
++	    targetUser = api.getUserInfo(targetUsername);
++	}
+ 
+-    if (targetGroupname[0] == '#' && targetGroupname.find_first_not_of(
++	if (targetGroupname[0] == '#' && targetGroupname.find_first_not_of(
+ 	    "0123456789", 1) == std::string::npos) {
+-	targetGroup = api.getGroupInfo(
++	    targetGroup = api.getGroupInfo(
+ 	    Util::strToInt(targetGroupname.substr(1)));
+-    } else {
+-	targetGroup = api.getGroupInfo(targetGroupname);
++	} else {
++	    targetGroup = api.getGroupInfo(targetGroupname);
++	}
+     }
+ #endif // OPT_USERGROUP_PARANOID || OPT_USERGROUP_FORCE
+ 
+@@ -519,6 +524,28 @@
+     } while (directory.getPath() != "/");
+ }
+ 
++bool suPHP::Application::checkUserDir(const std::string& url, UserInfo& user) const {
++    
++    if (url.length() <= 2 || url[1] != '~')
++	return false;
++
++    API& api = API_Helper::getSystemAPI();
++    std::string topDir;
++    std::istringstream strm(url);
++
++    for (int i = 0; i < 2; i++)
++	if (!std::getline(strm, topDir, '/'))
++	    return false;
++
++    std::string userName = topDir.substr(1,topDir.length());
++
++    try {
++	user = api.getUserInfo(userName);
++	return true;
++    } catch (LookupException& e) {
++	return false;
++    }
++}
+ 
+ int main(int argc, char **argv) {
+     try {

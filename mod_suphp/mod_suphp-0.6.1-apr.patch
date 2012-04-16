@@ -1,0 +1,97 @@
+From peter.wullinger at gmail.com  Sat Jan  7 19:29:36 2006
+From: peter.wullinger at gmail.com (Peter Wullinger)
+Date: Sat Jan  7 19:29:43 2006
+Subject: [suPHP] Patches for apr 1.0 (apache 2.2.0)
+Message-ID: <20060107182936.GA1807@kaliope.csn.tu-chemnitz.de>
+
+
+Good evening,
+
+APR_BRIGAGE_FOREACH() was deprecated in the apr bucket API,
+so suphp breaks, when using apache >= 2.2.0 and the new
+apr API.  APR_STATUS_IS_SUCCESS() is also gone.
+
+The following patch remedies this problem by completely
+removing all uses of the macros in question alltogether.
+
+I have tested these with apache 2.2.0 and apr 1.2.2.
+
+NOTE:
+	These patches also add the often ACCESS_CONF support
+	for suPHP_AddHandler and suPHP_RemoveHandler.
+	Remove these lines from the patch, if you don't want them.
+
+Cheers,
+	Peter
+
+--
+--- src/apache2/mod_suphp.c.orig	Sat Jan  7 19:03:59 2006
++++ src/apache2/mod_suphp.c	Sat Jan  7 19:20:32 2006
+@@ -56,7 +56,7 @@
+         return -1;
+        
+     rv = apr_bucket_read(b, &bucket_data, &bucket_data_len, APR_BLOCK_READ);
+-    if (!APR_STATUS_IS_SUCCESS(rv) || (bucket_data_len == 0))
++    if ((rv != APR_SUCCESS) || (bucket_data_len == 0))
+     {
+         return 0;
+     }
+@@ -558,7 +558,9 @@
+             return rv;
+         }
+         
+-        APR_BRIGADE_FOREACH(bucket, bb)
++		
++		bucket = APR_BRIGADE_FIRST(bb);
++		while (bucket != APR_BRIGADE_SENTINEL(bb))
+         {
+             const char *data;
+             apr_size_t len;
+@@ -582,6 +584,8 @@
+             {
+                 child_stopped_reading = 1;
+             }
++			
++			bucket = APR_BUCKET_NEXT(bucket);
+         }
+         apr_brigade_cleanup(bb);
+     }
+@@ -634,12 +638,15 @@
+             
+             const char *buf;
+             apr_size_t blen;
+-            APR_BRIGADE_FOREACH(b, bb)
++			b = APR_BRIGADE_FIRST(bb);
++			while (b != APR_BRIGADE_SENTINEL(bb))
+             {
+                 if (APR_BUCKET_IS_EOS(b))
+                     break;
+                 if (apr_bucket_read(b, &buf, &blen, APR_BLOCK_READ) != APR_SUCCESS)
+                     break;
++
++				b = APR_BUCKET_NEXT(b);
+             }
+             apr_brigade_destroy(bb);
+             suphp_log_script_err(r, proc->err);
+@@ -655,12 +662,14 @@
+             /* empty brigade (script output) */
+             const char *buf;
+             apr_size_t blen;
+-            APR_BRIGADE_FOREACH(b, bb)
++			b = APR_BRIGADE_FIRST(bb);
++			while (b != APR_BRIGADE_SENTINEL(bb))
+             {
+                 if (APR_BUCKET_IS_EOS(b))
+                     break;
+                 if (apr_bucket_read(b, &buf, &blen, APR_BLOCK_READ) != APR_SUCCESS)
+                     break;
++				b = APR_BUCKET_NEXT(b);
+             }
+             apr_brigade_destroy(bb);
+             return HTTP_MOVED_TEMPORARILY;
+--
+
+-- 
+Gl?cklich ist nicht, wer anderen so vorkommt,
+sondern wer sich selbst daf?r h?lt.
+	-- Lucius Annaeus Seneca

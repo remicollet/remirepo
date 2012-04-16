@@ -1,0 +1,25 @@
+In order to activate mod_suphp support, /etc/httpd/conf.d/mod_suphp.conf
+has to be edited.
+
+The commented line "suPHP_AddHandler ###HANDLER###" has to be uncommented,
+for mod_suphp to work.
+
+After a restart of the httpd, php scripts should be executed with the
+rights of the user owning them.
+
+In case you do need mod_php support for a certain virtual host or directory,
+you can selectively disable mod_suphp and fall back to mod_php:
+
+<Directory "/var/www/html">
+  suPHP_Engine off
+  suPHP_RemoveHandler .php
+  php_admin_flag engine on
+  php_admin_flag register_globals on
+</Directory>
+
+This should do the trick nicely. The register_globals flag is purely optional
+and should be avoided if possibly.
+
+Should you require mod_userdir support, in order to enable ~user URLs, you should set 
+check_vhost_docroot=false in the /etc/suphp.conf file, as currently suphp would fail
+with an incorrect vhost.

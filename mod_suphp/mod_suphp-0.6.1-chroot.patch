@@ -1,0 +1,252 @@
+Hello list!
+
+I've written a patch around the chroot() function in
+suPHP 0.6.1. First I'll explain our old setup and why
+we find this patch useful.
+
+Since we are improving our webserver security at the
+moment, we were looking for a possibility to
+chroot() some users.
+
+Our old setup consists of mod_php and PHP per VirtualHost
+configurations like:
+   php_admin_value open_basedir ...
+   php_admin_value upload_tmp_dir ...
+   ...
+With disable_functions we disabled functions like exec(),
+system(), etc to let the user stay in his open_basedir
+(executed programs don't got the open_basedir
+restrictions).
+
+Some users requested the possibility to exec programs like
+the ImageMagick tools, needed for Typo3 or other PHP
+programs like PHP gallery. I know about the possibility to
+configure a safe_mode_exec_dir within the php.ini, but it
+is not the best solution.
+
+The new suPHP version 0.6.1 offers the possibility to
+chroot and it works nice. Though there are some problems:
+- There is only one configuration file and the chroot-path
+  is configured within the global config. If you want to
+  chroot each virtual host into it's own chroot-jail it
+  isn't possible.
+- When chrooted the path of the php script stays like
+  outsite the chroot environment.
+  Example:
+     before suPHP chroot()
+     SCRIPT_FILENAME = /chroot/YOUR_SITE/var/www/index.php
+     CURRENT_ROOT    = /
+     CHROOT          = /chroot/YOUR_SITE/
+
+     after suPHP chroot()
+     SCRIPT_FILENAME = /chroot/YOUR_SITE/var/www/index.php
+     CURRENT_ROOT    = /chroot/YOUR_SITE/
+
+     PHP will look for a file called
+        /chroot/YOUR_SITE/var/www/index.php
+     inside the chroot environment.
+     Infact the file is
+        /var/www/index.php
+     inside the chroot environment.
+
+What the attached patch does:
+- It adds a mod_suphp configuration option called
+  "suPHP_Options" (the name might not be the best, but
+  since suPHP_ConfigPath was already in use, I've choosen
+  this name)
+- It "translates" the script path after chroot() so that
+  PHP will find the right script.
+
+Here are the steps I used to build a chroot environment for
+a virtual host:
+- Create a directory structure for the chroot directory:
+  $ mkdir -p /chroot/YOUR_SITE/\
+{bin,etc,lib,tmp,usr/bin,usr/lib/,var/www}
+
+- Copy the php binary and depending libraries into the
+  chroot directory:
+  $ ldd /usr/bin/php-cgi | sed -e \
+'s,.*=> /\(.*\) (0x.*,\1,' | while read lib; \
+do
+   LIBDIR="/chroot/YOUR_SITE/`dirname ${lib}`"; \
+   test ! -d $LIBDIR && mkdir -p $LIBDIR; \
+   cp -v /${lib} /chroot/YOUR_SITE/${lib}; \
+done
+
+- Copy a php.ini into the chroot directory and change the
+  doc_root configuration parameter.
+  $ cat /chroot/YOUR_SITE/etc/php.ini |
+     sed -e 's,^doc_root.*$,doc_root ="/var/www/",' > \
+     /chroot/YOUR_SITE/etc/php.ini
+
+- Create a apache VirtualHost:
+    <VirtualHost *>
+       ServerName YOUR_SITE.EXAMPLE
+       ServerAdmin [11]YOU at YOUR_SITE.EXAMPLE
+
+       DocumentRoot /chroot/YOUR_SITE/var/www/
+       <Directory /chroot/YOUR_SITE/var/www>
+          suPHP_Engine On
+          suPHP_Options /chroot/YOUR_SITE-suphp.conf
+
+          # chrooted view
+          suPHP_ConfigPath /etc/
+       </Directory>
+    </VirtualHost>
+
+- Create a suPHP configuration file.
+  Just pick the default file and set
+     chroot=/chroot/YOUR_SITE/
+
+WARNING there are some limitations with this patch:
+- First, I'm not the best C, C++ developer and this is my
+  first apache module work
+- The code is mostly quick and dirty hacked, because I
+  wanted to try if this would work.
+- Only the apache2 module was patched.
+
+I'd appreciate if you review this patch and post your
+comments on this.
+
+Greetings,
+Jan
+
+--- suphp-0.6.1/src/apache2/mod_suphp.c.orig	2006-05-24 04:31:35.000000000 +0200
++++ suphp-0.6.1/src/apache2/mod_suphp.c	2006-05-24 04:34:58.000000000 +0200
+@@ -114,6 +114,7 @@
+     char *target_user;
+     char *target_group;
+ #endif
++    char *suphp_options;
+     apr_table_t *handlers;
+ } suphp_conf;
+ 
+@@ -130,7 +131,9 @@
+     cfg->target_user = NULL;
+     cfg->target_group = NULL;
+ #endif
+-    
++
++    cfg->suphp_options = NULL;
++
+     /* Create table with 0 initial elements */
+     /* This size may be increased for performance reasons */
+     cfg->handlers = apr_table_make(p, 0);
+@@ -175,6 +178,13 @@
+     else
+         merged->target_group = NULL;
+ #endif
++
++    if (child->suphp_options)
++    	merged->suphp_options = apr_pstrdup(p, child->suphp_options);
++    else if (parent->suphp_options)
++	merged->suphp_options = apr_pstrdup(p, parent->suphp_options);
++    else
++	merged->suphp_options = NULL;
+     
+     merged->handlers = apr_table_overlay(p, child->handlers, parent->handlers);
+     
+@@ -265,6 +275,17 @@
+     return NULL;
+ }
+ 
++static const char *suphp_handle_cmd_options(cmd_parms *cmd, void *mconfig,
++                                           const char *arg)
++{
++    suphp_conf *cfg;
++    cfg = (suphp_conf *) mconfig;
++    
++    cfg->suphp_options = apr_pstrdup(cmd->pool, arg);
++    
++    return NULL;
++}
++
+ 
+ #ifdef SUPHP_USE_USERGROUP
+ static const char *suphp_handle_cmd_user_group(cmd_parms *cmd, void *mconfig,
+@@ -315,6 +336,7 @@
+ #endif
+     AP_INIT_ITERATE("suPHP_AddHandler", suphp_handle_cmd_add_handler, NULL, RSRC_CONF | ACCESS_CONF, "Tells mod_suphp to handle these MIME-types"),
+     AP_INIT_ITERATE("suPHP_RemoveHandler", suphp_handle_cmd_remove_handler, NULL, RSRC_CONF | ACCESS_CONF, "Tells mod_suphp not to handle these MIME-types"),
++	AP_INIT_TAKE1("suPHP_Options", suphp_handle_cmd_options, NULL, OR_OPTIONS, "The configuration file suPHP should use for this virtual host"),
+     {NULL}
+ };
+ 
+@@ -436,6 +458,11 @@
+     {
+         apr_table_setn(r->subprocess_env, "SUPHP_PHP_CONFIG", apr_pstrdup(p, dconf->php_config));
+     }
++
++    if (dconf->suphp_options)
++    {
++        apr_table_setn(r->subprocess_env, "SUPHP_OPTIONS", apr_pstrdup(p, dconf->suphp_options));
++    }
+     
+     apr_table_setn(r->subprocess_env, "SUPHP_HANDLER", r->handler);
+     
+--- suphp-0.6.1/src/Application.cpp.orig	2006-05-24 04:31:35.000000000 +0200
++++ suphp-0.6.1/src/Application.cpp	2006-05-24 04:34:13.000000000 +0200
+@@ -50,16 +50,23 @@
+     API& api = API_Helper::getSystemAPI();
+     Logger& logger = api.getSystemLogger();
+     
+-#ifdef OPT_CONFIGFILE
+-    File cfgFile = File(OPT_CONFIGFILE);
+-#else
+-    File cfgFile = File("/etc/suphp.conf");
+-#endif
+ 
+     std::string interpreter;
+     TargetMode targetMode;
+     Environment newEnv;
+ 
++    File cfgFile = File("");
++    
++    try {
++        cfgFile = File(env.getVar("SUPHP_OPTIONS").c_str());
++    } catch (KeyNotFoundException &e) {
++#ifdef OPT_CONFIGFILE
++	cfgFile = File(OPT_CONFIGFILE);
++#else
++	cfgFile = File("/etc/suphp.conf");
++#endif
++    }
++
+     // Begin try block - soft exception cannot really be handled before
+     // initialization
+     try {
+@@ -88,14 +95,23 @@
+ 	    return 1;
+ 	}
+ 
+-	this->checkScriptFile(scriptFilename, config, env);
+-
+ 	// Root privileges are needed for chroot()
+ 	// so do this before changing process permissions
+ 	if (config.getChrootPath().length() > 0) {
+ 	    api.chroot(config.getChrootPath());
++
++	    // after chroot() the SCRIPT_FILENAME path has changed
++	    // and needs to get "translated"
++	    std::string strChrootPath(config.getChrootPath());
++
++	    // TODO: check if there is a "/" at the beginning of scriptFilename
++	    scriptFilename.replace(scriptFilename.find(strChrootPath), strChrootPath.length(), "");
++	    env.setVar("DOCUMENT_ROOT", "/");
++	    env.setVar("SCRIPT_FILENAME", scriptFilename);
+ 	}
+ 
++	this->checkScriptFile(scriptFilename, config, env);
++
+ 	this->changeProcessPermissions(scriptFilename, config, env);
+ 
+ 	interpreter = this->getInterpreter(env, config);
+@@ -396,6 +412,8 @@
+ 	env.deleteVar("SUPHP_AUTH_PW");
+     if (env.hasVar("SUPHP_PHP_CONFIG"))
+ 	env.deleteVar("SUPHP_PHP_CONFIG");
++    if (env.hasVar("SUPHP_OPTIONS"))
++	env.deleteVar("SUPHP_OPTIONS");
+     
+     // Reset PATH
+     env.putVar("PATH", config.getEnvPath());

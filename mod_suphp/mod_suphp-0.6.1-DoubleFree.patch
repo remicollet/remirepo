@@ -1,0 +1,68 @@
+diff -urNp suphp-0.6.1.orig/src/API_Linux.cpp suphp-0.6.1/src/API_Linux.cpp
+--- suphp-0.6.1.orig/src/API_Linux.cpp	2006-06-19 18:39:17.000000000 +0100
++++ suphp-0.6.1/src/API_Linux.cpp	2006-06-19 18:37:38.000000000 +0100
+@@ -42,7 +42,7 @@ extern char **environ;
+ 
+ using namespace suPHP;
+ 
+-SmartPtr<API_Linux_Logger> suPHP::API_Linux::logger;
++SmartPtr<API_Linux_Logger>* suPHP::API_Linux::logger;
+ 
+ bool suPHP::API_Linux::isSymlink(const std::string path) const
+     throw (SystemException) {
+@@ -139,10 +139,10 @@ GroupInfo suPHP::API_Linux::getRealProce
+ 
+ 
+ Logger& suPHP::API_Linux::getSystemLogger() {
+-    if (suPHP::API_Linux::logger.get() == NULL) {
+-	suPHP::API_Linux::logger.reset(new API_Linux_Logger());
++    if (suPHP::API_Linux::logger->get() == NULL) {
++	suPHP::API_Linux::logger->reset(new API_Linux_Logger());
+     }
+-    return *(suPHP::API_Linux::logger);
++    return **(suPHP::API_Linux::logger);
+ }
+ 
+ 
+diff -urNp suphp-0.6.1.orig/src/API_Linux.hpp suphp-0.6.1/src/API_Linux.hpp
+--- suphp-0.6.1.orig/src/API_Linux.hpp	2006-06-19 18:39:17.000000000 +0100
++++ suphp-0.6.1/src/API_Linux.hpp	2006-06-19 18:43:23.000000000 +0100
+@@ -41,9 +41,10 @@ namespace suPHP {
+      */
+     class API_Linux : public API {
+     private:
+-	static SmartPtr<API_Linux_Logger> logger;
++	/* Try and avoid the "static initialization order fiasco" */
++	static SmartPtr<API_Linux_Logger>* logger;
+ 	/**
+-	 * Internal function for checking wheter path
++	 * Internal function for checking whether path
+ 	 * points to a symlink
+ 	 */
+ 	bool isSymlink(const std::string path) const 
+@@ -57,6 +58,25 @@ namespace suPHP {
+ 
+     public:
+ 	/**
++	 * Constructor
++	 */
++	API_Linux() {
++		logger = NULL;
++		logger = new SmartPtr<API_Linux_Logger>;
++	};
++
++	/**
++	 * Destructor
++	 */
++	~API_Linux() {
++		if (logger != NULL) {
++			delete logger;
++		}
++		logger = NULL;
++	};
++	
++	
++	/**
+ 	 * Get environment variable
+ 	 */
+ 	virtual Environment getProcessEnvironment();
