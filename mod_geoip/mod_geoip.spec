@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Apr 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.5-8
+- rebuild for remi repo and httpd 2.4
+
 * Mon Apr 16 2012 Joe Orton <jorton@redhat.com> - 1.2.5-8
 - fix config perms
 
