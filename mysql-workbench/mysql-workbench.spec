@@ -1,6 +1,6 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%global mw_version 5.2.38
+%global mw_version 5.2.39
 %global mw_release 1
 %global tarversion gpl-%{mw_version}-src
 %global srcversion gpl-%{mw_version}-src
@@ -29,8 +29,6 @@ Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tar
 Patch1:    %{name}-5.2.28-cppconn.patch
 Patch2:    %{name}-5.2.32-ctemplate.patch
 Patch3:    %{name}-5.2.36-tinyxml.patch
-# redirect man page to /usr/share
-Patch5:    %{name}-5.2.34-man.patch
 # http://bugs.mysql.com/63705 - Only <glib.h> can be included directly
 Patch6:    %{name}-5.2.36-glib.patch
 # http://bugs.mysql.com/63777 - service startup/shutdown command
@@ -108,27 +106,6 @@ an integrated tools environment for:
 * Database Administration (replacing MySQL Administrator)
 
 
-%package -n mysql-utilities
-
-Summary:        Scripts for managing and administering MySQL servers
-# Not yet published (else will be package separatly)
-# see ext/mysql-utilities/CHANGES.txt
-Version:        1.0.3
-Release:        0.%{mw_version}%{?dist}.%{mw_release}
-
-BuildArch:      noarch
-BuildRequires:  python-devel >= 2.4
-%if 0%{?fedora} >= 14
-BuildRequires:  python-sphinx >= 1.0
-%endif
-
-Requires:       mysql-connector-python
-
-%description -n mysql-utilities
-MySQL Utilities contain a collection of scripts useful for managing
-and administering MySQL servers.
-
-
 %prep
 %setup -q -n %{name}-%{srcversion}
 
@@ -147,7 +124,6 @@ rm -rf ext/ctemplate
 rm -rf library/tinyxml
 %endif
 
-%patch5 -p1 -b .man
 %patch6 -p1 -b .glib
 %patch7 -p1 -b .profiles
 %patch8 -p1 -b .automake
@@ -179,21 +155,10 @@ export CXXFLAGS="$RPM_OPT_FLAGS -fpermissive"
 
 make %{?_smp_mflags}
 
-%if 0%{?fedora} >= 14
-pushd ext/mysql-utilities
-%{__python} setup.py build_man
-popd
-%endif
-
 
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
-
-pushd ext/mysql-utilities
-install --directory %{buildroot}%{_mandir}/man1
-%{__python} setup.py install --skip-profile --root %{buildroot}
-popd
 
 # clean dev files
 echo Cleanup dev file
@@ -244,33 +209,12 @@ fi
 %exclude %{_datadir}/doc/%{name}
 
 
-%files -n mysql-utilities
-%defattr(-, root, root, -)
-%doc ext/mysql-utilities/*.txt
-%{_bindir}/mysqldbcompare
-%{_bindir}/mysqldbcopy
-%{_bindir}/mysqldbexport
-%{_bindir}/mysqldbimport
-%{_bindir}/mysqldiff
-%{_bindir}/mysqldiskusage
-%{_bindir}/mysqlindexcheck
-%{_bindir}/mysqlmetagrep
-%{_bindir}/mysqlprocgrep
-%{_bindir}/mysqlreplicate
-%{_bindir}/mysqlrplcheck
-%{_bindir}/mysqlserverclone
-%{_bindir}/mysqlserverinfo
-%{_bindir}/mysqluserclone
-%{python_sitelib}/mysql/utilities
-%{python_sitelib}/mysql_utilities*
-%if 0%{?fedora} >= 14
-%{_mandir}/man1/*
-%endif
-# empty file already provided by mysql-connector-python
-%exclude %{python_sitelib}/mysql/__init*
-
-
 %changelog
+* Sun Apr 15 2012 Remi Collet <remi@fedoraproject.org> 5.2.39-1
+- update to 5.2.39 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-39.html
+- remove mysql-utilities sub-package (available separately)
+
 * Fri Feb 24 2012 Remi Collet <remi@fedoraproject.org> 5.2.38-1
 - update to 5.2.38 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-38.html
