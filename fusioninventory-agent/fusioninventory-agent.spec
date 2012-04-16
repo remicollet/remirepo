@@ -22,13 +22,18 @@ Release:   0.2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
 Source0:   fusinv-fusioninventory-agent-2.1.8-95-g9bd1238.tar.gz
 %else
-Release:   1%{?dist}
+Release:   2%{?dist}
 Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
 Source1:   %{name}.cron
 Source2:   %{name}.init
 Source3:   %{name}.service
+
+# See http://forge.fusioninventory.org/issues/1581
+# Upstream desagree on this patch, but it will avoid behavior change
+# until managed properly, as part of the XML file
+Patch0:    %{name}-arch.patch
 
 
 BuildArch: noarch
@@ -157,6 +162,8 @@ Le service doit être actif et lancé avec l'option --rpc-trust-localhost.
 %else
 %setup -q -n FusionInventory-Agent-%{version}%{?prever}
 %endif
+
+%patch0 -p1 -b .rpmarch
 
 # This work only on older version, and is ignored on recent
 cat <<EOF | tee %{name}-req
@@ -326,6 +333,10 @@ exit 0
 
 
 %changelog
+* Mon Apr 16 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-2
+- revert change in 2.2.0: don't loose arch information
+  see http://forge.fusioninventory.org/issues/1581
+
 * Sat Apr 14 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0
   http://search.cpan.org/src/FUSINV/FusionInventory-Agent-2.2.0/Changes

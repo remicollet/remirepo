@@ -1,0 +1,12 @@
+diff -up FusionInventory-Agent-2.2.0/lib/FusionInventory/Agent/Task/Inventory/Input/Generic/Softwares/RPM.pm.orig FusionInventory-Agent-2.2.0/lib/FusionInventory/Agent/Task/Inventory/Input/Generic/Softwares/RPM.pm
+--- FusionInventory-Agent-2.2.0/lib/FusionInventory/Agent/Task/Inventory/Input/Generic/Softwares/RPM.pm.orig	2012-04-16 09:33:21.000000000 +0200
++++ FusionInventory-Agent-2.2.0/lib/FusionInventory/Agent/Task/Inventory/Input/Generic/Softwares/RPM.pm	2012-04-16 09:33:32.000000000 +0200
+@@ -17,7 +17,7 @@ sub doInventory {
+ 
+     my $command =
+         'rpm -qa --queryformat \'' .
+-        '%{NAME}\t' .
++        '%{NAME}.%{ARCH}\t' .
+         '%{VERSION}-%{RELEASE}\t' .
+         '%{INSTALLTIME:date}\t' .
+         '%{SIZE}\t' .
