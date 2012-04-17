@@ -1,0 +1,65 @@
+
+https://bugzilla.redhat.com/show_bug.cgi?id=809730
+
+diff --git a/mod_limitipconn.c b/mod_limitipconn.c
+index d8d2f9a..6262797 100644
+--- mod_limitipconn-0.23/mod_limitipconn.c.httpd24
++++ mod_limitipconn-0.23/mod_limitipconn.c
+@@ -104,7 +104,11 @@ static int check_limit(request_rec *r, l
+         return DECLINED;
+     }
+ 
++#if AP_MODULE_MAGIC_AT_LEAST(20111130,0)
++    address = r->useragent_ip;
++#else
+     address = r->connection->remote_ip;
++#endif
+ 
+     /* Only check the MIME-type if we have MIME-type stuff in our config.
+        The extra subreq can be quite expensive. */
+@@ -114,10 +118,12 @@ static int check_limit(request_rec *r, l
+          * translated into a MIME type. */
+         content_type = ap_sub_req_lookup_uri(r->uri, r, NULL)->content_type;
+ 
++#if !AP_MODULE_MAGIC_AT_LEAST(20090131, 0)
+         /* If there's no Content-type, use the default. */
+         if (!content_type) {
+             content_type = ap_default_type(r);
+         }
++#endif
+ 
+         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
+                 "mod_limitipconn: uri: %s  Content-Type: %s", 
+@@ -125,6 +131,9 @@ static int check_limit(request_rec *r, l
+ 
+         /* Cycle through the exempt list; if our content_type is exempt,
+          * return OK */
++#if AP_MODULE_MAGIC_AT_LEAST(20090131, 0)
++        if (content_type)
++#endif
+         for (i = 0; i < cfg->no_limit->nelts; i++) {
+             if ((ap_strcasecmp_match(content_type, nolim[i]) == 0)
+                 || (strncmp(nolim[i], content_type, strlen(nolim[i])) == 0)) 
+@@ -139,6 +148,10 @@ static int check_limit(request_rec *r, l
+          * is not present, bail out */
+         if (cfg->excl_limit->nelts) {
+             int excused = 1;
++
++#if AP_MODULE_MAGIC_AT_LEAST(20090131, 0)
++            if (content_type)
++#endif
+             for (i = 0; i < cfg->excl_limit->nelts; i++) {
+                 if ((ap_strcasecmp_match(content_type, exlim[i]) == 0)
+                     || 
+@@ -160,7 +173,11 @@ static int check_limit(request_rec *r, l
+      * this IP address */
+     for (i = 0; i < server_limit; ++i) {
+       for (j = 0; j < thread_limit; ++j) {
++#if AP_MODULE_MAGIC_AT_LEAST(20071023, 0)
++        ws_record = ap_get_scoreboard_worker_from_indexes(i, j);
++#else
+         ws_record = ap_get_scoreboard_worker(i, j);
++#endif
+         switch (ws_record->status) {
+             case SERVER_BUSY_READ:
+             case SERVER_BUSY_WRITE:
