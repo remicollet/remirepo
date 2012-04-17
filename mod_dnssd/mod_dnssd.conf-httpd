@@ -1,0 +1,5 @@
+LoadModule dnssd_module modules/mod_dnssd.so
+
+DNSSDEnable on
+#DNSSDAutoRegisterVHosts on
+#DNSSDAutoRegisterUserDir on
