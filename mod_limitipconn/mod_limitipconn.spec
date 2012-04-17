@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.23-8
+- rebuild for remi repo and httpd 2.4
+
 * Tue Apr 17 2012 Joe Orton <jorton@redhat.com> - 0.23-8
 - improve handling of absent content-type w/2.4
 
