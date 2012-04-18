@@ -7,8 +7,8 @@
 
 Summary: Apache HTTP Server
 Name: httpd
-Version: 2.4.1
-Release: 6%{?dist}
+Version: 2.4.2
+Release: 1%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -554,6 +554,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Wed Apr 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-1
+- update to 2.4.2, rebuild for remi repo
+
+* Wed Apr 18 2012 Jan Kaluza <jkaluza@redhat.com> - 2.4.2-1
+- update to 2.4.2
+
 * Fri Mar 23 2012 Joe Orton <jorton@redhat.com> - 2.4.1-6
 - fix macros
 

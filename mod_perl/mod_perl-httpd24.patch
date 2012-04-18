@@ -1,0 +1,1640 @@
+diff --git a/Apache-SizeLimit/Makefile.PL b/Apache-SizeLimit/Makefile.PL
+index f1fda05..77c72d8 100644
+--- a/Apache-SizeLimit/Makefile.PL
++++ b/Apache-SizeLimit/Makefile.PL
+@@ -66,10 +66,6 @@ else {
+                               );
+ }
+ 
+-if ($ENV{MOD_PERL_2_BUILD}) {
+-    pop @ARGV;
+-}
+-
+ sub check_for_apache_test {
+     return unless eval {
+         require Apache::Test;
+diff --git a/Apache-SizeLimit/lib/Apache/SizeLimit/Core.pm b/Apache-SizeLimit/lib/Apache/SizeLimit/Core.pm
+index 5942bc8..180b3aa 100644
+--- a/Apache-SizeLimit/lib/Apache/SizeLimit/Core.pm
++++ b/Apache-SizeLimit/lib/Apache/SizeLimit/Core.pm
+@@ -117,9 +117,9 @@ sub _limits_are_exceeded {
+ sub _check_size {
+     my $class = shift;
+ 
+-    my ($size, $share) = $class->_platform_check_size();
++    my ($size, $share, $unshared) = $class->_platform_check_size();
+ 
+-    return ($size, $share, $size - $share);
++    return ($size, $share, defined $unshared ? $unshared : $size - $share);
+ }
+ 
+ sub _load {
+@@ -143,7 +143,7 @@ BEGIN {
+ 
+         *_platform_getppid = \&_linux_getppid;
+ 
+-        if (eval { require Linux::Smaps } && Linux::Smaps->new($$)) {
++        if (eval { require Linux::Smaps && Linux::Smaps->new($$) }) {
+             $USE_SMAPS = 1;
+             *_platform_check_size = \&_linux_smaps_size_check;
+         }
+@@ -176,7 +176,9 @@ sub _linux_smaps_size_check {
+     return $class->_linux_size_check() unless $USE_SMAPS;
+ 
+     my $s = Linux::Smaps->new($$)->all;
+-    return ($s->size, $s->shared_clean + $s->shared_dirty);
++    return ($s->size,
++	    $s->shared_clean + $s->shared_dirty,
++	    $s->private_clean + $s->private_dirty);
+ }
+ 
+ sub _linux_size_check {
+diff --git a/Apache-SizeLimit/t/response/TestApache/basic.pm b/Apache-SizeLimit/t/response/TestApache/basic.pm
+index 6e054b6..26211d5 100644
+--- a/Apache-SizeLimit/t/response/TestApache/basic.pm
++++ b/Apache-SizeLimit/t/response/TestApache/basic.pm
+@@ -17,8 +17,13 @@ sub handler {
+ 
+     plan $r, tests => 13;
+ 
+-    ok( ! Apache::SizeLimit->_limits_are_exceeded(),
+-        'check that _limits_are_exceeded() returns false without any limits set' );
++    {
++        local ($Apache::SizeLimit::Core::MAX_PROCESS_SIZE,
++               $Apache::SizeLimit::Core::MIN_SHARE_SIZE,
++               $Apache::SizeLimit::Core::MAX_UNSHARED_SIZE);
++        ok( ! Apache::SizeLimit->_limits_are_exceeded(),
++            'check that _limits_are_exceeded() returns false without any limits set' );
++    }
+ 
+     {
+         my ( $size, $shared ) = Apache::SizeLimit->_check_size();
+diff --git a/Apache-SizeLimit/t/response/TestApache2/basic.pm b/Apache-SizeLimit/t/response/TestApache2/basic.pm
+index dce4ec1..f8a856c 100644
+--- a/Apache-SizeLimit/t/response/TestApache2/basic.pm
++++ b/Apache-SizeLimit/t/response/TestApache2/basic.pm
+@@ -17,8 +17,13 @@ sub handler {
+ 
+     plan $r, tests => 10;
+ 
+-    ok( ! Apache2::SizeLimit->_limits_are_exceeded(),
+-        'check that _limits_are_exceeded() returns false without any limits set' );
++    {
++        local ($Apache::SizeLimit::Core::MAX_PROCESS_SIZE,
++               $Apache::SizeLimit::Core::MIN_SHARE_SIZE,
++               $Apache::SizeLimit::Core::MAX_UNSHARED_SIZE);
++        ok( ! Apache2::SizeLimit->_limits_are_exceeded(),
++            'check that _limits_are_exceeded() returns false without any limits set' );
++    }
+ 
+     {
+         my ( $size, $shared ) = Apache2::SizeLimit->_check_size();
+diff --git a/Apache-Test/lib/Apache/TestConfig.pm b/Apache-Test/lib/Apache/TestConfig.pm
+index a12b251..65d8515 100644
+--- a/Apache-Test/lib/Apache/TestConfig.pm
++++ b/Apache-Test/lib/Apache/TestConfig.pm
+@@ -23,6 +23,7 @@ use constant OSX     => $^O eq 'darwin';
+ use constant CYGWIN  => $^O eq 'cygwin';
+ use constant NETWARE => $^O eq 'NetWare';
+ use constant SOLARIS => $^O eq 'solaris';
++use constant AIX     => $^O eq 'aix';
+ use constant WINFU   => WIN32 || NETWARE;
+ use constant COLOR   => ($ENV{APACHE_TEST_COLOR} && -t STDOUT) ? 1 : 0;
+ 
+@@ -557,6 +558,7 @@ sub massage_config_args {
+             }
+         }
+         else {
++            $data=~s/\n(?!\z)/\n    /g;
+             $args .= "    $data";
+         }
+         $args .= "</$directive>\n";
+@@ -610,7 +612,8 @@ sub add_config_hooks_run {
+ 
+     for (@{ $self->{$where} }) {
+         $self->replace;
+-        print $out "$_\n";
++        s/\n?$/\n/;
++        print $out "$_";
+     }
+ }
+ 
+@@ -1238,7 +1241,9 @@ sub parse_vhost {
+         @out_config = ([Listen => '0.0.0.0:' . $port]);
+ 
+         if ($self->{vhosts}->{$module}->{namebased}) {
+-            push @out_config => [NameVirtualHost => "*:$port"];
++            push @out_config => ["<IfVersion < 2.3.11>\n".
++                                 "${indent}${indent}NameVirtualHost"
++                                 => "*:$port\n${indent}</IfVersion>"];
+         }
+     }
+ 
+diff --git a/Apache-Test/lib/Apache/TestConfigPerl.pm b/Apache-Test/lib/Apache/TestConfigPerl.pm
+index 835b5f4..152ef58 100644
+--- a/Apache-Test/lib/Apache/TestConfigPerl.pm
++++ b/Apache-Test/lib/Apache/TestConfigPerl.pm
+@@ -111,19 +111,15 @@ sub configure_inc {
+ 
+     my $inc = $self->{inc};
+ 
+-    my $found;
+     for (catdir($top, qw(blib lib)), catdir($top, qw(blib arch))) {
+         if (-d $_) {
+ 	    push @$inc, $_;
+-	    $found=1;
+ 	}
+     }
+ 
+     # try ../blib as well for Apache::Reload & Co
+-    unless ($found) {
+-        for (catdir($top, qw(.. blib lib)), catdir($top, qw(.. blib arch))) {
+-	    push @$inc, $_ if -d $_;
+-	}
++    for (catdir($top, qw(.. blib lib)), catdir($top, qw(.. blib arch))) {
++        push @$inc, $_ if -d $_;
+     }
+ 
+     # spec: If PERL5LIB is defined, PERLLIB is not used.
+@@ -540,6 +536,13 @@ sub configure_pm_tests {
+         my ($file, $module, $subdir, $status) = @$entry;
+         my @args = ();
+ 
++        my $file_display;
++        {
++          $file_display=$file;
++          my $topdir=$self->{vars}->{top_dir};
++          $file_display=~s!^\Q$topdir\E(.)(?:\1)*!!;
++        }
++        $self->postamble("\n# included from $file_display");
+         my $directives = $self->add_module_config($file, \@args);
+         $module =~ s,\.pm$,,;
+         $module =~ s/^[a-z]://i; #strip drive if any
+@@ -568,10 +571,7 @@ sub configure_pm_tests {
+ 
+         debug "configuring $module";
+ 
+-        if ($directives->{noautoconfig}) {
+-            $self->postamble(""); # which adds "\n"
+-        }
+-        else {
++        unless ($directives->{noautoconfig}) {
+             if (my $cv = $add_hook_config{$hook}) {
+                 $self->$cv($module, \@args);
+             }
+@@ -595,6 +595,7 @@ sub configure_pm_tests {
+               $self->postamble(IfModule => 'mod_perl.c', $cfg);
+             }
+         }
++        $self->postamble("# end of $file_display\n");
+ 
+         $self->write_pm_test($module, lc $sub, map { lc } @base);
+     }
+diff --git a/Apache-Test/lib/Apache/TestHandler.pm b/Apache-Test/lib/Apache/TestHandler.pm
+index d96cc94..6b1e691 100644
+--- a/Apache-Test/lib/Apache/TestHandler.pm
++++ b/Apache-Test/lib/Apache/TestHandler.pm
+@@ -27,7 +27,8 @@ use Apache2::Const -compile => qw(OK NOT_FOUND SERVER_ERROR);
+ #see modperl-2.0/t/hooks/TestHooks/authen.pm
+ 
+ if ($ENV{MOD_PERL} && require mod_perl2) {
+-    require Apache2::RequestIO; # puts
++    require Apache2::RequestRec; # content_type
++    require Apache2::RequestIO;  # puts
+ }
+ 
+ #compat with 1.xx
+@@ -35,17 +36,17 @@ my $send_http_header = Apache->can('send_http_header') || sub {};
+ my $print = Apache2->can('print') || Apache2::RequestRec->can('puts');
+ 
+ sub ok {
+-    my $r = shift;
++    my ($r, $boolean) = @_;
+     $r->$send_http_header;
+     $r->content_type('text/plain');
+-    $r->$print("ok");
++    $r->$print((@_>1 && !$boolean ? "not " : '')."ok");
+     0;
+ }
+ 
+ sub ok1 {
+-    my $r = shift;
++    my ($r, $boolean) = @_;
+     Apache::Test::plan($r, tests => 1);
+-    Apache::Test::ok(1);
++    Apache::Test::ok(@_==1 || $boolean);
+     0;
+ }
+ 
+@@ -101,3 +102,74 @@ sub same_interp_fixup {
+ 
+ 1;
+ __END__
++
++=encoding utf8
++
++=head1 NAME
++
++Apache::TestHandler - a few response handlers and helpers
++
++=head1 SYNOPSIS
++
++    package My::Test;
++    use Apache::TestHandler ();
++    sub handler {
++        my ($r) = @_;
++        my $result = do_my_test;
++        Apache::TestHandler::ok1 $r, $result;
++    }
++
++    sub handler2 {
++        my ($r) = @_;
++        my $result = do_my_test;
++        Apache::TestHandler::ok $r, $result;
++    }
++
++=head1 DESCRIPTION
++
++C<Apache::TestHandler> provides 2 very simple response handler.
++
++=head1 FUNCTIONS
++
++=over 4
++
++=item ok $r, $boolean
++
++The handler simply prints out C<ok> or C<not ok> depending on the
++optional C<$boolean> parameter.
++
++If C<$boolean> is omitted C<true> is assumed.
++
++=item ok1 $r, $boolean
++
++This handler implements a simple response-only test. It can be used on its
++own to check if for a certain URI the response phase is reached. Or it
++can be called like a normal function to print out the test result. The
++client side is automatically created as described in
++L<http://perl.apache.org/docs/general/testing/testing.html#Developing_Response_only_Part_of_a_Test>.
++
++C<$boolean> is optional. If omitted C<true> is assumed.
++
++=item same_interp_counter
++
++=item same_interp_fixup
++
++TODO
++
++=back
++
++=head1 SEE ALSO
++
++The Apache-Test tutorial:
++L<http://perl.apache.org/docs/general/testing/testing.html>.
++
++L<Apache::Test>.
++
++=head1 AUTHOR
++
++Doug MacEachern, Geoffrey Young, Stas Bekman, Torsten Förtsch and others.
++
++Questions can be asked at the test-dev <at> httpd.apache.org list
++For more information see: http://httpd.apache.org/test/.
++
++=cut
+diff --git a/Apache-Test/lib/Apache/TestRequest.pm b/Apache-Test/lib/Apache/TestRequest.pm
+index c68780c..73c1490 100644
+--- a/Apache-Test/lib/Apache/TestRequest.pm
++++ b/Apache-Test/lib/Apache/TestRequest.pm
+@@ -159,6 +159,16 @@ sub user_agent {
+         };
+     }
+ 
++    # in LWP 6, verify_hostname defaults to on, so SSL_ca_file
++    # needs to be set accordingly
++    if ($have_lwp and $LWP::VERSION >= 6.0 and not exists $args->{ssl_opts}->{SSL_ca_file}) {
++        my $vars = Apache::Test::vars();
++        my $cafile = "$vars->{sslca}/$vars->{sslcaorg}/certs/ca.crt";
++        $args->{ssl_opts}->{SSL_ca_file} = $cafile;
++        # Net:SSL compatibility (legacy)
++        $ENV{HTTPS_CA_FILE} = $cafile;
++    }
++
+     eval { $UA ||= __PACKAGE__->new(%$args); };
+ }
+ 
+@@ -352,7 +362,7 @@ sub prepare {
+         }
+         push @$pass, content => $content;
+     }
+-    if ($keep->{cert}) {
++    if (exists $keep->{cert}) {
+         set_client_cert($keep->{cert});
+     }
+ 
+@@ -618,13 +628,27 @@ sub set_client_cert {
+     my $dir = join '/', $vars->{sslca}, $vars->{sslcaorg};
+ 
+     if ($name) {
+-        $ENV{HTTPS_CERT_FILE} = "$dir/certs/$name.crt";
+-        $ENV{HTTPS_KEY_FILE}  = "$dir/keys/$name.pem";
++        my ($cert, $key) = ("$dir/certs/$name.crt", "$dir/keys/$name.pem");
++        @ENV{qw/HTTPS_CERT_FILE HTTPS_KEY_FILE/} = ($cert, $key);
++        if ($LWP::VERSION >= 6.0) {
++            # IO::Socket:SSL doesn't look at environment variables
++            if ($UA) {
++                $UA->ssl_opts(SSL_cert_file => $cert);
++                $UA->ssl_opts(SSL_key_file  => $key);
++            } else {
++                user_agent(ssl_opts => { SSL_cert_file => $cert,
++                                         SSL_key_file  => $key });
++            }
++        }
+     }
+     else {
+         for (qw(CERT KEY)) {
+             delete $ENV{"HTTPS_${_}_FILE"};
+         }
++        if ($LWP::VERSION >= 6.0 and $UA) {
++            $UA->ssl_opts(SSL_cert_file => undef);
++            $UA->ssl_opts(SSL_key_file  => undef);
++        }
+     }
+ }
+ 
+diff --git a/Apache-Test/lib/Apache/TestUtil.pm b/Apache-Test/lib/Apache/TestUtil.pm
+index a63915e..cfd8229 100644
+--- a/Apache-Test/lib/Apache/TestUtil.pm
++++ b/Apache-Test/lib/Apache/TestUtil.pm
+@@ -43,7 +43,7 @@ $VERSION = '0.02';
+ );
+ 
+ @EXPORT_OK = qw(t_write_perl_script t_write_shell_script t_chown
+-                t_catfile_apache t_catfile
++                t_catfile_apache t_catfile t_file_watch_for
+                 t_start_error_log_watch t_finish_error_log_watch
+                 t_start_file_watch t_read_file_watch t_finish_file_watch);
+ 
+@@ -101,6 +101,33 @@ use constant INDENT     => 4;
+         return readline $fh;
+     }
+ 
++    sub t_file_watch_for ($$$) {
++	my ($name, $re, $timeout) = @_;
++	local $/ = "\n";
++	$re = qr/$re/ unless ref $re;
++	$timeout *= 10;
++	my $buf = '';
++	my @acc;
++	while ($timeout >= 0) {
++	    my $line = t_read_file_watch $name;
++	    unless (defined $line) { # EOF
++		select undef, undef, undef, 0.1;
++		$timeout--;
++		next;
++	    }
++	    $buf .= $line;
++	    next unless $buf =~ /\n$/; # incomplete line
++
++	    # found a complete line
++	    $line = $buf;
++	    $buf = '';
++
++	    push @acc, $line;
++	    return wantarray ? @acc : $line if $line =~ $re;
++	}
++	return;
++    }
++
+     sub t_start_error_log_watch {
+         t_start_file_watch;
+     }
+@@ -917,6 +944,36 @@ record length use this:
+     @lines=t_finish_file_watch($name);
+   }
+ 
++=item t_file_watch_for()
++
++  @lines=Apache::TestUtil::t_file_watch_for('access_log',
++                                            qr/condition/,
++                                            $timeout);
++
++This function reads the file from the current position and looks for the
++first line that matches C<qr/condition/>. If no such line could be found
++until end of file the function pauses and retries until either such a line
++is found or the timeout (in seconds) is reached.
++
++In scalar or void context only the matching line is returned. In list
++context all read lines are returned with the matching one in last position.
++
++The function uses C<\n> and end-of-line marker and waits for complete lines.
++
++The timeout although it can be specified with sub-second precision is not very
++accurate. It is simply multiplied by 10. The result is used as a maximum loop
++count. For the intented purpose this should be good enough.
++
++Use this function to check for logfile entries when you cannot be sure that
++they are already written when the test program reaches the point, for example
++to check for messages that are written in a PerlCleanupHandler or a
++PerlLogHandler.
++
++ ok t_file_watch_for 'access_log', qr/expected log entry/, 2;
++
++This call reads the C<access_log> and waits for maximum 2 seconds for the
++expected entry to appear.
++
+ =back
+ 
+ =head1 AUTHOR
+diff --git a/Apache-Test/lib/Bundle/ApacheTest.pm b/Apache-Test/lib/Bundle/ApacheTest.pm
+index 42802d6..4c5b78c 100644
+--- a/Apache-Test/lib/Bundle/ApacheTest.pm
++++ b/Apache-Test/lib/Bundle/ApacheTest.pm
+@@ -15,7 +15,7 @@
+ #
+ package Bundle::ApacheTest;
+ 
+-$VERSION = '0.01';
++$VERSION = '0.02';
+ 
+ 1;
+ 
+@@ -31,29 +31,31 @@ Bundle::ApacheTest - A bundle to install all Apache-Test related modules
+ 
+ =head1 CONTENTS
+ 
+-Crypt::SSLeay      - For https support
++Crypt::SSLeay        - For https support
+ 
+-Devel::CoreStack   - For getting core stack info
++Devel::CoreStack     - For getting core stack info
+ 
+-Devel::Symdump     - For, uh, dumping symbols
++Devel::Symdump       - For, uh, dumping symbols
+ 
+-Digest::MD5        - Needed for Digest authentication
++Digest::MD5          - Needed for Digest authentication
+ 
+-URI                - There are URIs everywhere
++URI                  - There are URIs everywhere
+ 
+-Net::Cmd           - For libnet
++Net::Cmd             - For libnet
+ 
+-MIME::Base64       - Used in authentication headers
++MIME::Base64         - Used in authentication headers
+ 
+-HTML::Tagset       - Needed by HTML::Parser
++HTML::Tagset         - Needed by HTML::Parser
+ 
+-HTML::Parser       - Need by HTML::HeadParser
++HTML::Parser         - Need by HTML::HeadParser
+ 
+-HTML::HeadParser   - To get the correct $res->base
++HTML::HeadParser     - To get the correct $res->base
+ 
+-LWP                - For libwww-perl
++LWP                  - For libwww-perl
+ 
+-IPC::Run3          - Used in Apache::TestSmoke
++LWP::Protocol::https - LWP plug-in for the https protocol
++
++IPC::Run3            - Used in Apache::TestSmoke
+ 
+ =head1 DESCRIPTION
+ 
+diff --git a/docs/api/APR/Pool.pod b/docs/api/APR/Pool.pod
+index 40fc752..5333c03 100644
+--- a/docs/api/APR/Pool.pod
++++ b/docs/api/APR/Pool.pod
+@@ -103,12 +103,23 @@ To pass more than one argument, use an ARRAY or a HASH reference
+ 
+ =item excpt:
+ 
+-if the registered callback fails, it happens when the pool is
+-destroyed. The destruction is performed by Apache and it ignores any
+-failures. Even if it didn't ignore the failures, most of the time the
+-pool is destroyed when a request or connection handlers are long gone.
+-However the error B<is> logged to F<error_log>, so if you monitor that
+-file you will spot if there are any problems with it.
++If a registered callback dies or throws an exception C<$@> is stringified
++and passed to C<warn()>. Usually, this results in printing it to the
++F<error_log>. However, a C<$SIG{__WARN__}> handler can be used to catch
++them.
++
++  $pool->cleanup_register(sub {die "message1\n"});
++  $pool->cleanup_register(sub {die "message2\n"});
++  my @warnings;
++  {
++      local $SIG{__WARN__}=sub {push @warnings, @_};
++      $pool->destroy;       # or simply undef $pool
++  }
++
++Both of the cleanups above are executed at the time C<$pool-E<gt>destroy>
++is called. C<@warnings> contains C<message2\n> and C<message1\n> afterwards.
++C<$pool-E<gt>destroy> itself does not throw an exception. Any value of C<$@>
++is preserved.
+ 
+ =item since: 2.0.00
+ 
+diff --git a/docs/api/Apache2/RequestUtil.pod b/docs/api/Apache2/RequestUtil.pod
+index 127ccd2..10d67b8 100644
+--- a/docs/api/Apache2/RequestUtil.pod
++++ b/docs/api/Apache2/RequestUtil.pod
+@@ -279,6 +279,8 @@ The default type
+ 
+ =item since: 2.0.00
+ 
++=item removed from the C<httpd> API in version 2.3.2
++
+ =back
+ 
+ 
+@@ -810,7 +812,7 @@ What's wrong with this code:
+   }
+ 
+ Nothing, except it doesn't work as expected due to this pnotes bug: If the 
+-same code is called in a sub-request then the pnote of $r->prev is magically 
++same code is called in a sub-request then the pnote of $r-E<gt>prev is magically 
+ updated at a distance to the same value!
+ 
+ Try explain why that is to anyone not deeply familar with perl internals!
+diff --git a/docs/api/Apache2/ServerUtil.pod b/docs/api/Apache2/ServerUtil.pod
+index e50ae60..ccd079b 100644
+--- a/docs/api/Apache2/ServerUtil.pod
++++ b/docs/api/Apache2/ServerUtil.pod
+@@ -841,6 +841,9 @@ F<startup.pl>. The function will croak if run after the
+ C<L<PerlPostConfigHandler|docs::2.0::user::handlers::server/C_PerlPostConfigHandler_>>
+ phase.
+ 
++Values returned from cleanup functions are ignored. If a cleanup dies the
++exception is stringified and passed to C<warn()>. Usually, this results in
++printing it to the F<error_log>.
+ 
+ 
+ 
+diff --git a/lib/Apache2/Build.pm b/lib/Apache2/Build.pm
+index 38978ef..1b5ac35 100644
+--- a/lib/Apache2/Build.pm
++++ b/lib/Apache2/Build.pm
+@@ -27,6 +27,42 @@ use File::Basename;
+ use ExtUtils::Embed ();
+ use File::Copy ();
+ 
++BEGIN {				# check for a sane ExtUtils::Embed
++    unless ($ENV{MP_USE_MY_EXTUTILS_EMBED}) {
++	my ($version, $path)=(ExtUtils::Embed->VERSION,
++			      $INC{q{ExtUtils/Embed.pm}});
++	my $msg=<<"EOF";
++I have found ExtUtils::Embed $version at
++
++  $path
++
++This is probably not the right one for this perl version. Please make sure
++there is only one version of this module installed and that it is the one
++that comes with this perl version.
++
++If you insist on using the ExtUtils::Embed as is set the environment
++variable MP_USE_MY_EXTUTILS_EMBED=1 and try again.
++
++EOF
++	if (eval {require Module::CoreList}) {
++	    my $req=$Module::CoreList::version{$]}->{q/ExtUtils::Embed/};
++	    die "Please repair your Module::CoreList" unless $req;
++	    unless ($version eq $req) {
++		$msg.=("Details: expecting ExtUtils::Embed $req ".
++		       "(according to Module::CoreList)\n\n");
++		die $msg;
++	    }
++	}
++	else {
++	    my $req=$Config{privlib}.'/ExtUtils/Embed.pm';
++	    unless ($path eq $req) {
++		$msg.="Details: expecting ExtUtils::Embed at $req\n\n";
++		die $msg;
++	    }
++	}
++    }
++}
++
+ use constant IS_MOD_PERL_BUILD => grep 
+     { -e "$_/Makefile.PL" && -e "$_/lib/mod_perl2.pm" } qw(. ..);
+ 
+@@ -239,12 +275,13 @@ sub caller_package {
+     return ($arg and ref($arg) eq __PACKAGE__) ? $arg : __PACKAGE__;
+ }
+ 
+-my %threaded_mpms = map { $_ => 1 }
+-        qw(worker winnt beos mpmt_os2 netware leader perchild threadpool);
++my %threaded_mpms;
++undef @threaded_mpms{qw(worker winnt beos mpmt_os2 netware leader perchild
++			threadpool dynamic)};
+ sub mpm_is_threaded {
+     my $self = shift;
+     my $mpm_name = $self->mpm_name();
+-    return $threaded_mpms{$mpm_name} || 0;
++    return exists $threaded_mpms{$mpm_name} ? 1 : 0;
+ }
+ 
+ sub mpm_name {
+@@ -252,6 +289,11 @@ sub mpm_name {
+ 
+     return $self->{mpm_name} if $self->{mpm_name};
+ 
++    if ($self->httpd_version =~ /^(\d+)\.(\d+)\.(\d+)/) {
++	delete $threaded_mpms{dynamic} if $self->mp_nonthreaded_ok;
++	return $self->{mpm_name} = 'dynamic' if ($1*1000+$2)*1000+$3>=2003000;
++    }
++
+     # XXX: hopefully apxs will work on win32 one day
+     return $self->{mpm_name} = 'winnt' if WIN32;
+ 
+@@ -2147,8 +2189,7 @@ sub has_large_files_conflict {
+     # with it is that we didn't have such a case yet, but may need to
+     # deal with it later
+ 
+-    return 0;
+-    # $perl_lfs64 ^ $apr_lfs64;
++    return $perl_lfs64 ^ $apr_lfs64;
+ }
+ 
+ # if perl is built with uselargefiles, but apr not, the build won't
+diff --git a/lib/ModPerl/BuildOptions.pm b/lib/ModPerl/BuildOptions.pm
+index e99e09b..cd53664 100644
+--- a/lib/ModPerl/BuildOptions.pm
++++ b/lib/ModPerl/BuildOptions.pm
+@@ -264,4 +264,4 @@ GENERATE_XS    0    Generate XS code based on httpd version
+ LIBNAME        0    Name of the modperl dso library (default is  mod_perl)
+ COMPAT_1X      0    Compile-time mod_perl 1.0 backcompat (default is  on)
+ APR_LIB        0    Lib used to build APR::* on Win32 (default is aprext)
+-
++NONTHREADED_OK 0    Using a non-threaded perl is okay with httpd >=2.3
+diff --git a/lib/ModPerl/Code.pm b/lib/ModPerl/Code.pm
+index e43f77c..4dbcc38 100644
+--- a/lib/ModPerl/Code.pm
++++ b/lib/ModPerl/Code.pm
+@@ -825,7 +825,8 @@ my %ifdef = map { $_, 1 }
+     qw(AP_MPMQ_STARTING AP_MPMQ_RUNNING AP_MPMQ_STOPPING
+        AP_MPMQ_MPM_STATE), # added in 2.0.49
+     qw(APR_FPROT_USETID APR_FPROT_GSETID
+-       APR_FPROT_WSTICKY APR_FOPEN_LARGEFILE); # added in 2.0.50?
++       APR_FPROT_WSTICKY APR_FOPEN_LARGEFILE), # added in 2.0.50?
++    qw(OPT_INCNOEXEC OPT_INC_WITH_EXEC);
+ 
+ sub constants_ifdef {
+     my $name = shift;
+diff --git a/lib/ModPerl/MapUtil.pm b/lib/ModPerl/MapUtil.pm
+index 1aa219f..788fcc7 100644
+--- a/lib/ModPerl/MapUtil.pm
++++ b/lib/ModPerl/MapUtil.pm
+@@ -103,15 +103,28 @@ sub readline {
+         # #_end_
+         if (/^\s*#\s*_(if|unless|els(?:e|if)|end)_(?:\s(.+))?/) {
+             my ($cmd, $param) = ($1, $2);
++            if (defined $param) {
++                while ($param=~s!\\$!!) {
++                    my $l=<$fh>;
++                    die "$ModPerl::MapUtil::MapFile($.): unexpected EOF\n"
++                        unless defined $l;
++                    chomp $l;
++                    $param.=$l;
++                }
++            }
+             if ($cmd eq 'if') {
+-                unshift @condition, 0+!!eval $param;
++                unshift @condition,
++                    0+!!eval "#line $. $ModPerl::MapUtil::MapFile\n".$param;
++                die $@ if $@;
+             }
+             elsif ($cmd eq 'elsif') {
+                 die "parse error ($ModPerl::MapUtil::MapFile line $.)".
+                     " #_elsif_ without #_if_"
+                     unless @condition;
+                 if ($condition[0] == 0) {
+-                    $condition[0]+=!!eval $param;
++                    $condition[0]+=
++                        !!eval "#line $. $ModPerl::MapUtil::MapFile\n".$param;
++                    die $@ if $@;
+                 } else {
+                     $condition[0]++;
+                 }
+@@ -123,7 +136,9 @@ sub readline {
+                 $condition[0]+=1;
+             }
+             elsif ($cmd eq 'unless') {
+-                unshift @condition, 0+!eval $param;
++                unshift @condition,
++                    0+!eval "#line $. $ModPerl::MapUtil::MapFile\n".$param;
++                die $@ if $@;
+             }
+             elsif ($cmd eq 'end') {
+                 shift @condition;
+@@ -133,6 +148,15 @@ sub readline {
+ 
+         if (/^\s*#\s*_(eval)_(?:\s(.+))?/) {
+             my ($cmd, $param) = ($1, $2);
++            if (defined $param) {
++                while ($param=~s!\\$!!) {
++                    my $l=<$fh>;
++                    die "$ModPerl::MapUtil::MapFile($.): unexpected EOF\n"
++                        unless defined $l;
++                    chomp $l;
++                    $param.=$l;
++                }
++            }
+             if ($cmd eq 'eval') {
+                 eval "#line $. $ModPerl::MapUtil::MapFile\n".$param;
+                 die $@ if $@;
+diff --git a/lib/ModPerl/MethodLookup.pm b/lib/ModPerl/MethodLookup.pm
+index 071debb..e0206f1 100644
+--- a/lib/ModPerl/MethodLookup.pm
++++ b/lib/ModPerl/MethodLookup.pm
+@@ -1945,7 +1945,7 @@ my $methods = {
+                             'APR::Socket'
+                           ]
+                         ],
+-          'remote_addr' => [
++          'client_addr' => [
+                              [
+                                'Apache2::Connection',
+                                'Apache2::Connection'
+@@ -1957,7 +1957,7 @@ my $methods = {
+                                'Apache2::Connection'
+                              ]
+                            ],
+-          'remote_ip' => [
++          'client_ip' => [
+                            [
+                              'Apache2::Connection',
+                              'Apache2::Connection'
+@@ -2003,6 +2003,18 @@ my $methods = {
+                                 'Apache2::RequestRec'
+                               ]
+                             ],
++          'useragent_ip' => [
++                                [
++                                  'Apache2::RequestRec',
++                                  'Apache2::RequestRec'
++                                ]
++                              ],
++          'useragent_addr' => [
++                              [
++                                'Apache2::RequestRec',
++                                'Apache2::RequestRec'
++                              ]
++                            ],
+           'requires' => [
+                           [
+                             'Apache2::Access',
+diff --git a/lib/ModPerl/TypeMap.pm b/lib/ModPerl/TypeMap.pm
+index 50aece4..dfbd6e4 100644
+--- a/lib/ModPerl/TypeMap.pm
++++ b/lib/ModPerl/TypeMap.pm
+@@ -442,12 +442,12 @@ sub typedefs_code {
+         $code .= qq{\#include "$_"\n}
+     }
+ 
+-    for my $t (sort {$a->[1] cmp $b->[1]} @{ $self->{struct} }) {
++    for my $t (@{ $self->{struct} }) {
+         next if $seen{ $t->[1] }++;
+         $code .= "typedef $t->[0] * $t->[1];\n";
+     }
+ 
+-    for my $t (sort {$a->[1] cmp $b->[1]} @{ $self->{typedef} }) {
++    for my $t (@{ $self->{typedef} }) {
+         next if $seen{ $t->[1] }++;
+         $code .= "typedef $t->[0] $t->[1];\n";
+     }
+@@ -470,9 +470,7 @@ sub sv_convert_code {
+     my %seen;
+     my $code = "";
+ 
+-    for my $ctype (sort keys %$map) {
+-        my $ptype = $map->{$ctype};
+-
++    while (my ($ctype, $ptype) = each %$map) {
+         next if $self->special($ptype);
+         next if $ctype =~ /\s/;
+         my $class = $ptype;
+diff --git a/src/modules/perl/mod_perl.c b/src/modules/perl/mod_perl.c
+index b27f8f4..7cb05b0 100644
+--- a/src/modules/perl/mod_perl.c
++++ b/src/modules/perl/mod_perl.c
+@@ -653,6 +653,10 @@ int modperl_is_running(void)
+ int modperl_hook_pre_config(apr_pool_t *p, apr_pool_t *plog,
+                             apr_pool_t *ptemp)
+ {
++#if AP_MODULE_MAGIC_AT_LEAST(20110329,0)
++    ap_reserve_module_slots_directive("PerlLoadModule");
++#endif
++
+     /* we can't have PerlPreConfigHandler without first configuring mod_perl */
+ 
+     /* perl 5.8.1+ */
+diff --git a/src/modules/perl/modperl_apache_compat.h b/src/modules/perl/modperl_apache_compat.h
+index 78a9cb3..02a16fd 100644
+--- a/src/modules/perl/modperl_apache_compat.h
++++ b/src/modules/perl/modperl_apache_compat.h
+@@ -66,12 +66,40 @@ AP_DECLARE(const char *) ap_get_server_version(void);
+ #define MP_HTTPD_OVERRIDE_HTACCESS (OR_LIMIT|OR_OPTIONS|OR_FILEINFO|OR_AUTHCFG|OR_INDEXES)
+ 
+ #define MP_HTTPD_OVERRIDE_OPTS_UNSET (-1)
++
++#if AP_SERVER_MAJORVERSION_NUMBER>2 || AP_SERVER_MINORVERSION_NUMBER>=3
++/* 2.4 API */
++
++#define mp_add_loaded_module(modp, pool, name) \
++  ap_add_loaded_module((modp), (pool), (name))
++
++#define mp_loglevel(s) ((s)->log.level)
++#define mp_module_index_ perl_module.module_index,
++
++#define MP_HTTPD_OVERRIDE_OPTS_DEFAULT (OPT_UNSET | \
++                                        OPT_ALL | \
++                                        OPT_SYM_OWNER | \
++                                        OPT_MULTI)
++
++#else
++/* 2.2 API */
++
++#define mp_add_loaded_module(modp, pool, name) \
++  ap_add_loaded_module((modp), (pool))
++
++#define mp_loglevel(s) ((s)->loglevel)
++#define mp_module_index_
++
+ #define MP_HTTPD_OVERRIDE_OPTS_DEFAULT (OPT_UNSET | \
+                                         OPT_ALL | \
+                                         OPT_INCNOEXEC | \
+                                         OPT_SYM_OWNER | \
+                                         OPT_MULTI)
+ 
++#define ap_unixd_config unixd_config
++
++#endif
++
+ #ifndef PROXYREQ_RESPONSE
+ #define PROXYREQ_RESPONSE (3)
+ #endif
+diff --git a/src/modules/perl/modperl_cmd.h b/src/modules/perl/modperl_cmd.h
+index d8629e9..efd24b9 100644
+--- a/src/modules/perl/modperl_cmd.h
++++ b/src/modules/perl/modperl_cmd.h
+@@ -115,6 +115,10 @@ MP_CMD_SRV_DECLARE(interp_scope);
+    AP_INIT_ITERATE( name, modperl_cmd_##item, NULL, \
+       RSRC_CONF, desc )
+ 
++#define MP_CMD_SRV_ITERATE_ON_READ(name, item, desc) \
++   AP_INIT_ITERATE( name, modperl_cmd_##item, NULL, \
++      RSRC_CONF|EXEC_ON_READ, desc )
++
+ #define MP_CMD_SRV_ITERATE2(name, item, desc) \
+    AP_INIT_ITERATE2( name, modperl_cmd_##item, NULL, \
+       RSRC_CONF, desc )
+diff --git a/src/modules/perl/modperl_common_util.h b/src/modules/perl/modperl_common_util.h
+index bba3403..3dcdaf1 100644
+--- a/src/modules/perl/modperl_common_util.h
++++ b/src/modules/perl/modperl_common_util.h
+@@ -22,7 +22,7 @@
+ #ifdef MP_DEBUG
+ #define MP_INLINE
+ #else
+-#define MP_INLINE
++#define MP_INLINE APR_INLINE
+ #endif
+ 
+ #ifdef CYGWIN
+diff --git a/src/modules/perl/modperl_config.c b/src/modules/perl/modperl_config.c
+index 4ec135c..f6a9529 100644
+--- a/src/modules/perl/modperl_config.c
++++ b/src/modules/perl/modperl_config.c
+@@ -186,7 +186,7 @@ modperl_config_srv_t *modperl_config_srv_new(apr_pool_t *p, server_rec *s)
+ 
+     /* make sure httpd's argv[0] is the first argument so $0 is
+      * correctly connected to the real thing */
+-    modperl_config_srv_argv_push(s->process->short_name);
++    modperl_config_srv_argv_push(s->process->argv[0]);
+ 
+     MP_TRACE_d(MP_FUNC, "new scfg: 0x%lx", (unsigned long)scfg);
+ 
+@@ -479,7 +479,13 @@ typedef struct {
+     PerlInterpreter *perl;
+ } svav_param_t;
+ 
+-static void *svav_getstr(void *buf, size_t bufsiz, void *param)
++static
++#if AP_MODULE_MAGIC_AT_LEAST(20110329,0)
++apr_status_t
++#else
++void *
++#endif
++svav_getstr(void *buf, size_t bufsiz, void *param)
+ {
+     svav_param_t *svav_param = (svav_param_t *)param;
+     dTHXa(svav_param->perl);
+@@ -488,7 +494,11 @@ static void *svav_getstr(void *buf, size_t bufsiz, void *param)
+     STRLEN n_a;
+ 
+     if (svav_param->ix > AvFILL(av)) {
++#if AP_MODULE_MAGIC_AT_LEAST(20110329,0)
++        return APR_EOF;
++#else
+         return NULL;
++#endif
+     }
+ 
+     sv = AvARRAY(av)[svav_param->ix++];
+@@ -496,7 +506,11 @@ static void *svav_getstr(void *buf, size_t bufsiz, void *param)
+ 
+     apr_cpystrn(buf, SvPVX(sv), bufsiz);
+ 
++#if AP_MODULE_MAGIC_AT_LEAST(20110329,0)
++    return APR_SUCCESS;
++#else
+     return buf;
++#endif
+ }
+ 
+ const char *modperl_config_insert(pTHX_ server_rec *s,
+diff --git a/src/modules/perl/modperl_error.h b/src/modules/perl/modperl_error.h
+index d18849d..cbd693f 100644
+--- a/src/modules/perl/modperl_error.h
++++ b/src/modules/perl/modperl_error.h
+@@ -45,4 +45,20 @@ void modperl_croak(pTHX_ apr_status_t rc, const char* func);
+         }                                                    \
+     } STMT_END
+ 
++#define MP_RUN_CROAK_RESET_OK(s, rc_run, func) STMT_START               \
++    {                                                                   \
++        apr_status_t rc = rc_run;                                       \
++        if (rc != APR_SUCCESS) {                                        \
++            if (APR_STATUS_IS_ECONNRESET(rc) ||                         \
++                APR_STATUS_IS_ECONNABORTED(rc)) {                       \
++                ap_log_error(APLOG_MARK, APLOG_INFO, 0, s,              \
++                             "%s got: %s", func,                        \
++                             modperl_error_strerror(aTHX_ rc));         \
++            }                                                           \
++            else {                                                      \
++                modperl_croak(aTHX_ rc, func);                          \
++            }                                                           \
++        }                                                               \
++    } STMT_END
++
+ #endif /* MODPERL_ERROR_H */
+diff --git a/src/modules/perl/modperl_filter.c b/src/modules/perl/modperl_filter.c
+index 8122a3f..3ab5c66 100644
+--- a/src/modules/perl/modperl_filter.c
++++ b/src/modules/perl/modperl_filter.c
+@@ -472,24 +472,6 @@ static int modperl_run_filter_init(ap_filter_t *f,
+     return status;
+ }
+ 
+-
+-#define MP_RUN_CROAK_RESET_OK(func)                                     \
+-    {                                                                   \
+-        apr_status_t rc = func(filter);                                 \
+-        if (rc != APR_SUCCESS) {                                        \
+-            if (APR_STATUS_IS_ECONNRESET(rc) ||                         \
+-                APR_STATUS_IS_ECONNABORTED(rc)) {                       \
+-                ap_log_error(APLOG_MARK, APLOG_INFO, 0, s,              \
+-                             "Apache2::Filter internal flush got: %s",  \
+-                             modperl_error_strerror(aTHX_ rc));         \
+-            }                                                           \
+-            else {                                                      \
+-                modperl_croak(aTHX_ rc,                                 \
+-                              "Apache2::Filter internal flush");        \
+-            }                                                           \
+-        }                                                               \
+-    }
+-
+ int modperl_run_filter(modperl_filter_t *filter)
+ {
+     AV *args = Nullav;
+@@ -563,10 +545,12 @@ int modperl_run_filter(modperl_filter_t *filter)
+             apr_brigade_destroy(filter->bb_in);
+             filter->bb_in = NULL;
+         }
+-        MP_RUN_CROAK_RESET_OK(modperl_input_filter_flush);
++        MP_RUN_CROAK_RESET_OK(s, modperl_input_filter_flush(filter),
++                              "Apache2::Filter internal flush");
+     }
+     else {
+-        MP_RUN_CROAK_RESET_OK(modperl_output_filter_flush);
++        MP_RUN_CROAK_RESET_OK(s, modperl_output_filter_flush(filter),
++                              "Apache2::Filter internal flush");
+     }
+ 
+     MP_FILTER_RESTORE_ERRSV(errsv);
+diff --git a/src/modules/perl/modperl_interp.c b/src/modules/perl/modperl_interp.c
+index dfff32e..56bc820 100644
+--- a/src/modules/perl/modperl_interp.c
++++ b/src/modules/perl/modperl_interp.c
+@@ -500,7 +500,7 @@ modperl_interp_t *modperl_interp_select(request_rec *r, conn_rec *c,
+                    "set interp 0x%lx in %s 0x%lx (%s request for %s)\n",
+                    (unsigned long)interp, desc, (unsigned long)p,
+                    (r ? (is_subrequest ? "sub" : "main") : "conn"),
+-                   (r ? r->uri : c->remote_ip));
++                   (r ? r->uri : c->client_ip));
+     }
+ 
+     /* set context (THX) for this thread */
+diff --git a/src/modules/perl/modperl_io_apache.c b/src/modules/perl/modperl_io_apache.c
+index 53c8cd7..208838e 100644
+--- a/src/modules/perl/modperl_io_apache.c
++++ b/src/modules/perl/modperl_io_apache.c
+@@ -169,8 +169,9 @@ PerlIOApache_flush(pTHX_ PerlIO *f)
+                                   rcfg->wbucket->outbuf,
+                                   rcfg->wbucket->outcnt));
+ 
+-    MP_RUN_CROAK(modperl_wbucket_flush(rcfg->wbucket, FALSE),
+-                 ":Apache2 IO flush");
++    MP_RUN_CROAK_RESET_OK(st->r->server,
++                          modperl_wbucket_flush(rcfg->wbucket, FALSE),
++                          ":Apache2 IO flush");
+ 
+     return 0;
+ }
+diff --git a/src/modules/perl/modperl_module.c b/src/modules/perl/modperl_module.c
+index 0963935..2e133d9 100644
+--- a/src/modules/perl/modperl_module.c
++++ b/src/modules/perl/modperl_module.c
+@@ -741,8 +741,6 @@ static const char *modperl_module_add_cmds(apr_pool_t *p, server_rec *s,
+ 
+ static void modperl_module_insert(module *modp)
+ {
+-    module *m;
+-
+     /*
+      * insert after mod_perl, rather the top of the list.
+      * (see ap_add_module; does not insert into ap_top_module list if
+@@ -750,14 +748,8 @@ static void modperl_module_insert(module *modp)
+      * this way, modperl config merging happens before this module.
+      */
+ 
+-    for (m = ap_top_module; m; m=m->next) {
+-        if (m == &perl_module) {
+-            module *next = m->next;
+-            m->next = modp;
+-            modp->next = next;
+-            break;
+-        }
+-    }
++    modp->next = perl_module.next;
++    perl_module.next = modp;
+ }
+ 
+ #define MP_isGV(gv) (gv && isGV(gv))
+@@ -840,7 +832,10 @@ const char *modperl_module_add(apr_pool_t *p, server_rec *s,
+ 
+     modperl_module_insert(modp);
+ 
+-    ap_add_loaded_module(modp, p);
++    if ((errmsg = mp_add_loaded_module(modp, p, modp->name))) {
++        perl_module.next = modp->next;
++        return errmsg;
++    }
+ 
+     apr_pool_cleanup_register(p, modp, modperl_module_remove,
+                               apr_pool_cleanup_null);
+diff --git a/src/modules/perl/modperl_pcw.c b/src/modules/perl/modperl_pcw.c
+index e83baea..16f8b06 100644
+--- a/src/modules/perl/modperl_pcw.c
++++ b/src/modules/perl/modperl_pcw.c
+@@ -27,7 +27,11 @@ void ap_pcw_walk_location_config(apr_pool_t *pconf, server_rec *s,
+                                  ap_pcw_dir_cb_t dir_cb, void *data)
+ {
+     int i;
+-    ap_conf_vector_t **urls = (ap_conf_vector_t **)sconf->sec_url->elts;
++    ap_conf_vector_t **urls;
++
++    if( !sconf->sec_url ) return;
++
++    urls = (ap_conf_vector_t **)sconf->sec_url->elts;
+ 
+     for (i = 0; i < sconf->sec_url->nelts; i++) {
+         core_dir_config *conf =
+@@ -46,7 +50,11 @@ void ap_pcw_walk_directory_config(apr_pool_t *pconf, server_rec *s,
+                                   ap_pcw_dir_cb_t dir_cb, void *data)
+ {
+     int i;
+-    ap_conf_vector_t **dirs = (ap_conf_vector_t **)sconf->sec_dir->elts;
++    ap_conf_vector_t **dirs;
++
++    if( !sconf->sec_dir ) return;
++
++    dirs = (ap_conf_vector_t **)sconf->sec_dir->elts;
+ 
+     for (i = 0; i < sconf->sec_dir->nelts; i++) {
+         core_dir_config *conf =
+@@ -65,7 +73,11 @@ void ap_pcw_walk_files_config(apr_pool_t *pconf, server_rec *s,
+                               ap_pcw_dir_cb_t dir_cb, void *data)
+ {
+     int i;
+-    ap_conf_vector_t **dirs = (ap_conf_vector_t **)dconf->sec_file->elts;
++    ap_conf_vector_t **dirs;
++
++    if( !dconf->sec_file ) return;
++
++    dirs = (ap_conf_vector_t **)dconf->sec_file->elts;
+ 
+     for (i = 0; i < dconf->sec_file->nelts; i++) {
+         core_dir_config *conf =
+diff --git a/src/modules/perl/modperl_svptr_table.c b/src/modules/perl/modperl_svptr_table.c
+index c05e0ac..0ca5c95 100644
+--- a/src/modules/perl/modperl_svptr_table.c
++++ b/src/modules/perl/modperl_svptr_table.c
+@@ -30,7 +30,7 @@
+ #ifdef USE_ITHREADS
+ 
+ #if MP_PERL_BRANCH(5, 6)
+-#   define my_sv_dup(s, p) sv_dup(s)
++#   define my_sv_dup(s, p) SvREFCNT_inc(sv_dup(s))
+ 
+ typedef struct {
+     AV *stashes;
+@@ -39,7 +39,11 @@ typedef struct {
+ } CLONE_PARAMS;
+ 
+ #else
+-#   define my_sv_dup(s, p) sv_dup(s, p)
++#   ifdef sv_dup_inc
++#       define my_sv_dup(s, p) sv_dup_inc(s, p)
++#   else
++#       define my_sv_dup(s, p) SvREFCNT_inc(sv_dup(s, p))
++#   endif
+ #endif
+ 
+ /*
+@@ -89,8 +93,7 @@ PTR_TBL_t *modperl_svptr_table_clone(pTHX_ PerlInterpreter *proto_perl,
+             /* key is just a pointer we do not modify, no need to copy */
+             dst_ent->oldval = src_ent->oldval;
+ 
+-            dst_ent->newval =
+-                SvREFCNT_inc(my_sv_dup((SV*)src_ent->newval, &parms));
++            dst_ent->newval = my_sv_dup((SV*)src_ent->newval, &parms);
+         }
+     }
+ 
+diff --git a/t/api/err_headers_out.t b/t/api/err_headers_out.t
+index 006f49f..c9066e6 100644
+--- a/t/api/err_headers_out.t
++++ b/t/api/err_headers_out.t
+@@ -19,6 +19,14 @@ my $location = '/TestAPI__err_headers_out';
+ 
+     ok t_cmp $res->code, 200, "OK";
+ 
++    # HTTP::Headers 6.00 makes the next 2 tests fail. When the response comes
++    # in the header name is stored as "x-err_headers_out". But when it is to
++    # be read below it is referred as "x-err-headers-out" and hence not found.
++    local $HTTP::Headers::TRANSLATE_UNDERSCORE=
++	$HTTP::Headers::TRANSLATE_UNDERSCORE;
++    undef $HTTP::Headers::TRANSLATE_UNDERSCORE
++	if defined HTTP::Headers->VERSION and HTTP::Headers->VERSION==6.00;
++
+     ok t_cmp $res->header('X-err_headers_out'), "err_headers_out",
+         "X-err_headers_out: made it";
+ 
+@@ -36,6 +44,14 @@ my $location = '/TestAPI__err_headers_out';
+ 
+     ok t_cmp $res->code, 404, "not found";
+ 
++    # HTTP::Headers 6.00 makes this test fail. When the response comes in
++    # the header name is stored as "x-err_headers_out". But when it is to
++    # be read below it is referred as "x-err-headers-out" and hence not found.
++    local $HTTP::Headers::TRANSLATE_UNDERSCORE=
++	$HTTP::Headers::TRANSLATE_UNDERSCORE;
++    undef $HTTP::Headers::TRANSLATE_UNDERSCORE
++	if defined HTTP::Headers->VERSION and HTTP::Headers->VERSION==6.00;
++
+     ok t_cmp $res->header('X-err_headers_out'), "err_headers_out",
+         "X-err_headers_out: made it";
+ 
+diff --git a/t/conf/extra.conf.in b/t/conf/extra.conf.in
+index 9d4f43e..3e8b005 100644
+--- a/t/conf/extra.conf.in
++++ b/t/conf/extra.conf.in
+@@ -73,6 +73,10 @@ PerlModule TestExit::FromPerlModule
+ </IfModule>
+ <IfModule mod_env.c>
+     SetEnv TMPDIR @t_logs@
++
++    # pass ld_library_path for non standard lib locations
++    # [rt.cpan.org #66085]
++    PassEnv LD_LIBRARY_PATH
+ </IfModule>
+ # </sandbox-friendly>
+ 
+diff --git a/t/filter/TestFilter/out_str_reverse.pm b/t/filter/TestFilter/out_str_reverse.pm
+index 737e831..b661ede 100644
+--- a/t/filter/TestFilter/out_str_reverse.pm
++++ b/t/filter/TestFilter/out_str_reverse.pm
+@@ -16,12 +16,21 @@ use TestCommon::Utils ();
+ use Apache2::Const -compile => qw(OK M_POST);
+ 
+ use constant BUFF_LEN => 2;
++use constant signature => "Reversed by mod_perl 2.0\n";
+ 
+ sub handler {
+     my $f = shift;
+     #warn "called\n";
+ 
+     my $leftover = $f->ctx;
++
++    # We are about to change the length of the response body. Hence, we
++    # have to adjust the content-length header.
++    unless (defined $leftover) { # 1st invocation
++	$f->r->headers_out->{'Content-Length'}+=length signature
++	    if exists $f->r->headers_out->{'Content-Length'};
++    }
++
+     while ($f->read(my $buffer, BUFF_LEN)) {
+         #warn "buffer: [$buffer]\n";
+         $buffer = $leftover . $buffer if defined $leftover;
+@@ -34,7 +43,7 @@ sub handler {
+ 
+     if ($f->seen_eos) {
+         $f->print(scalar reverse $leftover) if defined $leftover;
+-        $f->print("Reversed by mod_perl 2.0\n");
++        $f->print(signature);
+     }
+     else {
+         $f->ctx($leftover) if defined $leftover;
+diff --git a/t/protocol/TestProtocol/pseudo_http.pm b/t/protocol/TestProtocol/pseudo_http.pm
+index 713b06a..bb49ec8 100644
+--- a/t/protocol/TestProtocol/pseudo_http.pm
++++ b/t/protocol/TestProtocol/pseudo_http.pm
+@@ -165,6 +165,8 @@ __END__
+           AuthUserFile @ServerRoot@/htdocs/protocols/basic-auth
+       </IfModule>
+ 
++      AuthName TestProtocol::pseudo_http
++      AuthType Basic
+       Require user stas
+       Satisfy any
+ 
+diff --git a/t/response/TestAPI/add_config.pm b/t/response/TestAPI/add_config.pm
+index 0347c4c..f02a717 100644
+--- a/t/response/TestAPI/add_config.pm
++++ b/t/response/TestAPI/add_config.pm
+@@ -100,7 +100,8 @@ sub handler : method {
+ 
+     my $expect =  Apache2::Const::OPT_ALL |
+                   Apache2::Const::OPT_UNSET |
+-                  Apache2::Const::OPT_INCNOEXEC |
++                  (defined &Apache2::Const::OPT_INCNOEXEC
++                   ? Apache2::Const::OPT_INCNOEXEC() : 0) |
+                   Apache2::Const::OPT_MULTI |
+                   Apache2::Const::OPT_SYM_OWNER;
+ 
+@@ -121,7 +122,7 @@ __END__
+ # APACHE_TEST_CONFIG_ORDER 950
+ <NoAutoConfig>
+     <VirtualHost TestAPI::add_config>
+-        PerlModule TestAPI::add_config
++        PerlLoadModule TestAPI::add_config
+         AccessFileName htaccess
+         SetHandler modperl
+         <Directory @DocumentRoot@>
+diff --git a/t/response/TestAPI/request_rec.pm b/t/response/TestAPI/request_rec.pm
+index 2f20f9f..23d1fae 100644
+--- a/t/response/TestAPI/request_rec.pm
++++ b/t/response/TestAPI/request_rec.pm
+@@ -57,8 +57,9 @@ sub handler {
+ 
+     ok $r->protocol =~ /http/i;
+ 
+-    # HTTP 1.0
+-    ok t_cmp $r->proto_num, 1000, 't->proto_num';
++    # LWP >=6.00 uses HTTP/1.1, other HTTP/1.0
++    ok t_cmp $r->proto_num, 1000+substr($r->the_request, -1),
++	't->proto_num';
+ 
+     ok t_cmp lc($r->hostname), lc($r->get_server_name), '$r->hostname';
+ 
+@@ -124,7 +125,12 @@ sub handler {
+ 
+         ok t_cmp $r->args, $args, '$r->args';
+ 
+-        ok t_cmp $r->the_request, "GET $base_uri$path_info?$args HTTP/1.0",
++	# LWP uses HTTP/1.1 since 6.00
++        ok t_cmp $r->the_request, qr!GET
++				     \x20
++				     \Q$base_uri$path_info\E\?\Q$args\E
++				     \x20
++				     HTTP/1\.\d!x,
+             '$r->the_request';
+ 
+         {
+diff --git a/t/response/TestAPI/request_util.pm b/t/response/TestAPI/request_util.pm
+index 39ba311..4737314 100644
+--- a/t/response/TestAPI/request_util.pm
++++ b/t/response/TestAPI/request_util.pm
+@@ -24,7 +24,8 @@ sub handler {
+ 
+     plan $r, tests => (scalar keys %status_lines) + 11;
+ 
+-    ok $r->default_type;
++    # default_type() is gone as of httpd 2.3.2-dev
++    ok !defined(&Apache2::RequestRec::default_type) || $r->default_type;
+ 
+     my $document_root = $r->document_root;
+ 
+diff --git a/t/response/TestAPI/server_const.pm b/t/response/TestAPI/server_const.pm
+index 04a190b..d7b17ad 100644
+--- a/t/response/TestAPI/server_const.pm
++++ b/t/response/TestAPI/server_const.pm
+@@ -24,7 +24,7 @@ sub handler {
+ 
+     my $r = shift;
+ 
+-    plan $r, tests => 5;
++    plan $r, tests => 6;
+ 
+     # test Apache2::ServerUtil constant subroutines
+ 
+@@ -36,20 +36,22 @@ sub handler {
+              $built,
+              'Apache2::ServerUtil::get_server_built()');
+ 
+-    ok t_cmp(Apache2::ServerUtil::get_server_description,
+-             $version,
++    my $server_descr = Apache2::ServerUtil::get_server_description;
++    ok t_cmp($server_descr, qr/^\Q$version\E/,
+              'Apache2::ServerUtil::get_server_description()');
+ 
+-    my $server_version = Apache2::ServerUtil::get_server_version;
+-    ok t_cmp($version,
+-             qr/^$server_version/,
+-             'Apache2::ServerUtil::get_server_version()');
++    # added via $s->add_version_component in t/conf/modperl_extra.pl
++    ok t_cmp($server_descr, qr!\bworld domination series/2\.0\b!,
++             'Apache2::ServerUtil::get_server_description() -- component');
+ 
+-    my $server_banner = Apache2::ServerUtil::get_server_banner;
+-    ok t_cmp($version,
+-             qr/^$server_banner/,
++    # assuming ServerTokens Full (default) the banner equals description
++    ok t_cmp(Apache2::ServerUtil::get_server_banner, $server_descr,
+              'Apache2::ServerUtil::get_server_banner()');
+ 
++    # version is just an alias for banner
++    ok t_cmp(Apache2::ServerUtil::get_server_version, $server_descr,
++             'Apache2::ServerUtil::get_server_version()');
++
+     Apache2::Const::OK;
+ }
+ 
+diff --git a/t/response/TestDirective/cmdparms.pm b/t/response/TestDirective/cmdparms.pm
+index 72e0d33..aa155ca 100644
+--- a/t/response/TestDirective/cmdparms.pm
++++ b/t/response/TestDirective/cmdparms.pm
+@@ -134,6 +134,8 @@ TestCmdParms "Vhost"
+ 
+ TestCmdParms "Location"
+ 
+-<LimitExcept GET>
+-    TestCmdParms "Limit"
+-</LimitExcept>
++<Directory />
++    <LimitExcept GET>
++        TestCmdParms "Limit"
++    </LimitExcept>
++</Directory>
+diff --git a/xs/Apache2/Access/Apache2__Access.h b/xs/Apache2/Access/Apache2__Access.h
+index 539e201..d1a5dcf 100644
+--- a/xs/Apache2/Access/Apache2__Access.h
++++ b/xs/Apache2/Access/Apache2__Access.h
+@@ -19,7 +19,12 @@ static MP_INLINE SV *mpxs_ap_requires(pTHX_ request_rec *r)
+     AV *av;
+     HV *hv;
+     register int x;
+-    const apr_array_header_t *reqs_arr = ap_requires(r);
++    const apr_array_header_t *reqs_arr = 
++#if AP_SERVER_MAJORVERSION_NUMBER>2 || AP_SERVER_MINORVERSION_NUMBER>=3
++        0;
++#else
++        ap_requires(r);
++#endif
+     require_line *reqs;
+ 
+     if (!reqs_arr) {
+diff --git a/xs/Apache2/Log/Apache2__Log.h b/xs/Apache2/Log/Apache2__Log.h
+index 1866315..82db55a 100644
+--- a/xs/Apache2/Log/Apache2__Log.h
++++ b/xs/Apache2/Log/Apache2__Log.h
+@@ -48,13 +48,13 @@ static void mpxs_ap_log_error(pTHX_ int level, SV *sv, SV *msg)
+         s = modperl_global_get_server_rec();
+     }
+ 
+-    if ((lmask == APLOG_DEBUG) && (s->loglevel >= APLOG_DEBUG)) {
++    if ((lmask >= APLOG_DEBUG) && (mp_loglevel(s) >= APLOG_DEBUG)) {
+         COP *cop = PL_curcop;
+         file = CopFILE(cop); /* (caller)[1] */
+         line = CopLINE(cop); /* (caller)[2] */
+     }
+ 
+-    if ((s->loglevel >= lmask) &&
++    if ((mp_loglevel(s) >= lmask) &&
+         SvROK(msg) && (SvTYPE(SvRV(msg)) == SVt_PVCV)) {
+         dSP;
+         ENTER;SAVETMPS;
+@@ -72,10 +72,12 @@ static void mpxs_ap_log_error(pTHX_ int level, SV *sv, SV *msg)
+     }
+ 
+     if (r) {
+-        ap_log_rerror(file, line, level, 0, r, "%s", str);
++        ap_log_rerror(file, line, mp_module_index_ level, 0, r,
++		      "%s", str);
+     }
+     else {
+-        ap_log_error(file, line, level, 0, s, "%s", str);
++        ap_log_error(file, line, mp_module_index_ level, 0, s,
++		     "%s", str);
+     }
+ 
+     if (svstr) {
+@@ -258,10 +260,12 @@ MP_STATIC XS(MPXS_Apache2__Log_log_xerror)
+     msgstr = SvPV(msgsv, n_a);
+ 
+     if (r) {
+-        ap_log_rerror(file, line, level, status, r, "%s", msgstr);
++        ap_log_rerror(file, line, mp_module_index_ level, status, r,
++		      "%s", msgstr);
+     }
+     else {
+-        ap_log_error(file, line, level, status, s, "%s", msgstr);
++        ap_log_error(file, line, mp_module_index_ level, status, s,
++		     "%s", msgstr);
+     }
+ 
+     SvREFCNT_dec(msgsv);
+diff --git a/xs/Apache2/RequestIO/Apache2__RequestIO.h b/xs/Apache2/RequestIO/Apache2__RequestIO.h
+index ff586a4..aa2f1f5 100644
+--- a/xs/Apache2/RequestIO/Apache2__RequestIO.h
++++ b/xs/Apache2/RequestIO/Apache2__RequestIO.h
+@@ -179,8 +179,9 @@ void mpxs_Apache2__RequestRec_rflush(pTHX_ I32 items,
+                rcfg->wbucket->outcnt,
+                apr_pstrmemdup(rcfg->wbucket->pool, rcfg->wbucket->outbuf,
+                               rcfg->wbucket->outcnt));
+-    MP_RUN_CROAK(modperl_wbucket_flush(rcfg->wbucket, TRUE),
+-                 "Apache2::RequestIO::rflush");
++    MP_RUN_CROAK_RESET_OK(r->server,
++                          modperl_wbucket_flush(rcfg->wbucket, TRUE),
++                          "Apache2::RequestIO::rflush");
+ }
+ 
+ static MP_INLINE long mpxs_ap_get_client_block(pTHX_ request_rec *r,
+diff --git a/xs/Apache2/RequestUtil/Apache2__RequestUtil.h b/xs/Apache2/RequestUtil/Apache2__RequestUtil.h
+index ee3f197..931af4a 100644
+--- a/xs/Apache2/RequestUtil/Apache2__RequestUtil.h
++++ b/xs/Apache2/RequestUtil/Apache2__RequestUtil.h
+@@ -154,12 +154,6 @@ int mpxs_Apache2__RequestRec_location_merge(request_rec *r,
+                                                     &core_module);
+ 
+         if (strEQ(entry->d, location)) {
+-            if (!entry->ap_auth_type) {
+-                entry->ap_auth_type = "Basic";
+-            }
+-            if (!entry->ap_auth_name) {
+-                entry->ap_auth_name = apr_pstrdup(p, location);
+-            }
+             r->per_dir_config =
+                 ap_merge_per_dir_configs(p, s->lookup_defaults, sec[i]);
+             return 1;
+diff --git a/xs/Apache2/ServerUtil/Apache2__ServerUtil.h b/xs/Apache2/ServerUtil/Apache2__ServerUtil.h
+index ced1c38..8965dad 100644
+--- a/xs/Apache2/ServerUtil/Apache2__ServerUtil.h
++++ b/xs/Apache2/ServerUtil/Apache2__ServerUtil.h
+@@ -157,8 +157,8 @@ SV *mpxs_Apache2__ServerRec_get_handlers(pTHX_ server_rec *s,
+ #define mpxs_Apache2__ServerUtil_server(classname) modperl_global_get_server_rec()
+ 
+ #if !defined(OS2) && !defined(WIN32) && !defined(BEOS)  && !defined(NETWARE)
+-#define mpxs_Apache2__ServerUtil_user_id(classname)  unixd_config.user_id
+-#define mpxs_Apache2__ServerUtil_group_id(classname) unixd_config.group_id
++#define mpxs_Apache2__ServerUtil_user_id(classname)  ap_unixd_config.user_id
++#define mpxs_Apache2__ServerUtil_group_id(classname) ap_unixd_config.group_id
+ #else
+ #define mpxs_Apache2__ServerUtil_user_id(classname)  0
+ #define mpxs_Apache2__ServerUtil_group_id(classname) 0
+@@ -185,6 +185,13 @@ void mpxs_Apache2__ServerRec_add_config(pTHX_ server_rec *s, SV *lines)
+     }
+ }
+ 
++#define mpxs_Apache2__ServerRec_get_server_banner         \
++    ap_get_server_banner()
++#define mpxs_Apache2__ServerRec_get_server_description    \
++    ap_get_server_description()
++#define mpxs_Apache2__ServerRec_get_server_version        \
++    ap_get_server_version()
++
+ static void mpxs_Apache2__ServerUtil_BOOT(pTHX)
+ {
+     newCONSTSUB(PL_defstash, "Apache2::ServerUtil::server_root",
+@@ -192,13 +199,4 @@ static void mpxs_Apache2__ServerUtil_BOOT(pTHX)
+ 
+     newCONSTSUB(PL_defstash, "Apache2::ServerUtil::get_server_built",
+                 newSVpv(ap_get_server_built(), 0));
+-
+-    newCONSTSUB(PL_defstash, "Apache2::ServerUtil::get_server_version",
+-                newSVpv(ap_get_server_version(), 0));
+-
+-    newCONSTSUB(PL_defstash, "Apache2::ServerUtil::get_server_banner",
+-                newSVpv(ap_get_server_banner(), 0));
+-
+-    newCONSTSUB(PL_defstash, "Apache2::ServerUtil::get_server_description",
+-                newSVpv(ap_get_server_description(), 0));
+ }
+diff --git a/xs/maps/apache2_functions.map b/xs/maps/apache2_functions.map
+index 6d1f29b..27d5ef1 100644
+--- a/xs/maps/apache2_functions.map
++++ b/xs/maps/apache2_functions.map
+@@ -41,7 +41,14 @@ MODULE=Apache2::RequestUtil
+ MODULE=Apache2::RequestUtil   PACKAGE=guess
+  ap_psignature | | r, prefix
+ >ap_finalize_request_protocol
++#_if_ do {                                                                  \
++          Apache2::Build->build_config                                      \
++	      ->httpd_version =~ /^(\d+)\.(\d+)\.(\d+)/                     \
++          ? ($1*1000+$2)*1000+$3                                            \
++          : die "Cannot get httpd version";                                 \
++      } < 2003000
+  ap_default_type
++#_end_
+  ap_get_server_name
+  ap_get_server_port
+ !ap_content_type_tolower
+@@ -165,6 +172,9 @@ MODULE=Apache2::ServerUtil   PACKAGE=Apache2::ServerRec BOOT=1
+ MODULE=Apache2::ServerUtil   PACKAGE=Apache2::ServerUtil
+  ap_exists_config_define
+  ap_server_root_relative | | p, fname=""
++ ap_get_server_banner
++ ap_get_server_description
++ ap_get_server_version
+ 
+ MODULE=Apache2::ServerUtil   PACKAGE=guess
+  ap_error_log2stderr
+@@ -175,9 +185,6 @@ MODULE=Apache2::ServerUtil   PACKAGE=guess
+ #however it is not exported on win32
+ !ap_get_local_host
+ ~ap_get_server_built
+-~ap_get_server_version
+-~ap_get_server_banner
+-~ap_get_server_description
+ ~ap_server_root
+ 
+ 
+diff --git a/xs/tables/current/Apache2/ConstantsTable.pm b/xs/tables/current/Apache2/ConstantsTable.pm
+index 3f86493..1192611 100644
+--- a/xs/tables/current/Apache2/ConstantsTable.pm
++++ b/xs/tables/current/Apache2/ConstantsTable.pm
+@@ -53,6 +53,7 @@ $Apache2::ConstantsTable = {
+       'OPT_EXECCGI',
+       'OPT_UNSET',
+       'OPT_INCNOEXEC',
++      'OPT_INC_WITH_EXEC',
+       'OPT_SYM_OWNER',
+       'OPT_MULTI',
+       'OPT_ALL'
+diff --git a/xs/tables/current/Apache2/StructureTable.pm b/xs/tables/current/Apache2/StructureTable.pm
+index af50be1..ec134b4 100644
+--- a/xs/tables/current/Apache2/StructureTable.pm
++++ b/xs/tables/current/Apache2/StructureTable.pm
+@@ -2708,11 +2708,11 @@ $Apache2::StructureTable = [
+       },
+       {
+         'type' => 'apr_sockaddr_t *',
+-        'name' => 'remote_addr'
++        'name' => 'client_addr'
+       },
+       {
+         'type' => 'char *',
+-        'name' => 'remote_ip'
++        'name' => 'client_ip'
+       },
+       {
+         'type' => 'char *',
+@@ -2955,6 +2955,14 @@ $Apache2::StructureTable = [
+       },
+       {
+         'type' => 'char *',
++        'name' => 'useragent_ip'
++      },
++      {
++        'type' => 'apr_sockaddr_t *',
++        'name' => 'useragent_addr'
++      },
++      {
++        'type' => 'char *',
+         'name' => 'the_request'
+       },
+       {
+@@ -3245,10 +3253,6 @@ $Apache2::StructureTable = [
+       },
+       {
+         'type' => 'int',
+-        'name' => 'loglevel'
+-      },
+-      {
+-        'type' => 'int',
+         'name' => 'is_virtual'
+       },
+       {
