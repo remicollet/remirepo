@@ -1,0 +1,9 @@
+diff -u mod_revocator-1.0.2.orig/revocator.conf mod_revocator-1.0.2/revocator.conf
+--- mod_revocator-1.0.2.orig/revocator.conf	2006-08-04 14:49:33.000000000 -0400
++++ mod_revocator-1.0.2/revocator.conf	2006-10-16 10:10:33.000000000 -0400
+@@ -1,4 +1,4 @@
+-LoadModule rev_module modules/libmodrev.so
++LoadModule rev_module modules/mod_rev.so
+ 
+ #   CRL Engine Switch:
+ #   Enable/Disable CRL retrieval

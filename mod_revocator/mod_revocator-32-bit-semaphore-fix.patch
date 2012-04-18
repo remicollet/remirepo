@@ -1,0 +1,12 @@
+diff -rupN mod_revocator-1.0.3.patched/mod_rev.c mod_revocator-1.0.3/mod_rev.c
+--- mod_revocator-1.0.3.patched/mod_rev.c	2011-10-21 16:21:44.862124000 -0700
++++ mod_revocator-1.0.3/mod_rev.c	2011-10-21 16:23:11.028211000 -0700
+@@ -74,7 +74,7 @@ apr_status_t rev_module_kill(void *data)
+ 
+ static void kill_apache(void) {
+     char buffer[1024];
+-    PR_snprintf(buffer, sizeof(buffer), "%lld %s", 0, "kill");
++    PR_snprintf(buffer, sizeof(buffer), "%ld %s", 0, "kill");
+     write(outfd, buffer, strlen(buffer));
+ }
+ 

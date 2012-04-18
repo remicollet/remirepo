@@ -1,0 +1,245 @@
+diff -upN --recursive mod_revocator-1.0.3/crlhelper.cpp mod_revocator-1.0.3-kill/crlhelper.cpp
+--- mod_revocator-1.0.3/crlhelper.cpp	2010-04-13 10:11:12.000000000 -0400
++++ mod_revocator-1.0.3-kill/crlhelper.cpp	2010-11-17 13:53:07.000000000 -0500
+@@ -18,6 +18,7 @@
+ #include <sys/types.h>
+ #include <sys/ipc.h>
+ #include <sys/sem.h>
++#include <signal.h>
+ #include <nss.h>
+ #include <nspr.h>
+ #include <secitem.h>
+@@ -107,6 +108,7 @@ int main(int argc, char ** argv)
+     PRPollDesc pd;
+     PRIntervalTime timeout = PR_INTERVAL_NO_TIMEOUT;
+     int semid;
++    pid_t parent_pid;
+     union semun semarg;
+     char buf[4096];
+     char url[4096];
+@@ -124,18 +126,19 @@ int main(int argc, char ** argv)
+     while (fd < fdlimit)
+         close(fd++);
+ 
+-    if (argc < 3 || argc > 4) {
+-        fprintf(stderr, "Usage: crlhelper <semid> <directory> <prefix>\n");
++    if (argc < 4 || argc > 5) {
++        fprintf(stderr, "Usage: crlhelper <semid> <parentpid> <directory> <prefix>\n");
+         exit(1);
+     }
+ 
+     semid = strtol(argv[1], NULL, 10);
++    parent_pid = strtol(argv[2], NULL, 10);
+ 
+     /* Initialize NSPR */
+     PR_Init(PR_USER_THREAD, PR_PRIORITY_NORMAL, 256);
+  
+     /* Initialize NSS and open the certificate database read-only. */
+-    rv = NSS_Initialize(argv[2], argc == 4 ? argv[3] : NULL, argc == 4 ? argv[3] : NULL, "secmod.db", NSS_INIT_READONLY);
++    rv = NSS_Initialize(argv[3], argc == 5 ? argv[4] : NULL, argc == 5 ? argv[4] : NULL, "secmod.db", NSS_INIT_READONLY);
+ 
+     if (rv != SECSuccess) {
+         fprintf(stderr, "Unable to initialize NSS database: %d\n", rv);
+@@ -187,6 +190,10 @@ int main(int argc, char ** argv)
+                 continue;
+             }
+ #endif
++            if (!(strcmp(url, "kill"))) {
++                kill(parent_pid, SIGTERM);
++                continue;
++            }
+ 
+             /*
+              * TODO: 
+diff -upN --recursive mod_revocator-1.0.3/crlmanager.cpp mod_revocator-1.0.3-kill/crlmanager.cpp
+--- mod_revocator-1.0.3/crlmanager.cpp	2010-04-13 10:11:11.000000000 -0400
++++ mod_revocator-1.0.3-kill/crlmanager.cpp	2010-11-17 13:53:07.000000000 -0500
+@@ -66,13 +66,19 @@ RevStatus CRLInstance :: DownloadCRL(con
+     sb.sem_op = -1;
+     sb.sem_flg = SEM_UNDO;
+     if (semop(crlm->semid, &sb, 1) == -1) {
+-        perror("semop reserve resource");
++        mystatus.setDetailedError(REV_ERROR_SEMAPHORE_ERROR,
++                                  "Unable to reserve semaphore resource");
++        return mystatus;
++        /* perror("semop reserve resource"); */
+     }
+     void* data = get_crl(crlm->infd, crlm->outfd, inurl, timeout, lastfetchtime, &len, mystatus);
+     /* unlock the pipe */
+     sb.sem_op = 1;
+     if (semop(crlm->semid, &sb, 1) == -1) {
+-        perror("semop free resource id");
++        mystatus.setDetailedError(REV_ERROR_SEMAPHORE_ERROR,
++                                  "Unable to free semaphore resource");
++        return mystatus;
++        /* perror("semop free resource id"); */
+     }
+ 
+     /* We have a special case. If we have an HTTP request and the server
+diff -upN --recursive mod_revocator-1.0.3/mod_rev.c mod_revocator-1.0.3-kill/mod_rev.c
+--- mod_revocator-1.0.3/mod_rev.c	2010-04-13 10:11:11.000000000 -0400
++++ mod_revocator-1.0.3-kill/mod_rev.c	2010-11-19 18:43:08.000000000 -0500
+@@ -58,6 +58,8 @@ SECStatus ShutdownRevocation(void *data)
+ 
+ static pid_t parent_pid;
+ 
++int infd, outfd; /* file descriptors for our semaphore-controlled pipe */
++
+ apr_status_t rev_module_kill(void *data)
+ {
+     server_rec *s = (server_rec *)data;
+@@ -70,6 +72,12 @@ apr_status_t rev_module_kill(void *data)
+     return APR_SUCCESS;
+ }
+ 
++static void kill_apache(void) {
++    char buffer[1024];
++    PR_snprintf(buffer, sizeof(buffer), "%lld %s", 0, "kill");
++    write(outfd, buffer, strlen(buffer));
++}
++
+ /*
+  * Create the global config
+  */
+@@ -196,6 +204,7 @@ PRBool NESRevocationFailureNotification(
+             ap_log_error(APLOG_MARK, APLOG_NOTICE, 0, NULL,
+                 "%s : %s %s",
+                 errMsg, url, subject ? subject : "");
++            return PR_TRUE;
+         } else {
+             ap_log_error(APLOG_MARK, APLOG_ERR, 0, NULL,
+                 "Error updating CRL %s %s : %s",
+@@ -208,8 +217,8 @@ PRBool NESRevocationFailureNotification(
+         if (critical && revocatorInitialized)
+         {
+             ap_log_error(APLOG_MARK, APLOG_ERR, 0, NULL,
+-                "Critical CRL update failure. Shutting down server. %d", parent_pid);
+-            kill(parent_pid, 15);
++                "Critical CRL update failure. Shutting down server pid %d", parent_pid);
++            kill_apache();
+         }
+     }
+     return PR_TRUE;
+@@ -298,11 +307,11 @@ PRBool NESRevocationDownloadNotification
+                 {
+                     /* this CRL is outdated, log it */
+                     ap_log_error(APLOG_MARK, APLOG_ERR, 0, NULL,
+-                        "CRL %s %s is outdated. Shutting down server. %d",
++                        "CRL %s %s is outdated. Shutting down server pid %d",
+                          url, subject, parent_pid);
+ 
+                     /* we have to shut down the web server */
+-                    kill(parent_pid, 15);
++                    kill_apache();
+                 }
+             }
+ 
+@@ -335,6 +344,25 @@ init_Module(apr_pool_t *p, apr_pool_t *p
+         
+     sc->nInitCount++;
+ 
++    if (sc->nInitCount == 1) {
++        struct sembuf sb;
++        sc->semid = semget(IPC_PRIVATE, 1, IPC_CREAT | IPC_EXCL | 0600);
++        if (sc->semid == -1) {
++            ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
++                "Unable to obtain semaphore.");
++            nss_die();
++        }
++
++        /* Initialize the semaphore */
++        sb.sem_num = 0;
++        sb.sem_op = 1;
++        sb.sem_flg = 0;
++        if ((semop(sc->semid, &sb, 1)) == -1) {
++            ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
++                "Unable to initialize semaphore.");
++            nss_die();
++        }
++
+     /* The first pass through this function will create the semaphore that
+      * will be used to lock the pipe. The user is still root at that point
+      * so for any later calls the semaphore ops will fail with permission
+@@ -345,12 +373,11 @@ init_Module(apr_pool_t *p, apr_pool_t *p
+         status.sem_perm.uid = user_id;
+         semctl(sc->semid,0,IPC_SET,&status);
+     }
+-
+-    if (sc->nInitCount == 1) {
++    } else if (sc->nInitCount == 2) {
+         const char * child_argv[5];
+         apr_status_t rv;
+-        struct sembuf sb;
+         char sembuf[32];
++        char pidbuf[32];
+ 
+         if (sc->crlhelper == NULL) {
+             ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
+@@ -358,29 +385,16 @@ init_Module(apr_pool_t *p, apr_pool_t *p
+             nss_die();
+         }
+ 
+-        sc->semid = semget(IPC_PRIVATE, 1, IPC_CREAT | IPC_EXCL | 0600);
+-        if (sc->semid == -1) {
+-            ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
+-                "Unable to obtain semaphore.");
+-            nss_die();
+-        }
+-
+-        /* Initialize the semaphore */
+-        sb.sem_num = 0;
+-        sb.sem_op = 1;
+-        sb.sem_flg = 0;
+-        if ((semop(sc->semid, &sb, 1)) == -1) {
+-            ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
+-                "Unable to initialize semaphore.");
+-            nss_die();
+-        }
+-
+         PR_snprintf(sembuf, 32, "%d", sc->semid);
++        PR_snprintf(pidbuf, 32, "%d", parent_pid);
+         child_argv[0] = sc->crlhelper;
+         child_argv[1] = sembuf;
+-        child_argv[2] = sc->database;
+-        child_argv[3] = sc->dbprefix;
+-        child_argv[4] = NULL;
++        child_argv[2] = pidbuf;
++        child_argv[3] = sc->database;
++        child_argv[4] = sc->dbprefix;
++        child_argv[5] = NULL;
++        ap_log_error(APLOG_MARK, APLOG_INFO, 0, s,
++            "Parent PID is %d", parent_pid);
+ 
+         rv = apr_procattr_create(&sc->procattr, s->process->pool);
+ 
+@@ -428,7 +442,6 @@ InitRevocation(apr_pool_t *p, server_rec
+     void* critical = (void *)sc->crlcritical;
+     Rev_SetFailureCallbackEntryPoint setfcb = NULL;
+     Rev_SetDownloadCallbackEntryPoint setncb = NULL;
+-    int infd, outfd;
+ 
+     /* Do nothing until Apache is ready to run */
+     if (sc->nInitCount < 2) return APR_SUCCESS;
+@@ -499,7 +512,10 @@ InitRevocation(apr_pool_t *p, server_rec
+             free(configstring);
+             apr_dso_unload(dlh);
+             ap_log_error(APLOG_MARK, APLOG_ERR, 0, base_server,
+-                 "Unable to load secmod module: %d", PR_GetError());
++                 "Unable to load Revocation module, NSS error %d. %s", PR_GetError(), critical ? "" : "CRL retrieval will be disabled.");
++            if (critical) {
++                kill_apache();
++            }
+             return APR_EGENERAL;
+         }
+         free(configstring);
+diff -upN --recursive mod_revocator-1.0.3/reverror.h mod_revocator-1.0.3-kill/reverror.h
+--- mod_revocator-1.0.3/reverror.h	2007-06-05 10:38:58.000000000 -0400
++++ mod_revocator-1.0.3-kill/reverror.h	2010-11-17 13:53:07.000000000 -0500
+@@ -54,6 +54,7 @@ const PRInt32 REV_ERROR_BAD_ISSUER_USAGE
+ const PRInt32 REV_ERROR_MISSING_CRL_DATA    = 1014;
+ const PRInt32 REV_ERROR_BAD_ISSUER_TRUST    = 1015;
+ const PRInt32 REV_ERROR_NOUPDATE_AVAILABLE  = 1016;
++const PRInt32 REV_ERROR_SEMAPHORE_ERROR     = 1017;
+ 
+ #endif
+ 

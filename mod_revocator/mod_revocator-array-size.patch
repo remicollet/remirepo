@@ -1,0 +1,12 @@
+diff -rupN mod_revocator-1.0.3.patched/mod_rev.c mod_revocator-1.0.3/mod_rev.c
+--- mod_revocator-1.0.3.patched/mod_rev.c	2011-10-27 13:51:14.452000000 -0700
++++ mod_revocator-1.0.3/mod_rev.c	2011-10-27 13:58:07.598000000 -0700
+@@ -374,7 +374,7 @@ init_Module(apr_pool_t *p, apr_pool_t *p
+         semctl(sc->semid,0,IPC_SET,&status);
+     }
+     } else if (sc->nInitCount == 2) {
+-        const char * child_argv[5];
++        const char * child_argv[6];
+         apr_status_t rv;
+         char sembuf[32];
+         char pidbuf[32];
