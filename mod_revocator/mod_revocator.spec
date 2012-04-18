@@ -118,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/crlhelper
 
 %changelog
+* Wed Apr 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.3-11
+- rebuild for remi repo and httpd 2.4
+
 * Wed Apr 18 2012 Joe Orton <jorton@redhat.com> - 1.0.3-11
 - fix deps, packaging for 2.4 (#803074)
 
