@@ -1,9 +1,9 @@
-%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
 %{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
 
 Name:           mod_bw
 Version:        0.92
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Bandwidth Limiter For Apache
 
 Group:          System Environment/Daemons
@@ -11,10 +11,9 @@ License:        ASL 2.0
 URL:            http://www.ivn.cl/apache
 Source0:        http://www.ivn.cl/apache/files/source/mod_bw-%{version}.tgz
 Source1:        mod_bw.conf
-
 Patch0:         mod_bw-httpd24.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
 BuildRequires:  httpd-devel
 Requires:       httpd-mmn = %{_httpd_mmn}
 
@@ -57,6 +56,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.92-2
+- sync patch with rawhide (but keep version 0.92)
+
+* Tue Apr 10 2012  - Jakub Hrozek <jhrozek@redhat.com> 0.8-8
+- Fix compilation with httpd-2.4 (Jan Kaluza <jkaluza@redhat.com>)
+- Provide backwards-compatible _httpd_apxs macro
+
 * Sun Apr 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.92-1
 - update to 0.92 for remi repo and httpd 2.4
 
