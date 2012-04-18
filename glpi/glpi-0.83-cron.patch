@@ -7,7 +7,7 @@ diff -up install/install.php.orig install/install.php
        $DB->query($query) or die("4203 ".$LANG['update'][90].$DB->error());
 +      
 +      // RPM provides a good system cron
-+      $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1";
++      $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `name`!='watcher' AND (`allowmode` & 1)";
 +      $DB->query($query)
 +      or die("RPM update of glpi_crontasks. " . $LANG['update'][90] . $DB->error());
 +
@@ -25,7 +25,7 @@ diff -up install/update.php.orig install/update.php
     $plugin->unactivateAll();
  
 +   // RPM provides a good system cron
-+   $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `mode`=1";
++   $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `name`!='watcher' AND (`allowmode` & 1)";
 +   $DB->query($query)
 +   or die("RPM update of glpi_crontasks. " . $LANG['update'][90] . $DB->error());
 +
