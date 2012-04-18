@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/mod_dnssd.so
 
 %changelog
+* Tue Apr 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.6-6
+- rebuild for remi repo and httpd 2.4
+
 * Tue Apr 17 2012 Joe Orton <jorton@redhat.com> - 0.6-6
 - update for httpd 2.4, fix deps etc (#803069)
 
