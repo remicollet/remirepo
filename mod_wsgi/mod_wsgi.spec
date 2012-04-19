@@ -1,10 +1,12 @@
-
 %{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
 %{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
+# /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
+%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 
 Name:           mod_wsgi
 Version:        3.3
-Release:        5%{?dist}
+Release:        5%{?dist}.1
 Summary:        A WSGI interface for Python web applications in Apache
 
 Group:          System Environment/Libraries
@@ -41,12 +43,16 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 install -d -m 755 $RPM_BUILD_ROOT%{_httpd_modconfdir}
+%if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
+# httpd <= 2.2.x
+install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/wsgi.conf
+%else
+# httpd >= 2.4.x
 install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-wsgi.conf
-
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
 
 %files
 %defattr(-,root,root,-)
@@ -56,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 3.3-5.1
+- sync with rawhide, rebuild for remi repo
+
 * Wed Mar 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 3.3-5
 - rebuild for remi repo
 
