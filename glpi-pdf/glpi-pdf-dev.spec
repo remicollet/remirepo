@@ -6,7 +6,7 @@ Version:        0.83
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        GLPI Plugin to print PDF of equipment
 Summary(fr):    Extension GLPI pour créer des PDF des matériels
@@ -25,6 +25,7 @@ Source0:        https://forge.indepnet.net/attachments/download/1095/glpi-pdf-0.
 
 # https://forge.indepnet.net/issues/3455
 Patch0:         changeset_r322.diff
+Patch1:         changeset_r323.diff
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -54,6 +55,7 @@ done
 
 cd %{pluginname}
 %patch0 -p1
+%patch1 -p1
 
 
 %build
@@ -91,6 +93,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 19 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-1
+- add patch for 0.83.1 (Problem tab on various object)
+
 * Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-1
 - version 0.83
   https://forge.indepnet.net/projects/pdf/versions/615

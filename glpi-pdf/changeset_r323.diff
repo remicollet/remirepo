@@ -1,0 +1,107 @@
+Index: trunk/inc/monitor.class.php
+===================================================================
+--- trunk/inc/monitor.class.php	(revision 322)
++++ trunk/inc/monitor.class.php	(revision 323)
+@@ -41,6 +41,14 @@
+ 
+ 
+ 
++   function defineAllTabs($options=array()) {
++
++      $onglets = parent::defineAllTabs($options);
++      unset($onglets['Item_Problem$1']); // TODO add method to print linked Problems
++      return $onglets;
++   }
++
++
+    static function pdfMain(PluginPdfSimplePDF $pdf, Monitor $item) {
+       global $LANG;
+ 
+Index: trunk/inc/software.class.php
+===================================================================
+--- trunk/inc/software.class.php	(revision 322)
++++ trunk/inc/software.class.php	(revision 323)
+@@ -104,6 +104,7 @@
+ 
+       $onglets = parent::defineAllTabs($options);
+       unset($onglets['Software$1']); // Merge tab can't be exported
++      unset($onglets['Item_Problem$1']); // TODO add method to print linked Problems
+       return $onglets;
+    }
+ 
+Index: trunk/inc/peripheral.class.php
+===================================================================
+--- trunk/inc/peripheral.class.php	(revision 322)
++++ trunk/inc/peripheral.class.php	(revision 323)
+@@ -40,7 +40,14 @@
+    }
+ 
+ 
++   function defineAllTabs($options=array()) {
+ 
++      $onglets = parent::defineAllTabs($options);
++      unset($onglets['Item_Problem$1']); // TODO add method to print linked Problems
++      return $onglets;
++   }
++
++
+    static function pdfMain(PluginPdfSimplePDF $pdf, Peripheral $item) {
+       global $LANG;
+ 
+Index: trunk/inc/networkequipment.class.php
+===================================================================
+--- trunk/inc/networkequipment.class.php	(revision 322)
++++ trunk/inc/networkequipment.class.php	(revision 323)
+@@ -40,6 +40,14 @@
+    }
+ 
+ 
++   function defineAllTabs($options=array()) {
++
++      $onglets = parent::defineAllTabs($options);
++      unset($onglets['Item_Problem$1']); // TODO add method to print linked Problems
++      return $onglets;
++   }
++
++
+    static function pdfMain(PluginPdfSimplePDF $pdf, NetworkEquipment $item) {
+       global $LANG;
+ 
+Index: trunk/inc/phone.class.php
+===================================================================
+--- trunk/inc/phone.class.php	(revision 322)
++++ trunk/inc/phone.class.php	(revision 323)
+@@ -40,7 +40,14 @@
+    }
+ 
+ 
++   function defineAllTabs($options=array()) {
+ 
++      $onglets = parent::defineAllTabs($options);
++      unset($onglets['Item_Problem$1']); // TODO add method to print linked Problems
++      return $onglets;
++   }
++
++
+    static function pdfMain(PluginPdfSimplePDF $pdf, Phone $item) {
+       global $LANG;
+ 
+Index: trunk/inc/printer.class.php
+===================================================================
+--- trunk/inc/printer.class.php	(revision 322)
++++ trunk/inc/printer.class.php	(revision 323)
+@@ -40,6 +40,14 @@
+    }
+ 
+ 
++   function defineAllTabs($options=array()) {
++
++      $onglets = parent::defineAllTabs($options);
++      unset($onglets['Item_Problem$1']); // TODO add method to print linked Problems
++      return $onglets;
++   }
++
++
+    static function pdfMain(PluginPdfSimplePDF $pdf, Printer $printer) {
+       global $LANG;
+ 
