@@ -5,7 +5,7 @@ Version:        0.83.1
 %if 0%{?svnrelease}
 Release:        0.2.svn%{svnrelease}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
@@ -240,6 +240,9 @@ fi
 
 
 %changelog
+* Thu Apr 19 2012 Remi Collet <remi@fedoraproject.org> - 0.83.1-2
+- fix cron patch
+
 * Wed Apr 18 2012 Remi Collet <remi@fedoraproject.org> - 0.83.1-1
 - version 0.83.1 released
   https://forge.indepnet.net/projects/glpi/versions/696
