@@ -93,7 +93,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Apr 19 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-1
+* Thu Apr 19 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-2
 - add patch for 0.83.1 (Problem tab on various object)
 
 * Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-1
