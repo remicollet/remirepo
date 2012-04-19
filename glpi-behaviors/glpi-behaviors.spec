@@ -6,7 +6,7 @@ Version:        0.83.0
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 Summary:        Plugin to add optional behaviors to GLPI
 Summary(fr):    Extension ajoutant des comportements optionnels à GLPI
