@@ -33,8 +33,8 @@ Requires:       glpi <  0.84
 Requires:       php-cli
 Requires:       %{_sysconfdir}/cron.d
 
-# This plugin is going have been renamed
-Provides:       glpi-massocsimport = %{version}-%{release}
+# This plugin have been renamed
+Provides:       glpi-%{pluginname} = %{version}-%{release}
 
 
 %description
