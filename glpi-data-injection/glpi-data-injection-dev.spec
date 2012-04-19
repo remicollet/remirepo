@@ -1,5 +1,5 @@
-%define pluginname   datainjection
-%global svnrelease   703
+%global pluginname   datainjection
+#global svnrelease   703
 
 Name:           glpi-data-injection
 Version:        2.2.0
@@ -21,7 +21,7 @@ URL:            https://forge.indepnet.net/projects/datainjection
 Source0:        glpi-datainjection-2.2.0-%{svnrelease}.tar.gz
 %else
 # This change for each new version
-Source0:        https://forge.indepnet.net/attachments/download/1038/glpi-datainjection-2.1.4.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1135/glpi-datainjection-2.2.0.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -32,7 +32,7 @@ Requires:       glpi <  0.84
 Requires:       glpi-pdf
 
 # This plugin have been renamed
-Provides:       glpi-datainjection = %{version}-%{release}
+Provides:       glpi-%{pluginname} = %{version}-%{release}
 
 
 %description
@@ -108,6 +108,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 19 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.2.0-1
+- version 2.2.0 finale
+  https://forge.indepnet.net/projects/datainjection/versions/645
+
 * Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.2.0-0.1.svn703
 - new snapshot
 
