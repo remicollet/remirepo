@@ -3,11 +3,12 @@
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_moddir:    %{expand: %%global _httpd_moddir    %%{_libdir}/httpd/modules}}
 
 Summary: Simultaneous connection limiting module for Apache
 Name: mod_limitipconn
 Version: 0.23
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group: System Environment/Daemons
 License: ASL 2.0
 URL: http://dominia.org/djao/limitipconn2.html
@@ -59,6 +60,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.23-9
+- sync with rawhide, rebuild for remi repo
+
+* Thu Apr 19 2012 Joe Orton <jorton@redhat.com> - 0.23-9
+- add _httpd_moddir compat macro as well (#809730)
+
 * Tue Apr 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.23-8
 - rebuild for remi repo and httpd 2.4
 
