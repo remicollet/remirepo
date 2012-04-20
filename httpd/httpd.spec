@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.2
-Release: 1%{?dist}
+Release: 3%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -45,6 +45,8 @@ Patch23: httpd-2.4.1-export.patch
 Patch24: httpd-2.4.1-corelimit.patch
 Patch25: httpd-2.4.1-selinux.patch
 Patch26: httpd-2.4.1-suenable.patch
+# Bug fixes
+Patch40: httpd-2.4.2-restart.patch
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -151,6 +153,8 @@ authentication to the Apache HTTP Server.
 %patch24 -p1 -b .corelimit
 %patch25 -p1 -b .selinux
 %patch26 -p1 -b .suenable
+
+%patch40 -p1 -b .restart
 
 # Patch in vendor/release string
 sed "s/@RELEASE@/%{vstring}/" < %{PATCH20} | patch -p1
@@ -554,6 +558,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Fri Apr 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-3
+- sync with rawhide, rebuild for remi repo
+
+* Fri Apr 20 2012 Joe Orton <jorton@redhat.com> - 2.4.2-3
+- really fix restart
+
+* Fri Apr 20 2012 Joe Orton <jorton@redhat.com> - 2.4.2-2
+- tweak default ssl.conf
+- fix restart handling (#814645)
+- use graceful restart by default
+
 * Wed Apr 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-1
 - update to 2.4.2, rebuild for remi repo
 
