@@ -20,7 +20,6 @@ BuildRequires:  perl(Test::Compile)
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(FusionInventory::Agent) >= 2.2.0
-Requires:       perl(XML::SAX)
 # Optional (but recommended) dependencies
 Requires:       perl(Net::SNMP)
 Requires:       perl(Net::NBName)

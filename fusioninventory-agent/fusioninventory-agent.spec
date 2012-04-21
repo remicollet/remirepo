@@ -63,10 +63,9 @@ BuildRequires: systemd-units
 %endif
 
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:  perl(LWP) perl(Net::IP) perl(HTTP::Status) perl(Net::SSLeay) perl(Crypt::SSLeay)
+Requires:  perl(LWP) perl(Net::IP) perl(HTTP::Status) perl(Net::SSLeay)
 Requires:  perl(Proc::Daemon) perl(Proc::PID::File)
 %if 0%{?fedora} >= 6 || 0%{?rhel} >= 5
-Requires:  perl(Archive::Extract)
 Requires:  perl(Net::CUPS)
 %endif
 %if %{with_systemd}
