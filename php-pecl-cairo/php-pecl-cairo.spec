@@ -4,7 +4,7 @@
 
 Name:           php-pecl-cairo
 Version:        0.3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
@@ -155,6 +155,9 @@ fi
 
 
 %changelog
+* Sat Apr 21 2012 Remi Collet <remi@fedoraproject.org> - 0.3.1-2
+- rebuild for php 5.4
+
 * Sat Apr 21 2012 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
 - Initial RPM package
 - request for LICENSE https://bugs.php.net/61794
