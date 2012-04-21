@@ -1,0 +1,13 @@
+Index: tests/CairoContext/cairo_set_dash.phpt
+===================================================================
+--- tests/CairoContext/cairo_set_dash.phpt	(révision 325390)
++++ tests/CairoContext/cairo_set_dash.phpt	(copie de travail)
+@@ -58,7 +58,7 @@
+ CAUGHT ERROR: Argument 1 passed to cairo_set_dash() must be an instance of CairoContext, integer given
+ 
+ Warning: cairo_set_dash() expects parameter 1 to be CairoContext, integer given in %s on line %d
+-CAUGHT ERROR: Argument 2 passed to cairo_set_dash() must be an array, integer given
++CAUGHT ERROR: Argument 2 passed to cairo_set_dash() must be %s array, integer given
+ 
+ Warning: cairo_set_dash() expects parameter 2 to be array, integer given in %s on line %d
+ 
