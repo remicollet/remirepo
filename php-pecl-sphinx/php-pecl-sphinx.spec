@@ -3,16 +3,13 @@
 %define pecl_name sphinx
 
 Name:           php-pecl-sphinx
-Version:        1.1.0
-Release:        3%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bugs.php.net/60349
-Patch0:         sphinx-php54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libsphinxclient-devel
@@ -28,12 +25,10 @@ Provides:       php-pecl(%{pecl_name}) = %{version}
 
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{-libdir}/.*\\.so$
 
 
 %description
@@ -44,8 +39,10 @@ client library for Sphinx the SQL full-text search engine.
 %prep
 %setup -q -c
 
-%patch0 -p0 -b .php54
+# https://bugs.php.net/bug.php?id=61793
+sed -i -e '/PHP_SPHINX_VERSION/s/1.1.0/%{version}/'  %{pecl_name}-%{version}/php_sphinx.h
 
+# Check reported version (phpinfo), as this is often broken
 extver=$(sed -n '/#define PHP_SPHINX_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_sphinx.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
@@ -62,21 +59,24 @@ cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
-%configure  --with-php-config=%{php_bindir}/php-config
+phpize
+%configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-%{version}-zts
-%{php_ztsbindir}/phpize
-%configure  --with-php-config=%{php_ztsbindir}/php-config
+zts-phpize
+%configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
 %check
 # simple module load test
-cd %{pecl_name}-%{version}
 %{__php} --no-php-ini \
-    --define extension_dir=modules \
+    --define extension_dir=%{pecl_name}-%{version}/modules \
+    --define extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+%{__ztsphp} --no-php-ini \
+    --define extension_dir=%{pecl_name}-%{version}-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -123,6 +123,9 @@ fi
 
 
 %changelog
+* Sat Apr 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-1
+- update to 1.2.0
+
 * Mon Nov 21 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.0-3
 - add patch for php 5.4, see https://bugs.php.net/60349
 
