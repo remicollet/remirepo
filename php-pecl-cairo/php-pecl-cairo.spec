@@ -1,18 +1,16 @@
 %{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
 
-%define pecl_name cairo
+%global pecl_name cairo
+%global versuffix -beta
 
 Name:           php-pecl-cairo
-Version:        0.3.1
-Release:        2%{?dist}
+Version:        0.3.2
+Release:        1%{?dist}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# http://svn.php.net/viewvc?view=revision&revision=325391
-Patch0:         cairo-tests.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  cairo-devel >= 1.4
@@ -51,12 +49,9 @@ These are the files needed to compile programs using cairo extension.
 %prep
 %setup -c -q
 
-# Fix version https://bugs.php.net/61795
-sed -i -e '/PHP_CAIRO_VERSION/s/0.2.1-beta/%{version}/' Cairo-%{version}/php_cairo.h
-
 # Check reported version (phpinfo), as this is often broken
 extver=$(sed -n '/#define PHP_CAIRO_VERSION/{s/.* "//;s/".*$//;p}' Cairo-%{version}/php_cairo.h)
-if test "x${extver}" != "x%{version}"; then
+if test "x${extver}" != "x%{version}%{?versuffix}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
 fi
@@ -65,10 +60,6 @@ cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
-
-cd Cairo-%{version}
-%patch0 -p0
-cd ..
 
 cp -pr Cairo-%{version} Cairo-%{version}-zts
 
@@ -142,7 +133,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc Cairo-%{version}/{CREDITS,IGNORED,SYMBOLS,TODO}
+%doc Cairo-%{version}/{CREDITS,IGNORED,SYMBOLS,TODO,LICENSE}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -155,6 +146,9 @@ fi
 
 
 %changelog
+* Sun Apr 22 2012 Remi Collet <remi@fedoraproject.org> - 0.3.2-1
+- update to 0.3.2-beta
+
 * Sat Apr 21 2012 Remi Collet <remi@fedoraproject.org> - 0.3.1-2
 - rebuild for php 5.4
 
