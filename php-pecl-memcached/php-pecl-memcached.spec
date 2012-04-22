@@ -11,7 +11,7 @@ Version:      2.0.1
 Release:      0.1.git%{gitver}%{?dist}
 Source:       php-memcached-dev-php-memcached-v2.0.0b2-14-g%{gitver}.tar.gz
 %else
-Release:      5%{?dist}
+Release:      6%{?dist}
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 # memcached is PHP, FastLZ is MIT
@@ -173,6 +173,9 @@ ln -s %{php_ztsextdir}/igbinary.so modules/
 
 
 %changelog
+* Sun Apr 22 2012  Remi Collet <remi@fedoraproject.org> - 2.0.1-6
+- rebuild for libmemcached 1.0.6 (with SASL) and php 5.4
+
 * Sun Apr 22 2012  Remi Collet <remi@fedoraproject.org> - 2.0.1-5
 - rebuild for libmemcached 1.0.6 (with SASL) and php 5.3
 
