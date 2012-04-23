@@ -5,7 +5,7 @@ Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
 Version:        %{glpi_version}.0.%{plug_version}
-Release:        0.1.beta2%{?dist}
+Release:        0.2.beta3%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
@@ -13,7 +13,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/514/fusioninventory-for-glpi-metapackage_0.83_1.0-BETA2.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/614/fusioninventory-for-glpi-metapackage_0.83_1.0-BETA3.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -45,6 +45,7 @@ mv fusioninventory/docs fusioninventory-docs
 # .htaccess replaced by a httpd config file
 rm -f fusioninventory/install/mysql/.htaccess
 rm -f fusinvsnmp/install/mysql/.htaccess
+rm -f fusinvsnmp/scripts/.htaccess
 
 
 %build
@@ -118,9 +119,13 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusinvsnmp/pics
 %{_datadir}/glpi/plugins/fusinvsnmp/report
 %{_datadir}/glpi/plugins/fusinvsnmp/tool
+%{_datadir}/glpi/plugins/fusinvsnmp/scripts
 
 
 %changelog
+* Mon Apr 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.83.0.1.1-0.2.beta3
+- update to 0.83+1.0-beta3
+
 * Sun Feb 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.83.0.1.1-0.1.beta2
 - update to 0.83+1.0-beta2 for glpi 0.83 RC
 
