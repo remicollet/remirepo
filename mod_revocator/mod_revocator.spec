@@ -6,7 +6,7 @@
 
 Name: mod_revocator
 Version: 1.0.3
-Release: 11%{?dist}
+Release: 12%{?dist}
 Summary: CRL retrieval module for the Apache HTTP server
 Group: System Environment/Daemons
 License: ASL 2.0
@@ -81,9 +81,9 @@ mkdir -p $RPM_BUILD_ROOT%{_httpd_confdir} $RPM_BUILD_ROOT%{_httpd_modconfdir} \
 
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 # httpd >= 2.4.x
-sed -n /^LoadModule/p revocator.conf > 10-revocator.conf
+sed -n /^LoadModule/p revocator.conf > 11-revocator.conf
 sed -i /^LoadModule/d revocator.conf
-install -m 644 10-revocator.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-revocator.conf
+install -m 644 11-revocator.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/11-revocator.conf
 %endif
 install -m 644 revocator.conf $RPM_BUILD_ROOT%{_httpd_confdir}/revocator.conf
 install -m 755 .libs/libmodrev.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/mod_rev.so
@@ -108,7 +108,10 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc README LICENSE docs/mod_revocator.html
-%config(noreplace) %{_sysconfdir}/httpd/conf.*/*.conf
+%config(noreplace) %{_httpd_confdir}/*.conf
+%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
+%config(noreplace) %{_httpd_modconfdir}/*.conf
+%endif
 %{_libdir}/httpd/modules/mod_rev.so
 # rpmlint will complain that librevocation.so is a shared library but this
 # must be ignored because this file is loaded directly by name by the Apache
@@ -118,6 +121,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/crlhelper
 
 %changelog
+* Tue Apr 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.3-12
+- rebuild for remi repo and httpd 2.4
+
+* Mon Apr 23 2012 Joe Orton <jorton@redhat.com> - 1.0.3-12
+- use 11- prefix for config file w/2.4
+
 * Wed Apr 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.3-11
 - rebuild for remi repo and httpd 2.4
 
