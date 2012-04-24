@@ -1,0 +1,26 @@
+---  mod_nss-1.0/gencert.in	2006-06-20 22:43:33.000000000 -0400
++++  mod_nss-1.0/gencert.in.orig	2006-06-20 22:57:08.000000000 -0400
+@@ -82,12 +82,11 @@
+ 
+ DEST=$1
+ 
+-echo "httptest" > $DEST/pw.txt
++echo -e "\n" > $DEST/pw.txt
+ 
+ echo ""
+ echo "#####################################################################"
+-echo "Generating new server certificate and key database. The password"
+-echo "is httptest"
++echo "Generating new server certificate and key database."
+ echo "#####################################################################"
+ $CERTUTIL -N -d $DEST -f $DEST/pw.txt
+ 
+@@ -183,8 +182,4 @@
+ rm $DEST/pw.txt
+ rm $DEST/noise
+ 
+-echo ""
+-echo "The database password is httptest"
+-echo ""
+-
+ exit 0

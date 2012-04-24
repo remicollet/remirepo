@@ -1,0 +1,240 @@
+diff -u --recursive mod_nss-1.0.8/mod_nss.c mod_nss-1.0.8.lock/mod_nss.c
+--- mod_nss-1.0.8/mod_nss.c	2011-03-02 16:19:52.000000000 -0500
++++ mod_nss-1.0.8.lock/mod_nss.c	2011-03-02 16:17:48.000000000 -0500
+@@ -152,6 +152,8 @@
+     AP_INIT_RAW_ARGS("NSSLogLevel", ap_set_deprecated, NULL, OR_ALL, 
+       "SSLLogLevel directive is no longer supported - use LogLevel."),
+ #endif
++    AP_INIT_TAKE1("User", set_user, NULL, RSRC_CONF,
++                  "Apache user. Comes from httpd.conf."),
+     
+     AP_END_CMD
+ };
+diff -u --recursive mod_nss-1.0.8/mod_nss.h mod_nss-1.0.8.lock/mod_nss.h
+--- mod_nss-1.0.8/mod_nss.h	2011-03-02 16:19:52.000000000 -0500
++++ mod_nss-1.0.8.lock/mod_nss.h	2011-03-02 16:17:48.000000000 -0500
+@@ -41,6 +41,9 @@
+ #include "apr_shm.h"
+ #include "apr_global_mutex.h"
+ #include "apr_optional.h"
++#include <sys/types.h>
++#include <sys/ipc.h>
++#include <sys/sem.h>
+ 
+ #define MOD_NSS_VERSION AP_SERVER_BASEREVISION
+ 
+@@ -244,6 +247,9 @@
+     struct {
+         void *pV1, *pV2, *pV3, *pV4, *pV5, *pV6, *pV7, *pV8, *pV9, *pV10;
+     } rCtx;
++
++    int semid;
++    const char *user;
+ } SSLModConfigRec;
+ 
+ typedef struct SSLSrvConfigRec SSLSrvConfigRec;
+@@ -412,6 +418,7 @@
+ const char *nss_cmd_NSSProxyCipherSuite(cmd_parms *, void *, const char *);
+ const char *nss_cmd_NSSProxyNickname(cmd_parms *cmd, void *dcfg, const char *arg);
+ const char *nss_cmd_NSSProxyCheckPeerCN(cmd_parms *cmd, void *dcfg, int flag);
++const char *set_user(cmd_parms *cmd, void *dummy, const char *arg);
+ 
+ /*  module initialization  */
+ int  nss_init_Module(apr_pool_t *, apr_pool_t *, apr_pool_t *, server_rec *);
+diff -u --recursive mod_nss-1.0.8/nss_engine_config.c mod_nss-1.0.8.lock/nss_engine_config.c
+--- mod_nss-1.0.8/nss_engine_config.c	2011-03-02 16:19:52.000000000 -0500
++++ mod_nss-1.0.8.lock/nss_engine_config.c	2011-03-02 16:17:48.000000000 -0500
+@@ -830,3 +830,12 @@
+ 
+     return NULL;
+ }
++
++const char *set_user(cmd_parms *cmd, void *dummy, const char *arg)
++{
++    SSLModConfigRec *mc = myModConfig(cmd->server);
++
++    mc->user = arg;
++
++    return NULL;
++}
+diff -u --recursive mod_nss-1.0.8/nss_engine_init.c mod_nss-1.0.8.lock/nss_engine_init.c
+--- mod_nss-1.0.8/nss_engine_init.c	2011-03-02 16:19:49.000000000 -0500
++++ mod_nss-1.0.8.lock/nss_engine_init.c	2011-03-02 16:17:48.000000000 -0500
+@@ -312,6 +312,7 @@
+     int sslenabled = FALSE;
+     int fipsenabled = FALSE;
+     int threaded = 0;
++    struct semid_ds status;
+ 
+     mc->nInitCount++;
+ 
+@@ -412,10 +413,26 @@
+     ap_log_error(APLOG_MARK, APLOG_INFO, 0, s,
+                  "Init: %snitializing NSS library", mc->nInitCount == 1 ? "I" : "Re-i");
+ 
++    /* The first pass through this function will create the semaphore that
++     * will be used to lock the pipe. The user is still root at that point
++     * so for any later calls the semaphore ops will fail with permission
++     * errors. So switch the user to the Apache user.
++     */
++    if (mc->semid) {
++        uid_t user_id;
++
++        user_id = ap_uname2id(mc->user);
++        semctl(mc->semid, 0, IPC_STAT, &status);
++        status.sem_perm.uid = user_id;
++        semctl(mc->semid,0,IPC_SET,&status);
++    }
++
+     /* Do we need to fire up our password helper? */
+     if (mc->nInitCount == 1) {
+         const char * child_argv[5];
+         apr_status_t rv;
++        struct sembuf sb;
++        char sembuf[32];
+ 
+         if (mc->pphrase_dialog_helper == NULL) {
+             ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
+@@ -423,11 +440,31 @@
+             nss_die();
+         }
+ 
++        mc->semid = semget(IPC_PRIVATE, 1, IPC_CREAT | IPC_EXCL | 0600);
++        if (mc->semid == -1) {
++            ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
++                "Unable to obtain semaphore.");
++            nss_die();
++        }
++
++        /* Initialize the semaphore */
++        sb.sem_num = 0;
++        sb.sem_op = 1;
++        sb.sem_flg = 0;
++        if ((semop(mc->semid, &sb, 1)) == -1) {
++            ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
++                "Unable to initialize semaphore.");
++            nss_die();
++        }
++
++        PR_snprintf(sembuf, 32, "%d", mc->semid);
++
+         child_argv[0] = mc->pphrase_dialog_helper;
+-        child_argv[1] = fipsenabled ? "on" : "off";
+-        child_argv[2] = mc->pCertificateDatabase;
+-        child_argv[3] = mc->pDBPrefix;
+-        child_argv[4] = NULL;
++        child_argv[1] = sembuf;
++        child_argv[2] = fipsenabled ? "on" : "off";
++        child_argv[3] = mc->pCertificateDatabase;
++        child_argv[4] = mc->pDBPrefix;
++        child_argv[5] = NULL;
+ 
+         rv = apr_procattr_create(&mc->procattr, mc->pPool);
+ 
+diff -u --recursive mod_nss-1.0.8/nss_engine_pphrase.c mod_nss-1.0.8.lock/nss_engine_pphrase.c
+--- mod_nss-1.0.8/nss_engine_pphrase.c	2008-07-02 10:54:37.000000000 -0400
++++ mod_nss-1.0.8.lock/nss_engine_pphrase.c	2011-03-02 16:17:48.000000000 -0500
+@@ -279,6 +279,16 @@
+         char buf[1024];
+         apr_status_t rv;
+         apr_size_t nBytes = 1024;
++        struct sembuf sb;
++
++        /* lock the pipe */
++        sb.sem_num = 0;
++        sb.sem_op = -1;
++        sb.sem_flg = SEM_UNDO;
++        if (semop(parg->mc->semid, &sb, 1) == -1) {
++            ap_log_error(APLOG_MARK, APLOG_ERR, 0, NULL,
++                "Unable to reserve semaphore resource");
++        }
+ 
+         snprintf(buf, 1024, "RETR\t%s", token_name);
+         rv = apr_file_write_full(parg->mc->proc.in, buf, strlen(buf), NULL);
+@@ -293,6 +303,13 @@
+          */
+         memset(buf, 0, sizeof(buf));
+         rv = apr_file_read(parg->mc->proc.out, buf, &nBytes);
++        sb.sem_op = 1;
++        if (semop(parg->mc->semid, &sb, 1) == -1) {
++            ap_log_error(APLOG_MARK, APLOG_ERR, 0, NULL,
++                "Unable to free semaphore resource");
++            /* perror("semop free resource id"); */
++        }
++
+         if (rv != APR_SUCCESS) {
+             ap_log_error(APLOG_MARK, APLOG_ERR, 0, NULL,
+                 "Unable to read from pin store for slot: %s APR err: %d",  PK11_GetTokenName(slot), rv);
+diff -u --recursive mod_nss-1.0.8/nss_pcache.c mod_nss-1.0.8.lock/nss_pcache.c
+--- mod_nss-1.0.8/nss_pcache.c	2011-03-02 16:19:55.000000000 -0500
++++ mod_nss-1.0.8.lock/nss_pcache.c	2011-03-02 16:19:10.000000000 -0500
+@@ -21,6 +21,9 @@
+ #include <pk11func.h>
+ #include <secmod.h>
+ #include <signal.h>
++#include <sys/types.h>
++#include <sys/ipc.h>
++#include <sys/sem.h>
+ #include "nss_pcache.h"
+ 
+ static char * getstr(const char * cmd, int el);
+@@ -70,6 +73,13 @@
+     unsigned char *crypt;
+ };
+ 
++union semun {
++    int val;
++    struct semid_ds *buf;
++    unsigned short *array;
++    struct seminfo *__buf;
++};
++
+ /*
+  * Node - for maintaining link list of tokens with cached PINs
+  */
+@@ -304,15 +314,19 @@
+     char * tokenName;
+     char * tokenpw;
+     int fipsmode = 0;
++    int semid = 0;
++    union semun semarg;
+ 
+-    if (argc < 3 || argc > 4) {
+-        fprintf(stderr, "Usage: nss_pcache <fips on/off> <directory> <prefix>\n");
++    if (argc < 4 || argc > 5) {
++        fprintf(stderr, "Usage: nss_pcache <semid> <fips on/off> <directory> <prefix>\n");
+         exit(1);
+     }
+ 
+     signal(SIGHUP, SIG_IGN);
+ 
+-    if (!strcasecmp(argv[1], "on"))
++    semid = strtol(argv[1], NULL, 10);
++
++    if (!strcasecmp(argv[2], "on"))
+         fipsmode = 1;
+ 
+     /* Initialize NSPR */
+@@ -322,7 +336,7 @@
+     PK11_ConfigurePKCS11(NULL,NULL,NULL, INTERNAL_TOKEN_NAME, NULL, NULL,NULL,NULL,8,1);
+  
+     /* Initialize NSS and open the certificate database read-only. */
+-    rv = NSS_Initialize(argv[2], argc == 4 ? argv[3] : NULL, argc == 4 ? argv[3] : NULL, "secmod.db", NSS_INIT_READONLY);
++    rv = NSS_Initialize(argv[3], argc == 4 ? argv[4] : NULL, argc == 5 ? argv[4] : NULL, "secmod.db", NSS_INIT_READONLY);
+ 
+     if (rv != SECSuccess) {
+         fprintf(stderr, "Unable to initialize NSS database: %d\n", rv);
+@@ -437,6 +451,11 @@
+     }
+     freeList(pinList);
+     PR_Close(in);
++    /* Remove the semaphore used for locking here. This is because this
++     * program only goes away when Apache shuts down so we don't have to
++     * worry about reloads.
++     */
++    semctl(semid, 0, IPC_RMID, semarg);
+     return 0;
+ }
+ 
+Only in mod_nss-1.0.8.lock/: nss_pcache.c.orig
+Only in mod_nss-1.0.8.lock/: nss_pcache.c.rej

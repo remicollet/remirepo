@@ -1,0 +1,12 @@
+--- mod_nss-1.0.3.orig/nss_engine_io.c	2006-04-07 16:17:12.000000000 -0400
++++ mod_nss-1.0.3/nss_engine_io.c	2009-02-17 22:51:44.000000000 -0500
+@@ -259,7 +259,8 @@
+          */
+         if (APR_STATUS_IS_EAGAIN(inctx->rc) || APR_STATUS_IS_EINTR(inctx->rc)
+                || (inctx->rc == APR_SUCCESS && APR_BRIGADE_EMPTY(inctx->bb))) {
+-            return 0;
++            PR_SetError(PR_WOULD_BLOCK_ERROR, 0);
++            return -1;
+         }
+ 
+         if (inctx->rc != APR_SUCCESS) {
