@@ -30,8 +30,8 @@
 %endif
 
 Name:		mod_fcgid
-Version:	2.3.6
-Release:	6%{?dist}
+Version:	2.3.7
+Release:	1%{?dist}
 Summary:	FastCGI interface module for Apache 2
 Group:		System Environment/Daemons
 License:	ASL 2.0
@@ -46,7 +46,6 @@ Source10:	fastcgi.te
 Source11:	fastcgi-2.5.te
 Source12:	fastcgi.fc
 Patch0:		mod_fcgid-2.3.4-fixconf-shellbang.patch
-Patch1:		mod_fcgid-2.3.6-bz783742.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires:	httpd-devel >= 2.0, pkgconfig
 Requires:	httpd-mmn = %{_httpd_mmn}
@@ -116,10 +115,6 @@ cp -p %{SOURCE12} fastcgi.fc
 
 # Fix shellbang in fixconf script for our location of sed
 %patch0 -p1
-
-# Fix regression in 2.3.6 that broke process controls when
-# using vhost-specific configuration (upstream fix)
-%patch1 -p3
 
 %build
 APXS=%{_httpd_apxs} ./configure.apxs
@@ -225,6 +220,24 @@ exit 0
 %endif
 
 %changelog
+* Tue Apr 24 2012 Remi Collet <RPMS@FamilleCollet.com> 2.3.7-1
+- update to 2.3.7, rebuild for remi repo
+
+* Mon Apr 23 2012 Paul Howarth <paul@city-fan.org> 2.3.7-1
+- Update to 2.3.7
+  - Introduce FcgidWin32PreventOrphans directive on Windows to use OS Job
+    Control Objects to terminate all running fcgi's when the worker process
+    has been abruptly terminated (PR: 51078)
+  - Periodically clean out the brigades that are pulling in the request body
+    for handoff to the fcgid child (PR: 51749)
+  - Resolve crash during graceful restarts (PR: 50309)
+  - Solve latency/congestion of resolving effective user file access rights
+    when no such info is desired, for config-related filename stats (PR: 51020)
+  - Fix regression in 2.3.6 that broke process controls when using
+    vhost-specific configuration
+  - Account for first process in class in the spawn score
+- Drop patch for CVE-2012-1181, now included in upstream release
+
 * Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> 2.3.6-6
 - rebuild httpd 2.4
 
