@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Apr 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.2.2-16
+- rebuild for remi repo and httpd 2.4
+
 * Mon Apr 23 2012 Joe Orton <jorton@redhat.com> - 0.2.2-16
 - add _httpd_moddir fallback
 
