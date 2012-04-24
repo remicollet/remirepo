@@ -144,6 +144,9 @@ fi
 %{_sbindir}/gencert
 
 %changelog
+* Tue Apr 24 2012 Remi Collet <RPMS@FamilleCollet.com> 1.0.8-16
+- rebuild for remi repo and http 2.4
+
 * Mon Apr 23 2012 Joe Orton <jorton@redhat.com> - 1.0.8-16
 - packaging fixes/updates (#803072)
 
