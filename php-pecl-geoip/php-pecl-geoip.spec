@@ -26,12 +26,10 @@ Requires(postun): %{__pecl}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -64,13 +62,13 @@ cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
-%configure  --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-%{version}-zts
-%{php_ztsbindir}/phpize
-%configure  --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
