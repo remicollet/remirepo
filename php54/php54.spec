@@ -1180,10 +1180,10 @@ install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
-%endif
 # Environment file
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig/php-fpm
+%endif
 
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
