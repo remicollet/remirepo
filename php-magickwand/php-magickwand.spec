@@ -26,12 +26,10 @@ Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -65,13 +63,13 @@ cp -pr MagickWandForPHP-%{version} MagickWandForPHP-%{version}-zts
 export PHP_RPATH=no
 
 cd MagickWandForPHP-%{version}
-%{php_bindir}/phpize
-%configure --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../MagickWandForPHP-%{version}-zts
-%{php_ztsbindir}/phpize
-%configure --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -85,10 +83,14 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 
 %check
-cd MagickWandForPHP-%{version}
 # simple module load test
 %{__php} --no-php-ini \
-    --define extension_dir=modules \
+    --define extension_dir=MagickWandForPHP-%{version}/modules \
+    --define extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
+%{__ztsphp} --no-php-ini \
+    --define extension_dir=MagickWandForPHP-%{version}-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -107,6 +109,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 27 2012 Remi Collet <rpms@famillecollet.com> 1.0.9-2
+- fix macro usage
+
 * Sat Nov 26 2011 Remi Collet <rpms@famillecollet.com> 1.0.9-2
 - php 5.4 build
 
