@@ -108,7 +108,7 @@ Patch41: php-5.4.0-easter.patch
 Patch42: php-5.3.1-systzdata-v8.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
-Patch44: php-5.4.0RC6-system-libzip.patch
+Patch44: php-5.4.1-system-libzip.patch
 
 # Fixes for tests
 
