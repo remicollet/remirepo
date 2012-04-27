@@ -58,8 +58,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.10
-Release: 2%{?dist}
+Version: 5.3.11
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -79,7 +79,7 @@ Source7: php-fpm.logrotate
 Source8: php-fpm.sysconfig
 
 # Build fixes
-Patch1: php-5.3.9-gnusrc.patch
+Patch1: php-5.3.11-gnusrc.patch
 Patch2: php-5.3.0-install.patch
 Patch3: php-5.2.4-norpath.patch
 Patch5: php-5.2.0-includedir.patch
@@ -87,7 +87,7 @@ Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 # from http://svn.php.net/viewvc?view=revision&revision=311042
 # and  http://svn.php.net/viewvc?view=revision&revision=311908
-Patch8: php-5.3.9-aconf259.patch
+Patch8: php-5.3.11-aconf259.patch
 # fix harcoded mysql.sock path
 Patch9: php-5.3.9-mysqlnd.patch
 
@@ -1482,13 +1482,17 @@ fi
 %endif
 
 %changelog
-* Sat Feb 04 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-2
+* Fri Apr 27 2012 Remi Collet <Fedora@famillecollet.com> 5.3.11-1
+- update to 5.3.11
+  http://www.php.net/ChangeLog-5.php#5.3.11
+
+* Sat Feb 04 2012 Remi Collet <Fedora@famillecollet.com> 5.3.10-2
 - fix mysql.sock default path
 - missing %%__ztsphp macro
 
-* Fri Feb 03 2012 Remi Collet <Fedora@famillecollet.com> 5.4.0-1
-- update to 5.4.0
-  http://www.php.net/ChangeLog-5.php#5.4.0
+* Fri Feb 03 2012 Remi Collet <Fedora@famillecollet.com> 5.3.10-1
+- update to 5.3.10
+  http://www.php.net/ChangeLog-5.php#5.3.10
 - latest changes from rawhide (zts binary with zts- prefix)
 
 * Thu Jan 26 2012 Remi Collet <Fedora@famillecollet.com> 5.3.9-1.2

@@ -15,6 +15,11 @@
 # Check that networking is up.
 . /etc/sysconfig/network
 
+# Additional environment file
+if [ -f /etc/sysconfig/php-fpm ]; then
+      . /etc/sysconfig/php-fpm
+fi
+
 if [ "$NETWORKING" = "no" ]
 then
 	exit 0
