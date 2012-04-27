@@ -32,12 +32,10 @@ Requires:       %{phpname}(api) = %{php_core_api}
 
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -64,14 +62,14 @@ cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-%{version}-zts
 %build
 cd %{pecl_name}-%{version}-zts
 # ZTS build
-%{php_ztsbindir}/phpize
-%configure --with-imagick=%{prefix} --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 # Standard build
 cd ../%{pecl_name}-%{version}%{?prever}
-%{php_bindir}/phpize
-%configure --with-imagick=%{prefix} --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 
@@ -102,9 +100,13 @@ fi
 
 %check
 # simple module load test
-pushd %{pecl_name}-%{version}%{?prever}
 %{__php} --no-php-ini \
-    --define extension_dir=modules \
+    --define extension_dir=%{pecl_name}-%{version}%{?prever}/modules \
+    --define extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
+%{__ztsphp} --no-php-ini \
+    --define extension_dir=%{pecl_name}-%{version}-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
