@@ -31,12 +31,10 @@ Conflicts:      php-magickwand
 
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -74,13 +72,13 @@ cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-zts
 
 %build
 cd %{pecl_name}-%{version}%{?prever}
-%{php_bindir}/phpize
-%{configure} --with-%{pecl_name}  --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%{configure} --with-%{pecl_name}  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-zts
-%{php_ztsbindir}/phpize
-%{configure} --with-%{pecl_name}  --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%{configure} --with-%{pecl_name}  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -135,18 +133,18 @@ NO_INTERACTION=1 \
 
 cd ../%{pecl_name}-zts
 
-if [ -f %{php_ztsbindir}/php ]; then
+if [ -f %{__ztsphp} ]; then
 # simple module load test
-%{php_ztsbindir}/php --no-php-ini \
+%{__ztsphp} --no-php-ini \
     --define extension_dir=%{buildroot}%{php_ztsextdir} \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 # Still ignore test result as some fail on old version
-TEST_PHP_EXECUTABLE=%{php_ztsbindir}/php \
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
 REPORT_EXIT_STATUS=0 \
 NO_INTERACTION=1 \
-%{php_ztsbindir}/php run-tests.php \
+%{__ztsphp} run-tests.php \
     -n -q \
     -d extension_dir=%{buildroot}%{php_ztsextdir} \
     -d extension=%{pecl_name}.so
