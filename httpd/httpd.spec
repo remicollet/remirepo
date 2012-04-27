@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -47,6 +47,8 @@ Patch25: httpd-2.4.1-selinux.patch
 Patch26: httpd-2.4.1-suenable.patch
 # Bug fixes
 Patch40: httpd-2.4.2-restart.patch
+Patch41: httpd-2.4.2-r1327036+.patch
+Patch42: httpd-2.4.2-r1326980+.patch
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -155,6 +157,8 @@ authentication to the Apache HTTP Server.
 %patch26 -p1 -b .suenable
 
 %patch40 -p1 -b .restart
+%patch41 -p1 -b .r1327036+
+%patch42 -p1 -b .r1326980+
 
 # Patch in vendor/release string
 sed "s/@RELEASE@/%{vstring}/" < %{PATCH20} | patch -p1
@@ -558,6 +562,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Fri Apr 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-4
+- sync with rawhide, rebuild for remi repo
+
+* Fri Apr 27 2012 Joe Orton <jorton@redhat.com> - 2.4.2-4
+- pull from upstream:
+  * use TLS close_notify alert for dummy_connection (r1326980+)
+  * cleanup symbol exports (r1327036+)
+
 * Fri Apr 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-3
 - sync with rawhide, rebuild for remi repo
 
