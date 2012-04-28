@@ -25,12 +25,10 @@ Requires: php-api = %{php_apiver}
 %endif
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -58,13 +56,13 @@ chmod a-x *.[ch] TODO README INSTALL LICENSE
 
 %build
 cd phpShout-%{version}
-%{php_bindir}/phpize
-%configure --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../phpShout-zts
-%{php_ztsbindir}/phpize
-%configure --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -82,11 +80,14 @@ install -D -p -m 0644 phpShout-zts/shout.ini \
 
 
 %check
-cd phpShout-%{version}
-
 # simple module load test
-php --no-php-ini \
-    --define extension_dir=modules \
+%{__php} --no-php-ini \
+    --define extension_dir=phpShout-%{version}/modules \
+    --define extension=shout.so \
+    --modules | grep shout
+
+%{__ztsphp} --no-php-ini \
+    --define extension_dir=phpShout-zts/modules \
     --define extension=shout.so \
     --modules | grep shout
 
