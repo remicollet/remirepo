@@ -26,12 +26,10 @@ Requires(postun):	%{__pecl}
 Provides:	php-pecl(%{pecl_name}) = %{version}
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -57,15 +55,15 @@ EOF
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
+%{_bindir}/phpize
 %configure \
-    --with-php-config=%{php_bindir}/php-config
+    --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-%{version}-zts
-%{php_ztsbindir}/phpize
+%{_bindir}/zts-phpize
 %configure \
-    --with-php-config=%{php_ztsbindir}/php-config
+    --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -89,6 +87,16 @@ TEST_PHP_EXECUTABLE=%{__php} \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 %{__php} run-tests.php \
+    -n -q \
+    -d extension_dir=modules \
+    -d extension=lzf.so \
+
+cd ../%{pecl_name}-%{version}-zts
+
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+REPORT_EXIT_STATUS=1 \
+NO_INTERACTION=1 \
+%{__ztsphp} run-tests.php \
     -n -q \
     -d extension_dir=modules \
     -d extension=lzf.so \
