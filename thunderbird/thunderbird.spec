@@ -2,7 +2,7 @@
 %define debug_build       0
 
 # Use system Librairies ?
-%if 0%{?fedora} <= 15
+%if 0%{?fedora} <= 17
 %define system_sqlite 0
 %else
 %define system_sqlite 1
@@ -29,7 +29,7 @@
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
 %define lcms_version 1.19
-%define sqlite_version 3.7.7.1
+%define sqlite_version 3.7.10
 %define libnotify_version 0.4
 %global libvpx_version 1.0.0
 
@@ -51,16 +51,15 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        11.0.1
+Version:        12.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20120330.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20120428.tar.bz2
 %endif
-
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
 Source12:       thunderbird-redhat-default-prefs.js
@@ -75,13 +74,14 @@ Patch7:         crashreporter-remove-static.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
 
 # Build patches
-Patch100:       xulrunner-10.0-gcc47.patch
-Patch101:       mozilla-722127.patch
 Patch102:       mozilla-733867-x.patch
-
+Patch103:       mozilla-file.patch
+Patch104:       xulrunner-10.0-gcc47.patch
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
 
+# ARM Specific 
+Patch210: 	mozilla-724615.patch
 %if %{official_branding}
 # Required by Mozilla Corporation
 
@@ -193,14 +193,13 @@ cd %{tarballdir}
 cd mozilla
 %patch7 -p2 -b .static
 %patch8 -p3 -b .secondary-ipc
-%if 0%{?fedora} >= 17
-%patch100 -p1 -b .gcc47
-%endif
-%patch101 -p2 -b .722127
+%patch103 -p1 -b .mozilla-file
+%patch104 -p1 -b .gcc47
 cd ..
-%patch102 -p2 -b .733867
+%patch102 -p1 -b .733867
 
 %patch200 -p1 -b .addons
+%patch210 -p1 -b .724615
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -484,10 +483,20 @@ fi
 %exclude %{_libdir}/%{name}-devel-%{version}
 %{mozappdir}/chrome.manifest
 %{mozappdir}/searchplugins
+%{mozappdir}/distribution/extensions
 
 #===============================================================================
 
 %changelog
+* Sat Apr 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 12.0-1
+- Sync with rawhide, update to 12.0
+
+* Tue Apr 24 2012 Jan Horak <jhorak@redhat.com> - 12.0-1
+- Update to 12.0
+
+* Mon Apr 16 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 11.0.1-2
+- Add upstream patch to fix FTBFS on ARM
+
 * Fri Mar 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0.1-1
 - Update to 11.0.1
 
