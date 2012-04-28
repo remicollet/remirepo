@@ -32,12 +32,10 @@ Requires:       php-xml >= 5.2.3
 Provides:       php-pecl(%{pecl_name}) = %{version}, php-%{pecl_name} = %{version}
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -126,13 +124,13 @@ cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
-%configure  --with-php-config=%{php_bindir}/php-config
+%{_bindir}/phpize
+%configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-%{version}-zts
-%{php_ztsbindir}/phpize
-%configure  --with-php-config=%{php_ztsbindir}/php-config
+%{_bindir}/zts-phpize
+%configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -171,8 +169,19 @@ ln -s %{php_extdir}/json.so modules/
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=curl.so -d extension=json.so -d extension=%{pecl_name}.so" \
    REPORT_EXIT_STATUS=1 \
    NO_INTERACTION=1 \
-   TEST_PHP_EXECUTABLE=%{_bindir}/php \
-   %{_bindir}/php \
+   TEST_PHP_EXECUTABLE=%{__php} \
+   %{__php} \
+   run-tests.php
+
+cd ../%{pecl_name}-%{version}-zts
+ln -s %{php_ztsextdir}/curl.so modules/
+ln -s %{php_ztsextdir}/json.so modules/
+
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=curl.so -d extension=json.so -d extension=%{pecl_name}.so" \
+   REPORT_EXIT_STATUS=1 \
+   NO_INTERACTION=1 \
+   TEST_PHP_EXECUTABLE=%{__ztsphp} \
+   %{__ztsphp} \
    run-tests.php
 
 
