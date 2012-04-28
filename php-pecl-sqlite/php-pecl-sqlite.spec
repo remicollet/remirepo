@@ -37,12 +37,10 @@ Provides:       php-sqlite2 = 5.4.0
 Provides:       php-sqlite2%{?_isa} = 5.4.0
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -97,15 +95,15 @@ cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
+%{_bindir}/phpize
 %configure \
-    --with-php-config=%{php_bindir}/php-config
+    --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-zts
-%{php_ztsbindir}/phpize
+%{_bindir}/zts-phpize
 %configure \
-    --with-php-config=%{php_ztsbindir}/php-config
+    --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -132,10 +130,10 @@ NO_INTERACTION=1 \
     -d extension=%{pecl_name}.so
 
 cd ../%{pecl_name}-zts
-TEST_PHP_EXECUTABLE=%{php_ztsbindir}/php \
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
-%{php_ztsbindir}/php run-tests.php \
+%{__ztsphp} run-tests.php \
     -n -q \
     -d extension_dir=modules \
     -d extension=%{pecl_name}.so
