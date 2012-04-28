@@ -22,12 +22,10 @@ Requires: php(api) = %{php_core_api}
 Provides: php-pecl(%{pecl_name}) = %{version}-%{release}
 
 # RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_dir}/.*\\.so$
 
 
 %description
@@ -48,15 +46,15 @@ cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
 
 %build
 cd %{pecl_name}-%{version}
-%{php_bindir}/phpize
+%{_bindir}/phpize
 %configure \
-    --with-php-config=%{php_bindir}/php-config
+    --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-zts
-%{php_ztsbindir}/phpize
+%{_bindir}/zts-phpize
 %configure \
-    --with-php-config=%{php_ztsbindir}/php-config
+    --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
 
@@ -77,9 +75,13 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %check
 # simple module load test
-pushd %{pecl_name}-%{version}%{?prever}
 %{__php} --no-php-ini \
-    --define extension_dir=modules \
+    --define extension_dir=%{pecl_name}-%{version}/modules \
+    --define extension=%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
+%{__ztsphp} --no-php-ini \
+    --define extension_dir=%{pecl_name}-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
