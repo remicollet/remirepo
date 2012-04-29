@@ -1,20 +1,21 @@
 # Use system nspr/nss?
 %if 0%{?fedora} < 15
 %define system_nss        0
-%define system_cairo      0
 %define system_vpx        0
 %else
 %define system_nss        1
-%define system_cairo      1
 %define system_vpx        1
 %endif
 
 # Use system sqlite?
-%if 0%{?fedora} <= 15
+%if 0%{?fedora} <= 17
 %define system_sqlite     0
 %else
 %define system_sqlite     1
 %endif
+
+# Use system cairo?
+%define system_cairo      0
 
 %global shortname         xulrunner
 
@@ -43,7 +44,7 @@
 # alpha_version should be set to the alpha number if using an alpha, 0 otherwise
 # beta_version  should be set to the beta number if using a beta, 0 otherwise
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
-%global gecko_dir_ver 11
+%global gecko_dir_ver 12
 %global alpha_version 0
 %global beta_version  0
 %global rc_version    0
@@ -80,7 +81,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        11.0
+Version:        12.0
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -102,17 +103,12 @@ Patch17:        xulrunner-10.0-gcc47.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
-Patch23:        wmclass.patch
 Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
 # https://bugzilla.mozilla.org/show_bug.cgi?id=707993
 Patch39:        xulrunner-8.0-fix-maemo-checks-in-npapi.patch
-Patch42:        mozilla-706724.patch
 Patch43:        mozilla-file.patch
-# Needed to detect/use libvpx-1.0.0
-# https://bugzilla.mozilla.org/show_bug.cgi?id=722127
-Patch44:        mozilla-722127.patch
 Patch46:        mozilla-724615.patch
 Patch47:        mozilla-691898.patch
 
@@ -123,7 +119,7 @@ BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
-%if %{system_cairo}
+%if %{?system_cairo}
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
 BuildRequires:  libpng-devel
@@ -160,13 +156,10 @@ Requires:       nss >= %{nss_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
-Obsoletes:      xulrunner2
-Obsoletes:      xulrunner5
-Obsoletes:      xulrunner6
-Obsoletes:      xulrunner7
 Obsoletes:      xulrunner8
 Obsoletes:      xulrunner9
 Obsoletes:      xulrunner10
+Obsoletes:      xulrunner11
 
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
@@ -186,6 +179,10 @@ Group: Development/Libraries
 Obsoletes: mozilla-devel < 1.9
 Obsoletes: firefox-devel < 2.1
 Obsoletes: xulrunner-devel-unstable
+Obsoletes: xulrunner8-devel
+Obsoletes: xulrunner9-devel
+Obsoletes: xulrunner10-devel
+Obsoletes: xulrunner11-devel
 Provides: gecko-devel = %{gecko_verrel}
 Provides: gecko-devel%{?_isa} = %{gecko_verrel}
 Provides: gecko-devel-unstable = %{gecko_verrel}
@@ -196,7 +193,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: nspr-devel >= %{nspr_version}
 Requires: nss-devel >= %{nss_version}
 %endif
-%if %{system_cairo}
+%if %{?system_cairo}
 # Library requirements (cairo-tee >= 1.10)
 Requires: cairo-devel >= %{cairo_version}
 %endif
@@ -272,23 +269,15 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch17 -p1 -b .gcc47
 
 %patch20 -p2 -b .pk
-%patch23 -p1 -b .wmclass
 %patch24 -p1 -b .static
 
 %patch39 -p1 -b .707993
-%patch42 -p1 -b .706724
 %patch43 -p1 -b .file
-%if %{system_vpx}
-%patch44 -p2 -b .vpx1.0.0
-%endif
 %patch46 -p1 -b .724615
 #%patch47 -p1 -b .691898
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if ! %{system_cairo}
-  | grep -v enable-system-cairo    \
-%endif
 %ifarch %{ix86} x86_64
   | grep -v disable-necko-wifi     \
 %endif
@@ -315,6 +304,12 @@ echo "ac_add_options --without-system-nss" >> .mozconfig
 echo "ac_add_options --enable-system-sqlite" >> .mozconfig
 %else
 echo "ac_add_options --disable-system-sqlite" >> .mozconfig
+%endif
+
+%if %{?system_cairo}
+echo "ac_add_options --enable-system-cairo" >> .mozconfig
+%else
+echo "ac_add_options --disable-system-cairo" >> .mozconfig
 %endif
 
 %if %{?debug_build}
@@ -568,6 +563,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Apr 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 12.0-1
+- Sync with rawhide, update to 12.0
+
+* Tue Apr 24 2012 Martin Stransky <stransky@redhat.com> - 12.0-1
+- Update to 12.0
+
 * Sat Mar 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0-1
 - update to 11.0, sync with rawhide
 
