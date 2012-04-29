@@ -1,13 +1,13 @@
 # Use system nspr/nss?
 %if 0%{?fedora} < 15
 %define system_nss        0
-%define system_cairo      0
 %define system_vpx        0
 %else
 %define system_nss        1
-%define system_cairo      1
 %define system_vpx        1
 %endif
+
+%define system_cairo      0
 
 # Separated plugins are supported on x86(64) only
 %ifarch %{ix86} x86_64
@@ -25,13 +25,13 @@
 
 %global shortname              firefox
 #global mycomment              Beta 4
-%global firefox_dir_ver        11
-%global xulrunner_version      11.0
+%global firefox_dir_ver        12
+%global xulrunner_version      12.0
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20120317
+%global datelang               20120429
 
 %global mozappdir     %{_libdir}/%{shortname}
 %global langpackdir   %{mozappdir}/langpacks
@@ -62,7 +62,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        11.0
+Version:        12.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -87,7 +87,6 @@ Patch14:        firefox-5.0-asciidel.patch
 Patch15:        firefox-8.0-enable-addons.patch
 
 # Upstream patches
-Patch100:       mozilla-722127.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -143,7 +142,6 @@ cd %{tarballdir}
 %patch15 -p2 -b .addons
 
 # Upstream patches
-%patch100 -p2 -b .722127
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -155,9 +153,6 @@ cd %{tarballdir}
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%if ! %{system_cairo}
-  | grep -v enable-system-cairo    \
-%endif
 %ifarch %{ix86} x86_64
   | grep -v disable-necko-wifi     \
 %endif
@@ -184,6 +179,12 @@ echo "ac_add_options --with-system-nss" >> .mozconfig
 %else
 echo "ac_add_options --without-system-nspr" >> .mozconfig
 echo "ac_add_options --without-system-nss" >> .mozconfig
+%endif
+
+%if %{?system_cairo}
+echo "ac_add_options --enable-system-cairo" >> .mozconfig
+%else
+echo "ac_add_options --disable-system-cairo" >> .mozconfig
 %endif
 
 # Set up SDK path
@@ -305,6 +306,7 @@ ln -s `pkg-config --variable=libdir libxul` $RPM_BUILD_ROOT/%{mozappdir}/xulrunn
 %{__install} -p -D -m 644 %{SOURCE23} $RPM_BUILD_ROOT%{_mandir}/man1/%{name}.1
 
 %{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/firefox-config
+%{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/update-settings.ini
 
 for s in 16 22 24 32 48 256; do
     %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps
@@ -433,6 +435,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Apr 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 12.0-1
+- Sync with rawhide, update to 12.0
+
+* Tue Apr 24 2012 Martin Stransky <stransky@redhat.com> - 12.0-1
+- Update to 12.0
+
 * Sat Mar 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 11.0-1
 - Update to 11.0, sync with rawhide
 
