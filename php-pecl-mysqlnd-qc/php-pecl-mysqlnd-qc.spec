@@ -12,7 +12,7 @@
 Summary:      A query cache plugin for mysqlnd
 Name:         php-pecl-mysqlnd-qc
 Version:      1.1.1
-Release:      1%{?dist}
+Release:      2%{?dist}
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 License:      PHP
 Group:        Development/Languages
@@ -213,6 +213,9 @@ zts-php -n -q \
 
 
 %changelog
+* Mon Apr 30 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+- rebuild for EL and PHP 5.4
+
 * Mon Apr 30 2012  Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1-alpha
 - add devel sub-package
