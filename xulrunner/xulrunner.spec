@@ -387,7 +387,7 @@ export LIBDIR='%{_libdir}'
 MOZ_SMP_FLAGS=-j1
 # On x86 architectures, Mozilla can build up to 4 jobs at once in parallel,
 # however builds tend to fail on other arches when building in parallel.
-%ifarch %{ix86} x86_64
+%ifarch %{ix86} x86_64 ppc ppc64
 [ -z "$RPM_BUILD_NCPUS" ] && \
      RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
 [ "$RPM_BUILD_NCPUS" -ge 2 ] && MOZ_SMP_FLAGS=-j2
@@ -563,6 +563,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Apr 30 2012 Martin Stransky <stransky@redhat.com> - 12.0-2
+- Enable ppc(64) paralell builds (rhbz#816612)
+
 * Sun Apr 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 12.0-1
 - Sync with rawhide, update to 12.0
 
