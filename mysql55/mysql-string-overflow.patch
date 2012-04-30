@@ -7,10 +7,10 @@ Filed upstream at http://bugs.mysql.com/bug.php?id=64631
 Error: BUFFER_SIZE_WARNING:
 /builddir/build/BUILD/mysql-5.1.61/sql/sql_prepare.cc:2749: buffer_size_warning: Calling strncpy with a maximum size argument of 512 bytes on destination array "this->stmt->last_error" of size 512 bytes might leave the destination string unterminated.
 
-diff -up mysql-5.5.21/sql/sql_prepare.cc.coverity mysql-5.5.21/sql/sql_prepare.cc
---- mysql-5.5.21/sql/sql_prepare.cc.coverity	2012-03-13 17:24:40.493658626 +0100
-+++ mysql-5.5.21/sql/sql_prepare.cc	2012-03-13 17:25:14.574338307 +0100
-@@ -2863,7 +2863,7 @@ void mysql_stmt_get_longdata(THD *thd, c
+diff -Naur mysql-5.5.23.orig/sql/sql_prepare.cc mysql-5.5.23/sql/sql_prepare.cc
+--- mysql-5.5.23.orig/sql/sql_prepare.cc	2012-03-29 15:07:12.000000000 -0400
++++ mysql-5.5.23/sql/sql_prepare.cc	2012-04-27 22:19:09.196076848 -0400
+@@ -2871,7 +2871,7 @@
    {
      stmt->state= Query_arena::STMT_ERROR;
      stmt->last_errno= thd->stmt_da->sql_errno();
@@ -25,10 +25,10 @@ Error: STRING_OVERFLOW:
 /builddir/build/BUILD/mysql-5.1.61/sql/sql_trigger.cc:2194: fixed_size_dest: You might overrun the 512 byte fixed-size string "this->m_parse_error_message" by copying "error_message" without checking the length.
 /builddir/build/BUILD/mysql-5.1.61/sql/sql_trigger.cc:2194: parameter_as_source: Note: This defect has an elevated risk because the source argument is a parameter of the current function.
 
-diff -up mysql-5.5.21/sql/sql_trigger.cc.coverity mysql-5.5.21/sql/sql_trigger.cc
---- mysql-5.5.21/sql/sql_trigger.cc.coverity	2012-03-13 17:25:50.781985493 +0100
-+++ mysql-5.5.21/sql/sql_trigger.cc	2012-03-13 17:27:04.589225626 +0100
-@@ -2260,7 +2260,7 @@ void Table_triggers_list::mark_fields_us
+diff -Naur mysql-5.5.23.orig/sql/sql_trigger.cc mysql-5.5.23/sql/sql_trigger.cc
+--- mysql-5.5.23.orig/sql/sql_trigger.cc	2012-03-29 15:07:12.000000000 -0400
++++ mysql-5.5.23/sql/sql_trigger.cc	2012-04-27 22:19:09.198076947 -0400
+@@ -2260,7 +2260,7 @@
  void Table_triggers_list::set_parse_error_message(char *error_message)
  {
    m_has_unparseable_trigger= true;
@@ -36,5 +36,22 @@ diff -up mysql-5.5.21/sql/sql_trigger.cc.coverity mysql-5.5.21/sql/sql_trigger.c
 +  strncpy(m_parse_error_message, error_message, sizeof(m_parse_error_message)-1);
  }
  
+ 
 
 
+Error: STRING_OVERFLOW:
+/builddir/build/BUILD/mysql-5.1.61/storage/innodb_plugin/handler/ha_innodb.cc:6544: fixed_size_dest: You might overrun the 512 byte fixed-size string "name2" by copying "name" without checking the length.
+/builddir/build/BUILD/mysql-5.1.61/storage/innodb_plugin/handler/ha_innodb.cc:6544: parameter_as_source: Note: This defect has an elevated risk because the source argument is a parameter of the current function.
+
+diff -Naur mysql-5.5.23.orig/storage/innobase/handler/ha_innodb.cc mysql-5.5.23/storage/innobase/handler/ha_innodb.cc
+--- mysql-5.5.23.orig/storage/innobase/handler/ha_innodb.cc	2012-03-29 15:07:11.000000000 -0400
++++ mysql-5.5.23/storage/innobase/handler/ha_innodb.cc	2012-04-27 22:19:09.201077088 -0400
+@@ -7023,7 +7023,7 @@
+ 
+ 	ut_a(strlen(name) < sizeof(name2));
+ 
+-	strcpy(name2, name);
++	strncpy(name2, name, sizeof(name2)-1);
+ 
+ 	normalize_table_name(norm_name, name2);
+ 
