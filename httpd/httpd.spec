@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -562,6 +562,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Mon Apr 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-5
+- sync with rawhide, rebuild for remi repo
+
+* Fri Apr 27 2012 Joe Orton <jorton@redhat.com> - 2.4.2-5
+- use systemctl from logrotate (#221073)
+
 * Fri Apr 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-4
 - sync with rawhide, rebuild for remi repo
 
