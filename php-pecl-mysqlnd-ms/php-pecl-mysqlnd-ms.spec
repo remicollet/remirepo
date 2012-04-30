@@ -3,8 +3,8 @@
 
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
-Version:      1.2.2
-Release:      2%{?dist}
+Version:      1.3.2
+Release:      1%{?dist}
 
 License:      PHP
 Group:        Development/Languages
@@ -30,7 +30,11 @@ Requires:     php(api) = %{php_core_api}
 Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
 
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -45,10 +49,26 @@ dependent on the usage scenario required.
 Documentation : http://www.php.net/mysqlnd_ms
 
 
+%package devel
+Summary:       Mysqlnd_ms developer files (header)
+Group:         Development/Libraries
+Requires:      php-pecl-mysqlnd-ms%{?_isa} = %{version}-%{release}
+Requires:      php-devel
+
+%description devel
+These are the files needed to compile programs using mysqlnd_ms extension.
+
+
 %prep 
 %setup -c -q
 
 cp %{SOURCE1} %{pecl_name}.ini
+
+extver=$(sed -n '/#define MYSQLND_MS_VERSION /{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/mysqlnd_ms.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
 
 %if 0%{?__ztsphp:1}
 # Build ZTS extension if ZTS devel available (fedora >= 17)
@@ -78,7 +98,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 # for short-circuit
-rm -rf %{pecl_name}-*/modules/{json,mysqlnd}.so
+rm -f %{pecl_name}-*/modules/{json,mysqlnd}.so
 
 make install -C %{pecl_name}-%{version} \
      INSTALL_ROOT=%{buildroot}
@@ -151,8 +171,20 @@ ln -sf %{php_ztsextdir}/json.so modules/
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
+%files devel
+%defattr(-,root,root,-)
+%{_includedir}/php/ext/%{pecl_name}
+%if 0%{?__ztsphp:1}
+%{php_ztsincldir}/ext/%{pecl_name}
+%endif
+
 
 %changelog
+* Mon Apr 30 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
+- update to 1.2.3 (stable)
+- add version check
+- add devel sub-package
+
 * Thu Feb 02 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-2
 - build against php 5.4
 
