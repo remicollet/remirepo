@@ -3,6 +3,7 @@
 */*.tar.bz2
 */*.rpm
 */*.zip
+*/*.xz
 */noarch
 */x86_64
 *.xpi

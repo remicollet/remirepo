@@ -1,0 +1,47 @@
+diff -up vlc-2.0.1/modules/stream_out/switcher.c.orig vlc-2.0.1/modules/stream_out/switcher.c
+--- vlc-2.0.1/modules/stream_out/switcher.c.orig	2012-05-01 16:31:41.036832197 +0200
++++ vlc-2.0.1/modules/stream_out/switcher.c	2012-05-01 16:35:53.694838241 +0200
+@@ -844,7 +844,7 @@ static block_t *VideoGetBuffer( sout_str
+ 
+     if ( id->i_nb_pred >= p_sys->i_gop )
+     {
+-        id->p_frame->pict_type = FF_I_TYPE;
++        id->p_frame->pict_type = AV_PICTURE_TYPE_I;
+ #if 0
+         id->p_frame->me_threshold = 0;
+         id->p_frame->mb_threshold = 0;
+@@ -853,7 +853,7 @@ static block_t *VideoGetBuffer( sout_str
+     }
+     else
+     {
+-        id->p_frame->pict_type = FF_P_TYPE;
++        id->p_frame->pict_type = AV_PICTURE_TYPE_P;
+ #if 0
+         if ( id->p_frame->mb_type != NULL )
+         {
+@@ -873,7 +873,7 @@ static block_t *VideoGetBuffer( sout_str
+ 
+ #if 0
+     if ( id->p_frame->mb_type == NULL
+-          && id->ff_enc_c->coded_frame->pict_type != FF_I_TYPE )
++          && id->ff_enc_c->coded_frame->pict_type != AV_PICTURE_TYPE_I )
+     {
+         int mb_width = (id->ff_enc_c->width + 15) / 16;
+         int mb_height = (id->ff_enc_c->height + 15) / 16;
+@@ -926,13 +926,13 @@ static block_t *VideoGetBuffer( sout_str
+ 
+     switch ( id->ff_enc_c->coded_frame->pict_type )
+     {
+-    case FF_I_TYPE:
++    case AV_PICTURE_TYPE_I:
+         p_out->i_flags |= BLOCK_FLAG_TYPE_I;
+         break;
+-    case FF_P_TYPE:
++    case AV_PICTURE_TYPE_P:
+         p_out->i_flags |= BLOCK_FLAG_TYPE_P;
+         break;
+-    case FF_B_TYPE:
++    case AV_PICTURE_TYPE_B:
+         p_out->i_flags |= BLOCK_FLAG_TYPE_B;
+         break;
+     default:
