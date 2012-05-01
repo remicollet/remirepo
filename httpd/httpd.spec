@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -38,7 +38,6 @@ Patch1: httpd-2.4.1-apctl.patch
 Patch2: httpd-2.4.1-apxs.patch
 Patch3: httpd-2.4.1-deplibs.patch
 Patch5: httpd-2.4.1-layout.patch
-Patch6: httpd-2.4.1-apr14.patch
 # Features/functional changes
 Patch20: httpd-2.0.48-release.patch
 Patch23: httpd-2.4.1-export.patch
@@ -54,7 +53,7 @@ Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: autoconf, perl, pkgconfig, findutils, xmlto
 BuildRequires: zlib-devel, libselinux-devel, lua-devel
-BuildRequires: apr-devel >= 1.2.0, apr-util-devel >= 1.2.0, pcre-devel >= 5.0
+BuildRequires: apr-devel >= 1.4.0, apr-util-devel >= 1.2.0, pcre-devel >= 5.0
 Requires: /etc/mime.types, system-logos >= 7.92.1-1
 Obsoletes: httpd-suexec
 Provides: webserver
@@ -149,7 +148,6 @@ authentication to the Apache HTTP Server.
 %patch2 -p1 -b .apxs
 %patch3 -p1 -b .deplibs
 %patch5 -p1 -b .layout
-%patch6 -p1 -b .apr14
 
 %patch23 -p1 -b .export
 %patch24 -p1 -b .corelimit
@@ -562,6 +560,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Tue May  1 2012 Joe Orton <jorton@redhat.com> - 2.4.2-6
+- add BR on APR >= 1.4.0
+
 * Mon Apr 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-5
 - sync with rawhide, rebuild for remi repo
 
