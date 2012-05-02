@@ -68,6 +68,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_httpd_modconfdir}/*.conf
 
 %changelog
+* Wed May  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.8.1-5
+- sync with rawhide, rebuild for remi repo
+
 * Wed May  2 2012 Joe Orton <jorton@redhat.com> - 1.0.8.1-5
 - update packaging (#803065)
 
