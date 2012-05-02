@@ -1,8 +1,14 @@
+%{!?_httpd_apxs:       %{expand: %%global _httpd_apxs       %%{_sbindir}/apxs}}
+%{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
+# /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
+%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_moddir:    %{expand: %%global _httpd_moddir    %%{_libdir}/httpd/modules}}
 
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 12%{?dist}
+Release: 13%{?dist}
 License: BSD and MIT and ASL 2.0
 Group: System Environment/Daemons
 URL: http://modauthkerb.sourceforge.net/
@@ -13,6 +19,8 @@ Patch1: mod_auth_kerb-5.4-rcopshack.patch
 Patch2: mod_auth_kerb-5.4-fixes.patch
 Patch3: mod_auth_kerb-5.4-s4u2proxy.patch
 Patch4: mod_auth_kerb-5.4-httpd24.patch
+Patch5: mod_auth_kerb-5.4-cachedir.patch
+Patch6: mod_auth_kerb-5.4-delegation.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: httpd-devel, krb5-devel
 Requires: httpd-mmn = %{_httpd_mmn}
@@ -37,12 +45,18 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/httpd/modules \
-         $RPM_BUILD_ROOT%{_httpd_modconfdir}
-install -m 755 src/.libs/mod_auth_kerb.so \
-        $RPM_BUILD_ROOT%{_libdir}/httpd/modules/mod_auth_kerb.so
-install -p -m 644 %{SOURCE1} \
-        $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-auth_kerb.conf
+install -Dm 755 src/.libs/mod_auth_kerb.so \
+        $RPM_BUILD_ROOT%{_httpd_moddir}/mod_auth_kerb.so
+
+%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
+# httpd >= 2.4.x
+sed -n /^LoadModule/p %{SOURCE1} > 10-auth_kerb.conf
+sed '/LoadModule/d;/Location /,/Location>/s,^#,,' %{SOURCE1} > example.conf
+install -Dp -m 0644 10-auth_kerb.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-auth_kerb.conf
+%else
+# httpd <= 2.2.x
+install -Dp -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/auth_kerb.conf
+%endif
 
 # Copy the license files here so we can include them in %doc
 cp -p %{SOURCE2} .
@@ -54,9 +68,18 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc README LICENSE.ASL
 %config(noreplace) %{_httpd_modconfdir}/*.conf
+%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
+%doc example.conf
+%endif
 %{_libdir}/httpd/modules/*.so
 
 %changelog
+* Tue May  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-13
+- sync with rawhide, rebuild for remi repo
+
+* Tue May  1 2012 Joe Orton <jorton@redhat.com> - 5.4-13
+- add delegation fix (Ben Kahn, mgbowman, #687975)
+
 * Wed Mar 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-12
 - rebuild for remi repo and httpd 2.4
 
