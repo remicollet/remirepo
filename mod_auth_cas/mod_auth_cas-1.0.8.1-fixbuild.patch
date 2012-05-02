@@ -1,0 +1,12 @@
+--- mod_auth_cas-1.0.8.1/Makefile.in.fixbuild
++++ mod_auth_cas-1.0.8.1/Makefile.in
+@@ -1,7 +1,7 @@
+-APXS_LIBEXECDIR:=$(shell /usr/bin/apxs2 -q LIBEXECDIR)
++APXS_LIBEXECDIR:=$(shell @APXS@ -q LIBEXECDIR)
+ 
+ all:
+-	@APXS@ -c src/mod_auth_cas.c
++	@APXS@ -c src/mod_auth_cas.c -lssl -lcrypto
+ 
+ install:
+ 	if test ! -d ${DESTDIR}${APXS_LIBEXECDIR}; then mkdir -p ${DESTDIR}${APXS_LIBEXECDIR}; fi
