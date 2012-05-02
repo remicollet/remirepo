@@ -20,6 +20,9 @@
 # Module Magic Number
 %{!?_httpd_mmn: %global _httpd_mmn %(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo missing-httpd-devel)}
 
+# Configuration directory
+%{!?_httpd_confdir: %global _httpd_confdir %{_sysconfdir}/httpd/conf.d}
+
 # For httpd ≥ 2.4 we have a different filesystem layout
 %if 0%{?fedora} > 17 || 0%{?rhel} > 6
 %global httpd24 1
@@ -31,7 +34,7 @@
 
 Name:		mod_fcgid
 Version:	2.3.7
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:	FastCGI interface module for Apache 2
 Group:		System Environment/Daemons
 License:	ASL 2.0
@@ -133,10 +136,10 @@ rm -rf %{buildroot}
 make DESTDIR=%{buildroot} MKINSTALLDIRS="mkdir -p" install
 %if %{httpd24}
 mkdir -p %{buildroot}{%{_httpd_confdir},%{_httpd_modconfdir}}
-echo "LoadModule fcgid_module modules/mod_fcgid.so" > %{buildroot}%{_httpd_modconfdir}/fcgid.conf
+echo "LoadModule fcgid_module modules/mod_fcgid.so" > %{buildroot}%{_httpd_modconfdir}/10-fcgid.conf
 install -D -m 644 fcgid24.conf %{buildroot}%{_httpd_confdir}/fcgid.conf
 %else
-install -D -m 644 fcgid.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/fcgid.conf
+install -D -m 644 fcgid.conf %{buildroot}%{_httpd_confdir}/fcgid.conf
 %endif
 install -d -m 755 %{buildroot}%{rundir}/mod_fcgid
 
@@ -202,11 +205,9 @@ exit 0
 %doc build/fixconf.sed
 %{_libdir}/httpd/modules/mod_fcgid.so
 %if %{httpd24}
-%config(noreplace) %{_httpd_modconfdir}/fcgid.conf
-%config(noreplace) %{_httpd_confdir}/fcgid.conf
-%else
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/fcgid.conf
+%config(noreplace) %{_httpd_modconfdir}/10-fcgid.conf
 %endif
+%config(noreplace) %{_httpd_confdir}/fcgid.conf
 %if 0%{?fedora} > 14 || 0%{?rhel} > 6
 %{_sysconfdir}/tmpfiles.d/mod_fcgid.conf
 %endif
@@ -220,6 +221,16 @@ exit 0
 %endif
 
 %changelog
+* Wed May  2 2012 Remi Collet <RPMS@FamilleCollet.com> 2.3.7-3
+- sync with rawhide, rebuild for remi repo
+
+* Wed May  2 2012 Paul Howarth <paul@city-fan.org> 2.3.7-3
+- Make %%files list more explicit
+
+* Wed May  2 2012 Joe Orton <jorton@redhat.com> 2.3.7-2
+- Use 10- prefix for conf file in conf.modules.d with httpd ≥ 2.4
+- Use _httpd_confdir throughout
+
 * Tue Apr 24 2012 Remi Collet <RPMS@FamilleCollet.com> 2.3.7-1
 - update to 2.3.7, rebuild for remi repo
 
