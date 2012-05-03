@@ -5,7 +5,7 @@ Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
 Version:        %{glpi_version}.%{plug_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
@@ -16,12 +16,16 @@ URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-gl
 Source0:        http://forge.fusioninventory.org/attachments/download/626/fusioninventory-for-glpi-metapackage_0.80+1.3.tar.gz
 Source1:        %{name}-httpd.conf
 
+# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/b8849d9b86e797cb923831c0ba9dda213f4d4e94/diff
+Patch0:         fusinvdeploy-shebang.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 Requires:       glpi >= %{glpi_version}
 Requires:       glpi <  0.81
 Requires:       glpi-reports
+Requires:       glpi-webservices
 
 
 %description
@@ -35,12 +39,17 @@ Serveur FusionInventory embarqué dans une extension GLPI.
 %prep
 %setup -q -c
 
+%patch0 -p1
+
 # dos2unix to avoid rpmlint warnings
 for doc in */docs/* ; do
     sed -i -e 's/\r//' $doc
 done
 mv fusinvsnmp/docs      fusinvsnmp-docs  
 mv fusioninventory/docs fusioninventory-docs
+
+# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/fe7cdbab3115b333ae56aa3904fd907b3a93856a
+chmod -x fusinvdeploy/inc/task.class.php
 
 # .htaccess replaced by a httpd config file
 rm -f fusioninventory/install/mysql/.htaccess
@@ -60,6 +69,7 @@ mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
 cp -ar fusinvinventory %{buildroot}/%{_datadir}/glpi/plugins/fusinvinventory
 cp -ar fusinvsnmp      %{buildroot}/%{_datadir}/glpi/plugins/fusinvsnmp
 cp -ar fusioninventory %{buildroot}/%{_datadir}/glpi/plugins/fusioninventory
+cp -ar fusinvdeploy    %{buildroot}/%{_datadir}/glpi/plugins/fusinvdeploy
 
 install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
@@ -121,9 +131,29 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusinvsnmp/report
 %{_datadir}/glpi/plugins/fusinvsnmp/tool
 %{_datadir}/glpi/plugins/fusinvsnmp/scripts
+# fusinvdeploy
+%dir %{_datadir}/glpi/plugins/fusinvdeploy
+%dir %{_datadir}/glpi/plugins/fusinvdeploy/locales
+%{_datadir}/glpi/plugins/fusinvdeploy/LICENSE
+%{_datadir}/glpi/plugins/fusinvdeploy/*.php
+%{_datadir}/glpi/plugins/fusinvdeploy/ajax
+%{_datadir}/glpi/plugins/fusinvdeploy/b
+%{_datadir}/glpi/plugins/fusinvdeploy/css
+%{_datadir}/glpi/plugins/fusinvdeploy/front
+%{_datadir}/glpi/plugins/fusinvdeploy/inc
+%{_datadir}/glpi/plugins/fusinvdeploy/install
+%{_datadir}/glpi/plugins/fusinvdeploy/js
+%{_datadir}/glpi/plugins/fusinvdeploy/lib
+%{_datadir}/glpi/plugins/fusinvdeploy/pics
+%{_datadir}/glpi/plugins/fusinvdeploy/scripts
+%{_datadir}/glpi/plugins/fusinvdeploy/test
+%exclude %{_datadir}/glpi/plugins/fusinvdeploy/.gitignore
 
 
 %changelog
+* Thu May 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.3-2
+- add missing fusinvdeploy
+
 * Thu May 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.3-1
 - update to 0.80+1.3
   http://forge.fusioninventory.org/versions/122
