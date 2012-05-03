@@ -25,6 +25,7 @@ BuildArch:      noarch
 Requires:       glpi >= %{glpi_version}
 Requires:       glpi <  0.84
 Requires:       glpi-reports
+Requires:       glpi-webservices
 
 
 %description
