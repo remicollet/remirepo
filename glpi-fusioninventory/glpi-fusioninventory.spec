@@ -1,5 +1,5 @@
 %global  glpi_version  0.80.0
-%global  plug_version  1.2
+%global  plug_version  1.3
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -13,7 +13,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/606/fusioninventory-for-glpi-metapackage_0.80_1.2.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/626/fusioninventory-for-glpi-metapackage_0.80+1.3.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -124,6 +124,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.3-1
+- update to 0.80+1.3
+  http://forge.fusioninventory.org/versions/122
+
 * Sat Apr 14 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.2-1
 - update to 0.80+1.2
   http://forge.fusioninventory.org/versions/110
