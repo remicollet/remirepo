@@ -65,7 +65,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.4.1
+Version: 5.4.2
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
@@ -1479,6 +1479,9 @@ fi
 %endif
 
 %changelog
+* Thu May 03 2012 Remi Collet <remi@fedoraproject.org> 5.4.2-1
+- update to 5.4.2 (CVE-2012-1823)
+
 * Fri Apr 27 2012 Remi Collet <remi@fedoraproject.org> 5.4.1-1
 - update to 5.4.1
 - use libdb in fedora >= 18 instead of db4
