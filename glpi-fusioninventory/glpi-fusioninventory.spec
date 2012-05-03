@@ -5,7 +5,7 @@ Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
 Version:        %{glpi_version}.%{plug_version}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
@@ -45,8 +45,21 @@ Serveur FusionInventory embarqué dans une extension GLPI.
 for doc in */docs/* ; do
     sed -i -e 's/\r//' $doc
 done
-mv fusinvsnmp/docs      fusinvsnmp-docs  
-mv fusioninventory/docs fusioninventory-docs
+
+mkdir docs
+
+for plug in fus*
+do
+  if [ -d $plug/docs ]
+  then
+    # move doc, not to be installed
+    mv $plug/docs docs/$plug
+  else
+    mkdir -p docs/$plug
+  fi
+  # LICENSE are installed, just create link in standard docdir.
+  ln -s %{_datadir}/glpi/plugins/$plug/LICENSE docs/$plug/LICENSE
+done
 
 # http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/fe7cdbab3115b333ae56aa3904fd907b3a93856a
 chmod -x fusinvdeploy/inc/task.class.php
@@ -66,10 +79,10 @@ rm -f fusinvsnmp/scripts/.htaccess
 rm -rf %{buildroot} 
 
 mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
-cp -ar fusinvinventory %{buildroot}/%{_datadir}/glpi/plugins/fusinvinventory
-cp -ar fusinvsnmp      %{buildroot}/%{_datadir}/glpi/plugins/fusinvsnmp
-cp -ar fusioninventory %{buildroot}/%{_datadir}/glpi/plugins/fusioninventory
-cp -ar fusinvdeploy    %{buildroot}/%{_datadir}/glpi/plugins/fusinvdeploy
+for plug in fus*
+do
+  cp -ar $plug %{buildroot}/%{_datadir}/glpi/plugins/$plug
+done
 
 install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
@@ -90,8 +103,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 # fusioninventory
-%doc fusioninventory-docs/*
-%doc fusinvinventory/LICENSE
+%doc docs/*
 %dir %{_datadir}/glpi/plugins/fusioninventory
 %dir %{_datadir}/glpi/plugins/fusioninventory/locales
 # LICENSE file required by installation process
@@ -116,7 +128,6 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusinvinventory/install
 %{_datadir}/glpi/plugins/fusinvinventory/pics
 # fusinvsnmp
-%doc fusinvsnmp-docs
 %dir %{_datadir}/glpi/plugins/fusinvsnmp
 %dir %{_datadir}/glpi/plugins/fusinvsnmp/locales
 %{_datadir}/glpi/plugins/fusinvsnmp/LICENSE
@@ -151,6 +162,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.3-3
+- spec cleanups
+
 * Thu May 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.3-2
 - add missing fusinvdeploy
 
