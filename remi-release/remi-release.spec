@@ -9,7 +9,6 @@ License:        GPL
 URL:            http://remi.collet.free.fr
 Source0:        RPM-GPG-KEY-remi
 Source1:	remi-fc.repo
-Source2:	remi.channel
 Source3:	remi.list
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
@@ -65,10 +64,6 @@ install -m 644 -p %{SOURCE3} \
     %{buildroot}%{_sysconfdir}/apt/sources.list.d/remi.list
 ln -s ../../pki/rpm-gpg/RPM-GPG-KEY-remi \
     %{buildroot}%{_sysconfdir}/apt/gpg/gpg-pubkey-00f97f56-467e318a
-
-# SMART
-install -Dp -m 644 %{SOURCE2} \
-    %{buildroot}%{_sysconfdir}/smart/channels/remi.channel
 %endif
 
 %clean
@@ -86,10 +81,13 @@ rm -rf %{buildroot}
 %if %{fedora} > 5
 %{_sysconfdir}/apt/gpg/gpg-pubkey-00f97f56-467e318a
 %config(noreplace) %{_sysconfdir}/apt/sources.list.d/remi.list
-%config   	   %{_sysconfdir}/smart/channels/remi.channel
 %endif
 
 %changelog
+* Sat May 05 2012 Remi Collet <RPMS@FamilleCollet.com> - 17-6.fc17.remi
+- Fedora release 17 (Beefy Miracle)
+- drop Smart config
+
 * Sun Oct 02 2011 Remi Collet <RPMS@FamilleCollet.com> - 16-6.fc16.remi
 - F16 build - Verne
 
