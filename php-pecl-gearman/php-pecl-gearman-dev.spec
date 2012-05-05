@@ -5,7 +5,7 @@
 
 Name:		php-pecl-gearman
 Version:	1.0.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -19,6 +19,9 @@ BuildRequires:	php-devel, libgearman-devel > 0.21
 BuildRequires:	php-pear
 # Required by phpize
 BuildRequires: autoconf, automake, libtool
+# Temporary workaround for https://bugzilla.redhat.com/819209
+BuildRequires:  libgearman-1.0
+BuildRequires:  libgearman-1.0-devel
 
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
@@ -121,6 +124,10 @@ fi
 
 
 %changelog
+* Sat May 05 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-3
+- add BR libgearman-1.0 + libgearman-1.0-devel
+  Workaround for https://bugzilla.redhat.com/819209
+
 * Tue Mar 06 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
 - update to 1.0.2 for PHP 5.4
 
