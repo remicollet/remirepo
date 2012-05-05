@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 3.5.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -115,6 +115,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sat May 05 2012 Remi Collet <rpms@famillecollet.com> 3.5.1-2
+- make config compatible httpd 2.2 / 2.4
+
 * Fri May 04 2012 Remi Collet <rpms@famillecollet.com> 3.5.1-1
 - Upstream released 3.5.1 (bugfix release)
 
