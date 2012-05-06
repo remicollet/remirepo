@@ -4,7 +4,7 @@
 
 Name:           php-pecl-xhprof
 Version:        0.9.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
 License:        ASL 2.0
@@ -88,11 +88,22 @@ EOF
 # Apache configuration file
 cat >httpd.conf <<EOF
 Alias /xhprof /usr/share/xhprof/xhprof_html
+
 <Directory /usr/share/xhprof/xhprof_html>
-   order deny,allow
-   deny from all
-   allow from 127.0.0.1
-   allow from ::1
+   <IfModule mod_authz_core.c>
+      # Apache 2.4
+      <RequireAny>
+         Require ip 127.0.0.1
+         Require ip ::1
+      </RequireAny>
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+      # Apache 2.2
+      Order Deny,Allow
+      Deny from All
+      Allow from 127.0.0.1
+      Allow from ::1
+   </IfModule>
 </Directory>
 EOF
 
@@ -196,6 +207,9 @@ fi
 
 
 %changelog
+* Sun May 06 2012 Remi Collet <remi@fedoraproject.org> - 0.9.2-5
+- make configuration file compatible with apache 2.2 / 2.4
+
 * Mon Mar 05 2012 Remi Collet <remi@fedoraproject.org> - 0.9.2-4
 - rename patches
 - install html and lib under /usr/share/xhprof
