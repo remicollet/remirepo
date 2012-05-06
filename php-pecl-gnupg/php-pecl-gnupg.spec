@@ -4,7 +4,7 @@
 Summary:      Wrapper around the gpgme library
 Name:         php-pecl-gnupg
 Version:      1.3.2
-Release:      2%{?dist}
+Release:      3%{?dist}
 
 License:      BSD
 Group:        Development/Languages
@@ -179,6 +179,9 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Sun May 06 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-3
+- improve patch
+
 * Sat Jan 28 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-2
 - build against PHP 5.4
 
