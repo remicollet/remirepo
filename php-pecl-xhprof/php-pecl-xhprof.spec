@@ -1,6 +1,6 @@
 %{!?__pecl:         %{expand: %%global __pecl %{_bindir}/pecl}}
 
-%define pecl_name xhprof
+%global pecl_name xhprof
 
 Name:           php-pecl-xhprof
 Version:        0.9.2
