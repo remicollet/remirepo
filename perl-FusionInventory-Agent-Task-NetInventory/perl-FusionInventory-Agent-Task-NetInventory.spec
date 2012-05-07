@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-NetInventory
 Version:        2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Remote inventory support for FusionInventory Agent
 License:        GPLv2+
 Group:          Development/Libraries
@@ -11,11 +11,22 @@ Source0:        http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInvento
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl >= 1:5.8.0
-BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(inc::Module::Install)
 # For tests
-BuildRequires:  perl(FusionInventory::Agent::Task::NetDiscovery) >= 2.1
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Compile)
+BuildRequires:  perl(base)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(threads)
+BuildRequires:  perl(threads::shared)
+BuildRequires:  perl(Encode)
+BuildRequires:  perl(FusionInventory::Agent::Task::NetDiscovery) >= 2.1
+BuildRequires:  perl(FusionInventory::Agent::Task)
+BuildRequires:  perl(FusionInventory::Agent::SNMP)
+BuildRequires:  perl(FusionInventory::Agent::XML::Query)
+BuildRequires:  perl(FusionInventory::Agent::Tools)
+BuildRequires:  perl(FusionInventory::Agent::Tools::Network)
+BuildRequires:  perl(FusionInventory::Agent::XML::Response)
 
 Requires:       perl(FusionInventory::Agent::Task::NetDiscovery) >= 2.1
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -37,6 +48,10 @@ from remote hosts through SNMP protocol:
 
 %prep
 %setup -q -n FusionInventory-Agent-Task-NetInventory-%{version}
+
+# Use system ones
+rm -rf inc/*
+
 
 %build
 perl Makefile.PL \
@@ -75,6 +90,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 07 2012 Remi Collet <remi@fedoraproject.org> - 2.1-2
+- changes from review (#812583)
+
 * Sun Apr 15 2012 Remi Collet <remi@fedoraproject.org> - 2.1-1
 - rename to perl-FusionInventory-Agent-Task-NetInventory
 - update to 2.1 for agent 2.2.0
