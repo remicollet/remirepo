@@ -2,13 +2,11 @@
 %{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global prever    RC2
-%global devver    rc2
 
 Name:           %{phpname}-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.0
-Release:        0.7.%{prever}%{?dist}
+Release:        1%{?dist}
 Source0:        http://xdebug.org/files/%{pecl_name}-%{version}%{?prever}.tgz
 
 # The Xdebug License, version 1.01
@@ -176,6 +174,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 09 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Fri Apr 28 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.7.RC2
 - Update to 2.2.0RC2
 
