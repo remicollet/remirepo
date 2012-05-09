@@ -58,7 +58,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.12
+Version: 5.3.13
 Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
@@ -1482,6 +1482,9 @@ fi
 %endif
 
 %changelog
+* Wed May 09 2012 Remi Collet <Fedora@famillecollet.com> 5.3.13-1
+- update to 5.3.13 (CVE-2012-2311)
+
 * Thu May 03 2012 Remi Collet <Fedora@famillecollet.com> 5.3.12-1
 - update to 5.3.12 (CVE-2012-1823)
 
