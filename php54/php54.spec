@@ -65,7 +65,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.4.2
+Version: 5.4.3
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
@@ -1479,6 +1479,9 @@ fi
 %endif
 
 %changelog
+* Wed May 09 2012 Remi Collet <Fedora@famillecollet.com> 5.4.3-1
+- update to 5.4.3 (CVE-2012-2311, CVE-2012-2329)
+
 * Thu May 03 2012 Remi Collet <remi@fedoraproject.org> 5.4.2-1
 - update to 5.4.2 (CVE-2012-1823)
 
