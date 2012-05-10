@@ -18,12 +18,12 @@ URL:         http://fusioninventory.org/
 Version:     2.2.0
 
 %if 0%{?gitver:1}
-Release:   0.2.git%{gitver}%{?dist}
+Release:     0.2.git%{gitver}%{?dist}
 # From http://github.com/fusinv/fusioninventory-agent/tarball/master
-Source0:   fusinv-fusioninventory-agent-2.1.8-95-g9bd1238.tar.gz
+Source0:     fusinv-fusioninventory-agent-2.1.8-95-g9bd1238.tar.gz
 %else
-Release:   2%{?dist}
-Source0:   http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
+Release:     2%{?dist}
+Source0:     http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInventory-Agent-%{version}%{?prever}.tar.gz
 %endif
 
 Source1:   %{name}.cron
@@ -81,8 +81,6 @@ Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): /sbin/service
 %endif
 
-# OCS Software deployment is no more supported
-#Conflicts: perl-FusionInventory-Agent-Task-OcsDeploy
 
 # RPM 4.8
 %{?filter_from_requires: %filter_from_requires /perl(Win32/d}
@@ -122,12 +120,12 @@ OCS Inventory NG ou à un serveur GLPI disposant de l'extension FusionInventory.
 
 Vous pouvez ajouter les paquets additionnels pour les tâches optionnelles :
 
-* perl-FusionInventory-Agent-Task-OcsDeploy
-    Gestion du déploiement logiciel OCS Inventory
 * perl-FusionInventory-Agent-Task-NetDiscovery
     Gestion de la découverte réseau
-* perl-FusionInventory-Agent-Task-SNMPQuery
-    Gestion de l'interrogation SNMP
+* perl-FusionInventory-Agent-Task-NetInventory
+    Gestion de l'inventaire réseau
+* perl-FusionInventory-Agent-Task-Deploy
+    Gestion de déploiement de logiciels
 * perl-FusionInventory-Agent-Task-ESX
     Inventaire à distance des vCenter/ESX/ESXi
 
