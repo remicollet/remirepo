@@ -11,11 +11,12 @@ Source0:        http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInvento
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl >= 1:5.8.0
-BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(inc::Module::Install)
 BuildRequires:  perl(FusionInventory::Agent) >= 2.2.0
 BuildRequires:  perl(HTTP::Cookies)
 BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(Test::Exception)
+BuildRequires:  perl(Test::Compile)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::MockModule)
 BuildRequires:  perl(Test::MockObject)
@@ -39,6 +40,9 @@ You can import the generated files in:
 
 %prep
 %setup -q -n FusionInventory-Agent-Task-ESX-%{version}
+
+# Use system ones
+rm -rf inc/*
 
 
 %build
