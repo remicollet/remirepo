@@ -10,7 +10,7 @@ Source0:        http://search.cpan.org/CPAN/authors/id/F/FU/FUSINV/FusionInvento
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  perl(ExtUtils::MakeMaker) perl(Module::Install)
+BuildRequires:  perl(inc::Module::Install)
 # For tests
 BuildRequires:  perl(FusionInventory::Agent) >= 2.2.0
 BuildRequires:  perl(Net::SNMP)
@@ -35,6 +35,9 @@ SNMP protocol.
 
 %prep
 %setup -q -n FusionInventory-Agent-Task-NetDiscovery-%{version}
+
+# Use system ones
+rm -rf inc/*
 
 
 %build
