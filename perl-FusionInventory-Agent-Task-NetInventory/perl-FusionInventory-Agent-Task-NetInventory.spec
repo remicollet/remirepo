@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-NetInventory
 Version:        2.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Remote inventory support for FusionInventory Agent
 License:        GPLv2+
 Group:          Development/Libraries
@@ -20,26 +20,26 @@ BuildRequires:  perl(constant)
 BuildRequires:  perl(threads)
 BuildRequires:  perl(threads::shared)
 BuildRequires:  perl(Encode)
-BuildRequires:  perl(FusionInventory::Agent::Task::NetDiscovery) >= 2.1
-BuildRequires:  perl(FusionInventory::Agent::Task)
-BuildRequires:  perl(FusionInventory::Agent::SNMP)
-BuildRequires:  perl(FusionInventory::Agent::XML::Query)
-BuildRequires:  perl(FusionInventory::Agent::Tools)
-BuildRequires:  perl(FusionInventory::Agent::Tools::Network)
-BuildRequires:  perl(FusionInventory::Agent::XML::Response)
+BuildRequires:  perl-FusionInventory-Agent-Task-NetDiscovery >= 2.1
 
-Requires:       perl(FusionInventory::Agent::Task::NetDiscovery) >= 2.1
+Requires:       perl-FusionInventory-Agent-Task-NetDiscovery >= 2.1
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 # upstream have rename from SNMPQuery 1.3 to NetInventory 2.0
 Obsoletes:      perl-FusionInventory-Agent-Task-SNMPQuery < 2.0
 Provides:       perl-FusionInventory-Agent-Task-SNMPQuery = %{version}-%{release}
 
+# RPM 4.8
+%{?filter_from_provides: %filter_from_provides /perl(FusionInventory::/d}
+%{?filter_from_requires: %filter_from_requires /perl(FusionInventory::/d}
 %{?perl_default_filter}
+# RPM 4.9
+%global __provides_exclude %{?__provides_exclude:__provides_exclude|}^perl\\(FusionInventory::
+%global __requires_exclude %{?__requires_exclude:__requires_exclude|}^perl\\(FusionInventory::
 
 
 %description
-This task allows the FusionInventory agent to extracts various informations
+This task allows the FusionInventory agent to collect information
 from remote hosts through SNMP protocol:
 * printer cartridges and counters status
 * router/switch ports status
@@ -90,6 +90,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 11 2012 Remi Collet <remi@fedoraproject.org> - 2.1-3
+- filter private provides/requires
+- fix description (in sync with upstream)
+
 * Mon May 07 2012 Remi Collet <remi@fedoraproject.org> - 2.1-2
 - changes from review (#812583)
 
