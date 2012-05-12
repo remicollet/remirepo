@@ -2,12 +2,11 @@
 
 Detailed information about configuring mod_cluster can be found here:
 
-    http://docs.jboss.org/mod_cluster/1.1.0/html/native.config.html
+    http://docs.jboss.org/mod_cluster/1.2.0/html/native.config.html
 
 == Disable proxy_balancer_module (required) ==
 
-To enable mod_cluster you need to make sure you have proxy_balancer_module disabled. Please comment out the loading of
-proxy_balancer_module in /etc/httpd/conf/httpd.conf:
+To enable mod_cluster you need to make sure you have proxy_balancer_module disabled. Please comment out the loading of proxy_balancer_module in /etc/httpd/conf/httpd.conf:
 
 # LoadModule proxy_balancer_module
 
@@ -23,8 +22,7 @@ LoadModule manager_module modules/mod_manager.so
 
 == Enabling mod_cluster manager (optional) ==
 
-Mod_cluster manager is a simple tool that displays useful information about the cluster. To enable it you need to
-load the mod_manager module and call SetHandler for the selected context:
+Mod_cluster manager is a simple tool that displays useful information about the cluster. To enable it you need to load the mod_manager module and call SetHandler for the selected context:
 
 <Location /mod_cluster_manager>
     SetHandler mod_cluster-manager

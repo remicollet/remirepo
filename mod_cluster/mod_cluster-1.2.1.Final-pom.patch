@@ -1,0 +1,12 @@
+diff --git a/pom.xml b/pom.xml
+index cadb9bb..dcb92e0 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -206,7 +206,6 @@
+                 <module>container-spi</module>
+                 <module>core</module>
+                 <module>container</module>
+-                <module>demo</module>
+             </modules>
+         </profile>
+         <profile>
