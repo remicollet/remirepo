@@ -8,7 +8,7 @@
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: BSD and MIT and ASL 2.0
 Group: System Environment/Daemons
 URL: http://modauthkerb.sourceforge.net/
@@ -19,8 +19,8 @@ Patch1: mod_auth_kerb-5.4-rcopshack.patch
 Patch2: mod_auth_kerb-5.4-fixes.patch
 Patch3: mod_auth_kerb-5.4-s4u2proxy.patch
 Patch4: mod_auth_kerb-5.4-httpd24.patch
-Patch5: mod_auth_kerb-5.4-cachedir.patch
-Patch6: mod_auth_kerb-5.4-delegation.patch
+Patch5: mod_auth_kerb-5.4-delegation.patch
+Patch6: mod_auth_kerb-5.4-cachedir.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: httpd-devel, krb5-devel
 Requires: httpd-mmn = %{_httpd_mmn}
@@ -37,6 +37,8 @@ authentication based on ticket exchanges.
 %patch2 -p1 -b .fixes
 %patch3 -p1 -b .s4u2proxy
 %patch4 -p1 -b .httpd24
+%patch5 -p1 -b .delegation
+%patch6 -p1 -b .cachedir
 
 %build
 export APXS=%{_httpd_apxs}
@@ -58,6 +60,10 @@ install -Dp -m 0644 10-auth_kerb.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-aut
 install -Dp -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/auth_kerb.conf
 %endif
 
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
+echo 'd /var/run/user/apache 700 apache apache' \
+     > $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/httpd-user.conf
+
 # Copy the license files here so we can include them in %doc
 cp -p %{SOURCE2} .
 
@@ -71,9 +77,17 @@ rm -rf $RPM_BUILD_ROOT
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %doc example.conf
 %endif
-%{_libdir}/httpd/modules/*.so
+%{_httpd_moddir}/*.so
+%config %{_sysconfdir}/tmpfiles.d/httpd-user.conf
 
 %changelog
+* Sat May 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-14
+- sync with rawhide, rebuild for remi repo
+
+* Fri May 11 2012 Joe Orton <jorton@redhat.com> - 5.4-14
+- add tmpfile drop-in for cred cache (#796430)
+- really apply delegation fix
+
 * Tue May  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-13
 - sync with rawhide, rebuild for remi repo
 
