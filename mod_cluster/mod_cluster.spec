@@ -1,3 +1,9 @@
+%if 0%{?fedora} >= 17
+%global with_java 1
+%else
+%global with_java 0
+%endif
+
 %{!?_httpd_apxs:       %{expand: %%global _httpd_apxs       %%{_sbindir}/apxs}}
 %{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
@@ -28,6 +34,7 @@ Patch0:     mod_cluster-%{namedversion}-pom.patch
 Requires:      httpd >= 2.2.8
 Requires:      httpd-mmn = %{_httpd_mmn}
 
+%if %{with_java}
 BuildRequires: maven
 BuildRequires: maven-enforcer-plugin
 BuildRequires: jboss-parent
@@ -37,6 +44,7 @@ BuildRequires: jcip-annotations
 BuildRequires: jboss-logging
 BuildRequires: jboss-servlet-3.0-api
 BuildRequires: jboss-web
+%endif
 BuildRequires: httpd-devel >= 2.2.8
 BuildRequires: autoconf
 BuildRequires: make
@@ -54,6 +62,7 @@ HTTP methods, affectionately called the Mod-Cluster Management Protocol (MCMP).
 This additional feedback channel allows mod_cluster to offer a level of
 intelligence and granularity not found in other load balancing solutions.
 
+%if %{with_java}
 %package java
 Summary:          Java bindings for %{name}
 Group:            Development/Libraries
@@ -72,6 +81,7 @@ Requires:         jpackage-utils
 
 %description javadoc
 This package contains the API documentation for %{name}.
+%endif
 
 %prep
 %setup -q -n mod_cluster-%{namedversion}
@@ -91,18 +101,22 @@ for dir in ${module_dirs[@]} ; do
     popd
 done
 
+%if %{with_java}
 # Build the AS7 required libs
 # Tests skipped because of lack of mockito library
 mvn-rpmbuild -Dmaven.test.skip=true -P AS7 install javadoc:aggregate
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 install -d -m 755 $RPM_BUILD_ROOT%{_libdir}/httpd/modules
 install -d -m 755 $RPM_BUILD_ROOT/etc/httpd/conf.d
+%if %{with_java}
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
+%endif
 
 module_dirs=( advertise mod_manager mod_proxy_cluster mod_slotmem )
 
@@ -116,6 +130,7 @@ cp -a %{SOURCE1} $RPM_BUILD_ROOT/etc/httpd/conf.d/
 
 install -m 0644 %{SOURCE2} README
 
+%if %{with_java}
 # JAR
 cp -p core/target/mod_cluster-core-%{namedversion}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/core.jar
 cp -p container/catalina/target/mod_cluster-container-catalina-%{namedversion}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/container-catalina.jar
@@ -138,6 +153,7 @@ install -pm 644 container/jbossweb/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{
 %add_maven_depmap JPP.%{name}-container-spi.pom %{name}/container-spi.jar
 %add_maven_depmap JPP.%{name}-container-jbossweb.pom %{name}/container-jbossweb.jar
 %add_maven_depmap JPP.%{name}-container-catalina.pom %{name}/container-catalina.jar
+%endif
 
 
 %clean
@@ -153,6 +169,7 @@ rm -Rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/mod_slotmem.so
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/*.conf
 
+%if %{with_java}
 %files javadoc
 %{_javadocdir}/%{name}
 %doc lgpl.txt
@@ -162,6 +179,8 @@ rm -Rf $RPM_BUILD_ROOT
 %{_mavendepmapfragdir}/*
 %{_javadir}/*
 %doc lgpl.txt
+%endif
+
 
 %changelog
 * Sat May 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.1-1
