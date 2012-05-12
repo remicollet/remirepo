@@ -1,0 +1,22 @@
+
+Patch out strict version requirements for sqlite.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=815396
+
+--- subversion-1.7.4/subversion/libsvn_subr/sqlite.c.sqlitever
++++ subversion-1.7.4/subversion/libsvn_subr/sqlite.c
+@@ -740,14 +740,6 @@ static volatile svn_atomic_t sqlite_init
+ static svn_error_t *
+ init_sqlite(void *baton, apr_pool_t *pool)
+ {
+-  if (sqlite3_libversion_number() < SQLITE_VERSION_NUMBER)
+-    {
+-      return svn_error_createf(
+-                    SVN_ERR_SQLITE_ERROR, NULL,
+-                    _("SQLite compiled for %s, but running with %s"),
+-                    SQLITE_VERSION, sqlite3_libversion());
+-    }
+-
+ #if APR_HAS_THREADS
+ 
+   /* SQLite 3.5 allows verification of its thread-safety at runtime.

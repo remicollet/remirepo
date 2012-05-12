@@ -1,0 +1,16 @@
+
+Possible fix/workaround for dubious pointer derefs in #810861.
+
+--- subversion-1.7.4/subversion/libsvn_auth_kwallet/kwallet.cpp.kwallet
++++ subversion-1.7.4/subversion/libsvn_auth_kwallet/kwallet.cpp
+@@ -175,6 +175,10 @@ kwallet_terminate(void *data)
+                    "kwallet-initialized",
+                    APR_HASH_KEY_STRING,
+                    NULL);
++      apr_hash_set(parameters,
++                   "kwallet-wallet",
++                   APR_HASH_KEY_STRING,
++                   NULL);
+     }
+   return APR_SUCCESS;
+ }
