@@ -58,6 +58,9 @@ done
 %{_prefix}/lib/modsecurity.d/slr_rules
 
 %changelog
+* Sat May 12 2012 Remi Collet <RPMS@FamilleCollet.com> 2.2.4-2
+- rebuild for remi repo and httpd 2.4
+
 * Wed May 03 2012 Peter Vrabec <pvrabec@redhat.com> 2.2.4-2
 - fix fedora-review issues (#816975)
 
