@@ -98,6 +98,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.6.5-3
+- rebuild for remi repo and httpd 2.4
+
 * Mon May  7 2012 Joe Orton <jorton@redhat.com> - 2.6.5-3
 - packaging fixes
 
