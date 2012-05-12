@@ -481,6 +481,9 @@ fi
 %endif
 
 %changelog
+* Sat May 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.7.4-6
+- rebuild for remi repo and httpd 2.4
+
 * Tue Apr 24 2012 Joe Orton <jorton@redhat.com> - 1.7.4-6
 - drop strict sqlite version requirement (#815396)
 
