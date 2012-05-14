@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-NetInventory
 Version:        2.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Remote inventory support for FusionInventory Agent
 License:        GPLv2+
 Group:          Development/Libraries
@@ -20,10 +20,12 @@ BuildRequires:  perl(constant)
 BuildRequires:  perl(threads)
 BuildRequires:  perl(threads::shared)
 BuildRequires:  perl(Encode)
+BuildRequires:  fusioninventory-agent >= 2.2.0
 BuildRequires:  perl-FusionInventory-Agent-Task-NetDiscovery >= 2.1
 
-Requires:       perl-FusionInventory-Agent-Task-NetDiscovery >= 2.1
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       fusioninventory-agent >= 2.2.0
+Requires:       perl-FusionInventory-Agent-Task-NetDiscovery >= 2.1
 
 # upstream have rename from SNMPQuery 1.3 to NetInventory 2.0
 Obsoletes:      perl-FusionInventory-Agent-Task-SNMPQuery < 2.0
@@ -90,6 +92,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 14 2012 Remi Collet <remi@fedoraproject.org> - 2.1-4
+- add explicit BR/R on fusioninventory-agent
+
 * Fri May 11 2012 Remi Collet <remi@fedoraproject.org> - 2.1-3
 - filter private provides/requires
 - fix description (in sync with upstream)
