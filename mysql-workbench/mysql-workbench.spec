@@ -1,6 +1,6 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%global mw_version 5.2.39
+%global mw_version 5.2.40
 %global mw_release 1
 %global tarversion gpl-%{mw_version}-src
 %global srcversion gpl-%{mw_version}-src
@@ -29,10 +29,6 @@ Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tar
 Patch1:    %{name}-5.2.28-cppconn.patch
 Patch2:    %{name}-5.2.32-ctemplate.patch
 Patch3:    %{name}-5.2.36-tinyxml.patch
-# http://bugs.mysql.com/63705 - Only <glib.h> can be included directly
-Patch6:    %{name}-5.2.36-glib.patch
-# http://bugs.mysql.com/63777 - service startup/shutdown command
-Patch7:    %{name}-5.2.36-profiles.patch
 # http://bugs.mysql.com/63898 - fix for automake >= 1.11.2
 Patch8:    %{name}-5.2.37-automake.patch
 
@@ -124,8 +120,6 @@ rm -rf ext/ctemplate
 rm -rf library/tinyxml
 %endif
 
-%patch6 -p1 -b .glib
-%patch7 -p1 -b .profiles
 %patch8 -p1 -b .automake
 
 
@@ -210,6 +204,10 @@ fi
 
 
 %changelog
+* Tue May 15 2012 Remi Collet <remi@fedoraproject.org> 5.2.40-1
+- update to 5.2.40 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-40.html
+
 * Sun Apr 15 2012 Remi Collet <remi@fedoraproject.org> 5.2.39-1
 - update to 5.2.39 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-39.html
