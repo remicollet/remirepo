@@ -28,12 +28,18 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-#global rcver      RC2
+%global rcver      RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
 %global with_ibase 	%{?_with_ibase:1}%{!?_with_ibase:0}
-%global with_libzip 	%{?_with_libzip:1}%{!?_with_libzip:0}
+
+%if 0%{?fedora} < 17
+%global with_libzip 0
+%else
+%global with_libzip 1
+%endif
+
 %if 0%{?rhel} >= 5 || 0%{?fedora} >= 12
 %ifarch %{ix86} x86_64
 %global with_fpm 1
@@ -65,11 +71,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.4.3
+Version: 5.4.4
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 0.1.RC1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -689,6 +695,9 @@ rm -f tests/basic/php_egg_logo_guid.phpt
 rm -f ext/standard/tests/file/bug22414.phpt \
       ext/iconv/tests/bug16069.phpt
 
+# Temporary fix for 5.4.4RC1
+sed -i -e '/PHP_EXTRA_VERSION/s/-RC1/RC1/' configure.in
+sed -i -e '/PHP_VERSION/s/5.4.4-RC1/5.4.4RC1/' main/php_version.h
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
 if test "x${pver}" != "x%{version}%{?rcver}"; then
@@ -1479,6 +1488,9 @@ fi
 %endif
 
 %changelog
+* Thu May 17 2012 Remi Collet <Fedora@famillecollet.com> 5.4.4-0.1.RC1
+- update to 5.4.4RC1
+
 * Wed May 09 2012 Remi Collet <Fedora@famillecollet.com> 5.4.3-1
 - update to 5.4.3 (CVE-2012-2311, CVE-2012-2329)
 
