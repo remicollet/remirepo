@@ -1,0 +1,20 @@
+--- mod_authnz_external-3.3.1/mod_authnz_external.c.orig	2011-10-07 12:43:34.000000000 -0600
++++ mod_authnz_external-3.3.1/mod_authnz_external.c	2012-05-06 23:24:41.774553228 -0600
+@@ -443,8 +443,17 @@ static int exec_external(const char *ext
+ 	if (remote_host != NULL)
+ 	    child_env[i++]= apr_pstrcat(p, ENV_HOST"=", remote_host,NULL);
+ 
++#if ((AP_SERVER_MAJORVERSION_NUMBER == 2) \
++  && (AP_SERVER_MINORVERSION_NUMBER == 2))
+ 	if (c->remote_ip)
+ 	    child_env[i++]= apr_pstrcat(p, ENV_IP"=", c->remote_ip, NULL);
++#elif ((AP_SERVER_MAJORVERSION_NUMBER == 2) \
++  &&   (AP_SERVER_MINORVERSION_NUMBER == 4))
++	if (c->client_ip)
++	    child_env[i++]= apr_pstrcat(p, ENV_IP"=", c->client_ip, NULL);
++#else
++#error buildable only under APR 2.2 or 2.4
++#endif
+ 
+ 	if (r->uri)
+ 	    child_env[i++]= apr_pstrcat(p, ENV_URI"=", r->uri, NULL);

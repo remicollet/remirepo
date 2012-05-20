@@ -3,13 +3,14 @@
 
 Summary: An Apache module used for authentication
 Name: mod_%{modsuffix}
-Version: 3.2.6
+Version: 3.3.1
 Release: 1%{?dist}
 License: ASL 1.0
 Group: System Environment/Libraries
 URL: http://code.google.com/p/mod-auth-external/
 Source: http://mod-auth-external.googlecode.com/files/%{name}-%{version}.tar.gz
 Source1: %{conffile}
+Patch1: mod_authnz_external-3.3.1-remote_ip.patch
 Requires: pwauth, httpd-mmn = %(cat %{_includedir}/httpd/.mmn || echo missing)
 BuildRequires: httpd-devel
 
@@ -25,7 +26,7 @@ caution.
 
 %prep
 %setup -q
-
+%patch1 -p1 -b .remote_ip
 
 %build
 apxs -c -I . %{name}.c
@@ -49,6 +50,9 @@ sed -i \
 
 
 %changelog
+* Sun May 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 3.3.1-1
+- sync with rawhide, build for remi-dev repo.
+
 * Fri May 05 2012 Philip Prindeville <philipp@fedoraproject.org> 3.2.6-1
 - Initial version post packaging review.
 
