@@ -2,7 +2,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.3.3
+Version:        1.3.4
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -32,10 +32,8 @@ certain standards, such as PEAR, or user-defined.
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
-
-cd %{pear_name}-%{version}
+sed -e '/phpcs-svn-pre-commit/s/role="script"/role="doc"/' \
+    package.xml >%{pear_name}-%{version}/%{pear_name}.xml
 
 
 %build
@@ -49,11 +47,6 @@ rm -rf $RPM_BUILD_ROOT
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
 
 
-# Remove phpcs-svn-pre-commit: we'll add it to docs
-mv  -f $RPM_BUILD_ROOT%{_bindir}/scripts/phpcs-svn-pre-commit ..
-chmod 0644 ../phpcs-svn-pre-commit
-rm -rf $RPM_BUILD_ROOT%{_bindir}/scripts
-
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 
@@ -65,7 +58,7 @@ install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/tests
 
-# Version 1.3.1 : Tests: 209, Assertions: 150, Skipped: 3.
+# Version 1.3.4 : Tests: 210, Assertions: 150, Skipped: 3.
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   AllTests.php
@@ -87,14 +80,24 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc phpcs-svn-pre-commit
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
 %{pear_testdir}/%{pear_name}
 %{pear_datadir}/%{pear_name}
 %{pear_phpdir}/PHP
 %{_bindir}/phpcs
 
+
 %changelog
+* Sun May 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.4-1
+- upstream 1.3.4
+
+* Sat May 19 2012 Christof Damian <christof@damian.net> - 1.3.4-1
+- upstream 1.3.4
+
+* Fri Mar  2 2012 Christof Damian <christof@damian.net> - 1.3.3-1
+- upstream 1.3.3
+
 * Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.3-1
 - upstream 1.3.3
 
