@@ -4,7 +4,7 @@
 
 Name:           php-pecl-xhprof
 Version:        0.9.2
-Release:        5%{?dist}
+Release:        5%{?dist}.1
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
 License:        ASL 2.0
