@@ -62,6 +62,9 @@ fi
 
 
 %changelog
+* Wed May 23 2012 Remi Collet <RPMS@FamilleCollet.com> 1.3-3
+- rebuild for remi repository
+
 * Mon May 21 2012 Christof Damian <christof@damian.net> - 1.3-3
 - removed php-cli require
 
