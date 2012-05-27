@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.2
-Release: 7%{?dist}
+Release: 11%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -43,7 +43,8 @@ Patch20: httpd-2.0.48-release.patch
 Patch23: httpd-2.4.1-export.patch
 Patch24: httpd-2.4.1-corelimit.patch
 Patch25: httpd-2.4.1-selinux.patch
-Patch26: httpd-2.4.1-suenable.patch
+Patch26: httpd-2.4.2-r1337344+.patch
+Patch27: httpd-2.4.2-iconlink.patch
 # Bug fixes
 Patch40: httpd-2.4.2-restart.patch
 Patch41: httpd-2.4.2-r1327036+.patch
@@ -153,7 +154,8 @@ authentication to the Apache HTTP Server.
 %patch23 -p1 -b .export
 %patch24 -p1 -b .corelimit
 %patch25 -p1 -b .selinux
-%patch26 -p1 -b .suenable
+%patch26 -p1 -b .r1337344+
+%patch27 -p1 -b .iconlink
 
 %patch40 -p1 -b .restart
 %patch41 -p1 -b .r1327036+
@@ -162,6 +164,9 @@ authentication to the Apache HTTP Server.
 
 # Patch in vendor/release string
 sed "s/@RELEASE@/%{vstring}/" < %{PATCH20} | patch -p1
+
+# Prevent use of setcap in "install-suexec-caps" target.
+sed -i '/suexec/s,setcap ,echo Skipping setcap for ,' Makefile.in
 
 # Safety check: prevent build if defined MMN does not equal upstream MMN.
 vmmn=`echo MODULE_MAGIC_NUMBER_MAJOR | cpp -include include/ap_mmn.h | sed -n '/^2/p'`
@@ -207,9 +212,11 @@ export LYNX_PATH=/usr/bin/links
         --enable-mpms-shared=all \
         --with-apr=%{_prefix} --with-apr-util=%{_prefix} \
 	--enable-suexec --with-suexec \
+        --enable-suexec-capabilities \
 	--with-suexec-caller=%{suexec_caller} \
 	--with-suexec-docroot=%{docroot} \
-	--with-suexec-logfile=%{_localstatedir}/log/httpd/suexec.log \
+	--without-suexec-logfile \
+        --with-suexec-syslog \
 	--with-suexec-bin=%{_sbindir}/suexec \
 	--with-suexec-uidmin=500 --with-suexec-gidmin=100 \
         --enable-pie \
@@ -372,9 +379,6 @@ rm -vf \
 
 rm -rf $RPM_BUILD_ROOT/etc/httpd/conf/{original,extra}
 
-# Make suexec a+rw so it can be stripped.  %%files lists real permissions
-chmod 755 $RPM_BUILD_ROOT%{_sbindir}/suexec
-
 %pre
 # Add the "apache" user
 /usr/sbin/useradd -c "Apache" -u 48 \
@@ -485,8 +489,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/fcgistarter
 %{_sbindir}/apachectl
 %{_sbindir}/rotatelogs
-# cap_dac_override needed to write to /var/log/httpd
-%caps(cap_setuid,cap_setgid,cap_dac_override+pe) %attr(510,root,%{suexec_caller}) %{_sbindir}/suexec
+%caps(cap_setuid,cap_setgid+pe) %attr(510,root,%{suexec_caller}) %{_sbindir}/suexec
 
 %dir %{_libdir}/httpd
 %dir %{_libdir}/httpd/modules
@@ -562,6 +565,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Thu May 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-11
+- sync with rawhide, rebuild for remi repo
+
+* Thu May 24 2012 Joe Orton <jorton@redhat.com> - 2.4.2-11
+- really fix autoindex.conf (thanks to remi@)
+
+* Thu May 24 2012 Joe Orton <jorton@redhat.com> - 2.4.2-10
+- fix autoindex.conf to allow symlink to poweredby.png
+
+* Wed May 23 2012 Joe Orton <jorton@redhat.com> - 2.4.2-9
+- suexec: use upstream version of patch for capability bit support
+
+* Wed May 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-8
+- sync with rawhide, rebuild for remi repo
+
+* Wed May 23 2012 Joe Orton <jorton@redhat.com> - 2.4.2-8
+- suexec: use syslog rather than suexec.log, drop dac_override capability
+
 * Tue May  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-7
 - sync with rawhide, rebuild for remi repo
 
