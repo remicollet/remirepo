@@ -76,6 +76,9 @@ fi
 %{pear_phpdir}/Phake.php
 
 %changelog
+* Sun May 27 2012 Remi Collet <RPMS@FamilleCollet.com> 1.0.2-1
+- rebuild for remi repository
+
 * Wed May  2 2012 Christof Damian <christof@damian.net> - 1.0.2-1
 - initial release (1.0.2)
 
