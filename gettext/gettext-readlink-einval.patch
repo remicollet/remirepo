@@ -1,0 +1,24 @@
+diff -U 3 -p -r gettext-0.18.1.1.orig/gettext-tools/gnulib-tests/test-areadlink.h gettext-0.18.1.1/gettext-tools/gnulib-tests/test-areadlink.h
+--- gettext-0.18.1.1.orig/gettext-tools/gnulib-tests/test-areadlink.h	2010-02-16 16:32:26.000000000 -0500
++++ gettext-0.18.1.1/gettext-tools/gnulib-tests/test-areadlink.h	2011-08-31 16:16:26.325521167 -0400
+@@ -36,7 +36,7 @@ test_areadlink (char * (*func) (char con
+   ASSERT (errno == ENOENT);
+   errno = 0;
+   ASSERT (func ("", 1) == NULL);
+-  ASSERT (errno == ENOENT);
++  ASSERT (errno == ENOENT || errno == EINVAL);
+   errno = 0;
+   ASSERT (func (".", 1) == NULL);
+   ASSERT (errno == EINVAL);
+diff -U 3 -p -r gettext-0.18.1.1.orig/gettext-tools/gnulib-tests/test-readlink.h gettext-0.18.1.1/gettext-tools/gnulib-tests/test-readlink.h
+--- gettext-0.18.1.1.orig/gettext-tools/gnulib-tests/test-readlink.h	2011-08-31 15:54:15.000000000 -0400
++++ gettext-0.18.1.1/gettext-tools/gnulib-tests/test-readlink.h	2011-08-31 16:16:09.325165556 -0400
+@@ -38,7 +38,7 @@ test_readlink (ssize_t (*func) (char con
+   ASSERT (errno == ENOENT);
+   errno = 0;
+   ASSERT (func ("", buf, sizeof buf) == -1);
+-  ASSERT (errno == ENOENT);
++  ASSERT (errno == ENOENT || errno == EINVAL);
+   errno = 0;
+   ASSERT (func (".", buf, sizeof buf) == -1);
+   ASSERT (errno == EINVAL);
