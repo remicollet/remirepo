@@ -6,7 +6,7 @@
 Summary: GNU libraries and utilities for producing multi-lingual messages
 Name: gettext
 Version: 0.18.1.1
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: GPLv3+ and LGPLv2+
 Group: Development/Tools
 URL: http://www.gnu.org/software/gettext/
@@ -47,6 +47,8 @@ Conflicts: filesystem < 3
 Provides: bundled(gnulib)
 Provides: /bin/gettext
 Patch1: gettext-readlink-einval.patch
+# From debian
+Patch2: 03-fix-xgettext-crash
 
 %description
 The GNU gettext package provides a set of tools and documentation for
@@ -133,6 +135,7 @@ Emacs.
 %prep
 %setup -q
 %patch1 -p1 -b .orig
+%patch2 -p1 -b .crash
 
 
 %build
@@ -332,6 +335,9 @@ fi
 %{_emacs_sitelispdir}/%{name}/*.el
 
 %changelog
+* Tue May 29 2012 Remi Collet <remi@fedoraproject.org> - 0.18.1.1-14
+- add patch from debian
+
 * Thu May 17 2012 Jens Petersen <petersen@redhat.com> - 0.18.1.1-13
 - base package now provides bundled(gnulib) to make it clear that
   gettext is built with bundled gnulib (#821757)

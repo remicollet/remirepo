@@ -1,0 +1,109 @@
+From: Bruno Haible <bruno@clisp.org>
+Subject: Fix xgettext crash when extracting a message with plural that is excluded.
+Bug-Debian: http://bugs.debian.org/608181
+X-Debian-version: 0.18.1.1-4
+
+--- a/gettext-tools/src/xgettext.c
++++ b/gettext-tools/src/xgettext.c
+@@ -1,5 +1,5 @@
+ /* Extracts strings from C source file to Uniforum style .po file.
+-   Copyright (C) 1995-1998, 2000-2010 Free Software Foundation, Inc.
++   Copyright (C) 1995-1998, 2000-2011 Free Software Foundation, Inc.
+    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, April 1995.
+ 
+    This program is free software: you can redistribute it and/or modify
+@@ -2933,7 +2933,7 @@
+                                      msgid_context,
+                                      &best_cp->msgid_pos,
+                                      NULL, best_cp->msgid_comment);
+-            if (best_cp->msgid_plural != NULL)
++            if (mp != NULL && best_cp->msgid_plural != NULL)
+               remember_a_message_plural (mp, best_cp->msgid_plural,
+                                          msgid_plural_context,
+                                          &best_cp->msgid_plural_pos,
+--- a/gettext-tools/src/xgettext.h
++++ b/gettext-tools/src/xgettext.h
+@@ -1,5 +1,5 @@
+ /* xgettext common functions.
+-   Copyright (C) 2001-2003, 2005-2006, 2008-2009 Free Software Foundation, Inc.
++   Copyright (C) 2001-2003, 2005-2006, 2008-2009, 2011 Free Software Foundation, Inc.
+    Written by Peter Miller <millerp@canb.auug.org.au>
+    and Bruno Haible <haible@clisp.cons.org>, 2001.
+ 
+@@ -247,7 +247,8 @@
+    or NULL.
+    COMMENT may be savable_comment, or it may be a saved copy of savable_comment
+    (then add_reference must be used when saving it, and drop_reference while
+-   dropping it).  Clear savable_comment.  */
++   dropping it).  Clear savable_comment.
++   Return the new or found message, or NULL if the message is excluded.  */
+ extern message_ty *remember_a_message (message_list_ty *mlp,
+                                        char *msgctxt,
+                                        char *msgid,
+--- a/gettext-tools/src/x-smalltalk.c
++++ b/gettext-tools/src/x-smalltalk.c
+@@ -1,5 +1,5 @@
+ /* xgettext Smalltalk backend.
+-   Copyright (C) 2002-2003, 2005-2009 Free Software Foundation, Inc.
++   Copyright (C) 2002-2003, 2005-2009, 2011 Free Software Foundation, Inc.
+ 
+    This file was written by Bruno Haible <haible@clisp.cons.org>, 2002.
+ 
+@@ -562,9 +562,10 @@
+                 lex_pos_ty pos;
+                 pos.file_name = logical_file_name;
+                 pos.line_number = token.line_number;
+-                remember_a_message_plural (plural_mp, token.string,
+-                                           null_context, &pos,
+-                                           savable_comment);
++                if (plural_mp != NULL)
++                  remember_a_message_plural (plural_mp, token.string,
++                                             null_context, &pos,
++                                             savable_comment);
+                 state = 0;
+                 break;
+               }
+--- a/gettext-tools/src/x-ycp.c
++++ b/gettext-tools/src/x-ycp.c
+@@ -1,5 +1,5 @@
+ /* xgettext YCP backend.
+-   Copyright (C) 2001-2003, 2005-2009 Free Software Foundation, Inc.
++   Copyright (C) 2001-2003, 2005-2009, 2011 Free Software Foundation, Inc.
+ 
+    This file was written by Bruno Haible <haible@clisp.cons.org>, 2001.
+ 
+@@ -640,6 +640,7 @@
+                        bool in_i18n)
+ {
+   int state; /* 1 or 2 inside _( ... ), otherwise 0 */
++  int plural_state = 0; /* defined only when in states 1 and 2 */
+   message_ty *plural_mp = NULL; /* defined only when in states 1 and 2 */
+   /* Context iterator that will be used if the next token is a '('.  */
+   flag_context_list_iterator_ty next_context_iter =
+@@ -678,20 +679,22 @@
+               pos.file_name = logical_file_name;
+               pos.line_number = token.line_number;
+ 
+-              if (plural_mp == NULL)
++              if (plural_state == 0)
+                 {
+                   /* Seen an msgid.  */
+                   plural_mp = remember_a_message (mlp, NULL, token.string,
+                                                   inner_context, &pos,
+                                                   NULL, token.comment);
++                  plural_state = 1;
+                   state = 2;
+                 }
+               else
+                 {
+                   /* Seen an msgid_plural.  */
+-                  remember_a_message_plural (plural_mp, token.string,
+-                                             inner_context, &pos,
+-                                             token.comment);
++                  if (plural_mp != NULL)
++                    remember_a_message_plural (plural_mp, token.string,
++                                               inner_context, &pos,
++                                               token.comment);
+                   state = 0;
+                 }
+               drop_reference (token.comment);
