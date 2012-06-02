@@ -1,12 +1,12 @@
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name  gmagick
-%global prever     RC2
+%global prever     RC3
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        0.4.%{prever}%{?dist}
+Release:        0.5.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
@@ -45,26 +45,28 @@ of images using the GraphicsMagick API.
 %prep
 %setup -qc
 
-%patch0 -p0 -b .options
+cd %{pecl_name}-%{version}%{?prever}
+%patch0 -p1 -b .options
 
 %if 0%{?fedora} <= 15   &&   0%{?rhel} <= 6
 # Remove know to fail tests (GM font config issue)
 # https://bugzilla.redhat.com/783906
-rm -f %{pecl_name}-%{version}%{?prever}/tests/gmagick-006-annotateimage.phpt
+rm -f tests/gmagick-006-annotateimage.phpt
 %endif
+
+# Check extension version
+extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_gmagick.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
+   exit 1
+fi
+cd ..
 
 # Create configuration file
 cat >%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
-
-# Check extension version
-extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}%{?prever}/php_gmagick.h)
-if test "x${extver}" != "x%{version}%{?prever}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
-   exit 1
-fi
 
 # Duplicate build tree for nts/zts
 cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-zts
@@ -162,6 +164,9 @@ fi
 
 
 %changelog
+* Sat Jun 02 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.5.RC3
+- Update to 1.1.0RC3
+
 * Sat Jan 21 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.4.RC2
 - add patch for getColor options https://bugs.php.net/60829
 
