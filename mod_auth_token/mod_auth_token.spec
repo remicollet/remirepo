@@ -39,6 +39,9 @@ rm -f $RPM_BUILD_ROOT/usr/share/doc/mod_auth_token-1.0.5/NEWS
 %doc README LICENSE COPYING AUTHORS ChangeLog
 
 %changelog
+* Sat Jun 02 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.5-2
+- rebuild for http 2.4, for remi repo
+
 * Tue May 29 2012 Jan-Frode Myklebust <janfrode@tanso.net> - 1.0.5-2
 Apply package review patch from Lukáš Zapletal.
 
