@@ -1,3 +1,4 @@
+# ./pullrev.sh 1337344 1341905 1342065 1341930 1344712
 
 suexec enhancements:
 
@@ -8,6 +9,8 @@ http://svn.apache.org/viewvc?view=revision&revision=1337344
 http://svn.apache.org/viewvc?view=revision&revision=1341905
 http://svn.apache.org/viewvc?view=revision&revision=1342065
 http://svn.apache.org/viewvc?view=revision&revision=1341930
+
+http://svn.apache.org/viewvc?view=revision&revision=1344712
 
 --- httpd-2.4.2/configure.in.r1337344+
 +++ httpd-2.4.2/configure.in
@@ -136,7 +139,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
 +
 +install-suexec-caps:
 +	@if test -f $(builddir)/support/suexec; then \
-+            setcap 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec; \
++            echo Skipping setcap for 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec; \
  	fi
  
  suexec:
@@ -178,20 +181,28 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
  #if defined(PATH_MAX)
  #define AP_MAXPATH PATH_MAX
  #elif defined(MAXPATHLEN)
-@@ -69,7 +73,12 @@
+@@ -69,7 +73,20 @@
  #define AP_ENVBUF 256
  
  extern char **environ;
 +
 +#ifdef AP_LOG_SYSLOG
++/* Syslog support. */
++#if !defined(AP_LOG_FACILITY) && defined(LOG_AUTHPRIV)
++#define AP_LOG_FACILITY LOG_AUTHPRIV
++#elif !defined(AP_LOG_FACILITY)
++#define AP_LOG_FACILITY LOG_AUTH
++#endif
++
 +static int log_open;
 +#else
++/* Non-syslog support. */
  static FILE *log = NULL;
 +#endif
  
  static const char *const safe_env_lst[] =
  {
-@@ -128,10 +137,23 @@ static const char *const safe_env_lst[]
+@@ -128,10 +145,23 @@ static const char *const safe_env_lst[]
      NULL
  };
  
@@ -207,7 +218,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
 -#ifdef AP_LOG_EXEC
 +#if defined(AP_LOG_SYSLOG)
 +    if (!log_open) {
-+        openlog("suexec", LOG_PID, LOG_DAEMON);
++        openlog("suexec", LOG_PID, AP_LOG_FACILITY);
 +        log_open = 1;
 +    }
 +
@@ -216,7 +227,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
      time_t timevar;
      struct tm *lt;
  
-@@ -263,7 +285,7 @@ int main(int argc, char *argv[])
+@@ -263,7 +293,7 @@ int main(int argc, char *argv[])
       */
      uid = getuid();
      if ((pw = getpwuid(uid)) == NULL) {
@@ -225,7 +236,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
          exit(102);
      }
      /*
-@@ -289,7 +311,9 @@ int main(int argc, char *argv[])
+@@ -289,7 +319,9 @@ int main(int argc, char *argv[])
  #ifdef AP_HTTPD_USER
          fprintf(stderr, " -D AP_HTTPD_USER=\"%s\"\n", AP_HTTPD_USER);
  #endif
@@ -236,7 +247,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
          fprintf(stderr, " -D AP_LOG_EXEC=\"%s\"\n", AP_LOG_EXEC);
  #endif
  #ifdef AP_SAFE_PATH
-@@ -440,7 +464,7 @@ int main(int argc, char *argv[])
+@@ -440,7 +472,7 @@ int main(int argc, char *argv[])
       * a UID less than AP_UID_MIN.  Tsk tsk.
       */
      if ((uid == 0) || (uid < AP_UID_MIN)) {
@@ -245,7 +256,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
          exit(107);
      }
  
-@@ -449,7 +473,7 @@ int main(int argc, char *argv[])
+@@ -449,7 +481,7 @@ int main(int argc, char *argv[])
       * or as a GID less than AP_GID_MIN.  Tsk tsk.
       */
      if ((gid == 0) || (gid < AP_GID_MIN)) {
@@ -254,7 +265,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
          exit(108);
      }
  
-@@ -460,7 +484,7 @@ int main(int argc, char *argv[])
+@@ -460,7 +492,7 @@ int main(int argc, char *argv[])
       * and setgid() to the target group. If unsuccessful, error out.
       */
      if (((setgid(gid)) != 0) || (initgroups(actual_uname, gid) != 0)) {
@@ -263,7 +274,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
          exit(109);
      }
  
-@@ -468,7 +492,7 @@ int main(int argc, char *argv[])
+@@ -468,7 +500,7 @@ int main(int argc, char *argv[])
       * setuid() to the target user.  Error out on fail.
       */
      if ((setuid(uid)) != 0) {
@@ -272,7 +283,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
          exit(110);
      }
  
-@@ -556,11 +580,11 @@ int main(int argc, char *argv[])
+@@ -556,11 +588,11 @@ int main(int argc, char *argv[])
          (gid != dir_info.st_gid) ||
          (uid != prg_info.st_uid) ||
          (gid != prg_info.st_gid)) {
@@ -289,7 +300,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
          exit(120);
      }
      /*
-@@ -585,6 +609,12 @@ int main(int argc, char *argv[])
+@@ -585,6 +617,12 @@ int main(int argc, char *argv[])
  #endif /* AP_SUEXEC_UMASK */
  
      /* Be sure to close the log file so the CGI can't mess with it. */
@@ -302,7 +313,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
      if (log != NULL) {
  #if APR_HAVE_FCNTL_H
          /*
-@@ -606,6 +636,7 @@ int main(int argc, char *argv[])
+@@ -606,6 +644,7 @@ int main(int argc, char *argv[])
          log = NULL;
  #endif
      }

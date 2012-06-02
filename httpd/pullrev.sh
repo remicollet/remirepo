@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 if [ $# -lt 1 ]; then
     echo "What?"
@@ -14,9 +14,10 @@ vcurl="http://svn.apache.org/viewvc?view=revision&revision="
 
 if test -f ${fn}; then
     mv -v -f ${fn} ${fn}\~
-    sed '/^--- /,$d' < ${fn}\~ > ${fn}
+    echo "# $0 $*" > ${fn}
+    sed '1{/#.*pullrev/d;};/^--- /,$d' < ${fn}\~ >> ${fn}
 else
-    echo > ${fn}
+    echo "# $0 $*" > ${fn}
 fi
 
 new=0
@@ -33,7 +34,8 @@ prev=/dev/null
 for r in $*; do
     echo "+ fetching ${r}"
     this=`mktemp /tmp/pullrevXXXXXX`
-    svn diff -c ${r} ${repo} | filterdiff --remove-timestamps --addprefix="${prefix}/" > ${this}
+    svn diff -c ${r} ${repo} | filterdiff --remove-timestamps -x 'CHANGES' \
+        --addprefix="${prefix}/" > ${this}
     next=`mktemp /tmp/pullrevXXXXXX`
     combinediff --quiet ${prev} ${this} > ${next}
     rm -f "${this}"
