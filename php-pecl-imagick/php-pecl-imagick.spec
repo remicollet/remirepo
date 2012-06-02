@@ -2,12 +2,12 @@
 %{!?phpname: %{expand: %%global phpname php}}
 
 %global pecl_name   imagick
-%global prever      RC1
+%global prever      RC2
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{phpname}-pecl-imagick
 Version:       3.1.0
-Release:       0.1.%{prever}%{?dist}
+Release:       0.2.%{prever}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -128,6 +128,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 02 2012 Remi Collet <Fedora@FamilleCollet.com> - 3.1.0-0.2.RC2
+- update to 3.1.0RC1
+
 * Fri Nov 18 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.1.0-0.1.RC1
 - update to 3.1.0RC1 for php 5.4
 
