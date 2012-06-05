@@ -1,0 +1,10 @@
+diff -up mozilla-release/hal/sandbox/PHal.ipdl.old mozilla-release/hal/sandbox/PHal.ipdl
+--- mozilla-release/hal/sandbox/PHal.ipdl.old   2012-06-01 14:04:00.000000000 +0200
++++ mozilla-release/hal/sandbox/PHal.ipdl       2012-06-05 09:15:02.524408100 +0200
+@@ -39,7 +39,7 @@
+ include protocol PContent;
+ include protocol PBrowser;
+-include "nspr/prtime.h";
++include "prtime.h";
+ include "mozilla/HalSensor.h";
+ include "mozilla/HalTypes.h";

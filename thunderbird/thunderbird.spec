@@ -32,6 +32,7 @@
 %define sqlite_version 3.7.10
 %define libnotify_version 0.4
 %global libvpx_version 1.0.0
+%define _default_patch_fuzz 2
 
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
 
@@ -51,14 +52,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        12.0.1
+Version:        13.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20120430.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20120605.tar.bz2
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -74,14 +75,12 @@ Patch7:         crashreporter-remove-static.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
 
 # Build patches
-Patch102:       mozilla-733867-x.patch
-Patch103:       mozilla-file.patch
 Patch104:       xulrunner-10.0-gcc47.patch
+Patch105:       xulrunner-prtime.patch
+
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
 
-# ARM Specific 
-Patch210: 	mozilla-724615.patch
 %if %{official_branding}
 # Required by Mozilla Corporation
 
@@ -90,11 +89,11 @@ Patch210: 	mozilla-724615.patch
 
 %endif
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if %{system_nspr}
 BuildRequires:  nspr-devel >= %{nspr_version}
 %endif
 %if %{system_nss}
+BuildRequires:  nss-static
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{system_cairo}
@@ -193,13 +192,11 @@ cd %{tarballdir}
 cd mozilla
 %patch7 -p2 -b .static
 %patch8 -p3 -b .secondary-ipc
-%patch103 -p1 -b .mozilla-file
 %patch104 -p1 -b .gcc47
+%patch105 -p1 -b .prtime
 cd ..
-%patch102 -p1 -b .733867
 
 %patch200 -p1 -b .addons
-%patch210 -p1 -b .724615
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -298,16 +295,17 @@ make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 
 # create debuginfo for crash-stats.mozilla.com
 %if %{enable_mozilla_crashreporter}
-make buildsymbols
+make -C objdir buildsymbols
 %endif
 
 #===============================================================================
 
 %install
-%{__rm} -rf $RPM_BUILD_ROOT
-cd %{tarballdir}
+cd %{tarballdir}/objdir
 
 DESTDIR=$RPM_BUILD_ROOT make install
+
+cd ..
 
 # install icons
 for s in 16 22 24 32 48 256; do
@@ -377,7 +375,7 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{enable_mozilla_crashreporter}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{moz_debug_dir}
-%{__cp} mozilla/dist/%{symbols_file_name} $RPM_BUILD_ROOT/%{moz_debug_dir}
+%{__cp} objdir/mozilla/dist/%{symbols_file_name} $RPM_BUILD_ROOT/%{moz_debug_dir}
 %endif
 
 
@@ -397,11 +395,6 @@ rm -rf $RPM_BUILD_ROOT%{mozappdir}/*.chk
 
 #===============================================================================
 
-%clean
-%{__rm} -rf $RPM_BUILD_ROOT
-
-#===============================================================================
-
 %pre
 echo -e "\nWARNING : This %{name} RPM is not an official Fedora/Redhat build and it"
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
@@ -416,19 +409,17 @@ echo -e "You should consider upgrading to a supported release.\n"
 
 %post
 update-desktop-database &> /dev/null || :
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
-
-#===============================================================================
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun
 update-desktop-database &> /dev/null || :
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+if [ $1 -eq 0 ] ; then
+    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
+
+%posttrans
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 #===============================================================================
 
@@ -484,10 +475,17 @@ fi
 %{mozappdir}/chrome.manifest
 %{mozappdir}/searchplugins
 %{mozappdir}/distribution/extensions
+%{mozappdir}/dependentlibs.list
 
 #===============================================================================
 
 %changelog
+* Tue Jun  5 2012 Jan Horak <jhorak@redhat.com> - 13.0-1
+- Update to 13.0
+
+* Mon May 7 2012 Martin Stransky <stransky@redhat.com> - 12.0.1-2
+- Fixed #717245 - adhere Static Library Packaging Guidelines
+
 * Mon Apr 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 12.0.1-1
 - Sync with rawhide, update to 12.0.1
 
