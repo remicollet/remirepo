@@ -44,7 +44,7 @@
 # alpha_version should be set to the alpha number if using an alpha, 0 otherwise
 # beta_version  should be set to the beta number if using a beta, 0 otherwise
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
-%global gecko_dir_ver 12
+%global gecko_dir_ver 13
 %global alpha_version 0
 %global beta_version  0
 %global rc_version    0
@@ -52,12 +52,8 @@
 %global mozappdir     %{_libdir}/%{shortname}-%{gecko_dir_ver}
 %global tarballdir    mozilla-release
 
-# crash reporter work only on x86/x86_64
-#%ifarch %{ix86} x86_64
-#%global enable_mozilla_crashreporter 1
-#%else
+# no crash reporter for remi repo
 %global enable_mozilla_crashreporter 0
-#%endif
 
 %if %{alpha_version} > 0
 %global pre_version a%{alpha_version}
@@ -81,7 +77,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        12.0
+Version:        13.0
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -99,6 +95,9 @@ Patch0:         xulrunner-version.patch
 Patch1:         mozilla-build.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
 Patch17:        xulrunner-10.0-gcc47.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
+Patch18:        xulrunner-12.0-jemalloc-ppc.patch
+Patch19:        mozilla-nspr-build.patch
 
 
 # Fedora specific patches
@@ -106,11 +105,8 @@ Patch20:        mozilla-193-pkgconfig.patch
 Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
-# https://bugzilla.mozilla.org/show_bug.cgi?id=707993
-Patch39:        xulrunner-8.0-fix-maemo-checks-in-npapi.patch
-Patch43:        mozilla-file.patch
-Patch46:        mozilla-724615.patch
 Patch47:        mozilla-691898.patch
+Patch49:        mozilla-746112.patch
 
 # ---------------------------------------------------
 
@@ -118,6 +114,7 @@ BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 %if %{?system_nss}
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
+BuildRequires:  nss-static >= %{nss_version}
 %endif
 %if %{?system_cairo}
 BuildRequires:  cairo-devel >= %{cairo_version}
@@ -156,10 +153,10 @@ Requires:       nss >= %{nss_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
-Obsoletes:      xulrunner8
 Obsoletes:      xulrunner9
 Obsoletes:      xulrunner10
 Obsoletes:      xulrunner11
+Obsoletes:      xulrunner12
 
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
@@ -179,10 +176,10 @@ Group: Development/Libraries
 Obsoletes: mozilla-devel < 1.9
 Obsoletes: firefox-devel < 2.1
 Obsoletes: xulrunner-devel-unstable
-Obsoletes: xulrunner8-devel
 Obsoletes: xulrunner9-devel
 Obsoletes: xulrunner10-devel
 Obsoletes: xulrunner11-devel
+Obsoletes: xulrunner12-devel
 Provides: gecko-devel = %{gecko_verrel}
 Provides: gecko-devel%{?_isa} = %{gecko_verrel}
 Provides: gecko-devel-unstable = %{gecko_verrel}
@@ -224,11 +221,6 @@ Requires: yasm
 %ifarch %{ix86} x86_64
 Requires: wireless-tools-devel
 %endif
-Obsoletes: xulrunner6-devel
-Obsoletes: xulrunner7-devel
-Obsoletes: xulrunner8-devel
-Obsoletes: xulrunner9-devel
-Obsoletes: xulrunner10-devel
 
 %description devel
 This package contains the libraries amd header files that are needed
@@ -267,14 +259,16 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch1  -p1 -b .build
 %patch14 -p1 -b .chromium-types
 %patch17 -p1 -b .gcc47
+%patch18 -p2 -b .jemalloc-ppc
+%patch19 -p1 -b .nspr
 
 %patch20 -p2 -b .pk
 %patch24 -p1 -b .static
 
-%patch39 -p1 -b .707993
-%patch43 -p1 -b .file
-%patch46 -p1 -b .724615
-#%patch47 -p1 -b .691898
+%patch47 -p2 -b .691898
+%ifarch ppc ppc64
+%patch49 -p2 -b .746112
+%endif
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -401,19 +395,18 @@ make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS" MOZ_SE
 # create debuginfo for crash-stats.mozilla.com
 %if %{enable_mozilla_crashreporter}
 #cd %{moz_objdir}
-make buildsymbols
+make -C objdir buildsymbols
 %endif
 
 #---------------------------------------------------------------------
 
 %install
 cd %{tarballdir}
-%{__rm} -rf $RPM_BUILD_ROOT
 
 # set up our prefs before install, so it gets pulled in to omni.jar
-%{__cp} -p %{SOURCE12} dist/bin/defaults/pref/all-redhat.js
+%{__cp} -p %{SOURCE12} objdir/dist/bin/defaults/pref/all-redhat.js
 
-DESTDIR=$RPM_BUILD_ROOT make install
+DESTDIR=$RPM_BUILD_ROOT make -C objdir install
 
 # Start script install
 %{__rm} -rf $RPM_BUILD_ROOT%{_bindir}/%{shortname}
@@ -460,7 +453,7 @@ popd
 
 %if ! %{system_nss}
 %{__install} -D -p -m 755 \
-   dist/sdk/bin/nspr-config \
+   objdir/dist/sdk/bin/nspr-config \
    $RPM_BUILD_ROOT%{_libdir}/%{shortname}-devel-%{gecko_dir_ver}/sdk/bin/nspr-config
 %endif
 
@@ -490,17 +483,8 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{enable_mozilla_crashreporter}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{moz_debug_dir}
-%{__cp} dist/%{symbols_file_name} $RPM_BUILD_ROOT/%{moz_debug_dir}
+%{__cp} objdir/dist/%{symbols_file_name} $RPM_BUILD_ROOT/%{moz_debug_dir}
 %endif
-
-# Remi : this appears when using bundled lib (nss, nspr, ...)
-%{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/*.chk
-
-
-#---------------------------------------------------------------------
-
-%clean
-%{__rm} -rf $RPM_BUILD_ROOT
 
 #---------------------------------------------------------------------
 
@@ -544,7 +528,9 @@ fi
 %{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
 %endif
 %{mozappdir}/plugin-container
-
+%if !%{?system_nss}
+%{mozappdir}/*.chk
+%endif
 %if %{enable_mozilla_crashreporter}
 %{mozappdir}/crashreporter
 %{mozappdir}/crashreporter.ini
@@ -563,6 +549,32 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Jun 06 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0-1
+- Sync with rawhide, update to 13.0
+
+* Wed Jun 5 2012 Martin Stransky <stransky@redhat.com> - 13.0-2
+- src.rpm should include all patches
+
+* Mon Jun 4 2012 Martin Stransky <stransky@redhat.com> - 13.0-1
+- Update to 13.0
+
+* Mon May 28 2012 Martin Stransky <stransky@redhat.com> - 12.0-7
+- More ppc(64) fixes - mozbz#746112
+
+* Mon May 28 2012 Martin Stransky <stransky@redhat.com> - 12.0-6
+- Added workaround for ppc(64) - mozbz#746112
+
+* Mon May 7 2012 Dan Horák <dan[at]danny.cz> - 12.0-5
+- Used backported upstream patch from mozb#734335 for fixing the sps profiler build
+- Fixed build of jemalloc on ppc (patch by Gustavo Luiz Duarte/IBM)
+
+* Fri May 4 2012 Dan Horák <dan[at]danny.cz> - 12.0-4
+- Added new patch for 691898 - backport from trunk
+- Added build fix for secondary arches
+
+* Fri May 4 2012 Martin Stransky <stransky@redhat.com> - 12.0-3
+- Added requires for nss-static (rhbz#717247)
+
 * Mon Apr 30 2012 Martin Stransky <stransky@redhat.com> - 12.0-2
 - Enable ppc(64) paralell builds (rhbz#816612)
 

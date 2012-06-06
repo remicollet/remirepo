@@ -25,13 +25,13 @@
 
 %global shortname              firefox
 #global mycomment              Beta 4
-%global firefox_dir_ver        12
-%global xulrunner_version      12.0
+%global firefox_dir_ver        13
+%global xulrunner_version      13.0
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20120429
+%global datelang               20120606
 
 %global mozappdir     %{_libdir}/%{shortname}
 %global langpackdir   %{mozappdir}/langpacks
@@ -62,7 +62,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        12.0
+Version:        13.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -379,7 +379,6 @@ fi
 %post
 update-desktop-database &> /dev/null || :
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun
 update-desktop-database &> /dev/null || :
@@ -388,6 +387,8 @@ if [ $1 -eq 0 ] ; then
     gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
+%posttrans
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
@@ -435,6 +436,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Jun 06 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0-1
+- Sync with rawhide, update to 13.0
+
+* Tue Jun 5 2012 Martin Stransky <stransky@redhat.com> - 13.0-1
+- Update to 13.0
+
 * Sun Apr 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 12.0-1
 - Sync with rawhide, update to 12.0
 

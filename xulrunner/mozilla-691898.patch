@@ -1,169 +1,85 @@
-From: Mike Hommey <mh@glandium.org>
-Date: Sat, 24 Dec 2011 09:56:58 +0100
-Subject: Bug 691898 - Use YARR interpreter instead of PCRE on platforms where
- YARR JIT is not supported
-
----
- js/src/Makefile.in           |   21 +++++++++++++--------
- js/src/vm/RegExpObject-inl.h |   28 ++++++----------------------
- js/src/vm/RegExpObject.cpp   |   36 ------------------------------------
- js/src/vm/RegExpObject.h     |   27 ++++++---------------------
- js/src/yarr/wtfbridge.h      |    2 --
- 5 files changed, 25 insertions(+), 89 deletions(-)
-
-diff --git a/js/src/Makefile.in b/js/src/Makefile.in
-index fc48cbd..49f0bdc 100644
---- a/js/src/Makefile.in
-+++ b/js/src/Makefile.in
-@@ -416,15 +416,20 @@ CPPSRCS += 	checks.cc \
+diff -up xulrunner-13.0/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h.691898 xulrunner-13.0/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h
+--- xulrunner-13.0/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h.691898	2012-06-01 14:04:02.000000000 +0200
++++ xulrunner-13.0/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h	2012-06-04 10:43:23.694175924 +0200
+@@ -467,8 +467,6 @@ public:
+     {
+         sync_instruction_memory((caddr_t)code, size);
+     }
+-#else
+-    #error "The cacheFlush support is missing on this platform."
+ #endif
  
- ifeq (,$(filter arm% sparc %86 x86_64,$(TARGET_CPU)))
+ private:
+diff -up xulrunner-13.0/mozilla-release/js/src/Makefile.in.691898 xulrunner-13.0/mozilla-release/js/src/Makefile.in
+--- xulrunner-13.0/mozilla-release/js/src/Makefile.in.691898	2012-06-01 14:04:02.000000000 +0200
++++ xulrunner-13.0/mozilla-release/js/src/Makefile.in	2012-06-04 10:45:57.023808537 +0200
+@@ -337,20 +337,23 @@ CPPSRCS += 	checks.cc \
+ # END enclude sources for V8 dtoa
+ #############################################
+ 
+-# For architectures without YARR JIT, PCRE is faster than the YARR
+-# interpreter (bug 684559).
+-
+ ifeq (,$(filter arm% sparc %86 x86_64 mips%,$(TARGET_CPU)))
  
 -VPATH +=        $(srcdir)/yarr/pcre \
-+VPATH +=        $(srcdir)/assembler \
-+                $(srcdir)/assembler/wtf \
-+                $(srcdir)/yarr \
++VPATH +=	$(srcdir)/assembler \
++		$(srcdir)/assembler/wtf \
++		$(srcdir)/assembler/jit \
++		$(srcdir)/yarr \
  		$(NULL)
  
- CPPSRCS += \
+-CPPSRCS += \
 -                pcre_compile.cpp \
 -                pcre_exec.cpp \
 -                pcre_tables.cpp \
 -                pcre_xclass.cpp \
 -                pcre_ucp_searchfuncs.cpp \
-+                Assertions.cpp \
-+                OSAllocatorOS2.cpp \
-+                OSAllocatorPosix.cpp \
-+                OSAllocatorWin.cpp \
-+                PageBlock.cpp \
-+                YarrInterpreter.cpp \
-+                YarrPattern.cpp \
-+                YarrSyntaxChecker.cpp \
++CPPSRCS +=	ExecutableAllocator.cpp \
++		ExecutableAllocatorPosix.cpp \
++		OSAllocatorOS2.cpp \
++		OSAllocatorPosix.cpp \
++		OSAllocatorWin.cpp \
++		PageBlock.cpp \
++		YarrInterpreter.cpp \
++		YarrPattern.cpp \
++		YarrSyntaxChecker.cpp \
  		$(NULL)
  else
  
-@@ -1015,10 +1020,10 @@ endif
- # Needed to "configure" it correctly.  Unfortunately these
- # flags wind up being applied to all code in js/src, not just
- # the code in js/src/assembler.
--CXXFLAGS += -DUSE_SYSTEM_MALLOC=1 -DENABLE_ASSEMBLER=1
-+CXXFLAGS += -DUSE_SYSTEM_MALLOC=1
- 
- ifneq (,$(ENABLE_YARR_JIT)$(ENABLE_TRACEJIT)$(ENABLE_METHODJIT))
--CXXFLAGS +=  -DENABLE_JIT=1
-+CXXFLAGS +=  -DENABLE_JIT=1 -DENABLE_ASSEMBLER=1
- endif
- 
- INCLUDES +=	-I$(srcdir)/assembler -I$(srcdir)/yarr
-diff --git a/js/src/vm/RegExpObject-inl.h b/js/src/vm/RegExpObject-inl.h
-index 5f7817d..91108a7 100644
---- a/js/src/vm/RegExpObject-inl.h
-+++ b/js/src/vm/RegExpObject-inl.h
-@@ -327,6 +327,7 @@ RegExpPrivate::create(JSContext *cx, JSString *source, RegExpFlag flags, TokenSt
-     return RetType(self);
- }
- 
-+#if ENABLE_YARR_JIT
- /* This function should be deleted once bad Android platforms phase out. See bug 604774. */
- inline bool
- RegExpPrivateCode::isJITRuntimeEnabled(JSContext *cx)
-@@ -337,12 +338,12 @@ RegExpPrivateCode::isJITRuntimeEnabled(JSContext *cx)
-     return true;
- #endif
- }
-+#endif
- 
- inline bool
- RegExpPrivateCode::compile(JSContext *cx, JSLinearString &pattern, TokenStream *ts,
-                            uintN *parenCount, RegExpFlag flags)
- {
--#if ENABLE_YARR_JIT
-     /* Parse the pattern. */
-     ErrorCode yarrError;
-     YarrPattern yarrPattern(pattern, bool(flags & IgnoreCaseFlag), bool(flags & MultilineFlag),
-@@ -359,7 +360,7 @@ RegExpPrivateCode::compile(JSContext *cx, JSLinearString &pattern, TokenStream *
-      * case we have to bytecode compile it.
-      */
- 
--#ifdef JS_METHODJIT
-+#if ENABLE_YARR_JIT && defined(JS_METHODJIT)
-     if (isJITRuntimeEnabled(cx) && !yarrPattern.m_containsBackreferences) {
-         if (!cx->compartment->ensureJaegerCompartmentExists(cx))
-             return false;
-@@ -371,21 +372,11 @@ RegExpPrivateCode::compile(JSContext *cx, JSLinearString &pattern, TokenStream *
-     }
- #endif
- 
-+#if ENABLE_YARR_JIT
-     codeBlock.setFallBack(true);
-+#endif
-     byteCode = byteCompile(yarrPattern, cx->compartment->regExpAllocator).get();
-     return true;
--#else /* !defined(ENABLE_YARR_JIT) */
--    int error = 0;
--    compiled = jsRegExpCompile(pattern.chars(), pattern.length(),
--                  ignoreCase() ? JSRegExpIgnoreCase : JSRegExpDoNotIgnoreCase,
--                  multiline() ? JSRegExpMultiline : JSRegExpSingleLine,
--                  parenCount, &error);
--    if (error) {
--        reportPCREError(cx, error);
--        return false;
--    }
--    return true;
--#endif
- }
- 
- inline bool
-@@ -431,19 +422,12 @@ RegExpPrivateCode::execute(JSContext *cx, const jschar *chars, size_t start, siz
-     else
-         result = JSC::Yarr::execute(codeBlock, chars, start, length, output);
- #else
--    result = jsRegExpExecute(cx, compiled, chars, length, start, output, outputCount);
-+    result = JSC::Yarr::interpret(byteCode, chars, start, length, output);
- #endif
- 
-     if (result == -1)
-         return Success_NotFound;
- 
--#if !ENABLE_YARR_JIT
--    if (result < 0) {
--        reportPCREError(cx, result);
--        return Error;
--    }
--#endif
+@@ -918,4 +921,3 @@ endif
+ #
+ # END kludges for the Nitro assembler
+ ###############################################
 -
-     JS_ASSERT(result >= 0);
-     return Success;
- }
-diff --git a/js/src/vm/RegExpObject.cpp b/js/src/vm/RegExpObject.cpp
-index f75c6a5..7631dd5 100644
---- a/js/src/vm/RegExpObject.cpp
-+++ b/js/src/vm/RegExpObject.cpp
-@@ -251,7 +251,6 @@ Class js::RegExpClass = {
-     NULL                     /* trace */
- };
+diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp.691898 xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp
+--- xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp.691898	2012-06-01 14:04:05.000000000 +0200
++++ xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp	2012-06-04 10:43:23.695175928 +0200
+@@ -167,7 +167,6 @@ MatchPairs::checkAgainst(size_t inputLen
+ 
+ /* detail::RegExpCode */
  
 -#if ENABLE_YARR_JIT
  void
- RegExpPrivateCode::reportYarrError(JSContext *cx, TokenStream *ts, ErrorCode error)
+ RegExpCode::reportYarrError(JSContext *cx, TokenStream *ts, ErrorCode error)
  {
-@@ -283,41 +282,6 @@ RegExpPrivateCode::reportYarrError(JSContext *cx, TokenStream *ts, ErrorCode err
+@@ -199,46 +198,9 @@ RegExpCode::reportYarrError(JSContext *c
      }
  }
  
 -#else /* !ENABLE_YARR_JIT */
 -
 -void
--RegExpPrivateCode::reportPCREError(JSContext *cx, int error)
+-RegExpCode::reportPCREError(JSContext *cx, int error)
 -{
 -#define REPORT(msg_) \
 -    JS_ReportErrorFlagsAndNumberUC(cx, JSREPORT_ERROR, js_GetErrorMessage, NULL, msg_); \
 -    return
 -    switch (error) {
 -      case -2: REPORT(JSMSG_REGEXP_TOO_COMPLEX);
--      case 0: JS_NOT_REACHED("Precondition violation: an error must have occurred."); 
+-      case 0: JS_NOT_REACHED("Precondition violation: an error must have occurred.");
 -      case 1: REPORT(JSMSG_TRAILING_SLASH);
--      case 2: REPORT(JSMSG_TRAILING_SLASH); 
+-      case 2: REPORT(JSMSG_TRAILING_SLASH);
 -      case 3: REPORT(JSMSG_REGEXP_TOO_COMPLEX);
 -      case 4: REPORT(JSMSG_BAD_QUANTIFIER);
 -      case 5: REPORT(JSMSG_BAD_QUANTIFIER);
@@ -184,27 +100,88 @@ index f75c6a5..7631dd5 100644
 -    }
 -#undef REPORT
 -}
+-
 -#endif /* ENABLE_YARR_JIT */
 -
  bool
- js::ParseRegExpFlags(JSContext *cx, JSString *flagStr, RegExpFlag *flagsOut)
+ RegExpCode::compile(JSContext *cx, JSLinearString &pattern, unsigned *parenCount, RegExpFlag flags)
  {
-diff --git a/js/src/vm/RegExpObject.h b/js/src/vm/RegExpObject.h
-index 1449d56..279f3c0 100644
---- a/js/src/vm/RegExpObject.h
-+++ b/js/src/vm/RegExpObject.h
-@@ -49,8 +49,6 @@
+-#if ENABLE_YARR_JIT
+     /* Parse the pattern. */
+     ErrorCode yarrError;
+     YarrPattern yarrPattern(pattern, bool(flags & IgnoreCaseFlag), bool(flags & MultilineFlag),
+@@ -255,7 +217,7 @@ RegExpCode::compile(JSContext *cx, JSLin
+      * case we have to bytecode compile it.
+      */
+ 
+-#ifdef JS_METHODJIT
++#if ENABLE_YARR_JIT && defined(JS_METHODJIT)
+     if (isJITRuntimeEnabled(cx) && !yarrPattern.m_containsBackreferences) {
+         JSC::ExecutableAllocator *execAlloc = cx->runtime->getExecutableAllocator(cx);
+         if (!execAlloc) {
+@@ -276,21 +238,11 @@ RegExpCode::compile(JSContext *cx, JSLin
+         return false;
+     }
+ 
++#if ENABLE_YARR_JIT
+     codeBlock.setFallBack(true);
++#endif
+     byteCode = byteCompile(yarrPattern, bumpAlloc).get();
+     return true;
+-#else /* !defined(ENABLE_YARR_JIT) */
+-    int error = 0;
+-    compiled = jsRegExpCompile(pattern.chars(), pattern.length(),
+-                  ignoreCase() ? JSRegExpIgnoreCase : JSRegExpDoNotIgnoreCase,
+-                  multiline() ? JSRegExpMultiline : JSRegExpSingleLine,
+-                  parenCount, &error);
+-    if (error) {
+-        reportPCREError(cx, error);
+-        return false;
+-    }
+-    return true;
+-#endif
+ }
+ 
+ RegExpRunStatus
+@@ -305,19 +257,12 @@ RegExpCode::execute(JSContext *cx, const
+     else
+         result = JSC::Yarr::execute(codeBlock, chars, start, length, output);
+ #else
+-    result = jsRegExpExecute(cx, compiled, chars, length, start, output, outputCount);
++    result = JSC::Yarr::interpret(byteCode, chars, start, length, output);
+ #endif
+ 
+     if (result == -1)
+         return RegExpRunStatus_Success_NotFound;
+ 
+-#if !ENABLE_YARR_JIT
+-    if (result < 0) {
+-        reportPCREError(cx, result);
+-        return RegExpRunStatus_Error;
+-    }
+-#endif
+-
+     JS_ASSERT(result >= 0);
+     return RegExpRunStatus_Success;
+ }
+diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h.691898 xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h
+--- xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h.691898	2012-06-01 14:04:05.000000000 +0200
++++ xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h	2012-06-04 10:47:03.609081248 +0200
+@@ -51,10 +51,8 @@
  #include "yarr/Yarr.h"
  #if ENABLE_YARR_JIT
  #include "yarr/YarrJIT.h"
+-#include "yarr/YarrSyntaxChecker.h"
 -#else
 -#include "yarr/pcre/pcre.h"
  #endif
++#include "yarr/YarrSyntaxChecker.h"
  
- namespace js {
-@@ -153,48 +151,39 @@ ResetRegExpObject(JSContext *cx, AlreadyIncRefed<RegExpPrivate> rep);
- /* Abstracts away the gross |RegExpPrivate| backend details. */
- class RegExpPrivateCode
+ /*
+  * JavaScript Regular Expressions
+@@ -112,68 +110,51 @@ namespace detail {
+ 
+ class RegExpCode
  {
 -#if ENABLE_YARR_JIT
      typedef JSC::Yarr::BytecodePattern BytecodePattern;
@@ -224,7 +201,7 @@ index 1449d56..279f3c0 100644
 +    BytecodePattern *byteCode;
  
    public:
-     RegExpPrivateCode()
+     RegExpCode()
        :
  #if ENABLE_YARR_JIT
          codeBlock(),
@@ -235,7 +212,7 @@ index 1449d56..279f3c0 100644
 +        byteCode(NULL)
      { }
  
-     ~RegExpPrivateCode() {
+     ~RegExpCode() {
  #if ENABLE_YARR_JIT
          codeBlock.release();
 +#endif
@@ -247,18 +224,26 @@ index 1449d56..279f3c0 100644
 -#endif
      }
  
+     static bool checkSyntax(JSContext *cx, TokenStream *tokenStream, JSLinearString *source) {
+-#if ENABLE_YARR_JIT
+         ErrorCode error = JSC::Yarr::checkSyntax(*source);
+         if (error == JSC::Yarr::NoError)
+             return true;
+ 
+         reportYarrError(cx, tokenStream, error);
+         return false;
+-#else
+-# error "Syntax checking not implemented for !ENABLE_YARR_JIT"
+-#endif
+     }
+ 
  #if ENABLE_YARR_JIT
      static inline bool isJITRuntimeEnabled(JSContext *cx);
--    void reportYarrError(JSContext *cx, TokenStream *ts, JSC::Yarr::ErrorCode error);
+-    static void reportYarrError(JSContext *cx, TokenStream *ts, JSC::Yarr::ErrorCode error);
 -#else
--    void reportPCREError(JSContext *cx, int error);
+-    static void reportPCREError(JSContext *cx, int error);
  #endif
-+    void reportYarrError(JSContext *cx, TokenStream *ts, JSC::Yarr::ErrorCode error);
- 
-     inline bool compile(JSContext *cx, JSLinearString &pattern, TokenStream *ts, uintN *parenCount,
-                         RegExpFlag flags);
-@@ -205,11 +194,7 @@ class RegExpPrivateCode
-                                  int *output, size_t outputCount);
++    static void reportYarrError(JSContext *cx, TokenStream *ts, JSC::Yarr::ErrorCode error);
  
      static size_t getOutputSize(size_t pairCount) {
 -#if ENABLE_YARR_JIT
@@ -267,12 +252,30 @@ index 1449d56..279f3c0 100644
 -        return pairCount * 3; /* Should be x2, but PCRE has... needs. */
 -#endif
      }
- };
  
-diff --git a/js/src/yarr/wtfbridge.h b/js/src/yarr/wtfbridge.h
-index ac41d08..fb8eb86 100644
---- a/js/src/yarr/wtfbridge.h
-+++ b/js/src/yarr/wtfbridge.h
+     bool compile(JSContext *cx, JSLinearString &pattern, unsigned *parenCount, RegExpFlag flags);
+diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject-inl.h.691898 xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject-inl.h
+--- xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject-inl.h.691898	2012-06-01 14:04:05.000000000 +0200
++++ xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject-inl.h	2012-06-04 10:43:23.695175928 +0200
+@@ -137,6 +137,7 @@ RegExpObject::setSticky(bool enabled)
+     setSlot(STICKY_FLAG_SLOT, BooleanValue(enabled));
+ }
+ 
++#if ENABLE_YARR_JIT
+ /* This function should be deleted once bad Android platforms phase out. See bug 604774. */
+ inline bool
+ detail::RegExpCode::isJITRuntimeEnabled(JSContext *cx)
+@@ -147,6 +148,7 @@ detail::RegExpCode::isJITRuntimeEnabled(
+     return true;
+ #endif
+ }
++#endif
+ 
+ inline bool
+ RegExpToShared(JSContext *cx, JSObject &obj, RegExpGuard *g)
+diff -up xulrunner-13.0/mozilla-release/js/src/yarr/wtfbridge.h.691898 xulrunner-13.0/mozilla-release/js/src/yarr/wtfbridge.h
+--- xulrunner-13.0/mozilla-release/js/src/yarr/wtfbridge.h.691898	2012-06-01 14:04:05.000000000 +0200
++++ xulrunner-13.0/mozilla-release/js/src/yarr/wtfbridge.h	2012-06-04 10:43:23.696175932 +0200
 @@ -49,9 +49,7 @@
  #include "jsprvtd.h"
  #include "vm/String.h"

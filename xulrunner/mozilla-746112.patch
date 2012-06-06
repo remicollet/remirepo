@@ -1,0 +1,35 @@
+Index: xulrunner-10.0.1/mozilla-release/js/src/yarr/YarrInterpreter.h
+===================================================================
+--- xulrunner-10.0.1.orig/mozilla-release/js/src/yarr/YarrInterpreter.h
++++ xulrunner-10.0.1/mozilla-release/js/src/yarr/YarrInterpreter.h
+@@ -167,7 +167,7 @@ struct ByteTerm {
+         inputPosition = inputPos;
+     }
+ 
+-    ByteTerm(Type type, unsigned subpatternId, ByteDisjunction* parenthesesInfo, bool capture, int inputPos)
++    ByteTerm(Type type, unsigned subpatternId, ByteDisjunction* parenthesesInfo, bool capture, int inputPos) __attribute__((noinline))
+         : type(type)
+         , m_capture(capture)
+         , m_invert(false)
+@@ -188,7 +188,7 @@ struct ByteTerm {
+         atom.quantityCount = 1;
+     }
+ 
+-    ByteTerm(Type type, unsigned subpatternId, bool capture, bool invert, int inputPos)
++    ByteTerm(Type type, unsigned subpatternId, bool capture, bool invert, int inputPos) __attribute__((noinline))
+         : type(type)
+         , m_capture(capture)
+         , m_invert(invert)
+Index: xulrunner-10.0.1/mozilla-release/js/src/yarr/YarrPattern.h
+===================================================================
+--- xulrunner-10.0.1.orig/mozilla-release/js/src/yarr/YarrPattern.h
++++ xulrunner-10.0.1/mozilla-release/js/src/yarr/YarrPattern.h
+@@ -171,7 +171,7 @@ struct PatternTerm {
+         quantityCount = 1;
+     }
+ 
+-    PatternTerm(Type type, unsigned subpatternId, PatternDisjunction* disjunction, bool capture = false, bool invert = false)
++    PatternTerm(Type type, unsigned subpatternId, PatternDisjunction* disjunction, bool capture = false, bool invert = false) __attribute__((noinline))
+         : type(type)
+         , m_capture(capture)
+         , m_invert(invert)
