@@ -5,7 +5,7 @@ Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
 Version:        %{glpi_version}.0.%{plug_version}
-Release:        0.4.beta3%{?dist}
+Release:        0.4.beta4%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
@@ -13,11 +13,16 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/614/fusioninventory-for-glpi-metapackage_0.83_1.0-BETA3.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/641/fusioninventory-for-glpi-metapackage_0.83_1.0-BETA4.tar.gz
 Source1:        %{name}-httpd.conf
 
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/b8849d9b86e797cb923831c0ba9dda213f4d4e94/diff
-Patch0:         fusinvdeploy-shebang.patch
+# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/c6b4bc075e3087b0945b509139c8edc626020b30
+# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/702babf225e427f92c83c8802242e3f9409c8f23
+# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/a416c9d5c6bc75714638c7ff0984ca976f09496b
+# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/ab8b8126ddfd263b646a99d18453ad4f56b7b818
+# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/3f9a9e71acd4ded86fcf6042d81a8b38cdd2e291
+# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/cbd50207cd2ff92084f660d328449854b640b446
+Patch0:         fusioninventory-git.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -60,9 +65,6 @@ do
   # LICENSE are installed, just create link in standard docdir.
   ln -s %{_datadir}/glpi/plugins/$plug/LICENSE docs/$plug/LICENSE
 done
-
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/fe7cdbab3115b333ae56aa3904fd907b3a93856a
-chmod -x fusinvdeploy/inc/task.class.php
 
 # .htaccess replaced by a httpd config file
 rm -f fusioninventory/install/mysql/.htaccess \
@@ -161,6 +163,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 08 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.83.0.1.0-0.4.beta4
+- update to 0.83+1.0-beta4
+  http://forge.fusioninventory.org/versions/67
+
 * Thu May 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.83.0.1.0-0.4.beta3
 - spec cleanups
 
