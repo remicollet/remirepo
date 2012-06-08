@@ -1,5 +1,5 @@
 %global  glpi_version  0.80.0
-%global  plug_version  1.3
+%global  plug_version  1.4
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -13,11 +13,8 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/626/fusioninventory-for-glpi-metapackage_0.80+1.3.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/644/fusioninventory-for-glpi-metapackage_0.80+1.4.tar.gz
 Source1:        %{name}-httpd.conf
-
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/b8849d9b86e797cb923831c0ba9dda213f4d4e94/diff
-Patch0:         fusinvdeploy-shebang.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -39,8 +36,6 @@ Serveur FusionInventory embarqué dans une extension GLPI.
 %prep
 %setup -q -c
 
-%patch0 -p1
-
 # dos2unix to avoid rpmlint warnings
 for doc in */docs/* ; do
     sed -i -e 's/\r//' $doc
@@ -60,9 +55,6 @@ do
   # LICENSE are installed, just create link in standard docdir.
   ln -s %{_datadir}/glpi/plugins/$plug/LICENSE docs/$plug/LICENSE
 done
-
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/fe7cdbab3115b333ae56aa3904fd907b3a93856a
-chmod -x fusinvdeploy/inc/task.class.php
 
 # .htaccess replaced by a httpd config file
 rm -f fusioninventory/install/mysql/.htaccess
@@ -157,11 +149,13 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusinvdeploy/lib
 %{_datadir}/glpi/plugins/fusinvdeploy/pics
 %{_datadir}/glpi/plugins/fusinvdeploy/scripts
-%{_datadir}/glpi/plugins/fusinvdeploy/test
-%exclude %{_datadir}/glpi/plugins/fusinvdeploy/.gitignore
 
 
 %changelog
+* Fri Jun 06 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.4-1
+- update to 0.80+1.4
+  http://forge.fusioninventory.org/versions/129
+
 * Thu May 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.80.0.1.3-3
 - spec cleanups
 
