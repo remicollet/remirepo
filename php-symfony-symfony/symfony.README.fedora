@@ -1,0 +1,19 @@
+This Symfony package has some modifications to satisfy the Fedora packaging
+requirements.
+
+The main change is the removal of these libraries which are usually included
+with Symfony:
+
+- vendor/swiftmailer
+- plugins/sfDoctrinePlugin/lib/vendor/doctrine
+- plugins/sfPropelPlugin/lib/vendor/phing
+- plugins/sfPropelPlugin/lib/vendor/propel
+- plugins/sfPropelPlugin/lib/vendor/propel-generator
+
+except of propel these should all use the respective packages supplied by
+Fedora.
+
+Currently there is no prople package for Fedora with the correct version. 
+
+You should be able to use symfony without problems with Doctrine though.
+
