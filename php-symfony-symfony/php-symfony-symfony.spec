@@ -2,8 +2,8 @@
 %global pear_name symfony
 
 Name:           php-symfony-symfony
-Version:        1.4.8
-Release:        2%{?dist}
+Version:        1.4.18
+Release:        1%{?dist}
 Summary:        Open-Source PHP Web Framework
 
 Group:          Development/Libraries
@@ -17,11 +17,11 @@ Source1:        symfony.README.fedora
 BuildArch:      noarch
 BuildRequires:  php-channel(pear.symfony-project.com)
 BuildRequires:  php-pear(PEAR)
-Requires:       php >= 5.2.4
+Requires:       php-common >= 5.2.4
 Requires:       php-dom, php-simplexml
 Requires:       php-pear(PEAR)
 Requires:       php-channel(pear.symfony-project.com)
-Requires:       php-doctrine-Doctrine >= 1.2.0
+Requires:       php-doctrine-Doctrine >= 1.2.4
 Requires:       php-pear-phing >= 1.0.0
 #Requires:       php-pear-propel_generator >= 1.4.0
 #Requires:       php-pear-propel_runtime >= 1.4.0
@@ -62,7 +62,7 @@ cd %{pear_name}-%{version}
 rm -rf $RPM_BUILD_ROOT docdir
 PHPRC=./php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
 
-sed -i -e "s|dirname.*/lib/vendor/doctrine|'%{pear_phpdir}/Doctrine/lib|" \
+sed -i -e "s|dirname.*/lib/vendor/doctrine|'%{pear_phpdir}|" \
     $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/plugins/sfDoctrinePlugin/config/sfDoctrinePluginConfiguration.class.php 
 
 sed -i -e "s|sfConfig::get.*sf_symfony_lib_dir.*/vendor/swiftmailer|'%{pear_phpdir}/Swift|" \
@@ -134,6 +134,18 @@ fi
 %{_bindir}/symfony
 
 %changelog
+* Sat Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.18-1
+- upstream 1.4.18 (security fix), rebuild for remi repository
+
+* Mon Jun  4 2012 Christof Damian <christof@damian.net> - 1.4.18-1
+- upstream 1.4.18 (security fix)
+
+* Thu Mar  8 2012 Christof Damian <christof@damian.net> - 1.4.17-2
+- fix doctrine path
+
+* Thu Mar  8 2012 Christof Damian <christof@damian.net> - 1.4.17-1
+- upstream 1.4.17
+
 * Mon Feb 07 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.4.8-2
 - rebuild for remi repository
 
