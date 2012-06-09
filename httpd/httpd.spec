@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.2
-Release: 12%{?dist}
+Release: 18%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -44,12 +44,13 @@ Patch23: httpd-2.4.1-export.patch
 Patch24: httpd-2.4.1-corelimit.patch
 Patch25: httpd-2.4.1-selinux.patch
 Patch26: httpd-2.4.2-r1337344+.patch
-Patch27: httpd-2.4.2-iconlink.patch
+Patch27: httpd-2.4.2-icons.patch
 # Bug fixes
 Patch40: httpd-2.4.2-restart.patch
 Patch41: httpd-2.4.2-r1327036+.patch
 Patch42: httpd-2.4.2-r1326980+.patch
-Patch43: httpd-2.4.2-r1332643.patch
+Patch43: httpd-2.4.2-r1332643+.patch
+Patch44: httpd-2.4.2-r1346905.patch
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -155,12 +156,13 @@ authentication to the Apache HTTP Server.
 %patch24 -p1 -b .corelimit
 %patch25 -p1 -b .selinux
 %patch26 -p1 -b .r1337344+
-%patch27 -p1 -b .iconlink
+%patch27 -p1 -b .icons
 
 %patch40 -p1 -b .restart
 %patch41 -p1 -b .r1327036+
 %patch42 -p1 -b .r1326980+
-%patch43 -p1 -b .r1332643
+%patch43 -p1 -b .r1332643+
+%patch44 -p1 -b .r1346905
 
 # Patch in vendor/release string
 sed "s/@RELEASE@/%{vstring}/" < %{PATCH20} | patch -p1
@@ -240,9 +242,9 @@ rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 
 # Install systemd service files
-mkdir -p $RPM_BUILD_ROOT/lib/systemd/system
+mkdir -p $RPM_BUILD_ROOT%{_unitdir}
 install -p -m 644 $RPM_SOURCE_DIR/httpd.service \
-        $RPM_BUILD_ROOT/lib/systemd/system/httpd.service
+        $RPM_BUILD_ROOT%{_unitdir}/httpd.service
 
 # install conf file/directory
 mkdir $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d \
@@ -279,9 +281,9 @@ install -m 644 -p $RPM_SOURCE_DIR/httpd.sysconf \
    $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/httpd
 
 # tmpfiles.d configuration
-mkdir $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d 
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d 
 install -m 644 -p $RPM_SOURCE_DIR/httpd.tmpfiles \
-   $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/httpd.conf
+   $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/httpd.conf
 
 # for holding mod_dav lock database
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/dav
@@ -334,7 +336,7 @@ ln -s ../../pixmaps/poweredby.png \
 
 # symlinks for /etc/httpd
 ln -s ../..%{_localstatedir}/log/httpd $RPM_BUILD_ROOT/etc/httpd/logs
-ln -s ../..%{_localstatedir}/run/httpd $RPM_BUILD_ROOT/etc/httpd/run
+ln -s /run/httpd $RPM_BUILD_ROOT/etc/httpd/run
 ln -s ../..%{_libdir}/httpd/modules $RPM_BUILD_ROOT/etc/httpd/modules
 
 # install http-ssl-pass-dialog
@@ -353,7 +355,7 @@ sed -e "s|/usr/local/apache2/conf/httpd.conf|/etc/httpd/conf/httpd.conf|" \
     -e "s|/usr/local/apache2/conf/magic|/etc/httpd/conf/magic|" \
     -e "s|/usr/local/apache2/logs/error_log|/var/log/httpd/error_log|" \
     -e "s|/usr/local/apache2/logs/access_log|/var/log/httpd/access_log|" \
-    -e "s|/usr/local/apache2/logs/httpd.pid|/var/run/httpd/httpd.pid|" \
+    -e "s|/usr/local/apache2/logs/httpd.pid|/run/httpd/httpd.pid|" \
     -e "s|/usr/local/apache2|/etc/httpd|" < docs/man/httpd.8 \
   > $RPM_BUILD_ROOT%{_mandir}/man8/httpd.8
 
@@ -483,7 +485,7 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_sysconfdir}/httpd/conf.modules.d/01-ldap.conf
 
 %config(noreplace) %{_sysconfdir}/sysconfig/httpd
-%config %{_sysconfdir}/tmpfiles.d/httpd.conf
+%{_prefix}/lib/tmpfiles.d/httpd.conf
 
 %{_sbindir}/ht*
 %{_sbindir}/fcgistarter
@@ -513,7 +515,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{docroot}/cgi-bin
 %dir %{docroot}/html
 
-%attr(0710,root,apache) %dir %{_localstatedir}/run/httpd
+%attr(0710,root,apache) %dir /run/httpd
 %attr(0700,root,root) %dir %{_localstatedir}/log/httpd
 %attr(0700,apache,apache) %dir %{_localstatedir}/lib/dav
 %attr(0700,apache,apache) %dir %{_localstatedir}/cache/httpd
@@ -521,7 +523,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_mandir}/man8/*
 
-/lib/systemd/system/*.service
+%{_unitdir}/*.service
 
 %files tools
 %defattr(-,root,root)
@@ -565,6 +567,31 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Sat Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-18
+- sync with rawhide, rebuild for remi repo
+
+* Fri Jun  8 2012 Joe Orton <jorton@redhat.com> - 2.4.2-18
+- avoid use of "core" GIF for a "core" directory (#168776)
+- drop use of "syslog.target" in systemd unit file
+
+* Thu Jun  7 2012 Joe Orton <jorton@redhat.com> - 2.4.2-17
+- use _unitdir for systemd unit file
+- use /run in unit file, ssl.conf
+
+* Thu Jun  7 2012 Joe Orton <jorton@redhat.com> - 2.4.2-16
+- mod_ssl: fix NPN patch merge
+
+* Wed Jun  6 2012 Joe Orton <jorton@redhat.com> - 2.4.2-15
+- move tmpfiles.d fragment into /usr/lib per new guidelines
+- package /run/httpd not /var/run/httpd
+- set runtimedir to /run/httpd likewise
+
+* Wed Jun  6 2012 Joe Orton <jorton@redhat.com> - 2.4.2-14
+- fix htdbm/htpasswd crash on crypt() failure (#818684)
+
+* Wed Jun  6 2012 Joe Orton <jorton@redhat.com> - 2.4.2-13
+- pull fix for NPN patch from upstream (r1345599)
+
 * Sat Jun 02 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-12
 - sync with rawhide, rebuild for remi repo
 

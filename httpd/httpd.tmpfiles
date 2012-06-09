@@ -1,1 +1,1 @@
-d /var/run/httpd   710 root apache
+d /run/httpd   710 root apache

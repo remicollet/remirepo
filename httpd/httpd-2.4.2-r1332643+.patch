@@ -1,33 +1,14 @@
+# ./pullrev.sh 1332643 1345599
 
 https://bugzilla.redhat.com//show_bug.cgi?id=809599
 
 http://svn.apache.org/viewvc?view=revision&revision=1332643
 
---- httpd-2.4.2/modules/ssl/ssl_private.h
-+++ httpd-2.4.2/modules/ssl/ssl_private.h
-@@ -139,6 +139,11 @@
- #define HAVE_FIPS
- #endif
- 
-+#if OPENSSL_VERSION_NUMBER >= 0x10001000L && !defined(OPENSSL_NO_NEXTPROTONEG) \
-+    && !defined(OPENSSL_NO_TLSEXT)
-+#define HAVE_TLS_NPN
-+#endif
-+
- #if (OPENSSL_VERSION_NUMBER >= 0x10000000)
- #define MODSSL_SSL_CIPHER_CONST const
- #define MODSSL_SSL_METHOD_CONST const
-@@ -811,6 +816,7 @@
- int         ssl_callback_SessionTicket(SSL *, unsigned char *, unsigned char *,
-                                        EVP_CIPHER_CTX *, HMAC_CTX *, int);
- #endif
-+int ssl_callback_AdvertiseNextProtos(SSL *ssl, const unsigned char **data, unsigned int *len, void *arg);
- 
- /**  Session Cache Support  */
- void         ssl_scache_init(server_rec *, apr_pool_t *);
---- httpd-2.4.2/modules/ssl/mod_ssl.c
+http://svn.apache.org/viewvc?view=revision&revision=1345599
+
+--- httpd-2.4.2/modules/ssl/mod_ssl.c.r1332643+
 +++ httpd-2.4.2/modules/ssl/mod_ssl.c
-@@ -260,6 +260,18 @@
+@@ -260,6 +260,18 @@ static const command_rec ssl_config_cmds
      AP_END_CMD
  };
  
@@ -46,9 +27,9 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
  /*
   *  the various processing hooks
   */
---- httpd-2.4.2/modules/ssl/mod_ssl.h
+--- httpd-2.4.2/modules/ssl/mod_ssl.h.r1332643+
 +++ httpd-2.4.2/modules/ssl/mod_ssl.h
-@@ -63,5 +63,26 @@
+@@ -63,5 +63,26 @@ APR_DECLARE_OPTIONAL_FN(int, ssl_proxy_e
  
  APR_DECLARE_OPTIONAL_FN(int, ssl_engine_disable, (conn_rec *));
  
@@ -75,9 +56,9 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
 +
  #endif /* __MOD_SSL_H__ */
  /** @} */
---- httpd-2.4.2/modules/ssl/ssl_engine_init.c
+--- httpd-2.4.2/modules/ssl/ssl_engine_init.c.r1332643+
 +++ httpd-2.4.2/modules/ssl/ssl_engine_init.c
-@@ -681,6 +681,11 @@
+@@ -681,6 +681,11 @@ static void ssl_init_ctx_callbacks(serve
  #endif
  
      SSL_CTX_set_info_callback(ctx, ssl_callback_Info);
@@ -89,7 +70,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
  }
  
  static void ssl_init_ctx_verify(server_rec *s,
---- httpd-2.4.2/modules/ssl/ssl_engine_io.c
+--- httpd-2.4.2/modules/ssl/ssl_engine_io.c.r1332643+
 +++ httpd-2.4.2/modules/ssl/ssl_engine_io.c
 @@ -28,6 +28,7 @@
                                    core keeps dumping.''
@@ -99,7 +80,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
  #include "apr_date.h"
  
  /*  _________________________________________________________________
-@@ -297,6 +298,7 @@
+@@ -297,6 +298,7 @@ typedef struct {
      apr_pool_t *pool;
      char buffer[AP_IOBUFSIZE];
      ssl_filter_ctx_t *filter_ctx;
@@ -107,7 +88,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
  } bio_filter_in_ctx_t;
  
  /*
-@@ -1374,6 +1376,27 @@
+@@ -1364,6 +1366,26 @@ static apr_status_t ssl_io_filter_input(
          APR_BRIGADE_INSERT_TAIL(bb, bucket);
      }
  
@@ -123,9 +104,8 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
 +        SSL_get0_next_proto_negotiated(
 +            inctx->ssl, &next_proto, &next_proto_len);
 +        ap_log_cerror(APLOG_MARK, APLOG_DEBUG, APR_SUCCESS, f->c,
-+                      "SSL NPN negotiated protocol: '%s'",
-+                      apr_pstrmemdup(f->c->pool, (const char*)next_proto,
-+                                     next_proto_len));
++                      APLOGNO(02306) "SSL NPN negotiated protocol: '%*s'",
++                      next_proto_len, (const char*)next_proto);
 +        modssl_run_npn_proto_negotiated_hook(
 +            f->c, (const char*)next_proto, next_proto_len);
 +        inctx->npn_finished = 1;
@@ -135,7 +115,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
      return APR_SUCCESS;
  }
  
-@@ -1855,6 +1878,7 @@
+@@ -1845,6 +1867,7 @@ static void ssl_io_input_add_filter(ssl_
      inctx->block = APR_BLOCK_READ;
      inctx->pool = c->pool;
      inctx->filter_ctx = filter_ctx;
@@ -143,7 +123,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
  }
  
  /* The request_rec pointer is passed in here only to ensure that the
---- httpd-2.4.2/modules/ssl/ssl_engine_kernel.c
+--- httpd-2.4.2/modules/ssl/ssl_engine_kernel.c.r1332643+
 +++ httpd-2.4.2/modules/ssl/ssl_engine_kernel.c
 @@ -29,6 +29,7 @@
                                    time I was too famous.''
@@ -153,7 +133,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
  #include "util_md5.h"
  
  static void ssl_configure_env(request_rec *r, SSLConnRec *sslconn);
-@@ -2143,3 +2144,84 @@
+@@ -2164,3 +2165,86 @@ int ssl_callback_SessionTicket(SSL *ssl,
      return -1;
  }
  #endif
@@ -202,7 +182,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
 +        /* If the protocol name is too long (the length must fit in one byte),
 +         * then log an error and skip it. */
 +        if (length > 255) {
-+            ap_log_cerror(APLOG_MARK, APLOG_ERR, 0, c,
++            ap_log_cerror(APLOG_MARK, APLOG_ERR, 0, c, APLOGNO(02307)
 +                          "SSL NPN protocol name too long (length=%u): %s",
 +                          length, string);
 +            continue;
@@ -226,6 +206,8 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
 +    for (i = 0; i < num_protos; ++i) {
 +        const char *string = APR_ARRAY_IDX(protos, i, const char*);
 +        apr_size_t length = strlen(string);
++        if (length > 255)
++            continue;
 +        *start = (unsigned char)length;
 +        ++start;
 +        memcpy(start, string, length * sizeof(unsigned char));
@@ -238,3 +220,25 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
 +    return SSL_TLSEXT_ERR_OK;
 +}
 +#endif
+--- httpd-2.4.2/modules/ssl/ssl_private.h.r1332643+
++++ httpd-2.4.2/modules/ssl/ssl_private.h
+@@ -139,6 +139,11 @@
+ #define HAVE_FIPS
+ #endif
+ 
++#if OPENSSL_VERSION_NUMBER >= 0x10001000L && !defined(OPENSSL_NO_NEXTPROTONEG) \
++    && !defined(OPENSSL_NO_TLSEXT)
++#define HAVE_TLS_NPN
++#endif
++
+ #if (OPENSSL_VERSION_NUMBER >= 0x10000000)
+ #define MODSSL_SSL_CIPHER_CONST const
+ #define MODSSL_SSL_METHOD_CONST const
+@@ -807,6 +812,7 @@ int          ssl_callback_ServerNameIndi
+ int         ssl_callback_SessionTicket(SSL *, unsigned char *, unsigned char *,
+                                        EVP_CIPHER_CTX *, HMAC_CTX *, int);
+ #endif
++int ssl_callback_AdvertiseNextProtos(SSL *ssl, const unsigned char **data, unsigned int *len, void *arg);
+ 
+ /**  Session Cache Support  */
+ void         ssl_scache_init(server_rec *, apr_pool_t *);

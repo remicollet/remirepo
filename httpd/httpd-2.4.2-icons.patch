@@ -1,0 +1,25 @@
+
+- Fix config for /icons/ dir to allow symlink to poweredby.png.
+
+- Avoid using coredump GIF for a directory called "core"
+
+--- httpd-2.4.2/docs/conf/extra/httpd-autoindex.conf.in.icons
++++ httpd-2.4.2/docs/conf/extra/httpd-autoindex.conf.in
+@@ -21,7 +21,7 @@ IndexOptions FancyIndexing HTMLTable Ver
+ Alias /icons/ "@exp_iconsdir@/"
+ 
+ <Directory "@exp_iconsdir@">
+-    Options Indexes MultiViews
++    Options Indexes MultiViews FollowSymlinks
+     AllowOverride None
+     Require all granted
+ </Directory>
+@@ -53,7 +53,7 @@ AddIcon /icons/dvi.gif .dvi
+ AddIcon /icons/uuencoded.gif .uu
+ AddIcon /icons/script.gif .conf .sh .shar .csh .ksh .tcl
+ AddIcon /icons/tex.gif .tex
+-AddIcon /icons/bomb.gif core
++AddIcon /icons/bomb.gif core.
+ 
+ AddIcon /icons/back.gif ..
+ AddIcon /icons/hand.right.gif README
