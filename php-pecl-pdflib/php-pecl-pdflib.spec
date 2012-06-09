@@ -1,4 +1,5 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?php_inidir: %{expand: %%global php_inidir %{_sysconfdir}/php.d}}
 
 %global pecl_name pdflib
 %global extname   pdf
@@ -6,8 +7,8 @@
 Summary:        Package for generating PDF files
 Summary(fr):    Extension pour générer des fichiers PDF
 Name:           php-pecl-pdflib
-Version:        2.1.8
-Release:        3%{?dist}
+Version:        2.1.9
+Release:        1%{?dist}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
 Group:          Development/Languages
@@ -16,17 +17,15 @@ URL:            http://pecl.php.net/package/pdflib
 Source:         http://pecl.php.net/get/pdflib-%{version}.tgz
 Source2:        xml2changelog
 
-# https://bugs.php.net/60397 php 5.4 build
-Patch0:         pdflib-php54.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel, pdflib-lite-devel, php-pear
 
-Provides:       php-pecl(pdflib) = %{version}-%{release}, php-pdflib = %{version}-%{release}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:     php(zend-abi) = %{php_zend_api}
-Requires:     php(api) = %{php_core_api}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
+Provides:       php-pecl(pdflib) = %{version}-%{release}
+Provides:       php-pdflib = %{version}-%{release}
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -55,8 +54,6 @@ http://www.pdflib.com/developer-center/technical-documentation/php-howto
 %setup -c -q
 %{_bindir}/php -n %{SOURCE2} package.xml >CHANGELOG
 
-%patch0 -p0 -b .php54
-
 # Check version
 extver=$(sed -n '/#define PHP_PDFLIB_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_pdflib.h)
 if test "x${extver}" != "x%{version}"; then
@@ -79,36 +76,43 @@ cd %{pecl_name}-%{version}
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 
 make -C %{pecl_name}-%{version} install-modules INSTALL_ROOT=%{buildroot}
-make -C %{pecl_name}-zts        install-modules INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{extname}.ini %{buildroot}%{php_inidir}/%{extname}.ini
-install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+%if 0%{?__ztsphp:1}
+make -C %{pecl_name}-zts        install-modules INSTALL_ROOT=%{buildroot}
+install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
+%endif
+
 
 %check
-%{__php} -n \
+%{_bindir}/php -n \
     -d extension_dir=%{pecl_name}-%{version}/modules \
     -d extension=%{extname}.so \
     -m | grep %{extname}
 
+%if 0%{?__ztsphp:1}
 %{__ztsphp} -n \
     -d extension_dir=%{pecl_name}-zts/modules \
     -d extension=%{extname}.so \
     -m | grep %{extname}
+%endif
 
 
 %post
@@ -122,20 +126,26 @@ fi
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-, root, root, -)
 %doc CHANGELOG %{pecl_name}-%{version}/CREDITS
 %config(noreplace) %{php_inidir}/%{extname}.ini
-%config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
-%{php_ztsextdir}/%{extname}.so
 %{pecl_xmldir}/%{name}.xml
+
+%if 0%{?__ztsphp:1}
+%config(noreplace) %{php_ztsinidir}/%{extname}.ini
+%{php_ztsextdir}/%{extname}.so
+%endif
 
 
 %changelog
+* Sat Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.9-1
+- update to 2.1.9
+
 * Sun Nov 27 2011 Remi Collet <RPMS@FamilleCollet.com> 2.1.8-3
 - php 5.4 build
 - add ZTS extension
