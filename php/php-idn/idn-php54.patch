@@ -1,0 +1,129 @@
+diff -up idn-1.2c/idn.c.php54 idn-1.2c/idn.c
+--- idn-1.2c/idn.c.php54	2011-12-28 16:59:36.398415766 +0100
++++ idn-1.2c/idn.c	2011-12-28 17:12:29.231434281 +0100
+@@ -92,7 +92,7 @@ ZEND_GET_MODULE(idn)
+ /* {{{ idn_functions[]
+  * Every user visible function must have an entry in idn_functions[].
+  */
+-function_entry idn_functions[] = {
++zend_function_entry idn_functions[] = {
+ 	PHP_FE(idn_prep_name,					NULL)
+ 	PHP_FE(idn_prep_kerberos5,				NULL)
+ 	PHP_FE(idn_prep_node,					NULL)
+@@ -417,7 +417,7 @@ PHP_FUNCTION(idn_prep_name)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -443,7 +443,7 @@ PHP_FUNCTION(idn_prep_kerberos5)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -469,7 +469,7 @@ PHP_FUNCTION(idn_prep_node)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -495,7 +495,7 @@ PHP_FUNCTION(idn_prep_resource)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -521,7 +521,7 @@ PHP_FUNCTION(idn_prep_plain)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -547,7 +547,7 @@ PHP_FUNCTION(idn_prep_trace)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -573,7 +573,7 @@ PHP_FUNCTION(idn_prep_sasl)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -599,7 +599,7 @@ PHP_FUNCTION(idn_prep_iscsi)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -629,7 +629,7 @@ PHP_FUNCTION(idn_punycode_encode)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -655,7 +655,7 @@ PHP_FUNCTION(idn_punycode_decode)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -686,7 +686,7 @@ PHP_FUNCTION(idn_to_ascii)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -716,7 +716,7 @@ PHP_FUNCTION(idn_to_utf8)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 1) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {
+@@ -747,7 +747,7 @@ PHP_FUNCTION(idn_to_unicode)
+ {
+ 	char *output;
+ 	char *charset = IDNG(default_charset);
+-	pval **yyinput, **yycharset;
++	zval **yyinput, **yycharset;
+ 	int argv = ZEND_NUM_ARGS();
+ 
+     if ((argv < 0) || (argv > 2) || (zend_get_parameters_ex(argv, &yyinput, &yycharset) == FAILURE)) {

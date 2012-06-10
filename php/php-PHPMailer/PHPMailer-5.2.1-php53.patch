@@ -1,0 +1,105 @@
+diff -up PHPMailer_5.2.1/docs/use_gmail.txt.orig PHPMailer_5.2.1/docs/use_gmail.txt
+--- PHPMailer_5.2.1/docs/use_gmail.txt.orig	2012-03-20 18:59:04.665629722 +0100
++++ PHPMailer_5.2.1/docs/use_gmail.txt	2012-03-20 19:00:29.325624132 +0100
+@@ -8,7 +8,7 @@ include("class.smtp.php"); // note, this
+ $mail             = new PHPMailer();
+ 
+ $body             = $mail->getFile('contents.html');
+-$body             = eregi_replace("[\]",'',$body);
++$body             = preg_replace("[\]",'',$body);
+ 
+ $mail->IsSMTP();
+ $mail->SMTPAuth   = true;                  // enable SMTP authentication
+diff -up PHPMailer_5.2.1/examples/test_mail_basic.php.orig PHPMailer_5.2.1/examples/test_mail_basic.php
+--- PHPMailer_5.2.1/examples/test_mail_basic.php.orig	2012-03-20 18:59:33.545627815 +0100
++++ PHPMailer_5.2.1/examples/test_mail_basic.php	2012-03-20 19:00:29.341624132 +0100
+@@ -11,7 +11,7 @@ require_once('../class.phpmailer.php');
+ $mail             = new PHPMailer(); // defaults to using php "mail()"
+ 
+ $body             = file_get_contents('contents.html');
+-$body             = eregi_replace("[\]",'',$body);
++$body             = preg_replace("[\]",'',$body);
+ 
+ $mail->AddReplyTo("name@yourdomain.com","First Last");
+ 
+diff -up PHPMailer_5.2.1/examples/test_pop_before_smtp_basic.php.orig PHPMailer_5.2.1/examples/test_pop_before_smtp_basic.php
+--- PHPMailer_5.2.1/examples/test_pop_before_smtp_basic.php.orig	2012-03-20 18:59:12.433629208 +0100
++++ PHPMailer_5.2.1/examples/test_pop_before_smtp_basic.php	2012-03-20 19:00:29.334624132 +0100
+@@ -14,7 +14,7 @@ $pop->Authorise('pop3.yourdomain.com', 1
+ $mail = new PHPMailer();
+ 
+ $body             = file_get_contents('contents.html');
+-$body             = eregi_replace("[\]",'',$body);
++$body             = preg_replace("[\]",'',$body);
+ 
+ $mail->IsSMTP();
+ $mail->SMTPDebug = 2;
+diff -up PHPMailer_5.2.1/examples/test_sendmail_basic.php.orig PHPMailer_5.2.1/examples/test_sendmail_basic.php
+--- PHPMailer_5.2.1/examples/test_sendmail_basic.php.orig	2012-03-20 18:59:26.719628266 +0100
++++ PHPMailer_5.2.1/examples/test_sendmail_basic.php	2012-03-20 19:00:29.341624132 +0100
+@@ -13,7 +13,7 @@ $mail             = new PHPMailer(); //
+ $mail->IsSendmail(); // telling the class to use SendMail transport
+ 
+ $body             = file_get_contents('contents.html');
+-$body             = eregi_replace("[\]",'',$body);
++$body             = preg_replace("[\]",'',$body);
+ 
+ $mail->AddReplyTo("name@yourdomain.com","First Last");
+ 
+diff -up PHPMailer_5.2.1/examples/test_smtp_basic_no_auth.php.orig PHPMailer_5.2.1/examples/test_smtp_basic_no_auth.php
+--- PHPMailer_5.2.1/examples/test_smtp_basic_no_auth.php.orig	2012-03-20 18:59:48.193626848 +0100
++++ PHPMailer_5.2.1/examples/test_smtp_basic_no_auth.php	2012-03-20 19:00:29.342624132 +0100
+@@ -17,7 +17,7 @@ require_once('../class.phpmailer.php');
+ $mail             = new PHPMailer();
+ 
+ $body             = file_get_contents('contents.html');
+-$body             = eregi_replace("[\]",'',$body);
++$body             = preg_replace("[\]",'',$body);
+ 
+ $mail->IsSMTP(); // telling the class to use SMTP
+ $mail->Host       = "mail.yourdomain.com"; // SMTP server
+diff -up PHPMailer_5.2.1/examples/test_smtp_basic.php.orig PHPMailer_5.2.1/examples/test_smtp_basic.php
+--- PHPMailer_5.2.1/examples/test_smtp_basic.php.orig	2012-03-20 18:59:41.282627305 +0100
++++ PHPMailer_5.2.1/examples/test_smtp_basic.php	2012-03-20 19:00:29.342624132 +0100
+@@ -17,7 +17,7 @@ require_once('../class.phpmailer.php');
+ $mail             = new PHPMailer();
+ 
+ $body             = file_get_contents('contents.html');
+-$body             = eregi_replace("[\]",'',$body);
++$body             = preg_replace("[\]",'',$body);
+ 
+ $mail->IsSMTP(); // telling the class to use SMTP
+ $mail->Host       = "mail.yourdomain.com"; // SMTP server
+diff -up PHPMailer_5.2.1/examples/test_smtp_gmail_basic.php.orig PHPMailer_5.2.1/examples/test_smtp_gmail_basic.php
+--- PHPMailer_5.2.1/examples/test_smtp_gmail_basic.php.orig	2012-03-20 18:59:19.688628730 +0100
++++ PHPMailer_5.2.1/examples/test_smtp_gmail_basic.php	2012-03-20 19:00:29.341624132 +0100
+@@ -17,7 +17,7 @@ require_once('../class.phpmailer.php');
+ $mail             = new PHPMailer();
+ 
+ $body             = file_get_contents('contents.html');
+-$body             = eregi_replace("[\]",'',$body);
++$body             = preg_replace("[\]",'',$body);
+ 
+ $mail->IsSMTP(); // telling the class to use SMTP
+ $mail->Host       = "mail.yourdomain.com"; // SMTP server
+diff -up PHPMailer_5.2.1/test_script/index.php.orig PHPMailer_5.2.1/test_script/index.php
+--- PHPMailer_5.2.1/test_script/index.php.orig	2012-03-20 19:00:03.270625851 +0100
++++ PHPMailer_5.2.1/test_script/index.php	2012-03-20 19:00:29.343624132 +0100
+@@ -51,7 +51,7 @@ if ( $_POST['submit'] == "Submit" ) {
+ 
+   if ( $_POST['Message'] == '' ) {
+     $body             = $mail->getFile('contents.html');
+-    $body             = eregi_replace("[\]",'',$body);
++    $body             = preg_replace("[\]",'',$body);
+   } else {
+     $body = $_POST['Message'];
+   }
+@@ -196,7 +196,7 @@ $mail = new PHPMailer();
+ <?php
+ if ( $_POST['Message'] == '' ) {
+   echo '$body             = $mail->getFile(\'contents.html\');' . "\n";
+-  echo '$body             = eregi_replace("[\]",\'\',$body);' . "\n";
++  echo '$body             = preg_replace("[\]",\'\',$body);' . "\n";
+ } else {
+   echo '$body = ' . $_POST['Message'] . "\n";
+ }

@@ -1,0 +1,22 @@
+diff -Naupr eaccelerator-0.9.5-rc1.orig/eaccelerator.ini eaccelerator-0.9.5-rc1/eaccelerator.ini
+--- eaccelerator-0.9.5-rc1.orig/eaccelerator.ini	2006-07-25 15:00:00.000000000 +0200
++++ eaccelerator-0.9.5-rc1/eaccelerator.ini	2006-08-22 14:29:08.000000000 +0200
+@@ -15,9 +15,6 @@
+ ;extension="eaccelerator.so"
+ zend_extension="/usr/lib/php4/eaccelerator.so"
+ ;zend_extension_ts="/usr/lib/php4/eaccelerator.so"
+-;extension="eaccelerator.dll"
+-;zend_extension_ts="c:\php4\eaccelerator.dll"
+-;zend_extension="c:\php4\eaccelerator.dll"
+ 
+ ; The amount of shared memory (in megabytes) that eAccelerator will use.
+ ; "0" means OS default. Default value is "0".
+@@ -73,7 +70,7 @@ eaccelerator.shm_max = "0"
+ ; all scripts which were not accessed at last "shm_ttl" seconds from shared
+ ; memory. Default value is "0" that means - don't remove any files from
+ ; shared memory.
+-eaccelerator.shm_ttl = "0"
++eaccelerator.shm_ttl = "3600"
+ 
+ ; When eAccelerator fails to get shared memory for new script it tryes to 
+ ; remove old script if the previous try was made more then "shm_prune_period"
