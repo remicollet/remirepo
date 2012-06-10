@@ -3,10 +3,13 @@
 */*.tgz
 */*/*/*.tgz
 */*.tar.bz2
+*/*/*.tar.bz2
 */*/*/*.tar.bz2
 */*.rpm
+*/*/*.rpm
 */*/*/*.rpm
 */*.zip
+*/*/*.zip
 */*.xz
 */noarch
 */*/*/noarch

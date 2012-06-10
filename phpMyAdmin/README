@@ -1,8 +1,0 @@
-phpMyAdmin
-----------
-
-Diff from fedora packages
-
-- version 3.4.x
-- embeded themes
-- don't requires httpd

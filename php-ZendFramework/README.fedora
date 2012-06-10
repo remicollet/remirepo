@@ -1,3 +1,0 @@
-The "-tests" subpackage had to be removed because Fedora's current (2009-11-03)
-font packaging guidelines contradict with using font files as static test data
-aka "fixtures".

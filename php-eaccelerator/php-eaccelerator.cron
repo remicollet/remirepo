@@ -1,5 +1,0 @@
-#!/bin/sh
-
-# Remove cache files not accessed during the last 7 days
-/usr/sbin/tmpwatch -u -d -f 7d /var/cache/php-eaccelerator
-
