@@ -12,6 +12,7 @@ License:          MIT
 URL:              http://symfony.com/doc/current/components/dependency_injection.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -75,12 +76,16 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Symfony/Component/%{pear_name}
 
 
 %changelog
+* Sun Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-2
+- rebuild for remi repository
+
 * Sat Jun 9 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-2
 - Added php-pear(%%{pear_channel}/Config) require
 - Added php-pear(%%{pear_channel}/Yaml) require
