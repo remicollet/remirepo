@@ -1,6 +1,8 @@
 */*.tar.gz
+*/*/*.tar.gz
 */*/*/*.tar.gz
 */*.tgz
+*/*/*.tgz
 */*/*/*.tgz
 */*.tar.bz2
 */*/*.tar.bz2
