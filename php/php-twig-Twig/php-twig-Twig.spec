@@ -12,6 +12,7 @@ License:          BSD
 URL:              http://twig.sensiolabs.org
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -83,12 +84,16 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/%{pear_name}
 
 
 %changelog
+* Sun Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 1.8.2-1
+- rebuild for remi repository
+
 * Thu May 31 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.8.2-1
 - Updated to upstream version 1.8.2
 - Removed "BuildRequires: php-pear >= 1:1.4.9-1.2"
