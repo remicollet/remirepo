@@ -12,6 +12,7 @@ License:          MIT
 URL:              http://symfony.com/doc/current/components/class_loader.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -83,6 +84,7 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Symfony/Component/%{pear_name}
@@ -91,6 +93,9 @@ fi
 
 
 %changelog
+* Sun Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-1
+- rebuild for remi repository
+
 * Wed May 30 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-1
 - Updated to upstream version 2.0.15
 - Removed "BuildRequires: php-pear >= 1:1.4.9-1.2"
