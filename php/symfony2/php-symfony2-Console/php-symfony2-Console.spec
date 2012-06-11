@@ -3,8 +3,8 @@
 %global pear_name %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-Console
-Version:          2.0.14
-Release:          3%{?dist}
+Version:          2.0.15
+Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -13,7 +13,6 @@ URL:              http://symfony.com/doc/current/components/console.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildArch:        noarch
-BuildRequires:    php-pear >= 1:1.4.9-1.2
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
@@ -40,9 +39,8 @@ other batch jobs.
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
-cd %{pear_name}-%{version}
+# package.xml is version 2.0
+mv package.xml %{pear_name}-%{version}/%{name}.xml
 
 
 %build
@@ -51,29 +49,14 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 
-# Move documentation to correct location
-# NOTE: Remove this when upstream updates their package.xml with role="doc"
-#       for these files
-mkdir -p $RPM_BUILD_ROOT%{pear_docdir}/Symfony/Component/%{pear_name}
-mv -f \
-    $RPM_BUILD_ROOT%{pear_phpdir}/Symfony/Component/%{pear_name}/composer.json \
-    $RPM_BUILD_ROOT%{pear_phpdir}/Symfony/Component/%{pear_name}/LICENSE \
-    $RPM_BUILD_ROOT%{pear_phpdir}/Symfony/Component/%{pear_name}/README.md \
-    $RPM_BUILD_ROOT%{pear_docdir}/Symfony/Component/%{pear_name}
-
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
-
-
-%clean
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 
 %post
@@ -89,9 +72,7 @@ fi
 
 
 %files
-%doc %{pear_docdir}/Symfony/Component/%{pear_name}
-%dir %{pear_docdir}/Symfony/Component
-%dir %{pear_docdir}/Symfony
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Symfony/Component/%{pear_name}
 %dir %{pear_phpdir}/Symfony/Component
@@ -99,6 +80,15 @@ fi
 
 
 %changelog
+* Wed May 30 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-1
+- Updated to upstream version 2.0.15
+- Removed "BuildRequires: php-pear >= 1:1.4.9-1.2"
+- Updated %%prep section
+- Removed cleaning buildroot from %%install section
+- Removed documentation move from %%install section (fixed upstream)
+- Removed %%clean section
+- Updated %%doc in %%files section
+
 * Sun May 20 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.14-3
 - Moved documentation to correct location
 
