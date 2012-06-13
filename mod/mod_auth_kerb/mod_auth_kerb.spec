@@ -8,7 +8,7 @@
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 14%{?dist}
+Release: 16%{?dist}
 License: BSD and MIT and ASL 2.0
 Group: System Environment/Daemons
 URL: http://modauthkerb.sourceforge.net/
@@ -60,9 +60,10 @@ install -Dp -m 0644 10-auth_kerb.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-aut
 install -Dp -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/auth_kerb.conf
 %endif
 
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
-echo 'd /var/run/user/apache 700 apache apache' \
-     > $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/httpd-user.conf
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
+echo 'd /run/user/apache 700 apache apache' \
+     > $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/httpd-user.conf
+mkdir -p $RPM_BUILD_ROOT/run/user/apache
 
 # Copy the license files here so we can include them in %doc
 cp -p %{SOURCE2} .
@@ -78,9 +79,21 @@ rm -rf $RPM_BUILD_ROOT
 %doc example.conf
 %endif
 %{_httpd_moddir}/*.so
-%config %{_sysconfdir}/tmpfiles.d/httpd-user.conf
+%{_prefix}/lib/tmpfiles.d/httpd-user.conf
+%attr(0700,apache,apache) %dir /run/user/apache
 
 %changelog
+* Wed Jun 13 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-16
+- sync with rawhide, rebuild for remi repo
+
+* Wed Jun 13 2012 Joe Orton <jorton@redhat.com> - 5.4-16
+- hard-code use of /run/user/apache for cache dir
+- package /run/user/apache
+- move tmpfiles drop-in to /usr/lib
+
+* Wed Jun 13 2012 Joe Orton <jorton@redhat.com> - 5.4-15
+- fix segfault in cache dir fix (#796430)
+
 * Sat May 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-14
 - sync with rawhide, rebuild for remi repo
 
