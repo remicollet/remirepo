@@ -7,7 +7,7 @@
 
 Name: mod_nss
 Version: 1.0.8
-Release: 16%{?dist}
+Release: 17%{?dist}
 Summary: SSL/TLS module for the Apache HTTP server
 Group: System Environment/Daemons
 License: ASL 2.0
@@ -29,6 +29,7 @@ Patch5: mod_nss-reverseproxy.patch
 Patch6: mod_nss-pcachesignal.h
 Patch7: mod_nss-reseterror.patch
 Patch8: mod_nss-lockpcache.patch
+Patch9: mod_nss-httpd24.patch
 
 %description
 The mod_nss module provides strong cryptography for the Apache Web
@@ -46,6 +47,9 @@ security library.
 %patch6 -p1 -b .pcachesignal.h
 %patch7 -p1 -b .reseterror
 %patch8 -p1 -b .lockpcache
+#if 0%{?fedora} >= 18
+%patch9 -p1 -b .httpd24
+#endif
 
 # Touch expression parser sources to prevent regenerating it
 touch nss_expr_*.[chyl]
@@ -144,6 +148,12 @@ fi
 %{_sbindir}/gencert
 
 %changelog
+* Wed Jun 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.0.8-17
+- rebuild for remi repo and http 2.4
+
+* Tue Jun 12 2012 Nathan Kinder <nkinder@redhat.com> - 1.0.8-17
+- Port mod_nss to work with httpd 2.4
+
 * Tue Apr 24 2012 Remi Collet <RPMS@FamilleCollet.com> 1.0.8-16
 - rebuild for remi repo and http 2.4
 
