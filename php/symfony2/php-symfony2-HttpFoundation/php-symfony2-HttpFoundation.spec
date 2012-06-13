@@ -12,6 +12,7 @@ License:          MIT
 URL:              http://symfony.com/doc/current/components/http_foundation.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -79,6 +80,7 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Symfony/Component/%{pear_name}
@@ -87,6 +89,9 @@ fi
 
 
 %changelog
+* Wed Jun 13 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-2
+- rebuild for remi repository
+
 * Mon Jun 11 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-2
 - Added php-pdo require
 
