@@ -4,7 +4,7 @@
 
 Name:             php-symfony2-DependencyInjection
 Version:          2.0.15
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -26,10 +26,11 @@ Requires:         php-spl
 Requires:         php-simplexml
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
-Requires:         php-pear(%{pear_channel}/Config) = %{version}
-Requires:         php-pear(%{pear_channel}/Yaml) = %{version}
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
+# Optional requires
+Requires:         php-pear(%{pear_channel}/Config) = %{version}
+Requires:         php-pear(%{pear_channel}/Yaml) = %{version}
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -45,6 +46,14 @@ Service Container (http://symfony.com/doc/current/book/service_container.html).
 %setup -q -c
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
+
+# Fix package.xml for *.xsd file incorrectly being identified with role="doc"
+# instead of role="php" (the *.xsd file is being referenced in code and is
+# expected to be in the install directory instead of the doc directory)
+# *** NOTE: This needs to be fixed upstream
+sed -i \
+    's#<file *md5sum="\([^"]\{1,\}\)" *name="\([^"]\{1,\}.xsd\)" *role="doc" */>#<file md5sum="\1" name="\2" role="php" />#' \
+    %{pear_name}-%{version}/%{name}.xml
 
 
 %build
@@ -83,6 +92,12 @@ fi
 
 
 %changelog
+* Wed Jun 13 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
+- rebuild for remi repository
+
+* Tue Jun 12 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-3
+- Fix package.xml for *.xsd file issue
+
 * Sun Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-2
 - rebuild for remi repository
 
