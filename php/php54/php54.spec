@@ -762,7 +762,7 @@ find . -name \*.[ch] -exec chmod 644 {} \;
 chmod 644 README.*
 
 # php-fpm configuration files for tmpfiles.d
-echo "d %{_localstatedir}/run/php-fpm 755 root root" >php-fpm.tmpfiles
+echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 
 : Build for oci8=%{with_oci8} ibase=%{with_ibase}
 
@@ -1165,13 +1165,16 @@ install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{phpname}/session
 # PHP-FPM stuff
 # Log
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/log/php-fpm
-install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
 # Config
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/php-fpm.d
 install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
 install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_origsysconfdir}/php-fpm.d/www.conf
 mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
+# LogRotate
+install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
+install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 %if 0%{?fedora} >= 15
+install -m 755 -d $RPM_BUILD_ROOT/run/php-fpm
 # tmpfiles.d
 install -m 755 -d $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
 install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/php-fpm.conf
@@ -1179,13 +1182,13 @@ install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
 %else
+install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
+sed -i -e 's:/run:/var/run:' $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
+sed -i -e 's:/run:/var/run:' $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 # Service
 install -m 755 -d $RPM_BUILD_ROOT%{_originitdir}
 install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_originitdir}/php-fpm
 %endif
-# LogRotate
-install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d
-install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_origsysconfdir}/logrotate.d/php-fpm
 # Environment file
 install -m 755 -d $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_origsysconfdir}/sysconfig/php-fpm
@@ -1414,14 +1417,15 @@ fi
 %if 0%{?fedora} >= 15
 %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
+%dir /run/php-fpm
 %else
 %{_originitdir}/php-fpm
+%dir %{_localstatedir}/run/php-fpm
 %endif
 %{_sbindir}/php-fpm
 %dir %{_origsysconfdir}/php-fpm.d
 # log owned by apache for log
 %attr(770,apache,root) %dir %{_localstatedir}/log/php-fpm
-%dir %{_localstatedir}/run/php-fpm
 %{_mandir}/man8/php-fpm.8*
 %{_datadir}/fpm/status.html
 %endif
@@ -1487,7 +1491,8 @@ fi
 %changelog
 * Wed Jun 13 2012 Remi Collet <Fedora@famillecollet.com> 5.4.4-1
 - update to 5.4.4 finale
-- use /usr/lib/tmpfiles.d instead of /etc/tmpfiles.d
+- fedora >= 15: use /usr/lib/tmpfiles.d instead of /etc/tmpfiles.d
+- fedora >= 15: use /run/php-fpm instead of /var/run/php-fpm
 
 * Thu May 31 2012 Remi Collet <Fedora@famillecollet.com> 5.4.4-0.2.RC2
 - update to 5.4.4RC2
