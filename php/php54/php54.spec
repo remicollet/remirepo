@@ -1173,8 +1173,8 @@ install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_origsysconfdir}/php-fpm.d/www.conf
 mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
 %if 0%{?fedora} >= 15
 # tmpfiles.d
-install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
-install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm.conf
+install -m 755 -d $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
+install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/php-fpm.conf
 # install systemd unit files and scripts for handling server startup
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
@@ -1412,7 +1412,7 @@ fi
 %config(noreplace) %{_origsysconfdir}/logrotate.d/php-fpm
 %config(noreplace) %{_origsysconfdir}/sysconfig/php-fpm
 %if 0%{?fedora} >= 15
-%config(noreplace) %{_sysconfdir}/tmpfiles.d/php-fpm.conf
+%{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
 %else
 %{_originitdir}/php-fpm
@@ -1487,6 +1487,7 @@ fi
 %changelog
 * Wed Jun 13 2012 Remi Collet <Fedora@famillecollet.com> 5.4.4-1
 - update to 5.4.4 finale
+- use /usr/lib/tmpfiles.d instead of /etc/tmpfiles.d
 
 * Thu May 31 2012 Remi Collet <Fedora@famillecollet.com> 5.4.4-0.2.RC2
 - update to 5.4.4RC2
