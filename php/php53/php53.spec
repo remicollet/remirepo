@@ -58,7 +58,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.13
+Version: 5.3.14
 Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
@@ -87,7 +87,7 @@ Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 # from http://svn.php.net/viewvc?view=revision&revision=311042
 # and  http://svn.php.net/viewvc?view=revision&revision=311908
-Patch8: php-5.3.11-aconf259.patch
+Patch8: php-5.3.14-aconf259.patch
 # fix harcoded mysql.sock path
 Patch9: php-5.3.9-mysqlnd.patch
 
@@ -1482,6 +1482,9 @@ fi
 %endif
 
 %changelog
+* Thu Jun 14 2012 Remi Collet <Fedora@famillecollet.com> 5.3.14-1
+- update to 5.3.14 (CVE-2012-2143, CVE-2012-2386)
+
 * Wed May 09 2012 Remi Collet <Fedora@famillecollet.com> 5.3.13-1
 - update to 5.3.13 (CVE-2012-2311)
 
