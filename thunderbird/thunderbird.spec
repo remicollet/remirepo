@@ -52,14 +52,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        13.0
+Version:        13.0.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20120605.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20120615.tar.bz2
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -480,6 +480,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Fri Jun 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0.1-1
+- Sync with rawhide, update to 13.0.1
+
+* Fri Jun 15 2012 Jan Horak <jhorak@redhat.com> - 13.0.1-1
+- Update to 13.0.1
+
+* Tue Jun 05 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0-1
+- Sync with rawhide, update to 13.0
+
 * Tue Jun  5 2012 Jan Horak <jhorak@redhat.com> - 13.0-1
 - Update to 13.0
 
