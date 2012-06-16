@@ -2,7 +2,7 @@
 %global pear_name Horde_Translation
 
 Name:           php-horde-Horde-Translation
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Horde translation library
 
@@ -94,6 +94,7 @@ fi
 %dir %{pear_phpdir}/Horde
 %{pear_phpdir}/Horde/Translation
 %{pear_phpdir}/Horde/Translation.php
+%doc %{pear_docdir}/Horde_Translation
 # own locales (non standard) directories, .mo own by find_lang
 %dir %{pear_testdir}/Horde_Translation
 %dir %{pear_testdir}/Horde_Translation/Horde
@@ -105,6 +106,12 @@ fi
 
 
 %changelog
+* Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
+- Upgrade to 1.0.2, backport for remi repo
+
+* Thu Jun 14 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.2-1
+- Upgrade to 1.0.2
+
 * Mon Feb 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
 - backport for remi repo
 
