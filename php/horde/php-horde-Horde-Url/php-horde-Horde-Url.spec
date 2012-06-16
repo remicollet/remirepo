@@ -2,7 +2,7 @@
 %global pear_name Horde_Url
 
 Name:           php-horde-Horde-Url
-Version:        1.0.0
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Horde Url class
 
@@ -70,8 +70,15 @@ fi
 %{pear_phpdir}/Horde/Url
 %{pear_phpdir}/Horde/Url.php
 %{pear_testdir}/Horde_Url
+%doc %{pear_docdir}/Horde_Url
 
 %changelog
+* Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
+- Upgrade to 1.0.2, backport for remi repo
+
+* Thu Jun 14 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.2-1
+- Upgrade to 1.0.2
+
 * Mon Feb 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
 - backport for remi repo
 
