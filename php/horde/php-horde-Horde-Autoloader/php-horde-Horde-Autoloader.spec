@@ -11,6 +11,7 @@ License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.4.9-1.2
 Requires(post): %{__pear}
@@ -58,6 +59,7 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Autoloader
@@ -65,5 +67,8 @@ fi
 %{pear_testdir}/Horde_Autoloader
 
 %changelog
+* Thu Mar 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
+- backport for remi repo
+
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.1-1
 - Initial package
