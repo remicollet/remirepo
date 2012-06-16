@@ -2,7 +2,7 @@
 %global pear_name Horde_Exception
 
 Name:           php-horde-Horde-Exception
-Version:        1.0.8
+Version:        1.0.9
 Release:        1%{?dist}
 Summary:        Horde Exception Handler
 
@@ -98,6 +98,12 @@ fi
 %{pear_testdir}/Horde_Exception
 
 %changelog
+* Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.9-1
+- Upgrade to 1.0.9, backport for remi repo
+
+* Thu Jun 14 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.9-1
+- Upgrade to 1.0.9
+
 * Mon Feb 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.8-1
 - backport for remi repo
 - hack for find_lang on old distro

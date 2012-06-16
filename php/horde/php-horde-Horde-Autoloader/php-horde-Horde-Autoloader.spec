@@ -67,7 +67,7 @@ fi
 %{pear_testdir}/Horde_Autoloader
 
 %changelog
-* Thu Mar 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
+* Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
 - backport for remi repo
 
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.1-1
