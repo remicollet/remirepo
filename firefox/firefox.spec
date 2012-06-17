@@ -26,12 +26,12 @@
 %global shortname              firefox
 #global mycomment              Beta 4
 %global firefox_dir_ver        13
-%global xulrunner_version      13.0
+%global xulrunner_version      13.0.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20120606
+%global datelang               20120617
 
 %global mozappdir     %{_libdir}/%{shortname}
 %global langpackdir   %{mozappdir}/langpacks
@@ -62,7 +62,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           %{shortname}
-Version:        13.0
+Version:        13.0.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -436,6 +436,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Jun 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0.1-1
+- Sync with rawhide, update to 13.0.1
+
+* Sat Jun 16 2012 Jan Horak <jhorak@redhat.com> - 13.0.1-1
+- Update to 13.0.1
+
 * Wed Jun 06 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0-1
 - Sync with rawhide, update to 13.0
 

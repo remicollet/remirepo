@@ -77,7 +77,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        13.0
+Version:        13.0.1
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -549,6 +549,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0.1-1
+- Sync with rawhide, update to 13.0.1
+
+* Sat Jun 16 2012 Jan Horak <jhorak@redhat.com> - 13.0.1-1
+- Update to 13.0.1
+
 * Wed Jun 06 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0-1
 - Sync with rawhide, update to 13.0
 
