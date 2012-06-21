@@ -230,13 +230,16 @@ Provides: %{phpname}(api) = %{apiver}%{isasuffix}, %{phpname}(zend-abi) = %{zend
 # Provides for all builtin/shared modules:
 Provides: %{phpname}-bz2, %{phpname}-bz2%{?_isa}
 Provides: %{phpname}-calendar, %{phpname}-calendar%{?_isa}
+Provides: %{phpname}-core = %{version}, %{phpname}-core%{?_isa} = %{version}
 Provides: %{phpname}-ctype, %{phpname}-ctype%{?_isa}
 Provides: %{phpname}-curl, %{phpname}-curl%{?_isa}
 Provides: %{phpname}-date, %{phpname}-date%{?_isa}
+Provides: %{phpname}-ereg, %{phpname}-ereg%{?_isa}
 Provides: %{phpname}-exif, %{phpname}-exif%{?_isa}
 Provides: %{phpname}-fileinfo, %{phpname}-fileinfo%{?_isa}
 Provides: %{phpname}-pecl-Fileinfo = %{fileinfover}, %{phpname}-pecl-Fileinfo%{?_isa} = %{fileinfover}
 Provides: %{phpname}-pecl(Fileinfo) = %{fileinfover}, %{phpname}-pecl(Fileinfo)%{?_isa} = %{fileinfover}
+Provides: %{phpname}-filter, %{phpname}-filter%{?_isa}
 Provides: %{phpname}-ftp, %{phpname}-ftp%{?_isa}
 Provides: %{phpname}-gettext, %{phpname}-gettext%{?_isa}
 Provides: %{phpname}-gmp, %{phpname}-gmp%{?_isa}
@@ -257,6 +260,7 @@ Provides: %{phpname}-shmop, %{phpname}-shmop%{?_isa}
 Provides: %{phpname}-simplexml, %{phpname}-simplexml%{?_isa}
 Provides: %{phpname}-sockets, %{phpname}-sockets%{?_isa}
 Provides: %{phpname}-spl, %{phpname}-spl%{?_isa}
+Provides: %{phpname}-standard = %{version}, %{phpname}-standard%{?_isa} = %{version}
 Provides: %{phpname}-tokenizer, %{phpname}-tokenizer%{?_isa}
 %if %{with_zip}
 Provides: %{phpname}-zip, %{phpname}-zip%{?_isa}
@@ -1482,6 +1486,9 @@ fi
 %endif
 
 %changelog
+* Thu Jun 21 2012 Remi Collet <remi@fedoraproject.org> 5.3.14-1
+- sync with rawhide, add missing provides (core, ereg, filter, standard)
+
 * Thu Jun 14 2012 Remi Collet <Fedora@famillecollet.com> 5.3.14-1
 - update to 5.3.14 (CVE-2012-2143, CVE-2012-2386)
 
