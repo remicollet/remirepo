@@ -1,0 +1,104 @@
+Revision: http://svn.php.net/viewvc?view=revision&revision=325482
+- Fix bug #59829 APC should not try to canonicalize file URLs
+
+Revision: http://svn.php.net/viewvc?view=revision&revision=325483
+- Fix bug #61799 Typo in 'SEARCH' regex of apc.php      
+
+Revision: http://svn.php.net/viewvc?view=revision&revision=325875
+- Fixed possible memory leak in apc_inc() and apc_dec()
+
+Revision: http://svn.php.net/viewvc?view=revision&revision=325977
+- Fix bug 62230 apc_copy_internal_strings does not copy terminating \0 of class entry
+
+Revision: http://svn.php.net/viewvc?view=revision&revision=326089
+- Make sure interned strings are null-terminated (cschneid)
+
+--- pecl/apc/trunk/apc_cache.c	2012/04/30 21:13:32	325481
++++ pecl/apc/trunk/apc_cache.c	2012/05/01 00:09:36	325482
+@@ -944,7 +944,7 @@
+ 
+     len = strlen(filename);
+     if(APCG(fpstat)==0) {
+-        if(IS_ABSOLUTE_PATH(filename,len)) {
++        if(IS_ABSOLUTE_PATH(filename,len) || strstr(filename, "://")) {
+             key->data.fpfile.fullpath = filename;
+             key->data.fpfile.fullpath_len = len;
+             key->h = string_nhash_8(key->data.fpfile.fullpath, key->data.fpfile.fullpath_len);
+--- pecl/apc/trunk/apc.php	2012/05/01 00:09:36	325482
++++ pecl/apc/trunk/apc.php	2012/05/01 00:34:04	325483
+@@ -91,7 +91,7 @@
+ 	'SORT1'	=> '/^[AHSMCDTZ]$/',	// first sort key
+ 	'SORT2'	=> '/^[DA]$/',			// second sort key
+ 	'AGGR'	=> '/^\d+$/',			// aggregation by dir level
+-	'SEARCH'	=> '~^[a-zA-Z0-1/_.-]*$~'			// aggregation by dir level
++	'SEARCH'	=> '~^[a-zA-Z0-9/_.-]*$~'			// aggregation by dir level
+ );
+ 
+ // default cache mode
+--- pecl/apc/trunk/php_apc.c	2012/05/27 16:15:36	325874
++++ pecl/apc/trunk/php_apc.c	2012/05/27 17:15:26	325875
+@@ -724,6 +724,10 @@
+     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|lz", &strkey, &strkey_len, &(args.step), &success) == FAILURE) {
+         return;
+     }
++    
++	if (success) {
++		zval_dtor(success);
++	}
+ 
+     if(_apc_update(strkey, strkey_len, inc_updater, &args TSRMLS_CC)) {
+         if(success) ZVAL_TRUE(success);
+@@ -747,6 +751,10 @@
+     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|lz", &strkey, &strkey_len, &(args.step), &success) == FAILURE) {
+         return;
+     }
++    
++	if (success) {
++		zval_dtor(success);
++	}
+ 
+     args.step = args.step * -1;
+ 
+--- pecl/apc/trunk/apc_string.c	2012/06/05 04:25:50	325976
++++ pecl/apc/trunk/apc_string.c	2012/06/05 05:34:21	325977
+@@ -154,7 +154,7 @@
+         }
+ 
+ 		if (ce->name) {
+-            ce->name = apc_new_interned_string(ce->name, ce->name_length TSRMLS_CC);
++            ce->name = apc_new_interned_string(ce->name, ce->name_length+1 TSRMLS_CC);
+ 		}
+ 
+         q = ce->properties_info.pListHead;
+@@ -166,7 +166,7 @@
+             }
+ 
+             if (info->name) {
+-                info->name = apc_new_interned_string(info->name, info->name_length TSRMLS_CC);
++                info->name = apc_new_interned_string(info->name, info->name_length+1 TSRMLS_CC);
+             }
+ 
+             q = q->pListNext;
+--- pecl/apc/trunk/apc_string.c	2012/06/05 05:34:21	325977
++++ pecl/apc/trunk/apc_string.c	2012/06/11 04:29:57	326089
+@@ -91,17 +91,18 @@
+         p = p->pNext;
+     }
+    
+-    if (APCSG(interned_strings_top) + ZEND_MM_ALIGNED_SIZE(sizeof(Bucket) + nKeyLength) >=
++    if (APCSG(interned_strings_top) + ZEND_MM_ALIGNED_SIZE(sizeof(Bucket) + nKeyLength + 1) >=
+         APCSG(interned_strings_end)) {
+         /* no memory */
+         return NULL;
+     }
+ 
+     p = (Bucket *) APCSG(interned_strings_top);
+-    APCSG(interned_strings_top) += ZEND_MM_ALIGNED_SIZE(sizeof(Bucket) + nKeyLength);
++    APCSG(interned_strings_top) += ZEND_MM_ALIGNED_SIZE(sizeof(Bucket) + nKeyLength + 1);
+ 
+     p->arKey = (char*)(p+1);
+     memcpy(p->arKey, arKey, nKeyLength);
++    ((char *)p->arKey)[nKeyLength] = '\0';
+     p->nKeyLength = nKeyLength;
+     p->h = h;
+     p->pData = &p->pDataPtr;

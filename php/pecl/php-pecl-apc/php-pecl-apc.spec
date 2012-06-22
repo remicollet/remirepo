@@ -1,32 +1,27 @@
-%{!?phpname:	%{expand: %%global phpname   php}}
-%{!?__pecl:	%{expand: %%global __pecl    %{_bindir}/pecl}}
+%{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name APC
-#global svnver    324329
 
 Summary:       APC caches and optimizes PHP intermediate code
-Name:          %{phpname}-pecl-apc
+Name:          php-pecl-apc
 Version:       3.1.10
+Release:       2%{?dist}.2
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
-%if 0%{?svnver}
-# svn co -r 324329 https://svn.php.net/repository/pecl/apc/trunk apc-svn324329
-# tar czf apc-svn324329.tgz apc-svn324329
-Source:        apc-svn%{svnver}.tgz
-Release:       8.svn%{svnver}%{?dist}
-%else
-Release:       2%{?dist}
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
-%endif
 
+# Upstream patch from SVN.
+Patch0:        apc-svn.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-Conflicts:     %{phpname}-mmcache %{phpname}-eaccelerator
-BuildRequires: %{phpname}-devel >= 5.1.0, httpd-devel, %{phpname}-pear, pcre-devel
-Requires:      %{phpname}(zend-abi) = %{php_zend_api}
-Requires:      %{phpname}(api) = %{php_core_api}
-Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}
+Conflicts:     php-mmcache php-eaccelerator
+BuildRequires: php-devel >= 5.1.0, httpd-devel, php-pear, pcre-devel
+Requires(post): %{__pecl}
+Requires(postun): %{__pecl}
+Requires:      php(zend-abi) = %{php_zend_api}
+Requires:      php(api) = %{php_core_api}
+Provides:      php-pecl(%{pecl_name}) = %{version}
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -46,8 +41,8 @@ intermediate code.
 %package devel
 Summary:       APC developer files (header)
 Group:         Development/Libraries
-Requires:      %{phpname}-pecl-apc%{?_isa} = %{version}-%{release}
-Requires:      %{phpname}-devel%{?_isa}
+Requires:      php-pecl-apc%{?_isa} = %{version}-%{release}
+Requires:      php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using APC serializer.
@@ -56,22 +51,24 @@ These are the files needed to compile programs using APC serializer.
 %prep
 %setup -q -c 
 
-%if 0%{?svnver}
-mv apc-svn%{svnver}/package.xml .
-mv apc-svn%{svnver} APC-%{version}
-%endif
+cd APC-%{version}
+%patch0 -p3 -b .orig
 
 # https://bugs.php.net/61696
-sed -i -e 's/"3.1.9"/"%{version}"/' APC-%{version}/php_apc.h
+sed -i -e 's/"3.1.9"/"%{version}"/' php_apc.h
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' APC-%{version}/php_apc.h)
+extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}.
    exit 1
 fi
+cd ..
 
+%if 0%{?__ztsphp:1}
+# duplicate for ZTS build
 cp -pr APC-%{version} APC-%{version}-zts
+%endif
 
 # Drop in the bit of configuration
 cat > apc.ini << 'EOF'
@@ -154,10 +151,12 @@ cd APC-%{version}
 %configure --enable-apc-mmap --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if 0%{?__ztsphp:1}
 cd ../APC-%{version}-zts
 %{_bindir}/zts-phpize
 %configure --enable-apc-mmap --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -173,10 +172,12 @@ popd
 install -D -m 644 apc.ini %{buildroot}%{_sysconfdir}/php.d/apc.ini
 
 # Install the ZTS stuff
+%if 0%{?__ztsphp:1}
 pushd APC-%{version}-zts
 make install INSTALL_ROOT=%{buildroot}
 popd
 install -D -m 644 apc.ini %{buildroot}%{php_ztsinidir}/apc.ini
+%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -188,10 +189,12 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php %{_bindir}/php run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=apc.so
 
+%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-%{version}-zts
 TEST_PHP_EXECUTABLE=%{__ztsphp} %{__ztsphp} run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=apc.so
+%endif
 
 
 %post
@@ -216,16 +219,25 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/php.d/apc.ini
 %{php_extdir}/apc.so
 %{pecl_xmldir}/%{name}.xml
+%if 0%{?__ztsphp:1}
 %{php_ztsextdir}/apc.so
 %config(noreplace) %{php_ztsinidir}/apc.ini
-
+%endif
 
 %files devel
 %{_includedir}/php/ext/apc
+%if 0%{?__ztsphp:1}
 %{php_ztsincldir}/ext/apc
+%endif
 
 
 %changelog
+* Fri Jun 22 2012 Remi Collet <remi@fedoraproject.org> - 3.1.10-2.1
+- sync with rawhide, rebuild for remi repo
+
+* Fri Jun 22 2012 Remi Collet <remi@fedoraproject.org> - 3.1.10-2
+- add patches from upstream
+
 * Wed Apr 11 2012 Remi Collet <remi@fedoraproject.org> - 3.1.10-2
 - Update to 3.1.10 (beta) for PHP 5.4
 
