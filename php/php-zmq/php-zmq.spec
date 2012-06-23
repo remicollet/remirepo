@@ -6,7 +6,7 @@
 
 Name:          php-zmq
 Version:       %{version}
-Release:       %{release}%{?dist}
+Release:       %{release}%{?dist}.1
 Summary:       PHP 0MQ/zmq/zeromq extension
 # run-tests.php is PHP.  Everything else is BSD
 License:       BSD and PHP
@@ -18,11 +18,13 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 BuildRequires: php-cli
 BuildRequires: zeromq-devel >= 2.0.7
+# needed on EL-5
+BuildRequires: pkgconfig
 
 Requires:      zeromq >= 2.0.7
 
-%filter_from_provides /^zmq.so/d
-%filter_setup
+%{?filter_from_provides: %filter_from_provides /^zmq.so/d}
+%{?filter_setup}
 
 %description
 PHP extension for the 0MQ/zmq/zeromq messaging system
