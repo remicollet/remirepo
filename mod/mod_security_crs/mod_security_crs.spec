@@ -1,7 +1,7 @@
 Summary: ModSecurity Rules
 Name: mod_security_crs
-Version: 2.2.4
-Release: 2%{?dist}
+Version: 2.2.5
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -12,6 +12,7 @@ Requires: mod_security >= 2.6.5
 %description
 This package provides the base rules for mod_security.
 
+%if 0%{?fedora}
 %package        extras
 Summary:        Supplementary mod_security rules 
 Group:          System Environment/Daemons
@@ -19,6 +20,7 @@ Requires:       %name = %version-%release
 
 %description    extras
 This package provides supplementary rules for mod_security.
+%endif
 
 %prep
 %setup -q -n modsecurity-crs_%{version}
@@ -30,15 +32,20 @@ install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/
 install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/activated_rules
 
 install -d %{buildroot}%{_prefix}/lib/modsecurity.d/base_rules
+
+%if 0%{?fedora}
 install -d %{buildroot}%{_prefix}/lib/modsecurity.d/optional_rules
 install -d %{buildroot}%{_prefix}/lib/modsecurity.d/experimental_rules
 install -d %{buildroot}%{_prefix}/lib/modsecurity.d/slr_rules
+%endif
 
-install -m0644 modsecurity_crs_10_config.conf.example %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/modsecurity_crs_10_config.conf
+install -m0644 modsecurity_crs_10_setup.conf.example %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/modsecurity_crs_10_config.conf
 install -m0644 base_rules/* %{buildroot}%{_prefix}/lib/modsecurity.d/base_rules/
+%if 0%{?fedora}
 install -m0644 optional_rules/* %{buildroot}%{_prefix}/lib/modsecurity.d/optional_rules/
 install -m0644 experimental_rules/* %{buildroot}%{_prefix}/lib/modsecurity.d/experimental_rules/
 install -m0644 slr_rules/* %{buildroot}%{_prefix}/lib/modsecurity.d/slr_rules
+%endif
 
 # activate base_rules
 for f in `ls %{buildroot}/%{_prefix}/lib/modsecurity.d/base_rules/` ; do 
@@ -52,12 +59,23 @@ done
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/modsecurity_crs_10_config.conf
 %{_prefix}/lib/modsecurity.d/base_rules
 
+%if 0%{?fedora}
 %files extras
 %{_prefix}/lib/modsecurity.d/optional_rules
 %{_prefix}/lib/modsecurity.d/experimental_rules
 %{_prefix}/lib/modsecurity.d/slr_rules
+%endif
 
 %changelog
+* Sat Jun 23 2012 Remi Collet <RPMS@FamilleCollet.com> 2.2.5-2
+- backport for remi repo and httpd 2.4
+
+* Fri Jun 22 2012 Peter Vrabec <pvrabec@redhat.com> 2.2.5-1
+- upgrade
+
+* Wed Jun 20 2012 Peter Vrabec <pvrabec@redhat.com> 2.2.4-3
+- "extras" subpackage is not provided on RHEL
+
 * Sat May 12 2012 Remi Collet <RPMS@FamilleCollet.com> 2.2.4-2
 - rebuild for remi repo and httpd 2.4
 
