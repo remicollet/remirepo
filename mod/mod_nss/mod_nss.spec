@@ -48,7 +48,7 @@ security library.
 %patch6 -p1 -b .pcachesignal.h
 %patch7 -p1 -b .reseterror
 %patch8 -p1 -b .lockpcache
-%if "%{_httpd_confdir}" == "%{_httpd_modconfdir}"
+%if "%{_httpd_confdir}" != "%{_httpd_modconfdir}"
 %patch9 -p1 -b .httpd24
 %endif
 %patch10 -p1 -b .overlap
