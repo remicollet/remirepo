@@ -14,6 +14,7 @@ Group:         Development/Libraries
 URL:           http://github.com/mkoppanen/php-zmq
 Source:        php-zmq-0.6.0-2.20120613git516bd6f.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 BuildRequires: php-cli
 BuildRequires: zeromq-devel >= 2.0.7
@@ -48,10 +49,14 @@ echo "n" | make test
 
 %files
 %doc README LICENSE
+%defattr(-,root,root,-)
 %{_libdir}/php/modules/zmq.so
 %config(noreplace) %{_sysconfdir}/php.d/zmq.ini
 
 %changelog
+* Sat Jun 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.6.0-4.20120613git516bd6f
+- backport for remi repo
+
 * Thu Jun 14 2012 Ralph Bean <rbean@redhat.com> - 0.6.0-4.20120613git516bd6f
  - Fixed the private-shared-object-provides for reals with John Ciesla's help.
 * Wed Jun 13 2012 Ralph Bean <rbean@redhat.com> - 0.6.0-3.20120613git516bd6f
