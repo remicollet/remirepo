@@ -4,8 +4,8 @@
 
 Summary:      Terminal screen handling and optimization package
 Name:         php-pecl-ncurses
-Version:      1.0.1
-Release:      4%{?dist}
+Version:      1.0.2
+Release:      1%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/ncurses
@@ -23,6 +23,7 @@ Provides:     php-ncurses = 5.3.0
 Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
+
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -44,7 +45,7 @@ line.
 
 %prep 
 %setup -c -q
-%{__php} -n %{SOURCE2} package.xml >CHANGELOG
+%{_bindir}/php -n %{SOURCE2} package.xml >CHANGELOG
 
 cat >%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -81,8 +82,8 @@ make -C %{pecl_name}-%{version}-zts \
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 
 %check
@@ -132,6 +133,9 @@ fi
 
 
 %changelog
+* Sun Jun 24 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- update to 1.0.2
+
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-4
 - build against php 5.4
 
