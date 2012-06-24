@@ -1,0 +1,28 @@
+From e1e8d68d8d731ab38aa55328ab5ed32bd26d8c94 Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Fri, 25 Aug 2006 13:53:20 +0000
+Subject: [PATCH] curl - rhbz #688871
+
+backport of upstream 2ff609d
+---
+ lib/multi.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/lib/multi.c b/lib/multi.c
+index 89a1f99..0bcc744 100644
+--- a/lib/multi.c
++++ b/lib/multi.c
+@@ -386,6 +386,10 @@ CURLMcode curl_multi_remove_handle(CURLM *multi_handle,
+   if(easy) {
+     /* If the 'state' is not INIT or COMPLETED, we might need to do something
+        nice to put the easy_handle in a good known state when this returns. */
++    if(easy->state != CURLM_STATE_COMPLETED)
++      /* this handle is "alive" so we need to count down the total number of
++         alive connections when this is removed */
++      multi->num_alive--;
+ 
+     /* The timer must be shut down before easy->multi is set to NULL,
+        else the timenode will remain in the splay tree after
+-- 
+1.7.4.4
+

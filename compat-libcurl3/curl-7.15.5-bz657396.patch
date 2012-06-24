@@ -1,0 +1,465 @@
+From 795a6b48946f22d4562e6ad859306ac62eb3f6a0 Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Fri, 3 Nov 2006 12:43:55 +0000
+Subject: [PATCH 1/4] Olaf Stueben provided a patch that I edited slightly. It
+ fixes the notorious KNOWN_BUGS #25, which happens when
+ a proxy closes the connection when libcurl has sent
+ CONNECT, as part of an authentication negotiation.
+ Starting now, libcurl will re-connect accordingly and
+ continue the authentication as it should.
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/http.c    |   15 +++++++++++++++
+ lib/url.c     |   54 +++++++++++++++++++++++++++++++++---------------------
+ lib/urldata.h |    3 +++
+ 3 files changed, 51 insertions(+), 21 deletions(-)
+
+diff --git a/lib/http.c b/lib/http.c
+index 0fd0cbe..4d39a98 100644
+--- a/lib/http.c
++++ b/lib/http.c
+@@ -1095,6 +1095,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
+   curl_socket_t tunnelsocket = conn->sock[sockindex];
+   send_buffer *req_buffer;
+   curl_off_t cl=0;
++  bool closeConnection = FALSE;
+ 
+ #define SELECT_OK      0
+ #define SELECT_ERROR   1
+@@ -1102,6 +1103,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
+   int error = SELECT_OK;
+ 
+   infof(data, "Establish HTTP proxy tunnel to %s:%d\n", hostname, remote_port);
++  conn->bits.proxy_connect_closed = FALSE;
+ 
+   do {
+     if(conn->newurl) {
+@@ -1295,6 +1297,9 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
+                 cl = curlx_strtoofft(line_start + strlen("Content-Length:"),
+                                      NULL, 10);
+               }
++              else if(Curl_compareheader(line_start,
++                                         "Connection:", "close"))
++                closeConnection = TRUE;
+               else if(2 == sscanf(line_start, "HTTP/1.%d %d",
+                                   &subversion,
+                                   &k->httpcode)) {
+@@ -1321,11 +1326,21 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
+          headers. 'newurl' is set to a new URL if we must loop. */
+       Curl_http_auth_act(conn);
+ 
++    if (closeConnection && conn->newurl) {
++      /* Connection closed by server. Don't use it anymore */
++      sclose(conn->sock[sockindex]);
++      conn->sock[sockindex] = CURL_SOCKET_BAD;
++      break;
++    }
+   } while(conn->newurl);
+ 
+   if(200 != k->httpcode) {
+     failf(data, "Received HTTP code %d from proxy after CONNECT",
+           k->httpcode);
++
++    if (closeConnection && conn->newurl)
++      conn->bits.proxy_connect_closed = TRUE;
++
+     return CURLE_RECV_ERROR;
+   }
+ 
+diff --git a/lib/url.c b/lib/url.c
+index 1a0c206..bf4a3dd 100644
+--- a/lib/url.c
++++ b/lib/url.c
+@@ -2484,7 +2484,8 @@ CURLcode Curl_protocol_connect(struct connectdata *conn, bool *protocol_done)
+ 
+     /* it has started, possibly even completed but that knowledge isn't stored
+        in this bit! */
+-    conn->bits.protoconnstart = TRUE;
++    if (!result)
++      conn->bits.protoconnstart = TRUE;
+   }
+ 
+   return result; /* pass back status */
+@@ -3981,30 +3982,41 @@ static CURLcode SetupConnection(struct connectdata *conn,
+   data->state.crlf_conversions = 0; /* reset CRLF conversion counter */
+ #endif /* CURL_DO_LINEEND_CONV */
+ 
+-  if(CURL_SOCKET_BAD == conn->sock[FIRSTSOCKET]) {
+-    bool connected = FALSE;
++  for(;;) {
++    /* loop for CURL_SERVER_CLOSED_CONNECTION */
+ 
+-    /* Connect only if not already connected! */
+-    result = ConnectPlease(conn, hostaddr, &connected);
++    if(CURL_SOCKET_BAD == conn->sock[FIRSTSOCKET]) {
++      bool connected = FALSE;
+ 
+-    if(connected) {
+-      result = Curl_protocol_connect(conn, protocol_done);
+-      if(CURLE_OK == result)
+-        conn->bits.tcpconnect = TRUE;
+-    }
+-    else
+-      conn->bits.tcpconnect = FALSE;
++      /* Connect only if not already connected! */
++      result = ConnectPlease(conn, hostaddr, &connected);
+ 
++      if(connected) {
++        result = Curl_protocol_connect(conn, protocol_done);
++        if(CURLE_OK == result)
++          conn->bits.tcpconnect = TRUE;
++      }
++      else
++        conn->bits.tcpconnect = FALSE;
+ 
+-    if(CURLE_OK != result)
+-      return result;
+-  }
+-  else {
+-    Curl_pgrsTime(data, TIMER_CONNECT); /* we're connected already */
+-    conn->bits.tcpconnect = TRUE;
+-    *protocol_done = TRUE;
+-    if(data->set.verbose)
+-      verboseconnect(conn);
++      /* if the connection was closed by the server while exchanging
++         authentication informations, retry with the new set
++         authentication information */
++      if(conn->bits.proxy_connect_closed)
++        continue;
++
++      if(CURLE_OK != result)
++        return result;
++    }
++    else {
++      Curl_pgrsTime(data, TIMER_CONNECT); /* we're connected already */
++      conn->bits.tcpconnect = TRUE;
++      *protocol_done = TRUE;
++      if(data->set.verbose)
++        verboseconnect(conn);
++    }
++    /* Stop the loop now */
++    break;
+   }
+ 
+   conn->now = Curl_tvnow(); /* time this *after* the connect is done, we
+diff --git a/lib/urldata.h b/lib/urldata.h
+index d092113..3ac8fbf 100644
+--- a/lib/urldata.h
++++ b/lib/urldata.h
+@@ -454,6 +454,9 @@ struct ConnectBits {
+                          when Curl_done() is called, to prevent Curl_done() to
+                          get invoked twice when the multi interface is
+                          used. */
++  bool proxy_connect_closed; /* set true if a proxy disconnected the
++                                connection in a CONNECT request with auth, so
++                                that libcurl should reconnect and continue. */
+ };
+ 
+ struct hostname {
+-- 
+1.7.4.4
+
+
+From e3c76c19fd8d61f41b4025c4f085413dd9935e28 Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Tue, 10 Jul 2007 22:31:13 +0000
+Subject: [PATCH 2/4] Giancarlo Formicuccia reported and fixed a problem with
+ a closed connection to a proxy during CONNECT auth
+ negotiation.
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/http.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/lib/http.c b/lib/http.c
+index 4d39a98..6481fa0 100644
+--- a/lib/http.c
++++ b/lib/http.c
+@@ -1300,6 +1300,9 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
+               else if(Curl_compareheader(line_start,
+                                          "Connection:", "close"))
+                 closeConnection = TRUE;
++              else if(Curl_compareheader(line_start,
++                                         "Proxy-Connection:", "close"))
++                closeConnection = TRUE;
+               else if(2 == sscanf(line_start, "HTTP/1.%d %d",
+                                   &subversion,
+                                   &k->httpcode)) {
+-- 
+1.7.4.4
+
+
+From c1bfdb84733e58b11dce10eb2c99bf4c1f5c8806 Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Fri, 21 Sep 2007 11:05:31 +0000
+Subject: [PATCH 3/4] Mark Davies fixed Negotiate authentication over proxy,
+ and also introduced the --proxy-negotiate command line
+ option to allow a user to explicitly select it.
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ docs/curl.1          |   11 +++++++++++
+ lib/http.c           |   16 ++++++++++++++--
+ lib/http_negotiate.c |   14 +++++++-------
+ lib/http_negotiate.h |    4 ++--
+ src/main.c           |   11 +++++++++++
+ 5 files changed, 45 insertions(+), 11 deletions(-)
+
+diff --git a/docs/curl.1 b/docs/curl.1
+index e62be55..2658954 100644
+--- a/docs/curl.1
++++ b/docs/curl.1
+@@ -688,6 +688,9 @@ meant as a support for Kerberos5 authentication but may be also used along
+ with another authentication methods. For more information see IETF draft
+ draft-brezak-spnego-http-04.txt.
+ 
++If you want to enable Negotiate for your proxy authentication, then use
++\fI--proxy-negotiate\fP.
++
+ This option requires that the library was built with GSSAPI support. This is
+ not very common. Use \fI-V/--version\fP to see if your version supports
+ GSS-Negotiate.
+@@ -768,6 +771,14 @@ Tells curl to use HTTP Digest authentication when communicating with the given
+ proxy. Use \fI--digest\fP for enabling HTTP Digest with a remote host.
+ 
+ If this option is used twice, the second will again disable proxy HTTP Digest.
++.IP "--proxy-negotiate"
++Tells curl to use HTTP Negotiate authentication when communicating
++with the given proxy. Use \fI--negotiate\fP for enabling HTTP Negotiate
++with a remote host.
++
++If this option is used twice, the second will again disable proxy HTTP
++Negotiate.
++
+ .IP "--proxy-ntlm"
+ Tells curl to use HTTP NTLM authentication when communicating with the given
+ proxy. Use \fI--ntlm\fP for enabling NTLM with a remote host.
+diff --git a/lib/http.c b/lib/http.c
+index 6481fa0..033ee9b 100644
+--- a/lib/http.c
++++ b/lib/http.c
+@@ -416,6 +416,18 @@ Curl_http_output_auth(struct connectdata *conn,
+   /* Send proxy authentication header if needed */
+   if (conn->bits.httpproxy &&
+       (conn->bits.tunnel_proxy == proxytunnel)) {
++#ifdef HAVE_GSSAPI
++    if((authproxy->picked == CURLAUTH_GSSNEGOTIATE) &&
++       data->state.negotiate.context &&
++       !GSS_ERROR(data->state.negotiate.status)) {
++      auth="GSS-Negotiate";
++      result = Curl_output_negotiate(conn, TRUE);
++      if (result)
++        return result;
++      authproxy->done = TRUE;
++    }
++    else
++#endif
+ #ifdef USE_NTLM
+     if(authproxy->picked == CURLAUTH_NTLM) {
+       auth=(char *)"NTLM";
+@@ -478,7 +490,7 @@ Curl_http_output_auth(struct connectdata *conn,
+          data->state.negotiate.context &&
+          !GSS_ERROR(data->state.negotiate.status)) {
+         auth=(char *)"GSS-Negotiate";
+-        result = Curl_output_negotiate(conn);
++        result = Curl_output_negotiate(conn, FALSE);
+         if (result)
+           return result;
+         authhost->done = TRUE;
+@@ -585,7 +597,7 @@ CURLcode Curl_http_input_auth(struct connectdata *conn,
+     authp->avail |= CURLAUTH_GSSNEGOTIATE;
+     if(authp->picked == CURLAUTH_GSSNEGOTIATE) {
+       /* if exactly this is wanted, go */
+-      int neg = Curl_input_negotiate(conn, start);
++      int neg = Curl_input_negotiate(conn, (bool)(httpcode == 407), start);
+       if (neg == 0) {
+         conn->newurl = strdup(data->change.url);
+         data->state.authproblem = (conn->newurl == NULL);
+diff --git a/lib/http_negotiate.c b/lib/http_negotiate.c
+index 3fc678f..73deda5 100644
+--- a/lib/http_negotiate.c
++++ b/lib/http_negotiate.c
+@@ -49,7 +49,7 @@
+ #include "memdebug.h"
+ 
+ static int
+-get_gss_name(struct connectdata *conn, gss_name_t *server)
++get_gss_name(struct connectdata *conn, bool proxy, gss_name_t *server)
+ {
+   struct negotiatedata *neg_ctx = &conn->data->state.negotiate;
+   OM_uint32 major_status, minor_status;
+@@ -69,11 +69,11 @@ get_gss_name(struct connectdata *conn, gss_name_t *server)
+   else
+     service = "HTTP";
+ 
+-  token.length = strlen(service) + 1 + strlen(conn->host.name) + 1;
++  token.length = strlen(service) + 1 + strlen(proxy ? conn->proxy.name : conn->host.name) + 1;
+   if (token.length + 1 > sizeof(name))
+     return EMSGSIZE;
+ 
+-  snprintf(name, sizeof(name), "%s@%s", service, conn->host.name);
++  snprintf(name, sizeof(name), "%s@%s", service, proxy ? conn->proxy.name : conn->host.name);
+ 
+   token.value = (void *) name;
+   major_status = gss_import_name(&minor_status,
+@@ -113,7 +113,7 @@ log_gss_error(struct connectdata *conn, OM_uint32 error_status, char *prefix)
+   infof(conn->data, "%s", buf);
+ }
+ 
+-int Curl_input_negotiate(struct connectdata *conn, char *header)
++int Curl_input_negotiate(struct connectdata *conn, bool proxy, char *header)
+ {
+   struct negotiatedata *neg_ctx = &conn->data->state.negotiate;
+   OM_uint32 major_status, minor_status, minor_status2;
+@@ -169,7 +169,7 @@ int Curl_input_negotiate(struct connectdata *conn, char *header)
+   }
+ 
+   if (neg_ctx->server_name == NULL &&
+-      (ret = get_gss_name(conn, &neg_ctx->server_name)))
++      (ret = get_gss_name(conn, proxy, &neg_ctx->server_name)))
+     return ret;
+ 
+   header += strlen(neg_ctx->protocol);
+@@ -258,7 +258,7 @@ int Curl_input_negotiate(struct connectdata *conn, char *header)
+ }
+ 
+ 
+-CURLcode Curl_output_negotiate(struct connectdata *conn)
++CURLcode Curl_output_negotiate(struct connectdata *conn, bool proxy)
+ {
+   struct negotiatedata *neg_ctx = &conn->data->state.negotiate;
+   char *encoded = NULL;
+@@ -310,7 +310,7 @@ CURLcode Curl_output_negotiate(struct connectdata *conn)
+     return CURLE_OUT_OF_MEMORY;
+ 
+   conn->allocptr.userpwd =
+-    aprintf("Authorization: %s %s\r\n", neg_ctx->protocol, encoded);
++    aprintf("%sAuthorization: %s %s\r\n", proxy ? "Proxy-" : "", neg_ctx->protocol, encoded);
+   free(encoded);
+   Curl_cleanup_negotiate (conn->data);
+   return (conn->allocptr.userpwd == NULL) ? CURLE_OUT_OF_MEMORY : CURLE_OK;
+diff --git a/lib/http_negotiate.h b/lib/http_negotiate.h
+index cf8b048..8604a0c 100644
+--- a/lib/http_negotiate.h
++++ b/lib/http_negotiate.h
+@@ -27,10 +27,10 @@
+ #ifdef HAVE_GSSAPI
+ 
+ /* this is for Negotiate header input */
+-int Curl_input_negotiate(struct connectdata *conn, char *header);
++int Curl_input_negotiate(struct connectdata *conn, bool proxy, char *header);
+ 
+ /* this is for creating Negotiate header output */
+-CURLcode Curl_output_negotiate(struct connectdata *conn);
++CURLcode Curl_output_negotiate(struct connectdata *conn, bool proxy);
+ 
+ void Curl_cleanup_negotiate(struct SessionHandle *data);
+ 
+diff --git a/src/main.c b/src/main.c
+index 9f378db..44dd2c4 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -309,6 +309,7 @@ struct Configurable {
+   bool create_dirs;
+   bool ftp_create_dirs;
+   bool ftp_skip_ip;
++  bool proxynegotiate;
+   bool proxyntlm;
+   bool proxydigest;
+   bool proxybasic;
+@@ -555,6 +556,7 @@ static void help(void)
+     "    --proxy-anyauth Pick \"any\" proxy authentication method (H)",
+     "    --proxy-basic   Use Basic authentication on the proxy (H)",
+     "    --proxy-digest  Use Digest authentication on the proxy (H)",
++    "    --proxy-negotiate Use Negotiate authentication on the proxy (H)",
+     "    --proxy-ntlm    Use NTLM authentication on the proxy (H)",
+     " -P/--ftp-port <address> Use PORT with address instead of PASV (F)",
+     " -q                 If used as the first parameter disables .curlrc",
+@@ -1347,6 +1349,7 @@ static ParameterError getparameter(char *flag, /* f or -long-flag */
+     {"$t", "socks4",     TRUE},
+     {"$u", "ftp-alternative-to-user", TRUE},
+     {"$v", "ftp-ssl-reqd", FALSE},
++    {"$w", "proxy-negotiate",   FALSE},
+ 
+     {"0", "http1.0",     FALSE},
+     {"1", "tlsv1",       FALSE},
+@@ -1789,6 +1792,12 @@ static ParameterError getparameter(char *flag, /* f or -long-flag */
+       case 'v': /* --ftp-ssl-reqd */
+         config->ftp_ssl_reqd ^= TRUE;
+         break;
++      case 'w': /* --proxy-negotiate */
++        if(curlinfo->features & CURL_VERSION_GSSNEGOTIATE)
++          config->proxynegotiate ^= TRUE;
++        else
++          return PARAM_LIBCURL_DOESNT_SUPPORT;
++        break;
+       }
+       break;
+     case '#': /* --progress-bar */
+@@ -3960,6 +3969,8 @@ operate(struct Configurable *config, int argc, char *argv[])
+                          config->ftp_create_dirs);
+         if(config->proxyanyauth)
+           curl_easy_setopt(curl, CURLOPT_PROXYAUTH, CURLAUTH_ANY);
++        else if(config->proxynegotiate)
++          curl_easy_setopt(curl, CURLOPT_PROXYAUTH, CURLAUTH_GSSNEGOTIATE);
+         else if(config->proxyntlm)
+           curl_easy_setopt(curl, CURLOPT_PROXYAUTH, CURLAUTH_NTLM);
+         else if(config->proxydigest)
+-- 
+1.7.4.4
+
+
+From 88507544781155092ccee225bff92a0177e0f4df Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Mon, 16 Aug 2010 22:19:38 +0200
+Subject: [PATCH 4/4] negotiation: Wrong proxy authorization
+
+There's an error in http_negotiation.c where a mistake is using only
+userpwd even for proxy requests. Ludek provided a patch, but I decided
+to write the fix slightly different using his patch as inspiration.
+
+Reported by: Ludek Finstrle
+Bug: http://curl.haxx.se/bug/view.cgi?id=3046066
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/http_negotiate.c |   12 +++++++++---
+ 1 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/lib/http_negotiate.c b/lib/http_negotiate.c
+index 73deda5..1d6119d 100644
+--- a/lib/http_negotiate.c
++++ b/lib/http_negotiate.c
+@@ -263,6 +263,7 @@ CURLcode Curl_output_negotiate(struct connectdata *conn, bool proxy)
+   struct negotiatedata *neg_ctx = &conn->data->state.negotiate;
+   char *encoded = NULL;
+   int len;
++  char *userp;
+ 
+ #ifdef HAVE_SPNEGO /* Handle SPNEGO */
+   if (checkprefix("Negotiate",neg_ctx->protocol)) {
+@@ -309,11 +310,16 @@ CURLcode Curl_output_negotiate(struct connectdata *conn, bool proxy)
+   if (len < 0)
+     return CURLE_OUT_OF_MEMORY;
+ 
+-  conn->allocptr.userpwd =
+-    aprintf("%sAuthorization: %s %s\r\n", proxy ? "Proxy-" : "", neg_ctx->protocol, encoded);
++  userp = aprintf("%sAuthorization: %s %s\r\n", proxy ? "Proxy-" : "",
++                  neg_ctx->protocol, encoded);
++
++  if(proxy)
++    conn->allocptr.proxyuserpwd = userp;
++  else
++    conn->allocptr.userpwd = userp;
+   free(encoded);
+   Curl_cleanup_negotiate (conn->data);
+-  return (conn->allocptr.userpwd == NULL) ? CURLE_OUT_OF_MEMORY : CURLE_OK;
++  return (userp == NULL) ? CURLE_OUT_OF_MEMORY : CURLE_OK;
+ }
+ 
+ void Curl_cleanup_negotiate(struct SessionHandle *data)
+-- 
+1.7.4.4
+

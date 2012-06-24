@@ -1,0 +1,16 @@
+diff --git a/lib/ftp.c b/lib/ftp.c
+index cd067e0..b1f61f9 100644
+--- a/lib/ftp.c
++++ b/lib/ftp.c
+@@ -214,8 +214,10 @@ static CURLcode AllowServerConnect(struct connectdata *conn)
+       socklen_t size = (socklen_t) sizeof(struct sockaddr_in);
+       struct sockaddr_in add;
+ 
+-      if(0 == getsockname(sock, (struct sockaddr *) &add, &size))
++      if(0 == getsockname(sock, (struct sockaddr *) &add, &size)) {
++        size = sizeof(add);
+         s=accept(sock, (struct sockaddr *) &add, &size);
++      }
+ 
+       sclose(sock); /* close the first socket */
+ 

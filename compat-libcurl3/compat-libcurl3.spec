@@ -1,7 +1,9 @@
+%global rhelrel 15-el5
+
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others).
 Name: compat-libcurl3
 Version: 7.15.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/curl-%{version}.tar.bz2
@@ -18,6 +20,11 @@ Patch9: curl-7.15.5-bz532069.patch
 Patch10: curl-7.15.5-bz563220.patch
 Patch11: curl-7.15.5-bz655073.patch
 Patch12: curl-7.15.5-CVE-2011-2192.patch
+Patch13: curl-7.15.5-bz723643.patch
+Patch14: curl-7.15.5-bz652557.patch
+Patch15: curl-7.15.5-bz657396.patch
+Patch16: curl-7.15.5-bz688871.patch
+Patch17: curl-7.15.5-bz746849.patch
 URL: http://curl.haxx.se/
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: openssl-devel, libtool, pkgconfig, libidn-devel
@@ -31,7 +38,8 @@ offers many useful capabilities, like proxy support, user
 authentication, FTP upload, HTTP post, and file transfer resume.
 
 %{name} is provided for compatibility for package build against old
-libcurl (libcurl.so.3 provided by version < 7.16)
+libcurl (libcurl.so.3 provided by version < 7.16).
+In sync with curl-%{version}-%{rhelrel}.
 
 
 %package devel
@@ -63,6 +71,11 @@ rm -rf $RPM_BUILD_ROOT
 %patch10 -p1 -b .bz563220
 %patch11 -p1 -b .bz655073
 %patch12 -p1 -b .CVE-2011-2192
+%patch13 -p1 -b .bz723643
+%patch14 -p1 -b .bz652557
+%patch15 -p1 -b .bz657396
+%patch16 -p1 -b .bz688871
+%patch17 -p1 -b .bz746849
 
 %build
 aclocal
@@ -119,14 +132,38 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-3
+* Sun Jun 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 7.15.5-2
+- sync with curl 7.15.5-15
+
+* Thu Oct 27 2011 Kamil Dudka <kdudka@redhat.com> 7.15.5-15
+- introduce the --delegation option of curl (#746849)
+
+* Fri Oct 21 2011 Kamil Dudka <kdudka@redhat.com> 7.15.5-14
+- fix stack smashing in the FTP implementation (#652557)
+- fix proxy kerberos authentication (#657396)
+- update running_handles counter properly in curl_multi_remove_handle (#688871)
+
+* Tue Aug 16 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.15.5-1
 - build as compat-libcurl3 for remi repository
+- sync with 7.15.5-9.el5_6.3
+
+* Wed Aug 03 2011 Kamil Dudka <kdudka@redhat.com> 7.15.5-13
+- add a new option CURLOPT_GSSAPI_DELEGATION (#723643)
+
+* Thu Jun 23 2011 Kamil Dudka <kdudka@redhat.com> 7.15.5-12
+- do not delegate GSSAPI credentials (CVE-2011-2192)
 
 * Thu Jun 23 2011 Kamil Dudka <kdudka@redhat.com> 7.15.5-9.el5_6.3
 - do not delegate GSSAPI credentials (CVE-2011-2192)
 
+* Mon Jan 24 2011 Kamil Dudka <kdudka@redhat.com> - 7.15.5-11
+- avoid use of uninitialized variable on failure of a LDAP request (#655073)
+
 * Mon Jan 24 2011 Kamil Dudka <kdudka@redhat.com> - 7.15.5-9.el5_6.2
 - avoid use of uninitialized variable on failure of a LDAP request (#670523)
+
+* Tue Jan 18 2011 Kamil Dudka <kdudka@redhat.com> - 7.15.5-10
+- proxy tunnel support for LDAP requests (#655073)
 
 * Tue Jan 18 2011 Kamil Dudka <kdudka@redhat.com> - 7.15.5-9.el5_6.1
 - proxy tunnel support for LDAP requests (#670523)

@@ -1,0 +1,124 @@
+From 5a40e781345ed1c6eb5ae8fd7103719ebacd66e8 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Wed, 3 Aug 2011 14:30:45 +0200
+Subject: [PATCH] curl - rhbz #723643
+
+---
+ docs/libcurl/curl_easy_setopt.3 |    8 ++++++++
+ include/curl/curl.h             |    7 +++++++
+ lib/http_negotiate.c            |   15 ++++++++++++++-
+ lib/url.c                       |    6 ++++++
+ lib/urldata.h                   |    3 +++
+ 5 files changed, 38 insertions(+), 1 deletions(-)
+
+diff --git a/docs/libcurl/curl_easy_setopt.3 b/docs/libcurl/curl_easy_setopt.3
+index 00a819b..c259c5a 100644
+--- a/docs/libcurl/curl_easy_setopt.3
++++ b/docs/libcurl/curl_easy_setopt.3
+@@ -1330,6 +1330,14 @@ krb4 awareness.  This is a string, 'clear', 'safe', 'confidential' or
+ \&'private'.  If the string is set but doesn't match one of these, 'private'
+ will be used. Set the string to NULL to disable kerberos4. The kerberos
+ support only works for FTP.
++.IP CURLOPT_GSSAPI_DELEGATION
++Set the parameter to CURLGSSAPI_DELEGATION_FLAG to allow unconditional GSSAPI
++credential delegation.  The delegation is disabled by default since 7.21.7.
++Set the parameter to CURLGSSAPI_DELEGATION_POLICY_FLAG to delegate only if
++the OK-AS-DELEGATE flag is set in the service ticket in case this feature is
++supported by the GSSAPI implementation and the definition of
++GSS_C_DELEG_POLICY_FLAG was available at compile-time.
++(Added in 7.21.8)
+ .SH OTHER OPTIONS
+ .IP CURLOPT_PRIVATE
+ Pass a char * as parameter, pointing to data that should be associated with
+diff --git a/include/curl/curl.h b/include/curl/curl.h
+index 8ff213b..c4a0cab 100644
+--- a/include/curl/curl.h
++++ b/include/curl/curl.h
+@@ -388,6 +388,10 @@ typedef enum {
+ #define CURLE_FTP_BAD_DOWNLOAD_RESUME CURLE_BAD_DOWNLOAD_RESUME
+ #endif
+ 
++#define CURLGSSAPI_DELEGATION_NONE        0      /* no delegation (default) */
++#define CURLGSSAPI_DELEGATION_POLICY_FLAG (1<<0) /* if permitted by policy */
++#define CURLGSSAPI_DELEGATION_FLAG        (1<<1) /* delegate always */
++
+ #define CURL_ERROR_SIZE 256
+ 
+ /* parameter for the CURLOPT_FTP_SSL option */
+@@ -1012,6 +1016,9 @@ typedef enum {
+      to CURLPROTO_ALL & ~CURLPROTO_FILE. */
+   CINIT(REDIR_PROTOCOLS, LONG, 182),
+ 
++  /* allow GSSAPI credential delegation */
++  CINIT(GSSAPI_DELEGATION, LONG, 210),
++
+   CURLOPT_LASTENTRY /* the last unused */
+ } CURLoption;
+ 
+diff --git a/lib/http_negotiate.c b/lib/http_negotiate.c
+index 4015e2f..7758049 100644
+--- a/lib/http_negotiate.c
++++ b/lib/http_negotiate.c
+@@ -123,6 +123,19 @@ int Curl_input_negotiate(struct connectdata *conn, char *header)
+   size_t len;
+   bool gss;
+   const char* protocol;
++  OM_uint32 req_flags = 0;
++
++  if(conn->data->set.gssapi_delegation & CURLGSSAPI_DELEGATION_POLICY_FLAG) {
++#ifdef GSS_C_DELEG_POLICY_FLAG
++    req_flags |= GSS_C_DELEG_POLICY_FLAG;
++#else
++    infof(conn->data, "warning: support for CURLGSSAPI_DELEGATION_POLICY_FLAG "
++        "not compiled in\n");
++#endif
++  }
++
++  if(conn->data->set.gssapi_delegation & CURLGSSAPI_DELEGATION_FLAG)
++    req_flags |= GSS_C_DELEG_FLAG;
+ 
+   while(*header && isspace((int)*header))
+     header++;
+@@ -216,7 +229,7 @@ int Curl_input_negotiate(struct connectdata *conn, char *header)
+                                       &neg_ctx->context,
+                                       neg_ctx->server_name,
+                                       GSS_C_NO_OID,
+-                                      0,
++                                      req_flags,
+                                       0,
+                                       GSS_C_NO_CHANNEL_BINDINGS,
+                                       &input_token,
+diff --git a/lib/url.c b/lib/url.c
+index 0528605..1a0c206 100644
+--- a/lib/url.c
++++ b/lib/url.c
+@@ -1322,6 +1322,12 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
+     data->set.krb4_level = va_arg(param, char *);
+     data->set.krb4=data->set.krb4_level?TRUE:FALSE;
+     break;
++  case CURLOPT_GSSAPI_DELEGATION:
++    /*
++     * GSSAPI credential delegation
++     */
++    data->set.gssapi_delegation = va_arg(param, long);
++    break;
+   case CURLOPT_SSL_VERIFYPEER:
+     /*
+      * Enable peer SSL verifying.
+diff --git a/lib/urldata.h b/lib/urldata.h
+index 0ef49d5..d092113 100644
+--- a/lib/urldata.h
++++ b/lib/urldata.h
+@@ -1156,6 +1156,9 @@ struct UserDefined {
+   bool connect_only;     /* make connection, let application use the socket */
+   long allowed_protocols;
+   long redir_protocols;
++
++  long gssapi_delegation; /* GSSAPI credential delegation, see the
++                             documentation of CURLOPT_GSSAPI_DELEGATION */
+ };
+ 
+ struct Names {
+-- 
+1.7.4.4
+
