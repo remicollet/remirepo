@@ -7,8 +7,8 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.6.5
-Release: 3%{?dist}
+Version: 2.6.6
+Release: 2%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -22,6 +22,7 @@ ModSecurity is an open source intrusion detection and prevention engine
 for web applications. It operates embedded into the web server, acting
 as a powerful umbrella - shielding web applications from attacks.
 
+%if 0%{?fedora}
 %package -n     mlogc
 Summary:        ModSecurity Audit Log Collector
 Group:          System Environment/Daemons
@@ -29,6 +30,7 @@ Requires:       mod_security
 
 %description -n mlogc
 This package contains the ModSecurity Audit Log Collector.
+%endif
 
 %prep
 %setup -q -n modsecurity-apache_%{version}
@@ -66,12 +68,14 @@ install -Dp -m0644 10-mod_security.conf %{buildroot}%{_httpd_modconfdir}/10-mod_
 install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
 %endif
 
+%if 0%{?fedora}
 # mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc/data
 install -m0755 mlogc/mlogc %{buildroot}%{_bindir}/mlogc
 install -m0755 mlogc/mlogc-batch-load.pl %{buildroot}%{_bindir}/mlogc-batch-load
 install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -87,6 +91,7 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
 
+%if 0%{?fedora}
 %files -n mlogc
 %defattr (-,root,root)
 %doc mlogc/INSTALL
@@ -95,9 +100,18 @@ rm -rf %{buildroot}
 %attr(0770,root,apache) %dir %{_localstatedir}/log/mlogc/data
 %attr(0755,root,root) %{_bindir}/mlogc
 %attr(0755,root,root) %{_bindir}/mlogc-batch-load
-
+%endif
 
 %changelog
+* Sat Jun 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.6.6-2
+- backport for remi repo and httpd 2.4
+
+* Fri Jun 22 2012 Peter Vrabec <pvrabec@redhat.com> - 2.6.6-2
+- mlogc subpackage is not provided on RHEL
+ 
+* Thu Jun 21 2012 Peter Vrabec <pvrabec@redhat.com> - 2.6.6-1
+- upgrade
+
 * Sat May 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.6.5-3
 - rebuild for remi repo and httpd 2.4
 
