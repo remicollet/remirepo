@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.11.11
+Version:         1.11.12
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -629,6 +629,14 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Tue Jun 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.11.12-1
+- update to 1.11.12
+- backport for remi repository (with Oracle and Sqlite stuff)
+
+* Tue Jun 26 2012 Felix Kaechele <heffer@fedoraproject.org> - 1.11.12-1
+- update to 1.11.12
+- fixes ZF2012-01: Local file disclosure via XXE injection in Zend_XmlRpc
+
 * Mon Oct 24 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.11.11-1
 - update to 1.11.11
 - rebuild for remi repository (with Oracle and Sqlite stuff)
