@@ -1,6 +1,6 @@
 Name:           remi-release
 Version:        %{fedora}
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        YUM configuration for remi repository
 Summary(fr):	Configuration de YUM pour le dépôt remi
 
@@ -28,7 +28,7 @@ The repository is not enabled after installation, so you must use
 the --enablerepo=remi option for yum.
 
 %if %{fedora} > 5
-It also provides smart and apt configuration.
+It also provides apt configuration.
 %endif
 
 %description -l fr
@@ -39,7 +39,7 @@ Le dépôt n'est pas activé après l'installation, vous devez donc utiliser
 l'option --enablerepo=remi de yum.
 
 %if %{fedora} > 5
-Il fournit également la configuration de smart et apt.
+Il fournit également la configuration de apt.
 %endif
 
 %prep
@@ -69,11 +69,6 @@ ln -s ../../pki/rpm-gpg/RPM-GPG-KEY-remi \
 %clean
 rm -rf %{buildroot}
 
-%if %{fedora} > 5
-%post
-%{__sed} -i -e s/VERSION/%{fedora}/ -e s/ARCH/$(uname -i)/ %{_sysconfdir}/smart/channels/remi.channel 
-%endif
-
 %files
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/yum.repos.d/remi.repo
@@ -84,6 +79,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Jun 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 17-7.fc17.remi
+- remove post scriptlet (smart stuff)
+
 * Sat May 05 2012 Remi Collet <RPMS@FamilleCollet.com> - 17-6.fc17.remi
 - Fedora release 17 (Beefy Miracle)
 - drop Smart config
