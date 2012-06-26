@@ -42,11 +42,14 @@ l'option --enablerepo=remi de yum.
 Il fournit également la configuration de apt.
 %endif
 
+
 %prep
 %setup -c -T
 
+
 %build
 echo empty build
+
 
 %install
 rm -rf %{buildroot}
@@ -66,8 +69,10 @@ ln -s ../../pki/rpm-gpg/RPM-GPG-KEY-remi \
     %{buildroot}%{_sysconfdir}/apt/gpg/gpg-pubkey-00f97f56-467e318a
 %endif
 
+
 %clean
 rm -rf %{buildroot}
+
 
 %files
 %defattr(-,root,root,-)
@@ -77,6 +82,7 @@ rm -rf %{buildroot}
 %{_sysconfdir}/apt/gpg/gpg-pubkey-00f97f56-467e318a
 %config(noreplace) %{_sysconfdir}/apt/sources.list.d/remi.list
 %endif
+
 
 %changelog
 * Tue Jun 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 17-7.fc17.remi
