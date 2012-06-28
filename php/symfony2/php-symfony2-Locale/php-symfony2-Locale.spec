@@ -12,6 +12,7 @@ License:          MIT
 URL:              http://symfony.com/doc/current/components/locale.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -98,6 +99,7 @@ fi
 
 
 %files -f %{name}.lang
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Symfony
@@ -118,6 +120,9 @@ fi
 
 
 %changelog
+* Thu Jun 28 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
+- rebuild for remi repository
+
 * Sun Jun 23 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-3
 - Added %%lang directive flags for *.res files
 - Modified %%files because of separate *.res file listings
