@@ -3,8 +3,8 @@
 %{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
 
 Name:           mod_perl
-Version:        2.0.5
-Release:        10%{?dist}
+Version:        2.0.7
+Release:        1%{?dist}
 Summary:        An embedded Perl interpreter for the Apache HTTP Server
 
 Group:          System Environment/Daemons
@@ -23,6 +23,8 @@ BuildRequires:  perl-devel, perl(ExtUtils::Embed)
 BuildRequires:  httpd-devel >= 2.4.0, httpd, gdbm-devel
 BuildRequires:  apr-devel >= 1.2.0, apr-util-devel
 BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Data::Flow)
+BuildRequires:  perl(Tie::IxHash)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       httpd-mmn = %{_httpd_mmn}
 # For Apache::SizeLimit::Core
@@ -91,11 +93,22 @@ for i in devel/debug/c.pod devel/core/explained.pod user/Changes.pod; do
 done
 cd ..
 
+
 CFLAGS="$RPM_OPT_FLAGS -fpic" %{__perl} Makefile.PL </dev/null \
-        PREFIX=$RPM_BUILD_ROOT/%{_prefix} \
-        INSTALLDIRS=vendor \
-        MP_APXS=%{_httpd_apxs} \
-        MP_APR_CONFIG=%{_bindir}/apr-1-config
+         PREFIX=$RPM_BUILD_ROOT/%{_prefix} \
+         INSTALLDIRS=vendor \
+         MP_APXS=%{_httpd_apxs} \
+         MP_APR_CONFIG=%{_bindir}/apr-1-config
+
+make source_scan
+make xs_generate
+
+CFLAGS="$RPM_OPT_FLAGS -fpic" %{__perl} Makefile.PL </dev/null \
+         PREFIX=$RPM_BUILD_ROOT/%{_prefix} \
+         INSTALLDIRS=vendor \
+         MP_APXS=%{_httpd_apxs} \
+         MP_APR_CONFIG=%{_bindir}/apr-1-config
+
 
 make -C src/modules/perl %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS -fpic"
 make
@@ -170,6 +183,18 @@ echo "%%exclude %{_mandir}/man3/Apache::Test*.3pm*" >> exclude.files
 %{_mandir}/man3/Apache::Test*.3pm*
 
 %changelog
+* Fri Jun 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.7-1
+- sync with rawhide, update to 2.0.7, rebuild for remi repo
+
+* Fri Jun 29 2012 Petr Pisar <ppisar@redhat.com> - 2.0.7-2
+- Perl 5.16 rebuild
+
+* Fri Jun 29 2012 Jan Kaluza <jkaluza@redhat.com> - 2.0.7-1
+- update to 2.0.7 (#830501)
+
+* Sun Jun 10 2012 Petr Pisar <ppisar@redhat.com> - 2.0.5-11
+- Perl 5.16 rebuild
+
 * Thu Apr 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.5-10
 - sync with rawhide, rebuild for remi repo
 

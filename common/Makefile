@@ -71,12 +71,12 @@ devbuildmini:
 sign:
 	rpmsign --addsign *.src.rpm
 
-/tmp/filtered.spec: $(NAME).spec
-	sed -e "s/%{phpname}/php/g;s/%{phpconfdir}/%{_sysconfdir}/g;s/%{phpbindir}/%{_bindir}/g;s/%{phpincldir}/%{_includedir}/g;s/%{_origsysconfdir}/%{_sysconfdir}/g;s/%{_origincludedir}/%{_includedir}/g" $(NAME).spec >/tmp/filtered.spec
+/tmp/$(NAME)-filtered.spec: $(NAME).spec
+	sed -e "s/%{phpname}/php/g;s/%{phpconfdir}/%{_sysconfdir}/g;s/%{phpbindir}/%{_bindir}/g;s/%{phpincldir}/%{_includedir}/g;s/%{_origsysconfdir}/%{_sysconfdir}/g;s/%{_origincludedir}/%{_includedir}/g" $(NAME).spec >/tmp/$(NAME)-filtered.spec
 
-diff: /tmp/filtered.spec
-	colordiff -u  /tmp/filtered.spec /home/extras/GIT/$(NAME)/$(NAME).spec
+diff: /tmp/$(NAME)-filtered.spec
+	colordiff -u  /tmp/$(NAME)-filtered.spec /home/extras/GIT/$(NAME)/$(NAME).spec
 
-devdiff: /tmp/filtered.spec
-	colordiff -u  /tmp/filtered.spec $(NAME)-dev.spec
+devdiff: /tmp/$(NAME)-filtered.spec
+	colordiff -u  /tmp/$(NAME)-filtered.spec $(NAME)-dev.spec
 
