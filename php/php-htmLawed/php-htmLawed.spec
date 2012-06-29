@@ -3,7 +3,7 @@
 Name:           php-%{libname}
 Version:        1.1.11
 Release:        1%{?dist}
-Summary:        PHP code to purify & filter HTML
+Summary:        PHP code to purify and filter HTML
 Group:          Development/Libraries
 License:        LGPLv3+ and GPLv2+
 URL:            http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/
@@ -21,20 +21,20 @@ Requires:       php-pcre
 
 
 %description
-PHP code to purify & filter HTML
+PHP code to purify and filter HTML
 
 * make HTML markup in text secure and standard-compliant
 * process text for use in HTML, XHTML or XML documents
-* restrict HTML elements, attributes or URL protocols 
+* restrict HTML elements, attributes or URL protocols
   using black or white-lists
-* balance tags, check element nesting, transform deprecated 
+* balance tags, check element nesting, transform deprecated
   attributes and tags, make relative URLs absolute, etc.
 * fast, highly customizable, well-documented
 * single, 48 kb file
 * simple HTML Tidy alternative
 * free and licensed under LGPL v3 and GPL v2+
-* use to filter, secure & sanitize HTML in blog comments or 
-  forum posts, generate XML-compatible feed items from web-page 
+* use to filter, secure and sanitize HTML in blog comments or
+  forum posts, generate XML-compatible feed items from web-page
   excerpts, convert HTML to XHTML, pretty-print HTML, scrape
   web-pages, reduce spam, remove XSS code, etc.
 
@@ -52,7 +52,7 @@ chmod -x htm*
 %install
 rm -rf %{buildroot}
 install -d %{buildroot}%{_datadir}/php/%{libname}
-install -pm 0644 htmLawed.php %{buildroot}%{_datadir}/php/%{libname}
+install -pm 0644 %{libname}.php %{buildroot}%{_datadir}/php/%{libname}
 
 
 %clean
