@@ -1,12 +1,14 @@
+%global prever rc1
+
 Name: phpMyAdmin
-Version: 3.5.1
-Release: 2%{?dist}
+Version: 3.5.2
+Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
 License: GPLv2+
 URL: http://www.phpmyadmin.net/
-Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}-all-languages.tar.bz2
+Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.bz2
 Source2: phpMyAdmin.htaccess
 
 Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/darkblue_orange-2.10.zip
@@ -23,6 +25,7 @@ Requires: php-mysql >= 5.2.0
 Requires: php-mbstring >= 5.2.0
 Requires: php-gd >= 5.2.0
 Requires: php-mcrypt >= 5.2.0
+Requires: php-php-gettext
 Provides: phpmyadmin = %{version}-%{release}
 
 
@@ -35,7 +38,7 @@ is available in 50 languages
 
 
 %prep
-%setup -qn phpMyAdmin-%{version}-all-languages
+%setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
 
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
@@ -49,6 +52,7 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/Chang
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_datadir}/doc/%{name}-%{version}/LICENSE@" \
     -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
+    -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
     -i libraries/vendor_config.php
 
 # For debug
@@ -69,28 +73,30 @@ done
 
 %install
 rm -rf %{buildroot}
-%{__mkdir} -p %{buildroot}/%{_datadir}/%{name}
-%{__mkdir} -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
-%{__mkdir} -p %{buildroot}/%{_sysconfdir}/%{name}
-%{__cp} -ad ./* %{buildroot}/%{_datadir}/%{name}
-%{__cp} %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/conf.d/phpMyAdmin.conf
-%{__cp} CONFIG %{buildroot}/%{_sysconfdir}/%{name}/config.inc.php
+mkdir -p %{buildroot}/%{_datadir}/%{name}
+mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
+mkdir -p %{buildroot}/%{_sysconfdir}/%{name}
+cp -ad ./* %{buildroot}/%{_datadir}/%{name}
+cp %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/conf.d/phpMyAdmin.conf
+cp CONFIG %{buildroot}/%{_sysconfdir}/%{name}/config.inc.php
 
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/*txt
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/[CIRLT]*
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/libraries/.htaccess
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/setup/lib/.htaccess
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/setup/frames/.htaccess
-%{__rm} -rf %{buildroot}/%{_datadir}/%{name}/contrib
+rm -f %{buildroot}/%{_datadir}/%{name}/*txt
+rm -f %{buildroot}/%{_datadir}/%{name}/[CIRLT]*
+rm -f %{buildroot}/%{_datadir}/%{name}/libraries/.htaccess
+rm -f %{buildroot}/%{_datadir}/%{name}/setup/lib/.htaccess
+rm -f %{buildroot}/%{_datadir}/%{name}/setup/frames/.htaccess
+rm -rf %{buildroot}/%{_datadir}/%{name}/contrib
 
-%{__mkdir} -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
+mkdir -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
+
+rm -rf %{buildroot}%{_datadir}/%{pkgname}/libraries/php-gettext
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%if %{?fedora}%{!?fedora:99} <= 12
+%if %{?fedora}%{!?fedora:99} <= 16
 %pre
 echo -e "\nWARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
@@ -115,6 +121,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sun Jul 01 2012 Remi Collet <rpms@famillecollet.com> 3.5.1-0.1.rc1
+- update to 3.5.2-rc1
+- clean up spec, use system php-gettext
+
 * Sat May 05 2012 Remi Collet <rpms@famillecollet.com> 3.5.1-2
 - make config compatible httpd 2.2 / 2.4
 
