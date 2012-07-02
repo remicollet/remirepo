@@ -76,7 +76,7 @@ Version: 5.4.4
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 4%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -132,8 +132,8 @@ BuildRequires: sqlite-devel >= 3.6.0
 BuildRequires: sqlite-devel >= 3.0.0
 %endif
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
-BuildRequires: pcre-devel >= 7.8
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+BuildRequires: pcre-devel >= 8.0
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
@@ -194,7 +194,6 @@ executing PHP scripts, /usr/bin/php, and the CGI interface.
 Group: Development/Languages
 Summary: PHP FastCGI Process Manager
 Requires: php-common%{?_isa} = %{version}-%{release}
-BuildRequires: libevent-devel >= 1.4.11
 %if 0%{?fedora} >= 15
 BuildRequires: systemd-units
 Requires: systemd-units
@@ -223,6 +222,7 @@ Summary: Common files for PHP
 # ABI/API check - Arch specific
 Provides: php-api = %{apiver}%{isasuffix}, php-zend-abi = %{zendver}%{isasuffix}
 Provides: php(api) = %{apiver}%{isasuffix}, php(zend-abi) = %{zendver}%{isasuffix}
+Provides: php(language) = %{version}, php(language)%{?_isa} = %{version}
 # Provides for all builtin/shared modules:
 Provides: php-bz2, php-bz2%{?_isa}
 Provides: php-calendar, php-calendar%{?_isa}
@@ -807,7 +807,7 @@ ln -sf ../configure
 	--with-iconv \
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
         --with-pcre-regex=%{_prefix} \
 %endif
 	--with-zlib \
@@ -1245,6 +1245,7 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
     -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
+    -e "s/@PHP_VERSION@/%{version}/" \
     < %{SOURCE3} > macros.php
 install -m 644 -c macros.php \
            $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.php
@@ -1445,6 +1446,12 @@ fi
 
 
 %changelog
+* Mon Jul 02 2012 Remi Collet <RPM@famillecollet.com> 5.4.4-4
+- use system pcre only on fedora >= 14 (version 8.10)
+- drop BR for libevent (#835671)
+- provide php(language) to allow version check
+- define %%{php_version}
+
 * Thu Jun 21 2012 Remi Collet <RPM@famillecollet.com> 5.4.4-2
 - clean spec, sync with rawhide
 - add missing provides (core, ereg, filter, standard)
