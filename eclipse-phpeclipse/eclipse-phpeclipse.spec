@@ -3,7 +3,7 @@
 
 Name:      eclipse-phpeclipse
 Version:   1.2.3
-Release:   3%{?dist}
+Release:   4%{?dist}
 Summary:   PHP Eclipse plugin
 Group:     Development/Tools
 License:   CPL
@@ -87,11 +87,11 @@ find -name MANIFEST.MF | xargs sed --in-place "s/0.0.0/%{version}/"
 
 %build
 # build the main feature
-%{eclipse_base}/buildscripts/pdebuild -f net.sourceforge.phpeclipse.feature
+eclipse-pdebuild -f net.sourceforge.phpeclipse.feature
 
 # build the debug features
-%{eclipse_base}/buildscripts/pdebuild -f net.sourceforge.phpeclipse.debug.feature
-%{eclipse_base}/buildscripts/pdebuild -f net.sourceforge.phpeclipse.xdebug.feature
+eclipse-pdebuild -f net.sourceforge.phpeclipse.debug.feature
+eclipse-pdebuild -f net.sourceforge.phpeclipse.xdebug.feature
 
 %install
 rm -rf %{buildroot}
@@ -118,6 +118,9 @@ rm -rf %{buildroot}
 %{eclipse_dropin}/phpeclipse-xdebug
 
 %changelog
+* Mon Jul 02 2012  Remi Collet <remi@fedoraproject.org> - 1.2.3-4
+- bump release
+
 * Mon Jan 23 2012  Remi Collet <remi@fedoraproject.org> - 1.2.3-3
 - try to patch parser for php >= 5.3
 
