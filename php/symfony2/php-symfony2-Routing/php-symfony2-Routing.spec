@@ -12,6 +12,7 @@ License:          MIT
 URL:              http://symfony.com/doc/current/components/routing.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -78,12 +79,16 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Symfony/Component/%{pear_name}
 
 
 %changelog
+* Mon Jul 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
+- backport for remi repository
+
 * Tue Jun 12 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-3
 - Fix package.xml for *.xsd file issue
 
