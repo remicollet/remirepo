@@ -90,7 +90,7 @@ fi
 
 %changelog
 * Mon Jul 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-4
-- rebuild for remi repository
+- backport for remi repository
 
 * Mon Jul 2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-4
 - Added php-pear(%%{pear_channel}/DependencyInjection) require
