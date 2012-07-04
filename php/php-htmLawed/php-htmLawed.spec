@@ -2,10 +2,10 @@
 
 Name:           php-%{libname}
 Version:        1.1.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP code to purify and filter HTML
 Group:          Development/Libraries
-License:        LGPLv3+ and GPLv2+
+License:        LGPLv3 and GPLv2+
 URL:            http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/
 
 # Latest archive is not versionned
@@ -66,6 +66,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 04 2012 Remi Collet <remi@fedoraproject.org> - 1.1.11-2
+- fix License per review comment (#836587)
+
 * Fri Jun 29 2012 Remi Collet <remi@fedoraproject.org> - 1.1.11-1
 - initial package
 
