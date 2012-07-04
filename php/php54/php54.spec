@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-#global rcver      RC2
+%global rcver      RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -72,11 +72,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.4
+Version: 5.4.5
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 4%{?dist}
+Release: 0.1.RC1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -1446,6 +1446,9 @@ fi
 
 
 %changelog
+* Wed Jul 04 2012 Remi Collet <RPM@famillecollet.com> 5.4.5-0.1.RC1
+- update to 5.4.5RC1
+
 * Mon Jul 02 2012 Remi Collet <RPM@famillecollet.com> 5.4.4-4
 - use system pcre only on fedora >= 14 (version 8.10)
 - drop BR for libevent (#835671)

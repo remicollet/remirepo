@@ -71,7 +71,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.4.4
+Version: 5.4.5
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
