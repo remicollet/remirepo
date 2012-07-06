@@ -6,7 +6,7 @@
 # Extension version
 %global fileinfover 1.0.5
 %global pharver     2.0.1
-%global zipver      1.9.1
+%global zipver      1.11.0
 %global jsonver     1.2.1
 %global oci8ver     1.4.7
 
@@ -54,15 +54,13 @@
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 
-%if 0%{?fedora} >= 17
-%global with_zip     1
+%if 0%{?fedora} >= 18
 %global with_libzip  1
-%global zipmod       zip
 %else
-%global with_zip     1
 %global with_libzip  0
-%global zipmod       zip
 %endif
+%global with_zip     1
+%global zipmod       zip
 
 %if 0%{?fedora} < 18
 %global db_devel  db4-devel
@@ -1447,7 +1445,7 @@ fi
 
 %changelog
 * Wed Jul 04 2012 Remi Collet <RPM@famillecollet.com> 5.4.5-0.1.RC1
-- update to 5.4.5RC1
+- update to 5.4.5RC1 with bundled libzip.
 
 * Mon Jul 02 2012 Remi Collet <RPM@famillecollet.com> 5.4.4-4
 - use system pcre only on fedora >= 14 (version 8.10)
