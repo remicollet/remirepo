@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.25
+Version: 5.5.25a
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -130,7 +130,7 @@ Requires(pre): /usr/sbin/useradd
 Requires(post): chkconfig
 Requires(preun): chkconfig
 %if 0%{?fedora} >= 15
-# We require this to be present for /etc/tmpfiles.d
+# We require this to be present for %%{_prefix}/lib/tmpfiles.d
 Requires: systemd-units
 # Make sure it's there when scriptlets run, too
 Requires(post): systemd-units
@@ -443,8 +443,8 @@ sed -i -e '/PrivateTmp/s/true/false/' ${RPM_BUILD_ROOT}%{_unitdir}/mysqld.servic
 install -m 755 %{SOURCE12} ${RPM_BUILD_ROOT}%{_libexecdir}/
 install -m 755 %{SOURCE13} ${RPM_BUILD_ROOT}%{_libexecdir}/
 
-mkdir -p $RPM_BUILD_ROOT/etc/tmpfiles.d
-install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/tmpfiles.d/mysql.conf
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
+install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/mysql.conf
 
 %else
 mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
@@ -527,7 +527,7 @@ echo -e "\nWARNING : This MySQL RPM is not an official Fedora/Redhat build and i
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 14
+%if %{?fedora}%{!?fedora:99} <= 15
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -760,7 +760,7 @@ fi
 %{_libexecdir}/mysqld-prepare-db-dir
 %{_libexecdir}/mysqld-wait-ready
 
-/etc/tmpfiles.d/mysql.conf
+%{_prefix}/lib/tmpfiles.d/mysql.conf
 %else
 /etc/rc.d/init.d/mysqld
 %config(noreplace) /etc/sysconfig/mysqld
@@ -803,6 +803,18 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Jul 06 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.25a-1
+- update to MySQL 5.5.25a Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-25a.html
+
+* Mon Jun 11 2012 Tom Lane <tgl@redhat.com> 5.5.24-1
+- Update to MySQL 5.5.24, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-24.html
+   including the fix for CVE-2012-2122
+   Resolves: #830680
+- Tweak logrotate script to put the right permissions on mysqld.log
+- Minor specfile fixes for recent packaging guidelines changes
+
 * Fri Jun 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.25-1
 - update to MySQL 5.5.25 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-25.html

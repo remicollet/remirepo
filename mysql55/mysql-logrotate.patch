@@ -2,7 +2,8 @@ Adjust the mysql-log-rotate script in several ways:
 
 * Use the correct log file pathname for Red Hat installations.
 * Enable creation of the log file by logrotate (needed since
-  /var/log/ isn't writable by mysql user).
+  /var/log/ isn't writable by mysql user); and set the same 640
+  permissions we normally use.
 * Comment out the actual rotation commands, so that user must edit
   the file to enable rotation.  This is unfortunate, but the fact
   that the script will probably fail without manual configuration
@@ -48,7 +49,7 @@ diff -Naur mysql-5.5.22.orig/support-files/mysql-log-rotate.sh mysql-5.5.22/supp
 +# Then, un-comment the following lines to enable rotation of mysql's log file:
 +
 +#/var/log/mysqld.log {
-+#        create 600 mysql mysql
++#        create 640 mysql mysql
 +#        notifempty
 +#	daily
 +#        rotate 3
