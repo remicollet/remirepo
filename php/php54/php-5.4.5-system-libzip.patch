@@ -1,7 +1,7 @@
-diff -up php-5.4.1/ext/zip/config.m4.systzip php-5.4.1/ext/zip/config.m4
---- php-5.4.1/ext/zip/config.m4.systzip	2012-04-24 18:47:33.000000000 +0200
-+++ php-5.4.1/ext/zip/config.m4	2012-04-27 18:54:23.478299744 +0200
-@@ -13,88 +13,129 @@ fi
+diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
+--- php-5.4.5RC1/ext/zip/config.m4.systzip	2012-07-04 07:43:14.000000000 +0200
++++ php-5.4.5RC1/ext/zip/config.m4	2012-07-07 15:56:41.418171233 +0200
+@@ -13,65 +13,105 @@ fi
  PHP_ARG_WITH(pcre-dir, pcre install prefix,
  [  --with-pcre-dir           ZIP: pcre install prefix], no, no)
  
@@ -145,49 +145,18 @@ diff -up php-5.4.1/ext/zip/config.m4.systzip php-5.4.1/ext/zip/config.m4
 +    CPPFLAGS=$old_CPPFLAGS
  
 -  PHP_ZIP_SOURCES="$PHP_ZIP_SOURCES lib/zip_add.c lib/zip_error.c lib/zip_fclose.c \
--                         lib/zip_fread.c lib/zip_open.c lib/zip_source_filep.c  \
--                         lib/zip_strerror.c lib/zip_close.c lib/zip_error_get.c \
--                         lib/zip_file_error_get.c lib/zip_free.c lib/zip_rename.c \
--                         lib/zip_source_free.c lib/zip_unchange_all.c lib/zip_delete.c \
--                         lib/zip_error_get_sys_type.c lib/zip_file_get_offset.c \
--                         lib/zip_get_name.c lib/zip_replace.c lib/zip_source_function.c \
--                         lib/zip_unchange.c lib/zip_dirent.c lib/zip_error_strerror.c \
--                         lib/zip_filerange_crc.c lib/zip_file_strerror.c lib/zip_get_num_files.c \
--                         lib/zip_get_archive_flag.c lib/zip_set_archive_flag.c \
--                         lib/zip_set_name.c lib/zip_source_zip.c lib/zip_unchange_data.c \
--                         lib/zip_entry_free.c lib/zip_error_to_str.c lib/zip_fopen.c \
--                         lib/zip_name_locate.c lib/zip_source_buffer.c lib/zip_stat.c \
--                         lib/zip_entry_new.c lib/zip_err_str.c lib/zip_fopen_index.c \
--                         lib/zip_get_archive_comment.c lib/zip_get_file_comment.c \
--                         lib/zip_new.c lib/zip_source_file.c lib/zip_stat_index.c \
--                         lib/zip_set_archive_comment.c lib/zip_set_file_comment.c \
--                         lib/zip_unchange_archive.c lib/zip_memdup.c lib/zip_stat_init.c lib/zip_add_dir.c \
--                         lib/zip_error_clear.c lib/zip_file_error_clear.c"
--
++    PHP_ZIP_SOURCES="$PHP_ZIP_SOURCES lib/zip_add.c lib/zip_error.c lib/zip_fclose.c \
+                          lib/zip_fread.c lib/zip_open.c lib/zip_source_filep.c  \
+                          lib/zip_strerror.c lib/zip_close.c lib/zip_error_get.c \
+                          lib/zip_file_error_get.c lib/zip_free.c lib/zip_rename.c \
+@@ -98,10 +138,11 @@ yes
+ 						 lib/zip_source_open.c lib/zip_source_pkware.c lib/zip_source_pop.c \
+ 						 lib/zip_source_read.c lib/zip_source_stat.c"
+ 
 -  AC_DEFINE(HAVE_ZIP,1,[ ])
 -  PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c $PHP_ZIP_SOURCES, $ext_shared)
 -  PHP_ADD_BUILD_DIR($ext_builddir/lib, 1)
 -  PHP_SUBST(ZIP_SHARED_LIBADD)
-+    PHP_ZIP_SOURCES="$PHP_ZIP_SOURCES lib/zip_add.c lib/zip_error.c lib/zip_fclose.c \
-+                           lib/zip_fread.c lib/zip_open.c lib/zip_source_filep.c  \
-+                           lib/zip_strerror.c lib/zip_close.c lib/zip_error_get.c \
-+                           lib/zip_file_error_get.c lib/zip_free.c lib/zip_rename.c \
-+                           lib/zip_source_free.c lib/zip_unchange_all.c lib/zip_delete.c \
-+                           lib/zip_error_get_sys_type.c lib/zip_file_get_offset.c \
-+                           lib/zip_get_name.c lib/zip_replace.c lib/zip_source_function.c \
-+                           lib/zip_unchange.c lib/zip_dirent.c lib/zip_error_strerror.c \
-+                           lib/zip_filerange_crc.c lib/zip_file_strerror.c lib/zip_get_num_files.c \
-+                           lib/zip_get_archive_flag.c lib/zip_set_archive_flag.c \
-+                           lib/zip_set_name.c lib/zip_source_zip.c lib/zip_unchange_data.c \
-+                           lib/zip_entry_free.c lib/zip_error_to_str.c lib/zip_fopen.c \
-+                           lib/zip_name_locate.c lib/zip_source_buffer.c lib/zip_stat.c \
-+                           lib/zip_entry_new.c lib/zip_err_str.c lib/zip_fopen_index.c \
-+                           lib/zip_get_archive_comment.c lib/zip_get_file_comment.c \
-+                           lib/zip_new.c lib/zip_source_file.c lib/zip_stat_index.c \
-+                           lib/zip_set_archive_comment.c lib/zip_set_file_comment.c \
-+                           lib/zip_unchange_archive.c lib/zip_memdup.c lib/zip_stat_init.c lib/zip_add_dir.c \
-+                           lib/zip_error_clear.c lib/zip_file_error_clear.c"
-+
 +    AC_DEFINE(HAVE_ZIP,1,[ ])
 +    PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c $PHP_ZIP_SOURCES, $ext_shared)
 +    PHP_ADD_BUILD_DIR($ext_builddir/lib, 1)
@@ -196,9 +165,9 @@ diff -up php-5.4.1/ext/zip/config.m4.systzip php-5.4.1/ext/zip/config.m4
  
    dnl so we always include the known-good working hack.
    PHP_ADD_MAKEFILE_FRAGMENT
-diff -up php-5.4.1/ext/zip/php_zip.c.systzip php-5.4.1/ext/zip/php_zip.c
---- php-5.4.1/ext/zip/php_zip.c.systzip	2012-04-24 18:47:33.000000000 +0200
-+++ php-5.4.1/ext/zip/php_zip.c	2012-04-27 18:56:31.797302815 +0200
+diff -up php-5.4.5RC1/ext/zip/php_zip.c.systzip php-5.4.5RC1/ext/zip/php_zip.c
+--- php-5.4.5RC1/ext/zip/php_zip.c.systzip	2012-07-04 07:43:14.000000000 +0200
++++ php-5.4.5RC1/ext/zip/php_zip.c	2012-07-07 15:59:12.728676026 +0200
 @@ -29,8 +29,232 @@
  #include "ext/standard/php_string.h"
  #include "ext/pcre/php_pcre.h"
@@ -432,7 +401,7 @@ diff -up php-5.4.1/ext/zip/php_zip.c.systzip php-5.4.1/ext/zip/php_zip.c
  
  /* zip_open is a macro for renaming libzip zipopen, so we need to use PHP_NAMED_FUNCTION */
  static PHP_NAMED_FUNCTION(zif_zip_open);
-@@ -1619,6 +1843,10 @@ static ZIPARCHIVE_METHOD(addEmptyDir)
+@@ -1624,6 +1848,10 @@ static ZIPARCHIVE_METHOD(addEmptyDir)
  	}
  
  	idx = zip_stat(intern, s, 0, &sb);
@@ -443,7 +412,7 @@ diff -up php-5.4.1/ext/zip/php_zip.c.systzip php-5.4.1/ext/zip/php_zip.c
  	if (idx >= 0) {
  		RETVAL_FALSE;
  	} else {
-@@ -1841,6 +2069,10 @@ static ZIPARCHIVE_METHOD(addFromString)
+@@ -1846,6 +2074,10 @@ static ZIPARCHIVE_METHOD(addFromString)
  	}
  
  	cur_idx = zip_name_locate(intern, (const char *)name, 0);
@@ -454,22 +423,22 @@ diff -up php-5.4.1/ext/zip/php_zip.c.systzip php-5.4.1/ext/zip/php_zip.c
  	/* TODO: fix  _zip_replace */
  	if (cur_idx >= 0) {
  		if (zip_delete(intern, cur_idx) == -1) {
-@@ -2863,7 +3095,11 @@ static PHP_MINFO_FUNCTION(zip)
+@@ -2868,7 +3100,11 @@ static PHP_MINFO_FUNCTION(zip)
  	php_info_print_table_row(2, "Zip", "enabled");
  	php_info_print_table_row(2, "Extension Version","$Id$");
  	php_info_print_table_row(2, "Zip version", PHP_ZIP_VERSION_STRING);
--	php_info_print_table_row(2, "Libzip version", "0.9.0");
+-	php_info_print_table_row(2, "Libzip version", LIBZIP_VERSION);
 +#if defined(HAVE_LIBZIP)
 +	php_info_print_table_row(2, "Compiled against libzip version", LIBZIP_VERSION);
 +#else
-+	php_info_print_table_row(2, "Bundled libzip version", "0.9.0");
++	php_info_print_table_row(2, "Bundled libzip version", LIBZIP_VERSION);
 +#endif
  
  	php_info_print_table_end();
  }
-diff -up php-5.4.1/ext/zip/php_zip.h.systzip php-5.4.1/ext/zip/php_zip.h
---- php-5.4.1/ext/zip/php_zip.h.systzip	2012-04-24 18:47:33.000000000 +0200
-+++ php-5.4.1/ext/zip/php_zip.h	2012-04-27 18:54:23.479299744 +0200
+diff -up php-5.4.5RC1/ext/zip/php_zip.h.systzip php-5.4.5RC1/ext/zip/php_zip.h
+--- php-5.4.5RC1/ext/zip/php_zip.h.systzip	2012-07-04 07:43:14.000000000 +0200
++++ php-5.4.5RC1/ext/zip/php_zip.h	2012-07-07 15:57:34.845319432 +0200
 @@ -28,7 +28,11 @@ extern zend_module_entry zip_module_entr
  #include "TSRM.h"
  #endif
@@ -480,11 +449,11 @@ diff -up php-5.4.1/ext/zip/php_zip.h.systzip php-5.4.1/ext/zip/php_zip.h
  #include "lib/zip.h"
 +#endif
  
- #define PHP_ZIP_VERSION_STRING "1.9.1"
+ #define PHP_ZIP_VERSION_STRING "1.11.0"
  
-diff -up php-5.4.1/ext/zip/tests/bug38943.phpt.systzip php-5.4.1/ext/zip/tests/bug38943.phpt
---- php-5.4.1/ext/zip/tests/bug38943.phpt.systzip	2012-04-24 18:47:33.000000000 +0200
-+++ php-5.4.1/ext/zip/tests/bug38943.phpt	2012-04-27 18:54:23.480299744 +0200
+diff -up php-5.4.5RC1/ext/zip/tests/bug38943.phpt.systzip php-5.4.5RC1/ext/zip/tests/bug38943.phpt
+--- php-5.4.5RC1/ext/zip/tests/bug38943.phpt.systzip	2012-07-04 07:43:14.000000000 +0200
++++ php-5.4.5RC1/ext/zip/tests/bug38943.phpt	2012-07-07 15:56:41.422171242 +0200
 @@ -27,7 +27,7 @@ array(1) {
    [0]=>
    int(1)
@@ -494,9 +463,9 @@ diff -up php-5.4.1/ext/zip/tests/bug38943.phpt.systzip php-5.4.1/ext/zip/tests/b
    ["test":"myZip":private]=>
    int(0)
    ["testp"]=>
-diff -up php-5.4.1/ext/zip/tests/pecl12414.phpt.systzip php-5.4.1/ext/zip/tests/pecl12414.phpt
---- php-5.4.1/ext/zip/tests/pecl12414.phpt.systzip	2012-04-24 18:47:33.000000000 +0200
-+++ php-5.4.1/ext/zip/tests/pecl12414.phpt	2012-04-27 18:54:23.481299744 +0200
+diff -up php-5.4.5RC1/ext/zip/tests/pecl12414.phpt.systzip php-5.4.5RC1/ext/zip/tests/pecl12414.phpt
+--- php-5.4.5RC1/ext/zip/tests/pecl12414.phpt.systzip	2012-07-04 07:43:14.000000000 +0200
++++ php-5.4.5RC1/ext/zip/tests/pecl12414.phpt	2012-07-07 15:56:41.422171242 +0200
 @@ -5,6 +5,8 @@ Bug #12414 ( extracting files from damag
  /*$ */
  if(!extension_loaded('zip')) die('skip');
@@ -506,9 +475,9 @@ diff -up php-5.4.1/ext/zip/tests/pecl12414.phpt.systzip php-5.4.1/ext/zip/tests/
  --FILE--
  <?php
  $filename = 'MYLOGOV2.GFX';
-diff -up php-5.4.1/ext/zip/zip_stream.c.systzip php-5.4.1/ext/zip/zip_stream.c
---- php-5.4.1/ext/zip/zip_stream.c.systzip	2012-04-24 18:47:33.000000000 +0200
-+++ php-5.4.1/ext/zip/zip_stream.c	2012-04-27 18:54:23.479299744 +0200
+diff -up php-5.4.5RC1/ext/zip/zip_stream.c.systzip php-5.4.5RC1/ext/zip/zip_stream.c
+--- php-5.4.5RC1/ext/zip/zip_stream.c.systzip	2012-07-04 07:43:14.000000000 +0200
++++ php-5.4.5RC1/ext/zip/zip_stream.c	2012-07-07 15:56:41.423171244 +0200
 @@ -6,7 +6,11 @@
  #if HAVE_ZIP
  #ifdef ZEND_ENGINE_2

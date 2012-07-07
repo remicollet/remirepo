@@ -54,7 +54,7 @@
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 
-%if 0%{?fedora} >= 18
+%if 0%{?fedora} >= 17
 %global with_libzip  1
 %else
 %global with_libzip  0
@@ -74,7 +74,7 @@ Version: 5.4.5
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.1.RC1%{?dist}
+Release: 0.2.RC1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -110,7 +110,7 @@ Patch42: php-5.3.1-systzdata-v8.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
-Patch44: php-5.4.1-system-libzip.patch
+Patch44: php-5.4.5-system-libzip.patch
 
 # Fixes for tests
 
@@ -1444,6 +1444,9 @@ fi
 
 
 %changelog
+* Sat Jul 05 2012 Remi Collet <RPM@famillecollet.com> 5.4.5-0.2.RC1
+- update patch for system libzip
+
 * Wed Jul 04 2012 Remi Collet <RPM@famillecollet.com> 5.4.5-0.1.RC1
 - update to 5.4.5RC1 with bundled libzip.
 
