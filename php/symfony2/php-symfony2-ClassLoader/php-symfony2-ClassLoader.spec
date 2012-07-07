@@ -4,7 +4,7 @@
 
 Name:             php-symfony2-ClassLoader
 Version:          2.0.15
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -21,7 +21,6 @@ Requires:         php-common >= 5.3.2
 Requires:         php-pcre
 Requires:         php-spl
 Requires:         php-tokenizer
-Requires:         php-pecl-apc
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
@@ -47,6 +46,8 @@ implement one of the following conventions:
 If your classes and the third-party libraries you use for your project follow
 these standards, the Symfony2 auto-loader is the only auto-loader you will
 ever need.
+
+Optional dependency: APC
 
 
 %prep
@@ -93,6 +94,12 @@ fi
 
 
 %changelog
+* Sat Jul 7 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-2
+- backport for remi repository
+
+* Wed Jul 4 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-2
+- Removed php-pecl-apc require
+
 * Sun Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-1
 - rebuild for remi repository
 
