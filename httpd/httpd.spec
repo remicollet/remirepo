@@ -8,15 +8,17 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.2
-Release: 18%{?dist}
+Release: 21%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
-Source3: httpd.logrotate
-Source5: httpd.sysconf
-Source6: httpd-ssl-pass-dialog
-Source7: httpd.tmpfiles
-Source8: httpd.service
+Source2: httpd.logrotate
+Source3: httpd.sysconf
+Source4: httpd-ssl-pass-dialog
+Source5: httpd.tmpfiles
+Source6: httpd.service
+Source7: action-graceful.sh
+Source8: action-configtest.sh
 Source10: httpd.conf
 Source11: 00-base.conf
 Source12: 00-mpm.conf
@@ -51,6 +53,7 @@ Patch41: httpd-2.4.2-r1327036+.patch
 Patch42: httpd-2.4.2-r1326980+.patch
 Patch43: httpd-2.4.2-r1332643+.patch
 Patch44: httpd-2.4.2-r1346905.patch
+Patch45: httpd-2.4.2-r1357685.patch
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -163,6 +166,7 @@ authentication to the Apache HTTP Server.
 %patch42 -p1 -b .r1326980+
 %patch43 -p1 -b .r1332643+
 %patch44 -p1 -b .r1346905
+%patch45 -p1 -b .r1357685
 
 # Patch in vendor/release string
 sed "s/@RELEASE@/%{vstring}/" < %{PATCH20} | patch -p1
@@ -340,9 +344,16 @@ ln -s /run/httpd $RPM_BUILD_ROOT/etc/httpd/run
 ln -s ../..%{_libdir}/httpd/modules $RPM_BUILD_ROOT/etc/httpd/modules
 
 # install http-ssl-pass-dialog
-mkdir -p $RPM_BUILD_ROOT/%{_libexecdir}
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}
 install -m755 $RPM_SOURCE_DIR/httpd-ssl-pass-dialog \
-	$RPM_BUILD_ROOT/%{_libexecdir}/httpd-ssl-pass-dialog
+	$RPM_BUILD_ROOT%{_libexecdir}/httpd-ssl-pass-dialog
+
+# Install action scripts
+mkdir -p $RPM_BUILD_ROOT%{_libexecdir}/initscripts/legacy-actions/httpd
+for f in graceful configtest; do
+    install -p -m 755 $RPM_SOURCE_DIR/action-${f}.sh \
+            $RPM_BUILD_ROOT%{_libexecdir}/initscripts/legacy-actions/httpd/${f}
+done
 
 # Install logrotate config
 mkdir -p $RPM_BUILD_ROOT/etc/logrotate.d
@@ -487,6 +498,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/sysconfig/httpd
 %{_prefix}/lib/tmpfiles.d/httpd.conf
 
+%dir %{_libexecdir}/initscripts/legacy-actions/httpd
+%{_libexecdir}/initscripts/legacy-actions/httpd/*
+
 %{_sbindir}/ht*
 %{_sbindir}/fcgistarter
 %{_sbindir}/apachectl
@@ -567,6 +581,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Sat Jul 07 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-21
+- sync with rawhide, rebuild for remi repo
+
+* Fri Jul  6 2012 Joe Orton <jorton@redhat.com> - 2.4.2-21
+- drop explicit version requirement on initscripts
+
+* Thu Jul  5 2012 Joe Orton <jorton@redhat.com> - 2.4.2-20
+- mod_ext_filter: fix error_log warnings
+
+* Mon Jul  2 2012 Joe Orton <jorton@redhat.com> - 2.4.2-19
+- support "configtest" and "graceful" as initscripts "legacy actions"
+
 * Sat Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-18
 - sync with rawhide, rebuild for remi repo
 
