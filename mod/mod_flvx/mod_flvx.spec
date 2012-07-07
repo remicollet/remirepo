@@ -6,7 +6,7 @@
 Summary:	FLV progressive download streaming for the Apache HTTP Server
 Name:		mod_flvx
 Version:	0
-Release:	0.1.20100525git%{?dist}
+Release:	0.3.20100525git%{?dist}
 Group:		System Environment/Daemons
 License:	ASL 2.0
 URL:		http://tperspective.blogspot.com/2009/02/apache-flv-streaming-done-right.html
@@ -55,6 +55,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/flvx.conf
 
 %changelog
+* Sat Jul  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 0-0.3.20100525git
+- rebuild for remi repo and httpd 2.4
+
+* Thu Jul  5 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0-0.3.20100525git
+- Bump build so rawhide is higher than F-17
+
 * Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 0-0.1.20100525git
 - rebuild for remi repo and httpd 2.4
 

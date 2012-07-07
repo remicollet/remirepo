@@ -34,7 +34,7 @@
 
 Name:		mod_fcgid
 Version:	2.3.7
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	FastCGI interface module for Apache 2
 Group:		System Environment/Daemons
 License:	ASL 2.0
@@ -54,7 +54,7 @@ BuildRequires:	httpd-devel >= 2.0, pkgconfig
 Requires:	httpd-mmn = %{_httpd_mmn}
 # sed required for fixconf script
 Requires:	/bin/sed
-# systemd-units needed for ownership of /etc/tmpfiles.d directory
+# systemd-units needed for ownership of /usr/lib/tmpfiles.d directory
 %if 0%{?fedora} > 14 || 0%{?rhel} > 6
 Requires:	systemd-units
 %endif
@@ -153,8 +153,8 @@ rm -rf %{buildroot}%{_var}/www/manual
 # Make sure %%{rundir}/mod_fcgid exists at boot time for systems
 # with %%{rundir} on tmpfs (#656625)
 %if 0%{?fedora} > 14 || 0%{?rhel} > 6
-install -d -m 755 %{buildroot}%{_sysconfdir}/tmpfiles.d
-install -p -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/tmpfiles.d/mod_fcgid.conf
+install -d -m 755 %{buildroot}%{_prefix}/lib/tmpfiles.d
+install -p -m 644 %{SOURCE4} %{buildroot}%{_prefix}/lib/tmpfiles.d/mod_fcgid.conf
 %endif
 
 # Install SELinux policy modules
@@ -209,7 +209,7 @@ exit 0
 %endif
 %config(noreplace) %{_httpd_confdir}/fcgid.conf
 %if 0%{?fedora} > 14 || 0%{?rhel} > 6
-%{_sysconfdir}/tmpfiles.d/mod_fcgid.conf
+%{_prefix}/lib/tmpfiles.d/mod_fcgid.conf
 %endif
 %dir %attr(0755,apache,apache) %{rundir}/mod_fcgid/
 
@@ -221,6 +221,12 @@ exit 0
 %endif
 
 %changelog
+* Sat Jul  7 2012 Remi Collet <RPMS@FamilleCollet.com> 2.3.7-4
+- sync with rawhide, rebuild for remi repo
+
+* Wed Jul  4 2012 Paul Howarth <paul@city-fan.org> 2.3.7-4
+- Move tmpfiles.d config from %%{_sysconfdir} to %%{_prefix}/lib
+
 * Wed May  2 2012 Remi Collet <RPMS@FamilleCollet.com> 2.3.7-3
 - sync with rawhide, rebuild for remi repo
 
