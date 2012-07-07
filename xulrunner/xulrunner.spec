@@ -672,7 +672,7 @@ fi
 * Mon Nov 7 2011 Martin Stransky <stransky@redhat.com> 8.0-1
 - Updated to 8.0
 
-* Tue Oct 18 2011 Ville SkyttÃ¤ <ville.skytta@iki.fi> - 7.0.1-5
+* Tue Oct 18 2011 Ville Skyttä <ville.skytta@iki.fi> - 7.0.1-5
 - Avoid %%post/un shell invocations 
   and dependencies (rhbz#736830).
 
