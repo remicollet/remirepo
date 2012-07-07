@@ -6,7 +6,7 @@
 # Running this as ExecStartPost is useful so that services declared as
 # "After mysqld" won't be started until the database is really ready.
 
-# Service file passes us the daemon's PID
+# Service file passes us the daemon's PID (actually, mysqld_safe's PID)
 daemon_pid="$1"
 
 # extract value of a MySQL option from config files

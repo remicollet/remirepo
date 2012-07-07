@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.5.25a
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -52,7 +52,6 @@ Patch8: mysql-dubious-exports.patch
 Patch10: mysql-plugin-bool.patch
 Patch11: mysql-s390-tsc.patch
 Patch12: mysql-openssl-test.patch
-Patch13: mysqld-nowatch.patch
 Patch14: mysql-va-list.patch
 Patch15: mysql-netdevname.patch
 Patch16: mysql-logrotate.patch
@@ -237,10 +236,6 @@ rm -f Docs/mysql.info
 %if 0%{?fedora} >= 9 || 0%{?rhel} >= 5
 # When build with system openssl
 %patch12 -p1
-%endif
-%if 0%{?fedora} >= 15
-# for systemd
-%patch13 -p1
 %endif
 %patch14 -p1
 %patch15 -p1
@@ -803,6 +798,16 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Jul 07 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.25a-1.1
+- sync with rawhide
+
+* Fri Jul  6 2012 Tom Lane <tgl@redhat.com> 5.5.25a-1
+- Update to MySQL 5.5.25a, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-25a.html
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-25.html
+- Don't use systemd's Restart feature; rely on mysqld_safe instead
+Resolves: #832029
+
 * Fri Jul 06 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.25a-1
 - update to MySQL 5.5.25a Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-25a.html
@@ -811,7 +816,7 @@ fi
 - Update to MySQL 5.5.24, for various fixes described at
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-24.html
    including the fix for CVE-2012-2122
-   Resolves: #830680
+Resolves: #830680
 - Tweak logrotate script to put the right permissions on mysqld.log
 - Minor specfile fixes for recent packaging guidelines changes
 
