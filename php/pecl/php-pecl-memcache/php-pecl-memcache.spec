@@ -1,13 +1,12 @@
-%{!?phpname:    %{expand: %%global phpname    php}}
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 %{!?php_extdir: %{expand: %%global php_extdir %(%{phpbindir}/php-config --extension-dir)}}
 
 %global pecl_name memcache
 
 Summary:      Extension to work with the Memcached caching daemon
-Name:         %{phpname}-pecl-memcache
+Name:         php-pecl-memcache
 Version:      3.0.6
-Release:      3%{?dist}
+Release:      4%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -17,16 +16,18 @@ Source2:      xml2changelog
 
 # https://bugs.php.net/60284
 Patch0:       memcache-php54.patch
+Patch1:       php-pecl-memcache-3.0.6-fdcast.patch
+Patch2:       php-pecl-memcache-3.0.5-get-mem-corrupt.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{phpname}-devel >= 4.3.11, %{phpname}-pear, zlib-devel
+BuildRequires: php-devel >= 4.3.11, php-pear, zlib-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:     %{phpname}(zend-abi) = %{php_zend_api}
-Requires:     %{phpname}(api) = %{php_core_api}
+Requires:     php(zend-abi) = %{php_zend_api}
+Requires:     php(api) = %{php_core_api}
 
-Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
 
 
 # RPM 4.8
@@ -50,7 +51,11 @@ Memcache can be used as a PHP session handler.
 %prep 
 %setup -c -q
 
-%patch0 -p0 -b .php54
+pushd memcache-%{version}
+%patch0 -p1 -b .php54
+%patch1 -p1 -b .fdcast
+%patch2 -p1 -b .get-mem-corrupt.patch
+popd
 
 %{__php} -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
 
@@ -165,6 +170,14 @@ fi
 
 
 %changelog
+* Sat Jul  7 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-4
+- sync patch with rawhide
+
+* Thu Jul  5 2012 Joe Orton <jorton@redhat.com> - 3.0.6-4
+- fix php_stream_cast() usage
+- fix memory corruption after unserialization (Paul Clifford)
+- package license
+
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 3.0.6-3
 - build against php 5.4
 - add patch for ZTS build, see https://bugs.php.net/60284
