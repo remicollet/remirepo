@@ -1,4 +1,4 @@
-%global prever rc1
+#global prever rc1
 
 Name: phpMyAdmin
 Version: 3.5.2
@@ -121,7 +121,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
-* Sun Jul 01 2012 Remi Collet <rpms@famillecollet.com> 3.5.1-0.1.rc1
+* Sat Jul 08 2012 Remi Collet <rpms@famillecollet.com> 3.5.2-1
+- Upstream released 3.5.2 (bugfix release)
+
+* Sun Jul 01 2012 Remi Collet <rpms@famillecollet.com> 3.5.2-0.1.rc1
 - update to 3.5.2-rc1
 - clean up spec, use system php-gettext
 
