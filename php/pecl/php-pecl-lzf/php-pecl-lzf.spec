@@ -3,17 +3,13 @@
 %define pecl_name LZF
 
 Name:		php-pecl-lzf
-Version:	1.6.1
+Version:	1.6.2
 Release:	1%{?dist}
 Summary:	Extension to handle LZF de/compression
 Group:		Development/Languages
 License:	PHP
 URL:		http://pecl.php.net/package/%{pecl_name}
 Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bugs.php.net/bug.php?id=62501
-# wget http://svn.php.net/viewvc/pecl/lzf/trunk/filter.c?view=co -O filter.c
-Source1:        filter.c
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	php-devel
@@ -43,7 +39,6 @@ slight speed cost.
 %prep
 %setup -c -q
 
-cp %{SOURCE1} %{pecl_name}-%{version}
 cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 cat >lzf.ini << 'EOF'
@@ -126,6 +121,9 @@ fi
 
 
 %changelog
+* Mon Jul 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-1
+- update to 1.6.2
+
 * Sat Jul 07 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.6.1-1
 - update to 1.6.1
 
