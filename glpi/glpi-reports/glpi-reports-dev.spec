@@ -2,7 +2,7 @@
 #global svnrelease   215
 
 Name:           glpi-reports
-Version:        1.6.0
+Version:        1.6.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,14 +20,14 @@ URL:            https://forge.indepnet.net/projects/reports
 # tar czf glpi-reports-1.6.0-215.tar.gz reports
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1094/glpi-reports-1.6.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1218/glpi-reports-1.6.1.tar.gz
 %endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.83
+Requires:       glpi >= 0.83.3
 Requires:       glpi <  0.84
 
 
@@ -83,6 +83,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.6.1-1
+- version 1.6.1 for GLPI 0.83.3
+  https://forge.indepnet.net/projects/reports/versions/701
+
 * Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-1
 - version 1.6.0
   https://forge.indepnet.net/projects/reports/versions/636
