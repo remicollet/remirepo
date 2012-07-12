@@ -2,7 +2,7 @@
 #global svnrelease   322
 
 Name:           glpi-webservices
-Version:        1.3.0
+Version:        1.3.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,14 +20,14 @@ URL:            https://forge.indepnet.net/projects/webservices
 # tar czf glpi-webservices-1.3.0-322.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1098/glpi-webservices-1.3.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1205/glpi-webservices-1.3.1.tar.gz
 %endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.83
+Requires:       glpi >= 0.83.3
 Requires:       glpi <  0.84
 Requires:       php-xmlrpc php-soap
 
@@ -90,6 +90,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.1-1
+- version 1.3.1 for GLPI 0.83.3
+  https://forge.indepnet.net/projects/webservices/versions/703
+
 * Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.0-1
 - version 1.3.0
   https://forge.indepnet.net/projects/webservices/versions/635
