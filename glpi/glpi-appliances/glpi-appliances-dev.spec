@@ -2,7 +2,7 @@
 #global svnrelease   184
 
 Name:           glpi-appliances
-Version:        1.8.0
+Version:        1.8.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,18 +20,13 @@ URL:            https://forge.indepnet.net/projects/appliances
 # tar czf glpi-appliances-1.8.0-184.tar.gz appliances
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1114/glpi-appliances-1.8.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1214/glpi-appliances-1.8.1.tar.gz
 %endif
-
-# PHP 5.4.0 patch
-Patch0:         changeset_r189.diff
-# https://forge.indepnet.net/issues/3456
-Patch1:         changeset_r190.diff
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.83
+Requires:       glpi >= 0.83.3
 Requires:       glpi <  0.84
 Requires:       php-xmlrpc php-soap
 
@@ -64,10 +59,6 @@ cat >httpd <<EOF
 </Directory>
 EOF
 
-cd %{pluginname}
-%patch0 -p1
-%patch1 -p1
-
 
 %build
 # empty build
@@ -95,6 +86,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.8.1-1
+- version 1.8.1 for GLPI 0.83.3
+  https://forge.indepnet.net/projects/appliances/versions/747
+
 * Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.8.0-1
 - version 1.8.0
   https://forge.indepnet.net/projects/appliances/versions/614
