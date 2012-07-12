@@ -1,11 +1,11 @@
-%global  glpi_version  0.83
+%global  glpi_version  0.83.3
 %global  plug_version  1.0
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
-Version:        %{glpi_version}.0.%{plug_version}
-Release:        0.4.beta4%{?dist}
+Version:        %{glpi_version}.%{plug_version}
+Release:        0.1.RC2%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
@@ -13,16 +13,8 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/641/fusioninventory-for-glpi-metapackage_0.83_1.0-BETA4.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/669/fusioninventory-for-glpi-metapackage_0.83_1.0-RC2.tar.gz
 Source1:        %{name}-httpd.conf
-
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/c6b4bc075e3087b0945b509139c8edc626020b30
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/702babf225e427f92c83c8802242e3f9409c8f23
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/a416c9d5c6bc75714638c7ff0984ca976f09496b
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/ab8b8126ddfd263b646a99d18453ad4f56b7b818
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/3f9a9e71acd4ded86fcf6042d81a8b38cdd2e291
-# http://forge.fusioninventory.org/projects/fusioninventory-for-glpi/repository/revisions/cbd50207cd2ff92084f660d328449854b640b446
-Patch0:         fusioninventory-git.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -43,8 +35,6 @@ Serveur FusionInventory embarqué dans une extension GLPI.
 
 %prep
 %setup -q -c
-
-%patch0 -p1
 
 # dos2unix to avoid rpmlint warnings
 for doc in */docs/* ; do
@@ -159,10 +149,12 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusinvdeploy/lib
 %{_datadir}/glpi/plugins/fusinvdeploy/pics
 %{_datadir}/glpi/plugins/fusinvdeploy/scripts
-%{_datadir}/glpi/plugins/fusinvdeploy/test
 
 
 %changelog
+* Thu Jul 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.83.3.1.0-0.1.RC2
+- update to 0.83+1.0-RC2
+
 * Fri Jun 08 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.83.0.1.0-0.4.beta4
 - update to 0.83+1.0-beta4
   http://forge.fusioninventory.org/versions/67
