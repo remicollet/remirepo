@@ -1,9 +1,10 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+
 %global pear_channel pear.symfony.com
-%global pear_name %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-Serializer
-Version:          2.0.15
+Version:          2.0.16
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -18,6 +19,11 @@ BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
 Requires:         php-common >= 5.3.2
+Requires:         php-pear(PEAR)
+Requires:         php-channel(%{pear_channel})
+Requires(post):   %{__pear}
+Requires(postun): %{__pear}
+# phpci requires
 Requires:         php-ctype
 Requires:         php-dom
 Requires:         php-json
@@ -25,15 +31,14 @@ Requires:         php-libxml
 Requires:         php-pcre
 Requires:         php-simplexml
 Requires:         php-spl
-Requires:         php-pear(PEAR)
-Requires:         php-channel(%{pear_channel})
-Requires(post):   %{__pear}
-Requires(postun): %{__pear}
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
-%{summary}.
+With the Serializer component it's possible to handle serializing data
+structures, including object graphs, into array structures or other
+formats like XML and JSON.  It can also handle deserializing XML and
+JSON back to object graphs.
 
 
 %prep
@@ -43,7 +48,7 @@ mv package.xml %{pear_name}-%{version}/%{name}.xml
 
 
 %build
-# Empty build section, most likely nothing required.
+# Empty build section, nothing required
 
 
 %install
@@ -74,12 +79,20 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Symfony/Component/%{pear_name}
-%dir %{pear_phpdir}/Symfony/Component
 %dir %{pear_phpdir}/Symfony
+%dir %{pear_phpdir}/Symfony/Component
+     %{pear_phpdir}/Symfony/Component/%{pear_name}
 
 
 %changelog
+* Tue Jul 17 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.16-1
+- Update to 2.0.16, backport for remi repository
+
+* Sun Jul 15 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.16-1
+- Updated to upstream version 2.0.16
+- Updated %%description
+- Minor syntax updates
+
 * Tue Jun 12 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-1
 - rebuild for remi repository
 
