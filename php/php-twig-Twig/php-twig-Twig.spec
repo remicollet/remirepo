@@ -1,9 +1,10 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+
 %global pear_channel pear.twig-project.org
-%global pear_name %(echo %{name} | sed -e 's/^php-twig-//' -e 's/-/_/g')
+%global pear_name    %(echo %{name} | sed -e 's/^php-twig-//' -e 's/-/_/g')
 
 Name:             php-twig-Twig
-Version:          1.8.2
+Version:          1.9.0
 Release:          1%{?dist}
 Summary:          Twig is a modern template engine for PHP
 
@@ -18,19 +19,21 @@ BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
 Requires:         php-common >= 5.2.4
+Requires:         php-pear(PEAR)
+Requires:         php-channel(%{pear_channel})
+Requires(post):   %{__pear}
+Requires(postun): %{__pear}
+# phpci requires
 Requires:         php-ctype
 Requires:         php-date
 Requires:         php-dom
+Requires:         php-hash
 Requires:         php-iconv
 Requires:         php-json
 Requires:         php-mbstring
 Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-spl
-Requires:         php-pear(PEAR)
-Requires:         php-channel(%{pear_channel})
-Requires(post):   %{__pear}
-Requires(postun): %{__pear}
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -56,7 +59,7 @@ mv package.xml %{pear_name}-%{version}/%{name}.xml
 
 
 %build
-# Empty build section, most likely nothing required.
+# Empty build section, nothing required
 
 
 %install
@@ -91,6 +94,14 @@ fi
 
 
 %changelog
+* Tue Jul 17 2012 Remi Collet <RPMS@FamilleCollet.com> 1.9.0-1
+- Update to 1.9.0, backport for remi repository
+
+* Sun Jul 15 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.9.0-1
+- Updated to upstream version 1.9.0
+- Added php-hash require
+- Minor syntax updates
+
 * Sun Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 1.8.2-1
 - rebuild for remi repository
 
