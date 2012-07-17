@@ -1,10 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+
 %global pear_channel pear.symfony.com
-%global pear_name %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-Locale
-Version:          2.0.15
-Release:          3%{?dist}
+Version:          2.0.16
+Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -18,14 +19,15 @@ BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
 Requires:         php-common >= 5.3.2
-Requires:         php-ctype
-Requires:         php-date
-Requires:         php-intl
-Requires:         php-pcre
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
+# phpci requires
+Requires:         php-ctype
+Requires:         php-date
+Requires:         php-intl
+Requires:         php-pcre
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -52,17 +54,17 @@ Stub implementation only supports the en locale.
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
 
-# Fix package.xml for *.res files incorrectly being identified with role="doc"
-# instead of role="php" (the *.res files are being referenced in code and are
-# expected to be in the install directory instead of the doc directory)
-# *** NOTE: This needs to be fixed upstream
+# Fix package.xml for "Symfony/Component/Locale/Resources/data/UPDATE.txt" file
+# incorrectly being identified with role="php" instead of role="doc"
+# *** NOTE: This needs to be fixed upstream (was fine in 2.0.15, but changed
+#           in 2.0.16)
 sed -i \
-    's#<file *md5sum="\([^"]\{1,\}\)" *name="\([^"]\{1,\}.res\)" *role="doc" */>#<file md5sum="\1" name="\2" role="php" />#' \
+    's#<file *md5sum="\([^"]*\)" *name="\(Symfony/Component/Locale/Resources/data/UPDATE.txt\)" *role="php" */>#<file md5sum="\1" name="\2" role="doc" />#' \
     %{pear_name}-%{version}/%{name}.xml
 
 
 %build
-# Empty build section, nothing required.
+# Empty build section, nothing required
 
 
 %install
@@ -120,6 +122,15 @@ fi
 
 
 %changelog
+* Tue Jul 17 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.16-1
+- Update to 2.0.16, backport for remi repository
+
+* Sun Jul 15 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.16-1
+- Updated to upstream version 2.0.16
+- Removed package.xml fix for *.res files (fixed upstream)
+- Added package.xml fix for an UPDATE.txt file
+- Minor syntax updates
+
 * Thu Jun 28 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
 - rebuild for remi repository
 
