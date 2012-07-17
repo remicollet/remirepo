@@ -80,3 +80,6 @@ diff: /tmp/$(NAME)-filtered.spec
 devdiff: /tmp/$(NAME)-filtered.spec
 	colordiff -u  /tmp/$(NAME)-filtered.spec $(NAME)-dev.spec
 
+src: 
+	spectool -g -S $(NAME).spec
+
