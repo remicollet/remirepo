@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-%global rcver      RC1
+#global rcver      RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -74,7 +74,7 @@ Version: 5.4.5
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 0.2.RC1%{?dist}
+Release: 1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -1444,6 +1444,9 @@ fi
 
 
 %changelog
+* Fri Jul 20 2012 Remi Collet <RPM@famillecollet.com> 5.4.5-1
+- update to 5.4.5
+
 * Sat Jul 05 2012 Remi Collet <RPM@famillecollet.com> 5.4.5-0.2.RC1
 - update patch for system libzip
 
