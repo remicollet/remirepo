@@ -8,7 +8,7 @@
 # Extension version
 %global fileinfover 1.0.5-dev
 %global pharver     2.0.1
-%global zipver      1.9.1
+%global zipver      1.11.0
 %global jsonver     1.2.1
 %global oci8ver     1.4.7
 
@@ -58,7 +58,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.14
+Version: 5.3.15
 Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
@@ -210,7 +210,6 @@ Requires: %{phpname}-common%{?_isa} = %{version}-%{release}
 %if 0%{?fedora} >= 15
 Requires: systemd-units
 %endif
-BuildRequires: libevent-devel >= 1.4.11
 
 %description fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
@@ -227,6 +226,7 @@ Provides: %{phpname}(api) = %{apiver}, %{phpname}(zend-abi) = %{zendver}
 # New ABI/API check - Arch specific
 Provides: %{phpname}-api = %{apiver}%{isasuffix}, %{phpname}-zend-abi = %{zendver}%{isasuffix}
 Provides: %{phpname}(api) = %{apiver}%{isasuffix}, %{phpname}(zend-abi) = %{zendver}%{isasuffix}
+Provides: %{phpname}(language) = %{version}, %{phpname}(language)%{?_isa} = %{version}
 # Provides for all builtin/shared modules:
 Provides: %{phpname}-bz2, %{phpname}-bz2%{?_isa}
 Provides: %{phpname}-calendar, %{phpname}-calendar%{?_isa}
@@ -1486,6 +1486,11 @@ fi
 %endif
 
 %changelog
+* Fri Jul 20 2012 Remi Collet <remi@fedoraproject.org> 5.3.15-1
+- update to 5.3.15 (CVE-2012-2688)
+- provide php(language) to allow version check
+- drop BR for libevent
+
 * Thu Jun 21 2012 Remi Collet <remi@fedoraproject.org> 5.3.14-1
 - sync with rawhide, add missing provides (core, ereg, filter, standard)
 
