@@ -1,15 +1,16 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+
 %global pear_channel pear.symfony.com
-%global pear_name %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-DependencyInjection
-Version:          2.0.15
-Release:          3%{?dist}
+Version:          2.0.16
+Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
 License:          MIT
-URL:              http://symfony.com/doc/current/components/dependency_injection.html
+URL:              http://symfony.com/doc/current/components/dependency_injection/index.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,16 +19,17 @@ BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
 Requires:         php-common >= 5.3.2
+Requires:         php-pear(PEAR)
+Requires:         php-channel(%{pear_channel})
+Requires(post):   %{__pear}
+Requires(postun): %{__pear}
+# phpci requires
 Requires:         php-ctype
 Requires:         php-dom
 Requires:         php-libxml
 Requires:         php-pcre
 Requires:         php-spl
 Requires:         php-simplexml
-Requires:         php-pear(PEAR)
-Requires:         php-channel(%{pear_channel})
-Requires(post):   %{__pear}
-Requires(postun): %{__pear}
 # Optional requires
 Requires:         php-pear(%{pear_channel}/Config) = %{version}
 Requires:         php-pear(%{pear_channel}/Yaml) = %{version}
@@ -47,17 +49,9 @@ Service Container (http://symfony.com/doc/current/book/service_container.html).
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
 
-# Fix package.xml for *.xsd file incorrectly being identified with role="doc"
-# instead of role="php" (the *.xsd file is being referenced in code and is
-# expected to be in the install directory instead of the doc directory)
-# *** NOTE: This needs to be fixed upstream
-sed -i \
-    's#<file *md5sum="\([^"]\{1,\}\)" *name="\([^"]\{1,\}.xsd\)" *role="doc" */>#<file md5sum="\1" name="\2" role="php" />#' \
-    %{pear_name}-%{version}/%{name}.xml
-
 
 %build
-# Empty build section, most likely nothing required.
+# Empty build section, nothing required
 
 
 %install
@@ -92,6 +86,15 @@ fi
 
 
 %changelog
+* Fri Jul 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.16-1
+- Update to 2.0.16, backport for remi repository
+
+* Wed Jul 18 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.16-1
+- Updated to upstream version 2.0.16
+- Updated URL
+- Removed fix package.xml for *.xsd file (fixed upstream)
+- Minor syntax updates
+
 * Wed Jun 13 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
 - rebuild for remi repository
 
