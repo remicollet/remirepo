@@ -1,10 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+
 %global pear_channel pear.symfony.com
-%global pear_name %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-Security
-Version:          2.0.15
-Release:          3%{?dist}
+Version:          2.0.16
+Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -18,6 +19,14 @@ BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
 Requires:         php-common >= 5.3.2
+Requires:         php-pear(PEAR)
+Requires:         php-channel(%{pear_channel})
+Requires:         php-pear(%{pear_channel}/HttpKernel) = %{version}
+Requires:         php-pear(%{pear_channel}/HttpFoundation) = %{version}
+Requires:         php-pear(%{pear_channel}/EventDispatcher) = %{version}
+Requires(post):   %{__pear}
+Requires(postun): %{__pear}
+# phpci requires
 Requires:         php-date
 Requires:         php-hash
 Requires:         php-json
@@ -26,14 +35,7 @@ Requires:         php-pcre
 Requires:         php-pdo
 Requires:         php-reflection
 Requires:         php-spl
-Requires:         php-pear(PEAR)
-Requires:         php-channel(%{pear_channel})
-Requires:         php-pear(%{pear_channel}/HttpKernel) = %{version}
-Requires:         php-pear(%{pear_channel}/HttpFoundation) = %{version}
-Requires:         php-pear(%{pear_channel}/EventDispatcher) = %{version}
-Requires(post):   %{__pear}
-Requires(postun): %{__pear}
-# Optional require
+# Optional requires
 Requires:         php-pear(%{pear_channel}/ClassLoader) = %{version}
 Requires:         php-pear(%{pear_channel}/Finder) = %{version}
 Requires:         php-pear(%{pear_channel}/Form) = %{version}
@@ -55,15 +57,9 @@ Optional dependencies: DoctrineCommon and DoctrineDBAL
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
 
-# Change PEAR role of *.sql files from doc to php.
-# Fixed in upstream version 2.1.0 BETA1.
-sed -i \
-    's#<file *md5sum="\([^"]\+\)" *name="\([^"]\+.sql\)" *role="doc" */>#<file md5sum="\1" name="\2" role="php" />#' \
-    %{pear_name}-%{version}/%{name}.xml
-
 
 %build
-# Empty build section, most likely nothing required.
+# Empty build section, nothing required
 
 
 %install
@@ -98,7 +94,15 @@ fi
 
 
 %changelog
-* Mon Jul 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
+* Fri Jul 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.16-1
+- Update to 2.0.16, backport for remi repository
+
+* Wed Jul 18 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.16-1
+- Updated to upstream version 2.0.16
+- Removed changed PEAR role of *.sql files from doc to php (fixed upstream)
+- Minor syntax updates
+
+* Mon Jul 03 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
 - backport for remi repository
 
 * Sat Jun 30 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-3
