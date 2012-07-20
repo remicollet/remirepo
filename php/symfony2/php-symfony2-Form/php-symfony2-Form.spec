@@ -1,10 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+
 %global pear_channel pear.symfony.com
-%global pear_name %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-Form
-Version:          2.0.15
-Release:          4%{?dist}
+Version:          2.0.16
+Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -18,12 +19,6 @@ BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
 Requires:         php-common >= 5.3.2
-Requires:         php-ctype
-Requires:         php-date
-Requires:         php-intl
-Requires:         php-pcre
-Requires:         php-session
-Requires:         php-spl
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires:         php-pear(%{pear_channel}/EventDispatcher) = %{version}
@@ -31,6 +26,13 @@ Requires:         php-pear(%{pear_channel}/Validator) = %{version}
 Requires:         php-pear(%{pear_channel}/Locale) = %{version}
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
+# phpci requires
+Requires:         php-ctype
+Requires:         php-date
+Requires:         php-intl
+Requires:         php-pcre
+Requires:         php-session
+Requires:         php-spl
 # Optional requires
 Requires:         php-pear(%{pear_channel}/DependencyInjection) = %{version}
 Requires:         php-pear(%{pear_channel}/HttpFoundation) = %{version}
@@ -45,12 +47,6 @@ Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 %setup -q -c
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
-
-# Make Symfony/Component/Form/Resources/config/validation.xml role="php"
-# instead role="doc". Fixed in upstream version 2.1.0 BETA1.
-sed -i \
-    's#<file *md5sum="\([^"]\+\)" *name="Symfony/Component/Form/Resources/config/validation.xml" *role="doc" */>#<file md5sum="\1" name="Symfony/Component/Form/Resources/config/validation.xml" role="php" />#' \
-    %{pear_name}-%{version}/%{name}.xml
 
 
 %build
@@ -89,7 +85,16 @@ fi
 
 
 %changelog
-* Mon Jul 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-4
+* Fri Jul 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.16-1
+- Update to 2.0.16, backport for remi repository
+
+* Wed Jul 18 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.16-1
+- Updated to upstream version 2.0.16
+- Removed changed PEAR role of
+  Symfony/Component/Form/Resources/config/validation.xml (fixed upstream)
+- Minor syntax updates
+
+* Mon Jul 03 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-4
 - backport for remi repository
 
 * Mon Jul 2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-4
