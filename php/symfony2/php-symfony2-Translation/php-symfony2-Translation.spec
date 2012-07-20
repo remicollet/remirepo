@@ -1,10 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+
 %global pear_channel pear.symfony.com
-%global pear_name %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-Translation
-Version:          2.0.15
-Release:          4%{?dist}
+Version:          2.0.16
+Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -18,13 +19,14 @@ BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
 Requires:         php-common >= 5.3.2
-Requires:         php-libxml
-Requires:         php-pcre
-Requires:         php-simplexml
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
+# phpci requires
+Requires:         php-libxml
+Requires:         php-pcre
+Requires:         php-simplexml
 # Optional requires
 Requires:         php-pear(%{pear_channel}/Config) = %{version}
 Requires:         php-pear(%{pear_channel}/Yaml) = %{version}
@@ -40,17 +42,9 @@ Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
 
-# Fix package.xml for *.xsd files incorrectly being identified with role="doc"
-# instead of role="php" (the *.xsd files are being referenced in code and are
-# expected to be in the install directory instead of the doc directory)
-# *** NOTE: This needs to be fixed upstream
-sed -i \
-    's#<file *md5sum="\([^"]\{1,\}\)" *name="\([^"]\{1,\}.xsd\)" *role="doc" */>#<file md5sum="\1" name="\2" role="php" />#' \
-    %{pear_name}-%{version}/%{name}.xml
-
 
 %build
-# Empty build section, most likely nothing required.
+# Empty build section, nothing required
 
 
 %install
@@ -85,6 +79,14 @@ fi
 
 
 %changelog
+* Fri Jul 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.16-1
+- Update to 2.0.16, backport for remi repository
+
+* Wed Jul 18 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.16-1
+- Updated to upstream version 2.0.16
+- Removed fix package.xml for *.xsd files issue (fixed upstream)
+- Minor syntax updates
+
 * Thu Jun 28 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-4
 - rebuild for remi repository
 
