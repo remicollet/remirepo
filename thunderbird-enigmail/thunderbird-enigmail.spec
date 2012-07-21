@@ -35,8 +35,8 @@
 
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 
-%global thunver  13.0
-%global thunmax  14.0
+%global thunver  14.0
+%global thunmax  15.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -54,7 +54,7 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.4.2
+Version:        1.4.3
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
@@ -88,7 +88,6 @@ Patch8:         xulrunner-10.0-secondary-ipc.patch
 
 # Build patches
 Patch104:       xulrunner-10.0-gcc47.patch
-Patch105:       xulrunner-prtime.patch
 
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
@@ -181,7 +180,6 @@ cd mozilla
 %patch7 -p2 -b .static
 %patch8 -p3 -b .secondary-ipc
 %patch104 -p1 -b .gcc47
-%patch105 -p1 -b .prtime
 cd ..
 
 %patch200 -p1 -b .addons
@@ -254,7 +252,7 @@ pushd mailnews/extensions/enigmail
 # All tarballs (as well as CVS) will *always* report as 1.4a1pre (or whatever
 # the next major version would be). This is because I create builds from trunk
 # and simply label the result as 1.3.x.
-sed -i -e '/em:version/s/1.5pre/%{version}/' package/install.rdf
+sed -i -e '/em:version/s/1.5a1pre/%{version}/' package/install.rdf
 grep '<em:version>%{version}</em:version>' package/install.rdf || exit 1
 # Apply Enigmail patch here
 popd
@@ -330,6 +328,9 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Sat Jul 21 2012 Remi Collet <remi@fedoraproject.org> 1.4.3-1
+- Enigmail 1.4.3 for Thunderbird 14.0
+
 * Tue Jun 05 2012 Remi Collet <remi@fedoraproject.org> 1.4.2-1
 - Enigmail 1.4.2 for Thunderbird 13.0
 
