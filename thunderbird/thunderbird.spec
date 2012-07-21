@@ -52,14 +52,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        13.0.1
+Version:        14.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20120615.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20120721.tar.bz2
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -76,7 +76,6 @@ Patch8:         xulrunner-10.0-secondary-ipc.patch
 
 # Build patches
 Patch104:       xulrunner-10.0-gcc47.patch
-Patch105:       xulrunner-prtime.patch
 
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
@@ -193,7 +192,6 @@ cd mozilla
 %patch7 -p2 -b .static
 %patch8 -p3 -b .secondary-ipc
 %patch104 -p1 -b .gcc47
-%patch105 -p1 -b .prtime
 cd ..
 
 %patch200 -p1 -b .addons
@@ -400,7 +398,7 @@ echo -e "\nWARNING : This %{name} RPM is not an official Fedora/Redhat build and
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 14
+%if %{?fedora}%{!?fedora:99} <= 15
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -425,8 +423,8 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files -f %{tarballdir}/%{name}.lang
 %defattr(-,root,root,-)
-%attr(755,root,root) %{_bindir}/%{name}
-%attr(644,root,root) %{_datadir}/applications/mozilla-%{name}.desktop
+%attr(755,root,root) %{_bindir}/thunderbird
+%attr(644,root,root) %{_datadir}/applications/mozilla-thunderbird.desktop
 %dir %{_datadir}/mozilla/extensions/%{thunderbird_app_id}
 %dir %{_libdir}/mozilla/extensions/%{thunderbird_app_id}
 %dir %{mozappdir}
@@ -480,6 +478,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Sat Jul 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 14.0-1
+- Sync with rawhide, update to 14.0
+
+* Tue Jul 17 2012 Jan Horak <jhorak@redhat.com> - 14.0-1
+- Update to 14.0
+
 * Fri Jun 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0.1-1
 - Sync with rawhide, update to 13.0.1
 
