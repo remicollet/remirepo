@@ -23,17 +23,17 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global shortname              firefox
+#global shortname              firefox
 #global mycomment              Beta 4
-%global firefox_dir_ver        13
-%global xulrunner_version      13.0.1
+%global firefox_dir_ver        14
+%global xulrunner_version      14.0.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20120617
+%global datelang               20120724
 
-%global mozappdir     %{_libdir}/%{shortname}
+%global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
 %global tarballdir    mozilla-release
 
@@ -61,8 +61,8 @@
 %endif
 
 Summary:        Mozilla Firefox Web browser
-Name:           %{shortname}
-Version:        13.0.1
+Name:           firefox
+Version:        14.0.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -110,10 +110,6 @@ Requires:       xulrunner%{firefox_dir_ver}%{?_isa} >= %{xulrunner_verrel}
 Requires:       system-bookmarks
 Obsoletes:      mozilla <= 37:1.7.13
 Provides:       webclient
-%if %{name} == %{shortname}
-Obsoletes:      firefox%{firefox_dir_ver}
-Provides:       firefox%{firefox_dir_ver} = %{version}-%{release}
-%endif
 
 
 %description
@@ -294,16 +290,16 @@ desktop-file-install \
   --delete-original %{name}.desktop 
 
 # set up the firefox start script
-%{__rm} -rf $RPM_BUILD_ROOT%{_bindir}/%{shortname}
+%{__rm} -rf $RPM_BUILD_ROOT%{_bindir}/firefox
 XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
-%{__cat} %{SOURCE21} | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g"  \
-  > $RPM_BUILD_ROOT%{_bindir}/%{name}
-%{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
+%{__cat} %{SOURCE21} | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g" > \
+  $RPM_BUILD_ROOT%{_bindir}/firefox
+%{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/firefox
 
 # Link with xulrunner 
 ln -s `pkg-config --variable=libdir libxul` $RPM_BUILD_ROOT/%{mozappdir}/xulrunner
 
-%{__install} -p -D -m 644 %{SOURCE23} $RPM_BUILD_ROOT%{_mandir}/man1/%{name}.1
+%{__install} -p -D -m 644 %{SOURCE23} $RPM_BUILD_ROOT%{_mandir}/man1/firefox.1
 
 %{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/firefox-config
 %{__rm} -f $RPM_BUILD_ROOT/%{mozappdir}/update-settings.ini
@@ -311,7 +307,7 @@ ln -s `pkg-config --variable=libdir libxul` $RPM_BUILD_ROOT/%{mozappdir}/xulrunn
 for s in 16 22 24 32 48 256; do
     %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps
     %{__cp} -p browser/branding/official/default${s}.png \
-               $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps/%{name}.png
+               $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps/firefox.png
 done
 
 echo > ../%{name}.lang
@@ -323,14 +319,14 @@ for langpack in `ls firefox-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
   extensionID=langpack-$language@firefox.mozilla.org
   %{__mkdir_p} $extensionID
-  unzip -q $langpack -d $extensionID
+  unzip $langpack -d $extensionID
   find $extensionID -type f | xargs chmod 644
 
   sed -i -e "s|browser.startup.homepage.*$|browser.startup.homepage=%{homepage}|g;" \
      $extensionID/chrome/$language/locale/branding/browserconfig.properties
 
   cd $extensionID
-  zip -qr9mX ../${extensionID}.xpi *
+  zip -r9mX ../${extensionID}.xpi *
   cd -
 
   %{__install} -m 644 ${extensionID}.xpi $RPM_BUILD_ROOT%{langpackdir}
@@ -339,6 +335,32 @@ for langpack in `ls firefox-langpacks/*.xpi`; do
 done
 %{__rm} -rf firefox-langpacks
 %endif # build_langpacks
+
+# Install langpack workaround (see #707100, #821169)
+function create_default_langpack() {
+language_long=$1
+language_short=$2
+cd $RPM_BUILD_ROOT%{langpackdir}
+ln -s langpack-$language_long@firefox.mozilla.org.xpi langpack-$language_short@firefox.mozilla.org.xpi
+cd -
+echo "%%lang($language_short) %{langpackdir}/langpack-$language_short@firefox.mozilla.org.xpi" >> ../%{name}.lang
+}
+
+# Table of fallbacks for each language
+# please file a bug at bugzilla.redhat.com if the assignment is incorrect
+create_default_langpack "bn-IN" "bn"
+create_default_langpack "es-AR" "es"
+create_default_langpack "fy-NL" "fy"
+create_default_langpack "ga-IE" "ga"
+create_default_langpack "gu-IN" "gu"
+create_default_langpack "hi-IN" "hi"
+create_default_langpack "hy-AM" "hy"
+create_default_langpack "nb-NO" "nb"
+create_default_langpack "nn-NO" "nn"
+create_default_langpack "pa-IN" "pa"
+create_default_langpack "pt-PT" "pt"
+create_default_langpack "sv-SE" "sv"
+create_default_langpack "zh-TW" "zh"
 
 # System extensions
 %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/mozilla/extensions/%{firefox_app_id}
@@ -356,16 +378,15 @@ sed -i -e "s/\[Crash Reporter\]/[Crash Reporter]\nEnabled=1/" $RPM_BUILD_ROOT/%{
 
 %pre
 echo -e "\nWARNING : This %{name} %{version} %{?mycomment} RPM is not an official"
-echo -e "Fedora/Redhat build and it overrides the official one."
-echo -e "Don't file bugs on Fedora Project nor Redhat.\n"
+echo -e "Fedora / Red Hat build and it overrides the official one."
+echo -e "Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 14
+%if %{?fedora}%{!?fedora:99} <= 15
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
-%if %{name} == %{shortname}
 %preun
 # is it a final removal?
 if [ $1 -eq 0 ]; then
@@ -374,7 +395,6 @@ if [ $1 -eq 0 ]; then
   %{__rm} -rf %{mozappdir}/plugins
   %{__rm} -rf %{langpackdir}
 fi
-%endif
 
 %post
 update-desktop-database &> /dev/null || :
@@ -392,7 +412,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%{_bindir}/%{name}
+%{_bindir}/firefox
 %{mozappdir}/firefox
 %doc %{_mandir}/man1/*
 %dir %{_datadir}/mozilla/extensions/%{firefox_app_id}
@@ -418,12 +438,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/application.ini
 %exclude %{mozappdir}/removed-files
-%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
-%{_datadir}/icons/hicolor/22x22/apps/%{name}.png
-%{_datadir}/icons/hicolor/24x24/apps/%{name}.png
-%{_datadir}/icons/hicolor/256x256/apps/%{name}.png
-%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
+%{_datadir}/icons/hicolor/16x16/apps/firefox.png
+%{_datadir}/icons/hicolor/22x22/apps/firefox.png
+%{_datadir}/icons/hicolor/24x24/apps/firefox.png
+%{_datadir}/icons/hicolor/256x256/apps/firefox.png
+%{_datadir}/icons/hicolor/32x32/apps/firefox.png
+%{_datadir}/icons/hicolor/48x48/apps/firefox.png
 %{mozappdir}/xulrunner
 
 %if %{include_debuginfo}
@@ -436,6 +456,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jul 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 14.0.1-1
+- Sync with rawhide, update to 14.0.1
+
+* Mon Jul 16 2012 Martin Stransky <stransky@redhat.com> - 14.0.1-1
+- Update to 14.0.1
+
+* Tue Jul 10 2012 Martin Stransky <stransky@redhat.com> - 13.0.1-2
+- Fixed rhbz#707100, rhbz#821169
+
 * Sun Jun 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0.1-1
 - Sync with rawhide, update to 13.0.1
 

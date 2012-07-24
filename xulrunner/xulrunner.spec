@@ -44,7 +44,7 @@
 # alpha_version should be set to the alpha number if using an alpha, 0 otherwise
 # beta_version  should be set to the beta number if using a beta, 0 otherwise
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
-%global gecko_dir_ver 13
+%global gecko_dir_ver 14
 %global alpha_version 0
 %global beta_version  0
 %global rc_version    0
@@ -77,7 +77,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        13.0.1
+Version:        14.0.1
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -97,7 +97,6 @@ Patch14:        xulrunner-2.0-chromium-types.patch
 Patch17:        xulrunner-10.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
 Patch18:        xulrunner-12.0-jemalloc-ppc.patch
-Patch19:        mozilla-nspr-build.patch
 
 
 # Fedora specific patches
@@ -153,10 +152,10 @@ Requires:       nss >= %{nss_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
-Obsoletes:      xulrunner9
 Obsoletes:      xulrunner10
 Obsoletes:      xulrunner11
 Obsoletes:      xulrunner12
+Obsoletes:      xulrunner13
 
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
@@ -176,10 +175,10 @@ Group: Development/Libraries
 Obsoletes: mozilla-devel < 1.9
 Obsoletes: firefox-devel < 2.1
 Obsoletes: xulrunner-devel-unstable
-Obsoletes: xulrunner9-devel
 Obsoletes: xulrunner10-devel
 Obsoletes: xulrunner11-devel
 Obsoletes: xulrunner12-devel
+Obsoletes: xulrunner13-devel
 Provides: gecko-devel = %{gecko_verrel}
 Provides: gecko-devel%{?_isa} = %{gecko_verrel}
 Provides: gecko-devel-unstable = %{gecko_verrel}
@@ -260,7 +259,6 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch14 -p1 -b .chromium-types
 %patch17 -p1 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
-%patch19 -p1 -b .nspr
 
 %patch20 -p2 -b .pk
 %patch24 -p1 -b .static
@@ -471,6 +469,12 @@ EOF
 # Copy over the LICENSE
 %{__install} -p -c -m 644 LICENSE $RPM_BUILD_ROOT%{mozappdir}
 
+# Install xpcshell
+%{__cp} objdir/dist/bin/xpcshell $RPM_BUILD_ROOT/%{mozappdir}
+
+# Install run-mozilla.sh
+%{__cp} objdir/dist/bin/run-mozilla.sh $RPM_BUILD_ROOT/%{mozappdir}
+
 # Use the system hunspell dictionaries
 %{__rm} -rf ${RPM_BUILD_ROOT}%{mozappdir}/dictionaries
 ln -s %{_datadir}/myspell ${RPM_BUILD_ROOT}%{mozappdir}/dictionaries
@@ -505,7 +509,7 @@ fi
 %{_bindir}/%{name}
 %dir %{mozappdir}
 %doc %attr(644, root, root) %{mozappdir}/LICENSE
-%doc %attr(644, root, root) %{mozappdir}/README.txt
+%doc %attr(644, root, root) %{mozappdir}/README.xulrunner
 %{mozappdir}/chrome
 %{mozappdir}/chrome.manifest
 %{mozappdir}/dictionaries
@@ -549,6 +553,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jul 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 14.0.1-1
+- Sync with rawhide, update to 14.0.1
+
+* Mon Jul 16 2012 Jan Horak <jhorak@redhat.com> - 14.0.1-1
+- Update to 14.0.1
+
 * Sun Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0.1-1
 - Sync with rawhide, update to 13.0.1
 

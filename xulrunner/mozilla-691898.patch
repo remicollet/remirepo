@@ -1,7 +1,7 @@
-diff -up xulrunner-13.0/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h.691898 xulrunner-13.0/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h
---- xulrunner-13.0/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h.691898	2012-06-01 14:04:02.000000000 +0200
-+++ xulrunner-13.0/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h	2012-06-04 10:43:23.694175924 +0200
-@@ -467,8 +467,6 @@ public:
+diff -up xulrunner-14.0.1/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h.691898 xulrunner-14.0.1/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h
+--- xulrunner-14.0.1/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h.691898	2012-07-13 23:42:56.000000000 +0200
++++ xulrunner-14.0.1/mozilla-release/js/src/assembler/jit/ExecutableAllocator.h	2012-07-16 13:46:03.512655482 +0200
+@@ -468,8 +468,6 @@ public:
      {
          sync_instruction_memory((caddr_t)code, size);
      }
@@ -10,12 +10,12 @@ diff -up xulrunner-13.0/mozilla-release/js/src/assembler/jit/ExecutableAllocator
  #endif
  
  private:
-diff -up xulrunner-13.0/mozilla-release/js/src/Makefile.in.691898 xulrunner-13.0/mozilla-release/js/src/Makefile.in
---- xulrunner-13.0/mozilla-release/js/src/Makefile.in.691898	2012-06-01 14:04:02.000000000 +0200
-+++ xulrunner-13.0/mozilla-release/js/src/Makefile.in	2012-06-04 10:45:57.023808537 +0200
-@@ -337,20 +337,23 @@ CPPSRCS += 	checks.cc \
- # END enclude sources for V8 dtoa
- #############################################
+diff -up xulrunner-14.0.1/mozilla-release/js/src/Makefile.in.691898 xulrunner-14.0.1/mozilla-release/js/src/Makefile.in
+--- xulrunner-14.0.1/mozilla-release/js/src/Makefile.in.691898	2012-07-13 23:42:56.000000000 +0200
++++ xulrunner-14.0.1/mozilla-release/js/src/Makefile.in	2012-07-16 13:48:34.039399155 +0200
+@@ -320,20 +320,22 @@ endif
+ 
+ endif
  
 -# For architectures without YARR JIT, PCRE is faster than the YARR
 -# interpreter (bug 684559).
@@ -23,11 +23,11 @@ diff -up xulrunner-13.0/mozilla-release/js/src/Makefile.in.691898 xulrunner-13.0
  ifeq (,$(filter arm% sparc %86 x86_64 mips%,$(TARGET_CPU)))
  
 -VPATH +=        $(srcdir)/yarr/pcre \
+-		$(NULL)
 +VPATH +=	$(srcdir)/assembler \
 +		$(srcdir)/assembler/wtf \
 +		$(srcdir)/assembler/jit \
 +		$(srcdir)/yarr \
- 		$(NULL)
  
 -CPPSRCS += \
 -                pcre_compile.cpp \
@@ -47,15 +47,15 @@ diff -up xulrunner-13.0/mozilla-release/js/src/Makefile.in.691898 xulrunner-13.0
  		$(NULL)
  else
  
-@@ -918,4 +921,3 @@ endif
+@@ -903,4 +905,3 @@ endif
  #
  # END kludges for the Nitro assembler
  ###############################################
 -
-diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp.691898 xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp
---- xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp.691898	2012-06-01 14:04:05.000000000 +0200
-+++ xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp	2012-06-04 10:43:23.695175928 +0200
-@@ -167,7 +167,6 @@ MatchPairs::checkAgainst(size_t inputLen
+diff -up xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject.cpp.691898 xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject.cpp
+--- xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject.cpp.691898	2012-07-13 23:42:59.000000000 +0200
++++ xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject.cpp	2012-07-16 13:46:03.897657354 +0200
+@@ -168,7 +168,6 @@ MatchPairs::checkAgainst(size_t inputLen
  
  /* detail::RegExpCode */
  
@@ -63,7 +63,7 @@ diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp.691898 xulrun
  void
  RegExpCode::reportYarrError(JSContext *cx, TokenStream *ts, ErrorCode error)
  {
-@@ -199,46 +198,9 @@ RegExpCode::reportYarrError(JSContext *c
+@@ -200,46 +199,9 @@ RegExpCode::reportYarrError(JSContext *c
      }
  }
  
@@ -110,7 +110,7 @@ diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp.691898 xulrun
      /* Parse the pattern. */
      ErrorCode yarrError;
      YarrPattern yarrPattern(pattern, bool(flags & IgnoreCaseFlag), bool(flags & MultilineFlag),
-@@ -255,7 +217,7 @@ RegExpCode::compile(JSContext *cx, JSLin
+@@ -256,7 +218,7 @@ RegExpCode::compile(JSContext *cx, JSLin
       * case we have to bytecode compile it.
       */
  
@@ -119,7 +119,7 @@ diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp.691898 xulrun
      if (isJITRuntimeEnabled(cx) && !yarrPattern.m_containsBackreferences) {
          JSC::ExecutableAllocator *execAlloc = cx->runtime->getExecutableAllocator(cx);
          if (!execAlloc) {
-@@ -276,21 +238,11 @@ RegExpCode::compile(JSContext *cx, JSLin
+@@ -277,21 +239,11 @@ RegExpCode::compile(JSContext *cx, JSLin
          return false;
      }
  
@@ -143,7 +143,7 @@ diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp.691898 xulrun
  }
  
  RegExpRunStatus
-@@ -305,19 +257,12 @@ RegExpCode::execute(JSContext *cx, const
+@@ -306,19 +258,12 @@ RegExpCode::execute(JSContext *cx, const
      else
          result = JSC::Yarr::execute(codeBlock, chars, start, length, output);
  #else
@@ -164,10 +164,10 @@ diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.cpp.691898 xulrun
      JS_ASSERT(result >= 0);
      return RegExpRunStatus_Success;
  }
-diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h.691898 xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h
---- xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h.691898	2012-06-01 14:04:05.000000000 +0200
-+++ xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h	2012-06-04 10:47:03.609081248 +0200
-@@ -51,10 +51,8 @@
+diff -up xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject.h.691898 xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject.h
+--- xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject.h.691898	2012-07-13 23:42:59.000000000 +0200
++++ xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject.h	2012-07-16 13:46:03.897657354 +0200
+@@ -52,10 +52,8 @@
  #include "yarr/Yarr.h"
  #if ENABLE_YARR_JIT
  #include "yarr/YarrJIT.h"
@@ -179,7 +179,7 @@ diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h.691898 xulrunne
  
  /*
   * JavaScript Regular Expressions
-@@ -112,68 +110,51 @@ namespace detail {
+@@ -113,68 +111,51 @@ namespace detail {
  
  class RegExpCode
  {
@@ -254,9 +254,9 @@ diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject.h.691898 xulrunne
      }
  
      bool compile(JSContext *cx, JSLinearString &pattern, unsigned *parenCount, RegExpFlag flags);
-diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject-inl.h.691898 xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject-inl.h
---- xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject-inl.h.691898	2012-06-01 14:04:05.000000000 +0200
-+++ xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject-inl.h	2012-06-04 10:43:23.695175928 +0200
+diff -up xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject-inl.h.691898 xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject-inl.h
+--- xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject-inl.h.691898	2012-07-13 23:42:59.000000000 +0200
++++ xulrunner-14.0.1/mozilla-release/js/src/vm/RegExpObject-inl.h	2012-07-16 13:46:03.898657360 +0200
 @@ -137,6 +137,7 @@ RegExpObject::setSticky(bool enabled)
      setSlot(STICKY_FLAG_SLOT, BooleanValue(enabled));
  }
@@ -273,9 +273,9 @@ diff -up xulrunner-13.0/mozilla-release/js/src/vm/RegExpObject-inl.h.691898 xulr
  
  inline bool
  RegExpToShared(JSContext *cx, JSObject &obj, RegExpGuard *g)
-diff -up xulrunner-13.0/mozilla-release/js/src/yarr/wtfbridge.h.691898 xulrunner-13.0/mozilla-release/js/src/yarr/wtfbridge.h
---- xulrunner-13.0/mozilla-release/js/src/yarr/wtfbridge.h.691898	2012-06-01 14:04:05.000000000 +0200
-+++ xulrunner-13.0/mozilla-release/js/src/yarr/wtfbridge.h	2012-06-04 10:43:23.696175932 +0200
+diff -up xulrunner-14.0.1/mozilla-release/js/src/yarr/wtfbridge.h.691898 xulrunner-14.0.1/mozilla-release/js/src/yarr/wtfbridge.h
+--- xulrunner-14.0.1/mozilla-release/js/src/yarr/wtfbridge.h.691898	2012-07-13 23:42:59.000000000 +0200
++++ xulrunner-14.0.1/mozilla-release/js/src/yarr/wtfbridge.h	2012-07-16 13:46:03.898657360 +0200
 @@ -49,9 +49,7 @@
  #include "jsprvtd.h"
  #include "vm/String.h"
