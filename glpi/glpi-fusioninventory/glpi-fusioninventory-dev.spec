@@ -5,7 +5,7 @@ Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
 Version:        %{glpi_version}.%{plug_version}
-Release:        0.1.RC2%{?dist}
+Release:        0.2.RC3%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
@@ -13,7 +13,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/669/fusioninventory-for-glpi-metapackage_0.83_1.0-RC2.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/685/fusioninventory-for-glpi-metapackage_0.83_1.0-RC3.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -149,9 +149,13 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusinvdeploy/lib
 %{_datadir}/glpi/plugins/fusinvdeploy/pics
 %{_datadir}/glpi/plugins/fusinvdeploy/scripts
+%exclude %{_datadir}/glpi/plugins/fusinvdeploy/.gitignore
 
 
 %changelog
+* Fri Jul 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.83.3.1.0-0.2.RC3
+- update to 0.83+1.0-RC3
+
 * Thu Jul 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.83.3.1.0-0.1.RC2
 - update to 0.83+1.0-RC2
 
