@@ -16,6 +16,7 @@ BuildArch:      noarch
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:  php-pear >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
@@ -33,10 +34,6 @@ This package provides various stream wrappers.
 [ -f package2.xml ] || mv package.xml package2.xml
 mv package2.xml %{pear_name}-%{version}/%{name}.xml
 
-# Create a "localized" php.ini to avoid build warning
-#cp /etc/php.ini .
-#echo "date.timezone=UTC" >>php.ini
-
 cd %{pear_name}-%{version}
 
 %build
@@ -45,7 +42,7 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-PHPRC=../php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
@@ -65,11 +62,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %files
+%defattr(-,root,root,-)
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde
 %doc %{pear_docdir}/%{pear_name}
 
 %changelog
+* Wed Aug 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-3
+- backport for remi repo
+
 * Thu Jul 12 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.1-3
 - Fix packaging issues
 
