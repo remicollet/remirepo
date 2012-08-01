@@ -12,11 +12,11 @@ License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:  php-pear >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 

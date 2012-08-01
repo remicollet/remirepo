@@ -11,7 +11,10 @@ Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+# /usr/lib/rpm/find-lang.sh from fedora 16
+Source1:        find-lang.sh
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 
 BuildRequires:  php-pear >= 1:1.4.9-1.2
@@ -63,7 +66,13 @@ rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+%if 0%{?fedora} > 13
 %find_lang %{pear_name}
+%else
+sh %{SOURCE1} $RPM_BUILD_ROOT %{pear_name}
+%endif
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -76,6 +85,7 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %files -f %{pear_name}-%{version}/%{pear_name}.lang
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Date
@@ -89,6 +99,9 @@ fi
 
 
 %changelog
+* Wed Aug 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.11-1
+- backport for remi repo
+
 * Thu Jul 12 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.11-1
 - Update to 1.0.11, fix packaging issues
 
