@@ -11,6 +11,7 @@ License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(pear.horde.org)
@@ -67,12 +68,16 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Support
 %{pear_testdir}/%{pear_name}
 
 %changelog
+* Wed Aug 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-2
+- backport for remi repo
+
 * Thu Jul 12 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.2-2
 - Fix packaging issues
 
