@@ -46,9 +46,8 @@ developing applications that use libradius.
 %setup -q
 %patch0 -p1 -b .memcache
 %patch1 -p1 -b .ha
-%if 0%{?fedora} >= 18
+# only for httpd 2.4
 %patch2 -p1 -b .unixd
-%endif
 %patch3 -p1 -b .share_libxradius
 %patch4 -p1 -b .libnss_libxradius
 
@@ -105,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.4.6-16
+- backport for remi repo
+
 * Mon Jul 23 2012 Simone Caronni <negativo17@gmail.com> - 0.4.6-16
 - Fixed libxradius-devel requirement.
 
