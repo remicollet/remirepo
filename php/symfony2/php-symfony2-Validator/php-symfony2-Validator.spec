@@ -5,7 +5,7 @@
 
 Name:             php-symfony2-Validator
 Version:          2.0.16
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -26,13 +26,14 @@ Requires(postun): %{__pear}
 # phpci requires
 Requires:         php-ctype
 Requires:         php-date
-#Requires:         php-filter
 Requires:         php-intl
 Requires:         php-libxml
 Requires:         php-mbstring
 Requires:         php-pcre
 Requires:         php-simplexml
 Requires:         php-spl
+# phpci dist specific requires
+%{?fedora:Requires: php-filter}
 # Optional requires
 Requires:         php-pear(%{pear_channel}/HttpFoundation) = %{version}
 Requires:         php-pear(%{pear_channel}/Yaml) = %{version}
@@ -87,6 +88,9 @@ fi
 
 
 %changelog
+* Sun Jul 22 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.16-2
+- Made php-filter a dist specific require (not available in EPEL)
+
 * Fri Jul 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.16-1
 - Update to 2.0.16, backport for remi repository
 
