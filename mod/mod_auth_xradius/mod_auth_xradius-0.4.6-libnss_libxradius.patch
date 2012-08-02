@@ -1,0 +1,331 @@
+diff -Naur mod_auth_xradius-0.4.6.old/configure.ac mod_auth_xradius-0.4.6/configure.ac
+--- mod_auth_xradius-0.4.6.old/configure.ac	2012-07-13 16:14:18.597720284 +0200
++++ mod_auth_xradius-0.4.6/configure.ac	2012-07-13 16:15:15.348824052 +0200
+@@ -35,6 +35,17 @@
+ MODULE_CFLAGS="${LIBRADIUS_CFLAGS} ${APR_MEMCACHE_CFLAGS} ${APXS_CFLAGS} ${AP_INCLUDES} ${APR_INCLUDES} ${APU_INCLUDES}"
+ MODULE_LIBS="${APR_MEMCACHE_LIBS}"
+ 
++dnl NSS_InitContext() was introduced in NSS 3.12.5 and helps to prevent
++dnl collisions on NSS initialization/shutdown with other libraries
++LIBS="$LIBS -lnss3"
++AC_CHECK_FUNC(NSS_InitContext,
++[
++  AC_DEFINE(HAVE_NSS_INITCONTEXT, 1, [if you have the NSS_InitContext function])
++  AC_SUBST(HAVE_NSS_INITCONTEXT, [1])
++],
++AC_MSG_ERROR([Missing NSS_InitContext]))
++
++
+ AC_SUBST(MODULE_CFLAGS)
+ AC_SUBST(MODULE_LIBS)
+ 
+diff -Naur mod_auth_xradius-0.4.6.old/libradius/porting.h mod_auth_xradius-0.4.6/libradius/porting.h
+--- mod_auth_xradius-0.4.6.old/libradius/porting.h	2012-07-13 16:14:18.599720322 +0200
++++ mod_auth_xradius-0.4.6/libradius/porting.h	2012-07-13 16:14:36.172062002 +0200
+@@ -15,7 +15,7 @@
+ 
+ #else
+ 
+-#include "md5.h"
++#include "sechash.h"
+ #define MD5_DIGEST_LENGTH 16
+ #define MD5Final    xrad_MD5Final
+ #define MD5Init     xrad_MD5Init
+diff -Naur mod_auth_xradius-0.4.6.old/libradius/radlib.c mod_auth_xradius-0.4.6/libradius/radlib.c
+--- mod_auth_xradius-0.4.6.old/libradius/radlib.c	2012-07-13 16:14:18.599720322 +0200
++++ mod_auth_xradius-0.4.6/libradius/radlib.c	2012-07-13 16:15:15.349824040 +0200
+@@ -40,6 +40,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
++#include <nss3/nss.h>
+ 
+ #include "porting.h"
+ #include "radlib_private.h"
+@@ -87,6 +88,24 @@
+ }
+ #endif
+ 
++static NSSInitContext *xrad_nss_init(void)
++{
++    NSSInitContext *nctx = NULL;
++    NSSInitParameters initparams;
++
++    memset((void *) &initparams, '\0', sizeof(initparams));
++    initparams.length = sizeof(initparams);
++
++    return NSS_InitContext("", "", "", "", &initparams,
++                           NSS_INIT_READONLY
++                           | NSS_INIT_NOCERTDB
++                           | NSS_INIT_NOMODDB
++                           | NSS_INIT_FORCEOPEN
++                           | NSS_INIT_NOROOTINIT
++                           | NSS_INIT_OPTIMIZESPACE
++                           | NSS_INIT_PK11RELOAD);
++}
++
+ static void
+ clear_password(struct xrad_handle *h)
+ {
+@@ -110,24 +129,32 @@
+ static void
+ insert_scrambled_password(struct xrad_handle *h, int srv)
+ {
+-	MD5_CTX ctx;
++    NSSInitContext *nctx;
++	HASHContext *md5_ctx;
+ 	unsigned char md5[MD5_DIGEST_LENGTH];
+ 	const struct xrad_server *srvp;
+ 	int padded_len;
+ 	int pos;
++	unsigned int len;
+ 
+ 	srvp = &h->servers[srv];
+ 	padded_len = h->pass_len == 0 ? 16 : (h->pass_len+15) & ~0xf;
+ 
++	nctx = xrad_nss_init();
++	md5_ctx = HASH_Create(HASH_AlgMD5);
++
+ 	memcpy(md5, &h->request[POS_AUTH], LEN_AUTH);
+ 	for (pos = 0;  pos < padded_len;  pos += 16) {
+ 		int i;
+ 
+ 		/* Calculate the new scrambler */
+-		MD5Init(&ctx);
+-		MD5Update(&ctx, srvp->secret, strlen(srvp->secret));
+-		MD5Update(&ctx, md5, 16);
+-		MD5Final(md5, &ctx);
++		HASH_Begin(md5_ctx);
++		HASH_Update(md5_ctx,
++                    (const unsigned char *)srvp->secret,
++                    strlen(srvp->secret));
++		HASH_Update(md5_ctx, md5, 16);
++		HASH_End(md5_ctx, md5, &len, sizeof(md5));
++
+ 
+ 		/*
+ 		 * Mix in the current chunk of the password, and copy
+@@ -139,24 +166,43 @@
+ 			h->request[h->pass_pos + pos + i] =
+ 			    md5[i] ^= h->pass[pos + i];
+ 	}
++
++	HASH_Destroy(md5_ctx);
++
++	NSS_ShutdownContext(nctx);
+ }
+ 
+ static void
+ insert_request_authenticator(struct xrad_handle *h, int srv)
+ {
+-	MD5_CTX ctx;
++    NSSInitContext *nctx;
++	HASHContext *md5_ctx;
+ 	const struct xrad_server *srvp;
++	unsigned int len;
+ 
+ 	srvp = &h->servers[srv];
+ 
+ 	/* Create the request authenticator */
+-	MD5Init(&ctx);
+-	MD5Update(&ctx, &h->request[POS_CODE], POS_AUTH - POS_CODE);
+-        apr_generate_random_bytes(&h->request[POS_AUTH], LEN_AUTH);
+-	MD5Update(&ctx, &h->request[POS_AUTH], LEN_AUTH);
+-	MD5Update(&ctx, &h->request[POS_ATTRS], h->req_len - POS_ATTRS);
+-	MD5Update(&ctx, srvp->secret, strlen(srvp->secret));
+-	MD5Final(&h->request[POS_AUTH], &ctx);
++    nctx = xrad_nss_init();
++	md5_ctx = HASH_Create(HASH_AlgMD5);
++
++	HASH_Begin(md5_ctx);
++	HASH_Update(md5_ctx, &h->request[POS_CODE], POS_AUTH - POS_CODE);
++	apr_generate_random_bytes(&h->request[POS_AUTH], LEN_AUTH);
++	HASH_Update(md5_ctx,
++                (const unsigned char *)&h->request[POS_AUTH],
++                LEN_AUTH);
++	HASH_Update(md5_ctx,
++                (const unsigned char *)&h->request[POS_ATTRS],
++                h->req_len - POS_ATTRS);
++	HASH_Update(md5_ctx,
++                (const unsigned char *)srvp->secret,
++                strlen(srvp->secret));
++	HASH_End(md5_ctx, &h->request[POS_AUTH], &len, sizeof(h->request[POS_AUTH]));
++
++    HASH_Destroy(md5_ctx);
++
++    NSS_ShutdownContext(nctx);
+ }
+ 
+ static void
+@@ -192,10 +238,12 @@
+ is_valid_response(struct xrad_handle *h, int srv,
+     const struct sockaddr_in *from)
+ {
+-	MD5_CTX ctx;
++    NSSInitContext *nctx;
++	HASHContext *md5_ctx;
+ 	unsigned char md5[MD5_DIGEST_LENGTH];
+ 	const struct xrad_server *srvp;
+ 	int len;
++    unsigned int hash_len;
+ #ifdef WITH_SSL
+ 	HMAC_CTX hctx;
+ 	u_char resp[MSGSIZE], md[EVP_MAX_MD_SIZE];
+@@ -218,12 +266,19 @@
+ 		return 0;
+ 
+ 	/* Check the response authenticator */
+-	MD5Init(&ctx);
+-	MD5Update(&ctx, &h->response[POS_CODE], POS_AUTH - POS_CODE);
+-	MD5Update(&ctx, &h->request[POS_AUTH], LEN_AUTH);
+-	MD5Update(&ctx, &h->response[POS_ATTRS], len - POS_ATTRS);
+-	MD5Update(&ctx, srvp->secret, strlen(srvp->secret));
+-	MD5Final(md5, &ctx);
++    nctx = xrad_nss_init();
++	md5_ctx = HASH_Create(HASH_AlgMD5);
++	HASH_Begin(md5_ctx);
++	HASH_Update(md5_ctx, &h->response[POS_CODE], POS_AUTH - POS_CODE);
++	HASH_Update(md5_ctx, &h->request[POS_AUTH], LEN_AUTH);
++	HASH_Update(md5_ctx, &h->response[POS_ATTRS], len - POS_ATTRS);
++	HASH_Update(md5_ctx,
++                (const unsigned char *)srvp->secret,
++                strlen(srvp->secret));
++	HASH_End(md5_ctx, md5, &hash_len, sizeof(md5));
++	HASH_Destroy(md5_ctx);
++    NSS_ShutdownContext(nctx);
++
+ 	if (memcmp(&h->response[POS_AUTH], md5, sizeof md5) != 0)
+ 		return 0;
+ 
+@@ -1128,7 +1183,9 @@
+ 	char R[LEN_AUTH];
+ 	const char *S;
+ 	int i, Ppos;
+-	MD5_CTX Context;
++    int hash_len;
++    NSSInitContext *nctx;
++	HASHContext *md5_ctx;
+ 	u_char b[MD5_DIGEST_LENGTH], *C, *demangled;
+ 
+ 	if ((mlen % 16 != 0) || mlen > 128) {
+@@ -1152,10 +1209,14 @@
+ 	if (!demangled)
+ 		return NULL;
+ 
+-	MD5Init(&Context);
+-	MD5Update(&Context, S, strlen(S));
+-	MD5Update(&Context, R, LEN_AUTH);
+-	MD5Final(b, &Context);
++	nctx = xrad_nss_init();
++    md5_ctx = HASH_Create(HASH_AlgMD5);
++    HASH_Begin(md5_ctx);
++    HASH_Update(md5_ctx, S, strlen(S));
++    HASH_Update(md5_ctx, R, LEN_AUTH);
++    HASH_End(md5_ctx, b, &hash_len, sizeof(b));
++    HASH_Destroy(md5_ctx);
++
+ 	Ppos = 0;
+ 	while (mlen) {
+ 
+@@ -1164,15 +1225,19 @@
+ 			demangled[Ppos++] = C[i] ^ b[i];
+ 
+ 		if (mlen) {
+-			MD5Init(&Context);
+-			MD5Update(&Context, S, strlen(S));
+-			MD5Update(&Context, C, 16);
+-			MD5Final(b, &Context);
++            md5_ctx = HASH_Create(HASH_AlgMD5);
++            HASH_Begin(md5_ctx);
++            HASH_Update(md5_ctx, S, strlen(S));
++            HASH_Update(md5_ctx, C, 16);
++            HASH_End(md5_ctx, b, &hash_len, sizeof(b));
++            HASH_Destroy(md5_ctx);
+ 		}
+ 
+ 		C += 16;
+ 	}
+ 
++	NSS_ShutdownContext(nctx);
++
+ 	return demangled;
+ }
+ 
+@@ -1184,9 +1249,11 @@
+ 	const char *S;
+ 	u_char b[MD5_DIGEST_LENGTH], *demangled;
+ 	const u_char *A, *C;
+-	MD5_CTX Context;
++	NSSInitContext *nctx;
++	HASHContext *md5_ctx;
+ 	int Slen, i, Clen, Ppos;
+ 	u_char *P;
++    unsigned int hash_len;
+ 
+ 	if (mlen % 16 != SALT_LEN) {
+ 		generr(h, "Cannot interpret mangled data of length %lu",
+@@ -1207,11 +1274,15 @@
+ 	Slen = strlen(S);
+ 	P = alloca(Clen);        /* We derive our plaintext */
+ 
+-	MD5Init(&Context);
+-	MD5Update(&Context, S, Slen);
+-	MD5Update(&Context, R, LEN_AUTH);
+-	MD5Update(&Context, A, SALT_LEN);
+-	MD5Final(b, &Context);
++	nctx = xrad_nss_init();
++    md5_ctx = HASH_Create(HASH_AlgMD5);
++    HASH_Begin(md5_ctx);
++    HASH_Update(md5_ctx, S, Slen);
++    HASH_Update(md5_ctx, R, LEN_AUTH);
++    HASH_Update(md5_ctx, A, SALT_LEN);
++    HASH_End(md5_ctx, b, &hash_len, sizeof(b));
++    HASH_Destroy(md5_ctx);
++
+ 	Ppos = 0;
+ 
+ 	while (Clen) {
+@@ -1221,15 +1292,20 @@
+ 		    P[Ppos++] = C[i] ^ b[i];
+ 
+ 		if (Clen) {
+-			MD5Init(&Context);
+-			MD5Update(&Context, S, Slen);
+-			MD5Update(&Context, C, 16);
+-			MD5Final(b, &Context);
++            md5_ctx = HASH_Create(HASH_AlgMD5);
++            HASH_Begin(md5_ctx);
++            HASH_Update(md5_ctx, S, Slen);
++            HASH_Update(md5_ctx, C, 16);
++            HASH_Update(md5_ctx, A, SALT_LEN);
++            HASH_End(md5_ctx, b, &hash_len, sizeof(b));
++            HASH_Destroy(md5_ctx);
+ 		}
+ 
+ 		C += 16;
+ 	}
+ 
++	NSS_ShutdownContext(nctx);
++
+ 	/*
+ 	* The resulting plain text consists of a one-byte length, the text and
+ 	* maybe some padding.
+diff -Naur mod_auth_xradius-0.4.6.old/Makefile.am mod_auth_xradius-0.4.6/Makefile.am
+--- mod_auth_xradius-0.4.6.old/Makefile.am	2012-07-13 16:14:18.598720303 +0200
++++ mod_auth_xradius-0.4.6/Makefile.am	2012-07-13 16:14:36.179062137 +0200
+@@ -24,12 +24,11 @@
+ apachemoddir=${AP_LIBEXECDIR}
+ 
+ lib_LTLIBRARIES = libxradius.la
+-libxradius_la_SOURCES = libradius/radlib.c libradius/md5c.c
+-libxradius_la_CFLAGS = ${MODULE_CFLAGS}
+-libxradius_la_LDFLAGS = ${MODULE_LIBS}
++libxradius_la_SOURCES = libradius/radlib.c
++libxradius_la_CFLAGS = ${MODULE_CFLAGS} -I${includedir}/nss3 -I${includedir}/nspr4
++libxradius_la_LDFLAGS = ${MODULE_LIBS} -lnss3 -lnspr4
+ 
+ include_HEADERS = \
+-    libradius/md5.h \
+     libradius/porting.h \
+     libradius/radlib.h \
+     libradius/radlib_private.h \

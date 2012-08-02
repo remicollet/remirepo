@@ -1,0 +1,15 @@
+diff -Naur mod_auth_xradius-0.4.6.old/src/xradius_cache.c mod_auth_xradius-0.4.6/src/xradius_cache.c
+--- mod_auth_xradius-0.4.6.old/src/xradius_cache.c	2005-04-27 01:49:25.000000000 -0500
++++ mod_auth_xradius-0.4.6/src/xradius_cache.c	2012-05-15 11:52:34.464238207 -0500
+@@ -143,9 +143,9 @@ 
+     /* Running as Root */
+     if (geteuid() == 0)  {
+         /* Allow the configured Apache use to read/write to the DBM */
+-        chown(path1, unixd_config.user_id, -1);
++        chown(path1, ap_unixd_config.user_id, -1);
+         if (path2 != NULL) { 
+-            chown(path2, unixd_config.user_id, -1);
++            chown(path2, ap_unixd_config.user_id, -1);
+         }
+     }
+ #endif

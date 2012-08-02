@@ -1,0 +1,47 @@
+diff -Naur mod_auth_xradius-0.4.6.old/configure mod_auth_xradius-0.4.6.memcache/configure
+--- mod_auth_xradius-0.4.6.old/configure	2012-05-30 10:27:39.230465050 +0200
++++ mod_auth_xradius-0.4.6.memcache/configure	2012-05-30 11:06:40.236546705 +0200
+@@ -4476,8 +4476,8 @@
+ echo "${ECHO_T}$ac_cv_lib_apr_memcache_apr_memcache_create" >&6
+ if test $ac_cv_lib_apr_memcache_apr_memcache_create = yes; then
+ 
+-            APR_MEMCACHE_LIBS="-R$x/lib -L$x/lib -lapr_memcache"
+-            APR_MEMCACHE_CFLAGS="-I$x/include/apr_memcache-0"
++            APR_MEMCACHE_LIBS="`apu-1-config --link-ld`"
++            APR_MEMCACHE_CFLAGS="`apu-1-config --includes`"
+ 
+ fi
+ 
+diff -Naur mod_auth_xradius-0.4.6.old/m4/apr_memcache.m4 mod_auth_xradius-0.4.6.memcache/m4/apr_memcache.m4
+--- mod_auth_xradius-0.4.6.old/m4/apr_memcache.m4	2012-05-30 10:27:39.228465017 +0200
++++ mod_auth_xradius-0.4.6.memcache/m4/apr_memcache.m4	2012-05-30 11:11:30.271831333 +0200
+@@ -20,23 +20,19 @@
+     test_paths="${mc_path}"
+ fi
+ 
+-if test -n ${AP_PREFIX}; then
+-    test_paths="${AP_PREFIX} ${test_paths}"
+-fi
+-
+ for x in $test_paths ; do
+-    amc_shlib="${x}/libapr_memcache${shrext_cmds}"
+-    AC_MSG_CHECKING([for apr_memcache library in ${x}/lib])
++    amc_shlib="${x}/libaprutil-1${shrext_cmds}"
++    AC_MSG_CHECKING([for apr_memcache library in ${libdir}])
+     if test -f ${amc_shlib}; then
+         AC_MSG_RESULT([yes])
+         save_CFLAGS=$CFLAGS
+         save_LDFLAGS=$LDFLAGS
+         CFLAGS="$CFLAGS"
+-        LDFLAGS="-L$x/lib $LDFLAGS"
+-        AC_CHECK_LIB(apr_memcache, apr_memcache_create,
++        LDFLAGS="-L${libdir} $LDFLAGS"
++        AC_CHECK_LIB(aprutil-1, apr_memcache_create,
+             [
+-            APR_MEMCACHE_LIBS="-R$x/lib -L$x/lib -lapr_memcache"
+-            APR_MEMCACHE_CFLAGS="-I$x/include/apr_memcache-0"
++            APR_MEMCACHE_LIBS="`apu-1-config --link-ld`"
++            APR_MEMCACHE_CFLAGS="`apu-1-config --includes`"
+             ])
+         CFLAGS=$save_CFLAGS
+         LDFLAGS=$save_LDFLAGS

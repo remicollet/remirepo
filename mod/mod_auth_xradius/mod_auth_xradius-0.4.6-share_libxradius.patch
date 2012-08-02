@@ -1,0 +1,62 @@
+diff -Naur mod_auth_xradius-0.4.6.old/configure.ac mod_auth_xradius-0.4.6/configure.ac
+--- mod_auth_xradius-0.4.6.old/configure.ac	2012-06-12 11:08:55.776153937 +0200
++++ mod_auth_xradius-0.4.6/configure.ac	2012-06-12 11:09:08.798400381 +0200
+@@ -4,6 +4,8 @@
+ AC_PREREQ(2.53)
+ AC_CONFIG_SRCDIR([src/mod_auth_xradius.c])
+ AC_CONFIG_AUX_DIR(config)
++AC_CONFIG_MACRO_DIR([m4])
++LT_INIT
+ OOO_MAINTAIN_MODE
+ AM_MAINTAINER_MODE
+ AC_CANONICAL_TARGET
+@@ -15,7 +17,6 @@
+ AC_PROG_CC
+ AC_PROG_LD
+ AC_PROG_INSTALL
+-AC_PROG_RANLIB
+ 
+ AP_VERSION=2.0.40
+ CHECK_APACHE(,$AP_VERSION,
+diff -Naur mod_auth_xradius-0.4.6.old/Makefile.am mod_auth_xradius-0.4.6/Makefile.am
+--- mod_auth_xradius-0.4.6.old/Makefile.am	2012-06-12 11:08:55.777153955 +0200
++++ mod_auth_xradius-0.4.6/Makefile.am	2012-06-12 11:09:08.799400399 +0200
+@@ -1,3 +1,4 @@
++ACLOCAL_AMFLAGS = -I m4
+ AUTOMAKE_OPTIONS = foreign dist-bzip2
+ 
+ LIBRADIUS_EXTRA = libradius/md5.h libradius/radlib.h \
+@@ -17,19 +18,28 @@
+ mod_auth_xradius_la_SOURCES = src/mod_auth_xradius.c src/xradius_cache.c
+ mod_auth_xradius_la_CFLAGS = -Wall ${MODULE_CFLAGS}
+ mod_auth_xradius_la_LDFLAGS = -rpath ${AP_LIBEXECDIR} -module -avoid-version ${MODULE_LIBS}
+-mod_auth_xradius_la_LIBADD = libradius.la
++mod_auth_xradius_la_LIBADD = libxradius.la
+ 
+ apachemod_LTLIBRARIES = mod_auth_xradius.la
+ apachemoddir=${AP_LIBEXECDIR}
+ 
+-noinst_LTLIBRARIES = libradius.la
+-libradius_la_SOURCES = libradius/radlib.c libradius/md5c.c
+-libradius_la_CFLAGS = ${MODULE_CFLAGS}
+-libradius_la_LDFLAGS = ${MODULE_LIBS}
++lib_LTLIBRARIES = libxradius.la
++libxradius_la_SOURCES = libradius/radlib.c libradius/md5c.c
++libxradius_la_CFLAGS = ${MODULE_CFLAGS}
++libxradius_la_LDFLAGS = ${MODULE_LIBS}
++
++include_HEADERS = \
++    libradius/md5.h \
++    libradius/porting.h \
++    libradius/radlib.h \
++    libradius/radlib_private.h \
++    libradius/radlib_vs.h
+ 
+ install: install-am
+ 	rm -f $(DESTDIR)${AP_LIBEXECDIR}/mod_auth_xradius.a
+ 	rm -f $(DESTDIR)${AP_LIBEXECDIR}/mod_auth_xradius.la
++	rm -f $(DESTDIR)${libdir}/libxradius.a
++	rm -f $(DESTDIR)${libdir}/libxradius.la
+ 	@echo ""
+ 	@echo "***********************************************"
+ 	@echo ""
