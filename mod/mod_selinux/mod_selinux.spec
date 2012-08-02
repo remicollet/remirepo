@@ -8,16 +8,16 @@
 %define selinux_policy_types targeted mls
 
 Name: mod_selinux
-Version: 2.2.2454
-Release: 5%{?dist}
+Version: 2.4.3
+Release: 1%{?dist}
 Summary: Apache/SELinux plus module
 Group: System Environment/Daemons
 License: ASL 2.0
 URL: http://code.google.com/p/sepgsql/
 Source0: http://sepgsql.googlecode.com/files/%{name}-%{version}.tgz
 Source1: %{name}.conf
-BuildRequires: httpd-devel >= 2.2.0 libselinux-devel checkpolicy >= 2.0.19 policycoreutils selinux-policy-devel
-Requires: kernel >= 2.6.28 httpd >= 2.2.0 policycoreutils selinux-policy
+BuildRequires: httpd-devel >= 2.4.0 libselinux-devel checkpolicy >= 2.0.19 policycoreutils selinux-policy-devel
+Requires: kernel >= 2.6.28 httpd >= 2.4.0 policycoreutils selinux-policy
 Requires: httpd-mmn = %{_httpd_mmn}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -105,6 +105,15 @@ fi
 %{_datadir}/selinux/*/%{name}.pp
 
 %changelog
+* Thu Aug 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3
+- sync with rawhide, backport for remi repo
+
+* Tue Jul 24 2012 KaiGai Kohei <kaigai@ak.jp.nec.com> - 2.4.3
+- fix build towards httpd-2.4.x
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.2454-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Tue May  1 2012 Joe Orton <jorton@redhat.com> - 2.2.2454-5
 - packaging fixes (#803075)
 
