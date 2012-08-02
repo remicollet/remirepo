@@ -1,42 +1,31 @@
-diff -up mod_bw/mod_bw.c.httpd24 mod_bw/mod_bw.c
---- mod_bw/mod_bw.c.httpd24	2012-04-10 11:57:06.092958430 +0200
-+++ mod_bw/mod_bw.c	2012-04-10 11:59:51.832838191 +0200
-@@ -519,10 +519,8 @@ static long get_bw_rate(request_rec * r,
+diff --git a/mod_bw.c b/mod_bw.c
+index a49caf8..8b75973 100644
+--- a/mod_bw.c
++++ b/mod_bw.c
+@@ -519,7 +519,7 @@ static long get_bw_rate(request_rec * r, apr_array_header_t * a)
              return e[i].rate;
  
          case T_IP:
 -            if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
--                return e[i].rate;
--            }
--            break;
-+            return e[i].rate;
-+
-         case T_HOST:
-             if (!gothost) {
-                 int remotehost_is_ip;
-@@ -608,10 +606,8 @@ static int get_maxconn(request_rec * r,
++            if (apr_ipsubnet_test(e[i].x.ip, r->useragent_addr)) {
+                 return e[i].rate;
+             }
+             break;
+@@ -608,7 +608,7 @@ static int get_maxconn(request_rec * r, apr_array_header_t * a)
              return e[i].max;
  
          case T_IP:
 -            if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
--                return e[i].max;
--            }
--            break;
-+            return e[i].max;
-+
-         case T_HOST:
-             if (!gothost) {
-                 int remotehost_is_ip;
-@@ -659,10 +655,8 @@ static int get_sid(request_rec * r, apr_
++            if (apr_ipsubnet_test(e[i].x.ip, r->useragent_addr)) {
+                 return e[i].max;
+             }
+             break;
+@@ -659,7 +659,7 @@ static int get_sid(request_rec * r, apr_array_header_t * a)
              return e[i].sid;
  
          case T_IP:
 -            if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
--                return e[i].sid;
--            }
--            break;
-+            return e[i].sid;
-+
-         case T_HOST:
-             if (!gothost) {
-                 int remotehost_is_ip;
++            if (apr_ipsubnet_test(e[i].x.ip, r->useragent_addr)) {
+                 return e[i].sid;
+             }
+             break;

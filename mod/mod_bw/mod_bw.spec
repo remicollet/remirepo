@@ -3,7 +3,7 @@
 
 Name:           mod_bw
 Version:        0.92
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Bandwidth Limiter For Apache
 
 Group:          System Environment/Daemons
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.92-3
+- sync patch with rawhide (but keep version 0.92)
+
+* Mon Jul 23 2012 Jan Kaluza <jkaluza@redhat.com> - 0.8-10
+- Use proper httpd-2.4 patch
+
 * Wed Apr 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.92-2
 - sync patch with rawhide (but keep version 0.92)
 
