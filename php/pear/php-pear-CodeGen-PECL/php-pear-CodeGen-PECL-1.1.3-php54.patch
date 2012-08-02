@@ -1,0 +1,26 @@
+Patch by Robert Scheck <robert@fedoraproject.org> for CodeGen_PECL >= 1.1.3, which replaces
+the deprecated alias function_entry by zend_function_entry. This allows generated C code to
+be compiled using PHP 5.4.
+
+--- CodeGen_PECL-1.1.3/PECL/Extension.php		2010-09-27 13:53:30.000000000 +0200
++++ CodeGen_PECL-1.1.3/PECL/Extension.php.php54		2012-07-21 23:41:56.000000000 +0200
+@@ -1174,7 +1174,7 @@
+     function generateFunctionRegistrations()
+     {
+         $code  = "/* {{{ {$this->name}_functions[] */\n";
+-        $code .= "function_entry {$this->name}_functions[] = {\n";
++        $code .= "zend_function_entry {$this->name}_functions[] = {\n";
+         foreach ($this->functions as $function) {
+             $code.= $function->functionEntry();
+         }
+--- package.xml						2010-09-27 13:53:30.000000000 +0200
++++ package.xml.php54					2012-07-22 02:29:16.000000000 +0200
+@@ -126,7 +126,7 @@
+    <file baseinstalldir="CodeGen" md5sum="6b97e1fcb5ab96a8fdec223e7059db56" name="PECL/Tools/ProtoParser.php" role="php" />
+    <file baseinstalldir="CodeGen" md5sum="434d9ff71cb9aed4623f29028dd314dc" name="PECL/Command.php" role="php" />
+    <file baseinstalldir="CodeGen" md5sum="b9f06641880c7d8a825e1a0ce2595f24" name="PECL/Element.php" role="php" />
+-   <file baseinstalldir="CodeGen" md5sum="d63982ac842855a6f212882d5c3b8df2" name="PECL/Extension.php" role="php">
++   <file baseinstalldir="CodeGen" md5sum="cd7d51cd6d1fed5923a20d9b19e0cf95" name="PECL/Extension.php" role="php">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+    <file baseinstalldir="CodeGen" md5sum="79fb945b73123f8e0858472f6f9cd866" name="PECL/Cli.php" role="php" />

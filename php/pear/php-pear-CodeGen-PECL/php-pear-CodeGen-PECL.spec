@@ -76,10 +76,19 @@ fi
 %{pear_phpdir}/CodeGen/PECL/
 
 %changelog
+* Sun Jul 22 2012 Robert Scheck <robert@fedoraproject.org> 1.1.3-6
+- Added patch to generate PHP 5.4 compilable C code
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Feb 28 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.1.3-3
 - rebuild for remi repo
 
-* Thu Feb 24 2011 Robert Scheck <robert@fedoraproject.org> 1.0.7-3
+* Thu Feb 24 2011 Robert Scheck <robert@fedoraproject.org> 1.1.3-3
 - Changed requirements to php-common/-pear(PEAR) (#662257 #c2)
 
 * Sat Dec 11 2010 Robert Scheck <robert@fedoraproject.org> 1.1.3-2
