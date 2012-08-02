@@ -29,10 +29,6 @@ extension.
 %setup -qc
 %patch0 -p0 -b .php54
 
-# Create a "localized" php.ini to avoid build warning
-cp -pf /etc/php.ini .
-echo "date.timezone=UTC" >> php.ini
-
 # Package is V2
 cd %{pear_name}-%{version}
 mv -f ../package.xml %{name}.xml
@@ -42,13 +38,9 @@ cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 %install
+rm -rf $RPM_BUILD_ROOT
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docdir
-PHPRC=../php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
-
-# Move documentation
-mkdir -p docdir
-mv -f $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/docs docdir/%{pear_name}
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
@@ -70,12 +62,16 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/*
+%doc %{pear_docdir}/%{pear_name}
 %{_bindir}/pecl-gen
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/CodeGen/PECL/
 
 %changelog
+* Thu Aug 02 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.3-6
+- doc in /usr/share/doc/pear
+- backport for remi repo
+
 * Sun Jul 22 2012 Robert Scheck <robert@fedoraproject.org> 1.1.3-6
 - Added patch to generate PHP 5.4 compilable C code
 
