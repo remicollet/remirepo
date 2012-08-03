@@ -1,6 +1,6 @@
 Name: mysql
-Version: 5.5.25a
-Release: 1%{?dist}.1
+Version: 5.5.27
+Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -66,7 +66,7 @@ Patch21: mysql-readline.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
 BuildRequires: gcc-c++, cmake, ncurses-devel, zlib-devel, libaio-devel
-%if 0%{?fedora} >= 12
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildRequires: systemtap-sdt-devel >= 1.3
 %endif
 # make test requires time and ps
@@ -76,8 +76,6 @@ BuildRequires: perl(Socket), perl(Time::HiRes)
 %if 0%{?fedora} >= 15
 BuildRequires: systemd-units
 %endif
-# This is required old EL4
-BuildRequires: bison
 
 Requires: grep, fileutils
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
@@ -233,10 +231,8 @@ rm -f Docs/mysql.info
 %patch8 -p1
 %patch10 -p1
 %patch11 -p1
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 5
 # When build with system openssl
 %patch12 -p1
-%endif
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
@@ -309,16 +305,12 @@ cmake . -DBUILD_CONFIG=mysql_release \
 	-DMYSQL_DATADIR="/var/lib/mysql" \
 	-DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
 	-DENABLED_LOCAL_INFILE=ON \
-%if 0%{?fedora} >= 12
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 	-DENABLE_DTRACE=ON \
 %endif
 	-DWITH_EMBEDDED_SERVER=ON \
 	-DWITH_READLINE=ON \
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 5
 	-DWITH_SSL=system \
-%else
-	-DWITH_SSL=bundled \
-%endif
 	-DWITH_ZLIB=system
 
 gcc $CFLAGS $LDFLAGS -o scriptstub "-DLIBDIR=\"%{_libdir}/mysql\"" %{SOURCE4}
@@ -333,7 +325,7 @@ ar -x ../libmysqld.a
 rm -f sql_binlog.cc.o rpl_utility.cc.o
 gcc $CFLAGS $LDFLAGS -shared -Wl,-soname,libmysqld.so.0 -o libmysqld.so.0.0.1 \
 	*.o \
-%if 0%{?fedora} >= 12
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 	../../probes_mysql.o \
 %endif
 	-lpthread -laio -lcrypt -lssl -lcrypto -lz -lrt -lstdc++ -ldl -lm -lc
@@ -518,8 +510,8 @@ install -m 0644 mysql-test/rh-skipped-tests.list ${RPM_BUILD_ROOT}%{_datadir}/my
 rm -rf $RPM_BUILD_ROOT
 
 %pre libs
-echo -e "\nWARNING : This MySQL RPM is not an official Fedora/Redhat build and it"
-echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
+echo -e "\nWARNING : This MySQL RPM is not an official Fedora / Red Hat build and it"
+echo -e "overrides the official one. Don't file bugs on Fedora Project nor Red Hat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
 %if %{?fedora}%{!?fedora:99} <= 15
@@ -798,6 +790,12 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Aug 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.27-1
+- update to MySQL 5.5.27 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-27.html
+- enable dtrace on EL6
+- cleanup old stuff (EL4)
+
 * Sat Jul 07 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.25a-1.1
 - sync with rawhide
 

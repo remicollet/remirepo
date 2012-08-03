@@ -24,7 +24,7 @@
 %define mysql_vendor_2          Sun Microsystems, Inc.
 %define mysql_vendor            Oracle and/or its affiliates
 
-%define mysql_version   5.5.25a
+%define mysql_version   5.5.27
 
 %define mysqld_user     mysql
 %define mysqld_group    mysql
@@ -176,7 +176,7 @@
         %endif
       %else
         %if %(test -f /etc/SuSE-release && echo 1 || echo 0)
-          %define susever %(rpm -qf --qf '%%{version}\\n' /etc/SuSE-release)
+          %define susever %(rpm -qf --qf '%%{version}\\n' /etc/SuSE-release | cut -d. -f1)
           %if "%susever" == "10"
             %define distro_description    SUSE Linux Enterprise Server 10
             %define distro_releasetag     sles10
@@ -241,7 +241,7 @@
 Name:           MySQL%{product_suffix}
 Summary:        MySQL: a very fast and reliable SQL database server
 Group:          Applications/Databases
-Version:        5.5.25a
+Version:        5.5.27
 Release:        %{release}%{?distro_releasetag:.%{distro_releasetag}}
 Distribution:   %{distro_description}
 License:        Copyright (c) 2000, 2012, %{mysql_vendor}. All rights reserved. Under %{license_type} license as shown in the Description field.

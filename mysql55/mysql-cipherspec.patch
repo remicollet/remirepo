@@ -4,27 +4,26 @@ This patch enhances connect command by an option to specify a cipher
 and tests are adjusted to specify the expected cipher explicitly.
 Upstream bug report: http://bugs.mysql.com/bug.php?id=64461
 
-diff -up mysql-5.5.21/client/mysqltest.cc.cipherspec mysql-5.5.21/client/mysqltest.cc
---- mysql-5.5.21/client/mysqltest.cc.cipherspec	2012-01-31 12:28:16.000000000 +0100
-+++ mysql-5.5.21/client/mysqltest.cc	2012-03-09 14:38:37.083890817 +0100
-@@ -5458,6 +5458,7 @@ void do_connect(struct st_command *comma
+--- mysql-5.5.27/client/mysqltest.cc.orig	2012-07-20 19:38:02.000000000 +0200
++++ mysql-5.5.27/client/mysqltest.cc	2012-08-03 08:33:01.256212903 +0200
+@@ -5458,6 +5458,7 @@
    my_bool con_ssl= 0, con_compress= 0;
-   my_bool con_pipe= 0, con_shm= 0;
+   my_bool con_pipe= 0, con_shm= 0, con_cleartext_enable= 0;
    struct st_connection* con_slot;
 +  char *con_cipher=NULL;
  
    static DYNAMIC_STRING ds_connection_name;
    static DYNAMIC_STRING ds_host;
-@@ -5546,6 +5547,8 @@ void do_connect(struct st_command *comma
+@@ -5546,6 +5547,8 @@
        con_pipe= 1;
      else if (!strncmp(con_options, "SHM", 3))
        con_shm= 1;
 +    else if (!strncmp(con_options, "CIPHER:", 7))
 +      con_cipher = con_options + 7;
+     else if (!strncmp(con_options, "CLEARTEXT", 9))
+       con_cleartext_enable= 1;
      else
-       die("Illegal option to connect: %.*s", 
-           (int) (end - con_options), con_options);
-@@ -5593,8 +5596,11 @@ void do_connect(struct st_command *comma
+@@ -5595,8 +5598,11 @@
    if (con_ssl)
    {
  #if defined(HAVE_OPENSSL) && !defined(EMBEDDED_LIBRARY)
