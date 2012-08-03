@@ -149,7 +149,6 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/fusinvdeploy/lib
 %{_datadir}/glpi/plugins/fusinvdeploy/pics
 %{_datadir}/glpi/plugins/fusinvdeploy/scripts
-%exclude %{_datadir}/glpi/plugins/fusinvdeploy/.gitignore
 
 
 %changelog
