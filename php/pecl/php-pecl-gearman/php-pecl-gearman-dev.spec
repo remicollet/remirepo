@@ -4,8 +4,8 @@
 
 
 Name:		php-pecl-gearman
-Version:	1.0.2
-Release:	3%{?dist}
+Version:	1.0.3
+Release:	1%{?dist}
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -15,18 +15,23 @@ Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	php-devel, libgearman-devel > 0.21
+BuildRequires:	libgearman-devel > 0.21
+BuildRequires:	php-devel
 BuildRequires:	php-pear
 # Required by phpize
-BuildRequires: autoconf, automake, libtool
+BuildRequires:	autoconf, automake, libtool
+%if 0%{?fedora} >= 17
 # Temporary workaround for https://bugzilla.redhat.com/819209
-BuildRequires:  libgearman-1.0
-BuildRequires:  libgearman-1.0-devel
+BuildRequires:	libgearman-1.0
+BuildRequires:	libgearman-1.0-devel
+%endif
 
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
+
+Provides:	php-pecl(%{pecl_name}) = %{version}
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -54,6 +59,7 @@ cat >%{pecl_name}.ini <<EOF
 extension=%{pecl_name}.so
 EOF
 
+find %{pecl_name}-%{version} -type f -exec chmod -x {} \;
 cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 
@@ -124,6 +130,10 @@ fi
 
 
 %changelog
+* Sun Aug 05 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- update to 1.0.3
+- add missing provides php-pecl(gearman)
+
 * Sat May 05 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-3
 - add BR libgearman-1.0 + libgearman-1.0-devel
   Workaround for https://bugzilla.redhat.com/819209
