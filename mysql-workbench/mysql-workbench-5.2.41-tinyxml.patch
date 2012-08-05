@@ -1,6 +1,6 @@
-diff -up mysql-workbench-gpl-5.2.36-src/backend/wbprivate/Makefile.am.tinyxml mysql-workbench-gpl-5.2.36-src/backend/wbprivate/Makefile.am
---- mysql-workbench-gpl-5.2.36-src/backend/wbprivate/Makefile.am.tinyxml	2011-12-02 12:37:03.000000000 +0100
-+++ mysql-workbench-gpl-5.2.36-src/backend/wbprivate/Makefile.am	2011-12-10 07:49:14.230858719 +0100
+diff -up mysql-workbench-gpl-5.2.41-src/backend/wbprivate/Makefile.am.tinyxml mysql-workbench-gpl-5.2.41-src/backend/wbprivate/Makefile.am
+--- mysql-workbench-gpl-5.2.41-src/backend/wbprivate/Makefile.am.tinyxml	2012-07-25 05:07:37.000000000 +0200
++++ mysql-workbench-gpl-5.2.41-src/backend/wbprivate/Makefile.am	2012-08-05 16:19:08.160804046 +0200
 @@ -13,8 +13,7 @@ INCLUDES=@GLIB_CFLAGS@ @SIGC_CFLAGS@ @GR
    -I$(top_srcdir)/ext/cppconn/ -I$(top_srcdir)/library/dbc/src\
    -I$(top_srcdir)/ext/scintilla/include\
@@ -11,7 +11,7 @@ diff -up mysql-workbench-gpl-5.2.36-src/backend/wbprivate/Makefile.am.tinyxml my
  
  libwbprivate_a_SOURCES=\
  	model/canvas_floater.cpp\
-@@ -76,11 +75,7 @@ libwbprivate_a_SOURCES=\
+@@ -78,11 +77,7 @@ libwbprivate_a_SOURCES=\
    $(top_srcdir)/frontend/common/grt_python_debugger.cpp\
    $(top_srcdir)/frontend/common/plugin_manager_window.cpp\
    $(top_srcdir)/frontend/common/plugin_install_window.cpp\
@@ -24,19 +24,19 @@ diff -up mysql-workbench-gpl-5.2.36-src/backend/wbprivate/Makefile.am.tinyxml my
  
  #BUILT_SOURCES=stdafx.h.gch
  #stdafx.h.gch: workbench/stdafx.h
-diff -up mysql-workbench-gpl-5.2.36-src/library/forms/Makefile.am.tinyxml mysql-workbench-gpl-5.2.36-src/library/forms/Makefile.am
---- mysql-workbench-gpl-5.2.36-src/library/forms/Makefile.am.tinyxml	2011-12-02 12:37:01.000000000 +0100
-+++ mysql-workbench-gpl-5.2.36-src/library/forms/Makefile.am	2011-12-10 07:49:59.540022494 +0100
-@@ -74,7 +74,7 @@ gtk/src/lf_menu.cpp\
- gtk/src/lf_menubar.cpp\
+diff -up mysql-workbench-gpl-5.2.41-src/library/forms/Makefile.am.tinyxml mysql-workbench-gpl-5.2.41-src/library/forms/Makefile.am
+--- mysql-workbench-gpl-5.2.41-src/library/forms/Makefile.am.tinyxml	2012-07-25 05:07:41.000000000 +0200
++++ mysql-workbench-gpl-5.2.41-src/library/forms/Makefile.am	2012-08-05 16:20:10.931998514 +0200
+@@ -79,7 +79,7 @@ gtk/src/lf_menubar.cpp\
+ gtk/src/lf_find_panel.cpp\
  gtk/src/lf_hypertext.cpp
  
 -libmforms_la_LIBADD=@GNOME_LIBS@ @GNOME_KEYRING_LIBS@
 +libmforms_la_LIBADD=@GNOME_LIBS@ @GNOME_KEYRING_LIBS@ -ltinyxml
  
- INCLUDES=@GLIB_CFLAGS@ @GNOME_CFLAGS@ @SIGC_CFLAGS@ @CAIRO_CFLAGS@ @GNOME_KEYRING_CFLAGS@ @PCRE_CFLAGS@ \
+ INCLUDES=@GLIB_CFLAGS@ @GNOME_CFLAGS@ @SIGC_CFLAGS@ @CAIRO_CFLAGS@ @GNOME_KEYRING_CFLAGS@ @PCRE_CFLAGS@ -DSCI_NAMESPACE\
  -I$(top_srcdir)/library/forms\
-@@ -86,7 +86,6 @@ INCLUDES=@GLIB_CFLAGS@ @GNOME_CFLAGS@ @S
+@@ -91,7 +91,6 @@ INCLUDES=@GLIB_CFLAGS@ @GNOME_CFLAGS@ @S
  -I$(top_srcdir)/ext/vsqlite\
  -I$(top_srcdir)/library/\
  -I$(top_srcdir)/ext\
@@ -44,9 +44,9 @@ diff -up mysql-workbench-gpl-5.2.36-src/library/forms/Makefile.am.tinyxml mysql-
  -I$(top_srcdir)/ext/scintilla/include
  
  
-diff -up mysql-workbench-gpl-5.2.36-src/modules/wb.mysql.import/Makefile.am.tinyxml mysql-workbench-gpl-5.2.36-src/modules/wb.mysql.import/Makefile.am
---- mysql-workbench-gpl-5.2.36-src/modules/wb.mysql.import/Makefile.am.tinyxml	2011-12-02 12:37:03.000000000 +0100
-+++ mysql-workbench-gpl-5.2.36-src/modules/wb.mysql.import/Makefile.am	2011-12-10 07:44:49.683838383 +0100
+diff -up mysql-workbench-gpl-5.2.41-src/modules/wb.mysql.import/Makefile.am.tinyxml mysql-workbench-gpl-5.2.41-src/modules/wb.mysql.import/Makefile.am
+--- mysql-workbench-gpl-5.2.41-src/modules/wb.mysql.import/Makefile.am.tinyxml	2012-07-25 05:07:39.000000000 +0200
++++ mysql-workbench-gpl-5.2.41-src/modules/wb.mysql.import/Makefile.am	2012-08-05 16:19:08.161804049 +0200
 @@ -17,7 +17,6 @@ INCLUDES=\
  	-I$(top_srcdir)/library/sql-parser/source/linux\
  	-I$(top_srcdir)/ext/vsqlite\

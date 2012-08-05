@@ -1,10 +1,15 @@
 %if !%{defined version}
-%define version		5.2.40
+%define version		5.2.41
 %endif
 %define release 1
 %define edition   gpl
+# whether at least Python 2.6 is available
 %define have_python26 1
 %include %{_rpmconfigdir}/macros.python
+
+# Directory where iodbc and pyodbc binaries are located. Build both using the build_iodbc.sh script
+# If using distribution provided ODBC manager lib and pyodbc, then comment out this
+%define odbc_home	%{_builddir}/../odbc/usr
 
 Summary: A MySQL visual database modeling, administration and querying tool.
 Name: mysql-workbench-%{edition}
@@ -23,6 +28,7 @@ BuildRequires: libzip-devel libxml2-devel
 BuildRequires: python-devel >= 2.5
 BuildRequires: gnome-keyring-devel
 BuildRequires: boost-devel
+#BuildRequires: libiodbc-devel
 
 %if %_vendor == suse
 BuildRequires: libmysqlclient-devel, libctemplate-devel
@@ -38,9 +44,9 @@ BuildRequires: sqlite-devel
 %endif
 
 %if %_vendor == suse
-Requires: python-paramiko python-pexpect 
+Requires: python-paramiko python-pexpect
 %else
-Requires: python-paramiko pexpect 
+Requires: python-paramiko pexpect
 %endif
 %if %{defined fc13}
 Requires: python-sqlite2
@@ -64,15 +70,19 @@ and execute SQL queries.
 
 %build
 
-NOCONFIGURE=yes ./autogen.sh
-%if %{have_python26}
-%if %targos == el6
-%configure --disable-debug  --enable-mysql-utilities --disable-dependency-tracking --with-bundled-ctemplate
-%else
-%configure --disable-debug  --enable-mysql-utilities --disable-dependency-tracking
+%if %{defined have_python26}
+mysql_utilities_flags=--enable-mysql-utilities
 %endif
+
+%if %targos == el6
+ctemplate_flags=--with-bundled-ctemplate
+%endif
+
+NOCONFIGURE=yes ./autogen.sh
+%if %{defined odbc_home}
+%configure --disable-debug  --disable-dependency-tracking $mysql_utilities_flags $ctemplate_flags --with-odbc-cflags=-I%{odbc_home}/include --with-odbc-libs="-L%{odbc_home}/lib -liodbc"
 %else
-%configure --disable-debug  --disable-dependency-tracking
+%configure --disable-debug  --disable-dependency-tracking $mysql_utilities_flags $ctemplate_flags
 %endif
 make
 
@@ -87,11 +97,16 @@ make -C ext install-connector DESTDIR=%{buildroot}
 find %{buildroot}%{_libdir}/mysql-workbench -name \*.a  -exec rm {} \; -print
 find %{buildroot}%{_libdir}/mysql-workbench -name \*.la -exec rm {} \; -print
 
-%if %{defined centos}
-for l in libpixman-1.so.0 libcairo.so.2 libatkmm-1.6.so.1 libcairomm-1.0.so.1 libgdkmm-2.4.so.1 libglibmm-2.4.so.1 libgtkmm-2.4.so.1 libpangomm-1.4.so.1 libzip.so.1 libsigc-2.0.so.0; do
-cp %{_libdir}/$l %{buildroot}/%{_libdir}/mysql-workbench
-/usr/sbin/prelink -u %{buildroot}/%{_libdir}/mysql-workbench/$l || true
+%if %{defined odbc_home}
+for l in %{odbc_home}/lib/libiodbc.so.* %{odbc_home}/lib/libiodbcinst.so.* %{odbc_home}/lib/libiodbcadm.so.*; do
+cp -a $l %{buildroot}%{_libdir}/mysql-workbench
+/usr/sbin/prelink -u %{buildroot}%{_libdir}/mysql-workbench/`basename $l` || true
 done
+
+if [ %{odbc_home}/../pyodbc.so ]; then
+cp -a %{odbc_home}/../pyodbc.so %{buildroot}%{_libdir}/mysql-workbench/modules
+fi
+cp -a %{odbc_home}/bin/iodbcadm-gtk %{buildroot}%{_libdir}/mysql-workbench/
 %endif
 
 %post
@@ -131,6 +146,9 @@ rm -rf %{_builddir}/%{name}-%{version}-src
 %defattr(0644, root, root, 0755)
 %doc COPYING README
 %attr(0755,root,root) %{_bindir}/mysql*
+%attr(0755,root,root) %{_bindir}/wbcopytables
+%attr(0755,root,root) %{_datadir}/mysql-workbench/python/mysql*
+%attr(0755,root,root) %{_datadir}/mysql-workbench/extras/*.sh
 %dir %{_libdir}/mysql-workbench
 %{_libdir}/mysql-workbench/*
 %{_datadir}/icons/hicolor/*/mimetypes/*
@@ -140,6 +158,8 @@ rm -rf %{_builddir}/%{name}-%{version}-src
 %{_datadir}/applications/*.desktop
 %dir %{_datadir}/mysql-workbench
 %{_datadir}/mysql-workbench/*
+
+%attr(0755,root,root) %{_libdir}/mysql-workbench/iodbcadm-gtk
 
 %changelog
 

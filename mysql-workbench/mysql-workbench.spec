@@ -1,9 +1,6 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%global mw_version 5.2.40
-%global mw_release 1
-%global tarversion gpl-%{mw_version}-src
-%global srcversion gpl-%{mw_version}-src
+%global tarversion gpl-%{version}-src
 
 # Use system cppconn if a compatible upstream version exists
 #global cppconnver 1.1.0-0.3.bzr895
@@ -13,8 +10,8 @@
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   %{mw_version}
-Release:   %{mw_release}%{?dist}
+Version:   5.2.41
+Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -28,7 +25,7 @@ Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tar
 # !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
 Patch1:    %{name}-5.2.28-cppconn.patch
 Patch2:    %{name}-5.2.32-ctemplate.patch
-Patch3:    %{name}-5.2.36-tinyxml.patch
+Patch3:    %{name}-5.2.41-tinyxml.patch
 # http://bugs.mysql.com/63898 - fix for automake >= 1.11.2
 Patch8:    %{name}-5.2.37-automake.patch
 
@@ -69,6 +66,7 @@ BuildRequires: desktop-file-utils
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 BuildRequires: tinyxml-devel >= 2.6.0
 %endif
+BuildRequires: libiodbc-devel
 
 Requires: python-paramiko pexpect
 %if 0%{?fedora} < 17
@@ -103,7 +101,7 @@ an integrated tools environment for:
 
 
 %prep
-%setup -q -n %{name}-%{srcversion}
+%setup -q -n %{name}-%{tarversion}
 
 %if 0%{?cppconnver:1}
 %patch1 -p1 -b .cppconn
@@ -111,7 +109,7 @@ rm -rf ext/cppconn
 %endif
 
 %if 0%{?fedora} >= 12
-%patch2 -p1 -b .ctemplate
+#patch2 -p1 -b .ctemplate
 rm -rf ext/ctemplate
 %endif
 
@@ -120,7 +118,7 @@ rm -rf ext/ctemplate
 rm -rf library/tinyxml
 %endif
 
-%patch8 -p1 -b .automake
+#patch8 -p1 -b .automake
 
 
 touch -r COPYING .timestamp4rpm
@@ -145,6 +143,8 @@ export CXXFLAGS="$RPM_OPT_FLAGS -fpermissive"
 %if 0%{?fedora} < 12 && 0%{?rhel} < 7
     --with-bundled-ctemplate \
 %endif
+    --with-odbc-cflags="$(pkg-config --cflags libiodbc)" \
+    --with-odbc-libs="$(pkg-config --libs libiodbc)" \
     --enable-mysql-utilities
 
 make %{?_smp_mflags}
@@ -204,6 +204,10 @@ fi
 
 
 %changelog
+* Sun Aug 05 2012 Remi Collet <remi@fedoraproject.org> 5.2.41-1
+- update to 5.2.41 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-41.html
+
 * Tue May 15 2012 Remi Collet <remi@fedoraproject.org> 5.2.40-1
 - update to 5.2.40 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-40.html
