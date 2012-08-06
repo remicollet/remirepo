@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.2
-Release: 21%{?dist}
+Release: 23%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -54,6 +54,8 @@ Patch42: httpd-2.4.2-r1326980+.patch
 Patch43: httpd-2.4.2-r1332643+.patch
 Patch44: httpd-2.4.2-r1346905.patch
 Patch45: httpd-2.4.2-r1357685.patch
+Patch46: httpd-2.4.2-r1366693.patch
+Patch47: httpd-2.4.2-r1365604.patch
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -167,6 +169,8 @@ authentication to the Apache HTTP Server.
 %patch43 -p1 -b .r1332643+
 %patch44 -p1 -b .r1346905
 %patch45 -p1 -b .r1357685
+%patch46 -p1 -b .r1366693
+%patch47 -p1 -b .r1365604
 
 # Patch in vendor/release string
 sed "s/@RELEASE@/%{vstring}/" < %{PATCH20} | patch -p1
@@ -581,6 +585,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Mon Aug  6 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-23
+- sync with rawhide, rebuild for remi repo
+
+* Mon Aug  6 2012 Joe Orton <jorton@redhat.com> - 2.4.2-23
+- add mod_proxy fixes from upstream (r1366693, r1365604)
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.2-22
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jul 07 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-21
 - sync with rawhide, rebuild for remi repo
 
