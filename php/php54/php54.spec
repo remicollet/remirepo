@@ -106,7 +106,7 @@ Patch7: php-5.3.0-recode.patch
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
 Patch41: php-5.4.0-easter.patch
-Patch42: php-5.3.1-systzdata-v8.patch
+Patch42: php-5.3.1-systzdata-v9.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
