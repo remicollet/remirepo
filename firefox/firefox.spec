@@ -456,6 +456,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Aug 1 2012 Martin Stransky <stransky@redhat.com> - 14.0.1-2
+- removed StartupWMClass (rhbz#844860)
+
 * Tue Jul 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 14.0.1-1
 - Sync with rawhide, update to 14.0.1
 
