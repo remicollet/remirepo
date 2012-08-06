@@ -790,6 +790,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sun Aug  5 2012 Tom Lane <tgl@redhat.com> 5.5.27-1
+- Update to MySQL 5.5.27, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-27.html
+
 * Fri Aug 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.27-1
 - update to MySQL 5.5.27 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-27.html

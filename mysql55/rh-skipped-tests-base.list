@@ -7,13 +7,6 @@
 
 outfile_loaddata          : bug#46895 code wrong, expected results wrong too
 
-# Disable sys_vars.plugin_dir_basic, which is broken because
-# mysql-test-run doesn't set the right value of MYSQL_LIBDIR.
-# Upstream at http://bugs.mysql.com/bug.php?id=52223
-# Still fails in 5.5.16, even though upstream marked it closed.
-
-sys_vars.plugin_dir_basic : bug#52223 fails for lib64 library directory
-
 # Disable innodb.innodb, which is showing platform-dependent results
 # as of 5.5.9.  Upstream at http://bugs.mysql.com/bug.php?id=60155
 
