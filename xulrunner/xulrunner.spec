@@ -106,6 +106,7 @@ Patch24:        crashreporter-remove-static.patch
 # Upstream patches
 Patch47:        mozilla-691898.patch
 Patch49:        mozilla-746112.patch
+Patch50:        mozilla-750620.patch
 
 # ---------------------------------------------------
 
@@ -267,6 +268,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %ifarch ppc ppc64
 %patch49 -p2 -b .746112
 %endif
+%patch50 -p1 -b .750620
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -553,10 +555,16 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Jul 25 2012 Dan Horák <dan[at]danny.cz> - 14.0.1-5
+- Added fix for secondary arches - mozbz#750620
+
 * Tue Jul 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 14.0.1-1
 - Sync with rawhide, update to 14.0.1
 
-* Mon Jul 16 2012 Jan Horak <jhorak@redhat.com> - 14.0.1-1
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 14.0.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jul 16 2012 Martin Stransky <stransky@redhat.com> - 14.0.1-3
 - Update to 14.0.1
 
 * Sun Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0.1-1
