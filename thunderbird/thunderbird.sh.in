@@ -34,6 +34,7 @@ MOZ_DIST_BIN="$MOZ_LIB_DIR/thunderbird"
 MOZ_PROGRAM="$MOZ_DIST_BIN/thunderbird"
 MOZ_LANGPACKS_DIR="$MOZ_DIST_BIN/langpacks"
 MOZ_EXTENSIONS_PROFILE_DIR="$HOME/.mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}"
+MOZ_LAUNCHER="$MOZ_DIST_BIN/run-mozilla.sh"
 
 ##
 ## Set MOZ_ENABLE_PANGO is no longer used because Pango is enabled by default
@@ -117,4 +118,33 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
     create_langpack_link $SHORTMOZLOCALE || create_langpack_link $MOZLOCALE || true
 fi
 
-exec $MOZ_PROGRAM "$@"
+# Prepare command line arguments
+script_args=""
+pass_arg_count=0
+while [ $# -gt $pass_arg_count ]
+do
+  case "$1" in
+    -g | --debug)
+      script_args="$script_args -g"
+      debugging=1
+      shift
+      ;;
+    -d | --debugger)
+      if [ $# -gt 1 ]; then
+        script_args="$script_args -d $2"
+        shift 2
+      else
+        shift
+      fi
+      ;;
+    *)
+      # Move the unrecognized argument to the end of the list.
+      arg="$1"
+      shift
+      set -- "$@" "$arg"
+      pass_arg_count=`expr $pass_arg_count + 1`
+      ;;
+  esac
+done
+
+exec $MOZ_LAUNCHER $script_args $MOZ_PROGRAM "$@"

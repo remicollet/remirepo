@@ -8,7 +8,6 @@ TryExec=thunderbird
 Icon=thunderbird
 Terminal=false
 Type=Application
-StartupWMClass=Thunderbird-bin
 MimeType=message/rfc822;x-scheme-handler/mailto;
 StartupNotify=true
 Categories=Network;Email;
