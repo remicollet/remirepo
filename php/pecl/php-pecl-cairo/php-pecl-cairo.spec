@@ -5,12 +5,15 @@
 
 Name:           php-pecl-cairo
 Version:        0.3.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# see https://bugs.php.net/61882
+Patch0:         pecl-cairo-php_streams.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  cairo-devel >= 1.4
@@ -48,6 +51,8 @@ These are the files needed to compile programs using cairo extension.
 
 %prep
 %setup -c -q
+
+%patch0 -p0 -b .61882
 
 # Check reported version (phpinfo), as this is often broken
 extver=$(sed -n '/#define PHP_CAIRO_VERSION/{s/.* "//;s/".*$//;p}' Cairo-%{version}/php_cairo.h)
@@ -94,13 +99,15 @@ install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 
 %check
-# disable failing tests to kill build
-# tests/CairoFontFace/CairoFtFontFace/__construct.phpt
-# tests/CairoFontFace/CairoFtFontFace/cairo_ft_font_face_create.phpt
-# Work on fedora i386 >= 17 and fedora x86_64 < 17 (really strange)
+# 32/445 test failing with old cairo 1.8
+
 cd Cairo-%{version}
 TEST_PHP_EXECUTABLE=%{__php} \
+%if 0%{?fedora} > 13
+REPORT_EXIT_STATUS=1 \
+%else
 REPORT_EXIT_STATUS=0 \
+%endif
 NO_INTERACTION=1 \
 %{__php} run-tests.php \
     -n -q \
@@ -109,7 +116,11 @@ NO_INTERACTION=1 \
 
 cd ../Cairo-%{version}-zts
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
+%if 0%{?fedora} > 13
+REPORT_EXIT_STATUS=1 \
+%else
 REPORT_EXIT_STATUS=0 \
+%endif
 NO_INTERACTION=1 \
 %{__ztsphp} run-tests.php \
     -n -q \
@@ -146,6 +157,10 @@ fi
 
 
 %changelog
+* Thu Aug  9 2012 Remi Collet <remi@fedoraproject.org> - 0.3.2-3
+- add patch for https://bugs.php.net/61882
+- (re)enabling test result on fedora > 13
+
 * Sun Apr 22 2012 Remi Collet <remi@fedoraproject.org> - 0.3.2-2
 - update to 0.3.2-beta, rebuild for php 5.4
 

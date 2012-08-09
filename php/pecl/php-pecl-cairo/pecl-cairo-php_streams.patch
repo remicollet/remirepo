@@ -1,0 +1,11 @@
+--- Cairo-0.3.2.old/cairo_ft_font.c	2012-04-21 18:03:29.000000000 +0000
++++ Cairo-0.3.2/cairo_ft_font.c	2012-04-30 22:11:59.000000000 +0000
+@@ -97,7 +97,7 @@
+ #ifdef ZTS
+ 	closure->TSRMLS_C = TSRMLS_C;
+ #endif
+-
++	php_stream_stat(stream,&ssbuf);
+ 	ft_stream = ecalloc(1, sizeof(*ft_stream));
+ 	ft_stream->descriptor.pointer = (void *)closure;
+ 	ft_stream->pos = php_stream_tell(stream);
