@@ -9,7 +9,7 @@ switch the cache dir to be relative to runtimedir.
     krb5_ccache tmp_ccache = NULL;
  
 -   ccname = apr_psprintf(r->connection->pool, "FILE:%s/krb5cc_apache_XXXXXX", P_tmpdir);
-+   ccname = apr_pstrdup(r->connection->pool, "FILE:/run/user/apache/krb5cc_apache_XXXXXX");
++   ccname = apr_pstrdup(r->connection->pool, "FILE:/run/httpd/krbcache/krb5cc_apache_XXXXXX");
     fd = mkstemp(ccname + strlen("FILE:"));
     if (fd < 0) {
        log_rerror(APLOG_MARK, APLOG_ERR, 0, r,

@@ -8,7 +8,7 @@
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 16%{?dist}
+Release: 19%{?dist}
 License: BSD and MIT and ASL 2.0
 Group: System Environment/Daemons
 URL: http://modauthkerb.sourceforge.net/
@@ -24,6 +24,7 @@ Patch6: mod_auth_kerb-5.4-cachedir.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: httpd-devel, krb5-devel
 Requires: httpd-mmn = %{_httpd_mmn}
+Requires(pre): httpd
 
 %description
 mod_auth_kerb is module for the Apache HTTP Server designed to
@@ -60,10 +61,11 @@ install -Dp -m 0644 10-auth_kerb.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-aut
 install -Dp -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/auth_kerb.conf
 %endif
 
+# Credentials cache
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
-echo 'd /run/user/apache 700 apache apache' \
-     > $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/httpd-user.conf
-mkdir -p $RPM_BUILD_ROOT/run/user/apache
+echo 'd /run/httpd/krbcache 700 apache apache' \
+     > $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/httpd-krbcache.conf
+mkdir -p $RPM_BUILD_ROOT/run/httpd/krbcache
 
 # Copy the license files here so we can include them in %doc
 cp -p %{SOURCE2} .
@@ -79,10 +81,22 @@ rm -rf $RPM_BUILD_ROOT
 %doc example.conf
 %endif
 %{_httpd_moddir}/*.so
-%{_prefix}/lib/tmpfiles.d/httpd-user.conf
-%attr(0700,apache,apache) %dir /run/user/apache
+%{_prefix}/lib/tmpfiles.d/httpd-krbcache.conf
+%attr(0700,apache,apache) %dir /run/httpd/krbcache
 
 %changelog
+* Thu Aug  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-19
+- sync with rawhide, rebuild for remi repo
+
+* Wed Aug  8 2012 Joe Orton <jorton@redhat.com> - 5.4-19
+- add Requires(pre) for httpd to ensure apache uid exists at install time
+
+* Wed Aug  8 2012 Joe Orton <jorton@redhat.com> - 5.4-18
+- move ccache to /run/httpd/ccache
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.4-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Wed Jun 13 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-16
 - sync with rawhide, rebuild for remi repo
 
