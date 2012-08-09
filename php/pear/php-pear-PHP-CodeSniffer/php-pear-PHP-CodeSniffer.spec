@@ -2,7 +2,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.3.5
+Version:        1.3.6
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -89,6 +89,9 @@ fi
 
 
 %changelog
+* Tue Jul 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.6-1
+- upstream 1.3.6
+
 * Tue Jul 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.5-1
 - upstream 1.3.5, backport for remi repo
 
