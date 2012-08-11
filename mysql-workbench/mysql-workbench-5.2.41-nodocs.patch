@@ -1,0 +1,67 @@
+diff -up mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/Makefile.am.nodocs mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/Makefile.am
+--- mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/Makefile.am.nodocs	2012-08-11 17:57:08.216320706 +0200
++++ mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/Makefile.am	2012-08-11 18:01:21.206082661 +0200
+@@ -2,11 +2,5 @@
+ pylibdir=$(libdir)/@PACKAGE@/modules
+ 
+ pylib_DATA=\
+-  mysqldoclib.py\
+   wb_doclib_grt.py
+ 
+-docdatadir=$(datadir)/mysql-workbench/modules/data/DocLibrary
+-docdata_DATA=\
+-res/DocLibrary/mysqldoclib.sqlite\
+-res/DocLibrary/mysqldoclib_webui.sqlite
+-
+diff -up mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/wb_doclib_grt.py.nodocs mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/wb_doclib_grt.py
+--- mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/wb_doclib_grt.py.nodocs	2012-08-11 17:56:09.271140967 +0200
++++ mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/wb_doclib_grt.py	2012-08-11 17:56:18.259168247 +0200
+@@ -91,47 +91,7 @@ server_port = None
+ def openDocLib():
+     global docLibTab
+     global server_port
+-    if docLibTab:
+-      if docLibTab is True: # this will be True if an external browser is used
+-          Utilities.open_url("http://localhost:%i"%server_port)
+-          return 1
+-      App.get().select_view("wb.doclib")
+-      return 1
+-
+-    app = App.get()
+-
+-    try:
+-        import mysqldoclib
+-    except ImportError:
+-        Utilities.show_error("Cannot Open Documentation Library", 
+-                    '''pysqlite2 is not installed, please install python-sqlite2 or pysqlite2 to be able to use this feature.
+-Try running "easy_install pysqlite" with superuser privileges in the command line shell or, if using
+-Ubuntu, enable the Universe repository and install the python-pysqlite2 package from there.''',
+-                    "OK", "", "")
+-        return 0
+-    
+-    if server_port is None:
+-        ready_event = Event()
+-
+-        #datadir = "./modules/data/DocLibrary/"
+-        datadir = os.path.join(app.get_resource_path(""), "modules/data/DocLibrary")
+-
+-        thread.start_new_thread(run_server, (datadir, ready_event))    
+-
+-        # wait up to 1s for the doclib server to start
+-        ready_event.wait(1)
+-
+-    if platform.system() == "Linux":
+-        docLibTab = True
+-        Utilities.open_url("http://localhost:%i"%server_port)
+-        return 1
+-    docLibTab = DocLibTab(server_port)
+-    docLibTab.set_identifier("wb.doclib")
+-    
+-    app.dock_view(docLibTab, "maintab")
+-    app.set_view_title(docLibTab, "Doc Library (loading)")
+-
+-    app.set_status_text("Opening Doc Library...")
+ 
++    Utilities.open_url("http://dev.mysql.com/doc/index-gui.html")
+     return 1
+ 

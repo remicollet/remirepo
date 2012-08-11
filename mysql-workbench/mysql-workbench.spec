@@ -11,15 +11,18 @@
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   5.2.41
-Release:   1%{?dist}
+Release:   2%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
 URL:       http://wb.mysql.com
-# Upstream has a mirror redirector for downloads, so the URL is hard to
-# represent statically.  You can get the tarball by following a link from
-# http://dev.mysql.com/downloads/workbench/
-Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tarversion}.tar.gz
+
+# The upstream tarball includes non-free documentation that we cannot ship.
+# To remove the non-free documentation, run this script after downloading
+# the tarball into the current directory:
+# ./stripdocs.sh $VERSION
+Source0:   %{name}-nodocs-%{version}.tar.xz
+Source1:   stripdocs.sh
 
 # don't build extension, use system one
 # !!! This patch use versioned soname (libmysqlcppconn.so.6) !!!
@@ -30,6 +33,9 @@ Patch3:    %{name}-5.2.41-tinyxml.patch
 Patch4:    %{name}-5.2.41-antlr.patch
 # http://bugs.mysql.com/63705
 Patch5:    %{name}-5.2.41-glib.patch
+
+# don't use bundled documentation, redirect to online doc
+Patch9:    %{name}-5.2.41-nodocs.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -81,7 +87,7 @@ Requires: mysql-utilities
 # requires mysql client pkg (for mysqldump and mysql cmdline client)
 Requires: mysql%{?_isa}
 Requires: gnome-keyring%{?_isa}
-# For migration wizard (2.1.18 expected, but not yet available)
+# For migration wizard (2.1.18 prefered, but not yet available)
 # see https://bugzilla.redhat.com/847440
 Requires: pyodbc%{?_isa}
 %if 0%{?cppconnver:1}
@@ -133,6 +139,7 @@ rm -rf ext/antlr-runtime
 %endif
 
 %patch5 -p1 -b .glib
+%patch9 -p1 -b .nodocs
 
 touch -r COPYING .timestamp4rpm
 sed -i -e 's/\r//g' COPYING
@@ -222,6 +229,10 @@ fi
 
 
 %changelog
+* Sat Aug 11 2012 Remi Collet <remi@fedoraproject.org> 5.2.41-2
+- remove bundled documentation, redirect to online
+  This documentation is NOT distributed under a GPL license
+
 * Sun Aug 05 2012 Remi Collet <remi@fedoraproject.org> 5.2.41-1
 - update to 5.2.41 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-41.html
