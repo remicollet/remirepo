@@ -3,7 +3,7 @@
 %global tarversion gpl-%{version}-src
 
 # Use system cppconn if a compatible upstream version exists
-#global cppconnver 1.1.0-0.3.bzr895
+%global cppconnver 1.1.1
 
 # "script_templates" (and some others) shouldn't be compiled
 %global _python_bytecompile_errors_terminate_build 0
@@ -22,12 +22,13 @@ URL:       http://wb.mysql.com
 Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tarversion}.tar.gz
 
 # don't build extension, use system one
-# !!! This patch use versioned soname (libmysqlcppconn.so.5) !!!
-Patch1:    %{name}-5.2.28-cppconn.patch
-Patch2:    %{name}-5.2.32-ctemplate.patch
+# !!! This patch use versioned soname (libmysqlcppconn.so.6) !!!
+Patch1:    %{name}-5.2.41-cppconn.patch
+Patch2:    %{name}-5.2.41-ctemplate.patch
 Patch3:    %{name}-5.2.41-tinyxml.patch
-# http://bugs.mysql.com/63898 - fix for automake >= 1.11.2
-Patch8:    %{name}-5.2.37-automake.patch
+Patch4:    %{name}-5.2.41-antlr.patch
+# http://bugs.mysql.com/63705
+Patch5:    %{name}-5.2.41-glib.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -67,6 +68,9 @@ BuildRequires: desktop-file-utils
 BuildRequires: tinyxml-devel >= 2.6.0
 %endif
 BuildRequires: libiodbc-devel
+%if 0%{?fedora} >= 17
+BuildRequires: antlr3-C-devel >= 3.4
+%endif
 
 Requires: python-paramiko pexpect
 %if 0%{?fedora} < 17
@@ -74,9 +78,9 @@ Requires: python-sqlite2
 %endif
 Requires: mysql-utilities
 # requires mysql client pkg (for mysqldump and mysql cmdline client)
-Requires: mysql gnome-keyring
+Requires: mysql%{?_isa} gnome-keyring%{?_isa}
 %if 0%{?cppconnver:1}
-Requires: mysql-connector-c++ >= %{cppconnver}
+Requires: mysql-connector-c++%{?_isa} >= %{cppconnver}
 %endif
 # Official upstream builds (name changes quite often)
 Conflicts: mysql-workbench-oss
@@ -109,7 +113,7 @@ rm -rf ext/cppconn
 %endif
 
 %if 0%{?fedora} >= 12
-#patch2 -p1 -b .ctemplate
+%patch2 -p1 -b .ctemplate
 rm -rf ext/ctemplate
 %endif
 
@@ -118,8 +122,12 @@ rm -rf ext/ctemplate
 rm -rf library/tinyxml
 %endif
 
-#patch8 -p1 -b .automake
+%if 0%{?fedora} >= 17
+%patch4 -p1 -b .antlr
+rm -rf ext/antlr-runtime
+%endif
 
+%patch5 -p1 -b .glib
 
 touch -r COPYING .timestamp4rpm
 sed -i -e 's/\r//g' COPYING
@@ -136,7 +144,7 @@ touch po/POTFILES.in
 
 
 %build
-#NOCONFIGURE=yes ./autogen.sh
+NOCONFIGURE=yes ./autogen.sh
 export CXXFLAGS="$RPM_OPT_FLAGS -fpermissive"
 %configure \
     --disable-debug \
@@ -167,6 +175,11 @@ desktop-file-install --vendor="" \
    --dir=%{buildroot}%{_datadir}/applications/ \
          MySQLWorkbench.desktop
 
+# move binary and fix launcher http://bugs.mysql.com/66322
+mv %{buildroot}%{_bindir}/%{name}-bin %{buildroot}%{_libdir}/%{name}/%{name}-bin
+sed -e 's:bindirname/mysql-workbench-bin:wblibdir/mysql-workbench-bin:' \
+    -i %{buildroot}%{_bindir}/%{name}
+
 
 %clean
 rm -rf %{buildroot}
@@ -192,7 +205,7 @@ fi
 # NEWS and ChangeLog are empty or outdated
 %doc AUTHORS COPYING COPYING.LGPL README samples
 %{_bindir}/%{name}
-%{_bindir}/%{name}-bin
+%{_bindir}/wbcopytables
 %{_datadir}/applications/MySQLWorkbench.desktop
 %{_datadir}/icons/hicolor/*/mimetypes/*%{name}*.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
@@ -207,6 +220,8 @@ fi
 * Sun Aug 05 2012 Remi Collet <remi@fedoraproject.org> 5.2.41-1
 - update to 5.2.41 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-41.html
+- use system cppconn and antlr
+- move binary to libdir (only launcher in bindir)
 
 * Tue May 15 2012 Remi Collet <remi@fedoraproject.org> 5.2.40-1
 - update to 5.2.40 Community (OSS) Edition (GPL)

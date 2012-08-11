@@ -1,0 +1,12 @@
+diff -up mysql-workbench-gpl-5.2.41-src/backend/wbpublic/sqlide/autocomplete_object_name_cache.cpp.glib mysql-workbench-gpl-5.2.41-src/backend/wbpublic/sqlide/autocomplete_object_name_cache.cpp
+--- mysql-workbench-gpl-5.2.41-src/backend/wbpublic/sqlide/autocomplete_object_name_cache.cpp.glib	2012-08-11 09:34:13.454462374 +0200
++++ mysql-workbench-gpl-5.2.41-src/backend/wbpublic/sqlide/autocomplete_object_name_cache.cpp	2012-08-11 09:34:19.431483470 +0200
+@@ -22,7 +22,7 @@
+ #include <sqlite/execute.hpp>
+ #include <sqlite/query.hpp>
+ 
+-#include <glib/gthread.h>
++#include <glib.h>
+ 
+ #include "autocomplete_object_name_cache.h"
+ #include "base/log.h"
