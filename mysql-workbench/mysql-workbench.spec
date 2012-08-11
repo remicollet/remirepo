@@ -26,6 +26,7 @@ Source:    http://gd.tuwien.ac.at/db/mysql/Downloads/MySQLGUITools/%{name}-%{tar
 Patch1:    %{name}-5.2.41-cppconn.patch
 Patch2:    %{name}-5.2.41-ctemplate.patch
 Patch3:    %{name}-5.2.41-tinyxml.patch
+# http://bugs.mysql.com/66325
 Patch4:    %{name}-5.2.41-antlr.patch
 # http://bugs.mysql.com/63705
 Patch5:    %{name}-5.2.41-glib.patch
@@ -78,7 +79,11 @@ Requires: python-sqlite2
 %endif
 Requires: mysql-utilities
 # requires mysql client pkg (for mysqldump and mysql cmdline client)
-Requires: mysql%{?_isa} gnome-keyring%{?_isa}
+Requires: mysql%{?_isa}
+Requires: gnome-keyring%{?_isa}
+# For migration wizard (2.1.18 expected, but not yet available)
+# see https://bugzilla.redhat.com/847440
+Requires: pyodbc%{?_isa}
 %if 0%{?cppconnver:1}
 Requires: mysql-connector-c++%{?_isa} >= %{cppconnver}
 %endif
