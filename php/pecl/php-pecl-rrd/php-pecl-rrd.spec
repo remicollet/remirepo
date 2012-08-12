@@ -5,8 +5,8 @@
 
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
-Version:      1.0.5
-Release:      2%{?dist}
+Version:      1.1.0
+Release:      1%{?dist}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
@@ -21,10 +21,12 @@ BuildRequires: php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Conflicts:    rrdtool-php
-Provides:     php-pecl(%{pecl_name}) = %{version}%{?pre}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
+
+Conflicts:    rrdtool-php
+Provides:     php-pecl(%{pecl_name}) = %{version}%{?pre}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
 
 
 # RPM 4.8
@@ -103,11 +105,13 @@ if  grep -q "FAILED TEST" rpmtests.log; then
      echo "*** FAILED: $(basename $t .diff)"
      diff -u tests/$(basename $t .diff).exp tests/$(basename $t .diff).out || :
   done
-%if 0%{?fedora} >= 14
-  # tests only succeed with rrdtool 1.4.x
+
+  # tests only succeed with some rrdtool version (> 1.4.0 but < 1.4.7)
+  # because of difference between image size / position
   # http://pecl.php.net/bugs/22642
-  exit 1
-%endif
+
+  # only consider result of rrd_version test
+  [ -f tests/rrd_020.diff ] && exit 1
 fi
 
 
@@ -136,6 +140,12 @@ fi
 
 
 %changelog
+* Sun Aug 12 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Version 1.1.0 (stable), api 1.1.0 (stable)
+
+* Tue Jul 31 2012 Remi Collet <remi@fedoraproject.org> - 1.0.5-4
+- ignore test results (fails with rrdtool 1.4.7)
+
 * Fri Nov 18 2011 Remi Collet <Fedora@FamilleCollet.com> 1.0.5-2
 - build against php 5.4
 
