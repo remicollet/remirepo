@@ -114,6 +114,7 @@ fi
 %files
 %defattr(-,root,root,-)
 %{pear_xmldir}/%{name}.xml
+%dir %{pear_phpdir}/Net
 %{pear_phpdir}/Net/DNS2
 %{pear_phpdir}/Net/DNS2.php
 %{pear_testdir}/%{pear_name}
