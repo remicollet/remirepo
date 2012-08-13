@@ -110,7 +110,6 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
                  --bin    %{_bindir} \
                  --www    %{_localstatedir}/www/html \
                  --doc    %{_docdir}/pear \
-                 --test   %{_datarootdir}/tests/pear \
                  %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24}
 
 # Replace /usr/bin/* with simple scripts:
@@ -193,13 +192,12 @@ rm new-pear.conf
 %doc README* LICENSE*
 %dir %{_docdir}/pear
 %doc %{_docdir}/pear/*
-%dir %{_datarootdir}/tests
-%{_datarootdir}/tests/pear
+#dir %{_datarootdir}/tests
+#{_datarootdir}/tests/pear
 
 
 %changelog
 * Mon Aug 13 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-9
-- move test to /usr/share/tests/pear
 - remove XML_RPC
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.9.4-8
