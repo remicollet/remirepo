@@ -1,8 +1,5 @@
 %global peardir %{_datadir}/pear
 
-# https://pear.php.net/bugs/bug.php?id=19368
-# XML_RPC Please Provides LICENSE file
-%global xmlrpcver 1.5.5
 %global getoptver 1.3.1
 %global arctarver 1.3.10
 # https://pear.php.net/bugs/bug.php?id=19367
@@ -17,10 +14,10 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 8%{?dist}
+Release: 9%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
-# XML-RPC, Console_Getopt are PHP
+# Console_Getopt are PHP
 # Structures_Graph is LGPLv2+
 License: BSD and PHP and LGPLv2+
 Group: Development/Languages
@@ -30,17 +27,16 @@ Source0: http://download.pear.php.net/package/PEAR-%{version}.tgz
 Source1: install-pear.php
 Source2: relocate.php
 Source3: strip.php
-Source4: LICENSE-XML_RPC
 Source10: pear.sh
 Source11: pecl.sh
 Source12: peardev.sh
 Source13: macros.pear
-Source20: http://pear.php.net/get/XML_RPC-%{xmlrpcver}.tgz
 Source21: http://pear.php.net/get/Archive_Tar-%{arctarver}.tgz
 Source22: http://pear.php.net/get/Console_Getopt-%{getoptver}.tgz
 Source23: http://pear.php.net/get/Structures_Graph-%{structver}.tgz
 Source24: http://pear.php.net/get/XML_Util-%{xmlutil}.tgz
 # From RHEL: ignore REST cache creation failures as non-root user (#747361)
+# TODO See https://github.com/pear/pear-core/commit/dfef86e05211d2abc7870209d69064d448ef53b3#PEAR/REST.php
 Patch0: php-pear-1.9.4-restcache.patch
 
 BuildArch: noarch
@@ -54,7 +50,6 @@ Provides: php-pear(Console_Getopt) = %{getoptver}
 Provides: php-pear(Archive_Tar) = %{arctarver}
 Provides: php-pear(PEAR) = %{version}
 Provides: php-pear(Structures_Graph) = %{structver}
-Provides: php-pear(XML_RPC) = %{xmlrpcver}
 Provides: php-pear(XML_Util) = %{xmlutil}
 Obsoletes: php-pear-XML-Util < %{xmlutil}-%{release}
 Provides:  php-pear-XML-Util = %{xmlutil}-%{release}
@@ -110,12 +105,13 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
 
 %{_bindir}/php -n -dmemory_limit=32M -dshort_open_tag=0 -dsafe_mode=0 \
          -derror_reporting=E_ALL -ddetect_unicode=0 \
-      %{SOURCE1} -d %{peardir} \
-                 -c %{_sysconfdir}/pear \
-                 -b %{_bindir} \
-                 -w %{_localstatedir}/www/html \
-                 -D %{_docdir}/pear \
-                 %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24} %{SOURCE20}
+      %{SOURCE1} --dir    %{peardir} \
+                 --config %{_sysconfdir}/pear \
+                 --bin    %{_bindir} \
+                 --www    %{_localstatedir}/www/html \
+                 --doc    %{_docdir}/pear \
+                 --test   %{_datarootdir}/tests/pear \
+                 %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24}
 
 # Replace /usr/bin/* with simple scripts:
 install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pear
@@ -130,7 +126,6 @@ install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
 
 %{_bindir}/php -r "print_r(unserialize(substr(file_get_contents('$RPM_BUILD_ROOT%{_sysconfdir}/pear.conf'),17)));"
 
-install -m 644 -c %{SOURCE4} LICENSE-XML_RPC
 
 install -m 644 -c %{SOURCE13} \
            $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.pear     
@@ -198,9 +193,15 @@ rm new-pear.conf
 %doc README* LICENSE*
 %dir %{_docdir}/pear
 %doc %{_docdir}/pear/*
+%dir %{_datarootdir}/tests
+%{_datarootdir}/tests/pear
 
 
 %changelog
+* Mon Aug 13 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-9
+- move test to /usr/share/tests/pear
+- remove XML_RPC
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.9.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
