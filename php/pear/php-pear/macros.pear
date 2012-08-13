@@ -1,8 +1,8 @@
 #
 # Define full path to pear/pecl commands to be used in scriptlets:
 #
-%__pear @BINDIR@/pear
-%__pecl @BINDIR@/pecl
+%__pear %{_bindir}/pear
+%__pecl %{_bindir}/pecl
 
 #
 # Define PEAR directories used in php-pear-* spec files

@@ -1,4 +1,9 @@
 #!/bin/sh
-export PHP_PEAR_SYSCONF_DIR=@CONFDIR@
-exec @BINDIR@/php -C -n -q -d include_path=@PEARDIR@ \
-    -d output_buffering=1 @PEARDIR@/peclcmd.php "$@"
+exec /usr/bin/php -C -n -q \
+    -d include_path=/usr/share/pear \
+    -d date.timezone=UTC \
+    -d output_buffering=1 \
+    -d variables_order=EGPCS \
+    -d safe_mode=0 \
+    -d register_argc_argv="On" \
+    /usr/share/pear/peclcmd.php "$@"

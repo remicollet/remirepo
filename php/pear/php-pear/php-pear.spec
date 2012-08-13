@@ -1,28 +1,23 @@
-%{!?phpname:		%{expand: %%global phpname     php}}
+%global peardir %{_datadir}/pear
 
-%if %{phpname} == php
-%global phpbindir      %{_bindir}
-%global phpconfdir     %{_sysconfdir}
-%global phpincldir     %{_includedir}
-%global peardir        %{_datadir}/pear
-%else
-%global phpbindir      %{_bindir}/%{phpname}
-%global phpconfdir     %{_sysconfdir}/%{phpname}
-%global phpincldir     %{_includedir}/%{phpname}
-%global peardir        %{_datadir}/%{phpname}/pear
-%endif
-
-
-%global xmlrpcver 1.5.4
-%global getoptver 1.3.0
-%global arctarver 1.3.7
+# https://pear.php.net/bugs/bug.php?id=19368
+# XML_RPC Please Provides LICENSE file
+%global xmlrpcver 1.5.5
+%global getoptver 1.3.1
+%global arctarver 1.3.10
+# https://pear.php.net/bugs/bug.php?id=19367
+# Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.0.4
 %global xmlutil   1.2.1
 
+# Tests are only run with rpmbuild --with tests
+# Can't be run in mock / koji because PEAR is the first package
+%global with_tests       %{?_with_tests:1}%{!?_with_tests:0}
+
 Summary: PHP Extension and Application Repository framework
-Name: %{phpname}-pear
-Version: 1.9.1
-Release: 7%{?dist}
+Name: php-pear
+Version: 1.9.4
+Release: 8%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # XML-RPC, Console_Getopt are PHP
@@ -31,7 +26,7 @@ License: BSD and PHP and LGPLv2+
 Group: Development/Languages
 URL: http://pear.php.net/package/PEAR
 Source0: http://download.pear.php.net/package/PEAR-%{version}.tgz
-# wget http://svn.php.net/viewvc/pear/pear-core/trunk/install-pear.php?revision=287906&view=co -O install-pear.php
+# wget https://raw.github.com/pear/pear-core/master/install-pear.php
 Source1: install-pear.php
 Source2: relocate.php
 Source3: strip.php
@@ -45,20 +40,25 @@ Source21: http://pear.php.net/get/Archive_Tar-%{arctarver}.tgz
 Source22: http://pear.php.net/get/Console_Getopt-%{getoptver}.tgz
 Source23: http://pear.php.net/get/Structures_Graph-%{structver}.tgz
 Source24: http://pear.php.net/get/XML_Util-%{xmlutil}.tgz
+# From RHEL: ignore REST cache creation failures as non-root user (#747361)
+Patch0: php-pear-1.9.4-restcache.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{phpname}-cli >= 5.1.0-1, %{phpname}-xml, gnupg
+BuildRequires: php-cli >= 5.1.0-1, php-xml, gnupg
+%if %{with_tests}
+BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+%endif
 
-Provides: %{phpname}-pear(Console_Getopt) = %{getoptver}
-Provides: %{phpname}-pear(Archive_Tar) = %{arctarver}
-Provides: %{phpname}-pear(PEAR) = %{version}
-Provides: %{phpname}-pear(Structures_Graph) = %{structver}
-Provides: %{phpname}-pear(XML_RPC) = %{xmlrpcver}
-Provides: %{phpname}-pear(XML_Util) = %{xmlutil}
-Obsoletes: %{phpname}-pear-XML-Util <= %{xmlutil}
-Provides:  %{phpname}-pear-XML-Util = %{xmlutil}-%{release}
-Requires:  %{phpname}-cli >= 5.1.0-1
+Provides: php-pear(Console_Getopt) = %{getoptver}
+Provides: php-pear(Archive_Tar) = %{arctarver}
+Provides: php-pear(PEAR) = %{version}
+Provides: php-pear(Structures_Graph) = %{structver}
+Provides: php-pear(XML_RPC) = %{xmlrpcver}
+Provides: php-pear(XML_Util) = %{xmlutil}
+Obsoletes: php-pear-XML-Util < %{xmlutil}-%{release}
+Provides:  php-pear-XML-Util = %{xmlutil}-%{release}
+Requires:  php-cli >= 5.1.0-1
 
 
 %description
@@ -82,20 +82,14 @@ mv package.xml XML_Util.xml
 # apply patches on used PEAR during install
 # -- no patch
 
-%{__sed} -e "s:@BINDIR@:%{phpbindir}:;s:@PEARDIR@:%{peardir}:;s:@CONFDIR@:%{phpconfdir}:" %{SOURCE10} >pear.sh
-%{__sed} -e "s:@BINDIR@:%{phpbindir}:;s:@PEARDIR@:%{peardir}:;s:@CONFDIR@:%{phpconfdir}:" %{SOURCE11} >pecl.sh
-%{__sed} -e "s:@BINDIR@:%{phpbindir}:;s:@PEARDIR@:%{peardir}:;s:@CONFDIR@:%{phpconfdir}:" %{SOURCE12} >pdev.sh
-%{__sed} -e "s:@BINDIR@:%{phpbindir}:;s:@PEARDIR@:%{peardir}:;s:@CONFDIR@:%{phpconfdir}:" %{SOURCE13} >macros
-
-
 %build
 # This is an empty build section.
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-export PHP_PEAR_SYSCONF_DIR=%{phpconfdir}
-export PHP_PEAR_SIG_KEYDIR=%{phpconfdir}/pearkeys
+export PHP_PEAR_SYSCONF_DIR=%{_sysconfdir}
+export PHP_PEAR_SIG_KEYDIR=%{_sysconfdir}/pearkeys
 export PHP_PEAR_SIG_BIN=%{_bindir}/gpg
 export PHP_PEAR_INSTALL_DIR=%{peardir}
 
@@ -110,39 +104,42 @@ install -d $RPM_BUILD_ROOT%{peardir} \
            $RPM_BUILD_ROOT%{_localstatedir}/www/html \
            $RPM_BUILD_ROOT%{peardir}/.pkgxml \
            $RPM_BUILD_ROOT%{_sysconfdir}/rpm \
-           $RPM_BUILD_ROOT%{phpconfdir}/pear
+           $RPM_BUILD_ROOT%{_sysconfdir}/pear
 
 export INSTALL_ROOT=$RPM_BUILD_ROOT
 
-%{phpbindir}/php -n -dmemory_limit=32M -dshort_open_tag=0 -dsafe_mode=0 \
+%{_bindir}/php -n -dmemory_limit=32M -dshort_open_tag=0 -dsafe_mode=0 \
          -derror_reporting=E_ALL -ddetect_unicode=0 \
       %{SOURCE1} -d %{peardir} \
-                 -c %{phpconfdir}/pear \
-                 -b %{phpbindir} \
-                 -p %{phpbindir}/php \
+                 -c %{_sysconfdir}/pear \
+                 -b %{_bindir} \
                  -w %{_localstatedir}/www/html \
+                 -D %{_docdir}/pear \
                  %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24} %{SOURCE20}
 
 # Replace /usr/bin/* with simple scripts:
-install -m 755 pear.sh $RPM_BUILD_ROOT%{phpbindir}/pear
-install -m 755 pecl.sh $RPM_BUILD_ROOT%{phpbindir}/pecl
-install -m 755 pdev.sh $RPM_BUILD_ROOT%{phpbindir}/peardev
+install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pear
+install -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/pecl
+install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
 
 # Sanitize the pear.conf
-%{phpbindir}/php -n %{SOURCE2} $RPM_BUILD_ROOT%{phpconfdir}/pear.conf $RPM_BUILD_ROOT | 
-  %{phpbindir}/php -n %{SOURCE2} php://stdin $PWD > new-pear.conf
-%{phpbindir}/php -n %{SOURCE3} new-pear.conf ext_dir |
-  %{phpbindir}/php -n %{SOURCE3} php://stdin http_proxy > $RPM_BUILD_ROOT%{phpconfdir}/pear.conf
+%{_bindir}/php -n %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf $RPM_BUILD_ROOT | 
+  %{_bindir}/php -n %{SOURCE2} php://stdin $PWD > new-pear.conf
+%{_bindir}/php -n %{SOURCE3} new-pear.conf ext_dir |
+  %{_bindir}/php -n %{SOURCE3} php://stdin http_proxy > $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf
 
-%{phpbindir}/php -r "print_r(unserialize(substr(file_get_contents('$RPM_BUILD_ROOT%{phpconfdir}/pear.conf'),17)));"
+%{_bindir}/php -r "print_r(unserialize(substr(file_get_contents('$RPM_BUILD_ROOT%{_sysconfdir}/pear.conf'),17)));"
 
 install -m 644 -c %{SOURCE4} LICENSE-XML_RPC
 
-install -m 644 -c macros $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.%{name}     
+install -m 644 -c %{SOURCE13} \
+           $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.pear     
 
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
-# -- no patch
+ pushd PEAR
+  %__patch -s --no-backup --fuzz 0 -p0 < %{PATCH0}
+ popd
 popd
 
 # Why this file here ?
@@ -155,11 +152,28 @@ install -m 644 XML_Util.xml $RPM_BUILD_ROOT%{peardir}/.pkgxml/
 %check
 # Check that no bogus paths are left in the configuration, or in
 # the generated registry files.
-grep $RPM_BUILD_ROOT $RPM_BUILD_ROOT%{phpconfdir}/pear.conf && exit 1
-grep %{_libdir} $RPM_BUILD_ROOT%{phpconfdir}/pear.conf && exit 1
-grep '"/tmp"' $RPM_BUILD_ROOT%{phpconfdir}/pear.conf && exit 1
-grep /usr/local $RPM_BUILD_ROOT%{phpconfdir}/pear.conf && exit 1
+grep $RPM_BUILD_ROOT $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
+grep %{_libdir} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
+grep '"/tmp"' $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
+grep /usr/local $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
 grep -rl $RPM_BUILD_ROOT $RPM_BUILD_ROOT && exit 1
+
+
+%if %{with_tests}
+cd $RPM_BUILD_ROOT%{pear_phpdir}/test/Structures_Graph/tests
+phpunit \
+   -d date.timezone=UTC \
+   -d include_path=.:$RPM_BUILD_ROOT%{pear_phpdir}:%{pear_phpdir}: \
+   AllTests || exit 1
+
+cd $RPM_BUILD_ROOT%{pear_phpdir}/test/XML_Util/tests
+phpunit \
+   -d date.timezone=UTC \
+   -d include_path=.:$RPM_BUILD_ROOT%{pear_phpdir}:%{pear_phpdir}: \
+   AllTests || exit 1
+%else
+echo 'Test suite disabled (missing "--with tests" option)'
+%endif
 
 
 %clean
@@ -167,26 +181,77 @@ rm -rf $RPM_BUILD_ROOT
 rm new-pear.conf
 
 
-%triggerpostun -- %{phpname}-pear-XML-Util
+%triggerpostun -- php-pear-XML-Util
 # re-register extension unregistered during postun of obsoleted php-pear-XML-Util
-%{phpbindir}/pear install --nodeps --soft --force --register-only %{peardir}/.pkgxml/XML_Util.xml >/dev/null || :
+%{_bindir}/pear install --nodeps --soft --force --register-only %{pear_xmldir}/XML_Util.xml >/dev/null || :
 
 
 %files
 %defattr(-,root,root,-)
 %{peardir}
-%{phpbindir}/*
-%config(noreplace) %{phpconfdir}/pear.conf
-%config %{_sysconfdir}/rpm/macros.%{name}
+%{_bindir}/*
+%config(noreplace) %{_sysconfdir}/pear.conf
+%config %{_sysconfdir}/rpm/macros.pear
 %dir %{_localstatedir}/cache/php-pear
 %dir %{_localstatedir}/www/html
-%dir %{phpconfdir}/pear
+%dir %{_sysconfdir}/pear
 %doc README* LICENSE*
+%dir %{_docdir}/pear
+%doc %{_docdir}/pear/*
 
 
 %changelog
-* Mon Dec 27 2010 Remi Collet <rpms@famillecollet.com> 1:1.9.1-7
-- relocate using phpname macro
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.9.4-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Apr 11 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-7
+- Update Archive_Tar to 1.3.10
+
+* Wed Apr 04 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-6
+- fix Obsoletes version for XML_Util (#226295)
+- add link to upstream bug - please Provides LICENSE file
+  https://pear.php.net/bugs/bug.php?id=19368
+- add link to upstream bug - Incorrect FSF address
+  https://pear.php.net/bugs/bug.php?id=19367
+
+* Mon Feb 27 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-5
+- Update Archive_Tar to 1.3.9
+- add patch from RHEL (Joe Orton)
+- fix install-pear.php URL (with our patch for doc_dir applied)
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.9.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Sat Oct 15 2011 Remi Collet <remi@fedoraproject.org> 1:1.9.4-3
+- update Archive_Tar to 1.3.8
+- allow to build with "tests" option
+
+* Sat Aug 27 2011 Remi Collet <Fedora@FamilleCollet.com> 1:1.9.4-2
+- update to XML_RPC-1.5.5
+
+* Thu Jul 07 2011 Remi Collet <Fedora@FamilleCollet.com> 1:1.9.4-1
+- update to 1.9.4
+
+* Fri Jun 10 2011 Remi Collet <Fedora@FamilleCollet.com> 1:1.9.3-2
+- fix pecl launcher
+
+* Fri Jun 10 2011 Remi Collet <Fedora@FamilleCollet.com> 1:1.9.3-1
+- update to 1.9.3
+- sync options in launcher (pecl, pear, peardev) with upstream
+
+* Wed Mar 16 2011 Remi Collet <Fedora@FamilleCollet.com> 1:1.9.2-3
+- move %%{pear_docdir} to %%{_docdir}/pear
+  https://fedorahosted.org/fpc/ticket/69
+
+* Tue Mar  8 2011 Remi Collet <Fedora@FamilleCollet.com> 1:1.9.2-2
+- update Console_Getopt to 1.3.1 (no change)
+
+* Mon Feb 28 2011 Remi Collet <Fedora@FamilleCollet.com> 1:1.9.2-1
+- update to 1.9.2 (bug + security fix)
+  http://pear.php.net/advisory-20110228.txt
+
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.9.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Sun Dec 12 2010 Remi Collet <Fedora@FamilleCollet.com> 1:1.9.1-6
 - update Console_Getopt to 1.3.0

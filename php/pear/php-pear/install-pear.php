@@ -1,5 +1,5 @@
 <?php
-
+while (@ob_end_flush());
 /* $Id$ */
 
 error_reporting(1803);
@@ -75,6 +75,9 @@ for ($i = 0; $i < sizeof($argv); $i++) {
     } elseif ($arg == '-t') {
         $temp_dir = $argv[$i+1];
         $i++;
+    } elseif ($arg == '-D') {
+        $doc_dir = $argv[$i+1];
+        $i++;
     } elseif ($arg == '--debug') {
         $debug = 1;
     } elseif ($arg == '--extremedebug') {
@@ -131,11 +134,18 @@ if (!empty($temp_dir)) {
     $config->set('temp_dir', $temp_dir, 'default');
 }
 
+// Documentation files
+if (!empty($doc_dir)) {
+    $config->set('doc_dir', $doc_dir, 'default');
+}
+
 // User supplied a dir prefix
 if (!empty($with_dir)) {
     $ds = DIRECTORY_SEPARATOR;
     $config->set('php_dir', $with_dir, 'default');
-    $config->set('doc_dir', $with_dir . $ds . 'doc', 'default');
+    if (empty($doc_dir)) {
+        $config->set('doc_dir', $with_dir . $ds . 'doc', 'default');
+    }
     $config->set('data_dir', $with_dir . $ds . 'data', 'default');
     $config->set('test_dir', $with_dir . $ds . 'test', 'default');
     if (empty($www_dir)) {
