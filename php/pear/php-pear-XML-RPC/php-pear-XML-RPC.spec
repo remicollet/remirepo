@@ -15,10 +15,12 @@ Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.4.9-1.2
+BuildRequires:  php-pear >= 1:1.9.4-9
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# previous version have XML_RPC bundled
+Requires:       php-pear >= 1:1.9.4-9
 Requires:       php-pear(PEAR)
 # extensions detected by phpci
 Requires:       php-date, php-mbstring, php-pcre
