@@ -63,7 +63,9 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 rm -rf %{buildroot}
 
 
-%post
+# use posttrans to register after removal of php-pear bundled version
+# and of /usr/share/pear/.registry/xml_rpc.reg
+%posttrans
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
 
