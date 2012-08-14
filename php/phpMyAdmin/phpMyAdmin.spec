@@ -96,7 +96,7 @@ rm -rf %{buildroot}%{_datadir}/%{pkgname}/libraries/php-gettext
 rm -rf %{buildroot}
 
 
-%if %{?fedora}%{!?fedora:99} <= 16
+%if %{?fedora}%{!?fedora:99} <= 15
 %pre
 echo -e "\nWARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
