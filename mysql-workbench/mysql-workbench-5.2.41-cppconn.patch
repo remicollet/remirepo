@@ -34,27 +34,6 @@ diff -up mysql-workbench-gpl-5.2.41-src/ext/Makefile.am.cppconn mysql-workbench-
  
  if BUNDLE_UTILITIES
  all-am:
-diff -up mysql-workbench-gpl-5.2.41-src/ext/Makefile.in.cppconn mysql-workbench-gpl-5.2.41-src/ext/Makefile.in
---- mysql-workbench-gpl-5.2.41-src/ext/Makefile.in.cppconn	2012-07-25 05:07:51.000000000 +0200
-+++ mysql-workbench-gpl-5.2.41-src/ext/Makefile.in	2012-08-11 08:33:21.593138333 +0200
-@@ -53,7 +53,7 @@ RECURSIVE_CLEAN_TARGETS = mostlyclean-re
-   distclean-recursive maintainer-clean-recursive
- ETAGS = etags
- CTAGS = ctags
--DIST_SUBDIRS = scintilla/gtk cppconn vsqlite++ antlr-runtime ctemplate
-+DIST_SUBDIRS = scintilla/gtk vsqlite++ antlr-runtime ctemplate
- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
- ACLOCAL = @ACLOCAL@
- AMTAR = @AMTAR@
-@@ -222,7 +222,7 @@ top_builddir = @top_builddir@
- top_srcdir = @top_srcdir@
- unixodbc = @unixodbc@
- @BUILD_CTEMPLATE_FALSE@ctemplate_dirs = ctemplate 
--SUBDIRS = scintilla/gtk cppconn vsqlite++ antlr-runtime $(ctemplate_dirs)
-+SUBDIRS = scintilla/gtk vsqlite++ antlr-runtime $(ctemplate_dirs)
- all: all-recursive
- 
- .SUFFIXES:
 diff -up mysql-workbench-gpl-5.2.41-src/frontend/linux/workbench/Makefile.am.cppconn mysql-workbench-gpl-5.2.41-src/frontend/linux/workbench/Makefile.am
 --- mysql-workbench-gpl-5.2.41-src/frontend/linux/workbench/Makefile.am.cppconn	2012-07-25 05:07:40.000000000 +0200
 +++ mysql-workbench-gpl-5.2.41-src/frontend/linux/workbench/Makefile.am	2012-08-11 08:39:25.157340958 +0200
@@ -82,41 +61,6 @@ diff -up mysql-workbench-gpl-5.2.41-src/frontend/linux/workbench/Makefile.am.cpp
  
  #precompiled.h.gch: precompiled.h
  #	$(CXXCOMPILE) precompiled.h -o precompiled.h.gch
-diff -up mysql-workbench-gpl-5.2.41-src/frontend/linux/workbench/Makefile.in.cppconn mysql-workbench-gpl-5.2.41-src/frontend/linux/workbench/Makefile.in
---- mysql-workbench-gpl-5.2.41-src/frontend/linux/workbench/Makefile.in.cppconn	2012-07-25 05:07:52.000000000 +0200
-+++ mysql-workbench-gpl-5.2.41-src/frontend/linux/workbench/Makefile.in	2012-08-11 08:40:25.500548195 +0200
-@@ -71,7 +71,6 @@ mysql_workbench_bin_DEPENDENCIES =  \
- 	$(top_srcdir)/library/base/libwbbase.la \
- 	$(top_srcdir)/library/grt/src/libgrt.la \
- 	$(top_srcdir)/library/dbc/libcdbc.la \
--	$(top_srcdir)/ext/cppconn/driver/mysqlcppconn.la \
- 	$(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la \
- 	$(top_srcdir)/library/canvas/src/libmdcanvasgtk.la \
- 	$(top_srcdir)/library/canvas/src/libmdcanvas.la \
-@@ -304,7 +303,6 @@ INCLUDES = @GLIB_CFLAGS@ @SIGC_CFLAGS@ @
- 	-I$(top_srcdir)/modules/wb.model/src\
- 	-I$(top_srcdir)/modules/interfaces\
- 	-I$(top_srcdir)/ext\
--	-I$(top_srcdir)/ext/cppconn\
- 	-I$(top_srcdir)/modules\
-   -I$(top_srcdir)/ext/vsqlite++/include\
-   -I$(top_srcdir)/ext/scintilla/include\
-@@ -320,14 +318,13 @@ mysql_workbench_bin_LDADD = \
- 	$(top_srcdir)/library/base/libwbbase.la\
- 	$(top_srcdir)/library/grt/src/libgrt.la\
- 	$(top_srcdir)/library/dbc/libcdbc.la\
--	$(top_srcdir)/ext/cppconn/driver/mysqlcppconn.la\
- 	$(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la\
- 	$(top_srcdir)/library/canvas/src/libmdcanvasgtk.la\
- 	$(top_srcdir)/library/canvas/src/libmdcanvas.la\
- 	$(top_srcdir)/library/mysql55-parser/libmysql55parser.la\
- 	@CTEMPLATE_LIBS@\
- 	@GNOME_LIBS@ @GRT_LIBS@ @PCRE_LIBS@ @GLIB_LIBS@ @CAIRO_LIBS@ @ZIP_LIBS@ @MYSQL_LIBS@ @SQLITE3_LIBS@\
--	-lX11
-+	-lmysqlcppconn -lX11
- 
- mysql_workbench_bin_SOURCES = \
- main.cpp\
 diff -up mysql-workbench-gpl-5.2.41-src/library/dbc/src/driver_manager.cpp.cppconn mysql-workbench-gpl-5.2.41-src/library/dbc/src/driver_manager.cpp
 --- mysql-workbench-gpl-5.2.41-src/library/dbc/src/driver_manager.cpp.cppconn	2012-07-25 05:07:35.000000000 +0200
 +++ mysql-workbench-gpl-5.2.41-src/library/dbc/src/driver_manager.cpp	2012-08-11 08:37:39.612984727 +0200

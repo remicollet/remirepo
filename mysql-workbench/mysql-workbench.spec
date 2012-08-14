@@ -10,8 +10,8 @@
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   5.2.41
-Release:   2%{?dist}
+Version:   5.2.42
+Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -229,6 +229,10 @@ fi
 
 
 %changelog
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> 5.2.42-1
+- update to 5.2.42 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-42.html
+
 * Sat Aug 11 2012 Remi Collet <remi@fedoraproject.org> 5.2.41-2
 - remove bundled documentation, redirect to online
   This documentation is NOT distributed under a GPL license
