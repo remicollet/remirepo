@@ -3,7 +3,7 @@
 
 Name:           php-pear-XML-RPC
 Version:        1.5.5
-Release:        1%{?dist}.1
+Release:        2%{?dist}
 Summary:        PHP implementation of the XML-RPC protocol
 
 Group:          Development/Libraries
@@ -16,6 +16,7 @@ Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.9.4-9
+BuildRequires:  php-pear(PEAR)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -81,13 +82,15 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/XML/RPC
 %{pear_phpdir}/XML/RPC.php
-# this are not real unit test, can't be run in rpmbuild
+# this are not real unit tests, can't be run in rpmbuild
 %{pear_testdir}/%{pear_name}
 
 
 %changelog
-* Wed Aug 15 2012 Remi Collet <remi@fedoraproject.org> - 1.5.5-1.1
+* Wed Aug 15 2012 Remi Collet <remi@fedoraproject.org> - 1.5.5-2
 - rebuilt for new pear_testdir
+- fix typo in comment
+- add BR php-pear(PEAR)
 
 * Mon Aug 13 2012 Remi Collet <remi@fedoraproject.org> - 1.5.5-1
 - Version 1.5.5 (stable), API 1.5.0 (stable)
