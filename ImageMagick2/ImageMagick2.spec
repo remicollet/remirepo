@@ -1,8 +1,9 @@
-%global VER 6.6.5
+%global VER 6.7.8
 %global Patchlevel 10
 
+%if 0%{?rhel} >= 6 || 0%{?fedora} >= 5
 %define withdjvu 1
-%if 0%{?rhel}
+%else
 %define withdjvu 0
 %endif
 
@@ -15,7 +16,6 @@ Group:          Applications/Multimedia
 License:        ImageMagick
 Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.bz2
-Patch1:         ImageMagick-6.4.0-multilib.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -157,7 +157,6 @@ however.
 
 %prep
 %setup -q -n ImageMagick-%{VER}-%{Patchlevel}
-%patch1 -p1 -b .multilib
 sed -i 's/libltdl.la/libltdl.so/g' configure
 iconv -f ISO-8859-1 -t UTF-8 README.txt > README.txt.tmp
 touch -r README.txt README.txt.tmp
@@ -183,7 +182,9 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --with-perl-options="INSTALLDIRS=vendor %{?perl_prefix} CC='%__cc -L$PWD/magick/.libs' LDDLFLAGS='-shared -L$PWD/magick/.libs'" \
            --without-dps \
            --without-included-ltdl --with-ltdl-include=%{_includedir} \
-           --with-ltdl-lib=%{_libdir}
+           --with-ltdl-lib=%{_libdir} \
+           --sysconfdir=%{_sysconfdir}/%{name}
+
 # Disable rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -222,9 +223,6 @@ if [ -z perl-pkg-files ] ; then
     echo "ERROR: EMPTY FILE LIST"
     exit -1
 fi
-
-# These don't belong here, we include them in %%doc
-rm $RPM_BUILD_ROOT%{_datadir}/ImageMagick-%{VER}/{ChangeLog,LICENSE,NEWS.txt}
 
 # fix multilib issues
 %ifarch x86_64 s390x ia64 ppc64 alpha sparc64
@@ -274,13 +272,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc QuickStart.txt ChangeLog Platforms.txt
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
-%{_libdir}/libMagickCore.so.4*
-%{_libdir}/libMagickWand.so.4*
+%{_libdir}/libMagickCore.so.5*
+%{_libdir}/libMagickWand.so.5*
 %{_libdir}/ImageMagick-%{VER}
 %{_datadir}/ImageMagick-%{VER}
 %if %{withdjvu}
 %exclude %{_libdir}/ImageMagick-%{VER}/modules-Q16/coders/djvu.*
 %endif
+%{_sysconfdir}/%{name}
 
 %files tools
 %defattr(-,root,root,-)
@@ -322,7 +321,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc Magick++/AUTHORS Magick++/ChangeLog Magick++/NEWS Magick++/README
 %doc www/Magick++/COPYING
-%{_libdir}/libMagick++.so.4*
+%{_libdir}/libMagick++.so.5*
 
 %files c++-devel
 %defattr(-,root,root,-)
@@ -342,6 +341,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 6.7.8.10-1
+- update to 6.7.8-10 (soname bump to .5)
+
 * Thu Nov 25 2010 Remi Collet <RPMS@FamilleCollet.com> - 6.6.5.10-1
 - update to 6.6.5-10 (soname bump to .4)
 
