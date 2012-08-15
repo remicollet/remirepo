@@ -3,7 +3,7 @@
 
 Name:           php-pear-XML-RPC
 Version:        1.5.5
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 Summary:        PHP implementation of the XML-RPC protocol
 
 Group:          Development/Libraries
@@ -86,6 +86,9 @@ fi
 
 
 %changelog
+* Wed Aug 15 2012 Remi Collet <remi@fedoraproject.org> - 1.5.5-1.1
+- rebuilt for new pear_testdir
+
 * Mon Aug 13 2012 Remi Collet <remi@fedoraproject.org> - 1.5.5-1
 - Version 1.5.5 (stable), API 1.5.0 (stable)
 - Initial RPM
