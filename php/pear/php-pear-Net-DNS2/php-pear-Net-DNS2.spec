@@ -7,7 +7,7 @@
 
 Name:           php-pear-Net-DNS2
 Version:        1.2.2
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 Summary:        PHP Resolver library used to communicate with a DNS server
 
 Group:          Development/Libraries
@@ -121,6 +121,9 @@ fi
 
 
 %changelog
+* Wed Aug 15 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-1.1
+- rebuilt for new pear_testdir
+
 * Sun Aug 12 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - Version 1.2.2 (stable), API 1.2.2 (stable)
 - Initial package
