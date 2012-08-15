@@ -82,7 +82,7 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/XML/RPC
 %{pear_phpdir}/XML/RPC.php
-# this are not real unit tests, can't be run in rpmbuild
+# these are not real unit tests, can't be run in rpmbuild
 %{pear_testdir}/%{pear_name}
 
 
