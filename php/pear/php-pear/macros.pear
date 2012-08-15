@@ -25,8 +25,8 @@
 #
 # Define XML directories to store package registration information:
 #
-%pear_xmldir %{pear_phpdir}/.pkgxml
-%pecl_xmldir %{pecl_phpdir}/.pkgxml
+%pear_xmldir %{_localstatedir}/lib/pear/pkgxml
+%pecl_xmldir %{_localstatedir}/lib/pear/pkgxml
 
 #
 # Define macros to be used in scriplets for php-pecl-* spec files:

@@ -14,10 +14,10 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 9%{?dist}
+Release: 10%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
-# Console_Getopt are PHP
+# Console_Getopt is PHP
 # Structures_Graph is LGPLv2+
 License: BSD and PHP and LGPLv2+
 Group: Development/Languages
@@ -97,7 +97,7 @@ export PHP_PEAR_TEMP_DIR=/var/tmp
 install -d $RPM_BUILD_ROOT%{peardir} \
            $RPM_BUILD_ROOT%{_localstatedir}/cache/php-pear \
            $RPM_BUILD_ROOT%{_localstatedir}/www/html \
-           $RPM_BUILD_ROOT%{peardir}/.pkgxml \
+           $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml \
            $RPM_BUILD_ROOT%{_sysconfdir}/rpm \
            $RPM_BUILD_ROOT%{_sysconfdir}/pear
 
@@ -110,6 +110,7 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
                  --bin    %{_bindir} \
                  --www    %{_localstatedir}/www/html \
                  --doc    %{_docdir}/pear \
+                 --test   %{_datarootdir}/tests/pear \
                  %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24}
 
 # Replace /usr/bin/* with simple scripts:
@@ -140,7 +141,7 @@ popd
 rm -rf $RPM_BUILD_ROOT/.depdb* $RPM_BUILD_ROOT/.lock $RPM_BUILD_ROOT/.channels $RPM_BUILD_ROOT/.filemap
 
 # Need for re-registrying XML_Util
-install -m 644 XML_Util.xml $RPM_BUILD_ROOT%{peardir}/.pkgxml/
+install -m 644 XML_Util.xml $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml
 
 
 %check
@@ -175,9 +176,16 @@ rm -rf $RPM_BUILD_ROOT
 rm new-pear.conf
 
 
+%post
+# force new value as pear.conf is (noreplace)
+%{_bindir}/pear config-set test_dir \
+    %{_datarootdir}/tests/pear system >/dev/null || :
+
+
 %triggerpostun -- php-pear-XML-Util
 # re-register extension unregistered during postun of obsoleted php-pear-XML-Util
-%{_bindir}/pear install --nodeps --soft --force --register-only %{pear_xmldir}/XML_Util.xml >/dev/null || :
+%{_bindir}/pear install --nodeps --soft --force --register-only \
+    %{_localstatedir}/lib/pear/pkgxml/XML_Util.xml >/dev/null || :
 
 
 %files
@@ -192,11 +200,21 @@ rm new-pear.conf
 %doc README* LICENSE*
 %dir %{_docdir}/pear
 %doc %{_docdir}/pear/*
-#dir %{_datarootdir}/tests
-#{_datarootdir}/tests/pear
+%dir %{_datarootdir}/tests
+%{_datarootdir}/tests/pear
+%{_localstatedir}/lib/pear
 
 
 %changelog
+* Tue Aug 15 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-10
+- enforce test_dir on update
+
+* Mon Aug 13 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-9
+- move tests to /usr/share/tests/pear
+- move pkgxml to /var/lib/pear
+- remove XML_RPC
+- refresh installer
+
 * Mon Aug 13 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-9
 - remove XML_RPC
 
