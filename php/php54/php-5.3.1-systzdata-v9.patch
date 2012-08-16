@@ -465,7 +465,7 @@ r1: initial revision
  {
  	int left = 0, right = tzdb->index_size - 1;
  #ifdef HAVE_SETLOCALE
-@@ -299,36 +709,125 @@ static int seek_to_tz_position(const uns
+@@ -299,36 +709,128 @@ static int seek_to_tz_position(const uns
  	return 0;
  }
  

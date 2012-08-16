@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-%global rcver      RC1
+#global rcver      RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -74,7 +74,7 @@ Version: 5.4.6
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 %endif
 License: PHP
 Group: Development/Languages
@@ -1444,25 +1444,28 @@ fi
 
 
 %changelog
-* Thu Aug 02 2012 Remi Collet <RPM@famillecollet.com> 5.4.6-0.1.RC1
+* Thu Aug 16 2012 Remi Collet <remi@fedoraproject.org> 5.4.6-1
+- update to 5.4.6
+
+* Thu Aug 02 2012 Remi Collet <RPMS@famillecollet.com> 5.4.6-0.1.RC1
 - update to 5.4.6RC1
 
-* Fri Jul 20 2012 Remi Collet <RPM@famillecollet.com> 5.4.5-1
+* Fri Jul 20 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-1
 - update to 5.4.5
 
-* Sat Jul 05 2012 Remi Collet <RPM@famillecollet.com> 5.4.5-0.2.RC1
+* Sat Jul 05 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-0.2.RC1
 - update patch for system libzip
 
-* Wed Jul 04 2012 Remi Collet <RPM@famillecollet.com> 5.4.5-0.1.RC1
+* Wed Jul 04 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-0.1.RC1
 - update to 5.4.5RC1 with bundled libzip.
 
-* Mon Jul 02 2012 Remi Collet <RPM@famillecollet.com> 5.4.4-4
+* Mon Jul 02 2012 Remi Collet <RPMS@famillecollet.com> 5.4.4-4
 - use system pcre only on fedora >= 14 (version 8.10)
 - drop BR for libevent (#835671)
 - provide php(language) to allow version check
 - define %%{php_version}
 
-* Thu Jun 21 2012 Remi Collet <RPM@famillecollet.com> 5.4.4-2
+* Thu Jun 21 2012 Remi Collet <RPMS@famillecollet.com> 5.4.4-2
 - clean spec, sync with rawhide
 - add missing provides (core, ereg, filter, standard)
 
