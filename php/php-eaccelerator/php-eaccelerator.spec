@@ -10,9 +10,6 @@
 %global phpincldir     %{_includedir}/%{phpname}
 %endif
 
-%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo "undefined")
-%global php_version %((echo 0; %{phpbindir}/php-config --version 2>/dev/null) | tail -1)
-
 # This is the apache userid, used for sysvipc semaphores which is the default
 # on ppc since spinlock is not detected (not supported?)
 # We also use it for the default ownership of the cache directory
@@ -21,7 +18,7 @@
 Summary: PHP accelerator, optimizer, encoder and dynamic content cacher
 Name: %{phpname}-eaccelerator
 Version: 0.9.6.1
-Release: 16%{?dist}
+Release: 17%{?dist}
 Epoch: 1
 # The eaccelerator module itself is GPLv2+
 # The PHP control panel is under the Zend license (control.php and dasm.php)
@@ -171,6 +168,9 @@ fi
 
 
 %changelog
+* Thu Aug 16 2012 Remi Collet <remi@fedoraproject.org> - 1:0.9.6.1-17
+- rebuild against PHP 5.3.16
+
 * Fri Jul 20 2012 Remi Collet <remi@fedoraproject.org> - 1:0.9.6.1-16
 - rebuild against PHP 5.3.15
 
