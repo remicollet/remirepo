@@ -1,6 +1,6 @@
 Name:           php-geshi
 Version:        1.0.8.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Generic syntax highlighter
 
 Group:          Development/Libraries
@@ -10,7 +10,6 @@ Source0:        http://downloads.sourceforge.net/geshi/GeSHi-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       php >= 4.3.0
 Requires:       php-mbstring
 
 
@@ -51,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.8.10-2
+- drop Requires "php"
+
 * Tue Jul 05 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.0.8.10-1
 - rebuild for remi repository
 
