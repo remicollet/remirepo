@@ -58,7 +58,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.15
+Version: 5.3.16
 Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
@@ -1486,6 +1486,9 @@ fi
 %endif
 
 %changelog
+* Thu Aug 16 2012 Remi Collet <remi@fedoraproject.org> 5.3.16-1
+- update to 5.3.16
+
 * Fri Jul 20 2012 Remi Collet <remi@fedoraproject.org> 5.3.15-1
 - update to 5.3.15 (CVE-2012-2688)
 - provide php(language) to allow version check
