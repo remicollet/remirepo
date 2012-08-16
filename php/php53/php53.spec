@@ -1314,6 +1314,7 @@ install -d $RPM_BUILD_ROOT%{_origsysconfdir}/rpm
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
     -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
+    -e "s/@PHP_VERSION@/%{version}/" \
     -e "s/@PHPNAME@/%{phpname}/" \
     < %{SOURCE3} > macros.php
 install -m 644 -c macros.php \
@@ -1488,6 +1489,7 @@ fi
 %changelog
 * Thu Aug 16 2012 Remi Collet <remi@fedoraproject.org> 5.3.16-1
 - update to 5.3.16
+- define %%{php_version}
 
 * Fri Jul 20 2012 Remi Collet <remi@fedoraproject.org> 5.3.15-1
 - update to 5.3.15 (CVE-2012-2688)
