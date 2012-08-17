@@ -35,6 +35,11 @@ BuildRequires:  lcms-devel, libxml2-devel, librsvg2-devel
 
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
+Obsoletes:      ImageMagick2-tools
+# This could be improved in the future
+# https://bugzilla.redhat.com/849065
+Conflicts:      ImageMagick
+
 
 %description
 ImageMagick is an image display and manipulation tool for the X
@@ -82,7 +87,7 @@ however.
 %package libs
 Summary: Commands for ImageMagick
 Group: Applications/Multimedia
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Obsoletes: ImageMagick2
 
 %description libs
 Provides the shared libraries and plugins of ImageMagick-last.
@@ -96,7 +101,7 @@ for applications requiring this libraries.
 %package djvu
 Summary: DjVu plugin for ImageMagick
 Group: Applications/Multimedia
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description djvu
 This packages contains a plugin for ImageMagick which makes it possible to
@@ -118,7 +123,7 @@ http://www.imagemagick.org/
 %package perl
 Summary: ImageMagick perl bindings
 Group: System Environment/Libraries
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description perl
@@ -131,7 +136,7 @@ ImageMagick.
 %package c++
 Summary: ImageMagick Magick++ library (C++ bindings)
 Group: System Environment/Libraries
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description c++
 This package contains the Magick++ library, a C++ binding to the ImageMagick
