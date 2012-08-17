@@ -8,7 +8,7 @@
 %endif
 
 
-Name:           ImageMagick2
+Name:           ImageMagick-last
 Version:        %{VER}.%{Patchlevel}
 Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
@@ -33,6 +33,9 @@ BuildRequires:  libwmf-devel, jasper-devel, libtool-ltdl-devel
 BuildRequires:  libX11-devel, libXext-devel, libXt-devel
 BuildRequires:  lcms-devel, libxml2-devel, librsvg2-devel
 
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+
+
 %description
 ImageMagick is an image display and manipulation tool for the X
 Window System. ImageMagick can read and write JPEG, TIFF, PNM, GIF,
@@ -41,34 +44,32 @@ reduce, or add special effects to an image, and when finished you can
 either save the completed work in the original format or a different
 one. 
 
-ImageMagick2 can be installed with ImageMagick official RPM.
+ImageMagick-last includes the command line programs for creating animated or
+transparent .gifs, creating composite images, creating thumbnail images,
+and more.
 
-Command line programs for creating animated or transparent .gifs, 
-creating composite images, creating thumbnail images, and more are 
-included in ImageMagick2-tools package.
+ImageMagick-latest conflicts with ImageMagick official RPM and so can not
+be installed together.
 
-ImageMagick2 is one of your choices if you need a program to manipulate
-and display images. If you want to develop your own applications
-which use ImageMagick code or APIs, you need to install
-ImageMagick2-devel as well.
 
 
 %package devel
 Summary: Library links and header files for ImageMagick app development
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: libX11-devel, libXext-devel, libXt-devel
-Requires: ghostscript-devel
-Requires: bzip2-devel
-Requires: freetype-devel
-Requires: libtiff-devel
-Requires: libjpeg-devel
-Requires: lcms-devel
-Requires: jasper-devel
+Requires: ghostscript-devel%{?_isa}
+Requires: bzip2-devel%{?_isa}
+Requires: freetype-devel%{?_isa}
+Requires: libtiff-devel%{?_isa}
+Requires: libjpeg-devel%{?_isa}
+Requires: lcms-devel%{?_isa}
+Requires: jasper-devel%{?_isa}
 Requires: pkgconfig
 
+
 %description devel
-ImageMagick2-devel contains the library links and header files you'll
+ImageMagick-last-devel contains the library links and header files you'll
 need to develop ImageMagick applications. ImageMagick is an image
 manipulation program.
 
@@ -78,21 +79,24 @@ You do not need to install it if you just want to use ImageMagick,
 however.
 
 
-%package tools
+%package libs
 Summary: Commands for ImageMagick
 Group: Applications/Multimedia
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description tools
-Commands for ImageMagick
-This package conflict which ImageMagick officiel package
+%description libs
+Provides the shared libraries and plugins of ImageMagick-last.
+
+This package could be installed beside official RPM of ImageMagick
+for applications requiring this libraries.
+
 
 
 %if %{withdjvu}
 %package djvu
 Summary: DjVu plugin for ImageMagick
 Group: Applications/Multimedia
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description djvu
 This packages contains a plugin for ImageMagick which makes it possible to
@@ -114,7 +118,7 @@ http://www.imagemagick.org/
 %package perl
 Summary: ImageMagick perl bindings
 Group: System Environment/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description perl
@@ -127,7 +131,7 @@ ImageMagick.
 %package c++
 Summary: ImageMagick Magick++ library (C++ bindings)
 Group: System Environment/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description c++
 This package contains the Magick++ library, a C++ binding to the ImageMagick
@@ -139,8 +143,8 @@ Install ImageMagick-c++ if you want to use any applications that use Magick++.
 %package c++-devel
 Summary: C++ bindings for the ImageMagick library
 Group: Development/Libraries
-Requires: %{name}-c++ = %{version}-%{release}
-Requires: %{name}-devel = %{version}-%{release}
+Requires: %{name}-c++%{?_isa} = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description c++-devel
 ImageMagick-devel contains the static libraries and header files you'll
@@ -270,7 +274,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc QuickStart.txt ChangeLog Platforms.txt
+%{_bindir}/[a-z]*
+%{_mandir}/man[145]/[a-z]*
+%{_mandir}/man1/ImageMagick.*
+
+%files libs
+%defattr(-,root,root,-)
+%doc ChangeLog
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
 %{_libdir}/libMagickCore.so.5*
 %{_libdir}/libMagickWand.so.5*
@@ -281,11 +291,6 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %{_sysconfdir}/%{name}
 
-%files tools
-%defattr(-,root,root,-)
-%{_bindir}/[a-z]*
-%{_mandir}/man[145]/[a-z]*
-%{_mandir}/man1/ImageMagick.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -342,6 +347,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Wed Aug 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 6.7.8.10-1
+- rename to ImageMagick-last
 - update to 6.7.8-10 (soname bump to .5)
 
 * Thu Nov 25 2010 Remi Collet <RPMS@FamilleCollet.com> - 6.6.5.10-1
