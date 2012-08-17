@@ -3,7 +3,7 @@
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
 Version:       1.0.9
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -16,10 +16,10 @@ Patch0:        magickwand-php54.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 4.3.0, autoconf, automake, libtool
-%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
-BuildRequires: ImageMagick-devel >= 6.6.0
+%if 0%{?fedora} >= 17
+BuildRequires: ImageMagick-devel >= 6.7.5
 %else
-BuildRequires: ImageMagick2-devel >= 6.6.0
+BuildRequires: ImageMagick-last-devel >= 6.7.5
 %endif
 
 Requires:      php(zend-abi) = %{php_zend_api}
@@ -109,6 +109,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 16 2012 Remi Collet <rpms@famillecollet.com> 1.0.9-3
+- rebuild against new ImageMagick-last version 6.7.8.10
+
 * Fri Apr 27 2012 Remi Collet <rpms@famillecollet.com> 1.0.9-2
 - fix macro usage
 

@@ -1,16 +1,26 @@
-ImageMagick2
-------------
+ImageMagick-last
+----------------
 
 Backport of the latest fedora package to get
-all features in php-pecl-imagick extension.
+all features in php-pecl-imagick and php-magickwand extensions.
 
-ImageMagick2 could be installed with ImageMagick
+ImageMagick-last-libs could be installed with ImageMagick
 
 ImageMagick: (in EL5)
 	libMagick.so.10
 	libWand.so.10
 
-ImageMagick2:
+ImageMagick: (in EL6)
 	libMagickCore.so.2
 	libMagickWand.so.2
+
+ImageMagick: (in F16)
+	libMagickCore.so.4
+	libMagickWand.so.4
+
+ImageMagick-last-libs:
+	libMagickCore.so.5
+	libMagickWand.so.5
+
+ImageMagick-last could NOT be installed with ImageMagick
 

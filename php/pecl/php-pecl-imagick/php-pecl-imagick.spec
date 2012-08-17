@@ -7,7 +7,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{phpname}-pecl-imagick
 Version:       3.1.0
-Release:       0.2.%{prever}%{?dist}
+Release:       0.3.%{prever}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -16,10 +16,10 @@ Source:        http://pecl.php.net/get/imagick-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{phpname}-devel >= 5.1.3, %{phpname}-pear
-%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
-BuildRequires: ImageMagick-devel >= 6.6.0
+%if 0%{?fedora} >= 17
+BuildRequires: ImageMagick-devel >= 6.7.5
 %else
-BuildRequires: ImageMagick2-devel >= 6.6.0
+BuildRequires: ImageMagick-last-devel >= 6.7.5
 %endif
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -128,6 +128,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 16 2012 Remi Collet <rpms@famillecollet.com> - 3.1.0-0.3.RC2
+- rebuild against new ImageMagick-last version 6.7.8.10
+
 * Sat Jun 02 2012 Remi Collet <Fedora@FamilleCollet.com> - 3.1.0-0.2.RC2
 - update to 3.1.0RC1
 
