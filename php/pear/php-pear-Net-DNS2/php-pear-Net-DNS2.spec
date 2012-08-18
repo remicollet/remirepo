@@ -1,13 +1,9 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name Net_DNS2
 
-# Tests are only run with rpmbuild --with tests
-# Can't be run in mock / koji because Internet access
-%global with_tests       %{?_with_tests:1}%{!?_with_tests:0}
-
 Name:           php-pear-Net-DNS2
-Version:        1.2.2
-Release:        2%{?dist}
+Version:        1.2.3
+Release:        1%{?dist}
 Summary:        PHP Resolver library used to communicate with a DNS server
 
 Group:          Development/Libraries
@@ -15,18 +11,12 @@ License:        BSD
 URL:            http://pear.php.net/package/Net_DNS2
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
-# Request for License and tests folder https://pear.php.net/bugs/19562
-# https://netdns2.googlecode.com/svn/tags/Net_DNS2-1.2.2/tests/AllTests.php
-# https://netdns2.googlecode.com/svn/tags/Net_DNS2-1.2.2/tests/Net_DNS2_ParserTest.php
-# https://netdns2.googlecode.com/svn/tags/Net_DNS2-1.2.2/tests/Net_DNS2_ResolverTest.php
-Source1:        %{pear_name}-tests-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
-%if %{with_tests}
+# for tests
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
-%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -53,18 +43,10 @@ The main features for this package include:
 
 
 %prep
-%setup -q -c -a 1
+%setup -q -c
 cd %{pear_name}-%{version}
 # Package.xml is V2
 mv ../package.xml %{name}.xml
-
-sed -e '/include_path/d' \
-    -i tests/AllTests.php
-
-sed -e 's:</dir>:<file name="tests/AllTests.php" role="test" />\n</dir>:' \
-    -e 's:</dir>:<file name="tests/Net_DNS2_ParserTest.php" role="test" />\n</dir>:' \
-    -e 's:</dir>:<file name="tests/Net_DNS2_ResolverTest.php" role="test" />\n</dir>:' \
-    -i %{name}.xml
 
 
 %build
@@ -91,14 +73,17 @@ rm -rf %{buildroot}
 
 
 %check
-%if %{with_tests}
+if ping -c 1 dns.google.com &>/dev/null
+then
+  suite=AllTests.php
+else
+  : Resolver test disabled
+  suite=Net_DNS2_ParserTest.php
+fi
 phpunit \
    -d date.timezone=UTC \
    -d include_path=.:%{buildroot}%{pear_phpdir}:%{pear_phpdir} \
-   %{buildroot}%{pear_testdir}/%{pear_name}/tests
-%else
-: 'Test suite disabled (missing "--with tests" option)'
-%endif
+   %{buildroot}%{pear_testdir}/%{pear_name}/tests/$suite
 
 
 %post
@@ -114,6 +99,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Net
 %{pear_phpdir}/Net/DNS2
@@ -122,6 +108,11 @@ fi
 
 
 %changelog
+* Sat Aug 18 2012 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- Version 1.2.3 (stable), API 1.2.3 (stable)
+- upstream now provides LICENSE and tests
+- run all tests if network available, else only parser
+
 * Wed Aug 15 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-2
 - rebuilt for new pear_testdir
 - use php-pear(PEAR) in BR/R
