@@ -3,7 +3,7 @@
 
 Name:           php-pear-PHP-CodeSniffer
 Version:        1.3.6
-Release:        1%{?dist}.1
+Release:        1%{?dist}.2
 Summary:        PHP coding standards enforcement tool
 
 Group:          Development/Tools
@@ -89,6 +89,9 @@ fi
 
 
 %changelog
+* Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> - 1.3.6-1.2
+- rebuilt for new pear_datadir
+
 * Wed Aug 15 2012 Remi Collet <remi@fedoraproject.org> - 1.3.6-1.1
 - rebuilt for new pear_testdir
 
