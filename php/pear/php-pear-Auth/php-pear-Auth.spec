@@ -2,14 +2,13 @@
 %define pear_name Auth
 
 Name:           php-pear-Auth
-Version:        1.6.2
+Version:        1.6.4
 Release:        1%{?dist}
 Summary:        Authentication provider for PHP
 Group:          Development/Libraries
 License:        PHP
 URL:            http://pear.php.net/package/Auth
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
-Source1:        PHP-LICENSE-3.01
 #Patch0:         %{name}-1.6.1-md5sum.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -63,20 +62,18 @@ cd %{pear_name}-%{version}
 # %patch0 -p0 -b .md5sum
 %{__sed} -i 's/\r//' README.Auth
 
+sed -e '/md5.js/s/role="data"/role="php"/' \
+    -i %{pear_name}.xml
+
+
 %build
 cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 %install
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docdir
+rm -rf $RPM_BUILD_ROOT
 %{__pear} install --offline --nodeps --installroot $RPM_BUILD_ROOT %{pear_name}.xml
-
-# Move documentation
-mkdir -p docdir
-mv $RPM_BUILD_ROOT%{pear_docdir}/* docdir
-# License file added
-install -pm 644 -c  %{SOURCE1} docdir/LICENSE
 
 # Clean up unnecessary files
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
@@ -102,7 +99,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/*
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
 %{pear_phpdir}/%{pear_name}*
 %{pear_testdir}/%{pear_name}
@@ -118,6 +115,22 @@ fi
 %{pear_phpdir}/%{pear_name}/Container/RADIUS.php
 
 %changelog
+* Tue Aug 21 2012 Remi Collet <remi@fedoraproject.org> - 1.6.4-1
+- update to 1.6.4 for remi repo
+- move doc to /usr/share/doc/pear
+
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.6.2-5
+- rebuilt for new pear_testdir
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Fri May 07 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-1
 - rebuild for remi repository
 
