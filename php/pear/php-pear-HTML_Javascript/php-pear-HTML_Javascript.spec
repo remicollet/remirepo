@@ -2,21 +2,23 @@
 %global pear_name HTML_Javascript
 
 Name:		php-pear-HTML_Javascript
-Version:	1.1.1 
-Release:	8%{?dist}
+Version:	1.1.2
+Release:	1%{?dist}
 Summary:	Class for creating simple JS scripts	 
 Group:		Development/Libraries
 License:	PHP
 URL:		http://pear.php.net/package/HTML_Javascript
 Source0:	http://pear.php.net/get/%{pear_name}-%{version}.tgz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 BuildRequires:	php-pear >= 1:1.4.9-1.2
+
 Requires:	php-pear(PEAR)
 Requires:	php-pear(HTML_Common)
-Requires(post):	%{__pear}
-Requires(postun):	%{__pear}
+Requires(post): %{__pear}
+Requires(postun): %{__pear}
+
 Provides:	php-pear(%{pear_name}) = %{version}
 
 %description
@@ -34,12 +36,9 @@ cd %{pear_name}-%{version}
 cd %{pear_name}-%{version}
 
 %install
+rm -rf $RPM_BUILD_ROOT
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docdir
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
-
-mkdir -p docdir
-mv $RPM_BUILD_ROOT%{pear_docdir}/* docdir
 
 rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 
@@ -64,7 +63,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/*
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
 %{pear_testdir}/%{pear_name}
 %{pear_phpdir}/HTML/Javascript
@@ -72,6 +71,10 @@ fi
 
 
 %changelog
+* Tue Aug 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.2-1
+- update to 1.1.2
+- doc in /usr/share/doc/pear
+
 * Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-8
 - rebuilt for new pear_testdir
 
