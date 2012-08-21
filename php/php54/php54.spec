@@ -32,11 +32,7 @@
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
 
 %if 0%{?rhel} >= 5 || 0%{?fedora} >= 12
-%ifarch %{ix86} x86_64
 %global with_fpm 1
-%else
-%global with_fpm 0
-%endif
 %else
 %global with_fpm 0
 %endif
@@ -1444,6 +1440,9 @@ fi
 
 
 %changelog
+* Mon Aug 20 2012 Remi Collet <remi@fedoraproject.org> 5.4.6-2
+- enable php-fpm on secondary arch (#849490)
+
 * Thu Aug 16 2012 Remi Collet <remi@fedoraproject.org> 5.4.6-1
 - update to 5.4.6
 
