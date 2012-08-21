@@ -3,9 +3,9 @@ Upstream-HEAD: vendor
 Upstream-2.0: vendor
 Upstream-Status: vendor-specific change
 
---- httpd-2.0.48/server/core.c.release
-+++ httpd-2.0.48/server/core.c
-@@ -2758,7 +2758,7 @@
+--- httpd-2.4.3/server/core.c.release
++++ httpd-2.4.3/server/core.c
+@@ -3189,7 +3189,7 @@ static void set_banner(apr_pool_t *pconf
          ap_add_version_component(pconf, AP_SERVER_BASEPRODUCT "/" AP_SERVER_MAJORVERSION);
      }
      else {

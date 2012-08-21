@@ -1,9 +1,13 @@
---- httpd-2.4.1/config.layout.layout
-+++ httpd-2.4.1/config.layout
-@@ -347,3 +347,26 @@
-     proxycachedir: ${localstatedir}/proxy
+
+Add layout for Fedora.
+
+--- httpd-2.4.3/config.layout.layout
++++ httpd-2.4.3/config.layout
+@@ -370,3 +370,27 @@
+     logfiledir:      ${localstatedir}/log/httpd
+     proxycachedir:   ${localstatedir}/cache/httpd
  </Layout>
- 
++
 +# Fedora/RHEL layout
 +<Layout Fedora>
 +    prefix:        /usr
@@ -25,5 +29,5 @@
 +    localstatedir: /var
 +    runtimedir:    /run/httpd
 +    logfiledir:    ${localstatedir}/log/httpd
-+    proxycachedir: ${localstatedir}/cache/httpd
++    proxycachedir: ${localstatedir}/cache/httpd/proxy
 +</Layout>     
