@@ -3,7 +3,7 @@
 
 Name:           php-horde-Horde-Url
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Url class
 
 Group:          Development/Libraries
@@ -20,6 +20,9 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(pear.horde.org/Horde_Exception) >= 1.0.0
 Requires:       php-pear(pear.horde.org/Horde_Exception) < 2.0.0
+Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-common >= 5.2.0
+Requires:       php-channel(pear.horde.org)
 
 Provides:       php-pear(pear.horde.org/%{pear_name}) = %{version}
 
@@ -73,6 +76,12 @@ fi
 %doc %{pear_docdir}/Horde_Url
 
 %changelog
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-3
+- rebuilt for new pear_testdir
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
 - Upgrade to 1.0.2, backport for remi repo
 

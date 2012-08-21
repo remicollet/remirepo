@@ -3,7 +3,7 @@
 
 Name:           php-horde-Horde-Support
 Version:        1.0.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Horde support package
 
 Group:          Development/Libraries
@@ -75,6 +75,9 @@ fi
 %{pear_testdir}/%{pear_name}
 
 %changelog
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-3
+- rebuilt for new pear_testdir
+
 * Wed Aug 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-2
 - backport for remi repo
 

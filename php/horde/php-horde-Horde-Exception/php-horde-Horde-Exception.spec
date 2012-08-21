@@ -3,7 +3,7 @@
 
 Name:           php-horde-Horde-Exception
 Version:        1.0.9
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Horde Exception Handler
 
 Group:          Development/Libraries
@@ -16,10 +16,12 @@ Source1:        find-lang.sh
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
-BuildRequires:  php-channel(pear.horde.org) gettext
+BuildRequires:  php-channel(pear.horde.org)
+BuildRequires:  gettext
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pear(pear.horde.org/Horde_Translation) < 2.0.0
 Requires:       php-pear(pear.horde.org/Horde_Translation) >= 1.0.0
 
@@ -98,6 +100,15 @@ fi
 %{pear_testdir}/Horde_Exception
 
 %changelog
+* Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> - 1.0.9-4
+- rebuilt for new pear_datadir
+
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.0.9-3
+- rebuilt for new pear_testdir
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.9-1
 - Upgrade to 1.0.9, backport for remi repo
 

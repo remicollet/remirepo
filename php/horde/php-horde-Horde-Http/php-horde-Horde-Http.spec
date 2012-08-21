@@ -3,7 +3,7 @@
 
 Name:           php-horde-Horde-Http
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde HTTP libraries
 
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ fi
 %{pear_testdir}/Horde_Http
 
 %changelog
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+- rebuilt for new pear_testdir
+
 * Wed Aug 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.1-1
 - backport for remi repo
 

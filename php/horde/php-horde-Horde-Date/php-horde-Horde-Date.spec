@@ -4,7 +4,7 @@
 
 Name:           php-horde-Horde-Date
 Version:        1.0.11
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Date package
 
 Group:          Development/Libraries
@@ -99,6 +99,12 @@ fi
 
 
 %changelog
+* Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> - 1.0.11-3
+- rebuilt for new pear_datadir
+
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.0.11-2
+- rebuilt for new pear_testdir
+
 * Wed Aug 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.11-1
 - backport for remi repo
 

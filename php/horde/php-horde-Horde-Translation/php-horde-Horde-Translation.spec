@@ -3,7 +3,7 @@
 
 Name:           php-horde-Horde-Translation
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde translation library
 
 Group:          Development/Libraries
@@ -106,6 +106,12 @@ fi
 
 
 %changelog
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-3
+- rebuilt for new pear_testdir
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
 - Upgrade to 1.0.2, backport for remi repo
 

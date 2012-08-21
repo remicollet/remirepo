@@ -3,7 +3,7 @@
 
 Name:           php-horde-Horde-Nls
 Version:        1.1.6
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Native Language Support (NLS)
 
 Group:          Development/Libraries
@@ -21,7 +21,7 @@ BuildRequires:  gettext
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(pear.horde.org/Horde_Util) >= 1.0.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pear(pear.horde.org/Horde_Util) < 2.0.0
 # Optionnal
 Requires:       php-pecl(geoip)
@@ -99,6 +99,12 @@ fi
 
 %changelog
 %changelog
+* Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> - 1.1.6-3
+- rebuilt for new pear_datadir
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.6-1
 - Upgrade to 1.1.6, backport for remi repo
 

@@ -3,7 +3,7 @@
 
 Name:           php-horde-Horde-Autoloader
 Version:        1.0.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Autoloader
 
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ fi
 %{pear_testdir}/Horde_Autoloader
 
 %changelog
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-3
+- rebuilt for new pear_testdir
+
 * Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
 - backport for remi repo
 

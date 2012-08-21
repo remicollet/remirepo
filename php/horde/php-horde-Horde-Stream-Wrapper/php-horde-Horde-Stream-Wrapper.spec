@@ -4,7 +4,7 @@
 
 Name:           php-horde-Horde-Stream-Wrapper
 Version:        1.0.1
-Release:        3%{?dist}
+Release:        3%{?dist}.1
 Summary:        Horde Stream wrappers
 
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 
 %changelog
+* Tue Aug 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-3.1
+- rebuild
+
 * Wed Aug 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-3
 - backport for remi repo
 

@@ -3,7 +3,7 @@
 
 Name:           php-horde-Horde-Util
 Version:        1.4.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Utility Libraries
 
 Group:          Development/Libraries
@@ -20,8 +20,13 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(pear.horde.org/Horde_Url) >= 1.0.0
 Requires:       php-pear(pear.horde.org/Horde_Url) < 2.0.0
+Requires:       php-pear(pear.horde.org/Horde_Exception) >= 1.0.0
+Requires:       php-pear(pear.horde.org/Horde_Exception) < 2.0.0
+Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-common >= 5.2.0
 Requires:       php-xml >= 5.2.0
 Requires:       php-mbstring >= 5.2.0
+Requires:       php-channel(pear.horde.org)
 
 Provides:       php-pear(pear.horde.org/%{pear_name}) = %{version}
 
@@ -80,6 +85,12 @@ fi
 %{pear_testdir}/Horde_Util
 
 %changelog
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.4.0-3
+- rebuilt for new pear_testdir
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Tue Jul 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.0-1
 - Upgrade to 1.4.0, backport for remi repo
 
