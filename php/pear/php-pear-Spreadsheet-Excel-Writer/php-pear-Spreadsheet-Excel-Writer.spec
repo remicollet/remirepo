@@ -2,22 +2,25 @@
 %define pear_name Spreadsheet_Excel_Writer
 
 Name:           php-pear-Spreadsheet-Excel-Writer
-Version:        0.9.2
-Release:        5%{?dist}
+Version:        0.9.3
+Release:        1%{?dist}
 Summary:        Package for generating Excel spreadsheets
 
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.php.net/package/Spreadsheet_Excel_Writer
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.4.9-1.2
+
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php-pear(OLE) >= 0.5
+
 Provides:       php-pear(%{pear_name}) = %{version}
-Requires:       php-pear(OLE) >= 0.5, php-common >= 4.1.0
+
 
 %description
 Spreadsheet_Excel_Writer was born as a porting of the
@@ -44,9 +47,8 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docdir
+rm -rf $RPM_BUILD_ROOT
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
-
 
 
 # Clean up unnecessary files
@@ -81,6 +83,9 @@ fi
 
 
 %changelog 
+* Tue Aug 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.9.3-1
+- update to 0.9.3
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
