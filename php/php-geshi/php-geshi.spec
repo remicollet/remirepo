@@ -1,6 +1,6 @@
 Name:           php-geshi
-Version:        1.0.8.10
-Release:        2%{?dist}
+Version:        1.0.8.11
+Release:        1%{?dist}
 Summary:        Generic syntax highlighter
 
 Group:          Development/Libraries
@@ -11,6 +11,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 Requires:       php-mbstring
+Requires:       php-date
+Requires:       php-pcre
 
 
 %description
@@ -50,6 +52,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.8.11-1
+- Update to 1.0.8.11, CVE-2012-3521
+
+* Tue Aug 21 2012 Xavier Bachelot <xavier@bachelot.org> 1.0.8.11-1
+- Update to 1.0.8.11.
+- Fix remote directory traversal and information disclosure bug (RHBZ#850425).
+- Fix Requires (RHBZ#848699).
+
 * Thu Aug 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.8.10-2
 - drop Requires "php"
 
