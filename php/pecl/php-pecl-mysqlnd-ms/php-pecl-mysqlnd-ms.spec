@@ -3,8 +3,8 @@
 
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
-Version:      1.3.2
-Release:      2%{?dist}
+Version:      1.4.2
+Release:      1%{?dist}
 
 License:      PHP
 Group:        Development/Languages
@@ -18,12 +18,14 @@ Source1:      %{pecl_name}.ini
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.6
 BuildRequires: php-mysqlnd
+BuildRequires: php-json
 BuildRequires: php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
 Requires:     php-mysqlnd%{?_isa}
+Requires:     php-json%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
@@ -53,7 +55,7 @@ Documentation : http://www.php.net/mysqlnd_ms
 Summary:       Mysqlnd_ms developer files (header)
 Group:         Development/Libraries
 Requires:      php-pecl-mysqlnd-ms%{?_isa} = %{version}-%{release}
-Requires:      php-devel
+Requires:      php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using mysqlnd_ms extension.
@@ -77,6 +79,12 @@ cp -r %{pecl_name}-%{version} %{pecl_name}-zts
 
 
 %build
+# EXPERIMENTAL options not used
+# --enable-mysqlnd-ms-table-filter
+#         Enable support for table filter in mysqlnd_ms
+# --enable-mysqlnd-ms-cache-support
+#         Enable query caching through mysqlnd_qc
+
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 %configure \
@@ -171,15 +179,24 @@ ln -sf %{php_ztsextdir}/json.so modules/
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
+
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/php/ext/%{pecl_name}
+
 %if 0%{?__ztsphp:1}
 %{php_ztsincldir}/ext/%{pecl_name}
 %endif
 
 
 %changelog
+* Wed Aug 22 2012 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- update to 1.4.2 (stable)
+- add -devel sub package
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Mon Apr 30 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-2
 - rebuild for EL and PHP 5.4
 
