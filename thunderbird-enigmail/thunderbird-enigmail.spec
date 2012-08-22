@@ -54,7 +54,7 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.4.3
+Version:        1.4.4
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
@@ -252,7 +252,7 @@ pushd mailnews/extensions/enigmail
 # All tarballs (as well as CVS) will *always* report as 1.4a1pre (or whatever
 # the next major version would be). This is because I create builds from trunk
 # and simply label the result as 1.3.x.
-sed -i -e '/em:version/s/1.5a1pre/%{version}/' package/install.rdf
+# sed -i -e '/em:version/s/1.5a1pre/%{version}/' package/install.rdf
 grep '<em:version>%{version}</em:version>' package/install.rdf || exit 1
 # Apply Enigmail patch here
 popd
@@ -328,6 +328,9 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Wed Aug 21 2012 Remi Collet <remi@fedoraproject.org> 1.4.4-1
+- Enigmail 1.4.4 for Thunderbird 14.0
+
 * Sat Jul 21 2012 Remi Collet <remi@fedoraproject.org> 1.4.3-1
 - Enigmail 1.4.3 for Thunderbird 14.0
 
