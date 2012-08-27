@@ -6,7 +6,7 @@
 %else
 %define system_sqlite 1
 %endif
-%if 0%{?fedora} < 17
+%if 0%{?fedora} < 15 && 0%{?rhel} < 6
 %define system_nspr       0
 %define system_nss        0
 %else
@@ -35,8 +35,8 @@
 
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 
-%global thunver  14.0
-%global thunmax  15.0
+%global thunver  15.0
+%global thunmax  16.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -58,7 +58,7 @@ Version:        1.4.4
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -83,7 +83,6 @@ Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{versi
 
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
-Patch7:         crashreporter-remove-static.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
 
 # Build patches
@@ -177,7 +176,6 @@ cd %{tarballdir}
 %patch0  -p2 -b .dir
 # Mozilla (XULRunner) patches
 cd mozilla
-%patch7 -p2 -b .static
 %patch8 -p3 -b .secondary-ipc
 %patch104 -p1 -b .gcc47
 cd ..
@@ -328,6 +326,9 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Mon Aug 27 2012 Remi Collet <remi@fedoraproject.org> 1.4.4-2
+- Enigmail 1.4.4 for Thunderbird 15.0
+
 * Wed Aug 21 2012 Remi Collet <remi@fedoraproject.org> 1.4.4-1
 - Enigmail 1.4.4 for Thunderbird 14.0
 

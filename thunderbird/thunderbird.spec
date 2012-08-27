@@ -7,7 +7,7 @@
 %else
 %define system_sqlite 1
 %endif
-%if 0%{?fedora} < 15
+%if 0%{?fedora} < 15 && 0%{?rhel} < 6
 %define system_nspr       0
 %define system_nss        0
 %else
@@ -52,14 +52,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        14.0
+Version:        15.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20120721.tar.bz2
+Source1:        thunderbird-langpacks-%{version}-20120827.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -71,7 +71,6 @@ Source100:      find-external-requires
 
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
-Patch7:         crashreporter-remove-static.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
 
 # Build patches
@@ -104,7 +103,7 @@ BuildRequires:  libpng-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  zip
 BuildRequires:  bzip2-devel
-BuildRequires:  zlib-devel, gzip, zip, unzip
+BuildRequires:  zlib-devel, gzip, zip, unzip, xz
 BuildRequires:  libIDL-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  gnome-vfs2-devel
@@ -189,7 +188,6 @@ cd %{tarballdir}
 %patch0  -p2 -b .dir
 # Mozilla (XULRunner) patches
 cd mozilla
-%patch7 -p2 -b .static
 %patch8 -p3 -b .secondary-ipc
 %patch104 -p1 -b .gcc47
 cd ..
@@ -344,7 +342,7 @@ rm -f $RPM_BUILD_ROOT/%{_bindir}/thunderbird
 touch %{name}.lang
 %if %{build_langpacks}
 %{__mkdir_p} $RPM_BUILD_ROOT%{mozappdir}/langpacks
-%{__tar} xjf %{SOURCE1}
+%{__tar} xf %{SOURCE1}
 for langpack in `ls thunderbird-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
   extensionID=langpack-$language@thunderbird.mozilla.org
@@ -355,6 +353,9 @@ for langpack in `ls thunderbird-langpacks/*.xpi`; do
 done
 %{__rm} -rf thunderbird-langpacks
 %endif # build_langpacks
+
+# Get rid of devel package and its debugsymbols
+%{__rm} -rf $RPM_BUILD_ROOT%{_libdir}/%{name}-devel-%{version}
 
 # Copy over the LICENSE
 cd mozilla
@@ -469,7 +470,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 %exclude %{_datadir}/idl/%{name}-%{version}
 %exclude %{_includedir}/%{name}-%{version}
-%exclude %{_libdir}/%{name}-devel-%{version}
 %{mozappdir}/chrome.manifest
 %{mozappdir}/searchplugins
 %{mozappdir}/distribution/extensions
@@ -478,9 +478,19 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
-* Wed Aug 1 2012 Martin Stransky <stransky@redhat.com> - 14.0-3
-- removed StartupWMClass (rhbz#844863)
+* Mon Aug 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0-1
+- Sync with rawhide, update to 15.0
+
+* Mon Aug 27 2012 Jan Horak <jhorak@redhat.com> - 15.0-1
+- Update to 15.0
+
+* Wed Aug 1 2012 Martin Stransky <stransky@redhat.com> - 14.0-4
+- Removed StartupWMClass (rhbz#844863)
 - Fixed -g parameter
+- Removed thunderbird-devel before packing to avoid debugsymbols duplicities (rhbz#823940)
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 14.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sat Jul 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 14.0-1
 - Sync with rawhide, update to 14.0
