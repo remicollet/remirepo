@@ -3,8 +3,8 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-bytekit
-Version:        1.1.2
-Release:        2%{?dist}
+Version:        1.1.3
+Release:        1%{?dist}
 Summary:        A command-line tool built on the PHP Bytekit extension
 
 Group:          Development/Libraries
@@ -17,9 +17,10 @@ BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.9.4
 BuildRequires:  php-channel(%{channel})
 
-Requires:       php-common >= 5.2.7
+Requires:       php-common >= 5.3.3
 Requires:       php-channel(%{channel})
-Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.3.0
+Requires:       php-pear(pear.symfony.com/Finder) >= 2.1.0RC1
+Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
@@ -83,6 +84,12 @@ fi
 
 
 %changelog
+* Mon Aug 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.3-1
+- update to 1.1.3
+- add requires php-pear(pear.symfony.com/Finder) >= 2.1.0RC1
+- add requires php-pear(components.ez.no/ConsoleTools) >= 1.6
+- del requires php-pear(pear.phpunit.de/File_Iterator) >= 1.3.0
+
 * Mon Nov 07 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.1.2-2
 - upstream 1.1.2, rebuild for remi repository
 
