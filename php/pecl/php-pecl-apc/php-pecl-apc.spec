@@ -56,6 +56,10 @@ These are the files needed to compile programs using APC serializer.
 cd APC-%{version}
 %patch0 -p3 -b .orig
 
+# There are currently some failed tests
+# which requires dom extension, so drop them for now.
+rm -f tests/apc54_00{3,8,9}.phpt
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
 if test "x${extver}" != "x%{version}"; then
@@ -183,11 +187,9 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %check
-# There are currently some failed tests, so ignore exist status.
-
 cd %{pecl_name}-%{version}
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=1 \
 %{_bindir}/php run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=apc.so
@@ -195,7 +197,7 @@ REPORT_EXIT_STATUS=0 \
 %if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-%{version}-zts
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=1 \
 %{__ztsphp} run-tests.php \
     -n -q -d extension_dir=modules \
     -d extension=apc.so
@@ -242,6 +244,7 @@ rm -rf %{buildroot}
 %changelog
 * Sun Aug 26 2012 Remi Collet <remi@fedoraproject.org> - 3.1.12-2
 - add patches from upstream
+- delete tests which fail because of missing dom extension
 
 * Thu Aug 16 2012 Remi Collet <remi@fedoraproject.org> - 3.1.12-1
 - Version 3.1.12 (beta) - API 3.1.0 (stable)
