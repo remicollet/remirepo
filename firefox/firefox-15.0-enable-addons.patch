@@ -1,0 +1,26 @@
+diff -up firefox-15.0/mozilla-beta/browser/app/profile/firefox.js.addons firefox-15.0/mozilla-beta/browser/app/profile/firefox.js
+--- firefox-15.0/mozilla-beta/browser/app/profile/firefox.js.addons	2012-08-15 07:47:02.000000000 +0200
++++ firefox-15.0/mozilla-beta/browser/app/profile/firefox.js	2012-08-21 11:57:35.333981299 +0200
+@@ -61,7 +61,7 @@ pref("extensions.hotfix.certs.1.sha1Fing
+ 
+ // Disable add-ons that are not installed by the user in all scopes by default.
+ // See the SCOPE constants in AddonManager.jsm for values to use here.
+-pref("extensions.autoDisableScopes", 15);
++pref("extensions.autoDisableScopes", 0);
+ 
+ // Dictionary download preference
+ pref("browser.dictionaries.download.url", "https://addons.mozilla.org/%LOCALE%/firefox/dictionaries/");
+diff -up firefox-15.0/mozilla-beta/toolkit/mozapps/extensions/XPIProvider.jsm.addons firefox-15.0/mozilla-beta/toolkit/mozapps/extensions/XPIProvider.jsm
+--- firefox-15.0/mozilla-beta/toolkit/mozapps/extensions/XPIProvider.jsm.addons	2012-08-15 07:48:32.000000000 +0200
++++ firefox-15.0/mozilla-beta/toolkit/mozapps/extensions/XPIProvider.jsm	2012-08-21 11:56:41.441980035 +0200
+@@ -1630,8 +1630,8 @@ var XPIProvider = {
+       this.showUpgradeUI();
+       flushCaches = true;
+     }
+-    else if (aAppChanged === undefined) {
+-      // For new profiles we will never need to show the add-on selection UI
++    else {
++      // For all profiles we will never need to show the add-on selection UI
+       Services.prefs.setBoolPref(PREF_SHOWN_SELECTION_UI, true);
+     }
+ 

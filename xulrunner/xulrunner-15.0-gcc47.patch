@@ -1,0 +1,13 @@
+diff -up xulrunner-15.0/mozilla-beta/toolkit/crashreporter/client/Makefile.in.gcc47 xulrunner-15.0/mozilla-beta/toolkit/crashreporter/client/Makefile.in
+--- xulrunner-15.0/mozilla-beta/toolkit/crashreporter/client/Makefile.in.gcc47	2012-08-15 07:48:31.000000000 +0200
++++ xulrunner-15.0/mozilla-beta/toolkit/crashreporter/client/Makefile.in	2012-08-20 15:05:41.782947739 +0200
+@@ -34,6 +34,9 @@ CPPSRCS = \
+   crashreporter.cpp \
+   $(NULL)
+ 
++# Needed for moz_free
++LIBS += -L$(LIBXUL_DIST)/lib -lmozalloc
++
+ ifeq ($(OS_ARCH),WINNT)
+ CPPSRCS += crashreporter_win.cpp
+ LIBS += \

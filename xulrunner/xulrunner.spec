@@ -1,16 +1,20 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 15
+%if 0%{?fedora} < 15 && 0%{?rhel} < 6
 %define system_nss        0
-%define system_vpx        0
 %else
 %define system_nss        1
+%endif
+
+%if 0%{?fedora} < 15
+%define system_vpx        0
+%else
 %define system_vpx        1
 %endif
 
 # Use system sqlite?
 %if 0%{?fedora} <= 17
 %define system_sqlite     0
-%else
+%else7
 %define system_sqlite     1
 %endif
 
@@ -44,7 +48,7 @@
 # alpha_version should be set to the alpha number if using an alpha, 0 otherwise
 # beta_version  should be set to the beta number if using a beta, 0 otherwise
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
-%global gecko_dir_ver 14
+%global gecko_dir_ver 15
 %global alpha_version 0
 %global beta_version  0
 %global rc_version    0
@@ -77,7 +81,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        14.0.1
+Version:        15.0
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -94,19 +98,17 @@ Source21:       %{shortname}.sh.in
 Patch0:         xulrunner-version.patch
 Patch1:         mozilla-build.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
-Patch17:        xulrunner-10.0-gcc47.patch
+Patch17:        xulrunner-15.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
 Patch18:        xulrunner-12.0-jemalloc-ppc.patch
 
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
-Patch24:        crashreporter-remove-static.patch
 
 # Upstream patches
-Patch47:        mozilla-691898.patch
 Patch49:        mozilla-746112.patch
-Patch50:        mozilla-750620.patch
+Patch51:        mozilla-709732-gfx-icc-profile-fix.patch
 
 # ---------------------------------------------------
 
@@ -153,10 +155,10 @@ Requires:       nss >= %{nss_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
-Obsoletes:      xulrunner10
 Obsoletes:      xulrunner11
 Obsoletes:      xulrunner12
 Obsoletes:      xulrunner13
+Obsoletes:      xulrunner14
 
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
@@ -176,10 +178,10 @@ Group: Development/Libraries
 Obsoletes: mozilla-devel < 1.9
 Obsoletes: firefox-devel < 2.1
 Obsoletes: xulrunner-devel-unstable
-Obsoletes: xulrunner10-devel
 Obsoletes: xulrunner11-devel
 Obsoletes: xulrunner12-devel
 Obsoletes: xulrunner13-devel
+Obsoletes: xulrunner14-devel
 Provides: gecko-devel = %{gecko_verrel}
 Provides: gecko-devel%{?_isa} = %{gecko_verrel}
 Provides: gecko-devel-unstable = %{gecko_verrel}
@@ -248,7 +250,7 @@ debug %{name}, you want to install %{name}-debuginfo instead.
 #---------------------------------------------------------------------
 
 %prep
-echo TARGET = %{name}-%{version}-%{release}%{?dist}  GECKO = %{gecko_verrel}
+echo TARGET = %{name}-%{version}-%{release}  GECKO = %{gecko_verrel}
 %setup -q -c
 cd %{tarballdir}
 
@@ -258,17 +260,15 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 
 %patch1  -p1 -b .build
 %patch14 -p1 -b .chromium-types
-%patch17 -p1 -b .gcc47
+%patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
 
 %patch20 -p2 -b .pk
-%patch24 -p1 -b .static
 
-%patch47 -p2 -b .691898
 %ifarch ppc ppc64
 %patch49 -p2 -b .746112
 %endif
-%patch50 -p1 -b .750620
+%patch51 -p1 -b .709732
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -526,7 +526,6 @@ fi
 %{mozappdir}/mozilla-xremote-client
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/xulrunner
-%{mozappdir}/xulrunner-bin
 %{mozappdir}/xulrunner-stub
 %{mozappdir}/platform.ini
 %{mozappdir}/dependentlibs.list
@@ -555,6 +554,15 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Aug 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0-1
+- Sync with rawhide, update to 15.0
+
+* Wed Aug 22 2012 Martin Stransky <stransky@redhat.com> - 15.0-2
+- Update to 15.0
+
+* Thu Aug  9 2012 Jan Horak <jhorak@redhat.com> - 14.0.1-6
+- Added fix for mozbz#709732
+
 * Wed Jul 25 2012 Dan Horák <dan[at]danny.cz> - 14.0.1-5
 - Added fix for secondary arches - mozbz#750620
 
