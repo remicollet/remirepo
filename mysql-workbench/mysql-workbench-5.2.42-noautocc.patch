@@ -1,0 +1,96 @@
+diff -up mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp.auto mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp
+--- mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp.auto	2012-08-28 07:23:58.733977928 +0200
++++ mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp	2012-08-28 07:26:52.679449570 +0200
+@@ -485,7 +485,11 @@ static bool validate_save_edits(wb::WBCo
+ 
+ static bool validate_list_members(wb::WBContextSQLIDE *sqlide)
+ {
++#if 0
+   return sqlide->get_grt_manager()->get_app_option_int("DbSqlEditor:CodeCompletionEnabled") != 0;
++#else
++  return false;
++#endif
+ }
+ 
+ //--------------------------------------------------------------------------------------------------
+diff -up mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.auto mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp
+--- mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.auto	2012-08-28 07:23:50.240956043 +0200
++++ mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp	2012-08-28 07:25:59.442301869 +0200
+@@ -902,6 +902,7 @@ grt::StringRef SqlEditorForm::do_connect
+     model->catalog(catalog);
+   }
+    
++#if 0
+   if (_grtm->get_app_option_int("DbSqlEditor:CodeCompletionEnabled") == 1)
+   {
+     std::string cache_dir = _grtm->get_user_datadir() + "/cache/";
+@@ -921,6 +922,7 @@ grt::StringRef SqlEditorForm::do_connect
+     }
+   }
+   else
++#endif
+     log_debug("Code completion is disabled, so no name cache is created\n");
+   
+   return grt::StringRef();
+diff -up mysql-workbench-gpl-5.2.42-src/backend/wbprivate/workbench/wb_context.cpp.auto mysql-workbench-gpl-5.2.42-src/backend/wbprivate/workbench/wb_context.cpp
+--- mysql-workbench-gpl-5.2.42-src/backend/wbprivate/workbench/wb_context.cpp.auto	2012-08-28 07:24:08.635003637 +0200
++++ mysql-workbench-gpl-5.2.42-src/backend/wbprivate/workbench/wb_context.cpp	2012-08-28 07:27:24.959539941 +0200
+@@ -1551,8 +1551,8 @@ void WBContext::set_default_options(grt:
+   set_default(options, "SqlEditor::SyntaxCheck::MaxErrCount", 100);
+ 
+   // DB SQL editor
+-  options.gset("DbSqlEditor:CodeCompletionEnabled", 1);
+-  options.gset("DbSqlEditor:AutoStartCodeCompletion", 1);
++  options.gset("DbSqlEditor:CodeCompletionEnabled", 0);
++  options.gset("DbSqlEditor:AutoStartCodeCompletion", 0);
+   options.gset("DbSqlEditor:ProgressStatusUpdateInterval", 500); // in ms
+   options.gset("DbSqlEditor:KeepAliveInterval", 600); // in seconds
+   options.gset("DbSqlEditor:ReadTimeOut", 600); // in seconds
+diff -up mysql-workbench-gpl-5.2.42-src/backend/wbpublic/sqlide/sql_editor_be.cpp.auto mysql-workbench-gpl-5.2.42-src/backend/wbpublic/sqlide/sql_editor_be.cpp
+--- mysql-workbench-gpl-5.2.42-src/backend/wbpublic/sqlide/sql_editor_be.cpp.auto	2012-08-28 07:24:21.657037748 +0200
++++ mysql-workbench-gpl-5.2.42-src/backend/wbpublic/sqlide/sql_editor_be.cpp	2012-08-28 07:28:23.988706289 +0200
+@@ -880,14 +880,22 @@ void Sql_editor::set_sql_check_enabled(b
+ 
+ bool Sql_editor::code_completion_enabled()
+ {
++#if 0
+   return d->_grtm->get_app_option_int("DbSqlEditor:CodeCompletionEnabled") == 1;
++#else
++  return false;
++#endif
+ }
+ 
+ //--------------------------------------------------------------------------------------------------
+ 
+ bool Sql_editor::auto_start_code_completion()
+ {
++#if 0
+   return d->_grtm->get_app_option_int("DbSqlEditor:AutoStartCodeCompletion") == 1;
++#else
++  return false;
++#endif
+ }
+ 
+ //--------------------------------------------------------------------------------------------------
+diff -up mysql-workbench-gpl-5.2.42-src/frontend/common/preferences_form.cpp.auto mysql-workbench-gpl-5.2.42-src/frontend/common/preferences_form.cpp
+--- mysql-workbench-gpl-5.2.42-src/frontend/common/preferences_form.cpp.auto	2012-08-28 07:24:35.712074907 +0200
++++ mysql-workbench-gpl-5.2.42-src/frontend/common/preferences_form.cpp	2012-08-28 07:43:53.125210902 +0200
+@@ -618,6 +618,10 @@ void PreferencesForm::create_sqlide_page
+     
+     // Code completion settings is a horizontal box with two check boxes.
+     {
++      // Hack: force value to 0
++      _wbui->set_wb_options_value(_model_id, "DbSqlEditor:CodeCompletionEnabled", "0", grt::IntegerType);
++      _wbui->set_wb_options_value(_model_id, "DbSqlEditor:AutoStartCodeCompletion", "0", grt::IntegerType);
++
+       mforms::Box *cc_box = mforms::manage(new mforms::Box(true));
+       vbox->add(cc_box, false);
+       mforms::CheckBox *auto_start_check = new_checkbox_option("DbSqlEditor:AutoStartCodeCompletion");
+@@ -629,6 +633,7 @@ void PreferencesForm::create_sqlide_page
+         check->set_text(_("Enable Code Completion in Editors"));
+         check->set_tooltip(_(
+                              "If enabled SQL editors display a code completion list when pressing the defined hotkey"));
++        check->set_enabled(false); // Hack disable this checkbox
+         cc_box->add(check, false);
+         
+         // Set initial enabled state of the auto-cc checkbox depending on whether

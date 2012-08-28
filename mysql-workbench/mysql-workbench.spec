@@ -11,7 +11,7 @@
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
 Version:   5.2.42
-Release:   1%{?dist}
+Release:   2%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -33,6 +33,8 @@ Patch3:    %{name}-5.2.41-tinyxml.patch
 Patch4:    %{name}-5.2.41-antlr.patch
 # http://bugs.mysql.com/63705
 Patch5:    %{name}-5.2.41-glib.patch
+# Disable broken AutoCompletion feature
+Patch6:    %{name}-5.2.42-noautocc.patch
 
 # don't use bundled documentation, redirect to online doc
 Patch9:    %{name}-5.2.41-nodocs.patch
@@ -139,6 +141,7 @@ rm -rf ext/antlr-runtime
 %endif
 
 %patch5 -p1 -b .glib
+%patch6 -p1 -b .noautocc
 %patch9 -p1 -b .nodocs
 
 touch -r COPYING .timestamp4rpm
@@ -229,6 +232,9 @@ fi
 
 
 %changelog
+* Tue Aug 28 2012 Remi Collet <remi@fedoraproject.org> 5.2.42-2
+- diable broken auto completion (#851283)
+
 * Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> 5.2.42-1
 - update to 5.2.42 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-42.html
