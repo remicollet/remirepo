@@ -233,7 +233,7 @@ fi
 
 %changelog
 * Tue Aug 28 2012 Remi Collet <remi@fedoraproject.org> 5.2.42-2
-- diable broken auto completion (#851283)
+- disable broken auto completion (#851283)
 
 * Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> 5.2.42-1
 - update to 5.2.42 Community (OSS) Edition (GPL)
