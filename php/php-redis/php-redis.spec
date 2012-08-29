@@ -1,17 +1,14 @@
-%global ext_name redis
-
-# not yet ready for zts, change to 0%{?__ztsphp:1} when ready
-%global with_zts 0
+%global ext_name   redis
+%global with_zts   0%{?__ztsphp:1}
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          php-%{ext_name}
-Version:       2.2.1
+Version:       2.2.2
 Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/nicolasff/phpredis
-# wget https://github.com/nicolasff/phpredis/tarball/2.2.1 -O php-redis-2.2.1.tgz
-# also check content from top dir (nicolasff-phpredis-250e81b)
+# wget https://github.com/nicolasff/phpredis/tarball/2.2.2 -O php-redis-2.2.2.tgz
 Source:        %{name}-%{version}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -23,11 +20,9 @@ Requires:      php(api) = %{php_core_api}
 # php-pecl-igbinary missing php-pecl(igbinary)%{?_isa}
 Requires:      php-pecl-igbinary%{?_isa}
 
-# RPM 4.8
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -39,7 +34,7 @@ with the Redis key-value store.
 %setup -q -c 
 
 # rename source folder
-mv nicolasff-phpredis-* nts
+mv *redis* nts
 
 chmod -x nts/*{c,h}
 
@@ -135,6 +130,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 29 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- update to 2.2.2
+- enable ZTS build
+
 * Tue Aug 28 2012 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - initial package
 
