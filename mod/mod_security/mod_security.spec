@@ -7,8 +7,8 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.6.6
-Release: 2%{?dist}
+Version: 2.6.7
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -103,6 +103,15 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Aug 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.6.7-1
+- Update to 2.6.7, backport for remi repo and httpd 2.4
+
+* Sat Aug 25 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.6.7-1
+- Update to 2.6.7
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jun 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.6.6-2
 - backport for remi repo and httpd 2.4
 
