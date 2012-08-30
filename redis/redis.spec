@@ -6,20 +6,22 @@
 %global with_perftools 1
 %endif
 
+%global prever rc6
+
 Name:             redis
-Version:          2.4.16
-Release:          1%{?dist}
+Version:          2.6.0
+Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
 License:          BSD
 URL:              http://redis.io
-Source0:          http://redis.googlecode.com/files/%{name}-%{version}.tar.gz
+Source0:          http://redis.googlecode.com/files/%{name}-%{version}%{?prever:-%{prever}}.tar.gz
 Source1:          %{name}.logrotate
 Source2:          %{name}.init
 Source3:          %{name}.service
 # Update configuration for Fedora
-Patch0:           %{name}-2.4.6-redis.conf.patch
+Patch0:           %{name}-2.6.0-redis.conf.patch
 
 BuildRequires:    systemd-units
 %if !0%{?el5}
@@ -45,8 +47,8 @@ union, intersection, difference between sets, and so forth. Redis supports
 different kind of sorting abilities.
 
 %prep
-%setup -q
-%patch0 -p1
+%setup -q -n %{name}-%{version}%{?prever:-%{prever}}
+%patch0 -p1 -b .orig
 
 %build
 make %{?_smp_mflags} \
@@ -114,6 +116,9 @@ fi
 %{_unitdir}/%{name}.service
 
 %changelog
+* Thu Aug 30 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.1.rc6
+- Update to redis 2.6.0-RC6
+
 * Thu Aug 30 2012 Remi Collet <remi@fedoraproject.org> - 2.4.16-1
 - Update to redis 2.4.16
 
