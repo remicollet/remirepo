@@ -7,8 +7,8 @@
 %endif
 
 Name:             redis
-Version:          2.4.15
-Release:          3%{?dist}
+Version:          2.4.16
+Release:          1%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -114,6 +114,9 @@ fi
 %{_unitdir}/%{name}.service
 
 %changelog
+* Thu Aug 30 2012 Remi Collet <remi@fedoraproject.org> - 2.4.16-1
+- Update to redis 2.4.16
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.15-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
