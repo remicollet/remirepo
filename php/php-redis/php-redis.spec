@@ -1,19 +1,28 @@
 %global ext_name   redis
 %global with_zts   0%{?__ztsphp:1}
+%global gitver     5df5153
+%global gitrel     29
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          php-%{ext_name}
 Version:       2.2.2
-Release:       1%{?dist}
+Release:       2%{?gitver:.git%{gitver}}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/nicolasff/phpredis
+%if 0%{?gitver:1}
+# wget https://github.com/nicolasff/phpredis/tarball/master
+Source0:       nicolasff-phpredis-%{version}-%{gitrel}-g%{gitver}.tar.gz
+%else
 # wget https://github.com/nicolasff/phpredis/tarball/2.2.2 -O php-redis-2.2.2.tgz
-Source:        %{name}-%{version}.tgz
+Source0:       %{name}-%{version}.tgz
+%endif
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 BuildRequires: php-pecl-igbinary-devel
+# to run Test suite
+BuildRequires: redis
 
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
@@ -112,6 +121,27 @@ ln -s %{php_ztsextdir}/igbinary.so zts/modules/
     --modules | grep %{ext_name}
 %endif
 
+cd nts/tests
+
+# Launch redis server
+mkdir -p {run,log,lib}/redis
+sed -s "s:/var:$PWD:" /etc/redis.conf >redis.conf
+%{_sbindir}/redis-server ./redis.conf &
+srv=$!
+
+# Run the test Suite
+ret=0
+php --no-php-ini \
+    --define extension_dir=../modules \
+    --define extension=igbinary.so \
+    --define extension=%{ext_name}.so \
+    TestRedis.php || ret=1
+
+# Cleanup
+kill $srv
+
+exit $ret
+
 
 %clean
 rm -rf %{buildroot}
@@ -130,6 +160,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 29 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-2.git5df5153
+- latest master
+- run test suite
+
 * Tue Aug 29 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - update to 2.2.2
 - enable ZTS build
