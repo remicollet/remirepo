@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.11.12
+Version:         1.12.0
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -17,27 +17,36 @@ BuildArch:       noarch
 
 Requires: php >= 5.2.4
 Requires: php-bcmath
-Requires: php-ctype
-Requires: php-curl
-Requires: php-dom
-Requires: php-hash
-Requires: php-iconv
-Requires: php-json
-Requires: php-pcre
-Requires: php-posix
-Requires: php-reflection
-Requires: php-session
-Requires: php-simplexml
-Requires: php-spl
-Requires: php-zlib
-Requires: php-pdo
+# The following are provided by php-common:
+# Requires: php-ctype
+# Requires: php-curl
+# Requires: php-dom
+# Requires: php-hash
+# Requires: php-iconv
+# Requires: php-json
+# Requires: php-pcre
+# Requires: php-reflection
+# Requires: php-session
+# Requires: php-simplexml
+# Requires: php-spl
+# Requires: php-zlib
+
+# This provides php-posix
+Requires: php-process
+
+# php-dom is provided by php-xml
 Requires: php-xml
+
 # missing for Http_Client
 # Requires: php-mime_magic
 
 # Needed after the removal of the tests subpackage
 Provides:  %{name}-tests = %{version}-%{release}
 Obsoletes: %{name}-tests < 1.9.6-2
+
+# Gdata moved back into the main package
+Provides:  %{name}-Gdata = %{version}-%{release}
+Obsoletes: %{name}-Gdata < 1.12.0-1
 
 %description
 Extending the art & spirit of PHP, Zend Framework is based on simplicity,
@@ -66,6 +75,44 @@ Provides: %{name}-ZendX = %{version}-%{release}
 
 %description extras
 This package includes the ZendX libraries.
+
+
+%package full
+Summary:  Meta package to install full Zend Framework
+Group:    Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-extras = %{version}-%{release}
+Requires: %{name}-Auth-Adapter-Ldap = %{version}-%{release}
+Requires: %{name}-Cache-Backend-Apc = %{version}-%{release}
+Requires: %{name}-Cache-Backend-Memcached = %{version}-%{release}
+Requires: %{name}-Cache-Backend-Libmemcached = %{version}-%{release}
+#Requires: %{name}-Cache-Backend-Sqlite = %{version}-%{release}
+Requires: %{name}-Captcha = %{version}-%{release}
+Requires: %{name}-Dojo = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Mysqli = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Firebird = %{version}-%{release}
+#Requires: %{name}-Db-Adapter-Oracle = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Pdo = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Pdo-Mssql = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Pdo-Mysql = %{version}-%{release}
+#Requires: %{name}-Db-Adapter-Pdo-Oci = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Pdo-Pgsql = %{version}-%{release}
+Requires: %{name}-Feed = %{version}-%{release}
+Requires: %{name}-Ldap = %{version}-%{release}
+Requires: %{name}-Pdf = %{version}-%{release}
+Requires: %{name}-Search-Lucene = %{version}-%{release}
+Requires: %{name}-Serializer-Adapter-Igbinary = %{version}-%{release}
+Requires: %{name}-Services = %{version}-%{release}
+Requires: %{name}-Soap = %{version}-%{release}
+
+%description full
+This package is a meta package designed to track in most subpackages
+and install the nearly full Zend Framework
+
+Also available in remi repository separately:
+- %{name}-Cache-Backend-Sqlite
+- %{name}-Db-Adapter-Oracle
+- %{name}-Db-Adapter-Pdo-Oci
 
 
 %package Auth-Adapter-Ldap
@@ -100,6 +147,17 @@ This package contains the back end for Zend_Cache to store and retrieve data
 via memcache.
 
 
+%package Cache-Backend-Libmemcached
+Summary:  Zend Framework libmemcache cache backend
+Group:    Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: php-pecl-memcached
+
+%description Cache-Backend-Libmemcached
+This package contains the back end for Zend_Cache to store and retrieve data
+via memcache.
+
+
 %package Cache-Backend-Sqlite
 Summary:  Zend Framework sqlite back end
 Group:    Development/Libraries
@@ -115,6 +173,7 @@ via sqlite databases.
 Summary:  Zend Framework CAPTCHA component
 Group:    Development/Libraries
 Requires: %{name} = %{version}-%{release}
+Requires: %{name}-Services = %{version}-%{release}
 Requires: php-gd
 
 %description Captcha
@@ -175,6 +234,78 @@ This package contains the files for Zend Framework necessary to connect to an
 Oracle database.
 
 
+%package Db-Adapter-Pdo
+Summary:  Zend Framework database adapter for PDO
+Group:    Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: php-pdo
+
+%description Db-Adapter-Pdo
+This package contains the files for Zend Framework necessary to connect to
+databases using the PDO Adapter.
+
+
+# php-pecl-PDO_IBM not available for Fedora
+# %package Db-Adapter-Pdo-Ibm
+# Summary:  Zend Framework database adapter for IBM PDO
+# Group:    Development/Libraries
+# Requires: %{name} = %{version}-%{release}
+# Requires: %{name}-Db-Adapter-Pdo = %{version}-%{release}
+# Requires: php-pecl-PDO_IBM
+#
+# %description Db-Adapter-Pdo-Ibm
+# This package contains the files for Zend Framework necessary to connect to IBM
+# databases using the IBM PDO Adapter.
+
+
+%package Db-Adapter-Pdo-Mssql
+Summary:  Zend Framework database adapter for MS SQL PDO
+Group:    Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Pdo = %{version}-%{release}
+Requires: php-mssql
+
+%description Db-Adapter-Pdo-Mssql
+This package contains the files for Zend Framework necessary to connect to MS 
+SQL databases using the MS SQL PDO Adapter.
+
+
+%package Db-Adapter-Pdo-Mysql
+Summary:  Zend Framework database adapter for MySQL PDO
+Group:    Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Pdo = %{version}-%{release}
+Requires: php-mysql
+
+%description Db-Adapter-Pdo-Mysql
+This package contains the files for Zend Framework necessary to connect to MySQL
+databases using the MySQL PDO Adapter.
+
+
+%package Db-Adapter-Pdo-Oci
+Summary:  Zend Framework database adapter for Oracle
+Group:    Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Pdo = %{version}-%{release}
+Requires: php-oci8
+
+%description Db-Adapter-Pdo-Oci
+This package contains the files for Zend Framework necessary to connect to
+Oracle databases using the OCI PDO Adapter.
+
+
+%package Db-Adapter-Pdo-Pgsql
+Summary:  Zend Framework database adapter for PgSQL PDO
+Group:    Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-Db-Adapter-Pdo = %{version}-%{release}
+Requires: php-pgsql
+
+%description Db-Adapter-Pdo-Pgsql
+This package contains the files for Zend Framework necessary to connect to PgSQL
+databases using the PgSQL PDO Adapter.
+
+
 %package Feed
 Summary:  Live syndication feeds helper
 Group:    Development/Libraries
@@ -188,21 +319,6 @@ This component provides a very simple way to work with live syndicated feeds.
 * provides utilities for discovering feed links
 * imports feeds from multiple sources
 * providers feed building and posting operations
-
-
-%package Gdata
-Summary:  Google Data APIs
-Group:    Development/Libraries
-Requires: %{name} = %{version}-%{release}
-
-%description Gdata
-The Google Data APIs provide read/write access to such services hosted at
-google.com as Spreadsheets, Calendar, Blogger, and CodeSearch.
-
-* supports both authentication mechanisms of Google Data servers
-* supports queries and posting changes against Google Data services
-* supports service-specific element types in an object-oriented interface
-* matches functionality and design of other Google Data API clients
 
 
 %package Ldap
@@ -253,18 +369,32 @@ types. Zend_Search_Lucene is a port of this engine written entirely in PHP 5.
 * matches Apache Lucene in performance
 
 
+%package Serializer-Adapter-Igbinary
+Summary:  Drop-in replacement for the standard PHP serializer
+Group:    Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: php-pecl-igbinary
+
+%description Serializer-Adapter-Igbinary
+Igbinary is Open Source Software released by Sulake Dynamoid Oy. It's a drop-in
+replacement for the standard PHP serializer. Instead of time and space
+consuming textual representation, igbinary stores PHP data structures in a
+compact binary form. Savings are significant when using memcached or similar
+memory based storages for serialized data. 
+
+
 %package Services
 Summary:  Web service APIs for a number of providers
 Group:    Development/Libraries
 Requires: %{name} = %{version}-%{release}
+Requires: %{name}-Soap = %{version}-%{release}
 Requires: php-mcrypt
-Requires: php-soap
 
 %description Services
 This package contains web service client APIs for the following services:
 
 - Akismet
-- Amazon (including Ec2, S3)
+- Amazon (including EC2, S3)
 - Audioscrobbler
 - del.icio.us
 - Developer Garden
@@ -272,13 +402,14 @@ This package contains web service client APIs for the following services:
 - Flickr
 - LiveDocx
 - Nirvanix
+- Rackspace
 - ReCaptcha
-- Simpy
+- Various URL Shortener services
 - SlideShare
+- SqlAzure
 - StrikeIron
 - Technorati
 - Twitter
-- Various URL Shortener services
 - Windows Azure
 - Yahoo!
 
@@ -310,17 +441,12 @@ options mechanism.
 
 %prep
 %setup -qn %{php_name}-%{version}%{?posttag}
-cp %{SOURCE1} .
+cp -p %{SOURCE1} .
 
 
 %build
-%if 0%{?rhel} == 4
-find . -type f  \
-  -fprint executables -exec %{__chmod} -x '{}' \; >/dev/null
-%else
 find . -type f -perm /111 \
   -fprint executables -exec %{__chmod} -x '{}' \; >/dev/null
-%endif
 
 find . -type f -name \*.sh \
   -fprint valid_executables -exec %{__chmod} +x '{}' \; >/dev/null
@@ -373,6 +499,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Cache
 %exclude %{_datadir}/php/Zend/Cache/Backend/Apc.php
 %exclude %{_datadir}/php/Zend/Cache/Backend/Memcached.php
+%exclude %{_datadir}/php/Zend/Cache/Backend/Libmemcached.php
 %exclude %{_datadir}/php/Zend/Cache/Backend/Sqlite.php
 %{_datadir}/php/Zend/Cache.php
 %{_datadir}/php/Zend/Cloud
@@ -400,15 +527,21 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %exclude %{_datadir}/php/Zend/Db/Adapter/Oracle
 %exclude %{_datadir}/php/Zend/Db/Statement/Oracle.php
 %exclude %{_datadir}/php/Zend/Db/Statement/Oracle
+%exclude %{_datadir}/php/Zend/Db/Adapter/Pdo
+%exclude %{_datadir}/php/Zend/Db/Statement/Pdo.php
+%exclude %{_datadir}/php/Zend/Db/Statement/Pdo
 %{_datadir}/php/Zend/Db.php
 %{_datadir}/php/Zend/Debug.php
 %{_datadir}/php/Zend/Dom
 %{_datadir}/php/Zend/Exception.php
+%{_datadir}/php/Zend/EventManager
 %{_datadir}/php/Zend/File
 %{_datadir}/php/Zend/Filter
 %{_datadir}/php/Zend/Filter.php
 %{_datadir}/php/Zend/Form
 %{_datadir}/php/Zend/Form.php
+%{_datadir}/php/Zend/Gdata
+%{_datadir}/php/Zend/Gdata.php
 %{_datadir}/php/Zend/Http
 %{_datadir}/php/Zend/InfoCard
 %{_datadir}/php/Zend/InfoCard.php
@@ -431,6 +564,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Memory.php
 %{_datadir}/php/Zend/Mime
 %{_datadir}/php/Zend/Mime.php
+%{_datadir}/php/Zend/Mobile
 %{_datadir}/php/Zend/Navigation
 %{_datadir}/php/Zend/Navigation.php
 %{_datadir}/php/Zend/Oauth
@@ -454,26 +588,36 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %exclude %{_datadir}/php/Zend/Service/Audioscrobbler.php
 %exclude %{_datadir}/php/Zend/Service/Delicious.php
 %exclude %{_datadir}/php/Zend/Service/Delicious
+%exclude %{_datadir}/php/Zend/Service/DeveloperGarden
+%exclude %{_datadir}/php/Zend/Service/Ebay
 %exclude %{_datadir}/php/Zend/Service/Flickr.php
 %exclude %{_datadir}/php/Zend/Service/Flickr
+%exclude %{_datadir}/php/Zend/Service/LiveDocx.php
+%exclude %{_datadir}/php/Zend/Service/LiveDocx
 %exclude %{_datadir}/php/Zend/Service/Nirvanix.php
 %exclude %{_datadir}/php/Zend/Service/Nirvanix
+%exclude %{_datadir}/php/Zend/Service/Rackspace
 %exclude %{_datadir}/php/Zend/Service/ReCaptcha.php
 %exclude %{_datadir}/php/Zend/Service/ReCaptcha
-%exclude %{_datadir}/php/Zend/Service/Simpy.php
-%exclude %{_datadir}/php/Zend/Service/Simpy
+%exclude %{_datadir}/php/Zend/Service/ShortUrl
 %exclude %{_datadir}/php/Zend/Service/SlideShare.php
 %exclude %{_datadir}/php/Zend/Service/SlideShare
+%exclude %{_datadir}/php/Zend/Service/SqlAzure
 %exclude %{_datadir}/php/Zend/Service/StrikeIron.php
 %exclude %{_datadir}/php/Zend/Service/StrikeIron
 %exclude %{_datadir}/php/Zend/Service/Technorati.php
 %exclude %{_datadir}/php/Zend/Service/Technorati
+%exclude %{_datadir}/php/Zend/Service/Twitter.php
+%exclude %{_datadir}/php/Zend/Service/Twitter
+%exclude %{_datadir}/php/Zend/Service/WindowsAzure
 %exclude %{_datadir}/php/Zend/Service/Yahoo.php
 %exclude %{_datadir}/php/Zend/Service/Yahoo
 %{_datadir}/php/Zend/Serializer
 %{_datadir}/php/Zend/Serializer.php
+%exclude %{_datadir}/php/Zend/Serializer/Adapter/Igbinary.php
 %{_datadir}/php/Zend/Session
 %{_datadir}/php/Zend/Session.php
+%{_datadir}/php/Zend/Stdlib
 %{_datadir}/php/Zend/Tag
 %{_datadir}/php/Zend/Test
 %{_datadir}/php/Zend/Text
@@ -503,6 +647,9 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %exclude %{_datadir}/php/ZendX/Db
 %doc LICENSE.txt
 
+%files full
+%doc LICENSE.txt
+
 %files Auth-Adapter-Ldap
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Auth/Adapter/Ldap.php
@@ -516,6 +663,10 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %files Cache-Backend-Memcached
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Cache/Backend/Memcached.php
+%doc LICENSE.txt
+
+%files Cache-Backend-Libmemcached
+%{_datadir}/php/Zend/Cache/Backend/Libmemcached.php
 %doc LICENSE.txt
 
 %files Cache-Backend-Sqlite
@@ -561,6 +712,44 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Db/Statement/Oracle
 %doc LICENSE.txt
 
+%files Db-Adapter-Pdo
+%{_datadir}/php/Zend/Db/Adapter/Pdo
+%{_datadir}/php/Zend/Db/Statement/Pdo.php
+%{_datadir}/php/Zend/Db/Statement/Pdo
+%exclude %{_datadir}/php/Zend/Db/Adapter/Pdo/Ibm.php
+%exclude %{_datadir}/php/Zend/Db/Adapter/Pdo/Ibm
+%exclude %{_datadir}/php/Zend/Db/Statement/Pdo/Ibm.php
+%exclude %{_datadir}/php/Zend/Db/Statement/Pdo/Oci.php
+%exclude %{_datadir}/php/Zend/Db/Adapter/Pdo/Mssql.php
+%exclude %{_datadir}/php/Zend/Db/Adapter/Pdo/Mysql.php
+%exclude %{_datadir}/php/Zend/Db/Adapter/Pdo/Oci.php
+%exclude %{_datadir}/php/Zend/Db/Adapter/Pdo/Pgsql.php
+%doc LICENSE.txt
+
+# php-pecl-PDO_IBM not available for Fedora
+# %files Db-Adapter-Pdo-Ibm
+# %{_datadir}/php/Zend/Db/Adapter/Pdo/Ibm.php
+# %{_datadir}/php/Zend/Db/Adapter/Pdo/Ibm
+# %{_datadir}/php/Zend/Db/Statement/Pdo/Ibm.php
+# %doc LICENSE.txt
+
+%files Db-Adapter-Pdo-Mssql
+%{_datadir}/php/Zend/Db/Adapter/Pdo/Mssql.php
+%doc LICENSE.txt
+
+%files Db-Adapter-Pdo-Mysql
+%{_datadir}/php/Zend/Db/Adapter/Pdo/Mysql.php
+%doc LICENSE.txt
+
+%files Db-Adapter-Pdo-Oci
+%{_datadir}/php/Zend/Db/Adapter/Pdo/Oci.php
+%{_datadir}/php/Zend/Db/Statement/Pdo/Oci.php
+%doc LICENSE.txt
+
+%files Db-Adapter-Pdo-Pgsql
+%{_datadir}/php/Zend/Db/Adapter/Pdo/Pgsql.php
+%doc LICENSE.txt
+
 %files Dojo
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Dojo.php
@@ -571,12 +760,6 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Feed.php
 %{_datadir}/php/Zend/Feed
-%doc LICENSE.txt
-
-%files Gdata
-%defattr(-,root,root,-)
-%{_datadir}/php/Zend/Gdata.php
-%{_datadir}/php/Zend/Gdata
 %doc LICENSE.txt
 
 %files Ldap
@@ -596,6 +779,10 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Search
 %doc LICENSE.txt
 
+%files Serializer-Adapter-Igbinary
+%{_datadir}/php/Zend/Serializer/Adapter/Igbinary.php
+%doc LICENSE.txt
+
 %files Services
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Service/Akismet.php
@@ -604,20 +791,28 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Service/Audioscrobbler.php
 %{_datadir}/php/Zend/Service/Delicious.php
 %{_datadir}/php/Zend/Service/Delicious
+%{_datadir}/php/Zend/Service/DeveloperGarden
+%{_datadir}/php/Zend/Service/Ebay
 %{_datadir}/php/Zend/Service/Flickr.php
 %{_datadir}/php/Zend/Service/Flickr
+%{_datadir}/php/Zend/Service/LiveDocx.php
+%{_datadir}/php/Zend/Service/LiveDocx
 %{_datadir}/php/Zend/Service/Nirvanix.php
 %{_datadir}/php/Zend/Service/Nirvanix
+%{_datadir}/php/Zend/Service/Rackspace
 %{_datadir}/php/Zend/Service/ReCaptcha.php
 %{_datadir}/php/Zend/Service/ReCaptcha
-%{_datadir}/php/Zend/Service/Simpy.php
-%{_datadir}/php/Zend/Service/Simpy
+%{_datadir}/php/Zend/Service/ShortUrl
 %{_datadir}/php/Zend/Service/SlideShare.php
 %{_datadir}/php/Zend/Service/SlideShare
+%{_datadir}/php/Zend/Service/SqlAzure
 %{_datadir}/php/Zend/Service/StrikeIron.php
 %{_datadir}/php/Zend/Service/StrikeIron
 %{_datadir}/php/Zend/Service/Technorati.php
 %{_datadir}/php/Zend/Service/Technorati
+%{_datadir}/php/Zend/Service/Twitter.php
+%{_datadir}/php/Zend/Service/Twitter
+%{_datadir}/php/Zend/Service/WindowsAzure
 %{_datadir}/php/Zend/Service/Yahoo.php
 %{_datadir}/php/Zend/Service/Yahoo
 %doc LICENSE.txt
@@ -629,6 +824,20 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Fri Aug 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.12.0-1
+- update to 1.12.0, sync with rawhide
+
+* Thu Aug 30 2012 Felix Kaechele <heffer@fedoraproject.org> - 1.12.0-1
+- update to 1.12.0
+- cleaned up and fixed dependencies
+- moved Gdata back into main package as it no longer has external deps
+- subpackaged more classes with external deps
+- added a "full" subpackage to install a full ZF
+- new modules: EventManager, Mobile
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Tue Jun 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.11.12-1
 - update to 1.11.12
 - backport for remi repository (with Oracle and Sqlite stuff)
