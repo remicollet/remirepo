@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-#global rcver      RC1
+%global rcver      RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8 	%{?_with_oci8:1}%{!?_with_oci8:0}
@@ -66,7 +66,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.6
+Version: 5.4.7
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -1440,6 +1440,9 @@ fi
 
 
 %changelog
+* Fri Aug 31 2012 Remi Collet <RPMS@famillecollet.com> 5.4.7-0.1.RC1
+- update to 5.4.7RC1
+
 * Mon Aug 20 2012 Remi Collet <remi@fedoraproject.org> 5.4.6-2
 - enable php-fpm on secondary arch (#849490)
 
