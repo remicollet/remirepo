@@ -133,7 +133,9 @@ cd nts/tests
 
 # Launch redis server
 mkdir -p {run,log,lib}/redis
-sed -s "s:/var:$PWD:" /etc/redis.conf >redis.conf
+sed -e "s:/var:$PWD:" \
+    -e "/daemonize/s/yes/no/" \
+    /etc/redis.conf >redis.conf
 %if 0%{?__isa_bits}
 # port number to allow 32/64 build at same time
 # and avoid conflict with a possible running server
@@ -153,7 +155,7 @@ php --no-php-ini \
     TestRedis.php || ret=1
 
 # Cleanup
-kill $srv
+kill $srv || :
 
 exit $ret
 %else
