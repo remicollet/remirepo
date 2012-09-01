@@ -2,11 +2,16 @@
 %global with_zts   0%{?__ztsphp:1}
 %global gitver     5df5153
 %global gitrel     29
+%if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
+%global with_test  1
+%else
+%global with_test  0
+%endif
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          php-%{ext_name}
 Version:       2.2.2
-Release:       2%{?gitver:.git%{gitver}}%{?dist}
+Release:       3%{?gitver:.git%{gitver}}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/nicolasff/phpredis
@@ -22,7 +27,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 BuildRequires: php-pecl-igbinary-devel
 # to run Test suite
-BuildRequires: redis
+%if %{with_test}
+BuildRequires: redis >= 2.4.0
+%endif
 
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
@@ -105,7 +112,7 @@ install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
 
 %check
 # simple module load test
-ln -s %{php_extdir}/igbinary.so nts/modules/
+ln -sf %{php_extdir}/igbinary.so nts/modules/igbinary.so
 %{__php} --no-php-ini \
     --define extension_dir=nts/modules \
     --define extension=igbinary.so \
@@ -113,7 +120,7 @@ ln -s %{php_extdir}/igbinary.so nts/modules/
     --modules | grep %{ext_name}
 
 %if %{with_zts}
-ln -s %{php_ztsextdir}/igbinary.so zts/modules/
+ln -sf %{php_ztsextdir}/igbinary.so zts/modules/igbinary.so
 %{__ztsphp} --no-php-ini \
     --define extension_dir=zts/modules \
     --define extension=igbinary.so \
@@ -121,6 +128,7 @@ ln -s %{php_ztsextdir}/igbinary.so zts/modules/
     --modules | grep %{ext_name}
 %endif
 
+%if %{with_test}
 cd nts/tests
 
 # Launch redis server
@@ -141,6 +149,9 @@ php --no-php-ini \
 kill $srv
 
 exit $ret
+%else
+: Upstream test suite disabled
+%endif
 
 
 %clean
@@ -160,11 +171,14 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Aug 29 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-2.git5df5153
+* Sat Sep  1 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-3.git5df5153
+- run only test suite with redis > 2.4
+
+* Fri Aug 31 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-2.git5df5153
 - latest master
 - run test suite
 
-* Tue Aug 29 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+* Wed Aug 29 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - update to 2.2.2
 - enable ZTS build
 
