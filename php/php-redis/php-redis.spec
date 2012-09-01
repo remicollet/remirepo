@@ -134,6 +134,13 @@ cd nts/tests
 # Launch redis server
 mkdir -p {run,log,lib}/redis
 sed -s "s:/var:$PWD:" /etc/redis.conf >redis.conf
+%if 0%{?__isa_bits}
+# port number to allow 32/64 build at same time
+# and avoid conflict with a possible running server
+port=$(expr %{__isa_bits} + 6350)
+sed -e "s/6379/$port/" -i redis.conf
+sed -e "s/6379/$port/" -i TestRedis.php
+%endif
 %{_sbindir}/redis-server ./redis.conf &
 srv=$!
 
