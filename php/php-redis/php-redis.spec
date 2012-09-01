@@ -134,7 +134,7 @@ cd nts/tests
 # Launch redis server
 mkdir -p {run,log,lib}/redis
 sed -e "s:/var:$PWD:" \
-    -e "/daemonize/s/yes/no/" \
+    -e "/daemonize/s/no/yes/" \
     /etc/redis.conf >redis.conf
 %if 0%{?__isa_bits}
 # port number to allow 32/64 build at same time
@@ -143,8 +143,7 @@ port=$(expr %{__isa_bits} + 6350)
 sed -e "s/6379/$port/" -i redis.conf
 sed -e "s/6379/$port/" -i TestRedis.php
 %endif
-%{_sbindir}/redis-server ./redis.conf &
-srv=$!
+%{_sbindir}/redis-server ./redis.conf
 
 # Run the test Suite
 ret=0
@@ -155,9 +154,12 @@ php --no-php-ini \
     TestRedis.php || ret=1
 
 # Cleanup
-kill $srv || :
+if [ -f run/redis/redis.pid ]; then
+   kill $(cat run/redis/redis.pid)
+fi
 
 exit $ret
+
 %else
 : Upstream test suite disabled
 %endif
