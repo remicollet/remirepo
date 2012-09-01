@@ -3,8 +3,14 @@
 %global gitver     5df5153
 %global gitrel     29
 %if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
-%global with_test  1
+%ifarch ppc64
+# redis have ExcludeArch: ppc64
+%global with_test  0
 %else
+%global with_test  1
+%endif
+%else
+# redis version is too old
 %global with_test  0
 %endif
 
@@ -113,7 +119,7 @@ install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
 %check
 # simple module load test
 ln -sf %{php_extdir}/igbinary.so nts/modules/igbinary.so
-%{__php} --no-php-ini \
+php --no-php-ini \
     --define extension_dir=nts/modules \
     --define extension=igbinary.so \
     --define extension=%{ext_name}.so \
