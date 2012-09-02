@@ -1,7 +1,8 @@
 %global ext_name   redis
 %global with_zts   0%{?__ztsphp:1}
-%global gitver     5df5153
-%global gitrel     29
+%global gitver     6f7087f
+%global gitrel     38
+
 %if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
 %ifarch ppc64
 # redis have ExcludeArch: ppc64
@@ -17,12 +18,12 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          php-%{ext_name}
 Version:       2.2.2
-Release:       3%{?gitver:.git%{gitver}}%{?dist}
+Release:       4%{?gitver:.git%{gitver}}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/nicolasff/phpredis
 %if 0%{?gitver:1}
-# wget https://github.com/nicolasff/phpredis/tarball/master
+# wget https://github.com/nicolasff/phpredis/tarball/6f7087fbfe2b96a2fb36abb7005b70d86329c83d
 Source0:       nicolasff-phpredis-%{version}-%{gitrel}-g%{gitver}.tar.gz
 %else
 # wget https://github.com/nicolasff/phpredis/tarball/2.2.2 -O php-redis-2.2.2.tgz
@@ -58,13 +59,6 @@ with the Redis key-value store.
 # rename source folder
 mv *redis* nts
 
-chmod -x nts/*{c,h}
-
-# remove bundled lib
-rm -rf nts/igbinary
-sed -e 's:igbinary/[^ ]*\.c::g' \
-    -i nts/config.m4
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' nts/php_redis.h)
 if test "x${extver}" != "x%{version}"; then
@@ -92,13 +86,21 @@ EOF
 %build
 cd nts
 %{_bindir}/phpize
-%configure --with-php-config=%{_bindir}/php-config
+%configure \
+    --enable-redis \
+    --enable-redis-session \
+    --enable-redis-igbinary \
+    --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../zts
 %{_bindir}/zts-phpize
-%configure --with-php-config=%{_bindir}/zts-php-config
+%configure \
+    --enable-redis \
+    --enable-redis-session \
+    --enable-redis-igbinary \
+    --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
 
@@ -188,6 +190,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep  2 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-4.git6f7087f
+- latest snahot (without bundled igbinary)
+- remove chmod (done upstream)
+
 * Sat Sep  1 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-3.git5df5153
 - run only test suite with redis > 2.4
 
