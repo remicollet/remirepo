@@ -1,99 +1,179 @@
---- pecl/apc/trunk/apc_string.c	2012/08/22 14:36:28	327232
-+++ pecl/apc/trunk/apc_string.c	2012/08/22 14:54:39	327233
-@@ -206,48 +206,52 @@
-     int count = APCG(shm_strings_buffer) / (sizeof(Bucket) + sizeof(Bucket*) * 2);
+--- pecl/apc/trunk/tests/apc54_004.phpt	2012/09/03 17:19:06	327448
++++ pecl/apc/trunk/tests/apc54_004.phpt	2012/09/03 17:31:18	327449
+@@ -31,63 +31,63 @@
  
-     apc_interned_strings_data = (apc_interned_strings_data_t*) apc_sma_malloc(APCG(shm_strings_buffer) TSRMLS_CC);
--    memset((void *)apc_interned_strings_data, 0, APCG(shm_strings_buffer));
-+    if (apc_interned_strings_data) {
-+        memset((void *)apc_interned_strings_data, 0, APCG(shm_strings_buffer));
- 
--    CREATE_LOCK(APCSG(lock));
-+        CREATE_LOCK(APCSG(lock));
- 
--    zend_hash_init(&APCSG(interned_strings), count, NULL, NULL, 1);
--    APCSG(interned_strings).nTableMask = APCSG(interned_strings).nTableSize - 1;
--    APCSG(interned_strings).arBuckets = (Bucket**)((char*)apc_interned_strings_data + sizeof(apc_interned_strings_data_t));
--   
--    APCSG(interned_strings_start) = (char*)APCSG(interned_strings).arBuckets + APCSG(interned_strings).nTableSize * sizeof(Bucket *);
--    APCSG(interned_strings_end)   = (char*)apc_interned_strings_data + APCG(shm_strings_buffer);
--    APCSG(interned_strings_top)   = APCSG(interned_strings_start);
--
--    old_interned_strings_start = CG(interned_strings_start);
--    old_interned_strings_end = CG(interned_strings_end);
--    old_new_interned_string = zend_new_interned_string;
--    old_interned_strings_snapshot = zend_interned_strings_snapshot;
--    old_interned_strings_restore = zend_interned_strings_restore;
--
--    CG(interned_strings_start) = APCSG(interned_strings_start);
--    CG(interned_strings_end) = APCSG(interned_strings_end);
--    zend_new_interned_string = apc_dummy_new_interned_string_for_php;
--    zend_interned_strings_snapshot = apc_dummy_interned_strings_snapshot_for_php;
--    zend_interned_strings_restore = apc_dummy_interned_strings_restore_for_php;
-+        zend_hash_init(&APCSG(interned_strings), count, NULL, NULL, 1);
-+        APCSG(interned_strings).nTableMask = APCSG(interned_strings).nTableSize - 1;
-+        APCSG(interned_strings).arBuckets = (Bucket**)((char*)apc_interned_strings_data + sizeof(apc_interned_strings_data_t));
-+
-+        APCSG(interned_strings_start) = (char*)APCSG(interned_strings).arBuckets + APCSG(interned_strings).nTableSize * sizeof(Bucket *);
-+        APCSG(interned_strings_end)   = (char*)apc_interned_strings_data + APCG(shm_strings_buffer);
-+        APCSG(interned_strings_top)   = APCSG(interned_strings_start);
-+
-+        old_interned_strings_start = CG(interned_strings_start);
-+        old_interned_strings_end = CG(interned_strings_end);
-+        old_new_interned_string = zend_new_interned_string;
-+        old_interned_strings_snapshot = zend_interned_strings_snapshot;
-+        old_interned_strings_restore = zend_interned_strings_restore;
-+
-+        CG(interned_strings_start) = APCSG(interned_strings_start);
-+        CG(interned_strings_end) = APCSG(interned_strings_end);
-+        zend_new_interned_string = apc_dummy_new_interned_string_for_php;
-+        zend_interned_strings_snapshot = apc_dummy_interned_strings_snapshot_for_php;
-+        zend_interned_strings_restore = apc_dummy_interned_strings_restore_for_php;
- 
--    apc_copy_internal_strings(TSRMLS_C);
-+        apc_copy_internal_strings(TSRMLS_C);
-+    }
- }
- 
- void apc_interned_strings_shutdown(TSRMLS_D)
- {	
--    zend_hash_clean(CG(function_table));
--    zend_hash_clean(CG(class_table));
--    zend_hash_clean(EG(zend_constants));
--
--    CG(interned_strings_start) = old_interned_strings_start;
--    CG(interned_strings_end) = old_interned_strings_end;
--    zend_new_interned_string = old_new_interned_string;
--    zend_interned_strings_snapshot = old_interned_strings_snapshot;
--    zend_interned_strings_restore = old_interned_strings_restore;
-+    if (apc_interned_strings_data) {
-+        zend_hash_clean(CG(function_table));
-+        zend_hash_clean(CG(class_table));
-+        zend_hash_clean(EG(zend_constants));
-+
-+        CG(interned_strings_start) = old_interned_strings_start;
-+        CG(interned_strings_end) = old_interned_strings_end;
-+        zend_new_interned_string = old_new_interned_string;
-+        zend_interned_strings_snapshot = old_interned_strings_snapshot;
-+        zend_interned_strings_restore = old_interned_strings_restore;
- 
--    apc_sma_free(apc_interned_strings_data TSRMLS_CC);
-+        apc_sma_free(apc_interned_strings_data TSRMLS_CC);
- 
--    DESTROY_LOCK(APCSG(lock));
-+        DESTROY_LOCK(APCSG(lock));
-+    }
- }
- #endif
- 
---- pecl/apc/trunk/apc_string.c	2012/08/23 07:39:44	327243
-+++ pecl/apc/trunk/apc_string.c	2012/08/23 09:08:12	327244
-@@ -248,8 +248,6 @@
-         zend_interned_strings_snapshot = old_interned_strings_snapshot;
-         zend_interned_strings_restore = old_interned_strings_restore;
- 
--        apc_sma_free(apc_interned_strings_data TSRMLS_CC);
--
-         DESTROY_LOCK(APCSG(lock));
-     }
- }
+ --EXPECTF--
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ <br />
+-<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
++<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
+ done
+--- pecl/apc/trunk/tests/apc54_018.phpt	2012/09/03 17:31:18	327449
++++ pecl/apc/trunk/tests/apc54_018.phpt	2012/09/03 17:37:18	327450
+@@ -42,7 +42,7 @@
+   ["type"]=>
+   string(4) "user"
+   ["key"]=>
+-  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
++  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
+   ["value"]=>
+   string(%d) "%s"
+   ["num_hits"]=>
+@@ -67,7 +67,7 @@
+   ["type"]=>
+   string(4) "user"
+   ["key"]=>
+-  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
++  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
+   ["value"]=>
+   string(%d) "%s"
+   ["num_hits"]=>
+@@ -92,7 +92,7 @@
+   ["type"]=>
+   string(4) "user"
+   ["key"]=>
+-  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
++  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
+   ["value"]=>
+   string(%d) "%s"
+   ["num_hits"]=>
+@@ -117,7 +117,7 @@
+   ["type"]=>
+   string(4) "user"
+   ["key"]=>
+-  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
++  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
+   ["value"]=>
+   string(%d) "%s"
+   ["num_hits"]=>
+@@ -142,7 +142,7 @@
+   ["type"]=>
+   string(4) "user"
+   ["key"]=>
+-  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
++  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
+   ["value"]=>
+   string(%d) "%s"
+   ["num_hits"]=>
+@@ -167,7 +167,7 @@
+   ["type"]=>
+   string(4) "user"
+   ["key"]=>
+-  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
++  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
+   ["value"]=>
+   string(%d) "%s"
+   ["num_hits"]=>
+@@ -192,7 +192,7 @@
+   ["type"]=>
+   string(4) "user"
+   ["key"]=>
+-  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
++  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
+   ["value"]=>
+   string(%d) "%s"
+   ["num_hits"]=>
+@@ -217,7 +217,7 @@
+   ["type"]=>
+   string(4) "user"
+   ["key"]=>
+-  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
++  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
+   ["value"]=>
+   string(%d) "%s"
+   ["num_hits"]=>
+@@ -242,7 +242,7 @@
+   ["type"]=>
+   string(4) "user"
+   ["key"]=>
+-  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
++  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
+   ["value"]=>
+   string(%d) "%s"
+   ["num_hits"]=>

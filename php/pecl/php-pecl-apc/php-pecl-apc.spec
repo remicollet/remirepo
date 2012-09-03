@@ -4,20 +4,22 @@
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          php-pecl-apc
-Version:       3.1.12
-Release:       2%{?dist}
+Version:       3.1.13
+Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
 
 # Upstream patch from SVN.
-# http://svn.php.net/viewvc?view=revision&revision=327233
-# http://svn.php.net/viewvc?view=revision&revision=327244
+# http://svn.php.net/viewvc?view=revision&revision=327449
+# http://svn.php.net/viewvc?view=revision&revision=327450
 Patch0:        apc-svn.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.0, httpd-devel, php-pear, pcre-devel
+# For tests
+BuildRequires: php-dom
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -28,11 +30,17 @@ Conflicts:     php-mmcache php-eaccelerator
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:     php53-pecl-apc
+Obsoletes:     php53u-pecl-apc
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-apc
+%endif
+
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -56,9 +64,16 @@ These are the files needed to compile programs using APC serializer.
 cd APC-%{version}
 %patch0 -p3 -b .orig
 
-# There are currently some failed tests
+# There are currently some failed tests, https://bugs.php.net/63003
 # which requires dom extension, so drop them for now.
 rm -f tests/apc54_00{3,8,9}.phpt
+
+%if 0%{?__isa_bits}
+# port number to allow 32/64 build at same time
+port=$(expr %{__isa_bits} + 8900)
+sed -e "/PHP_CLI_SERVER_PORT/s/8964/$port/" \
+    -i tests/server_test.inc
+%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
@@ -188,18 +203,24 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %check
 cd %{pecl_name}-%{version}
+ln -sf %{php_extdir}/dom.so modules/
+
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php run-tests.php \
     -n -q -d extension_dir=modules \
+    -d extension=dom.so \
     -d extension=apc.so
 
 %if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-%{version}-zts
+ln -sf %{php_ztsextdir}/dom.so modules/
+
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} run-tests.php \
     -n -q -d extension_dir=modules \
+    -d extension=dom.so \
     -d extension=apc.so
 %endif
 
@@ -242,6 +263,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep  3 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-1
+- Version 3.1.13 (beta) - API 3.1.0 (stable)
+- add patches from upstream (fixes some tests)
+- change serveur port for tests (32/64 bits)
+- obsoletes php53*, php54*
+
 * Sun Aug 26 2012 Remi Collet <remi@fedoraproject.org> - 3.1.12-2
 - add patches from upstream
 - delete tests which fail because of missing dom extension
