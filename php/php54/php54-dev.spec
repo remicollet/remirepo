@@ -470,7 +470,7 @@ Summary: 	A module for PHP applications that use OCI8 databases
 Group: 		Development/Languages
 BuildRequires: 	oracle-instantclient-devel >= %{oraclever}
 Requires: 	%{phpname}-pdo%{?_isa} = %{version}-%{release}
-Provides: 	%{phpname}_database 
+Provides: 	%{phpname}_database
 Provides: 	%{phpname}-pdo_oci = %{oci8ver}, %{phpname}-pdo_oci%{?_isa} = %{oci8ver}
 Provides:       %{phpname}-pecl-oci8 = %{oci8ver}, %{phpname}-pecl-oci8%{?_isa} = %{oci8ver}
 Provides:       %{phpname}-pecl(oci8) = %{oci8ver}, %{phpname}-pecl(oci8)%{?_isa} = %{oci8ver}
