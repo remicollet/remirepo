@@ -2,7 +2,7 @@
 
 Name: phpMyAdmin
 Version: 3.5.2.2
-Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
+Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}.1
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -20,13 +20,14 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: unzip
 
-Requires: webserver 
-Requires: php-mysql >= 5.2.0
-Requires: php-mbstring >= 5.2.0
-Requires: php-gd >= 5.2.0
-Requires: php-mcrypt >= 5.2.0
-Requires: php-php-gettext
-Provides: phpmyadmin = %{version}-%{release}
+Requires:  webserver
+Requires:  php-mysql >= 5.2.0
+Requires:  php-mbstring >= 5.2.0
+Requires:  php-gd >= 5.2.0
+Requires:  php-mcrypt >= 5.2.0
+Requires:  php-php-gettext
+Provides:  phpmyadmin = %{version}-%{release}
+Obsoletes: phpMyAdmin3
 
 
 %description
@@ -121,6 +122,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Mon Sep  3 2012 Remi Collet <rpms@famillecollet.com> 3.5.2.2-1.1
+- Obsoletes phpMyAdmin3
+
 * Sun Aug 12 2012 Remi Collet <rpms@famillecollet.com> 3.5.2.2-1
 - Upstream released 3.5.2.2 (security)
   fix PMASA-2012-4
