@@ -11,9 +11,11 @@ Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
 Source:        http://pecl.php.net/get/APC-%{version}.tgz
 
-# Upstream patch from SVN.
+# Upstream patch from SVN, fixed test suite.
 # http://svn.php.net/viewvc?view=revision&revision=327449
 # http://svn.php.net/viewvc?view=revision&revision=327450
+# http://svn.php.net/viewvc?view=revision&revision=327453
+# http://svn.php.net/viewvc?view=revision&revision=327454
 Patch0:        apc-svn.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -63,10 +65,6 @@ These are the files needed to compile programs using APC serializer.
 
 cd APC-%{version}
 %patch0 -p3 -b .orig
-
-# There are currently some failed tests, https://bugs.php.net/63003
-# which requires dom extension, so drop them for now.
-rm -f tests/apc54_00{3,8,9}.phpt
 
 %if 0%{?__isa_bits}
 # port number to allow 32/64 build at same time
@@ -206,22 +204,20 @@ cd %{pecl_name}-%{version}
 ln -sf %{php_extdir}/dom.so modules/
 
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension=apc.so" \
+NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php run-tests.php \
-    -n -q -d extension_dir=modules \
-    -d extension=dom.so \
-    -d extension=apc.so
+%{_bindir}/php run-tests.php
 
 %if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-%{version}-zts
 ln -sf %{php_ztsextdir}/dom.so modules/
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension=apc.so" \
+NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} run-tests.php \
-    -n -q -d extension_dir=modules \
-    -d extension=dom.so \
-    -d extension=apc.so
+%{__ztsphp} run-tests.php
 %endif
 
 
@@ -266,7 +262,7 @@ rm -rf %{buildroot}
 * Mon Sep  3 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-1
 - Version 3.1.13 (beta) - API 3.1.0 (stable)
 - add patches from upstream (fixes some tests)
-- change serveur port for tests (32/64 bits)
+- change serveur port for tests (allow 32/64 bits build)
 - obsoletes php53*, php54*
 
 * Sun Aug 26 2012 Remi Collet <remi@fedoraproject.org> - 3.1.12-2

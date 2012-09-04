@@ -177,3 +177,32 @@
    ["value"]=>
    string(%d) "%s"
    ["num_hits"]=>
+--- pecl/apc/trunk/tests/apc54_020.phpt	2012/09/04 00:04:46	327452
++++ pecl/apc/trunk/tests/apc54_020.phpt	2012/09/04 05:30:31	327453
+@@ -3,8 +3,8 @@
+ --SKIPIF--
+ <?php
+     require_once(dirname(__FILE__) . '/skipif.inc'); 
+-    if (PHP_MAJOR_VERSION < 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION < 4)) {
+-		die('skip PHP 5.4+ only');
++    if (version_compare(PHP_VERSION, '5.4.6', '<')) {
++		die('skip PHP 5.4.6+ only');
+ 	}
+ --FILE--
+ <?php
+--- pecl/apc/trunk/tests/server_test.inc	2012/09/04 05:30:31	327453
++++ pecl/apc/trunk/tests/server_test.inc	2012/09/04 05:32:28	327454
+@@ -23,8 +23,11 @@
+ 		2 => STDERR,
+ 	);
+ 
+-	$ext = (substr(PHP_OS, 0, 3) == 'WIN') ? 'php_apc.dll' : 'apc.so';
+-	$php_args = "-d extension_dir=$doc_root/../modules -d extension=$ext";
++	$php_args = getenv('TEST_PHP_ARGS');
++	if (empty($php_args)) {
++		$ext = (substr(PHP_OS, 0, 3) == 'WIN') ? 'php_apc.dll' : 'apc.so';
++		$php_args = "-d extension_dir=$doc_root/../modules -d extension=$ext";
++	}
+ 	if ($php_opts) {
+ 		$php_args = "$php_args -d " . implode(' -d ', $php_opts);;
+ 	}
