@@ -207,7 +207,7 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension=apc.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php run-tests.php
+%{_bindir}/php -n run-tests.php
 
 %if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-%{version}-zts
@@ -217,7 +217,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension=apc.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} run-tests.php
+%{__ztsphp} -n run-tests.php
 %endif
 
 
