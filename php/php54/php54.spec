@@ -122,7 +122,7 @@ BuildRequires: sqlite-devel >= 3.0.0
 %endif
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
-BuildRequires: pcre-devel >= 8.0
+BuildRequires: pcre-devel >= 8.10
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
@@ -270,6 +270,9 @@ package and the php-cli package.
 Group: Development/Libraries
 Summary: Files needed for building PHP extensions
 Requires: php%{?_isa} = %{version}-%{release}, autoconf, automake
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+Requires: pcre-devel%{?_isa}
+%endif
 Obsoletes: php-pecl-pdo-devel
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}

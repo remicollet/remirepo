@@ -5,7 +5,7 @@
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          php-pecl-apc
 Version:       3.1.13
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
@@ -19,7 +19,7 @@ Source:        http://pecl.php.net/get/APC-%{version}.tgz
 Patch0:        apc-svn.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel >= 5.1.0, httpd-devel, php-pear, pcre-devel
+BuildRequires: php-devel >= 5.1.0, httpd-devel, php-pear
 # For tests
 BuildRequires: php-dom
 
@@ -259,6 +259,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep  4 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-2
+- sync with rawhide
+- EL rebuild
+
 * Mon Sep  3 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-1
 - Version 3.1.13 (beta) - API 3.1.0 (stable)
 - add patches from upstream (fixes some tests)

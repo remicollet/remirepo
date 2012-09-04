@@ -46,7 +46,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.16
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -123,8 +123,8 @@ BuildRequires: sqlite-devel >= 3.5.9
 BuildRequires: sqlite-devel >= 3.0.0
 %endif
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
-BuildRequires: pcre-devel >= 7.8
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+BuildRequires: pcre-devel >= 8.10
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 %if 0%{?rhel}%{?fedora} > 4
@@ -268,6 +268,9 @@ package and the %{phpname}-cli package.
 Group: Development/Libraries
 Summary: Files needed for building PHP extensions
 Requires: %{phpname}%{?_isa} = %{version}-%{release}, autoconf, automake
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+Requires: pcre-devel%{?_isa}
+%endif
 Obsoletes: %{phpname}-pecl-pdo-devel
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
@@ -866,7 +869,7 @@ ln -sf ../configure
 	--with-iconv \
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
         --with-pcre-regex=%{_prefix} \
 %endif
 	--with-zlib \
@@ -1493,6 +1496,9 @@ fi
 %endif
 
 %changelog
+* Tue Sep  4 2012 Remi Collet <remi@fedoraproject.org> 5.3.16-3
+- use system pcre only on fedora >= 14 (version 8.10)
+
 * Mon Sep  3 2012 Remi Collet <remi@fedoraproject.org> 5.3.16-2
 - obsoletes php53 packages to allow smoth update
 - clean unneeded conditionnal

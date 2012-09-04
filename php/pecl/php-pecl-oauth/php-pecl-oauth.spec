@@ -5,7 +5,7 @@
 
 Name:           php-pecl-oauth
 Version:        1.2.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD
@@ -17,7 +17,6 @@ BuildRequires:  php-devel
 BuildRequires:  php-pear
 # curl instead of libcurl for old release
 BuildRequires:  curl-devel
-BuildRequires:  pcre-devel
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
@@ -112,6 +111,9 @@ fi
 
 
 %changelog
+* Tue Sep  4 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-4
+- EL rebuild
+
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 1.2.2-3
 - build against php 5.4
 
