@@ -14,7 +14,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 10%{?dist}
+Release: 11%{?dist}.1
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -54,7 +54,8 @@ Provides: php-pear(XML_Util) = %{xmlutil}
 Obsoletes: php-pear-XML-Util < %{xmlutil}-%{release}
 Provides:  php-pear-XML-Util = %{xmlutil}-%{release}
 Requires:  php-cli >= 5.1.0-1
-
+# From other third party
+Obsoletes: php53-pear, php53u-pear, php54-pear
 
 %description
 PEAR is a framework and distribution system for reusable PHP
@@ -70,9 +71,11 @@ do
     file=${archive##*/}
     [ -f LICENSE ] && mv LICENSE LICENSE-${file%%-*}
     [ -f README ]  && mv README  README-${file%%-*}
+
+    tar xzf $archive 'package*xml'
+    [ -f package2.xml ] && mv package2.xml ${file%%-*}.xml \
+                        || mv package.xml  ${file%%-*}.xml
 done
-tar xzf %{SOURCE24} package.xml
-mv package.xml XML_Util.xml
 
 # apply patches on used PEAR during install
 # -- no patch
@@ -110,7 +113,8 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
                  --bin    %{_bindir} \
                  --www    %{_localstatedir}/www/html \
                  --doc    %{_docdir}/pear \
-                 --test   %{_datarootdir}/tests/pear \
+                 --test   %{_datadir}/tests/pear \
+                 --data   %{_datadir}/pear-data \
                  %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24}
 
 # Replace /usr/bin/* with simple scripts:
@@ -141,7 +145,7 @@ popd
 rm -rf $RPM_BUILD_ROOT/.depdb* $RPM_BUILD_ROOT/.lock $RPM_BUILD_ROOT/.channels $RPM_BUILD_ROOT/.filemap
 
 # Need for re-registrying XML_Util
-install -m 644 XML_Util.xml $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml
+install -m 644 *.xml $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml
 
 
 %check
@@ -178,8 +182,13 @@ rm new-pear.conf
 
 %post
 # force new value as pear.conf is (noreplace)
-%{_bindir}/pear config-set test_dir \
-    %{_datarootdir}/tests/pear system >/dev/null || :
+%{_bindir}/pear config-set \
+    test_dir %{_datadir}/tests/pear \
+    system >/dev/null || :
+
+%{_bindir}/pear config-set \
+    data_dir %{_datadir}/pear-data \
+    system >/dev/null || :
 
 
 %triggerpostun -- php-pear-XML-Util
@@ -200,12 +209,20 @@ rm new-pear.conf
 %doc README* LICENSE*
 %dir %{_docdir}/pear
 %doc %{_docdir}/pear/*
-%dir %{_datarootdir}/tests
-%{_datarootdir}/tests/pear
+%dir %{_datadir}/tests
+%{_datadir}/tests/pear
+%{_datadir}/pear-data
 %{_localstatedir}/lib/pear
 
 
 %changelog
+* Thu Sep  6 2012 Remi Collet <RPMS@famillecollet.com> 1:1.9.4-11.1
+- obsoletes php53* php54* on EL
+
+* Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-11
+- move data to /usr/share/pear-data
+- provides all package.xml
+
 * Tue Aug 15 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-10
 - enforce test_dir on update
 
