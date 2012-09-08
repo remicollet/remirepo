@@ -1,0 +1,46 @@
+From a66b1286b06ec0c8b11790d772725a2a7bb33d57 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 18 Aug 2012 18:57:39 +0200
+Subject: [PATCH] fix build with libmemcached < 1.0.10
+
+---
+ config.m4       |    2 ++
+ php_memcached.c |    6 ++++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/config.m4 b/config.m4
+index 045758a..a346d4c 100644
+--- a/config.m4
++++ b/config.m4
+@@ -250,6 +250,8 @@ if test "$PHP_MEMCACHED" != "no"; then
+     
+     PHP_MEMCACHED_FILES="php_memcached.c fastlz/fastlz.c g_fmt.c"
+ 
++    AC_CHECK_LIB(memcached, memcached_server_major_version, AC_DEFINE(HAVE_MEMCACHED_SERVER_VERSION, 1, [Whether libmemcached have memcached_server_xxx_version functions]))
++
+     if test "$PHP_MEMCACHED_SESSION" != "no"; then
+       PHP_MEMCACHED_FILES="${PHP_MEMCACHED_FILES} php_memcached_session.c"
+     fi
+diff --git a/php_memcached.c b/php_memcached.c
+index 90ea8ab..3f3882a 100644
+--- a/php_memcached.c
++++ b/php_memcached.c
+@@ -2643,9 +2643,15 @@ static memcached_return php_memc_do_version_callback(const memcached_st *ptr, me
+ 
+ 	hostport_len = spprintf(&hostport, 0, "%s:%d", memcached_server_name(instance), memcached_server_port(instance));
+ 	version_len = snprintf(version, sizeof(version), "%d.%d.%d",
++#ifdef HAVE_MEMCACHED_SERVER_VERSION
+ 				memcached_server_major_version(instance),
+ 				memcached_server_minor_version(instance),
+ 				memcached_server_micro_version(instance));
++#else
++				instance->major_version,
++				instance->minor_version,
++				instance->micro_version);
++#endif
+ 
+ 	add_assoc_stringl_ex(context->return_value, hostport, hostport_len+1, version, version_len, 1);
+ 	efree(hostport);
+-- 
+1.7.10
+

@@ -1,51 +1,52 @@
-%{!?phpname:  %{expand: %%global phpname     php}}
-%{!?__pecl:   %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name memcached
-#global gitver    1736623
 
 Summary:      Extension to work with the Memcached caching daemon
-Name:         %{phpname}-pecl-memcached
-Version:      2.0.1
-%if 0%{?gitver:1}
-Release:      0.1.git%{gitver}%{?dist}
-Source:       php-memcached-dev-php-memcached-v2.0.0b2-14-g%{gitver}.tar.gz
-%else
-Release:      6%{?dist}
-Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-%endif
+Name:         php-pecl-memcached
+Version:      2.1.0
+Release:      2%{?dist}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
+Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# https://github.com/php-memcached-dev/php-memcached/issues/25
+# https://github.com/remicollet/php-memcached/commit/a66b1286b06ec0c8b11790d772725a2a7bb33d57.patch
+Patch0:        %{pecl_name}-build.patch
+
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
-BuildRequires: %{phpname}-devel >= 5.2.10
-BuildRequires: %{phpname}-pear
-BuildRequires: %{phpname}-pecl-igbinary-devel
-BuildRequires: libmemcached-devel
+BuildRequires: php-devel >= 5.2.10
+BuildRequires: php-pear
+BuildRequires: php-pecl-igbinary-devel
+BuildRequires: libmemcached-devel >= 1.0.0
 BuildRequires: zlib-devel
 BuildRequires: cyrus-sasl-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:     %{phpname}-common%{?_isa} >= 5.2.10
-Requires:     %{phpname}-pecl-igbinary%{?_isa}
-Requires:     %{phpname}(zend-abi) = %{php_zend_api}
-Requires:     %{phpname}(api) = %{php_core_api}
+Requires:     php-common%{?_isa} >= 5.2.10
+Requires:     php-pecl-igbinary%{?_isa}
+Requires:     php(zend-abi) = %{php_zend_api}
+Requires:     php(api) = %{php_core_api}
 
-Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
-Provides:     %{phpname}-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
+Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
 
+# Other third party repo stuff
+Obsoletes:     php53-pecl-memcached
+Obsoletes:     php53u-pecl-memcached
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-memcached
+%endif
 
-# RPM 4.8
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -61,11 +62,6 @@ It also provides a session handler (memcached).
 
 %prep 
 %setup -c -q
-
-%if 0%{?gitver:1}
-mv php-memcached-dev-php-memcached-%{gitver}/package.xml .
-mv php-memcached-dev-php-memcached-%{gitver} %{pecl_name}-%{version}
-%endif
 
 # Chech version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_MEMCACHED_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_memcached.h)
@@ -89,6 +85,10 @@ extension=%{pecl_name}.so
 ;session.save_path="localhost:11211"
 EOF
 
+cd %{pecl_name}-%{version}
+%patch0 -p1 -b .build
+cd ..
+
 cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 
@@ -111,20 +111,18 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-make install -C %{pecl_name}-%{version}     INSTALL_ROOT=%{buildroot}
-make install -C %{pecl_name}-%{version}-zts INSTALL_ROOT=%{buildroot}
+# Install the NTS extension
+make install -C %{pecl_name}-%{version} INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-
-%clean
-rm -rf %{buildroot}
+# Install the ZTS extension
+make install -C %{pecl_name}-%{version}-zts INSTALL_ROOT=%{buildroot}
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 
 %post
@@ -162,17 +160,26 @@ ln -s %{php_ztsextdir}/igbinary.so modules/
 
 
 %files
-%defattr(-, root, root, -)
+%defattr(-,root,root,-)
 %doc %{pecl_name}-%{version}/{CREDITS,LICENSE,README.markdown,ChangeLog}
 %doc LICENSE-FastLZ
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
 
 
 %changelog
+* Sat Sep  8 2012 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
+- sync with rawhide, cleanups
+- Obsoletes php53*, php54* on EL
+
+* Tue Aug 07 2012 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0
+- add patch to lower libmemcached required version
+
 * Sun Apr 22 2012  Remi Collet <remi@fedoraproject.org> - 2.0.1-6
 - rebuild for libmemcached 1.0.6 (with SASL) and php 5.4
 
