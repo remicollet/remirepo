@@ -4,7 +4,7 @@
 
 Name:           php-pecl-geoip
 Version:        1.0.8
-Release:        2%{?dist}
+Release:        3%{?dist}.1
 Summary:        Extension to map IP addresses to geographic places
 Group:          Development/Languages
 License:        PHP
@@ -25,11 +25,16 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:     php53-pecl-geoip
+Obsoletes:     php53u-pecl-geoip
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-geoip
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -124,6 +129,9 @@ fi
 
 
 %changelog
+* Fri Sep  7 2012 Remi Collet <remi@fedoraproject.org> - 1.0.8-3
+- Obsoletes php53*, php54* on EL
+
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 1.0.8-2
 - build against php 5.4
 
