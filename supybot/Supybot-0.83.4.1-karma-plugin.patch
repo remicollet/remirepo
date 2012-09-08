@@ -1,0 +1,184 @@
+diff -uNr Supybot-0.83.4.1-orig/plugins/Karma/plugin.py Supybot-0.83.4.1/plugins/Karma/plugin.py
+--- Supybot-0.83.4.1-orig/plugins/Karma/plugin.py	2009-05-25 12:38:12.000000000 -0500
++++ Supybot-0.83.4.1/plugins/Karma/plugin.py	2010-06-03 12:17:20.355768834 -0500
+@@ -49,7 +49,7 @@
+ 
+     def _getDb(self, channel):
+         try:
+-            import sqlite
++            from pysqlite2 import dbapi2
+         except ImportError:
+             raise callbacks.Error, 'You need to have PySQLite installed to ' \
+                                    'use Karma.  Download it at ' \
+@@ -58,9 +58,9 @@
+         if filename in self.dbs:
+             return self.dbs[filename]
+         if os.path.exists(filename):
+-            self.dbs[filename] = sqlite.connect(filename)
++            self.dbs[filename] = dbapi2.connect(filename)
+             return self.dbs[filename]
+-        db = sqlite.connect(filename)
++        db = dbapi2.connect(filename)
+         self.dbs[filename] = db
+         cursor = db.cursor()
+         cursor.execute("""CREATE TABLE karma (
+@@ -80,12 +80,16 @@
+         db = self._getDb(channel)
+         thing = thing.lower()
+         cursor = db.cursor()
+-        cursor.execute("""SELECT added, subtracted FROM karma
+-                          WHERE normalized=%s""", thing)
+-        if cursor.rowcount == 0:
++        sql = """SELECT added, subtracted FROM karma
++                          WHERE normalized='%s'""" % thing
++        cursor.execute(sql)
++        results = cursor.fetchall()
++        print results
++        if results == []:
+             return None
+         else:
+-            return map(int, cursor.fetchone())
++            return results[0]
++            #return map(int, results)
+ 
+     def gets(self, channel, things):
+         db = self._getDb(channel)
+@@ -93,7 +97,7 @@
+         normalizedThings = dict(zip(map(lambda s: s.lower(), things), things))
+         criteria = ' OR '.join(['normalized=%s'] * len(normalizedThings))
+         sql = """SELECT name, added-subtracted FROM karma
+-                 WHERE %s ORDER BY added-subtracted DESC""" % criteria
++                 WHERE '%s' ORDER BY added-subtracted DESC""" % criteria
+         cursor.execute(sql, *normalizedThings)
+         L = [(name, int(karma)) for (name, karma) in cursor.fetchall()]
+         for (name, _) in L:
+@@ -106,53 +110,49 @@
+         db = self._getDb(channel)
+         cursor = db.cursor()
+         cursor.execute("""SELECT name, added-subtracted FROM karma
+-                          ORDER BY added-subtracted DESC LIMIT %s""", limit)
++                          ORDER BY added-subtracted DESC LIMIT '%s'""" % limit)
+         return [(t[0], int(t[1])) for t in cursor.fetchall()]
+ 
+     def bottom(self, channel, limit):
+         db = self._getDb(channel)
+         cursor = db.cursor()
+         cursor.execute("""SELECT name, added-subtracted FROM karma
+-                          ORDER BY added-subtracted ASC LIMIT %s""", limit)
++                          ORDER BY added-subtracted ASC LIMIT '%s'""" % limit)
+         return [(t[0], int(t[1])) for t in cursor.fetchall()]
+ 
+     def rank(self, channel, thing):
+         db = self._getDb(channel)
+         cursor = db.cursor()
+         cursor.execute("""SELECT added-subtracted FROM karma
+-                          WHERE name=%s""", thing)
+-        if cursor.rowcount == 0:
++                          WHERE name='%s'""" % thing)
++        if cursor.rowcount <= 0:
+             return None
+-        karma = int(cursor.fetchone()[0])
++        karma = int(cursor.fetchall()[0])
+         cursor.execute("""SELECT COUNT(*) FROM karma
+-                          WHERE added-subtracted > %s""", karma)
+-        rank = int(cursor.fetchone()[0])
++                          WHERE added-subtracted > '%s'""" % karma)
++        rank = int(cursor.fetchall()[0])
+         return rank+1
+ 
+     def size(self, channel):
+         db = self._getDb(channel)
+         cursor = db.cursor()
+         cursor.execute("""SELECT COUNT(*) FROM karma""")
+-        return int(cursor.fetchone()[0])
++        return int(cursor.fetchall()[0])
+ 
+     def increment(self, channel, name):
+         db = self._getDb(channel)
+         cursor = db.cursor()
+         normalized = name.lower()
+-        cursor.execute("""INSERT INTO karma VALUES (NULL, %s, %s, 0, 0)""",
+-                       name, normalized)
+-        cursor.execute("""UPDATE karma SET added=added+1
+-                          WHERE normalized=%s""", normalized)
++        cursor.execute("""INSERT INTO karma VALUES (NULL, '%s', '%s', 0, 0)""" % (name, normalized))
++        cursor.execute("""UPDATE karma SET added=added+1 WHERE normalized='%s'"""  % normalized)
+         db.commit()
+ 
+     def decrement(self, channel, name):
+         db = self._getDb(channel)
+         cursor = db.cursor()
+         normalized = name.lower()
+-        cursor.execute("""INSERT INTO karma VALUES (NULL, %s, %s, 0, 0)""",
+-                       name, normalized)
+-        cursor.execute("""UPDATE karma SET subtracted=subtracted+1
+-                          WHERE normalized=%s""", normalized)
++        cursor.execute("""INSERT INTO karma VALUES (NULL, '%s', '%s', 0, 0)""" % (name, normalized))
++        cursor.execute("""UPDATE karma SET subtracted=subtracted+1 WHERE normalized='%s'""" % normalized)
+         db.commit()
+ 
+     def most(self, channel, kind, limit):
+@@ -164,7 +164,7 @@
+             orderby = 'added+subtracted'
+         else:
+             raise ValueError, 'invalid kind'
+-        sql = """SELECT name, %s FROM karma ORDER BY %s DESC LIMIT %s""" % \
++        sql = """SELECT name, '%s' FROM karma ORDER BY '%s' DESC LIMIT '%s'""" % \
+               (orderby, orderby, limit)
+         db = self._getDb(channel)
+         cursor = db.cursor()
+@@ -176,7 +176,7 @@
+         cursor = db.cursor()
+         normalized = name.lower()
+         cursor.execute("""UPDATE karma SET subtracted=0, added=0
+-                          WHERE normalized=%s""", normalized)
++                          WHERE normalized='%s'""" % normalized)
+         db.commit()
+ 
+     def dump(self, channel, filename):
+@@ -200,13 +200,13 @@
+         for (name, added, subtracted) in reader:
+             normalized = name.lower()
+             cursor.execute("""INSERT INTO karma
+-                              VALUES (NULL, %s, %s, %s, %s)""",
+-                           name, normalized, added, subtracted)
++                              VALUES (NULL, '%s', '%s', '%s', '%s')""" %
++                           (name, normalized, added, subtracted))
+         db.commit()
+         fd.close()
+ 
+ KarmaDB = plugins.DB('Karma',
+-                     {'sqlite': SqliteKarmaDB})
++                     {'pysqlite2': SqliteKarmaDB})
+ 
+ class Karma(callbacks.Plugin):
+     callBefore = ('Factoids', 'MoobotFactoids', 'Infobot')
+@@ -249,6 +249,10 @@
+             elif thing:
+                 self.db.decrement(channel, self._normalizeThing(thing))
+                 self._respond(irc, channel)
++        t = self.db.get(channel, thing)
++        (added, subtracted) = t
++        total = added - subtracted
++        irc.reply('Karma for %s (%s)' % (thing, total))
+ 
+     def invalidCommand(self, irc, msg, tokens):
+         channel = msg.args[0]
+diff -uNr Supybot-0.83.4.1-orig/plugins/Karma/test.py Supybot-0.83.4.1/plugins/Karma/test.py
+--- Supybot-0.83.4.1-orig/plugins/Karma/test.py	2009-05-25 12:38:12.000000000 -0500
++++ Supybot-0.83.4.1/plugins/Karma/test.py	2010-06-03 12:12:41.090762813 -0500
+@@ -30,11 +30,11 @@
+ from supybot.test import *
+ 
+ try:
+-    import sqlite
++    import pysqlite2
+ except ImportError:
+-    sqlite = None
++    pysqlite2 = None
+ 
+-if sqlite is not None:
++if pysqlite2 is not None:
+     class KarmaTestCase(ChannelPluginTestCase):
+         plugins = ('Karma',)
+         def testKarma(self):
