@@ -27,7 +27,7 @@ Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
 Provides:      php-pecl(%{pecl_name}) = %{version}%{?prever}
-Provides:      php-pecl(%{pecl_name})%{_isa} = %{version}%{?prever}
+Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 Conflicts:     php-pecl-gmagick
 
 # Other third party repo stuff

@@ -28,7 +28,7 @@ Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
 Provides:     php-pecl(%{pecl_name}) = %{version}
-Provides:     php-pecl(%{pecl_name})%{_isa} = %{version}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-memcache
