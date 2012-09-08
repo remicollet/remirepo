@@ -1,18 +1,18 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(%{phpbindir}/php-config --extension-dir)}}
 
 %global pecl_name memcache
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcache
 Version:      3.0.6
-Release:      4%{?dist}
+Release:      5%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
+Source3:      LICENSE
 
 # https://bugs.php.net/60284
 Patch0:       memcache-php54.patch
@@ -27,14 +27,20 @@ Requires(postun): %{__pecl}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
-Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:     php-pecl(%{pecl_name}) = %{version}
+Provides:     php-pecl(%{pecl_name})%{_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-memcache
+Obsoletes:     php53u-pecl-memcache
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-memcache
+%endif
 
 
-# RPM 4.8
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -51,13 +57,15 @@ Memcache can be used as a PHP session handler.
 %prep 
 %setup -c -q
 
+%patch0 -p0 -b .php54
 pushd memcache-%{version}
-%patch0 -p1 -b .php54
 %patch1 -p1 -b .fdcast
 %patch2 -p1 -b .get-mem-corrupt.patch
 popd
 
 %{__php} -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
+
+cp -p %{SOURCE3} .
 
 cat >%{pecl_name}.ini << 'EOF'
 ; ----- Enable %{pecl_name} extension module
@@ -160,7 +168,7 @@ fi
 
 %files
 %defattr(-, root, root, -)
-%doc CHANGELOG %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/README 
+%doc CHANGELOG %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/README LICENSE
 %doc %{pecl_name}-%{version}/example.php %{pecl_name}-%{version}/memcache.php
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
@@ -170,6 +178,10 @@ fi
 
 
 %changelog
+* Sat Sep  8 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-5
+- add LICENSE
+- Obsoletes php53*, php54* on EL
+
 * Sat Jul  7 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-4
 - sync patch with rawhide
 
