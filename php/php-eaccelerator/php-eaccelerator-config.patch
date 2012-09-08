@@ -1,0 +1,27 @@
+--- eaccelerator.ini.orig	2012-09-08 18:15:19.000000000 +0200
++++ eaccelerator.ini	2012-09-08 18:22:31.000000000 +0200
+@@ -12,13 +12,8 @@
+ 
+ ; You must uncomment one (and only one) line from the following to load
+ ; eAccelerator extension.
+-extension="eaccelerator.so"
+-;zend_extension="/usr/lib/php/modules/eaccelerator.so"
+-;zend_extension_ts="/usr/lib/php/modules/eaccelerator.so"
+-
+-;extension="eaccelerator.dll"
+-;zend_extension_ts="c:\php4\eaccelerator.dll"
+-;zend_extension="c:\php4\eaccelerator.dll"
++;extension="eaccelerator.so"
++zend_extension="@EXTDIR@/eaccelerator.so"
+ 
+ ; The amount of shared memory (in megabytes) that eAccelerator will use.
+ ; "0" means OS default. Default value is "0".
+@@ -28,7 +23,7 @@
+ ; code, session data, content and user entries here. The same data can be
+ ; stored in shared memory also (for more quick access). Default value is
+ ; "/tmp/eaccelerator".
+-eaccelerator.cache_dir = "/tmp/eaccelerator"
++eaccelerator.cache_dir = "@CACHEDIR@"
+ 
+ ; Enables or disables eAccelerator. Should be "1" for enabling or
+ ; "0" for disabling. Default value is "1".
