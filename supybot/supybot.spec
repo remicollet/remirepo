@@ -3,7 +3,7 @@
 
 Name:           supybot
 Version:        0.83.4.1
-Release:        9%{?dist}
+Release:        1%{?dist}
 Summary:        Cross-platform IRC bot written in Python
 
 Group:          Applications/Internet
@@ -20,7 +20,11 @@ Patch1:         Supybot-0.83.4.1-karma-plugin.patch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildArch:      noarch
+%if 0%{?fedora} >= 8 || 0%{?rhel} >= 6
 BuildRequires:  python-setuptools-devel
+%else
+BuildRequires:  python-setuptools
+%endif
 Requires:       python-twisted-core
 Requires:       python-twisted-names
 Requires:       python-dateutil
@@ -99,6 +103,9 @@ CFLAGS="%{optflags}" %{__python} -c 'import setuptools; execfile("setup.py")' bu
 
 
 %changelog
+* Sat Sep  8 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.83.4.1-1
+- EL-5 rebuild for remi repo
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.83.4.1-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
