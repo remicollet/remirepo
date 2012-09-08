@@ -1,13 +1,12 @@
 %{!?__pecl:  %{expand: %%global __pecl %{_bindir}/pecl}}
-%{!?phpname: %{expand: %%global phpname php}}
 
 %global pecl_name   imagick
 %global prever      RC2
 
 Summary:       Extension to create and modify images using ImageMagick
-Name:          %{phpname}-pecl-imagick
+Name:          php-pecl-imagick
 Version:       3.1.0
-Release:       0.3.%{prever}%{?dist}
+Release:       0.4.%{prever}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -15,7 +14,7 @@ Source:        http://pecl.php.net/get/imagick-%{version}%{?prever}.tgz
 
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: %{phpname}-devel >= 5.1.3, %{phpname}-pear
+BuildRequires: php-devel >= 5.1.3, php-pear
 %if 0%{?fedora} >= 17
 BuildRequires: ImageMagick-devel >= 6.7.5
 %else
@@ -23,19 +22,24 @@ BuildRequires: ImageMagick-last-devel >= 6.7.5
 %endif
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides:      %{phpname}-pecl(%{pecl_name}) = %{version}%{?prever}
 
-Conflicts:     %{phpname}-pecl-gmagick
+Requires:      php(zend-abi) = %{php_zend_api}
+Requires:      php(api) = %{php_core_api}
 
-Requires:       %{phpname}(zend-abi) = %{php_zend_api}
-Requires:       %{phpname}(api) = %{php_core_api}
+Provides:      php-pecl(%{pecl_name}) = %{version}%{?prever}
+Provides:      php-pecl(%{pecl_name})%{_isa} = %{version}%{?prever}
+Conflicts:     php-pecl-gmagick
 
+# Other third party repo stuff
+Obsoletes:     php53-pecl-imagick
+Obsoletes:     php53u-pecl-imagick
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-imagick
+%endif
 
-# RPM 4.8
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -128,6 +132,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep  8 2012 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.4.RC2
+- Obsoletes php53*, php54* on EL
+
 * Thu Aug 16 2012 Remi Collet <rpms@famillecollet.com> - 3.1.0-0.3.RC2
 - rebuild against new ImageMagick-last version 6.7.8.10
 
