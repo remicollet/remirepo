@@ -1,5 +1,5 @@
 --- eaccelerator.ini.upstream	2012-09-09 12:38:47.000000000 +0200
-+++ eaccelerator.ini	2012-09-09 12:39:55.000000000 +0200
++++ eaccelerator.ini	2012-09-09 16:20:49.000000000 +0200
 @@ -12,13 +12,8 @@
  
  ; You must uncomment one (and only one) line from the following to load
@@ -25,3 +25,15 @@
  
  ; A string that's prepended to all keys. This allows two applications that use the
  ; same key names to run on the same host by setting this in .htaccess or in the main
+@@ -79,9 +74,9 @@
+ ; Enables or disables caching of compiled scripts on disk. It has no effect
+ ; on session data and content caching.
+ ; Default value is "0" that means - use disk and shared memory for caching.
+-eaccelerator.shm_only = "0"
++eaccelerator.shm_only = "1"
+ 
+ ; The script paths that are allowed to get admin information and do admin
+ ; controls
+-eaccelerator.allowed_admin_path = ""
++eaccelerator.allowed_admin_path = "/usr/share/eaccelerator"
+ 

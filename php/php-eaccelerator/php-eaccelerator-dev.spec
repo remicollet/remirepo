@@ -4,21 +4,23 @@
 %global apache    48
 %global gitver    42067ac
 %global cache     %{_var}/cache/php-eaccelerator
+%global extname   eaccelerator
 
-Summary:   PHP accelerator, optimizer, encoder and dynamic content cacher
+Summary:   PHP accelerator, optimizer and dynamic content cacher
 Name:      php-eaccelerator
 Version:   1.0
-Release:   0.2.git%{gitver}%{?dist}
+Release:   0.3.git%{gitver}%{?dist}
 Epoch:     1
 # The eaccelerator module itself is GPLv2+
 # The PHP control panel is under the Zend license (control.php and dasm.php)
-License:   GPLv2+ and Zend
+License:   GPLv2+ and PHP
 Group:     Development/Languages
 URL:       http://eaccelerator.net/
 
 # github.com/eaccelerator/eaccelerator/tarvall/42067ac7e2d55caa5d060580489f5043357ffbe2
 Source0:   eaccelerator-eaccelerator-%{gitver}.tar.gz
 Source1:   %{name}.cron
+Source2:   %{name}.httpd
 
 # Fix packaging directory path
 Patch0:    %{name}-config.patch
@@ -36,7 +38,7 @@ Requires:  php-common%{?_isa} = %{php_version}
 # Required by our cleanup cron job
 Requires:  tmpwatch
 
-Conflicts: php-mmcache, php-pecl-apc, php-xcache
+Conflicts: php-pecl-apc, php-xcache
 
 # Other third party repo stuff
 Obsoletes: php53-eaccelerator
@@ -68,16 +70,23 @@ Turck MMCache was created by Dmitry Stogov and much of the eAccelerator code
 is still based on his work.
 
 
+%package httpd
+Summary:       Configuration file for eAccelerator and Apache
+Requires(pre): httpd
+Requires:      php%{?_isa}
+Requires:      %{name}%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description httpd
+This package provides Apache configuration for eAccelerator:
+- enable disk cache
+- enable control panel on http://localhost/eaccelerator
+
+
 %prep
 %setup -q -c
 
 cp %{SOURCE1} .
-
-cat >httpd.conf <<EOF
-# Redirect cache and log when used from httpd + mod_php
-php_value eaccelerator.cache_dir "%{cache}"
-php_value eaccelerator.log_file "%{_var}/log/httpd/eaccelerator_log"
-EOF
+cp %{SOURCE2} .
 
 # prepare duplicated build tree
 mv eaccelerator-eaccelerator-%{gitver} nts
@@ -87,14 +96,14 @@ cd nts
 %patch0 -p0 -b .upstream
 # Change extension path in the example config
 sed -e 's|@EXTDIR@/|%{php_extdir}/|' \
-    -i eaccelerator.ini
+    -i %{extname}.ini
 %patch1 -p0 -b .cache
 
 cd ../zts
 %patch0 -p0 -b .upstream
 # Change extension path in the example config
 sed -e 's|@EXTDIR@/|%{php_ztsextdir}/|' \
-    -i eaccelerator.ini
+    -i %{extname}.ini
 %patch1 -p0 -b .cache
 
 
@@ -129,19 +138,22 @@ make -C zts install INSTALL_ROOT=%{buildroot}
 mkdir -p %{buildroot}%{cache}/%{apache}
 
 # Drop in the bit of configuration
-install -D -m 0644 nts/eaccelerator.ini \
-        %{buildroot}%{php_inidir}/eaccelerator.ini
-install -D -m 0644 zts/eaccelerator.ini \
-        %{buildroot}%{php_ztsinidir}/eaccelerator.ini
+install -D -m 0644 nts/%{extname}.ini \
+        %{buildroot}%{php_inidir}/%{extname}.ini
+install -D -m 0644 zts/%{extname}.ini \
+        %{buildroot}%{php_ztsinidir}/%{extname}.ini
 
 # Cache removal cron job
-install -D -m 0755 -p php-eaccelerator.cron \
+install -D -m 0755 -p %{name}.cron \
         %{buildroot}%{_sysconfdir}/cron.daily/%{name}
 
 # Apache configuration file
-install -D -m 0644 -p httpd.conf \
+install -D -m 0644 -p %{name}.httpd \
         %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
+# Control panel
+install -d -m 0755 %{buildroot}/%{_datadir}/%{extname}
+install -p -m 0644 nts/control.php %{buildroot}/%{_datadir}/%{extname}/index.php
 
 %clean
 rm -rf %{buildroot}
@@ -153,36 +165,21 @@ if [ $1 -eq 0 ]; then
     rm -rf %{cache}/* &>/dev/null || :
 fi
 
-%post
-# We don't want to require "httpd" in case PHP is used with some other web
-# server or without any, but we do want the owner of this directory to default
-# to apache for a working "out of the box" experience on the most common setup.
-#
-# We can't store numeric ownerships in %%files and have it work, so "fix" here,
-# but only change the ownership if it's the current user (which is root), which
-# allows users to manually change ownership and not have it change back.
-if [ ! -d %{cache}/%{apache} ]
-then
-	# Create the ghost'ed directory with default ownership and mode
-    mkdir -p %{cache}/%{apache}
-    chown %{apache}:%{apache} %{cache}/%{apache}
-    chmod 0750 %{cache}
-fi
-
+%post httpd
 # Please remember to empty your eAccelerator disk cache
 # when upgrading, otherwise things will break!
-rm -rf %{cache}/*/* &>/dev/null || :
+rm -rf %{cache}/%{apache}/* &>/dev/null || :
 
 
 %check
 # Check if the built extensions can be loaded
 %{__php} -n \
-    -d zend_extension=%{buildroot}%{php_extdir}/eaccelerator.so \
-    -m | grep eAccelerator
+    -d zend_extension=%{buildroot}%{php_extdir}/%{extname}.so \
+    -m | grep -i %{extname}
 
 %{__ztsphp} -n \
-    -d zend_extension=%{buildroot}%{php_ztsextdir}/eaccelerator.so \
-    -m | grep eAccelerator
+    -d zend_extension=%{buildroot}%{php_ztsextdir}/%{extname}.so \
+    -m | grep -i %{extname}
 
 
 %files
@@ -190,17 +187,22 @@ rm -rf %{cache}/*/* &>/dev/null || :
 %doc nts/{AUTHORS,ChangeLog,COPYING,NEWS,README}
 %doc nts/*.php
 %{_sysconfdir}/cron.daily/%{name}
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
-%config(noreplace) %{php_inidir}/eaccelerator.ini
-%config(noreplace) %{php_ztsinidir}/eaccelerator.ini
-%{php_extdir}/eaccelerator.so
-%{php_ztsextdir}/eaccelerator.so
-# We need this hack, as otherwise rpm resets ownership upon package upgrade
+%config(noreplace) %{php_inidir}/%{extname}.ini
+%config(noreplace) %{php_ztsinidir}/%{extname}.ini
+%{php_extdir}/%{extname}.so
+%{php_ztsextdir}/%{extname}.so
 %dir %{cache}
-%ghost %{cache}/%{apache}
+%{_datadir}/%{extname}
+
+%files httpd
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%attr(750,apache,apache) %dir %{cache}/%{apache}
 
 
 %changelog
+* Sun Sep  9 2012 Remi Collet <remi@fedoraproject.org> - 1:1.0-0.3.git42067ac
+- create httpd subpackage
+
 * Sun Sep  9 2012 Remi Collet <remi@fedoraproject.org> - 1:1.0-0.2.git42067ac
 - try to improve cache management
 
