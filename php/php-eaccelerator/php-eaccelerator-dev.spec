@@ -8,7 +8,7 @@
 Summary:   PHP accelerator, optimizer, encoder and dynamic content cacher
 Name:      php-eaccelerator
 Version:   1.0
-Release:   0.1.git%{gitver}%{?dist}
+Release:   0.2.git%{gitver}%{?dist}
 Epoch:     1
 # The eaccelerator module itself is GPLv2+
 # The PHP control panel is under the Zend license (control.php and dasm.php)
@@ -22,6 +22,8 @@ Source1:   %{name}.cron
 
 # Fix packaging directory path
 Patch0:    %{name}-config.patch
+# Try to improves cache management
+Patch1:    %{name}-cache.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.0
@@ -70,23 +72,29 @@ is still based on his work.
 
 cp %{SOURCE1} .
 
+cat >httpd.conf <<EOF
+# Redirect cache and log when used from httpd + mod_php
+php_value eaccelerator.cache_dir "%{cache}"
+php_value eaccelerator.log_file "%{_var}/log/httpd/eaccelerator_log"
+EOF
+
 # prepare duplicated build tree
 mv eaccelerator-eaccelerator-%{gitver} nts
 cp -r nts zts
 
 cd nts
 %patch0 -p0 -b .upstream
-# Change paths in the example config
+# Change extension path in the example config
 sed -e 's|@EXTDIR@/|%{php_extdir}/|' \
-    -e 's|@CACHEDIR@|%{cache}|' \
     -i eaccelerator.ini
+%patch1 -p0 -b .cache
 
 cd ../zts
 %patch0 -p0 -b .upstream
-# Change paths in the example config
+# Change extension path in the example config
 sed -e 's|@EXTDIR@/|%{php_ztsextdir}/|' \
-    -e 's|@CACHEDIR@|%{cache}|' \
     -i eaccelerator.ini
+%patch1 -p0 -b .cache
 
 
 %build
@@ -117,7 +125,7 @@ make -C nts install INSTALL_ROOT=%{buildroot}
 make -C zts install INSTALL_ROOT=%{buildroot}
 
 # The cache directory where pre-compiled files will reside
-mkdir -p %{buildroot}%{cache}
+mkdir -p %{buildroot}%{cache}/%{apache}
 
 # Drop in the bit of configuration
 install -D -m 0644 nts/eaccelerator.ini \
@@ -127,7 +135,11 @@ install -D -m 0644 zts/eaccelerator.ini \
 
 # Cache removal cron job
 install -D -m 0755 -p php-eaccelerator.cron \
-        %{buildroot}%{_sysconfdir}/cron.daily/php-eaccelerator
+        %{buildroot}%{_sysconfdir}/cron.daily/%{name}
+
+# Apache configuration file
+install -D -m 0644 -p httpd.conf \
+        %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
 
 %clean
@@ -148,18 +160,17 @@ fi
 # We can't store numeric ownerships in %%files and have it work, so "fix" here,
 # but only change the ownership if it's the current user (which is root), which
 # allows users to manually change ownership and not have it change back.
-
-if [ -d %{cache} ]
+if [ ! -d %{cache}/%{apache} ]
 then
-    # Please remember to empty your eAccelerator disk cache
-    # when upgrading, otherwise things will break!  
-    rm -rf %{cache}/* &>/dev/null || :
-else
 	# Create the ghost'ed directory with default ownership and mode
-    mkdir -p %{cache}
-    chown %{apache}:%{apache} %{cache}
+    mkdir -p %{cache}/%{apache}
+    chown %{apache}:%{apache} %{cache}/%{apache}
     chmod 0750 %{cache}
 fi
+
+# Please remember to empty your eAccelerator disk cache
+# when upgrading, otherwise things will break!
+rm -rf %{cache}/*/* &>/dev/null || :
 
 
 %check
@@ -177,16 +188,21 @@ fi
 %defattr(-,root,root,-)
 %doc nts/{AUTHORS,ChangeLog,COPYING,NEWS,README}
 %doc nts/*.php
-%{_sysconfdir}/cron.daily/php-eaccelerator
+%{_sysconfdir}/cron.daily/%{name}
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config(noreplace) %{php_inidir}/eaccelerator.ini
 %config(noreplace) %{php_ztsinidir}/eaccelerator.ini
 %{php_extdir}/eaccelerator.so
 %{php_ztsextdir}/eaccelerator.so
 # We need this hack, as otherwise rpm resets ownership upon package upgrade
-%ghost %{cache}
+%dir %{cache}
+%ghost %{cache}/%{apache}
 
 
 %changelog
+* Sun Sep  9 2012 Remi Collet <remi@fedoraproject.org> - 1:1.0-0.2.git42067ac
+- try to improve cache management
+
 * Sat Sep  8 2012 Remi Collet <remi@fedoraproject.org> - 1:1.0-0.1.git42067ac
 - update to 1.0-dev for php 5.4
 
@@ -307,84 +323,4 @@ fi
 - Remove two upstreamed patches (php52fix and trac187).
 - Use sed instead of perl for the config file changes.
 - No longer use dist because we want to use the same package on F-n and n+1.
-
-* Wed May 16 2007 Matthias Saou <http://freshrpms.net/> 5.2.2_0.9.5-2
-- Include ppc64 %%ifarch, since it's now a Fedora target.
-- Include patch to fix trac bug #187.
-
-* Wed May 16 2007 Matthias Saou <http://freshrpms.net/> 5.2.2_0.9.5-1
-- Rebuild against PHP 5.2.2.
-
-* Mon Feb 19 2007 Matthias Saou <http://freshrpms.net/> 5.2.1_0.9.5-1
-- Rebuild against PHP 5.2.1.
-
-* Mon Dec  4 2006 Matthias Saou <http://freshrpms.net/> 5.2.0_0.9.5-2
-- Include patch to fix use of PHP 5.2 (ea #204, rh #218166).
-
-* Wed Nov 29 2006 Matthias Saou <http://freshrpms.net/> 5.2.0_0.9.5-1
-- Rebuild against PHP 5.2.0.
-
-* Wed Nov  8 2006 Matthias Saou <http://freshrpms.net/> 5.1.6_0.9.5-2
-- Change to require php-common instead of php, for fastcgi without apache.
-
-* Mon Oct 16 2006 Matthias Saou <http://freshrpms.net/> 5.1.6_0.9.5-1
-- Update to 0.9.5 final.
-- Add cleanup of the cache directory upon package removal.
-
-* Thu Sep  7 2006 Matthias Saou <http://freshrpms.net/> 5.1.6_0.9.5-0.4.rc1
-- Rebuild for PHP 5.1.6, eA still checks the exact PHP version it seems :-(
-- Put "Requires: php = %%{php_version}" back to avoid broken setups if/when
-  PHP gets updated.
-
-* Mon Aug 28 2006 Matthias Saou <http://freshrpms.net/> 5.1.4_0.9.5-0.4.rc1
-- FC6 rebuild.
-
-* Tue Aug 22 2006 Matthias Saou <http://freshrpms.net/> 5.1.4_0.9.5-0.3.rc1
-- Update to 0.9.5-rc1.
-- Enable shared-memory, sessions and content-caching (#201319).
-- Remove both patches of fixes, merged upstream.
-- Change from creating a full eaccelerator.ini to using the included one with
-  path substitutions and a patch to change default values.
-
-* Tue May 23 2006 Matthias Saou <http://freshrpms.net/> 5.1.x_0.9.5-0.2.beta2
-- Rebuild against PHP 5.1.4.
-
-* Fri May  5 2006 Matthias Saou <http://freshrpms.net/> 5.1.x_0.9.5-0.2.beta2
-- Rework heavily the API version requirement detection, should work with
-  chroots builds where PHP isn't installed outside.
-- Replace the CC way of getting the API version with php -i output.
-
-* Tue Apr 11 2006 Matthias Saou <http://freshrpms.net/> 5.1.x_0.9.5-0.1.beta2
-- Update to 0.9.5-beta2.
-
-* Tue Mar 14 2006 Matthias Saou <http://freshrpms.net/> 5.1.x_0.9.3-0.3
-- Pass userid 48 to configure script on PPC for sysvipc semaphores.
-
-* Tue Mar 14 2006 Matthias Saou <http://freshrpms.net/> 5.1.x_0.9.3-0.2
-- Update to latest eaccelerator-svn200603090012 snapshot.
-
-* Thu Feb  9 2006 Matthias Saou <http://freshrpms.net/> 5.1.x_0.9.3-0.1
-- Update to 5.1.x compatible snapshot.
-- Will try to make re2c available in Extras in order to build require it.
-
-* Mon Oct 17 2005 Matthias Saou <http://freshrpms.net/> 4.x.x_0.9.3-4
-- Re-add %%{?_smp_mflags}, as this was a false alarm.
-- Force SEM to FCNTL as the IPC version is buggy on x86_64 SMP at least.
-
-* Mon Jun 27 2005 Matthias Saou <http://freshrpms.net/> 4.x.x_0.9.3-3
-- Include buffer overflow patch from zoeloelip, this should fix the real
-  problem that wasn't in fact solved with the removal of _smp_mflags.
-- Add explicit shm_and_disk defaults to the ini file.
-
-* Mon Jun 27 2005 Matthias Saou <http://freshrpms.net/> 4.x.x_0.9.3-2
-- Remove %%{?_smp_mflags}, since the module crashes otherwise (#161189).
-
-* Tue Jun 21 2005 Matthias Saou <http://freshrpms.net/> 4.x.x_0.9.3-1
-- Update to 0.9.3, bugfix release.
-
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
-- rebuilt
-
-* Tue Jan 11 2005 Matthias Saou <http://freshrpms.net/> 4.x.x_0.9.2a-0
-- Initial RPM release based on the php-mmcache spec file.
 

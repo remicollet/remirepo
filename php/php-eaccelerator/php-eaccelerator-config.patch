@@ -1,5 +1,5 @@
---- eaccelerator.ini.orig	2012-09-08 18:15:19.000000000 +0200
-+++ eaccelerator.ini	2012-09-08 18:22:31.000000000 +0200
+--- eaccelerator.ini.upstream	2012-09-09 12:38:47.000000000 +0200
++++ eaccelerator.ini	2012-09-09 12:39:55.000000000 +0200
 @@ -12,13 +12,8 @@
  
  ; You must uncomment one (and only one) line from the following to load
@@ -16,12 +16,12 @@
  
  ; The amount of shared memory (in megabytes) that eAccelerator will use.
  ; "0" means OS default. Default value is "0".
-@@ -28,7 +23,7 @@
- ; code, session data, content and user entries here. The same data can be
- ; stored in shared memory also (for more quick access). Default value is
- ; "/tmp/eaccelerator".
--eaccelerator.cache_dir = "/tmp/eaccelerator"
-+eaccelerator.cache_dir = "@CACHEDIR@"
+@@ -45,7 +40,7 @@
  
- ; Enables or disables eAccelerator. Should be "1" for enabling or
- ; "0" for disabling. Default value is "1".
+ ; Set the log file for eaccelerator. When this option isn't set then the data
+ ; will be logged to stderr
+-eaccelerator.log_file = "/var/log/httpd/eaccelerator_log"
++eaccelerator.log_file = ""
+ 
+ ; A string that's prepended to all keys. This allows two applications that use the
+ ; same key names to run on the same host by setting this in .htaccess or in the main
