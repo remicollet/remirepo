@@ -13,8 +13,8 @@ getxpi() {
 		fi
 		# 85 max extensions (21+20+20+20+4)
 		for i in af ak ar as ast be bg bn-BD bn-IN br bs ca cs csb cy da de el en-GB en-ZA eo es-AR \
-			es-CL es-ES es-MX et eu	fa fi fr fy-NL ga-IE gd gl gu-IN he hi-IN hr hu hy-AM id is it \
-			ja ka kk kn ko ku lg lt lv mai mk ml mn mr nb-NO nl nn-NO nso oc or \
+			es-CL es-ES es-MX et eu	fa ff fi fr fy-NL ga-IE gd gl gu-IN he hi-IN hr hu hy-AM id is it \
+			ja ka kk kn km ko ku lg lij lt lv mai mk ml mn mr nb-NO nl nn-NO nso oc or \
                         pa-IN pl pt-BR pt-PT rm ro ru si sk sl son sq sr sv-SE ta ta-LK te th tr uk \
                         vi zh-CN zh-TW zu
 		do 	echo -en "$i\t"
@@ -79,8 +79,8 @@ donexpi() {
 	                *)      dest=firefox
 	                        ;;
 	        esac
-		echo "Création de /home/rpmbuild/SPECS/remirepo/$dest/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2"
-		tar cvjf /home/rpmbuild/SPECS/remirepo/$dest/firefox-langpacks-$1-$(date +%Y%m%d).tar.bz2 \
+		echo "Création de /home/rpmbuild/SPECS/remirepo/$dest/firefox-langpacks-$1-$(date +%Y%m%d).tar.xz"
+		tar cvJf /home/rpmbuild/SPECS/remirepo/$dest/firefox-langpacks-$1-$(date +%Y%m%d).tar.xz \
 			--exclude tmp firefox-langpacks
 	fi
 }

@@ -29,12 +29,12 @@
 #global shortname              firefox
 #global mycomment              Beta 4
 %global firefox_dir_ver        15
-%global xulrunner_version      15.0
+%global xulrunner_version      15.0.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20120827
+%global datelang               20120909
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
@@ -68,7 +68,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        15.0
+Version:        15.0.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -462,6 +462,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0.1-1
+- update to 15.0.1
+
 * Tue Aug 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0-1
 - Sync with rawhide, update to 15.0
 

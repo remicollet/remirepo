@@ -81,7 +81,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        15.0
+Version:        15.0.1
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -554,6 +554,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0.1-1
+- update to 15.0.1
+
 * Tue Aug 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0-1
 - Sync with rawhide, update to 15.0
 
