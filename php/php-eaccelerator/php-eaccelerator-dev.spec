@@ -69,6 +69,10 @@ eAccelerator was born in December 2004 as a fork of the Turck MMCache project.
 Turck MMCache was created by Dmitry Stogov and much of the eAccelerator code
 is still based on his work.
 
+Default configuration provided have disk cache disabled.
+Install %{name}-http package for Apache specific configuration files,
+which have disk cache and control panel enabled.
+
 
 %package httpd
 Summary:       Configuration file for eAccelerator and Apache
