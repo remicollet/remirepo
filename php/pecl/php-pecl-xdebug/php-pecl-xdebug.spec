@@ -1,13 +1,12 @@
-%{!?phpname: %{expand: %%global phpname    php}}
-%{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
 
-Name:           %{phpname}-pecl-xdebug
+Name:           php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
-Version:        2.2.0
-Release:        1%{?dist}
-Source0:        http://xdebug.org/files/%{pecl_name}-%{version}%{?prever}.tgz
+Version:        2.2.1
+Release:        2%{?dist}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -16,23 +15,28 @@ Group:          Development/Languages
 URL:            http://xdebug.org/
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{phpname}-pear  >= 1:1.4.9-1.2
-BuildRequires:  %{phpname}-devel >= 5.1.0
+BuildRequires:  php-pear  >= 1:1.4.9-1.2
+BuildRequires:  php-devel >= 5.1.0
 BuildRequires:  libedit-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       %{phpname}(zend-abi) = %{php_zend_api}
-Requires:       %{phpname}(api) = %{php_core_api}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
-Provides:       %{phpname}-pecl(Xdebug) = %{version}
-Provides:       %{phpname}-pecl(Xdebug)%{?_isa} = %{version}
+Provides:       php-pecl(Xdebug) = %{version}
+Provides:       php-pecl(Xdebug)%{?_isa} = %{version}
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:     php53-pecl-xdebug
+Obsoletes:     php53u-pecl-xdebug
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-xdebug
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -174,6 +178,16 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-2
+- sync with rawhide, cleanups
+- obsoletes php53*, php54*
+
+* Tue Jul 17 2012 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1
+
+* Fri Jun 22 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-2
+- upstream patch for upstream bug #838/#839/#840
+
 * Wed May 09 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
