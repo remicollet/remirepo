@@ -1,0 +1,19 @@
+--- xcache.ini.upstream	2012-09-09 07:56:44.000000000 +0200
++++ xcache.ini	2012-09-09 07:59:12.000000000 +0200
+@@ -1,15 +1,8 @@
+-;; this is an example, it won't work unless properly configured into php.ini
+ [xcache-common]
+ ;; WARNING: zend_extension* = *xcache* MUST be the first(above) of all zend_extension*=*
+ ;; using extension=xcache.so is not recommended
+ 
+-;; non-windows example
+-;; update xxx accordingly
+-zend_extension = /usr/local/lib/php/extensions/non-debug-non-zts-xxx/xcache.so
+-;; windows example:
+-zend_extension_ts = c:/php/extensions/php_xcache.dll
+-;; for newer PHP, _ts is removed, use the following line instead
+-zend_extension = c:/php/extensions/php_xcache.dll
++zend_extension = @EXTDIR@/xcache.so
+ 
+ [xcache.admin]
+ xcache.admin.enable_auth = On
