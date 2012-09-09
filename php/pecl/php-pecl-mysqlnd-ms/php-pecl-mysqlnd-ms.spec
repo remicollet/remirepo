@@ -4,7 +4,7 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
 Version:      1.4.2
-Release:      1%{?dist}
+Release:      2%{?dist}
 
 License:      PHP
 Group:        Development/Languages
@@ -29,14 +29,19 @@ Requires:     php-json%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
-Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
-Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
+Provides:     php-pecl(%{pecl_name}) = %{version}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:     php53-pecl-mysqlnd-ms
+Obsoletes:     php53u-pecl-mysqlnd-ms
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-mysqlnd-ms
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -72,10 +77,8 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
-%if 0%{?__ztsphp:1}
 # Build ZTS extension if ZTS devel available (fedora >= 17)
 cp -r %{pecl_name}-%{version} %{pecl_name}-zts
-%endif
 
 
 %build
@@ -93,7 +96,6 @@ cd %{pecl_name}-%{version}
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure \
@@ -101,7 +103,6 @@ cd ../%{pecl_name}-zts
     --enable-mysqlnd-ms \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 %install
 rm -rf %{buildroot}
@@ -111,13 +112,11 @@ rm -f %{pecl_name}-*/modules/{json,mysqlnd}.so
 make install -C %{pecl_name}-%{version} \
      INSTALL_ROOT=%{buildroot}
 
-%if 0%{?__ztsphp:1}
 make install -C %{pecl_name}-zts \
      INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-%endif
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
 
 # Install XML package description
@@ -151,7 +150,6 @@ php -n -q \
     -d extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
 ln -sf %{php_ztsextdir}/mysqlnd.so modules/
 ln -sf %{php_ztsextdir}/json.so modules/
@@ -163,7 +161,6 @@ ln -sf %{php_ztsextdir}/json.so modules/
     -d extension=mysqlnd.so \
     -d extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
-%endif
 
 
 %files
@@ -174,22 +171,21 @@ ln -sf %{php_ztsextdir}/json.so modules/
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
-%if 0%{?__ztsphp:1}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
-%endif
 
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/php/ext/%{pecl_name}
-
-%if 0%{?__ztsphp:1}
 %{php_ztsincldir}/ext/%{pecl_name}
-%endif
 
 
 %changelog
+* Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.2-2
+- obsoletes php53*, php54*
+- cleanups
+
 * Wed Aug 22 2012 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - update to 1.4.2 (stable)
 - add -devel sub package
