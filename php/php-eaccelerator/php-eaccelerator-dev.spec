@@ -23,6 +23,7 @@ Source1:   %{name}.cron
 # Fix packaging directory path
 Patch0:    %{name}-config.patch
 # Try to improves cache management
+# https://github.com/eaccelerator/eaccelerator/pull/17
 Patch1:    %{name}-cache.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
