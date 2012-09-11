@@ -18,7 +18,7 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          php-%{ext_name}
 Version:       2.2.2
-Release:       4%{?gitver:.git%{gitver}}%{?dist}
+Release:       5%{?gitver:.git%{gitver}}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/nicolasff/phpredis
@@ -51,6 +51,10 @@ Requires:      php-pecl-igbinary%{?_isa}
 %description
 The phpredis extension provides an API for communicating
 with the Redis key-value store.
+
+This Redis client implements most of the latest Redis API.
+As method only only works when also implemented on the server side,
+some doesn't work with an old redis server version.
 
 
 %prep
@@ -144,13 +148,19 @@ mkdir -p {run,log,lib}/redis
 sed -e "s:/var:$PWD:" \
     -e "/daemonize/s/no/yes/" \
     /etc/redis.conf >redis.conf
-%if 0%{?__isa_bits}
 # port number to allow 32/64 build at same time
 # and avoid conflict with a possible running server
+%if 0%{?__isa_bits}
 port=$(expr %{__isa_bits} + 6350)
+%else
+%ifarch x86_64
+port=6414
+%else
+port=6382
+%endif
+%endif
 sed -e "s/6379/$port/" -i redis.conf
 sed -e "s/6379/$port/" -i TestRedis.php
-%endif
 %{_sbindir}/redis-server ./redis.conf
 
 # Run the test Suite
@@ -180,6 +190,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc nts/COPYING nts/CREDITS nts/README.markdown
+%doc nts/arrays.markdown nts/serialize.list
+
 %config(noreplace) %{_sysconfdir}/php.d/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
 
@@ -190,6 +202,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 11 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-5.git6f7087f
+- more docs and improved description
+
 * Sun Sep  2 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-4.git6f7087f
 - latest snahot (without bundled igbinary)
 - remove chmod (done upstream)
