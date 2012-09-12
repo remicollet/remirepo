@@ -52,14 +52,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        15.0
+Version:        15.0.1
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20120827.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20120911.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -78,6 +78,9 @@ Patch104:       xulrunner-10.0-gcc47.patch
 
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
+
+# PPC fixes
+Patch300:       xulrunner-852698.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -193,6 +196,7 @@ cd mozilla
 cd ..
 
 %patch200 -p1 -b .addons
+%patch300 -p1 -b .852698
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -478,6 +482,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Wed Sep 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0.1-1
+- update to 15.0.1
+
+* Tue Sep 11 2012 Jan Horak <jhorak@redhat.com> - 15.0.1-1
+- Update to 15.0.1
+
+* Fri Sep  7 2012 Jan Horak <jhorak@redhat.com> - 15.0-2
+- Added workaround fix for PPC (rbhz#852698)
+
 * Mon Aug 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0-1
 - Sync with rawhide, update to 15.0
 

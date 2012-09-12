@@ -1,0 +1,14 @@
+Index: comm-release/mozilla/memory/jemalloc/jemalloc.c
+===================================================================
+--- comm-release.orig/mozilla/memory/jemalloc/jemalloc.c
++++ comm-release/mozilla/memory/jemalloc/jemalloc.c
+@@ -1091,7 +1091,9 @@ static unsigned		ncpus;
+  * controlling the malloc behavior are defined as compile-time constants
+  * for best performance and cannot be altered at runtime.
+  */
++#if !(defined(__powerpc__))
+ #define MALLOC_STATIC_SIZES 1
++#endif
+ 
+ #ifdef MALLOC_STATIC_SIZES
+ 
