@@ -1,12 +1,12 @@
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name  gmagick
-%global prever     RC3
+%global prever     RC1
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.0
-Release:        0.5.%{prever}%{?dist}
+Version:        1.1.1
+Release:        0.1.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
@@ -29,12 +29,16 @@ Provides:       php-pecl(%{pecl_name}) = %{version}%{?prever}
 Conflicts:      php-pecl-imagick
 Conflicts:      php-magickwand
 
+# Other third party repo stuff
+Obsoletes:     php53-pecl-gmagick
+Obsoletes:     php53u-pecl-gmagick
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-gmagick
+%endif
 
-# RPM 4.8
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -53,6 +57,9 @@ cd %{pecl_name}-%{version}%{?prever}
 # https://bugzilla.redhat.com/783906
 rm -f tests/gmagick-006-annotateimage.phpt
 %endif
+
+# Fix version
+sed -e '/PHP_GMAGICK_VERSION/s/1.1.0RC3/%{version}%{?prever}/' -i php_gmagick.h
 
 # Check extension version
 extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_gmagick.h)
@@ -164,6 +171,9 @@ fi
 
 
 %changelog
+* Wed Sep 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.1-0.1.RC1
+- Update to 1.1.1RC1
+
 * Sat Jun 02 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.5.RC3
 - Update to 1.1.0RC3
 
