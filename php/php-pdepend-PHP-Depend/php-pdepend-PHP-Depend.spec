@@ -3,7 +3,7 @@
 %global channel pear.pdepend.org
 
 Name:           php-pdepend-PHP-Depend
-Version:        1.0.7
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -79,6 +79,15 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 
 %changelog
+* Wed Sep 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.0-1
+- upstream 1.0.7, backport for remi repo
+
+* Wed Sep 12 2012 Christof Damian <christof@damian.net> - 1.1.0-1
+- upstream 1.1.0
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.7-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Tue May  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.7-1
 - upstream 1.0.7, backport for remi repo
 
