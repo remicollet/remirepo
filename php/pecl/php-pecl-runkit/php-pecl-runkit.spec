@@ -67,6 +67,11 @@ ogólnego użytku. Wykonywanie danego kodu w ograniczonym środowisku
 %setup -q -c
 
 mv zenovich-runkit-%{GIT} nts
+
+%if 0%{?rhel} == 5
+sed -e 's/-Werror//' -i nts/config.m4
+%endif
+
 cp -r nts zts
 
 # Create the configuration file
