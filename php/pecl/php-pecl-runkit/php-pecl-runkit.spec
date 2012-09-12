@@ -1,52 +1,50 @@
-%global	php_apiver	%((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 %{!?__pecl:			%{expand:	%%global __pecl	%{_bindir}/pecl}}
-%{!?php_extdir:		%{expand:	%%global php_extdir	%(php-config --extension-dir &>/dev/null)}}
 
-%global		GIT	8c73eaf
-
-%global		peclName	runkit
+%global		GIT	        a079457
+%global		pecl_name	runkit
 
 Summary:		Mangle with user defined functions and classes
 Summary(ru):	Манипулирование пользовательскими функциями и классами
 Summary(pl):	Obróbka zdefiniowanych przez użytkownika funkcji i klas
-Name:		php-pecl-%{peclName}
+Name:		    php-pecl-%{pecl_name}
 Version:		1.0.4
-Release:		0.1%{?GIT:.GIT%{GIT}}%{?dist}
+Release:		0.2%{?GIT:.git%{GIT}}%{?dist}
 License:		PHP
-Group:		Development/Libraries
-%if 0%{?GIT:1}
-# git clone https://github.com/zenovich/runkit.git
-# cd runkit
-# git archive master | bzip2 > runkit-1.0.4-GIT$(git reflog | cut -d' ' -f1).tar.bz2
-Source0:		%{peclName}-%{version}-GIT%{GIT}.tar.bz2
-%else
-Source0:		http://pecl.php.net/get/%{peclName}-%{version}.tgz
-%endif
+Group:		    Development/Libraries
 #URL:			http://pecl.php.net/package/runkit/
 # New upstream URL - https://bugs.php.net/bug.php?id=61189
 URL:			https://github.com/zenovich/runkit
-BuildRequires:	php-pear >= 1:1.4.9-1.2
-BuildRequires:	php-devel >= 5.1.0, php-cli
-%if 0%{?pecl_install:1}
+
+%if 0%{?GIT:1}
+# https://github.com/zenovich/runkit/tarball/a079457
+Source0:		zenovich-%{pecl_name}-%{GIT}.tar.gz
+%else
+Source0:		http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
+
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root-%(id -u -n)
+BuildRequires:	php-pear
+BuildRequires:	php-devel
+
 Requires(post):	%{__pecl}
-%endif
-%if 0%{?pecl_uninstall:1}
 Requires(postun):	%{__pecl}
-%endif
-%if %{?php_zend_api:1}0
 Requires:		php(zend-abi) = %{php_zend_api}
 Requires:		php(api) = %{php_core_api}
-%else
-Requires:		php-api = %{php_apiver}
-%endif
-Provides:		php-pecl(%{peclName}) = %{version}
-BuildRoot:	%{_tmppath}/%{name}-%{version}-root-%(id -u -n)
 
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
+Provides:		php-pecl(%{pecl_name}) = %{version}
+Provides:		php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-runkit
+Obsoletes:     php53u-pecl-runkit
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-runkit
+%endif
+
+# filter private shared
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+
 
 %description
 Replace, rename, and remove user defined functions and classes. Define
@@ -58,59 +56,101 @@ in restricted environment (sandboxing).
 и классов. Определение собственных суперглобальных переменных. Выполнение
 кода в ограниченной среде (песочнице)
 
-
 %description -l pl
 Zastępowanie, zmiana nazwy lub usuwanie zdefiniowanych przez
 użytkownika funkcji i klas. Definiowanie zmiennych superglobalnych do
 ogólnego użytku. Wykonywanie danego kodu w ograniczonym środowisku
 (sandbox).
 
+
 %prep
 %setup -q -c
 
+mv zenovich-runkit-%{GIT} nts
+cp -r nts zts
+
+# Create the configuration file
+cat <<'EOF' > %{pecl_name}.ini
+; Enable %{pecl_name} extension module
+extension=%{pecl_name}.so
+EOF
+
+
 %build
-phpize
-%configure --enable-%{peclName} --with-%{peclName}
-make
+cd nts
+%{_bindir}/phpize
+%configure \
+    --with-%{pecl_name}\
+    --with-php-config=%{_bindir}/php-config
+make %{?_smp_mflags}
+
+cd ../zts
+%{_bindir}/zts-phpize
+%configure \
+    --with-%{pecl_name}\
+    --with-php-config=%{_bindir}/zts-php-config
+make %{?_smp_mflags}
+
 
 %install
 rm -rf %{buildroot}
-install -d %{buildroot}{%{_sysconfdir}/php.d,%{php_extdir}}
 
-install modules/%{peclName}.so %{buildroot}%{php_extdir}
-#*Hu cat <<'EOF' > %{buildroot}%{_sysconfdir}/conf.d/%{peclName}.ini
-cat <<'EOF' > %{buildroot}%{_sysconfdir}/php.d/%{peclName}.ini
-; Enable %{peclName} extension module
-extension=%{peclName}.so
-EOF
+make install -C nts  install INSTALL_ROOT=%{buildroot}
+make install -C zts  install INSTALL_ROOT=%{buildroot}
+
+# Drop in the bit of configuration
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
-install -m 0755 -d %{buildroot}%{pecl_xmldir}
-install -m 0664 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 0664 nts/package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+
+%check
+# No test provided, just minimal load test
+%{__php} --no-php-ini \
+    --define extension_dir=%{buildroot}%{php_extdir} \
+    --define extension=%{pecl_name}.so \
+    -m | grep %{pecl_name}
+
+%{__ztsphp} --no-php-ini \
+    --define extension_dir=%{buildroot}%{php_ztsextdir} \
+    --define extension=%{pecl_name}.so \
+    -m | grep %{pecl_name}
+
 
 %post
-%if 0%{?pecl_install:1}
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 %postun
-%if 0%{?pecl_uninstall:1}
 if [ "$1" -eq "0" ]; then
-	%{pecl_uninstall} %{peclName} >/dev/null || :
+	%{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
+
 
 %clean
 rm -rf %{buildroot}
 
+
 %files
 %defattr(-,root,root,-)
-%doc README LICENSE
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php.d/%{peclName}.ini
+%doc nts/{README,LICENSE}
 %{pecl_xmldir}/%{name}.xml
-%attr(755,root,root) %{php_extdir}/%{peclName}.so
+
+%{php_extdir}/%{pecl_name}.so
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+
+%{php_ztsextdir}/%{pecl_name}.so
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+
 
 %changelog
+* Wed Sep 12 2012 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.2.gita079457
+- standardize for remi repo, lot of cleanups
+- add ZTS extension
+- add %%check section: minimal load test
+- update to latest master snapshot
+
 * Mon Sep 3 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1.0.4-0.1.GIT8c73eaf
 - New upstream url - https://bugs.php.net/bug.php?id=61189, continue developing, new version, switch to git SCM.
 - Fix compilation error: https://github.com/zenovich/runkit/issues/26#issuecomment-8268795
