@@ -1,0 +1,49 @@
+From 49b202f2cfe04d577671b685b7c0d3a096a433c7 Mon Sep 17 00:00:00 2001
+From: Xinchen Hui <laruence@php.net>
+Date: Thu, 2 Aug 2012 22:16:46 +0800
+Subject: [PATCH] Fixed bug that can not get default value of parameter if
+ it's not `optional`
+
+---
+ ext/reflection/php_reflection.c    |    4 ----
+ ext/reflection/tests/bug62715.phpt |    7 +++++++
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/ext/reflection/php_reflection.c b/ext/reflection/php_reflection.c
+index 23c9044..593a050 100644
+--- a/ext/reflection/php_reflection.c
++++ b/ext/reflection/php_reflection.c
+@@ -2406,10 +2406,6 @@ ZEND_METHOD(reflection_parameter, getDefaultValue)
+ 		zend_throw_exception_ex(reflection_exception_ptr, 0 TSRMLS_CC, "Cannot determine default value for internal functions");
+ 		return;
+ 	}
+-	if (param->offset < param->required) {
+-		zend_throw_exception_ex(reflection_exception_ptr, 0 TSRMLS_CC, "Parameter is not optional");
+-		return;
+-	}
+ 	precv = _get_recv_op((zend_op_array*)param->fptr, param->offset);
+ 	if (!precv || precv->opcode != ZEND_RECV_INIT || precv->op2.op_type == IS_UNUSED) {
+ 		zend_throw_exception_ex(reflection_exception_ptr, 0 TSRMLS_CC, "Internal error");
+diff --git a/ext/reflection/tests/bug62715.phpt b/ext/reflection/tests/bug62715.phpt
+index 721d484..feb67f6 100644
+--- a/ext/reflection/tests/bug62715.phpt
++++ b/ext/reflection/tests/bug62715.phpt
+@@ -10,8 +10,15 @@ foreach ($r->getParameters() as $p) {
+     var_dump($p->isDefaultValueAvailable());
+ }
+ 
++foreach ($r->getParameters() as $p) {
++    if ($p->isDefaultValueAvailable()) {
++        var_dump($p->getDefaultValue());
++    }
++}
+ ?>
+ --EXPECT--
+ bool(true)
+ bool(true)
+ bool(false)
++NULL
++int(0)
+-- 
+1.7.8
+
