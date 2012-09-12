@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -33,6 +33,7 @@ Source20: userdir.conf
 Source21: ssl.conf
 Source22: welcome.conf
 Source23: manual.conf
+Source24: 00-systemd.conf
 # Documentation
 Source30: README.confd
 # build/scripts patches
@@ -48,6 +49,7 @@ Patch25: httpd-2.4.1-selinux.patch
 Patch26: httpd-2.4.2-r1337344+.patch
 Patch27: httpd-2.4.2-icons.patch
 Patch28: httpd-2.4.2-r1332643+.patch
+Patch29: httpd-2.4.3-mod_systemd.patch
 # Bug fixes
 Patch50: httpd-2.4.2-r1374214+.patch
 License: ASL 2.0
@@ -56,6 +58,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: autoconf, perl, pkgconfig, findutils, xmlto
 BuildRequires: zlib-devel, libselinux-devel, lua-devel
 BuildRequires: apr-devel >= 1.4.0, apr-util-devel >= 1.2.0, pcre-devel >= 5.0
+BuildRequires: systemd-devel
 Requires: /etc/mime.types, system-logos >= 7.92.1-1
 Obsoletes: httpd-suexec
 Provides: webserver
@@ -157,6 +160,7 @@ authentication to the Apache HTTP Server.
 %patch26 -p1 -b .r1337344+
 %patch27 -p1 -b .icons
 %patch28 -p1 -b .r1332643+
+%patch29 -p1 -b .systemd
 
 %patch50 -p1 -b .r1374214+
 
@@ -249,7 +253,7 @@ install -m 644 $RPM_SOURCE_DIR/README.confd \
     $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/README
 for f in 00-base.conf 00-mpm.conf 00-lua.conf 01-cgi.conf 00-dav.conf \
          00-proxy.conf 00-ssl.conf 01-ldap.conf 00-proxyhtml.conf \
-         01-ldap.conf; do
+         01-ldap.conf 00-systemd.conf; do
   install -m 644 -p $RPM_SOURCE_DIR/$f \
         $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.modules.d/$f
 done
@@ -574,6 +578,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Wed Sep 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-3
+- sync with rawhide, rebuild for remi repo
+
+* Fri Sep 07 2012 Jan Kaluza <jkaluza@redhat.com> - 2.4.3-3
+- adding mod_systemd to integrate with systemd better
+
 * Tue Aug 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-2
 - sync with rawhide, rebuild for remi repo
 
