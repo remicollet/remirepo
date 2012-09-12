@@ -4,7 +4,7 @@
 
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
-Version:       1.0.5
+Version:       1.0.7
 Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
@@ -20,14 +20,21 @@ Requires:         php(zend-abi) = %{php_zend_api}
 Requires:         php(api) = %{php_core_api}
 Requires(post):   %{__pecl}
 Requires(postun): %{__pecl}
-Provides:         php-pecl(%{pecl_name}) = %{version}-%{release}
+
+Provides:         php-pecl(%{pecl_name}) = %{version}
+Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-amqp
+Obsoletes:     php53u-pecl-amqp
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-amqp
+%endif
 
 
-# RPM 4.8
+# filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -39,9 +46,6 @@ from any queue.
 
 %prep
 %setup -q -c
-
-sed -e '/Version/s/1.0.4/%{version}/' \
-    -i %{pecl_name}-%{version}/amqp.c
 
 # Upstream often forget to change this
 extver=$(sed -n '/"Version"/{s/.*"1/1/;s/".*$//;p}' %{pecl_name}-%{version}/amqp.c)
@@ -134,6 +138,10 @@ fi
 
 
 %changelog
+* Wed Sep 12 2012 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
+- update to 1.0.7
+- cleanups
+
 * Mon Aug 27 2012 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - update to 1.0.5
 - LICENSE now provided in upstream tarball
