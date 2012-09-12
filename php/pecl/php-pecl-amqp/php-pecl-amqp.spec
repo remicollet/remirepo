@@ -1,36 +1,23 @@
 %{!?__pecl:   %{expand: %%global __pecl   %{_bindir}/pecl}}
-%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%global php_extver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP Extension => //p') | tail -1)
 %global pecl_name   amqp
 
 
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
-Version:       1.0.1
-Release:       2%{?dist}
-# https://bugs.php.net/61337 - missing LICENSE file
+Version:       1.0.5
+Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# http://svn.php.net/viewvc?view=revision&revision=324074
-Patch0:        %{pecl_name}-php54.patch
-
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel
+BuildRequires: php-devel > 5.2.0
 BuildRequires: php-pear
 BuildRequires: librabbitmq-devel
 
-%if 0%{?php_zend_api:1}
-# For Fedora and EL >= 6
 Requires:         php(zend-abi) = %{php_zend_api}
 Requires:         php(api) = %{php_core_api}
-%else
-# For EL = 5
-Requires:         php-zend-abi = %{php_extver}
-Requires:         php-api = %{php_apiver}
-%endif
 Requires(post):   %{__pecl}
 Requires(postun): %{__pecl}
 Provides:         php-pecl(%{pecl_name}) = %{version}-%{release}
@@ -53,7 +40,15 @@ from any queue.
 %prep
 %setup -q -c
 
-%patch0 -p0 -b php54
+sed -e '/Version/s/1.0.4/%{version}/' \
+    -i %{pecl_name}-%{version}/amqp.c
+
+# Upstream often forget to change this
+extver=$(sed -n '/"Version"/{s/.*"1/1/;s/".*$//;p}' %{pecl_name}-%{version}/amqp.c)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
 
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -120,29 +115,42 @@ php --no-php-ini \
 rm -rf %{buildroot}
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/CREDITS
+%doc %{pecl_name}-%{version}/{CREDITS,LICENSE}
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Mon Aug 27 2012 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- update to 1.0.5
+- LICENSE now provided in upstream tarball
+
+* Wed Aug 01 2012 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- update to 1.0.4
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat May 19 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- update to 1.0.3
+- add extension version check (and fix)
+
+* Mon Mar 19 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-3
+- clean EL-5 stuff as requires php 5.2.0, https://bugs.php.net/61351
+
 * Sat Mar 10 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
 - rebuild for PHP 5.4
 
