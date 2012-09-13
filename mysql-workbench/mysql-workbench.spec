@@ -10,8 +10,8 @@
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   5.2.42
-Release:   2%{?dist}
+Version:   5.2.43
+Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
 
@@ -26,15 +26,12 @@ Source1:   stripdocs.sh
 
 # don't build extension, use system one
 # !!! This patch use versioned soname (libmysqlcppconn.so.6) !!!
-Patch1:    %{name}-5.2.41-cppconn.patch
-Patch2:    %{name}-5.2.41-ctemplate.patch
+Patch1:    %{name}-5.2.43-cppconn.patch
+Patch2:    %{name}-5.2.43-ctemplate.patch
 Patch3:    %{name}-5.2.41-tinyxml.patch
-# http://bugs.mysql.com/66325
-Patch4:    %{name}-5.2.41-antlr.patch
-# http://bugs.mysql.com/63705
-Patch5:    %{name}-5.2.41-glib.patch
+Patch4:    %{name}-5.2.43-antlr.patch
 # Disable broken AutoCompletion feature
-Patch6:    %{name}-5.2.42-noautocc.patch
+Patch6:    %{name}-5.2.43-noautocc.patch
 
 # don't use bundled documentation, redirect to online doc
 Patch9:    %{name}-5.2.41-nodocs.patch
@@ -140,7 +137,6 @@ rm -rf library/tinyxml
 rm -rf ext/antlr-runtime
 %endif
 
-%patch5 -p1 -b .glib
 %patch6 -p1 -b .noautocc
 %patch9 -p1 -b .nodocs
 
@@ -190,11 +186,6 @@ desktop-file-install --vendor="" \
    --dir=%{buildroot}%{_datadir}/applications/ \
          MySQLWorkbench.desktop
 
-# move binary and fix launcher http://bugs.mysql.com/66322
-mv %{buildroot}%{_bindir}/%{name}-bin %{buildroot}%{_libdir}/%{name}/%{name}-bin
-sed -e 's:bindirname/mysql-workbench-bin:wblibdir/mysql-workbench-bin:' \
-    -i %{buildroot}%{_bindir}/%{name}
-
 
 %clean
 rm -rf %{buildroot}
@@ -226,12 +217,17 @@ fi
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/mime-info/%{name}.mime
 %{_datadir}/mime/packages/%{name}.xml
+%{_libexecdir}/mysql-workbench-bin
 %{_libdir}/%{name}
 %{_datadir}/%{name}
 %exclude %{_datadir}/doc/%{name}
 
 
 %changelog
+* Thu Sep 13 2012 Remi Collet <remi@fedoraproject.org> 5.2.43-1
+- update to 5.2.43 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-43.html
+
 * Tue Aug 28 2012 Remi Collet <remi@fedoraproject.org> 5.2.42-2
 - disable broken auto completion (#851283)
 

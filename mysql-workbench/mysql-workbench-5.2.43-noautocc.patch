@@ -1,6 +1,6 @@
-diff -up mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp.auto mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp
---- mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp.auto	2012-08-28 07:23:58.733977928 +0200
-+++ mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp	2012-08-28 07:26:52.679449570 +0200
+diff -up mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp.noautocc mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp
+--- mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp.noautocc	2012-09-11 17:47:00.000000000 +0200
++++ mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_context_sqlide.cpp	2012-09-13 18:21:55.207851256 +0200
 @@ -485,7 +485,11 @@ static bool validate_save_edits(wb::WBCo
  
  static bool validate_list_members(wb::WBContextSQLIDE *sqlide)
@@ -13,9 +13,9 @@ diff -up mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_context_sqli
  }
  
  //--------------------------------------------------------------------------------------------------
-diff -up mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.auto mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp
---- mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.auto	2012-08-28 07:23:50.240956043 +0200
-+++ mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp	2012-08-28 07:25:59.442301869 +0200
+diff -up mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.noautocc mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp
+--- mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.noautocc	2012-09-13 18:21:55.186851187 +0200
++++ mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp	2012-09-13 18:21:55.209851264 +0200
 @@ -902,6 +902,7 @@ grt::StringRef SqlEditorForm::do_connect
      model->catalog(catalog);
    }
@@ -32,24 +32,22 @@ diff -up mysql-workbench-gpl-5.2.42-src/backend/wbprivate/sqlide/wb_sql_editor_f
      log_debug("Code completion is disabled, so no name cache is created\n");
    
    return grt::StringRef();
-diff -up mysql-workbench-gpl-5.2.42-src/backend/wbprivate/workbench/wb_context.cpp.auto mysql-workbench-gpl-5.2.42-src/backend/wbprivate/workbench/wb_context.cpp
---- mysql-workbench-gpl-5.2.42-src/backend/wbprivate/workbench/wb_context.cpp.auto	2012-08-28 07:24:08.635003637 +0200
-+++ mysql-workbench-gpl-5.2.42-src/backend/wbprivate/workbench/wb_context.cpp	2012-08-28 07:27:24.959539941 +0200
-@@ -1551,8 +1551,8 @@ void WBContext::set_default_options(grt:
+diff -up mysql-workbench-gpl-5.2.43-src/backend/wbprivate/workbench/wb_context.cpp.noautocc mysql-workbench-gpl-5.2.43-src/backend/wbprivate/workbench/wb_context.cpp
+--- mysql-workbench-gpl-5.2.43-src/backend/wbprivate/workbench/wb_context.cpp.noautocc	2012-09-11 17:47:19.000000000 +0200
++++ mysql-workbench-gpl-5.2.43-src/backend/wbprivate/workbench/wb_context.cpp	2012-09-13 18:23:03.409093906 +0200
+@@ -1555,7 +1555,7 @@ void WBContext::set_default_options(grt:
    set_default(options, "SqlEditor::SyntaxCheck::MaxErrCount", 100);
  
    // DB SQL editor
 -  options.gset("DbSqlEditor:CodeCompletionEnabled", 1);
--  options.gset("DbSqlEditor:AutoStartCodeCompletion", 1);
 +  options.gset("DbSqlEditor:CodeCompletionEnabled", 0);
-+  options.gset("DbSqlEditor:AutoStartCodeCompletion", 0);
+   options.gset("DbSqlEditor:AutoStartCodeCompletion", 0); // enable back when it works better
    options.gset("DbSqlEditor:ProgressStatusUpdateInterval", 500); // in ms
    options.gset("DbSqlEditor:KeepAliveInterval", 600); // in seconds
-   options.gset("DbSqlEditor:ReadTimeOut", 600); // in seconds
-diff -up mysql-workbench-gpl-5.2.42-src/backend/wbpublic/sqlide/sql_editor_be.cpp.auto mysql-workbench-gpl-5.2.42-src/backend/wbpublic/sqlide/sql_editor_be.cpp
---- mysql-workbench-gpl-5.2.42-src/backend/wbpublic/sqlide/sql_editor_be.cpp.auto	2012-08-28 07:24:21.657037748 +0200
-+++ mysql-workbench-gpl-5.2.42-src/backend/wbpublic/sqlide/sql_editor_be.cpp	2012-08-28 07:28:23.988706289 +0200
-@@ -880,14 +880,22 @@ void Sql_editor::set_sql_check_enabled(b
+diff -up mysql-workbench-gpl-5.2.43-src/backend/wbpublic/sqlide/sql_editor_be.cpp.noautocc mysql-workbench-gpl-5.2.43-src/backend/wbpublic/sqlide/sql_editor_be.cpp
+--- mysql-workbench-gpl-5.2.43-src/backend/wbpublic/sqlide/sql_editor_be.cpp.noautocc	2012-09-11 17:47:17.000000000 +0200
++++ mysql-workbench-gpl-5.2.43-src/backend/wbpublic/sqlide/sql_editor_be.cpp	2012-09-13 18:21:55.212851274 +0200
+@@ -889,14 +889,22 @@ void Sql_editor::set_sql_check_enabled(b
  
  bool Sql_editor::code_completion_enabled()
  {
@@ -72,9 +70,9 @@ diff -up mysql-workbench-gpl-5.2.42-src/backend/wbpublic/sqlide/sql_editor_be.cp
  }
  
  //--------------------------------------------------------------------------------------------------
-diff -up mysql-workbench-gpl-5.2.42-src/frontend/common/preferences_form.cpp.auto mysql-workbench-gpl-5.2.42-src/frontend/common/preferences_form.cpp
---- mysql-workbench-gpl-5.2.42-src/frontend/common/preferences_form.cpp.auto	2012-08-28 07:24:35.712074907 +0200
-+++ mysql-workbench-gpl-5.2.42-src/frontend/common/preferences_form.cpp	2012-08-28 07:43:53.125210902 +0200
+diff -up mysql-workbench-gpl-5.2.43-src/frontend/common/preferences_form.cpp.noautocc mysql-workbench-gpl-5.2.43-src/frontend/common/preferences_form.cpp
+--- mysql-workbench-gpl-5.2.43-src/frontend/common/preferences_form.cpp.noautocc	2012-09-11 17:47:11.000000000 +0200
++++ mysql-workbench-gpl-5.2.43-src/frontend/common/preferences_form.cpp	2012-09-13 18:21:55.213851277 +0200
 @@ -618,6 +618,10 @@ void PreferencesForm::create_sqlide_page
      
      // Code completion settings is a horizontal box with two check boxes.

@@ -1,0 +1,15 @@
+diff -up mysql-workbench-gpl-5.2.43-src/configure.in.antlr mysql-workbench-gpl-5.2.43-src/configure.in
+diff -up mysql-workbench-gpl-5.2.43-src/ext/Makefile.am.antlr mysql-workbench-gpl-5.2.43-src/ext/Makefile.am
+--- mysql-workbench-gpl-5.2.43-src/ext/Makefile.am.antlr	2012-09-13 18:16:37.000000000 +0200
++++ mysql-workbench-gpl-5.2.43-src/ext/Makefile.am	2012-09-13 18:17:02.908892609 +0200
+@@ -1,9 +1,5 @@
+ 
+-if BUILD_ANTLR_RUNTIME
+-antlr_dirs=antlr-runtime
+-endif
+-
+-SUBDIRS=scintilla/gtk vsqlite++ $(antlr_dirs)
++SUBDIRS=scintilla/gtk vsqlite++
+ 
+ if BUNDLE_UTILITIES
+ all-am:
