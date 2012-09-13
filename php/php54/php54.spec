@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-%global rcver      RC1
+#global rcver      RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
@@ -65,7 +65,7 @@ Version: 5.4.7
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 %endif
 License: PHP
 Group: Development/Languages
@@ -1470,6 +1470,9 @@ fi
 
 
 %changelog
+* Thu Sep 13 2012 Remi Collet <RPMS@famillecollet.com> 5.4.7-1
+- update to 5.4.7
+
 * Mon Sep  3 2012 Remi Collet <RPMS@famillecollet.com> 5.4.7-0.2.RC1
 - obsoletes php53* and php54*
 
