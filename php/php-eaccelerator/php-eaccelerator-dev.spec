@@ -76,6 +76,7 @@ which have disk cache and control panel enabled.
 
 %package httpd
 Summary:       Configuration file for eAccelerator and Apache
+Group:         Development/Languages
 Requires(pre): httpd
 Requires:      php%{?_isa}
 Requires:      %{name}%{?_isa} = %{epoch}:%{version}-%{release}
