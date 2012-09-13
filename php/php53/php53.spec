@@ -45,8 +45,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.16
-Release: 4%{?dist}
+Version: 5.3.17
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -109,10 +109,6 @@ Patch93: php-5.3.9-mysqli.patch
 # http://svn.php.net/viewvc?view=revision&revision=300646
 # http://svn.php.net/viewvc?view=revision&revision=300791
 Patch94: php-5.3.7-pdo-dblib-50755.patch
-
-# real fix for https://bugs.php.net/62715
-# http://git.php.net/?p=php-src.git;a=commitdiff;h=49b202f2cfe04d577671b685b7c0d3a096a433c7
-Patch95: php-5.3.16-62715.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -717,7 +713,6 @@ echo CIBLE = %{name}-%{version}-%{release}
 %patch93 -p1 -b .mysqli
 %endif
 %patch94 -p1 -b .50755
-%patch95 -p1 -b .62715
 
 
 # Prevent %%doc confusion over LICENSE files
@@ -1501,7 +1496,10 @@ fi
 %endif
 
 %changelog
-* Tue Sep 12 2012 Remi Collet <remi@fedoraproject.org> 5.3.16-4
+* Thu Sep 13 2012 Remi Collet <remi@fedoraproject.org> 5.3.17-1
+- update to 5.3.17
+
+* Wed Sep 12 2012 Remi Collet <remi@fedoraproject.org> 5.3.16-4
 - add upstream patch for https://bugs.php.net/62715
 
 * Tue Sep  4 2012 Remi Collet <remi@fedoraproject.org> 5.3.16-3
