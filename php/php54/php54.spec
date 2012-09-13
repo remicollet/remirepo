@@ -65,7 +65,7 @@ Version: 5.4.7
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}.1
+Release: 1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
