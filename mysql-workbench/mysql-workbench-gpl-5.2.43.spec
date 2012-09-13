@@ -1,5 +1,5 @@
 %if !%{defined version}
-%define version		5.2.42
+%define version		5.2.43
 %endif
 %define release 1
 %define edition   gpl
@@ -28,19 +28,23 @@ BuildRequires: libzip-devel libxml2-devel
 BuildRequires: python-devel >= 2.5
 BuildRequires: gnome-keyring-devel
 BuildRequires: boost-devel
-#BuildRequires: libiodbc-devel
 
 %if %_vendor == suse
 BuildRequires: libmysqlclient-devel, libctemplate-devel
 BuildRequires: Mesa
 %else
-%if %targos == fc15
+%if %targos == fc17
 BuildRequires: ctemplate-devel
 %endif
 BuildRequires: mysql-devel >= 5.1
 BuildRequires: gtkmm24-devel
 BuildRequires: mesa-libGL-devel
 BuildRequires: sqlite-devel
+# In Oracle packages, iodbc is bundled, so we don't need it
+#BuildRequires: libiodbc-devel
+BuildRequires: make
+BuildRequires: tar
+BuildRequires: gcc-c++
 %endif
 
 %if %_vendor == suse
@@ -149,6 +153,7 @@ rm -rf %{_builddir}/%{name}-%{version}-src
 %attr(0755,root,root) %{_bindir}/wbcopytables
 %attr(0755,root,root) %{_datadir}/mysql-workbench/python/mysql*
 %attr(0755,root,root) %{_datadir}/mysql-workbench/extras/*.sh
+%attr(0755,root,root) %{_libexecdir}/mysql-workbench-bin
 %dir %{_libdir}/mysql-workbench
 %{_libdir}/mysql-workbench/*
 %{_datadir}/icons/hicolor/*/mimetypes/*
