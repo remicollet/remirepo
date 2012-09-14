@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -578,6 +578,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Fri Sep 14 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-4
+- sync with rawhide, rebuild for remi repo
+
+* Thu Sep 13 2012 Joe Orton <jorton@redhat.com> - 2.4.3-4
+- use IncludeOptional for conf.d/*.conf inclusion
+
 * Wed Sep 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-3
 - sync with rawhide, rebuild for remi repo
 
