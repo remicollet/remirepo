@@ -45,10 +45,17 @@ if [ ! -d "$datadir/mysql" ] ; then
     echo "Initializing MySQL database"
     /usr/bin/mysql_install_db --datadir="$datadir" --user=mysql
     ret=$?
-    chown -R mysql:mysql "$datadir"
     if [ $ret -ne 0 ] ; then
+        echo "Initialization of MySQL database failed." >&2
+        echo "Perhaps /etc/my.cnf is misconfigured." >&2
+        # Clean up any partially-created database files
+        if [ ! -e "$datadir/mysql/user.frm" ] ; then
+            rm -rf "$datadir"/*
+        fi
         exit $ret
     fi
+    # In case we're running as root, make sure files are owned properly
+    chown -R mysql:mysql "$datadir"
 fi
 
 exit 0
