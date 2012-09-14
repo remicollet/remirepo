@@ -1,18 +1,18 @@
 Summary: ModSecurity Rules
 Name: mod_security_crs
 Version: 2.2.5
-Release: 1%{?dist}
+Release: 5%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
 Source: https://sourceforge.net/projects/mod-security/files/modsecurity-crs/0-CURRENT/modsecurity-crs_%{version}.tar.gz
 BuildArch: noarch
 Requires: mod_security >= 2.6.5
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
 This package provides the base rules for mod_security.
 
-%if 0%{?fedora}
 %package        extras
 Summary:        Supplementary mod_security rules 
 Group:          System Environment/Daemons
@@ -20,7 +20,6 @@ Requires:       %name = %version-%release
 
 %description    extras
 This package provides supplementary rules for mod_security.
-%endif
 
 %prep
 %setup -q -n modsecurity-crs_%{version}
@@ -28,29 +27,30 @@ This package provides supplementary rules for mod_security.
 %build
 
 %install
+rm -rf %{buildroot}
+
 install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/
 install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/activated_rules
 
 install -d %{buildroot}%{_prefix}/lib/modsecurity.d/base_rules
 
-%if 0%{?fedora}
 install -d %{buildroot}%{_prefix}/lib/modsecurity.d/optional_rules
 install -d %{buildroot}%{_prefix}/lib/modsecurity.d/experimental_rules
 install -d %{buildroot}%{_prefix}/lib/modsecurity.d/slr_rules
-%endif
 
 install -m0644 modsecurity_crs_10_setup.conf.example %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/modsecurity_crs_10_config.conf
 install -m0644 base_rules/* %{buildroot}%{_prefix}/lib/modsecurity.d/base_rules/
-%if 0%{?fedora}
 install -m0644 optional_rules/* %{buildroot}%{_prefix}/lib/modsecurity.d/optional_rules/
 install -m0644 experimental_rules/* %{buildroot}%{_prefix}/lib/modsecurity.d/experimental_rules/
 install -m0644 slr_rules/* %{buildroot}%{_prefix}/lib/modsecurity.d/slr_rules
-%endif
 
 # activate base_rules
 for f in `ls %{buildroot}/%{_prefix}/lib/modsecurity.d/base_rules/` ; do 
     ln -s %{_prefix}/lib/modsecurity.d/base_rules/$f %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/activated_rules/$f; 
 done
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
@@ -59,14 +59,24 @@ done
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/modsecurity_crs_10_config.conf
 %{_prefix}/lib/modsecurity.d/base_rules
 
-%if 0%{?fedora}
 %files extras
 %{_prefix}/lib/modsecurity.d/optional_rules
 %{_prefix}/lib/modsecurity.d/experimental_rules
 %{_prefix}/lib/modsecurity.d/slr_rules
-%endif
 
 %changelog
+* Thu Sep 13 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.2.5-5
+- Enable extra rules sub-package for EPEL.
+
+* Tue Aug 28 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.2.5-4
+- Fix spec for el5
+
+* Tue Aug 28 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.2.5-3
+- Add BuildRoot def for el5 compatibility
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jun 23 2012 Remi Collet <RPMS@FamilleCollet.com> 2.2.5-2
 - backport for remi repo and httpd 2.4
 
