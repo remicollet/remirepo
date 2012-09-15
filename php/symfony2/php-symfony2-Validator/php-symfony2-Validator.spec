@@ -4,8 +4,8 @@
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-Validator
-Version:          2.0.16
-Release:          2%{?dist}
+Version:          2.0.17
+Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -26,10 +26,12 @@ Requires(postun): %{__pear}
 # phpci requires
 Requires:         php-ctype
 Requires:         php-date
+Requires:         php-dom
 Requires:         php-intl
 Requires:         php-libxml
 Requires:         php-mbstring
 Requires:         php-pcre
+Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
 # phpci dist specific requires
@@ -88,6 +90,13 @@ fi
 
 
 %changelog
+* Sat Sep 15 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.17-1
+- Update to 2.0.17, backport for remi repository
+
+* Sat Sep 15 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.17-1
+- Updated to upstream version 2.0.17
+- Added php-dom and php-reflection requires
+
 * Sun Jul 22 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.16-2
 - Made php-filter a dist specific require (not available in EPEL)
 

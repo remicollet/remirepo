@@ -4,7 +4,7 @@
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-ClassLoader
-Version:          2.0.16
+Version:          2.0.17
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -26,6 +26,7 @@ Requires(postun): %{__pear}
 # phpci requires
 Requires:         php-pcre
 Requires:         php-spl
+Requires:         php-reflection
 Requires:         php-tokenizer
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -96,6 +97,13 @@ fi
 
 
 %changelog
+* Sat Sep 15 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.17-1
+- Update to 2.0.17, backport for remi repository
+
+* Sat Sep 15 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.17-1
+- Updated to upstream version 2.0.17
+- Added php-reflection require
+
 * Tue Jul 17 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.16-1
 - Update to 2.0.16, backport for remi repository
 
