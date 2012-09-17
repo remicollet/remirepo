@@ -1,0 +1,39 @@
+diff -up ffmpeg-php-svn678/ffmpeg_movie.c.php54 ffmpeg-php-svn678/ffmpeg_movie.c
+--- ffmpeg-php-svn678/ffmpeg_movie.c.php54	2012-09-17 06:08:57.113312219 +0200
++++ ffmpeg-php-svn678/ffmpeg_movie.c	2012-09-17 06:12:10.425069883 +0200
+@@ -36,7 +36,7 @@
+ 
+ #include <avcodec.h>
+ #include <avformat.h>
+-#include <pixfmt.h>
++#include <pixfmt.h>
+ #include <pixdesc.h>
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -315,7 +315,7 @@ FFMPEG_PHP_CONSTRUCTOR(ffmpeg_movie, __c
+     } 
+ 
+     if (persistent) {
+-        list_entry *le;
++        zend_rsrc_list_entry *le;
+         /* resolve the fully-qualified path name to use as the hash key */
+         fullpath = expand_filepath(filename, NULL TSRMLS_CC);
+ 
+@@ -350,7 +350,7 @@ FFMPEG_PHP_CONSTRUCTOR(ffmpeg_movie, __c
+             }
+             
+         } else { /* no existing persistant movie, create one */
+-            list_entry new_le;
++            zend_rsrc_list_entry new_le;
+             ffmovie_ctx = _php_alloc_ffmovie_ctx(1);
+ 
+             if (_php_open_movie_file(ffmovie_ctx, filename)) {
+@@ -364,7 +364,7 @@ FFMPEG_PHP_CONSTRUCTOR(ffmpeg_movie, __c
+             new_le.ptr = ffmovie_ctx;
+ 
+             if (FAILURE == zend_hash_update(&EG(persistent_list), hashkey, 
+-                        hashkey_length+1, (void *)&new_le, sizeof(list_entry),
++                        hashkey_length+1, (void *)&new_le, sizeof(zend_rsrc_list_entry),
+                         NULL)) {
+                 php_error_docref(NULL TSRMLS_CC, E_WARNING, 
+                         "Failed to register persistent resource");

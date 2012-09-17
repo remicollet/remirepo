@@ -1,6 +1,6 @@
-diff -up ffmpeg-php-0.6.0/config.m4.orig ffmpeg-php-0.6.0/config.m4
---- ffmpeg-php-0.6.0/config.m4.orig	2010-03-21 09:05:15.000000000 +0100
-+++ ffmpeg-php-0.6.0/config.m4	2010-03-21 09:12:32.000000000 +0100
+diff -up ./config.m4.incl ./config.m4
+--- ./config.m4.incl	2009-07-02 19:15:48.000000000 +0200
++++ ./config.m4	2012-09-17 06:31:46.733978790 +0200
 @@ -41,6 +41,18 @@ if test "$PHP_FFMPEG" != "no"; then
        PHP_ADD_INCLUDE($i/include/libavdevice/)
        FFMPEG_INC_FOUND=$i/include/libavcodec
@@ -20,4 +20,15 @@ diff -up ffmpeg-php-0.6.0/config.m4.orig ffmpeg-php-0.6.0/config.m4
      fi
    done
  
-
+diff -up ./ffmpeg_frame.c.incl ./ffmpeg_frame.c
+--- ./ffmpeg_frame.c.incl	2012-09-17 06:44:58.242810037 +0200
++++ ./ffmpeg_frame.c	2012-09-17 06:44:07.729629307 +0200
+@@ -57,7 +57,7 @@
+    allow ffmpeg-php to be built without access to the php sources
+    */
+ #if HAVE_LIBGD20
+-#include "gd.h" 
++#include "gd/libgd/gd.h" 
+ 
+ #define FFMPEG_PHP_FETCH_IMAGE_RESOURCE(gd_img, ret) { \
+     ZEND_GET_RESOURCE_TYPE_ID(le_gd, "gd"); \
