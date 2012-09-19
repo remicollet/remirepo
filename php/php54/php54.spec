@@ -65,7 +65,7 @@ Version: 5.4.7
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 5%{?dist}
+Release: 6%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -103,6 +103,9 @@ Patch42: php-5.3.1-systzdata-v9.patch
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
 Patch44: php-5.4.5-system-libzip.patch
+# improves php-fpm daemonize mode
+# see https://bugs.php.net/63085
+Patch45: php-5.4.7-63085.patch
 
 # Fixes for tests
 
@@ -684,6 +687,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %if %{with_libzip}
 %patch44 -p1 -b .systzip
 %endif
+%patch45 -p0 -b .63085
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1196,10 +1200,6 @@ install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 # php-fpm should not fork on recent version
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-sed -e '/daemonize/s/yes/no/' -e $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
-sed -e '/forking/d'           -e $RPM_BUILD_ROOT%{_unitdir}/php-fpm.service
-%endif
 %endif
 
 # Fix the link
@@ -1477,6 +1477,10 @@ fi
 
 
 %changelog
+* Wed Sep 19 2012 Remi Collet <RPMS@famillecollet.com> 5.4.7-6
+- add --daemonize / --nodaemonize options to php-fpm
+  upstream RFE: https://bugs.php.net/63085
+
 * Wed Sep 19 2012 Remi Collet <RPMS@famillecollet.com> 5.4.7-5
 - sync with rawhide
 - patch to report libdb version https://bugs.php.net/63117
