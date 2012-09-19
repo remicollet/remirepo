@@ -440,7 +440,6 @@ The php-soap package contains a dynamic shared object that will add
 support to PHP for using the SOAP web services protocol.
 
 %package interbase
-%package interbase
 Summary: 	A module for PHP applications that use Interbase/Firebird databases
 Group: 		Development/Languages
 BuildRequires:  firebird-devel
@@ -1478,6 +1477,10 @@ fi
 
 
 %changelog
+* Wed Sep 19 2012 Remi Collet <RPMS@famillecollet.com> 5.4.7-5
+- sync with rawhide
+- patch to report libdb version https://bugs.php.net/63117
+
 * Wed Sep 19 2012 Remi Collet <rcollet@redhat.com> 5.4.7-5
 - patch to ensure we use latest libdb (not libdb4)
 
