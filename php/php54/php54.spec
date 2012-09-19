@@ -30,7 +30,7 @@
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
-%global with_fpm    1
+%global with_fpm 1
 
 %if 0%{?__isa:1}
 %global isasuffix -%{__isa}
@@ -45,15 +45,15 @@
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 
-%if 0%{?fedora} >= 17
-%global with_libzip  1
-%else
+%if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %global with_libzip  0
+%else
+%global with_libzip  1
 %endif
 %global with_zip     1
 %global zipmod       zip
 
-%if 0%{?fedora} < 18
+%if 0%{?fedora} < 18 && 0%{?rhel} < 7
 %global db_devel  db4-devel
 %else
 %global db_devel  libdb-devel
@@ -65,7 +65,7 @@ Version: 5.4.7
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 5%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -91,6 +91,7 @@ Source99: php-fpm.init
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
+Patch8: php-5.4.7-libdb.patch
 
 # Fixes for extension modules
 
@@ -185,7 +186,7 @@ executing PHP scripts, /usr/bin/php, and the CGI interface.
 Group: Development/Languages
 Summary: PHP FastCGI Process Manager
 Requires: php-common%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} >= 15
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires: systemd-units
 Requires: systemd-units
 Requires(post): systemd-units
@@ -439,14 +440,15 @@ The php-soap package contains a dynamic shared object that will add
 support to PHP for using the SOAP web services protocol.
 
 %package interbase
-Summary: A module for PHP applications that use Interbase/Firebird databases
-Group: Development/Languages
-BuildRequires: firebird-devel
-Requires: php-pdo%{?_isa} = %{version}-%{release}
-Provides: php_database
-Provides: php-firebird, php-firebird%{?_isa}
-Provides: php-pdo_firebird, php-pdo_firebird%{?_isa}
-Obsoletes: php53-interbase, php53u-interbase, php54-interbase
+%package interbase
+Summary: 	A module for PHP applications that use Interbase/Firebird databases
+Group: 		Development/Languages
+BuildRequires:  firebird-devel
+Requires: 	php-pdo%{?_isa} = %{version}-%{release}
+Provides: 	php_database
+Provides: 	php-firebird, php-firebird%{?_isa}
+Provides: 	php-pdo_firebird, php-pdo_firebird%{?_isa}
+Obsoletes:  php53-interbase, php53u-interbase, php54-interbase
 
 %description interbase
 The php-interbase package contains a dynamic shared object that will add
@@ -672,6 +674,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
+%patch8 -p1 -b .libdb
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -1174,7 +1177,7 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
-%if 0%{?fedora} >= 15
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 install -m 755 -d $RPM_BUILD_ROOT/run/php-fpm
 # tmpfiles.d
 install -m 755 -d $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
@@ -1193,6 +1196,11 @@ install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
 # Environment file
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
+# php-fpm should not fork on recent version
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
+sed -e '/daemonize/s/yes/no/' -e $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
+sed -e '/forking/d'           -e $RPM_BUILD_ROOT%{_unitdir}/php-fpm.service
+%endif
 %endif
 
 # Fix the link
@@ -1470,6 +1478,24 @@ fi
 
 
 %changelog
+* Wed Sep 19 2012 Remi Collet <rcollet@redhat.com> 5.4.7-5
+- patch to ensure we use latest libdb (not libdb4)
+
+* Wed Sep 19 2012 Remi Collet <rcollet@redhat.com> 5.4.7-4
+- really fix rhel tests (use libzip and libdb)
+
+* Tue Sep 18 2012 Remi Collet <rcollet@redhat.com> 5.4.7-3
+- fix test to enable zip extension on RHEL-7
+
+* Mon Sep 17 2012 Remi Collet <remi@fedoraproject.org> 5.4.7-2
+- remove session.save_path from php.ini
+  move it to apache and php-fpm configuration files
+
+* Fri Sep 14 2012 Remi Collet <remi@fedoraproject.org> 5.4.7-1
+- update to 5.4.7
+  http://www.php.net/releases/5_4_7.php
+- php-fpm: don't daemonize
+
 * Thu Sep 13 2012 Remi Collet <RPMS@famillecollet.com> 5.4.7-1
 - update to 5.4.7
 
