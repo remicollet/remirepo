@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -52,6 +52,7 @@ Patch28: httpd-2.4.2-r1332643+.patch
 Patch29: httpd-2.4.3-mod_systemd.patch
 # Bug fixes
 Patch50: httpd-2.4.2-r1374214+.patch
+Patch51: httpd-2.4.2-r1387633.patch
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -163,6 +164,7 @@ authentication to the Apache HTTP Server.
 %patch29 -p1 -b .systemd
 
 %patch50 -p1 -b .r1374214+
+%patch51 -p1 -b .r1387633
 
 # Patch in vendor/release string
 sed "s/@RELEASE@/%{vstring}/" < %{PATCH20} | patch --fuzz=%{_default_patch_fuzz} -p1
@@ -578,6 +580,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Thu Sep 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-5
+- sync with rawhide, rebuild for remi repo
+
+* Wed Sep 19 2012 Joe Orton <jorton@redhat.com> - 2.4.3-5
+- fix some error log spam with graceful-stop (r1387633)
+- minor mod_systemd tweaks
+
 * Fri Sep 14 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-4
 - sync with rawhide, rebuild for remi repo
 

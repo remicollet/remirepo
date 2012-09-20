@@ -1,9 +1,28 @@
-diff --git a/modules/arch/unix/mod_systemd.c b/modules/arch/unix/mod_systemd.c
-new file mode 100644
-index 0000000..40dca79
---- /dev/null
-+++ b/modules/arch/unix/mod_systemd.c
-@@ -0,0 +1,145 @@
+--- httpd-2.4.3/modules/arch/unix/config5.m4.systemd
++++ httpd-2.4.3/modules/arch/unix/config5.m4
+@@ -18,6 +18,19 @@ APACHE_MODULE(privileges, Per-virtualhos
+   fi
+ ])
+ 
++
++APACHE_MODULE(systemd, Systemd support, , , $unixd_mods_enabled, [
++  AC_CHECK_LIB(systemd-daemon, sd_notify, SYSTEMD_LIBS="-lsystemd-daemon")
++  AC_CHECK_HEADERS(systemd/sd-daemon.h, [ap_HAVE_SD_DAEMON_H="yes"], [ap_HAVE_SD_DAEMON_H="no"])
++  if test $ap_HAVE_SD_DAEMON_H = "no" || test -z "${LUA_LIBS}"; then
++    AC_MSG_WARN([Your system does not support systemd.])
++    enable_systemd="no"
++  else
++    APR_ADDTO(MOD_SYSTEMD_LDADD, [$SYSTEMD_LIBS])
++    enable_systemd="yes"
++  fi
++])
++
+ APR_ADDTO(INCLUDES, [-I\$(top_srcdir)/$modpath_current])
+ 
+ APACHE_MODPATH_FINISH
+--- httpd-2.4.3/modules/arch/unix/mod_systemd.c.systemd
++++ httpd-2.4.3/modules/arch/unix/mod_systemd.c
+@@ -0,0 +1,138 @@
 +/* Licensed to the Apache Software Foundation (ASF) under one or more
 + * contributor license agreements.  See the NOTICE file distributed with
 + * this work for additional information regarding copyright ownership.
@@ -47,8 +66,7 @@ index 0000000..40dca79
 +static unsigned long last_update_access;
 +static unsigned long last_update_kbytes;
 +
-+static int systemd_post_config(apr_pool_t *p, apr_pool_t *plog,
-+                            apr_pool_t *ptemp, server_rec *s)
++static int systemd_pre_mpm(apr_pool_t *p, ap_scoreboard_e sb_type)
 +{
 +    int rv;
 +    last_update_time = time(0);
@@ -61,33 +79,29 @@ index 0000000..40dca79
 +        threads_per_child = 1;
 +    ap_mpm_query(AP_MPMQ_MAX_DAEMONS, &max_servers);
 +
-+    /* For every MPM, there is already the main process ready in
-+    * AP_SQ_MS_CREATE_CONFIG state. */
-+    if (pid == 0 && ap_state_query(AP_SQ_MAIN_STATE) == AP_SQ_MS_CREATE_CONFIG)
-+    {
-+        pid = getpid();
-+
-+        rv = sd_notifyf(0, "READY=1\n"
-+                "STATUS=Processing requests...\n"
-+                "MAINPID=%lu",
-+                (unsigned long) pid);
-+        if (rv < 0)
-+        {
-+            ap_log_error(APLOG_MARK, APLOG_ERR, 0, s, APLOGNO(00000)
-+                "sd_notifyf returned an error %d", rv);
-+        }
++    pid = getpid();
++    
++    rv = sd_notifyf(0, "READY=1\n"
++                    "STATUS=Processing requests...\n"
++                    "MAINPID=%lu",
++                    (unsigned long) pid);
++    if (rv < 0) {
++        ap_log_perror(APLOG_MARK, APLOG_ERR, 0, p, 
++                     "sd_notifyf returned an error %d", rv);
 +    }
++
 +    return OK;
 +}
 +
-+static int systemd_monitor(apr_pool_t *p, server_rec *s) {
++static int systemd_monitor(apr_pool_t *p, server_rec *s)
++{
 +    int i, j, res, rv;
 +    process_score *ps_record;
 +    worker_score *ws_record;
 +    unsigned long access = 0;
 +    unsigned long bytes = 0;
 +    unsigned long kbytes = 0;
-+
++    char bps[5];
 +    time_t now = time(0);
 +    time_t elapsed = now - last_update_time;
 +
@@ -110,18 +124,16 @@ index 0000000..40dca79
 +        }
 +    }
 +
-+    char bps[5];
 +    apr_strfsize((unsigned long)(KBYTE *(float) (kbytes - last_update_kbytes)
-+                        / (float) elapsed), bps);
++                                 / (float) elapsed), bps);
 +
 +    rv = sd_notifyf(0, "READY=1\n"
-+                "STATUS=Total requests: %lu; Current requests/sec: %.3g; "
-+                "Current traffic: %sB/sec\n", access,
-+                ((float)access - last_update_access) / (float) elapsed, bps);
-+    if (rv < 0)
-+    {
++                    "STATUS=Total requests: %lu; Current requests/sec: %.3g; "
++                    "Current traffic: %sB/sec\n", access,
++                    ((float)access - last_update_access) / (float) elapsed, bps);
++    if (rv < 0) {
 +        ap_log_error(APLOG_MARK, APLOG_ERR, 0, s, APLOGNO(00000)
-+            "sd_notifyf returned an error %d", rv);
++                     "sd_notifyf returned an error %d", rv);
 +    }
 +
 +    last_update_access = access;
@@ -134,7 +146,7 @@ index 0000000..40dca79
 +static void systemd_register_hooks(apr_pool_t *p)
 +{
 +    /* We know the PID in this hook ... */
-+    ap_hook_post_config(systemd_post_config, NULL, NULL, APR_HOOK_LAST);
++    ap_hook_pre_mpm(systemd_pre_mpm, NULL, NULL, APR_HOOK_LAST);
 +    /* Used to update httpd's status line using sd_notifyf */
 +    ap_hook_monitor(systemd_monitor, NULL, NULL, APR_HOOK_MIDDLE);
 +}
@@ -149,27 +161,3 @@ index 0000000..40dca79
 +    NULL,
 +    systemd_register_hooks,
 +};
-diff --git a/modules/arch/unix/config5.m4 b/modules/arch/unix/config5.m4
-index 77027a8..4fd9799 100644
---- a/modules/arch/unix/config5.m4
-+++ b/modules/arch/unix/config5.m4
-@@ -18,6 +18,19 @@ APACHE_MODULE(privileges, Per-virtualhost Unix UserIDs and enhanced security for
-   fi
- ])
- 
-+
-+APACHE_MODULE(systemd, Systemd support, , , $unixd_mods_enabled, [
-+  AC_CHECK_LIB(systemd-daemon, sd_notify, SYSTEMD_LIBS="-lsystemd-daemon")
-+  AC_CHECK_HEADERS(systemd/sd-daemon.h, [ap_HAVE_SD_DAEMON_H="yes"], [ap_HAVE_SD_DAEMON_H="no"])
-+  if test $ap_HAVE_SD_DAEMON_H = "no" || test -z "${LUA_LIBS}"; then
-+    AC_MSG_WARN([Your system does not support systemd.])
-+    enable_systemd="no"
-+  else
-+    APR_ADDTO(MOD_SYSTEMD_LDADD, [$SYSTEMD_LIBS])
-+    enable_systemd="yes"
-+  fi
-+])
-+
- APR_ADDTO(INCLUDES, [-I\$(top_srcdir)/$modpath_current])
- 
- APACHE_MODPATH_FINISH
