@@ -4,7 +4,7 @@
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-Finder
-Version:          2.0.17
+Version:          2.1.1
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -17,6 +17,7 @@ BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 
 Requires:         php-common >= 5.3.2
 Requires:         php-pear(PEAR)
@@ -37,6 +38,13 @@ interface.
 
 %prep
 %setup -q -c
+
+# Hum...
+sed -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
+    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
+    -e '/Tests/s/role="php"/role="test"/' \
+    -i package.xml
+
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
 
@@ -55,6 +63,11 @@ rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%check
+cd %{pear_name}-%{version}/Symfony/Component/Finder/Tests
+phpunit  --bootstrap bootstrap.php .
 
 
 %post
@@ -76,9 +89,13 @@ fi
 %dir %{pear_phpdir}/Symfony
 %dir %{pear_phpdir}/Symfony/Component
      %{pear_phpdir}/Symfony/Component/%{pear_name}
+     %{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Thu Sep 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.1-1
+- Update to 2.1.1 for bytekit 1.1.3
+
 * Sat Sep 15 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.17-1
 - Update to 2.0.17, backport for remi repository
 
