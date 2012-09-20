@@ -19,7 +19,7 @@ BuildRequires:  php-channel(%{channel})
 
 Requires:       php-common >= 5.3.3
 Requires:       php-channel(%{channel})
-Requires:       php-pear(pear.symfony.com/Finder) >= 2.1.0RC1
+Requires:       php-pear(pear.symfony.com/Finder) >= 2.1.0
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
