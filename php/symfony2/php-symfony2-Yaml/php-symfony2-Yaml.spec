@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             php-symfony2-Yaml
-Version:          2.1.1
+Version:          2.1.2
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -113,6 +113,9 @@ fi
 
 
 %changelog
+* Thu Sep 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-1
+- Update to 2.1.2
+
 * Thu Sep 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.1-1
 - Update to 2.1.1 for PHPUnit 3.7
 
