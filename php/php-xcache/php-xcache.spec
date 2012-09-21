@@ -1,5 +1,7 @@
-%global ext_name   xcache
-%global with_zts   0%{?__ztsphp:1}
+%global ext_name     xcache
+%global with_zts     0%{?__ztsphp:1}
+%global php_apiver   %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
+%global php_abiver   %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP Extension => //p') | tail -1)
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
@@ -17,10 +19,15 @@ Source2:       xcache-coverager.conf
 Patch0:        %{ext_name}-conf.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel > 5.2.0
+BuildRequires: php-devel
 
+%if 0%{?php_zend_api:1}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
+%else
+Requires:      php-api = %{php_apiver}
+Requires:      php-zend-abi = %{php_abiver}
+%endif
 
 # Only one opcode cache
 Conflicts:     php-pecl-apc, php-eaccelerator
@@ -199,7 +206,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Fri Sep 21 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-3
-- prepare for review
+- prepare for review with EL-5 stuff
 
 * Fri Sep 21 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - add admin and coverager sub-package
