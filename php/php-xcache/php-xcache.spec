@@ -4,8 +4,8 @@
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
 Version:       2.0.1
-Release:       2%{?dist}
-License:       PHP
+Release:       3%{?dist}
+License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
 
@@ -17,19 +17,13 @@ Source2:       xcache-coverager.conf
 Patch0:        %{ext_name}-conf.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel
+BuildRequires: php-devel > 5.2.0
 
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
+# Only one opcode cache
 Conflicts:     php-pecl-apc, php-eaccelerator
-
-# Other third party repo stuff
-Obsoletes: php53-xcache
-Obsoletes: php53u-xcache
-%if "%{php_version}" > "5.4"
-Obsoletes: php54-xcache
-%endif
 
 # Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -204,6 +198,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 21 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-3
+- prepare for review
+
 * Fri Sep 21 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - add admin and coverager sub-package
 
