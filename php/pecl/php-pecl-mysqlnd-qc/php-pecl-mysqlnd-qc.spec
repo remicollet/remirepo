@@ -12,7 +12,7 @@
 Summary:      A query cache plugin for mysqlnd
 Name:         php-pecl-mysqlnd-qc
 Version:      1.1.1
-Release:      2%{?dist}
+Release:      3%{?dist}
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 License:      PHP
 Group:        Development/Languages
@@ -39,14 +39,19 @@ Requires:     php-sqlite3%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
-Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
-Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
+Provides:     php-pecl(%{pecl_name}) = %{version}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:     php53-pecl-mysqlnd-qc
+Obsoletes:     php53u-pecl-mysqlnd-qc
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-mysqlnd-qc
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -127,17 +132,17 @@ rm -rf %{buildroot}
 rm -f %{pecl_name}-*/modules/{sqlite3,mysqlnd}.so
 
 make install -C %{pecl_name}-%{version} INSTALL_ROOT=%{buildroot}
-
-%if 0%{?__ztsphp:1}
-make install -C %{pecl_name}-zts        INSTALL_ROOT=%{buildroot}
-
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-%endif
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+%if 0%{?__ztsphp:1}
+make install -C %{pecl_name}-zts        INSTALL_ROOT=%{buildroot}
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
 
 
 %clean
@@ -213,6 +218,10 @@ zts-php -n -q \
 
 
 %changelog
+* Sat Sep 22 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-3
+- rebuild for new libmemcached
+- Obsoletes php53*, php54*
+
 * Mon Apr 30 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
 - rebuild for EL and PHP 5.4
 
