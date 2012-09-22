@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcached
 Version:      2.1.0
-Release:      2%{?dist}
+Release:      3%{?dist}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -24,7 +24,7 @@ BuildRequires: php-pear
 BuildRequires: php-pecl-igbinary-devel
 BuildRequires: libmemcached-devel >= 1.0.0
 BuildRequires: zlib-devel
-BuildRequires: cyrus-sasl-devel
+# BuildRequires: cyrus-sasl-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -93,11 +93,11 @@ cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
 
 %build
+# no --enable-memcached-sasl, droped from libmemcached
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 %configure --enable-memcached-igbinary \
            --enable-memcached-json \
-           --enable-memcached-sasl \
            --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -105,7 +105,6 @@ cd ../%{pecl_name}-%{version}-zts
 %{_bindir}/zts-phpize
 %configure --enable-memcached-igbinary \
            --enable-memcached-json \
-           --enable-memcached-sasl \
            --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
@@ -172,6 +171,10 @@ ln -s %{php_ztsextdir}/igbinary.so modules/
 
 
 %changelog
+* Sat Sep 22 2012 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
+- rebuild for new libmemcached
+- drop sasl support
+
 * Sat Sep  8 2012 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - sync with rawhide, cleanups
 - Obsoletes php53*, php54* on EL
