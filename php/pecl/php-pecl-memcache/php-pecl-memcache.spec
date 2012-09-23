@@ -4,23 +4,22 @@
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcache
-Version:      3.0.6
-Release:      5%{?dist}
+Version:      3.0.7
+Release:      1%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
+# https://bugs.php.net/63141
 Source3:      LICENSE
 
-# https://bugs.php.net/60284
-Patch0:       memcache-php54.patch
-Patch1:       php-pecl-memcache-3.0.6-fdcast.patch
+# https://bugs.php.net/63142
 Patch2:       php-pecl-memcache-3.0.5-get-mem-corrupt.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel >= 4.3.11, php-pear, zlib-devel
+BuildRequires: php-devel php-pear, zlib-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -36,7 +35,6 @@ Obsoletes:     php53u-pecl-memcache
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-memcache
 %endif
-
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -57,10 +55,16 @@ Memcache can be used as a PHP session handler.
 %prep 
 %setup -c -q
 
-%patch0 -p0 -b .php54
-pushd memcache-%{version}
-%patch1 -p1 -b .fdcast
+pushd %{pecl_name}-%{version}
 %patch2 -p1 -b .get-mem-corrupt.patch
+
+# Chech version as upstream often forget to update this
+extver=$(sed -n '/#define PHP_MEMCACHE_VERSION/{s/.* "//;s/".*$//;p}' php_memcache.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is now ${extver}, expecting %{version}.
+   : Update the pdover macro and rebuild.
+   exit 1
+fi
 popd
 
 %{__php} -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
@@ -72,6 +76,7 @@ cat >%{pecl_name}.ini << 'EOF'
 extension=%{pecl_name}.so
 
 ; ----- Options for the %{pecl_name} module
+; see http://www.php.net/manual/en/memcache.ini.php
 
 ;  Whether to transparently failover to other servers on errors
 ;memcache.allow_failover=1
@@ -103,9 +108,6 @@ extension=%{pecl_name}.so
 ;  Defines a comma separated of server urls to use for session storage
 ;session.save_path="tcp://localhost:11211?persistent=1&weight=1&timeout=1&retry_interval=15"
 EOF
-
-# avoid spurious-executable-perm
-find . -type f -exec chmod -x {} \;
 
 cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
@@ -178,6 +180,11 @@ fi
 
 
 %changelog
+* Sun Sep 23 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-1
+- update to 3.0.7
+- drop patches merged upstream
+- cleanup spec
+
 * Sat Sep  8 2012 Remi Collet <remi@fedoraproject.org> - 3.0.6-5
 - add LICENSE
 - Obsoletes php53*, php54* on EL
