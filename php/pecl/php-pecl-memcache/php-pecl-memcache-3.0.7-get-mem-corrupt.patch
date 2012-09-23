@@ -1,34 +1,10 @@
-From 6e09e8db8d36de6a5020f5d517f62a8c16af8222 Mon Sep 17 00:00:00 2001
-From: "Vojtech Vitek (V-Teq)" <vvitek@redhat.com>
-Date: Mon, 17 Oct 2011 16:17:51 +0200
-Subject: [PATCH] fix get/unserialize memory corruption
-
-Possible memory corruption (and segfault) after unserialising objects:
-<?php
-$obj = new StdClass;
-$obj->obj = $obj;
-$memcache = new Memcache;
-$memcache->connect('127.0.0.1', 11211);
-$memcache->set('x', $obj, false, 300);
-$x = $memcache->get('x');
-$x = $memcache->get('x');
-$x = $memcache->get('x');
-$x = $memcache->get('x');
-$x = $memcache->get('x');
-
-Patch by Paul Clifford.
-
----
- memcache-3.0.5/memcache_pool.c |   15 +++++++--------
- 1 files changed, 7 insertions(+), 8 deletions(-)
-
-diff --git memcache-3.0.5/memcache_pool.c memcache-3.0.5/memcache_pool.c
-index 420a773..e89ebce 100644
---- memcache-3.0.5/memcache_pool.c
-+++ memcache-3.0.5/memcache_pool.c
-@@ -422,8 +422,8 @@ int mmc_unpack_value(
+--- pecl/memcache/branches/NON_BLOCKING_IO/memcache_pool.c	2012/09/23 07:13:18	327753
++++ pecl/memcache/branches/NON_BLOCKING_IO/memcache_pool.c	2012/09/23 08:29:10	327754
+@@ -426,13 +426,15 @@
+ {
  	char *data = NULL;
  	unsigned long data_len;
++	int rv;
  
 -	zval value;
 -	INIT_ZVAL(value);
@@ -37,7 +13,12 @@ index 420a773..e89ebce 100644
  
  	if (flags & MMC_COMPRESSED) {
  		if (mmc_uncompress(buffer->value.c, bytes, &data, &data_len) != MMC_OK) {
-@@ -439,7 +439,6 @@ int mmc_unpack_value(
+ 			php_error_docref(NULL TSRMLS_CC, E_NOTICE, "Failed to uncompress data");
++			zval_ptr_dtor(&object);
+ 			return MMC_REQUEST_DONE;
+ 		}
+ 	}
+@@ -444,7 +446,6 @@
  	if (flags & MMC_SERIALIZED) {
  		php_unserialize_data_t var_hash;
  		const unsigned char *p = (unsigned char *)data;
@@ -45,7 +26,26 @@ index 420a773..e89ebce 100644
  
  		char key_tmp[MMC_MAX_KEY_LEN + 1];
  		mmc_request_value_handler value_handler;
-@@ -495,7 +494,7 @@ int mmc_unpack_value(
+@@ -476,6 +477,7 @@
+ 			}
+ 
+ 			php_error_docref(NULL TSRMLS_CC, E_NOTICE, "Failed to unserialize data");
++			zval_ptr_dtor(&object);
+ 			return MMC_REQUEST_DONE;
+ 		}
+ 
+@@ -492,7 +494,9 @@
+ 		}
+ 
+ 		/* delegate to value handler */
+-		return value_handler(key_tmp, key_len, object, flags, cas, value_handler_param TSRMLS_CC);
++		rv = value_handler(key_tmp, key_len, object, flags, cas, value_handler_param TSRMLS_CC);
++		zval_ptr_dtor(&object);
++		return rv;
+ 	}
+ 	else {
+ 		switch (flags & 0x0f00) {
+@@ -500,7 +504,7 @@
  				long val;
  				data[data_len] = '\0';
  				val = strtol(data, NULL, 10);
@@ -54,7 +54,7 @@ index 420a773..e89ebce 100644
  				break;
  			}
  
-@@ -503,17 +502,17 @@ int mmc_unpack_value(
+@@ -508,17 +512,17 @@
  				double val = 0;
  				data[data_len] = '\0';
  				sscanf(data, "%lg", &val);
@@ -75,15 +75,14 @@ index 420a773..e89ebce 100644
  
  				if (!(flags & MMC_COMPRESSED)) {
  					/* release buffer because it's now owned by the zval */
-@@ -522,7 +521,7 @@ int mmc_unpack_value(
+@@ -527,7 +531,9 @@
  		}
  
  		/* delegate to value handler */
 -		return request->value_handler(key, key_len, &value, flags, cas, request->value_handler_param TSRMLS_CC);
-+		return request->value_handler(key, key_len, object, flags, cas, request->value_handler_param TSRMLS_CC);
++		rv = request->value_handler(key, key_len, object, flags, cas, request->value_handler_param TSRMLS_CC);
++		zval_ptr_dtor(&object);
++		return rv;
  	}
  }
  /* }}}*/
--- 
-1.7.6.2
-

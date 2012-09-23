@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcache
 Version:      3.0.7
-Release:      1%{?dist}
+Release:      2%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -16,7 +16,8 @@ Source2:      xml2changelog
 Source3:      LICENSE
 
 # https://bugs.php.net/63142
-Patch2:       php-pecl-memcache-3.0.5-get-mem-corrupt.patch
+# http://svn.php.net/viewvc/pecl/memcache/branches/NON_BLOCKING_IO/memcache_pool.c?r1=327754&r2=327753&pathrev=327754
+Patch2:       php-pecl-memcache-3.0.7-get-mem-corrupt.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel php-pear, zlib-devel
@@ -56,7 +57,7 @@ Memcache can be used as a PHP session handler.
 %setup -c -q
 
 pushd %{pecl_name}-%{version}
-%patch2 -p1 -b .get-mem-corrupt.patch
+%patch2 -p4 -b .get-mem-corrupt.patch
 
 # Chech version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_MEMCACHE_VERSION/{s/.* "//;s/".*$//;p}' php_memcache.h)
@@ -180,6 +181,9 @@ fi
 
 
 %changelog
+* Sun Sep 23 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-2
+- use upstream patch instead of our (memleak)
+
 * Sun Sep 23 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-1
 - update to 3.0.7
 - drop patches merged upstream
