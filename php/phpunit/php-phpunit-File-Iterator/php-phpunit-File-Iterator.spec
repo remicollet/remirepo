@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-File-Iterator
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
@@ -14,8 +14,10 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.2
+BuildRequires:  php-pear(PEAR) >= 1.9.2
 BuildRequires:  php-channel(%{channel})
+
+Requires:       php-pear(PEAR) >= 1.9.2
 Requires:       php-channel(%{channel})
 Requires:       php-common >= 5.2.7
 Requires(post): %{__pear}
@@ -29,8 +31,8 @@ FilterIterator implementation that filters files based on a list of suffixes.
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || %{__mv} package.xml package2.xml
-%{__mv} package2.xml %{pear_name}-%{version}/%{name}.xml
+mv package.xml %{pear_name}-%{version}/%{name}.xml
+
 
 %build
 cd %{pear_name}-%{version}
@@ -38,21 +40,21 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT
 
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-%{__rm} -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_phpdir}/.??*
 
 # Install XML package description
-%{__mkdir} -p $RPM_BUILD_ROOT%{pear_xmldir}
-%{__install} -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-%{__rm} -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -69,13 +71,32 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/File
 
+%doc %{pear_docdir}/%{pear_name}
+
+
 %changelog
+* Sun Sep 23 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
+- upstream 1.3.2
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jan 17 2012 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- Version 1.3.1 (stable) - API 1.3.0 (stable)
+- unmacro current command
+- remove pear version hack
+
 * Mon Jan 16 2012 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - upstream 1.3.1
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Wed Nov  2 2011 Christof Damian <christof@damian.net> - 1.3.0-1
+- upstream 1.3.0
 
 * Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - upstream 1.3.0
