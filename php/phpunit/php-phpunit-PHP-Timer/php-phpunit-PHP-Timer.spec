@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-Timer
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        PHP Utility class for timing
 
@@ -80,6 +80,9 @@ fi
 %{pear_phpdir}/PHP
 
 %changelog
+* Mon Sep 24 2012 Remi Collet <rpms@famillecollet.com> 1.0.3-1
+- update to 1.0.3
+
 * Sun Oct 23 2011 Remi Collet <rpms@famillecollet.com> 1.0.2-1
 - update to 1.0.2
 
