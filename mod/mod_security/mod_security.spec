@@ -7,7 +7,7 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.6.7
+Version: 2.6.8
 Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
@@ -103,6 +103,12 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sat Sep 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.6.9-1
+- Update to 2.6.9, backport for remi repo and httpd 2.4
+
+* Fri Sep 28 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.6.8-1
+- Update to 2.6.8
+
 * Thu Aug 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.6.7-1
 - Update to 2.6.7, backport for remi repo and httpd 2.4
 
