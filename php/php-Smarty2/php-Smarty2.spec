@@ -1,9 +1,9 @@
-Name:           php-Smarty
+Name:           php-Smarty2
 Summary:        Template/Presentation Framework for PHP
-Version:        2.6.26
-Release:        2%{?dist}
+Version:        2.6.27
+Release:        1%{?dist}
 
-Source0:        http://www.smarty.net/distributions/Smarty-%{version}.tar.gz
+Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -11,11 +11,8 @@ Group:          Development/Libraries
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-%if 0%{?rhel}
-Requires:       php >= 5.1.6-3.5
-%else
-Requires:       php >= 5.2.0-9
-%endif
+Requires:       php-date, php-mbstring, php-pcre, php-spl
+
 
 %description
 Although Smarty is known as a "Template Engine", it would be more accurately
@@ -42,8 +39,8 @@ iconv -f iso8859-1 -t utf-8 ChangeLog > ChangeLog.conv && mv -f ChangeLog.conv C
 rm -rf $RPM_BUILD_ROOT
 
 # install smarty libs
-install -d $RPM_BUILD_ROOT%{_datadir}/php/Smarty
-cp -a libs/* $RPM_BUILD_ROOT%{_datadir}/php/Smarty/
+install -d $RPM_BUILD_ROOT%{_datadir}/php/Smarty2
+cp -a libs/* $RPM_BUILD_ROOT%{_datadir}/php/Smarty2/
 
 
 %clean
@@ -54,10 +51,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc BUGS ChangeLog COPYING.lib demo FAQ NEWS QUICK_START README
 %doc RELEASE_NOTES TODO
-%{_datadir}/php/Smarty
+%{_datadir}/php/Smarty2
 
 
 %changelog
+* Sat Sep 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.6.27-1
+- rename to php-Smarty2 and update to 2.6.27 for remi repo
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.26-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
