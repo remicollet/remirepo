@@ -1,5 +1,5 @@
 Name: mysql
-Version: 5.5.27
+Version: 5.5.28
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -51,7 +51,6 @@ Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
 Patch10: mysql-plugin-bool.patch
 Patch11: mysql-s390-tsc.patch
-Patch12: mysql-openssl-test.patch
 Patch14: mysql-va-list.patch
 Patch15: mysql-netdevname.patch
 Patch16: mysql-logrotate.patch
@@ -231,8 +230,6 @@ rm -f Docs/mysql.info
 %patch8 -p1
 %patch10 -p1
 %patch11 -p1
-# When build with system openssl
-%patch12 -p1
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
@@ -790,6 +787,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Sep 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.28-1
+- update to MySQL 5.5.28 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-28.html
+
 * Sun Aug  5 2012 Tom Lane <tgl@redhat.com> 5.5.27-1
 - Update to MySQL 5.5.27, for various fixes described at
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-27.html
