@@ -1,10 +1,9 @@
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.11
+Version:        3.1.12
 Release:        1%{?dist}
 
-Source0:        http://www.smarty.net/distributions/Smarty-%{version}.tar.gz
-Patch0:         php-Smarty-3.1.11-CVE-2012-4437.patch
+Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -12,11 +11,9 @@ Group:          Development/Libraries
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-%if 0%{?rhel}
-Requires:       php >= 5.1.6-3.5
-%else
-Requires:       php >= 5.2.0-9
-%endif
+Requires:       php(language) >= 5.2.0
+Requires:       php-date, php-mbstring, php-pcre, php-spl
+
 
 %description
 Although Smarty is known as a "Template Engine", it would be more accurately
@@ -32,7 +29,6 @@ high-performance, scalability, security and future growth.
 %prep
 %setup -qn Smarty-%{version}
 
-%patch0 -p0
 
 %build
 # empty build section, nothing required
@@ -57,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 3.1.12-1
+- update to 3.1.12 for remi repo
+
 * Thu Sep 20 2012 Jon Ciesla <limburgher@gmail.com> - 3.1.11-1
 - Update to 3.1.11, patch for CVE-2012-4437, BZ 858989.
 
