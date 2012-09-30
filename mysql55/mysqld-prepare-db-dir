@@ -22,10 +22,31 @@ datadir="$result"
 get_mysql_option mysqld_safe log-error "/var/log/mysqld.log"
 errlogfile="$result"
 
+# Absorb configuration settings from the specified systemd service file,
+# or the default "mysqld" service if not specified
+SERVICE_NAME="$1"
+if [ x"$SERVICE_NAME" = x ]
+then
+    SERVICE_NAME=mysqld.service
+fi
+
+myuser=`systemctl show -p User "${SERVICE_NAME}" |
+  sed 's/^User=//'`
+if [ x"$myuser" = x ]
+then
+    myuser=mysql
+fi
+
+mygroup=`systemctl show -p Group "${SERVICE_NAME}" |
+  sed 's/^Group=//'`
+if [ x"$mygroup" = x ]
+then
+    mygroup=mysql
+fi
 
 # Set up the errlogfile with appropriate permissions
 touch "$errlogfile"
-chown mysql:mysql "$errlogfile"
+chown "$myuser:$mygroup" "$errlogfile"
 chmod 0640 "$errlogfile"
 [ -x /sbin/restorecon ] && /sbin/restorecon "$errlogfile"
 
@@ -37,13 +58,13 @@ if [ ! -d "$datadir/mysql" ] ; then
     then
         mkdir -p "$datadir" || exit 1
     fi
-    chown mysql:mysql "$datadir"
+    chown "$myuser:$mygroup" "$datadir"
     chmod 0755 "$datadir"
     [ -x /sbin/restorecon ] && /sbin/restorecon "$datadir"
 
     # Now create the database
     echo "Initializing MySQL database"
-    /usr/bin/mysql_install_db --datadir="$datadir" --user=mysql
+    /usr/bin/mysql_install_db --datadir="$datadir" --user="$myuser"
     ret=$?
     if [ $ret -ne 0 ] ; then
         echo "Initialization of MySQL database failed." >&2
@@ -55,7 +76,7 @@ if [ ! -d "$datadir/mysql" ] ; then
         exit $ret
     fi
     # In case we're running as root, make sure files are owned properly
-    chown -R mysql:mysql "$datadir"
+    chown -R "$myuser:$mygroup" "$datadir"
 fi
 
 exit 0

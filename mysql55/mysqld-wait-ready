@@ -31,7 +31,7 @@ socketfile="$result"
 # Wait for the server to come up or for the mysqld process to disappear
 ret=0
 while /bin/true; do
-	RESPONSE=`/usr/bin/mysqladmin --socket="$socketfile" --user=UNKNOWN_MYSQL_USER ping 2>&1`
+	RESPONSE=`/usr/bin/mysqladmin --no-defaults --socket="$socketfile" --user=UNKNOWN_MYSQL_USER ping 2>&1`
 	mret=$?
 	if [ $mret -eq 0 ]; then
 	    break

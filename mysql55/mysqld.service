@@ -27,7 +27,7 @@ Type=simple
 User=mysql
 Group=mysql
 
-ExecStartPre=/usr/libexec/mysqld-prepare-db-dir
+ExecStartPre=/usr/libexec/mysqld-prepare-db-dir %n
 # Note: we set --basedir to prevent probes that might trigger SELinux alarms,
 # per bug #547485
 ExecStart=/usr/bin/mysqld_safe --basedir=/usr

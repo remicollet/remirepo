@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.5.28
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -532,6 +532,9 @@ echo -e "You should consider upgrading to a supported release.\n"
 /sbin/ldconfig
 
 %post server
+%if 0%{?systemd_post:1}
+%systemd_post mysqld.service
+%else
 if [ $1 = 1 ]; then
     # Initial installation
 %if 0%{?fedora} >= 15
@@ -540,6 +543,7 @@ if [ $1 = 1 ]; then
     /sbin/chkconfig --add mysqld
 %endif
 fi
+%endif
 /bin/chmod 0755 /var/lib/mysql
 /bin/touch /var/log/mysqld.log
 
@@ -561,6 +565,9 @@ fi
 %endif
 
 %preun server
+%if 0%{?systemd_preun:1}
+%systemd_preun mysqld.service
+%else
 if [ $1 = 0 ]; then
     # Package removal, not upgrade
 %if 0%{?fedora} >= 15
@@ -571,6 +578,7 @@ if [ $1 = 0 ]; then
     /sbin/chkconfig --del mysqld
 %endif
 fi
+%endif
 
 %postun libs
 if [ $1 = 0 ] ; then
@@ -578,6 +586,9 @@ if [ $1 = 0 ] ; then
 fi
 
 %postun server
+%if 0%{?systemd_postun_with_restart:1}
+%systemd_postun_with_restart mysqld.service
+%else
 %if 0%{?fedora} >= 15
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ]; then
@@ -588,6 +599,7 @@ fi
 if [ $1 -ge 1 ]; then
     /sbin/service mysqld condrestart >/dev/null 2>&1 || :
 fi
+%endif
 %endif
 
 
@@ -787,6 +799,23 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Sep 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.28-2
+- sync with rawhide
+
+* Sat Sep 29 2012 Tom Lane <tgl@redhat.com> 5.5.28-1
+- Update to MySQL 5.5.28, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-28.html
+- Clean up partially-created database files when mysql_install_db fails
+Related: #835131
+- Honor user and group settings from service file in mysqld-prepare-db-dir
+Resolves: #840431
+- Export THR_KEY_mysys as a workaround for inadequate threading support
+Resolves: #846602
+- Adopt new systemd macros for server package install/uninstall triggers
+Resolves: #850222
+- Use --no-defaults when invoking mysqladmin to wait for the server to start
+Related: #855704
+
 * Sat Sep 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.28-1
 - update to MySQL 5.5.28 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-28.html
