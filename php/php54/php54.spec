@@ -65,7 +65,7 @@ Version: 5.4.7
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 6%{?dist}
+Release: 10%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -94,6 +94,14 @@ Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
 
 # Fixes for extension modules
+# https://bugs.php.net/63126 - DISABLE_AUTHENTICATOR ignores array
+Patch20: php-5.4.7-imap.patch
+# https://bugs.php.net/63171 no odbc call during timeout
+Patch21: php-5.4.7-odbctimer.patch
+# https://bugs.php.net/63149 check sqlite3_column_table_name
+Patch22: php-5.4.7-sqlite.patch
+# https://bugs.php.net/bug.php?id=62886 - php-fpm startup
+Patch23: php-5.4.7-fpm.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -103,9 +111,8 @@ Patch42: php-5.3.1-systzdata-v9.patch
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
 Patch44: php-5.4.5-system-libzip.patch
-# improves php-fpm daemonize mode
-# see https://bugs.php.net/63085
-Patch45: php-5.4.7-63085.patch
+# https://bugs.php.net/63085 systemd integration
+Patch45: php-5.4.7-fpm-systemd.patch
 
 # Fixes for tests
 
@@ -678,6 +685,11 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
 
+%patch20 -p1 -b .imap
+%patch21 -p1 -b .odbctimer
+%patch22 -p1 -b .tablename
+%patch23 -p1 -b .fpmstartup
+
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
 %if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
@@ -687,7 +699,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %if %{with_libzip}
 %patch44 -p1 -b .systzip
 %endif
-%patch45 -p0 -b .63085
+%patch45 -p1 -b .systemd
 
 %patch91 -p1 -b .remi-oci8
 
@@ -704,15 +716,20 @@ mkdir build-cgi build-apache build-embedded build-zts build-ztscli \
     build-fpm
 %endif
 
-# Remove bogus test; position of read position after fopen(, "a+")
-# is not defined by C standard, so don't presume anything.
-rm -f ext/standard/tests/file/bug21131.phpt
+# ----- Manage known as failed test -------
 # php_egg_logo_guid() removed by patch41
 rm -f tests/basic/php_egg_logo_guid.phpt
-
-# Tests that fail.
-rm -f ext/standard/tests/file/bug22414.phpt \
-      ext/iconv/tests/bug16069.phpt
+# affected by systzdata patch
+rm -f ext/date/tests/timezone_location_get.phpt
+# https://bugs.php.net/63147 tests requiring an internet connection
+rm -f ext/standard/tests/network/gethostbyname_basic002.phpt
+rm -f ext/standard/tests/network/gethostbyname_error004.phpt
+rm -f ext/standard/tests/network/getmxrr.phpt
+# https://bugzilla.redhat.com/859878 - missing feature in SQLite
+# https://bugs.php.net/63149 - build against system SQLite
+rm -f ext/pdo_sqlite/tests/bug_42589.phpt
+# fails sometime
+rm -f ext/sockets/tests/mcast_ipv?_recv.phpt
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
@@ -952,7 +969,7 @@ build --with-apxs2=%{_httpd_apxs} \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
       --with-pdo-mysql=shared,%{mysql_config} \
-      --with-pdo-sqlite=shared,%{_prefix} \
+      --without-pdo-sqlite \
       ${without_shared}
 popd
 
@@ -1060,7 +1077,7 @@ build --with-apxs2=%{_httpd_apxs} \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
       --with-pdo-mysql=shared,%{mysql_config} \
-      --with-pdo-sqlite=shared,%{_prefix} \
+      --without-pdo-sqlite \
       ${without_shared}
 popd
 
@@ -1188,6 +1205,10 @@ install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/php-fpm
 # install systemd unit files and scripts for handling server startup
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
+%if 0%{?fedora} < 16 && 0%{?rhel} < 7
+# PrivateTmp only work on fedora >= 16
+sed -i -e '/PrivateTmp/s/true/false/' ${RPM_BUILD_ROOT}%{_unitdir}/php-fpm.service
+%endif
 %else
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
 sed -i -e 's:/run:/var/run:' $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
@@ -1308,6 +1329,9 @@ echo -e "You should consider upgrading to a supported release.\n"
 
 %if %{with_fpm}
 %post fpm
+%if 0%{?systemd_post:1}
+%systemd_post php-fpm.service
+%else
 if [ $1 = 1 ]; then
     # Initial installation
 %if 0%{?fedora} >= 15
@@ -1316,8 +1340,12 @@ if [ $1 = 1 ]; then
     /sbin/chkconfig --add php-fpm
 %endif
 fi
+%endif
 
 %preun fpm
+%if 0%{?systemd_preun:1}
+%systemd_preun php-fpm.service
+%else
 if [ $1 = 0 ]; then
     # Package removal, not upgrade
 %if 0%{?fedora} >= 15
@@ -1328,8 +1356,12 @@ if [ $1 = 0 ]; then
     /sbin/chkconfig --del php-fpm
 %endif
 fi
+%endif
 
 %postun fpm
+%if 0%{?systemd_postun_with_restart:1}
+%systemd_postun_with_restart php-fpm.service
+%else
 %if 0%{?fedora} >= 15
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ]; then
@@ -1340,6 +1372,7 @@ fi
 if [ $1 -ge 1 ]; then
     /sbin/service php-fpm condrestart >/dev/null 2>&1 || :
 fi
+%endif
 %endif
 
 # Handle upgrading from SysV initscript to native systemd unit.
@@ -1477,6 +1510,25 @@ fi
 
 
 %changelog
+* Mon Oct  1 2012 Remi Collet <remi@fedoraproject.org> 5.4.7-10
+- fix typo in systemd macro
+
+* Mon Oct  1 2012 Remi Collet <remi@fedoraproject.org> 5.4.7-9
+- php-fpm: enable PrivateTmp
+- php-fpm: new systemd macros (#850268)
+- php-fpm: add upstream patch for startup issue (#846858)
+
+* Fri Sep 28 2012 Remi Collet <rcollet@redhat.com> 5.4.7-8
+- systemd integration, https://bugs.php.net/63085
+- no odbc call during timeout, https://bugs.php.net/63171
+- check sqlite3_column_table_name, https://bugs.php.net/63149
+
+* Mon Sep 24 2012 Remi Collet <rcollet@redhat.com> 5.4.7-7
+- most failed tests explained (i386, x86_64)
+
+* Wed Sep 19 2012 Remi Collet <rcollet@redhat.com> 5.4.7-6
+- fix for http://bugs.php.net/63126 (#783967)
+
 * Wed Sep 19 2012 Remi Collet <RPMS@famillecollet.com> 5.4.7-6
 - add --daemonize / --nodaemonize options to php-fpm
   upstream RFE: https://bugs.php.net/63085

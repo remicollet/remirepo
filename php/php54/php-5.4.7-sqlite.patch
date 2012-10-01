@@ -1,0 +1,27 @@
+From 05b9b50f09e10038230e1edab43b86afb67c14a8 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 24 Sep 2012 13:53:59 +0200
+Subject: [PATCH] Fix Bug #63149, check sqlite3_column_table_name availability
+ with system SQLite
+
+---
+ ext/sqlite3/config0.m4 |    3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/ext/sqlite3/config0.m4 b/ext/sqlite3/config0.m4
+index ac58b35..1365def 100644
+--- a/ext/sqlite3/config0.m4
++++ b/ext/sqlite3/config0.m4
+@@ -50,6 +50,9 @@ if test $PHP_SQLITE3 != "no"; then
+     PHP_CHECK_LIBRARY(sqlite3,sqlite3_key,[
+       AC_DEFINE(HAVE_SQLITE3_KEY, 1, [have commercial sqlite3 with crypto support])
+     ])
++    PHP_CHECK_LIBRARY(sqlite3,sqlite3_column_table_name,[
++      AC_DEFINE(SQLITE_ENABLE_COLUMN_METADATA, 1, [have sqlite3 with column metadata enabled])
++    ])
+ 
+     PHP_CHECK_LIBRARY(sqlite3,sqlite3_load_extension,
+     [],
+-- 
+1.7.10
+

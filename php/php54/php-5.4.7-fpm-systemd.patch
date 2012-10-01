@@ -1,6 +1,24 @@
-diff -Nru sapi/fpm.old/config.m4 sapi/fpm/config.m4
---- sapi/fpm.old/config.m4	2012-09-19 15:53:48.001758347 +0200
-+++ sapi/fpm/config.m4	2012-09-19 16:18:57.661936394 +0200
+From 851a04bb7b680954249e825ea3fef420f7d66bb7 Mon Sep 17 00:00:00 2001
+From: Jerome Loyet <fat@php.net>
+Date: Fri, 28 Sep 2012 00:33:05 +0200
+Subject: [PATCH] - Fixed bug #63085 (Systemd integration and daemonize)
+
+---
+ NEWS                       |    1 +
+ sapi/fpm/config.m4         |    2 +-
+ sapi/fpm/fpm/fpm.c         |    4 ++--
+ sapi/fpm/fpm/fpm.h         |    2 +-
+ sapi/fpm/fpm/fpm_conf.c    |   11 ++++++++---
+ sapi/fpm/fpm/fpm_conf.h    |    2 +-
+ sapi/fpm/fpm/fpm_main.c    |   18 ++++++++++++++++--
+ sapi/fpm/init.d.php-fpm.in |    2 +-
+ sapi/fpm/php-fpm.8.in      |   23 ++++++++++++++++++++++-
+ 9 files changed, 53 insertions(+), 12 deletions(-)
+
+diff --git a/sapi/fpm/config.m4 b/sapi/fpm/config.m4
+index c23485a..7687660 100644
+--- a/sapi/fpm/config.m4
++++ b/sapi/fpm/config.m4
 @@ -589,7 +589,7 @@
  
    PHP_ADD_BUILD_DIR(sapi/fpm/fpm)
@@ -10,11 +28,12 @@ diff -Nru sapi/fpm.old/config.m4 sapi/fpm/config.m4
    PHP_ADD_MAKEFILE_FRAGMENT([$abs_srcdir/sapi/fpm/Makefile.frag])
  
    SAPI_FPM_PATH=sapi/fpm/php-fpm
-diff -Nru sapi/fpm.old/fpm/fpm.c sapi/fpm/fpm/fpm.c
---- sapi/fpm.old/fpm/fpm.c	2012-09-19 15:53:48.000758297 +0200
-+++ sapi/fpm/fpm/fpm.c	2012-09-19 16:09:57.462102346 +0200
-@@ -42,7 +42,7 @@
- 	.send_config_signal = 0,
+diff --git a/sapi/fpm/fpm/fpm.c b/sapi/fpm/fpm/fpm.c
+index 2f42175..b866f37 100644
+--- a/sapi/fpm/fpm/fpm.c
++++ b/sapi/fpm/fpm/fpm.c
+@@ -42,7 +42,7 @@ struct fpm_globals_s fpm_globals = {
+ 	.send_config_pipe = {0, 0},
  };
  
 -int fpm_init(int argc, char **argv, char *config, char *prefix, char *pid, int test_conf, int run_as_root) /* {{{ */
@@ -22,7 +41,7 @@ diff -Nru sapi/fpm.old/fpm/fpm.c sapi/fpm/fpm/fpm.c
  {
  	fpm_globals.argc = argc;
  	fpm_globals.argv = argv;
-@@ -55,7 +55,7 @@
+@@ -55,7 +55,7 @@ int fpm_init(int argc, char **argv, char *config, char *prefix, char *pid, int t
  
  	if (0 > fpm_php_init_main()           ||
  	    0 > fpm_stdio_init_main()         ||
@@ -31,10 +50,24 @@ diff -Nru sapi/fpm.old/fpm/fpm.c sapi/fpm/fpm/fpm.c
  	    0 > fpm_unix_init_main()          ||
  	    0 > fpm_scoreboard_init_main()    ||
  	    0 > fpm_pctl_init_main()          ||
-diff -Nru sapi/fpm.old/fpm/fpm_conf.c sapi/fpm/fpm/fpm_conf.c
---- sapi/fpm.old/fpm/fpm_conf.c	2012-09-19 15:53:48.000758297 +0200
-+++ sapi/fpm/fpm/fpm_conf.c	2012-09-19 16:08:46.034854345 +0200
-@@ -1115,7 +1115,7 @@
+diff --git a/sapi/fpm/fpm/fpm.h b/sapi/fpm/fpm/fpm.h
+index c576876..65d0e0d 100644
+--- a/sapi/fpm/fpm/fpm.h
++++ b/sapi/fpm/fpm/fpm.h
+@@ -37,7 +37,7 @@
+ 
+ 
+ int fpm_run(int *max_requests);
+-int fpm_init(int argc, char **argv, char *config, char *prefix, char *pid, int test_conf, int run_as_root);
++int fpm_init(int argc, char **argv, char *config, char *prefix, char *pid, int test_conf, int run_as_root, int force_daemon);
+ 
+ struct fpm_globals_s {
+ 	pid_t parent_pid;
+diff --git a/sapi/fpm/fpm/fpm_conf.c b/sapi/fpm/fpm/fpm_conf.c
+index dfe6792..25e2cc4 100644
+--- a/sapi/fpm/fpm/fpm_conf.c
++++ b/sapi/fpm/fpm/fpm_conf.c
+@@ -1115,7 +1115,7 @@ int fpm_conf_write_pid() /* {{{ */
  }
  /* }}} */
  
@@ -43,7 +76,7 @@ diff -Nru sapi/fpm.old/fpm/fpm_conf.c sapi/fpm/fpm/fpm_conf.c
  {
  	struct fpm_worker_pool_s *wp;
  
-@@ -1123,6 +1123,11 @@
+@@ -1123,6 +1123,11 @@ static int fpm_conf_post_process(TSRMLS_D) /* {{{ */
  		fpm_evaluate_full_path(&fpm_global_config.pid_file, NULL, PHP_LOCALSTATEDIR, 0);
  	}
  
@@ -55,7 +88,7 @@ diff -Nru sapi/fpm.old/fpm/fpm_conf.c sapi/fpm/fpm/fpm_conf.c
  	fpm_globals.log_level = fpm_global_config.log_level;
  
  	if (fpm_global_config.process_max < 0) {
-@@ -1584,7 +1589,7 @@
+@@ -1584,7 +1589,7 @@ static void fpm_conf_dump() /* {{{ */
  }
  /* }}} */
  
@@ -64,7 +97,7 @@ diff -Nru sapi/fpm.old/fpm/fpm_conf.c sapi/fpm/fpm/fpm_conf.c
  {
  	int ret;
  	TSRMLS_FETCH();
-@@ -1630,7 +1635,7 @@
+@@ -1630,7 +1635,7 @@ int fpm_conf_init_main(int test_conf) /* {{{ */
  		return -1;
  	}
  
@@ -73,10 +106,11 @@ diff -Nru sapi/fpm.old/fpm/fpm_conf.c sapi/fpm/fpm/fpm_conf.c
  		zlog(ZLOG_ERROR, "failed to post process the configuration");
  		return -1;
  	}
-diff -Nru sapi/fpm.old/fpm/fpm_conf.h sapi/fpm/fpm/fpm_conf.h
---- sapi/fpm.old/fpm/fpm_conf.h	2012-09-19 15:53:48.000758297 +0200
-+++ sapi/fpm/fpm/fpm_conf.h	2012-09-19 16:05:29.874174589 +0200
-@@ -97,7 +97,7 @@
+diff --git a/sapi/fpm/fpm/fpm_conf.h b/sapi/fpm/fpm/fpm_conf.h
+index f780f03..dc54133 100644
+--- a/sapi/fpm/fpm/fpm_conf.h
++++ b/sapi/fpm/fpm/fpm_conf.h
+@@ -97,7 +97,7 @@ enum {
  	PM_STYLE_ONDEMAND = 3
  };
  
@@ -85,21 +119,10 @@ diff -Nru sapi/fpm.old/fpm/fpm_conf.h sapi/fpm/fpm/fpm_conf.h
  int fpm_worker_pool_config_free(struct fpm_worker_pool_config_s *wpc);
  int fpm_conf_write_pid();
  int fpm_conf_unlink_pid();
-diff -Nru sapi/fpm.old/fpm/fpm.h sapi/fpm/fpm/fpm.h
---- sapi/fpm.old/fpm/fpm.h	2012-09-19 15:53:48.000758297 +0200
-+++ sapi/fpm/fpm/fpm.h	2012-09-19 16:02:06.113470905 +0200
-@@ -37,7 +37,7 @@
- 
- 
- int fpm_run(int *max_requests);
--int fpm_init(int argc, char **argv, char *config, char *prefix, char *pid, int test_conf, int run_as_root);
-+int fpm_init(int argc, char **argv, char *config, char *prefix, char *pid, int test_conf, int run_as_root, int force_daemon);
- 
- struct fpm_globals_s {
- 	pid_t parent_pid;
-diff -Nru sapi/fpm.old/fpm/fpm_main.c sapi/fpm/fpm/fpm_main.c
---- sapi/fpm.old/fpm/fpm_main.c	2012-09-19 15:53:47.999758244 +0200
-+++ sapi/fpm/fpm/fpm_main.c	2012-09-19 16:29:52.595853439 +0200
+diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
+index 70e917a..3faf308 100644
+--- a/sapi/fpm/fpm/fpm_main.c
++++ b/sapi/fpm/fpm/fpm_main.c
 @@ -155,6 +155,8 @@
  	{'p', 1, "prefix"},
  	{'g', 1, "pid"},
@@ -123,7 +146,7 @@ diff -Nru sapi/fpm.old/fpm/fpm_main.c sapi/fpm/fpm/fpm_main.c
  				"                   Specify alternative path to FastCGI process manager config file.\n"
  				"  -t, --test       Test FPM configuration and exit\n"
 +				"  -D, --daemonize  force to run in background, and ignore daemonize option from config file\n"
-+				"   F, --nodaemonize\n"
++				"  -F, --nodaemonize\n"
 +				"                   force to stay in foreground, and ignore daemonize option from config file\n"
  				"  -R, --allow-to-run-as-root\n"
  				"                   Allow pool to run as root (disabled by default)\n",
@@ -158,12 +181,13 @@ diff -Nru sapi/fpm.old/fpm/fpm_main.c sapi/fpm/fpm/fpm_main.c
 -	if (0 > fpm_init(argc, argv, fpm_config ? fpm_config : CGIG(fpm_config), fpm_prefix, fpm_pid, test_conf, php_allow_to_run_as_root)) {
 +	if (0 > fpm_init(argc, argv, fpm_config ? fpm_config : CGIG(fpm_config), fpm_prefix, fpm_pid, test_conf, php_allow_to_run_as_root, force_daemon)) {
  
- 		if (fpm_globals.send_config_signal) {
- 			zlog(ZLOG_DEBUG, "Sending SIGUSR2 (error) to parent %d", getppid());
-diff -Nru sapi/fpm.old/init.d.php-fpm.in sapi/fpm/init.d.php-fpm.in
---- sapi/fpm.old/init.d.php-fpm.in	2012-09-19 15:53:47.998758183 +0200
-+++ sapi/fpm/init.d.php-fpm.in	2012-09-19 16:12:13.356570094 +0200
-@@ -54,7 +54,7 @@
+ 		if (fpm_globals.send_config_pipe[1]) {
+ 			int writeval = 0;
+diff --git a/sapi/fpm/init.d.php-fpm.in b/sapi/fpm/init.d.php-fpm.in
+index dc66310..3edd64f 100644
+--- a/sapi/fpm/init.d.php-fpm.in
++++ b/sapi/fpm/init.d.php-fpm.in
+@@ -54,7 +54,7 @@ case "$1" in
  	start)
  		echo -n "Starting php-fpm "
  
@@ -172,10 +196,11 @@ diff -Nru sapi/fpm.old/init.d.php-fpm.in sapi/fpm/init.d.php-fpm.in
  
  		if [ "$?" != 0 ] ; then
  			echo " failed"
-diff -Nru sapi/fpm.old/php-fpm.8.in sapi/fpm/php-fpm.8.in
---- sapi/fpm.old/php-fpm.8.in	2012-09-19 15:53:47.998758183 +0200
-+++ sapi/fpm/php-fpm.8.in	2012-09-19 16:40:57.865863325 +0200
-@@ -99,6 +99,20 @@
+diff --git a/sapi/fpm/php-fpm.8.in b/sapi/fpm/php-fpm.8.in
+index 6c9c6d6..a4e7e74 100644
+--- a/sapi/fpm/php-fpm.8.in
++++ b/sapi/fpm/php-fpm.8.in
+@@ -99,6 +99,20 @@ Test FPM configuration file and exit
  If called twice (-tt), the configuration is dumped before exiting.
  .TP
  .PD 0
@@ -196,7 +221,7 @@ diff -Nru sapi/fpm.old/php-fpm.8.in sapi/fpm/php-fpm.8.in
  .B \-\-zend\-extension \fIfile\fP
  .TP
  .PD 1
-@@ -113,13 +127,20 @@
+@@ -113,13 +127,20 @@ The configuration file for the php-fpm daemon.
  .B php.ini
  The standard php configuration file.
  .SH EXAMPLES
@@ -218,9 +243,24 @@ diff -Nru sapi/fpm.old/php-fpm.8.in sapi/fpm/php-fpm.8.in
  If your installation has no appropriate init script, launch php-fpm with no arguments. It will launch as a daemon (background process) by default. The file @php_fpm_localstatedir@/run/php-fpm.pid determines whether php-fpm is already up and running. Once started, php-fpm then responds to several POSIX signals:
  .P
  .PD 0
-diff -Nru sapi/fpm.old/php-fpm.service.in sapi/fpm/php-fpm.service.in
---- sapi/fpm.old/php-fpm.service.in	1970-01-01 01:00:00.000000000 +0100
-+++ sapi/fpm/php-fpm.service.in	2012-09-19 16:21:32.140467558 +0200
+-- 
+1.7.8
+
+From 2259a8f18b1f25c175c486f54849fcd9e61ecde1 Mon Sep 17 00:00:00 2001
+From: Jerome Loyet <fat@php.net>
+Date: Fri, 28 Sep 2012 00:47:56 +0200
+Subject: [PATCH] - add missing php-fpm.service.in
+
+---
+ sapi/fpm/php-fpm.service.in |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
+ create mode 100644 sapi/fpm/php-fpm.service.in
+
+diff --git a/sapi/fpm/php-fpm.service.in b/sapi/fpm/php-fpm.service.in
+new file mode 100644
+index 0000000..396a88d
+--- /dev/null
++++ b/sapi/fpm/php-fpm.service.in
 @@ -0,0 +1,12 @@
 +[Unit]
 +Description=The PHP FastCGI Process Manager
@@ -234,3 +274,6 @@ diff -Nru sapi/fpm.old/php-fpm.service.in sapi/fpm/php-fpm.service.in
 +[Install]
 +WantedBy=multi-user.target
 +
+-- 
+1.7.8
+

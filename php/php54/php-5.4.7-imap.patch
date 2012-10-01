@@ -1,0 +1,11 @@
+--- php-5.4.7/ext/imap/php_imap.c.orig	2012-09-22 09:00:39.661043173 +0200
++++ php-5.4.7/ext/imap/php_imap.c	2012-09-22 09:01:13.606053829 +0200
+@@ -1191,7 +1191,7 @@
+ 							if (zend_hash_index_find(Z_ARRVAL_PP(disabled_auth_method), i, (void **) &z_auth_method) == SUCCESS) {
+ 								if (Z_TYPE_PP(z_auth_method) == IS_STRING) {
+ 									if (Z_STRLEN_PP(z_auth_method) > 1) {
+-										mail_parameters (NIL, DISABLE_AUTHENTICATOR, (void *)Z_STRVAL_PP(disabled_auth_method));
++										mail_parameters (NIL, DISABLE_AUTHENTICATOR, (void *)Z_STRVAL_PP(z_auth_method));
+ 									}
+ 								} else {
+ 									php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid argument, expect string or array of strings");
