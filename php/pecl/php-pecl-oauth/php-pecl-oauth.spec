@@ -4,8 +4,8 @@
 %global pecl_name oauth
 
 Name:           php-pecl-oauth
-Version:        1.2.2
-Release:        4%{?dist}
+Version:        1.2.3
+Release:        1%{?dist}
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD
@@ -25,12 +25,16 @@ Requires(postun): %{__pecl}
 
 Provides: php-pecl(%{pecl_name}) = %{version}
 
+# Other third party repo stuff
+Obsoletes:     php53-pecl-oauth
+Obsoletes:     php53u-pecl-oauth
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-oauth
+%endif
 
-# RPM 4.8
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -94,6 +98,7 @@ fi
     -d extension_dir=%{pecl_name}-%{version}/modules \
     -d extension=%{pecl_name}.so \
     --modules | grep OAuth
+
 %{__ztsphp} -n \
     -d extension_dir=%{pecl_name}-%{version}-zts/modules \
     -d extension=%{pecl_name}.so \
@@ -111,6 +116,9 @@ fi
 
 
 %changelog
+* Tue Oct  2 2012 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- update to 1.2.3
+
 * Tue Sep  4 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-4
 - EL rebuild
 
