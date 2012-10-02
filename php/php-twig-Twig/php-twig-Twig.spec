@@ -1,10 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 
 %global pear_channel pear.twig-project.org
 %global pear_name    %(echo %{name} | sed -e 's/^php-twig-//' -e 's/-/_/g')
 
 Name:             php-twig-Twig
-Version:          1.9.2
+Version:          1.10.0
 Release:          1%{?dist}
 Summary:          Twig is a modern template engine for PHP
 
@@ -18,7 +19,7 @@ BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
-Requires:         php-common >= 5.2.4
+Requires:         php(language) >= 5.2.4
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
@@ -67,7 +68,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
@@ -94,6 +95,9 @@ fi
 
 
 %changelog
+* Tue Oct  2 2012 Remi Collet <RPMS@FamilleCollet.com> 1.10.0-1
+- Update to 1.10.0
+
 * Mon Aug 27 2012 Remi Collet <RPMS@FamilleCollet.com> 1.9.2-1
 - Update to 1.9.2
 
