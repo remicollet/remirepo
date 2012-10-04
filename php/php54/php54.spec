@@ -63,7 +63,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.8
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -104,7 +104,7 @@ Patch22: php-5.4.7-sqlite.patch
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
 Patch41: php-5.4.0-easter.patch
-Patch42: php-5.3.1-systzdata-v9.patch
+Patch42: php-5.3.1-systzdata-v10.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
@@ -715,7 +715,6 @@ mkdir build-cgi build-apache build-embedded build-zts build-ztscli \
 rm -f tests/basic/php_egg_logo_guid.phpt
 # affected by systzdata patch
 rm -f ext/date/tests/timezone_location_get.phpt
-rm -f ext/standard/tests/general_functions/bug60723.phpt
 # https://bugs.php.net/63149 - build against system SQLite
 rm -f ext/pdo_sqlite/tests/bug_42589.phpt
 # fails sometime
@@ -1501,6 +1500,9 @@ fi
 
 
 %changelog
+* Thu Oct  4 2012 Remi Collet <RPMS@famillecollet.com> 5.4.8-0.2.RC1
+- update systzdata patch to v10, timezone are case insensitive
+
 * Thu Oct  4 2012 Remi Collet <RPMS@famillecollet.com> 5.4.8-0.1.RC1
 - update to 5.4.8RC1
 
