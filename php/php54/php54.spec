@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-#global rcver      RC1
+%global rcver      RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
@@ -61,11 +61,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.7
+Version: 5.4.8
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 10%{?dist}
+Release: 1%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -100,8 +100,6 @@ Patch20: php-5.4.7-imap.patch
 Patch21: php-5.4.7-odbctimer.patch
 # https://bugs.php.net/63149 check sqlite3_column_table_name
 Patch22: php-5.4.7-sqlite.patch
-# https://bugs.php.net/bug.php?id=62886 - php-fpm startup
-Patch23: php-5.4.7-fpm.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -111,8 +109,6 @@ Patch42: php-5.3.1-systzdata-v9.patch
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
 Patch44: php-5.4.5-system-libzip.patch
-# https://bugs.php.net/63085 systemd integration
-Patch45: php-5.4.7-fpm-systemd.patch
 
 # Fixes for tests
 
@@ -688,7 +684,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch20 -p1 -b .imap
 %patch21 -p1 -b .odbctimer
 %patch22 -p1 -b .tablename
-%patch23 -p1 -b .fpmstartup
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -699,7 +694,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %if %{with_libzip}
 %patch44 -p1 -b .systzip
 %endif
-%patch45 -p1 -b .systemd
 
 %patch91 -p1 -b .remi-oci8
 
@@ -721,11 +715,6 @@ mkdir build-cgi build-apache build-embedded build-zts build-ztscli \
 rm -f tests/basic/php_egg_logo_guid.phpt
 # affected by systzdata patch
 rm -f ext/date/tests/timezone_location_get.phpt
-# https://bugs.php.net/63147 tests requiring an internet connection
-rm -f ext/standard/tests/network/gethostbyname_basic002.phpt
-rm -f ext/standard/tests/network/gethostbyname_error004.phpt
-rm -f ext/standard/tests/network/getmxrr.phpt
-# https://bugzilla.redhat.com/859878 - missing feature in SQLite
 # https://bugs.php.net/63149 - build against system SQLite
 rm -f ext/pdo_sqlite/tests/bug_42589.phpt
 # fails sometime
@@ -1089,6 +1078,7 @@ popd
 cd build-apache
 # Run tests, using the CLI SAPI
 export NO_INTERACTION=1 REPORT_EXIT_STATUS=1 MALLOC_CHECK_=2
+export SKIP_ONLINE_TESTS=1
 unset TZ LANG LC_ALL
 if ! make test; then
   set +x
@@ -1510,6 +1500,9 @@ fi
 
 
 %changelog
+* Thu Oct  4 2012 Remi Collet <RPMS@famillecollet.com> 5.4.8-0.1.RC1
+- update to 5.4.8RC1
+
 * Mon Oct  1 2012 Remi Collet <remi@fedoraproject.org> 5.4.7-10
 - fix typo in systemd macro
 
