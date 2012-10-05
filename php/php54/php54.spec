@@ -716,8 +716,6 @@ mkdir build-cgi build-apache build-embedded build-zts build-ztscli \
 rm -f tests/basic/php_egg_logo_guid.phpt
 # affected by systzdata patch
 rm -f ext/date/tests/timezone_location_get.phpt
-# https://bugs.php.net/63149 - build against system SQLite
-rm -f ext/pdo_sqlite/tests/bug_42589.phpt
 # fails sometime
 rm -f ext/sockets/tests/mcast_ipv?_recv.phpt
 
