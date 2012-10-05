@@ -1,0 +1,45 @@
+
+Upstream-Status: vendor specific patch
+
+diff --git a/support/apachectl.in b/support/apachectl.in
+index c6ac3ea..2599386 100644
+--- a/support/apachectl.in
++++ b/support/apachectl.in
+@@ -100,9 +100,24 @@ fi
+ ERROR=$?
+ }
+ 
++if [ "x$2" != "x" ] ; then
++    echo Passing arguments to httpd using apachectl is no longer supported.
++    echo You can only start/stop/restart httpd using this script.
++    echo If you want to pass extra arguments to httpd, edit the
++    echo /etc/sysconfig/httpd config file.
++fi
++
+ case $ACMD in
+-start|stop|restart|graceful|graceful-stop)
+-    $HTTPD $OPTIONS -k $ARGV
++start|stop|restart|status)
++    /usr/bin/systemctl $ACMD httpd.service
++    ERROR=$?
++    ;;
++graceful)
++    /usr/bin/systemctl restart httpd.service
++    ERROR=$?
++    ;;
++graceful-stop)
++    /usr/bin/systemctl stop httpd.service
+     ERROR=$?
+     ;;
+ startssl|sslstart|start-SSL)
+@@ -114,10 +129,6 @@ startssl|sslstart|start-SSL)
+ configtest)
+     testconfig
+     ;;
+-status)
+-    checklynx
+-    $LYNX $STATUSURL | awk ' /process$/ { print; exit } { print } '
+-    ;;
+ fullstatus)
+     checklynx
+     $LYNX $STATUSURL

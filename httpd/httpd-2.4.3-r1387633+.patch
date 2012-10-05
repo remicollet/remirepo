@@ -1,15 +1,17 @@
-# ./pullrev.sh 1387633
+# ./pullrev.sh 1387633 1392850
 
 http://svn.apache.org/viewvc?view=revision&revision=1387633
+http://svn.apache.org/viewvc?view=revision&revision=1392850
 
---- httpd-2.4.2/server/mpm/prefork/prefork.c
-+++ httpd-2.4.2/server/mpm/prefork/prefork.c
-@@ -564,8 +564,14 @@
+--- httpd-2.4.3/server/mpm/prefork/prefork.c
++++ httpd-2.4.3/server/mpm/prefork/prefork.c
+@@ -564,9 +564,16 @@
  
          status = apr_pollset_add(pollset, &pfd);
          if (status != APR_SUCCESS) {
 -            ap_log_error(APLOG_MARK, APLOG_EMERG, status, ap_server_conf, APLOGNO(00157)
 -                         "Couldn't add listener to pollset; check system or user limits");
+-            clean_child_exit(APEXIT_CHILDSICK);
 +            /* If the child processed a SIGWINCH before setting up the
 +             * pollset, this error path is expected and harmless,
 +             * since the listener fd was already closed; so don't
@@ -17,7 +19,9 @@ http://svn.apache.org/viewvc?view=revision&revision=1387633
 +            if (!die_now) {
 +                ap_log_error(APLOG_MARK, APLOG_EMERG, status, ap_server_conf, APLOGNO(00157)
 +                             "Couldn't add listener to pollset; check system or user limits");
++                clean_child_exit(APEXIT_CHILDSICK);
 +            }
-             clean_child_exit(APEXIT_CHILDSICK);
++            clean_child_exit(0);
          }
  
+         lr->accept_func = ap_unixd_accept;

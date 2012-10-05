@@ -1,7 +1,8 @@
 
 - Fix config for /icons/ dir to allow symlink to poweredby.png.
-
 - Avoid using coredump GIF for a directory called "core"
+
+Upstream-Status: vendor specific patch
 
 --- httpd-2.4.2/docs/conf/extra/httpd-autoindex.conf.in.icons
 +++ httpd-2.4.2/docs/conf/extra/httpd-autoindex.conf.in

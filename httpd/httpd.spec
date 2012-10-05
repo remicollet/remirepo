@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.3
-Release: 5%{?dist}
+Release: 10%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -41,8 +41,8 @@ Patch1: httpd-2.4.1-apctl.patch
 Patch2: httpd-2.4.3-apxs.patch
 Patch3: httpd-2.4.1-deplibs.patch
 Patch5: httpd-2.4.3-layout.patch
+Patch6: httpd-2.4.3-apctl-systemd.patch
 # Features/functional changes
-Patch20: httpd-2.4.3-release.patch
 Patch23: httpd-2.4.1-export.patch
 Patch24: httpd-2.4.1-corelimit.patch
 Patch25: httpd-2.4.1-selinux.patch
@@ -52,7 +52,7 @@ Patch28: httpd-2.4.2-r1332643+.patch
 Patch29: httpd-2.4.3-mod_systemd.patch
 # Bug fixes
 Patch50: httpd-2.4.2-r1374214+.patch
-Patch51: httpd-2.4.2-r1387633.patch
+Patch51: httpd-2.4.3-r1387633+.patch
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -154,6 +154,7 @@ authentication to the Apache HTTP Server.
 %patch2 -p1 -b .apxs
 %patch3 -p1 -b .deplibs
 %patch5 -p1 -b .layout
+%patch6 -p1 -b .apctlsystemd
 
 %patch23 -p1 -b .export
 %patch24 -p1 -b .corelimit
@@ -166,8 +167,8 @@ authentication to the Apache HTTP Server.
 %patch50 -p1 -b .r1374214+
 %patch51 -p1 -b .r1387633
 
-# Patch in vendor/release string
-sed "s/@RELEASE@/%{vstring}/" < %{PATCH20} | patch --fuzz=%{_default_patch_fuzz} -p1
+# Patch in the vendor string
+sed -i '/^#define PLATFORM/s/Unix/%{vstring}/' os/unix/os.h
 
 # Prevent use of setcap in "install-suexec-caps" target.
 sed -i '/suexec/s,setcap ,echo Skipping setcap for ,' Makefile.in
@@ -396,21 +397,33 @@ rm -rf $RPM_BUILD_ROOT/etc/httpd/conf/{original,extra}
 	-s /sbin/nologin -r -d %{contentdir} apache 2> /dev/null || :
 
 %post
+%if 0%{?systemd_post:1}
+%systemd_post httpd.service
+%else
 # Register the httpd service
 if [ $1 -eq 1 ] ; then 
     # Initial installation 
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
+%endif
 
 %preun
+%if 0%{?systemd_preun:1}
+%systemd_preun httpd.service
+%else
 if [ $1 -eq 0 ] ; then
     # Package removal, not upgrade
-    /bin/systemctl --no-reload disable %{all_services} > /dev/null 2>&1 || :
-    /bin/systemctl stop %{all_services} > /dev/null 2>&1 || :
+    /bin/systemctl --no-reload disable httpd.service > /dev/null 2>&1 || :
+    /bin/systemctl stop httpd.service > /dev/null 2>&1 || :
 fi
+%endif
 
 %postun
+%if 0%{?systemd_postun:1}
+%systemd_postun
+%else
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+%endif
 
 # Trigger for conversion from SysV, per guidelines at:
 # https://fedoraproject.org/wiki/Packaging:ScriptletSnippets#Systemd
@@ -424,7 +437,8 @@ fi
 /sbin/chkconfig --del httpd >/dev/null 2>&1 || :
 
 %posttrans
-/bin/systemctl try-restart httpd.service >/dev/null 2>&1 || :
+test -f /etc/sysconfig/httpd-disable-posttrans || \
+  /bin/systemctl try-restart httpd.service >/dev/null 2>&1 || :
 
 %define sslcert %{_sysconfdir}/pki/tls/certs/localhost.crt
 %define sslkey %{_sysconfdir}/pki/tls/private/localhost.key
@@ -580,6 +594,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Fri Oct  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-10
+- sync with rawhide, rebuild for remi repo
+
+* Wed Oct  3 2012 Joe Orton <jorton@redhat.com> - 2.4.3-10
+- pull upstream patch r1392850 in addition to r1387633
+
+* Mon Oct  1 2012 Joe Orton <jorton@redhat.com> - 2.4.3-9
+- define PLATFORM in os.h using vendor string
+
+* Mon Oct  1 2012 Joe Orton <jorton@redhat.com> - 2.4.3-8
+- use systemd script unconditionally (#850149)
+
+* Mon Oct  1 2012 Joe Orton <jorton@redhat.com> - 2.4.3-7
+- use systemd scriptlets if available (#850149)
+- don't run posttrans restart if /etc/sysconfig/httpd-disable-posttrans exists
+
+* Mon Oct 01 2012 Jan Kaluza <jkaluza@redhat.com> - 2.4.3-6
+- use systemctl from apachectl (#842736)
+
 * Thu Sep 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-5
 - sync with rawhide, rebuild for remi repo
 
