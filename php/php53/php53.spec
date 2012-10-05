@@ -46,7 +46,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
 Version: 5.3.17
-Release: 2%{?dist}
+Release: 2%{?dist}.1
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -242,6 +242,7 @@ Provides: %{phpname}-libxml, %{phpname}-libxml%{?_isa}
 Provides: %{phpname}-openssl, %{phpname}-openssl%{?_isa}
 Provides: %{phpname}-pecl-phar = %{pharver}, %{phpname}-pecl-phar%{?_isa} = %{pharver}
 Provides: %{phpname}-pecl(phar) = %{pharver}, %{phpname}-pecl(phar)%{?_isa} = %{pharver}
+Provides: %{phpname}-phar, %{phpname}-phar%{?_isa}
 Provides: %{phpname}-pcre, %{phpname}-pcre%{?_isa}
 Provides: %{phpname}-reflection, %{phpname}-reflection%{?_isa}
 Provides: %{phpname}-session, %{phpname}-session%{?_isa}
@@ -1499,6 +1500,9 @@ fi
 %endif
 
 %changelog
+* Fri Oct  5 2012 Remi Collet <remi@fedoraproject.org> 5.3.17-2.1
+- provides php-phar
+
 * Mon Oct  1 2012 Remi Collet <remi@fedoraproject.org> 5.3.17-2
 - add upstream patch for fpm startup issue (#846858)
 

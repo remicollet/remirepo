@@ -63,7 +63,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.8
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -248,6 +248,7 @@ Provides: php-libxml, php-libxml%{?_isa}
 Provides: php-openssl, php-openssl%{?_isa}
 Provides: php-pecl-phar = %{pharver}, php-pecl-phar%{?_isa} = %{pharver}
 Provides: php-pecl(phar) = %{pharver}, php-pecl(phar)%{?_isa} = %{pharver}
+Provides: php-phar, php-phar%{?_isa}
 Provides: php-pcre, php-pcre%{?_isa}
 Provides: php-reflection, php-reflection%{?_isa}
 Provides: php-session, php-session%{?_isa}
@@ -1500,6 +1501,9 @@ fi
 
 
 %changelog
+* Fri Oct  5 2012 Remi Collet <remi@fedoraproject.org> 5.4.8-0.3.RC1
+- provides php-phar
+
 * Thu Oct  4 2012 Remi Collet <RPMS@famillecollet.com> 5.4.8-0.2.RC1
 - update systzdata patch to v10, timezone are case insensitive
 
