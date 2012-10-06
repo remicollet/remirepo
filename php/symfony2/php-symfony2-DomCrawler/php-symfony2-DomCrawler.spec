@@ -21,7 +21,7 @@ BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/CssSelector) = %{version}
+BuildRequires:    php-pear(%{pear_channel}/CssSelector)
 
 Requires:         php-common >= 5.3.2
 Requires:         php-pear(PEAR)
