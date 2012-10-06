@@ -1,3 +1,4 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
@@ -7,7 +8,7 @@
 
 Name:             php-symfony2-Yaml
 Version:          2.1.2
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -74,7 +75,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
@@ -113,6 +114,9 @@ fi
 
 
 %changelog
+* Thu Sep 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-2
+- rebuild
+
 * Thu Sep 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-1
 - Update to 2.1.2
 
