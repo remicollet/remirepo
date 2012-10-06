@@ -1,3 +1,4 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
@@ -5,18 +6,20 @@
 
 Name:             php-symfony2-Finder
 Version:          2.1.2
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
 License:          MIT
 URL:              http://symfony.com/doc/current/components/finder.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+Source1:          bootstrap.php
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+# For tests
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 
 Requires:         php-common >= 5.3.2
@@ -58,7 +61,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
@@ -67,7 +70,8 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/Symfony/Component/Finder/Tests
-phpunit  --bootstrap bootstrap.php .
+cp %{SOURCE1} bootstrap.php
+phpunit  --bootstrap bootstrap.php --verbose .
 
 
 %post
@@ -93,6 +97,9 @@ fi
 
 
 %changelog
+* Sat Oct  6 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-2
+- rebuild
+
 * Thu Sep 20 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-1
 - Update to 2.1.2
 

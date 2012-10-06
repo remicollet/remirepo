@@ -104,7 +104,7 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Symfony/Component/%{pear_name}
-     %{pear_testdir}/%{pear_name}
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
