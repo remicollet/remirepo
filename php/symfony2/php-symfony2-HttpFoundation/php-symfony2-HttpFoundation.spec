@@ -19,6 +19,7 @@ BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+# For tests
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 
 Requires:         php-common >= 5.3.2
