@@ -1,0 +1,34 @@
+* php-symfony2-Yaml   (required for PHPUnit)
+* php-symfony2-ClassLoader
+* php-symfony2-Config
+* php-symfony2-Console
+* php-symfony2-CssSelector
+* php-symfony2-OptionsResolver
+* php-symfony2-Filesystem
+* php-symfony2-DependencyInjection
+    (Config, Yaml)
+* php-symfony2-EventDispatcher
+    BR => DependencyInjection
+* php-symfony2-Finder
+* php-symfony2-HttpFoundation
+* php-symfony2-Locale
+* php-symfony2-Process
+* php-symfony2-Serializer
+* php-symfony2-Templating
+* php-symfony2-DomCrawler
+    (CssSelector)
+* php-symfony2-BrowserKit 
+    DomCrawler (Process)
+* php-symfony2-Translation
+    (Config, Yaml)
+* php-symfony2-Validator
+    (HttpFoundation, Yaml) BR => Locale
+* php-symfony2-HttpKernel
+    HttpFoundation, EventDispatcher (BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder)
+* php-symfony2-Routing
+    (Config, Yaml) BR => HttpKernel
+* php-symfony2-Form
+    EventDispatcher, Validator, Locale, OptionsResolver (DependencyInjection, HttpFoundation)
+* php-symfony2-Security
+    (ClassLoader, Finder, Form, Routing)
+
