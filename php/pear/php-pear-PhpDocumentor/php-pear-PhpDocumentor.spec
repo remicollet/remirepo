@@ -1,10 +1,11 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name PhpDocumentor
 
 Summary:          The complete documentation solution for PHP
 Name:             php-pear-PhpDocumentor
 Version:          1.4.4
-Release:          2%{?dist}
+Release:          5%{?dist}
 License:          LGPLv2+
 Group:            Development/Libraries
 URL:              http://www.phpdoc.org/
@@ -17,7 +18,7 @@ BuildRequires:    php-pear >= 1:1.4.9
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 
 Requires:         php-pear(PEAR)
-Requires:         php-Smarty >= 2.6.0
+Requires:         php-Smarty2 >= 2.6.0
 Requires:         php-pear(XML_Beautifier) >= 1.1
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
@@ -45,15 +46,14 @@ in Docbook XML.
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 # don't install our own php-Smarty
 # don't install scripts in bin, but in doc
 sed -e '/Smarty-2/d' \
     -e '/name="scripts/s/role="php"/role="doc"/' \
-    -i %{pear_name}.xml
+    -i %{name}.xml
 
 
 %build
@@ -62,17 +62,17 @@ sed -e '/Smarty-2/d' \
 %install
 cd %{pear_name}-%{version}
 rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 # Point to the system php-Smarty
-sed -i -e "s|phpDocumentor/Smarty-2.6.0/libs|Smarty|" \
+sed -i -e "s|phpDocumentor/Smarty-2.6.0/libs|Smarty2|" \
     $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/phpDocumentor/Converter.inc
 
 
@@ -97,7 +97,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{pear_name}.xml >/dev/null || :
+    %{pear_xmldir}/%{name}.xml >/dev/null || :
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -112,11 +112,24 @@ fi
 %{pear_phpdir}/%{pear_name}
 %{pear_datadir}/%{pear_name}
 %{pear_testdir}/%{pear_name}
-%{pear_xmldir}/%{pear_name}.xml
+%{pear_xmldir}/%{name}.xml
 %{_bindir}/phpdoc
 
 
 %changelog
+* Sat Oct  6 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.4-5
+- use Smart2 (broken with Smarty3)
+- rename PhpDocumentor.xml  to php-pear-PhpDocumentor.xml
+
+* Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> - 1.4.4-4
+- rebuilt for new pear_datadir
+
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.4.4-3
+- rebuilt for new pear_testdir
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Thu Feb 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.4-2
 - run test suite during build
 
