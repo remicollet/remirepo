@@ -1,10 +1,14 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
+# requires too recent PHPUnit 3.7
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:             php-symfony2-HttpFoundation
-Version:          2.0.17
+Version:          2.1.2
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -12,11 +16,15 @@ Group:            Development/Libraries
 License:          MIT
 URL:              http://symfony.com/doc/current/components/http_foundation.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+Source1:          bootstrap.php
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+%if %{with_tests}
+BuildRequires:    php-pear(pear.phpunit.de/PHPUnit) > 3.7.0
+%endif
 
 Requires:         php-common >= 5.3.2
 Requires:         php-pear(PEAR)
@@ -49,6 +57,13 @@ variables and functions by an Object-Oriented layer.
 
 %prep
 %setup -q -c
+
+# Hum...
+sed -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
+    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
+    -e '/Tests/s/role="php"/role="test"/' \
+    -i package.xml
+
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
 
@@ -62,11 +77,21 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%check
+%if %{with_tests}
+cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}/Tests
+cp %{SOURCE1} bootstrap.php
+phpunit  --bootstrap bootstrap.php --verbose .
+%else
+: Tests skipped, missing --with tests option
+%endif
 
 
 %post
@@ -88,9 +113,13 @@ fi
 %dir %{pear_phpdir}/Symfony
 %dir %{pear_phpdir}/Symfony/Component
      %{pear_phpdir}/Symfony/Component/%{pear_name}
+     %{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Sat Oct  6 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-1
+- update to 2.1.2
+
 * Sat Sep 15 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.17-1
 - Update to 2.0.17, backport for remi repository
 
