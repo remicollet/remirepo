@@ -94,6 +94,9 @@ fi
      %{pear_testdir}/%{pear_name}
 
 %changelog
+* Sat Oct  6 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-1
+- update to 2.1.2
+
 * Sat Sep 15 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.17-1
 - Update to 2.0.17, backport for remi repository
 
