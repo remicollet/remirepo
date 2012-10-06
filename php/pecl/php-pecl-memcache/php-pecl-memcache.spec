@@ -104,6 +104,10 @@ extension=%{pecl_name}.so
 
 ; ----- Options to use the memcache session handler
 
+; RPM note : save_handler and save_path are defined
+; for mod_php, in /etc/httpd/conf.d/php.conf
+; for php-fpm, in /etc/php-fpm.d/*conf
+
 ;  Use memcache as a session handler
 ;session.save_handler=memcache
 ;  Defines a comma separated of server urls to use for session storage
