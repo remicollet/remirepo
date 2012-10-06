@@ -4,9 +4,6 @@
 %global pear_channel pear.symfony.com
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
-# requires too recent PHPUnit 3.7
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
-
 Name:             php-symfony2-HttpFoundation
 Version:          2.1.2
 Release:          1%{?dist}
@@ -22,9 +19,7 @@ BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
-%if %{with_tests}
-BuildRequires:    php-pear(pear.phpunit.de/PHPUnit) > 3.7.0
-%endif
+BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 
 Requires:         php-common >= 5.3.2
 Requires:         php-pear(PEAR)
@@ -85,13 +80,9 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 
 %check
-%if %{with_tests}
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}/Tests
 cp %{SOURCE1} bootstrap.php
-phpunit  --bootstrap bootstrap.php --verbose .
-%else
-: Tests skipped, missing --with tests option
-%endif
+phpunit  --bootstrap bootstrap.php .
 
 
 %post
