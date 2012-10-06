@@ -1,10 +1,13 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+# Lot of failures, need investigation
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             php-symfony2-Locale
-Version:          2.0.17
+Version:          2.1.2
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -12,11 +15,15 @@ Group:            Development/Libraries
 License:          MIT
 URL:              http://symfony.com/doc/current/components/locale.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+Source1:          bootstrap.php
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+%if %{with_tests}
+BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
+%endif
 
 Requires:         php-common >= 5.3.2
 Requires:         php-pear(PEAR)
@@ -52,16 +59,15 @@ Stub implementation only supports the en locale.
 
 %prep
 %setup -q -c
+
+# Hum...
+sed -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
+    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
+    -e '/Tests/s/role="php"/role="test"/' \
+    -i package.xml
+
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
-
-# Fix package.xml for "Symfony/Component/Locale/Resources/data/UPDATE.txt" file
-# incorrectly being identified with role="php" instead of role="doc"
-# *** NOTE: This needs to be fixed upstream (was fine in 2.0.15, but changed
-#           in 2.0.16)
-sed -i \
-    's#<file *md5sum="\([^"]*\)" *name="\(Symfony/Component/Locale/Resources/data/UPDATE.txt\)" *role="php" */>#<file md5sum="\1" name="\2" role="doc" />#' \
-    %{pear_name}-%{version}/%{name}.xml
 
 
 %build
@@ -73,11 +79,11 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Lang files
 for res_file in \
-    $RPM_BUILD_ROOT%{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/*/*.res
+    $RPM_BUILD_ROOT%{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/*/*.res
 do
     res_file_lang=$(basename $res_file | sed 's#\(_.*\)*\.res##')
     echo "%lang($res_file_lang) $res_file"
@@ -87,6 +93,16 @@ sed -i "s#) $RPM_BUILD_ROOT#) #" ../%{name}.lang
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%check
+%if %{with_tests}
+cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}/Tests
+cp %{SOURCE1} bootstrap.php
+phpunit  --bootstrap bootstrap.php --verbose .
+%else
+: Tests skipped, missing --with tests option
+%endif
 
 
 %post
@@ -112,14 +128,19 @@ fi
      %{pear_phpdir}/Symfony/Component/%{pear_name}/Locale.php
 %dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources
 %dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/lang
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/locales
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/names
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/region
-     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/stub
-     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/update-data.php
+%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49
+%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/lang
+%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/locales
+%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/names
+%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/region
+     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/stub
+     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/svn-info.txt
+     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/build-data.php
+     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/icu.ini
+     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/UPDATE.txt
      %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/stubs
      %{pear_phpdir}/Symfony/Component/%{pear_name}/Stub
+     %{pear_testdir}/%{pear_name}
 
 
 %changelog

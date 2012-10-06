@@ -69,7 +69,7 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 
 %check
-cd %{pear_name}-%{version}/Symfony/Component/Finder/Tests
+cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}/Tests
 cp %{SOURCE1} bootstrap.php
 phpunit  --bootstrap bootstrap.php --verbose .
 
