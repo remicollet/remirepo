@@ -1,10 +1,11 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 
 Name:             php-symfony2-EventDispatcher
-Version:          2.0.17
+Version:          2.1.2
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -12,11 +13,15 @@ Group:            Development/Libraries
 License:          MIT
 URL:              http://symfony.com/doc/current/components/event_dispatcher/index.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+Source1:          bootstrap.php
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+# For tests
+BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:    php-pear(%{pear_channel}/DependencyInjection)
 
 Requires:         php-common >= 5.3.2
 Requires:         php-pear(PEAR)
@@ -51,6 +56,14 @@ how it works:
 
 %prep
 %setup -q -c
+
+# Hum...
+sed -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
+    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
+    -e '/Tests/s/role="php"/role="test"/' \
+    -e '/.gitignore/d' \
+    -i package.xml
+
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
 
@@ -64,11 +77,17 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%check
+cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}/Tests
+cp %{SOURCE1} bs.php
+phpunit  --bootstrap bs.php --verbose .
 
 
 %post
@@ -90,9 +109,13 @@ fi
 %dir %{pear_phpdir}/Symfony
 %dir %{pear_phpdir}/Symfony/Component
      %{pear_phpdir}/Symfony/Component/%{pear_name}
+     %{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Sat Sep 15 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.17-1
+- Update to 2.0.17, backport for remi repository
+
 * Sat Sep 15 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.17-1
 - Update to 2.0.17, backport for remi repository
 
