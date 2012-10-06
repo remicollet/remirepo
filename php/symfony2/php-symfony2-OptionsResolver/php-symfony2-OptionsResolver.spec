@@ -1,3 +1,4 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
@@ -12,10 +13,13 @@ Group:            Development/Libraries
 License:          MIT
 URL:              http://symfony.com/components
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+Source1:          bootstrap.php
 
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+# For tests
+BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 
 Requires:         php-common >= 5.3.2
 Requires:         php-pear(PEAR)
@@ -38,6 +42,14 @@ default value depends on the value of another option.
 
 %prep
 %setup -q -c
+
+# Hum...
+sed -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
+    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
+    -e '/Tests/s/role="php"/role="test"/' \
+    -e '/.gitignore/d' \
+    -i package.xml
+
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
 
@@ -51,11 +63,17 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%check
+cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}/Tests
+cp %{SOURCE1} bootstrap.php
+phpunit  --bootstrap bootstrap.php --verbose .
 
 
 %post
@@ -76,8 +94,12 @@ fi
 %dir %{pear_phpdir}/Symfony
 %dir %{pear_phpdir}/Symfony/Component
      %{pear_phpdir}/Symfony/Component/%{pear_name}
+     %{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Sat Oct  6 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-1
+- rebuild
+
 * Thu Sep 20 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.2-1
 - Initial package
