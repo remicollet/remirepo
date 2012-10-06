@@ -1,9 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name     PHP_TokenStream
 %global channel       pear.phpunit.de
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.1.4
+Version:        1.1.5
 Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
@@ -31,10 +32,8 @@ Wrapper around PHP tokenizer extension.
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-%{__mv} package2.xml %{pear_name}-%{version}/%{name}.xml
-
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -48,7 +47,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
@@ -78,6 +77,9 @@ fi
 %{pear_phpdir}/PHP
 
 %changelog
+* Sat Oct  6 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.5-1
+- upstream 1.1.5
+
 * Mon Sep 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.4-1
 - upstream 1.1.4
 
