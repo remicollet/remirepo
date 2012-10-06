@@ -1,9 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name File_Iterator
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-File-Iterator
-Version:        1.3.2
+Version:        1.3.3
 Release:        1%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
@@ -46,7 +47,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -78,6 +79,9 @@ fi
 
 
 %changelog
+* Sat Oct  6 2012 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- upstream 1.3.3
+
 * Sun Sep 23 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - upstream 1.3.2
 
