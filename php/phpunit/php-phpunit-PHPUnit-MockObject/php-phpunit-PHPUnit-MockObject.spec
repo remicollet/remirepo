@@ -1,10 +1,11 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name PHPUnit_MockObject
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        1.1.1
-Release:        2%{?dist}
+Version:        1.2.1
+Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -20,9 +21,9 @@ BuildRequires:  php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-soap >= 5.2.7
+Requires:       php-soap >= 5.3.3
 Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
-Requires:       php-pear(%{channel}/PHPUnit) >= 3.6.0
+Requires:       php-pear(%{channel}/PHPUnit) >= 3.7.0
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -49,7 +50,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -79,6 +80,13 @@ fi
 
 
 %changelog
+* Sat Oct  6 2012 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Version 1.2.1 (stable) - API 1.2.0 (stable)
+
+* Thu Sep 20 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Version 1.2.0 (stable) - API 1.2.0 (stable)
+- raise dependencies: php 5.3.3, PHPUnit 3.7.0
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
