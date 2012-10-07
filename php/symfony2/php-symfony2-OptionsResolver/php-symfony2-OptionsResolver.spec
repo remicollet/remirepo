@@ -15,6 +15,7 @@ URL:              http://symfony.com/components
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 Source1:          bootstrap.php
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -89,6 +90,7 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Symfony
