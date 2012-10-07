@@ -1,9 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name PHPUnit
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        3.6.12
+Version:        3.7.6
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -18,17 +19,19 @@ BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{channel})
 
-Requires:       php-xml >= 5.2.7
+Requires:       php-xml >= 5.3.3
 Requires:       php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(%{channel}/File_Iterator) >= 1.3.0
 Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
-Requires:       php-pear(%{channel}/PHP_CodeCoverage) >= 1.1.0
-Requires:       php-pear(%{channel}/PHP_Timer) >= 1.0.1
-Requires:       php-pear(pear.symfony-project.com/YAML) >= 1.0.2
+Requires:       php-pear(%{channel}/PHP_CodeCoverage) >= 1.2.1
+Conflicts:      php-pear(%{channel}/PHP_CodeCoverage) >  1.2.99
+Requires:       php-pear(%{channel}/PHP_Timer) >= 1.0.2
+Requires:       php-pear(pear.symfony.com/Yaml) >= 2.1.0
 # PHPUnit Extensions (yes, with circular dependency on PHPUnit)
-Requires:       php-pear(%{channel}/PHPUnit_MockObject) >= 1.1.0
+Requires:       php-pear(%{channel}/PHPUnit_MockObject) >= 1.2.0
+Conflicts:      php-pear(%{channel}/PHPUnit_MockObject) >  1.2.99
 
 # Optionnal dependencies
 Requires:       php-json php-pdo php-mbstring
@@ -68,7 +71,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 install -d %{buildroot}%{pear_xmldir}
@@ -105,6 +108,21 @@ fi
 
 
 %changelog
+* Sun Oct  7 2012 Remi Collet <remi@fedoraproject.org> - 3.7.6-1
+- Version 3.7.6 (stable) - API 3.7.0 (stable)
+
+* Sat Oct  6 2012 Remi Collet <remi@fedoraproject.org> - 3.7.5-1
+- Version 3.7.5 (stable) - API 3.7.0 (stable)
+
+* Sat Oct  6 2012 Remi Collet <remi@fedoraproject.org> - 3.7.4-1
+- Version 3.7.4 (stable) - API 3.7.0 (stable)
+- add Conflicts for max version of PHP_CodeCoverage and PHPUnit_MockObject
+
+* Thu Sep 20 2012 Remi Collet <remi@fedoraproject.org> - 3.7.1-1
+- Version 3.7.1 (stable) - API 3.7.0 (stable)
+- raise dependencies: php 5.3.3, PHP_CodeCoverage 1.2.1,
+  PHP_Timer 1.0.2, Yaml 2.1.0 (instead of YAML from symfony 1)
+
 * Sat Aug 04 2012 Remi Collet <remi@fedoraproject.org> - 3.6.12-1
 - Version 3.6.12 (stable) - API 3.6.0 (stable)
 
