@@ -1,9 +1,10 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %global pear_name PHPUnit_Selenium
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        1.2.8
+Version:        1.2.9
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -19,8 +20,11 @@ BuildRequires:  php-channel(%{channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(%{channel}/PHPUnit) >= 3.6.0
-Requires:       php-common >= 5.2.7
+Requires:       php-pear(%{channel}/PHPUnit) >= 3.7.0
+Requires:       php-common >= 5.3.3
+Requires:       php-curl, php-dom, php-reflection, php-spl
+# phpci detected extensions
+Requires:       php-date, php-pcre, php-json
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -47,7 +51,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -83,6 +87,10 @@ fi
 
 
 %changelog
+* Sat Sep 29 2012 Remi Collet <remi@fedoraproject.org> - 1.2.9-1
+- Version 1.2.9 (stable) - API 1.2.1 (stable)
+- raise dependencies: php 5.3.3, PHPUnit 3.7.0
+
 * Thu Aug  9 2012 Remi Collet <remi@fedoraproject.org> - 1.2.8-1
 - Version 1.2.8 (stable) - API 1.2.1 (stable)
 
