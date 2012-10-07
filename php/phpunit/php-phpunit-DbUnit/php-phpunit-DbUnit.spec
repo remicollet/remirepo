@@ -1,10 +1,11 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name DbUnit
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-DbUnit
-Version:        1.1.2
-Release:        2%{?dist}
+Version:        1.2.1
+Release:        1%{?dist}
 Summary:        DbUnit port for PHP/PHPUnit
 
 Group:          Development/Libraries
@@ -19,9 +20,9 @@ BuildRequires:  php-channel(%{channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pdo >= 5.2.7
-Requires:       php-pear(%{channel}/PHPUnit) >= 3.6.0
-Requires:       php-pear(pear.symfony-project.com/YAML) >= 1.0.2
+Requires:       php-pdo >= 5.3.3
+Requires:       php-pear(%{channel}/PHPUnit) >= 3.7.0
+Requires:       php-pear(pear.symfony.com/Yaml) >= 2.1.0
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -47,7 +48,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -78,8 +79,13 @@ fi
 
 
 %changelog
-* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+* Sat Oct  6 2012 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Version 1.2.1 (stable) - API 1.2.0 (stable)
+
+* Thu Sep 20 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Version 1.2.0 (stable) - API 1.2.0 (stable)
+- raise dependencies: php 5.3.3, PHPUnit 3.7.0,
+  Yaml 2.1.0 (instead of YAML from symfony 1)
 
 * Fri Jan 27 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Version 1.1.2 (stable) - API 1.1.0 (stable)
