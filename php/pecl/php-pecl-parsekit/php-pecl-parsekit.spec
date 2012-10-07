@@ -1,12 +1,12 @@
 %{!?__pecl:      %{expand:   %%global __pecl   %{_bindir}/pecl}}
 
-%global   CVS        20120226
+#global   CVS        20120226
 %global   pecl_name  parsekit
 
 Summary:       PHP Opcode Analyser
 Name:          php-pecl-parsekit
-Version:       1.3
-Release:       2%{?CVS:.CVS%{CVS}}%{?dist}
+Version:       1.3.0
+Release:       1%{?CVS:.CVS%{CVS}}%{?dist}
 License:       PHP
 URL:           http://pecl.php.net/package/parsekit
 Group:         Development/Libraries
@@ -41,6 +41,13 @@ Obsoletes:     php53u-pecl-parsekit
 Obsoletes:     php54-pecl-parsekit
 %endif
 
+# Other third party repo stuff
+Obsoletes:     php53-pecl-parsekit
+Obsoletes:     php53u-pecl-parsekit
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-parsekit
+%endif
+
 # filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
@@ -57,7 +64,11 @@ some code which is potentially non-threadsafe.
 %prep
 %setup -qc
 
-%patch1 -p1 -b .php5.4
+%if "%{php_version}" > "5.4"
+cd %{pecl_name}-%{version}
+%patch1 -p2 -b .php54
+cd ..
+%endif
 
 # Create configuration file
 cat <<'EOF' > %{pecl_name}.ini
@@ -65,11 +76,11 @@ cat <<'EOF' > %{pecl_name}.ini
 extension=%{pecl_name}.so
 EOF
 
-cp -r %{pecl_name} %{pecl_name}-zts
+cp -r %{pecl_name}-%{version} %{pecl_name}-zts
 
 
 %build
-cd %{pecl_name}
+cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 %configure \
     --with-%{pecl_name}\
@@ -87,15 +98,15 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make install -C %{pecl_name}     install INSTALL_ROOT=%{buildroot}
-make install -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
+make install -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
+make install -C %{pecl_name}-zts        install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
-install -Dpm 0664 %{pecl_name}/package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 0664 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %check
@@ -126,7 +137,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}/examples %{pecl_name}/README
+%doc %{pecl_name}-%{version}/examples
+%doc %{pecl_name}-%{version}/README
 %{pecl_xmldir}/%{name}.xml
 
 %{php_extdir}/%{pecl_name}.so
@@ -137,6 +149,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct  7 2012 Remi Collet <RPMS@famillecollet.com> - 1.3.0-1
+- latest changes from rawhide (rebase on upstream 1.3.0)
+
+* Sat Oct 6 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.0-1
+- Update to upstream release.
+- Use pecl package.xml 2.0 version (bz#860331).
+
 * Wed Sep 12 2012 Remi Collet <remi@fedoraproject.org> - 1.3-2.CVS20120226
 - standardize for remi repo, lot of cleanups
 - add ZTS extension
