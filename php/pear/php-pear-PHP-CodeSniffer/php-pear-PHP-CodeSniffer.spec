@@ -1,9 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.3.6
-Release:        1%{?dist}.2
+Version:        1.4.0
+Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
 Group:          Development/Tools
@@ -48,7 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
@@ -61,6 +62,7 @@ cd %{pear_name}-%{version}/tests
 # Version 1.3.4 : Tests: 210, Assertions: 150, Skipped: 3.
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
+  --verbose \
   AllTests.php
 
 
@@ -89,6 +91,9 @@ fi
 
 
 %changelog
+* Sun Oct  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.0-1
+- upstream 1.4.0
+
 * Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> - 1.3.6-1.2
 - rebuilt for new pear_datadir
 
