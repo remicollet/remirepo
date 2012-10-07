@@ -1,9 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name PHP_CodeCoverage
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        1.1.3
+Version:        1.2.5
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -19,10 +20,10 @@ BuildRequires:  php-channel(%{channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-xml >= 5.2.7
+Requires:       php-xml >= 5.3.3
 Requires:       php-pecl(Xdebug) >= 2.0.5
 Requires:       php-pear(%{channel}/File_Iterator) >= 1.3.0
-Requires:       php-pear(%{channel}/PHP_TokenStream) >= 1.1.0
+Requires:       php-pear(%{channel}/PHP_TokenStream) >= 1.1.3
 Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 
@@ -51,7 +52,7 @@ rm -rf %{buildroot}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -81,6 +82,19 @@ fi
 
 
 %changelog
+* Sun Oct  7 2012 Remi Collet <remi@fedoraproject.org> - 1.2.5-1
+- Version 1.2.5 (stable) - API 1.2.0 (stable)
+
+* Sat Oct  6 2012 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- Version 1.2.3 (stable) - API 1.2.0 (stable)
+
+* Fri Sep 21 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Version 1.2.2 (stable) - API 1.2.0 (stable)
+
+* Thu Sep 20 2012 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Version 1.2.1 (stable) - API 1.2.0 (stable)
+- raise dependency: php 5.3.3, PHP_TokenStream 1.1.3
+
 * Wed Aug 01 2012 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Version 1.1.3 (stable) - API 1.1.0 (stable)
 
