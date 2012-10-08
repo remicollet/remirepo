@@ -1,0 +1,19 @@
+Index: mozilla-release/js/src/gc/Memory.cpp
+===================================================================
+--- mozilla-release.orig/js/src/gc/Memory.cpp
++++ mozilla-release/js/src/gc/Memory.cpp
+@@ -348,9 +348,14 @@ UnmapPages(void *p, size_t size)
+ bool
+ MarkPagesUnused(void *p, size_t size)
+ {
++// A workaround for Bug 746112 - endless loop on ppc64
++#if !(defined(__powerpc__))
+     JS_ASSERT(uintptr_t(p) % PageSize == 0);
+     int result = madvise(p, size, MADV_DONTNEED);
+     return result != -1;
++#else
++    return true;
++#endif
+ }
+ 
+ bool

@@ -1,7 +1,7 @@
 Index: xulrunner-11.0/mozilla-release/memory/jemalloc/jemalloc.c
 ===================================================================
---- xulrunner-11.0.orig/mozilla-release/memory/jemalloc/jemalloc.c
-+++ xulrunner-11.0/mozilla-release/memory/jemalloc/jemalloc.c
+--- xulrunner-11.0.orig/mozilla-release/memory/mozjemalloc/jemalloc.c
++++ xulrunner-11.0/mozilla-release/memory/mozjemalloc/jemalloc.c
 @@ -1089,7 +1089,9 @@ static unsigned		ncpus;
   * controlling the malloc behavior are defined as compile-time constants
   * for best performance and cannot be altered at runtime.

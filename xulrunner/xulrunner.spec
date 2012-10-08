@@ -14,7 +14,7 @@
 # Use system sqlite?
 %if 0%{?fedora} <= 17
 %define system_sqlite     0
-%else7
+%else
 %define system_sqlite     1
 %endif
 
@@ -48,7 +48,7 @@
 # alpha_version should be set to the alpha number if using an alpha, 0 otherwise
 # beta_version  should be set to the beta number if using a beta, 0 otherwise
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
-%global gecko_dir_ver 15
+%global gecko_dir_ver 16
 %global alpha_version 0
 %global beta_version  0
 %global rc_version    0
@@ -81,7 +81,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        15.0.1
+Version:        16.0
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -100,8 +100,7 @@ Patch1:         mozilla-build.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
 Patch17:        xulrunner-15.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
-Patch18:        xulrunner-12.0-jemalloc-ppc.patch
-
+Patch18:        xulrunner-16.0-jemalloc-ppc.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -109,10 +108,10 @@ Patch20:        mozilla-193-pkgconfig.patch
 # Upstream patches
 Patch49:        mozilla-746112.patch
 Patch51:        mozilla-709732-gfx-icc-profile-fix.patch
+Patch52:        rhbz-855919.patch
 
 # ---------------------------------------------------
 
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 %if %{?system_nss}
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
@@ -149,16 +148,17 @@ BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
 
 Requires:       mozilla-filesystem
+Requires:       liberation-sans-fonts
 %if %{?system_nss}
 Requires:       nspr >= %{nspr_version}
 Requires:       nss >= %{nss_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
-Obsoletes:      xulrunner11
 Obsoletes:      xulrunner12
 Obsoletes:      xulrunner13
 Obsoletes:      xulrunner14
+Obsoletes:      xulrunner15
 
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
@@ -178,10 +178,10 @@ Group: Development/Libraries
 Obsoletes: mozilla-devel < 1.9
 Obsoletes: firefox-devel < 2.1
 Obsoletes: xulrunner-devel-unstable
-Obsoletes: xulrunner11-devel
 Obsoletes: xulrunner12-devel
 Obsoletes: xulrunner13-devel
 Obsoletes: xulrunner14-devel
+Obsoletes: xulrunner15-devel
 Provides: gecko-devel = %{gecko_verrel}
 Provides: gecko-devel%{?_isa} = %{gecko_verrel}
 Provides: gecko-devel-unstable = %{gecko_verrel}
@@ -269,6 +269,7 @@ sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
 %patch49 -p2 -b .746112
 %endif
 %patch51 -p1 -b .709732
+%patch52 -p1 -b .855919
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -372,8 +373,16 @@ MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
+%ifarch s390
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1')
+%endif
+%ifarch s390 %{arm} ppc
+MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
+%endif
+
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
+export LDFLAGS=$MOZ_LINK_FLAGS
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
@@ -438,7 +447,7 @@ EOF
 
 INTERNAL_APP_NAME=%{shortname}-%{gecko_dir_ver}
 
-pushd $RPM_BUILD_ROOT/%{_includedir}/${INTERNAL_APP_NAME}
+pushd $RPM_BUILD_ROOT/%{_includedir}/%{shortname}-%{version}
 install_file "mozilla-config"
 install_file "js-config"
 popd
@@ -546,7 +555,7 @@ fi
 %defattr(-,root,root,-)
 #%dir %{_libdir}/%{shortname}-devel-*
 %{_datadir}/idl/%{shortname}*%{gecko_dir_ver}
-%{_includedir}/%{shortname}*%{gecko_dir_ver}
+%{_includedir}/%{shortname}*%{version}
 %{_libdir}/%{shortname}-devel-*
 %{_libdir}/pkgconfig/*.pc
 %{mozappdir}/xpcshell
@@ -554,6 +563,21 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Oct 8 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0-1
+- Sync with rawhide, update to 16.0
+
+* Mon Oct 8 2012 Martin Stransky <stransky@redhat.com> - 16.0-1
+- Update to 16.0
+
+* Thu Sep 27 2012 Jan Horak <jhorak@redhat.com> - 15.0.1-4
+- Rebuild with latest gcc to fix rhbz#830017
+
+* Mon Sep 17 2012 Martin Stransky <stransky@redhat.com> - 15.0.1-3
+- Added fix for rhbz#855919 - Firefox freezes on Fedora 18 for PPC64
+
+* Fri Sep 14 2012 Martin Stransky <stransky@redhat.com> - 15.0.1-2
+- Added build flags for second arches
+
 * Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0.1-1
 - update to 15.0.1
 

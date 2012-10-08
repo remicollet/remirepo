@@ -28,13 +28,13 @@
 
 #global shortname              firefox
 #global mycomment              Beta 4
-%global firefox_dir_ver        15
-%global xulrunner_version      15.0.1
+%global firefox_dir_ver        16
+%global xulrunner_version      16.0
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20120909
+%global datelang               20121008
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
@@ -68,7 +68,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        15.0.1
+Version:        16.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -443,6 +443,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/searchplugins
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/application.ini
+%{mozappdir}/webapprt*
 %exclude %{mozappdir}/removed-files
 %{_datadir}/icons/hicolor/16x16/apps/firefox.png
 %{_datadir}/icons/hicolor/22x22/apps/firefox.png
@@ -462,6 +463,13 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Oct 8 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0-1
+- Sync with rawhide, update to 16.0
+
+* Mon Oct  8 2012 Jan Horak <jhorak@redhat.com> - 16.0-1
+- Update to 16.0
+- Use /var/tmp instead of /tmp (rhbz#860814)
+
 * Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0.1-1
 - update to 15.0.1
 
