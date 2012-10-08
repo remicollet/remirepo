@@ -16,6 +16,7 @@ Source1:       %{pecl_name}.ini
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.2.0
 BuildRequires: php-pear
+BuildRequires: pcre-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
