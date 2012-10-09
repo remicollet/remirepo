@@ -1,3 +1,10 @@
+# Use system nspr/nss?
+%if 0%{?fedora} < 15 && 0%{?rhel} < 6
+%define system_nss        0
+%else
+%define system_nss        1
+%endif
+
 # Build as a debug package?
 %define debug_build       0
 
@@ -6,13 +13,6 @@
 %define system_sqlite 0
 %else
 %define system_sqlite 1
-%endif
-%if 0%{?fedora} < 15 && 0%{?rhel} < 6
-%define system_nspr       0
-%define system_nss        0
-%else
-%define system_nspr       1
-%define system_nss        1
 %endif
 %if 0%{?fedora} < 15
 %define system_cairo      0
@@ -24,12 +24,16 @@
 
 %define build_langpacks 1
 
+%if %{?system_nss}
 %define nspr_version 4.9
 %define nss_version 3.13.3
+%endif
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
 %define lcms_version 1.19
+%if %{?system_sqlite}
 %define sqlite_version 3.7.10
+%endif
 %define libnotify_version 0.4
 %global libvpx_version 1.0.0
 %define _default_patch_fuzz 2
@@ -52,14 +56,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        15.0.1
+Version:        16.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20120911.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20121009.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -80,7 +84,8 @@ Patch104:       xulrunner-10.0-gcc47.patch
 Patch200:       thunderbird-8.0-enable-addons.patch
 
 # PPC fixes
-Patch300:       xulrunner-852698.patch
+Patch300:       xulrunner-16.0-jemalloc-ppc.patch
+Patch301:       rhbz-855923.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -90,11 +95,9 @@ Patch300:       xulrunner-852698.patch
 
 %endif
 
-%if %{system_nspr}
+%if %{?system_nss}
+BuildRequires:  nss-static >= %{nss_version}
 BuildRequires:  nspr-devel >= %{nspr_version}
-%endif
-%if %{system_nss}
-BuildRequires:  nss-static
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{system_cairo}
@@ -135,10 +138,8 @@ BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
 
 Requires:       mozilla-filesystem
-%if %{system_nspr}
+%if %{?system_nss}
 Requires:       nspr >= %{nspr_version}
-%endif
-%if %{system_nss}
 Requires:       nss >= %{nss_version}
 %endif
 %if %{?system_sqlite}
@@ -197,6 +198,7 @@ cd ..
 
 %patch200 -p1 -b .addons
 %patch300 -p1 -b .852698
+%patch301 -p1 -b .855923
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -209,12 +211,6 @@ cd ..
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
-%if ! %{system_nss}
-  | grep -v system-nss 		\
-%endif
-%if ! %{system_nspr}
-  | grep -v system-nspr 	\
-%endif
 %if ! %{system_cairo}
   | grep -v enable-system-cairo    \
 %endif
@@ -232,6 +228,14 @@ echo "ac_add_options --disable-libjpeg-turbo"  >> .mozconfig
 %endif
 %if %{enable_mozilla_crashreporter}
 %{__cat} %{SOURCE13} >> .mozconfig
+%endif
+
+%if %{?system_nss}
+echo "ac_add_options --with-system-nspr" >> .mozconfig
+echo "ac_add_options --with-system-nss" >> .mozconfig
+%else
+echo "ac_add_options --without-system-nspr" >> .mozconfig
+echo "ac_add_options --without-system-nss" >> .mozconfig
 %endif
 
 # s390(x) fails to start with jemalloc enabled
@@ -274,8 +278,16 @@ MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
+%ifarch s390
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1')
+%endif
+%ifarch s390 %{arm} ppc
+MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
+%endif
+
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
+export LDFLAGS=$MOZ_LINK_FLAGS
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
@@ -393,7 +405,6 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
   install -m 644 mail/extensions/newsblog/rss.rdf   $RPM_BUILD_ROOT%{mozappdir}/isp/
 
 rm -rf $RPM_BUILD_ROOT%{mozappdir}/isp/en-US
-rm -rf $RPM_BUILD_ROOT%{mozappdir}/*.chk
 
 
 #===============================================================================
@@ -472,6 +483,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/crashreporter.ini
 %{mozappdir}/Throbber-small.gif
 %endif
+%if !%{?system_nss}
+%{mozappdir}/*.chk
+%endif
 %exclude %{_datadir}/idl/%{name}-%{version}
 %exclude %{_includedir}/%{name}-%{version}
 %{mozappdir}/chrome.manifest
@@ -482,6 +496,18 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Tue Oct  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0-1
+- Sync with rawhide, update to 16.0
+
+* Tue Oct  9 2012 Jan Horak <jhorak@redhat.com> - 16.0-1
+- Update to 16.0
+
+* Tue Sep 18 2012 Dan Horák <dan[at]danny.cz> - 15.0.1-3
+- Added fix for rhbz#855923 - TB freezes on Fedora 18 for PPC64
+
+* Fri Sep 14 2012 Martin Stransky <stransky@redhat.com> - 15.0.1-2
+- Added build flags for second arches
+
 * Wed Sep 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 15.0.1-1
 - update to 15.0.1
 
