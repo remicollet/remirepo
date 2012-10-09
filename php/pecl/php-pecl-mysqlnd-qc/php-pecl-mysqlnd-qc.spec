@@ -22,7 +22,6 @@ URL:          http://pecl.php.net/package/mysqlnd_qc
 # From http://www.php.net/manual/en/mysqlnd-qc.configuration.php
 Source1:      mysqlnd_qc.ini
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.3.4
 BuildRequires: php-mysqlnd
 BuildRequires: php-pear
@@ -42,11 +41,9 @@ Requires:     php(api) = %{php_core_api}
 Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
 
-# RPM 4.8
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -122,7 +119,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # for short-circuit
 rm -f %{pecl_name}-*/modules/{sqlite3,mysqlnd}.so
 
@@ -138,10 +134,6 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
-
-
-%clean
-rm -rf %{buildroot}
 
 
 %post
@@ -191,7 +183,6 @@ zts-php -n -q \
 
 
 %files
-%defattr(-, root, root, -)
 %doc %{pecl_name}-%{version}/{CHANGES,CREDITS,LICENSE,README}
 %doc %{pecl_name}-%{version}/web
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
@@ -204,7 +195,6 @@ zts-php -n -q \
 %endif
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/php/ext/%{pecl_name}
 
 %if 0%{?__ztsphp:1}
@@ -213,6 +203,9 @@ zts-php -n -q \
 
 
 %changelog
+* Tue Oct  9 2012  Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+- clean EL-5 stuff
+
 * Mon Apr 30 2012  Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1-alpha
 - add devel sub-package
