@@ -1,3 +1,11 @@
+# Use system nspr/nss?
+%if 0%{?fedora} < 15 && 0%{?rhel} < 6
+%define system_nss        0
+%else
+%define system_nss        1
+%endif
+
+# Build as a debug package?
 %define debug_build       0
 
 # Use system Librairies ?
@@ -5,13 +13,6 @@
 %define system_sqlite 0
 %else
 %define system_sqlite 1
-%endif
-%if 0%{?fedora} < 15 && 0%{?rhel} < 6
-%define system_nspr       0
-%define system_nss        0
-%else
-%define system_nspr       1
-%define system_nss        1
 %endif
 %if 0%{?fedora} < 15
 %define system_cairo      0
@@ -23,20 +24,24 @@
 
 %define build_langpacks 1
 
+%if %{?system_nss}
 %define nspr_version 4.9
 %define nss_version 3.13.3
+%endif
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
 %define lcms_version 1.19
+%if %{?system_sqlite}
 %define sqlite_version 3.7.10
+%endif
 %define libnotify_version 0.4
 %global libvpx_version 1.0.0
 %define _default_patch_fuzz 2
 
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 
-%global thunver  15.0
-%global thunmax  16.0
+%global thunver  16.0
+%global thunmax  17.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -54,11 +59,11 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.4.4
+Version:        1.4.5
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 URL:            http://enigmail.mozdev.org/
 License:        MPLv1.1 or GPLv2+
@@ -91,6 +96,10 @@ Patch104:       xulrunner-10.0-gcc47.patch
 # Linux specific
 Patch200:       thunderbird-8.0-enable-addons.patch
 
+# PPC fixes
+Patch300:       xulrunner-16.0-jemalloc-ppc.patch
+Patch301:       rhbz-855923.patch
+
 # Enigmail patch
 
 
@@ -102,11 +111,9 @@ Patch200:       thunderbird-8.0-enable-addons.patch
 
 %endif
 
-%if %{system_nspr}
+%if %{?system_nss}
+BuildRequires:  nss-static >= %{nss_version}
 BuildRequires:  nspr-devel >= %{nspr_version}
-%endif
-%if %{system_nss}
-BuildRequires:  nss-static
 BuildRequires:  nss-devel >= %{nss_version}
 %endif
 %if %{system_cairo}
@@ -181,6 +188,8 @@ cd mozilla
 cd ..
 
 %patch200 -p1 -b .addons
+%patch300 -p1 -b .852698
+%patch301 -p1 -b .855923
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -193,12 +202,6 @@ cd ..
 
 %{__rm} -f .mozconfig
 cat %{SOURCE10} 		\
-%if ! %{system_nss}
-  | grep -v system-nss 		\
-%endif
-%if ! %{system_nspr}
-  | grep -v system-nspr 	\
-%endif
 %if ! %{system_cairo}
   | grep -v enable-system-cairo    \
 %endif
@@ -213,6 +216,14 @@ echo "ac_add_options --disable-libjpeg-turbo"  >> .mozconfig
 
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
+%endif
+
+%if %{?system_nss}
+echo "ac_add_options --with-system-nspr" >> .mozconfig
+echo "ac_add_options --with-system-nss" >> .mozconfig
+%else
+echo "ac_add_options --without-system-nspr" >> .mozconfig
+echo "ac_add_options --without-system-nss" >> .mozconfig
 %endif
 
 # s390(x) fails to start with jemalloc enabled
@@ -250,7 +261,7 @@ pushd mailnews/extensions/enigmail
 # All tarballs (as well as CVS) will *always* report as 1.4a1pre (or whatever
 # the next major version would be). This is because I create builds from trunk
 # and simply label the result as 1.3.x.
-# sed -i -e '/em:version/s/1.5a1pre/%{version}/' package/install.rdf
+sed -i -e '/em:version/s/1.5a1pre/%{version}/' package/install.rdf
 grep '<em:version>%{version}</em:version>' package/install.rdf || exit 1
 # Apply Enigmail patch here
 popd
@@ -278,8 +289,19 @@ cd %{tarballdir}
 #
 MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
                       %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
+%if %{?debug_build}
+MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
+%endif
+%ifarch s390
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1')
+%endif
+%ifarch s390 %{arm} ppc
+MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
+%endif
+
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
+export LDFLAGS=$MOZ_LINK_FLAGS
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
@@ -326,6 +348,9 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Tue Oct  9 2012 Remi Collet <remi@fedoraproject.org> 1.4.5-1
+- Enigmail 1.4.5 for Thunderbird 16
+
 * Mon Aug 27 2012 Remi Collet <remi@fedoraproject.org> 1.4.4-2
 - Enigmail 1.4.4 for Thunderbird 15.0
 

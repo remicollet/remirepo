@@ -1,0 +1,14 @@
+Index: xulrunner-11.0/mozilla-release/memory/jemalloc/jemalloc.c
+===================================================================
+--- a/mozilla/memory/mozjemalloc/jemalloc.c
++++ b/mozilla/memory/mozjemalloc/jemalloc.c
+@@ -1089,7 +1089,9 @@ static unsigned		ncpus;
+  * controlling the malloc behavior are defined as compile-time constants
+  * for best performance and cannot be altered at runtime.
+  */
++#if !(defined(__powerpc__))
+ #define MALLOC_STATIC_SIZES 1
++#endif
+ 
+ #ifdef MALLOC_STATIC_SIZES
+ 
