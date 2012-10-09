@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 15 && 0%{?rhel} < 6
+%if 0%{?fedora} < 16 && 0%{?rhel} < 7
 %define system_nss        0
 %else
 %define system_nss        1

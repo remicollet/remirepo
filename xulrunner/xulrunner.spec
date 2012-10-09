@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 15 && 0%{?rhel} < 6
+%if 0%{?fedora} < 16 && 0%{?rhel} < 7
 %define system_nss        0
 %else
 %define system_nss        1
@@ -34,7 +34,7 @@
 %global lcms_version 1.18
 
 %if %{?system_nss}
-%global nspr_version 4.9
+%global nspr_version 4.9.2
 %global nss_version 3.13.3
 %endif
 
