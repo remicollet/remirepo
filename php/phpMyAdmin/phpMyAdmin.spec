@@ -1,8 +1,8 @@
 #global prever rc1
 
 Name: phpMyAdmin
-Version: 3.5.2.2
-Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}.1
+Version: 3.5.3
+Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -122,6 +122,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Oct  9 2012 Remi Collet <rpms@famillecollet.com> 3.5.3-1
+- Upstream released 3.5.2.3 (security)
+  fix PMASA-2012-6 and PMASA-2012-7
+
 * Mon Sep  3 2012 Remi Collet <rpms@famillecollet.com> 3.5.2.2-1.1
 - Obsoletes phpMyAdmin3
 
