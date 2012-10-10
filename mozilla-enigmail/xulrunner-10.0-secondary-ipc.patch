@@ -1,0 +1,36 @@
+diff -up thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/base/data_pack.cc.secondary-ipc thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/base/data_pack.cc
+--- thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/base/data_pack.cc.secondary-ipc	2012-01-29 15:44:23.000000000 +0100
++++ thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/base/data_pack.cc	2012-01-31 10:45:57.784248018 +0100
+@@ -91,14 +91,7 @@ bool DataPack::Load(const FilePath& path
+ bool DataPack::Get(uint32_t resource_id, StringPiece* data) {
+   // It won't be hard to make this endian-agnostic, but it's not worth
+   // bothering to do right now.
+-#if defined(__BYTE_ORDER)
+-  // Linux check
+-  COMPILE_ASSERT(__BYTE_ORDER == __LITTLE_ENDIAN,
+-                 datapack_assumes_little_endian);
+-#elif defined(__BIG_ENDIAN__)
+-  // Mac check
+-  #error DataPack assumes little endian
+-#endif
++#warning DoTheRightThingMakingThisEndianAgnostic!
+ 
+   DataPackEntry* target = reinterpret_cast<DataPackEntry*>(
+       bsearch(&resource_id, mmap_->data() + kHeaderLength, resource_count_,
+diff -up thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/build/build_config.h.secondary-ipc thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/build/build_config.h
+--- thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/build/build_config.h.secondary-ipc	2012-01-29 15:44:23.000000000 +0100
++++ thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/build/build_config.h	2012-01-31 10:53:24.409935119 +0100
+@@ -65,10 +65,10 @@
+ #elif defined(__ppc__) || defined(__powerpc__)
+ #define ARCH_CPU_PPC 1
+ #define ARCH_CPU_32_BITS 1
+-#elif defined(__sparc64__)
++#elif defined(__sparc__) && !defined(__arch64)
+ #define ARCH_CPU_SPARC 1
+ #define ARCH_CPU_64_BITS 1
+-#elif defined(__sparc__)
++#elif defined(__sparc__) && defined(__arch64)
+ #define ARCH_CPU_SPARC 1
+ #define ARCH_CPU_32_BITS 1
+ #elif defined(__mips__)
+diff -up thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/chrome/common/ipc_message_utils.h.secondary-ipc thunderbird-10.0/comm-release/mozilla/ipc/chromium/src/chrome/common/ipc_message_utils.h
