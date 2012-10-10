@@ -43,11 +43,13 @@
 %global thun_guid \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 %global seam_guid \{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a\}
 
-%global thunver   16.0
-%global thunmax   17.0
+# Match version of thunderbird source we use
+%global thun_ver  16.0
+%global thun_max  17.0
 
-%global seamver   2.13
-%global seammax   2.15
+# According to enigmail/package/install.rdf
+%global seam_ver  2.13
+%global seam_max  2.15
 
 
 # The tarball is pretty inconsistent with directory structure.
@@ -69,12 +71,12 @@ Version:        1.4.5
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
-URL:            http://enigmail.mozdev.org/
+URL:            http://www.enigmail.net/
 License:        MPLv1.1 or GPLv2+
 Group:          Applications/Internet
-Source0:        thunderbird-%{thunver}%{?thunbeta}.source.tar.bz2
+Source0:        thunderbird-%{thun_ver}%{?thunbeta}.source.tar.bz2
 #NoSource:       0
 
 Source10:       thunderbird-mozconfig
@@ -88,7 +90,7 @@ Source11:       thunderbird-mozconfig-branded
 # tar czf /home/rpmbuild/SOURCES/enigmail-20091121.tgz --exclude CVS -C enigmail/src .
 Source100:      enigmail-%{CVS}.tgz
 %else
-Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{version}%{?prever}.tar.gz
+Source100:      http://www.enigmail.net/download/source/enigmail-%{version}%{?prever}.tar.gz
 %endif
 
 
@@ -183,8 +185,8 @@ to access the authentication and encryption features provided by GnuPG.
 %package -n thunderbird-enigmail
 Summary:    Authentication and encryption extension for Mozilla Thunderbird
 Requires:   %{name}%{?_isa} = %{version}-%{release}
-Requires:   thunderbird%{?_isa} >= %{thunver}
-Conflicts:  thunderbird%{?_isa} >= %{thunmax}
+Requires:   thunderbird%{?_isa} >= %{thun_ver}
+Conflicts:  thunderbird%{?_isa} >= %{thun_max}
 
 %description -n thunderbird-enigmail
 Enigmail is an extension to the mail client Mozilla Thunderbird
@@ -195,8 +197,8 @@ features provided by GnuPG.
 %package -n seamonkey-enigmail
 Summary:    Authentication and encryption extension for SeaMonkey
 Requires:   %{name}%{?_isa} = %{version}-%{release}
-Requires:   seamonkey%{?_isa} >= %{seamver}
-Conflicts:  seamonkey%{?_isa} >= %{seammax}
+Requires:   seamonkey%{?_isa} >= %{seam_ver}
+Conflicts:  seamonkey%{?_isa} >= %{seam_max}
 
 %description -n seamonkey-enigmail
 Enigmail is an extension to the Seamonkey mail client which allows users 
@@ -367,18 +369,19 @@ popd
 cd %{tarballdir}
 
 # mozilla-enigmail
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/%{name}
-unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{_libdir}/%{name}
+mkdir -p %{buildroot}%{_libdir}/%{name}
+unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi \
+      -d %{buildroot}%{_libdir}/%{name}
 
 # thunderbird-enigmail
-mkdir -p $RPM_BUILD_ROOT%{mozextdir}/%{thun_guid}
-ln -s %{_libdir}/%{name} \
-      $RPM_BUILD_ROOT%{mozextdir}/%{thun_guid}/%{enig_guid}
+mkdir -p %{buildroot}%{mozextdir}/%{thun_guid}
+cd       %{buildroot}%{mozextdir}/%{thun_guid}
+ln -s    %{_libdir}/%{name} %{enig_guid}
 
 # seamonkey-enigmail
-mkdir -p $RPM_BUILD_ROOT%{mozextdir}/%{seam_guid}
-ln -s %{_libdir}/%{name} \
-      $RPM_BUILD_ROOT%{mozextdir}/%{seam_guid}/%{enig_guid}
+mkdir -p %{buildroot}%{mozextdir}/%{seam_guid}
+cd       %{buildroot}%{mozextdir}/%{seam_guid}
+ln -s    %{_libdir}/%{name} %{enig_guid}
 
 
 #===============================================================================
@@ -409,6 +412,7 @@ fi
 * Wed Oct 10 2012 Remi Collet <remi@fedoraproject.org> 1.4.5-2
 - rename to mozilla-enigmail
 - add thunderbird and enigmail sub package
+- fix project URL
 
 * Tue Oct  9 2012 Remi Collet <remi@fedoraproject.org> 1.4.5-1
 - Enigmail 1.4.5 for Thunderbird 16
