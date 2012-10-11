@@ -9,12 +9,13 @@
 %define debug_build       0
 
 # Use system Librairies ?
-%if 0%{?fedora} <= 17
+%if 0%{?fedora} < 18 && 0%{?rhel} < 7
 %define system_sqlite 0
 %else
 %define system_sqlite 1
 %endif
-%if 0%{?fedora} < 15
+
+%if 0%{?fedora} < 15 && 0%{?rhel} < 7
 %define system_cairo      0
 %define system_vpx        0
 %else
@@ -30,7 +31,6 @@
 %endif
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
-%define lcms_version 1.19
 %if %{?system_sqlite}
 %define sqlite_version 3.7.10
 %endif
@@ -71,10 +71,11 @@ Version:        1.4.5
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 URL:            http://www.enigmail.net/
-License:        MPLv1.1 or GPLv2+
+# All files licensed under MPL 1.1/GPL 2.0/LGPL 2.1
+License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        thunderbird-%{thun_ver}%{?thunbeta}.source.tar.bz2
 #NoSource:       0
@@ -155,7 +156,6 @@ BuildRequires:  libcurl-devel
 BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  GConf2-devel
-BuildRequires:  lcms-devel >= %{lcms_version}
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
@@ -241,7 +241,7 @@ cat %{SOURCE10} 		\
 %endif
   | tee .mozconfig
 
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
+%if 0%{?fedora} < 14 && 0%{?rhel} < 7
 echo "ac_add_options --disable-libjpeg-turbo"  >> .mozconfig
 %endif
 
@@ -409,6 +409,10 @@ fi
 #===============================================================================
 
 %changelog
+* Wed Oct 10 2012 Remi Collet <remi@fedoraproject.org> 1.4.5-3
+- fix licensing
+- remove lcms (as thunderbird use bundled one)
+
 * Wed Oct 10 2012 Remi Collet <remi@fedoraproject.org> 1.4.5-2
 - rename to mozilla-enigmail
 - add thunderbird and enigmail sub package
