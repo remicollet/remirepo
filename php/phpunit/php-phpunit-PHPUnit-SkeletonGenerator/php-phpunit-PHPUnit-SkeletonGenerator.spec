@@ -3,7 +3,7 @@
 %global channel   pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
@@ -82,6 +82,9 @@ fi
 
 
 %changelog
+* Sat Mar 03 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Version 1.1.0 (stable) - API 1.1.0 (stable)
+
 * Sat Jan 21 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
 
