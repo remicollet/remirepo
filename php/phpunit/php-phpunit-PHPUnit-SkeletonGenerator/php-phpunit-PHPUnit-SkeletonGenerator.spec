@@ -1,9 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name PHPUnit_SkeletonGenerator
 %global channel   pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
-Version:        1.1.0
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
@@ -20,7 +21,7 @@ BuildRequires:  php-pear(PEAR) >= 1.9.4
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-common >= 5.2.7
+Requires:       php-common >= 5.3.3
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
 Requires:       php-channel(%{channel})
@@ -50,7 +51,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -77,11 +78,14 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{_bindir}/phpunit-skelgen
-%{pear_phpdir}/PHPUnit/SkeletonGenerator
-%{pear_phpdir}/PHPUnit/SkeletonGenerator.php
+%{pear_phpdir}/SebastianBergmann/PHPUnit/SkeletonGenerator
 
 
 %changelog
+* Thu Oct 11 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Version 1.2.0 (stable) - API 1.2.0 (stable)
+- raise dependency: php >= 5.3.3
+
 * Sat Mar 03 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Version 1.1.0 (stable) - API 1.1.0 (stable)
 
