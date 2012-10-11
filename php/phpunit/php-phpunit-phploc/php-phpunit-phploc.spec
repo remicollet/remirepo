@@ -1,9 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name phploc
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phploc
-Version:        1.6.4
+Version:        1.7.1
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -11,16 +12,21 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://sebastianbergmann.github.com/phploc/
 Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.4
+BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{channel})
-Requires:       php-common >= 5.2.7
+
+Requires:       php-pear(PEAR) >= 1.9.4
+Requires:       php-common >= 5.3.3
+Requires:       php-dom
+Requires:       php-spl
+Requires:       php-tokenizer
 Requires:       php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.3.0
+Requires:       php-pear(pear.phpunit.de/FinderFacade) >= 1.0.4
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
@@ -51,7 +57,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-%{__rm} -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+%{__rm} -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 %{__mkdir} -p $RPM_BUILD_ROOT%{pear_xmldir}
@@ -76,12 +82,18 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHPLOC
+%{pear_phpdir}/SebastianBergmann/PHPLOC
 %{_bindir}/phploc
 
 
 %changelog
+* Thu Oct 11 2012 Remi Collet <remi@fedoraproject.org> - 1.7.1-1
+- Version 1.7.1 (stable) - API 1.7.0 (stable)
+- use FinderFacade instead of File_Iterator
+- raise dependecies: php >= 5.3.3
+
 * Mon Nov 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.6.4-1
 - upstream 1.6.4, rebuild for remi repository
 
