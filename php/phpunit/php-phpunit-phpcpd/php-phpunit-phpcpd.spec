@@ -1,9 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name phpcpd
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phpcpd
-Version:        1.3.5
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -16,14 +17,14 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.9.4
 BuildRequires:  php-channel(%{channel})
-Requires:       php-common >= 5.2.7
+Requires:       php-common >= 5.3.3
 Requires:       php-tokenizer
 Requires:       php-xml
 Requires:       php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(pear.phpunit.de/File_Iterator) >= 1.3.0
-Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.2
+Requires:       php-pear(pear.phpunit.de/FinderFacade) >= 1.0.4
+Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.4
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6 
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
@@ -55,7 +56,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -80,12 +81,18 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHPCPD
+%{pear_phpdir}/SebastianBergmann/PHPCPD
 %{_bindir}/phpcpd
 
 
 %changelog
+* Thu Oct 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.0-1
+- Update to 1.4.0
+- use FinderFacade instead of File_Iterator
+- raise dependecies: php >= 5.3.3, PHP_Timer >= 1.0.4
+
 * Sat Nov 26 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.5-1
 - Update to 1.3.5
 
