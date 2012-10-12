@@ -3,12 +3,12 @@
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global prever    dev7
-%global devver    dev7
+%global prever    alpha1
+%global devver    dev
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.6.%{prever}%{?dist}
+Release:        0.10.%{prever}%{?dist}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -18,10 +18,6 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
-
-# Fix RHEL build
-# http://svn.php.net/viewvc?view=revision&revision=324058
-Patch0:         %{proj_name}-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.4.0
@@ -75,8 +71,6 @@ These are the files needed to compile programs using HTTP extension.
 
 %prep
 %setup -c -q 
-
-%patch0 -p0 -b .build
 
 extver=$(sed -n '/#define PHP_HTTP_EXT_VERSION/{s/.* "//;s/".*$//;p}' %{proj_name}-%{version}%{?prever}/php_http.h)
 if test "x${extver}" != "x%{version}%{?devver}"; then
@@ -163,6 +157,18 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.0-0.10.alpha1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Apr 21 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.9.alpha1
+- update to 2.0.0alpha1
+
+* Sat Mar 31 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.8.dev10
+- update to 2.0.0dev10
+
+* Fri Mar 16 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.7.dev8
+- update to 2.0.0dev8
+
 * Fri Mar 09 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.6.dev7
 - update to 2.0.0dev7
 
