@@ -3,24 +3,28 @@
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global prever    alpha1
-%global devver    dev
+%global prever    beta1
+%global devver    beta1
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.10.%{prever}%{?dist}
+Release:        0.11.%{prever}%{?dist}
 Summary:        Extended HTTP support
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/pecl_http
+# need to be repack
+# tar xif pecl_http-2.0.0beta1.tgz
+# tar cf  pecl_http-2.0.0beta1.tgz package.xml pecl_http-2.0.0beta1
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel >= 5.4.0
+BuildRequires:  php-devel >= 5.3.0
+BuildRequires:  php-json
 BuildRequires:  php-pear
 BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
@@ -30,16 +34,23 @@ BuildRequires:  curl-devel >= 7.18.2
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides:       php-pecl(%{proj_name}) = %{version}%{devver}
-Provides:       php-pecl(%{pecl_name}) = %{version}%{devver}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+Requires:       php-json
 
-# RPM 4.8
+Provides:       php-pecl(%{proj_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-http
+Obsoletes:     php53u-pecl-http
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-http
+%endif
+
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -108,21 +119,25 @@ make -C %{proj_name}-zts \
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-# install config file
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+# install config file (z-http.ini to be loaded after json)
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
 
 
 %check
 # Minimal load test for NTS extension
+ln -sf %{php_extdir}/json.so %{proj_name}-%{version}%{?prever}/modules
 %{__php} --no-php-ini \
     --define extension_dir=%{proj_name}-%{version}%{?prever}/modules \
+    --define extension=json.so \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 # Minimal load test for ZTS extension
+ln -sf %{php_ztsextdir}/json.so %{proj_name}-zts/modules
 %{__ztsphp} --no-php-ini \
     --define extension_dir=%{proj_name}-zts/modules \
+    --define extension=json.so \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -144,8 +159,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{proj_name}-%{version}%{?prever}/{CREDITS,LICENSE,ThanksTo.txt}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
@@ -157,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 12 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.11.beta1
+- update to 2.0.0beta1
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.0-0.10.alpha1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
