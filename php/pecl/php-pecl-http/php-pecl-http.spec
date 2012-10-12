@@ -4,7 +4,6 @@
 %global proj_name pecl_http
 %global pecl_name http
 %global prever    beta1
-%global devver    beta1
 
 Name:           php-pecl-http
 Version:        2.0.0
@@ -14,7 +13,7 @@ Summary:        Extended HTTP support
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/pecl_http
-# need to be repack
+# upstream archive is corrupted, need to be repack
 # tar xif pecl_http-2.0.0beta1.tgz
 # tar cf  pecl_http-2.0.0beta1.tgz package.xml pecl_http-2.0.0beta1
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
@@ -38,8 +37,10 @@ Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 Requires:       php-json
 
-Provides:       php-pecl(%{proj_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       php-pecl(%{proj_name})         = %{version}%{?prever}
+Provides:       php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
+Provides:       php-pecl(%{pecl_name})         = %{version}%{?prever}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-http
@@ -74,7 +75,7 @@ Documentation : http://php.net/http
 Summary:       Extended HTTP support developer files (header)
 Group:         Development/Libraries
 Requires:      php-pecl-http%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa} >= 5.4.0
+Requires:      php-devel%{?_isa} >= 5.3.0
 
 %description devel
 These are the files needed to compile programs using HTTP extension.
@@ -84,8 +85,8 @@ These are the files needed to compile programs using HTTP extension.
 %setup -c -q 
 
 extver=$(sed -n '/#define PHP_HTTP_EXT_VERSION/{s/.* "//;s/".*$//;p}' %{proj_name}-%{version}%{?prever}/php_http.h)
-if test "x${extver}" != "x%{version}%{?devver}"; then
-   : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?devver}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
@@ -174,6 +175,7 @@ rm -rf %{buildroot}
 %changelog
 * Fri Oct 12 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.11.beta1
 - update to 2.0.0beta1
+- must be load after json, to rename config to z-http.ini
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.0-0.10.alpha1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
