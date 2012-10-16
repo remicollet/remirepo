@@ -1,46 +1,50 @@
 # Use system nspr/nss?
 %if 0%{?fedora} < 16 && 0%{?rhel} < 7
-%define system_nss        0
+%global system_nss        0
 %else
-%define system_nss        1
+%global system_nss        1
 %endif
 
 # Build as a debug package?
-%define debug_build       0
+%global debug_build       0
 
 # Use system Librairies ?
-%if 0%{?fedora} <= 17
-%define system_sqlite 0
+%if 0%{?fedora} < 18 && 0%{?rhel} < 7
+%global system_sqlite 0
 %else
-%define system_sqlite 1
+%global system_sqlite 1
 %endif
-%if 0%{?fedora} < 15
-%define system_cairo      0
-%define system_vpx        0
+%if 0%{?fedora} < 15 && 0%{?rhel} < 7
+%global system_cairo      0
+%global system_vpx        0
 %else
-%define system_cairo      1
-%define system_vpx        1
+%global system_cairo      1
+%global system_vpx        1
 %endif
 
-%define build_langpacks 1
+%global build_langpacks 1
 
 %if %{?system_nss}
-%define nspr_version 4.9.2
-%define nss_version 3.13.3
+%global nspr_version 4.9.2
+%global nss_version 3.13.3
 %endif
-%define cairo_version 1.10.0
-%define freetype_version 2.1.9
-%define lcms_version 1.19
+%if %{?system_cairo}
+%global cairo_version 1.10.0
+%endif
+%global freetype_version 2.1.9
 %if %{?system_sqlite}
-%define sqlite_version 3.7.10
+%global sqlite_version 3.7.13
 %endif
-%define libnotify_version 0.4
+%global libnotify_version 0.4
+%if %{?system_cairo}
 %global libvpx_version 1.0.0
-%define _default_patch_fuzz 2
+%endif
+%global _default_patch_fuzz 2
 
-%define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
+%global thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
+%global enimail_app_id     \{847b3a00-7ab1-11d4-8f02-006008948af5\}
 
-%global thunver  16.0
+%global thunver  16.0.1
 %global thunmax  17.0
 
 # The tarball is pretty inconsistent with directory structure.
@@ -48,13 +52,13 @@
 #
 # IMPORTANT: If there is no top level directory, this should be 
 # set to the cwd, ie: '.'
-#%define tarballdir .
-%define tarballdir comm-release
+#global tarballdir .
+%global tarballdir comm-release
 
-%define official_branding 1
+%global official_branding 1
 
-%define mozappdir         %{_libdir}/thunderbird
-%global enigmail_extname  %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{847b3a00-7ab1-11d4-8f02-006008948af5}
+%global mozappdir         %{_libdir}/thunderbird
+%global enigmail_extname  %{_libdir}/mozilla/extensions/%{thunderbird_app_id}/%{enimail_app_id}
 
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
@@ -63,10 +67,11 @@ Version:        1.4.5
 %if 0%{?prever:1}
 Release:        0.1.%{prever}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 URL:            http://enigmail.mozdev.org/
-License:        MPLv1.1 or GPLv2+
+# All files licensed under MPL 1.1/GPL 2.0/LGPL 2.1
+License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        thunderbird-%{thunver}%{?thunbeta}.source.tar.bz2
 #NoSource:       0
@@ -147,7 +152,6 @@ BuildRequires:  libcurl-devel
 BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  GConf2-devel
-BuildRequires:  lcms-devel >= %{lcms_version}
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
@@ -161,9 +165,9 @@ BuildRequires:  perl
 # because provided by xulrunner). 
 AutoReq:  0
 # All others deps already required by thunderbird
-Requires: gnupg
-Requires: thunderbird >= %{thunver}
-Requires: thunderbird <  %{thunmax}
+Requires:  gnupg
+Requires:  thunderbird >= %{thunver}
+Conflicts: thunderbird >=  %{thunmax}
 
 # Nothing usefull provided
 AutoProv: 0
@@ -293,7 +297,7 @@ MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
 %ifarch s390
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1')
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
 %endif
 %ifarch s390 %{arm} ppc
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
@@ -348,6 +352,10 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Tue Oct 16 2012 Remi Collet <remi@fedoraproject.org> 1.4.5-2
+- Enigmail 1.4.5 for Thunderbird 16.0.1
+- merge changes from thunderbird in rawhide
+
 * Tue Oct  9 2012 Remi Collet <remi@fedoraproject.org> 1.4.5-1
 - Enigmail 1.4.5 for Thunderbird 16
 
