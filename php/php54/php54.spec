@@ -26,7 +26,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 #global snapdate   201201041830
-%global rcver      RC1
+#global rcver      RC1
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
@@ -65,7 +65,7 @@ Version: 5.4.8
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 %endif
 License: PHP
 Group: Development/Languages
@@ -100,6 +100,8 @@ Patch20: php-5.4.7-imap.patch
 Patch21: php-5.4.7-odbctimer.patch
 # https://bugs.php.net/63149 check sqlite3_column_table_name
 Patch22: php-5.4.7-sqlite.patch
+# https://bugs.php.net/61557 crash in libxml
+Patch23: php-5.4.8-libxml.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -192,6 +194,7 @@ executing PHP scripts, /usr/bin/php, and the CGI interface.
 Group: Development/Languages
 Summary: PHP FastCGI Process Manager
 Requires: php-common%{?_isa} = %{version}-%{release}
+Requires(pre): /usr/sbin/useradd
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 BuildRequires: systemd-units
 Requires: systemd-units
@@ -685,6 +688,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch20 -p1 -b .imap
 %patch21 -p1 -b .odbctimer
 %patch22 -p1 -b .tablename
+%patch23 -p1 -b .libxmlcrash
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -1317,6 +1321,15 @@ echo -e "You should consider upgrading to a supported release.\n"
 
 
 %if %{with_fpm}
+%pre fpm
+# Add the "apache" user as we don't require httpd
+getent group  apache >/dev/null || \
+  groupadd -g 48 -r apache
+getent passwd apache >/dev/null || \
+  useradd -r -u 48 -g apache -s /sbin/nologin \
+    -d %{contentdir} -c "Apache" apache
+exit 0
+
 %post fpm
 %if 0%{?systemd_post:1}
 %systemd_post php-fpm.service
@@ -1499,6 +1512,11 @@ fi
 
 
 %changelog
+* Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> 5.4.8-1
+- update to 5.4.8
+- improve comments for session path
+- php-fpm: create apache user if needed
+
 * Fri Oct  5 2012 Remi Collet <remi@fedoraproject.org> 5.4.8-0.3.RC1
 - provides php-phar
 
