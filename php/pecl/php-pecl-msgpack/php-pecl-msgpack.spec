@@ -5,7 +5,7 @@
 
 Summary:       API for communicating with MessagePack serialization
 Name:          php-pecl-msgpack
-Version:       0.5.2
+Version:       0.5.3
 Release:       1%{?dist}
 License:       BSD
 Group:         Development/Languages
@@ -162,7 +162,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc %{pecl_name}-%{version}/{ChangeLog,CREDITS,LICENSE,README}
+%doc %{pecl_name}-%{version}/{ChangeLog,CREDITS,LICENSE,README.md}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
@@ -183,6 +183,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> - 0.5.3-1
+- update to 0.5.3 (beta)
+
 * Sat Sep 15 2012 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
 - initial package, version 0.5.2 (beta)
 
