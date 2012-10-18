@@ -4,7 +4,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phploc
-Version:        1.7.1
+Version:        1.7.2
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -89,6 +89,9 @@ fi
 
 
 %changelog
+* Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> - 1.7.2-1
+- Version 1.7.2 (stable) - API 1.7.0 (stable)
+
 * Thu Oct 11 2012 Remi Collet <remi@fedoraproject.org> - 1.7.1-1
 - Version 1.7.1 (stable) - API 1.7.0 (stable)
 - use FinderFacade instead of File_Iterator
