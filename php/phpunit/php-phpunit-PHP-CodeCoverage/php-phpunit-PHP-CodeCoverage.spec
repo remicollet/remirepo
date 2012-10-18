@@ -4,7 +4,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        1.2.5
+Version:        1.2.6
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -20,7 +20,8 @@ BuildRequires:  php-channel(%{channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-xml >= 5.3.3
+Requires:       php(language) >= 5.3.3
+Requires:       php-dom
 Requires:       php-pecl(Xdebug) >= 2.0.5
 Requires:       php-pear(%{channel}/File_Iterator) >= 1.3.0
 Requires:       php-pear(%{channel}/PHP_TokenStream) >= 1.1.3
@@ -82,6 +83,9 @@ fi
 
 
 %changelog
+* Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> - 1.2.6-1
+- Version 1.2.6 (stable) - API 1.2.0 (stable)
+
 * Sun Oct  7 2012 Remi Collet <remi@fedoraproject.org> - 1.2.5-1
 - Version 1.2.5 (stable) - API 1.2.0 (stable)
 
