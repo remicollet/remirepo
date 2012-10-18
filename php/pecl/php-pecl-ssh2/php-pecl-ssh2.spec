@@ -3,8 +3,8 @@
 %global pecl_name ssh2
 
 Name:           php-pecl-ssh2
-Version:        0.11.3
-Release:        2%{?dist}
+Version:        0.12
+Release:        1%{?dist}
 Summary:        Bindings for the libssh2 library
 
 # http://pecl.php.net/bugs/bug.php?id=24364
@@ -15,20 +15,27 @@ Source0:        http://pecl.php.net/get/ssh2-%{version}.tgz
 Source2:        php-pecl-ssh2-0.10-README
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  libssh2-devel php-devel php-pear
+BuildRequires:  libssh2-devel >= 1.2
+BuildRequires:  php-devel
+BuildRequires:  php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides:       php-pecl(ssh2) = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
 
-# RPM 4.8
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -41,9 +48,6 @@ Documentation : http://php.net/ssh2
 
 %prep
 %setup -c -q 
-
-# http://pecl.php.net/bugs/bug.php?id=24390
-sed -i -e '/PHP_SSH2_VERSION/s/0.11.3-dev/0.11.3/' %{pecl_name}-%{version}/php_ssh2.h
 
 extver=$(sed -n '/#define PHP_SSH2_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_ssh2.h)
 if test "x${extver}" != "x%{version}"; then
@@ -130,6 +134,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.12-1
+- update to 0.12
+- raise dependency on libssh2 >= 1.2
+
 * Sun Nov 13 2011 Remi Collet <remi@fedoraproject.org> - 0.11.3-2
 - build against php 5.4
 
