@@ -280,7 +280,7 @@ package and the php-cli package.
 %package devel
 Group: Development/Libraries
 Summary: Files needed for building PHP extensions
-Requires: php%{?_isa} = %{version}-%{release}, autoconf, automake
+Requires: php-cli%{?_isa} = %{version}-%{release}, autoconf, automake
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
 Requires: pcre-devel%{?_isa}
 %endif
@@ -1514,8 +1514,11 @@ fi
 %changelog
 * Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> 5.4.8-1
 - update to 5.4.8
-- improve comments for session path
+- define both session.save_handler and session.save_path
+- fix possible segfault in libxml (#828526)
 - php-fpm: create apache user if needed
+- use SKIP_ONLINE_TEST during make test
+- php-devel requires pcre-devel and php-cli (instead of php)
 
 * Fri Oct  5 2012 Remi Collet <remi@fedoraproject.org> 5.4.8-0.3.RC1
 - provides php-phar
