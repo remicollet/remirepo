@@ -6,11 +6,17 @@
 %global with_perftools 1
 %endif
 
-%global prever rc6
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%global with_systemd 1
+%else
+%global with_systemd 0
+%endif
+
+%global prever rc8
 
 Name:             redis
 Version:          2.6.0
-Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:          %{?prever:0.}2%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -32,11 +38,18 @@ BuildRequires:    google-perftools-devel
 %endif
 
 Requires:         logrotate
-Requires(post):   chkconfig
-Requires(postun): initscripts
 Requires(pre):    shadow-utils
+%if %{with_systemd}
+Requires(post):   systemd-units
+Requires(preun):  systemd-units
+Requires(postun): systemd-units
+%else
+Requires(post):   chkconfig
 Requires(preun):  chkconfig
 Requires(preun):  initscripts
+Requires(postun): initscripts
+%endif
+
 
 %description
 Redis is an advanced key-value store. It is similar to memcached but the data
@@ -70,14 +83,17 @@ make %{?_smp_mflags} \
 make install PREFIX=%{buildroot}%{_prefix}
 # Install misc other
 install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 install -p -D -m 644 %{name}.conf %{buildroot}%{_sysconfdir}/%{name}.conf
 install -d -m 755 %{buildroot}%{_localstatedir}/lib/%{name}
 install -d -m 755 %{buildroot}%{_localstatedir}/log/%{name}
 install -d -m 755 %{buildroot}%{_localstatedir}/run/%{name}
 
 # Install systemd unit
-install -p -D -m 644 %{SOURCE3} %{buildroot}/%{_unitdir}/%{name}.service
+%if %{with_systemd}
+install -p -D -m 644 %{SOURCE3} %{buildroot}%{_unitdir}/%{name}.service
+%else
+install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
+%endif
 
 # Fix non-standard-executable-perm error
 chmod 755 %{buildroot}%{_bindir}/%{name}-*
@@ -87,20 +103,58 @@ mkdir -p %{buildroot}%{_sbindir}
 mv %{buildroot}%{_bindir}/%{name}-server %{buildroot}%{_sbindir}/%{name}-server
 
 %post
-/sbin/chkconfig --add redis
+%if 0%{?systemd_post:1}
+%systemd_post redis.service
+%else
+if [ $1 = 1 ]; then
+  # Initial installation
+%if %{with_systemd}
+  /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+%else
+  /sbin/chkconfig --add redis
+%endif
+fi
+%endif
 
 %pre
 getent group redis &> /dev/null || groupadd -r redis &> /dev/null
 getent passwd redis &> /dev/null || \
 useradd -r -g redis -d %{_sharedstatedir}/redis -s /sbin/nologin \
--c 'Redis Server' redis &> /dev/null
+        -c 'Redis Server' redis &> /dev/null
 exit 0
 
 %preun
+%if 0%{?systemd_preun:1}
+%systemd_preun mysqld.service
+%else
 if [ $1 = 0 ]; then
+  # Package removal, not upgrade
+%if %{with_systemd}
+  /bin/systemctl --no-reload disable redis.service >/dev/null 2>&1 || :
+  /bin/systemctl stop redis.service >/dev/null 2>&1 || :
+%else
   /sbin/service redis stop &> /dev/null
   /sbin/chkconfig --del redis &> /dev/null
+%endif
 fi
+%endif
+
+%if 0%{?systemd_postun_with_restart:1}
+%systemd_postun_with_restart redis.service
+%else
+%if %{with_systemd}
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ]; then
+  # Package upgrade, not uninstall
+  /bin/systemctl try-restart redis.service >/dev/null 2>&1 || :
+fi
+%else
+if [ $1 -ge 1 ]; then
+  /sbin/service redis condrestart >/dev/null 2>&1 || :
+fi
+%endif
+%endif
+
 
 %files
 %defattr(-,root,root,-)
@@ -112,12 +166,19 @@ fi
 %dir %attr(0755, redis, root) %{_localstatedir}/run/%{name}
 %{_bindir}/%{name}-*
 %{_sbindir}/%{name}-*
-%{_initrddir}/%{name}
+%if %{with_systemd}
 %{_unitdir}/%{name}.service
+%else
+%{_initrddir}/%{name}
+%endif
 
 %changelog
+* Sat Oct 20 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.2.rc8
+- Update to redis 2.6.0-rc8
+- improve systemd integration
+
 * Thu Aug 30 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.1.rc6
-- Update to redis 2.6.0-RC6
+- Update to redis 2.6.0-rc6
 
 * Thu Aug 30 2012 Remi Collet <remi@fedoraproject.org> - 2.4.16-1
 - Update to redis 2.4.16
