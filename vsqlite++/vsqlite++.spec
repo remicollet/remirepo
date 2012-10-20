@@ -8,6 +8,7 @@ License:    BSD
 URL:        https://github.com/vinzenz/vsqlite--
 Source0:    https://github.com/downloads/vinzenz/vsqlite--/%{name}-%{version}.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  premake
 BuildRequires:  boost-devel
 BuildRequires:  sqlite-devel
@@ -28,7 +29,9 @@ Requires:       %{name} = %{version}-%{release}
 This package contains development files for %{name}.
 
 %package doc
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch:      noarch
+%endif
 Summary:        Development documentation for %{name}
 Group:          Development/Libraries
 
@@ -60,9 +63,11 @@ make DESTDIR=%{buildroot} install
 %postun -p /sbin/ldconfig
 
 %files doc
+%defattr(-,root,root,-)
 %doc ChangeLog README COPYING examples/sqlite_wrapper.cpp html/*
 
 %files devel
+%defattr(-,root,root,-)
 %doc ChangeLog README COPYING
 %{_libdir}/libvsqlitepp.so
 %{_includedir}/sqlite
@@ -71,10 +76,14 @@ make DESTDIR=%{buildroot} install
 %exclude %{_libdir}/libvsqlitepp.a
 
 %files
+%defattr(-,root,root,-)
 %doc ChangeLog README COPYING 
 %{_libdir}/libvsqlitepp.so.*
 
 %changelog
+* Sat Oct 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.3.9-3
+- backport for remi repo
+
 * Fri Sep 28 2012 Vinzenz Feenstra <evilissimo@gmail.com> - 0.3.9-3
 - Documentation subpackage now noarch
 
