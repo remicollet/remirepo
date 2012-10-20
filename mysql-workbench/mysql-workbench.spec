@@ -10,7 +10,7 @@
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   5.2.43
+Version:   5.2.44
 Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
@@ -27,11 +27,18 @@ Source1:   stripdocs.sh
 # don't build extension, use system one
 # !!! This patch use versioned soname (libmysqlcppconn.so.6) !!!
 Patch1:    %{name}-5.2.43-cppconn.patch
+# Use system ctemplate
 Patch2:    %{name}-5.2.43-ctemplate.patch
+# Use system tinyxml
 Patch3:    %{name}-5.2.41-tinyxml.patch
+# Use system antlr (keep bundled vsqlite)
 Patch4:    %{name}-5.2.43-antlr.patch
+# Use system antlr (and vsqlite)
+Patch5:    %{name}-5.2.44-antlr.patch
 # Disable broken AutoCompletion feature
 Patch6:    %{name}-5.2.43-noautocc.patch
+# Use system vsqlite++ (not ready)
+Patch7:    %{name}-5.2.44-vsqlite.patch
 
 # don't use bundled documentation, redirect to online doc
 Patch9:    %{name}-5.2.41-nodocs.patch
@@ -74,6 +81,9 @@ BuildRequires: desktop-file-utils
 BuildRequires: tinyxml-devel >= 2.6.0
 %endif
 BuildRequires: libiodbc-devel
+%if 0
+BuildRequires: vsqlite++-devel
+%endif
 %if 0%{?fedora} >= 17
 BuildRequires: antlr3-C-devel >= 3.4
 %endif
@@ -125,6 +135,11 @@ rm -rf ext/cppconn
 %if 0%{?fedora} >= 12
 %patch2 -p1 -b .ctemplate
 rm -rf ext/ctemplate
+%endif
+
+%if 0
+%patch7 -p1 -b .vsqlite
+rm -rf ext/vsqlite++
 %endif
 
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
@@ -224,6 +239,11 @@ fi
 
 
 %changelog
+* Sat Oct 20 2012 Remi Collet <remi@fedoraproject.org> 5.2.44-1
+- update to 5.2.44 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/workbench/en/wb-news-5-2-44.html
+- keep bundled vsqlite++ for now
+
 * Thu Sep 13 2012 Remi Collet <remi@fedoraproject.org> 5.2.43-1
 - update to 5.2.43 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-43.html
