@@ -17,7 +17,9 @@ Patch0:         php-lzf-rm-bundled-libs.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear >= 1:1.4.0
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 5
 BuildRequires:  liblzf-devel
+%endif
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
@@ -48,10 +50,13 @@ slight speed cost.
 
 %prep
 %setup -c -q
+
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 5
 cd %{pecl_name}-%{version}
 %patch0 -p1 -b liblzf
 rm -f lzf_c.c lzf_d.c lzf.h
 cd ..
+%endif
 
 cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
