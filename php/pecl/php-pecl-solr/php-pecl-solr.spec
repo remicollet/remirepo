@@ -7,7 +7,7 @@ Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           php-pecl-solr
 Version:        1.0.2
-Release:        2%{?dist}
+Release:        4%{?dist}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -29,13 +29,21 @@ Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 Requires:       php-xml >= 5.2.3
-Provides:       php-pecl(%{pecl_name}) = %{version}, php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -208,6 +216,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 21 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-4
+- rebuild
+
 * Tue Nov 29 2011 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
 - php 5.4 build
 

@@ -6,7 +6,7 @@
 
 Name:           php-pecl-sqlite
 Version:        2.0.0
-Release:        0.1.svn%{svnver}%{?dist}
+Release:        0.2.svn%{svnver}%{?dist}
 Summary:        Extension for the SQLite V2 Embeddable SQL Database Engine
 Group:          Development/Languages
 License:        PHP
@@ -27,7 +27,10 @@ Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides: php-pecl(%{pecl_name}) = %{extver}
+
+Provides:       php-pecl(%{pecl_name}) = %{extver}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{extver}
+
 # Was provided by php until 5.4.0
 Obsoletes:      php-sqlite < 5.4.0
 Provides:       php-sqlite = 5.4.0
@@ -36,11 +39,16 @@ Obsoletes:      php-sqlite2 < 5.4.0
 Provides:       php-sqlite2 = 5.4.0
 Provides:       php-sqlite2%{?_isa} = 5.4.0
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -169,5 +177,8 @@ fi
 
 
 %changelog
+* Sun Oct 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-0.2.svn313074
+- rebuild
+
 * Sun Nov 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-0.1.svn313074
 - initial RPM as pecl extension
