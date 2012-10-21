@@ -1,24 +1,25 @@
 Name:           remi-release
 Version:        %{fedora}
+%if %{fedora} >= 18
+Release:        1%{?dist}
+%else
 Release:        7%{?dist}
+%endif
 Summary:        YUM configuration for remi repository
 Summary(fr):	Configuration de YUM pour le dépôt remi
 
 Group:          System Environment/Base
-License:        GPL
-URL:            http://remi.collet.free.fr
+License:        GPLv2+
+URL:            http://rpms.famillecollet.com/
 Source0:        RPM-GPG-KEY-remi
-Source1:	remi-fc.repo
-Source3:	remi.list
+Source1:	    remi-fc.repo
+Source3:	    remi.list
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
 
 Requires:       yum
 Requires:       fedora-release >= %{fedora}
-# If apt is around, it needs to be a version with repomd support
-%if %{fedora} > 5
 Conflicts:      apt < 0.5.15lorg3
-%endif
 
 %description
 This package contains yum configuration for the "remi" RPM Repository, 
@@ -27,9 +28,7 @@ as well as the public GPG keys used to sign them.
 The repository is not enabled after installation, so you must use
 the --enablerepo=remi option for yum.
 
-%if %{fedora} > 5
 It also provides apt configuration.
-%endif
 
 %description -l fr
 Ce paquetage contient le fichier de configuration de YUM pour utiliser
@@ -38,9 +37,7 @@ les RPM du dépôt "remi" ainsi que la clé GPG utilisée pour les signer.
 Le dépôt n'est pas activé après l'installation, vous devez donc utiliser
 l'option --enablerepo=remi de yum.
 
-%if %{fedora} > 5
 Il fournit également la configuration de apt.
-%endif
 
 
 %prep
@@ -55,19 +52,17 @@ echo empty build
 rm -rf %{buildroot}
 
 # PGP
-%{__install} -Dp -m 644 %{SOURCE0} %{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
+install -Dp -m 644 %{SOURCE0} %{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
 
 # YUM
-%{__install} -Dp -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/yum.repos.d/remi.repo
+install -Dp -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/yum.repos.d/remi.repo
 
-%if %{fedora} > 5
 # APT
 install -dm 755 %{buildroot}%{_sysconfdir}/apt/{gpg,sources.list.d}
 install -m 644 -p %{SOURCE3} \
     %{buildroot}%{_sysconfdir}/apt/sources.list.d/remi.list
 ln -s ../../pki/rpm-gpg/RPM-GPG-KEY-remi \
     %{buildroot}%{_sysconfdir}/apt/gpg/gpg-pubkey-00f97f56-467e318a
-%endif
 
 
 %clean
@@ -78,13 +73,14 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/yum.repos.d/remi.repo
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
-%if %{fedora} > 5
 %{_sysconfdir}/apt/gpg/gpg-pubkey-00f97f56-467e318a
 %config(noreplace) %{_sysconfdir}/apt/sources.list.d/remi.list
-%endif
 
 
 %changelog
+* Sun Oct 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 18-1.fc18.remi
+- Fedora release 18 (Spherical Cow)
+
 * Tue Jun 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 17-7.fc17.remi
 - remove post scriptlet (smart stuff)
 
