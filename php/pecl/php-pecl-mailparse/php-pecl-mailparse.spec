@@ -5,7 +5,7 @@
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      php-pecl-mailparse
 Version:   2.1.6
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
@@ -24,14 +24,20 @@ Requires: php(zend-abi) = %{php_zend_api}
 Requires: php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides: php-pecl(%{pecl_name}) = %{version}-%{release}
 
+Provides: php-pecl(%{pecl_name}) = %{version}
+Provides: php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -153,6 +159,9 @@ fi
 %endif
 
 %changelog
+* Sun Oct 21 2012 Remi Collet <remi@fedoraproject.org> - 2.1.6-3
+- rebuild
+
 * Sat Mar 10 2012 Remi Collet <remi@fedoraproject.org> - 2.1.6-2
 - rebuild for PHP 5.4
 
