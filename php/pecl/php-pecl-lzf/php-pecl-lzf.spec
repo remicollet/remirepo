@@ -1,31 +1,41 @@
-%{!?__pecl:		%{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?__pecl:            %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %define pecl_name LZF
 
-Name:		php-pecl-lzf
-Version:	1.6.2
-Release:	1%{?dist}
-Summary:	Extension to handle LZF de/compression
-Group:		Development/Languages
-License:	PHP
-URL:		http://pecl.php.net/package/%{pecl_name}
-Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Name:           php-pecl-lzf
+Version:        1.6.2
+Release:        2%{?dist}
+Summary:        Extension to handle LZF de/compression
+Group:          Development/Languages
+License:        PHP
+URL:            http://pecl.php.net/package/%{pecl_name}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:	php-devel
+# remove bundled lzf libs
+Patch0:         php-lzf-rm-bundled-libs.patch
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  php-devel
 BuildRequires:  php-pear >= 1:1.4.0
+BuildRequires:  liblzf-devel
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-Requires(post):	%{__pecl}
-Requires(postun):	%{__pecl}
-Provides:	php-pecl(%{pecl_name}) = %{version}
+Requires(post): %{__pecl}
+Requires(postun): %{__pecl}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:      php53-pecl-memcache
+Obsoletes:      php53u-pecl-memcache
+%if "%{php_version}" > "5.4"
+Obsoletes:      php54-pecl-memcache
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -38,6 +48,10 @@ slight speed cost.
 
 %prep
 %setup -c -q
+cd %{pecl_name}-%{version}
+%patch0 -p1 -b liblzf
+rm -f lzf_c.c lzf_d.c lzf.h
+cd ..
 
 cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
@@ -121,6 +135,13 @@ fi
 
 
 %changelog
+* Sun Oct 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-2
+- sync with rawhide (use system liblzf)
+
+* Sat Oct 20 2012 Andrew Colin Kissa - 1.6.2-1
+- Upgrade to latest upstream
+- Fix bugzilla #838309 #680230
+
 * Mon Jul 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-1
 - update to 1.6.2
 

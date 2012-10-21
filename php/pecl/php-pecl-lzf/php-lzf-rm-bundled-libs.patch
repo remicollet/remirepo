@@ -1,0 +1,30 @@
+diff -ruN LZF-1.6.2.orig/config.m4 LZF-1.6.2/config.m4
+--- LZF-1.6.2.orig/config.m4	2012-07-08 18:46:20.000000000 +0200
++++ LZF-1.6.2/config.m4	2012-10-20 19:04:57.124540254 +0200
+@@ -13,6 +13,24 @@
+   else
+     AC_DEFINE(PHP_LZF_ULTRA_FAST,0,[ ])
+   fi
+-
+-  PHP_NEW_EXTENSION(lzf, lzf.c lzf_c.c lzf_d.c filter.c, $ext_shared)
++  SEARCH_PATH="/usr"
++  SEARCH_FOR="/include/lzf.h"
++  AC_MSG_CHECKING([for lzf files in default path])
++  for i in $SEARCH_PATH ; do
++    if test -r $i/$SEARCH_FOR; then
++       LZF_DIR=$i
++    fi
++  done
++  dnl
++  if test -z "$LZF_DIR"; then
++    AC_MSG_RESULT([not found])
++    AC_MSG_ERROR([Please install the lzf package])
++  fi
++  PHP_ADD_INCLUDE($LZF_DIR/include)
++  dnl
++  LIBNAME=lzf
++  LIBSYMBOL=lzf_decompress
++  PHP_CHECK_LIBRARY($LIBNAME, $LIBSYMBOL, [PHP_ADD_LIBRARY_WITH_PATH($LIBNAME, $LZF_DIR/lib, LZF_SHARED_LIBADD) AC_DEFINE(HAVE_LZFLIB,1,[ ])],[AC_MSG_ERROR([lzf libs not found])], [])
++  PHP_SUBST(LZF_SHARED_LIBADD)
++  PHP_NEW_EXTENSION(lzf, lzf.c filter.c, $ext_shared)
+ fi
