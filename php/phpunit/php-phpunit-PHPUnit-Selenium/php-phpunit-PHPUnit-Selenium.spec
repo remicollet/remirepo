@@ -4,7 +4,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        1.2.9
+Version:        1.2.10
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -22,9 +22,9 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(%{channel}/PHPUnit) >= 3.7.0
 Requires:       php-common >= 5.3.3
-Requires:       php-curl, php-dom, php-reflection, php-spl
+Requires:       php-curl, php-dom
 # phpci detected extensions
-Requires:       php-date, php-pcre, php-json
+Requires:       php-date, php-pcre, php-json, php-reflection, php-spl
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -87,6 +87,9 @@ fi
 
 
 %changelog
+* Mon Oct 22 2012 Remi Collet <remi@fedoraproject.org> - 1.2.10-1
+- Version 1.2.10 (stable) - API 1.2.1 (stable)
+
 * Sat Sep 29 2012 Remi Collet <remi@fedoraproject.org> - 1.2.9-1
 - Version 1.2.9 (stable) - API 1.2.1 (stable)
 - raise dependencies: php 5.3.3, PHPUnit 3.7.0
