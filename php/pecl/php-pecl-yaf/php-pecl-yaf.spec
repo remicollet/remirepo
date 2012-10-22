@@ -4,9 +4,8 @@
 
 Summary:       Yet Another Framework
 Name:          php-pecl-yaf
-Version:       2.2.4
+Version:       2.2.5
 Release:       1%{?dist}
-# https://bugs.php.net/63239 - Please Provides LICENSE file
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
@@ -27,10 +26,10 @@ Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
-Obsoletes:     php53-pecl-yaf
-Obsoletes:     php53u-pecl-yaf
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-yaf
+Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 
 
@@ -128,7 +127,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/CREDITS
+%doc %{pecl_name}-%{version}/{LICENSE,CREDITS}
 
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -141,6 +140,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 22 2012 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- version 2.2.5 (stable)
+- LICENSE now provided by upstream
+
 * Tue Sep  4 2012 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
 - version 2.2.4 (beta)
 - initial package
