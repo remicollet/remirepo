@@ -74,7 +74,7 @@ different kind of sorting abilities.
 make %{?_smp_mflags} \
   DEBUG="" \
   CFLAGS='%{optflags}' \
-%if !0%{?el5}
+%if 0%{?rhel} >= 6 || 0%{?fedora} >= 13
 %if 0%{?with_perftools}
   USE_TCMALLOC=yes \
 %endif
