@@ -12,11 +12,11 @@
 %global with_systemd 0
 %endif
 
-%global prever rc8
+#global prever rc8
 
 Name:             redis
 Version:          2.6.0
-Release:          %{?prever:0.}2%{?prever:.%{prever}}%{?dist}
+Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -28,8 +28,10 @@ Source2:          %{name}.init
 Source3:          %{name}.service
 # Update configuration for Fedora
 Patch0:           %{name}-2.6.0-redis.conf.patch
+# For old glibc
+Patch1:           %{name}-oldglibc.patch
 
-BuildRequires:    systemd-units
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if !0%{?el5}
 BuildRequires:    tcl >= 8.5
 %if 0%{?with_perftools}
@@ -40,6 +42,7 @@ BuildRequires:    google-perftools-devel
 Requires:         logrotate
 Requires(pre):    shadow-utils
 %if %{with_systemd}
+BuildRequires:    systemd-units
 Requires(post):   systemd-units
 Requires(preun):  systemd-units
 Requires(postun): systemd-units
@@ -62,6 +65,10 @@ different kind of sorting abilities.
 %prep
 %setup -q -n %{name}-%{version}%{?prever:-%{prever}}
 %patch0 -p1 -b .orig
+%if 0%{?rhel} == 5
+%patch1 -p1 -b .oldglibc
+%endif
+
 
 %build
 make %{?_smp_mflags} \
@@ -92,6 +99,8 @@ install -d -m 755 %{buildroot}%{_localstatedir}/run/%{name}
 %if %{with_systemd}
 install -p -D -m 644 %{SOURCE3} %{buildroot}%{_unitdir}/%{name}.service
 %else
+sed -e '/^daemonize/s/no/yes/' \
+    -i %{buildroot}%{_sysconfdir}/%{name}.conf
 install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 %endif
 
@@ -172,7 +181,12 @@ fi
 %{_initrddir}/%{name}
 %endif
 
+
 %changelog
+* Wed Oct 24 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- Redis 2.6.0 is the latest stable version
+- add patch for old glibc on RHEL-5
+
 * Sat Oct 20 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.2.rc8
 - Update to redis 2.6.0-rc8
 - improve systemd integration
