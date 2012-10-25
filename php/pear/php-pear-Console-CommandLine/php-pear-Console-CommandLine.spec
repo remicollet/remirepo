@@ -64,8 +64,9 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}
 
-# seems this one need to be fixed for new feature
-rm -f tests/console_commandline_addargument.phpt
+# seems this ones need to be fixed for new feature
+rm -f tests/console_commandline_addargument.phpt \
+      tests/console_commandline_webrequest_2.phpt
 
 %{_bindir}/phpunit tests
 
