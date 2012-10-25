@@ -65,7 +65,7 @@ Version: 5.4.8
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 3%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
@@ -92,6 +92,8 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
+# https://bugs.php.net/63361 - Header not installed
+Patch9: php-5.4.8-mysqli.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63126 - DISABLE_AUTHENTICATOR ignores array
@@ -111,6 +113,8 @@ Patch42: php-5.3.1-systzdata-v10.patch
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
 Patch44: php-5.4.5-system-libzip.patch
+# Use -lldap_r for OpenLDAP
+Patch45: php-5.4.8-ldap_r.patch
 
 # Fixes for tests
 
@@ -684,6 +688,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
+%patch9 -p1 -b .mysqliheaders
 
 %patch20 -p1 -b .imap
 %patch21 -p1 -b .odbctimer
@@ -699,6 +704,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %if %{with_libzip}
 %patch44 -p1 -b .systzip
 %endif
+%patch45 -p1 -b .ldap_r
 
 %patch91 -p1 -b .remi-oci8
 
@@ -784,6 +790,17 @@ if test "$ver" != "%{jsonver}"; then
    : Update the jsonver macro and rebuild.
    exit 1
 fi
+
+# https://bugs.php.net/63362 - Not needed but installed headers.
+# Drop some Windows specific headers to avoid installation,
+# before build to ensure they are really not needed.
+rm -f TSRM/tsrm_win32.h \
+      TSRM/tsrm_config.w32.h \
+      Zend/zend_config.w32.h \
+      ext/mysqlnd/config-win.h \
+      ext/standard/winver.h \
+      main/win32_internal_function_disabled.h \
+      main/win95nt.h
 
 # Fix some bogus permissions
 find . -name \*.[ch] -exec chmod 644 {} \;
@@ -1512,6 +1529,12 @@ fi
 
 
 %changelog
+* Tue Oct 25 2012 Remi Collet <rcollet@redhat.com> 5.4.8-3
+- fix installed headers
+
+* Tue Oct 23 2012 Joe Orton <jorton@redhat.com> - 5.4.8-2
+- use libldap_r for ldap extension
+
 * Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> 5.4.8-1
 - update to 5.4.8
 - define both session.save_handler and session.save_path
