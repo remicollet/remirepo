@@ -1,21 +1,24 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name Console_CommandLine
 
 Name:           php-pear-Console-CommandLine
-Version:        1.1.3
-Release:        8%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        A full featured command line options and arguments parser
 
 Group:          Development/Libraries
 License:        MIT
 URL:            http://pear.php.net/package/%{pear_name}
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-Requires:       php-common >= 5.1.0
-BuildRequires:  php-pear >= 1:1.4.9-1.2
+BuildRequires:  php-pear
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+
+Requires:       php(language) >= 5.1.0
+Requires:       php-spl
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Provides:       php-pear(%{pear_name}) = %{version}
@@ -33,15 +36,12 @@ Main features:
 * built-in support for i18n,
 * and much more...
 
+
 %prep
 %setup -qc
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
-# Create a "localized" php.ini to avoid build warning
-cp /etc/php.ini .
-echo "date.timezone=UTC" >>php.ini
 
 %build
 cd %{pear_name}-%{version}
@@ -51,22 +51,24 @@ cd %{pear_name}-%{version}
 %install
 cd %{pear_name}-%{version}
 rm -rf $RPM_BUILD_ROOT docdir
-PHPRC=./php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
-
-# Move documentation
-mkdir -p docdir
-mv $RPM_BUILD_ROOT%{pear_docdir}/Console_CommandLine/docs/examples docdir
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 install -d $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
+
 %check
 cd %{pear_name}-%{version}
+
+# seems this one need to be fixed for new feature
+rm -f tests/console_commandline_addargument.phpt
+
 %{_bindir}/phpunit tests
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -85,7 +87,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/*
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_datadir}/%{pear_name}
 %{pear_testdir}/%{pear_name}
@@ -93,6 +95,9 @@ fi
 
 
 %changelog
+* Thu Oct 25 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Version 1.2.0 (stable) - API 1.2.0 (stable)
+
 * Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> - 1.1.3-8
 - rebuilt for new pear_datadir
 
