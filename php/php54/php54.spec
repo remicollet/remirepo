@@ -1529,7 +1529,7 @@ fi
 
 
 %changelog
-* Tue Oct 25 2012 Remi Collet <rcollet@redhat.com> 5.4.8-3
+* Thu Oct 25 2012 Remi Collet <rcollet@redhat.com> 5.4.8-3
 - fix installed headers
 
 * Tue Oct 23 2012 Joe Orton <jorton@redhat.com> - 5.4.8-2
