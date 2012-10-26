@@ -5,11 +5,14 @@
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          php-pecl-apc
 Version:       3.1.13
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
-Source:        http://pecl.php.net/get/APC-%{version}.tgz
+Source0:       http://pecl.php.net/get/APC-%{version}.tgz
+Source1:       apc.ini
+Source2:       apc-panel.conf
+Source3:       apc.conf.php
 
 # Upstream patch from SVN, fixed test suite.
 # http://svn.php.net/viewvc?view=revision&revision=327449
@@ -39,7 +42,6 @@ Obsoletes:     php53u-pecl-apc
 Obsoletes:     php54-pecl-apc
 %endif
 
-
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
@@ -58,6 +60,20 @@ Requires:      php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using APC serializer.
+
+
+%package -n apc-panel
+Summary:       APC control panel
+Group:         Applications/Internet
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+BuildArch:     noarch
+%endif
+Requires:      %{name} = %{version}-%{release}
+Requires:      mod_php, httpd
+
+%description  -n apc-panel
+This package provides the APC control panel, with Apache
+configuration, available on http://localhost/apc-panel/
 
 
 %prep
@@ -86,80 +102,6 @@ cd ..
 cp -pr APC-%{version} APC-%{version}-zts
 %endif
 
-# Drop in the bit of configuration
-cat > apc.ini << 'EOF'
-; Enable apc extension module
-extension = apc.so
-
-; Options for the APC module version >= 3.1.3
-; See http://www.php.net/manual/en/apc.configuration.php
-
-; This can be set to 0 to disable APC. 
-apc.enabled=1
-; The number of shared memory segments to allocate for the compiler cache. 
-apc.shm_segments=1
-; The size of each shared memory segment, with M/G suffixe
-apc.shm_size=64M
-; A "hint" about the number of distinct source files that will be included or 
-; requested on your web server. Set to zero or omit if you are not sure;
-apc.num_files_hint=1024
-; Just like num_files_hint, a "hint" about the number of distinct user cache
-; variables to store.  Set to zero or omit if you are not sure;
-apc.user_entries_hint=4096
-; The number of seconds a cache entry is allowed to idle in a slot in case this
-; cache entry slot is needed by another entry.
-apc.ttl=7200
-; use the SAPI request start time for TTL
-apc.use_request_time=1
-; The number of seconds a user cache entry is allowed to idle in a slot in case
-; this cache entry slot is needed by another entry.
-apc.user_ttl=7200
-; The number of seconds that a cache entry may remain on the garbage-collection list. 
-apc.gc_ttl=3600
-; On by default, but can be set to off and used in conjunction with positive
-; apc.filters so that files are only cached if matched by a positive filter.
-apc.cache_by_default=1
-; A comma-separated list of POSIX extended regular expressions.
-apc.filters
-; The mktemp-style file_mask to pass to the mmap module 
-apc.mmap_file_mask=/tmp/apc.XXXXXX
-; This file_update_protection setting puts a delay on caching brand new files.
-apc.file_update_protection=2
-; Setting this enables APC for the CLI version of PHP (Mostly for testing and debugging).
-apc.enable_cli=0
-; Prevents large files from being cached
-apc.max_file_size=1M
-; Whether to stat the main script file and the fullpath includes.
-apc.stat=1
-; Vertification with ctime will avoid problems caused by programs such as svn or rsync by making 
-; sure inodes have not changed since the last stat. APC will normally only check mtime.
-apc.stat_ctime=0
-; Whether to canonicalize paths in stat=0 mode or fall back to stat behaviour
-apc.canonicalize=0
-; With write_lock enabled, only one process at a time will try to compile an 
-; uncached script while the other processes will run uncached
-apc.write_lock=1
-; Logs any scripts that were automatically excluded from being cached due to early/late binding issues.
-apc.report_autofilter=0
-; RFC1867 File Upload Progress hook handler
-apc.rfc1867=0
-apc.rfc1867_prefix =upload_
-apc.rfc1867_name=APC_UPLOAD_PROGRESS
-apc.rfc1867_freq=0
-apc.rfc1867_ttl=3600
-; Optimize include_once and require_once calls and avoid the expensive system calls used.
-apc.include_once_override=0
-apc.lazy_classes=0
-apc.lazy_functions=0
-; Enables APC handling of signals, such as SIGSEGV, that write core files when signaled. 
-; APC will attempt to unmap the shared memory segment in order to exclude it from the core file
-apc.coredump_unmap=0
-; Records a md5 hash of files. 
-apc.file_md5=0
-; not documented
-apc.preload_path
-EOF
-
 
 %build
 cd APC-%{version}
@@ -185,18 +127,30 @@ make install INSTALL_ROOT=%{buildroot}
 iconv -f iso-8859-1 -t utf8 NOTICE >NOTICE.utf8
 mv NOTICE.utf8 NOTICE
 popd
-install -D -m 644 apc.ini %{buildroot}%{_sysconfdir}/php.d/apc.ini
+install -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/php.d/apc.ini
 
 # Install the ZTS stuff
 %if 0%{?__ztsphp:1}
 pushd APC-%{version}-zts
 make install INSTALL_ROOT=%{buildroot}
 popd
-install -D -m 644 apc.ini %{buildroot}%{php_ztsinidir}/apc.ini
+install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/apc.ini
 %endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+# Install the Control Panel
+# Pages
+install -d -m 755 %{buildroot}%{_datadir}/apc-panel
+sed -e s:apc.conf.php:%{_sysconfdir}/apc-panel/conf.php:g \
+    APC-%{version}/apc.php >%{buildroot}%{_datadir}/apc-panel/index.php
+# Apache config
+install -D -m 644 -p %{SOURCE2} \
+        %{buildroot}%{_sysconfdir}/httpd/conf.d/apc-panel.conf
+# Panel config
+install -D -m 644 -p %{SOURCE3} \
+        %{buildroot}%{_sysconfdir}/apc-panel/conf.php
 
 
 %check
@@ -236,7 +190,7 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %doc APC-%{version}/TECHNOTES.txt APC-%{version}/CHANGELOG APC-%{version}/LICENSE
 %doc APC-%{version}/NOTICE        APC-%{version}/TODO      APC-%{version}/apc.php
 %doc APC-%{version}/INSTALL
@@ -250,15 +204,27 @@ rm -rf %{buildroot}
 %endif
 
 %files devel
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %{_includedir}/php/ext/apc
 
 %if 0%{?__ztsphp:1}
 %{php_ztsincldir}/ext/apc
 %endif
 
+%files -n apc-panel
+%defattr(-,root,root,-)
+# Need to restrict access, as it contains a clear password
+%attr(750,apache,root) %dir %{_sysconfdir}/apc-panel
+%config(noreplace) %{_sysconfdir}/apc-panel/conf.php
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/apc-panel.conf
+%{_datadir}/apc-panel
+
 
 %changelog
+* Fri Oct 26 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-3
+- move apc.ini to Source3
+- new apc-panel package
+
 * Tue Sep  4 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-2
 - sync with rawhide
 - EL rebuild
