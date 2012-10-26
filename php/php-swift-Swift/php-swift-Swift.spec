@@ -1,8 +1,9 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name Swift
 
 Name:           php-swift-Swift
-Version:        4.2.1
+Version:        4.2.2
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -10,13 +11,14 @@ Group:          Development/Libraries
 License:        LGPLv3
 URL:            http://www.swiftmailer.org/
 Source0:        http://pear.swiftmailer.org/get/Swift-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-channel(pear.swiftmailer.org)
 BuildRequires:  php-pear(PEAR)
-Requires:       php-common >= 5.2.4
-Requires:       php-pear(PEAR) >= 1.4.0
+
+Requires:       php(language) >= 5.2.4
+Requires:       php-pear(PEAR)
 Requires:       php-channel(pear.swiftmailer.org)
 Requires:       php-pdo
 Requires(post): %{__pear}
@@ -24,16 +26,15 @@ Requires(postun): %{__pear}
 Provides:       php-pear(pear.swiftmailer.org/%{pear_name}) = %{version}
 
 %description
-
 Swift Mailer integrates into any web app written in PHP 5, offering a 
 flexible and elegant object-oriented approach to sending emails with 
 a multitude of features.
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
 cd %{pear_name}-%{version}
+mv ../package.xml %{pear_name}.xml
 
 
 %build
@@ -47,7 +48,7 @@ rm -rf $RPM_BUILD_ROOT docdir
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 mkdir -p $RPM_BUILD_ROOT%{pear_phpdir}/tmp
 mv $RPM_BUILD_ROOT%{pear_phpdir}/*.php \
@@ -83,6 +84,9 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Fri Oct 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.2.2-1
+- upstream 4.2.2
+
 * Tue Jul 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.2.1-1
 - upstream 4.2.1, backport for remi repository
 
