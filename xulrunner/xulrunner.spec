@@ -12,7 +12,7 @@
 %endif
 
 # Use system sqlite?
-%if 0%{?fedora} <= 17
+%if 0%{?fedora} < 18
 %define system_sqlite     0
 %else
 %define system_sqlite     1
@@ -35,11 +35,13 @@
 
 %if %{?system_nss}
 %global nspr_version 4.9.2
-%global nss_version 3.13.3
+%global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
+%global nss_version 3.13.5
+%global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
 %endif
 
 %if %{?system_sqlite}
-%global sqlite_version 3.7.7.1
+%global sqlite_version 3.7.13
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
 %endif
@@ -81,7 +83,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}%{gecko_dir_ver}
-Version:        16.0.1
+Version:        16.0.2
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -150,8 +152,8 @@ BuildRequires:  libvpx-devel >= %{libvpx_version}
 Requires:       mozilla-filesystem
 Requires:       liberation-sans-fonts
 %if %{?system_nss}
-Requires:       nspr >= %{nspr_version}
-Requires:       nss >= %{nss_version}
+Requires:       nspr >= %{nspr_build_version}
+Requires:       nss >= %{nss_build_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
@@ -189,8 +191,8 @@ Provides: gecko-devel-unstable%{?_isa} = %{gecko_verrel}
 
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %if %{?system_nss}
-Requires: nspr-devel >= %{nspr_version}
-Requires: nss-devel >= %{nss_version}
+Requires: nspr-devel >= %{nspr_build_version}
+Requires: nss-devel >= %{nss_build_version}
 %endif
 %if %{?system_cairo}
 # Library requirements (cairo-tee >= 1.10)
@@ -209,7 +211,7 @@ Requires: libXt-devel
 Requires: libXrender-devel
 Requires: hunspell-devel
 %if %{?system_sqlite}
-Requires: sqlite-devel
+Requires: sqlite-devel >= %{sqlite_build_version}
 %endif
 Requires: startup-notification-devel
 Requires: alsa-lib-devel
@@ -563,6 +565,15 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Oct 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-1
+- Sync with rawhide, update to 16.0.2
+
+* Fri Oct 26 2012 Jan Horak <jhorak@redhat.com> - 16.0.2-1
+- Update to 16.0.2
+
+* Tue Oct 16 2012 Jan Horak <jhorak@redhat.com> - 16.0.1-2
+- Fixed required nss and nspr version
+
 * Thu Oct 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.1-1
 - Sync with rawhide, update to 16.0.1
 
