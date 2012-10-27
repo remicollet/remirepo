@@ -1,11 +1,10 @@
-%global ext_name   xcache
-%global with_zts   0%{?__ztsphp:1}
+%global ext_name     xcache
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
 Version:       2.0.1
-Release:       2%{?dist}
-License:       PHP
+Release:       3%{?dist}
+License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
 
@@ -22,6 +21,7 @@ BuildRequires: php-devel
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
+# Only one opcode cache
 Conflicts:     php-pecl-apc, php-eaccelerator
 
 # Other third party repo stuff
@@ -47,7 +47,7 @@ It overcomes a lot of problems that has been with other competing opcachers
 such as being able to be used with new  PHP versions. 
 
 
-%package admin
+%package -n xcache-admin
 Summary:       XCache Administration
 Group:         Development/Languages
 Requires:      mod_php, httpd
@@ -55,8 +55,10 @@ Requires:      %{name} = %{version}-%{release}
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch:     noarch
 %endif
+Obsoletes:     php-xcache-admin < %{version}-%{release}
+Provides:      php-xcache-admin = %{version}-%{release}
 
-%description admin
+%description -n xcache-admin
 This package provides the XCache Administration web application,
 with Apache configuration, on http://localhost/xcache-admin
 
@@ -64,7 +66,7 @@ This requires to configure xcache.admin.user and xcache.admin.pass options
 in XCache configuration file (xcache.ini).
 
 
-%package coverager
+%package -n xcache-coverager
 Summary:       XCache PHP Code Coverage Viewer
 Group:         Development/Languages
 Requires:      mod_php, httpd
@@ -72,8 +74,10 @@ Requires:      %{name} = %{version}-%{release}
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch:     noarch
 %endif
+Obsoletes:     php-xcache-admin < %{version}-%{release}
+Provides:      php-xcache-admin = %{version}-%{release}
 
-%description coverager
+%description -n xcache-coverager
 This package provides the XCache PHP Code Coverage Viewer web application,
 with Apache configuration, on http://localhost/xcache-coverager
 
@@ -94,20 +98,16 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
-%if %{with_zts}
 # duplicate for ZTS build
 cp -pr nts zts
-%endif
 
 cd nts
 %patch0 -p0 -b .upstream
 sed -e 's:@EXTDIR@:%{php_extdir}:'    -i %{ext_name}.ini
 
-%if %{with_zts}
 cd ../zts
 %patch0 -p0 -b .upstream
 sed -e 's:@EXTDIR@:%{php_ztsextdir}:' -i %{ext_name}.ini
-%endif
 
 
 %build
@@ -124,7 +124,6 @@ cd nts
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if %{with_zts}
 cd ../zts
 %{_bindir}/zts-phpize
 %configure \
@@ -134,7 +133,6 @@ cd ../zts
     --enable-xcache-coverager \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
@@ -143,11 +141,9 @@ rm -rf %{buildroot}
 make -C nts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{ext_name}.ini
 
-%if %{with_zts}
 # Install the ZTS stuff
 make -C zts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 zts/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
-%endif
 
 # Install the admin stuff
 install -d -m 755 %{buildroot}%{_datadir}/xcache/admin
@@ -168,11 +164,9 @@ php --no-php-ini \
     --define zend_extension=%{buildroot}%{php_extdir}/%{ext_name}.so \
     --modules | grep XCache
 
-%if %{with_zts}
 %{__ztsphp} --no-php-ini \
     --define zend_extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so \
     --modules | grep XCache
-%endif
 
 
 %clean
@@ -183,20 +177,17 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc nts/{AUTHORS,ChangeLog,COPYING,README,THANKS}
 %config(noreplace) %{_sysconfdir}/php.d/%{ext_name}.ini
-%{php_extdir}/%{ext_name}.so
-
-%if %{with_zts}
-%{php_ztsextdir}/%{ext_name}.so
 %config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
-%endif
+%{php_extdir}/%{ext_name}.so
+%{php_ztsextdir}/%{ext_name}.so
 
-%files admin
+%files -n xcache-admin
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/xcache-admin.conf
 %dir %{_datadir}/xcache
 %{_datadir}/xcache/admin
 
-%files coverager
+%files -n xcache-coverager
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/xcache-coverager.conf
 %dir %{_datadir}/xcache
@@ -204,6 +195,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 27 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-3
+- drop php prefix from sub packages
+- fix License
+- spec cleanups
+
 * Fri Sep 21 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - add admin and coverager sub-package
 
