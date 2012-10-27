@@ -1,12 +1,10 @@
 %global ext_name     xcache
 %global with_zts     0%{?__ztsphp:1}
-%global php_apiver   %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%global php_abiver   %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP Extension => //p') | tail -1)
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
 Version:       2.0.1
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -18,16 +16,10 @@ Source2:       xcache-coverager.conf
 # Specific RPM extension PATH
 Patch0:        %{ext_name}-conf.patch
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 
-%if 0%{?php_zend_api:1}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
-%else
-Requires:      php-api = %{php_apiver}
-Requires:      php-zend-abi = %{php_abiver}
-%endif
 
 # Only one opcode cache
 Conflicts:     php-pecl-apc, php-eaccelerator
@@ -48,16 +40,14 @@ It overcomes a lot of problems that has been with other competing opcachers
 such as being able to be used with new  PHP versions. 
 
 
-%package admin
+%package -n xcache-admin
 Summary:       XCache Administration
 Group:         Development/Languages
 Requires:      mod_php, httpd
 Requires:      %{name} = %{version}-%{release}
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch:     noarch
-%endif
 
-%description admin
+%description -n xcache-admin
 This package provides the XCache Administration web application,
 with Apache configuration, on http://localhost/xcache-admin
 
@@ -65,16 +55,14 @@ This requires to configure xcache.admin.user and xcache.admin.pass options
 in XCache configuration file (xcache.ini).
 
 
-%package coverager
+%package -n xcache-coverager
 Summary:       XCache PHP Code Coverage Viewer
 Group:         Development/Languages
 Requires:      mod_php, httpd
 Requires:      %{name} = %{version}-%{release}
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch:     noarch
-%endif
 
-%description coverager
+%description -n xcache-coverager
 This package provides the XCache PHP Code Coverage Viewer web application,
 with Apache configuration, on http://localhost/xcache-coverager
 
@@ -139,7 +127,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # Install the NTS stuff
 make -C nts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{ext_name}.ini
@@ -176,12 +163,7 @@ php --no-php-ini \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %doc nts/{AUTHORS,ChangeLog,COPYING,README,THANKS}
 %config(noreplace) %{_sysconfdir}/php.d/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
@@ -191,20 +173,22 @@ rm -rf %{buildroot}
 %config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
 %endif
 
-%files admin
-%defattr(-,root,root,-)
+%files -n xcache-admin
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/xcache-admin.conf
 %dir %{_datadir}/xcache
 %{_datadir}/xcache/admin
 
-%files coverager
-%defattr(-,root,root,-)
+%files -n xcache-coverager
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/xcache-coverager.conf
 %dir %{_datadir}/xcache
 %{_datadir}/xcache/coverager
 
 
 %changelog
+* Sat Oct 27 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-4
+- drop php prefix from sub packages
+- clean EL-5 stuff
+
 * Fri Sep 21 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-3
 - prepare for review with EL-5 stuff
 
