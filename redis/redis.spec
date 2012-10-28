@@ -12,8 +12,6 @@
 %global with_systemd 0
 %endif
 
-#global prever rc8
-
 Name:             redis
 Version:          2.6.2
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
@@ -28,8 +26,6 @@ Source2:          %{name}.init
 Source3:          %{name}.service
 # Update configuration for Fedora
 Patch0:           %{name}-2.6.0-redis.conf.patch
-# For old glibc
-Patch1:           %{name}-oldglibc.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if !0%{?el5}
@@ -65,9 +61,6 @@ different kind of sorting abilities.
 %prep
 %setup -q -n %{name}-%{version}%{?prever:-%{prever}}
 %patch0 -p1 -b .orig
-%if 0%{?rhel} == 5
-%patch1 -p1 -b .oldglibc
-%endif
 
 
 %build
