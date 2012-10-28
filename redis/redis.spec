@@ -15,7 +15,7 @@
 #global prever rc8
 
 Name:             redis
-Version:          2.6.0
+Version:          2.6.2
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
@@ -134,7 +134,7 @@ exit 0
 
 %preun
 %if 0%{?systemd_preun:1}
-%systemd_preun mysqld.service
+%systemd_preun redis.service
 %else
 if [ $1 = 0 ]; then
   # Package removal, not upgrade
@@ -183,6 +183,10 @@ fi
 
 
 %changelog
+* Sun Oct 28 2012 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
+- Redis 2.6.2
+- fix typo in systemd macro
+
 * Wed Oct 24 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - Redis 2.6.0 is the latest stable version
 - add patch for old glibc on RHEL-5
