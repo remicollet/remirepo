@@ -34,12 +34,14 @@ Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
 
 %description
-An Extension to PHP's standard DOM to add various convinience methods
+An Extension to PHP's standard DOM to add various convenience methods
 and exceptions by default
 
 
 %prep
 %setup -q -c
+
+# Package.xml is V2
 mv package.xml %{pear_name}-%{version}/%{name}.xml
 
 
