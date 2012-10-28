@@ -4,7 +4,7 @@
 %global channel   pear.netpirates.net
 
 Name:           php-theseer-fDOMDocument
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        An Extension to PHP standard DOM
 
@@ -17,6 +17,10 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.1
 BuildRequires:  php-channel(%{channel})
+# For test
+BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:  php-dom
+BuildRequires:  php-libxml
 
 Requires:       php-pear(PEAR) >= 1.9.1
 Requires:       php-channel(%{channel})
@@ -58,6 +62,13 @@ mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
+%check
+cd %{pear_name}-%{version}
+sed -e s:autoload:TheSeer/fDOMDocument/autoload: \
+    phpunit.xml.dist >phpunit.xml
+phpunit -d date.timezone=UTC
+
+
 %clean
 rm -rf %{buildroot}
 
@@ -76,12 +87,18 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/TheSeer/%{pear_name}
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
-* Thu Oct 11 2012 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+* Sun Oct 28 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
+- Version 1.3.2 (stable) - API 1.3.0 (stable)
+- run test units
+
+* Thu Oct 11 2012 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - Version 1.3.1 (stable) - API 1.3.0 (stable)
 - Initial packaging
 
