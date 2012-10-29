@@ -2,7 +2,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  0.8.2
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System         
@@ -15,7 +15,8 @@ Source4: roundcubemail-README.fedora
 # Non-upstremable: Adjusts config path to Fedora policy
 Patch6: roundcubemail-0.4.1-confpath.patch
 Patch7: roundcubemail-0.8.1-strict.patch
-#Patch8: roundcubemail-0.7.3-xss-sig.patch
+# https://bugzilla.redhat.com/870933
+Patch8: roundcubemail-0.8.2-mdb2.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root%(%{__id_u} -n)
@@ -48,7 +49,7 @@ interface is fully skinnable using XHTML and CSS 2.
 
 %patch6 -p0
 %patch7 -p0
-#%patch8 -p0
+%patch8 -p1
 
 # fix permissions and remove any .htaccess files
 find . -type f -print | xargs chmod a-x
@@ -140,6 +141,9 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
 %changelog
+* Sun Oct 28 2012 Remi Collet <remi@fedoraproject.org> - 0.8.2-2
+- add fix for latest MDB2 (#870933)
+
 * Wed Oct 10 2012 Jon Ciesla <limburgher@gmail.com> - 0.8.2-1
 - Latest upstream.
 
