@@ -25,21 +25,24 @@
 %define build_langpacks 1
 
 %if %{?system_nss}
-%define nspr_version 4.9.2
-%define nss_version 3.13.3
+%global nspr_version 4.9.2
+%global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
+%global nss_version 3.13.5
+%global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
 %endif
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
-%define lcms_version 1.19
 %if %{?system_sqlite}
-%define sqlite_version 3.7.10
+%define sqlite_version 3.7.13
+# The actual sqlite version (see #480989):
+%global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
 %endif
+
 %define libnotify_version 0.4
 %global libvpx_version 1.0.0
 %define _default_patch_fuzz 2
 
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
-
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -56,14 +59,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        16.0.1
+Version:        16.0.2
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20121011.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20121029.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -132,18 +135,17 @@ BuildRequires:  libcurl-devel
 BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  GConf2-devel
-BuildRequires:  lcms-devel >= %{lcms_version}
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
 
 Requires:       mozilla-filesystem
 %if %{?system_nss}
-Requires:       nspr >= %{nspr_version}
-Requires:       nss >= %{nss_version}
+Requires:       nspr >= %{nspr_build_version}
+Requires:       nss >= %{nss_build_version}
 %endif
 %if %{?system_sqlite}
-Requires:       sqlite >= %{sqlite_version}
+Requires:       sqlite >= %{sqlite_build_version}
 %endif
 %if %{system_vpx}
 Requires:       libvpx >= %{libvpx_version}
@@ -279,7 +281,7 @@ MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
 %ifarch s390
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1')
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
 %endif
 %ifarch s390 %{arm} ppc
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
@@ -496,7 +498,13 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
-* Thu Oct 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0-1
+* Mon Oct 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-1
+- Sync with rawhide, update to 16.0.2
+
+* Mon Oct 29 2012 Jan Horak <jhorak@redhat.com> - 16.0.2-1
+- Update to 16.0.2
+
+* Thu Oct 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.1-1
 - Sync with rawhide, update to 16.0.1
 
 * Thu Oct 11 2012 Jan Horak <jhorak@redhat.com> - 16.0.1-1
