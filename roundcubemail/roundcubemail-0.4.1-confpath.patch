@@ -1,0 +1,12 @@
+--- program/include/iniset.php~	2010-09-29 05:04:09.000000000 -0500
++++ program/include/iniset.php	2010-10-04 08:29:02.687967293 -0500
+@@ -46,7 +46,8 @@
+ }
+ 
+ if (!defined('RCMAIL_CONFIG_DIR')) {
+-    define('RCMAIL_CONFIG_DIR', INSTALL_PATH . 'config');
++    #define('RCMAIL_CONFIG_DIR', INSTALL_PATH . 'config');
++    define('RCMAIL_CONFIG_DIR', '/etc/roundcubemail');
+ }
+ 
+ // make sure path_separator is defined

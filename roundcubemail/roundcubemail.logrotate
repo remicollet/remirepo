@@ -1,0 +1,7 @@
+/var/log/roundcubemail/errors {
+    missingok
+    su root apache
+    notifempty
+    size 30k
+    create 0660 root apache
+}

@@ -1,0 +1,24 @@
+Regarding database availability:
+
+In addition to MySQL and PostgreSQL, upstream Roundcubemail includes support
+for SQLite.  This has been disabled in the Fedora version (for the time being)
+because Roundcube requires the SQLite2-compatible mainline PHP SQLite extension.
+This extension is unavailable in Fedora in favor of the SQLite3-compatible PDO
+SQLite extension (php-pdo package).  For this reason, we have disabled SQLite
+support in Roundcube.  If upstream releases a new version that supports the 
+PDO extension, or if SQLite2 support for PHP becomes available in Fedora, we
+will re-enable SQLite support in Roundcubemail.
+
+Jon Ciesla
+05/11/2007
+
+Additional installation information:
+
+In your installation process, you'll need to modify db.inc.php and main.inc.php.  
+In Fedora, these are located in /etc/roundcubemail.  These will work in this location,
+and should not be moved.  They will not be modified at upgrade, so you may want to 
+check the .rpmnew files at that time so see if you need to migrate your settings to 
+the new file.
+
+Jon Ciesla
+10/20/2009
