@@ -17,7 +17,7 @@
 ** php-symfony2-Templating
 ** php-symfony2-DomCrawler
     (CssSelector)
-* php-symfony2-BrowserKit 
+** php-symfony2-BrowserKit
     DomCrawler (Process)
 * php-symfony2-Translation
     (Config, Yaml)
