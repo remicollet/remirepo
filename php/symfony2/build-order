@@ -5,7 +5,7 @@
 ** php-symfony2-CssSelector
 ** php-symfony2-OptionsResolver
 ** php-symfony2-Filesystem
-* php-symfony2-DependencyInjection
+** php-symfony2-DependencyInjection
     (Config, Yaml)
 * php-symfony2-EventDispatcher
     BR => DependencyInjection
