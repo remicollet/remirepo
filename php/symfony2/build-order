@@ -2,8 +2,8 @@
 ** php-symfony2-ClassLoader
 ** php-symfony2-Config
 ** php-symfony2-Console
-* php-symfony2-CssSelector
-* php-symfony2-OptionsResolver
+** php-symfony2-CssSelector
+** php-symfony2-OptionsResolver
 * php-symfony2-Filesystem
 * php-symfony2-DependencyInjection
     (Config, Yaml)
