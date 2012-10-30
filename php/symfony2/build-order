@@ -12,7 +12,7 @@
 ** php-symfony2-Finder
 ** php-symfony2-HttpFoundation
 ** php-symfony2-Locale
-* php-symfony2-Process
+** php-symfony2-Process
 * php-symfony2-Serializer
 * php-symfony2-Templating
 * php-symfony2-DomCrawler
