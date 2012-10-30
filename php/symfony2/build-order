@@ -1,5 +1,5 @@
 ** php-symfony2-Yaml   (required for PHPUnit)
-* php-symfony2-ClassLoader
+** php-symfony2-ClassLoader
 * php-symfony2-Config
 * php-symfony2-Console
 * php-symfony2-CssSelector

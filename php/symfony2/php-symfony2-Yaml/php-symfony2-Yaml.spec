@@ -22,7 +22,7 @@ BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 # Test requires
-BuildRequires:    php-common >= %{php_min_ver}
+BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 # Test requires: phpci
 BuildRequires:    php-ctype
@@ -112,7 +112,8 @@ cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 
 %postun
 if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
+    %{__pear} uninstalBuildRequires:    php(language) >= %{php_min_ver}
+l --nodeps --ignore-errors --register-only \
         %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
