@@ -21,7 +21,7 @@
     DomCrawler (Process)
 ** php-symfony2-Translation
     (Config, Yaml)
-* php-symfony2-Validator
+** php-symfony2-Validator
     (HttpFoundation, Yaml) BR => Locale
 * php-symfony2-HttpKernel
     HttpFoundation, EventDispatcher (BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder)

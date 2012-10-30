@@ -1,11 +1,12 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 
 %global pear_channel pear.symfony.com
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global php_min_ver  5.3.3
 
 Name:             php-symfony2-Validator
-Version:          2.1.2
+Version:          2.1.3
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -13,19 +14,32 @@ Group:            Development/Libraries
 License:          MIT
 URL:              http://symfony.com/components
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-Source1:          bootstrap.php
+Patch0:           %{name}-tests-bootstrap.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
-# For tests
+# Test requires
+BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation)
-BuildRequires:    php-pear(%{pear_channel}/Locale)
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.1.0
+BuildRequires:    php-pear(%{pear_channel}/Locale) >= 2.1.0
+BuildRequires:    php-pear(%{pear_channel}/Yaml) >= 2.1.0
+# Test requires: phpci
+BuildRequires:    php-ctype
+BuildRequires:    php-date
+BuildRequires:    php-dom
 BuildRequires:    php-intl
+BuildRequires:    php-libxml
+BuildRequires:    php-mbstring
+BuildRequires:    php-pcre
+BuildRequires:    php-reflection
+BuildRequires:    php-simplexml
+BuildRequires:    php-spl
+BuildRequires:    php-filter
 
-Requires:         php-common >= 5.3.2
+Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
@@ -41,28 +55,40 @@ Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
-# phpci dist specific requires
-%{?fedora:Requires: php-filter}
+Requires:         php-filter
 # Optional requires
-Requires:         php-pear(%{pear_channel}/HttpFoundation) = %{version}
-Requires:         php-pear(%{pear_channel}/Yaml) = %{version}
+Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.1.0
+Requires:         php-pear(%{pear_channel}/Yaml) >= 2.1.0
+# TODO: Add DoctrineCommon (>=2.1,<2.4-dev) when available
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
-%{summary}.
+This component is based on the JSR-303 Bean Validation specification and
+enables specifying validation rules for classes using XML, YAML, PHP or
+annotations, which can then be checked against instances of these classes.
 
-Optional dependency: APC
+Optional dependencies: APC, DoctrineCommon
 
 
 %prep
 %setup -q -c
 
-# Hum...
-sed -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
+# Patches
+cd %{pear_name}-%{version}
+%patch0 -p0
+cd ..
+
+# Modify PEAR package.xml file:
+# - Remove .gitignore file
+# - Change role from "php" to "doc" for CHANGELOG.md file
+# - Change role from "php" to "test" for all test files
+# - Remove md5sum from bootsrap.php file since it was patched
+sed -e '/.git/d' \
+    -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/Tests/s/role="php"/role="test"/' \
-    -e '/.gitignore/d' \
+    -e '/bootstrap.php/s/md5sum="[^"]*"\s*//' \
     -i package.xml
 
 # package.xml is version 2.0
@@ -75,21 +101,20 @@ mv package.xml %{pear_name}-%{version}/%{name}.xml
 
 %install
 cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
 %if 0%{?fedora} > 13
-cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}/Tests
-cp %{SOURCE1} bootstrap.php
-phpunit  --bootstrap bootstrap.php --verbose .
+cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
+%{_bindir}/phpunit
 %else
 : Test temporary disabled on EL
 %endif
@@ -116,6 +141,21 @@ fi
 
 
 %changelog
+* Tue Oct 30 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.3-1
+- sync with rawhide, update to 2.1.3
+
+* Mon Oct 29 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.2-2
+- Added "%%global pear_metadir" and usage in %%install
+- Changed RPM_BUILD_ROOT to %%{buildroot}
+
+* Tue Oct 23 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.2-1
+- Updated to upstream version 2.1.2
+- PHP minimum version 5.3.3 instead of 5.3.2
+- Require other components ">= 2.1.0" instead of "= %%{version}"
+- Added PEAR package.xml modifications
+- Added patch for tests' bootstrap.php
+- Added tests (%%check)
+
 * Sat Oct  6 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-1
 - update to 2.1.2
 
