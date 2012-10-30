@@ -9,7 +9,7 @@
     (Config, Yaml)
 ** php-symfony2-EventDispatcher
     BR => DependencyInjection
-* php-symfony2-Finder
+** php-symfony2-Finder
 * php-symfony2-HttpFoundation
 * php-symfony2-Locale
 * php-symfony2-Process
