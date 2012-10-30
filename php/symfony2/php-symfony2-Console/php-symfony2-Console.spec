@@ -29,7 +29,8 @@ BuildRequires:    php-json
 BuildRequires:    php-mbstring
 BuildRequires:    php-pcre
 BuildRequires:    php-posix
-BuildRequires:    php-readline
+# use php-cli instead of php-readline to avoid issue on EL-5
+BuildRequires:    php-cli
 BuildRequires:    php-reflection
 BuildRequires:    php-spl
 
@@ -44,7 +45,8 @@ Requires:         php-json
 Requires:         php-mbstring
 Requires:         php-pcre
 Requires:         php-posix
-Requires:         php-readline
+# use php-cli instead of php-readline to avoid issue on EL-5
+Requires:         php-cli
 Requires:         php-reflection
 Requires:         php-spl
 
