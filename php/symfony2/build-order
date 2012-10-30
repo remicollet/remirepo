@@ -7,7 +7,7 @@
 ** php-symfony2-Filesystem
 ** php-symfony2-DependencyInjection
     (Config, Yaml)
-* php-symfony2-EventDispatcher
+** php-symfony2-EventDispatcher
     BR => DependencyInjection
 * php-symfony2-Finder
 * php-symfony2-HttpFoundation
