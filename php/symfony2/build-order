@@ -25,9 +25,9 @@
     (HttpFoundation, Yaml) BR => Locale
 ** php-symfony2-HttpKernel
     HttpFoundation, EventDispatcher (BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder)
-* php-symfony2-Routing
+** php-symfony2-Routing
     (Config, Yaml) BR => HttpKernel
-* php-symfony2-Form
+** php-symfony2-Form
     EventDispatcher, Validator, Locale, OptionsResolver (DependencyInjection, HttpFoundation)
 * php-symfony2-Security
     (ClassLoader, Finder, Form, Routing)
