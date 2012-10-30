@@ -23,7 +23,7 @@
     (Config, Yaml)
 ** php-symfony2-Validator
     (HttpFoundation, Yaml) BR => Locale
-* php-symfony2-HttpKernel
+** php-symfony2-HttpKernel
     HttpFoundation, EventDispatcher (BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder)
 * php-symfony2-Routing
     (Config, Yaml) BR => HttpKernel
