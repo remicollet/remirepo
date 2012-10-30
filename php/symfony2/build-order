@@ -15,7 +15,7 @@
 ** php-symfony2-Process
 ** php-symfony2-Serializer
 ** php-symfony2-Templating
-* php-symfony2-DomCrawler
+** php-symfony2-DomCrawler
     (CssSelector)
 * php-symfony2-BrowserKit 
     DomCrawler (Process)
