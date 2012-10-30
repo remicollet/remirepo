@@ -19,7 +19,7 @@
     (CssSelector)
 ** php-symfony2-BrowserKit
     DomCrawler (Process)
-* php-symfony2-Translation
+** php-symfony2-Translation
     (Config, Yaml)
 * php-symfony2-Validator
     (HttpFoundation, Yaml) BR => Locale
