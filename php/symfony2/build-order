@@ -29,6 +29,6 @@
     (Config, Yaml) BR => HttpKernel
 ** php-symfony2-Form
     EventDispatcher, Validator, Locale, OptionsResolver (DependencyInjection, HttpFoundation)
-* php-symfony2-Security
+** php-symfony2-Security
     (ClassLoader, Finder, Form, Routing)
 
