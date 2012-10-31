@@ -1,0 +1,59 @@
+diff -ru xcache-3.0.0/htdocs.old/cacher/config.example.php xcache-3.0.0/htdocs/cacher/config.example.php
+--- xcache-3.0.0/htdocs.old/cacher/config.example.php	2012-08-01 18:49:57.000000000 +0200
++++ xcache-3.0.0/htdocs/cacher/config.example.php	2012-10-31 08:35:32.000000000 +0100
+@@ -5,10 +5,10 @@
+ // 1. copy config.example.php config.php; edit config.php
+ // 2. upgrading your config.php when config.example.php were upgraded
+ // XCache will load
+-// 1. ../config.default.php
+-// 2. ./config.default.php
+-// 3. ../config.php
+-// 4. ./config.php
++// 1. /usr/share/xcache/config.default.php
++// 2. /usr/share/xcache/cacher/config.default.php
++// 3. /etc/xcache/config.php
++// 4. /etc/xcache/cacher/config.php
+ 
+ // width of graph for free or usage blocks
+ $config['percent_graph_width'] = 120;
+Seulement dans xcache-3.0.0/htdocs/cacher: config.example.php~
+diff -ru xcache-3.0.0/htdocs.old/common/common.php xcache-3.0.0/htdocs/common/common.php
+--- xcache-3.0.0/htdocs.old/common/common.php	2012-08-01 18:49:59.000000000 +0200
++++ xcache-3.0.0/htdocs/common/common.php	2012-10-31 08:32:34.000000000 +0100
+@@ -252,11 +252,13 @@
+ 	include "./config.default.php";
+ }
+ include "../config.default.php";
+-if (file_exists("../config.php")) {
+-	include "../config.php";
++
++$mod=basename(getcwd());
++if (file_exists("/etc/xcache/config.php")) {
++	include "/etc/xcache/config.php";
+ }
+-if (file_exists("./config.php")) {
+-	include "./config.php";
++if (file_exists("/etc/xcache/$mod/config.php")) {
++	include "/etc/xcache/$mod/config.php";
+ }
+ 
+ $strings = array();
+diff -ru xcache-3.0.0/htdocs.old/coverager/config.example.php xcache-3.0.0/htdocs/coverager/config.example.php
+--- xcache-3.0.0/htdocs.old/coverager/config.example.php	2012-10-10 14:01:55.000000000 +0200
++++ xcache-3.0.0/htdocs/coverager/config.example.php	2012-10-31 08:35:34.000000000 +0100
+@@ -5,10 +5,10 @@
+ // 1. copy config.example.php config.php; edit config.php
+ // 2. upgrading your config.php when config.example.php were upgraded
+ // XCache will load
+-// 1. ../config.default.php
+-// 2. ./config.default.php
+-// 3. ../config.php
+-// 4. ./config.php
++// 1. /usr/share/xcache/config.default.php
++// 2. /usr/share/xcache/coverager/config.default.php
++// 3. /etc/xcache/config.php
++// 4. /etc/xcache/coverager/config.php
+ 
+ // $config['include_paths'] = array("/www/my-php-project/");
+ // $config['exclude_paths'] = array("/www/my-php-project/tmp/");
+Seulement dans xcache-3.0.0/htdocs/coverager: config.example.php~
