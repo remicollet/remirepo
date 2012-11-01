@@ -18,6 +18,7 @@
 ---- with test unit ----
 18 php-horde-Horde-Argv        => Exception, Translation
 19 php-horde-Horde-Serialize   => Exception, Util
+20 php-horde-Horde-Xml-Wbxml   => Util
 ---- missing BR for test unit ---
 php-horde-Horde-Auth        => BR(Horde_Db), Exception, Util
 
