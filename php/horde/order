@@ -15,7 +15,7 @@
 15 php-horde-Horde-Image       => Exception, Support, Translation, Util
 ---- with test unit ----
 16 php-horde-Horde-Argv        => Exception, Translation
-
+17 php-horde-Horde-Serialize   => Exception, Util
 ---- missing BR for test unit ---
 php-horde-Horde-Auth        => BR(Horde_Db), Exception, Util
 
