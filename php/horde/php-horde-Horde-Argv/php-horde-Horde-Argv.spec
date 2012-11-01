@@ -32,7 +32,7 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
 
-Provides:       php-pear(%{pear_channel}/Horde_Argv) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -81,7 +81,7 @@ sh %{SOURCE1} %{buildroot} %{pear_name}
 
 
 %check
-cd %{pear_name}-%{version}/test/Horde/Argv
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
 phpunit AllTests.php
 
 
@@ -100,12 +100,12 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Argv
-%{pear_testdir}/Horde_Argv
+%{pear_testdir}/%{pear_name}
 # own locales (non standard) directories, .mo own by find_lang
-%dir %{pear_datadir}/Horde_Argv
-%dir %{pear_datadir}/Horde_Argv/locale
-%dir %{pear_datadir}/Horde_Argv/locale/*
-%dir %{pear_datadir}/Horde_Argv/locale/*/LC_MESSAGES
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}/locale
+%dir %{pear_datadir}/%{pear_name}/locale/*
+%dir %{pear_datadir}/%{pear_name}/locale/*/LC_MESSAGES
 
 
 %changelog
