@@ -21,4 +21,5 @@
 20 php-horde-Horde-Xml-Wbxml   => Util
 ---- missing BR for test unit ---
 php-horde-Horde-Auth        => BR(Horde_Db), Exception, Util
+php-horde-Horde-Token       => BR(Horde_Db), Exception, Translation, Url, Util
 
