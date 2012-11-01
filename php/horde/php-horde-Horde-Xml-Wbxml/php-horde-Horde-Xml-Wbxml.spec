@@ -19,7 +19,9 @@ BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+%if 0%{?fedora} > 12
 BuildRequires:  libwbxml
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
