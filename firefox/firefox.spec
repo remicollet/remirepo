@@ -26,10 +26,8 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-#global shortname              firefox
-#global mycomment              Beta 4
-%global firefox_dir_ver        16
 %global xulrunner_version      16.0.2
+%global xulrunner_version_max  16.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
@@ -69,7 +67,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        16.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -108,14 +106,15 @@ Patch15:        firefox-15.0-enable-addons.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  system-bookmarks
-BuildRequires:  xulrunner%{firefox_dir_ver}-devel >= %{xulrunner_verrel}
+BuildRequires:  xulrunner-last-devel >= %{xulrunner_verrel}
 # For WebM support
 BuildRequires:	yasm
 
-Requires:       xulrunner%{firefox_dir_ver}%{?_isa} >= %{xulrunner_verrel}
+Requires:       xulrunner-last%{?_isa} >= %{xulrunner_verrel}
 Requires:       system-bookmarks
 Obsoletes:      mozilla <= 37:1.7.13
 Provides:       webclient
+Conflicts:      xulrunner-last%{?_isa} >= %{xulrunner_version_max}
 
 
 %description
@@ -135,7 +134,7 @@ cd %{tarballdir}
 # Build patches, can't change backup suffix from default because during build
 # there is a compare of config and js/config directories and .orig suffix is 
 # ignored during this compare.
-%patch0 -p2 -b .orig
+%patch0 -p1
 
 # For branding specific patches.
 
@@ -443,7 +442,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/searchplugins
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/application.ini
-%{mozappdir}/webapprt*
 %exclude %{mozappdir}/removed-files
 %{_datadir}/icons/hicolor/16x16/apps/firefox.png
 %{_datadir}/icons/hicolor/22x22/apps/firefox.png
@@ -452,7 +450,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/32x32/apps/firefox.png
 %{_datadir}/icons/hicolor/48x48/apps/firefox.png
 %{mozappdir}/xulrunner
-
+%{mozappdir}/webapprt-stub
+%dir %{mozappdir}/webapprt
+%{mozappdir}/webapprt/omni.ja
+%{mozappdir}/webapprt/webapprt.ini
 %if %{include_debuginfo}
 #%{mozappdir}/crashreporter
 %{mozappdir}/crashreporter-override.ini
@@ -463,6 +464,13 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-2
+- Sync with rawhide
+- build using xulrunner-last
+
+* Tue Oct 30 2012 Martin Stransky <stransky@redhat.com> - 16.0.2-2
+- Updated man page (#800234)
+
 * Fri Oct 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-1
 - Sync with rawhide, update to 16.0.2
 

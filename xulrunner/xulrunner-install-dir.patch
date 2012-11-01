@@ -6,7 +6,7 @@ diff -up mozilla-aurora-7676a9a06403/config/baseconfig.mk.dir mozilla-aurora-767
  includedir := $(includedir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
  idldir = $(datadir)/idl/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
 -installdir = $(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
-+installdir = $(libdir)/$(MOZ_APP_NAME)
++installdir = $(libdir)/$(MOZ_APP_NAME)-last
  sdkdir = $(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION)
  DIST = $(DEPTH)/dist
  
@@ -17,7 +17,7 @@ diff -up mozilla-aurora-7676a9a06403/js/src/config/baseconfig.mk.dir mozilla-aur
  INCLUDED_AUTOCONF_MK = 1
  
 -installdir = $(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
-+installdir = $(libdir)/$(MOZ_APP_NAME)
++installdir = $(libdir)/$(MOZ_APP_NAME)-last
  sdkdir = $(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION)
  
  ifneq (,$(filter /%,$(TOP_DIST)))

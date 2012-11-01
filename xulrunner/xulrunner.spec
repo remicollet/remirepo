@@ -50,12 +50,12 @@
 # alpha_version should be set to the alpha number if using an alpha, 0 otherwise
 # beta_version  should be set to the beta number if using a beta, 0 otherwise
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
-%global gecko_dir_ver 16
+%global gecko_dir_ver %{version}
 %global alpha_version 0
 %global beta_version  0
 %global rc_version    0
 
-%global mozappdir     %{_libdir}/%{shortname}-%{gecko_dir_ver}
+%global mozappdir     %{_libdir}/%{name}
 %global tarballdir    mozilla-release
 
 # no crash reporter for remi repo
@@ -82,7 +82,7 @@
 %endif
 
 Summary:        XUL Runtime for Gecko Applications
-Name:           %{shortname}%{gecko_dir_ver}
+Name:           %{shortname}-last
 Version:        16.0.2
 Release:        1%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
@@ -97,8 +97,8 @@ Source12:       %{shortname}-redhat-default-prefs.js
 Source21:       %{shortname}.sh.in
 
 # build patches
-Patch0:         xulrunner-version.patch
 Patch1:         mozilla-build.patch
+Patch2:         xulrunner-install-dir.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
 Patch17:        xulrunner-15.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
@@ -110,7 +110,6 @@ Patch20:        mozilla-193-pkgconfig.patch
 # Upstream patches
 Patch49:        mozilla-746112.patch
 Patch51:        mozilla-709732-gfx-icc-profile-fix.patch
-Patch52:        rhbz-855919.patch
 
 # ---------------------------------------------------
 
@@ -157,10 +156,10 @@ Requires:       nss >= %{nss_build_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
-Obsoletes:      xulrunner12
 Obsoletes:      xulrunner13
 Obsoletes:      xulrunner14
 Obsoletes:      xulrunner15
+Obsoletes:      xulrunner16
 
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
@@ -180,10 +179,10 @@ Group: Development/Libraries
 Obsoletes: mozilla-devel < 1.9
 Obsoletes: firefox-devel < 2.1
 Obsoletes: xulrunner-devel-unstable
-Obsoletes: xulrunner12-devel
 Obsoletes: xulrunner13-devel
 Obsoletes: xulrunner14-devel
 Obsoletes: xulrunner15-devel
+Obsoletes: xulrunner16-devel
 Provides: gecko-devel = %{gecko_verrel}
 Provides: gecko-devel%{?_isa} = %{gecko_verrel}
 Provides: gecko-devel-unstable = %{gecko_verrel}
@@ -256,22 +255,16 @@ echo TARGET = %{name}-%{version}-%{release}  GECKO = %{gecko_verrel}
 %setup -q -c
 cd %{tarballdir}
 
-sed -e 's/__RPM_VERSION_INTERNAL__/%{gecko_dir_ver}/' %{P:%%PATCH0} \
-    > version.patch
-%{__patch} -p1 -b --suffix .version --fuzz=0 < version.patch
-
 %patch1  -p1 -b .build
+%patch2  -p1
 %patch14 -p1 -b .chromium-types
 %patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
 
 %patch20 -p2 -b .pk
 
-%ifarch ppc ppc64
-%patch49 -p2 -b .746112
-%endif
+%patch49 -p1 -b .746112
 %patch51 -p1 -b .709732
-%patch52 -p1 -b .855919
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -376,7 +369,7 @@ MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
 %ifarch s390
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1')
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
 %endif
 %ifarch s390 %{arm} ppc
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
@@ -449,7 +442,7 @@ EOF
 
 INTERNAL_APP_NAME=%{shortname}-%{gecko_dir_ver}
 
-pushd $RPM_BUILD_ROOT/%{_includedir}/%{shortname}-%{version}
+pushd $RPM_BUILD_ROOT/%{_includedir}/${INTERNAL_APP_NAME}
 install_file "mozilla-config"
 install_file "js-config"
 popd
@@ -472,7 +465,7 @@ popd
 LD_SO_CONF_D=%{_sysconfdir}/ld.so.conf.d
 LD_CONF_FILE=xulrunner-%{__isa_bits}.conf
 
-%if %{name} == %{shortname}
+%if "%{name}" == "%{shortname}"
 %{__mkdir_p} ${RPM_BUILD_ROOT}${LD_SO_CONF_D}
 %{__cat} > ${RPM_BUILD_ROOT}${LD_SO_CONF_D}/${LD_CONF_FILE} << EOF
 %{mozappdir}
@@ -509,7 +502,7 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 
 %postun -p /sbin/ldconfig
 
-%if %{name} == %{shortname}
+%if "%{name}" == "%{shortname}"
 %preun
 # is it a final removal?
 if [ $1 -eq 0 ]; then
@@ -540,7 +533,7 @@ fi
 %{mozappdir}/xulrunner-stub
 %{mozappdir}/platform.ini
 %{mozappdir}/dependentlibs.list
-%if %{name} == %{shortname}
+%if "%{name}" == "%{shortname}"
 %{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
 %endif
 %{mozappdir}/plugin-container
@@ -555,16 +548,24 @@ fi
 
 %files devel
 %defattr(-,root,root,-)
-#%dir %{_libdir}/%{shortname}-devel-*
+%dir %{_libdir}/%{shortname}-devel-*
 %{_datadir}/idl/%{shortname}*%{gecko_dir_ver}
-%{_includedir}/%{shortname}*%{version}
-%{_libdir}/%{shortname}-devel-*
+%{_includedir}/%{shortname}*%{gecko_dir_ver}
+%{_libdir}/%{shortname}-devel-*/*
 %{_libdir}/pkgconfig/*.pc
 %{mozappdir}/xpcshell
 
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-1
+- sync patch with rawhide
+- rename to xulrunner-last
+
+* Wed Oct 31 2012 Martin Stransky <stransky@redhat.com> - 16.0.2-1
+- Updated mozilla-746112.patch for second arches
+- Removed unused one (rhbz#855919)
+
 * Fri Oct 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-1
 - Sync with rawhide, update to 16.0.2
 
