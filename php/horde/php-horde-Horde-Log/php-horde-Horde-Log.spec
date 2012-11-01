@@ -1,8 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Horde_Log
+%global pear_name    Horde_Log
+%global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Log
-Version:        1.1.2
+Version:        2.0.0
 Release:        2%{?dist}
 Summary:        Horde Logging library
 
@@ -11,27 +13,32 @@ License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-pear
+BuildRequires:  php-channel(%{pear_channel})
+
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Provides:       php-pear(pear.horde.org/%{pear_name}) = %{version}
-Requires:       php-pear(pear.horde.org/Horde_Constraint) < 2.0.0
-Requires:       php-pear(pear.horde.org/Horde_Exception) < 2.0.0
-Requires:       php-pear(PEAR) >= 1.7.0
-BuildRequires:  php-channel(pear.horde.org)
-Requires:       php-channel(pear.horde.org)
-Requires:       php-common >= 5.2.0
+Requires:       php(language) >= 5.3.0
+Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/Horde_Constraint) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Constraint) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
 Horde Logging package with configurable handlers, filters, and formatting.
 
 %prep
-%setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
+%setup -q -c -T
+tar xif %{SOURCE0}
 
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
+
 
 %build
 cd %{pear_name}-%{version}
@@ -40,14 +47,14 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-PHPRC=../php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -56,11 +63,12 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.horde.org/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Log
@@ -68,6 +76,9 @@ fi
 %{pear_testdir}/Horde_Log
 
 %changelog
+* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+- Update to 2.0.0 for remi repo
+
 * Thu Aug 2 2012 Nick Bebout <nb@fedoraproject.org> - 1.1.2-2
 - Fix packaging issues
 
