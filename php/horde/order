@@ -10,6 +10,6 @@
 10 php-horde-Horde-Date        => Nls, Translation, Exception, Util
 11 php-horde-Horde-Http        => Exception, Support
 12 php-horde-Horde-Constraint
-
-php-horde-Horde-Test        => Support, Util, Cli, Log
+13 php-horde-Horde-Log         => Constraint, Exception
+14 php-horde-Horde-Test        => Support, Util, Cli, Log
 
