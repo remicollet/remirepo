@@ -10,3 +10,5 @@
 10 php-horde-Horde-Date        => Nls, Translation, Exception, Util
 11 php-horde-Horde-Http        => Exception, Support
 
+php-horde-Horde-Test        => Support, Util, Cli, Log
+
