@@ -14,9 +14,10 @@
 14 php-horde-Horde-Test        => Support, Util, Cli, Log
 15 php-horde-Horde-Image       => Exception, Support, Translation, Util
 16 php-horde-Horde-Browser     => Exception, Util
+17 php-horde-Horde-Lock        => Exception, Support
 ---- with test unit ----
-17 php-horde-Horde-Argv        => Exception, Translation
-18 php-horde-Horde-Serialize   => Exception, Util
+18 php-horde-Horde-Argv        => Exception, Translation
+19 php-horde-Horde-Serialize   => Exception, Util
 ---- missing BR for test unit ---
 php-horde-Horde-Auth        => BR(Horde_Db), Exception, Util
 

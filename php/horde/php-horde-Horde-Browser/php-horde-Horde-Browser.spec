@@ -23,6 +23,7 @@ BuildRequires:  gettext
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php(language) >= 5.3.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
