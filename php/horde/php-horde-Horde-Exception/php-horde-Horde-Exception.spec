@@ -1,9 +1,11 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Horde_Exception
+%global pear_name    Horde_Exception
+%global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Exception
-Version:        1.0.9
-Release:        4%{?dist}
+Version:        2.0.0
+Release:        1%{?dist}
 Summary:        Horde Exception Handler
 
 Group:          Development/Libraries
@@ -16,23 +18,25 @@ Source1:        find-lang.sh
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
-BuildRequires:  php-channel(pear.horde.org)
+BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR) >= 1.7.0
-Requires:       php-pear(pear.horde.org/Horde_Translation) < 2.0.0
-Requires:       php-pear(pear.horde.org/Horde_Translation) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
 
-Provides:       php-pear(pear.horde.org/Horde_Exception) = %{version}
+Provides:       php-pear(%{pear_channel}/Horde_Exception) = %{version}
 
 %description
 This class provides the default exception handlers for the Horde
 Application Framework.
 
 %prep
-%setup -q -c
+%setup -q -c -T
+tar xif %{SOURCE0}
+
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
@@ -52,27 +56,27 @@ do
 done
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %if 0%{?fedora} > 13
 %find_lang %{pear_name}
 %else
-sh %{SOURCE1} $RPM_BUILD_ROOT %{pear_name}
+sh %{SOURCE1} %{buildroot} %{pear_name}
 %endif
 cat %{pear_name}.lang
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -82,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.horde.org/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -100,6 +104,9 @@ fi
 %{pear_testdir}/Horde_Exception
 
 %changelog
+* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+- Update to 2.0.0 for remi repo
+
 * Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> - 1.0.9-4
 - rebuilt for new pear_datadir
 

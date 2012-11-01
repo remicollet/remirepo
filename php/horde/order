@@ -1,0 +1,12 @@
+01 php-horde-Horde-Autoloader
+02 php-horde-Horde-Translation
+03 php-horde-Horde-Stream-Wrapper
+04 php-horde-Horde-Util
+05 php-horde-Horde-Exception   => Translation
+06 php-horde-Horde-Support     => Exception, Stream_Wrapper
+07 php-horde-Horde-Cli         => Support, Translation
+08 php-horde-Horde-Url         => Exception
+09 php-horde-Horde-Nls         => Util, Translation
+10 php-horde-Horde-Date        => Nls, Translation, Exception, Util
+11 php-horde-Horde-Http        => Exception, Support
+

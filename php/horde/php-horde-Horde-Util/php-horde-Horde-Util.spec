@@ -1,8 +1,10 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Horde_Util
+%global pear_name    Horde_Util
+%global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Util
-Version:        1.4.0
+Version:        2.0.0
 Release:        3%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -13,32 +15,27 @@ Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.7.0
-BuildRequires:  php-channel(pear.horde.org)
+BuildRequires:  php-pear
+BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(pear.horde.org/Horde_Url) >= 1.0.0
-Requires:       php-pear(pear.horde.org/Horde_Url) < 2.0.0
-Requires:       php-pear(pear.horde.org/Horde_Exception) >= 1.0.0
-Requires:       php-pear(pear.horde.org/Horde_Exception) < 2.0.0
-Requires:       php-pear(PEAR) >= 1.7.0
-Requires:       php-common >= 5.2.0
-Requires:       php-xml >= 5.2.0
-Requires:       php-mbstring >= 5.2.0
-Requires:       php-channel(pear.horde.org)
+Requires:       php(language) >= 5.3.0
+Requires:       php-xml
+Requires:       php-mbstring
+Requires:       php-channel(%{pear_channel})
 
-Provides:       php-pear(pear.horde.org/%{pear_name}) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
 These classes provide functionality useful for all kind of applications.
 
 %prep
-%setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
+%setup -q -c -T
+tar xif %{SOURCE0}
 
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -47,19 +44,19 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -84,7 +81,11 @@ fi
 %{pear_phpdir}/Horde/Variables.php
 %{pear_testdir}/Horde_Util
 
+
 %changelog
+* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+- Update to 2.0.0 for remi repo
+
 * Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.4.0-3
 - rebuilt for new pear_testdir
 
