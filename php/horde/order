@@ -26,4 +26,7 @@ php-horde-Horde-Token       => BR(Horde_Db), Exception, Translation, Url, Util
 
 ---- TODO ----
 php-horde-Horde-Alarm       => Date, Exception, Translation
+php-horde-Horde-Stream-Filter
+php-horde-Horde-Mail        => Exception, Stream-Filter
+php-horde-Horde-Mime        => Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 
