@@ -32,4 +32,5 @@ php-horde-Horde-Mime        => Exception, Mail, Stream-Filter, Support, Text-Flo
 php-horde-Horde-Form        => Core, Date, Exception, Mime, Nls, Token, Translation, Util
 php-horde-Horde-Group       => Exception, Util
 php-horde-Horde-LoginTasks
+php-horde-Horde-Db          => Date, Exception, Support
 
