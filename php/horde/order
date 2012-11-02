@@ -24,3 +24,6 @@
 php-horde-Horde-Auth        => BR(Horde_Db), Exception, Util
 php-horde-Horde-Token       => BR(Horde_Db), Exception, Translation, Url, Util
 
+---- TODO ----
+php-horde-Horde-Alarm       => Date, Exception, Translation
+
