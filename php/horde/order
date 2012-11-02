@@ -37,4 +37,12 @@ php-horde-Horde-Perms       => Db, Exception, Group, Util, Translation
 php-horde-Horde-Prefs       => Exception, Mime, Translation, Util
 php-horde-Horde-Icalendar   => Date, Exception, Mime, Support, Translation, Util
 php-horde-Horde-Xml-Element => Exception
+php-horde-Horde-SyncMl      => Date, ICalandar, Log, Support, Util Xml_Wbxml, Translation
+php-horde-Horde-Template
+php-horde-Horde-Text-Diff   => Exception, Util
+php-horde-Horde-Text-Filter => Exception, Util
+php-horde-Horde-Tree        => Exception, Url, Util
+php-horde-Horde-View        => Exception, Support, Util
+php-horde-Horde-Vfs         => Exception, Translation, Util
+php-horde-Horde-Injector    => Exception
 
