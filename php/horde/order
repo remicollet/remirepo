@@ -34,4 +34,6 @@ php-horde-Horde-Group       => Exception, Util
 php-horde-Horde-LoginTasks
 php-horde-Horde-Db          => Date, Exception, Support
 php-horde-Horde-Perms       => Db, Exception, Group, Util, Translation
+php-horde-Horde-Prefs       => Exception, Mime, Translation, Util
+php-horde-Horde-Icalendar   => Date, Exception, Mime, Support, Translation, Util
 
