@@ -27,10 +27,11 @@
 26 php-horde-Horde-Auth        => BR(Db), Exception, Util
 27 php-horde-Horde-Token       => BR(Db, Url), Exception, Translation, Url, Util
 28 php-horde-Horde-Template
+29 php-horde-Horde-Xml-Element => Exception
+30 php-horde-Horde-Alarm       => BR(Date), Date, Exception, Translation
 ---- missing BR for test unit ---
 
 ---- TODO ----
-php-horde-Horde-Alarm       => Date, Exception, Translation
 php-horde-Horde-Mail        => Exception, Stream-Filter
 php-horde-Horde-Mime        => Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 php-horde-Horde-Form        => Core, Date, Exception, Mime, Nls, Token, Translation, Util
@@ -38,7 +39,6 @@ php-horde-Horde-Group       => Exception, Util
 php-horde-Horde-Perms       => Db, Exception, Group, Util, Translation
 php-horde-Horde-Prefs       => Exception, Mime, Translation, Util
 php-horde-Horde-Icalendar   => Date, Exception, Mime, Support, Translation, Util
-php-horde-Horde-Xml-Element => Exception
 php-horde-Horde-SyncMl      => Date, ICalandar, Log, Support, Util Xml_Wbxml, Translation
 php-horde-Horde-Text-Diff   => Exception, Util
 php-horde-Horde-Text-Filter => Exception, Util
