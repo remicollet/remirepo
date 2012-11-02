@@ -45,4 +45,5 @@ php-horde-Horde-Tree        => Exception, Url, Util
 php-horde-Horde-View        => Exception, Support, Util
 php-horde-Horde-Vfs         => Exception, Translation, Util
 php-horde-Horde-Injector    => Exception
+php-horde-Horde-Controller  => Exception, Injector, Log, Support, Util
 
