@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Token
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Token API
 
 Group:          Development/Libraries
@@ -17,6 +17,10 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -68,7 +72,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-# Need Db phpunit AllTests.php
+phpunit AllTests.php
 
 
 %post
@@ -93,6 +97,9 @@ fi
 
 
 %changelog
+* Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
+- run test during build
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 

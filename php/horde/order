@@ -24,9 +24,9 @@
 23 php-horde-Horde-LoginTasks  => BR(Date), Date, Translation
 24 php-horde-Horde-Text-Flowed => Util
 25 php-horde-Horde-Db          => BR(Cache), Date, Exception, Support
+26 php-horde-Horde-Auth        => BR(Db), Exception, Util
+27 php-horde-Horde-Token       => BR(Db, Url), Exception, Translation, Url, Util
 ---- missing BR for test unit ---
-php-horde-Horde-Auth        => BR(Horde_Db), Exception, Util
-php-horde-Horde-Token       => BR(Horde_Db), Exception, Translation, Url, Util
 
 ---- TODO ----
 php-horde-Horde-Alarm       => Date, Exception, Translation
