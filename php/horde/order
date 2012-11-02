@@ -28,6 +28,7 @@ php-horde-Horde-Token       => BR(Horde_Db), Exception, Translation, Url, Util
 php-horde-Horde-Alarm       => Date, Exception, Translation
 php-horde-Horde-Stream-Filter
 php-horde-Horde-Mail        => Exception, Stream-Filter
+php-horde-Horde-Text-Flowed => Util
 php-horde-Horde-Mime        => Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 php-horde-Horde-Form        => Core, Date, Exception, Mime, Nls, Token, Translation, Util
 php-horde-Horde-Group       => Exception, Util
@@ -52,4 +53,5 @@ php-horde-Horde-History     => Db, Exception
 php-horde-Horde-Crypt       => Exception, Mime, Stream-Filter, Translation, Util
 php-horde-Horde-Imap-Client => Exception, Mail, Mime, Util
 php-horde-Horde-Itip        => Icalendar, Mime
+php-horde-Horde-Notification => Exception, Util
 
