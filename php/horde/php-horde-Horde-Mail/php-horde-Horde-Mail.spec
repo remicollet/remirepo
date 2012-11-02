@@ -3,6 +3,9 @@
 %global pear_name    Horde_Mail
 %global pear_channel pear.horde.org
 
+# Can run test because of circular dependency with Horde_Mime
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:           php-horde-Horde-Mail
 Version:        2.0.0
 Release:        1%{?dist}
@@ -12,13 +15,17 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+# /usr/lib/rpm/find-lang.sh from fedora 16
+Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -75,9 +82,12 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
+%if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-# Ignore test results for now ( > vs /> )
-phpunit AllTests.php || exit 0
+phpunit AllTests.php
+%else
+: Test disabled, missing '--with tests' option.
+%endif
 
 
 %post
@@ -96,7 +106,6 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Mail
-%{pear_phpdir}/Horde/Mail.php
 %{pear_testdir}/%{pear_name}
 
 
