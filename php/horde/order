@@ -35,6 +35,7 @@
 34 php-horde-Horde-Tree        =>           Exception, Url, Util
 35 php-horde-Horde-Injector    =>           Exception
 36 php-horde-Horde-Controller  =>           Exception, Injector, Log, Support, Util
+37 php-horde-Horde-View        => BR(Controller), Exception, Support, Util
 ---- missing BR for test unit ---
 
 ---- TODO ----
@@ -54,5 +55,4 @@ php-horde-Horde-Imap-Client => Exception, Mail, Mime, Util
 php-horde-Horde-Itip        => Icalendar, Mime
 php-horde-Horde-Notification => Exception, Util
 
-php-horde-Horde-View        => BR(Horde_Controller_Base) Exception, Support, Util
 

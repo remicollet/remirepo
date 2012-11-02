@@ -1,26 +1,41 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Horde_Mail
+%global pear_name    Horde_Mail
+%global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mail
-Version:        1.2.0
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Horde Mail Library
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.horde.org
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-pear
+BuildRequires:  php-channel(%{pear_channel})
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Provides:       php-pear(pear.horde.org/%{pear_name}) = %{version}
-Requires:       php-pear(pear.horde.org/Horde_Exception) < 2.0.0
-Requires:       php-pear(pear.horde.org/Horde_Stream_Filter) < 2.0.0
-Requires:       php-pear(PEAR) >= 1.7.0
-BuildRequires:  php-channel(pear.horde.org)
-Requires:       php-channel(pear.horde.org)
+Requires:       php(language) >= 5.3.0
+Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Filter) >= 3.0.0
+# Optionnal
+Requires:       php-pear(Net_SMTP) >= 1.6.0
+Requires:       php-pear(Net_DNS2)
+
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 The Horde_Mail library is a fork of the PEAR Mail library that provides
@@ -33,16 +48,13 @@ things like message redirection pursuant to RFC 5322 [3.6.6]).
 * Provides more comprehensive sendmail error messages.
 * Uses Exceptions instead of PEAR_Errors.
 
-%prep
-%setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
 
-# Create a "localized" php.ini to avoid build warning
-cp /etc/php.ini .
-echo "date.timezone=UTC" >>php.ini
+%prep
+%setup -q -c -T
+tar xif %{SOURCE0}
 
 cd %{pear_name}-%{version}
+cp ../package.xml %{name}.xml
 
 
 %build
@@ -52,14 +64,21 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-PHPRC=../php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+
+%check
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+# Ignore test results for now ( > vs /> )
+phpunit AllTests.php || exit 0
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -68,18 +87,23 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.horde.org/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Mail
 %{pear_phpdir}/Horde/Mail.php
-%{pear_testdir}/Horde_Mail
+%{pear_testdir}/%{pear_name}
+
 
 %changelog
+* Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+- Update to 2.0.0 for remi repo
+
 * Thu Jun 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.2.0-1
 - Upgrade to 1.2.0
 
