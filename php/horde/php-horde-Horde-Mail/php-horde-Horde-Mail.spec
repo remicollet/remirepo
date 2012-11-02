@@ -22,6 +22,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  gettext
 %if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
