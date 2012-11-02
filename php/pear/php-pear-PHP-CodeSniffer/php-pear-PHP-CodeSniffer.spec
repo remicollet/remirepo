@@ -3,7 +3,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -14,7 +14,7 @@ Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.4.9-1.2
+BuildRequires:  php-pear
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
 
@@ -42,18 +42,18 @@ sed -e '/phpcs-svn-pre-commit/s/role="script"/role="doc"/' \
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
 
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
 
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
@@ -67,7 +67,7 @@ cd %{pear_name}-%{version}/tests
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.1-1
+- upstream 1.4.1
+
 * Sun Oct  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.0-1
 - upstream 1.4.0
 
