@@ -17,18 +17,19 @@
 17 php-horde-Horde-Lock        => Exception, Support
 18 php-horde-Horde-Cache       => Exception, Util
 ---- with test unit ----
-19 php-horde-Horde-Argv        => Exception, Translation
-20 php-horde-Horde-Serialize   => Exception, Util
-21 php-horde-Horde-Xml-Wbxml   => Util
+19 php-horde-Horde-Argv        =>           Exception, Translation
+20 php-horde-Horde-Serialize   =>           Exception, Util
+21 php-horde-Horde-Xml-Wbxml   =>           Util
 22 php-horde-Horde-Stream-Filter
 23 php-horde-Horde-LoginTasks  => BR(Date), Date, Translation
-24 php-horde-Horde-Text-Flowed => Util
+24 php-horde-Horde-Text-Flowed =>           Util
 25 php-horde-Horde-Db          => BR(Cache), Date, Exception, Support
-26 php-horde-Horde-Auth        => BR(Db), Exception, Util
+26 php-horde-Horde-Auth        => BR(Db),   Exception, Util
 27 php-horde-Horde-Token       => BR(Db, Url), Exception, Translation, Url, Util
 28 php-horde-Horde-Template
-29 php-horde-Horde-Xml-Element => Exception
-30 php-horde-Horde-Alarm       => BR(Date), Date, Exception, Translation
+29 php-horde-Horde-Xml-Element =>           Exception
+30 php-horde-Horde-Alarm       => BR(Date),     Date, Exception, Translation
+31 php-horde-Horde-Text-Diff   =>           Exception,    Util
 ---- missing BR for test unit ---
 
 ---- TODO ----
@@ -40,7 +41,6 @@ php-horde-Horde-Perms       => Db, Exception, Group, Util, Translation
 php-horde-Horde-Prefs       => Exception, Mime, Translation, Util
 php-horde-Horde-Icalendar   => Date, Exception, Mime, Support, Translation, Util
 php-horde-Horde-SyncMl      => Date, ICalandar, Log, Support, Util Xml_Wbxml, Translation
-php-horde-Horde-Text-Diff   => Exception, Util
 php-horde-Horde-Text-Filter => Exception, Util
 php-horde-Horde-Tree        => Exception, Url, Util
 php-horde-Horde-View        => Exception, Support, Util
