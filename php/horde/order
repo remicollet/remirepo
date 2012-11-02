@@ -36,11 +36,11 @@
 35 php-horde-Horde-Injector    =>           Exception
 36 php-horde-Horde-Controller  =>           Exception, Injector, Log, Support, Util
 37 php-horde-Horde-View        => BR(Controller), Exception, Support, Util
+38 php-horde-Horde-Mail        =>           Exception, Mime, Stream-Filter
+39 php-horde-Horde-Mime        =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 ---- missing BR for test unit ---
 
 ---- TODO ----
-php-horde-Horde-Mail        => Exception, Stream-Filter
-php-horde-Horde-Mime        => Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 php-horde-Horde-Form        => Core, Date, Exception, Mime, Nls, Token, Translation, Util
 php-horde-Horde-Perms       => Db, Exception, Group, Util, Translation
 php-horde-Horde-Prefs       => Exception, Mime, Translation, Util

@@ -15,11 +15,14 @@ Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+# /usr/lib/rpm/find-lang.sh from fedora 16
+Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  gettext
 %if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
