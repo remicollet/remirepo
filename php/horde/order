@@ -46,4 +46,10 @@ php-horde-Horde-View        => Exception, Support, Util
 php-horde-Horde-Vfs         => Exception, Translation, Util
 php-horde-Horde-Injector    => Exception
 php-horde-Horde-Controller  => Exception, Injector, Log, Support, Util
+php-horde-Horde-Compress    => Exception, Translation, Util, Stream-Filter
+php-horde-Horde-Data        => Browser, Exception, Icalendar, Mime, Translation, Util
+php-horde-Horde-History     => Db, Exception
+php-horde-Horde-Crypt       => Exception, Mime, Stream-Filter, Translation, Util
+php-horde-Horde-Imap-Client => Exception, Mail, Mime, Util
+php-horde-Horde-Itip        => Icalendar, Mime
 
