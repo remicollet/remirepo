@@ -22,6 +22,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php(language) >= 5.3.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
