@@ -31,13 +31,13 @@
 30 php-horde-Horde-Alarm       => BR(Date), Date, Exception, Translation
 31 php-horde-Horde-Text-Diff   =>           Exception, Util
 32 php-horde-Horde-Text-Filter =>           Exception, Util
+33 php-horde-Horde-Group       => BR(Db),   Exception, Util
 ---- missing BR for test unit ---
 
 ---- TODO ----
 php-horde-Horde-Mail        => Exception, Stream-Filter
 php-horde-Horde-Mime        => Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 php-horde-Horde-Form        => Core, Date, Exception, Mime, Nls, Token, Translation, Util
-php-horde-Horde-Group       => Exception, Util
 php-horde-Horde-Perms       => Db, Exception, Group, Util, Translation
 php-horde-Horde-Prefs       => Exception, Mime, Translation, Util
 php-horde-Horde-Icalendar   => Date, Exception, Mime, Support, Translation, Util
