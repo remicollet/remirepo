@@ -29,4 +29,5 @@ php-horde-Horde-Alarm       => Date, Exception, Translation
 php-horde-Horde-Stream-Filter
 php-horde-Horde-Mail        => Exception, Stream-Filter
 php-horde-Horde-Mime        => Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
+php-horde-Horde-Form        => Core, Date, Exception, Mime, Nls, Token, Translation, Util
 
