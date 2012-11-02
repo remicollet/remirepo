@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Auth
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Authentication API
 
 Group:          Development/Libraries
@@ -20,6 +20,9 @@ BuildArch:      noarch
 BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -81,7 +84,7 @@ sh %{SOURCE1} %{buildroot} %{pear_name}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
-# need Horde_Db phpunit AllTests.php
+phpunit AllTests.php
 
 
 %post
@@ -111,6 +114,9 @@ fi
 
 
 %changelog
+* Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
+- run test during build
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
