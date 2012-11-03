@@ -22,7 +22,10 @@ BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
-BuildRequires:  gnupg
+%if 0%{?rhel} < 6
+# Don't work with GnuPG 2
+BuildRequires:  gnupg < 2
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
