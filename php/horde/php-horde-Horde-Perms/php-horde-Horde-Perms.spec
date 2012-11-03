@@ -106,6 +106,7 @@ if [ $1 -eq 0 ] ; then
         %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
+
 %files -f %{pear_name}-%{version}/%{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
