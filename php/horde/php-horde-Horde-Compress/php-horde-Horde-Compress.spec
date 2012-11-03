@@ -101,6 +101,7 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %files -f %{pear_name}-%{version}/%{pear_name}.lang
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Compress
