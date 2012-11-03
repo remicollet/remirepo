@@ -49,6 +49,7 @@
 48 php-horde-Horde-Stream      =>           Exception
 49 php-horde-Horde-Imap-Client => BR(Stream, Mime), Exception, Mail, Mime, Util
 50 php-horde-Horde-Secret      =>           Exception, Support
+51 php-horde-Horde-SessionHandler => BR(Db), Exception, Util
 ---- missing BR for test unit ---
 
 ---- TODO ----
@@ -56,8 +57,7 @@ php-horde-Horde-Form        => Core, Date, Exception, Mime, Nls, Token, Translat
 php-horde-Horde-SyncMl      => Date, ICalandar, Log, Support, Util, Xml_Wbxml, Translation
 php-horde-Horde-Data        => Browser, Exception, Icalendar, Mime, Translation, Util
 php-horde-Horde-Itip        => Icalendar, Mime
-php-horde-Horde-MimeViewer
-php-horde-Horde-SessionHandler
+php-horde-Horde-Mime-Viewer
 php-horde-Horde-Share
 php-horde-Horde-Text-Filter-CssTidy
 php-horde-Horde-Core

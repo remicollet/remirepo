@@ -1,12 +1,12 @@
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name    Horde_Secret
+%global pear_name    Horde_SessionHandler
 %global pear_channel pear.horde.org
 
-Name:           php-horde-Horde-Secret
+Name:           php-horde-Horde-SessionHandler
 Version:        2.0.0
 Release:        1%{?dist}
-Summary:        Secret Encryption API
+Summary:        Horde Session Handler API
 
 Group:          Development/Libraries
 License:        LGPLv2+
@@ -15,31 +15,35 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
-BuildRequires:  php-pear(Crypt_Blowfish) >= 1.0.1
+BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
-Requires:       php-hash
+Requires:       php-date
 Requires:       php-session
 Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(PEAR)
-Requires:       php-pear(Crypt_Blowfish) >= 1.0.1
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+# Optionnal
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
+# also: Horde_Memcache
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
-An API for encrypting and decrypting small pieces of data with the use of a
-shared key.
+Horde_SessionHandler defines an API for implementing custom session
+handlers for PHP.
 
 %prep
 %setup -q -c -T
@@ -55,27 +59,25 @@ cd %{pear_name}-%{version}
 
 
 %install
-rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf $RPM_BUILD_ROOT
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
+install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-# Test suite not ready
-sed -e 's/E_ALL.*E_STRICT/E_ALL \& ~E_STRICT/' -i Autoload.php
-phpunit -d date.timezone=UTC AllTests.php || exit 0
-
-
-%clean
-rm -rf %{buildroot}
+phpunit -d date.timezone=UTC AllTests.php
 
 
 %post
@@ -93,8 +95,9 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Horde/Secret
-%{pear_phpdir}/Horde/Secret.php
+%{pear_phpdir}/Horde/SessionHandler
+%{pear_phpdir}/Horde/SessionHandler.php
+%{pear_datadir}/%{pear_name}
 %{pear_testdir}/%{pear_name}
 
 
