@@ -46,12 +46,13 @@
 45 php-horde-Horde-Crypt       =>           Exception, Mime, Stream-Filter, Translation, Util
 46 php-horde-Horde-Notification =>          Exception, Util
 47 php-horde-Horde-Icalendar   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
+48 php-horde-Horde-Stream      =>           Exception
+49 php-horde-Horde-Imap-Client => BR(Stream, Mime), Exception, Mail, Mime, Util
 ---- missing BR for test unit ---
 
 ---- TODO ----
 php-horde-Horde-Form        => Core, Date, Exception, Mime, Nls, Token, Translation, Util
 php-horde-Horde-SyncMl      => Date, ICalandar, Log, Support, Util, Xml_Wbxml, Translation
 php-horde-Horde-Data        => Browser, Exception, Icalendar, Mime, Translation, Util
-php-horde-Horde-Imap-Client => Exception, Mail, Mime, Util
 php-horde-Horde-Itip        => Icalendar, Mime
 
