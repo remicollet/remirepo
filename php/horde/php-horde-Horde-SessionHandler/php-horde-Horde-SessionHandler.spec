@@ -60,19 +60,19 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+rm -rf %{buildroot}
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %check
