@@ -54,12 +54,12 @@
 53 php-horde-Horde-Role
 54 php-horde-Horde-Mime-Viewer => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
 55 php-horde-Horde-Itip        => BR(Icalendar), Icalendar, Mime
+56 php-horde-Horde-Text-Filter-CssTidy =>   Text-Filter
 ---- missing BR for test unit ---
 
 ---- TODO ----
 php-horde-Horde-Form        => Core, Date, Exception, Mime, Nls, Token, Translation, Util
 php-horde-Horde-SyncMl      => Date, ICalandar, Log, Support, Util, Xml_Wbxml, Translation
 php-horde-Horde-Data        => Browser, Exception, Icalendar, Mime, Translation, Util
-php-horde-Horde-Text-Filter-CssTidy
 php-horde-Horde-Core
 
