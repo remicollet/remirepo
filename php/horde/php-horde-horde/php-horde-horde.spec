@@ -5,7 +5,7 @@
 
 Name:           php-horde-horde
 Version:        5.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -113,7 +113,6 @@ cd %{pear_name}-%{version}
 sed -e '/%{pear_name}.po/d' \
     -e '/htaccess/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
-    -e '/%{pear_name}.mo/s/role="horde"/role="data"/' \
     ../package.xml >%{name}.xml
 
 
@@ -154,6 +153,11 @@ install -D -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/horde.c
 %else
 sh %{SOURCE1} %{buildroot} %{pear_name}
 %endif
+for xml in locale/*/help.xml
+do
+    lang=$(basename $(dirname $xml))
+    echo "%%lang(${lang%_*}) %{pear_hordedir}/$xml" >> %{pear_name}.lang
+done
 
 
 %clean
@@ -199,7 +203,10 @@ fi
 %{pear_hordedir}/config
 %{pear_hordedir}/install
 %{pear_hordedir}/lib
-%{pear_hordedir}/locale
+# own locales (non standard) directories, .mo own by find_lang
+%dir %{pear_hordedir}/locale
+%dir %{pear_hordedir}/locale/*
+%dir %{pear_hordedir}/locale/*/LC_MESSAGES
 %{pear_hordedir}/rpc
 %{pear_hordedir}/services
 %{pear_hordedir}/static
@@ -208,14 +215,12 @@ fi
 %{pear_hordedir}/util
 %{pear_hordedir}/js/plupload
 %{pear_hordedir}/js/*.js
-# own locales (non standard) directories, .mo own by find_lang
-%dir %{pear_datadir}/%{pear_name}
-%dir %{pear_datadir}/%{pear_name}/locale
-%dir %{pear_datadir}/%{pear_name}/locale/*
-%dir %{pear_datadir}/%{pear_name}/locale/*/LC_MESSAGES
-%{pear_datadir}/%{pear_name}/scripts
+%{pear_datadir}/%{pear_name}
 
 
 %changelog
+* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.0-2
+- fix locale
+
 * Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.0-1
 - Initial package
