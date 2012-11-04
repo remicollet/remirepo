@@ -59,4 +59,5 @@
 58 php-horde-Horde-SyncMl      =>           Date, ICalandar, Log, Support, Util, Xml_Wbxml, Translation
 59 php-horde-Horde-Core        => BR(Role, Url, Injector, Group)
 60 php-horde-Horde-Form        =>           Core, Date, Exception, Mime, Nls, Token, Translation, Util
+61 php-horde-Horde-Rpc         =>           Core, Exception, Perms, Serialize, Support, Translation, Util, Xml_Element
 

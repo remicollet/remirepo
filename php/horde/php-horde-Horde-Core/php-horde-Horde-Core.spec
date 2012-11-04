@@ -29,6 +29,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php(language) >= 5.3.0
 Requires:       php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.0.0
