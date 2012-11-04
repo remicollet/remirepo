@@ -3,7 +3,7 @@
 %global pear_name    Horde_Core
 %global pear_channel pear.horde.org
 
-Name:           php-pear.horde.org-Horde-Core
+Name:           php-horde-Horde-Core
 Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
