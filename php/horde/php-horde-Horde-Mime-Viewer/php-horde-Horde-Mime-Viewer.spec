@@ -3,7 +3,7 @@
 %global pear_name    Horde_Mime_Viewer
 %global pear_channel pear.horde.org
 
-Name:           php-pear.horde.org-Horde-Mime-Viewer
+Name:           php-horde-Horde-Mime-Viewer
 Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
