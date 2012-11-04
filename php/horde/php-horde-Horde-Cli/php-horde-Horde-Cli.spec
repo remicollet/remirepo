@@ -67,11 +67,13 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
 %if 0%{?fedora} > 13 || 0%{?rhel} > 6
 %find_lang %{pear_name}
 %else
 sh %{SOURCE1} %{buildroot} %{pear_name}
 %endif
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
