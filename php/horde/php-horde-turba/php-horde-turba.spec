@@ -3,6 +3,10 @@
 %global pear_name    turba
 %global pear_channel pear.horde.org
 
+# TODO
+# config: provides one
+# "horde-turba" sub package with apache stuff
+
 Name:           php-horde-turba
 Version:        4.0.0
 Release:        1%{?dist}
@@ -10,7 +14,7 @@ Summary:        A web based address book
 
 Group:          Development/Libraries
 License:        ASL
-URL:            http://pear.horde.org/package/turba
+URL:            http://www.horde.org/apps/turba
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 # /usr/lib/rpm/find-lang.sh from fedora 16
 Source1:        find-lang.sh

@@ -3,6 +3,13 @@
 %global pear_name    horde
 %global pear_channel pear.horde.org
 
+# TODO :
+# static -> /var/lib
+# /var/log
+# cron (alarm)
+# config: Image, Log
+# "horbe" sub-package, with apache stuff
+
 Name:           php-horde-horde
 Version:        5.0.0
 Release:        2%{?dist}

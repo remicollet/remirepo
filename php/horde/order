@@ -60,4 +60,7 @@
 59 php-horde-Horde-Core        => BR(Role, Url, Injector, Group)
 60 php-horde-Horde-Form        =>           Core, Date, Exception, Mime, Nls, Token, Translation, Util
 61 php-horde-Horde-Rpc         =>           Core, Exception, Perms, Serialize, Support, Translation, Util, Xml_Element
+---- apps -----
+php-horde-horde (Framework)
+php-horde-turba (Address book)
 
