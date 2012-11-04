@@ -17,9 +17,8 @@ Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
-BuildRequires:  gettext
 BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
@@ -115,6 +114,7 @@ fi
 
 
 %files -f %{pear_name}-%{version}/%{pear_name}.lang
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Data
