@@ -1,120 +1,106 @@
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name    Horde_Core
+%global pear_name    horde
 %global pear_channel pear.horde.org
 
-Name:           php-horde-Horde-Core
-Version:        2.0.1
+Name:           php-horde-horde
+Version:        5.0.0
 Release:        1%{?dist}
-Summary:        Horde Core Framework libraries
+Summary:        Horde Application Framework
 
 Group:          Development/Libraries
-License:        LGPL-2.1
-URL:            http://pear.horde.org
+License:        LGPLv2+
+URL:            http://www.horde.org/apps/horde
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 # /usr/lib/rpm/find-lang.sh from fedora 16
 Source1:        find-lang.sh
+Source2:        horde.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear
 BuildRequires:  gettext
+BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
-# To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
 Requires:       php-channel(%{pear_channel})
-BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Alarm) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Argv) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Argv) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Auth) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Autoloader) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Browser) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Cache) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Cli) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Cli) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Compress) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Compress) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Controller) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Controller) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Data) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Form) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Group) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_History) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Injector) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Lock) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Lock) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Http) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Image) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_LoginTasks) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Notification) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Perms) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Prefs) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Secret) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Rpc) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Rpc) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Serialize) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_SessionHandler) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_SessionHandler) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Share) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Share) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Template) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Template) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Diff) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Text_Diff) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Token) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Token) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Url) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
-# Optionnal: Horde_ActiveSync, Horde_Crypt, Horde_Editor, Horde_ElasticSearch, Horde_Form
-#            Horde_Http, Horde_Icalendar, Horde_Image, Horde_Imap_Client, Horde_Kolab_Server
-#            Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Ldap, Horde_Mail, Horde_Nls
-#            Horde_Oauth, Horde_Routes, Horde_Service_Twitter, Horde_SpellChecker, Horde_Tree
-#            Horde_Vfs, Net_DNS2, Text_CAPTCHA, Text_Figlet, Text_LanguageDetect, pecl/lzf
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
+# Optionnal: Net_DNS2, Services_Weather, Horde_ActiveSync, Horde_Db, Horde_Feed, Horde_Oauth, Horde_Service_Facebook,
+#            Horde_Service_Twitter, Horde_Service_Weather, Horde_SyncMl, Console_Getopt, Console_Table, File_Find
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
-These classes provide the core functionality of the Horde Application
-Framework.
-
+The Horde Application Framework is a flexible, modular, general-purpose web
+application framework written in PHP. It provides an extensive array of
+components that are targeted at the common problems and tasks involved in
+developing modern web applications. It is the basis for a large number of
+production-level web applications, notably the Horde Groupware suites. For
+more information on Horde or the Horde Groupware suites, visit
+http://www.horde.org.
 
 %prep
 %setup -q -c -T
@@ -125,8 +111,9 @@ cd %{pear_name}-%{version}
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
-    -e '/LICENSE/s/role="horde"/role="doc"/' \
+    -e '/htaccess/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/%{pear_name}.mo/s/role="horde"/role="data"/' \
     ../package.xml >%{name}.xml
 
 
@@ -152,16 +139,21 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+# Move configuration to /etc
+mkdir -p %{buildroot}%{_sysconfdir}
+mv %{buildroot}%{pear_hordedir}/config \
+   %{buildroot}%{_sysconfdir}/horde
+ln -s %{_sysconfdir}/horde %{buildroot}%{pear_hordedir}/config
+cp %{buildroot}%{_sysconfdir}/horde/conf.php.dist \
+   %{buildroot}%{_sysconfdir}/horde/conf.php
+
+install -D -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/horde.conf
+
 %if 0%{?fedora} > 13
 %find_lang %{pear_name}
 %else
 sh %{SOURCE1} %{buildroot} %{pear_name}
 %endif
-
-
-%check
-cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit -d date.timezone=UTC AllTests.php
 
 
 %clean
@@ -182,32 +174,48 @@ fi
 %files -f %{pear_name}-%{version}/%{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/horde.conf
+%attr(0770,apache,apache) %dir %{_sysconfdir}/horde
+%attr(0770,apache,apache) %dir %{_sysconfdir}/horde/registry.d
+%attr(0640,apache,apache) %config %{_sysconfdir}/horde/*.dist
+%attr(0660,apache,apache) %config(noreplace) %{_sysconfdir}/horde/*.php
+%attr(0660,apache,apache) %config %{_sysconfdir}/horde/*.xml
+%attr(0640,apache,apache) %config %{_sysconfdir}/horde/registry.d/README
 %{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Horde/Config
-%{pear_phpdir}/Horde/Core
-%{pear_phpdir}/Horde/Exception/*.php
-%{pear_phpdir}/Horde/Registry
-%{pear_phpdir}/Horde/Script
-%{pear_phpdir}/Horde/Session
-%{pear_phpdir}/Horde/Themes
-%{pear_phpdir}/Horde/*.php
-%{pear_phpdir}/Horde.php
-%{pear_testdir}/%{pear_name}
+%{_bindir}/horde-active-sessions
+%{_bindir}/horde-alarms
+%{_bindir}/horde-check-logger
+%{_bindir}/horde-clear-cache
+%{_bindir}/horde-crond
+%{_bindir}/horde-db-migrate
+%{_bindir}/horde-import-squirrelmail-prefs
+%{_bindir}/horde-memcache-stats
+%{_bindir}/horde-run-task
+%{_bindir}/horde-set-perms
+%{_bindir}/horde-themes
+%{_bindir}/horde-translation
+%{pear_hordedir}/*php
+%{pear_hordedir}/admin
+%{pear_hordedir}/config
+%{pear_hordedir}/install
+%{pear_hordedir}/lib
+%{pear_hordedir}/locale
+%{pear_hordedir}/rpc
+%{pear_hordedir}/services
+%{pear_hordedir}/static
+%{pear_hordedir}/templates
+%{pear_hordedir}/themes
+%{pear_hordedir}/util
+%{pear_hordedir}/js/plupload
+%{pear_hordedir}/js/*.js
 # own locales (non standard) directories, .mo own by find_lang
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
 %dir %{pear_datadir}/%{pear_name}/locale/*
 %dir %{pear_datadir}/%{pear_name}/locale/*/LC_MESSAGES
-%{pear_datadir}/%{pear_name}/migration
-# Web files
-%dir %{pear_hordedir}/js
-%{pear_hordedir}/js/date
-%{pear_hordedir}/js/jquery.mobile
-%{pear_hordedir}/js/map
-%{pear_hordedir}/js/scriptaculous
-%{pear_hordedir}/js/*js
+%{pear_datadir}/%{pear_name}/scripts
 
 
 %changelog
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.0-1
 - Initial package
