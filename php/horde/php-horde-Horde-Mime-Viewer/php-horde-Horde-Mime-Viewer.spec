@@ -134,6 +134,6 @@ fi
 
 
 %changelog
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
+* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Initial package
 
