@@ -31,12 +31,19 @@ Requires:       php-date
 Requires:       php-pcre
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Browser) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Icalendar) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) < 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
