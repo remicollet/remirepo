@@ -3,7 +3,7 @@
 %global pear_name    Horde_Autoloader
 %global pear_channel pear.horde.org
 
-# Can run test because of circular dependency with Horde_Mime
+# Can run test because of circular dependency with Horde_Test
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Autoloader
@@ -55,7 +55,6 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-rm -rf %{buildroot}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
@@ -84,6 +83,7 @@ if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
         %{pear_channel}/%{pear_name} >/dev/null || :
 fi
+
 
 %files
 %defattr(-,root,root,-)

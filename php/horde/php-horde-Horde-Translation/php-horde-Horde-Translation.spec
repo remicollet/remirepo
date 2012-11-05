@@ -3,9 +3,12 @@
 %global pear_name    Horde_Translation
 %global pear_channel pear.horde.org
 
+# Can run test because of circular dependency with Horde_Test
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:           php-horde-Horde-Translation
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde translation library
 
 Group:          Development/Libraries
@@ -17,14 +20,21 @@ Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
-BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php(language) >= 5.3.0
+Requires:       php-gettext
+Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/Horde_Translation) = %{version}
 
@@ -45,6 +55,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
+
 %build
 cd %{pear_name}-%{version}
 
@@ -54,8 +65,8 @@ do
    msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
+
 %install
-rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -76,8 +87,15 @@ sh %{SOURCE1} %{buildroot} Horde_Other
 cat Horde_Other.lang >> %{pear_name}.lang
 cat %{pear_name}.lang
 
-%clean
-rm -rf %{buildroot}
+
+%check
+%if %{with_tests}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit AllTests.php
+%else
+: Test disabled, missing '--with tests' option.
+%endif
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -109,6 +127,9 @@ fi
 
 
 %changelog
+* Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
+- make test optionnal
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
