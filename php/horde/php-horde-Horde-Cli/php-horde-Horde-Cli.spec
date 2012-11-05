@@ -11,30 +11,34 @@ Summary:        Horde Command Line Interface API
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 # /usr/lib/rpm/find-lang.sh from fedora 16
 Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildArch:      noarch
-BuildRequires:  php-pear
-BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
+BuildArch:      noarch
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php(language) >= 5.3.0
+Requires:       php-pcre
+Requires:       php-session
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
-Requires:       php(language) >= 5.3.0
-Requires:       php-channel(%{pear_channel})
-Requires:       php-pcre php-session
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
+
 %description
 Horde_Cli:: API for basic command-line functionality/checks
+
 
 %prep
 %setup -q -c -T
@@ -48,6 +52,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
+
 %build
 cd %{pear_name}-%{version}
 
@@ -57,9 +62,10 @@ do
    msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
+
 %install
 cd %{pear_name}-%{version}
-PHPRC=../php.ini %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
 rm -rf %{buildroot}%{pear_metadir}/.??*
@@ -85,6 +91,7 @@ if [ $1 -eq 0 ] ; then
         %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
+
 %files -f %{pear_name}-%{version}/%{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
@@ -96,6 +103,7 @@ fi
 %dir %{pear_datadir}/Horde_Cli/locale
 %dir %{pear_datadir}/Horde_Cli/locale/*
 %dir %{pear_datadir}/Horde_Cli/locale/*/LC_MESSAGES
+
 
 %changelog
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
