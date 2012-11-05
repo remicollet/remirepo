@@ -17,19 +17,22 @@ Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
-BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-date
+Requires:       php-pcre
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
 # Optionnal
 Requires:       php-pecl(geoip)
+Requires:       php-pear(Net_DNS2)
 
 Provides:       php-pear(%{pear_channel}/Horde_Nls) = %{version}
 
@@ -49,6 +52,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
+
 %build
 cd %{pear_name}-%{version}
 
@@ -58,8 +62,8 @@ do
    msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
+
 %install
-rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -75,11 +79,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %else
 sh %{SOURCE1} %{buildroot} %{pear_name}
 %endif
-head %{pear_name}.lang
 
-
-%clean
-rm -rf %{buildroot}
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -104,7 +104,7 @@ fi
 %dir %{pear_datadir}/Horde_Nls/locale/*
 %dir %{pear_datadir}/Horde_Nls/locale/*/LC_MESSAGES
 
-%changelog
+
 %changelog
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
