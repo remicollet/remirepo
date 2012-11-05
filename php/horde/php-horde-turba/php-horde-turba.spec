@@ -95,7 +95,7 @@ tar xif %{SOURCE0}
 cat <<EOF >httpd.conf
 <DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale|scripts|templates)>
      Deny from all
-</Directory>
+</DirectoryMatch>
 EOF
 
 cd %{pear_name}-%{version}
