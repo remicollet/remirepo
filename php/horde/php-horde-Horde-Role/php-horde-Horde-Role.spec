@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Role
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PEAR installer role used to install Horde components
 
 Group:          Development/Libraries
@@ -20,6 +20,7 @@ BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php(language) >= 5.2.0
 Requires:       php-pear(PEAR)
 Requires:       php-channel(%{pear_channel})
 
@@ -27,8 +28,10 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
-This package provides a method for PEAR to install Horde components into a
-base Horde installation.
+This package provides a method for PEAR to install Horde components into
+the base Horde installation.
+
+System default Horde installation directory is %{_datadir}/horde.
 
 
 %prep
@@ -49,8 +52,6 @@ cd %{pear_name}-%{version}
 
 
 %install
-rm -rf %{buildroot}
-
 # Horde web files location
 mkdir -p %{buildroot}%{_datadir}/horde
 
@@ -67,10 +68,6 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
-
-
-%clean
-rm -rf %{buildroot}
 
 
 %post
@@ -99,6 +96,8 @@ fi
 
 
 %changelog
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
-- Initial package
+* Mon Nov  5 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- cleaups
 
+* Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Initial package
