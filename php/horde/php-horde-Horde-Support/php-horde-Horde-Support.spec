@@ -14,7 +14,7 @@ Summary:        Horde support package
 Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.horde.org
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -27,13 +27,15 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php(language) >= 5.3.0
+Requires:       php-channel(%{pear_channel})
+Requires:       php-date
+Requires:       php-pcre
+Requires:       php-spl
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 3.0.0
-Requires:       php(language) >= 5.3.0
-Requires:       php-channel(%{pear_channel})
-Requires:       php-date php-pcre php-spl
 # designed to work with php-pecl-uuid, not uuid-php
 Conflicts:      uuid-php
 
@@ -42,6 +44,7 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 %description
 Support classes not tied to Horde but is used by it. These classes can be
 used outside of Horde as well.
+
 
 %prep
 %setup -q -c -T
@@ -54,6 +57,7 @@ mv ../package.xml %{name}.xml
 %build
 cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
+
 
 %install
 cd %{pear_name}-%{version}
