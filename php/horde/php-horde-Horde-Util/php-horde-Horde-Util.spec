@@ -3,27 +3,45 @@
 %global pear_name    Horde_Util
 %global pear_channel pear.horde.org
 
+# Can run test because of circular dependency with Horde_Test
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:           php-horde-Horde-Util
 Version:        2.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Horde Utility Libraries
 
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
-Requires:       php-xml
+Requires:       php-ctype
+Requires:       php-dom
+Requires:       php-filter
+Requires:       php-iconv
+Requires:       php-libxml
 Requires:       php-mbstring
+Requires:       php-pcre
+Requires:       php-session
+Requires:       php-spl
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
+# Optionnal
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Imap_Client) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -44,7 +62,6 @@ cd %{pear_name}-%{version}
 
 
 %install
-rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -55,8 +72,15 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-%clean
-rm -rf %{buildroot}
+
+%check
+%if %{with_tests}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit AllTests.php
+%else
+: Test disabled, missing '--with tests' option.
+%endif
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -83,7 +107,10 @@ fi
 
 
 %changelog
-* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-4
+- make test optionnal
+
+* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-3
 - Update to 2.0.0 for remi repo
 
 * Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.4.0-3
