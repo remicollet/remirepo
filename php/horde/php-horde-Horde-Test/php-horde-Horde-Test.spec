@@ -11,16 +11,23 @@ Summary:        Horde testing base classes
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-dom
+Requires:       php-json
+Requires:       php-pcre
+Requires:       php-pdo
+Requires:       php-spl
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
@@ -30,8 +37,6 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Cli) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
-Requires:       php-channel(%{pear_channel})
-Requires:       php-pdo php-dom php-spl php-json php-pcre
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -61,6 +66,7 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
