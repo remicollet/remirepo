@@ -3,9 +3,12 @@
 %global pear_name    Horde_Autoloader
 %global pear_channel pear.horde.org
 
+# Can run test because of circular dependency with Horde_Mime
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:           php-horde-Horde-Autoloader
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Autoloader
 
 Group:          Development/Libraries
@@ -15,12 +18,19 @@ Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-pcre
+Requires:       php-spl
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/Horde_Autoloader) = %{version}
@@ -28,6 +38,7 @@ Provides:       php-pear(%{pear_channel}/Horde_Autoloader) = %{version}
 
 %description
 Autoload implementation and class loading manager for Horde.
+
 
 %prep
 %setup -q -c -T
@@ -54,6 +65,16 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+
+%check
+%if %{with_tests}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit AllTests.php
+%else
+: Test disabled, missing '--with tests' option.
+%endif
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -72,7 +93,11 @@ fi
 %{pear_phpdir}/Horde/Autoloader.php
 %{pear_testdir}/Horde_Autoloader
 
+
 %changelog
+* Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
+- make test optionnal
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
