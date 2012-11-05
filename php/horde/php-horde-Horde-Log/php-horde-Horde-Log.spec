@@ -8,7 +8,7 @@
 
 Name:           php-horde-Horde-Log
 Version:        2.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Logging library
 
 Group:          Development/Libraries
@@ -40,7 +40,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 # Optionnal
 Requires:       php-dom
-# TODO Horde_Scribe
+Requires:       php-pear(%{pear_channel}/Horde_Scribe) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Scribe) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -103,7 +104,11 @@ fi
 
 
 %changelog
-* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Mon Nov  5 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-3
+- requires Horde_Scribe
+- make test optional
+
+* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
 - Update to 2.0.0 for remi repo
 
 * Thu Aug 2 2012 Nick Bebout <nb@fedoraproject.org> - 1.1.2-2
