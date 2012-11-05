@@ -14,7 +14,7 @@ Summary:        Horde translation library
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 # /usr/lib/rpm/find-lang.sh from fedora 16
 Source1:        find-lang.sh
 

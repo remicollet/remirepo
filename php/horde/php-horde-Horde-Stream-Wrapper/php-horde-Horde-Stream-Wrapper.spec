@@ -5,22 +5,24 @@
 
 Name:           php-horde-Horde-Stream-Wrapper
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Stream wrappers
 
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-spl
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -41,6 +43,7 @@ mv ../package.xml %{name}.xml
 cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
+
 %install
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
@@ -52,6 +55,7 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -62,13 +66,18 @@ if [ $1 -eq 0 ] ; then
         %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
+
 %files
 %defattr(-,root,root,-)
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde
 %doc %{pear_docdir}/%{pear_name}
 
+
 %changelog
+* Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
+- cleanups
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
