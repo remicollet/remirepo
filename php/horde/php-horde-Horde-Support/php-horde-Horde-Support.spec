@@ -16,6 +16,8 @@ License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+# http://bugs.horde.org/ticket/11653
+# Make compatible with both existing UUID extensions
 Patch0:         %{name}-uuid.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
