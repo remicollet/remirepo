@@ -53,6 +53,9 @@ An Image utility API, with backends for:
 * ImageMagick convert command line tool
 * Imagick Extension
 
+Optional dependency: php-pecl-imagick
+
+
 %prep
 %setup -q -c -T
 tar xif %{SOURCE0}
