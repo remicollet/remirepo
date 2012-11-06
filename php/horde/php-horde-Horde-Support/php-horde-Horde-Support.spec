@@ -8,13 +8,15 @@
 
 Name:           php-horde-Horde-Support
 Version:        2.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Horde support package
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+Patch0:         %{name}-uuid.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -36,9 +38,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 3.0.0
-# designed to work with php-pecl-uuid, not uuid-php
-Requires:       php-pecl(uuid)
-Conflicts:      uuid-php
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -46,13 +45,19 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Support classes not tied to Horde but is used by it. These classes can be
 used outside of Horde as well.
 
+Optional dependencies:
+- uuid-php or php-pecl-uuid
+
 
 %prep
 %setup -q -c -T
 tar xif %{SOURCE0}
 
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%patch0 -p1 -b .uuid
+
+sed -e '/Uuid.php/s/md5sum=.*name/name/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -101,6 +106,9 @@ fi
 
 
 %changelog
+* Tue Nov  6 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-3
+- add patch to allow uuid-php or php-pecl-uuid
+
 * Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
 - conflicts with uuid-php
 - add optionnal %%check
