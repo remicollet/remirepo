@@ -37,6 +37,7 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 3.0.0
 # designed to work with php-pecl-uuid, not uuid-php
+Requires:       php-pecl(uuid)
 Conflicts:      uuid-php
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
