@@ -6,7 +6,7 @@
 Summary:       Universally Unique Identifier extension for PHP
 Name:          php-pecl-uuid
 Version:       1.0.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 # https://bugs.php.net/63446 - Please Provides LICENSE file
 License:       LGPLv2+
 Group:         Development/Languages
@@ -16,6 +16,12 @@ Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # http://svn.php.net/viewvc?view=revision&revision=328255
 # Use preg_match to avoid "Function ereg() is deprecated" in test suite
 Patch0:        %{pecl_name}-ereg.patch
+# http://svn.php.net/viewvc?view=revision&revision=328259
+# Fix build warnings
+Patch1:        %{pecl_name}-build.patch
+# http://svn.php.net/viewvc?view=revision&revision=328261
+# Improves phpinfo() output
+Patch2:        %{pecl_name}-info.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
@@ -53,7 +59,9 @@ A wrapper around Universally Unique Identifier library (libuuid).
 %setup -q -c 
 
 cd %{pecl_name}-%{version}
-%patch0 -p1 -b .ereg
+%patch0 -p3 -b .ereg
+%patch1 -p3 -b .build
+%patch2 -p3 -b .info
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_UUID_VERSION/{s/.* "//;s/".*$//;p}' php_uuid.h)
@@ -156,5 +164,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov  6 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
+- more upstream patches (build warning + phpinfo output)
+
 * Tue Nov  6 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package, version 1.0.3 (stable)

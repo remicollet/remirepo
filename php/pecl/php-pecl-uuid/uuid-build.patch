@@ -1,0 +1,11 @@
+--- pecl/uuid/trunk/uuid.c	2012/11/06 09:09:21	328258
++++ pecl/uuid/trunk/uuid.c	2012/11/06 09:46:03	328259
+@@ -177,7 +177,7 @@
+ 		  default:
+ 			php_error_docref(NULL TSRMLS_CC, 
+ 							 E_WARNING,
+-							 "Unknown/invalid UUID type '%d' requested, using default type instead",
++							 "Unknown/invalid UUID type '%ld' requested, using default type instead",
+ 							 uuid_type);
+ 			uuid_generate(uuid);
+ 			break;        
