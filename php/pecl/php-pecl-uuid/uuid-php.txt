@@ -24,22 +24,48 @@ Extension [ <persistent> extension #103 uuid version <no_version> ] {
 
   - Functions {
     Function [ <internal:uuid> function uuid_create ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$ctx ]
+      }
     }
     Function [ <internal:uuid> function uuid_destroy ] {
     }
     Function [ <internal:uuid> function uuid_clone ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ctx ]
+        Parameter #1 [ <required> &$ctx2 ]
+      }
     }
     Function [ <internal:uuid> function uuid_load ] {
     }
     Function [ <internal:uuid> function uuid_make ] {
     }
     Function [ <internal:uuid> function uuid_isnil ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ctx ]
+        Parameter #1 [ <required> &$result ]
+      }
     }
     Function [ <internal:uuid> function uuid_compare ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ctx ]
+        Parameter #1 [ <required> $ctx2 ]
+        Parameter #2 [ <required> &$result ]
+      }
     }
     Function [ <internal:uuid> function uuid_import ] {
     }
     Function [ <internal:uuid> function uuid_export ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ctx ]
+        Parameter #1 [ <required> $fmt ]
+        Parameter #2 [ <required> &$data ]
+      }
     }
     Function [ <internal:uuid> function uuid_error ] {
     }
