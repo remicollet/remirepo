@@ -15,25 +15,41 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-date
+Requires:       php-hash
+Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+# Optional dependencies
+Requires:       php-pecl(lzf)
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 This package provides a simple, functional caching API, with the option to
 store the cached data on the filesystem, in one of the PHP opcode cache
 systems (APC, eAcclerator, XCache, or Zend Performance Suite's content
 cache), memcached, or an SQL table.
+
+Optional dependencies:
+- php-pecl-apc or php-xcache
+- php-horde-Horde-Memcache
+
 
 %prep
 %setup -q -c -T
