@@ -23,7 +23,6 @@ Patch1:        %{pecl_name}-build.patch
 # Improves phpinfo() output
 Patch2:        %{pecl_name}-info.patch
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 BuildRequires: php-pear
 BuildRequires: libuuid-devel
@@ -37,14 +36,6 @@ Conflicts:     uuid-php
 
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
-
-# Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-%{pecl_name}
-%endif
-
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -100,7 +91,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # Install the NTS stuff
 make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
@@ -145,12 +135,7 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-, root, root, 0755)
 %doc %{pecl_name}-%{version}/CREDITS
 %{pecl_xmldir}/%{name}.xml
 
@@ -166,6 +151,7 @@ rm -rf %{buildroot}
 %changelog
 * Tue Nov  6 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - more upstream patches (build warning + phpinfo output)
+- cleanups for review
 
 * Tue Nov  6 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package, version 1.0.3 (stable)
