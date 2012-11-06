@@ -16,7 +16,7 @@
 16 php-horde-Horde-Test        => Support, Util, Cli, Log
 17 php-horde-Horde-Image       => Exception, Support, Translation, Util
 18 php-horde-Horde-Browser     => Exception, Util
-19 php-horde-Horde-Lock        => Exception, Support
+19 php-horde-Horde-Lock        => Exception, Support, (Db, Log)
 20 php-horde-Horde-Cache       => Exception, Util
 ---- with test unit ----
 21 php-horde-Horde-Argv        =>           Exception, Translation
