@@ -1,0 +1,12 @@
+diff -up uuid-1.0.3/tests/uuid_create.phpt.old uuid-1.0.3/tests/uuid_create.phpt
+--- uuid-1.0.3/tests/uuid_create.phpt.old	2012-11-06 09:30:20.644788269 +0100
++++ uuid-1.0.3/tests/uuid_create.phpt	2012-11-06 09:30:30.512821665 +0100
+@@ -10,7 +10,7 @@ if(!extension_loaded('uuid')) die('skip
+ <?php
+         // check basic format of generated UUIDs
+         $uuid = uuid_create();
+-        if (ereg("[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}", $uuid)) {
++        if (preg_match("/[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}/", $uuid)) {
+                 echo "basic format ok\n";
+         } else {
+                 echo "basic UUID format check failed, generated UUID was $uuid\n";
