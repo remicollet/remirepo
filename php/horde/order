@@ -49,8 +49,8 @@
 48 php-horde-Horde-Notification =>          Exception, Util
 49 php-horde-Horde-Icalendar   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
 50 php-horde-Horde-Stream      =>           Exception
-51 php-horde-Horde-Imap-Client => BR(Stream, Mime), Exception, Mail, Mime, Util
-52 php-horde-Horde-Secret      =>           Exception, Support
+51 php-horde-Horde-Secret      =>           Exception, Support
+52 php-horde-Horde-Imap-Client => BR(Stream, Mime), Exception, Mail, Mime, Util
 53 php-horde-Horde-SessionHandler => BR(Db), Exception, Util
 54 php-horde-Horde-Share       => ****      Db, Exception, Group, Perms, Support, Translation, Url, Util
 55 php-horde-Horde-Role

@@ -4,12 +4,12 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.1.1
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
 Group:          Development/Libraries
-License:        LGPL-2.1
+License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 # /usr/lib/rpm/find-lang.sh from fedora 16
@@ -17,7 +17,7 @@ Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 # To run unit tests
@@ -28,9 +28,12 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-date
 Requires:       php-hash
-Requires:       php-imap
-Requires:       php-mbstring
+Requires:       php-openssl
+Requires:       php-pcre
+Requires:       php-spl
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
@@ -42,6 +45,16 @@ Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Stream) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+# Optionnal
+Requires:       php-imap
+Requires:       php-json
+Requires:       php-mbstring
+Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Cache) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Secret) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Filter) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -52,9 +65,7 @@ drivers.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
-
+%setup -q -c
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
@@ -62,6 +73,7 @@ cd %{pear_name}-%{version}
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+
 
 %build
 cd %{pear_name}-%{version}
@@ -126,6 +138,9 @@ fi
 
 
 %changelog
+* Tue Nov  6 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.3-1
+- Update to 2.1.3 for remi repo
+
 * Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.1-1
 - Update to 2.1.1 for remi repo
 
