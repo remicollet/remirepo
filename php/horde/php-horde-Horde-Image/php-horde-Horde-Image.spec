@@ -25,7 +25,7 @@ Requires:       php-date
 Requires:       php-exif
 Requires:       php-pcre
 Requires:       php-spl
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
