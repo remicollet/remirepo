@@ -1,0 +1,80 @@
+Extension [ <persistent> extension #103 uuid version 1.0.3 ] {
+
+  - Constants [10] {
+    Constant [ integer UUID_VARIANT_DCE ] { 1 }
+    Constant [ integer UUID_VARIANT_MICROSOFT ] { 2 }
+    Constant [ integer UUID_VARIANT_OTHER ] { 3 }
+    Constant [ integer UUID_TYPE_DEFAULT ] { 0 }
+    Constant [ integer UUID_TYPE_TIME ] { 1 }
+    Constant [ integer UUID_TYPE_DCE ] { 4 }
+    Constant [ integer UUID_TYPE_NAME ] { 1 }
+    Constant [ integer UUID_TYPE_RANDOM ] { 4 }
+    Constant [ integer UUID_TYPE_NULL ] { -1 }
+    Constant [ integer UUID_TYPE_INVALID ] { -42 }
+  }
+
+  - Functions {
+    Function [ <internal:uuid> function uuid_create ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $uuid_type ]
+      }
+    }
+    Function [ <internal:uuid> function uuid_is_valid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uuid ]
+      }
+    }
+    Function [ <internal:uuid> function uuid_compare ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $uuid1 ]
+        Parameter #1 [ <required> $uuid2 ]
+      }
+    }
+    Function [ <internal:uuid> function uuid_is_null ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uuid ]
+      }
+    }
+    Function [ <internal:uuid> function uuid_type ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uuid ]
+      }
+    }
+    Function [ <internal:uuid> function uuid_variant ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uuid ]
+      }
+    }
+    Function [ <internal:uuid> function uuid_time ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uuid ]
+      }
+    }
+    Function [ <internal:uuid> function uuid_mac ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uuid ]
+      }
+    }
+    Function [ <internal:uuid> function uuid_parse ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uuid ]
+      }
+    }
+    Function [ <internal:uuid> function uuid_unparse ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uuid ]
+      }
+    }
+  }
+}
+

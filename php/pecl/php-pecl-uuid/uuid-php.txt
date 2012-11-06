@@ -1,0 +1,50 @@
+Extension [ <persistent> extension #103 uuid version <no_version> ] {
+
+  - Constants [19] {
+    Constant [ integer UUID_VERSION ] { 1073666 }
+    Constant [ integer UUID_LEN_BIN ] { 16 }
+    Constant [ integer UUID_LEN_STR ] { 36 }
+    Constant [ integer UUID_LEN_SIV ] { 39 }
+    Constant [ integer UUID_RC_OK ] { 0 }
+    Constant [ integer UUID_RC_ARG ] { 1 }
+    Constant [ integer UUID_RC_MEM ] { 2 }
+    Constant [ integer UUID_RC_SYS ] { 3 }
+    Constant [ integer UUID_RC_INT ] { 4 }
+    Constant [ integer UUID_RC_IMP ] { 5 }
+    Constant [ integer UUID_MAKE_V1 ] { 1 }
+    Constant [ integer UUID_MAKE_V3 ] { 2 }
+    Constant [ integer UUID_MAKE_V4 ] { 4 }
+    Constant [ integer UUID_MAKE_V5 ] { 8 }
+    Constant [ integer UUID_MAKE_MC ] { 16 }
+    Constant [ integer UUID_FMT_BIN ] { 0 }
+    Constant [ integer UUID_FMT_STR ] { 1 }
+    Constant [ integer UUID_FMT_SIV ] { 2 }
+    Constant [ integer UUID_FMT_TXT ] { 3 }
+  }
+
+  - Functions {
+    Function [ <internal:uuid> function uuid_create ] {
+    }
+    Function [ <internal:uuid> function uuid_destroy ] {
+    }
+    Function [ <internal:uuid> function uuid_clone ] {
+    }
+    Function [ <internal:uuid> function uuid_load ] {
+    }
+    Function [ <internal:uuid> function uuid_make ] {
+    }
+    Function [ <internal:uuid> function uuid_isnil ] {
+    }
+    Function [ <internal:uuid> function uuid_compare ] {
+    }
+    Function [ <internal:uuid> function uuid_import ] {
+    }
+    Function [ <internal:uuid> function uuid_export ] {
+    }
+    Function [ <internal:uuid> function uuid_error ] {
+    }
+    Function [ <internal:uuid> function uuid_version ] {
+    }
+  }
+}
+
