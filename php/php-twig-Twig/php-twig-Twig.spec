@@ -1,11 +1,10 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-
 %global pear_channel pear.twig-project.org
 %global pear_name    %(echo %{name} | sed -e 's/^php-twig-//' -e 's/-/_/g')
 
 Name:             php-twig-Twig
-Version:          1.10.3
+Version:          1.11.0
 Release:          1%{?dist}
 Summary:          Twig is a modern template engine for PHP
 
@@ -38,6 +37,7 @@ Requires:         php-spl
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
+
 %description
 The flexible, fast, and secure template engine for PHP.
 
@@ -65,14 +65,14 @@ mv package.xml %{pear_name}-%{version}/%{name}.xml
 
 %install
 cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %post
@@ -95,6 +95,9 @@ fi
 
 
 %changelog
+* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> 1.11.1-1
+- Update to 1.11.1 for remi repo
+
 * Sat Oct 20 2012 Remi Collet <RPMS@FamilleCollet.com> 1.10.3-1
 - Update to 1.10.3
 
