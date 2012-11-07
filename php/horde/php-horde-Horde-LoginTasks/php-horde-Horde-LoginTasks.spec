@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-LoginTasks
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Horde Login Tasks System
 
@@ -17,7 +17,7 @@ Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 # To run unit tests
@@ -27,6 +27,8 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-date
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
@@ -42,9 +44,7 @@ The Horde_LoginTasks library provides a set of methods for dealing with
 tasks run upon login to Horde applications.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
-
+%setup -q -c
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
@@ -67,7 +67,7 @@ done
 
 %install
 cd %{pear_name}-%{version}
-PHPRC=../php.ini %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
 rm -rf %{buildroot}%{pear_metadir}/.??*
@@ -112,7 +112,11 @@ fi
 %dir %{pear_datadir}/%{pear_name}/locale/*
 %dir %{pear_datadir}/%{pear_name}/locale/*/LC_MESSAGES
 
+
 %changelog
+* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
