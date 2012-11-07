@@ -11,8 +11,8 @@
 # "horbe" sub-package, with apache stuff
 
 Name:           php-horde-horde
-Version:        5.0.0
-Release:        2%{?dist}
+Version:        5.0.1
+Release:        1%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -110,9 +110,7 @@ more information on Horde or the Horde Groupware suites, visit
 http://www.horde.org.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
-
+%setup -q -c
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
@@ -226,6 +224,9 @@ fi
 
 
 %changelog
+* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.1-1
+- update to 5.0.1 for remi repo
+
 * Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.0-2
 - fix locale
 
