@@ -7,18 +7,14 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Support
-Version:        2.0.0
-Release:        3%{?dist}
+Version:        2.0.1
+Release:        1%{?dist}
 Summary:        Horde support package
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# http://bugs.horde.org/ticket/11653
-# Make compatible with both existing UUID extensions
-Patch0:         %{name}-uuid.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -52,14 +48,10 @@ Optional dependencies:
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
-%patch0 -p1 -b .uuid
-
-sed -e '/Uuid.php/s/md5sum=.*name/name/' \
-    ../package.xml >%{name}.xml
+cp ../package.xml %{name}.xml
 
 
 %build
@@ -108,6 +100,10 @@ fi
 
 
 %changelog
+* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-3
+- Update to 2.0.1 for remi repo
+- drop our patch, merged upstream
+
 * Tue Nov  6 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-3
 - add patch to allow uuid-php or php-pecl-uuid
 
