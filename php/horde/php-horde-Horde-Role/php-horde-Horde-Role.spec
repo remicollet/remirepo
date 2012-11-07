@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Role
 Version:        1.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        PEAR installer role used to install Horde components
 
 Group:          Development/Libraries
@@ -15,13 +15,13 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.2.0
-Requires:       php-pear(PEAR)
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -43,7 +43,10 @@ cat <<EOF | tee macros.horde
 EOF
 
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+
+# no PEAR postinstall task. do it in RPM post scriplet.
+sed -e '/tasks:/d' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -92,12 +95,16 @@ fi
 %{pear_phpdir}/PEAR/Installer/Role/Horde
 %{pear_phpdir}/PEAR/Installer/Role/Horde.php
 %{pear_phpdir}/PEAR/Installer/Role/Horde.xml
+# Empty dir, used by horde apps.
 %{_datadir}/horde
 
 
 %changelog
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
+- fix xml (install fails because of tasks:postinstallscript)
+
 * Mon Nov  5 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
-- cleaups
+- cleanups
 
 * Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Initial package
