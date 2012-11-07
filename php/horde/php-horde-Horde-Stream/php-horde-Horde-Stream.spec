@@ -88,9 +88,9 @@ fi
 
 
 %changelog
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.1-1
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1 for remi repo
 
-* Sat Nov  3 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
+* Sat Nov  3 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Initial package
 
