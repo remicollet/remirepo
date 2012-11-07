@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Browser
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Horde Browser API
 
@@ -41,9 +41,7 @@ current user's browser and its capabilities.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
-
+%setup -q -c
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
@@ -107,6 +105,9 @@ fi
 
 
 %changelog
+* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
