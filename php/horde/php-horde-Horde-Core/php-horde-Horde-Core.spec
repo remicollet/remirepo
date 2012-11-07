@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -17,8 +17,8 @@ Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear
 BuildRequires:  gettext
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 # To run unit tests
@@ -30,6 +30,19 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-date
+Requires:       php-dom
+Requires:       php-gettext
+Requires:       php-hash
+Requires:       php-json
+Requires:       php-pcre
+Requires:       php-pdo_mysql
+Requires:       php-reflection
+Requires:       php-session
+Requires:       php-simplexml
+Requires:       php-sockets
+Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.0.0
@@ -102,12 +115,34 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
-# Optionnal: Horde_ActiveSync, Horde_Crypt, Horde_Editor, Horde_ElasticSearch, Horde_Form
-#            Horde_Http, Horde_Icalendar, Horde_Image, Horde_Imap_Client, Horde_Kolab_Server
-#            Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Ldap, Horde_Mail, Horde_Nls
+# Optional
+Requires:       php-pecl(LZF)
+Requires:       php-pear(Net_DNS2)
+Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Crypt) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Form) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Http) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Icalendar) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Image) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Imap_Client) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
+# Optionnal: Horde_ActiveSync, Horde_Editor, Horde_ElasticSearch, Horde_Kolab_Server
+#            Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Ldap
 #            Horde_Oauth, Horde_Routes, Horde_Service_Twitter, Horde_SpellChecker, Horde_Tree
-#            Horde_Vfs, Net_DNS2, Text_CAPTCHA, Text_Figlet, Text_LanguageDetect, pecl/lzf
-
+#            Text_CAPTCHA, Text_Figlet, Text_LanguageDetect
+# TODO Horde_Ldap
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
@@ -117,9 +152,7 @@ Framework.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
-
+%setup -q -c
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
@@ -141,7 +174,6 @@ done
 
 
 %install
-rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -162,10 +194,6 @@ sh %{SOURCE1} %{buildroot} %{pear_name}
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit -d date.timezone=UTC AllTests.php
-
-
-%clean
-rm -rf %{buildroot}
 
 
 %post
@@ -209,5 +237,8 @@ fi
 
 
 %changelog
+* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+- Update to 2.0.2 for remi repo
+
 * Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Initial package
