@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Alarm
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Horde Alarm Libraries
 
@@ -17,8 +17,8 @@ Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  gettext
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
@@ -27,6 +27,9 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-date
+Requires:       php-spl
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
@@ -34,6 +37,21 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+# Optional
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Notification) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Perms) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Prefs) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -45,9 +63,7 @@ available: standard Horde notifications, pop-ups, emails.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
-
+%setup -q -c
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
@@ -117,6 +133,9 @@ fi
 
 
 %changelog
+* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo
+
 * Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
