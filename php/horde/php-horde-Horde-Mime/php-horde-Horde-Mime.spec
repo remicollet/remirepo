@@ -7,7 +7,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -20,7 +20,7 @@ Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 %if %{with_tests}
@@ -31,26 +31,32 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-date
+Requires:       php-fileinfo
+Requires:       php-pcre
+Requires:       php-spl
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/Horde_Exception) <= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mail) <= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Filter) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Support) <= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) <= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Text_Flowed) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) <= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Util) <= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optionnal
-Requires:       php-pear(%{pear_channel}/Horde_Nls) <= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) <= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter) >= 3.0.0
+Requires:       php-intl
 Requires:       php-pear(Net_DNS2)
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -60,10 +66,9 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides methods for dealing with MIME (RFC 2045) and related e-mail (RFC
 822/2822/5322) standards.
 
-%prep
-%setup -q -c -T
-tar xif %{SOURCE0}
 
+%prep
+%setup -q -c
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
