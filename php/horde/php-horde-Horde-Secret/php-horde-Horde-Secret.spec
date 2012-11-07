@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Secret
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Secret Encryption API
 
 Group:          Development/Libraries
@@ -13,9 +13,12 @@ License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+# http://bugs.horde.org/ticket/11667
+Patch0:         %{pear_name}-test.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
@@ -26,9 +29,9 @@ Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-hash
 Requires:       php-session
-Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(PEAR)
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pear(Crypt_Blowfish) >= 1.0.1
+Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
@@ -41,12 +44,18 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 An API for encrypting and decrypting small pieces of data with the use of a
 shared key.
 
+
 %prep
 %setup -q -c -T
 tar xif %{SOURCE0}
 
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%patch0 -p1 -b .11667
+
+# clear md5sum for patched files
+sed -e '/Autoload.php/s/md5sum.*name/name/' \
+    -e '/SecretTest.php/s/md5sum.*name/name/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -55,7 +64,6 @@ cd %{pear_name}-%{version}
 
 
 %install
-rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -69,13 +77,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-# Test suite not ready
-sed -e 's/E_ALL.*E_STRICT/E_ALL \& ~E_STRICT/' -i Autoload.php
-phpunit -d date.timezone=UTC AllTests.php || exit 0
-
-
-%clean
-rm -rf %{buildroot}
+phpunit -d date.timezone=UTC AllTests.php
 
 
 %post
@@ -99,6 +101,10 @@ fi
 
 
 %changelog
-* Sat Nov  3 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- add patch for broken unit test
+  http://bugs.horde.org/ticket/11667
+
+* Sat Nov  3 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Initial package
 
