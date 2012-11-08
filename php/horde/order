@@ -63,6 +63,7 @@
 62 php-horde-Horde-Form             2.0.0   =>           Core, Date, Exception, Mime, Nls, Token, Translation, Util
 63 php-horde-Horde-Rpc          *   2.0.1   =>           Core, Exception, Perms, Serialize, Support, Translation, Util, Xml_Element
 64 php-horde-Horde-Memcache     *   2.0.0                Exception
+65 php-horde-Horde-Memcache     *   2.0.0                Exception, Util
 ---- apps -----
 php-horde-horde (Framework)     +   5.0.1
 php-horde-turba (Address book)  +   4.0.0
