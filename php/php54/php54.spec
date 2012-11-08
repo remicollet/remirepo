@@ -8,7 +8,7 @@
 %global pharver     2.0.1
 %global zipver      1.11.0
 %global jsonver     1.2.1
-%global oci8ver     1.4.7
+%global oci8ver     1.4.9
 
 %global mysql_sock %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
@@ -25,8 +25,11 @@
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
 
-#global snapdate   201201041830
-#global rcver      RC1
+#global snapdate      201201041830
+%global rcver         RC1
+
+# version used for php embedded library soname
+%global embed_version 5.4
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
@@ -61,9 +64,9 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.8
+Version: 5.4.9
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 5%{?dist}
 %endif
@@ -1494,7 +1497,7 @@ fi
 %files embedded
 %defattr(-,root,root,-)
 %{_libdir}/libphp5.so
-%{_libdir}/libphp5-%{version}%{?rcver}.so
+%{_libdir}/libphp5-%{embed_version}.so
 
 %files pgsql -f files.pgsql
 %files mysql -f files.mysql
@@ -1529,6 +1532,10 @@ fi
 
 
 %changelog
+* Thu Nov  8 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.1.RC1
+- update to 5.4.9RC1
+- change php embedded library soname version to 5.4
+
 * Tue Nov  6 2012 Remi Collet <rcollet@redhat.com> 5.4.8-5
 - fix _httpd_mmn macro definition
 
