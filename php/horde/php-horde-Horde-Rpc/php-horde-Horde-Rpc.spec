@@ -3,6 +3,9 @@
 %global pear_name    Horde_Rpc
 %global pear_channel pear.horde.org
 
+# Single test is not a unit test (requires a web server)
+# so, don't run it during rpmbuild
+
 Name:           php-horde-Horde-Rpc
 Version:        2.0.1
 Release:        1%{?dist}
@@ -60,6 +63,7 @@ Conflicts:      php-pear(%{pear_channel}/Horde_SyncMl) >= 3.0.0
 # TODO  Horde_ActiveSync
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 A common abstracted interface to various remote methods of accessing Horde
@@ -131,8 +135,8 @@ fi
 
 
 %changelog
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Initial package
