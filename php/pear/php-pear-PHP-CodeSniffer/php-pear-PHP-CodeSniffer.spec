@@ -3,7 +3,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.4.1
+Version:        1.4.2
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -19,7 +19,7 @@ BuildRequires:  php-pear
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
 
 Requires:       php-pear(PEAR)
-Requires:       php-common >= 5.1.2
+Requires:       php(language) >= 5.1.2
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Fri Nov  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.2-1
+- upstream 1.4.2
+
 * Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.1-1
 - upstream 1.4.1
 
