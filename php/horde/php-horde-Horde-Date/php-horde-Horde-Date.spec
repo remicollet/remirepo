@@ -34,7 +34,7 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-pcre
 Requires:       php-spl
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
