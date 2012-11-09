@@ -1,35 +1,35 @@
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name phploc
-%global channel pear.phpunit.de
+%global pear_name    phploc
+%global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-phploc
-Version:        1.7.2
+Version:        1.7.3
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://sebastianbergmann.github.com/phploc/
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
+BuildRequires:  php-channel(%{pear_channel})
 
 Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-common >= 5.3.3
+Requires:       php(language) >= 5.3.3
 Requires:       php-dom
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-channel(%{channel})
+Requires:       php-channel(%{pear_channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(pear.phpunit.de/FinderFacade) >= 1.0.4
+Requires:       php-pear(%{pear_channel}/FinderFacade) >= 1.0.4
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -53,19 +53,19 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT docdir
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__rm} -rf %{buildroot} docdir
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-%{__rm} -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+%{__rm} -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-%{__mkdir} -p $RPM_BUILD_ROOT%{pear_xmldir}
-%{__install} -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+%{__mkdir} -p %{buildroot}%{pear_xmldir}
+%{__install} -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-%{__rm} -rf $RPM_BUILD_ROOT
+%{__rm} -rf %{buildroot}
 
 
 %post
@@ -76,7 +76,7 @@ cd %{pear_name}-%{version}
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -89,6 +89,9 @@ fi
 
 
 %changelog
+* Fri Nov  9 2012 Remi Collet <remi@fedoraproject.org> - 1.7.3-1
+- Version 1.7.3 (stable) - API 1.7.0 (stable)
+
 * Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> - 1.7.2-1
 - Version 1.7.2 (stable) - API 1.7.0 (stable)
 
