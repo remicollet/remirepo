@@ -14,6 +14,7 @@ License:          MIT
 URL:              http://pirum.sensiolabs.org
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -83,12 +84,16 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{_bindir}/pirum
 
 
 %changelog
+* Fri Nov  9 2012 Remi Collet <rpms@famillecollet.com> - 1.1.4-2
+- backport for remi repo
+
 * Thu Nov  8 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.4-2
 - Added "%%global pear_metadir" and usage in %%install
 - Changed RPM_BUILD_ROOT to %%{buildroot}
