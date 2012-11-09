@@ -14,7 +14,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 11%{?dist}.1
+Release: 12%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -25,7 +25,6 @@ URL: http://pear.php.net/package/PEAR
 Source0: http://download.pear.php.net/package/PEAR-%{version}.tgz
 # wget https://raw.github.com/pear/pear-core/master/install-pear.php
 Source1: install-pear.php
-Source2: relocate.php
 Source3: strip.php
 Source10: pear.sh
 Source11: pecl.sh
@@ -76,6 +75,7 @@ do
     [ -f package2.xml ] && mv package2.xml ${file%%-*}.xml \
                         || mv package.xml  ${file%%-*}.xml
 done
+cp %{SOURCE1} .
 
 # apply patches on used PEAR during install
 # -- no patch
@@ -108,7 +108,9 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
 
 %{_bindir}/php -n -dmemory_limit=32M -dshort_open_tag=0 -dsafe_mode=0 \
          -derror_reporting=E_ALL -ddetect_unicode=0 \
-      %{SOURCE1} --dir    %{peardir} \
+      install-pear.php \
+                 --dir    %{peardir} \
+                 --cache  %{_localstatedir}/cache/php-pear \
                  --config %{_sysconfdir}/pear \
                  --bin    %{_bindir} \
                  --www    %{_localstatedir}/www/html \
@@ -123,10 +125,8 @@ install -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/pecl
 install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
 
 # Sanitize the pear.conf
-%{_bindir}/php -n %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf $RPM_BUILD_ROOT | 
-  %{_bindir}/php -n %{SOURCE2} php://stdin $PWD > new-pear.conf
-%{_bindir}/php -n %{SOURCE3} new-pear.conf ext_dir |
-  %{_bindir}/php -n %{SOURCE3} php://stdin http_proxy > $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf
+%{_bindir}/php -n %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf ext_dir >new-pear.conf
+%{_bindir}/php -n %{SOURCE3} new-pear.conf http_proxy > $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf
 
 %{_bindir}/php -r "print_r(unserialize(substr(file_get_contents('$RPM_BUILD_ROOT%{_sysconfdir}/pear.conf'),17)));"
 
@@ -216,6 +216,12 @@ rm new-pear.conf
 
 
 %changelog
+* Fri Nov  9 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-12
+- provides value for %%{pear_metadir}
+
+* Wed Sep 26 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-12
+- drop relocate stuff, no more needed
+
 * Thu Sep  6 2012 Remi Collet <RPMS@famillecollet.com> 1:1.9.4-11.1
 - obsoletes php53* php54* on EL
 
