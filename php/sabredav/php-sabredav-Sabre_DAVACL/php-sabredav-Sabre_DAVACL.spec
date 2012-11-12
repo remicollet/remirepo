@@ -7,10 +7,12 @@ Version:        1.6.0
 Release:        3%{?dist}
 Summary:        RFC3744 implementation for SabreDAV
 
+Group:          Development/Libraries
 License:        BSD
 URL:            http://code.google.com/p/sabredav
 Source0:        http://pear.sabredav.org/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{channelname})
@@ -18,7 +20,6 @@ BuildRequires:  php-channel(%{channelname})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
-Requires:       php-common >= 5.1
 Requires:       php-pdo
 Requires:       php-xml
 Requires:       php-pear(PEAR)
@@ -47,7 +48,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
@@ -66,12 +67,16 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
 %{pear_phpdir}/Sabre/DAVACL
 
 
 %changelog
+* Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.6.0-3
+- backport for remi repo
+
 * Wed Oct 31 2012 Joseph Marrero <jmarrero@fedoraproject.org> 1.6.0-3
 - added required dep pointed out by phpci
 * Tue Oct 23 2012 Joseph Marrero <jmarrero@fedoraproject.org> 1.6.0-2
