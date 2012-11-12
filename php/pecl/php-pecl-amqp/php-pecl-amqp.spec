@@ -4,12 +4,16 @@
 
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
-Version:       1.0.7
+Version:       1.0.8
 Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://github.com/pdezwart/php-amqp/issues/19
+Source1:       https://raw.github.com/pdezwart/php-amqp/master/amqp_object_store.c
+Source2:       https://raw.github.com/pdezwart/php-amqp/master/amqp_object_store.h
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel > 5.2.0
@@ -21,6 +25,8 @@ Requires:         php(api) = %{php_core_api}
 Requires(post):   %{__pecl}
 Requires(postun): %{__pecl}
 
+Provides:         php-%{pecl_name} = %{version}
+Provides:         php-%{pecl_name}%{?_isa} = %{version}
 Provides:         php-pecl(%{pecl_name}) = %{version}
 Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -47,12 +53,19 @@ from any queue.
 %prep
 %setup -q -c
 
+cd %{pecl_name}-%{version}
+
+cp %{SOURCE1} %{SOURCE2} .
+
+sed -e '/"Version"/s/"1.0.6"/"%{version}"/' -i amqp.c
+
 # Upstream often forget to change this
-extver=$(sed -n '/"Version"/{s/.*"1/1/;s/".*$//;p}' %{pecl_name}-%{version}/amqp.c)
+extver=$(sed -n '/"Version"/{s/.*"1/1/;s/".*$//;p}' amqp.c)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
 fi
+cd ..
 
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -87,6 +100,8 @@ extension = %{pecl_name}.so
 ;amqp.vhost = /
 EOF
 
+cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
+
 
 %build
 cd %{pecl_name}-%{version}
@@ -94,14 +109,22 @@ phpize
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+cd ../%{pecl_name}-zts
+zts-phpize
+%configure --with-php-config=%{_bindir}/zts-php-config
+make %{?_smp_mflags}
+
 
 %install
 rm -rf %{buildroot}
 make -C %{pecl_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
+make -C %{pecl_name}-zts \
+     install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -109,8 +132,13 @@ install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %check
 # No test provided, just minimal load test
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension_dir=%{pecl_name}-%{version}/modules \
+    --define extension=%{pecl_name}.so \
+    -m | grep %{pecl_name}
+
+%{__ztsphp} --no-php-ini \
+    --define extension_dir=%{pecl_name}-zts/modules \
     --define extension=%{pecl_name}.so \
     -m | grep %{pecl_name}
 
@@ -132,12 +160,19 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_name}-%{version}/{CREDITS,LICENSE}
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Mon Nov 12 2012 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
+- update to 1.0.8
+- build ZTS extension
+- also provides php-amqp
+
 * Wed Sep 12 2012 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - update to 1.0.7
 - cleanups
