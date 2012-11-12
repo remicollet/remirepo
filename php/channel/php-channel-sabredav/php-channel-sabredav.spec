@@ -11,12 +11,16 @@ License:    Public Domain
 URL:        http://code.google.com/p/sabredav
 Source0:    http://pear.sabredav.org/channel.xml
 
+BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:  noarch
-BuildRequires:  php-pear >= 1:1.4.9-1.2
+BuildRequires: php-pear
+
 Requires:   php-pear(PEAR)
 Requires(post):     %{__pear}
 Requires(postun):   %{__pear}
+
 Provides:   php-channel(%{channelname})
+
 
 %description
 This package adds the SabreDAV channel which allows PEAR packages
@@ -51,10 +55,14 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %{pear_xmldir}/%{channelname}.xml
 
 
 %changelog
+* Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.3-3
+- backport for remi repo
+
 * Mon Oct 01 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.3-3
 - remove rm -rf %%BUILDROOT from install
 - change licence to public domain
