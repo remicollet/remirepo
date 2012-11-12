@@ -7,17 +7,18 @@ Version:        1.6.4
 Release:        3%{?dist}
 Summary:        HTTP component for the SabreDAV WebDAV framework for PHP
 
+Group:          Development/Libraries
 License:        BSD
 URL:            http://code.google.com/p/sabredav
 Source0:        http://pear.sabredav.org/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{channelname})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 4
 Requires:       php-pear(PEAR)
 Requires:       php-channel(%{channelname})
 Requires:       php-pear(%{channelname}/Sabre)
@@ -44,7 +45,7 @@ cd %{pear_name}-%{version}
 
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 
 # Install XML package description
@@ -64,12 +65,16 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
 %{pear_phpdir}/Sabre/HTTP
 
 
 %changelog
+* Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.6.4-3
+- backport for remi repo
+
 * Wed Oct 31 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.4-3
 - specified php required version pointed out by phpci
 * Sun Oct 12 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.4-2

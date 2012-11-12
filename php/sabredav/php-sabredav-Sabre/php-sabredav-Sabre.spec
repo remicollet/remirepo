@@ -7,6 +7,7 @@ Version:        1.0.0
 Release:        6%{?dist}
 Summary:        Base for Sabre_DAV packages
 
+Group:          Development/Libraries
 License:        BSD
 URL:            http://code.google.com/p/sabredav
 Source0:        http://pear.sabredav.org/get/%{pear_name}-%{version}.tgz

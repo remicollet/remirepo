@@ -7,6 +7,7 @@ Version:        1.6.5
 Release:        1%{?dist}
 Summary:        Sabre_DAV is a WebDAV framework for PHP
 
+Group:          Development/Libraries
 License:        BSD
 URL:            http://code.google.com/p/sabredav
 Source0:        http://pear.sabredav.org/get/%{pear_name}-%{version}.tgz
@@ -77,7 +78,7 @@ fi
 
 
 %changelog
-* Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.3-3
+* Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.6.5-1
 - backport for remi repo
 
 * Wed Oct 31 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.5-1
