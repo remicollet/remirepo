@@ -11,7 +11,7 @@ License:        BSD
 URL:            http://code.google.com/p/sabredav
 Source0:        http://pear.sabredav.org/get/%{pear_name}-%{version}.tgz
 
-BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{channelname})
