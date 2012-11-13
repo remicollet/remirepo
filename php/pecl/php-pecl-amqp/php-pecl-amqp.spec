@@ -4,16 +4,12 @@
 
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
-Version:       1.0.8
+Version:       1.0.9
 Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/pdezwart/php-amqp/issues/19
-Source1:       https://raw.github.com/pdezwart/php-amqp/master/amqp_object_store.c
-Source2:       https://raw.github.com/pdezwart/php-amqp/master/amqp_object_store.h
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel > 5.2.0
@@ -54,10 +50,6 @@ from any queue.
 %setup -q -c
 
 cd %{pecl_name}-%{version}
-
-cp %{SOURCE1} %{SOURCE2} .
-
-sed -e '/"Version"/s/"1.0.6"/"%{version}"/' -i amqp.c
 
 # Upstream often forget to change this
 extver=$(sed -n '/"Version"/{s/.*"1/1/;s/".*$//;p}' amqp.c)
@@ -168,6 +160,9 @@ fi
 
 
 %changelog
+* Tue Nov 13 2012 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- update to 1.0.9
+
 * Mon Nov 12 2012 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - update to 1.0.8
 - build ZTS extension
