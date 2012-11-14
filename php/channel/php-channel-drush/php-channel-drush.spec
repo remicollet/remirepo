@@ -12,6 +12,7 @@ License:          Public Domain
 URL:              http://%{pear_channel}
 Source0:          http://%{pear_channel}/channel.xml
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 
@@ -54,9 +55,13 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %{pear_xmldir}/%{name}.xml
 
 
 %changelog
+* Tue Nov 14 2012 Remi Collet <rpms@famillecollet.com> - 1.3-1
+- backport for remi repo
+
 * Thu Nov  8 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3-1
 - Initial package (version matches channel REST version)
