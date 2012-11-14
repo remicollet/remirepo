@@ -1,7 +1,7 @@
 diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
 --- php-5.4.5RC1/ext/zip/config.m4.systzip	2012-07-04 07:43:14.000000000 +0200
 +++ php-5.4.5RC1/ext/zip/config.m4	2012-07-07 15:56:41.418171233 +0200
-@@ -13,65 +13,105 @@ fi
+@@ -13,65 +13,116 @@
  PHP_ARG_WITH(pcre-dir, pcre install prefix,
  [  --with-pcre-dir           ZIP: pcre install prefix], no, no)
  
@@ -18,22 +18,34 @@ diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
 -      PHP_ZLIB_INCDIR="$PHP_ZLIB_DIR/include"
 +if test "$PHP_ZIP" != "no"; then
 +  if test "$PHP_LIBZIP" != "no"; then
++
++    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
++
 +    dnl system libzip, depends on libzip
++    AC_MSG_CHECKING(for libzip)
 +    if test -r $PHP_LIBZIP/include/zip.h; then
-+      LIBZIP_DIR=$PHP_LIBZIP
++      LIBZIP_CFLAGS="-I$PHP_LIBZIP/include"
++      LIBZIP_LIBDIR="$PHP_LIBZIP/$PHP_LIBDIR"
++      AC_MSG_RESULT(from option: found in $PHP_LIBZIP)
++
++    elif test -x "$PKG_CONFIG" && $PKG_CONFIG --exists libzip; then
++      LIBZIP_CFLAGS=`$PKG_CONFIG libzip --cflags`
++      LIBZIP_LIBDIR=`$PKG_CONFIG libzip --variable=libdir`
++      AC_MSG_RESULT(from pkgconfig: found in $LIBZIP_LIBDIR)
++
      else
 -      AC_MSG_ERROR([Can not find zlib headers under "$PHP_ZLIB_DIR"])
-+      AC_MSG_CHECKING(for libzip in default path)
 +      for i in /usr/local /usr; do
 +        if test -r $i/include/zip.h; then
-+          LIBZIP_DIR=$i
-+          AC_MSG_RESULT(found in $i)
++          LIBZIP_CFLAGS="-I$i/include"
++          LIBZIP_LIBDIR="$i/$PHP_LIBDIR"
++          AC_MSG_RESULT(in default path: found in $i)
 +          break
 +        fi
 +      done
 +    fi
 +
-+    if test -z "$LIBZIP_DIR"; then
++    if test -z "$LIBZIP_LIBDIR"; then
 +      AC_MSG_RESULT(not found)
 +      AC_MSG_ERROR(Please reinstall the libzip distribution)
      fi
@@ -41,17 +53,16 @@ diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
 +    dnl Could not think of a simple way to check libzip for overwrite support
 +    PHP_CHECK_LIBRARY(zip, zip_open,
 +    [
-+      PHP_ADD_INCLUDE($LIBZIP_DIR/include)
-+      PHP_ADD_LIBRARY_WITH_PATH(zip, $LIBZIP_DIR/$PHP_LIBDIR, ZIP_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(zip, $LIBZIP_LIBDIR, ZIP_SHARED_LIBADD)
 +      AC_DEFINE(HAVE_LIBZIP,1,[ ])
 +    ], [
 +      AC_MSG_ERROR(could not find usable libzip)
 +    ], [
-+      -L$LIBZIP_DIR/$PHP_LIBDIR
++      -L$LIBZIP_LIBDIR
 +    ])
 +
 +    AC_DEFINE(HAVE_ZIP,1,[ ]) 
-+    PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c, $ext_shared)
++    PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c, $ext_shared,, $LIBZIP_CFLAGS)
 +    PHP_SUBST(ZIP_SHARED_LIBADD)
    else
 -    for i in /usr/local /usr; do
@@ -149,7 +160,7 @@ diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
                           lib/zip_fread.c lib/zip_open.c lib/zip_source_filep.c  \
                           lib/zip_strerror.c lib/zip_close.c lib/zip_error_get.c \
                           lib/zip_file_error_get.c lib/zip_free.c lib/zip_rename.c \
-@@ -98,10 +138,11 @@ yes
+@@ -98,10 +149,11 @@
  						 lib/zip_source_open.c lib/zip_source_pkware.c lib/zip_source_pop.c \
  						 lib/zip_source_read.c lib/zip_source_stat.c"
  

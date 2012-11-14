@@ -1613,11 +1613,17 @@ fi
 
 
 %changelog
-* Wed Nov 14 2012 Remi Collet <remi@fedoraproject.org> 5.4.9-0.3.RC1
+* Wed Nov 14 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.3.RC1
+- improve system libzip patch to use pkg-config
+
+* Wed Nov 14 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.2.RC1
+- use _httpd_moddir macro
+
+* Wed Nov 14 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.1.RC1
+- update to 5.4.9RC1
 - improves php.conf (use FilesMatch + SetHandler)
 - improves filter (httpd module)
 - apply ldap_r patch on fedora >= 18 only
-- use _httpd_moddir macro
 
 * Fri Nov  9 2012 Remi Collet <remi@fedoraproject.org> 5.4.9-0.2.RC1
 - sync with rawhide
