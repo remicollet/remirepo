@@ -2,7 +2,7 @@
 %global pear_channel pear.pirum-project.org
 
 Name:             php-channel-pirum
-Version:          1.0
+Version:          1.3
 Release:          1%{?dist}
 Summary:          Adds %{pear_channel} channel to PEAR
 
@@ -19,7 +19,7 @@ Requires:         php-pear(PEAR)
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 
-Provides:         php-channel(%{pear_channel}) = %{version}
+Provides:         php-channel(%{pear_channel})
 
 %description
 This package adds the %{pear_channel} channel which allows PEAR packages
@@ -59,6 +59,13 @@ fi
 
 
 %changelog
+* Tue Nov 13 2012 Remi Collet <rpms@famillecollet.com> - 1.3-1
+- backport for remi repo
+
+* Tue Nov 13 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3-1
+- Updated version to match channel REST version
+- Removed version from virtual provide
+
 * Fri Nov  9 2012 Remi Collet <rpms@famillecollet.com> - 1.0-1
 - backport for remi repo
 
