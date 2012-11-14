@@ -47,6 +47,7 @@
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
 
 %if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %global with_libzip  0
@@ -167,7 +168,7 @@ Requires(pre): httpd
 # Don't provides extensions, which are not shared library, as .so
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php-zts/modules/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{_libdir}/httpd/modules/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_httpd_moddir}/.*\.so$}
 %{?filter_setup}
 
 
@@ -1251,11 +1252,11 @@ install -m 644 php.gif $RPM_BUILD_ROOT%{contentdir}/icons/php.gif
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/php
 
 # install the DSO
-install -m 755 -d $RPM_BUILD_ROOT%{_libdir}/httpd/modules
-install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules
+install -m 755 -d $RPM_BUILD_ROOT%{_httpd_moddir}
+install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd_moddir}
 
 # install the ZTS DSO
-install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/libphp5-zts.so
+install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd_moddir}/libphp5-zts.so
 
 # Apache config fragment
 %if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
@@ -1492,8 +1493,8 @@ fi
 
 %files
 %defattr(-,root,root)
-%{_libdir}/httpd/modules/libphp5.so
-%{_libdir}/httpd/modules/libphp5-zts.so
+%{_httpd_moddir}/libphp5.so
+%{_httpd_moddir}/libphp5-zts.so
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
 %config(noreplace) %{_httpd_confdir}/php.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
@@ -1616,6 +1617,7 @@ fi
 - improves php.conf (use FilesMatch + SetHandler)
 - improves filter (httpd module)
 - apply ldap_r patch on fedora >= 18 only
+- use _httpd_moddir macro
 
 * Fri Nov  9 2012 Remi Collet <remi@fedoraproject.org> 5.4.9-0.2.RC1
 - sync with rawhide
