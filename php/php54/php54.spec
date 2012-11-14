@@ -66,7 +66,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.9
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 5%{?dist}
 %endif
@@ -165,13 +165,10 @@ Requires(pre): httpd
 
 
 # Don't provides extensions, which are not shared library, as .so
-# RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php-zts/modules/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/httpd/modules/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/php/modules/.*\\.so$
-%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/php-zts/modules/.*\\.so$
 
 
 %description
@@ -777,7 +774,9 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %if %{with_libzip}
 %patch44 -p1 -b .systzip
 %endif
+%if 0%{?fedora} >= 18
 %patch45 -p1 -b .ldap_r
+%endif
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1613,6 +1612,11 @@ fi
 
 
 %changelog
+* Wed Nov 14 2012 Remi Collet <remi@fedoraproject.org> 5.4.9-0.3.RC1
+- improves php.conf (use FilesMatch + SetHandler)
+- improves filter (httpd module)
+- apply ldap_r patch on fedora >= 18 only
+
 * Fri Nov  9 2012 Remi Collet <remi@fedoraproject.org> 5.4.9-0.2.RC1
 - sync with rawhide
 
