@@ -2,8 +2,8 @@
 %global pear_channel pear.twig-project.org
 
 Name:             php-channel-twig
-Version:          1.0
-Release:          3%{?dist}
+Version:          1.3
+Release:          1%{?dist}
 Summary:          Adds %{pear_channel} channel to PEAR
 
 Group:            Development/Libraries
@@ -19,7 +19,7 @@ Requires:         php-pear(PEAR)
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 
-Provides:         php-channel(%{pear_channel}) = %{version}
+Provides:         php-channel(%{pear_channel})
 
 %description
 This package adds the %{pear_channel} channel which allows PEAR packages
@@ -59,6 +59,16 @@ fi
 
 
 %changelog
+* Tue Nov 14 2012 Remi Collet <RPMS@FamilleCollet.com> 1.3-1
+- backport for remi repository
+
+* Tue Nov 13 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3-1
+- Updated version to match channel REST version
+- Removed version from virtual provide
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sun Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 1.0-3
 - rebuild for remi repository
 
