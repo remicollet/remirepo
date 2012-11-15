@@ -11,7 +11,7 @@
 # "horbe" sub-package, with apache stuff
 
 Name:           php-horde-horde
-Version:        5.0.1
+Version:        5.0.2
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -224,6 +224,9 @@ fi
 
 
 %changelog
+* Thu Nov 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.2-1
+- update to 5.0.2 for remi repo
+
 * Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.1-1
 - update to 5.0.1 for remi repo
 
