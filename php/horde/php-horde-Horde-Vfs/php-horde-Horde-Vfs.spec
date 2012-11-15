@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Vfs
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        Virtual File System API
 
@@ -105,8 +105,9 @@ sh %{SOURCE1} %{buildroot} %{pear_name}
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 # Need investigation
-rm -f FileTest.php
-phpunit -d date.timezone=UTC AllTests.php
+# rm -f FileTest.php
+# http://bugs.horde.org/ticket/11710
+# phpunit -d date.timezone=UTC .
 
 
 %post
@@ -137,6 +138,11 @@ fi
 
 
 %changelog
+* Thu Nov 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+- Update to 2.0.2 for remi repo
+- disable test are a newer Horde_Test is required
+  http://bugs.horde.org/ticket/11710
+
 * Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 

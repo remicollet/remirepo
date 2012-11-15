@@ -42,7 +42,7 @@
 41 php-horde-Horde-Mime             2.0.1   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 42 php-horde-Horde-Perms            2.0.1   => BR(Group), Db, Exception, Group, Util, Translation
 43 php-horde-Horde-Prefs            2.0.1   => BR(Db),   Exception, Mime, Translation, Util
-44 php-horde-Horde-Vfs              2.0.1   => BR(Db),   Exception, Translation, Util
+44 php-horde-Horde-Vfs              2.0.2   => BR(Db),   Exception, Translation, Util
 45 php-horde-Horde-Compress         2.0.1   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
 46 php-horde-Horde-History          2.0.0   => BR(Db),   Db, Exception
 47 php-horde-Horde-Crypt            2.1.0   =>           Exception, Mime, Stream-Filter, Translation, Util
@@ -65,7 +65,7 @@
 64 php-horde-Horde-Memcache     *   2.0.0                Exception
 65 php-horde-Horde-Memcache     *   2.0.0                Exception, Util
 ---- apps -----
-php-horde-horde (Framework)     +   5.0.1
+php-horde-horde (Framework)     +   5.0.2
 php-horde-turba (Address book)  +   4.0.0
 
 + : in progress
