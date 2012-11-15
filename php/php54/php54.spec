@@ -67,7 +67,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.9
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 5%{?dist}
 %endif
@@ -146,7 +146,6 @@ BuildRequires: pcre-devel >= 8.10
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
-BuildRequires: bison
 %if %{with_libzip}
 BuildRequires: libzip-devel >= 0.10
 %endif
@@ -921,6 +920,9 @@ PEAR_INSTALLDIR=%{_datadir}/pear; export PEAR_INSTALLDIR
 
 # Shell function to configure and build a PHP tree.
 build() {
+# Old/recent bison version seems to produce a broken parser;
+# upstream uses GNU Bison 2.3. Workaround:
+mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 ln -sf ../configure
 %configure \
 	--cache-file=../config.cache \
@@ -1613,6 +1615,9 @@ fi
 
 
 %changelog
+* Thu Nov 15 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.5.RC1
+- switch back to upstream generated scanner/parser
+
 * Thu Nov 15 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.4.RC1
 - use _httpd_contentdir macro and fix php.gif path
 
