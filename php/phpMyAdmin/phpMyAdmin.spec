@@ -1,8 +1,8 @@
 #global prever rc1
 
 Name: phpMyAdmin
-Version: 3.5.3
-Release: %{?prever:0.}2%{?prever:.%prever}%{?dist}
+Version: 3.5.4
+Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -22,10 +22,11 @@ BuildArch: noarch
 BuildRequires: unzip
 
 Requires:  webserver
-Requires:  php-mysql >= 5.2.0
-Requires:  php-mbstring >= 5.2.0
-Requires:  php-gd >= 5.2.0
-Requires:  php-mcrypt >= 5.2.0
+Requires:  php(language) >= 5.2.0
+Requires:  php-gd
+Requires:  php-mbstring
+Requires:  php-mcrypt
+Requires:  php-mysql
 Requires:  php-php-gettext
 Provides:  phpmyadmin = %{version}-%{release}
 Obsoletes: phpMyAdmin3
@@ -123,6 +124,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Fri Nov 16 2012 Remi Collet <rpms@famillecollet.com> 3.5.4-1
+- Upstream released 3.5.4 (bugfix)
+
 * Fri Nov 16 2012 Remi Collet <rpms@famillecollet.com> 3.5.3-2
 - update theme Darkblue/orange to 2.11
 - add theme blueorange 1.0b
