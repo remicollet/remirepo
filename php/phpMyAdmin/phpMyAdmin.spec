@@ -2,7 +2,7 @@
 
 Name: phpMyAdmin
 Version: 3.5.3
-Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
+Release: %{?prever:0.}2%{?prever:.%prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -11,10 +11,11 @@ URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.bz2
 Source2: phpMyAdmin.htaccess
 
-Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/darkblue_orange-2.10.zip
+Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/darkblue_orange-2.11.zip
 Source11: http://downloads.sourceforge.net/sourceforge/phpmyadmin/graphite-1.0.zip
 Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/toba-0.2.zip
 Source13: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.4.zip
+Source14: http://downloads.sourceforge.net/sourceforge/phpmyadmin/blueorange-1.0b.zip
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -62,7 +63,7 @@ grep '^define' libraries/vendor_config.php
 # to avoid rpmlint warnings
 find . -name \*.php -exec chmod -x {} \;
 
-for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13}
+for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14}
 do
     %{__unzip} -q $archive -d themes
 done
@@ -122,6 +123,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Fri Nov 16 2012 Remi Collet <rpms@famillecollet.com> 3.5.3-2
+- update theme Darkblue/orange to 2.11
+- add theme blueorange 1.0b
+
 * Tue Oct  9 2012 Remi Collet <rpms@famillecollet.com> 3.5.3-1
 - Upstream released 3.5.2.3 (security)
   fix PMASA-2012-6 and PMASA-2012-7
