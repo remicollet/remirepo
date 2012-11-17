@@ -3,7 +3,7 @@
 Summary: ModSecurity Rules
 Name: mod_security_crs
 Version: 2.2.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -13,9 +13,8 @@ Group: System Environment/Daemons
 
 Source: SpiderLabs-owasp-modsecurity-crs-v%{version}-0-g%{git_short}.tar.gz
 BuildArch: noarch
-Requires: mod_security >= 2.6.5
+Requires: mod_security >= 2.7.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Patch0: %{name}-fix-incompatible-rules.patch
 
 %description
 This package provides the base rules for mod_security.
@@ -30,7 +29,6 @@ This package provides supplementary rules for mod_security.
 
 %prep
 %setup -q -n SpiderLabs-owasp-modsecurity-crs-%{git_short}
-%patch0 -p1
 
 %build
 
@@ -73,6 +71,13 @@ rm -rf %{buildroot}
 %{_prefix}/lib/modsecurity.d/slr_rules
 
 %changelog
+* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> 2.2.6-3
+- backport for remi repo and httpd 2.4
+
+* Wed Oct 17 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.2.6-3
+- Remove the patch since we're requiring mod_security >= 2.7.0
+- Require mod_security >= 2.7.0
+
 * Fri Oct  5 2012 Remi Collet <RPMS@FamilleCollet.com> 2.2.6-2
 - backport for remi repo and httpd 2.4
 
