@@ -1,3 +1,6 @@
+
+Compiler warning fixes.
+
 --- mod_auth_kerb-5.4/src/mod_auth_kerb.c.fixes
 +++ mod_auth_kerb-5.4/src/mod_auth_kerb.c
 @@ -677,7 +677,8 @@ end:

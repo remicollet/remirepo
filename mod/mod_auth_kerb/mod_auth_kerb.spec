@@ -1,5 +1,5 @@
 %{!?_httpd_apxs:       %{expand: %%global _httpd_apxs       %%{_sbindir}/apxs}}
-%{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo missing-httpd-devel)}}
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
@@ -8,7 +8,9 @@
 Summary: Kerberos authentication module for HTTP
 Name: mod_auth_kerb
 Version: 5.4
-Release: 19%{?dist}
+Release: 22%{?dist}
+# src/mod_auth_kerb.c is under 3-clause BSD, ASL 2.0 code is patched in (-s4u2proxy.patch)
+# src/mit-internals.h contains MIT-licensed code.
 License: BSD and MIT and ASL 2.0
 Group: System Environment/Daemons
 URL: http://modauthkerb.sourceforge.net/
@@ -25,6 +27,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: httpd-devel, krb5-devel
 Requires: httpd-mmn = %{_httpd_mmn}
 Requires(pre): httpd
+
+# Suppres auto-provides for module DSO
+%{?filter_provides_in: %filter_provides_in %{_libdir}/httpd/modules/.*\.so$}
+%{?filter_setup}
 
 %description
 mod_auth_kerb is module for the Apache HTTP Server designed to
@@ -75,7 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README LICENSE.ASL
+%doc README LICENSE LICENSE.ASL
 %config(noreplace) %{_httpd_modconfdir}/*.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %doc example.conf
@@ -85,6 +91,20 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0700,apache,apache) %dir /run/httpd/krbcache
 
 %changelog
+* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-22
+- sync with rawhide, rebuild for remi repo
+
+* Thu Nov 15 2012 Joe Orton <jorton@redhat.com> - 5.4-22
+- clarify licensing; clean up spec file
+
+* Tue Nov 13 2012 Joe Orton <jorton@redhat.com> - 5.4-21
+- fix httpd_mmn stderr filter (thanks rcollet)
+
+* Tue Nov 13 2012 Joe Orton <jorton@redhat.com> - 5.4-20
+- hide stderr if finding httpd_mmn 
+- package LICENSE
+- filter DSO auto provides
+
 * Thu Aug  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.4-19
 - sync with rawhide, rebuild for remi repo
 

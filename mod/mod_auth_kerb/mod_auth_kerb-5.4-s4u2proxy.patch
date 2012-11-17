@@ -1,4 +1,24 @@
-diff -up --recursive mod_auth_kerb-5.4.orig/README mod_auth_kerb-5.4/README
+
+Add S4U2Proxy feature:
+
+http://sourceforge.net/mailarchive/forum.php?thread_name=4EE665D1.3000308%40redhat.com&forum_name=modauthkerb-help
+
+The attached patches add support for using s4u2proxy 
+(http://k5wiki.kerberos.org/wiki/Projects/Services4User) to allow the 
+web service to obtain credentials on behalf of the authenticated user.
+
+The first patch adds basic support for s4u2proxy. This requires the web 
+administrator to manually create and manage the credentails cache for 
+the apache user (via a cron job, for example).
+
+The second patch builds on this and makes mod_auth_kerb manage the 
+ccache instead.
+
+These are patches against the current CVS HEAD (mod_auth_krb 5.4).
+
+I've added a new module option to enable this support, 
+KrbConstrainedDelegation. The default is off.
+
 --- mod_auth_kerb-5.4.orig/README	2008-11-26 11:51:05.000000000 -0500
 +++ mod_auth_kerb-5.4/README	2012-01-04 11:17:22.000000000 -0500
 @@ -122,4 +122,16 @@ KrbSaveCredentials, the tickets will be 
