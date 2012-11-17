@@ -1,0 +1,23 @@
+--- mod_wsgi-3.3/mod_wsgi.c.procexit
++++ mod_wsgi-3.3/mod_wsgi.c
+@@ -9845,6 +9845,20 @@ static void wsgi_manage_process(int reas
+                              wsgi_server, "mod_wsgi (pid=%d): "
+                              "Process '%s' has died, restarting.",
+                              daemon->process.pid, daemon->group->name);
++                if (WIFEXITED(status)) {
++                    ap_log_error(APLOG_MARK, WSGI_LOG_INFO(0),
++                                 wsgi_server, "mod_wsgi (pid=%d): "
++                                 "Process '%s' terminated normally, exit code %d", 
++                                 daemon->process.pid, daemon->group->name,
++                                 WEXITSTATUS(status));
++                }
++                else if (WIFSIGNALED(status)) {
++                    ap_log_error(APLOG_MARK, WSGI_LOG_INFO(0),
++                                 wsgi_server, "mod_wsgi (pid=%d): "
++                                 "Process '%s' terminated by signal %d", 
++                                 daemon->process.pid, daemon->group->name,
++                                 WTERMSIG(status));
++                }
+ 
+                 wsgi_start_process(wsgi_parent_pool, daemon);
+             }

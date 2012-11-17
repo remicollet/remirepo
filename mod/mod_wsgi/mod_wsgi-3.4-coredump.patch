@@ -1,0 +1,42 @@
+--- mod_wsgi-3.4/configure.ac.dumpcore
++++ mod_wsgi-3.4/configure.ac
+@@ -39,6 +39,8 @@ fi
+ 
+ AC_SUBST(APXS)
+ 
++AC_CHECK_FUNCS(prctl)
++
+ AC_MSG_CHECKING(Apache version)
+ HTTPD="`${APXS} -q SBINDIR`/`${APXS} -q TARGET`"
+ HTTPD_INCLUDEDIR="`${APXS} -q INCLUDEDIR`"
+--- mod_wsgi-3.4/mod_wsgi.c.coredump
++++ mod_wsgi-3.4/mod_wsgi.c
+@@ -139,6 +139,10 @@ typedef regmatch_t ap_regmatch_t;
+ #include <pwd.h>
+ #endif
+ 
++#ifdef HAVE_SYS_PRCTL_H
++#include <sys/prctl.h>
++#endif
++
+ #include "Python.h"
+ 
+ #if !defined(PY_VERSION_HEX)
+@@ -10485,6 +10489,17 @@ static void wsgi_setup_access(WSGIDaemon
+                      "mod_wsgi (pid=%d): Unable to change to uid=%ld.",
+                      getpid(), (long)daemon->group->uid);
+     }
++
++#if defined(HAVE_PRCTL) && defined(PR_SET_DUMPABLE)
++    /* this applies to Linux 2.4+ */
++    if (ap_coredumpdir_configured) {
++        if (prctl(PR_SET_DUMPABLE, 1)) {
++            ap_log_error(APLOG_MARK, WSGI_LOG_ALERT(errno), wsgi_server,
++                         "mod_wsgi (pid=%d): set dumpable failed - this child will not coredump"
++                         " after software errors", getpid());
++        }
++    }
++#endif
+ }
+ 
+ static int wsgi_setup_socket(WSGIProcessGroup *process)

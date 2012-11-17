@@ -5,8 +5,8 @@
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 
 Name:           mod_wsgi
-Version:        3.3
-Release:        6%{?dist}
+Version:        3.4
+Release:        4%{?dist}
 Summary:        A WSGI interface for Python web applications in Apache
 
 Group:          System Environment/Libraries
@@ -14,11 +14,12 @@ License:        ASL 2.0
 URL:            http://modwsgi.org
 Source0:        http://modwsgi.googlecode.com/files/%{name}-%{version}.tar.gz
 Source1:        wsgi.conf
-Patch0:         mod_wsgi-3.3-httpd24.patch
+Patch0:         mod_wsgi-3.4-connsbh.patch
+Patch1:         mod_wsgi-3.4-procexit.patch
+Patch2:         mod_wsgi-3.4-coredump.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  httpd-devel
-BuildRequires:  python-devel
+BuildRequires:  httpd-devel, python-devel, autoconf
 Requires: httpd-mmn = %{_httpd_mmn}
 
 %description
@@ -31,11 +32,15 @@ existing WSGI adapters for mod_python or CGI.
 
 %prep
 %setup -q
-%patch0 -p1 -b .httpd24
+%patch0 -p1 -b .connsbh
+%patch1 -p1 -b .procexit
+%patch2 -p1 -b .coredump
 
 %build
+autoconf
+export LDFLAGS="$RPM_LD_FLAGS -L%{_libdir}"
 %configure --enable-shared --with-apxs=%{_httpd_apxs}
-make LDFLAGS="-L%{_libdir}" %{?_smp_mflags}
+make %{?_smp_mflags}
 
 
 %install
@@ -62,6 +67,25 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 3.4-4
+- sync with rawhide, rebuild for remi repo
+
+* Wed Oct 17 2012 Joe Orton <jorton@redhat.com> - 3.4-4
+- enable PR_SET_DUMPABLE in daemon process to enable core dumps
+
+* Wed Oct 17 2012 Joe Orton <jorton@redhat.com> - 3.4-3
+- use a NULL c->sbh pointer with httpd 2.4 (possible fix for #867276)
+- add logging for unexpected daemon process loss
+
+* Wed Oct 17 2012 Matthias Runge <mrunge@redhat.com> - 3.4-2
+- also use RPM_LD_FLAGS for build bz. #867137
+
+* Mon Oct 15 2012 Matthias Runge <mrunge@redhat.com> - 3.4-1
+- update to upstream release 3.4
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Wed Jun 13 2012 Remi Collet <RPMS@FamilleCollet.com> - 3.3-6
 - sync with rawhide, rebuild for remi repo
 
