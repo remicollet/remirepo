@@ -1,4 +1,4 @@
-# ./pullrev.sh 1337344 1341905 1342065 1341930 1344712
+# ./pullrev.sh 1337344 1341905 1342065 1341930
 
 suexec enhancements:
 
@@ -10,11 +10,9 @@ http://svn.apache.org/viewvc?view=revision&revision=1341905
 http://svn.apache.org/viewvc?view=revision&revision=1342065
 http://svn.apache.org/viewvc?view=revision&revision=1341930
 
-http://svn.apache.org/viewvc?view=revision&revision=1344712
-
---- httpd-2.4.2/configure.in.r1337344+
-+++ httpd-2.4.2/configure.in
-@@ -700,7 +700,24 @@ APACHE_HELP_STRING(--with-suexec-gidmin,
+--- httpd-2.4.3/configure.in.r1337344+
++++ httpd-2.4.3/configure.in
+@@ -717,7 +717,24 @@ APACHE_HELP_STRING(--with-suexec-gidmin,
  
  AC_ARG_WITH(suexec-logfile,
  APACHE_HELP_STRING(--with-suexec-logfile,Set the logfile),[
@@ -40,7 +38,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1344712
  
  AC_ARG_WITH(suexec-safepath,
  APACHE_HELP_STRING(--with-suexec-safepath,Set the safepath),[
-@@ -710,6 +727,15 @@ AC_ARG_WITH(suexec-umask,
+@@ -727,6 +744,15 @@ AC_ARG_WITH(suexec-umask,
  APACHE_HELP_STRING(--with-suexec-umask,umask for suexec'd process),[
    AC_DEFINE_UNQUOTED(AP_SUEXEC_UMASK, 0$withval, [umask for suexec'd process] ) ] )
  
@@ -56,9 +54,9 @@ http://svn.apache.org/viewvc?view=revision&revision=1344712
  dnl APR should go after the other libs, so the right symbols can be picked up
  if test x${apu_found} != xobsolete; then
    AP_LIBS="$AP_LIBS `$apu_config --avoid-ldap --link-libtool`"
---- httpd-2.4.2/docs/manual/suexec.html.en.r1337344+
-+++ httpd-2.4.2/docs/manual/suexec.html.en
-@@ -369,6 +369,21 @@
+--- httpd-2.4.3/docs/manual/suexec.html.en.r1337344+
++++ httpd-2.4.3/docs/manual/suexec.html.en
+@@ -372,6 +372,21 @@
        together with the <code>--enable-suexec</code> option to let
        APACI accept your request for using the suEXEC feature.</dd>
  
@@ -80,7 +78,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1344712
        <dt><code>--with-suexec-bin=<em>PATH</em></code></dt>
  
        <dd>The path to the <code>suexec</code> binary must be hard-coded
-@@ -430,6 +445,12 @@
+@@ -433,6 +448,12 @@
        "<code>suexec_log</code>" and located in your standard logfile
        directory (<code>--logfiledir</code>).</dd>
  
@@ -93,7 +91,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1344712
        <dt><code>--with-suexec-safepath=<em>PATH</em></code></dt>
  
        <dd>Define a safe PATH environment to pass to CGI
-@@ -546,9 +567,12 @@
+@@ -550,9 +571,12 @@ Group webgroup
  
      <p>The suEXEC wrapper will write log information
      to the file defined with the <code>--with-suexec-logfile</code>
@@ -109,8 +107,15 @@ http://svn.apache.org/viewvc?view=revision&revision=1344712
  
  </div><div class="top"><a href="#page-header"><img alt="top" src="./images/up.gif" /></a></div>
  <div class="section">
---- httpd-2.4.2/Makefile.in.r1337344+
-+++ httpd-2.4.2/Makefile.in
+@@ -640,4 +664,4 @@ if (typeof(prettyPrint) !== 'undefined')
+     prettyPrint();
+ }
+ //--><!]]></script>
+-</body></html>
+\ No newline at end of file
++</body></html>
+--- httpd-2.4.3/Makefile.in.r1337344+
++++ httpd-2.4.3/Makefile.in
 @@ -236,11 +236,22 @@ install-man:
  	  cd $(DESTDIR)$(manualdir) && find . -name ".svn" -type d -print | xargs rm -rf 2>/dev/null || true; \
  	fi
@@ -136,8 +141,8 @@ http://svn.apache.org/viewvc?view=revision&revision=1344712
  	fi
  
  suexec:
---- httpd-2.4.2/modules/arch/unix/mod_unixd.c.r1337344+
-+++ httpd-2.4.2/modules/arch/unix/mod_unixd.c
+--- httpd-2.4.3/modules/arch/unix/mod_unixd.c.r1337344+
++++ httpd-2.4.3/modules/arch/unix/mod_unixd.c
 @@ -284,6 +284,13 @@ unixd_set_suexec(cmd_parms *cmd, void *d
      return NULL;
  }
@@ -161,8 +166,8 @@ http://svn.apache.org/viewvc?view=revision&revision=1344712
              && (access(SUEXEC_BIN, R_OK|X_OK) == 0)) {
              ap_unixd_config.suexec_enabled = 1;
              ap_unixd_config.suexec_disabled_reason = "";
---- httpd-2.4.2/support/suexec.c.r1337344+
-+++ httpd-2.4.2/support/suexec.c
+--- httpd-2.4.3/support/suexec.c.r1337344+
++++ httpd-2.4.3/support/suexec.c
 @@ -58,6 +58,10 @@
  #include <grp.h>
  #endif

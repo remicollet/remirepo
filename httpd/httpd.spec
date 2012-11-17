@@ -5,10 +5,16 @@
 %define mmnisa %{mmn}-%{__isa_name}-%{__isa_bits}
 %define vstring Fedora
 
+# Drop automatic provides for module DSOs
+%{?filter_setup:
+%filter_provides_in %{_libdir}/httpd/modules/.*\.so$
+%filter_setup
+}
+
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.3
-Release: 10%{?dist}
+Release: 14%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -46,7 +52,7 @@ Patch6: httpd-2.4.3-apctl-systemd.patch
 Patch23: httpd-2.4.1-export.patch
 Patch24: httpd-2.4.1-corelimit.patch
 Patch25: httpd-2.4.1-selinux.patch
-Patch26: httpd-2.4.2-r1337344+.patch
+Patch26: httpd-2.4.3-r1337344+.patch
 Patch27: httpd-2.4.2-icons.patch
 Patch28: httpd-2.4.2-r1332643+.patch
 Patch29: httpd-2.4.3-mod_systemd.patch
@@ -594,6 +600,22 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-14
+- sync with rawhide, rebuild for remi repo
+
+* Tue Nov 13 2012 Joe Orton <jorton@redhat.com> - 2.4.3-14
+- drop patch for r1344712
+
+* Tue Nov 13 2012 Joe Orton <jorton@redhat.com> - 2.4.3-13
+- filter mod_*.so auto-provides (thanks to rcollet)
+- pull in syslog logging fix from upstream (r1344712)
+
+* Fri Oct 26 2012 Joe Orton <jorton@redhat.com> - 2.4.3-12
+- rebuild to pick up new apr-util-ldap
+
+* Tue Oct 23 2012 Joe Orton <jorton@redhat.com> - 2.4.3-11
+- rebuild
+
 * Fri Oct  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-10
 - sync with rawhide, rebuild for remi repo
 
