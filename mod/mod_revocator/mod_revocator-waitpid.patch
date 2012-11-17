@@ -1,0 +1,61 @@
+diff -rupN mod_revocator-1.0.3.orig/exec-client.cpp mod_revocator-1.0.3/exec-client.cpp
+--- mod_revocator-1.0.3.orig/exec-client.cpp	2006-10-16 11:16:35.000000000 -0700
++++ mod_revocator-1.0.3/exec-client.cpp	2012-10-08 13:36:11.093881000 -0700
+@@ -36,6 +36,8 @@
+ #ifdef XP_UNIX
+ #include <sys/types.h>
+ #include <unistd.h>
++#include <sys/wait.h>
++#include <syslog.h>
+ #endif
+ 
+ #include "client.h"
+@@ -50,6 +52,7 @@ PR_IMPLEMENT(void *)exec_client(const ch
+     char * separator;
+     int pfildes[2];
+     int pid;
++    int status;
+     char * tmpurl = NULL;
+     int ldap = 0;
+     char * arg;
+@@ -105,12 +108,10 @@ PR_IMPLEMENT(void *)exec_client(const ch
+         int done = 0;
+ 
+         close(pfildes[1]);
+-        dup2(pfildes[0],0);
+-        close(pfildes[0]);
+ 
+         totalread = 0;
+         do {
+-            numbytes = read(0, buffer, (BIG_LINE * 4) - 1);
++            numbytes = read(pfildes[0], buffer, (BIG_LINE * 4) - 1);
+             if (numbytes > 0) {
+                 buffer[numbytes] = '\0';
+                 totalread += numbytes;
+@@ -125,6 +126,8 @@ PR_IMPLEMENT(void *)exec_client(const ch
+                         }
+                         *errnum = CL_OUT_OF_MEMORY;
+                         free(tmpurl);
++                        close(pfildes[0]);
++                        waitpid(pid, &status, WNOHANG);
+                         return NULL;
+                     }
+                     sz += (BIG_LINE * 4);
+@@ -135,6 +138,8 @@ PR_IMPLEMENT(void *)exec_client(const ch
+                 if (data) free(data);
+                 data = 0;
+                 free(tmpurl);
++                close(pfildes[0]);
++                waitpid(pid, &status, WNOHANG);
+                 return NULL;
+             } else if (numbytes == 0) {
+                 done = 1;
+@@ -148,6 +153,8 @@ PR_IMPLEMENT(void *)exec_client(const ch
+         }
+         free(tmpurl);
+         *len = totalread;
++        close(pfildes[0]);
++        waitpid(pid, &status, 0);
+         return data;
+     }
+ }
