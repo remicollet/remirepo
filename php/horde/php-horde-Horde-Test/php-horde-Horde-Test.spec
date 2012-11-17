@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Test
-Version:        2.0.0
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde testing base classes
 
@@ -87,6 +87,9 @@ fi
 
 
 %changelog
+* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.0-1
+- Update to 2.1.0 for remi repo
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
