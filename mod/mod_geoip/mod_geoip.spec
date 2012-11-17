@@ -1,77 +1,86 @@
 %{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
 %{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
-%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
-%{!?_httpd_moddir:    %{expand: %%global _httpd_moddir    %%{_libdir}/httpd/modules}}
+%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
 
-Summary: GeoIP module for the Apache HTTP Server
-Name: mod_geoip
-Version: 1.2.5
-Release: 8%{?dist}
-License: ASL 1.1
-Group: System Environment/Daemons
-URL: http://www.maxmind.com/app/mod_geoip
-Source: http://www.maxmind.com/download/geoip/api/mod_geoip2/mod_geoip2_%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: GeoIP httpd httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
-BuildRequires: httpd-devel GeoIP-devel
-# Not upstream
-Patch0: mod_geoip-httpd24.patch
+Summary:	GeoIP module for the Apache HTTP Server
+Name:		mod_geoip
+Version:	1.2.7
+Release:	1%{?dist}
+Group:		System Environment/Daemons
+License:	ASL 1.1
+URL:		http://www.maxmind.com/app/mod_geoip
+Source:		http://www.maxmind.com/download/geoip/api/mod_geoip2/mod_geoip2_%{version}.tar.gz
+Patch0:		mod_geoip-1.2.5-httpd24.patch
+BuildRequires:	httpd-devel, GeoIP-devel >= 1.4.3
+Requires:	GeoIP%{?_isa}, httpd-mmn = %{_httpd_mmn}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
-mod_geoip is an Apache module for finding the country that a web request
-originated from.  It uses the GeoIP library and database to perform
-the lookup.  It is free software, licensed under the Apache license.
+mod_geoip is an Apache module to look up geolocation information for a
+client as part of the HTTP request process. It uses the GeoIP library
+and database to perform the lookup. It is free software, licensed under
+the Apache license.
 
 %prep
-
 %setup -q -n mod_geoip2_%{version}
 %patch0 -p0 -b .geoip
 
 %build
-%{_httpd_apxs} -Wc,"%{optflags}" -Wl,"-lGeoIP" -c mod_geoip.c
+%{_httpd_apxs} -Wc,-Wall -Wl,"-lGeoIP" -c %{name}.c
 
 %install
-mkdir -p %{buildroot}%{_httpd_confdir} %{buildroot}%{_httpd_modconfdir} \
-      %{buildroot}%{_httpd_moddir}
-install -Dp .libs/mod_geoip.so %{buildroot}%{_httpd_moddir}
+rm -rf $RPM_BUILD_ROOT
+install -D -p -m 755 .libs/%{name}.so $RPM_BUILD_ROOT%{_httpd_moddir}/%{name}.so
 
-cat << EOF > 10-mod_geoip.conf
+cat << EOF > 10-geoip.conf
 LoadModule geoip_module modules/mod_geoip.so
-
 EOF
-cat << EOF > mod_geoip.conf
+
+cat << EOF > geoip.conf
 <IfModule mod_geoip.c>
   GeoIPEnable On
   GeoIPDBFile /usr/share/GeoIP/GeoIP.dat
 </IfModule>
-
 EOF
 
-%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
-# 2.4-style
-install -m 0644 10-mod_geoip.conf %{buildroot}%{_httpd_modconfdir}
-install -m 0644 mod_geoip.conf %{buildroot}%{_httpd_confdir}
+%if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
+# httpd <= 2.2.x
+cat 10-geoip.conf > unified.conf
+echo >> unified.conf
+cat geoip.conf >> unified.conf
+install -D -p -m 644 unified.conf $RPM_BUILD_ROOT%{_httpd_confdir}/geoip.conf
 %else
-# old-style
-cat 10-mod_geoip.conf mod_geoip.conf > unified.conf
-install -m 0644 unified.conf %{buildroot}%{_httpd_confdir}/mod_geoip.conf
+# httpd >= 2.4.x
+install -D -p -m 644 10-geoip.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-geoip.conf
+install -D -p -m 644 geoip.conf $RPM_BUILD_ROOT%{_httpd_confdir}/geoip.conf
 %endif
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr (-,root,root)
+%defattr(-,root,root,-)
 %doc INSTALL README* Changes
-%{_libdir}/httpd/modules/mod_geoip.so
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_geoip.conf
+%{_httpd_moddir}/%{name}.so
+%config(noreplace) %{_httpd_confdir}/geoip.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
-%config(noreplace) %{_sysconfdir}/httpd/conf.modules.d/10-mod_geoip.conf
+%config(noreplace) %{_httpd_modconfdir}/10-geoip.conf
 %endif
 
 %changelog
+* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.7-1
+- rebuild for remi repo and httpd 2.4
+
+* Sat Nov 17 2012 Robert Scheck <robert@fedoraproject.org> 1.2.7-1
+- Upgrade to 1.2.7
+- Updated spec file to match with Apache 2.4 policy (#809698)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.5-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Mon Apr 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.5-8
 - rebuild for remi repo and httpd 2.4
 
