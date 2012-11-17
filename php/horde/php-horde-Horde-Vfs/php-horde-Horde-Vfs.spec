@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Vfs
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Virtual File System API
 
 Group:          Development/Libraries
@@ -21,7 +21,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 
 Requires(post): %{__pear}
@@ -105,9 +105,12 @@ sh %{SOURCE1} %{buildroot} %{pear_name}
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 # Need investigation
-# rm -f FileTest.php
-# http://bugs.horde.org/ticket/11710
-# phpunit -d date.timezone=UTC .
+rm -f FileTest.php
+
+phpunit \
+   -d date.timezone=UTC \
+   -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+   .
 
 
 %post
@@ -138,6 +141,9 @@ fi
 
 
 %changelog
+* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-2
+- enable test
+
 * Thu Nov 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - disable test are a newer Horde_Test is required
