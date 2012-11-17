@@ -1,12 +1,16 @@
 %{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
 %{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
+# /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
+%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
 
 %global gitver	48bb878
 
 Summary:	FLV progressive download streaming for the Apache HTTP Server
 Name:		mod_flvx
 Version:	0
-Release:	0.3.20100525git%{?dist}
+Release:	0.5.20100525git%{?dist}
 Group:		System Environment/Daemons
 License:	ASL 2.0
 URL:		http://tperspective.blogspot.com/2009/02/apache-flv-streaming-done-right.html
@@ -38,8 +42,19 @@ supported tool, e.g. flvtool2.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -D -p -m 755 .libs/%{name}.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/%{name}.so
-install -D -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/flvx.conf
+install -D -p -m 755 .libs/%{name}.so $RPM_BUILD_ROOT%{_httpd_moddir}/%{name}.so
+
+%if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
+# httpd <= 2.2.x
+install -D -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/flvx.conf
+%else
+# httpd >= 2.4.x
+head -n 5 %{SOURCE1} > 10-flvx.conf
+sed -e '4,5d' %{SOURCE1} > flvx.conf
+touch -c -r %{SOURCE1} 10-flvx.conf flvx.conf
+install -D -p -m 644 10-flvx.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-flvx.conf
+install -D -p -m 644 flvx.conf $RPM_BUILD_ROOT%{_httpd_confdir}/flvx.conf
+%endif
 
 # Fix incorrect end-of-line encoding
 sed -e 's/\r//' README.md > README
@@ -51,10 +66,22 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc README
-%{_libdir}/httpd/modules/%{name}.so
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/flvx.conf
+%{_httpd_moddir}/%{name}.so
+%config(noreplace) %{_httpd_confdir}/flvx.conf
+%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
+%config(noreplace) %{_httpd_modconfdir}/10-flvx.conf
+%endif
 
 %changelog
+* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 0-0.5.20100525git
+- rebuild for remi repo and httpd 2.4
+
+* Sat Nov 17 2012 Robert Scheck <robert@fedoraproject.org> 0-0.5.20100525git
+- Updated spec file to match with Apache 2.4 policy (#808560)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0-0.4.20100525git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jul  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 0-0.3.20100525git
 - rebuild for remi repo and httpd 2.4
 
