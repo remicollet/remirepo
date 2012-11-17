@@ -22,7 +22,7 @@ BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 %endif
 
 Requires(post): %{__pear}
@@ -86,7 +86,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit AllTests.php
+phpunit .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
