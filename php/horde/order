@@ -64,10 +64,14 @@
 63 php-horde-Horde-Rpc          *   2.0.1   =>           Core, Exception, Perms, Serialize, Support, Translation, Util, Xml_Element
 64 php-horde-Horde-Memcache     *   2.0.0                Exception
 65 php-horde-Horde-Memcache     *   2.0.0                Exception, Util
+66 php-horde-Horde-Date-Parser  +   2.0.0   =>           Date, Support
+67 php-horde-Horde-Rdo          +   2.0.0   =>           Db, Exception
 ---- apps -----
 php-horde-horde (Framework)     +   5.0.2
 php-horde-turba (Address book)  +   4.0.0
 php-horde-nag   (Tasks)         +   4.0.0
+
+TODO content
 
 + : in progress
 * : submitted
