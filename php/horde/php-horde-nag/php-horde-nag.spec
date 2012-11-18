@@ -37,6 +37,7 @@ Requires:       php-pcre
 Requires:       php-session
 Requires:       php-spl
 Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
 Conflicts:      php-pear(%{pear_channel}/horde) >= 6.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
@@ -83,6 +84,8 @@ Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
 # TODO Horde_ActiveSync
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+# not documentated, required for Content_Tagger
+Requires:       php-pear(%{pear_channel}/content) >= 2.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
