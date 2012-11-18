@@ -7,6 +7,7 @@
 # Tests are not ready
 # config: provides one ?
 # "horde-nag" sub package with apache stuff
+# NEED horde/content for Content_Tagger
 
 Name:           php-horde-nag
 Version:        4.0.0
