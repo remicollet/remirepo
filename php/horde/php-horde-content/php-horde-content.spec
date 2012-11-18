@@ -64,7 +64,7 @@ tar xif %{SOURCE0}
 cd %{pear_name}-%{version}
 (
 echo "<Directory %{pear_hordedir}/%{pear_name}>"
-cat %{pear_name}-%{version}/.htaccess
+cat .htaccess
 echo "</Directory>"
 ) | tee ../httpd.conf
 
