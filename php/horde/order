@@ -67,6 +67,7 @@
 ---- apps -----
 php-horde-horde (Framework)     +   5.0.2
 php-horde-turba (Address book)  +   4.0.0
+php-horde-nag   (Tasks)         +   4.0.0
 
 + : in progress
 * : submitted

@@ -1,24 +1,22 @@
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name    turba
+%global pear_name    nag
 %global pear_channel pear.horde.org
 
 # TODO
 # Tests are not ready
 # config: provides one ?
-# "horde-turba" sub package with apache stuff
+# "horde-nag" sub package with apache stuff
 
-Name:           php-horde-turba
+Name:           php-horde-nag
 Version:        4.0.0
 Release:        1%{?dist}
-Summary:        A web based address book
+Summary:        A web based task list manager
 
 Group:          Development/Libraries
-License:        ASL
-URL:            http://www.horde.org/apps/turba
+License:        GPLv2+
+URL:            http://www.horde.org/apps/nag
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-# /usr/lib/rpm/find-lang.sh from fedora 16
-Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -31,14 +29,13 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php(language) >= 5.3.0
-Requires:       php-gettext
 Requires:       php-date
-Requires:       php-hash
+Requires:       php-gettext
 Requires:       php-json
 Requires:       php-pcre
+Requires:       php-session
 Requires:       php-spl
 Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
 Conflicts:      php-pear(%{pear_channel}/horde) >= 6.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
@@ -49,6 +46,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Data) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Date_Parser) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Date_Parser) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
@@ -63,38 +62,44 @@ Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Perms) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Prefs) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Serialize) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Share) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Share) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Url) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
-Provides:       php-pear(%{pear_channel}/turba) = %{version}
+# optional
+# TODO Horde_ActiveSync
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
-Turba is the Horde contact management application. Leveraging the Horde
-framework to provide seamless integration with IMP and other Horde
-applications, it supports storing contacts in SQL, LDAP, Kolab, and IMSP
-address books.
+Nag is a web-based application built upon the Horde Application Framework
+which provides a simple, clean interface for managing online task lists
+(i.e., todo lists). It also includes strong integration with the other
+Horde applications and allows users to share task lists or enable
+light-weight project management.
+
 
 %prep
 %setup -q -c -T
 tar xif %{SOURCE0}
 
 cat <<EOF >httpd.conf
-<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale|scripts|templates)>
+<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale)>
      Deny from all
 </DirectoryMatch>
 EOF
@@ -111,24 +116,19 @@ sed -e '/%{pear_name}.po/d' \
 
 %build
 cd %{pear_name}-%{version}
-
-# Regenerate the locales
-for po in $(find locale -name \*.po)
-do
-   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
-done
+# Empty build section, most likely nothing required.
 
 
 %install
 cd %{pear_name}-%{version}
-rm -rf %{buildroot}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
 rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-install -Dpm 644 %{name}.xml %{buildroot}%{pear_xmldir}/%{name}.xml
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 # Install Apache configuration
 install -Dpm 0644 ../httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -139,26 +139,12 @@ mv %{buildroot}%{pear_hordedir}/%{pear_name}/config \
    %{buildroot}%{_sysconfdir}/horde/%{pear_name}
 ln -s %{_sysconfdir}/horde/%{pear_name} %{buildroot}%{pear_hordedir}/%{pear_name}/config
 
-%if 0%{?fedora} > 13 || 0%{?rhel} > 6
-%find_lang %{pear_name}
-%else
-sh %{SOURCE1} %{buildroot} %{pear_name}
-%endif
-for xml in locale/*/help.xml
+# Locales
+for loc in locale/?? locale/??_??
 do
-    lang=$(basename $(dirname $xml))
-    echo "%%lang(${lang%_*}) %{pear_hordedir}/%{pear_name}/$xml" >> %{pear_name}.lang
-done
-
-
-%clean
-rm -rf %{buildroot}
-
-
-%check
-cd %{pear_name}-%{version}/test/Turba
-: tests not ready 
-#phpunit AllTests.php
+    lang=$(basename $loc)
+    echo "%%lang(${lang%_*}) %{pear_hordedir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
 
 
 %post
@@ -168,41 +154,38 @@ cd %{pear_name}-%{version}/test/Turba
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.horde.org/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
-%files -f %{pear_name}-%{version}/%{pear_name}.lang
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
+%{pear_xmldir}/%{name}.xml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %attr(0770,apache,apache) %dir %{_sysconfdir}/horde/%{pear_name}
 %attr(0640,apache,apache) %config %{_sysconfdir}/horde/%{pear_name}/*.dist
 %attr(0660,apache,apache) %config(noreplace) %{_sysconfdir}/horde/%{pear_name}/*.php
 %attr(0660,apache,apache) %config %{_sysconfdir}/horde/%{pear_name}/*.xml
-%{pear_xmldir}/%{name}.xml
-%{pear_datadir}/turba
-%{pear_testdir}/turba
-%{_bindir}/turba-convert-datatree-shares-to-sql
-%{_bindir}/turba-convert-sql-shares-to-sqlng
-%{_bindir}/turba-import-squirrelmail-file-abook
-%{_bindir}/turba-import-squirrelmail-sql-abook
-%{_bindir}/turba-import-vcards
-%{_bindir}/turba-public-to-horde-share
+%{pear_testdir}/%{pear_name}
+%{_bindir}/nag-convert-datatree-shares-to-sql
+%{_bindir}/nag-convert-sql-shares-to-sqlng
+%{_bindir}/nag-create-missing-add-histories-sql
+%{_bindir}/nag-import-vtodos
 %dir %{pear_hordedir}/%{pear_name}
+%dir %{pear_hordedir}/%{pear_name}/locale
 %{pear_hordedir}/%{pear_name}/*.php
-%{pear_hordedir}/%{pear_name}/addressbooks
+%{pear_hordedir}/%{pear_name}/app
 %{pear_hordedir}/%{pear_name}/config
 %{pear_hordedir}/%{pear_name}/js
 %{pear_hordedir}/%{pear_name}/lib
 %{pear_hordedir}/%{pear_name}/migration
-%{pear_hordedir}/%{pear_name}/themes
+%{pear_hordedir}/%{pear_name}/tasklists
+%{pear_hordedir}/%{pear_name}/tasks
 %{pear_hordedir}/%{pear_name}/templates
-%dir %{pear_hordedir}/%{pear_name}/locale
-%dir %{pear_hordedir}/%{pear_name}/locale/*
-%dir %{pear_hordedir}/%{pear_name}/locale/*/LC_MESSAGES
+%{pear_hordedir}/%{pear_name}/themes
 
 
 %changelog
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.0-1
+* Sun Nov 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.0-1
 - Initial package
