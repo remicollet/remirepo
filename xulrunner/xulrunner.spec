@@ -31,7 +31,6 @@
 %global freetype_version 2.1.9
 %global libnotify_version 0.7.0
 %global libvpx_version 1.0.0
-%global lcms_version 1.18
 
 %if %{?system_nss}
 %global nspr_version 4.9.2
@@ -52,7 +51,7 @@
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
 %global gecko_dir_ver %{version}
 %global alpha_version 0
-%global beta_version  0
+%global beta_version  6
 %global rc_version    0
 
 %global mozappdir     %{_libdir}/%{name}
@@ -83,8 +82,8 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        16.0.2
-Release:        1%{?dist}
+Version:        17.0
+Release:        0.2%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -97,8 +96,8 @@ Source12:       %{shortname}-redhat-default-prefs.js
 Source21:       %{shortname}.sh.in
 
 # build patches
-Patch1:         mozilla-build.patch
-Patch2:         xulrunner-install-dir.patch
+Patch1:         xulrunner-install-dir.patch
+Patch2:         mozilla-build.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
 Patch17:        xulrunner-15.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
@@ -109,7 +108,6 @@ Patch20:        mozilla-193-pkgconfig.patch
 
 # Upstream patches
 Patch49:        mozilla-746112.patch
-Patch51:        mozilla-709732-gfx-icc-profile-fix.patch
 
 # ---------------------------------------------------
 
@@ -139,11 +137,6 @@ BuildRequires:  alsa-lib-devel
 BuildRequires:  libnotify-devel
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  curl-devel
-BuildRequires:  lcms-devel >= %{lcms_version}
-BuildRequires:  yasm
-%ifarch %{ix86} x86_64
-BuildRequires:  wireless-tools-devel
-%endif
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
@@ -219,11 +212,6 @@ Requires: mesa-libGL-devel
 %if %{system_vpx}
 Requires: libvpx-devel >= %{libvpx_version}
 %endif
-Requires: lcms-devel
-Requires: yasm
-%ifarch %{ix86} x86_64
-Requires: wireless-tools-devel
-%endif
 
 %description devel
 This package contains the libraries amd header files that are needed
@@ -255,22 +243,18 @@ echo TARGET = %{name}-%{version}-%{release}  GECKO = %{gecko_verrel}
 %setup -q -c
 cd %{tarballdir}
 
-%patch1  -p1 -b .build
-%patch2  -p1
+%patch1  -p1
+%patch2  -p1 -b .build
 %patch14 -p1 -b .chromium-types
 %patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
 
 %patch20 -p2 -b .pk
 
-%patch49 -p1 -b .746112
-%patch51 -p1 -b .709732
+%patch49 -p2 -b .746112
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%ifarch %{ix86} x86_64
-  | grep -v disable-necko-wifi     \
-%endif
 %if ! %{system_vpx}
   | grep -v with-system-libvpx     \
 %endif
@@ -279,8 +263,6 @@ cd %{tarballdir}
 %if %{enable_mozilla_crashreporter}
 %{__cat} %{SOURCE11} >> .mozconfig
 %endif
-
-echo "ac_add_options --enable-system-lcms" >> .mozconfig
 
 %if %{?system_nss}
 echo "ac_add_options --with-system-nspr" >> .mozconfig
@@ -364,7 +346,7 @@ cd %{tarballdir}
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
 MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
-                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
+                      %{__sed} -e 's/-Wall//')
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
@@ -545,6 +527,9 @@ fi
 %{mozappdir}/crashreporter.ini
 %{mozappdir}/Throbber-small.gif
 %endif
+%exclude %{mozappdir}/components/.mkdir.done
+%exclude %{mozappdir}/defaults/pref/.mkdir.done
+%exclude %{mozappdir}/modules/.mkdir.done
 
 %files devel
 %defattr(-,root,root,-)
@@ -558,6 +543,18 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Nov 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-0.2.b6
+- Update to 17.0 Beta 6, sync with rawhide
+
+* Wed Nov 14 2012 Martin Stransky <stransky@redhat.com> - 17.0-0.2b6
+- Update to 17.0 Beta 6
+
+* Tue Nov 13 2012 Martin Stransky <stransky@redhat.com> - 17.0-0.1b5
+- Update to 17.0 Beta 5
+
+* Tue Nov 6 2012 Martin Stransky <stransky@redhat.com> - 16.0.2-2
+- Added fix for rhbz#872752
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-1
 - sync patch with rawhide
 - rename to xulrunner-last

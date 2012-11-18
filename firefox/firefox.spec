@@ -1,4 +1,4 @@
-# Use system nspr/nss?
+# Use system nss/nspr?
 %if 0%{?fedora} < 16 && 0%{?rhel} < 7
 %define system_nss        0
 %else
@@ -26,19 +26,19 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      16.0.2
-%global xulrunner_version_max  16.1
-%global xulrunner_release      1
+%global xulrunner_version      17.0
+%global xulrunner_version_max  17.1
+%global xulrunner_release      0.1
 %global alpha_version          0
-%global beta_version           0
+%global beta_version           6
 %global rc_version             0
-%global datelang               20121026
+%global datelang               20121115
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
 %global tarballdir    mozilla-release
 
-%define official_branding       1
+%define official_branding       0
 %define build_langpacks         1
 %define include_debuginfo       0
 
@@ -51,6 +51,7 @@
 %global pre_version b%{beta_version}
 %global pre_name    beta%{beta_version}
 %global tarballdir  mozilla-beta
+%global mycomment   Beta %{beta_version}
 %endif
 %if %{rc_version} > 0
 %global pre_version rc%{rc_version}
@@ -66,8 +67,8 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        16.0.2
-Release:        2%{?dist}
+Version:        17.0
+Release:        0.1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -89,6 +90,7 @@ Patch0:         firefox-install-dir.patch
 # Fedora patches
 Patch14:        firefox-5.0-asciidel.patch
 Patch15:        firefox-15.0-enable-addons.patch
+Patch16:        firefox-duckduckgo.patch
 
 # Upstream patches
 
@@ -141,6 +143,7 @@ cd %{tarballdir}
 # Fedora patches
 %patch14 -p1 -b .asciidel
 %patch15 -p2 -b .addons
+%patch16 -p1 -b .duckduckgo
 
 # Upstream patches
 
@@ -154,14 +157,8 @@ cd %{tarballdir}
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
-%ifarch %{ix86} x86_64
-  | grep -v disable-necko-wifi     \
-%endif
 %if ! %{system_vpx}
   | grep -v with-system-libvpx     \
-%endif
-%ifarch %{ix86} x86_64
-  | grep -v disable-necko-wifi     \
 %endif
   | tee .mozconfig
 
@@ -170,16 +167,6 @@ cd %{tarballdir}
 %endif
 %if %{include_debuginfo}
 %{__cat} %{SOURCE13} >> .mozconfig
-%endif
-
-echo "ac_add_options --enable-system-lcms" >> .mozconfig
-
-%if %{?system_nss}
-echo "ac_add_options --with-system-nspr" >> .mozconfig
-echo "ac_add_options --with-system-nss" >> .mozconfig
-%else
-echo "ac_add_options --without-system-nspr" >> .mozconfig
-echo "ac_add_options --without-system-nss" >> .mozconfig
 %endif
 
 %if %{?system_cairo}
@@ -212,6 +199,14 @@ echo "ac_add_options --disable-debug" >> .mozconfig
 echo "ac_add_options --enable-optimize" >> .mozconfig
 %endif
 
+%if %{?system_nss}
+echo "ac_add_options --with-system-nspr" >> .mozconfig
+echo "ac_add_options --with-system-nss" >> .mozconfig
+%else
+echo "ac_add_options --without-system-nspr" >> .mozconfig
+echo "ac_add_options --without-system-nss" >> .mozconfig
+%endif
+
 #---------------------------------------------------------------------
 
 %build
@@ -223,7 +218,7 @@ cd %{tarballdir}
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
 MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
-                     %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
+                     %{__sed} -e 's/-Wall//')
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
@@ -374,6 +369,9 @@ create_default_langpack "zh-TW" "zh"
 # Copy over the LICENSE
 %{__install} -p -c -m 644 LICENSE $RPM_BUILD_ROOT/%{mozappdir}
 
+# Remove tmp files
+find $RPM_BUILD_ROOT/%{mozappdir}/modules -name '.mkdir.done' -exec rm -rf {} \;
+
 # Enable crash reporter for Firefox application
 %if %{include_debuginfo}
 sed -i -e "s/\[Crash Reporter\]/[Crash Reporter]\nEnabled=1/" $RPM_BUILD_ROOT/%{mozappdir}/application.ini
@@ -451,6 +449,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/48x48/apps/firefox.png
 %{mozappdir}/xulrunner
 %{mozappdir}/webapprt-stub
+%{mozappdir}/modules/*
 %dir %{mozappdir}/webapprt
 %{mozappdir}/webapprt/omni.ja
 %{mozappdir}/webapprt/webapprt.ini
@@ -464,6 +463,18 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Nov 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-0.1.b6
+- Update to 17.0 Beta 6, sync with rawhide
+
+* Thu Nov 15 2012 Martin Stransky <stransky@redhat.com> - 17.0-0.1b6
+- Update to 17.0 Beta 6
+
+* Wed Nov  7 2012 Jan Horak <jhorak@redhat.com> - 16.0.2-4
+- Added duckduckgo.com search engine
+
+* Thu Nov  1 2012 Jan Horak <jhorak@redhat.com> - 16.0.2-3
+- Added keywords to desktop file (871900)
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-2
 - Sync with rawhide
 - build using xulrunner-last

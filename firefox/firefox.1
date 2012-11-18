@@ -1,79 +1,125 @@
-.TH "FIREFOX" "1" "October 2012" "http://www.mozilla.org" "User Commands"
-.SH "NAME"
-Firefox \- a Web browser for X11 from the Mozilla Foundation.
-.SH "SYNOPSIS"
+.TH FIREFOX 1 "August 07, 2001" firefox "Linux User's Manual"
+.SH NAME
+firefox \- a Web browser for X11 derived from the Mozilla browser
+
+.SH SYNOPSIS
 .B firefox
 [\fIOPTIONS\fR] [\fIURL\fR]
-.SH "OPTIONS"
-Summary of command\-line options:
-.PP 
-\fBX11 options\fR
-.TP 
-\fB\-\-display\fR=\fIDISPLAY\fR
-X display to use.
-.TP 
-\fB\-\-sync\fR
-Make X calls synchronous.
-.TP 
-\fB\-\-g\-fatal\-warnings\fR
-Make all warnings fatal.
-.PP 
-\fBFirefox options\fR
-.TP 
-\fB\-h\fR or \fB\-help\fR
-Print all command-line options.
-.TP 
-\fB\-v\fR or \fB\-version\fR
-Print Firefox version.
-.TP 
-\fB\-P\fR <profile>
-Start with <profile>.
-.TP 
-\fB\-migration\fR
-Start with migration wizard.
-.TP 
-\fB\-ProfileManager\fR
-Start with ProfileManager.
-.TP 
-\fB\-no\-remote\fR
-Do not accept or send remote commands; implies \fB\-new\-instance\fR.
-.TP 
-\fB\-new\-instance\fR
-Open new instance, not a new window in running instance.
-.TP 
-\fB\-UILocale\fR <locale>
-Start with <locale> resources as UI Locale.
-.TP 
-\fB\-safe\-mode\fR
-Disables extensions and themes for this session.
-.TP 
-\fB\-jsconsole\fR
-Open the Error console.
-.TP 
-\fB\-browser\fR
-Open a browser window.
-.TP 
-\fB\-new\-window\fR <url>
-Open <url> in a new window.
-.TP 
-\fB\-new\-tab\fR <url>
-Open <url> in a new tab.
-.TP 
-\fB\-preferences\fR
-Open Preferences dialog.
-.TP 
-\fB\-search\fR <term>
-Search <term> with your default search engine.
-.TP 
-\fB\-private\fR
-Enable private browsing mode.
-.TP 
-\fB\-private\-toggle\fR
-Toggle private browsing mode.
-.TP 
-\fB\-setDefaultBrowser\fR
-Set this app as the default browser.
-.SH "BUGS"
-For packaging related bug reports (including this man page): https://bugzilla.redhat.com/
 
-For application bug reports: https://bugzilla.mozilla.org/
+.B firefox-bin
+[\fIOPTIONS\fR] [\fIURL\fR]
+
+.SH DESCRIPTION
+\fBMozilla Firefox\fR is an open-source web browser, designed for
+standards compliance, performance and portability.
+
+.SH USAGE
+\fBfirefox\fR is a simple shell script that will set up the
+environment for the actual executable, \fBfirefox-bin\fR.
+
+.SH OPTIONS
+A summary of the options supported by \fBfirefox\fR is included below.
+
+.SS "GTK options"
+\fB\-\-gdk-debug=\fR\fIFLAGS\fR
+Gdk debugging flags to set
+.TP
+\fB\-\-gdk-no-debug=\fR\fIFLAGS\fR
+Gdk debugging flags to unset
+.TP
+\fB\-\-gtk-debug=\fR\fIFLAGS\fR
+Gtk+ debugging flags to set
+.TP
+\fB\-\-gtk-no-debug=\fR\fIFLAGS\fR
+Gtk+ debugging flags to unset
+.TP
+\fB\-\-gtk-module=\fR\fIMODULE\fR
+Load an additional Gtk module
+
+.SS "X11 options"
+.TP
+.BI \-\-display= DISPLAY
+X display to use
+.TP
+.B \--sync
+Make X calls synchronous
+.TP
+.B \-\-no-xshm
+Don't use X shared memory extension
+.TP
+.BI \-\-xim-preedit= STYLE
+.TP
+.BI \-\-xim-status= STYLE
+.TP
+.B \-\-g-fatal-warnings
+Make all warnings fatal
+
+.SS "Firefox options"
+.TP
+\fB\-height\fR \fIvalue\fR
+Set height of startup window to \fIvalue\fR.
+.TP
+.B \-h, \-help
+Show summary of options.
+.TP
+.B \-installer
+Start with 4.x migration window.
+.TP
+\fB\-width\fR \fIvalue\fR
+Set width of startup window to \fIvalue\fR.
+.TP
+.B \-v, \-version
+Print \fB/usr/bin/firefox-bin\fR version.
+.TP
+\fB\-CreateProfile\fR \fIprofile\fR
+Create \fIprofile\fR.
+.TP
+\fB\-P\fR \fIprofile\fR
+Start with \fIprofile\fR.
+.TP
+.B \-ProfileWizard
+Start with profile wizard.
+.TP
+.B \-ProfileManager
+Start with profile manager.
+.TP
+.B \-SelectProfile
+Start with profile selection dialog.
+.TP
+\fB\-lang\fR \fIlang-region\fR
+Start with \fIlang-region\fR resources.
+.TP
+\fB\-remote\fR \fIcommand\fR
+Execute \fIcommand\fR in an already running Firefox process.  For more info,
+see: \fIhttp://www.mozilla.org/unix/remote.html\fR
+.TP
+.B \-splash
+Enable splash screen.
+.TP
+.B \-jsconsole
+Start with Javascript Console
+.TP
+\fB\-chrome\fR \fIurl\fR
+Load the specified chrome.
+.TP
+
+.SH FILES
+\fI/usr/bin/firefox\fR - shell script wrapping
+\fBfirefox\fR
+.br
+\fI/usr/lib/mozilla/firefox-bin\fR - \fBfirefox\fR
+executable
+
+.SH VERSION
+1.0
+
+.SH BUGS
+To report a bug, please visit \fIhttp://bugzilla.mozilla.org/\fR
+
+.SH "SEE ALSO"
+.BR mozilla(1)
+
+.SH AUTHORS
+.TP
+.B The Mozilla Organization
+.I http://www.mozilla.org/about.html
