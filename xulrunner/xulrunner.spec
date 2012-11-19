@@ -51,7 +51,7 @@
 # rc_version    should be set to the RC number if using an RC, 0 otherwise
 %global gecko_dir_ver %{version}
 %global alpha_version 0
-%global beta_version  6
+%global beta_version  0
 %global rc_version    0
 
 %global mozappdir     %{_libdir}/%{name}
@@ -83,7 +83,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
 Version:        17.0
-Release:        0.2%{?pre_tag}%{?dist}
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -543,6 +543,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-1
+- Update to 17.0
+
+* Mon Nov 19 2012 Martin Stransky <stransky@redhat.com> - 17.0-1
+- Update to 17.0
+
 * Sun Nov 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-0.2.b6
 - Update to 17.0 Beta 6, sync with rawhide
 

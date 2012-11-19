@@ -28,17 +28,17 @@
 
 %global xulrunner_version      17.0
 %global xulrunner_version_max  17.1
-%global xulrunner_release      0.1
+%global xulrunner_release      1
 %global alpha_version          0
-%global beta_version           6
+%global beta_version           0
 %global rc_version             0
-%global datelang               20121115
+%global datelang               20121119
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
 %global tarballdir    mozilla-release
 
-%define official_branding       0
+%define official_branding       1
 %define build_langpacks         1
 %define include_debuginfo       0
 
@@ -68,7 +68,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        17.0
-Release:        0.1%{?pre_tag}%{?dist}
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -207,6 +207,11 @@ echo "ac_add_options --without-system-nspr" >> .mozconfig
 echo "ac_add_options --without-system-nss" >> .mozconfig
 %endif
 
+# s390(x) fails to start with jemalloc enabled
+%ifarch s390 s390x
+echo "ac_add_options --disable-jemalloc" >> .mozconfig
+%endif
+
 #---------------------------------------------------------------------
 
 %build
@@ -221,6 +226,12 @@ MOZ_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | \
                      %{__sed} -e 's/-Wall//')
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
+%endif
+%ifarch s390
+MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
+%endif
+%ifarch s390 %{arm} ppc
+MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
 %endif
 export CFLAGS=$MOZ_OPT_FLAGS
 export CXXFLAGS=$MOZ_OPT_FLAGS
@@ -463,6 +474,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-1
+- Update to 17.0
+
+* Mon Nov 19 2012 Martin Stransky <stransky@redhat.com> - 17.0-1
+- Update to 17.0
+
 * Sun Nov 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-0.1.b6
 - Update to 17.0 Beta 6, sync with rawhide
 
