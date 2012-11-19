@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-History
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        API for tracking the history of an object
 
@@ -18,7 +18,7 @@ BuildArch:      noarch
 BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 
 Requires(post): %{__pear}
@@ -66,7 +66,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 # Need investigation
-phpunit -d date.timezone=UTC AllTests.php || exit 0
+phpunit\
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    . || exit 0
 
 
 %post
@@ -90,6 +93,9 @@ fi
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo
+
 * Sat Nov  3 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
