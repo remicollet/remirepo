@@ -4,7 +4,6 @@ pear.horde.org Horde_Image               2.0.0 (stable) 2.0.1 (stable) 747kB
 pear.horde.org Horde_Imap_Client         2.1.6 (stable) 2.2.0 (stable) 153kB
 pear.horde.org Horde_Injector            2.0.0 (stable) 2.0.1 (stable) 22kB
 pear.horde.org Horde_Ldap                2.0.0 (stable) 2.0.1 (stable) 62kB
-pear.horde.org Horde_Log                 2.0.0 (stable) 2.0.1 (stable) 13.6kB
 pear.horde.org Horde_Memcache            2.0.0 (stable) 2.0.1 (stable) 13.5kB
 pear.horde.org Horde_Notification        2.0.0 (stable) 2.0.1 (stable) 21kB
 pear.horde.org Horde_Rdo                 2.0.0 (stable) 2.0.1 (stable) 34kB
@@ -37,7 +36,7 @@ pear.horde.org Horde_Xml_Wbxml           2.0.0 (stable) 2.0.1 (stable) 26kB
 12 php-horde-Horde-Constraint       2.0.1
 13 php-horde-Horde-Thrift       *   2.0.0       
 14 php-horde-Horde-Scribe       *   2.0.0   => Thrift
-15 php-horde-Horde-Log              2.0.0   => Constraint, Exception, Scribe
+15 php-horde-Horde-Log              2.0.1   => Constraint, Exception, Scribe
 16 php-horde-Horde-Test             2.0.0   => Support, Util, Cli, Log
 17 php-horde-Horde-Image            2.0.0   => Exception, Support, Translation, Util
 18 php-horde-Horde-Browser          2.0.2   => Exception, Util
