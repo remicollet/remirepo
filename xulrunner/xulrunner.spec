@@ -140,6 +140,7 @@ BuildRequires:  curl-devel
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
+BuildRequires:  yasm
 
 Requires:       mozilla-filesystem
 Requires:       liberation-sans-fonts
@@ -212,6 +213,7 @@ Requires: mesa-libGL-devel
 %if %{system_vpx}
 Requires: libvpx-devel >= %{libvpx_version}
 %endif
+Requires: yasm
 
 %description devel
 This package contains the libraries amd header files that are needed
