@@ -12,7 +12,7 @@
 
 Name:           php-horde-horde
 Version:        5.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -151,7 +151,7 @@ ln -s %{_sysconfdir}/horde %{buildroot}%{pear_hordedir}/config
 cp %{buildroot}%{_sysconfdir}/horde/conf.php.dist \
    %{buildroot}%{_sysconfdir}/horde/conf.php
 
-install -D -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/horde.conf
+install -D -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
 %if 0%{?fedora} > 13
 %find_lang %{pear_name}
@@ -183,7 +183,7 @@ fi
 %files -f %{pear_name}-%{version}/%{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/horde.conf
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %attr(0770,apache,apache) %dir %{_sysconfdir}/horde
 %attr(0770,apache,apache) %dir %{_sysconfdir}/horde/registry.d
 %attr(0640,apache,apache) %config %{_sysconfdir}/horde/*.dist
@@ -224,6 +224,9 @@ fi
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.2-2
+- fix apache config and rename to php-horde-horde.conf
+
 * Thu Nov 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.2-1
 - update to 5.0.2 for remi repo
 
