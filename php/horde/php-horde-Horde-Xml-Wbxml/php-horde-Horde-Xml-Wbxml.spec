@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Xml-Wbxml
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Provides an API for encoding and decoding WBXML documents
 
@@ -18,7 +18,7 @@ BuildArch:      noarch
 BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 %if 0%{?fedora} > 12
 BuildRequires:  libwbxml
 %endif
@@ -65,7 +65,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit AllTests.php
+phpunit\
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 
 
 %post
@@ -89,6 +92,9 @@ fi
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo
+
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 

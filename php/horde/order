@@ -17,7 +17,6 @@ pear.horde.org Horde_Text_Filter_Csstidy 2.0.0 (stable) 2.0.1 (stable) 25kB
 pear.horde.org Horde_Text_Flowed         2.0.0 (stable) 2.0.1 (stable) 13.9kB
 pear.horde.org Horde_View                2.0.0 (stable) 2.0.1 (stable) 43kB
 pear.horde.org Horde_Xml_Element         2.0.0 (stable) 2.0.1 (stable) 10.5kB
-pear.horde.org Horde_Xml_Wbxml           2.0.0 (stable) 2.0.1 (stable) 26kB
 
 01 php-horde-Horde-Autoloader       2.0.1
 02 php-horde-Horde-Translation      2.0.1
@@ -42,7 +41,7 @@ pear.horde.org Horde_Xml_Wbxml           2.0.0 (stable) 2.0.1 (stable) 26kB
 ---- with test unit ----
 21 php-horde-Horde-Argv             2.0.2   =>           Exception, Translation
 22 php-horde-Horde-Serialize        2.0.1   =>           Exception, Util
-23 php-horde-Horde-Xml-Wbxml        2.0.0   =>           Util
+23 php-horde-Horde-Xml-Wbxml        2.0.1   =>           Util
 24 php-horde-Horde-Stream-Filter    2.0.0
 25 php-horde-Horde-LoginTasks       2.0.1   => BR(Date), Date, Translation
 26 php-horde-Horde-Text-Flowed      2.0.0   =>           Util
