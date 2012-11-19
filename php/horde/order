@@ -10,7 +10,6 @@ pear.horde.org Horde_Secret              2.0.0 (stable) 2.0.2 (stable) 13.2kB
 pear.horde.org Horde_SessionHandler      2.0.0 (stable) 2.0.1 (stable) 21kB
 pear.horde.org Horde_Stream              1.1.1 (stable) 1.2.0 (stable) 13.5kB
 pear.horde.org Horde_Template            2.0.0 (stable) 2.0.1 (stable) 14.5kB
-pear.horde.org Horde_Text_Filter         2.0.1 (stable) 2.0.2 (stable) 51kB
 pear.horde.org Horde_Text_Filter_Csstidy 2.0.0 (stable) 2.0.1 (stable) 25kB
 pear.horde.org Horde_Text_Flowed         2.0.0 (stable) 2.0.1 (stable) 13.9kB
 pear.horde.org Horde_View                2.0.0 (stable) 2.0.1 (stable) 43kB
@@ -50,7 +49,7 @@ pear.horde.org Horde_Xml_Element         2.0.0 (stable) 2.0.1 (stable) 10.5kB
 31 php-horde-Horde-Xml-Element      2.0.0   =>           Exception
 32 php-horde-Horde-Alarm            2.0.2   => BR(Date), Date, Exception, Translation
 33 php-horde-Horde-Text-Diff        2.0.1   =>           Exception, Util
-34 php-horde-Horde-Text-Filter      2.0.1   =>           Exception, Util
+34 php-horde-Horde-Text-Filter      2.0.2   =>           Exception, Util
 35 php-horde-Horde-Group            2.0.1   => BR(Db),   Exception, Util
 36 php-horde-Horde-Tree             2.0.0   =>           Exception, Url, Util
 37 php-horde-Horde-Injector         2.0.0   =>           Exception
