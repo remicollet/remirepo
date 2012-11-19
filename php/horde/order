@@ -7,7 +7,6 @@ pear.horde.org Horde_Notification        2.0.0 (stable) 2.0.1 (stable) 21kB
 pear.horde.org Horde_Rdo                 2.0.0 (stable) 2.0.1 (stable) 34kB
 pear.horde.org Horde_Role                1.0.0 (stable) 1.0.1 (stable) 10.8kB
 pear.horde.org Horde_Secret              2.0.0 (stable) 2.0.2 (stable) 13.2kB
-pear.horde.org Horde_Serialize           2.0.0 (stable) 2.0.1 (stable) 15.6kB
 pear.horde.org Horde_SessionHandler      2.0.0 (stable) 2.0.1 (stable) 21kB
 pear.horde.org Horde_Stream              1.1.1 (stable) 1.2.0 (stable) 13.5kB
 pear.horde.org Horde_Stream_Filter       2.0.0 (stable) 2.0.1 (stable) 12.9kB
@@ -42,7 +41,7 @@ pear.horde.org Horde_Xml_Wbxml           2.0.0 (stable) 2.0.1 (stable) 26kB
 20 php-horde-Horde-Cache            2.0.1   => Exception, Util
 ---- with test unit ----
 21 php-horde-Horde-Argv             2.0.2   =>           Exception, Translation
-22 php-horde-Horde-Serialize        2.0.0   =>           Exception, Util
+22 php-horde-Horde-Serialize        2.0.1   =>           Exception, Util
 23 php-horde-Horde-Xml-Wbxml        2.0.0   =>           Util
 24 php-horde-Horde-Stream-Filter    2.0.0
 25 php-horde-Horde-LoginTasks       2.0.1   => BR(Date), Date, Translation
