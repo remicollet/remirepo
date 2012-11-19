@@ -36,7 +36,7 @@
 35 php-horde-Horde-Group            2.0.0   => BR(Db),   Exception, Util
 36 php-horde-Horde-Tree             2.0.0   =>           Exception, Url, Util
 37 php-horde-Horde-Injector         2.0.0   =>           Exception
-38 php-horde-Horde-Controller       2.0.0   =>           Exception, Injector, Log, Support, Util
+38 php-horde-Horde-Controller       2.0.1   =>           Exception, Injector, Log, Support, Util
 39 php-horde-Horde-View             2.0.0   => BR(Controller), Exception, Support, Util
 40 php-horde-Horde-Mail             2.0.0   =>           Exception, Mime, Stream-Filter
 41 php-horde-Horde-Mime             2.0.1   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
