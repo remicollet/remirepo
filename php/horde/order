@@ -19,7 +19,7 @@
 19 php-horde-Horde-Lock             2.0.0   => Exception, Support, (Db, Log)
 20 php-horde-Horde-Cache            2.0.0   => Exception, Util
 ---- with test unit ----
-21 php-horde-Horde-Argv             2.0.1   =>           Exception, Translation
+21 php-horde-Horde-Argv             2.0.2   =>           Exception, Translation
 22 php-horde-Horde-Serialize        2.0.0   =>           Exception, Util
 23 php-horde-Horde-Xml-Wbxml        2.0.0   =>           Util
 24 php-horde-Horde-Stream-Filter    2.0.0
@@ -30,7 +30,7 @@
 29 php-horde-Horde-Token            2.0.1   => BR(Db, Url), Exception, Translation, Url, Util
 30 php-horde-Horde-Template         2.0.0
 31 php-horde-Horde-Xml-Element      2.0.0   =>           Exception
-32 php-horde-Horde-Alarm            2.0.1   => BR(Date), Date, Exception, Translation
+32 php-horde-Horde-Alarm            2.0.2   => BR(Date), Date, Exception, Translation
 33 php-horde-Horde-Text-Diff        2.0.0   =>           Exception, Util
 34 php-horde-Horde-Text-Filter      2.0.1   =>           Exception, Util
 35 php-horde-Horde-Group            2.0.0   => BR(Db),   Exception, Util

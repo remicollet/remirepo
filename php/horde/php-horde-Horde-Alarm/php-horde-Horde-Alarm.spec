@@ -104,7 +104,10 @@ sh %{SOURCE1} %{buildroot} %{pear_name}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit -d date.timezone=UTC .
+phpunit\
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 
 
 %post
