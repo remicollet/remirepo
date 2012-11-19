@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.1.6
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -21,7 +21,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 
@@ -108,7 +108,10 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 %if 0%{?fedora} >= 18
 : no test as php segfault, need investigation
 %else
-phpunit -d date.timezone=UTC AllTests.php
+phpunit\
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 %endif
 
 
@@ -138,6 +141,9 @@ fi
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.0-1
+- Update to 2.2.0 for remi repo
+
 * Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.6-1
 - Update to 2.1.6 for remi repo
 
