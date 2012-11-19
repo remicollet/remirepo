@@ -3,6 +3,9 @@
 %global pear_name    Horde_Argv
 %global pear_channel pear.horde.org
 
+# Need locale, so need package to be installed
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:           php-horde-Horde-Argv
 Version:        2.0.2
 Release:        1%{?dist}
@@ -20,8 +23,10 @@ BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
+%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -82,8 +87,15 @@ sh %{SOURCE1} %{buildroot} %{pear_name}
 
 
 %check
-cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
-phpunit .
+%if %{with_tests}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit\
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
+%else
+: Test disabled, missing '--with tests' option.
+%endif
 
 
 %post
@@ -113,6 +125,7 @@ fi
 %changelog
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
 - Update to 2.0.2 for remi repo
+- make test optional (need locale)
 
 * Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
