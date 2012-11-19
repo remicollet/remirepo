@@ -4,12 +4,12 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Role
-Version:        1.0.0
+Version:        1.0.1
 Release:        3%{?dist}
 Summary:        PEAR installer role used to install Horde components
 
 Group:          Development/Libraries
-License:        LGPL
+License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -90,6 +90,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{_sysconfdir}/rpm/macros.horde
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/PEAR/Installer/Role/Horde
@@ -100,6 +101,10 @@ fi
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
+- Update to 1.0.1 for remi repo
+- License is LGPLv2+
+
 * Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
 - fix xml (install fails because of tasks:postinstallscript)
 
