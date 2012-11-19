@@ -9,7 +9,7 @@
 09 php-horde-Horde-Nls              2.0.1   => Util, Translation
 10 php-horde-Horde-Date             2.0.1   => Nls, Translation, Exception, Util
 11 php-horde-Horde-Http             2.0.0   => Exception, Support
-12 php-horde-Horde-Constraint       2.0.0
+12 php-horde-Horde-Constraint       2.0.1
 13 php-horde-Horde-Thrift       *   2.0.0       
 14 php-horde-Horde-Scribe       *   2.0.0   => Thrift
 15 php-horde-Horde-Log              2.0.0   => Constraint, Exception, Scribe
