@@ -3,9 +3,11 @@
 %global pear_name    Horde_Image
 %global pear_channel pear.horde.org
 
+# No test: all are skipped.
+
 Name:           php-horde-Horde-Image
-Version:        2.0.0
-Release:        2%{?dist}
+Version:        2.0.1
+Release:        1%{?dist}
 Summary:        Horde Image API
 
 Group:          Development/Libraries
@@ -103,6 +105,9 @@ fi
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo
+
 * Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
 - cleanups
 - requires php-pear(XML_SVG)
