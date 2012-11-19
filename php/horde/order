@@ -33,7 +33,7 @@
 32 php-horde-Horde-Alarm            2.0.2   => BR(Date), Date, Exception, Translation
 33 php-horde-Horde-Text-Diff        2.0.0   =>           Exception, Util
 34 php-horde-Horde-Text-Filter      2.0.1   =>           Exception, Util
-35 php-horde-Horde-Group            2.0.0   => BR(Db),   Exception, Util
+35 php-horde-Horde-Group            2.0.1   => BR(Db),   Exception, Util
 36 php-horde-Horde-Tree             2.0.0   =>           Exception, Url, Util
 37 php-horde-Horde-Injector         2.0.0   =>           Exception
 38 php-horde-Horde-Controller       2.0.1   =>           Exception, Injector, Log, Support, Util
