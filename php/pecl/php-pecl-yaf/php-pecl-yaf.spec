@@ -4,7 +4,7 @@
 
 Summary:       Yet Another Framework
 Name:          php-pecl-yaf
-Version:       2.2.6
+Version:       2.2.7
 Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
@@ -22,6 +22,8 @@ Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
+Provides:      php-%{pecl_name} = %{version}
+Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -140,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.2.7-1
+- version 2.2.7 (stable)
+
 * Thu Nov  1 2012 Remi Collet <remi@fedoraproject.org> - 2.2.6-1
 - version 2.2.6 (stable)
 
