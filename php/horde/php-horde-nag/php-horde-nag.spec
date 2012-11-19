@@ -7,11 +7,10 @@
 # Tests are not ready
 # config: provides one ?
 # "horde-nag" sub package with apache stuff
-# NEED horde/content for Content_Tagger
 
 Name:           php-horde-nag
 Version:        4.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based task list manager
 
 Group:          Development/Libraries
@@ -84,8 +83,10 @@ Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
 # TODO Horde_ActiveSync
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
-# not documentated, required for Content_Tagger
+# not documented, required for Content_Tagger
 Requires:       php-pear(%{pear_channel}/content) >= 2.0.0
+# not documented, required for Horde_Routes_Mapper
+Requires:       php-pear(%{pear_channel}/Horde_Routes) >= 2.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -191,5 +192,8 @@ fi
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.0-2
+- requires Horde_Routes
+
 * Sun Nov 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.0-1
 - Initial package
