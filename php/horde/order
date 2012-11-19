@@ -1,6 +1,5 @@
 pear.horde.org Horde_Ldap                2.0.0 (stable) 2.0.1 (stable) 62kB
 pear.horde.org Horde_Rdo                 2.0.0 (stable) 2.0.1 (stable) 34kB
-pear.horde.org Horde_Template            2.0.0 (stable) 2.0.1 (stable) 14.5kB
 pear.horde.org Horde_Xml_Element         2.0.0 (stable) 2.0.1 (stable) 10.5kB
 
 01 php-horde-Horde-Autoloader       2.0.1
@@ -33,7 +32,7 @@ pear.horde.org Horde_Xml_Element         2.0.0 (stable) 2.0.1 (stable) 10.5kB
 27 php-horde-Horde-Db               2.0.1   => BR(Cache), Date, Exception, Support
 28 php-horde-Horde-Auth             2.0.1   => BR(Db),   Exception, Util
 29 php-horde-Horde-Token            2.0.1   => BR(Db, Url), Exception, Translation, Url, Util
-30 php-horde-Horde-Template         2.0.0
+30 php-horde-Horde-Template         2.0.1
 31 php-horde-Horde-Xml-Element      2.0.0   =>           Exception
 32 php-horde-Horde-Alarm            2.0.2   => BR(Date), Date, Exception, Translation
 33 php-horde-Horde-Text-Diff        2.0.1   =>           Exception, Util
