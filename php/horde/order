@@ -1,6 +1,5 @@
 pear.horde.org Horde_History             2.0.0 (stable) 2.0.1 (stable) 16.8kB
 pear.horde.org Horde_Imap_Client         2.1.6 (stable) 2.2.0 (stable) 153kB
-pear.horde.org Horde_Injector            2.0.0 (stable) 2.0.1 (stable) 22kB
 pear.horde.org Horde_Ldap                2.0.0 (stable) 2.0.1 (stable) 62kB
 pear.horde.org Horde_Memcache            2.0.0 (stable) 2.0.1 (stable) 13.5kB
 pear.horde.org Horde_Notification        2.0.0 (stable) 2.0.1 (stable) 21kB
@@ -52,7 +51,7 @@ pear.horde.org Horde_Xml_Element         2.0.0 (stable) 2.0.1 (stable) 10.5kB
 34 php-horde-Horde-Text-Filter      2.0.2   =>           Exception, Util
 35 php-horde-Horde-Group            2.0.1   => BR(Db),   Exception, Util
 36 php-horde-Horde-Tree             2.0.0   =>           Exception, Url, Util
-37 php-horde-Horde-Injector         2.0.0   =>           Exception
+37 php-horde-Horde-Injector         2.0.1   =>           Exception
 38 php-horde-Horde-Controller       2.0.1   =>           Exception, Injector, Log, Support, Util
 39 php-horde-Horde-View             2.0.0   => BR(Controller), Exception, Support, Util
 40 php-horde-Horde-Mail             2.0.0   =>           Exception, Mime, Stream-Filter
