@@ -7,8 +7,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Translation
-Version:        2.0.0
-Release:        2%{?dist}
+Version:        2.0.1
+Release:        1%{?dist}
 Summary:        Horde translation library
 
 Group:          Development/Libraries
@@ -91,7 +91,10 @@ cat %{pear_name}.lang
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit AllTests.php
+phpunit\
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -124,9 +127,13 @@ fi
 %dir %{pear_testdir}/Horde_Translation/Horde/Translation/locale/de
 %dir %{pear_testdir}/Horde_Translation/Horde/Translation/locale/de/LC_MESSAGES
 %{pear_testdir}/Horde_Translation/Horde/Translation/*.php
+%{pear_testdir}/Horde_Translation/Horde/Translation/phpunit.xml
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo
+
 * Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
 - make test optionnal
 
