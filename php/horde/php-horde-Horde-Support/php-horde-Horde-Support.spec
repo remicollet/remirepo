@@ -7,7 +7,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Support
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        Horde support package
 
@@ -22,7 +22,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 %endif
 
 Requires(post): %{__pear}
@@ -74,7 +74,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit -d date.timezone=UTC AllTests.php
+phpunit\
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -100,6 +103,9 @@ fi
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+- Update to 2.0.2 for remi repo
+
 * Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-3
 - Update to 2.0.1 for remi repo
 - drop our patch, merged upstream
