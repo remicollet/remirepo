@@ -35,6 +35,8 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optionnal
 Requires:       php-pear(%{pear_channel}/Horde_Controller) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Controller) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Routes) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Routes) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

@@ -84,8 +84,10 @@ Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 # not documented, required for Content_Tagger
+# http://bugs.horde.org/ticket/11726
 Requires:       php-pear(%{pear_channel}/content) >= 2.0.0
 # not documented, required for Horde_Routes_Mapper
+# http://bugs.horde.org/ticket/11727
 Requires:       php-pear(%{pear_channel}/Horde_Routes) >= 2.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
