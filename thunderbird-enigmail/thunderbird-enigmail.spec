@@ -14,6 +14,7 @@
 %else
 %global system_sqlite 1
 %endif
+
 %if 0%{?fedora} < 15 && 0%{?rhel} < 7
 %global system_cairo      0
 %global system_vpx        0
@@ -44,8 +45,8 @@
 %global thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 %global enimail_app_id     \{847b3a00-7ab1-11d4-8f02-006008948af5\}
 
-%global thunver  16.0.1
-%global thunmax  17.0
+%global thunver  17.0
+%global thunmax  18.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -63,12 +64,8 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.4.5
-%if 0%{?prever:1}
-Release:        0.1.%{prever}%{?dist}
-%else
+Version:        1.4.6
 Release:        2%{?dist}
-%endif
 URL:            http://enigmail.mozdev.org/
 # All files licensed under MPL 1.1/GPL 2.0/LGPL 2.1
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -80,15 +77,7 @@ Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
 
 # ===== Enigmail files =====
-%if 0%{?CVS}
-# cvs -d :pserver:guest@mozdev.org:/cvs login
-# => password is guest 
-# cvs -d :pserver:guest@mozdev.org:/cvs co enigmail/src
-# tar czf /home/rpmbuild/SOURCES/enigmail-20091121.tgz --exclude CVS -C enigmail/src .
-Source100:      enigmail-%{CVS}.tgz
-%else
-Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{version}%{?prever}.tar.gz
-%endif
+Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{version}.tar.gz
 
 
 # Mozilla (XULRunner) patches
@@ -184,7 +173,7 @@ features provided by GnuPG
 %setup -q -c
 cd %{tarballdir}
 
-%patch0  -p2 -b .dir
+%patch0  -p1 -b .dir
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch8 -p3 -b .secondary-ipc
@@ -265,7 +254,7 @@ pushd mailnews/extensions/enigmail
 # All tarballs (as well as CVS) will *always* report as 1.4a1pre (or whatever
 # the next major version would be). This is because I create builds from trunk
 # and simply label the result as 1.3.x.
-sed -i -e '/em:version/s/1.5a1pre/%{version}/' package/install.rdf
+#sed -i -e '/em:version/s/1.5a1pre/%{version}/' package/install.rdf
 grep '<em:version>%{version}</em:version>' package/install.rdf || exit 1
 # Apply Enigmail patch here
 popd
@@ -292,7 +281,7 @@ cd %{tarballdir}
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
 MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
-                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
+                      %{__sed} -e 's/-Wall//')
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
@@ -352,6 +341,12 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Tue Nov 20 2012 Remi Collet <remi@fedoraproject.org> 1.4.6-2
+- Enigmail 1.4.6 for Thunderbird 17
+
+* Fri Nov  9 2012 Remi Collet <remi@fedoraproject.org> 1.4.6-1
+- Enigmail 1.4.6 for Thunderbird 16
+
 * Tue Oct 16 2012 Remi Collet <remi@fedoraproject.org> 1.4.5-2
 - Enigmail 1.4.5 for Thunderbird 16.0.1
 - merge changes from thunderbird in rawhide

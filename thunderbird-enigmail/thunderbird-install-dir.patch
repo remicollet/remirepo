@@ -1,19 +1,18 @@
-diff -up thunderbird-16.0/comm-release/config/autoconf.mk.in.dir thunderbird-16.0/comm-release/config/autoconf.mk.in
---- thunderbird-16.0/comm-release/config/autoconf.mk.in.dir	2012-10-05 23:20:26.000000000 +0200
-+++ thunderbird-16.0/comm-release/config/autoconf.mk.in	2012-10-09 12:57:24.290767832 +0200
-@@ -36,7 +36,7 @@ datadir		= @datadir@
- mandir		= @mandir@
- idldir		= $(datadir)/idl/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
+diff -up comm-release/config/baseconfig.mk.dir comm-release/config/baseconfig.mk
+--- comm-release/config/baseconfig.mk.dir	2012-11-20 10:35:27.280236537 +0100
++++ comm-release/config/baseconfig.mk	2012-11-20 10:35:45.208242562 +0100
+@@ -2,7 +2,7 @@ INCLUDED_AUTOCONF_MK = 1
  
--installdir	= $(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
-+installdir	= $(libdir)/$(MOZ_APP_NAME)
- sdkdir		= $(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION)
- 
- MOZDEPTH	= $(DEPTH)/mozilla
-diff -up thunderbird-16.0/comm-release/mozilla/config/autoconf.mk.in.dir thunderbird-16.0/comm-release/mozilla/config/autoconf.mk.in
-diff -up thunderbird-16.0/comm-release/mozilla/config/baseconfig.mk.dir thunderbird-16.0/comm-release/mozilla/config/baseconfig.mk
---- thunderbird-16.0/comm-release/mozilla/config/baseconfig.mk.dir	2012-10-05 23:27:15.000000000 +0200
-+++ thunderbird-16.0/comm-release/mozilla/config/baseconfig.mk	2012-10-09 13:01:32.269317094 +0200
+ includedir := $(includedir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
+ idldir = $(datadir)/idl/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
+-installdir = $(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
++installdir = $(libdir)/$(MOZ_APP_NAME)
+ sdkdir = $(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION)
+ MOZILLA_SRCDIR = $(topsrcdir)/mozilla
+ MOZDEPTH = $(DEPTH)/mozilla
+diff -up comm-release/mozilla/config/baseconfig.mk.dir comm-release/mozilla/config/baseconfig.mk
+--- comm-release/mozilla/config/baseconfig.mk.dir	2012-11-16 22:16:02.000000000 +0100
++++ comm-release/mozilla/config/baseconfig.mk	2012-11-20 10:34:30.610216973 +0100
 @@ -2,7 +2,7 @@ INCLUDED_AUTOCONF_MK = 1
  
  includedir := $(includedir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION)
@@ -23,10 +22,9 @@ diff -up thunderbird-16.0/comm-release/mozilla/config/baseconfig.mk.dir thunderb
  sdkdir = $(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION)
  DIST = $(DEPTH)/dist
  
-diff -up thunderbird-16.0/comm-release/mozilla/js/src/config/autoconf.mk.in.dir thunderbird-16.0/comm-release/mozilla/js/src/config/autoconf.mk.in
-diff -up thunderbird-16.0/comm-release/mozilla/js/src/config/baseconfig.mk.dir thunderbird-16.0/comm-release/mozilla/js/src/config/baseconfig.mk
---- thunderbird-16.0/comm-release/mozilla/js/src/config/baseconfig.mk.dir	2012-10-05 23:27:30.000000000 +0200
-+++ thunderbird-16.0/comm-release/mozilla/js/src/config/baseconfig.mk	2012-10-09 13:02:00.885495014 +0200
+diff -up comm-release/mozilla/js/src/config/baseconfig.mk.dir comm-release/mozilla/js/src/config/baseconfig.mk
+--- comm-release/mozilla/js/src/config/baseconfig.mk.dir	2012-11-16 22:16:14.000000000 +0100
++++ comm-release/mozilla/js/src/config/baseconfig.mk	2012-11-20 10:34:32.511217747 +0100
 @@ -1,6 +1,6 @@
  INCLUDED_AUTOCONF_MK = 1
  
