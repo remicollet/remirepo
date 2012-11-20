@@ -59,14 +59,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        16.0.2
+Version:        17.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20121029.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20121119.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -191,7 +191,7 @@ sed -e "s/^Name=.*/Name=Thunderbird %{version} %{?relcan}/" \
 
 cd %{tarballdir}
 
-%patch0  -p2 -b .dir
+%patch0  -p1 -b .dir
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch8 -p3 -b .secondary-ipc
@@ -276,7 +276,7 @@ cd %{tarballdir}
 # Disable C++ exceptions since Mozilla code is not exception-safe
 # 
 MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
-                      %{__sed} -e 's/-Wall//' -e 's/-fexceptions/-fno-exceptions/g')
+                      %{__sed} -e 's/-Wall//')
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
@@ -498,6 +498,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Tue Nov 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-1
+- Sync with rawhide, update to 17.0
+
+* Mon Nov 19 2012 Jan Horak <jhorak@redhat.com> - 17.0-1
+- Update to 17.0
+
 * Mon Oct 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-1
 - Sync with rawhide, update to 16.0.2
 
