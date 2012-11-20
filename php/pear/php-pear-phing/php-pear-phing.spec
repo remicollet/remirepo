@@ -1,34 +1,52 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name phing
-%global channel pear.phing.info
+%global pear_name    phing
+%global pear_channel pear.phing.info
 
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
-Version:	2.4.12
+Version:	2.4.13
 Release:	1%{?dist}
 
 License:	LGPLv2
 Group:		Development/Tools
-Source0:	http://pear.phing.info/get/phing-%{version}.tgz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:	http://%{pear_channel}/get/phing-%{version}.tgz
 URL:		http://phing.info/trac/
 
-BuildArch:	noarch
+BuildRoot:	    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:	    noarch
 BuildRequires:	php-pear(PEAR) >= 1.8.0
-BuildRequires:	php-channel(pear.phing.info)
+BuildRequires:	php-channel(%{pear_channel})
 BuildRequires:	dos2unix
 
-Requires:	php-cli >= 5.2.0
+Requires:	php(language) >= 5.2.0
+Requires:	php-cli
 Requires:	php-pear(PEAR) >= 1.8.0
 Requires:	php-pecl-xdebug >= 2.0.5
-Requires:	php-channel(pear.phing.info)
+Requires:	php-channel(%{pear_channel})
 
+# Optional
 Requires:	php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
+Requires:	php-pear(pear.phpunit.de/PHP_CodeCoverage) >= 1.1.0
+Requires:	php-pear(pear.phpunit.de/phpcpd) >= 1.3.3
+Requires:	php-pear(pear.phpunit.de/phploc) >= 1.6.4
+Requires:	php-pear(Archive_Tar) >= 1.3.0
+Requires:	php-pear(HTTP_Request2) >= 0.5.2
+Requires:	php-pear(PHP_CodeSniffer) >= 1.3.0
+Requires:	php-pear(pear.pdepend.org/PHP_Depend) >= 0.10.0
+Requires:	php-pear(pear.phpmd.org/PHP_PMD) >= 1.1.0
+# TODO
+# pear.phing.info/phingdocs >= 2.4.13
+# VersionControl_SVN >= 0.4.0
+# VersionControl_Git >= 0.4.3
+# PEAR_PackageFileManager >= 1.5.2
+# Services_Amazon_S3 >= 0.3.1
+# pear.phpdoc.org/phpDocumentor >= 2.0.0a10
+
 
 Requires(post):	%{__pear}
 Requires(postun): %{__pear}
 
-Provides:	php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:	php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -45,8 +63,9 @@ PEAR packages, and much more.
 
 %prep
 %setup -qc
-%{__mv} package.xml %{pear_name}-%{version}/%{pear_name}.xml
 cd %{pear_name}-%{version}
+mv ../package.xml %{pear_name}.xml
+
 
 %build
 cd %{pear_name}-%{version}
@@ -54,18 +73,14 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
 
-# not in the archive dos2unix $RPM_BUILD_ROOT/%{pear_docdir}/%{pear_name}/UPGRADE
+# not in the archive dos2unix %{buildroot}/%{pear_docdir}/%{pear_name}/UPGRADE
 
-%{__rm} -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
-%{__mkdir_p} $RPM_BUILD_ROOT%{pear_xmldir}
-%{__install} -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
-
-%clean
-%{__rm} -rf $RPM_BUILD_ROOT
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 
 
 %post
@@ -75,7 +90,7 @@ cd %{pear_name}-%{version}
 %postun
 if [ $1 -eq 0 ] ; then
 	%{__pear} uninstall --nodeps --ignore-errors --register-only \
-		%{channel}/%{pear_name} >/dev/null || :
+		%{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -90,8 +105,12 @@ fi
 
 
 %changelog
+* Tue Nov 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.13-1
+- upstream 2.4.13, for remi repo
+- add more requires (optional deps)
+
 * Thu Apr 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.12-1
-- upstream 2.4.9, backport for remi repo
+- upstream 2.4.13, backport for remi repo
 
 * Wed Apr 11 2012 Christof Damian <christof@damian.net> - 2.4.12-1
 - upstream 2.4.12
