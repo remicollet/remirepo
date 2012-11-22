@@ -10,10 +10,10 @@
 %global pharver     2.0.1
 %global zipver      1.11.0
 %global jsonver     1.2.1
-%global oci8ver     1.4.7
+%global oci8ver     1.4.9
 
-%global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
-%global mysql_sock %(mysql_config --socket || echo /var/lib/mysql/mysql.sock)
+%global httpd_mmn %(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo missing-httpd-devel)
+%global mysql_sock %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
 %ifarch ppc ppc64
 %global oraclever 10.2.0.2
@@ -45,7 +45,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.18
+Version: 5.3.19
 Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
@@ -521,6 +521,8 @@ Provides: %{phpname}-dom, %{phpname}-dom%{?_isa}
 Provides: %{phpname}-xsl, %{phpname}-xsl%{?_isa}
 Provides: %{phpname}-domxml, %{phpname}-domxml%{?_isa}
 Provides: %{phpname}-wddx, %{phpname}-wddx%{?_isa}
+Provides: %{phpname}-xmlreader, %{phpname}-xmlreader%{?_isa}
+Provides: %{phpname}-xmlwriter, %{phpname}-xmlwriter%{?_isa}
 BuildRequires: libxslt-devel >= 1.0.18-1, libxml2-devel >= 2.4.14-1
 Obsoletes: php53-xml, php53u-xml
 
@@ -871,7 +873,7 @@ ln -sf ../configure
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
-        --with-pcre-regex=%{_prefix} \
+	--with-pcre-regex=%{_prefix} \
 %endif
 	--with-zlib \
 	--with-layout=GNU \
@@ -1497,6 +1499,11 @@ fi
 %endif
 
 %changelog
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> 5.3.19-1
+- update to 5.3.19
+- provides php-xmlreader and php-xmlwriter
+- oci8 extension 1.4.9
+
 * Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> 5.3.18-1
 - update to 5.3.18
 - provides php-phar
