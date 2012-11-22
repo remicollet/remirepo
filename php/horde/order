@@ -3,7 +3,6 @@ Horde_Crypt_Blowfish 1.0.0 (stable) 1.0.1 (stable) 24kB
 Horde_Form           2.0.0 (stable) 2.0.1 (stable) 183kB
 Horde_Imap_Client    2.2.0 (stable) 2.2.1 (stable) 153kB
 Horde_Scribe         2.0.0 (stable) 2.0.1 (stable) 4.9kB
-Horde_Thrift         2.0.0 (stable) 2.0.1 (stable) 23kB
 Horde_Tree           2.0.0 (stable) 2.0.1 (stable) 15.6kB
 
 01 php-horde-Horde-Autoloader       2.0.1
@@ -18,7 +17,7 @@ Horde_Tree           2.0.0 (stable) 2.0.1 (stable) 15.6kB
 10 php-horde-Horde-Date             2.0.1   => Nls, Translation, Exception, Util
 11 php-horde-Horde-Http             2.0.1   => Exception, Support
 12 php-horde-Horde-Constraint       2.0.1
-13 php-horde-Horde-Thrift       *   2.0.0       
+13 php-horde-Horde-Thrift       *   2.0.1
 14 php-horde-Horde-Scribe       *   2.0.0   => Thrift
 15 php-horde-Horde-Log              2.0.1   => Constraint, Exception, Scribe
 16 php-horde-Horde-Test             2.0.0   => Support, Util, Cli, Log
