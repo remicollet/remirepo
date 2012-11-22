@@ -3,8 +3,10 @@
 %global pear_name    Horde_Form
 %global pear_channel pear.horde.org
 
+# Note : test not ready (old .phpt)
+
 Name:           php-horde-Horde-Form
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Horde Form API
 
@@ -24,6 +26,8 @@ BuildRequires:  php-channel(%{pear_channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-date
+Requires:       php-pcre
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
@@ -53,8 +57,7 @@ functionality for the Horde Application Framework.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 
@@ -119,6 +122,9 @@ fi
 
 
 %changelog
+* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo
+
 * Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 

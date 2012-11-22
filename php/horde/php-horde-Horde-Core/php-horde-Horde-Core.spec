@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -22,7 +22,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
@@ -197,7 +197,10 @@ sh %{SOURCE1} %{buildroot} %{pear_name}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit -d date.timezone=UTC AllTests.php
+phpunit\
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 
 
 %post
@@ -241,6 +244,9 @@ fi
 
 
 %changelog
+* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+- Update to 2.0.3 for remi repo
+
 * Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 
