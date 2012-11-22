@@ -9,6 +9,9 @@
 %global jsonver     1.2.1
 %global oci8ver     1.4.9
 
+# version used for php embedded library soname
+%global embed_version 5.4
+
 %global mysql_sock %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
 %ifarch ppc ppc64
@@ -23,12 +26,6 @@
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
-
-#global snapdate      201201041830
-%global rcver         RC1
-
-# version used for php embedded library soname
-%global embed_version 5.4
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
@@ -63,13 +60,16 @@
 %global db_devel  libdb-devel
 %endif
 
+#global snapdate      201201041830
+#global rcver         RC1
+
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.9
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 5%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -774,7 +774,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %if %{with_libzip}
 %patch44 -p1 -b .systzip
 %endif
-%if 0%{?fedora} >= 18
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 %patch45 -p1 -b .ldap_r
 %endif
 
@@ -1615,6 +1615,9 @@ fi
 
 
 %changelog
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> 5.4.9-1
+- update to 5.4.9
+
 * Thu Nov 15 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.5.RC1
 - switch back to upstream generated scanner/parser
 

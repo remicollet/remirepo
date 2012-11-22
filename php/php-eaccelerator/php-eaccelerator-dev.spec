@@ -9,7 +9,7 @@
 Summary:   PHP accelerator, optimizer and dynamic content cacher
 Name:      php-eaccelerator
 Version:   1.0
-Release:   0.5.git%{gitver}%{?dist}
+Release:   0.6.git%{gitver}%{?dist}
 Epoch:     1
 # The eaccelerator module itself is GPLv2+
 # The PHP control panel is under the Zend license (control.php and dasm.php)
@@ -205,6 +205,9 @@ rm -rf %{cache}/%{apache}/* &>/dev/null || :
 
 
 %changelog
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 1:1.0-0.6.git42067ac
+- rebuild for php 5.4.9
+
 * Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> - 1:1.0-0.5.git42067ac
 - rebuild for php 5.4.8
 
