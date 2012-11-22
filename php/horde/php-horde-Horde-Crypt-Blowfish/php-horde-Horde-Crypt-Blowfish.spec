@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt-Blowfish
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Blowfish Encryption Library
 
@@ -67,10 +67,6 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%if 0%{?rhel} == 5
-# Issue with old openssl version
-rm -f EcbTest.php
-%endif
 phpunit\
     -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
     -d date.timezone=UTC \
@@ -98,5 +94,8 @@ fi
 
 
 %changelog
+* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
+- Update to 1.0.1 for remi repo (no change)
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
 - Initial package
