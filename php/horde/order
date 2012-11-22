@@ -2,7 +2,6 @@ Horde_Core           2.0.2 (stable) 2.0.3 (stable) 1337kB
 Horde_Crypt_Blowfish 1.0.0 (stable) 1.0.1 (stable) 24kB
 Horde_Form           2.0.0 (stable) 2.0.1 (stable) 183kB
 Horde_Imap_Client    2.2.0 (stable) 2.2.1 (stable) 153kB
-Horde_Tree           2.0.0 (stable) 2.0.1 (stable) 15.6kB
 
 01 php-horde-Horde-Autoloader       2.0.1
 02 php-horde-Horde-Translation      2.0.1
@@ -40,7 +39,7 @@ Horde_Tree           2.0.0 (stable) 2.0.1 (stable) 15.6kB
 33 php-horde-Horde-Text-Diff        2.0.1   =>           Exception, Util
 34 php-horde-Horde-Text-Filter      2.0.2   =>           Exception, Util
 35 php-horde-Horde-Group            2.0.1   => BR(Db),   Exception, Util
-36 php-horde-Horde-Tree             2.0.0   =>           Exception, Url, Util
+36 php-horde-Horde-Tree             2.0.1   =>           Exception, Url, Util
 37 php-horde-Horde-Injector         2.0.1   =>           Exception
 38 php-horde-Horde-Controller       2.0.1   =>           Exception, Injector, Log, Support, Util
 39 php-horde-Horde-View             2.0.1   => BR(Controller), Exception, Support, Util
