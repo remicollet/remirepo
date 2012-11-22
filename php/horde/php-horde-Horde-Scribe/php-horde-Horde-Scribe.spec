@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Scribe
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Scribe
 
@@ -34,8 +34,7 @@ Packaged version of the PHP Scribe client.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
@@ -80,5 +79,8 @@ fi
 
 
 %changelog
+* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo (no change)
+
 * Mon Nov  5 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Initial package
