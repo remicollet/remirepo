@@ -4,13 +4,12 @@ Horde_Form           2.0.0 (stable) 2.0.1 (stable) 183kB
 Horde_Imap_Client    2.2.0 (stable) 2.2.1 (stable) 153kB
 Horde_Lock           2.0.0 (stable) 2.0.1 (stable) 13.8kB
 Horde_Scribe         2.0.0 (stable) 2.0.1 (stable) 4.9kB
-Horde_Stream_Wrapper 2.0.0 (stable) 2.0.1 (stable) 11.6kB
 Horde_Thrift         2.0.0 (stable) 2.0.1 (stable) 23kB
 Horde_Tree           2.0.0 (stable) 2.0.1 (stable) 15.6kB
 
 01 php-horde-Horde-Autoloader       2.0.1
 02 php-horde-Horde-Translation      2.0.1
-03 php-horde-Horde-Stream-Wrapper   2.0.0
+03 php-horde-Horde-Stream-Wrapper   2.0.1
 04 php-horde-Horde-Util             2.0.1
 05 php-horde-Horde-Exception        2.0.1   => Translation
 06 php-horde-Horde-Support          2.0.2   => Exception, Stream_Wrapper
