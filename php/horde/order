@@ -2,7 +2,6 @@ Horde_Core           2.0.2 (stable) 2.0.3 (stable) 1337kB
 Horde_Crypt_Blowfish 1.0.0 (stable) 1.0.1 (stable) 24kB
 Horde_Form           2.0.0 (stable) 2.0.1 (stable) 183kB
 Horde_Imap_Client    2.2.0 (stable) 2.2.1 (stable) 153kB
-Horde_Lock           2.0.0 (stable) 2.0.1 (stable) 13.8kB
 Horde_Scribe         2.0.0 (stable) 2.0.1 (stable) 4.9kB
 Horde_Thrift         2.0.0 (stable) 2.0.1 (stable) 23kB
 Horde_Tree           2.0.0 (stable) 2.0.1 (stable) 15.6kB
@@ -25,7 +24,7 @@ Horde_Tree           2.0.0 (stable) 2.0.1 (stable) 15.6kB
 16 php-horde-Horde-Test             2.0.0   => Support, Util, Cli, Log
 17 php-horde-Horde-Image            2.0.1   => Exception, Support, Translation, Util
 18 php-horde-Horde-Browser          2.0.2   => Exception, Util
-19 php-horde-Horde-Lock             2.0.0   => Exception, Support, (Db, Log)
+19 php-horde-Horde-Lock             2.0.1   => Exception, Support, (Db, Log)
 20 php-horde-Horde-Cache            2.0.1   => Exception, Util
 ---- with test unit ----
 21 php-horde-Horde-Argv             2.0.2   =>           Exception, Translation
