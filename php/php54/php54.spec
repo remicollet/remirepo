@@ -69,7 +69,7 @@ Version: 5.4.9
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -101,6 +101,8 @@ Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
 # https://bugs.php.net/63361 - Header not installed
 Patch9: php-5.4.8-mysqli.patch
+# See http://bugs.php.net/63588
+Patch10: php-5.4.9-json.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63126 - DISABLE_AUTHENTICATOR ignores array
@@ -759,6 +761,8 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
 %patch9 -p1 -b .mysqliheaders
+%patch10 -p1 -b .63588
+rm -f ext/json/utf8_to_utf16.*
 
 %patch20 -p1 -b .imap
 %patch21 -p1 -b .odbctimer
@@ -1615,6 +1619,10 @@ fi
 
 
 %changelog
+* Fri Nov 23 2012 Remi Collet <remi@fedoraproject.org> 5.4.9-2
+- add patch for https://bugs.php.net/63588
+  duplicated implementation of php_next_utf8_char
+
 * Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> 5.4.9-1
 - update to 5.4.9
 
