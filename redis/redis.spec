@@ -13,7 +13,7 @@
 %endif
 
 Name:             redis
-Version:          2.6.4
+Version:          2.6.5
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
@@ -176,11 +176,14 @@ fi
 
 
 %changelog
+* Fri Nov 23 2012 Remi Collet <remi@fedoraproject.org> - 2.6.5-1
+- Redis 2.6.5 (upgrade urgency: moderate)
+
 * Fri Nov 16 2012 Remi Collet <remi@fedoraproject.org> - 2.6.4-1
-- Redis 2.6.4
+- Redis 2.6.4 (upgrade urgency: low)
 
 * Sun Oct 28 2012 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
-- Redis 2.6.2
+- Redis 2.6.2 (upgrade urgency: low)
 - fix typo in systemd macro
 
 * Wed Oct 24 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
