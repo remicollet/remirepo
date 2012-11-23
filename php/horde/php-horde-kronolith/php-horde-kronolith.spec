@@ -4,7 +4,7 @@
 
 Name:           php-horde-kronolith
 Version:        4.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based calendar
 
 Group:          Development/Libraries
@@ -129,7 +129,7 @@ cat <<EOF | tee httpd.conf
     RewriteCond   %%{REQUEST_FILENAME}  !-f
     RewriteRule   ^(.*)\$ index.php?c=\$1 [QSA,L]
   </IfModule>
-</DirectoryMatch>
+</Directory>
 EOF
 
 cd %{pear_name}-%{version}
@@ -217,5 +217,8 @@ fi
 
 
 %changelog
+* Fri Nov 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.1-2
+- fix httpd configuration
+
 * Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.1-1
 - Initial package
