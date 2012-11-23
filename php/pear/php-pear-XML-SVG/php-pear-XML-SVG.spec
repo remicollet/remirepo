@@ -4,7 +4,7 @@
 
 Name:           php-pear-XML-SVG
 Version:        1.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        API for building SVG documents
 
 Group:          Development/Libraries
@@ -31,7 +31,10 @@ This package provides an object-oriented API for building SVG documents.
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+
+# https://pear.php.net/bugs/19718 - README is Doc
+sed -e '/README/s/role="data"/role="doc"/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -71,10 +74,14 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/XML
-%{pear_datadir}/%{pear_name}
+%dir %{pear_phpdir}/XML
+%{pear_phpdir}/XML/SVG.php
+%{pear_phpdir}/XML/SVG
 
 
 %changelog
+* Fri Nov 23 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- fix README Role (from review #872957)
+
 * Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Initial package
