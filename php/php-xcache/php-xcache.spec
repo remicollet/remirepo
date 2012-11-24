@@ -4,7 +4,7 @@
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
 Version:       3.0.0
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -20,7 +20,7 @@ BuildRequires: php-devel
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-# Only one opcode cache
+# Only one opcode cache can installed
 Conflicts:     php-pecl-apc
 Conflicts:     php-eaccelerator
 
@@ -65,9 +65,6 @@ mv %{ext_name}-%{version} nts
 
 cd nts
 %patch0 -p1
-
-# fix version
-sed -e '/XCACHE_VERSION/s/-dev//' -i xcache.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/define XCACHE_VERSION/{s/.* "//;s/".*$//;p}' xcache.h)
@@ -184,6 +181,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Sat Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 3.0.0-1.1
+- upstream have fixed the sources (review #859504)
+
 * Wed Oct 31 2012 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - new major version
 - drop xcache-coverager subpackage
