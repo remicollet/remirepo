@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 # Get rid of la files
 rm -rf %{buildroot}%{_libdir}/*.la
+# Missing header
+install -p -m644 json_object_iterator.h \
+        %{buildroot}%{_includedir}/json/
 
 %clean
 rm -rf %{buildroot}
