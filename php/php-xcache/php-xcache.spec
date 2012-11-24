@@ -20,7 +20,7 @@ BuildRequires: php-devel
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-# Only one opcode cache
+# Only one opcode cache can be installed
 Conflicts:     php-pecl-apc
 Conflicts:     php-eaccelerator
 
@@ -79,9 +79,6 @@ mv %{ext_name}-%{version} nts
 cd nts
 %patch0 -p1
 
-# fix version
-sed -e '/XCACHE_VERSION/s/-dev//' -i xcache.h
-
 # Sanity check, really often broken
 extver=$(sed -n '/define XCACHE_VERSION/{s/.* "//;s/".*$//;p}' xcache.h)
 if test "x${extver}" != "x%{version}"; then
@@ -123,7 +120,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 # Install the NTS stuff
 make -C nts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{ext_name}.ini
+install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
 
 # Install the ZTS stuff
 make -C zts install INSTALL_ROOT=%{buildroot}
@@ -179,7 +176,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc nts/{AUTHORS,ChangeLog,COPYING,README,THANKS}
-%config(noreplace) %{_sysconfdir}/php.d/%{ext_name}.ini
+%config(noreplace) %{php_inidir}/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
 %config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
 %{php_ztsextdir}/%{ext_name}.so
@@ -193,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 3.0.0-1.1
+- upstream have fixed the sources (review #859504)
+
 * Wed Oct 31 2012 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
 - rebuild for remi repo
 
