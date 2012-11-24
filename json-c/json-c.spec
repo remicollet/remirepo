@@ -1,6 +1,6 @@
 Name:		json-c
 Version:	0.10
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A JSON implementation in C
 Group:		Development/Libraries
 License:	MIT
@@ -41,6 +41,13 @@ for doc in ChangeLog; do
  mv $doc.new $doc
 done
 
+# Hack...
+sed -e 's/json_object.c/json_object.c json_object_iterator.c/' \
+    -e 's/json_object.h/json_object.h json_object_iterator.h/' \
+    -e 's/json_object.lo/json_object.lo json_object_iterator.lo/' \
+    -i Makefile.in
+
+
 %build
 %configure --enable-shared --disable-static
 make %{?_smp_mflags}
@@ -48,11 +55,10 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
+
 # Get rid of la files
 rm -rf %{buildroot}%{_libdir}/*.la
-# Missing header
-install -p -m644 json_object_iterator.h \
-        %{buildroot}%{_includedir}/json/
+
 
 %clean
 rm -rf %{buildroot}
@@ -76,7 +82,10 @@ rm -rf %{buildroot}
 %doc doc/html/*
 
 %changelog
-* Sat Nov 24 2012 Jiri Pirko <jpirko@redhat.com> - 0.10-1
+* Sat Nov 24 2012 Remi Collet <remi@fedoraproject.org> - 0.10-2
+- build json_object_iterator
+
+* Sat Nov 24 2012 Remi Collet <remi@fedoraproject.org> - 0.10-1
 - update to 0.10
 - new upstream URL
 
