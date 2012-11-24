@@ -6,12 +6,14 @@
 Summary:       Universally Unique Identifier extension for PHP
 Name:          php-pecl-uuid
 Version:       1.0.3
-Release:       2%{?dist}
-# https://bugs.php.net/63446 - Please Provides LICENSE file
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+# https://bugs.php.net/63446 - Please Provides LICENSE file
+# http://svn.php.net/viewvc/pecl/uuid/trunk/LICENSE?view=co
+Source1:       %{pecl_name}-LICENSE
 
 # http://svn.php.net/viewvc?view=revision&revision=328255
 # Use preg_match to avoid "Function ereg() is deprecated" in test suite
@@ -50,6 +52,8 @@ A wrapper around Universally Unique Identifier library (libuuid).
 %setup -q -c 
 
 cd %{pecl_name}-%{version}
+cp %{SOURCE1} LICENSE
+
 %patch0 -p3 -b .ereg
 %patch1 -p3 -b .build
 %patch2 -p3 -b .info
@@ -136,7 +140,7 @@ fi
 
 
 %files
-%doc %{pecl_name}-%{version}/CREDITS
+%doc %{pecl_name}-%{version}/{CREDITS,LICENSE}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
@@ -149,6 +153,7 @@ fi
 
 
 %changelog
+* Sat Nov 24 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
 * Tue Nov  6 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - more upstream patches (build warning + phpinfo output)
 - cleanups for review
