@@ -1,17 +1,18 @@
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 
-%global with_zts    0%{?__ztsphp:1}
 %global pecl_name   uuid
 
 Summary:       Universally Unique Identifier extension for PHP
 Name:          php-pecl-uuid
 Version:       1.0.3
-Release:       2%{?dist}
-# https://bugs.php.net/63446 - Please Provides LICENSE file
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+# https://bugs.php.net/63446 - Please Provides LICENSE file
+# http://svn.php.net/viewvc/pecl/uuid/trunk/LICENSE?view=co
+Source1:       %{pecl_name}-LICENSE
 
 # http://svn.php.net/viewvc?view=revision&revision=328255
 # Use preg_match to avoid "Function ereg() is deprecated" in test suite
@@ -35,6 +36,8 @@ Requires:      php(api) = %{php_core_api}
 # both provides same extension, with different API
 Conflicts:     uuid-php
 
+Provides:      php-%{pecl_name} = %{version}
+Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -59,6 +62,8 @@ A wrapper around Universally Unique Identifier library (libuuid).
 %setup -q -c 
 
 cd %{pecl_name}-%{version}
+cp %{SOURCE1} LICENSE
+
 %patch0 -p3 -b .ereg
 %patch1 -p3 -b .build
 %patch2 -p3 -b .info
@@ -71,10 +76,8 @@ if test "x${extver}" != "x%{version}"; then
 fi
 cd ..
 
-%if %{with_zts}
 # duplicate for ZTS build
 cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
-%endif
 
 # Drop in the bit of configuration
 cat > %{pecl_name}.ini << 'EOF'
@@ -91,25 +94,21 @@ cd %{pecl_name}-%{version}
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if %{with_zts}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
 rm -rf %{buildroot}
 # Install the NTS stuff
 make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
 # Install the ZTS stuff
-%if %{with_zts}
 make -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -124,7 +123,6 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
-%if %{with_zts}
 cd ../%{pecl_name}-zts
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
@@ -132,7 +130,6 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
-%endif
 
 
 %post
@@ -151,19 +148,21 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc %{pecl_name}-%{version}/CREDITS
+%doc %{pecl_name}-%{version}/{CREDITS,LICENSE}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
-%if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
-%endif
 
 
 %changelog
+* Sat Nov 24 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
+- add LICENSE from upstream SVN
+- also provides php-uuid
+
 * Tue Nov  6 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - more upstream patches (build warning + phpinfo output)
 
