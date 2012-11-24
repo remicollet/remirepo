@@ -20,7 +20,7 @@ BuildRequires: php-devel
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-# Only one opcode cache can installed
+# Only one opcode cache can be installed
 Conflicts:     php-pecl-apc
 Conflicts:     php-eaccelerator
 
