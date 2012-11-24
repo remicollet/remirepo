@@ -1,15 +1,13 @@
 Name:		json-c
-Version:	0.9
-Release:	5%{?dist}
+Version:	0.10
+Release:	1%{?dist}
 Summary:	A JSON implementation in C
 Group:		Development/Libraries
 License:	MIT
-URL:		http://oss.metaparadigm.com/json-c/
-Source0:	http://oss.metaparadigm.com/json-c/json-c-%{version}.tar.gz
+URL:		https://github.com/json-c/json-c/wiki
+Source0:	https://github.com/downloads/%{name}/%{name}/%{name}-%{version}.tar.gz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-# Upstream has applied this in git master branch
-Patch0: json-c-add-json_tokener_parse_verbose-and-return-NULL-on-pa.patch
 
 %description
 JSON-C implements a reference counting object model that allows you to easily
@@ -36,7 +34,7 @@ This package contains the reference manual for json-c.
 
 %prep
 %setup -q
-%patch0 -p1
+
 for doc in ChangeLog; do
  iconv -f iso-8859-1 -t utf8 $doc > $doc.new &&
  touch -r $doc $doc.new &&
@@ -75,6 +73,10 @@ rm -rf %{buildroot}
 %doc doc/html/*
 
 %changelog
+* Sat Nov 24 2012 Jiri Pirko <jpirko@redhat.com> - 0.10-1
+- update to 0.10
+- new upstream URL
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
