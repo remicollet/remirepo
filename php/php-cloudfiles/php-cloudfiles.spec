@@ -1,19 +1,20 @@
-%global commit	930eb8d
+%global commit   930eb8d
 
-Name:		php-cloudfiles
-Version:		1.7.11
-Release:		2%{?dist}
-Summary:		PHP API for the Cloud Files storage system
+Name:         php-cloudfiles
+Version:      1.7.11
+Release:      2%{?dist}
+Summary:      PHP API for the Cloud Files storage system
+Group:        Development/Libraries
 
-License:		MIT
-URL:		https://github.com/rackspace/php-cloudfiles
-Source0:		https://github.com/rackspace/php-cloudfiles/tarball/v1.7.11/rackspace-%{name}-v%{version}-0-g%{commit}.tar.gz
+License:      MIT
+URL:          https://github.com/rackspace/php-cloudfiles
+Source0:      https://github.com/rackspace/php-cloudfiles/tarball/v1.7.11/rackspace-%{name}-v%{version}-0-g%{commit}.tar.gz
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch:	noarch
+BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:   noarch
 
-Requires:	php-curl, php-date, php-fileinfo, php-hash, php-json
-Requires:	php-mbstring, php-pcre, php-spl
+Requires:    php-curl, php-date, php-fileinfo, php-hash, php-json
+Requires:    php-mbstring, php-pcre, php-spl
 
 
 %description
@@ -26,10 +27,11 @@ PHP bindings for the Rackspace Cloud Files RESTful API. Features:
 
 
 %package devel-doc
-Summary:		Development documentation for %{name}
+Summary:      Development documentation for %{name}
+Group:        Development/Libraries
 
 %description devel-doc
-%{summary}
+%{summary}.
 
 
 %prep
