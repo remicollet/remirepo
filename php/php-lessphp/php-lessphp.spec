@@ -10,6 +10,7 @@ License:       MIT or GPLv3
 URL:           http://leafo.net/lessphp
 Source0:       %{url}/src/%{libname}-%{version}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 BuildRequires: help2man
 # Test requires
@@ -77,6 +78,7 @@ sed 's#%{_datadir}#%{buildroot}%{_datadir}#' -i tests/*.php
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.md docs composer.json
 %doc %{_mandir}/man1/plessc.1*
 %{_datadir}/php/%{libname}
@@ -86,6 +88,9 @@ sed 's#%{_datadir}#%{buildroot}%{_datadir}#' -i tests/*.php
 
 
 %changelog
+* Sun Nov 25 2012 Remi Collet <RPMS@famillecollet.com> 0.3.8-3
+- backport 0.3.8 for remi repo
+
 * Sun Nov 18 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 0.3.8-3
 - Fixed man page creation
 - Added tests directory ownership
