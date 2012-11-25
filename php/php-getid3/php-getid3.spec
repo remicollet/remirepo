@@ -28,6 +28,7 @@ for i in ./*.txt demos/*.php; do
 done
 sed -i 's/\r//' demos/index.php
 sed -i 's/\r//' changelog.txt
+cp -a %{SOURCE1} .
 
 %build
 
@@ -36,7 +37,6 @@ rm -rf %{buildroot}
 
 mkdir -p %{buildroot}%{_datadir}/php
 cp -a getid3 %{buildroot}%{_datadir}/php/
-cp -a %{SOURCE1} %{_builddir}/%{name}-%{version}/
 
 %clean
 rm -rf %{buildroot}
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_datadir}/php/getid3
 
 %changelog
+* Sun Nov 25 2012 Remi Collet <RPMS@famillecollet.com> - 1:1.9.3-1
+- backport 1.9.3 for remi repo
+
 * Sun Oct 07 2012 Paulo Roma <roma@lcg.ufrj.br> - 1:1.9.3-1
 - Downgraded to latest stable version.
 - Got needed extensions by using:
