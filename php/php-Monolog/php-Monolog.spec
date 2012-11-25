@@ -10,6 +10,7 @@ License:   MIT
 URL:       https://github.com/Seldaek/monolog
 Source0:   %{url}/archive/%{version}.tar.gz
 
+BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  php-common >= 5.3.0
@@ -22,8 +23,7 @@ Requires:  php-libxml
 Requires:  php-pcre
 Requires:  php-sockets
 Requires:  php-spl
-# phpci dist specific requires
-%{?fedora:Requires: php-filter}
+Requires:  php-filter
 
 %description
 %{summary}.
@@ -39,6 +39,7 @@ Optional packages:
 
 %package amqp
 Summary:  Monolog AMQP handler
+Group:    Development/Libraries
 Requires: php-%{libname} = %{version}-%{release}
 Requires: php-pecl(amqp)
 
@@ -48,6 +49,7 @@ Allow sending log messages to an AMQP server (1.0+ required).
 
 %package mongo
 Summary:  Monolog MongoDB handler
+Group:    Development/Libraries
 Requires: php-%{libname} = %{version}-%{release}
 Requires: php-pecl(mongo)
 
@@ -69,19 +71,25 @@ cp -pr src/%{libname} %{buildroot}%{_datadir}/php/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.mdown doc composer.json
 %{_datadir}/php/%{libname}
 %exclude %{_datadir}/php/%{libname}/Handler/MongoDBHandler.php
 %exclude %{_datadir}/php/%{libname}/Handler/AmqpHandler.php
 
 %files amqp
+%defattr(-,root,root,-)
 %{_datadir}/php/%{libname}/Handler/AmqpHandler.php
 
 %files mongo
+%defattr(-,root,root,-)
 %{_datadir}/php/%{libname}/Handler/MongoDBHandler.php
 
 
 %changelog
+* Sun Nov 25 2012 Remi Collet <RPMS@famillecollet.com> 1.2.1-1
+- backport 1.2.1 for remi repo
+
 * Sat Nov 17 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.2.1-1
 - Updated to upstream version 1.2.1
 - Changed %%{libname} from monolog to Monolog
