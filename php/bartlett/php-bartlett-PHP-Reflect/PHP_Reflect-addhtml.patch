@@ -1,16 +1,16 @@
-diff -up PHP_Reflect-1.0.2/php-bartlett-PHP-Reflect.xml.inst2 PHP_Reflect-1.0.2/php-bartlett-PHP-Reflect.xml
---- PHP_Reflect-1.0.2/php-bartlett-PHP-Reflect.xml.inst2	2011-09-19 18:13:52.630592571 +0200
-+++ PHP_Reflect-1.0.2/php-bartlett-PHP-Reflect.xml	2011-09-19 18:13:57.232589618 +0200
-@@ -238,6 +238,15 @@ Bug fixes:
-    <file baseinstalldir="Bartlett" md5sum="13e7cd0079e1cdf3283ba099e0f87f9f" name="LICENSE" role="doc">
+diff -up PHP_Reflect-1.1.0/php-bartlett-PHP-Reflect.xml.addhtml PHP_Reflect-1.1.0/php-bartlett-PHP-Reflect.xml
+--- PHP_Reflect-1.1.0/php-bartlett-PHP-Reflect.xml.addhtml	2011-11-11 19:30:07.000000000 +0100
++++ PHP_Reflect-1.1.0/php-bartlett-PHP-Reflect.xml	2011-11-11 19:31:26.000000000 +0100
+@@ -255,5 +255,15 @@ Bug fixes:
      <tasks:replace from="@package_version@" to="version" type="package-info" />
     </file>
-+   <file baseinstalldir="Bartlett" name="docs/userguide.html" role="doc" />
++   <file baseinstalldir="Bartlett" name="docs/phpreflect-book.html" role="doc" />
 +   <file baseinstalldir="Bartlett" name="docs/index.html" role="doc" />
 +   <file baseinstalldir="Bartlett" name="docs/CHANGELOG.html" role="doc" />
 +   <file baseinstalldir="Bartlett" name="docs/INSTALL.html" role="doc" />
 +   <file baseinstalldir="Bartlett" name="docs/LICENSE.html" role="doc" />
 +   <file baseinstalldir="Bartlett" name="docs/sources/scanFile.html" role="doc" />
++   <file baseinstalldir="Bartlett" name="docs/sources/scanFunctionArguments.html" role="doc" />
 +   <file baseinstalldir="Bartlett" name="docs/sources/Token.html" role="doc" />
 +   <file baseinstalldir="Bartlett" name="docs/sources/Autoload.html" role="doc" />
 +   <file baseinstalldir="Bartlett" name="docs/sources/Reflect.html" role="doc" />

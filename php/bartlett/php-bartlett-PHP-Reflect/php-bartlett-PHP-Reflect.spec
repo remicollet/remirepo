@@ -2,7 +2,7 @@
 %global channel   bartlett.laurent-laville.org
 %global pear_name PHP_Reflect
 
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 12
 %global withhtmldoc 1
 %else
 %global withhtmldoc 0
@@ -10,7 +10,7 @@
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.0.2
+Version:        1.4.2
 Release:        2%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -19,8 +19,6 @@ License:        BSD
 URL:            http://bartlett.laurent-laville.org/
 Source0:        http://%{channel}/get/%{pear_name}-%{version}%{?prever}.tgz
 
-# for old asciidoc version https://bugzilla.redhat.com/556171
-Patch0:         PHP_Reflect-docs.patch
 # Don't install .js (unused)
 Patch1:         PHP_Reflect-deljs.patch
 # Install generated doc using pear command
@@ -62,7 +60,6 @@ HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/index.html
 cd %{pear_name}-%{version}%{?prever}
 mv -f ../package.xml %{name}.xml
 
-%patch0 -p0 -b .fix
 %patch1 -p1 -b .deljs
 %if %{withhtmldoc}
 %patch2 -p1 -b .addhtml
@@ -74,20 +71,19 @@ cd %{pear_name}-%{version}%{?prever}
 
 %if %{withhtmldoc}
 # Generate the HTML documentation
-phing -f docs/build-phing.xml \
+phing -f docs/build-phing.xml  \
       -Dhomedir=$PWD \
       -Dasciidoc.home=%{_datadir}/asciidoc \
-      make-full-docs
+      -Doutput.dir=$PWD/docs \
+      -Dbuild.tarball=false \
+      make-html-docs
 
 # Asciidoc fails silently
 # Check that our patch for installed doc is ok
 cpt=$(find docs -name \*.html | wc -l)
 echo "File generated:$cpt, expected:9"
-[ $cpt -eq 9 ] || exit 1
+[ $cpt -eq 10 ] || exit 1
 %endif
-
-# restore unpatched docs (for install and checksum)
-mv docs/index.txt.fix docs/index.txt
 
 
 %install
@@ -108,7 +104,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}%{?prever}
 
-# Version 1.0.2 : OK (25 tests, 42 assertions)
+# Version 1.3.0 : OK (34 tests, 55 assertions)
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --bootstrap %{buildroot}%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
@@ -139,6 +135,30 @@ fi
 
 
 %changelog
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.4.2-2
+- rebuildt for new pear_testdir
+
+* Wed Aug 01 2012 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- Version 1.4.2 (stable) - API 1.4.0 (stable)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Feb 17 2012 Remi Collet <remi@fedoraproject.org> - 1.3.0-2
+- bump release
+
+* Fri Feb 17 2012 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Version 1.3.0 (stable) - API 1.3.0 (stable)
+
+* Sun Feb 05 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Version 1.2.0 (stable) - API 1.2.0 (stable)
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Fri Nov 11 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.1.0-1
+- Version 1.1.0 (stable) - API 1.1.0 (stable)
+
 * Mon Sep 19 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-2
 - remove unused .js and improve installation of generated doc
 - use buildroot macro
