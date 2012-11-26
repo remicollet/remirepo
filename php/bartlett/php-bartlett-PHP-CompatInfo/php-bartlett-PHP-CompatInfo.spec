@@ -3,7 +3,7 @@
 %global pear_name   PHP_CompatInfo
 %global channel     bartlett.laurent-laville.org
 
-%if 0%{?fedora} >= 99
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %global withhtmldoc 1
 %else
 %global withhtmldoc 0
@@ -15,7 +15,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.10.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -39,8 +39,8 @@ BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.5.0
 %if %{withhtmldoc}
 # to build HTML documentation
-BuildRequires:  php-pear(pear.phing.info/phing)
 BuildRequires:  asciidoc >= 8.4.0
+BuildRequires:  source-highlight
 %endif
 
 Requires(post): %{__pear}
@@ -94,18 +94,11 @@ mv -f ../package.xml %{name}.xml
 cd %{pear_name}-%{version}%{?prever}
 
 %if %{withhtmldoc}
-# Generate the HTML documentation
-phing -f docs/builddocs.xml \
-      -Dhomedir=$PWD \
-      -Dasciidoc.home=%{_datadir}/asciidoc \
-      -Doutput.dir=$PWD/docs \
-      -Dbuild.tarball=false \
-      make-html-docs
-
-# asciidoc fails silently
-cpt=$(find docs -name \*.html | wc -l)
-echo "File generated:$cpt, expected:5"
-[ $cpt -eq 5 ] || exit 1
+for page in index INSTALL CHANGELOG LICENSE phpci-book; do
+    asciidoc  -a linkcss -a icons -a theme=flask -a toc2 -n --safe \
+              -o $PWD/docs/$page.html  $PWD/docs/$page.txt || :
+    [ -f $PWD/docs/$page.html ] || exit 1
+done
 %endif
 
 
@@ -183,6 +176,9 @@ fi
 
 
 %changelog
+* Mon Nov 26 2012 Remi Collet <remi@fedoraproject.org> - 2.10.0-2
+- generate documentation using asciidoc, without phing
+
 * Mon Nov 26 2012 Remi Collet <remi@fedoraproject.org> - 2.10.0-1
 - Version 2.10.0 (stable) - API 2.10.0 (stable)
 - raise dependencies, PHP_Reflect 1.5.0
