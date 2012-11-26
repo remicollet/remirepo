@@ -3,7 +3,7 @@
 %global pear_name   PHP_CompatInfo
 %global channel     bartlett.laurent-laville.org
 
-%if 0%{?fedora} >= 15
+%if 0%{?fedora} >= 99
 %global withhtmldoc 1
 %else
 %global withhtmldoc 0
@@ -14,7 +14,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.9.0
+Version:        2.10.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -36,7 +36,7 @@ BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.4.3
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.5.0
 %if %{withhtmldoc}
 # to build HTML documentation
 BuildRequires:  php-pear(pear.phing.info/phing)
@@ -45,7 +45,7 @@ BuildRequires:  asciidoc >= 8.4.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.2.0
+Requires:       php-common >= 5.2.1
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-libxml
@@ -53,7 +53,7 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.4.3
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.5.0
 Requires:       php-pear(Console_CommandLine) >= 1.2.0
 Requires:       php-pear(components.ez.no/Base) >= 1.8
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6.1
@@ -72,6 +72,8 @@ show content of dictionary references.
 
 %if %{withhtmldoc}
 HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/index.html
+%else
+Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 %endif
 
 
@@ -93,7 +95,7 @@ cd %{pear_name}-%{version}%{?prever}
 
 %if %{withhtmldoc}
 # Generate the HTML documentation
-phing -f docs/build-phing.xml \
+phing -f docs/builddocs.xml \
       -Dhomedir=$PWD \
       -Dasciidoc.home=%{_datadir}/asciidoc \
       -Doutput.dir=$PWD/docs \
@@ -181,6 +183,11 @@ fi
 
 
 %changelog
+* Mon Nov 26 2012 Remi Collet <remi@fedoraproject.org> - 2.10.0-1
+- Version 2.10.0 (stable) - API 2.10.0 (stable)
+- raise dependencies, PHP_Reflect 1.5.0
+- drop documentation build
+
 * Tue Oct 30 2012 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
 - Version 2.9.0 (stable) - API 2.9.0 (stable)
 - raise dependencies, PHP_Reflect 1.4.3, Console_CommandLine 1.2.0
