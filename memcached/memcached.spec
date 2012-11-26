@@ -9,7 +9,7 @@
 
 Name:           memcached
 Version:        1.4.15
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
 
@@ -31,6 +31,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libevent-devel
 BuildRequires:  perl(Test::More), perl(Test::Harness)
+BuildRequires:  cyrus-sasl-devel
 
 %if %{with_systemd}
 Requires(post): systemd
@@ -72,7 +73,7 @@ memcached binary include files.
 
 
 %build
-%configure
+%configure --enable-sasl
 sed -i 's/-Werror/ /' Makefile
 make %{?_smp_mflags}
 
@@ -226,6 +227,9 @@ fi
 %{_includedir}/memcached/*
 
 %changelog
+* Mon Nov 26 2012 Remi Collet <rpms@famillecollet.com> - 0:1.4.15-2
+- enable SASL support
+
 * Mon Nov 26 2012 Remi Collet <rpms@famillecollet.com> - 0:1.4.15-1
 - sync with rawhide, backport for remi repo
 
