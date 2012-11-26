@@ -3,7 +3,7 @@
 %global channel   bartlett.laurent-laville.org
 %global pear_name PHP_Reflect
 
-%if 0%{?fedora} >= 12
+%if 0%{?fedora} >= 99
 %global withhtmldoc 1
 %else
 %global withhtmldoc 0
@@ -11,7 +11,7 @@
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.4.3
+Version:        1.5.0
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -54,6 +54,8 @@ functions, constants and more, by connecting php callbacks to other tokens.
 
 %if %{withhtmldoc}
 HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/index.html
+%else
+Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 %endif
 
 
@@ -75,7 +77,7 @@ cd %{pear_name}-%{version}%{?prever}
 
 %if %{withhtmldoc}
 # Generate the HTML documentation
-phing -f docs/build-phing.xml  \
+phing -f docs/builddocs.xml  \
       -Dhomedir=$PWD \
       -Dasciidoc.home=%{_datadir}/asciidoc \
       -Doutput.dir=$PWD/docs \
@@ -139,6 +141,10 @@ fi
 
 
 %changelog
+* Mon Nov 26 2012 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- Version 1.5.0 (stable) - API 1.5.0 (stable)
+- drop documentation build
+
 * Tue Oct 30 2012 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
 - Version 1.4.3 (stable) - API 1.4.0 (stable)
 
