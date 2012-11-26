@@ -14,7 +14,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.8.1
+Version:        2.9.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -36,7 +36,7 @@ BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.4.2
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.4.3
 %if %{withhtmldoc}
 # to build HTML documentation
 BuildRequires:  php-pear(pear.phing.info/phing)
@@ -45,15 +45,21 @@ BuildRequires:  asciidoc >= 8.4.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-xml >= 5.2.0
+Requires:       php-common >= 5.2.0
+Requires:       php-date
+Requires:       php-dom
+Requires:       php-libxml
+Requires:       php-pcre
+Requires:       php-reflection
+Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.3.0
-Requires:       php-pear(Console_CommandLine) >= 1.1.3
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.4.3
+Requires:       php-pear(Console_CommandLine) >= 1.2.0
+Requires:       php-pear(components.ez.no/Base) >= 1.8
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6.1
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
+Requires:       php-pear(pear.phpunit.de/PHP_Timer)
 # Optional and not yet availalble php-pear(Net_Growl) >= 2.2.2
-# php-pear(components.ez.no/Base) required by ConsoleTools
-# php-pear(pear.phpunit.de/PHP_Timer) required by PHPUnit
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
 
@@ -175,6 +181,10 @@ fi
 
 
 %changelog
+* Tue Oct 30 2012 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
+- Version 2.9.0 (stable) - API 2.9.0 (stable)
+- raise dependencies, PHP_Reflect 1.4.3, Console_CommandLine 1.2.0
+
 * Sat Sep 29 2012 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
 - Version 2.8.1 (stable) - API 2.8.0 (stable)
 
