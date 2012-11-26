@@ -2,7 +2,7 @@
 %global pear_name symfony
 
 Name:           php-symfony-symfony
-Version:        1.4.18
+Version:        1.4.20
 Release:        1%{?dist}
 Summary:        Open-Source PHP Web Framework
 
@@ -17,8 +17,10 @@ Source1:        symfony.README.fedora
 BuildArch:      noarch
 BuildRequires:  php-channel(pear.symfony-project.com)
 BuildRequires:  php-pear(PEAR)
+
 Requires:       php-common >= 5.2.4
-Requires:       php-dom, php-simplexml
+Requires:       php-dom
+Requires:       php-simplexml
 Requires:       php-pear(PEAR)
 Requires:       php-channel(pear.symfony-project.com)
 Requires:       php-doctrine-Doctrine >= 1.2.4
@@ -28,7 +30,9 @@ Requires:       php-pear-phing >= 1.0.0
 Requires:       php-pear(pear.swiftmailer.org/Swift) >= 4.0.5
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+
 Provides:       php-pear(pear.symfony-project.com/%{pear_name}) = %{version}
+
 
 %description
 
@@ -44,13 +48,20 @@ every time a new web application is built!
 %prep
 %setup -q -c
 
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
+cp %{SOURCE1} README.fedora
+
 cd %{pear_name}-%{version}
 
-# Create a "localized" php.ini to avoid build warning
-cp /etc/php.ini .
-echo "date.timezone=UTC" >>php.ini
+# Remove bundled libraries
+sed -e '/vendor\/swiftmailer/d'   \
+    -e '/lib\/vendor\/doctrine/d' \
+    -e '/lib\/vendor\/phing/d'    \
+    -e '/lib\/vendor\/propel/d'   \
+    -e '/LICENSE.swiftmailer/d'   \
+    -e '/LICENSE.phing/d'         \
+    -e '/LICENSE.Propel/d'        \
+    ../package.xml >%{name}.xml
+
 
 %build
 cd %{pear_name}-%{version}
@@ -59,33 +70,20 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docdir
-PHPRC=./php.ini %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 sed -i -e "s|dirname.*/lib/vendor/doctrine|'%{pear_phpdir}|" \
-    $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/plugins/sfDoctrinePlugin/config/sfDoctrinePluginConfiguration.class.php 
+    %{buildroot}%{pear_phpdir}/%{pear_name}/plugins/sfDoctrinePlugin/config/sfDoctrinePluginConfiguration.class.php
 
 sed -i -e "s|sfConfig::get.*sf_symfony_lib_dir.*/vendor/swiftmailer|'%{pear_phpdir}/Swift|" \
-    $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/mailer/sfMailer.class.php \
-    $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/task/sfCommandApplicationTask.class.php
-
-# Move documentation
-mkdir -p docdir
-mv $RPM_BUILD_ROOT%{pear_docdir}/* docdir
-cp %{SOURCE1} docdir/%{pear_name}/README.fedora
+    %{buildroot}%{pear_phpdir}/%{pear_name}/mailer/sfMailer.class.php \
+    %{buildroot}%{pear_phpdir}/%{pear_name}/task/sfCommandApplicationTask.class.php
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
-find $RPM_BUILD_ROOT%{pear_phpdir} -name .sf -print0 | xargs -0 rm -fr
+find %{buildroot}%{pear_phpdir} -name .sf -print0 | xargs -0 rm -fr
 
-# Remove bundled libraries
-rm -rf \
-  $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/vendor/swiftmailer \
-  $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/plugins/sfDoctrinePlugin/lib/vendor/doctrine \
-  $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/plugins/sfPropelPlugin/lib/vendor/phing \
-  $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/plugins/sfPropelPlugin/lib/vendor/propel \
-  $RPM_BUILD_ROOT%{pear_phpdir}/%{pear_name}/plugins/sfPropelPlugin/lib/vendor/propel-generator
 
 # change dos files to unix
 for file in `find -name LICENSE.ICU`; do
@@ -100,23 +98,22 @@ for file in \
   %{pear_phpdir}/%{pear_name}/task/generator/skeleton/project/symfony \
   %{pear_datadir}/%{pear_name}/bin/create_sandbox.sh \
   ; do
-   chmod a+x $RPM_BUILD_ROOT/$file
+   chmod a+x %{buildroot}/$file
 done
 
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-rm -rfv $RPM_BUILD_ROOT%{pear_phpdir}/pear/symfony/vendor/swiftmailer
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{pear_name}.xml >/dev/null || :
+    %{pear_xmldir}/%{name}.xml >/dev/null || :
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -127,13 +124,21 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/*
-%{pear_xmldir}/%{pear_name}.xml
+%doc README.fedora
+%doc %{pear_docdir}/%{pear_name}
+%{pear_xmldir}/%{name}.xml
 %{pear_datadir}/%{pear_name}
 %{pear_phpdir}/%{pear_name}
 %{_bindir}/symfony
 
+
 %changelog
+* Mon Nov 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.20-1
+- upstream 1.4.20 (security fix), rebuild for remi repository
+- remove bundled lib from package.xml
+- move doc to /usr/share/doc/pear
+- rename symfony.xml to php-symfony-symfony.xml
+
 * Sat Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.18-1
 - upstream 1.4.18 (security fix), rebuild for remi repository
 
