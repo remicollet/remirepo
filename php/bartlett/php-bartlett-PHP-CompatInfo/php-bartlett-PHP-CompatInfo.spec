@@ -1,8 +1,9 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %global pear_name   PHP_CompatInfo
 %global channel     bartlett.laurent-laville.org
 
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 15
 %global withhtmldoc 1
 %else
 %global withhtmldoc 0
@@ -13,8 +14,8 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.1.0
-Release:        3%{?dist}
+Version:        2.8.1
+Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -23,23 +24,19 @@ License:        BSD and MIT
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
 
-# for old asciidoc version https://bugzilla.redhat.com/556171
-Patch0:         PHP_CompatInfo-docs.patch
 # Remove unused asciidoc*.js scripts
-# source7813.php => PHP License
-# source13873.php => GPL
-# and tests which use this files.
-Patch1:         PHP_CompatInfo-del.patch
+Patch1:         %{pear_name}-del.patch
 # Install generated doc using pear command
-Patch2:         PHP_CompatInfo-addhtml.patch
+Patch2:         %{pear_name}-addhtml.patch
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 0.7.0
+BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.4.2
 %if %{withhtmldoc}
 # to build HTML documentation
 BuildRequires:  php-pear(pear.phing.info/phing)
@@ -50,7 +47,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-xml >= 5.2.0
 Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 0.7.0
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.3.0
 Requires:       php-pear(Console_CommandLine) >= 1.1.3
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6.1
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
@@ -79,7 +76,6 @@ HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/index.html
 cd %{pear_name}-%{version}%{?prever}
 mv -f ../package.xml %{name}.xml
 
-%patch0 -p1 -b .fix
 %patch1 -p1 -b .del
 %if %{withhtmldoc}
 %patch2 -p1 -b .addhtml
@@ -94,16 +90,15 @@ cd %{pear_name}-%{version}%{?prever}
 phing -f docs/build-phing.xml \
       -Dhomedir=$PWD \
       -Dasciidoc.home=%{_datadir}/asciidoc \
-      make-full-docs
+      -Doutput.dir=$PWD/docs \
+      -Dbuild.tarball=false \
+      make-html-docs
 
 # asciidoc fails silently
 cpt=$(find docs -name \*.html | wc -l)
 echo "File generated:$cpt, expected:5"
 [ $cpt -eq 5 ] || exit 1
 %endif
-
-# restore unpatched docs (for install and checksum)
-mv docs/index.txt.fix docs/index.txt
 
 
 %install
@@ -112,7 +107,7 @@ cd %{pear_name}-%{version}%{?prever}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -122,13 +117,25 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 sed -i -e 's/\r//' %{buildroot}%{_bindir}/phpci
 sed -i -e 's/\r//' %{buildroot}%{pear_docdir}/%{pear_name}/README.markdown
 
+# Create default package configuration
+sed -e '/reference=/s/PHP5/ALL/' \
+     %{buildroot}%{pear_cfgdir}/%{pear_name}/phpcompatinfo.xml.dist \
+    >%{buildroot}%{pear_cfgdir}/%{pear_name}/phpcompatinfo.xml
+
 
 %check
 cd %{pear_name}-%{version}%{?prever}
 
-# OK (444, Assertions: 8380, Skipped: 7) when all extensions installed
+%if 0%{?rhel} == 6
+# php-5.3.3-CVE-2012-0057.patch add new constants from php 5.3.9
+# so drop this test which fails with
+# Constant 'XSL_SECPREF_CREATE_DIRECTORY', found in Reference (5.3.9,), exists.
+rm -f tests/Reference/XslTest.php
+%endif
+
+# Tests: 654, Assertions: 9682, Skipped: 28, when most extensions installed
 # OK, but incomplete or skipped tests!
-# Tests: 329, Assertions: 5446, Skipped: 133.
+# Tests: 462, Assertions: 5936, Skipped: 254, in mock
 # Reference tests need some fixes for EL-4, so ignore result for now
 %{_bindir}/phpunit \
     -d date.timezone=UTC \
@@ -156,7 +163,10 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %dir %{pear_cfgdir}/%{pear_name}
-%config(noreplace) %{pear_cfgdir}/%{pear_name}/*dist
+# Editable configuration
+%config(noreplace) %{pear_cfgdir}/%{pear_name}/phpcompatinfo.xml
+# Default configuration
+%{pear_cfgdir}/%{pear_name}/phpcompatinfo.xml.dist
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Bartlett/PHP/Compat*
 %{pear_testdir}/%{pear_name}
@@ -165,6 +175,66 @@ fi
 
 
 %changelog
+* Sat Sep 29 2012 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
+- Version 2.8.1 (stable) - API 2.8.0 (stable)
+
+* Mon Sep 17 2012 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
+- Version 2.8.0 (stable) - API 2.8.0 (stable)
+- new extensions : amqp, geoip, inclued, xcache
+
+* Mon Sep  3 2012 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- Version 2.7.0 (stable) - API 2.7.0 (stable)
+
+* Sun Aug 19 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-3
+- rebuilt for new pear_datadir
+
+* Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-2
+- rebuildt for new pear_testdir
+
+* Wed Aug 01 2012 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- Version 2.6.0 (stable) - API 2.6.0 (stable)
+- raise dependencies: PHPUnit 3.6.0, PHP_Reflect 1.4.2
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.0-2.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jul  8 2012 Remi Collet <remi@fedoraproject.org> - 2.5.0-1.1
+- drop XslTest in EL-6
+
+* Fri Jun 22 2012 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- Version 2.5.0 (stable) - API 2.5.0 (stable)
+- use reference="ALL" in provided config
+
+* Fri May 11 2012 Remi Collet <remi@fedoraproject.org> - 2.4.0-1.1
+- add patch for old libxml
+
+* Fri May 11 2012 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- Version 2.4.0 (stable) - API 2.3.0 (stable)
+
+* Mon Mar 05 2012 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Version 2.3.0 (stable) - API 2.3.0 (stable)
+
+* Sat Feb 25 2012 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- Version 2.2.5 (stable) - API 2.2.0 (stable)
+
+* Fri Feb 17 2012 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
+- Version 2.2.4 (stable) - API 2.2.0 (stable)
+
+* Tue Feb 14 2012 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- Version 2.2.3 (stable) - API 2.2.0 (stable)
+
+* Thu Feb 09 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- Version 2.2.2 (stable) - API 2.2.0 (stable)
+
+* Sun Feb 05 2012 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Version 2.2.1 (stable) - API 2.2.0 (stable)
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Sat Sep 24 2011 Remi Collet <remi@fedoraproject.org> - 2.1.0-3.1
+- no html doc on EL6
+
 * Wed Sep 21 2011 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
 - remove all files with licensing issue
   don't use it during test, don't install it
