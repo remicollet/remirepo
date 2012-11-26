@@ -3,7 +3,7 @@
 %global channel   bartlett.laurent-laville.org
 %global pear_name PHP_Reflect
 
-%if 0%{?fedora} >= 99
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %global withhtmldoc 1
 %else
 %global withhtmldoc 0
@@ -12,7 +12,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        1.5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -33,8 +33,8 @@ BuildRequires:  php-channel(%{channel})
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
 %if %{withhtmldoc}
 # to build HTML documentation
-BuildRequires:  php-pear(pear.phing.info/phing)
 BuildRequires:  asciidoc >= 8.4.0
+BuildRequires:  source-highlight
 %endif
 
 Requires:       php-pear(PEAR) >= 1.9.0
@@ -76,19 +76,13 @@ mv -f ../package.xml %{name}.xml
 cd %{pear_name}-%{version}%{?prever}
 
 %if %{withhtmldoc}
-# Generate the HTML documentation
-phing -f docs/builddocs.xml  \
-      -Dhomedir=$PWD \
-      -Dasciidoc.home=%{_datadir}/asciidoc \
-      -Doutput.dir=$PWD/docs \
-      -Dbuild.tarball=false \
-      make-html-docs
-
-# Asciidoc fails silently
-# Check that our patch for installed doc is ok
-cpt=$(find docs -name \*.html | wc -l)
-echo "File generated:$cpt, expected:9"
-[ $cpt -eq 10 ] || exit 1
+for page in index INSTALL CHANGELOG LICENSE phpreflect-book \
+            sources/scanFile sources/scanFunctionArguments \
+            sources/Token sources/Autoload sources/Reflect ; do
+    asciidoc  -a linkcss -a icons -a theme=flask -a toc2 -n --safe \
+              -o $PWD/docs/$page.html  $PWD/docs/$page.txt || :
+    [ -f $PWD/docs/$page.html ] || exit 1
+done
 %endif
 
 
@@ -141,6 +135,9 @@ fi
 
 
 %changelog
+* Mon Nov 26 2012 Remi Collet <remi@fedoraproject.org> - 1.5.0-2
+- generate documentation using asciidoc, without phing
+
 * Mon Nov 26 2012 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - Version 1.5.0 (stable) - API 1.5.0 (stable)
 - drop documentation build
