@@ -37,9 +37,13 @@ lockfile=${LOCKFILE-/var/lock/subsys/memcached}
 
 start () {
 	echo -n $"Starting $prog: "
-	# Ensure that /var/run/memcached has proper permissions
-	if [ "`stat -c %U /var/run/memcached`" != "$USER" ]; then
-		chown $USER /var/run/memcached
+	# Ensure that $pidfile directory has proper permissions and exists
+	piddir=`dirname $pidfile`
+	if [ ! -d $piddir ]; then
+		mkdir $piddir
+	fi
+	if [ "`stat -c %U $piddir`" != "$USER" ]; then
+		chown $USER $piddir
 	fi
 
 	daemon --pidfile ${pidfile} memcached -d -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN -P ${pidfile} $OPTIONS
