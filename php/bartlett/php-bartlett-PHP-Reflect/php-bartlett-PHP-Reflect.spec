@@ -1,3 +1,4 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global channel   bartlett.laurent-laville.org
 %global pear_name PHP_Reflect
@@ -10,8 +11,8 @@
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.4.2
-Release:        2%{?dist}
+Version:        1.4.3
+Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -40,6 +41,9 @@ Requires:       php-pear(PEAR) >= 1.9.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-channel(%{channel})
+Requires:       php-pcre
+Requires:       php-spl
+Requires:       php-tokenizer
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
 
@@ -93,7 +97,7 @@ cd %{pear_name}-%{version}%{?prever}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -135,6 +139,9 @@ fi
 
 
 %changelog
+* Tue Oct 30 2012 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
+- Version 1.4.3 (stable) - API 1.4.0 (stable)
+
 * Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.4.2-2
 - rebuildt for new pear_testdir
 
