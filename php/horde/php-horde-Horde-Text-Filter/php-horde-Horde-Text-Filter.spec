@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Filter
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
@@ -12,8 +12,6 @@ Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-# /usr/lib/rpm/find-lang.sh from fedora 16
-Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -80,11 +78,12 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-%if 0%{?fedora} > 13
-%find_lang %{pear_name}
-%else
-sh %{SOURCE1} %{buildroot} %{pear_name}
-%endif
+# Locales
+for loc in locale/{??,??_??}
+do
+    lang=$(basename $loc)
+    test -d $loc && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
 
 
 %check
@@ -108,21 +107,21 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files -f %{pear_name}-%{version}/%{pear_name}.lang
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Text/Filter
 %{pear_phpdir}/Horde/Text/Filter.php
 %{pear_testdir}/%{pear_name}
-# own locales (non standard) directories, .mo own by find_lang
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
-%dir %{pear_datadir}/%{pear_name}/locale/*
-%dir %{pear_datadir}/%{pear_name}/locale/*/LC_MESSAGES
 
 
 %changelog
+* Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+- Update to 2.0.3 for remi repo
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 

@@ -1,3 +1,9 @@
+pear.horde.org Horde_Core        2.0.3 (stable) 2.0.4 (stable) 1337kB
+pear.horde.org Horde_Vfs         2.0.2 (stable) 2.0.3 (stable) 68kB
+pear.horde.org kronolith         4.0.1 (stable) 4.0.2 (stable) 2460kB
+pear.horde.org nag               4.0.0 (stable) 4.0.1 (stable) 1622kB
+pear.horde.org turba             4.0.0 (stable) 4.0.1 (stable) 1932kB
+
 01 php-horde-Horde-Autoloader       2.0.1
 02 php-horde-Horde-Translation      2.0.1
 03 php-horde-Horde-Stream-Wrapper   2.0.1
@@ -32,7 +38,7 @@
 31 php-horde-Horde-Xml-Element      2.0.1   =>           Exception
 32 php-horde-Horde-Alarm            2.0.2   => BR(Date), Date, Exception, Translation
 33 php-horde-Horde-Text-Diff        2.0.1   =>           Exception, Util
-34 php-horde-Horde-Text-Filter      2.0.2   =>           Exception, Util
+34 php-horde-Horde-Text-Filter      2.0.3   =>           Exception, Util
 35 php-horde-Horde-Group            2.0.1   => BR(Db),   Exception, Util
 36 php-horde-Horde-Tree             2.0.1   =>           Exception, Url, Util
 37 php-horde-Horde-Injector         2.0.1   =>           Exception
@@ -51,7 +57,7 @@
 50 php-horde-Horde-Stream       *   1.2.0   =>           Exception
 51 php-horde-Horde-Crypt-Blowfish + 1.0.1   =>
 52 php-horde-Horde-Secret       *   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
-53 php-horde-Horde-Imap-Client      2.2.1   => BR(Stream, Mime), Exception, Mail, Mime, Util
+53 php-horde-Horde-Imap-Client      2.2.2   => BR(Stream, Mime), Exception, Mail, Mime, Util
 54 php-horde-Horde-SessionHandler + 2.0.1   => BR(Db), Exception, Util
 55 php-horde-Horde-Share        +   2.0.1   => ****      Db, Exception, Group, Perms, Support, Translation, Url, Util
 56 php-horde-Horde-Role         *   1.0.1
