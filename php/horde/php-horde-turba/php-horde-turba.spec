@@ -9,7 +9,7 @@
 # "horde-turba" sub package with apache stuff
 
 Name:           php-horde-turba
-Version:        4.0.0
+Version:        4.0.1
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -17,8 +17,6 @@ Group:          Development/Libraries
 License:        ASL
 URL:            http://www.horde.org/apps/turba
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-# /usr/lib/rpm/find-lang.sh from fedora 16
-Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -139,16 +137,12 @@ mv %{buildroot}%{pear_hordedir}/%{pear_name}/config \
    %{buildroot}%{_sysconfdir}/horde/%{pear_name}
 ln -s %{_sysconfdir}/horde/%{pear_name} %{buildroot}%{pear_hordedir}/%{pear_name}/config
 
-%if 0%{?fedora} > 13 || 0%{?rhel} > 6
-%find_lang %{pear_name}
-%else
-sh %{SOURCE1} %{buildroot} %{pear_name}
-%endif
-for xml in locale/*/help.xml
+# Locales
+for loc in locale/?? locale/??_??
 do
-    lang=$(basename $(dirname $xml))
-    echo "%%lang(${lang%_*}) %{pear_hordedir}/%{pear_name}/$xml" >> %{pear_name}.lang
-done
+    lang=$(basename $loc)
+    echo "%%lang(${lang%_*}) %{pear_hordedir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
 
 
 %clean
@@ -157,7 +151,7 @@ rm -rf %{buildroot}
 
 %check
 cd %{pear_name}-%{version}/test/Turba
-: tests not ready 
+: tests not ready
 #phpunit AllTests.php
 
 
@@ -172,7 +166,7 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files -f %{pear_name}-%{version}/%{pear_name}.lang
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -199,10 +193,11 @@ fi
 %{pear_hordedir}/%{pear_name}/themes
 %{pear_hordedir}/%{pear_name}/templates
 %dir %{pear_hordedir}/%{pear_name}/locale
-%dir %{pear_hordedir}/%{pear_name}/locale/*
-%dir %{pear_hordedir}/%{pear_name}/locale/*/LC_MESSAGES
 
 
 %changelog
+* Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.1-1
+- Update to 4.0.1 for remi repo
+
 * Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.0-1
 - Initial package

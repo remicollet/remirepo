@@ -1,6 +1,4 @@
 pear.horde.org kronolith         4.0.1 (stable) 4.0.2 (stable) 2460kB
-pear.horde.org nag               4.0.0 (stable) 4.0.1 (stable) 1622kB
-pear.horde.org turba             4.0.0 (stable) 4.0.1 (stable) 1932kB
 
 01 php-horde-Horde-Autoloader       2.0.1
 02 php-horde-Horde-Translation      2.0.1
@@ -75,9 +73,9 @@ pear.horde.org turba             4.0.0 (stable) 4.0.1 (stable) 1932kB
 70 php-horde-Horde-Timezone     +   1.0.1   =>           Date, Icalendar, Vfs
 ---- apps -----
 php-horde-horde (Framework)     +   5.0.2
-php-horde-turba (Address book)  +   4.0.0
+php-horde-turba (Address book)  +   4.0.1
 php-horde-content (Tags)        +   2.0.1
-php-horde-nag   (Tasks)         +   4.0.0
+php-horde-nag   (Tasks)         +   4.0.1
 php-horde-kronolith (Calendars) +   4.0.1
 
 TODO content
