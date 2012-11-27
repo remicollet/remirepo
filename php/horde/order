@@ -1,5 +1,3 @@
-pear.horde.org kronolith         4.0.1 (stable) 4.0.2 (stable) 2460kB
-
 01 php-horde-Horde-Autoloader       2.0.1
 02 php-horde-Horde-Translation      2.0.1
 03 php-horde-Horde-Stream-Wrapper   2.0.1
@@ -76,7 +74,7 @@ php-horde-horde (Framework)     +   5.0.2
 php-horde-turba (Address book)  +   4.0.1
 php-horde-content (Tags)        +   2.0.1
 php-horde-nag   (Tasks)         +   4.0.1
-php-horde-kronolith (Calendars) +   4.0.1
+php-horde-kronolith (Calendars) +   4.0.2
 
 TODO content
 
