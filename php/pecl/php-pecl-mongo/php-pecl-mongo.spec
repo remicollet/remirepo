@@ -3,33 +3,43 @@
 
 %global pecl_name mongo
 
-# RPM 4.8
+# Filter private shared provides
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_libdir}/.*\\.so$
 
 
 Summary:      PHP MongoDB database driver
-Name:         %{phpname}-pecl-mongo
-Version:      1.2.12
+Name:         php-pecl-mongo
+Version:      1.3.0
 Release:      1%{?dist}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
-Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source1:      %{pecl_name}.ini
+Source2:      https://raw.github.com/mongodb/mongo-php-driver/master/LICENSE.md
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{phpname}-devel >= 5.1.0
-BuildRequires: %{phpname}-pear >= 1.4.9-1.2
+BuildRequires: php-devel >= 5.2.6
+BuildRequires: php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:     %{phpname}(zend-abi) = %{php_zend_api}
-Requires:     %{phpname}(api) = %{php_core_api}
+Requires:     php(zend-abi) = %{php_zend_api}
+Requires:     php(api) = %{php_core_api}
 
-Provides:     %{phpname}-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:     php-%{pecl_name} = %{version}
+Provides:     php-%{pecl_name}%{?_isa} = %{version}
+Provides:     php-pecl(%{pecl_name}) = %{version}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
 
 
 %description
@@ -46,48 +56,11 @@ if test "x${extver}" != "x%{version}%{?pre}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
 fi
-
 cd ..
 
+cp %{SOURCE1} %{SOURCE2} .
+
 cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
-
-%{__cat} >%{pecl_name}.ini << 'EOF'
-; Enable %{pecl_name} extension module
-extension=%{pecl_name}.so
-
-;  option documentation: http://www.php.net/manual/en/mongo.configuration.php
-
-;  If persistent connections are allowed.
-;mongo.allow_persistent = 1
-
-;  Whether to reconnect to the database if the connection is lost. 
-;mongo.auto_reconnect = 1
-
-;  The number of bytes-per-chunk. 
-;  This number must be at least 100 less than 4 megabytes (max: 4194204) 
-;mongo.chunk_size = 262144
-
-;  A character to be used in place of $ in modifiers and comparisons.
-;mongo.cmd = $
-
-;  Default hostname when nothing is passed to the constructor. 
-;mongo.default_host = localhost
-
-;  The default TCP port number. The database's default is 27017. 
-;mongo.default_port = 27017
-
-;  Return a BSON_LONG as an instance of MongoInt64  
-;  (instead of a primitive type). 
-;mongo.long_as_object = 0
-
-;  Use MongoDB native long (this will default to true for 1.1.0)
-mongo.native_long = true
-
-;  If an exception should be thrown for non-UTF8 strings. 
-;  This option will be eliminated and exceptions always thrown for non-UTF8 
-;  strings starting with version 1.1.0. 
-mongo.utf8 = 1
-EOF
 
 
 %build
@@ -150,6 +123,7 @@ fi
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_name}-%{version}/README.md
+%doc LICENSE.md
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -158,6 +132,12 @@ fi
 
 
 %changelog
+* Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.0-1
+- update to 1.3.0
+- add new options allow_empty_keys, is_master_interval, ping_interval
+- remove old option auto_reconnect
+- add LICENSE from upstream github
+
 * Wed Aug 01 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.12-1
 - update to 1.2.12
 
