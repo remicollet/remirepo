@@ -9,8 +9,8 @@
 # "horde-nag" sub package with apache stuff
 
 Name:           php-horde-nag
-Version:        4.0.0
-Release:        2%{?dist}
+Version:        4.0.1
+Release:        1%{?dist}
 Summary:        A web based task list manager
 
 Group:          Development/Libraries
@@ -194,6 +194,9 @@ fi
 
 
 %changelog
+* Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.1-1
+- Update to 4.0.1 for remi repo
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.0-2
 - requires Horde_Routes
 
