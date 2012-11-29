@@ -142,6 +142,9 @@ fi
 
 
 %changelog
+* Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.4-1
+- update to 2.1.4
+
 * Wed Nov 14 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.3-1
 - Updated to upstream version 2.1.3
 - Removed .gitattributes file from package.xml
