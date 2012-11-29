@@ -131,7 +131,7 @@ fi
 
 %changelog
 * Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.4-1
-- update to 2.1.4 (no change)
+- update to 2.1.4
 
 * Tue Nov 13 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.3-2
 - Removed .gitattributes and .gitignore files from package.xml

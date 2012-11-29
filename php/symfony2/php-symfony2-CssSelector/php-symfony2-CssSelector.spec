@@ -1,12 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 
 %global pear_channel pear.symfony.com
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-CssSelector
-Version:          2.1.3
+Version:          2.1.4
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -53,14 +52,17 @@ cd %{pear_name}-%{version}
 cd ..
 
 # Modify PEAR package.xml file:
+# - Remove .gitattributes file
+# - Remove .gitignore file
 # - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
 # - Remove md5sum from bootsrap.php file since it was patched
-sed -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
+sed -e '/\.gitattributes/d' \
+    -e '/\.gitignore/d' \
+    -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/Tests/s/role="php"/role="test"/' \
     -e '/bootstrap.php/s/md5sum="[^"]*"\s*//' \
-    -e '/.gitattributes/d' \
     -i package.xml
 
 # package.xml is version 2.0
@@ -111,6 +113,15 @@ fi
 
 
 %changelog
+* Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.4-1
+- update to 2.1.4 (no change)
+
+* Tue Nov 13 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.3-2
+- Removed .gitattributes and .gitignore files from package.xml
+
+* Sun Nov 11 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.3-1
+- Updated to upstream version 2.1.3
+
 * Tue Oct 30 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.3-1
 - sync with rawhide, update to 2.1.3
 
