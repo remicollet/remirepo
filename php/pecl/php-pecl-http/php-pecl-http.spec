@@ -3,11 +3,11 @@
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global prever    beta1
+%global prever    beta2
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.11.%{prever}%{?dist}
+Release:        0.12.%{prever}%{?dist}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -41,6 +41,8 @@ Provides:       php-pecl(%{proj_name})         = %{version}%{?prever}
 Provides:       php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
 Provides:       php-pecl(%{pecl_name})         = %{version}%{?prever}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
+Provides:       php-%{pecl_name}               = %{version}%{?prever}
+Provides:       php-%{pecl_name}%{?_isa}       = %{version}%{?prever}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-http
@@ -173,6 +175,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 29 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.12.beta2
+- update to 2.0.0beta2
+- also provides php-http
+- remove old directives from configuration file
+
 * Fri Oct 12 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.11.beta1
 - update to 2.0.0beta1
 - must be load after json, to rename config to z-http.ini
