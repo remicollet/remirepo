@@ -13,9 +13,6 @@ Summary:        Extended HTTP support
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/pecl_http
-# upstream archive is corrupted, need to be repack
-# tar xif pecl_http-2.0.0beta1.tgz
-# tar cf  pecl_http-2.0.0beta1.tgz package.xml pecl_http-2.0.0beta1
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
