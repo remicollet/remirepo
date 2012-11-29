@@ -1,5 +1,4 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 
 %global pear_channel pear.symfony.com
 %global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
