@@ -6,7 +6,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-ClassLoader
-Version:          2.1.3
+Version:          2.1.4
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -76,16 +76,17 @@ cd %{pear_name}-%{version}
 cd ..
 
 # Modify PEAR package.xml file:
+# - Remove .gitattributes file
 # - Remove .gitignore file
 # - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
 # - Remove md5sum from bootsrap.php file since it was patched
-sed -e '/.gitignore/d' \
+sed -e '/\.gitattributes/d' \
+    -e '/\.gitignore/d' \
     -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/Tests/s/role="php"/role="test"/' \
     -e '/bootstrap.php/s/md5sum="[^"]*"\s*//' \
-    -e '/.gitignore/d' \
     -i package.xml
 
 # package.xml is version 2.0
@@ -136,6 +137,13 @@ fi
 
 
 %changelog
+* Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.4-1
+- update to 2.1.4 (no change)
+
+* Wed Nov 14 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.3-1
+- Updated to upstream version 2.1.3
+- Removed .gitattributes file from package.xml
+
 * Tue Oct 30 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.3-1
 - sync with rawhide, update to 2.1.3
 
