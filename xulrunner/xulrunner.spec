@@ -82,7 +82,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        17.0
+Version:        17.0.1
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -247,7 +247,7 @@ cd %{tarballdir}
 
 %patch1  -p1
 %patch2  -p1 -b .build
-%patch14 -p1 -b .chromium-types
+%patch14 -p2 -b .chromium-types
 %patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
 
@@ -322,6 +322,10 @@ echo "ac_add_options --disable-methodjit" >> .mozconfig
 echo "ac_add_options --disable-monoic" >> .mozconfig
 echo "ac_add_options --disable-polyic" >> .mozconfig
 echo "ac_add_options --disable-tracejit" >> .mozconfig
+%endif
+
+%ifnarch %{ix86} x86_64 %{arm}
+echo "ac_add_options --disable-webrtc" >> .mozconfig
 %endif
 
 #---------------------------------------------------------------------
@@ -545,6 +549,21 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-1
+- Sync with rawhide, Update to 17.0.1
+
+* Thu Nov 29 2012 Jan Horak <jhorak@redhat.com> - 17.0.1-1
+- Update to 17.0.1
+
+* Tue Nov 27 2012 Jan Horak <jhorak@redhat.com> - 17.0-4
+- Rebuild agains older NSS
+
+* Mon Nov 19 2012 Martin Stransky <stransky@redhat.com> - 17.0-3
+- Updated second arch patches
+
+* Mon Nov 19 2012 Dan Horák <dan[at]danny.cz> - 17.0-2
+- webrtc is available only on selected arches
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-1
 - Update to 17.0
 
