@@ -22,6 +22,7 @@ php-pecl-sqlite		2.0.0beta
 php-pecl-ssh2		0.12
 php-pecl-uuid		1.0.3
 php-pecl-xdebug		2.2.2dev
+php-pecl-yaml		1.1.0
 
 TODO:
 =====
@@ -42,7 +43,6 @@ php-pecl-runkit
 php-pecl-selinux
 php-pecl-xhprof
 php-pecl-yaf
-php-pecl-yaml
 php-redis
 php-shout
 php-xcache

@@ -5,7 +5,7 @@
 Summary:       PHP Bindings for yaml
 Name:          php-pecl-yaml
 Version:       1.1.0
-Release:       2%{?dist}
+Release:       2%{?dist}.1
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -19,15 +19,24 @@ BuildRequires: libyaml-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides:      php-pecl(%{pecl_name}) = %{version}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-# RPM 4.8
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -151,6 +160,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.0-2.1
+- also provides php-yaml
+
 * Fri Apr 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.0-2
 - update to 1.0.1 for php 5.4
 
