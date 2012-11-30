@@ -6,6 +6,7 @@ php-pecl-igbinary
 php-pecl-lzf
 php-pecl-mailparse
 php-pecl-memcache
+php-pecl-memcached
 php-pecl-msgpack
 php-pecl-ncurses
 
@@ -23,7 +24,6 @@ php-pecl-gnupg
 php-pecl-haru
 php-pecl-http
 php-pecl-imagick
-php-pecl-memcached
 php-pecl-mongo
 php-pecl-mysqlnd-ms
 php-pecl-mysqlnd-qc
