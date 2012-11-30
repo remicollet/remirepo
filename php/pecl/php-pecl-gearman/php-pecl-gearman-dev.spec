@@ -5,7 +5,7 @@
 
 Name:		php-pecl-gearman
 Version:	1.0.3
-Release:	1%{?dist}
+Release:	1%{?dist}.1
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -31,13 +31,24 @@ Requires:	php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Provides:	php-pecl(%{pecl_name}) = %{version}
+Provides:     php-%{pecl_name} = %{version}
+Provides:     php-%{pecl_name}%{?_isa} = %{version}
+Provides:     php-pecl(%{pecl_name}) = %{version}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# RPM 4.8
+# Other third party repo stuff
+Obsoletes:    php53-pecl-%{pecl_name}
+Obsoletes:    php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:    php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:    php55-pecl-%{pecl_name}
+%endif
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -130,6 +141,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1.1
+- also provides php-gearman
+
 * Sun Aug 05 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - update to 1.0.3
 - add missing provides php-pecl(gearman)

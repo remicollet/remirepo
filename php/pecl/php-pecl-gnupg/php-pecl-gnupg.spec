@@ -45,7 +45,7 @@ Obsoletes:    php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
 Obsoletes:    php54-pecl-%{pecl_name}
 %endif
-%if "%{php_version}" > "5.4"
+%if "%{php_version}" > "5.5"
 Obsoletes:    php55-pecl-%{pecl_name}
 %endif
 
