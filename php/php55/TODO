@@ -15,6 +15,7 @@ php-pecl-msgpack	0.5.3
 php-pecl-mysqlnd-ms	1.4.2
 php-pecl-ncurses	1.0.2
 php-pecl-radius		1.2.5
+php-pecl-solr		1.0.2
 php-pecl-sqlite		2.0.0beta
 php-pecl-ssh2		0.12
 php-pecl-uuid		1.0.3
@@ -38,7 +39,6 @@ php-pecl-pdflib
 php-pecl-rrd
 php-pecl-runkit
 php-pecl-selinux
-php-pecl-solr
 php-pecl-sphinx
 php-pecl-xhprof
 php-pecl-yaf
