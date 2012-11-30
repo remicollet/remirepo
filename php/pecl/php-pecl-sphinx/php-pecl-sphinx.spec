@@ -4,7 +4,7 @@
 
 Name:           php-pecl-sphinx
 Version:        1.2.0
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
@@ -21,14 +21,21 @@ Requires:       php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
 
-# RPM 4.8
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{-libdir}/.*\\.so$
 
 
 %description
@@ -75,6 +82,7 @@ make %{?_smp_mflags}
     --define extension_dir=%{pecl_name}-%{version}/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
 %{__ztsphp} --no-php-ini \
     --define extension_dir=%{pecl_name}-%{version}-zts/modules \
     --define extension=%{pecl_name}.so \
@@ -123,6 +131,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-2.1
+- also provides php-sphinx
+
 * Sat Apr 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-2
 - update to 1.2.0, php 5.4
 
