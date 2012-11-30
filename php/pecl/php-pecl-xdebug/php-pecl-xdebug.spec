@@ -25,6 +25,7 @@ BuildRequires:  php-pear  >= 1:1.4.9-1.2
 BuildRequires:  php-devel >= 5.1.0
 BuildRequires:  libedit-devel
 
+# https://github.com/xdebug/xdebug/pull/39
 Patch0:         %{pecl_name}-build.patch
 
 Requires(post): %{__pecl}
