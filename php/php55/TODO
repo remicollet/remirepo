@@ -14,7 +14,7 @@ php-pecl-xhprof
 php-pecl-imagick
 php-pecl-pdflib
 mlt-php
-php-pecl-ncurses
+	php-pecl-ncurses
 php-pecl-gearman
 php-pecl-rrd
 php-pecl-mysqlnd-ms

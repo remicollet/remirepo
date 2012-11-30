@@ -18,18 +18,19 @@ BuildRequires: php-devel, ncurses-devel, php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Obsoletes:    php-ncurses < 5.3.0
-Provides:     php-ncurses = 5.3.0
-Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
+Obsoletes:    php-ncurses < 5.3.0
+Provides:     php-ncurses = 5.3.0
+Provides:     php-ncurses%{?_isa} = 5.3.0
+Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# RPM 4.8
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -133,6 +134,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-1.1
+- rebuild
+
 * Sun Jun 24 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - update to 1.0.2
 
