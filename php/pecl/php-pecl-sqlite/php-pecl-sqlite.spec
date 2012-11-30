@@ -6,7 +6,7 @@
 
 Name:           php-pecl-sqlite
 Version:        2.0.0
-Release:        0.2.svn%{svnver}%{?dist}
+Release:        0.3.svn%{svnver}%{?dist}.1
 Summary:        Extension for the SQLite V2 Embeddable SQL Database Engine
 Group:          Development/Languages
 License:        PHP
@@ -22,6 +22,7 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.4.0
 BuildRequires:  php-pear >= 1:1.4.0
+BuildRequires:  sqlite2-devel
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
@@ -105,12 +106,14 @@ cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 %configure \
+    --with-sqlite=%{_prefix} \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure \
+    --with-sqlite=%{_prefix} \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
@@ -177,6 +180,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-0.3.svn313074
+- rebuild with system Sqlite2
+
 * Sun Oct 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-0.2.svn313074
 - rebuild
 
