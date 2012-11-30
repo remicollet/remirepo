@@ -1,6 +1,6 @@
 # API/ABI check
 %global apiver      20121113
-%global zendver     20121113
+%global zendver     20121128
 %global pdover      20080721
 # Extension version
 %global fileinfover 1.0.5-dev
@@ -31,8 +31,8 @@
 %global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
 %global with_fpm 1
 
-%if 0%{?__isa:1}
-%global isasuffix -%{__isa}
+%if 0%{?__isa_bits:1}
+%global isasuffix -%{__isa_bits}
 %else
 %global isasuffix %nil
 %endif
@@ -60,14 +60,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201211300857
+%global snapdate      201211301534
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1607,6 +1607,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.2.201211301534
+- update to have zend_execute_ex for xDebug
+
 * Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.1.201211300857
 - Initial work on 5.5.0-dev
 
