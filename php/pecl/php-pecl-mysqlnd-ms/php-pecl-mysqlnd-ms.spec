@@ -4,7 +4,7 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
 Version:      1.4.2
-Release:      2%{?dist}
+Release:      2%{?dist}.1
 
 License:      PHP
 Group:        Development/Languages
@@ -29,6 +29,8 @@ Requires:     php-json%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
+Provides:     php-%{pecl_name} = %{version}
+Provides:     php-%{pecl_name}%{?_isa} = %{version}
 Provides:     php-pecl(%{pecl_name}) = %{version}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -182,6 +184,9 @@ ln -sf %{php_ztsextdir}/json.so modules/
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.2-2.1
+- also provides php-mysqlnd_ms
+
 * Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.2-2
 - obsoletes php53*, php54*
 - cleanups
