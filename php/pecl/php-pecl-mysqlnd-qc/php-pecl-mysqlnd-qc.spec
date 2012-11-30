@@ -12,7 +12,7 @@
 Summary:      A query cache plugin for mysqlnd
 Name:         php-pecl-mysqlnd-qc
 Version:      1.1.1
-Release:      3%{?dist}
+Release:      3%{?dist}.1
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 License:      PHP
 Group:        Development/Languages
@@ -39,6 +39,8 @@ Requires:     php-sqlite3%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
+Provides:     php-%{pecl_name} = %{version}
+Provides:     php-%{pecl_name}%{?_isa} = %{version}
 Provides:     php-pecl(%{pecl_name}) = %{version}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -95,6 +97,8 @@ cp -r %{pecl_name}-%{version} %{pecl_name}-zts
 %build
 cd %{pecl_name}-%{version}
 
+#LDFLAGS="$(pkg-config libmemcached --libs) -lpthread %{__global_ldflags}"
+#export LDFLAGS
 %{_bindir}/phpize
 
 # don't use --enable-mysqlnd-qc-apc because:
@@ -103,6 +107,7 @@ cd %{pecl_name}-%{version}
     --with-libdir=%{_lib} \
     --enable-mysqlnd-qc \
     --enable-mysqlnd-qc-memcache \
+    --with-libmemcached-dir=%{_prefix} \
 %if %{withsqlite}
     --enable-mysqlnd-qc-sqlite \
     --with-sqlite-dir=%{_prefix} \
@@ -117,6 +122,7 @@ cd ../%{pecl_name}-zts
     --with-libdir=%{_lib} \
     --enable-mysqlnd-qc \
     --enable-mysqlnd-qc-memcache \
+    --with-libmemcached-dir=%{_prefix} \
 %if %{withsqlite}
     --enable-mysqlnd-qc-sqlite \
     --with-sqlite-dir=%{_prefix} \
@@ -218,6 +224,9 @@ zts-php -n -q \
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-3.1
+- also provides php-mysqlnd_qc
+
 * Sat Sep 22 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-3
 - rebuild for new libmemcached
 - Obsoletes php53*, php54*
