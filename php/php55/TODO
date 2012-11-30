@@ -5,6 +5,7 @@ php-pecl-apc		3.1.13
 php-pecl-geoip		1.0.8
 php-pecl-http		2.0.0beta2
 php-pecl-igbinary	1.1.2dev
+php-pecl-imagick	3.1.0RC2
 php-pecl-lzf		1.6.2
 php-pecl-mailparse	2.1.6
 php-pecl-memcache	3.0.7
@@ -29,7 +30,6 @@ php-pecl-bbcode
 php-pecl-gearman
 php-pecl-gnupg
 php-pecl-haru
-php-pecl-imagick
 php-pecl-mysqlnd-ms
 php-pecl-mysqlnd-qc
 php-pecl-oauth

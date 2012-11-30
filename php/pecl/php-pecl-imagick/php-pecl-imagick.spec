@@ -6,7 +6,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
 Version:       3.1.0
-Release:       0.4.%{prever}%{?dist}
+Release:       0.5.%{prever}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -26,6 +26,8 @@ Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
+Provides:      php-%{pecl_name} = %{version}%{?prever}
+Provides:      php-%{pecl_name}%{?_isa} = %{version}%{?prever}
 Provides:      php-pecl(%{pecl_name}) = %{version}%{?prever}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 Conflicts:     php-pecl-gmagick
@@ -132,6 +134,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.5.RC2
+- also provides php-imagick
+
 * Sat Sep  8 2012 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.4.RC2
 - Obsoletes php53*, php54* on EL
 
