@@ -2,6 +2,7 @@ DONE:
 =====
 php-pecl-apc
 php-pecl-geoip
+php-pecl-igbinary
 php-pecl-lzf
 php-pecl-mailparse
 php-pecl-memcache
@@ -21,7 +22,6 @@ php-pecl-gearman
 php-pecl-gnupg
 php-pecl-haru
 php-pecl-http
-php-pecl-igbinary
 php-pecl-imagick
 php-pecl-memcached
 php-pecl-mongo

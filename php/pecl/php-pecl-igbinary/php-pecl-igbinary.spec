@@ -1,19 +1,15 @@
-%{!?phpname: %{expand: %%global phpname php}}
-
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(%{phpbindir}/php-config --extension-dir 2>/dev/null || echo %{_libdir}/php/modules)}}
 
 %global extname   igbinary
 %global gitver    3b8ab7e
 %global prever    -dev
 
-
 Summary:        Replacement for the standard PHP serializer
-Name:           %{phpname}-pecl-igbinary
+Name:           php-pecl-igbinary
 Version:        1.1.2
 %if 0%{?gitver:1}
-Release:	0.2.git%{gitver}%{?dist}
-Source0:	igbinary-igbinary-1.1.1-15-g3b8ab7e.tar.gz
+Release:	    0.3.git%{gitver}%{?dist}
+Source0:	    igbinary-igbinary-1.1.1-15-g3b8ab7e.tar.gz
 %else
 Release:        2%{?dist}
 Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
@@ -31,27 +27,31 @@ Patch0:         igbinary-php54.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
-BuildRequires:  %{phpname}-pecl-apc-devel >= 3.1.7
-BuildRequires:  %{phpname}-pear
-BuildRequires:  %{phpname}-devel >= 5.2.0
+BuildRequires:  php-pecl-apc-devel >= 3.1.7
+BuildRequires:  php-pear
+BuildRequires:  php-devel >= 5.2.0
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       %{phpname}(zend-abi) = %{php_zend_api}
-Requires:       %{phpname}(api) = %{php_core_api}
-Obsoletes:      %{phpname}-%{extname} <= 1.1.1
-Provides:       %{phpname}-%{extname} = %{version}-%{release}
-Provides:       %{phpname}-%{extname}%{?_isa} = %{version}-%{release}
-Provides:       %{phpname}-pecl(%{extname}) = %{version}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
+Obsoletes:      php-%{extname} <= 1.1.1
+Provides:       php-%{extname} = %{version}
+Provides:       php-%{extname}%{?_isa} = %{version}
+Provides:       php-pecl(%{extname}) = %{version}
+Provides:       php-pecl(%{extname})%{?_isa} = %{version}
 
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{extname}
+Obsoletes:     php53u-pecl-%{extname}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{extname}
+%endif
+
+# Filter private shared
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
-%global __provides_exclude_from %__provides_exclude_from|%{php_ztsextdir}/.*\\.so$
 
 
 %description
@@ -66,11 +66,11 @@ based storages for serialized data.
 %package devel
 Summary:       Igbinary developer files (header)
 Group:         Development/Libraries
-Requires:      %{phpname}-pecl-%{extname}%{?_isa} = %{version}-%{release}
-Requires:      %{phpname}-devel%{?_isa}
-Obsoletes:     %{phpname}-%{extname}-devel <= 1.1.1
-Provides:      %{phpname}-%{extname}-devel = %{version}-%{release}
-Provides:      %{phpname}-%{extname}-devel%{?_isa} = %{version}-%{release}
+Requires:      php-pecl-%{extname}%{?_isa} = %{version}-%{release}
+Requires:      php-devel%{?_isa}
+Obsoletes:     php-%{extname}-devel <= 1.1.1
+Provides:      php-%{extname}-devel = %{version}-%{release}
+Provides:      php-%{extname}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using Igbinary
@@ -82,6 +82,7 @@ These are the files needed to compile programs using Igbinary
 %if 0%{?gitver:1}
 mv igbinary-igbinary-%{gitver}/package.xml .
 mv igbinary-igbinary-%{gitver} %{extname}-%{version}
+sed -e '/release/s/-dev/dev/' -i package.xml
 cd %{extname}-%{version}
 %patch0 -p0 -b .php54
 
@@ -198,6 +199,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.3.git3b8ab7e
+- cleanups
+
 * Sat Mar 03 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.2.git3b8ab7e
 - macro usage for latest PHP
 
