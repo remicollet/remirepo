@@ -7,7 +7,7 @@
 Name:           php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.2
-Release:        0.1%{?gitver:.git%{gitver}}%{?dist}
+Release:        0.2%{?gitver:.git%{gitver}}%{?dist}
 %if 0%{?gitver:1}
 # https://github.com/xdebug/xdebug/archive/xdebug_2_2.tar.gz
 Source0:        xdebug-xdebug_2_2.tar.gz
@@ -24,9 +24,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-pear  >= 1:1.4.9-1.2
 BuildRequires:  php-devel >= 5.1.0
 BuildRequires:  libedit-devel
-
-# https://github.com/xdebug/xdebug/pull/39
-Patch0:         %{pecl_name}-build.patch
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -78,10 +75,6 @@ mv xdebug-xdebug_2_2 %{pecl_name}-%{version}%{?prever}
 %endif
 
 cd %{pecl_name}-%{version}%{?prever}
-
-%if "%{php_version}" > "5.5"
-%patch0 -p0 -b .php55
-%endif
 
 # https://bugs.php.net/60330
 sed -i -e '/AC_PREREQ/s/2.60/2.59/' debugclient/configure.in
@@ -198,8 +191,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-0.2.gite773b090fc
+- rebuild with new php 5.5 snaphost with zend_execute_ex
+
 * Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-0.1.gite773b090fc
-- update to git snapshoit for php 5.5
+- update to git snapshot for php 5.5
 - also provides php-xdebug
 
 * Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-2

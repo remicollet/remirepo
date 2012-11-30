@@ -1,7 +1,7 @@
 DONE:
 =====
-php-pecl-apc		3.1.13
 php-pecl-amqp		1.0.9
+php-pecl-apc		3.1.13
 php-pecl-geoip		1.0.8
 php-pecl-http		2.0.0beta2
 php-pecl-igbinary	1.1.2dev
