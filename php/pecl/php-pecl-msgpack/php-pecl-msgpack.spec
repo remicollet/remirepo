@@ -6,7 +6,7 @@
 Summary:       API for communicating with MessagePack serialization
 Name:          php-pecl-msgpack
 Version:       0.5.3
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
@@ -20,6 +20,8 @@ Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
+Provides:      php-%{pecl_name} = %{version}
+Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -183,6 +185,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 0.5.3-1.1
+- also provides php-msgpack
+
 * Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> - 0.5.3-1
 - update to 0.5.3 (beta)
 

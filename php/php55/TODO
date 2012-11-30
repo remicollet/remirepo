@@ -17,7 +17,7 @@ php-pecl-mailparse
 	php-pecl-memcache
 php-pecl-memcached
 php-pecl-mongo
-php-pecl-msgpack
+	php-pecl-msgpack
 php-pecl-mysqlnd-ms
 php-pecl-mysqlnd-qc
 	php-pecl-ncurses
