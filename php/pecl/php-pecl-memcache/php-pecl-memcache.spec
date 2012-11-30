@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcache
 Version:      3.0.7
-Release:      4%{?dist}
+Release:      4%{?dist}.1
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -29,6 +29,8 @@ Requires:     php(api) = %{php_core_api}
 
 Provides:     php-pecl(%{pecl_name}) = %{version}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:     php-%{pecl_name} = %{version}
+Provides:     php-%{pecl_name}%{?_isa} = %{version}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-memcache
@@ -185,6 +187,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-4.1
+- also provides php-memcache
+
 * Fri Oct 19 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-4
 - improve comment in configuration about session.
 

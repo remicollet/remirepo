@@ -31,7 +31,7 @@ php-pecl-lzf
 php-pecl-solr
 php-pecl-selinux
 php-pecl-sqlite
-php-pecl-memcache
+	php-pecl-memcache
 php-xcache
 php-pecl-geoip
 php-pecl-amqp
