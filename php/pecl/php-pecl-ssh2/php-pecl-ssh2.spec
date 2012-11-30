@@ -4,7 +4,7 @@
 
 Name:           php-pecl-ssh2
 Version:        0.12
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 Summary:        Bindings for the libssh2 library
 
 # http://pecl.php.net/bugs/bug.php?id=24364
@@ -21,10 +21,13 @@ BuildRequires:  php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -134,6 +137,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.12-1.1
+- also provides php-ssh2
+
 * Thu Oct 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.12-1
 - update to 0.12
 - raise dependency on libssh2 >= 1.2
