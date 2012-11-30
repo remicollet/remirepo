@@ -197,7 +197,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-3.gite773b090fc
+* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-0.1.gite773b090fc
 - update to git snapshoit for php 5.5
 - also provides php-xdebug
 
