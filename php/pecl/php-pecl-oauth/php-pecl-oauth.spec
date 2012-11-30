@@ -1,11 +1,10 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %global pecl_name oauth
 
 Name:           php-pecl-oauth
 Version:        1.2.3
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD
@@ -23,7 +22,10 @@ Requires:       php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Provides: php-pecl(%{pecl_name}) = %{version}
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-oauth
@@ -116,6 +118,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.2.3-1.1
+- also provides php-oauth
+
 * Tue Oct  2 2012 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - update to 1.2.3
 
