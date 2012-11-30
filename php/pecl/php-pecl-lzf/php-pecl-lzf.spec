@@ -4,7 +4,7 @@
 
 Name:           php-pecl-lzf
 Version:        1.6.2
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -25,6 +25,9 @@ Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
+
+Provides:       php-lzf = %{version}
+Provides:       php-lzf%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -140,6 +143,9 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-2.1
+- also provides php-lzf
+
 * Sun Oct 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-2
 - sync with rawhide (use system liblzf)
 
