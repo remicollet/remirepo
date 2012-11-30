@@ -5,7 +5,7 @@
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          php-pecl-apc
 Version:       3.1.13
-Release:       3%{?dist}
+Release:       3%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
@@ -23,7 +23,7 @@ Patch0:        apc-svn.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.0, httpd-devel, php-pear
-# For tests
+# Only for tests (used by some unit tests)
 BuildRequires: php-dom
 
 Requires(post): %{__pecl}
@@ -31,7 +31,10 @@ Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-Conflicts:     php-mmcache php-eaccelerator
+Conflicts:     php-mmcache
+Conflicts:     php-eaccelerator
+Provides:      php-apc = %{version}
+Provides:      php-apc%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -69,7 +72,7 @@ Group:         Applications/Internet
 BuildArch:     noarch
 %endif
 Requires:      %{name} = %{version}-%{release}
-Requires:      mod_php, httpd
+Requires:      mod_php, httpd, php-gd
 
 %description  -n apc-panel
 This package provides the APC control panel, with Apache
@@ -97,10 +100,8 @@ if test "x${extver}" != "x%{version}"; then
 fi
 cd ..
 
-%if 0%{?__ztsphp:1}
 # duplicate for ZTS build
 cp -pr APC-%{version} APC-%{version}-zts
-%endif
 
 
 %build
@@ -109,12 +110,10 @@ cd APC-%{version}
 %configure --enable-apc-mmap --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if 0%{?__ztsphp:1}
 cd ../APC-%{version}-zts
 %{_bindir}/zts-phpize
 %configure --enable-apc-mmap --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
@@ -127,15 +126,13 @@ make install INSTALL_ROOT=%{buildroot}
 iconv -f iso-8859-1 -t utf8 NOTICE >NOTICE.utf8
 mv NOTICE.utf8 NOTICE
 popd
-install -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/php.d/apc.ini
+install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/apc.ini
 
 # Install the ZTS stuff
-%if 0%{?__ztsphp:1}
 pushd APC-%{version}-zts
 make install INSTALL_ROOT=%{buildroot}
 popd
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/apc.ini
-%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -154,6 +151,7 @@ install -D -m 644 -p %{SOURCE3} \
 
 
 %check
+%ifarch x86_64
 cd %{pecl_name}-%{version}
 ln -sf %{php_extdir}/dom.so modules/
 
@@ -163,7 +161,6 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
-%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-%{version}-zts
 ln -sf %{php_ztsextdir}/dom.so modules/
 
@@ -194,22 +191,17 @@ rm -rf %{buildroot}
 %doc APC-%{version}/TECHNOTES.txt APC-%{version}/CHANGELOG APC-%{version}/LICENSE
 %doc APC-%{version}/NOTICE        APC-%{version}/TODO      APC-%{version}/apc.php
 %doc APC-%{version}/INSTALL
-%config(noreplace) %{_sysconfdir}/php.d/apc.ini
+%config(noreplace) %{php_inidir}/apc.ini
 %{php_extdir}/apc.so
 %{pecl_xmldir}/%{name}.xml
 
-%if 0%{?__ztsphp:1}
 %{php_ztsextdir}/apc.so
 %config(noreplace) %{php_ztsinidir}/apc.ini
-%endif
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/php/ext/apc
-
-%if 0%{?__ztsphp:1}
+%{php_incldir}/ext/apc
 %{php_ztsincldir}/ext/apc
-%endif
 
 %files -n apc-panel
 %defattr(-,root,root,-)
@@ -221,6 +213,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-3.1
+- apc-panel requires php-gd
+- also provides php-apc
+- only run test on x86_64
+
 * Fri Oct 26 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-3
 - move apc.ini to Source3
 - new apc-panel package

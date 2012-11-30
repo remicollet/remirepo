@@ -1,5 +1,6 @@
 DONE:
 =====
+php-pecl-apc
 php-pecl-geoip
 php-pecl-lzf
 php-pecl-mailparse
@@ -14,7 +15,6 @@ php-digidoc
 php-ffmpeg
 php-idn
 php-libvirt
-php-pecl-apc
 php-pecl-amqp
 php-pecl-bbcode
 php-pecl-gearman
