@@ -1,14 +1,16 @@
 DONE:
 =====
-php-pecl-apc
-php-pecl-geoip
-php-pecl-igbinary
-php-pecl-lzf
-php-pecl-mailparse
-php-pecl-memcache
-php-pecl-memcached
-php-pecl-msgpack
-php-pecl-ncurses
+php-pecl-apc		3.1.13
+php-pecl-geoip		1.0.8
+php-pecl-igbinary	1.1.2dev
+php-pecl-lzf		1.6.2
+php-pecl-mailparse	2.1.6
+php-pecl-memcache	3.0.7
+php-pecl-memcached	2.1.0
+php-pecl-msgpack	0.5.3
+php-pecl-ncurses	1.0.2
+php-pecl-uuid		1.0.3
+php-pecl-xdebug		2.2.2dev
 
 TODO:
 =====
@@ -38,8 +40,6 @@ php-pecl-solr
 php-pecl-sphinx
 php-pecl-sqlite
 php-pecl-ssh2
-php-pecl-uuid
-php-pecl-xdebug
 php-pecl-xhprof
 php-pecl-yaf
 php-pecl-yaml

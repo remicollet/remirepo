@@ -1,13 +1,19 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
+%global gitver    e773b090fc
+%global prever    dev
 
 Name:           php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
-Version:        2.2.1
-Release:        2%{?dist}
+Version:        2.2.2
+Release:        0.1%{?gitver:.git%{gitver}}%{?dist}
+%if 0%{?gitver:1}
+# https://github.com/xdebug/xdebug/archive/xdebug_2_2.tar.gz
+Source0:        xdebug-xdebug_2_2.tar.gz
+%else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
+%endif
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
 License:        PHP
@@ -19,11 +25,15 @@ BuildRequires:  php-pear  >= 1:1.4.9-1.2
 BuildRequires:  php-devel >= 5.1.0
 BuildRequires:  libedit-devel
 
+Patch0:         %{pecl_name}-build.patch
+
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(Xdebug) = %{version}
 Provides:       php-pecl(Xdebug)%{?_isa} = %{version}
 
@@ -60,8 +70,17 @@ Xdebug also provides:
 
 %prep
 %setup -qc
+%if 0%{?gitver:1}
+sed -e '/release/s/2.2.1/%{version}%{?prever}/' \
+    xdebug-xdebug_2_2/package.xml >package.xml
+mv xdebug-xdebug_2_2 %{pecl_name}-%{version}%{?prever}
+%endif
 
 cd %{pecl_name}-%{version}%{?prever}
+
+%if "%{php_version}" > "5.5"
+%patch0 -p0 -b .php55
+%endif
 
 # https://bugs.php.net/60330
 sed -i -e '/AC_PREREQ/s/2.60/2.59/' debugclient/configure.in
@@ -73,8 +92,8 @@ chmod -x *.[ch]
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
-if test "$ver" != "%{version}%{?devver}"; then
-   : Error: Upstream XDEBUG_VERSION version is ${ver}, expecting %{version}%{?devver}.
+if test "$ver" != "%{version}%{?prever}"; then
+   : Error: Upstream XDEBUG_VERSION version is ${ver}, expecting %{version}%{?prever}.
    exit 1
 fi
 
@@ -118,7 +137,7 @@ install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
 install -d %{buildroot}%{_sysconfdir}/php.d
-cat > %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini << 'EOF'
+cat > %{buildroot}%{php_inidir}/%{pecl_name}.ini << 'EOF'
 ; Enable xdebug extension module
 zend_extension=%{php_extdir}/%{pecl_name}.so
 
@@ -168,7 +187,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc  %{pecl_name}-%{version}%{?prever}/{CREDITS,LICENSE,NEWS,README}
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{_bindir}/debugclient
 %{pecl_xmldir}/%{name}.xml
@@ -178,6 +197,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-3.gite773b090fc
+- update to git snapshoit for php 5.5
+- also provides php-xdebug
+
 * Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-2
 - sync with rawhide, cleanups
 - obsoletes php53*, php54*
