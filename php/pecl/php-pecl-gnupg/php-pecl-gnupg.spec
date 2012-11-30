@@ -4,7 +4,7 @@
 Summary:      Wrapper around the gpgme library
 Name:         php-pecl-gnupg
 Version:      1.3.2
-Release:      3%{?dist}
+Release:      3%{?dist}.1
 
 License:      BSD
 Group:        Development/Languages
@@ -34,9 +34,23 @@ Requires:     php(api) = %{php_core_api}
 # We force use of /usr/bin/gpg as gpg2 is unusable in non-interactive mode
 Requires:     gnupg
 
-Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
-Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}-%{release}
+Provides:     php-%{pecl_name} = %{version}
+Provides:     php-%{pecl_name}%{?_isa} = %{version}
+Provides:     php-pecl(%{pecl_name}) = %{version}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+# Other third party repo stuff
+Obsoletes:    php53-pecl-%{pecl_name}
+Obsoletes:    php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:    php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.4"
+Obsoletes:    php55-pecl-%{pecl_name}
+%endif
+
+# Filter private shared
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 
 
@@ -76,11 +90,8 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
-
-%if 0%{?__ztsphp:1}
 # Build ZTS extension if ZTS devel available (fedora >= 17)
 cp -r %{pecl_name}-%{version} %{pecl_name}-zts
-%endif
 
 
 %build
@@ -94,14 +105,13 @@ cd %{pecl_name}-%{version}
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure \
     --with-libdir=%{_lib} \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
+
 
 %install
 rm -rf %{buildroot}
@@ -111,14 +121,12 @@ rm -rf %{pecl_name}-*/modules/{json,mysqlnd}.so
 make install -C %{pecl_name}-%{version} \
      INSTALL_ROOT=%{buildroot}
 
-%if 0%{?__ztsphp:1}
 make install -C %{pecl_name}-zts \
      INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-%endif
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -141,6 +149,8 @@ fi
 %check
 cd %{pecl_name}-%{version}
 
+unset GPG_AGENT_INFO
+
 # run full test suite
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 REPORT_EXIT_STATUS=1 \
@@ -150,7 +160,6 @@ php run-tests.php \
     -d extension_dir=modules \
     -d extension=%{pecl_name}.so
 
-%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
 
 # run full test suite
@@ -161,7 +170,6 @@ NO_INTERACTION=1 \
     -n -q \
     -d extension_dir=modules \
     -d extension=%{pecl_name}.so
-%endif
 
 
 %files
@@ -169,16 +177,17 @@ NO_INTERACTION=1 \
 %doc %{pecl_name}-%{version}/{LICENSE,README}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
-%if 0%{?__ztsphp:1}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
-%endif
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-3.1
+- also provides php-gnupg + cleanups
+
 * Sun May 06 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-3
 - improve patch
 
