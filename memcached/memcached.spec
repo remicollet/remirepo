@@ -7,9 +7,11 @@
 %global with_systemd 0
 %endif
 
+%global with_sasl    0
+
 Name:           memcached
 Version:        1.4.15
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
 
@@ -31,7 +33,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libevent-devel
 BuildRequires:  perl(Test::More), perl(Test::Harness)
+%if %{with_sasl}
 BuildRequires:  cyrus-sasl-devel
+%endif
 
 %if %{with_systemd}
 Requires(post): systemd
@@ -73,7 +77,11 @@ memcached binary include files.
 
 
 %build
-%configure --enable-sasl
+%configure \
+%if %{with_sasl}
+   --enable-sasl
+%endif
+
 sed -i 's/-Werror/ /' Makefile
 make %{?_smp_mflags}
 
@@ -227,6 +235,9 @@ fi
 %{_includedir}/memcached/*
 
 %changelog
+* Sun Dec  2 2012 Remi Collet <rpms@famillecollet.com> - 0:1.4.15-2.1
+- build test without SASL
+
 * Mon Nov 26 2012 Remi Collet <rpms@famillecollet.com> - 0:1.4.15-2
 - enable SASL support
 
