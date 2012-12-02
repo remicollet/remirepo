@@ -1,10 +1,10 @@
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name PHPUnit
-%global channel pear.phpunit.de
+%global pear_name    PHPUnit
+%global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        3.7.8
+Version:        3.7.9
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -17,28 +17,38 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
+BuildRequires:  php-channel(%{pear_channel})
 
-Requires:       php-xml >= 5.3.3
-Requires:       php-channel(%{channel})
+Requires:       php(language) >= 5.3.3
+Requires:       php-ctype
+Requires:       php-dom
+Requires:       php-libxml
+Requires:       php-pcntl
+Requires:       php-pcre
+Requires:       php-reflection
+Requires:       php-spl
+Requires:       php-tidy
+Requires:       php-channel(%{pear_channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(%{channel}/File_Iterator) >= 1.3.0
-Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
-Requires:       php-pear(%{channel}/PHP_CodeCoverage) >= 1.2.1
-Conflicts:      php-pear(%{channel}/PHP_CodeCoverage) >  1.2.99
-Requires:       php-pear(%{channel}/PHP_Timer) >= 1.0.2
+Requires:       php-pear(%{pear_channel}/File_Iterator) >= 1.3.0
+Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.1.1
+Requires:       php-pear(%{pear_channel}/PHP_CodeCoverage) >= 1.2.1
+Conflicts:      php-pear(%{pear_channel}/PHP_CodeCoverage) >  1.2.99
+Requires:       php-pear(%{pear_channel}/PHP_Timer) >= 1.0.2
 Requires:       php-pear(pear.symfony.com/Yaml) >= 2.1.0
 # PHPUnit Extensions (yes, with circular dependency on PHPUnit)
-Requires:       php-pear(%{channel}/PHPUnit_MockObject) >= 1.2.0
-Conflicts:      php-pear(%{channel}/PHPUnit_MockObject) >  1.2.99
+Requires:       php-pear(%{pear_channel}/PHPUnit_MockObject) >= 1.2.0
+Conflicts:      php-pear(%{pear_channel}/PHPUnit_MockObject) >  1.2.99
 
 # Optionnal dependencies
-Requires:       php-json php-pdo php-mbstring
+Requires:       php-json
+Requires:       php-pdo
+Requires:       php-mbstring
 Requires:       php-pecl(Xdebug) >= 2.0.5
-Requires:       php-pear(%{channel}/PHP_Invoker) >= 1.1.0
+Requires:       php-pear(%{pear_channel}/PHP_Invoker) >= 1.1.0
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Obsoletes:      php-pear-PHPUnit < %{version}
 Provides:       php-pear-PHPUnit = %{version}-%{release}
 
@@ -89,7 +99,7 @@ rm -rf %{buildroot}
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 %triggerpostun -- php-pear-PHPUnit
@@ -108,6 +118,9 @@ fi
 
 
 %changelog
+* Wed Nov 07 2012 Remi Collet <remi@fedoraproject.org> - 3.7.9-1
+- Version 3.7.9 (stable) - API 3.7.0 (stable)
+
 * Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> - 3.7.8-1
 - Version 3.7.8 (stable) - API 3.7.0 (stable)
 
