@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name PHP_CodeCoverage
-%global channel pear.phpunit.de
+%global pear_name    PHP_CodeCoverage
+%global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        1.2.6
+Version:        1.2.7
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -16,19 +15,27 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
+BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.3
+Requires:       php-date
 Requires:       php-dom
+Requires:       php-json
+Requires:       php-pcre
+Requires:       php-reflection
+Requires:       php-spl
+Requires:       php-tokenizer
 Requires:       php-pecl(Xdebug) >= 2.0.5
-Requires:       php-pear(%{channel}/File_Iterator) >= 1.3.0
-Requires:       php-pear(%{channel}/PHP_TokenStream) >= 1.1.3
-Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
+Requires:       php-pear(PEAR) >= 1.9.4
+Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/File_Iterator) >= 1.3.0
+Requires:       php-pear(%{pear_channel}/PHP_TokenStream) >= 1.1.3
+Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.1.1
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
 Library that provides collection, processing, and rendering functionality
@@ -48,8 +55,8 @@ cd %{pear_name}-%{version}
 
 
 %install
-cd %{pear_name}-%{version}
 rm -rf %{buildroot}
+cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
@@ -71,7 +78,7 @@ rm -rf %{buildroot}
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -83,6 +90,9 @@ fi
 
 
 %changelog
+* Sun Dec  2 2012 Remi Collet <remi@fedoraproject.org> - 1.2.7-1
+- Version 1.2.7 (stable) - API 1.2.0 (stable)
+
 * Thu Oct 18 2012 Remi Collet <remi@fedoraproject.org> - 1.2.6-1
 - Version 1.2.6 (stable) - API 1.2.0 (stable)
 
