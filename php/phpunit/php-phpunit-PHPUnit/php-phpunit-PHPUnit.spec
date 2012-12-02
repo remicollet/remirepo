@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        3.7.9
+Version:        3.7.10
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -14,7 +13,6 @@ URL:            http://www.phpunit.de
 Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{pear_channel})
@@ -118,6 +116,9 @@ fi
 
 
 %changelog
+* Sun Dec  2 2012 Remi Collet <remi@fedoraproject.org> - 3.7.10-1
+- Version 3.7.10 (stable) - API 3.7.0 (stable)
+
 * Wed Nov 07 2012 Remi Collet <remi@fedoraproject.org> - 3.7.9-1
 - Version 3.7.9 (stable) - API 3.7.0 (stable)
 
