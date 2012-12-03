@@ -2,7 +2,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  0.8.4
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System         
@@ -18,20 +18,37 @@ Patch7: roundcubemail-0.8.1-strict.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root%(%{__id_u} -n)
-Requires: php-pear-Auth-SASL
-Requires: php-pear-DB
-Requires: php-pear-Mail-Mime
-Requires: php-pear-Net-SMTP
-Requires: php-pear-Net-Socket
-Requires: php, httpd
-Requires: php-pear-Mail-mimeDecode
-Requires: php-mcrypt
-Requires: php-pear-MDB2 >= 2.5.0
-Requires: php-pear-MDB2-Driver-mysql
-Requires: php-pecl-Fileinfo
-Requires: php-xml
+Requires: httpd
+Requires: mod_php
+Requires: php-curl
+Requires: php-date
+Requires: php-dom
+Requires: php-fileinfo
+Requires: php-gd
+Requires: php-hash
+Requires: php-iconv
+Requires: php-intl
+Requires: php-json
+Requires: php-ldap
 Requires: php-mbstring
-Requires: php-pear-Net-IDNA2
+Requires: php-mcrypt
+Requires: php-pcre
+Requires: php-posix
+Requires: php-pspell
+Requires: php-session
+Requires: php-simplexml
+Requires: php-sockets
+Requires: php-spl
+Requires: php-xml
+Requires: php-pear(Auth_SASL)
+Requires: php-pear(DB)
+Requires: php-pear(Mail_Mime)
+Requires: php-pear(Net_SMTP)
+Requires: php-pear(Net_Socket)
+Requires: php-pear(Mail_mimeDecode)
+Requires: php-pear(MDB2) >= 2.5.0
+Requires: php-pear(MDB2_Driver_mysql)
+Requires: php-pear(Net_IDNA2)
 
 %description
 RoundCube Webmail is a browser-based multilingual IMAP client
@@ -138,6 +155,12 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
 %changelog
+* Mon Dec 03 2012 Remi Collet <remi@fedoraproject.org> - 0.8.4-2
+- improved Requires
+
+* Mon Nov 19 2012 Jon Ciesla <limburgher@gmail.com> - 0.8.4-1
+- Latest upstream.
+
 * Fri Nov 16 2012 Remi Collet <remi@fedoraproject.org> - 0.8.4-1
 - new upstream release 0.8.4
 
