@@ -1,0 +1,11 @@
+--- ext/date/php_date.c.orig	2012-12-01 09:54:45.834231459 +0100
++++ ext/date/php_date.c	2012-12-01 09:54:51.594252063 +0100
+@@ -1027,7 +1027,7 @@
+ 			case 'H': length = slprintf(buffer, 32, "%02d", (int) t->h); break;
+ 			case 'i': length = slprintf(buffer, 32, "%02d", (int) t->i); break;
+ 			case 's': length = slprintf(buffer, 32, "%02d", (int) t->s); break;
+-			case 'u': length = slprintf(buffer, 32, "%06d", (int) floor(t->f * 1000000)); break;
++			case 'u': length = slprintf(buffer, 32, "%06d", (int) floor(t->f * 1000000 + 0.5)); break;
+ 
+ 			/* timezone */
+ 			case 'I': length = slprintf(buffer, 32, "%d", localtime ? offset->is_dst : 0); break;

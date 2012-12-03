@@ -3,10 +3,6 @@
 %global zendver     20121128
 %global pdover      20080721
 # Extension version
-%global fileinfover 1.0.5-dev
-%global pharver     2.0.1
-%global zipver      1.11.0
-%global jsonver     1.2.1
 %global oci8ver     1.4.9
 
 # version used for php embedded library soname
@@ -67,7 +63,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -148,7 +144,7 @@ BuildRequires: bison
 %endif
 
 Obsoletes: php-dbg, php3, phpfi, stronghold-php, php-zts < 5.3.7
-Obsoletes: php53, php53u, php54
+Obsoletes: php53, php53u, php54, php55
 Provides: php-zts = %{version}-%{release}
 Provides: php-zts%{?_isa} = %{version}-%{release}
 
@@ -186,7 +182,7 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 Provides: php-cgi = %{version}-%{release}, php-cgi%{?_isa} = %{version}-%{release}
 Provides: php-pcntl, php-pcntl%{?_isa}
 Provides: php-readline, php-readline%{?_isa}
-Obsoletes: php53-cli, php53u-cli, php54-cli
+Obsoletes: php53-cli, php53u-cli, php54-cli, php55-cli
 
 %description cli
 The php-cli package contains the command-line interface 
@@ -218,7 +214,7 @@ Requires(post): systemd-sysv
 Requires(preun): initscripts
 Requires(postun): initscripts
 %endif
-Obsoletes: php53-fpm, php53u-fpm, php54-fpm
+Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php55-fpm
 
 %description fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
@@ -234,8 +230,8 @@ Summary: Common files for PHP
 # regex, libmagic are licensed under BSD
 License: PHP and BSD
 # ABI/API check - Arch specific
-Provides: php-api = %{apiver}%{isasuffix}, php-zend-abi = %{zendver}%{isasuffix}
-Provides: php(api) = %{apiver}%{isasuffix}, php(zend-abi) = %{zendver}%{isasuffix}
+Provides: php(api) = %{apiver}%{isasuffix}
+Provides: php(zend-abi) = %{zendver}%{isasuffix}
 Provides: php(language) = %{version}, php(language)%{?_isa} = %{version}
 # Provides for all builtin/shared modules:
 Provides: php-bz2, php-bz2%{?_isa}
@@ -247,8 +243,6 @@ Provides: php-date, php-date%{?_isa}
 Provides: php-ereg, php-ereg%{?_isa}
 Provides: php-exif, php-exif%{?_isa}
 Provides: php-fileinfo, php-fileinfo%{?_isa}
-Provides: php-pecl-Fileinfo = %{fileinfover}, php-pecl-Fileinfo%{?_isa} = %{fileinfover}
-Provides: php-pecl(Fileinfo) = %{fileinfover}, php-pecl(Fileinfo)%{?_isa} = %{fileinfover}
 Provides: php-filter, php-filter%{?_isa}
 Provides: php-ftp, php-ftp%{?_isa}
 Provides: php-gettext, php-gettext%{?_isa}
@@ -257,12 +251,8 @@ Provides: php-hash, php-hash%{?_isa}
 Provides: php-mhash = %{version}, php-mhash%{?_isa} = %{version}
 Provides: php-iconv, php-iconv%{?_isa}
 Provides: php-json, php-json%{?_isa}
-Provides: php-pecl-json = %{jsonver}, php-pecl-json%{?_isa} = %{jsonver}
-Provides: php-pecl(json) = %{jsonver}, php-pecl(json)%{?_isa} = %{jsonver}
 Provides: php-libxml, php-libxml%{?_isa}
 Provides: php-openssl, php-openssl%{?_isa}
-Provides: php-pecl-phar = %{pharver}, php-pecl-phar%{?_isa} = %{pharver}
-Provides: php-pecl(phar) = %{pharver}, php-pecl(phar)%{?_isa} = %{pharver}
 Provides: php-phar, php-phar%{?_isa}
 Provides: php-pcre, php-pcre%{?_isa}
 Provides: php-reflection, php-reflection%{?_isa}
@@ -275,15 +265,13 @@ Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
 Provides: php-tokenizer, php-tokenizer%{?_isa}
 %if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
-Provides: php-pecl-zip = %{zipver}, php-pecl-zip%{?_isa} = %{zipver}
-Provides: php-pecl(zip) = %{zipver}, php-pecl(zip)%{?_isa} = %{zipver}
 Obsoletes: php-pecl-zip
 %endif
 Provides: php-zlib, php-zlib%{?_isa}
 Obsoletes: php-openssl, php-pecl-json, php-json, php-pecl-phar, php-pecl-Fileinfo
 Obsoletes: php-mhash < 5.3.0
 Obsoletes: php53-mhash, php53u-mhash
-Obsoletes: php53-common, php53u-common, php54-common
+Obsoletes: php53-common, php53u-common, php54-common, php55-common
 
 %description common
 The php-common package contains files used by both the php
@@ -299,7 +287,7 @@ Requires: pcre-devel%{?_isa}
 Obsoletes: php-pecl-pdo-devel
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
-Obsoletes: php53-devel, php53u-devel, php54-devel
+Obsoletes: php53-devel, php53u-devel, php54-devel, php55-devel
 
 %description devel
 The php-devel package contains the files needed for building PHP
@@ -314,7 +302,7 @@ License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: mod_php3-imap, stronghold-php-imap
 BuildRequires: krb5-devel, openssl-devel, libc-client-devel
-Obsoletes: php53-imap, php53u-imap, php54-imap
+Obsoletes: php53-imap, php53u-imap, php54-imap, php55-imap
 
 %description imap
 The php-imap package contains a dynamic shared object (DSO) for the
@@ -333,7 +321,7 @@ License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: mod_php3-ldap, stronghold-php-ldap
 BuildRequires: cyrus-sasl-devel, openldap-devel, openssl-devel
-Obsoletes: php53-ldap, php53u-ldap, php54-ldap
+Obsoletes: php53-ldap, php53u-ldap, php54-ldap, php55-ldap
 
 %description ldap
 The php-ldap package is a dynamic shared object (DSO) for the Apache
@@ -354,7 +342,7 @@ Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo
 Provides: php-pdo-abi = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
-Obsoletes: php53-pdo, php53u-pdo, php54-pdo
+Obsoletes: php53-pdo, php53u-pdo, php54-pdo, php55-pdo
 
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
@@ -375,7 +363,7 @@ Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
 Obsoletes: mod_php3-mysql, stronghold-php-mysql
 BuildRequires: mysql-devel >= 4.1.0
 Conflicts: php-mysqlnd
-Obsoletes: php53-mysql, php53u-mysql, php54-mysql
+Obsoletes: php53-mysql, php53u-mysql, php54-mysql, php55-mysql
 
 %description mysql
 The php-mysql package contains a dynamic shared object that will add
@@ -396,7 +384,7 @@ Provides: php-mysql%{?_isa} = %{version}-%{release}
 Provides: php-mysqli = %{version}-%{release}
 Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
-Obsoletes: php53-mysqlnd, php53u-mysqlnd, php54-mysqlnd
+Obsoletes: php53-mysqlnd, php53u-mysqlnd, php54-mysqlnd, php55-mysqlnd
 
 %description mysqlnd
 The php-mysqlnd package contains a dynamic shared object that will add
@@ -417,7 +405,7 @@ Provides: php_database
 Provides: php-pdo_pgsql, php-pdo_pgsql%{?_isa}
 Obsoletes: mod_php3-pgsql, stronghold-php-pgsql
 BuildRequires: krb5-devel, openssl-devel, postgresql-devel
-Obsoletes: php53-pgsql, php53u-pgsql, php54-pgsql
+Obsoletes: php53-pgsql, php53u-pgsql, php54-pgsql, php55-pgsql
 
 %description pgsql
 The php-pgsql package includes a dynamic shared object (DSO) that can
@@ -438,7 +426,7 @@ Provides: php-posix, php-posix%{?_isa}
 Provides: php-sysvsem, php-sysvsem%{?_isa}
 Provides: php-sysvshm, php-sysvshm%{?_isa}
 Provides: php-sysvmsg, php-sysvmsg%{?_isa}
-Obsoletes: php53-process, php53u-process, php54-process
+Obsoletes: php53-process, php53u-process, php54-process, php55-process
 
 %description process
 The php-process package contains dynamic shared objects which add
@@ -456,7 +444,7 @@ Provides: php_database
 Provides: php-pdo_odbc, php-pdo_odbc%{?_isa}
 Obsoletes: stronghold-php-odbc
 BuildRequires: unixODBC-devel
-Obsoletes: php53-odbc, php53u-odbc, php54-odbc
+Obsoletes: php53-odbc, php53u-odbc, php54-odbc, php55-odbc
 
 %description odbc
 The php-odbc package contains a dynamic shared object that will add
@@ -474,7 +462,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libxml2-devel
-Obsoletes: php53-soap, php53u-soap, php54-soap
+Obsoletes: php53-soap, php53u-soap, php54-soap, php55-soap
 
 %description soap
 The php-soap package contains a dynamic shared object that will add
@@ -490,7 +478,7 @@ Requires: 	php-pdo%{?_isa} = %{version}-%{release}
 Provides: 	php_database
 Provides: 	php-firebird, php-firebird%{?_isa}
 Provides: 	php-pdo_firebird, php-pdo_firebird%{?_isa}
-Obsoletes:  php53-interbase, php53u-interbase, php54-interbase
+Obsoletes:  php53-interbase, php53u-interbase, php54-interbase, php55-interbase
 
 %description interbase
 The php-interbase package contains a dynamic shared object that will add
@@ -519,7 +507,7 @@ Provides:       php-pecl-oci8 = %{oci8ver}, php-pecl-oci8%{?_isa} = %{oci8ver}
 Provides:       php-pecl(oci8) = %{oci8ver}, php-pecl(oci8)%{?_isa} = %{oci8ver}
 # Should requires libclntsh.so.11.1, but it's not provided by Oracle RPM.
 AutoReq:        0
-Obsoletes:      php53-oci8, php53u-oci8, php54-oci8
+Obsoletes:      php53-oci8, php53u-oci8, php54-oci8, php55-oci8
 
 %description oci8
 The php-oci8 package contains a dynamic shared object that will add
@@ -533,7 +521,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}, net-snmp
 BuildRequires: net-snmp-devel
-Obsoletes: php53-snmp, php53u-snmp, php54-snmp
+Obsoletes: php53-snmp, php53u-snmp, php54-snmp, php55-snmp
 
 %description snmp
 The php-snmp package contains a dynamic shared object that will add
@@ -555,7 +543,7 @@ Provides: php-wddx, php-wddx%{?_isa}
 Provides: php-xmlreader, php-xmlreader%{?_isa}
 Provides: php-xmlwriter, php-xmlwriter%{?_isa}
 BuildRequires: libxslt-devel >= 1.0.18-1, libxml2-devel >= 2.4.14-1
-Obsoletes: php53-xml, php53u-xml, php54-xml
+Obsoletes: php53-xml, php53u-xml, php54-xml, php55-xml
 
 %description xml
 The php-xml package contains dynamic shared objects which add support
@@ -569,7 +557,7 @@ Group: Development/Languages
 # libXMLRPC is licensed under BSD
 License: PHP and BSD
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-xmlrpc, php53u-xmlrpc, php54-xmlrpc
+Obsoletes: php53-xmlrpc, php53u-xmlrpc, php54-xmlrpc, php55-xmlrpc
 
 %description xmlrpc
 The php-xmlrpc package contains a dynamic shared object that will add
@@ -584,7 +572,7 @@ Group: Development/Languages
 # ucgendat is licensed under OpenLDAP
 License: PHP and LGPLv2 and BSD and OpenLDAP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-mbstring, php53u-mbstring, php54-mbstring
+Obsoletes: php53-mbstring, php53u-mbstring, php54-mbstring, php55-mbstring
 
 %description mbstring
 The php-mbstring package contains a dynamic shared object that will add
@@ -600,7 +588,7 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 # Required to build the bundled GD library
 BuildRequires: libjpeg-devel, libpng-devel, freetype-devel
 BuildRequires: libXpm-devel, t1lib-devel
-Obsoletes: php53-gd, php53u-gd, php54-gd
+Obsoletes: php53-gd, php53u-gd, php54-gd, php55-gd
 
 %description gd
 The php-gd package contains a dynamic shared object that will add
@@ -613,7 +601,7 @@ Group: Development/Languages
 # libbcmath is licensed under LGPLv2+
 License: PHP and LGPLv2+
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-bcmath, php53u-bcmath, php54-bcmath
+Obsoletes: php53-bcmath, php53u-bcmath, php54-bcmath, php55-bcmath
 
 %description bcmath
 The php-bcmath package contains a dynamic shared object that will add
@@ -625,7 +613,7 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-dba, php53u-dba, php54-dba
+Obsoletes: php53-dba, php53u-dba, php54-dba, php55-dba
 
 %description dba
 The php-dba package contains a dynamic shared object that will add
@@ -638,7 +626,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libmcrypt-devel
-Obsoletes: php53-mcrypt, php53u-mcrypt, php54-mcrypt
+Obsoletes: php53-mcrypt, php53u-mcrypt, php54-mcrypt, php55-mcrypt
 
 %description mcrypt
 The php-mcrypt package contains a dynamic shared object that will add
@@ -651,7 +639,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libtidy-devel
-Obsoletes: php53-tidy, php53u-tidy, php54-tidy
+Obsoletes: php53-tidy, php53u-tidy, php54-tidy, php55-tidy
 
 %description tidy
 The php-tidy package contains a dynamic shared object that will add
@@ -665,7 +653,7 @@ License: PHP
 Requires: php-pdo%{?_isa} = %{version}-%{release}
 BuildRequires: freetds-devel
 Provides: php-pdo_dblib, php-pdo_dblib%{?_isa}
-Obsoletes: php53-mssql, php53u-mssql, php54-mssql
+Obsoletes: php53-mssql, php53u-mssql, php54-mssql, php55-mssql
 
 %description mssql
 The php-mssql package contains a dynamic shared object that will
@@ -680,7 +668,7 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 # doing a real -devel package for just the .so symlink is a bit overkill
 Provides: php-embedded-devel = %{version}-%{release}
 Provides: php-embedded-devel%{?_isa} = %{version}-%{release}
-Obsoletes: php53-embedded, php53u-embedded, php54-embedded
+Obsoletes: php53-embedded, php53u-embedded, php54-embedded, php55-embedded
 
 %description embedded
 The php-embedded package contains a library which can be embedded
@@ -693,7 +681,7 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: aspell-devel >= 0.50.0
-Obsoletes: php53-pspell, php53u-pspell, php54-pspell
+Obsoletes: php53-pspell, php53u-pspell, php54-pspell, php55-pspell
 
 %description pspell
 The php-pspell package contains a dynamic shared object that will add
@@ -706,7 +694,7 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: recode-devel
-Obsoletes: php53-recode, php53u-recode, php54-recode
+Obsoletes: php53-recode, php53u-recode, php54-recode, php55-recode
 
 %description recode
 The php-recode package contains a dynamic shared object that will add
@@ -719,7 +707,7 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libicu-devel >= 3.6
-Obsoletes: php53-intl, php53u-intl, php54-intl
+Obsoletes: php53-intl, php53u-intl, php54-intl, php55-intl
 
 %description intl
 The php-intl package contains a dynamic shared object that will add
@@ -732,7 +720,7 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: enchant-devel >= 1.2.4
-Obsoletes: php53-enchant, php53u-enchant, php54-enchant
+Obsoletes: php53-enchant, php53u-enchant, php54-enchant, php55-enchant
 
 %description enchant
 The php-intl package contains a dynamic shared object that will add
@@ -804,7 +792,7 @@ rm -f ext/sockets/tests/mcast_ipv?_recv.phpt
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
 if test "x${pver}" != "x%{version}%{?rcver}%{?snapdate:-dev}"; then
-   : Error: Upstream PHP version is now ${pver}, expecting %{version}%{?rcver}.
+   : Error: Upstream PHP version is now ${pver}, expecting %{version}%{?rcver}%{?snapdate:-dev}.
    : Update the version/rcver macros and rebuild.
    exit 1
 fi
@@ -832,34 +820,10 @@ if test "x${vpdo}" != "x%{pdover}"; then
 fi
 
 # Check for some extension version
-ver=$(sed -n '/#define PHP_FILEINFO_VERSION /{s/.* "//;s/".*$//;p}' ext/fileinfo/php_fileinfo.h)
-if test "$ver" != "%{fileinfover}"; then
-   : Error: Upstream FILEINFO version is now ${ver}, expecting %{fileinfover}.
-   : Update the fileinfover macro and rebuild.
-   exit 1
-fi
-ver=$(sed -n '/#define PHP_PHAR_VERSION /{s/.* "//;s/".*$//;p}' ext/phar/php_phar.h)
-if test "$ver" != "%{pharver}"; then
-   : Error: Upstream PHAR version is now ${ver}, expecting %{pharver}.
-   : Update the pharver macro and rebuild.
-   exit 1
-fi
-ver=$(sed -n '/#define PHP_ZIP_VERSION_STRING /{s/.* "//;s/".*$//;p}' ext/zip/php_zip.h)
-if test "$ver" != "%{zipver}"; then
-   : Error: Upstream ZIP version is now ${ver}, expecting %{zipver}.
-   : Update the zipver macro and rebuild.
-   exit 1
-fi
 ver=$(sed -n '/#define PHP_OCI8_VERSION /{s/.* "//;s/".*$//;p}' ext/oci8/php_oci8.h)
 if test "$ver" != "%{oci8ver}"; then
    : Error: Upstream OCI8 version is now ${ver}, expecting %{oci8ver}.
    : Update the oci8ver macro and rebuild.
-   exit 1
-fi
-ver=$(sed -n '/#define PHP_JSON_VERSION /{s/.* "//;s/".*$//;p}' ext/json/php_json.h)
-if test "$ver" != "%{jsonver}"; then
-   : Error: Upstream JSON version is now ${ver}, expecting %{jsonver}.
-   : Update the jsonver macro and rebuild.
    exit 1
 fi
 
@@ -1610,6 +1574,10 @@ fi
 
 
 %changelog
+* Mon Dec  3 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.3.201211301534
+- drop some old compatibility provides (php-api, php-zend-abi, php-pecl-*)
+- obsoletes php55-*
+
 * Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.2.201211301534
 - update to have zend_execute_ex for xDebug
 
