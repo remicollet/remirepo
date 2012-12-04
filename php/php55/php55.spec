@@ -258,7 +258,6 @@ Provides: php-pcre, php-pcre%{?_isa}
 Provides: php-reflection, php-reflection%{?_isa}
 Provides: php-session, php-session%{?_isa}
 Provides: php-shmop, php-shmop%{?_isa}
-Provides: php-simplexml, php-simplexml%{?_isa}
 Provides: php-sockets, php-sockets%{?_isa}
 Provides: php-spl, php-spl%{?_isa}
 Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
@@ -537,11 +536,12 @@ License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php-domxml, php-dom
 Provides: php-dom, php-dom%{?_isa}
-Provides: php-xsl, php-xsl%{?_isa}
 Provides: php-domxml, php-domxml%{?_isa}
+Provides: php-simplexml, php-simplexml%{?_isa}
 Provides: php-wddx, php-wddx%{?_isa}
 Provides: php-xmlreader, php-xmlreader%{?_isa}
 Provides: php-xmlwriter, php-xmlwriter%{?_isa}
+Provides: php-xsl, php-xsl%{?_isa}
 BuildRequires: libxslt-devel >= 1.0.18-1, libxml2-devel >= 2.4.14-1
 Obsoletes: php53-xml, php53u-xml, php54-xml, php55-xml
 
@@ -910,7 +910,6 @@ ln -sf ../configure
 %endif
 	--with-zlib \
 	--with-layout=GNU \
-	--enable-exif \
 	--enable-ftp \
 	--enable-magic-quotes \
 	--enable-sockets \
@@ -946,6 +945,7 @@ build --enable-force-cgi-redirect \
       --with-gd=shared \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
+      --enable-exif=shared \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -962,6 +962,7 @@ build --enable-force-cgi-redirect \
       --with-pdo-firebird=shared,%{_libdir}/firebird \
       --enable-dom=shared \
       --with-pgsql=shared \
+      --enable-simplexml=shared \
       --enable-xml=shared \
       --enable-wddx=shared \
       --with-snmp=shared,%{_prefix} \
@@ -1011,6 +1012,7 @@ without_shared="--without-gd \
       --without-sqlite3 --disable-phar --disable-fileinfo \
       --disable-json --without-pspell --disable-wddx \
       --without-curl --disable-posix --disable-xml \
+      --disable-simplexml --disable-exif \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1059,6 +1061,7 @@ build --enable-force-cgi-redirect \
       --with-gd=shared \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
+      --enable-exif=shared \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1076,6 +1079,7 @@ build --enable-force-cgi-redirect \
       --with-pdo-firebird=shared,%{_libdir}/firebird \
       --enable-dom=shared \
       --with-pgsql=shared \
+      --enable-simplexml=shared \
       --enable-xml=shared \
       --enable-wddx=shared \
       --with-snmp=shared,%{_prefix} \
@@ -1282,6 +1286,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
+    simplexml exif \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
@@ -1312,7 +1317,8 @@ EOF
 done
 
 # The dom, xsl and xml* modules are all packaged in php-xml
-cat files.dom files.xsl files.xml{reader,writer} files.wddx >> files.xml
+cat files.dom files.xsl files.xml{reader,writer} files.wddx \
+    files.simplexml >> files.xml
 
 # The mysql and mysqli modules are both packaged in php-mysql
 cat files.mysqli >> files.mysql
@@ -1343,7 +1349,8 @@ cat files.sqlite3 >> files.pdo
 %endif
 
 # Package json, zip, curl, phar and fileinfo in -common.
-cat files.json files.curl files.phar files.fileinfo > files.common
+cat files.json files.curl files.phar files.fileinfo \
+    files.exif > files.common
 %if %{with_zip}
 cat files.zip >> files.common
 %endif
@@ -1581,7 +1588,8 @@ fi
 
 %changelog
 * Tue Dec  4 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.4.201211301534
-- build xml extension shared (provided by php-xml)
+- build simplexml and xml extensions shared (provided by php-xml)
+- build exif extension shared (provided by php-common)
 
 * Mon Dec  3 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.3.201211301534
 - drop some old compatibility provides (php-api, php-zend-abi, php-pecl-*)
