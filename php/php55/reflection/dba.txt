@@ -1,0 +1,115 @@
+Extension [ <persistent> extension #33 dba version <no_version> ] {
+
+  - INI {
+    Entry [ dba.default_handler <ALL> ]
+      Current = 'flatfile'
+    }
+  }
+
+  - Functions {
+    Function [ <internal:dba> function dba_open ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <required> $mode ]
+        Parameter #2 [ <optional> $handlername ]
+        Parameter #3 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:dba> function dba_popen ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <required> $mode ]
+        Parameter #2 [ <optional> $handlername ]
+        Parameter #3 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:dba> function dba_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_delete ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_exists ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_fetch ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $skip ]
+        Parameter #2 [ <optional> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_insert ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $value ]
+        Parameter #2 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_replace ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $value ]
+        Parameter #2 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_firstkey ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_nextkey ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_optimize ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_sync ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:dba> function dba_handlers ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $full_info ]
+      }
+    }
+    Function [ <internal:dba> function dba_list ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:dba> function dba_key_split ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $key ]
+      }
+    }
+  }
+}
+

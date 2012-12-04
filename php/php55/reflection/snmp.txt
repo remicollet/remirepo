@@ -1,0 +1,436 @@
+Extension [ <persistent> extension #77 snmp version 0.1 ] {
+
+  - Dependencies {
+    Dependency [ spl (Required) ]
+  }
+
+  - Constants [21] {
+    Constant [ integer SNMP_OID_OUTPUT_SUFFIX ] { 1 }
+    Constant [ integer SNMP_OID_OUTPUT_MODULE ] { 2 }
+    Constant [ integer SNMP_OID_OUTPUT_FULL ] { 3 }
+    Constant [ integer SNMP_OID_OUTPUT_NUMERIC ] { 4 }
+    Constant [ integer SNMP_OID_OUTPUT_UCD ] { 5 }
+    Constant [ integer SNMP_OID_OUTPUT_NONE ] { 6 }
+    Constant [ integer SNMP_VALUE_LIBRARY ] { 0 }
+    Constant [ integer SNMP_VALUE_PLAIN ] { 1 }
+    Constant [ integer SNMP_VALUE_OBJECT ] { 2 }
+    Constant [ integer SNMP_BIT_STR ] { 3 }
+    Constant [ integer SNMP_OCTET_STR ] { 4 }
+    Constant [ integer SNMP_OPAQUE ] { 68 }
+    Constant [ integer SNMP_NULL ] { 5 }
+    Constant [ integer SNMP_OBJECT_ID ] { 6 }
+    Constant [ integer SNMP_IPADDRESS ] { 64 }
+    Constant [ integer SNMP_COUNTER ] { 66 }
+    Constant [ integer SNMP_UNSIGNED ] { 66 }
+    Constant [ integer SNMP_TIMETICKS ] { 67 }
+    Constant [ integer SNMP_UINTEGER ] { 71 }
+    Constant [ integer SNMP_INTEGER ] { 2 }
+    Constant [ integer SNMP_COUNTER64 ] { 70 }
+  }
+
+  - Functions {
+    Function [ <internal:snmp> function snmpget ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmpgetnext ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmpwalk ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmprealwalk ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmpwalkoid ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmpset ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <required> $type ]
+        Parameter #4 [ <required> $value ]
+        Parameter #5 [ <optional> $timeout ]
+        Parameter #6 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp_get_quick_print ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $d ]
+      }
+    }
+    Function [ <internal:snmp> function snmp_set_quick_print ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $quick_print ]
+      }
+    }
+    Function [ <internal:snmp> function snmp_set_enum_print ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $enum_print ]
+      }
+    }
+    Function [ <internal:snmp> function snmp_set_oid_output_format ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $oid_format ]
+      }
+    }
+    Function [ <internal:snmp> function snmp_set_oid_numeric_print ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $oid_format ]
+      }
+    }
+    Function [ <internal:snmp> function snmp2_get ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp2_getnext ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp2_walk ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp2_real_walk ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp2_set ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $community ]
+        Parameter #2 [ <required> $object_id ]
+        Parameter #3 [ <required> $type ]
+        Parameter #4 [ <required> $value ]
+        Parameter #5 [ <optional> $timeout ]
+        Parameter #6 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp3_get ] {
+
+      - Parameters [10] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $sec_name ]
+        Parameter #2 [ <required> $sec_level ]
+        Parameter #3 [ <required> $auth_protocol ]
+        Parameter #4 [ <required> $auth_passphrase ]
+        Parameter #5 [ <required> $priv_protocol ]
+        Parameter #6 [ <required> $priv_passphrase ]
+        Parameter #7 [ <required> $object_id ]
+        Parameter #8 [ <optional> $timeout ]
+        Parameter #9 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp3_getnext ] {
+
+      - Parameters [10] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $sec_name ]
+        Parameter #2 [ <required> $sec_level ]
+        Parameter #3 [ <required> $auth_protocol ]
+        Parameter #4 [ <required> $auth_passphrase ]
+        Parameter #5 [ <required> $priv_protocol ]
+        Parameter #6 [ <required> $priv_passphrase ]
+        Parameter #7 [ <required> $object_id ]
+        Parameter #8 [ <optional> $timeout ]
+        Parameter #9 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp3_walk ] {
+
+      - Parameters [10] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $sec_name ]
+        Parameter #2 [ <required> $sec_level ]
+        Parameter #3 [ <required> $auth_protocol ]
+        Parameter #4 [ <required> $auth_passphrase ]
+        Parameter #5 [ <required> $priv_protocol ]
+        Parameter #6 [ <required> $priv_passphrase ]
+        Parameter #7 [ <required> $object_id ]
+        Parameter #8 [ <optional> $timeout ]
+        Parameter #9 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp3_real_walk ] {
+
+      - Parameters [10] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $sec_name ]
+        Parameter #2 [ <required> $sec_level ]
+        Parameter #3 [ <required> $auth_protocol ]
+        Parameter #4 [ <required> $auth_passphrase ]
+        Parameter #5 [ <required> $priv_protocol ]
+        Parameter #6 [ <required> $priv_passphrase ]
+        Parameter #7 [ <required> $object_id ]
+        Parameter #8 [ <optional> $timeout ]
+        Parameter #9 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp3_set ] {
+
+      - Parameters [12] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $sec_name ]
+        Parameter #2 [ <required> $sec_level ]
+        Parameter #3 [ <required> $auth_protocol ]
+        Parameter #4 [ <required> $auth_passphrase ]
+        Parameter #5 [ <required> $priv_protocol ]
+        Parameter #6 [ <required> $priv_passphrase ]
+        Parameter #7 [ <required> $object_id ]
+        Parameter #8 [ <required> $type ]
+        Parameter #9 [ <required> $value ]
+        Parameter #10 [ <optional> $timeout ]
+        Parameter #11 [ <optional> $retries ]
+      }
+    }
+    Function [ <internal:snmp> function snmp_set_valueretrieval ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $method ]
+      }
+    }
+    Function [ <internal:snmp> function snmp_get_valueretrieval ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:snmp> function snmp_read_mib ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+  }
+
+  - Classes [2] {
+    Class [ <internal:snmp> class SNMP ] {
+
+      - Constants [12] {
+        Constant [ integer VERSION_1 ] { 0 }
+        Constant [ integer VERSION_2c ] { 1 }
+        Constant [ integer VERSION_2C ] { 1 }
+        Constant [ integer VERSION_3 ] { 3 }
+        Constant [ integer ERRNO_NOERROR ] { 0 }
+        Constant [ integer ERRNO_ANY ] { 126 }
+        Constant [ integer ERRNO_GENERIC ] { 2 }
+        Constant [ integer ERRNO_TIMEOUT ] { 4 }
+        Constant [ integer ERRNO_ERROR_IN_REPLY ] { 8 }
+        Constant [ integer ERRNO_OID_NOT_INCREASING ] { 16 }
+        Constant [ integer ERRNO_OID_PARSING_ERROR ] { 32 }
+        Constant [ integer ERRNO_MULTIPLE_SET_QUERIES ] { 64 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [9] {
+        Method [ <internal:snmp, ctor> public method __construct ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $version ]
+            Parameter #1 [ <required> $host ]
+            Parameter #2 [ <required> $community ]
+            Parameter #3 [ <optional> $timeout ]
+            Parameter #4 [ <optional> $retries ]
+          }
+        }
+
+        Method [ <internal:snmp> public method close ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:snmp> public method setSecurity ] {
+
+          - Parameters [9] {
+            Parameter #0 [ <required> $session ]
+            Parameter #1 [ <required> $sec_level ]
+            Parameter #2 [ <required> $auth_protocol ]
+            Parameter #3 [ <required> $auth_passphrase ]
+            Parameter #4 [ <required> $priv_protocol ]
+            Parameter #5 [ <required> $priv_passphrase ]
+            Parameter #6 [ <required> $contextName ]
+            Parameter #7 [ <required> $contextEngineID ]
+            Parameter #8 [ <optional> $ ]
+          }
+        }
+
+        Method [ <internal:snmp> public method get ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $object_id ]
+            Parameter #1 [ <optional> $use_orignames ]
+          }
+        }
+
+        Method [ <internal:snmp> public method getnext ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $object_id ]
+            Parameter #1 [ <optional> $use_orignames ]
+          }
+        }
+
+        Method [ <internal:snmp> public method walk ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $object_id ]
+            Parameter #1 [ <required> $suffix_keys ]
+            Parameter #2 [ <required> $max_repetitions ]
+            Parameter #3 [ <required> $non_repeaters ]
+          }
+        }
+
+        Method [ <internal:snmp> public method set ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $object_id ]
+            Parameter #1 [ <required> $type ]
+            Parameter #2 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:snmp> public method getErrno ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:snmp> public method getError ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:snmp> class SNMPException extends RuntimeException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+  }
+}
+

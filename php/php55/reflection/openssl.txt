@@ -1,0 +1,440 @@
+Extension [ <persistent> extension #5 openssl version <no_version> ] {
+
+  - Constants [46] {
+    Constant [ string OPENSSL_VERSION_TEXT ] { OpenSSL 1.0.0j-fips 10 May 2012 }
+    Constant [ integer OPENSSL_VERSION_NUMBER ] { 268435459 }
+    Constant [ integer X509_PURPOSE_SSL_CLIENT ] { 1 }
+    Constant [ integer X509_PURPOSE_SSL_SERVER ] { 2 }
+    Constant [ integer X509_PURPOSE_NS_SSL_SERVER ] { 3 }
+    Constant [ integer X509_PURPOSE_SMIME_SIGN ] { 4 }
+    Constant [ integer X509_PURPOSE_SMIME_ENCRYPT ] { 5 }
+    Constant [ integer X509_PURPOSE_CRL_SIGN ] { 6 }
+    Constant [ integer X509_PURPOSE_ANY ] { 7 }
+    Constant [ integer OPENSSL_ALGO_SHA1 ] { 1 }
+    Constant [ integer OPENSSL_ALGO_MD5 ] { 2 }
+    Constant [ integer OPENSSL_ALGO_MD4 ] { 3 }
+    Constant [ integer OPENSSL_ALGO_DSS1 ] { 5 }
+    Constant [ integer OPENSSL_ALGO_SHA224 ] { 6 }
+    Constant [ integer OPENSSL_ALGO_SHA256 ] { 7 }
+    Constant [ integer OPENSSL_ALGO_SHA384 ] { 8 }
+    Constant [ integer OPENSSL_ALGO_SHA512 ] { 9 }
+    Constant [ integer OPENSSL_ALGO_RMD160 ] { 10 }
+    Constant [ integer PKCS7_DETACHED ] { 64 }
+    Constant [ integer PKCS7_TEXT ] { 1 }
+    Constant [ integer PKCS7_NOINTERN ] { 16 }
+    Constant [ integer PKCS7_NOVERIFY ] { 32 }
+    Constant [ integer PKCS7_NOCHAIN ] { 8 }
+    Constant [ integer PKCS7_NOCERTS ] { 2 }
+    Constant [ integer PKCS7_NOATTR ] { 256 }
+    Constant [ integer PKCS7_BINARY ] { 128 }
+    Constant [ integer PKCS7_NOSIGS ] { 4 }
+    Constant [ integer OPENSSL_PKCS1_PADDING ] { 1 }
+    Constant [ integer OPENSSL_SSLV23_PADDING ] { 2 }
+    Constant [ integer OPENSSL_NO_PADDING ] { 3 }
+    Constant [ integer OPENSSL_PKCS1_OAEP_PADDING ] { 4 }
+    Constant [ integer OPENSSL_CIPHER_RC2_40 ] { 0 }
+    Constant [ integer OPENSSL_CIPHER_RC2_128 ] { 1 }
+    Constant [ integer OPENSSL_CIPHER_RC2_64 ] { 2 }
+    Constant [ integer OPENSSL_CIPHER_DES ] { 3 }
+    Constant [ integer OPENSSL_CIPHER_3DES ] { 4 }
+    Constant [ integer OPENSSL_CIPHER_AES_128_CBC ] { 5 }
+    Constant [ integer OPENSSL_CIPHER_AES_192_CBC ] { 6 }
+    Constant [ integer OPENSSL_CIPHER_AES_256_CBC ] { 7 }
+    Constant [ integer OPENSSL_KEYTYPE_RSA ] { 0 }
+    Constant [ integer OPENSSL_KEYTYPE_DSA ] { 1 }
+    Constant [ integer OPENSSL_KEYTYPE_DH ] { 2 }
+    Constant [ integer OPENSSL_KEYTYPE_EC ] { 3 }
+    Constant [ integer OPENSSL_RAW_DATA ] { 1 }
+    Constant [ integer OPENSSL_ZERO_PADDING ] { 2 }
+    Constant [ integer OPENSSL_TLSEXT_SERVER_NAME ] { 1 }
+  }
+
+  - Functions {
+    Function [ <internal:openssl> function openssl_pkey_free ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $key ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkey_new ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $configargs ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkey_export ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> &$out ]
+        Parameter #2 [ <optional> $passphrase ]
+        Parameter #3 [ <optional> $config_args ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkey_export_to_file ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $outfilename ]
+        Parameter #2 [ <optional> $passphrase ]
+        Parameter #3 [ <optional> $config_args ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkey_get_private ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <optional> $passphrase ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkey_get_public ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $cert ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkey_get_details ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $key ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_free_key ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $key ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_get_privatekey ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <optional> $passphrase ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_get_publickey ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $cert ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_x509_read ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $cert ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_x509_free ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $x509 ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_x509_parse ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $x509 ]
+        Parameter #1 [ <required> $shortname ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_x509_checkpurpose ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $x509cert ]
+        Parameter #1 [ <required> $purpose ]
+        Parameter #2 [ <required> $cainfo ]
+        Parameter #3 [ <optional> $untrustedfile ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_x509_check_private_key ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $cert ]
+        Parameter #1 [ <required> $key ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_x509_export ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $x509 ]
+        Parameter #1 [ <required> &$out ]
+        Parameter #2 [ <optional> $notext ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_x509_export_to_file ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $x509 ]
+        Parameter #1 [ <required> $outfilename ]
+        Parameter #2 [ <optional> $notext ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkcs12_export ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $x509 ]
+        Parameter #1 [ <required> &$out ]
+        Parameter #2 [ <required> $priv_key ]
+        Parameter #3 [ <required> $pass ]
+        Parameter #4 [ <required> $args ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkcs12_export_to_file ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $x509 ]
+        Parameter #1 [ <required> $filename ]
+        Parameter #2 [ <required> $priv_key ]
+        Parameter #3 [ <required> $pass ]
+        Parameter #4 [ <optional> $args ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkcs12_read ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $PKCS12 ]
+        Parameter #1 [ <required> &$certs ]
+        Parameter #2 [ <required> $pass ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_csr_new ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $dn ]
+        Parameter #1 [ <required> &$privkey ]
+        Parameter #2 [ <optional> $configargs ]
+        Parameter #3 [ <optional> $extraattribs ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_csr_export ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $csr ]
+        Parameter #1 [ <required> &$out ]
+        Parameter #2 [ <optional> $notext ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_csr_export_to_file ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $csr ]
+        Parameter #1 [ <required> $outfilename ]
+        Parameter #2 [ <optional> $notext ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_csr_sign ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $csr ]
+        Parameter #1 [ <required> $x509 ]
+        Parameter #2 [ <required> $priv_key ]
+        Parameter #3 [ <required> $days ]
+        Parameter #4 [ <optional> $config_args ]
+        Parameter #5 [ <optional> $serial ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_csr_get_subject ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $csr ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_csr_get_public_key ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $csr ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_digest ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> $method ]
+        Parameter #2 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_encrypt ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> $method ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $iv ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_decrypt ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> $method ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $iv ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_cipher_iv_length ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $method ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_sign ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> &$signature ]
+        Parameter #2 [ <required> $key ]
+        Parameter #3 [ <optional> $method ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_verify ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> $signature ]
+        Parameter #2 [ <required> $key ]
+        Parameter #3 [ <optional> $method ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_seal ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> &$sealdata ]
+        Parameter #2 [ <required> &$ekeys ]
+        Parameter #3 [ <required> $pubkeys ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_open ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> &$opendata ]
+        Parameter #2 [ <required> $ekey ]
+        Parameter #3 [ <required> $privkey ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pbkdf2 ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $password ]
+        Parameter #1 [ <required> $salt ]
+        Parameter #2 [ <required> $key_length ]
+        Parameter #3 [ <required> $iterations ]
+        Parameter #4 [ <optional> $digest_algorithm ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkcs7_verify ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $flags ]
+        Parameter #2 [ <optional> $signerscerts ]
+        Parameter #3 [ <optional> $cainfo ]
+        Parameter #4 [ <optional> $extracerts ]
+        Parameter #5 [ <optional> $content ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkcs7_decrypt ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $infilename ]
+        Parameter #1 [ <required> $outfilename ]
+        Parameter #2 [ <required> $recipcert ]
+        Parameter #3 [ <optional> $recipkey ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkcs7_sign ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $infile ]
+        Parameter #1 [ <required> $outfile ]
+        Parameter #2 [ <required> $signcert ]
+        Parameter #3 [ <required> $signkey ]
+        Parameter #4 [ <required> $headers ]
+        Parameter #5 [ <optional> $flags ]
+        Parameter #6 [ <optional> $extracertsfilename ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_pkcs7_encrypt ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $infile ]
+        Parameter #1 [ <required> $outfile ]
+        Parameter #2 [ <required> $recipcerts ]
+        Parameter #3 [ <required> $headers ]
+        Parameter #4 [ <optional> $flags ]
+        Parameter #5 [ <optional> $cipher ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_private_encrypt ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> &$crypted ]
+        Parameter #2 [ <required> $key ]
+        Parameter #3 [ <optional> $padding ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_private_decrypt ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> &$crypted ]
+        Parameter #2 [ <required> $key ]
+        Parameter #3 [ <optional> $padding ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_public_encrypt ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> &$crypted ]
+        Parameter #2 [ <required> $key ]
+        Parameter #3 [ <optional> $padding ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_public_decrypt ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> &$crypted ]
+        Parameter #2 [ <required> $key ]
+        Parameter #3 [ <optional> $padding ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_get_md_methods ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $aliases ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_get_cipher_methods ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $aliases ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_dh_compute_key ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pub_key ]
+        Parameter #1 [ <required> $dh_key ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_random_pseudo_bytes ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $length ]
+        Parameter #1 [ <optional> &$result_is_strong ]
+      }
+    }
+    Function [ <internal:openssl> function openssl_error_string ] {
+
+      - Parameters [0] {
+      }
+    }
+  }
+}
+

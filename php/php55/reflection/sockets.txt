@@ -1,0 +1,379 @@
+Extension [ <persistent> extension #25 sockets version <no_version> ] {
+
+  - Constants [152] {
+    Constant [ integer AF_UNIX ] { 1 }
+    Constant [ integer AF_INET ] { 2 }
+    Constant [ integer AF_INET6 ] { 10 }
+    Constant [ integer SOCK_STREAM ] { 1 }
+    Constant [ integer SOCK_DGRAM ] { 2 }
+    Constant [ integer SOCK_RAW ] { 3 }
+    Constant [ integer SOCK_SEQPACKET ] { 5 }
+    Constant [ integer SOCK_RDM ] { 4 }
+    Constant [ integer MSG_OOB ] { 1 }
+    Constant [ integer MSG_WAITALL ] { 256 }
+    Constant [ integer MSG_DONTWAIT ] { 64 }
+    Constant [ integer MSG_PEEK ] { 2 }
+    Constant [ integer MSG_DONTROUTE ] { 4 }
+    Constant [ integer MSG_EOR ] { 128 }
+    Constant [ integer MSG_EOF ] { 512 }
+    Constant [ integer SO_DEBUG ] { 1 }
+    Constant [ integer SO_REUSEADDR ] { 2 }
+    Constant [ integer SO_KEEPALIVE ] { 9 }
+    Constant [ integer SO_DONTROUTE ] { 5 }
+    Constant [ integer SO_LINGER ] { 13 }
+    Constant [ integer SO_BROADCAST ] { 6 }
+    Constant [ integer SO_OOBINLINE ] { 10 }
+    Constant [ integer SO_SNDBUF ] { 7 }
+    Constant [ integer SO_RCVBUF ] { 8 }
+    Constant [ integer SO_SNDLOWAT ] { 19 }
+    Constant [ integer SO_RCVLOWAT ] { 18 }
+    Constant [ integer SO_SNDTIMEO ] { 21 }
+    Constant [ integer SO_RCVTIMEO ] { 20 }
+    Constant [ integer SO_TYPE ] { 3 }
+    Constant [ integer SO_ERROR ] { 4 }
+    Constant [ integer SOL_SOCKET ] { 1 }
+    Constant [ integer SOMAXCONN ] { 128 }
+    Constant [ integer TCP_NODELAY ] { 1 }
+    Constant [ integer PHP_NORMAL_READ ] { 1 }
+    Constant [ integer PHP_BINARY_READ ] { 2 }
+    Constant [ integer MCAST_JOIN_GROUP ] { 42 }
+    Constant [ integer MCAST_LEAVE_GROUP ] { 45 }
+    Constant [ integer MCAST_BLOCK_SOURCE ] { 43 }
+    Constant [ integer MCAST_UNBLOCK_SOURCE ] { 44 }
+    Constant [ integer MCAST_JOIN_SOURCE_GROUP ] { 46 }
+    Constant [ integer MCAST_LEAVE_SOURCE_GROUP ] { 47 }
+    Constant [ integer IP_MULTICAST_IF ] { 32 }
+    Constant [ integer IP_MULTICAST_TTL ] { 33 }
+    Constant [ integer IP_MULTICAST_LOOP ] { 34 }
+    Constant [ integer IPV6_MULTICAST_IF ] { 17 }
+    Constant [ integer IPV6_MULTICAST_HOPS ] { 18 }
+    Constant [ integer IPV6_MULTICAST_LOOP ] { 19 }
+    Constant [ integer SOCKET_EPERM ] { 1 }
+    Constant [ integer SOCKET_ENOENT ] { 2 }
+    Constant [ integer SOCKET_EINTR ] { 4 }
+    Constant [ integer SOCKET_EIO ] { 5 }
+    Constant [ integer SOCKET_ENXIO ] { 6 }
+    Constant [ integer SOCKET_E2BIG ] { 7 }
+    Constant [ integer SOCKET_EBADF ] { 9 }
+    Constant [ integer SOCKET_EAGAIN ] { 11 }
+    Constant [ integer SOCKET_ENOMEM ] { 12 }
+    Constant [ integer SOCKET_EACCES ] { 13 }
+    Constant [ integer SOCKET_EFAULT ] { 14 }
+    Constant [ integer SOCKET_ENOTBLK ] { 15 }
+    Constant [ integer SOCKET_EBUSY ] { 16 }
+    Constant [ integer SOCKET_EEXIST ] { 17 }
+    Constant [ integer SOCKET_EXDEV ] { 18 }
+    Constant [ integer SOCKET_ENODEV ] { 19 }
+    Constant [ integer SOCKET_ENOTDIR ] { 20 }
+    Constant [ integer SOCKET_EISDIR ] { 21 }
+    Constant [ integer SOCKET_EINVAL ] { 22 }
+    Constant [ integer SOCKET_ENFILE ] { 23 }
+    Constant [ integer SOCKET_EMFILE ] { 24 }
+    Constant [ integer SOCKET_ENOTTY ] { 25 }
+    Constant [ integer SOCKET_ENOSPC ] { 28 }
+    Constant [ integer SOCKET_ESPIPE ] { 29 }
+    Constant [ integer SOCKET_EROFS ] { 30 }
+    Constant [ integer SOCKET_EMLINK ] { 31 }
+    Constant [ integer SOCKET_EPIPE ] { 32 }
+    Constant [ integer SOCKET_ENAMETOOLONG ] { 36 }
+    Constant [ integer SOCKET_ENOLCK ] { 37 }
+    Constant [ integer SOCKET_ENOSYS ] { 38 }
+    Constant [ integer SOCKET_ENOTEMPTY ] { 39 }
+    Constant [ integer SOCKET_ELOOP ] { 40 }
+    Constant [ integer SOCKET_EWOULDBLOCK ] { 11 }
+    Constant [ integer SOCKET_ENOMSG ] { 42 }
+    Constant [ integer SOCKET_EIDRM ] { 43 }
+    Constant [ integer SOCKET_ECHRNG ] { 44 }
+    Constant [ integer SOCKET_EL2NSYNC ] { 45 }
+    Constant [ integer SOCKET_EL3HLT ] { 46 }
+    Constant [ integer SOCKET_EL3RST ] { 47 }
+    Constant [ integer SOCKET_ELNRNG ] { 48 }
+    Constant [ integer SOCKET_EUNATCH ] { 49 }
+    Constant [ integer SOCKET_ENOCSI ] { 50 }
+    Constant [ integer SOCKET_EL2HLT ] { 51 }
+    Constant [ integer SOCKET_EBADE ] { 52 }
+    Constant [ integer SOCKET_EBADR ] { 53 }
+    Constant [ integer SOCKET_EXFULL ] { 54 }
+    Constant [ integer SOCKET_ENOANO ] { 55 }
+    Constant [ integer SOCKET_EBADRQC ] { 56 }
+    Constant [ integer SOCKET_EBADSLT ] { 57 }
+    Constant [ integer SOCKET_ENOSTR ] { 60 }
+    Constant [ integer SOCKET_ENODATA ] { 61 }
+    Constant [ integer SOCKET_ETIME ] { 62 }
+    Constant [ integer SOCKET_ENOSR ] { 63 }
+    Constant [ integer SOCKET_ENONET ] { 64 }
+    Constant [ integer SOCKET_EREMOTE ] { 66 }
+    Constant [ integer SOCKET_ENOLINK ] { 67 }
+    Constant [ integer SOCKET_EADV ] { 68 }
+    Constant [ integer SOCKET_ESRMNT ] { 69 }
+    Constant [ integer SOCKET_ECOMM ] { 70 }
+    Constant [ integer SOCKET_EPROTO ] { 71 }
+    Constant [ integer SOCKET_EMULTIHOP ] { 72 }
+    Constant [ integer SOCKET_EBADMSG ] { 74 }
+    Constant [ integer SOCKET_ENOTUNIQ ] { 76 }
+    Constant [ integer SOCKET_EBADFD ] { 77 }
+    Constant [ integer SOCKET_EREMCHG ] { 78 }
+    Constant [ integer SOCKET_ERESTART ] { 85 }
+    Constant [ integer SOCKET_ESTRPIPE ] { 86 }
+    Constant [ integer SOCKET_EUSERS ] { 87 }
+    Constant [ integer SOCKET_ENOTSOCK ] { 88 }
+    Constant [ integer SOCKET_EDESTADDRREQ ] { 89 }
+    Constant [ integer SOCKET_EMSGSIZE ] { 90 }
+    Constant [ integer SOCKET_EPROTOTYPE ] { 91 }
+    Constant [ integer SOCKET_ENOPROTOOPT ] { 92 }
+    Constant [ integer SOCKET_EPROTONOSUPPORT ] { 93 }
+    Constant [ integer SOCKET_ESOCKTNOSUPPORT ] { 94 }
+    Constant [ integer SOCKET_EOPNOTSUPP ] { 95 }
+    Constant [ integer SOCKET_EPFNOSUPPORT ] { 96 }
+    Constant [ integer SOCKET_EAFNOSUPPORT ] { 97 }
+    Constant [ integer SOCKET_EADDRINUSE ] { 98 }
+    Constant [ integer SOCKET_EADDRNOTAVAIL ] { 99 }
+    Constant [ integer SOCKET_ENETDOWN ] { 100 }
+    Constant [ integer SOCKET_ENETUNREACH ] { 101 }
+    Constant [ integer SOCKET_ENETRESET ] { 102 }
+    Constant [ integer SOCKET_ECONNABORTED ] { 103 }
+    Constant [ integer SOCKET_ECONNRESET ] { 104 }
+    Constant [ integer SOCKET_ENOBUFS ] { 105 }
+    Constant [ integer SOCKET_EISCONN ] { 106 }
+    Constant [ integer SOCKET_ENOTCONN ] { 107 }
+    Constant [ integer SOCKET_ESHUTDOWN ] { 108 }
+    Constant [ integer SOCKET_ETOOMANYREFS ] { 109 }
+    Constant [ integer SOCKET_ETIMEDOUT ] { 110 }
+    Constant [ integer SOCKET_ECONNREFUSED ] { 111 }
+    Constant [ integer SOCKET_EHOSTDOWN ] { 112 }
+    Constant [ integer SOCKET_EHOSTUNREACH ] { 113 }
+    Constant [ integer SOCKET_EALREADY ] { 114 }
+    Constant [ integer SOCKET_EINPROGRESS ] { 115 }
+    Constant [ integer SOCKET_EISNAM ] { 120 }
+    Constant [ integer SOCKET_EREMOTEIO ] { 121 }
+    Constant [ integer SOCKET_EDQUOT ] { 122 }
+    Constant [ integer SOCKET_ENOMEDIUM ] { 123 }
+    Constant [ integer SOCKET_EMEDIUMTYPE ] { 124 }
+    Constant [ integer IPPROTO_IP ] { 0 }
+    Constant [ integer IPPROTO_IPV6 ] { 41 }
+    Constant [ integer SOL_TCP ] { 6 }
+    Constant [ integer SOL_UDP ] { 17 }
+  }
+
+  - Functions {
+    Function [ <internal:sockets> function socket_select ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> &$read_fds ]
+        Parameter #1 [ <required> &$write_fds ]
+        Parameter #2 [ <required> &$except_fds ]
+        Parameter #3 [ <required> $tv_sec ]
+        Parameter #4 [ <optional> $tv_usec ]
+      }
+    }
+    Function [ <internal:sockets> function socket_create ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $domain ]
+        Parameter #1 [ <required> $type ]
+        Parameter #2 [ <required> $protocol ]
+      }
+    }
+    Function [ <internal:sockets> function socket_create_listen ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $port ]
+        Parameter #1 [ <optional> $backlog ]
+      }
+    }
+    Function [ <internal:sockets> function socket_create_pair ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $domain ]
+        Parameter #1 [ <required> $type ]
+        Parameter #2 [ <required> $protocol ]
+        Parameter #3 [ <required> &$fd ]
+      }
+    }
+    Function [ <internal:sockets> function socket_accept ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $socket ]
+      }
+    }
+    Function [ <internal:sockets> function socket_set_nonblock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $socket ]
+      }
+    }
+    Function [ <internal:sockets> function socket_set_block ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $socket ]
+      }
+    }
+    Function [ <internal:sockets> function socket_listen ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <optional> $backlog ]
+      }
+    }
+    Function [ <internal:sockets> function socket_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $socket ]
+      }
+    }
+    Function [ <internal:sockets> function socket_write ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $buf ]
+        Parameter #2 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:sockets> function socket_read ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $length ]
+        Parameter #2 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:sockets> function socket_getsockname ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> &$addr ]
+        Parameter #2 [ <optional> &$port ]
+      }
+    }
+    Function [ <internal:sockets> function socket_getpeername ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> &$addr ]
+        Parameter #2 [ <optional> &$port ]
+      }
+    }
+    Function [ <internal:sockets> function socket_connect ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $addr ]
+        Parameter #2 [ <optional> $port ]
+      }
+    }
+    Function [ <internal:sockets> function socket_strerror ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $errno ]
+      }
+    }
+    Function [ <internal:sockets> function socket_bind ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $addr ]
+        Parameter #2 [ <optional> $port ]
+      }
+    }
+    Function [ <internal:sockets> function socket_recv ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> &$buf ]
+        Parameter #2 [ <required> $len ]
+        Parameter #3 [ <required> $flags ]
+      }
+    }
+    Function [ <internal:sockets> function socket_send ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $buf ]
+        Parameter #2 [ <required> $len ]
+        Parameter #3 [ <required> $flags ]
+      }
+    }
+    Function [ <internal:sockets> function socket_recvfrom ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> &$buf ]
+        Parameter #2 [ <required> $len ]
+        Parameter #3 [ <required> $flags ]
+        Parameter #4 [ <required> &$name ]
+        Parameter #5 [ <optional> &$port ]
+      }
+    }
+    Function [ <internal:sockets> function socket_sendto ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $buf ]
+        Parameter #2 [ <required> $len ]
+        Parameter #3 [ <required> $flags ]
+        Parameter #4 [ <required> $addr ]
+        Parameter #5 [ <optional> $port ]
+      }
+    }
+    Function [ <internal:sockets> function socket_get_option ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $level ]
+        Parameter #2 [ <required> $optname ]
+      }
+    }
+    Function [ <internal:sockets> function socket_set_option ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $level ]
+        Parameter #2 [ <required> $optname ]
+        Parameter #3 [ <required> $optval ]
+      }
+    }
+    Function [ <internal:sockets> function socket_shutdown ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <optional> $how ]
+      }
+    }
+    Function [ <internal:sockets> function socket_last_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $socket ]
+      }
+    }
+    Function [ <internal:sockets> function socket_clear_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $socket ]
+      }
+    }
+    Function [ <internal:sockets> function socket_import_stream ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream ]
+      }
+    }
+    Function [ <internal:sockets> function socket_getopt ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $level ]
+        Parameter #2 [ <required> $optname ]
+      }
+    }
+    Function [ <internal:sockets> function socket_setopt ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $level ]
+        Parameter #2 [ <required> $optname ]
+        Parameter #3 [ <required> $optval ]
+      }
+    }
+  }
+}
+

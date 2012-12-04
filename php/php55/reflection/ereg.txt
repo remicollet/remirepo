@@ -1,0 +1,60 @@
+Extension [ <persistent> extension #3 ereg version <no_version> ] {
+
+  - Functions {
+    Function [ <internal, deprecated:ereg> function ereg ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> &$registers ]
+      }
+    }
+    Function [ <internal, deprecated:ereg> function ereg_replace ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $replacement ]
+        Parameter #2 [ <required> $string ]
+      }
+    }
+    Function [ <internal, deprecated:ereg> function eregi ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> &$registers ]
+      }
+    }
+    Function [ <internal, deprecated:ereg> function eregi_replace ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $replacement ]
+        Parameter #2 [ <required> $string ]
+      }
+    }
+    Function [ <internal, deprecated:ereg> function split ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> $limit ]
+      }
+    }
+    Function [ <internal, deprecated:ereg> function spliti ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> $limit ]
+      }
+    }
+    Function [ <internal, deprecated:ereg> function sql_regcase ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $string ]
+      }
+    }
+  }
+}
+

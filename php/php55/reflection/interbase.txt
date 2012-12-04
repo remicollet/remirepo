@@ -1,0 +1,826 @@
+Extension [ <persistent> extension #44 interbase version <no_version> ] {
+
+  - INI {
+    Entry [ ibase.allow_persistent <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ ibase.max_persistent <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ ibase.max_links <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ ibase.default_db <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ ibase.default_user <ALL> ]
+      Current = ''
+    }
+    Entry [ ibase.default_password <ALL> ]
+      Current = ''
+    }
+    Entry [ ibase.default_charset <ALL> ]
+      Current = ''
+    }
+    Entry [ ibase.timestampformat <ALL> ]
+      Current = '%Y-%m-%d %H:%M:%S'
+    }
+    Entry [ ibase.dateformat <ALL> ]
+      Current = '%Y-%m-%d'
+    }
+    Entry [ ibase.timeformat <ALL> ]
+      Current = '%H:%M:%S'
+    }
+  }
+
+  - Constants [66] {
+    Constant [ integer IBASE_DEFAULT ] { 0 }
+    Constant [ integer IBASE_CREATE ] { 0 }
+    Constant [ integer IBASE_TEXT ] { 1 }
+    Constant [ integer IBASE_FETCH_BLOBS ] { 1 }
+    Constant [ integer IBASE_FETCH_ARRAYS ] { 2 }
+    Constant [ integer IBASE_UNIXTIME ] { 4 }
+    Constant [ integer IBASE_WRITE ] { 1 }
+    Constant [ integer IBASE_READ ] { 2 }
+    Constant [ integer IBASE_COMMITTED ] { 8 }
+    Constant [ integer IBASE_CONSISTENCY ] { 16 }
+    Constant [ integer IBASE_CONCURRENCY ] { 4 }
+    Constant [ integer IBASE_REC_VERSION ] { 64 }
+    Constant [ integer IBASE_REC_NO_VERSION ] { 32 }
+    Constant [ integer IBASE_NOWAIT ] { 256 }
+    Constant [ integer IBASE_WAIT ] { 128 }
+    Constant [ integer IBASE_BKP_IGNORE_CHECKSUMS ] { 1 }
+    Constant [ integer IBASE_BKP_IGNORE_LIMBO ] { 2 }
+    Constant [ integer IBASE_BKP_METADATA_ONLY ] { 4 }
+    Constant [ integer IBASE_BKP_NO_GARBAGE_COLLECT ] { 8 }
+    Constant [ integer IBASE_BKP_OLD_DESCRIPTIONS ] { 16 }
+    Constant [ integer IBASE_BKP_NON_TRANSPORTABLE ] { 32 }
+    Constant [ integer IBASE_BKP_CONVERT ] { 64 }
+    Constant [ integer IBASE_RES_DEACTIVATE_IDX ] { 256 }
+    Constant [ integer IBASE_RES_NO_SHADOW ] { 512 }
+    Constant [ integer IBASE_RES_NO_VALIDITY ] { 1024 }
+    Constant [ integer IBASE_RES_ONE_AT_A_TIME ] { 2048 }
+    Constant [ integer IBASE_RES_REPLACE ] { 4096 }
+    Constant [ integer IBASE_RES_CREATE ] { 8192 }
+    Constant [ integer IBASE_RES_USE_ALL_SPACE ] { 16384 }
+    Constant [ integer IBASE_PRP_PAGE_BUFFERS ] { 5 }
+    Constant [ integer IBASE_PRP_SWEEP_INTERVAL ] { 6 }
+    Constant [ integer IBASE_PRP_SHUTDOWN_DB ] { 7 }
+    Constant [ integer IBASE_PRP_DENY_NEW_TRANSACTIONS ] { 10 }
+    Constant [ integer IBASE_PRP_DENY_NEW_ATTACHMENTS ] { 9 }
+    Constant [ integer IBASE_PRP_RESERVE_SPACE ] { 11 }
+    Constant [ integer IBASE_PRP_RES_USE_FULL ] { 35 }
+    Constant [ integer IBASE_PRP_RES ] { 36 }
+    Constant [ integer IBASE_PRP_WRITE_MODE ] { 12 }
+    Constant [ integer IBASE_PRP_WM_ASYNC ] { 37 }
+    Constant [ integer IBASE_PRP_WM_SYNC ] { 38 }
+    Constant [ integer IBASE_PRP_ACCESS_MODE ] { 13 }
+    Constant [ integer IBASE_PRP_AM_READONLY ] { 39 }
+    Constant [ integer IBASE_PRP_AM_READWRITE ] { 40 }
+    Constant [ integer IBASE_PRP_SET_SQL_DIALECT ] { 14 }
+    Constant [ integer IBASE_PRP_ACTIVATE ] { 256 }
+    Constant [ integer IBASE_PRP_DB_ONLINE ] { 512 }
+    Constant [ integer IBASE_RPR_CHECK_DB ] { 16 }
+    Constant [ integer IBASE_RPR_IGNORE_CHECKSUM ] { 32 }
+    Constant [ integer IBASE_RPR_KILL_SHADOWS ] { 64 }
+    Constant [ integer IBASE_RPR_MEND_DB ] { 4 }
+    Constant [ integer IBASE_RPR_VALIDATE_DB ] { 1 }
+    Constant [ integer IBASE_RPR_FULL ] { 128 }
+    Constant [ integer IBASE_RPR_SWEEP_DB ] { 2 }
+    Constant [ integer IBASE_STS_DATA_PAGES ] { 1 }
+    Constant [ integer IBASE_STS_DB_LOG ] { 2 }
+    Constant [ integer IBASE_STS_HDR_PAGES ] { 4 }
+    Constant [ integer IBASE_STS_IDX_PAGES ] { 8 }
+    Constant [ integer IBASE_STS_SYS_RELATIONS ] { 16 }
+    Constant [ integer IBASE_SVC_SERVER_VERSION ] { 55 }
+    Constant [ integer IBASE_SVC_IMPLEMENTATION ] { 56 }
+    Constant [ integer IBASE_SVC_GET_ENV ] { 59 }
+    Constant [ integer IBASE_SVC_GET_ENV_LOCK ] { 60 }
+    Constant [ integer IBASE_SVC_GET_ENV_MSG ] { 61 }
+    Constant [ integer IBASE_SVC_USER_DBPATH ] { 58 }
+    Constant [ integer IBASE_SVC_SVR_DB_INFO ] { 50 }
+    Constant [ integer IBASE_SVC_GET_USERS ] { 68 }
+  }
+
+  - Functions {
+    Function [ <internal:interbase> function ibase_connect ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $database ]
+        Parameter #1 [ <optional> $username ]
+        Parameter #2 [ <optional> $password ]
+        Parameter #3 [ <optional> $charset ]
+        Parameter #4 [ <optional> $buffers ]
+        Parameter #5 [ <optional> $dialect ]
+        Parameter #6 [ <optional> $role ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_pconnect ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $database ]
+        Parameter #1 [ <optional> $username ]
+        Parameter #2 [ <optional> $password ]
+        Parameter #3 [ <optional> $charset ]
+        Parameter #4 [ <optional> $buffers ]
+        Parameter #5 [ <optional> $dialect ]
+        Parameter #6 [ <optional> $role ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_drop_db ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_query ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $link_identifier ]
+        Parameter #2 [ <optional> $query ]
+        Parameter #3 [ <optional> $bind_arg ]
+        Parameter #4 [ <optional> $bind_arg ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_fetch_row ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $fetch_flags ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_fetch_assoc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $fetch_flags ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_fetch_object ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $fetch_flags ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_free_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_name_result ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $name ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_prepare ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $query ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_execute ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $query ]
+        Parameter #1 [ <optional> $bind_arg ]
+        Parameter #2 [ <optional> $bind_arg ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_free_query ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $query ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_gen_id ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $generator ]
+        Parameter #1 [ <optional> $increment ]
+        Parameter #2 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_num_fields ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $query_result ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_num_params ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $query ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_affected_rows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_field_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $query_result ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_param_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $query ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_trans ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <optional> $trans_args ]
+        Parameter #1 [ <optional> $link_identifier ]
+        Parameter #2 [ <optional> $trans_args ]
+        Parameter #3 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_commit ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_rollback ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_commit_ret ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_rollback_ret ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_blob_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $blob_id ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_blob_create ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_blob_add ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $blob_handle ]
+        Parameter #1 [ <required> $data ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_blob_cancel ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $blob_handle ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_blob_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $blob_handle ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_blob_open ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $blob_id ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_blob_get ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $blob_handle ]
+        Parameter #1 [ <required> $len ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_blob_echo ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $blob_id ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_blob_import ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $file ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_errmsg ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:interbase> function ibase_errcode ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:interbase> function ibase_add_user ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $user_name ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $first_name ]
+        Parameter #4 [ <optional> $middle_name ]
+        Parameter #5 [ <optional> $last_name ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_modify_user ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $user_name ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $first_name ]
+        Parameter #4 [ <optional> $middle_name ]
+        Parameter #5 [ <optional> $last_name ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_delete_user ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $user_name ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $first_name ]
+        Parameter #4 [ <optional> $middle_name ]
+        Parameter #5 [ <optional> $last_name ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_service_attach ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $dba_username ]
+        Parameter #2 [ <required> $dba_password ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_service_detach ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $service_handle ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_backup ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $source_db ]
+        Parameter #2 [ <required> $dest_file ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $verbose ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_restore ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $source_file ]
+        Parameter #2 [ <required> $dest_db ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $verbose ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_maintain_db ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $db ]
+        Parameter #2 [ <required> $action ]
+        Parameter #3 [ <optional> $argument ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_db_info ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $db ]
+        Parameter #2 [ <required> $action ]
+        Parameter #3 [ <optional> $argument ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_server_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $action ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_wait_event ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <optional> $event ]
+        Parameter #2 [ <optional> $event2 ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_set_event_handler ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $handler ]
+        Parameter #2 [ <optional> $event ]
+        Parameter #3 [ <optional> $event2 ]
+      }
+    }
+    Function [ <internal:interbase> function ibase_free_event_handler ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $event ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_connect ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $database ]
+        Parameter #1 [ <optional> $username ]
+        Parameter #2 [ <optional> $password ]
+        Parameter #3 [ <optional> $charset ]
+        Parameter #4 [ <optional> $buffers ]
+        Parameter #5 [ <optional> $dialect ]
+        Parameter #6 [ <optional> $role ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_pconnect ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $database ]
+        Parameter #1 [ <optional> $username ]
+        Parameter #2 [ <optional> $password ]
+        Parameter #3 [ <optional> $charset ]
+        Parameter #4 [ <optional> $buffers ]
+        Parameter #5 [ <optional> $dialect ]
+        Parameter #6 [ <optional> $role ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_drop_db ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_query ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $link_identifier ]
+        Parameter #2 [ <optional> $query ]
+        Parameter #3 [ <optional> $bind_arg ]
+        Parameter #4 [ <optional> $bind_arg ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_fetch_row ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $fetch_flags ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_fetch_assoc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $fetch_flags ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_fetch_object ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $fetch_flags ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_free_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_name_result ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $name ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_prepare ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $query ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_execute ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $query ]
+        Parameter #1 [ <optional> $bind_arg ]
+        Parameter #2 [ <optional> $bind_arg ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_free_query ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $query ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_gen_id ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $generator ]
+        Parameter #1 [ <optional> $increment ]
+        Parameter #2 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_num_fields ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $query_result ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_num_params ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $query ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_affected_rows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_field_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $query_result ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_param_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $query ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_trans ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <optional> $trans_args ]
+        Parameter #1 [ <optional> $link_identifier ]
+        Parameter #2 [ <optional> $trans_args ]
+        Parameter #3 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_commit ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_rollback ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_commit_ret ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_rollback_ret ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_blob_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $blob_id ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_blob_create ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_blob_add ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $blob_handle ]
+        Parameter #1 [ <required> $data ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_blob_cancel ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $blob_handle ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_blob_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $blob_handle ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_blob_open ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $blob_id ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_blob_get ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $blob_handle ]
+        Parameter #1 [ <required> $len ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_blob_echo ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $blob_id ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_blob_import ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $link_identifier ]
+        Parameter #1 [ <optional> $file ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_errmsg ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:interbase> function fbird_errcode ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:interbase> function fbird_add_user ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $user_name ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $first_name ]
+        Parameter #4 [ <optional> $middle_name ]
+        Parameter #5 [ <optional> $last_name ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_modify_user ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $user_name ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $first_name ]
+        Parameter #4 [ <optional> $middle_name ]
+        Parameter #5 [ <optional> $last_name ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_delete_user ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $user_name ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $first_name ]
+        Parameter #4 [ <optional> $middle_name ]
+        Parameter #5 [ <optional> $last_name ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_service_attach ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $dba_username ]
+        Parameter #2 [ <required> $dba_password ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_service_detach ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $service_handle ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_backup ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $source_db ]
+        Parameter #2 [ <required> $dest_file ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $verbose ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_restore ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $source_file ]
+        Parameter #2 [ <required> $dest_db ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $verbose ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_maintain_db ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $db ]
+        Parameter #2 [ <required> $action ]
+        Parameter #3 [ <optional> $argument ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_db_info ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $db ]
+        Parameter #2 [ <required> $action ]
+        Parameter #3 [ <optional> $argument ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_server_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $service_handle ]
+        Parameter #1 [ <required> $action ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_wait_event ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <optional> $event ]
+        Parameter #2 [ <optional> $event2 ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_set_event_handler ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $handler ]
+        Parameter #2 [ <optional> $event ]
+        Parameter #3 [ <optional> $event2 ]
+      }
+    }
+    Function [ <internal:interbase> function fbird_free_event_handler ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $event ]
+      }
+    }
+  }
+}
+

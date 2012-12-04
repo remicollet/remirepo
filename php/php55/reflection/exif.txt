@@ -1,0 +1,75 @@
+Extension [ <persistent> extension #11 exif version 1.4 $Id$ ] {
+
+  - Dependencies {
+    Dependency [ standard (Required) ]
+    Dependency [ mbstring (Optional) ]
+  }
+
+  - INI {
+    Entry [ exif.encode_unicode <ALL> ]
+      Current = 'ISO-8859-15'
+    }
+    Entry [ exif.decode_unicode_motorola <ALL> ]
+      Current = 'UCS-2BE'
+    }
+    Entry [ exif.decode_unicode_intel <ALL> ]
+      Current = 'UCS-2LE'
+    }
+    Entry [ exif.encode_jis <ALL> ]
+      Current = ''
+    }
+    Entry [ exif.decode_jis_motorola <ALL> ]
+      Current = 'JIS'
+    }
+    Entry [ exif.decode_jis_intel <ALL> ]
+      Current = 'JIS'
+    }
+  }
+
+  - Constants [1] {
+    Constant [ integer EXIF_USE_MBSTRING ] { 1 }
+  }
+
+  - Functions {
+    Function [ <internal:exif> function exif_read_data ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $sections_needed ]
+        Parameter #2 [ <optional> $sub_arrays ]
+        Parameter #3 [ <optional> $read_thumbnail ]
+      }
+    }
+    Function [ <internal:exif> function read_exif_data ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $sections_needed ]
+        Parameter #2 [ <optional> $sub_arrays ]
+        Parameter #3 [ <optional> $read_thumbnail ]
+      }
+    }
+    Function [ <internal:exif> function exif_tagname ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $index ]
+      }
+    }
+    Function [ <internal:exif> function exif_thumbnail ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> &$width ]
+        Parameter #2 [ <optional> &$height ]
+        Parameter #3 [ <optional> &$imagetype ]
+      }
+    }
+    Function [ <internal:exif> function exif_imagetype ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $imagefile ]
+      }
+    }
+  }
+}
+

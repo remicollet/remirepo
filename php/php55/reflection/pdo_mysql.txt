@@ -1,0 +1,14 @@
+Extension [ <persistent> extension #66 pdo_mysql version 1.0.2 ] {
+
+  - Dependencies {
+    Dependency [ pdo (Required) ]
+    Dependency [ mysqlnd (Required) ]
+  }
+
+  - INI {
+    Entry [ pdo_mysql.default_socket <SYSTEM> ]
+      Current = '/var/lib/mysql/mysql.sock'
+    }
+  }
+}
+

@@ -1,0 +1,294 @@
+Extension [ <persistent> extension #15 gmp version <no_version> ] {
+
+  - Constants [4] {
+    Constant [ integer GMP_ROUND_ZERO ] { 0 }
+    Constant [ integer GMP_ROUND_PLUSINF ] { 1 }
+    Constant [ integer GMP_ROUND_MINUSINF ] { 2 }
+    Constant [ string GMP_VERSION ] { 5.0.2 }
+  }
+
+  - Functions {
+    Function [ <internal:gmp> function gmp_init ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $number ]
+        Parameter #1 [ <optional> $base ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_intval ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $gmpnumber ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_strval ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $gmpnumber ]
+        Parameter #1 [ <optional> $base ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_add ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_sub ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_mul ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_div_qr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+        Parameter #2 [ <optional> $round ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_div_q ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+        Parameter #2 [ <optional> $round ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_div_r ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+        Parameter #2 [ <optional> $round ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_div ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+        Parameter #2 [ <optional> $round ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_mod ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_divexact ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_neg ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_abs ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_fact ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_sqrt ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_sqrtrem ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_pow ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $base ]
+        Parameter #1 [ <required> $exp ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_powm ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $base ]
+        Parameter #1 [ <required> $exp ]
+        Parameter #2 [ <required> $mod ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_perfect_square ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_prob_prime ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <optional> $reps ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_gcd ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_gcdext ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_invert ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_jacobi ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_legendre ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_cmp ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_sign ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_random ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $limiter ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_and ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_or ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_com ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_xor ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_setbit ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> &$a ]
+        Parameter #1 [ <required> $index ]
+        Parameter #2 [ <optional> $set_clear ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_clrbit ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$a ]
+        Parameter #1 [ <required> $index ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_scan0 ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $start ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_scan1 ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $start ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_testbit ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $index ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_popcount ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_hamdist ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+    Function [ <internal:gmp> function gmp_nextprime ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $a ]
+      }
+    }
+  }
+}
+

@@ -1,0 +1,672 @@
+Extension [ <persistent> extension #2 date version 5.5.0-dev ] {
+
+  - INI {
+    Entry [ date.timezone <ALL> ]
+      Current = 'Europe/Paris'
+    }
+    Entry [ date.default_latitude <ALL> ]
+      Current = '31.7667'
+    }
+    Entry [ date.default_longitude <ALL> ]
+      Current = '35.2333'
+    }
+    Entry [ date.sunset_zenith <ALL> ]
+      Current = '90.583333'
+    }
+    Entry [ date.sunrise_zenith <ALL> ]
+      Current = '90.583333'
+    }
+  }
+
+  - Constants [14] {
+    Constant [ string DATE_ATOM ] { Y-m-d\TH:i:sP }
+    Constant [ string DATE_COOKIE ] { l, d-M-y H:i:s T }
+    Constant [ string DATE_ISO8601 ] { Y-m-d\TH:i:sO }
+    Constant [ string DATE_RFC822 ] { D, d M y H:i:s O }
+    Constant [ string DATE_RFC850 ] { l, d-M-y H:i:s T }
+    Constant [ string DATE_RFC1036 ] { D, d M y H:i:s O }
+    Constant [ string DATE_RFC1123 ] { D, d M Y H:i:s O }
+    Constant [ string DATE_RFC2822 ] { D, d M Y H:i:s O }
+    Constant [ string DATE_RFC3339 ] { Y-m-d\TH:i:sP }
+    Constant [ string DATE_RSS ] { D, d M Y H:i:s O }
+    Constant [ string DATE_W3C ] { Y-m-d\TH:i:sP }
+    Constant [ integer SUNFUNCS_RET_TIMESTAMP ] { 0 }
+    Constant [ integer SUNFUNCS_RET_STRING ] { 1 }
+    Constant [ integer SUNFUNCS_RET_DOUBLE ] { 2 }
+  }
+
+  - Functions {
+    Function [ <internal:date> function strtotime ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $time ]
+        Parameter #1 [ <optional> $now ]
+      }
+    }
+    Function [ <internal:date> function date ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <optional> $timestamp ]
+      }
+    }
+    Function [ <internal:date> function idate ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <optional> $timestamp ]
+      }
+    }
+    Function [ <internal:date> function gmdate ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <optional> $timestamp ]
+      }
+    }
+    Function [ <internal:date> function mktime ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <optional> $hour ]
+        Parameter #1 [ <optional> $min ]
+        Parameter #2 [ <optional> $sec ]
+        Parameter #3 [ <optional> $mon ]
+        Parameter #4 [ <optional> $day ]
+        Parameter #5 [ <optional> $year ]
+      }
+    }
+    Function [ <internal:date> function gmmktime ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <optional> $hour ]
+        Parameter #1 [ <optional> $min ]
+        Parameter #2 [ <optional> $sec ]
+        Parameter #3 [ <optional> $mon ]
+        Parameter #4 [ <optional> $day ]
+        Parameter #5 [ <optional> $year ]
+      }
+    }
+    Function [ <internal:date> function checkdate ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $month ]
+        Parameter #1 [ <required> $day ]
+        Parameter #2 [ <required> $year ]
+      }
+    }
+    Function [ <internal:date> function strftime ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <optional> $timestamp ]
+      }
+    }
+    Function [ <internal:date> function gmstrftime ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <optional> $timestamp ]
+      }
+    }
+    Function [ <internal:date> function time ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:date> function localtime ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $timestamp ]
+        Parameter #1 [ <optional> $associative_array ]
+      }
+    }
+    Function [ <internal:date> function getdate ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $timestamp ]
+      }
+    }
+    Function [ <internal:date> function date_create ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $time ]
+        Parameter #1 [ <optional> $object ]
+      }
+    }
+    Function [ <internal:date> function date_create_from_format ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <required> $time ]
+        Parameter #2 [ <optional> $object ]
+      }
+    }
+    Function [ <internal:date> function date_parse ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $date ]
+      }
+    }
+    Function [ <internal:date> function date_parse_from_format ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <required> $date ]
+      }
+    }
+    Function [ <internal:date> function date_get_last_errors ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:date> function date_format ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $format ]
+      }
+    }
+    Function [ <internal:date> function date_modify ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $modify ]
+      }
+    }
+    Function [ <internal:date> function date_add ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $interval ]
+      }
+    }
+    Function [ <internal:date> function date_sub ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $interval ]
+      }
+    }
+    Function [ <internal:date> function date_timezone_get ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+    }
+    Function [ <internal:date> function date_timezone_set ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $timezone ]
+      }
+    }
+    Function [ <internal:date> function date_offset_get ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+    }
+    Function [ <internal:date> function date_diff ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $object2 ]
+        Parameter #2 [ <optional> $absolute ]
+      }
+    }
+    Function [ <internal:date> function date_time_set ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $hour ]
+        Parameter #2 [ <required> $minute ]
+        Parameter #3 [ <optional> $second ]
+      }
+    }
+    Function [ <internal:date> function date_date_set ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $year ]
+        Parameter #2 [ <required> $month ]
+        Parameter #3 [ <required> $day ]
+      }
+    }
+    Function [ <internal:date> function date_isodate_set ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $year ]
+        Parameter #2 [ <required> $week ]
+        Parameter #3 [ <optional> $day ]
+      }
+    }
+    Function [ <internal:date> function date_timestamp_set ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $unixtimestamp ]
+      }
+    }
+    Function [ <internal:date> function date_timestamp_get ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+    }
+    Function [ <internal:date> function timezone_open ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $timezone ]
+      }
+    }
+    Function [ <internal:date> function timezone_name_get ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+    }
+    Function [ <internal:date> function timezone_name_from_abbr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $abbr ]
+        Parameter #1 [ <optional> $gmtoffset ]
+        Parameter #2 [ <optional> $isdst ]
+      }
+    }
+    Function [ <internal:date> function timezone_offset_get ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $datetime ]
+      }
+    }
+    Function [ <internal:date> function timezone_transitions_get ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <optional> $timestamp_begin ]
+        Parameter #2 [ <optional> $timestamp_end ]
+      }
+    }
+    Function [ <internal:date> function timezone_location_get ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+    }
+    Function [ <internal:date> function timezone_identifiers_list ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $what ]
+        Parameter #1 [ <optional> $country ]
+      }
+    }
+    Function [ <internal:date> function timezone_abbreviations_list ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:date> function timezone_version_get ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:date> function date_interval_create_from_date_string ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $time ]
+      }
+    }
+    Function [ <internal:date> function date_interval_format ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $format ]
+      }
+    }
+    Function [ <internal:date> function date_default_timezone_set ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $timezone_identifier ]
+      }
+    }
+    Function [ <internal:date> function date_default_timezone_get ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:date> function date_sunrise ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $time ]
+        Parameter #1 [ <optional> $format ]
+        Parameter #2 [ <optional> $latitude ]
+        Parameter #3 [ <optional> $longitude ]
+        Parameter #4 [ <optional> $zenith ]
+        Parameter #5 [ <optional> $gmt_offset ]
+      }
+    }
+    Function [ <internal:date> function date_sunset ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $time ]
+        Parameter #1 [ <optional> $format ]
+        Parameter #2 [ <optional> $latitude ]
+        Parameter #3 [ <optional> $longitude ]
+        Parameter #4 [ <optional> $zenith ]
+        Parameter #5 [ <optional> $gmt_offset ]
+      }
+    }
+    Function [ <internal:date> function date_sun_info ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $time ]
+        Parameter #1 [ <required> $latitude ]
+        Parameter #2 [ <required> $longitude ]
+      }
+    }
+  }
+
+  - Classes [4] {
+    Class [ <internal:date> class DateTime ] {
+
+      - Constants [11] {
+        Constant [ string ATOM ] { Y-m-d\TH:i:sP }
+        Constant [ string COOKIE ] { l, d-M-y H:i:s T }
+        Constant [ string ISO8601 ] { Y-m-d\TH:i:sO }
+        Constant [ string RFC822 ] { D, d M y H:i:s O }
+        Constant [ string RFC850 ] { l, d-M-y H:i:s T }
+        Constant [ string RFC1036 ] { D, d M y H:i:s O }
+        Constant [ string RFC1123 ] { D, d M Y H:i:s O }
+        Constant [ string RFC2822 ] { D, d M Y H:i:s O }
+        Constant [ string RFC3339 ] { Y-m-d\TH:i:sP }
+        Constant [ string RSS ] { D, d M Y H:i:s O }
+        Constant [ string W3C ] { Y-m-d\TH:i:sP }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [3] {
+        Method [ <internal:date> static public method __set_state ] {
+        }
+
+        Method [ <internal:date> static public method createFromFormat ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $format ]
+            Parameter #1 [ <required> $time ]
+            Parameter #2 [ <optional> $object ]
+          }
+        }
+
+        Method [ <internal:date> static public method getLastErrors ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [15] {
+        Method [ <internal:date, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $time ]
+            Parameter #1 [ <optional> $object ]
+          }
+        }
+
+        Method [ <internal:date> public method __wakeup ] {
+        }
+
+        Method [ <internal:date> public method format ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $format ]
+          }
+        }
+
+        Method [ <internal:date> public method modify ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $modify ]
+          }
+        }
+
+        Method [ <internal:date> public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $interval ]
+          }
+        }
+
+        Method [ <internal:date> public method sub ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $interval ]
+          }
+        }
+
+        Method [ <internal:date> public method getTimezone ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:date> public method setTimezone ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timezone ]
+          }
+        }
+
+        Method [ <internal:date> public method getOffset ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:date> public method setTime ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $hour ]
+            Parameter #1 [ <required> $minute ]
+            Parameter #2 [ <optional> $second ]
+          }
+        }
+
+        Method [ <internal:date> public method setDate ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $year ]
+            Parameter #1 [ <required> $month ]
+            Parameter #2 [ <required> $day ]
+          }
+        }
+
+        Method [ <internal:date> public method setISODate ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $year ]
+            Parameter #1 [ <required> $week ]
+            Parameter #2 [ <optional> $day ]
+          }
+        }
+
+        Method [ <internal:date> public method setTimestamp ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $unixtimestamp ]
+          }
+        }
+
+        Method [ <internal:date> public method getTimestamp ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:date> public method diff ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $object ]
+            Parameter #1 [ <optional> $absolute ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:date> class DateTimeZone ] {
+
+      - Constants [14] {
+        Constant [ integer AFRICA ] { 1 }
+        Constant [ integer AMERICA ] { 2 }
+        Constant [ integer ANTARCTICA ] { 4 }
+        Constant [ integer ARCTIC ] { 8 }
+        Constant [ integer ASIA ] { 16 }
+        Constant [ integer ATLANTIC ] { 32 }
+        Constant [ integer AUSTRALIA ] { 64 }
+        Constant [ integer EUROPE ] { 128 }
+        Constant [ integer INDIAN ] { 256 }
+        Constant [ integer PACIFIC ] { 512 }
+        Constant [ integer UTC ] { 1024 }
+        Constant [ integer ALL ] { 2047 }
+        Constant [ integer ALL_WITH_BC ] { 4095 }
+        Constant [ integer PER_COUNTRY ] { 4096 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:date> static public method listAbbreviations ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:date> static public method listIdentifiers ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $what ]
+            Parameter #1 [ <optional> $country ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:date, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timezone ]
+          }
+        }
+
+        Method [ <internal:date> public method getName ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:date> public method getOffset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $datetime ]
+          }
+        }
+
+        Method [ <internal:date> public method getTransitions ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $timestamp_begin ]
+            Parameter #1 [ <required> $timestamp_end ]
+          }
+        }
+
+        Method [ <internal:date> public method getLocation ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:date> class DateInterval ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:date> static public method __set_state ] {
+        }
+
+        Method [ <internal:date> static public method createFromDateString ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $time ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:date, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $interval_spec ]
+          }
+        }
+
+        Method [ <internal:date> public method __wakeup ] {
+        }
+
+        Method [ <internal:date> public method format ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $format ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:date> <iterateable> class DatePeriod implements Traversable ] {
+
+      - Constants [1] {
+        Constant [ integer EXCLUDE_START_DATE ] { 1 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:date, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $start ]
+            Parameter #1 [ <required> $interval ]
+            Parameter #2 [ <required> $end ]
+          }
+        }
+      }
+    }
+  }
+}
+

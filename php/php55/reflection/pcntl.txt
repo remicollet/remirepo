@@ -1,0 +1,254 @@
+Extension [ <persistent> extension #18 pcntl version <no_version> ] {
+
+  - Constants [110] {
+    Constant [ integer WNOHANG ] { 1 }
+    Constant [ integer WUNTRACED ] { 2 }
+    Constant [ integer SIG_IGN ] { 1 }
+    Constant [ integer SIG_DFL ] { 0 }
+    Constant [ integer SIG_ERR ] { -1 }
+    Constant [ integer SIGHUP ] { 1 }
+    Constant [ integer SIGINT ] { 2 }
+    Constant [ integer SIGQUIT ] { 3 }
+    Constant [ integer SIGILL ] { 4 }
+    Constant [ integer SIGTRAP ] { 5 }
+    Constant [ integer SIGABRT ] { 6 }
+    Constant [ integer SIGIOT ] { 6 }
+    Constant [ integer SIGBUS ] { 7 }
+    Constant [ integer SIGFPE ] { 8 }
+    Constant [ integer SIGKILL ] { 9 }
+    Constant [ integer SIGUSR1 ] { 10 }
+    Constant [ integer SIGSEGV ] { 11 }
+    Constant [ integer SIGUSR2 ] { 12 }
+    Constant [ integer SIGPIPE ] { 13 }
+    Constant [ integer SIGALRM ] { 14 }
+    Constant [ integer SIGTERM ] { 15 }
+    Constant [ integer SIGSTKFLT ] { 16 }
+    Constant [ integer SIGCLD ] { 17 }
+    Constant [ integer SIGCHLD ] { 17 }
+    Constant [ integer SIGCONT ] { 18 }
+    Constant [ integer SIGSTOP ] { 19 }
+    Constant [ integer SIGTSTP ] { 20 }
+    Constant [ integer SIGTTIN ] { 21 }
+    Constant [ integer SIGTTOU ] { 22 }
+    Constant [ integer SIGURG ] { 23 }
+    Constant [ integer SIGXCPU ] { 24 }
+    Constant [ integer SIGXFSZ ] { 25 }
+    Constant [ integer SIGVTALRM ] { 26 }
+    Constant [ integer SIGPROF ] { 27 }
+    Constant [ integer SIGWINCH ] { 28 }
+    Constant [ integer SIGPOLL ] { 29 }
+    Constant [ integer SIGIO ] { 29 }
+    Constant [ integer SIGPWR ] { 30 }
+    Constant [ integer SIGSYS ] { 31 }
+    Constant [ integer SIGBABY ] { 31 }
+    Constant [ integer PRIO_PGRP ] { 1 }
+    Constant [ integer PRIO_USER ] { 2 }
+    Constant [ integer PRIO_PROCESS ] { 0 }
+    Constant [ integer SIG_BLOCK ] { 0 }
+    Constant [ integer SIG_UNBLOCK ] { 1 }
+    Constant [ integer SIG_SETMASK ] { 2 }
+    Constant [ integer SI_USER ] { 0 }
+    Constant [ integer SI_KERNEL ] { 128 }
+    Constant [ integer SI_QUEUE ] { -1 }
+    Constant [ integer SI_TIMER ] { -2 }
+    Constant [ integer SI_MESGQ ] { -3 }
+    Constant [ integer SI_ASYNCIO ] { -4 }
+    Constant [ integer SI_SIGIO ] { -5 }
+    Constant [ integer SI_TKILL ] { -6 }
+    Constant [ integer CLD_EXITED ] { 1 }
+    Constant [ integer CLD_KILLED ] { 2 }
+    Constant [ integer CLD_DUMPED ] { 3 }
+    Constant [ integer CLD_TRAPPED ] { 4 }
+    Constant [ integer CLD_STOPPED ] { 5 }
+    Constant [ integer CLD_CONTINUED ] { 6 }
+    Constant [ integer TRAP_BRKPT ] { 1 }
+    Constant [ integer TRAP_TRACE ] { 2 }
+    Constant [ integer POLL_IN ] { 1 }
+    Constant [ integer POLL_OUT ] { 2 }
+    Constant [ integer POLL_MSG ] { 3 }
+    Constant [ integer POLL_ERR ] { 4 }
+    Constant [ integer POLL_PRI ] { 5 }
+    Constant [ integer POLL_HUP ] { 6 }
+    Constant [ integer ILL_ILLOPC ] { 1 }
+    Constant [ integer ILL_ILLOPN ] { 2 }
+    Constant [ integer ILL_ILLADR ] { 3 }
+    Constant [ integer ILL_ILLTRP ] { 4 }
+    Constant [ integer ILL_PRVOPC ] { 5 }
+    Constant [ integer ILL_PRVREG ] { 6 }
+    Constant [ integer ILL_COPROC ] { 7 }
+    Constant [ integer ILL_BADSTK ] { 8 }
+    Constant [ integer FPE_INTDIV ] { 1 }
+    Constant [ integer FPE_INTOVF ] { 2 }
+    Constant [ integer FPE_FLTDIV ] { 3 }
+    Constant [ integer FPE_FLTOVF ] { 4 }
+    Constant [ integer FPE_FLTUND ] { 7 }
+    Constant [ integer FPE_FLTRES ] { 6 }
+    Constant [ integer FPE_FLTINV ] { 7 }
+    Constant [ integer FPE_FLTSUB ] { 8 }
+    Constant [ integer SEGV_MAPERR ] { 1 }
+    Constant [ integer SEGV_ACCERR ] { 2 }
+    Constant [ integer BUS_ADRALN ] { 1 }
+    Constant [ integer BUS_ADRERR ] { 2 }
+    Constant [ integer BUS_OBJERR ] { 3 }
+    Constant [ integer PCNTL_EINTR ] { 4 }
+    Constant [ integer PCNTL_ECHILD ] { 10 }
+    Constant [ integer PCNTL_EINVAL ] { 22 }
+    Constant [ integer PCNTL_EAGAIN ] { 11 }
+    Constant [ integer PCNTL_ESRCH ] { 3 }
+    Constant [ integer PCNTL_EACCES ] { 13 }
+    Constant [ integer PCNTL_EPERM ] { 1 }
+    Constant [ integer PCNTL_ENOMEM ] { 12 }
+    Constant [ integer PCNTL_E2BIG ] { 7 }
+    Constant [ integer PCNTL_EFAULT ] { 14 }
+    Constant [ integer PCNTL_EIO ] { 5 }
+    Constant [ integer PCNTL_EISDIR ] { 21 }
+    Constant [ integer PCNTL_ELIBBAD ] { 80 }
+    Constant [ integer PCNTL_ELOOP ] { 40 }
+    Constant [ integer PCNTL_EMFILE ] { 24 }
+    Constant [ integer PCNTL_ENAMETOOLONG ] { 36 }
+    Constant [ integer PCNTL_ENFILE ] { 23 }
+    Constant [ integer PCNTL_ENOENT ] { 2 }
+    Constant [ integer PCNTL_ENOEXEC ] { 8 }
+    Constant [ integer PCNTL_ENOTDIR ] { 20 }
+    Constant [ integer PCNTL_ETXTBSY ] { 26 }
+  }
+
+  - Functions {
+    Function [ <internal:pcntl> function pcntl_fork ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_waitpid ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pid ]
+        Parameter #1 [ <required> &$status ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_wait ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$status ]
+        Parameter #1 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_signal ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $signo ]
+        Parameter #1 [ <required> $handler ]
+        Parameter #2 [ <optional> $restart_syscalls ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_signal_dispatch ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_wifexited ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $status ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_wifstopped ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $status ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_wifsignaled ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $status ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_wexitstatus ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $status ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_wtermsig ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $status ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_wstopsig ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $status ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_exec ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <optional> $args ]
+        Parameter #2 [ <optional> $envs ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_alarm ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $seconds ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_get_last_error ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_errno ] {
+    }
+    Function [ <internal:pcntl> function pcntl_strerror ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $errno ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_getpriority ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $pid ]
+        Parameter #1 [ <optional> $process_identifier ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_setpriority ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $priority ]
+        Parameter #1 [ <optional> $pid ]
+        Parameter #2 [ <optional> $process_identifier ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_sigprocmask ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $how ]
+        Parameter #1 [ <required> $set ]
+        Parameter #2 [ <optional> &$oldset ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_sigwaitinfo ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $set ]
+        Parameter #1 [ <optional> &$info ]
+      }
+    }
+    Function [ <internal:pcntl> function pcntl_sigtimedwait ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $set ]
+        Parameter #1 [ <optional> &$info ]
+        Parameter #2 [ <optional> $seconds ]
+        Parameter #3 [ <optional> $nanoseconds ]
+      }
+    }
+  }
+}
+

@@ -1,0 +1,88 @@
+Extension [ <persistent> extension #19 readline version 5.5.0-dev ] {
+
+  - INI {
+    Entry [ cli.pager <ALL> ]
+      Current = ''
+    }
+    Entry [ cli.prompt <ALL> ]
+      Current = '\b \> '
+    }
+  }
+
+  - Constants [1] {
+    Constant [ string READLINE_LIB ] { libedit }
+  }
+
+  - Functions {
+    Function [ <internal:readline> function readline ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $prompt ]
+      }
+    }
+    Function [ <internal:readline> function readline_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $varname ]
+        Parameter #1 [ <optional> $newvalue ]
+      }
+    }
+    Function [ <internal:readline> function readline_add_history ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $prompt ]
+      }
+    }
+    Function [ <internal:readline> function readline_clear_history ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:readline> function readline_read_history ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $filename ]
+      }
+    }
+    Function [ <internal:readline> function readline_write_history ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $filename ]
+      }
+    }
+    Function [ <internal:readline> function readline_completion_function ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $funcname ]
+      }
+    }
+    Function [ <internal:readline> function readline_callback_handler_install ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $prompt ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:readline> function readline_callback_read_char ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:readline> function readline_callback_handler_remove ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:readline> function readline_redisplay ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:readline> function readline_on_new_line ] {
+
+      - Parameters [0] {
+      }
+    }
+  }
+}
+

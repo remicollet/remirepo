@@ -1,0 +1,639 @@
+Extension [ <persistent> extension #43 imap version <no_version> ] {
+
+  - Dependencies {
+    Dependency [ standard (Required) ]
+  }
+
+  - Constants [68] {
+    Constant [ integer NIL ] { 0 }
+    Constant [ integer IMAP_OPENTIMEOUT ] { 1 }
+    Constant [ integer IMAP_READTIMEOUT ] { 2 }
+    Constant [ integer IMAP_WRITETIMEOUT ] { 3 }
+    Constant [ integer IMAP_CLOSETIMEOUT ] { 4 }
+    Constant [ integer OP_DEBUG ] { 1 }
+    Constant [ integer OP_READONLY ] { 2 }
+    Constant [ integer OP_ANONYMOUS ] { 4 }
+    Constant [ integer OP_SHORTCACHE ] { 8 }
+    Constant [ integer OP_SILENT ] { 16 }
+    Constant [ integer OP_PROTOTYPE ] { 32 }
+    Constant [ integer OP_HALFOPEN ] { 64 }
+    Constant [ integer OP_EXPUNGE ] { 128 }
+    Constant [ integer OP_SECURE ] { 256 }
+    Constant [ integer CL_EXPUNGE ] { 32768 }
+    Constant [ integer FT_UID ] { 1 }
+    Constant [ integer FT_PEEK ] { 2 }
+    Constant [ integer FT_NOT ] { 4 }
+    Constant [ integer FT_INTERNAL ] { 8 }
+    Constant [ integer FT_PREFETCHTEXT ] { 32 }
+    Constant [ integer ST_UID ] { 1 }
+    Constant [ integer ST_SILENT ] { 2 }
+    Constant [ integer ST_SET ] { 4 }
+    Constant [ integer CP_UID ] { 1 }
+    Constant [ integer CP_MOVE ] { 2 }
+    Constant [ integer SE_UID ] { 1 }
+    Constant [ integer SE_FREE ] { 2 }
+    Constant [ integer SE_NOPREFETCH ] { 4 }
+    Constant [ integer SO_FREE ] { 8 }
+    Constant [ integer SO_NOSERVER ] { 16 }
+    Constant [ integer SA_MESSAGES ] { 1 }
+    Constant [ integer SA_RECENT ] { 2 }
+    Constant [ integer SA_UNSEEN ] { 4 }
+    Constant [ integer SA_UIDNEXT ] { 8 }
+    Constant [ integer SA_UIDVALIDITY ] { 16 }
+    Constant [ integer SA_ALL ] { 31 }
+    Constant [ integer LATT_NOINFERIORS ] { 1 }
+    Constant [ integer LATT_NOSELECT ] { 2 }
+    Constant [ integer LATT_MARKED ] { 4 }
+    Constant [ integer LATT_UNMARKED ] { 8 }
+    Constant [ integer LATT_REFERRAL ] { 16 }
+    Constant [ integer LATT_HASCHILDREN ] { 32 }
+    Constant [ integer LATT_HASNOCHILDREN ] { 64 }
+    Constant [ integer SORTDATE ] { 0 }
+    Constant [ integer SORTARRIVAL ] { 1 }
+    Constant [ integer SORTFROM ] { 2 }
+    Constant [ integer SORTSUBJECT ] { 3 }
+    Constant [ integer SORTTO ] { 4 }
+    Constant [ integer SORTCC ] { 5 }
+    Constant [ integer SORTSIZE ] { 6 }
+    Constant [ integer TYPETEXT ] { 0 }
+    Constant [ integer TYPEMULTIPART ] { 1 }
+    Constant [ integer TYPEMESSAGE ] { 2 }
+    Constant [ integer TYPEAPPLICATION ] { 3 }
+    Constant [ integer TYPEAUDIO ] { 4 }
+    Constant [ integer TYPEIMAGE ] { 5 }
+    Constant [ integer TYPEVIDEO ] { 6 }
+    Constant [ integer TYPEMODEL ] { 7 }
+    Constant [ integer TYPEOTHER ] { 8 }
+    Constant [ integer ENC7BIT ] { 0 }
+    Constant [ integer ENC8BIT ] { 1 }
+    Constant [ integer ENCBINARY ] { 2 }
+    Constant [ integer ENCBASE64 ] { 3 }
+    Constant [ integer ENCQUOTEDPRINTABLE ] { 4 }
+    Constant [ integer ENCOTHER ] { 5 }
+    Constant [ integer IMAP_GC_ELT ] { 1 }
+    Constant [ integer IMAP_GC_ENV ] { 2 }
+    Constant [ integer IMAP_GC_TEXTS ] { 4 }
+  }
+
+  - Functions {
+    Function [ <internal:imap> function imap_open ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $mailbox ]
+        Parameter #1 [ <required> $user ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $n_retries ]
+        Parameter #5 [ <optional> $params ]
+      }
+    }
+    Function [ <internal:imap> function imap_reopen ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mailbox ]
+        Parameter #2 [ <optional> $options ]
+        Parameter #3 [ <optional> $n_retries ]
+      }
+    }
+    Function [ <internal:imap> function imap_close ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_num_msg ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_id ]
+      }
+    }
+    Function [ <internal:imap> function imap_num_recent ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_id ]
+      }
+    }
+    Function [ <internal:imap> function imap_headers ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_id ]
+      }
+    }
+    Function [ <internal:imap> function imap_headerinfo ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <optional> $from_length ]
+        Parameter #3 [ <optional> $subject_length ]
+        Parameter #4 [ <optional> $default_host ]
+      }
+    }
+    Function [ <internal:imap> function imap_rfc822_parse_headers ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $headers ]
+        Parameter #1 [ <optional> $default_host ]
+      }
+    }
+    Function [ <internal:imap> function imap_rfc822_write_address ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $mailbox ]
+        Parameter #1 [ <required> $host ]
+        Parameter #2 [ <required> $personal ]
+      }
+    }
+    Function [ <internal:imap> function imap_rfc822_parse_adrlist ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $address_string ]
+        Parameter #1 [ <required> $default_host ]
+      }
+    }
+    Function [ <internal:imap> function imap_body ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_bodystruct ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <required> $section ]
+      }
+    }
+    Function [ <internal:imap> function imap_fetchbody ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <required> $section ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_fetchmime ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <required> $section ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_savebody ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $file ]
+        Parameter #2 [ <required> $msg_no ]
+        Parameter #3 [ <optional> $section ]
+        Parameter #4 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_fetchheader ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_fetchstructure ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_gc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:imap> function imap_expunge ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_id ]
+      }
+    }
+    Function [ <internal:imap> function imap_delete ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_undelete ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:imap> function imap_check ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_id ]
+      }
+    }
+    Function [ <internal:imap> function imap_listscan ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $ref ]
+        Parameter #2 [ <required> $pattern ]
+        Parameter #3 [ <required> $content ]
+      }
+    }
+    Function [ <internal:imap> function imap_mail_copy ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msglist ]
+        Parameter #2 [ <required> $mailbox ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_mail_move ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $sequence ]
+        Parameter #2 [ <required> $mailbox ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_mail_compose ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $envelope ]
+        Parameter #1 [ <required> $body ]
+      }
+    }
+    Function [ <internal:imap> function imap_createmailbox ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mailbox ]
+      }
+    }
+    Function [ <internal:imap> function imap_renamemailbox ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $old_name ]
+        Parameter #2 [ <required> $new_name ]
+      }
+    }
+    Function [ <internal:imap> function imap_deletemailbox ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mailbox ]
+      }
+    }
+    Function [ <internal:imap> function imap_subscribe ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mailbox ]
+      }
+    }
+    Function [ <internal:imap> function imap_unsubscribe ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mailbox ]
+      }
+    }
+    Function [ <internal:imap> function imap_append ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $folder ]
+        Parameter #2 [ <required> $message ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $date ]
+      }
+    }
+    Function [ <internal:imap> function imap_ping ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_id ]
+      }
+    }
+    Function [ <internal:imap> function imap_base64 ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $text ]
+      }
+    }
+    Function [ <internal:imap> function imap_qprint ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $text ]
+      }
+    }
+    Function [ <internal:imap> function imap_8bit ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $text ]
+      }
+    }
+    Function [ <internal:imap> function imap_binary ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $text ]
+      }
+    }
+    Function [ <internal:imap> function imap_utf8 ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mime_encoded_text ]
+      }
+    }
+    Function [ <internal:imap> function imap_status ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mailbox ]
+        Parameter #2 [ <required> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_mailboxmsginfo ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_id ]
+      }
+    }
+    Function [ <internal:imap> function imap_setflag_full ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $sequence ]
+        Parameter #2 [ <required> $flag ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_clearflag_full ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $sequence ]
+        Parameter #2 [ <required> $flag ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_sort ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $criteria ]
+        Parameter #2 [ <required> $reverse ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $search_criteria ]
+        Parameter #5 [ <optional> $charset ]
+      }
+    }
+    Function [ <internal:imap> function imap_uid ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+      }
+    }
+    Function [ <internal:imap> function imap_msgno ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $unique_msg_id ]
+      }
+    }
+    Function [ <internal:imap> function imap_list ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $ref ]
+        Parameter #2 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:imap> function imap_lsub ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $ref ]
+        Parameter #2 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:imap> function imap_fetch_overview ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $sequence ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_alerts ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:imap> function imap_errors ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:imap> function imap_last_error ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:imap> function imap_search ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $criteria ]
+        Parameter #2 [ <optional> $options ]
+        Parameter #3 [ <optional> $charset ]
+      }
+    }
+    Function [ <internal:imap> function imap_utf7_decode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $buf ]
+      }
+    }
+    Function [ <internal:imap> function imap_utf7_encode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $buf ]
+      }
+    }
+    Function [ <internal:imap> function imap_mime_header_decode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:imap> function imap_thread ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_timeout ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $timeout_type ]
+        Parameter #1 [ <optional> $timeout ]
+      }
+    }
+    Function [ <internal:imap> function imap_get_quota ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $qroot ]
+      }
+    }
+    Function [ <internal:imap> function imap_get_quotaroot ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mbox ]
+      }
+    }
+    Function [ <internal:imap> function imap_set_quota ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $qroot ]
+        Parameter #2 [ <required> $mailbox_size ]
+      }
+    }
+    Function [ <internal:imap> function imap_setacl ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mailbox ]
+        Parameter #2 [ <required> $id ]
+        Parameter #3 [ <required> $rights ]
+      }
+    }
+    Function [ <internal:imap> function imap_getacl ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mailbox ]
+      }
+    }
+    Function [ <internal:imap> function imap_mail ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $to ]
+        Parameter #1 [ <required> $subject ]
+        Parameter #2 [ <required> $message ]
+        Parameter #3 [ <optional> $additional_headers ]
+        Parameter #4 [ <optional> $cc ]
+        Parameter #5 [ <optional> $bcc ]
+        Parameter #6 [ <optional> $rpath ]
+      }
+    }
+    Function [ <internal:imap> function imap_header ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <optional> $from_length ]
+        Parameter #3 [ <optional> $subject_length ]
+        Parameter #4 [ <optional> $default_host ]
+      }
+    }
+    Function [ <internal:imap> function imap_listmailbox ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $ref ]
+        Parameter #2 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:imap> function imap_getmailboxes ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $ref ]
+        Parameter #2 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:imap> function imap_scanmailbox ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $ref ]
+        Parameter #2 [ <required> $pattern ]
+        Parameter #3 [ <required> $content ]
+      }
+    }
+    Function [ <internal:imap> function imap_listsubscribed ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $ref ]
+        Parameter #2 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:imap> function imap_getsubscribed ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $ref ]
+        Parameter #2 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:imap> function imap_fetchtext ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $msg_no ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:imap> function imap_scan ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $ref ]
+        Parameter #2 [ <required> $pattern ]
+        Parameter #3 [ <required> $content ]
+      }
+    }
+    Function [ <internal:imap> function imap_create ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $mailbox ]
+      }
+    }
+    Function [ <internal:imap> function imap_rename ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream_id ]
+        Parameter #1 [ <required> $old_name ]
+        Parameter #2 [ <required> $new_name ]
+      }
+    }
+  }
+}
+

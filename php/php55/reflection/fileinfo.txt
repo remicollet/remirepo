@@ -1,0 +1,114 @@
+Extension [ <persistent> extension #36 fileinfo version 1.0.5-dev ] {
+
+  - Constants [9] {
+    Constant [ integer FILEINFO_NONE ] { 0 }
+    Constant [ integer FILEINFO_SYMLINK ] { 2 }
+    Constant [ integer FILEINFO_MIME ] { 1040 }
+    Constant [ integer FILEINFO_MIME_TYPE ] { 16 }
+    Constant [ integer FILEINFO_MIME_ENCODING ] { 1024 }
+    Constant [ integer FILEINFO_DEVICES ] { 8 }
+    Constant [ integer FILEINFO_CONTINUE ] { 32 }
+    Constant [ integer FILEINFO_PRESERVE_ATIME ] { 128 }
+    Constant [ integer FILEINFO_RAW ] { 256 }
+  }
+
+  - Functions {
+    Function [ <internal:fileinfo> function finfo_open ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $options ]
+        Parameter #1 [ <optional> $arg ]
+      }
+    }
+    Function [ <internal:fileinfo> function finfo_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $finfo ]
+      }
+    }
+    Function [ <internal:fileinfo> function finfo_set_flags ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $finfo ]
+        Parameter #1 [ <required> $options ]
+      }
+    }
+    Function [ <internal:fileinfo> function finfo_file ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $finfo ]
+        Parameter #1 [ <required> $filename ]
+        Parameter #2 [ <optional> $options ]
+        Parameter #3 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:fileinfo> function finfo_buffer ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $finfo ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> $options ]
+        Parameter #3 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:fileinfo> function mime_content_type ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $string ]
+      }
+    }
+  }
+
+  - Classes [1] {
+    Class [ <internal:fileinfo> class finfo ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:fileinfo, ctor> public method finfo ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $options ]
+            Parameter #1 [ <optional> $arg ]
+          }
+        }
+
+        Method [ <internal:fileinfo> public method set_flags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:fileinfo> public method file ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $options ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:fileinfo> public method buffer ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <optional> $options ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,283 @@
+Extension [ <persistent> extension #13 ftp version <no_version> ] {
+
+  - Constants [10] {
+    Constant [ integer FTP_ASCII ] { 1 }
+    Constant [ integer FTP_TEXT ] { 1 }
+    Constant [ integer FTP_BINARY ] { 2 }
+    Constant [ integer FTP_IMAGE ] { 2 }
+    Constant [ integer FTP_AUTORESUME ] { -1 }
+    Constant [ integer FTP_TIMEOUT_SEC ] { 0 }
+    Constant [ integer FTP_AUTOSEEK ] { 1 }
+    Constant [ integer FTP_FAILED ] { 0 }
+    Constant [ integer FTP_FINISHED ] { 1 }
+    Constant [ integer FTP_MOREDATA ] { 2 }
+  }
+
+  - Functions {
+    Function [ <internal:ftp> function ftp_connect ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <optional> $port ]
+        Parameter #2 [ <optional> $timeout ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_ssl_connect ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <optional> $port ]
+        Parameter #2 [ <optional> $timeout ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_login ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $username ]
+        Parameter #2 [ <required> $password ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_pwd ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ftp ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_cdup ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ftp ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_chdir ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $directory ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_exec ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $command ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_raw ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $command ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_mkdir ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $directory ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_rmdir ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $directory ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_chmod ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $mode ]
+        Parameter #2 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_alloc ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $size ]
+        Parameter #2 [ <optional> &$response ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_nlist ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $directory ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_rawlist ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $directory ]
+        Parameter #2 [ <optional> $recursive ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_systype ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ftp ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_pasv ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $pasv ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_get ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $local_file ]
+        Parameter #2 [ <required> $remote_file ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <optional> $resume_pos ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_fget ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $fp ]
+        Parameter #2 [ <required> $remote_file ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <optional> $resumepos ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_put ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $remote_file ]
+        Parameter #2 [ <required> $local_file ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <optional> $startpos ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_fput ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $remote_file ]
+        Parameter #2 [ <required> $fp ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <optional> $startpos ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_size ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_mdtm ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_rename ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $src ]
+        Parameter #2 [ <required> $dest ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_delete ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $file ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_site ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $cmd ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ftp ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_set_option ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $option ]
+        Parameter #2 [ <required> $value ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_get_option ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $option ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_nb_fget ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $fp ]
+        Parameter #2 [ <required> $remote_file ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <optional> $resumepos ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_nb_get ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $local_file ]
+        Parameter #2 [ <required> $remote_file ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <optional> $resume_pos ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_nb_continue ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ftp ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_nb_put ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $remote_file ]
+        Parameter #2 [ <required> $local_file ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <optional> $startpos ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_nb_fput ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $ftp ]
+        Parameter #1 [ <required> $remote_file ]
+        Parameter #2 [ <required> $fp ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <optional> $startpos ]
+      }
+    }
+    Function [ <internal:ftp> function ftp_quit ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ftp ]
+      }
+    }
+  }
+}
+

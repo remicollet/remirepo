@@ -1,0 +1,852 @@
+Extension [ <persistent> extension #71 pgsql version <no_version> ] {
+
+  - INI {
+    Entry [ pgsql.allow_persistent <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ pgsql.max_persistent <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ pgsql.max_links <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ pgsql.auto_reset_persistent <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ pgsql.ignore_notice <ALL> ]
+      Current = '0'
+    }
+    Entry [ pgsql.log_notice <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Constants [48] {
+    Constant [ string PGSQL_LIBPQ_VERSION ] { 9.1.6 }
+    Constant [ string PGSQL_LIBPQ_VERSION_STR ] { PostgreSQL 9.1.6 on x86_64-redhat-linux-gnu, compiled by gcc (GCC) 4.7.2 20120921 (Red Hat 4.7.2-2), 64-bit }
+    Constant [ integer PGSQL_CONNECT_FORCE_NEW ] { 2 }
+    Constant [ integer PGSQL_ASSOC ] { 1 }
+    Constant [ integer PGSQL_NUM ] { 2 }
+    Constant [ integer PGSQL_BOTH ] { 3 }
+    Constant [ integer PGSQL_CONNECTION_BAD ] { 1 }
+    Constant [ integer PGSQL_CONNECTION_OK ] { 0 }
+    Constant [ integer PGSQL_TRANSACTION_IDLE ] { 0 }
+    Constant [ integer PGSQL_TRANSACTION_ACTIVE ] { 1 }
+    Constant [ integer PGSQL_TRANSACTION_INTRANS ] { 2 }
+    Constant [ integer PGSQL_TRANSACTION_INERROR ] { 3 }
+    Constant [ integer PGSQL_TRANSACTION_UNKNOWN ] { 4 }
+    Constant [ integer PGSQL_ERRORS_TERSE ] { 0 }
+    Constant [ integer PGSQL_ERRORS_DEFAULT ] { 1 }
+    Constant [ integer PGSQL_ERRORS_VERBOSE ] { 2 }
+    Constant [ integer PGSQL_SEEK_SET ] { 0 }
+    Constant [ integer PGSQL_SEEK_CUR ] { 1 }
+    Constant [ integer PGSQL_SEEK_END ] { 2 }
+    Constant [ integer PGSQL_STATUS_LONG ] { 1 }
+    Constant [ integer PGSQL_STATUS_STRING ] { 2 }
+    Constant [ integer PGSQL_EMPTY_QUERY ] { 0 }
+    Constant [ integer PGSQL_COMMAND_OK ] { 1 }
+    Constant [ integer PGSQL_TUPLES_OK ] { 2 }
+    Constant [ integer PGSQL_COPY_OUT ] { 3 }
+    Constant [ integer PGSQL_COPY_IN ] { 4 }
+    Constant [ integer PGSQL_BAD_RESPONSE ] { 5 }
+    Constant [ integer PGSQL_NONFATAL_ERROR ] { 6 }
+    Constant [ integer PGSQL_FATAL_ERROR ] { 7 }
+    Constant [ integer PGSQL_DIAG_SEVERITY ] { 83 }
+    Constant [ integer PGSQL_DIAG_SQLSTATE ] { 67 }
+    Constant [ integer PGSQL_DIAG_MESSAGE_PRIMARY ] { 77 }
+    Constant [ integer PGSQL_DIAG_MESSAGE_DETAIL ] { 68 }
+    Constant [ integer PGSQL_DIAG_MESSAGE_HINT ] { 72 }
+    Constant [ integer PGSQL_DIAG_STATEMENT_POSITION ] { 80 }
+    Constant [ integer PGSQL_DIAG_INTERNAL_POSITION ] { 112 }
+    Constant [ integer PGSQL_DIAG_INTERNAL_QUERY ] { 113 }
+    Constant [ integer PGSQL_DIAG_CONTEXT ] { 87 }
+    Constant [ integer PGSQL_DIAG_SOURCE_FILE ] { 70 }
+    Constant [ integer PGSQL_DIAG_SOURCE_LINE ] { 76 }
+    Constant [ integer PGSQL_DIAG_SOURCE_FUNCTION ] { 82 }
+    Constant [ integer PGSQL_CONV_IGNORE_DEFAULT ] { 2 }
+    Constant [ integer PGSQL_CONV_FORCE_NULL ] { 4 }
+    Constant [ integer PGSQL_CONV_IGNORE_NOT_NULL ] { 8 }
+    Constant [ integer PGSQL_DML_NO_CONV ] { 256 }
+    Constant [ integer PGSQL_DML_EXEC ] { 512 }
+    Constant [ integer PGSQL_DML_ASYNC ] { 1024 }
+    Constant [ integer PGSQL_DML_STRING ] { 2048 }
+  }
+
+  - Functions {
+    Function [ <internal:pgsql> function pg_connect ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $connection_string ]
+        Parameter #1 [ <optional> $connect_type ]
+        Parameter #2 [ <optional> $host ]
+        Parameter #3 [ <optional> $port ]
+        Parameter #4 [ <optional> $options ]
+        Parameter #5 [ <optional> $tty ]
+        Parameter #6 [ <optional> $database ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_pconnect ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $connection_string ]
+        Parameter #1 [ <optional> $host ]
+        Parameter #2 [ <optional> $port ]
+        Parameter #3 [ <optional> $options ]
+        Parameter #4 [ <optional> $tty ]
+        Parameter #5 [ <optional> $database ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_connection_status ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_connection_busy ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_connection_reset ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_host ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_dbname ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_port ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_tty ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_options ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_version ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_ping ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_parameter_status ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <optional> $param_name ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_transaction_status ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_query ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $query ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_query_params ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $query ]
+        Parameter #2 [ <optional> $params ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_prepare ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $stmtname ]
+        Parameter #2 [ <optional> $query ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_execute ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $stmtname ]
+        Parameter #2 [ <optional> $params ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_send_query ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $query ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_send_query_params ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $query ]
+        Parameter #2 [ <required> $params ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_send_prepare ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $stmtname ]
+        Parameter #2 [ <required> $query ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_send_execute ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $stmtname ]
+        Parameter #2 [ <required> $params ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_cancel_query ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fetch_result ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $row_number ]
+        Parameter #2 [ <optional> $field_name ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fetch_row ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $row ]
+        Parameter #2 [ <optional> $result_type ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fetch_assoc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $row ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fetch_array ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $row ]
+        Parameter #2 [ <optional> $result_type ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fetch_object ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $row ]
+        Parameter #2 [ <optional> $class_name ]
+        Parameter #3 [ <optional> $l ]
+        Parameter #4 [ <optional> $ctor_params ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fetch_all ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fetch_all_columns ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $column_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_affected_rows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_get_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_result_seek ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $offset ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_result_status ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $result_type ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_free_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_last_oid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_num_rows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_num_fields ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_field_name ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_field_num ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_name ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_field_size ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_field_type ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_field_type_oid ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_field_prtlen ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $row ]
+        Parameter #2 [ <optional> $field_name_or_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_field_is_null ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $row ]
+        Parameter #2 [ <optional> $field_name_or_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_field_table ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_number ]
+        Parameter #2 [ <optional> $oid_only ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_get_notify ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $e ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_get_pid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_result_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_result_error_field ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $fieldcode ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_last_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_last_notice ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_put_line ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $query ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_end_copy ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_copy_to ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $table_name ]
+        Parameter #2 [ <optional> $delimiter ]
+        Parameter #3 [ <optional> $null_as ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_copy_from ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $table_name ]
+        Parameter #2 [ <required> $rows ]
+        Parameter #3 [ <optional> $delimiter ]
+        Parameter #4 [ <optional> $null_as ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_trace ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $mode ]
+        Parameter #2 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_untrace ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_create ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $large_object_id ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_unlink ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $large_object_oid ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_open ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $large_object_oid ]
+        Parameter #2 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $large_object ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_read ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $large_object ]
+        Parameter #1 [ <optional> $len ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_write ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $large_object ]
+        Parameter #1 [ <required> $buf ]
+        Parameter #2 [ <optional> $len ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_read_all ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $large_object ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_import ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $filename ]
+        Parameter #2 [ <optional> $large_object_oid ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_export ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $objoid ]
+        Parameter #2 [ <optional> $filename ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_seek ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $large_object ]
+        Parameter #1 [ <required> $offset ]
+        Parameter #2 [ <optional> $whence ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lo_tell ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $large_object ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_escape_string ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $data ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_escape_bytea ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $data ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_unescape_bytea ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_escape_literal ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $data ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_escape_identifier ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $data ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_set_error_verbosity ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $verbosity ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_client_encoding ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_set_client_encoding ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_meta_data ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $db ]
+        Parameter #1 [ <required> $table ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_convert ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $db ]
+        Parameter #1 [ <required> $table ]
+        Parameter #2 [ <required> $values ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_insert ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $db ]
+        Parameter #1 [ <required> $table ]
+        Parameter #2 [ <required> $values ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_update ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $db ]
+        Parameter #1 [ <required> $table ]
+        Parameter #2 [ <required> $fields ]
+        Parameter #3 [ <required> $ids ]
+        Parameter #4 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_delete ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $db ]
+        Parameter #1 [ <required> $table ]
+        Parameter #2 [ <required> $ids ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_select ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $db ]
+        Parameter #1 [ <required> $table ]
+        Parameter #2 [ <required> $ids ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_exec ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $query ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_getlastoid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_cmdtuples ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_errormessage ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_numrows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_numfields ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fieldname ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fieldsize ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fieldtype ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fieldnum ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_name ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fieldprtlen ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $row ]
+        Parameter #2 [ <optional> $field_name_or_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_fieldisnull ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $row ]
+        Parameter #2 [ <optional> $field_name_or_number ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_freeresult ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_loreadall ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $large_object ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_locreate ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $large_object_id ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lounlink ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $large_object_oid ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_loopen ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $large_object_oid ]
+        Parameter #2 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_loclose ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $large_object ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_loread ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $large_object ]
+        Parameter #1 [ <optional> $len ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_lowrite ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $large_object ]
+        Parameter #1 [ <required> $buf ]
+        Parameter #2 [ <optional> $len ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_loimport ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $filename ]
+        Parameter #2 [ <optional> $large_object_oid ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_loexport ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $objoid ]
+        Parameter #2 [ <optional> $filename ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_clientencoding ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection ]
+      }
+    }
+    Function [ <internal:pgsql> function pg_setclientencoding ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $connection ]
+        Parameter #1 [ <optional> $encoding ]
+      }
+    }
+  }
+}
+

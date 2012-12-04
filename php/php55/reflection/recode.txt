@@ -1,0 +1,28 @@
+Extension [ <persistent> extension #76 recode version <no_version> ] {
+
+  - Functions {
+    Function [ <internal:recode> function recode_string ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $request ]
+        Parameter #1 [ <required> $str ]
+      }
+    }
+    Function [ <internal:recode> function recode_file ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $request ]
+        Parameter #1 [ <required> $input ]
+        Parameter #2 [ <required> $output ]
+      }
+    }
+    Function [ <internal:recode> function recode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $request ]
+        Parameter #1 [ <required> $str ]
+      }
+    }
+  }
+}
+

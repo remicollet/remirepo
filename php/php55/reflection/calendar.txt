@@ -1,0 +1,157 @@
+Extension [ <persistent> extension #9 calendar version <no_version> ] {
+
+  - Constants [21] {
+    Constant [ integer CAL_GREGORIAN ] { 0 }
+    Constant [ integer CAL_JULIAN ] { 1 }
+    Constant [ integer CAL_JEWISH ] { 2 }
+    Constant [ integer CAL_FRENCH ] { 3 }
+    Constant [ integer CAL_NUM_CALS ] { 4 }
+    Constant [ integer CAL_DOW_DAYNO ] { 0 }
+    Constant [ integer CAL_DOW_SHORT ] { 1 }
+    Constant [ integer CAL_DOW_LONG ] { 2 }
+    Constant [ integer CAL_MONTH_GREGORIAN_SHORT ] { 0 }
+    Constant [ integer CAL_MONTH_GREGORIAN_LONG ] { 1 }
+    Constant [ integer CAL_MONTH_JULIAN_SHORT ] { 2 }
+    Constant [ integer CAL_MONTH_JULIAN_LONG ] { 3 }
+    Constant [ integer CAL_MONTH_JEWISH ] { 4 }
+    Constant [ integer CAL_MONTH_FRENCH ] { 5 }
+    Constant [ integer CAL_EASTER_DEFAULT ] { 0 }
+    Constant [ integer CAL_EASTER_ROMAN ] { 1 }
+    Constant [ integer CAL_EASTER_ALWAYS_GREGORIAN ] { 2 }
+    Constant [ integer CAL_EASTER_ALWAYS_JULIAN ] { 3 }
+    Constant [ integer CAL_JEWISH_ADD_ALAFIM_GERESH ] { 2 }
+    Constant [ integer CAL_JEWISH_ADD_ALAFIM ] { 4 }
+    Constant [ integer CAL_JEWISH_ADD_GERESHAYIM ] { 8 }
+  }
+
+  - Functions {
+    Function [ <internal:calendar> function jdtogregorian ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $juliandaycount ]
+      }
+    }
+    Function [ <internal:calendar> function gregoriantojd ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $month ]
+        Parameter #1 [ <required> $day ]
+        Parameter #2 [ <required> $year ]
+      }
+    }
+    Function [ <internal:calendar> function jdtojulian ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $juliandaycount ]
+      }
+    }
+    Function [ <internal:calendar> function juliantojd ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $month ]
+        Parameter #1 [ <required> $day ]
+        Parameter #2 [ <required> $year ]
+      }
+    }
+    Function [ <internal:calendar> function jdtojewish ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $juliandaycount ]
+        Parameter #1 [ <optional> $hebrew ]
+        Parameter #2 [ <optional> $fl ]
+      }
+    }
+    Function [ <internal:calendar> function jewishtojd ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $month ]
+        Parameter #1 [ <required> $day ]
+        Parameter #2 [ <required> $year ]
+      }
+    }
+    Function [ <internal:calendar> function jdtofrench ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $juliandaycount ]
+      }
+    }
+    Function [ <internal:calendar> function frenchtojd ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $month ]
+        Parameter #1 [ <required> $day ]
+        Parameter #2 [ <required> $year ]
+      }
+    }
+    Function [ <internal:calendar> function jddayofweek ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $juliandaycount ]
+        Parameter #1 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:calendar> function jdmonthname ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $juliandaycount ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:calendar> function easter_date ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $year ]
+      }
+    }
+    Function [ <internal:calendar> function easter_days ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $year ]
+        Parameter #1 [ <optional> $method ]
+      }
+    }
+    Function [ <internal:calendar> function unixtojd ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $timestamp ]
+      }
+    }
+    Function [ <internal:calendar> function jdtounix ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $jday ]
+      }
+    }
+    Function [ <internal:calendar> function cal_to_jd ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $calendar ]
+        Parameter #1 [ <required> $month ]
+        Parameter #2 [ <required> $day ]
+        Parameter #3 [ <required> $year ]
+      }
+    }
+    Function [ <internal:calendar> function cal_from_jd ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $jd ]
+        Parameter #1 [ <required> $calendar ]
+      }
+    }
+    Function [ <internal:calendar> function cal_days_in_month ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $calendar ]
+        Parameter #1 [ <required> $month ]
+        Parameter #2 [ <required> $year ]
+      }
+    }
+    Function [ <internal:calendar> function cal_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $calendar ]
+      }
+    }
+  }
+}
+

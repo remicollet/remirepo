@@ -1,0 +1,153 @@
+Extension [ <persistent> extension #74 pspell version <no_version> ] {
+
+  - Constants [4] {
+    Constant [ integer PSPELL_FAST ] { 1 }
+    Constant [ integer PSPELL_NORMAL ] { 2 }
+    Constant [ integer PSPELL_BAD_SPELLERS ] { 3 }
+    Constant [ integer PSPELL_RUN_TOGETHER ] { 8 }
+  }
+
+  - Functions {
+    Function [ <internal:pspell> function pspell_new ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $language ]
+        Parameter #1 [ <optional> $spelling ]
+        Parameter #2 [ <optional> $jargon ]
+        Parameter #3 [ <optional> $encoding ]
+        Parameter #4 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_new_personal ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $personal ]
+        Parameter #1 [ <required> $language ]
+        Parameter #2 [ <optional> $spelling ]
+        Parameter #3 [ <optional> $jargon ]
+        Parameter #4 [ <optional> $encoding ]
+        Parameter #5 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_new_config ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $config ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_check ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pspell ]
+        Parameter #1 [ <required> $word ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_suggest ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pspell ]
+        Parameter #1 [ <required> $word ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_store_replacement ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pspell ]
+        Parameter #1 [ <required> $misspell ]
+        Parameter #2 [ <required> $correct ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_add_to_personal ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pspell ]
+        Parameter #1 [ <required> $word ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_add_to_session ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pspell ]
+        Parameter #1 [ <required> $word ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_clear_session ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $pspell ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_save_wordlist ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $pspell ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_config_create ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $language ]
+        Parameter #1 [ <optional> $spelling ]
+        Parameter #2 [ <optional> $jargon ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_config_runtogether ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conf ]
+        Parameter #1 [ <required> $runtogether ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_config_mode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conf ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_config_ignore ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conf ]
+        Parameter #1 [ <required> $ignore ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_config_personal ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conf ]
+        Parameter #1 [ <required> $personal ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_config_dict_dir ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conf ]
+        Parameter #1 [ <required> $directory ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_config_data_dir ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conf ]
+        Parameter #1 [ <required> $directory ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_config_repl ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conf ]
+        Parameter #1 [ <required> $repl ]
+      }
+    }
+    Function [ <internal:pspell> function pspell_config_save_repl ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conf ]
+        Parameter #1 [ <required> $save ]
+      }
+    }
+  }
+}
+

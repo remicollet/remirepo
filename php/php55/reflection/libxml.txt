@@ -1,0 +1,93 @@
+Extension [ <persistent> extension #4 libxml version <no_version> ] {
+
+  - Constants [25] {
+    Constant [ integer LIBXML_VERSION ] { 20708 }
+    Constant [ string LIBXML_DOTTED_VERSION ] { 2.7.8 }
+    Constant [ string LIBXML_LOADED_VERSION ] { 20708 }
+    Constant [ integer LIBXML_NOENT ] { 2 }
+    Constant [ integer LIBXML_DTDLOAD ] { 4 }
+    Constant [ integer LIBXML_DTDATTR ] { 8 }
+    Constant [ integer LIBXML_DTDVALID ] { 16 }
+    Constant [ integer LIBXML_NOERROR ] { 32 }
+    Constant [ integer LIBXML_NOWARNING ] { 64 }
+    Constant [ integer LIBXML_NOBLANKS ] { 256 }
+    Constant [ integer LIBXML_XINCLUDE ] { 1024 }
+    Constant [ integer LIBXML_NSCLEAN ] { 8192 }
+    Constant [ integer LIBXML_NOCDATA ] { 16384 }
+    Constant [ integer LIBXML_NONET ] { 2048 }
+    Constant [ integer LIBXML_PEDANTIC ] { 128 }
+    Constant [ integer LIBXML_COMPACT ] { 65536 }
+    Constant [ integer LIBXML_NOXMLDECL ] { 2 }
+    Constant [ integer LIBXML_PARSEHUGE ] { 524288 }
+    Constant [ integer LIBXML_NOEMPTYTAG ] { 4 }
+    Constant [ integer LIBXML_HTML_NOIMPLIED ] { 8192 }
+    Constant [ integer LIBXML_HTML_NODEFDTD ] { 4 }
+    Constant [ integer LIBXML_ERR_NONE ] { 0 }
+    Constant [ integer LIBXML_ERR_WARNING ] { 1 }
+    Constant [ integer LIBXML_ERR_ERROR ] { 2 }
+    Constant [ integer LIBXML_ERR_FATAL ] { 3 }
+  }
+
+  - Functions {
+    Function [ <internal:libxml> function libxml_set_streams_context ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $context ]
+      }
+    }
+    Function [ <internal:libxml> function libxml_use_internal_errors ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $use_errors ]
+      }
+    }
+    Function [ <internal:libxml> function libxml_get_last_error ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:libxml> function libxml_clear_errors ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:libxml> function libxml_get_errors ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:libxml> function libxml_disable_entity_loader ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $disable ]
+      }
+    }
+    Function [ <internal:libxml> function libxml_set_external_entity_loader ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $resolver_function ]
+      }
+    }
+  }
+
+  - Classes [1] {
+    Class [ <internal:libxml> class LibXMLError ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+  }
+}
+

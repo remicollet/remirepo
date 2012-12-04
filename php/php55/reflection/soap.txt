@@ -1,0 +1,467 @@
+Extension [ <persistent> extension #78 soap version <no_version> ] {
+
+  - INI {
+    Entry [ soap.wsdl_cache_enabled <ALL> ]
+      Current = '1'
+    }
+    Entry [ soap.wsdl_cache_dir <ALL> ]
+      Current = '/tmp'
+    }
+    Entry [ soap.wsdl_cache_ttl <ALL> ]
+      Current = '86400'
+    }
+    Entry [ soap.wsdl_cache <ALL> ]
+      Current = '1'
+    }
+    Entry [ soap.wsdl_cache_limit <ALL> ]
+      Current = '5'
+    }
+  }
+
+  - Constants [77] {
+    Constant [ integer SOAP_1_1 ] { 1 }
+    Constant [ integer SOAP_1_2 ] { 2 }
+    Constant [ integer SOAP_PERSISTENCE_SESSION ] { 1 }
+    Constant [ integer SOAP_PERSISTENCE_REQUEST ] { 2 }
+    Constant [ integer SOAP_FUNCTIONS_ALL ] { 999 }
+    Constant [ integer SOAP_ENCODED ] { 1 }
+    Constant [ integer SOAP_LITERAL ] { 2 }
+    Constant [ integer SOAP_RPC ] { 1 }
+    Constant [ integer SOAP_DOCUMENT ] { 2 }
+    Constant [ integer SOAP_ACTOR_NEXT ] { 1 }
+    Constant [ integer SOAP_ACTOR_NONE ] { 2 }
+    Constant [ integer SOAP_ACTOR_UNLIMATERECEIVER ] { 3 }
+    Constant [ integer SOAP_COMPRESSION_ACCEPT ] { 32 }
+    Constant [ integer SOAP_COMPRESSION_GZIP ] { 0 }
+    Constant [ integer SOAP_COMPRESSION_DEFLATE ] { 16 }
+    Constant [ integer SOAP_AUTHENTICATION_BASIC ] { 0 }
+    Constant [ integer SOAP_AUTHENTICATION_DIGEST ] { 1 }
+    Constant [ integer UNKNOWN_TYPE ] { 999998 }
+    Constant [ integer XSD_STRING ] { 101 }
+    Constant [ integer XSD_BOOLEAN ] { 102 }
+    Constant [ integer XSD_DECIMAL ] { 103 }
+    Constant [ integer XSD_FLOAT ] { 104 }
+    Constant [ integer XSD_DOUBLE ] { 105 }
+    Constant [ integer XSD_DURATION ] { 106 }
+    Constant [ integer XSD_DATETIME ] { 107 }
+    Constant [ integer XSD_TIME ] { 108 }
+    Constant [ integer XSD_DATE ] { 109 }
+    Constant [ integer XSD_GYEARMONTH ] { 110 }
+    Constant [ integer XSD_GYEAR ] { 111 }
+    Constant [ integer XSD_GMONTHDAY ] { 112 }
+    Constant [ integer XSD_GDAY ] { 113 }
+    Constant [ integer XSD_GMONTH ] { 114 }
+    Constant [ integer XSD_HEXBINARY ] { 115 }
+    Constant [ integer XSD_BASE64BINARY ] { 116 }
+    Constant [ integer XSD_ANYURI ] { 117 }
+    Constant [ integer XSD_QNAME ] { 118 }
+    Constant [ integer XSD_NOTATION ] { 119 }
+    Constant [ integer XSD_NORMALIZEDSTRING ] { 120 }
+    Constant [ integer XSD_TOKEN ] { 121 }
+    Constant [ integer XSD_LANGUAGE ] { 122 }
+    Constant [ integer XSD_NMTOKEN ] { 123 }
+    Constant [ integer XSD_NAME ] { 124 }
+    Constant [ integer XSD_NCNAME ] { 125 }
+    Constant [ integer XSD_ID ] { 126 }
+    Constant [ integer XSD_IDREF ] { 127 }
+    Constant [ integer XSD_IDREFS ] { 128 }
+    Constant [ integer XSD_ENTITY ] { 129 }
+    Constant [ integer XSD_ENTITIES ] { 130 }
+    Constant [ integer XSD_INTEGER ] { 131 }
+    Constant [ integer XSD_NONPOSITIVEINTEGER ] { 132 }
+    Constant [ integer XSD_NEGATIVEINTEGER ] { 133 }
+    Constant [ integer XSD_LONG ] { 134 }
+    Constant [ integer XSD_INT ] { 135 }
+    Constant [ integer XSD_SHORT ] { 136 }
+    Constant [ integer XSD_BYTE ] { 137 }
+    Constant [ integer XSD_NONNEGATIVEINTEGER ] { 138 }
+    Constant [ integer XSD_UNSIGNEDLONG ] { 139 }
+    Constant [ integer XSD_UNSIGNEDINT ] { 140 }
+    Constant [ integer XSD_UNSIGNEDSHORT ] { 141 }
+    Constant [ integer XSD_UNSIGNEDBYTE ] { 142 }
+    Constant [ integer XSD_POSITIVEINTEGER ] { 143 }
+    Constant [ integer XSD_NMTOKENS ] { 144 }
+    Constant [ integer XSD_ANYTYPE ] { 145 }
+    Constant [ integer XSD_ANYXML ] { 147 }
+    Constant [ integer APACHE_MAP ] { 200 }
+    Constant [ integer SOAP_ENC_OBJECT ] { 301 }
+    Constant [ integer SOAP_ENC_ARRAY ] { 300 }
+    Constant [ integer XSD_1999_TIMEINSTANT ] { 401 }
+    Constant [ string XSD_NAMESPACE ] { http://www.w3.org/2001/XMLSchema }
+    Constant [ string XSD_1999_NAMESPACE ] { http://www.w3.org/1999/XMLSchema }
+    Constant [ integer SOAP_SINGLE_ELEMENT_ARRAYS ] { 1 }
+    Constant [ integer SOAP_WAIT_ONE_WAY_CALLS ] { 2 }
+    Constant [ integer SOAP_USE_XSI_ARRAY_TYPE ] { 4 }
+    Constant [ integer WSDL_CACHE_NONE ] { 0 }
+    Constant [ integer WSDL_CACHE_DISK ] { 1 }
+    Constant [ integer WSDL_CACHE_MEMORY ] { 2 }
+    Constant [ integer WSDL_CACHE_BOTH ] { 3 }
+  }
+
+  - Functions {
+    Function [ <internal:soap> function use_soap_error_handler ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $handler ]
+      }
+    }
+    Function [ <internal:soap> function is_soap_fault ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+    }
+  }
+
+  - Classes [6] {
+    Class [ <internal:soap> class SoapClient ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [13] {
+        Method [ <internal:soap, ctor> public method SoapClient ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $wsdl ]
+            Parameter #1 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:soap> public method __call ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $function_name ]
+            Parameter #1 [ <required> $arguments ]
+          }
+        }
+
+        Method [ <internal:soap> public method __soapCall ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $function_name ]
+            Parameter #1 [ <required> $arguments ]
+            Parameter #2 [ <optional> $options ]
+            Parameter #3 [ <optional> $input_headers ]
+            Parameter #4 [ <optional> &$output_headers ]
+          }
+        }
+
+        Method [ <internal:soap> public method __getLastRequest ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:soap> public method __getLastResponse ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:soap> public method __getLastRequestHeaders ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:soap> public method __getLastResponseHeaders ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:soap> public method __getFunctions ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:soap> public method __getTypes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:soap> public method __doRequest ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $request ]
+            Parameter #1 [ <required> $location ]
+            Parameter #2 [ <required> $action ]
+            Parameter #3 [ <required> $version ]
+            Parameter #4 [ <optional> $one_way ]
+          }
+        }
+
+        Method [ <internal:soap> public method __setCookie ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <optional> $value ]
+          }
+        }
+
+        Method [ <internal:soap> public method __setLocation ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $new_location ]
+          }
+        }
+
+        Method [ <internal:soap> public method __setSoapHeaders ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $soapheaders ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:soap> class SoapVar ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:soap, ctor> public method SoapVar ] {
+
+          - Parameters [6] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <required> $encoding ]
+            Parameter #2 [ <optional> $type_name ]
+            Parameter #3 [ <optional> $type_namespace ]
+            Parameter #4 [ <optional> $node_name ]
+            Parameter #5 [ <optional> $node_namespace ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:soap> class SoapServer ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [9] {
+        Method [ <internal:soap, ctor> public method SoapServer ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $wsdl ]
+            Parameter #1 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:soap> public method setPersistence ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $mode ]
+          }
+        }
+
+        Method [ <internal:soap> public method setClass ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $class_name ]
+            Parameter #1 [ <optional> $args ]
+          }
+        }
+
+        Method [ <internal:soap> public method setObject ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+
+        Method [ <internal:soap> public method addFunction ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $functions ]
+          }
+        }
+
+        Method [ <internal:soap> public method getFunctions ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:soap> public method handle ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $soap_request ]
+          }
+        }
+
+        Method [ <internal:soap> public method fault ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $code ]
+            Parameter #1 [ <required> $string ]
+            Parameter #2 [ <optional> $actor ]
+            Parameter #3 [ <optional> $details ]
+            Parameter #4 [ <optional> $name ]
+          }
+        }
+
+        Method [ <internal:soap> public method addSoapHeader ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:soap> class SoapFault extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:soap, ctor> public method SoapFault ] {
+
+          - Parameters [6] {
+            Parameter #0 [ <required> $faultcode ]
+            Parameter #1 [ <required> $faultstring ]
+            Parameter #2 [ <optional> $faultactor ]
+            Parameter #3 [ <optional> $detail ]
+            Parameter #4 [ <optional> $faultname ]
+            Parameter #5 [ <optional> $headerfault ]
+          }
+        }
+
+        Method [ <internal:soap, overwrites Exception, prototype Exception> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+      }
+    }
+
+    Class [ <internal:soap> class SoapParam ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:soap, ctor> public method SoapParam ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <required> $name ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:soap> class SoapHeader ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:soap, ctor> public method SoapHeader ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $namespace ]
+            Parameter #1 [ <required> $name ]
+            Parameter #2 [ <optional> $data ]
+            Parameter #3 [ <optional> $mustunderstand ]
+            Parameter #4 [ <optional> $actor ]
+          }
+        }
+      }
+    }
+  }
+}
+

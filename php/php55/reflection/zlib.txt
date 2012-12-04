@@ -1,0 +1,202 @@
+Extension [ <persistent> extension #7 zlib version 2.0 ] {
+
+  - INI {
+    Entry [ zlib.output_compression <ALL> ]
+      Current = '0'
+    }
+    Entry [ zlib.output_compression_level <ALL> ]
+      Current = '-1'
+    }
+    Entry [ zlib.output_handler <ALL> ]
+      Current = ''
+    }
+  }
+
+  - Constants [5] {
+    Constant [ integer FORCE_GZIP ] { 31 }
+    Constant [ integer FORCE_DEFLATE ] { 15 }
+    Constant [ integer ZLIB_ENCODING_RAW ] { -15 }
+    Constant [ integer ZLIB_ENCODING_GZIP ] { 31 }
+    Constant [ integer ZLIB_ENCODING_DEFLATE ] { 15 }
+  }
+
+  - Functions {
+    Function [ <internal:zlib> function readgzfile ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $use_include_path ]
+      }
+    }
+    Function [ <internal:zlib> function gzrewind ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:zlib> function gzclose ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:zlib> function gzeof ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:zlib> function gzgetc ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:zlib> function gzgets ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:zlib> function gzgetss ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <optional> $length ]
+        Parameter #2 [ <optional> $allowable_tags ]
+      }
+    }
+    Function [ <internal:zlib> function gzread ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $length ]
+      }
+    }
+    Function [ <internal:zlib> function gzopen ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $mode ]
+        Parameter #2 [ <optional> $use_include_path ]
+      }
+    }
+    Function [ <internal:zlib> function gzpassthru ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:zlib> function gzseek ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $offset ]
+        Parameter #2 [ <optional> $whence ]
+      }
+    }
+    Function [ <internal:zlib> function gztell ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:zlib> function gzwrite ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $str ]
+        Parameter #2 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:zlib> function gzputs ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $str ]
+        Parameter #2 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:zlib> function gzfile ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $use_include_path ]
+      }
+    }
+    Function [ <internal:zlib> function gzcompress ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $level ]
+        Parameter #2 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:zlib> function gzuncompress ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $max_decoded_len ]
+      }
+    }
+    Function [ <internal:zlib> function gzdeflate ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $level ]
+        Parameter #2 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:zlib> function gzinflate ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $max_decoded_len ]
+      }
+    }
+    Function [ <internal:zlib> function gzencode ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $level ]
+        Parameter #2 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:zlib> function gzdecode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $max_decoded_len ]
+      }
+    }
+    Function [ <internal:zlib> function zlib_encode ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> $encoding ]
+        Parameter #2 [ <optional> $level ]
+      }
+    }
+    Function [ <internal:zlib> function zlib_decode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $max_decoded_len ]
+      }
+    }
+    Function [ <internal:zlib> function zlib_get_coding_type ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:zlib> function ob_gzhandler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <required> $flags ]
+      }
+    }
+  }
+}
+

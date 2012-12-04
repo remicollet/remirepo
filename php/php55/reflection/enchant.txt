@@ -1,0 +1,153 @@
+Extension [ <persistent> extension #35 enchant version 1.1.0 ] {
+
+  - Constants [2] {
+    Constant [ integer ENCHANT_MYSPELL ] { 1 }
+    Constant [ integer ENCHANT_ISPELL ] { 2 }
+  }
+
+  - Functions {
+    Function [ <internal:enchant> function enchant_broker_init ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_free ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $broker ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_get_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $broker ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_set_dict_path ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $broker ]
+        Parameter #1 [ <required> $name ]
+        Parameter #2 [ <required> $value ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_get_dict_path ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $broker ]
+        Parameter #1 [ <required> $name ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_list_dicts ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $broker ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_request_dict ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $broker ]
+        Parameter #1 [ <required> $tag ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_request_pwl_dict ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $broker ]
+        Parameter #1 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_free_dict ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $dict ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_dict_exists ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $broker ]
+        Parameter #1 [ <required> $tag ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_set_ordering ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $broker ]
+        Parameter #1 [ <required> $tag ]
+        Parameter #2 [ <required> $ordering ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_broker_describe ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $broker ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_dict_check ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $dict ]
+        Parameter #1 [ <required> $word ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_dict_suggest ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $dict ]
+        Parameter #1 [ <required> $word ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_dict_add_to_personal ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $dict ]
+        Parameter #1 [ <required> $word ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_dict_add_to_session ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $dict ]
+        Parameter #1 [ <required> $word ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_dict_is_in_session ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $dict ]
+        Parameter #1 [ <required> $word ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_dict_store_replacement ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $dict ]
+        Parameter #1 [ <required> $mis ]
+        Parameter #2 [ <required> $cor ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_dict_get_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $dict ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_dict_describe ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $dict ]
+      }
+    }
+    Function [ <internal:enchant> function enchant_dict_quick_check ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $dict ]
+        Parameter #1 [ <required> $word ]
+        Parameter #2 [ <optional> &$suggestions ]
+      }
+    }
+  }
+}
+

@@ -1,0 +1,426 @@
+Extension [ <persistent> extension #62 odbc version 1.0 ] {
+
+  - INI {
+    Entry [ odbc.allow_persistent <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ odbc.max_persistent <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ odbc.max_links <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ odbc.default_db <ALL> ]
+      Current = ''
+    }
+    Entry [ odbc.default_user <ALL> ]
+      Current = ''
+    }
+    Entry [ odbc.default_pw <ALL> ]
+      Current = ''
+    }
+    Entry [ odbc.defaultlrl <ALL> ]
+      Current = '4096'
+    }
+    Entry [ odbc.defaultbinmode <ALL> ]
+      Current = '1'
+    }
+    Entry [ odbc.check_persistent <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ odbc.default_cursortype <ALL> ]
+      Current = '3'
+    }
+  }
+
+  - Constants [40] {
+    Constant [ string ODBC_TYPE ] { unixODBC }
+    Constant [ integer ODBC_BINMODE_PASSTHRU ] { 0 }
+    Constant [ integer ODBC_BINMODE_RETURN ] { 1 }
+    Constant [ integer ODBC_BINMODE_CONVERT ] { 2 }
+    Constant [ integer SQL_ODBC_CURSORS ] { 110 }
+    Constant [ integer SQL_CUR_USE_DRIVER ] { 2 }
+    Constant [ integer SQL_CUR_USE_IF_NEEDED ] { 0 }
+    Constant [ integer SQL_CUR_USE_ODBC ] { 1 }
+    Constant [ integer SQL_CONCURRENCY ] { 7 }
+    Constant [ integer SQL_CONCUR_READ_ONLY ] { 1 }
+    Constant [ integer SQL_CONCUR_LOCK ] { 2 }
+    Constant [ integer SQL_CONCUR_ROWVER ] { 3 }
+    Constant [ integer SQL_CONCUR_VALUES ] { 4 }
+    Constant [ integer SQL_CURSOR_TYPE ] { 6 }
+    Constant [ integer SQL_CURSOR_FORWARD_ONLY ] { 0 }
+    Constant [ integer SQL_CURSOR_KEYSET_DRIVEN ] { 1 }
+    Constant [ integer SQL_CURSOR_DYNAMIC ] { 2 }
+    Constant [ integer SQL_CURSOR_STATIC ] { 3 }
+    Constant [ integer SQL_KEYSET_SIZE ] { 8 }
+    Constant [ integer SQL_FETCH_FIRST ] { 2 }
+    Constant [ integer SQL_FETCH_NEXT ] { 1 }
+    Constant [ integer SQL_CHAR ] { 1 }
+    Constant [ integer SQL_VARCHAR ] { 12 }
+    Constant [ integer SQL_LONGVARCHAR ] { -1 }
+    Constant [ integer SQL_DECIMAL ] { 3 }
+    Constant [ integer SQL_NUMERIC ] { 2 }
+    Constant [ integer SQL_BIT ] { -7 }
+    Constant [ integer SQL_TINYINT ] { -6 }
+    Constant [ integer SQL_SMALLINT ] { 5 }
+    Constant [ integer SQL_INTEGER ] { 4 }
+    Constant [ integer SQL_BIGINT ] { -5 }
+    Constant [ integer SQL_REAL ] { 7 }
+    Constant [ integer SQL_FLOAT ] { 6 }
+    Constant [ integer SQL_DOUBLE ] { 8 }
+    Constant [ integer SQL_BINARY ] { -2 }
+    Constant [ integer SQL_VARBINARY ] { -3 }
+    Constant [ integer SQL_LONGVARBINARY ] { -4 }
+    Constant [ integer SQL_DATE ] { 9 }
+    Constant [ integer SQL_TIME ] { 10 }
+    Constant [ integer SQL_TIMESTAMP ] { 11 }
+  }
+
+  - Functions {
+    Function [ <internal:odbc> function odbc_autocommit ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <optional> $onoff ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_binmode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_close_all ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:odbc> function odbc_columns ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <optional> $qualifier ]
+        Parameter #2 [ <optional> $owner ]
+        Parameter #3 [ <optional> $table_name ]
+        Parameter #4 [ <optional> $column_name ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_commit ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_connect ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $dsn ]
+        Parameter #1 [ <required> $user ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $cursor_option ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_cursor ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_data_source ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $fetch_type ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_execute ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <optional> $parameters_array ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_errormsg ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $connection_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_exec ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $query ]
+        Parameter #2 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_fetch_array ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $rownumber ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_fetch_object ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $rownumber ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_fetch_row ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <optional> $row_number ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_fetch_into ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> &$result_array ]
+        Parameter #2 [ <optional> $rownumber ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_field_len ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_field_scale ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_field_name ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_field_type ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_field_num ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> $field_name ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_free_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_gettypeinfo ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <optional> $data_type ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_longreadlen ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> $length ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_next_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_num_fields ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_num_rows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_pconnect ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $dsn ]
+        Parameter #1 [ <required> $user ]
+        Parameter #2 [ <required> $password ]
+        Parameter #3 [ <optional> $cursor_option ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_prepare ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $query ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_result ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_result_all ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <optional> $format ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_rollback ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection_id ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_setoption ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $conn_id ]
+        Parameter #1 [ <required> $which ]
+        Parameter #2 [ <required> $option ]
+        Parameter #3 [ <required> $value ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_specialcolumns ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $type ]
+        Parameter #2 [ <required> $qualifier ]
+        Parameter #3 [ <required> $owner ]
+        Parameter #4 [ <required> $table ]
+        Parameter #5 [ <required> $scope ]
+        Parameter #6 [ <required> $nullable ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_statistics ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $qualifier ]
+        Parameter #2 [ <required> $owner ]
+        Parameter #3 [ <required> $name ]
+        Parameter #4 [ <required> $unique ]
+        Parameter #5 [ <required> $accuracy ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_tables ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <optional> $qualifier ]
+        Parameter #2 [ <optional> $owner ]
+        Parameter #3 [ <optional> $name ]
+        Parameter #4 [ <optional> $table_types ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_primarykeys ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $qualifier ]
+        Parameter #2 [ <required> $owner ]
+        Parameter #3 [ <required> $table ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_columnprivileges ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $catalog ]
+        Parameter #2 [ <required> $schema ]
+        Parameter #3 [ <required> $table ]
+        Parameter #4 [ <required> $column ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_tableprivileges ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $qualifier ]
+        Parameter #2 [ <required> $owner ]
+        Parameter #3 [ <required> $name ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_foreignkeys ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $pk_qualifier ]
+        Parameter #2 [ <required> $pk_owner ]
+        Parameter #3 [ <required> $pk_table ]
+        Parameter #4 [ <required> $fk_qualifier ]
+        Parameter #5 [ <required> $fk_owner ]
+        Parameter #6 [ <required> $fk_table ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_procedures ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <optional> $qualifier ]
+        Parameter #2 [ <optional> $owner ]
+        Parameter #3 [ <optional> $name ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_procedurecolumns ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <optional> $qualifier ]
+        Parameter #2 [ <optional> $owner ]
+        Parameter #3 [ <optional> $proc ]
+        Parameter #4 [ <optional> $column ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_do ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $connection_id ]
+        Parameter #1 [ <required> $query ]
+        Parameter #2 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:odbc> function odbc_field_precision ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_id ]
+        Parameter #1 [ <required> $field_number ]
+      }
+    }
+  }
+}
+

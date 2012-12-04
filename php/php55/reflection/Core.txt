@@ -1,0 +1,1040 @@
+Extension [ <persistent> extension #0 Core version 5.5.0-dev ] {
+
+  - INI {
+    Entry [ highlight.comment <ALL> ]
+      Current = '#FF8000'
+    }
+    Entry [ highlight.default <ALL> ]
+      Current = '#0000BB'
+    }
+    Entry [ highlight.html <ALL> ]
+      Current = '#000000'
+    }
+    Entry [ highlight.keyword <ALL> ]
+      Current = '#007700'
+    }
+    Entry [ highlight.string <ALL> ]
+      Current = '#DD0000'
+    }
+    Entry [ asp_tags <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ display_errors <ALL> ]
+      Current = '1'
+    }
+    Entry [ display_startup_errors <ALL> ]
+      Current = '0'
+    }
+    Entry [ enable_dl <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ expose_php <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ docref_root <ALL> ]
+      Current = ''
+    }
+    Entry [ docref_ext <ALL> ]
+      Current = ''
+    }
+    Entry [ html_errors <ALL> ]
+      Current = '0'
+    }
+    Entry [ xmlrpc_errors <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ xmlrpc_error_number <ALL> ]
+      Current = '0'
+    }
+    Entry [ max_input_time <PERDIR,SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ ignore_user_abort <ALL> ]
+      Current = '0'
+    }
+    Entry [ implicit_flush <ALL> ]
+      Current = '1'
+    }
+    Entry [ log_errors <ALL> ]
+      Current = '0'
+    }
+    Entry [ log_errors_max_len <ALL> ]
+      Current = '1024'
+    }
+    Entry [ ignore_repeated_errors <ALL> ]
+      Current = '0'
+    }
+    Entry [ ignore_repeated_source <ALL> ]
+      Current = '0'
+    }
+    Entry [ report_memleaks <ALL> ]
+      Current = '1'
+    }
+    Entry [ report_zend_debug <ALL> ]
+      Current = '0'
+    }
+    Entry [ output_buffering <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ output_handler <PERDIR,SYSTEM> ]
+      Current = ''
+    }
+    Entry [ register_argc_argv <PERDIR,SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ auto_globals_jit <PERDIR,SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ short_open_tag <PERDIR,SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ sql.safe_mode <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ track_errors <ALL> ]
+      Current = '0'
+    }
+    Entry [ unserialize_callback_func <ALL> ]
+      Current = ''
+    }
+    Entry [ serialize_precision <ALL> ]
+      Current = '17'
+    }
+    Entry [ arg_separator.output <ALL> ]
+      Current = '&'
+    }
+    Entry [ arg_separator.input <PERDIR,SYSTEM> ]
+      Current = '&'
+    }
+    Entry [ auto_append_file <PERDIR,SYSTEM> ]
+      Current = ''
+    }
+    Entry [ auto_prepend_file <PERDIR,SYSTEM> ]
+      Current = ''
+    }
+    Entry [ doc_root <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ default_charset <ALL> ]
+      Current = ''
+    }
+    Entry [ default_mimetype <ALL> ]
+      Current = 'text/html'
+    }
+    Entry [ error_log <ALL> ]
+      Current = ''
+    }
+    Entry [ extension_dir <SYSTEM> ]
+      Current = '/usr/lib64/php/modules'
+    }
+    Entry [ include_path <ALL> ]
+      Current = '.:/usr/share/pear:/usr/share/php'
+    }
+    Entry [ max_execution_time <ALL> ]
+      Current = '0'
+    }
+    Entry [ open_basedir <ALL> ]
+      Current = ''
+    }
+    Entry [ file_uploads <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ upload_max_filesize <PERDIR,SYSTEM> ]
+      Current = '2M'
+    }
+    Entry [ post_max_size <PERDIR,SYSTEM> ]
+      Current = '8M'
+    }
+    Entry [ upload_tmp_dir <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ max_input_nesting_level <PERDIR,SYSTEM> ]
+      Current = '64'
+    }
+    Entry [ max_input_vars <PERDIR,SYSTEM> ]
+      Current = '1000'
+    }
+    Entry [ user_dir <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ variables_order <PERDIR,SYSTEM> ]
+      Current = 'EGPCS'
+    }
+    Entry [ request_order <PERDIR,SYSTEM> ]
+      Current = ''
+    }
+    Entry [ error_append_string <ALL> ]
+      Current = ''
+    }
+    Entry [ error_prepend_string <ALL> ]
+      Current = ''
+    }
+    Entry [ SMTP <ALL> ]
+      Current = 'localhost'
+    }
+    Entry [ smtp_port <ALL> ]
+      Current = '25'
+    }
+    Entry [ mail.add_x_header <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ mail.log <PERDIR,SYSTEM> ]
+      Current = ''
+    }
+    Entry [ browscap <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ memory_limit <ALL> ]
+      Current = '-1'
+    }
+    Entry [ precision <ALL> ]
+      Current = '14'
+    }
+    Entry [ sendmail_from <ALL> ]
+      Current = ''
+    }
+    Entry [ sendmail_path <SYSTEM> ]
+      Current = '/usr/sbin/sendmail -t -i '
+    }
+    Entry [ mail.force_extra_parameters <PERDIR,SYSTEM> ]
+      Current = ''
+    }
+    Entry [ disable_functions <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ disable_classes <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ max_file_uploads <PERDIR,SYSTEM> ]
+      Current = '20'
+    }
+    Entry [ allow_url_fopen <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ allow_url_include <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ enable_post_data_reading <PERDIR,SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ always_populate_raw_post_data <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ realpath_cache_size <SYSTEM> ]
+      Current = '16K'
+    }
+    Entry [ realpath_cache_ttl <SYSTEM> ]
+      Current = '120'
+    }
+    Entry [ user_ini.filename <SYSTEM> ]
+      Current = '.user.ini'
+    }
+    Entry [ user_ini.cache_ttl <SYSTEM> ]
+      Current = '300'
+    }
+    Entry [ exit_on_timeout <ALL> ]
+      Current = '0'
+    }
+    Entry [ error_reporting <ALL> ]
+      Current = ''
+    }
+    Entry [ zend.enable_gc <ALL> ]
+      Current = '1'
+    }
+    Entry [ zend.multibyte <PERDIR> ]
+      Current = '0'
+    }
+    Entry [ zend.script_encoding <ALL> ]
+      Current = ''
+    }
+    Entry [ zend.detect_unicode <ALL> ]
+      Current = '1'
+    }
+  }
+
+  - Constants [73] {
+    Constant [ integer E_ERROR ] { 1 }
+    Constant [ integer E_RECOVERABLE_ERROR ] { 4096 }
+    Constant [ integer E_WARNING ] { 2 }
+    Constant [ integer E_PARSE ] { 4 }
+    Constant [ integer E_NOTICE ] { 8 }
+    Constant [ integer E_STRICT ] { 2048 }
+    Constant [ integer E_DEPRECATED ] { 8192 }
+    Constant [ integer E_CORE_ERROR ] { 16 }
+    Constant [ integer E_CORE_WARNING ] { 32 }
+    Constant [ integer E_COMPILE_ERROR ] { 64 }
+    Constant [ integer E_COMPILE_WARNING ] { 128 }
+    Constant [ integer E_USER_ERROR ] { 256 }
+    Constant [ integer E_USER_WARNING ] { 512 }
+    Constant [ integer E_USER_NOTICE ] { 1024 }
+    Constant [ integer E_USER_DEPRECATED ] { 16384 }
+    Constant [ integer E_ALL ] { 32767 }
+    Constant [ integer DEBUG_BACKTRACE_PROVIDE_OBJECT ] { 1 }
+    Constant [ integer DEBUG_BACKTRACE_IGNORE_ARGS ] { 2 }
+    Constant [ boolean TRUE ] { 1 }
+    Constant [ boolean FALSE ] {  }
+    Constant [ null NULL ] {  }
+    Constant [ boolean ZEND_THREAD_SAFE ] {  }
+    Constant [ boolean ZEND_DEBUG_BUILD ] {  }
+    Constant [ string PHP_VERSION ] { 5.5.0-dev }
+    Constant [ integer PHP_MAJOR_VERSION ] { 5 }
+    Constant [ integer PHP_MINOR_VERSION ] { 5 }
+    Constant [ integer PHP_RELEASE_VERSION ] { 0 }
+    Constant [ string PHP_EXTRA_VERSION ] { -dev }
+    Constant [ integer PHP_VERSION_ID ] { 50500 }
+    Constant [ integer PHP_ZTS ] { 0 }
+    Constant [ integer PHP_DEBUG ] { 0 }
+    Constant [ string PHP_OS ] { Linux }
+    Constant [ string PHP_SAPI ] { cli }
+    Constant [ string DEFAULT_INCLUDE_PATH ] { .:/usr/share/pear:/usr/share/php }
+    Constant [ string PEAR_INSTALL_DIR ] { /usr/share/pear }
+    Constant [ string PEAR_EXTENSION_DIR ] { /usr/lib64/php/modules }
+    Constant [ string PHP_EXTENSION_DIR ] { /usr/lib64/php/modules }
+    Constant [ string PHP_PREFIX ] { /usr }
+    Constant [ string PHP_BINDIR ] { /usr/bin }
+    Constant [ string PHP_MANDIR ] { /usr/share/man }
+    Constant [ string PHP_LIBDIR ] { /usr/lib64/php }
+    Constant [ string PHP_DATADIR ] { /usr/share }
+    Constant [ string PHP_SYSCONFDIR ] { /etc }
+    Constant [ string PHP_LOCALSTATEDIR ] { /var }
+    Constant [ string PHP_CONFIG_FILE_PATH ] { /etc }
+    Constant [ string PHP_CONFIG_FILE_SCAN_DIR ] { /etc/php.d }
+    Constant [ string PHP_SHLIB_SUFFIX ] { so }
+    Constant [ string PHP_EOL ] { 
+ }
+    Constant [ integer PHP_MAXPATHLEN ] { 4096 }
+    Constant [ integer PHP_INT_MAX ] { 9223372036854775807 }
+    Constant [ integer PHP_INT_SIZE ] { 8 }
+    Constant [ string PHP_BINARY ] { /usr/bin/php }
+    Constant [ integer PHP_OUTPUT_HANDLER_START ] { 1 }
+    Constant [ integer PHP_OUTPUT_HANDLER_WRITE ] { 0 }
+    Constant [ integer PHP_OUTPUT_HANDLER_FLUSH ] { 4 }
+    Constant [ integer PHP_OUTPUT_HANDLER_CLEAN ] { 2 }
+    Constant [ integer PHP_OUTPUT_HANDLER_FINAL ] { 8 }
+    Constant [ integer PHP_OUTPUT_HANDLER_CONT ] { 0 }
+    Constant [ integer PHP_OUTPUT_HANDLER_END ] { 8 }
+    Constant [ integer PHP_OUTPUT_HANDLER_CLEANABLE ] { 16 }
+    Constant [ integer PHP_OUTPUT_HANDLER_FLUSHABLE ] { 32 }
+    Constant [ integer PHP_OUTPUT_HANDLER_REMOVABLE ] { 64 }
+    Constant [ integer PHP_OUTPUT_HANDLER_STDFLAGS ] { 112 }
+    Constant [ integer PHP_OUTPUT_HANDLER_STARTED ] { 4096 }
+    Constant [ integer PHP_OUTPUT_HANDLER_DISABLED ] { 8192 }
+    Constant [ integer UPLOAD_ERR_OK ] { 0 }
+    Constant [ integer UPLOAD_ERR_INI_SIZE ] { 1 }
+    Constant [ integer UPLOAD_ERR_FORM_SIZE ] { 2 }
+    Constant [ integer UPLOAD_ERR_PARTIAL ] { 3 }
+    Constant [ integer UPLOAD_ERR_NO_FILE ] { 4 }
+    Constant [ integer UPLOAD_ERR_NO_TMP_DIR ] { 6 }
+    Constant [ integer UPLOAD_ERR_CANT_WRITE ] { 7 }
+    Constant [ integer UPLOAD_ERR_EXTENSION ] { 8 }
+  }
+
+  - Functions {
+    Function [ <internal:Core> function zend_version ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function func_num_args ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function func_get_arg ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg_num ]
+      }
+    }
+    Function [ <internal:Core> function func_get_args ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function strlen ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:Core> function strcmp ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str1 ]
+        Parameter #1 [ <required> $str2 ]
+      }
+    }
+    Function [ <internal:Core> function strncmp ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str1 ]
+        Parameter #1 [ <required> $str2 ]
+        Parameter #2 [ <required> $len ]
+      }
+    }
+    Function [ <internal:Core> function strcasecmp ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str1 ]
+        Parameter #1 [ <required> $str2 ]
+      }
+    }
+    Function [ <internal:Core> function strncasecmp ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str1 ]
+        Parameter #1 [ <required> $str2 ]
+        Parameter #2 [ <required> $len ]
+      }
+    }
+    Function [ <internal:Core> function each ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arr ]
+      }
+    }
+    Function [ <internal:Core> function error_reporting ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $new_error_level ]
+      }
+    }
+    Function [ <internal:Core> function define ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $constant_name ]
+        Parameter #1 [ <required> $value ]
+        Parameter #2 [ <required> $case_insensitive ]
+      }
+    }
+    Function [ <internal:Core> function defined ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $constant_name ]
+      }
+    }
+    Function [ <internal:Core> function get_class ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $object ]
+      }
+    }
+    Function [ <internal:Core> function get_called_class ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function get_parent_class ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $object ]
+      }
+    }
+    Function [ <internal:Core> function method_exists ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $method ]
+      }
+    }
+    Function [ <internal:Core> function property_exists ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $object_or_class ]
+        Parameter #1 [ <required> $property_name ]
+      }
+    }
+    Function [ <internal:Core> function class_exists ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $classname ]
+        Parameter #1 [ <optional> $autoload ]
+      }
+    }
+    Function [ <internal:Core> function interface_exists ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $classname ]
+        Parameter #1 [ <optional> $autoload ]
+      }
+    }
+    Function [ <internal:Core> function trait_exists ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $traitname ]
+        Parameter #1 [ <optional> $autoload ]
+      }
+    }
+    Function [ <internal:Core> function function_exists ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $function_name ]
+      }
+    }
+    Function [ <internal:Core> function class_alias ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $user_class_name ]
+        Parameter #1 [ <required> $alias_name ]
+        Parameter #2 [ <optional> $autoload ]
+      }
+    }
+    Function [ <internal:Core> function get_included_files ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function get_required_files ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function is_subclass_of ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $class_name ]
+        Parameter #2 [ <optional> $allow_string ]
+      }
+    }
+    Function [ <internal:Core> function is_a ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <required> $class_name ]
+        Parameter #2 [ <optional> $allow_string ]
+      }
+    }
+    Function [ <internal:Core> function get_class_vars ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $class_name ]
+      }
+    }
+    Function [ <internal:Core> function get_object_vars ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $obj ]
+      }
+    }
+    Function [ <internal:Core> function get_class_methods ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $class ]
+      }
+    }
+    Function [ <internal:Core> function trigger_error ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $message ]
+        Parameter #1 [ <optional> $error_type ]
+      }
+    }
+    Function [ <internal:Core> function user_error ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $message ]
+        Parameter #1 [ <optional> $error_type ]
+      }
+    }
+    Function [ <internal:Core> function set_error_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $error_handler ]
+        Parameter #1 [ <optional> $error_types ]
+      }
+    }
+    Function [ <internal:Core> function restore_error_handler ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function set_exception_handler ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $exception_handler ]
+      }
+    }
+    Function [ <internal:Core> function restore_exception_handler ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function get_declared_classes ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function get_declared_traits ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function get_declared_interfaces ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function get_defined_functions ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function get_defined_vars ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function create_function ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $args ]
+        Parameter #1 [ <required> $code ]
+      }
+    }
+    Function [ <internal:Core> function get_resource_type ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $res ]
+      }
+    }
+    Function [ <internal:Core> function get_loaded_extensions ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $zend_extensions ]
+      }
+    }
+    Function [ <internal:Core> function extension_loaded ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $extension_name ]
+      }
+    }
+    Function [ <internal:Core> function get_extension_funcs ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $extension_name ]
+      }
+    }
+    Function [ <internal:Core> function get_defined_constants ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $categorize ]
+      }
+    }
+    Function [ <internal:Core> function debug_backtrace ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $options ]
+        Parameter #1 [ <optional> $limit ]
+      }
+    }
+    Function [ <internal:Core> function debug_print_backtrace ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:Core> function gc_collect_cycles ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function gc_enabled ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function gc_enable ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:Core> function gc_disable ] {
+
+      - Parameters [0] {
+      }
+    }
+  }
+
+  - Classes [10] {
+    Class [ <internal:Core> class stdClass ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Interface [ <internal:Core> interface Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Interface [ <internal:Core> interface IteratorAggregate extends Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:Core> abstract public method getIterator ] {
+        }
+      }
+    }
+
+    Interface [ <internal:Core> interface Iterator extends Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:Core> abstract public method current ] {
+        }
+
+        Method [ <internal:Core> abstract public method next ] {
+        }
+
+        Method [ <internal:Core> abstract public method key ] {
+        }
+
+        Method [ <internal:Core> abstract public method valid ] {
+        }
+
+        Method [ <internal:Core> abstract public method rewind ] {
+        }
+      }
+    }
+
+    Interface [ <internal:Core> interface ArrayAccess ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:Core> abstract public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset ]
+          }
+        }
+
+        Method [ <internal:Core> abstract public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset ]
+          }
+        }
+
+        Method [ <internal:Core> abstract public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:Core> abstract public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:Core> interface Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:Core> abstract public method serialize ] {
+        }
+
+        Method [ <internal:Core, ctor> abstract public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:Core> class Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [7] {
+        Property [ <default> protected $message ]
+        Property [ <default> private $string ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+        Property [ <default> private $trace ]
+        Property [ <default> private $previous ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core> final private method __clone ] {
+        }
+
+        Method [ <internal:Core, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core> final public method getCode ] {
+        }
+
+        Method [ <internal:Core> final public method getFile ] {
+        }
+
+        Method [ <internal:Core> final public method getLine ] {
+        }
+
+        Method [ <internal:Core> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:Core> class ErrorException extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [5] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+        Property [ <default> protected $severity ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, overwrites Exception, ctor> public method __construct ] {
+
+          - Parameters [6] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $severity ]
+            Parameter #3 [ <optional> $filename ]
+            Parameter #4 [ <optional> $lineno ]
+            Parameter #5 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core> final public method getSeverity ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:Core> final class Closure ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:Core> static public method bind ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $closure ]
+            Parameter #1 [ <required> $newthis ]
+            Parameter #2 [ <optional> $newscope ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:Core, ctor> private method __construct ] {
+        }
+
+        Method [ <internal:Core> public method bindTo ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $newthis ]
+            Parameter #1 [ <optional> $newscope ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:Core> <iterateable> final class Generator implements Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:Core, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core> public method send ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:Core> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+

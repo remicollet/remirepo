@@ -1,0 +1,49 @@
+Extension [ <persistent> extension #23 shmop version <no_version> ] {
+
+  - Functions {
+    Function [ <internal:shmop> function shmop_open ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $flags ]
+        Parameter #2 [ <required> $mode ]
+        Parameter #3 [ <required> $size ]
+      }
+    }
+    Function [ <internal:shmop> function shmop_read ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $shmid ]
+        Parameter #1 [ <required> $start ]
+        Parameter #2 [ <required> $count ]
+      }
+    }
+    Function [ <internal:shmop> function shmop_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $shmid ]
+      }
+    }
+    Function [ <internal:shmop> function shmop_size ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $shmid ]
+      }
+    }
+    Function [ <internal:shmop> function shmop_write ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $shmid ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <required> $offset ]
+      }
+    }
+    Function [ <internal:shmop> function shmop_delete ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $shmid ]
+      }
+    }
+  }
+}
+

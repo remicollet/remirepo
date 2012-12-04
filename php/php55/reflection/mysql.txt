@@ -1,0 +1,470 @@
+Extension [ <persistent> extension #57 mysql version 1.0 ] {
+
+  - Dependencies {
+    Dependency [ mysqlnd (Required) ]
+  }
+
+  - INI {
+    Entry [ mysql.allow_persistent <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ mysql.max_persistent <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ mysql.max_links <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ mysql.default_host <ALL> ]
+      Current = ''
+    }
+    Entry [ mysql.default_user <ALL> ]
+      Current = ''
+    }
+    Entry [ mysql.default_password <ALL> ]
+      Current = ''
+    }
+    Entry [ mysql.default_port <ALL> ]
+      Current = ''
+    }
+    Entry [ mysql.default_socket <ALL> ]
+      Current = '/var/lib/mysql/mysql.sock'
+    }
+    Entry [ mysql.connect_timeout <ALL> ]
+      Current = '60'
+    }
+    Entry [ mysql.trace_mode <ALL> ]
+      Current = '0'
+    }
+    Entry [ mysql.allow_local_infile <SYSTEM> ]
+      Current = '1'
+    }
+  }
+
+  - Constants [7] {
+    Constant [ integer MYSQL_ASSOC ] { 1 }
+    Constant [ integer MYSQL_NUM ] { 2 }
+    Constant [ integer MYSQL_BOTH ] { 3 }
+    Constant [ integer MYSQL_CLIENT_COMPRESS ] { 32 }
+    Constant [ integer MYSQL_CLIENT_SSL ] { 2048 }
+    Constant [ integer MYSQL_CLIENT_INTERACTIVE ] { 1024 }
+    Constant [ integer MYSQL_CLIENT_IGNORE_SPACE ] { 256 }
+  }
+
+  - Functions {
+    Function [ <internal:mysql> function mysql_connect ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <optional> $hostname ]
+        Parameter #1 [ <optional> $username ]
+        Parameter #2 [ <optional> $password ]
+        Parameter #3 [ <optional> $new ]
+        Parameter #4 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_pconnect ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <optional> $hostname ]
+        Parameter #1 [ <optional> $username ]
+        Parameter #2 [ <optional> $password ]
+        Parameter #3 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_select_db ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $database_name ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_query ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $query ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_unbuffered_query ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $query ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_db_query ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $database_name ]
+        Parameter #1 [ <required> $query ]
+        Parameter #2 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_list_dbs ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_list_tables ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $database_name ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_list_fields ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $database_name ]
+        Parameter #1 [ <required> $table_name ]
+        Parameter #2 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_list_processes ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_errno ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_affected_rows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_insert_id ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_result ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $row ]
+        Parameter #2 [ <optional> $field ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_num_rows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_num_fields ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_fetch_row ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_fetch_array ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $result_type ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_fetch_assoc ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_fetch_object ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $class_name ]
+        Parameter #2 [ <optional> $ctor_params ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_data_seek ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $row_number ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_fetch_lengths ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_fetch_field ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $field_offset ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_field_seek ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_offset ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_free_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_field_name ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_index ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_field_table ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_offset ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_field_len ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_offset ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_field_type ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_offset ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_field_flags ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_offset ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_escape_string ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $string ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_real_escape_string ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_stat ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_thread_id ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_client_encoding ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_ping ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_get_client_info ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:mysql> function mysql_get_host_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_get_proto_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_get_server_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_set_charset ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $charset_name ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $database_name ]
+        Parameter #1 [ <required> $query ]
+        Parameter #2 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_fieldname ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_index ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_fieldtable ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_offset ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_fieldlen ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_offset ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_fieldtype ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_offset ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_fieldflags ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $field_offset ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_selectdb ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $database_name ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_freeresult ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_numfields ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_numrows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_listdbs ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_listtables ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $database_name ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_listfields ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $database_name ]
+        Parameter #1 [ <required> $table_name ]
+        Parameter #2 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_db_name ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $row ]
+        Parameter #2 [ <optional> $field ]
+      }
+    }
+    Function [ <internal, deprecated:mysql> function mysql_dbname ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $row ]
+        Parameter #2 [ <optional> $field ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_tablename ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $row ]
+        Parameter #2 [ <optional> $field ]
+      }
+    }
+    Function [ <internal:mysql> function mysql_table_name ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $row ]
+        Parameter #2 [ <optional> $field ]
+      }
+    }
+  }
+}
+

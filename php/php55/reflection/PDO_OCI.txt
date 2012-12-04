@@ -1,0 +1,7 @@
+Extension [ <persistent> extension #67 PDO_OCI version 1.0.1 ] {
+
+  - Dependencies {
+    Dependency [ pdo (Required) ]
+  }
+}
+

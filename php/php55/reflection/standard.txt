@@ -1,0 +1,4086 @@
+Extension [ <persistent> extension #26 standard version 5.5.0-dev ] {
+
+  - Dependencies {
+    Dependency [ session (Optional) ]
+  }
+
+  - INI {
+    Entry [ user_agent <ALL> ]
+      Current = ''
+    }
+    Entry [ from <ALL> ]
+      Current = ''
+    }
+    Entry [ default_socket_timeout <ALL> ]
+      Current = '60'
+    }
+    Entry [ auto_detect_line_endings <ALL> ]
+      Current = '0'
+    }
+    Entry [ assert.active <ALL> ]
+      Current = '1'
+    }
+    Entry [ assert.bail <ALL> ]
+      Current = '0'
+    }
+    Entry [ assert.warning <ALL> ]
+      Current = '1'
+    }
+    Entry [ assert.callback <ALL> ]
+      Current = ''
+    }
+    Entry [ assert.quiet_eval <ALL> ]
+      Current = '0'
+    }
+    Entry [ url_rewriter.tags <ALL> ]
+      Current = 'a=href,area=href,frame=src,form=,fieldset='
+    }
+  }
+
+  - Constants [349] {
+    Constant [ integer CONNECTION_ABORTED ] { 1 }
+    Constant [ integer CONNECTION_NORMAL ] { 0 }
+    Constant [ integer CONNECTION_TIMEOUT ] { 2 }
+    Constant [ integer INI_USER ] { 1 }
+    Constant [ integer INI_PERDIR ] { 2 }
+    Constant [ integer INI_SYSTEM ] { 4 }
+    Constant [ integer INI_ALL ] { 7 }
+    Constant [ integer INI_SCANNER_NORMAL ] { 0 }
+    Constant [ integer INI_SCANNER_RAW ] { 1 }
+    Constant [ integer PHP_URL_SCHEME ] { 0 }
+    Constant [ integer PHP_URL_HOST ] { 1 }
+    Constant [ integer PHP_URL_PORT ] { 2 }
+    Constant [ integer PHP_URL_USER ] { 3 }
+    Constant [ integer PHP_URL_PASS ] { 4 }
+    Constant [ integer PHP_URL_PATH ] { 5 }
+    Constant [ integer PHP_URL_QUERY ] { 6 }
+    Constant [ integer PHP_URL_FRAGMENT ] { 7 }
+    Constant [ integer PHP_QUERY_RFC1738 ] { 1 }
+    Constant [ integer PHP_QUERY_RFC3986 ] { 2 }
+    Constant [ double M_E ] { 2.718281828459 }
+    Constant [ double M_LOG2E ] { 1.442695040889 }
+    Constant [ double M_LOG10E ] { 0.43429448190325 }
+    Constant [ double M_LN2 ] { 0.69314718055995 }
+    Constant [ double M_LN10 ] { 2.302585092994 }
+    Constant [ double M_PI ] { 3.1415926535898 }
+    Constant [ double M_PI_2 ] { 1.5707963267949 }
+    Constant [ double M_PI_4 ] { 0.78539816339745 }
+    Constant [ double M_1_PI ] { 0.31830988618379 }
+    Constant [ double M_2_PI ] { 0.63661977236758 }
+    Constant [ double M_SQRTPI ] { 1.7724538509055 }
+    Constant [ double M_2_SQRTPI ] { 1.1283791670955 }
+    Constant [ double M_LNPI ] { 1.1447298858494 }
+    Constant [ double M_EULER ] { 0.57721566490153 }
+    Constant [ double M_SQRT2 ] { 1.4142135623731 }
+    Constant [ double M_SQRT1_2 ] { 0.70710678118655 }
+    Constant [ double M_SQRT3 ] { 1.7320508075689 }
+    Constant [ double INF ] { INF }
+    Constant [ double NAN ] { NAN }
+    Constant [ integer PHP_ROUND_HALF_UP ] { 1 }
+    Constant [ integer PHP_ROUND_HALF_DOWN ] { 2 }
+    Constant [ integer PHP_ROUND_HALF_EVEN ] { 3 }
+    Constant [ integer PHP_ROUND_HALF_ODD ] { 4 }
+    Constant [ integer INFO_GENERAL ] { 1 }
+    Constant [ integer INFO_CREDITS ] { 2 }
+    Constant [ integer INFO_CONFIGURATION ] { 4 }
+    Constant [ integer INFO_MODULES ] { 8 }
+    Constant [ integer INFO_ENVIRONMENT ] { 16 }
+    Constant [ integer INFO_VARIABLES ] { 32 }
+    Constant [ integer INFO_LICENSE ] { 64 }
+    Constant [ integer INFO_ALL ] { 4294967295 }
+    Constant [ integer CREDITS_GROUP ] { 1 }
+    Constant [ integer CREDITS_GENERAL ] { 2 }
+    Constant [ integer CREDITS_SAPI ] { 4 }
+    Constant [ integer CREDITS_MODULES ] { 8 }
+    Constant [ integer CREDITS_DOCS ] { 16 }
+    Constant [ integer CREDITS_FULLPAGE ] { 32 }
+    Constant [ integer CREDITS_QA ] { 64 }
+    Constant [ integer CREDITS_ALL ] { 4294967295 }
+    Constant [ integer HTML_SPECIALCHARS ] { 0 }
+    Constant [ integer HTML_ENTITIES ] { 1 }
+    Constant [ integer ENT_COMPAT ] { 2 }
+    Constant [ integer ENT_QUOTES ] { 3 }
+    Constant [ integer ENT_NOQUOTES ] { 0 }
+    Constant [ integer ENT_IGNORE ] { 4 }
+    Constant [ integer ENT_SUBSTITUTE ] { 8 }
+    Constant [ integer ENT_DISALLOWED ] { 128 }
+    Constant [ integer ENT_HTML401 ] { 0 }
+    Constant [ integer ENT_XML1 ] { 16 }
+    Constant [ integer ENT_XHTML ] { 32 }
+    Constant [ integer ENT_HTML5 ] { 48 }
+    Constant [ integer STR_PAD_LEFT ] { 0 }
+    Constant [ integer STR_PAD_RIGHT ] { 1 }
+    Constant [ integer STR_PAD_BOTH ] { 2 }
+    Constant [ integer PATHINFO_DIRNAME ] { 1 }
+    Constant [ integer PATHINFO_BASENAME ] { 2 }
+    Constant [ integer PATHINFO_EXTENSION ] { 4 }
+    Constant [ integer PATHINFO_FILENAME ] { 8 }
+    Constant [ integer CHAR_MAX ] { 127 }
+    Constant [ integer LC_CTYPE ] { 0 }
+    Constant [ integer LC_NUMERIC ] { 1 }
+    Constant [ integer LC_TIME ] { 2 }
+    Constant [ integer LC_COLLATE ] { 3 }
+    Constant [ integer LC_MONETARY ] { 4 }
+    Constant [ integer LC_ALL ] { 6 }
+    Constant [ integer LC_MESSAGES ] { 5 }
+    Constant [ integer SEEK_SET ] { 0 }
+    Constant [ integer SEEK_CUR ] { 1 }
+    Constant [ integer SEEK_END ] { 2 }
+    Constant [ integer LOCK_SH ] { 1 }
+    Constant [ integer LOCK_EX ] { 2 }
+    Constant [ integer LOCK_UN ] { 3 }
+    Constant [ integer LOCK_NB ] { 4 }
+    Constant [ integer STREAM_NOTIFY_CONNECT ] { 2 }
+    Constant [ integer STREAM_NOTIFY_AUTH_REQUIRED ] { 3 }
+    Constant [ integer STREAM_NOTIFY_AUTH_RESULT ] { 10 }
+    Constant [ integer STREAM_NOTIFY_MIME_TYPE_IS ] { 4 }
+    Constant [ integer STREAM_NOTIFY_FILE_SIZE_IS ] { 5 }
+    Constant [ integer STREAM_NOTIFY_REDIRECTED ] { 6 }
+    Constant [ integer STREAM_NOTIFY_PROGRESS ] { 7 }
+    Constant [ integer STREAM_NOTIFY_FAILURE ] { 9 }
+    Constant [ integer STREAM_NOTIFY_COMPLETED ] { 8 }
+    Constant [ integer STREAM_NOTIFY_RESOLVE ] { 1 }
+    Constant [ integer STREAM_NOTIFY_SEVERITY_INFO ] { 0 }
+    Constant [ integer STREAM_NOTIFY_SEVERITY_WARN ] { 1 }
+    Constant [ integer STREAM_NOTIFY_SEVERITY_ERR ] { 2 }
+    Constant [ integer STREAM_FILTER_READ ] { 1 }
+    Constant [ integer STREAM_FILTER_WRITE ] { 2 }
+    Constant [ integer STREAM_FILTER_ALL ] { 3 }
+    Constant [ integer STREAM_CLIENT_PERSISTENT ] { 1 }
+    Constant [ integer STREAM_CLIENT_ASYNC_CONNECT ] { 2 }
+    Constant [ integer STREAM_CLIENT_CONNECT ] { 4 }
+    Constant [ integer STREAM_CRYPTO_METHOD_SSLv2_CLIENT ] { 0 }
+    Constant [ integer STREAM_CRYPTO_METHOD_SSLv3_CLIENT ] { 1 }
+    Constant [ integer STREAM_CRYPTO_METHOD_SSLv23_CLIENT ] { 2 }
+    Constant [ integer STREAM_CRYPTO_METHOD_TLS_CLIENT ] { 3 }
+    Constant [ integer STREAM_CRYPTO_METHOD_SSLv2_SERVER ] { 4 }
+    Constant [ integer STREAM_CRYPTO_METHOD_SSLv3_SERVER ] { 5 }
+    Constant [ integer STREAM_CRYPTO_METHOD_SSLv23_SERVER ] { 6 }
+    Constant [ integer STREAM_CRYPTO_METHOD_TLS_SERVER ] { 7 }
+    Constant [ integer STREAM_SHUT_RD ] { 0 }
+    Constant [ integer STREAM_SHUT_WR ] { 1 }
+    Constant [ integer STREAM_SHUT_RDWR ] { 2 }
+    Constant [ integer STREAM_PF_INET ] { 2 }
+    Constant [ integer STREAM_PF_INET6 ] { 10 }
+    Constant [ integer STREAM_PF_UNIX ] { 1 }
+    Constant [ integer STREAM_IPPROTO_IP ] { 0 }
+    Constant [ integer STREAM_IPPROTO_TCP ] { 6 }
+    Constant [ integer STREAM_IPPROTO_UDP ] { 17 }
+    Constant [ integer STREAM_IPPROTO_ICMP ] { 1 }
+    Constant [ integer STREAM_IPPROTO_RAW ] { 255 }
+    Constant [ integer STREAM_SOCK_STREAM ] { 1 }
+    Constant [ integer STREAM_SOCK_DGRAM ] { 2 }
+    Constant [ integer STREAM_SOCK_RAW ] { 3 }
+    Constant [ integer STREAM_SOCK_SEQPACKET ] { 5 }
+    Constant [ integer STREAM_SOCK_RDM ] { 4 }
+    Constant [ integer STREAM_PEEK ] { 2 }
+    Constant [ integer STREAM_OOB ] { 1 }
+    Constant [ integer STREAM_SERVER_BIND ] { 4 }
+    Constant [ integer STREAM_SERVER_LISTEN ] { 8 }
+    Constant [ integer FILE_USE_INCLUDE_PATH ] { 1 }
+    Constant [ integer FILE_IGNORE_NEW_LINES ] { 2 }
+    Constant [ integer FILE_SKIP_EMPTY_LINES ] { 4 }
+    Constant [ integer FILE_APPEND ] { 8 }
+    Constant [ integer FILE_NO_DEFAULT_CONTEXT ] { 16 }
+    Constant [ integer FILE_TEXT ] { 0 }
+    Constant [ integer FILE_BINARY ] { 0 }
+    Constant [ integer FNM_NOESCAPE ] { 2 }
+    Constant [ integer FNM_PATHNAME ] { 1 }
+    Constant [ integer FNM_PERIOD ] { 4 }
+    Constant [ integer FNM_CASEFOLD ] { 16 }
+    Constant [ integer PSFS_PASS_ON ] { 2 }
+    Constant [ integer PSFS_FEED_ME ] { 1 }
+    Constant [ integer PSFS_ERR_FATAL ] { 0 }
+    Constant [ integer PSFS_FLAG_NORMAL ] { 0 }
+    Constant [ integer PSFS_FLAG_FLUSH_INC ] { 1 }
+    Constant [ integer PSFS_FLAG_FLUSH_CLOSE ] { 2 }
+    Constant [ integer PASSWORD_DEFAULT ] { 1 }
+    Constant [ integer PASSWORD_BCRYPT ] { 1 }
+    Constant [ integer PASSWORD_BCRYPT_DEFAULT_COST ] { 10 }
+    Constant [ integer ABDAY_1 ] { 131072 }
+    Constant [ integer ABDAY_2 ] { 131073 }
+    Constant [ integer ABDAY_3 ] { 131074 }
+    Constant [ integer ABDAY_4 ] { 131075 }
+    Constant [ integer ABDAY_5 ] { 131076 }
+    Constant [ integer ABDAY_6 ] { 131077 }
+    Constant [ integer ABDAY_7 ] { 131078 }
+    Constant [ integer DAY_1 ] { 131079 }
+    Constant [ integer DAY_2 ] { 131080 }
+    Constant [ integer DAY_3 ] { 131081 }
+    Constant [ integer DAY_4 ] { 131082 }
+    Constant [ integer DAY_5 ] { 131083 }
+    Constant [ integer DAY_6 ] { 131084 }
+    Constant [ integer DAY_7 ] { 131085 }
+    Constant [ integer ABMON_1 ] { 131086 }
+    Constant [ integer ABMON_2 ] { 131087 }
+    Constant [ integer ABMON_3 ] { 131088 }
+    Constant [ integer ABMON_4 ] { 131089 }
+    Constant [ integer ABMON_5 ] { 131090 }
+    Constant [ integer ABMON_6 ] { 131091 }
+    Constant [ integer ABMON_7 ] { 131092 }
+    Constant [ integer ABMON_8 ] { 131093 }
+    Constant [ integer ABMON_9 ] { 131094 }
+    Constant [ integer ABMON_10 ] { 131095 }
+    Constant [ integer ABMON_11 ] { 131096 }
+    Constant [ integer ABMON_12 ] { 131097 }
+    Constant [ integer MON_1 ] { 131098 }
+    Constant [ integer MON_2 ] { 131099 }
+    Constant [ integer MON_3 ] { 131100 }
+    Constant [ integer MON_4 ] { 131101 }
+    Constant [ integer MON_5 ] { 131102 }
+    Constant [ integer MON_6 ] { 131103 }
+    Constant [ integer MON_7 ] { 131104 }
+    Constant [ integer MON_8 ] { 131105 }
+    Constant [ integer MON_9 ] { 131106 }
+    Constant [ integer MON_10 ] { 131107 }
+    Constant [ integer MON_11 ] { 131108 }
+    Constant [ integer MON_12 ] { 131109 }
+    Constant [ integer AM_STR ] { 131110 }
+    Constant [ integer PM_STR ] { 131111 }
+    Constant [ integer D_T_FMT ] { 131112 }
+    Constant [ integer D_FMT ] { 131113 }
+    Constant [ integer T_FMT ] { 131114 }
+    Constant [ integer T_FMT_AMPM ] { 131115 }
+    Constant [ integer ERA ] { 131116 }
+    Constant [ integer ERA_D_T_FMT ] { 131120 }
+    Constant [ integer ERA_D_FMT ] { 131118 }
+    Constant [ integer ERA_T_FMT ] { 131121 }
+    Constant [ integer ALT_DIGITS ] { 131119 }
+    Constant [ integer CRNCYSTR ] { 262159 }
+    Constant [ integer RADIXCHAR ] { 65536 }
+    Constant [ integer THOUSEP ] { 65537 }
+    Constant [ integer YESEXPR ] { 327680 }
+    Constant [ integer NOEXPR ] { 327681 }
+    Constant [ integer CODESET ] { 14 }
+    Constant [ integer CRYPT_SALT_LENGTH ] { 123 }
+    Constant [ integer CRYPT_STD_DES ] { 1 }
+    Constant [ integer CRYPT_EXT_DES ] { 1 }
+    Constant [ integer CRYPT_MD5 ] { 1 }
+    Constant [ integer CRYPT_BLOWFISH ] { 1 }
+    Constant [ integer CRYPT_SHA256 ] { 1 }
+    Constant [ integer CRYPT_SHA512 ] { 1 }
+    Constant [ string DIRECTORY_SEPARATOR ] { / }
+    Constant [ string PATH_SEPARATOR ] { : }
+    Constant [ integer SCANDIR_SORT_ASCENDING ] { 0 }
+    Constant [ integer SCANDIR_SORT_DESCENDING ] { 1 }
+    Constant [ integer SCANDIR_SORT_NONE ] { 2 }
+    Constant [ integer GLOB_BRACE ] { 1024 }
+    Constant [ integer GLOB_MARK ] { 2 }
+    Constant [ integer GLOB_NOSORT ] { 4 }
+    Constant [ integer GLOB_NOCHECK ] { 16 }
+    Constant [ integer GLOB_NOESCAPE ] { 64 }
+    Constant [ integer GLOB_ERR ] { 1 }
+    Constant [ integer GLOB_ONLYDIR ] { 8192 }
+    Constant [ integer GLOB_AVAILABLE_FLAGS ] { 9303 }
+    Constant [ integer LOG_EMERG ] { 0 }
+    Constant [ integer LOG_ALERT ] { 1 }
+    Constant [ integer LOG_CRIT ] { 2 }
+    Constant [ integer LOG_ERR ] { 3 }
+    Constant [ integer LOG_WARNING ] { 4 }
+    Constant [ integer LOG_NOTICE ] { 5 }
+    Constant [ integer LOG_INFO ] { 6 }
+    Constant [ integer LOG_DEBUG ] { 7 }
+    Constant [ integer LOG_KERN ] { 0 }
+    Constant [ integer LOG_USER ] { 8 }
+    Constant [ integer LOG_MAIL ] { 16 }
+    Constant [ integer LOG_DAEMON ] { 24 }
+    Constant [ integer LOG_AUTH ] { 32 }
+    Constant [ integer LOG_SYSLOG ] { 40 }
+    Constant [ integer LOG_LPR ] { 48 }
+    Constant [ integer LOG_NEWS ] { 56 }
+    Constant [ integer LOG_UUCP ] { 64 }
+    Constant [ integer LOG_CRON ] { 72 }
+    Constant [ integer LOG_AUTHPRIV ] { 80 }
+    Constant [ integer LOG_LOCAL0 ] { 128 }
+    Constant [ integer LOG_LOCAL1 ] { 136 }
+    Constant [ integer LOG_LOCAL2 ] { 144 }
+    Constant [ integer LOG_LOCAL3 ] { 152 }
+    Constant [ integer LOG_LOCAL4 ] { 160 }
+    Constant [ integer LOG_LOCAL5 ] { 168 }
+    Constant [ integer LOG_LOCAL6 ] { 176 }
+    Constant [ integer LOG_LOCAL7 ] { 184 }
+    Constant [ integer LOG_PID ] { 1 }
+    Constant [ integer LOG_CONS ] { 2 }
+    Constant [ integer LOG_ODELAY ] { 4 }
+    Constant [ integer LOG_NDELAY ] { 8 }
+    Constant [ integer LOG_NOWAIT ] { 16 }
+    Constant [ integer LOG_PERROR ] { 32 }
+    Constant [ integer EXTR_OVERWRITE ] { 0 }
+    Constant [ integer EXTR_SKIP ] { 1 }
+    Constant [ integer EXTR_PREFIX_SAME ] { 2 }
+    Constant [ integer EXTR_PREFIX_ALL ] { 3 }
+    Constant [ integer EXTR_PREFIX_INVALID ] { 4 }
+    Constant [ integer EXTR_PREFIX_IF_EXISTS ] { 5 }
+    Constant [ integer EXTR_IF_EXISTS ] { 6 }
+    Constant [ integer EXTR_REFS ] { 256 }
+    Constant [ integer SORT_ASC ] { 4 }
+    Constant [ integer SORT_DESC ] { 3 }
+    Constant [ integer SORT_REGULAR ] { 0 }
+    Constant [ integer SORT_NUMERIC ] { 1 }
+    Constant [ integer SORT_STRING ] { 2 }
+    Constant [ integer SORT_LOCALE_STRING ] { 5 }
+    Constant [ integer SORT_NATURAL ] { 6 }
+    Constant [ integer SORT_FLAG_CASE ] { 8 }
+    Constant [ integer CASE_LOWER ] { 0 }
+    Constant [ integer CASE_UPPER ] { 1 }
+    Constant [ integer COUNT_NORMAL ] { 0 }
+    Constant [ integer COUNT_RECURSIVE ] { 1 }
+    Constant [ integer ASSERT_ACTIVE ] { 1 }
+    Constant [ integer ASSERT_CALLBACK ] { 2 }
+    Constant [ integer ASSERT_BAIL ] { 3 }
+    Constant [ integer ASSERT_WARNING ] { 4 }
+    Constant [ integer ASSERT_QUIET_EVAL ] { 5 }
+    Constant [ integer STREAM_USE_PATH ] { 1 }
+    Constant [ integer STREAM_IGNORE_URL ] { 2 }
+    Constant [ integer STREAM_REPORT_ERRORS ] { 8 }
+    Constant [ integer STREAM_MUST_SEEK ] { 16 }
+    Constant [ integer STREAM_URL_STAT_LINK ] { 1 }
+    Constant [ integer STREAM_URL_STAT_QUIET ] { 2 }
+    Constant [ integer STREAM_MKDIR_RECURSIVE ] { 1 }
+    Constant [ integer STREAM_IS_URL ] { 1 }
+    Constant [ integer STREAM_OPTION_BLOCKING ] { 1 }
+    Constant [ integer STREAM_OPTION_READ_TIMEOUT ] { 4 }
+    Constant [ integer STREAM_OPTION_READ_BUFFER ] { 2 }
+    Constant [ integer STREAM_OPTION_WRITE_BUFFER ] { 3 }
+    Constant [ integer STREAM_BUFFER_NONE ] { 0 }
+    Constant [ integer STREAM_BUFFER_LINE ] { 1 }
+    Constant [ integer STREAM_BUFFER_FULL ] { 2 }
+    Constant [ integer STREAM_CAST_AS_STREAM ] { 0 }
+    Constant [ integer STREAM_CAST_FOR_SELECT ] { 3 }
+    Constant [ integer STREAM_META_TOUCH ] { 1 }
+    Constant [ integer STREAM_META_OWNER ] { 3 }
+    Constant [ integer STREAM_META_OWNER_NAME ] { 2 }
+    Constant [ integer STREAM_META_GROUP ] { 5 }
+    Constant [ integer STREAM_META_GROUP_NAME ] { 4 }
+    Constant [ integer STREAM_META_ACCESS ] { 6 }
+    Constant [ integer IMAGETYPE_GIF ] { 1 }
+    Constant [ integer IMAGETYPE_JPEG ] { 2 }
+    Constant [ integer IMAGETYPE_PNG ] { 3 }
+    Constant [ integer IMAGETYPE_SWF ] { 4 }
+    Constant [ integer IMAGETYPE_PSD ] { 5 }
+    Constant [ integer IMAGETYPE_BMP ] { 6 }
+    Constant [ integer IMAGETYPE_TIFF_II ] { 7 }
+    Constant [ integer IMAGETYPE_TIFF_MM ] { 8 }
+    Constant [ integer IMAGETYPE_JPC ] { 9 }
+    Constant [ integer IMAGETYPE_JP2 ] { 10 }
+    Constant [ integer IMAGETYPE_JPX ] { 11 }
+    Constant [ integer IMAGETYPE_JB2 ] { 12 }
+    Constant [ integer IMAGETYPE_SWC ] { 13 }
+    Constant [ integer IMAGETYPE_IFF ] { 14 }
+    Constant [ integer IMAGETYPE_WBMP ] { 15 }
+    Constant [ integer IMAGETYPE_JPEG2000 ] { 9 }
+    Constant [ integer IMAGETYPE_XBM ] { 16 }
+    Constant [ integer IMAGETYPE_ICO ] { 17 }
+    Constant [ integer IMAGETYPE_UNKNOWN ] { 0 }
+    Constant [ integer IMAGETYPE_COUNT ] { 18 }
+    Constant [ integer DNS_A ] { 1 }
+    Constant [ integer DNS_NS ] { 2 }
+    Constant [ integer DNS_CNAME ] { 16 }
+    Constant [ integer DNS_SOA ] { 32 }
+    Constant [ integer DNS_PTR ] { 2048 }
+    Constant [ integer DNS_HINFO ] { 4096 }
+    Constant [ integer DNS_MX ] { 16384 }
+    Constant [ integer DNS_TXT ] { 32768 }
+    Constant [ integer DNS_SRV ] { 33554432 }
+    Constant [ integer DNS_NAPTR ] { 67108864 }
+    Constant [ integer DNS_AAAA ] { 134217728 }
+    Constant [ integer DNS_A6 ] { 16777216 }
+    Constant [ integer DNS_ANY ] { 268435456 }
+    Constant [ integer DNS_ALL ] { 251713587 }
+  }
+
+  - Functions {
+    Function [ <internal:standard> function constant ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $const_name ]
+      }
+    }
+    Function [ <internal:standard> function bin2hex ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:standard> function hex2bin ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:standard> function sleep ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $seconds ]
+      }
+    }
+    Function [ <internal:standard> function usleep ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $micro_seconds ]
+      }
+    }
+    Function [ <internal:standard> function time_nanosleep ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $seconds ]
+        Parameter #1 [ <required> $nanoseconds ]
+      }
+    }
+    Function [ <internal:standard> function time_sleep_until ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $timestamp ]
+      }
+    }
+    Function [ <internal:standard> function strptime ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $timestamp ]
+        Parameter #1 [ <required> $format ]
+      }
+    }
+    Function [ <internal:standard> function flush ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function wordwrap ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $width ]
+        Parameter #2 [ <optional> $break ]
+        Parameter #3 [ <optional> $cut ]
+      }
+    }
+    Function [ <internal:standard> function htmlspecialchars ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <optional> $quote_style ]
+        Parameter #2 [ <optional> $charset ]
+        Parameter #3 [ <optional> $double_encode ]
+      }
+    }
+    Function [ <internal:standard> function htmlentities ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <optional> $quote_style ]
+        Parameter #2 [ <optional> $charset ]
+        Parameter #3 [ <optional> $double_encode ]
+      }
+    }
+    Function [ <internal:standard> function html_entity_decode ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <optional> $quote_style ]
+        Parameter #2 [ <optional> $charset ]
+      }
+    }
+    Function [ <internal:standard> function htmlspecialchars_decode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <optional> $quote_style ]
+      }
+    }
+    Function [ <internal:standard> function get_html_translation_table ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $table ]
+        Parameter #1 [ <optional> $quote_style ]
+      }
+    }
+    Function [ <internal:standard> function sha1 ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:standard> function sha1_file ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:standard> function md5 ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:standard> function md5_file ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:standard> function crc32 ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function iptcparse ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $iptcdata ]
+      }
+    }
+    Function [ <internal:standard> function iptcembed ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $iptcdata ]
+        Parameter #1 [ <required> $jpeg_file_name ]
+        Parameter #2 [ <optional> $spool ]
+      }
+    }
+    Function [ <internal:standard> function getimagesize ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $imagefile ]
+        Parameter #1 [ <optional> &$info ]
+      }
+    }
+    Function [ <internal:standard> function getimagesizefromstring ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $imagefile ]
+        Parameter #1 [ <optional> &$info ]
+      }
+    }
+    Function [ <internal:standard> function image_type_to_mime_type ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $imagetype ]
+      }
+    }
+    Function [ <internal:standard> function image_type_to_extension ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $imagetype ]
+        Parameter #1 [ <optional> $include_dot ]
+      }
+    }
+    Function [ <internal:standard> function phpinfo ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $what ]
+      }
+    }
+    Function [ <internal:standard> function phpversion ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $extension ]
+      }
+    }
+    Function [ <internal:standard> function phpcredits ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $flag ]
+      }
+    }
+    Function [ <internal:standard> function php_sapi_name ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function php_uname ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function php_ini_scanned_files ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function php_ini_loaded_file ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function strnatcmp ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $s1 ]
+        Parameter #1 [ <required> $s2 ]
+      }
+    }
+    Function [ <internal:standard> function strnatcasecmp ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $s1 ]
+        Parameter #1 [ <required> $s2 ]
+      }
+    }
+    Function [ <internal:standard> function substr_count ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+        Parameter #3 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:standard> function strspn ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $mask ]
+        Parameter #2 [ <optional> $start ]
+        Parameter #3 [ <optional> $len ]
+      }
+    }
+    Function [ <internal:standard> function strcspn ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $mask ]
+        Parameter #2 [ <optional> $start ]
+        Parameter #3 [ <optional> $len ]
+      }
+    }
+    Function [ <internal:standard> function strtok ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $token ]
+      }
+    }
+    Function [ <internal:standard> function strtoupper ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function strtolower ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function strpos ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:standard> function stripos ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:standard> function strrpos ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:standard> function strripos ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:standard> function strrev ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function hebrev ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $max_chars_per_line ]
+      }
+    }
+    Function [ <internal:standard> function hebrevc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $max_chars_per_line ]
+      }
+    }
+    Function [ <internal:standard> function nl2br ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $is_xhtml ]
+      }
+    }
+    Function [ <internal:standard> function basename ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <optional> $suffix ]
+      }
+    }
+    Function [ <internal:standard> function dirname ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $path ]
+      }
+    }
+    Function [ <internal:standard> function pathinfo ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:standard> function stripslashes ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function stripcslashes ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function strstr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $part ]
+      }
+    }
+    Function [ <internal:standard> function stristr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $part ]
+      }
+    }
+    Function [ <internal:standard> function strrchr ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+      }
+    }
+    Function [ <internal:standard> function str_shuffle ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function str_word_count ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $format ]
+        Parameter #2 [ <optional> $charlist ]
+      }
+    }
+    Function [ <internal:standard> function str_split ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $split_length ]
+      }
+    }
+    Function [ <internal:standard> function strpbrk ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <optional> $char_list ]
+      }
+    }
+    Function [ <internal:standard> function substr_compare ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $main_str ]
+        Parameter #1 [ <required> $str ]
+        Parameter #2 [ <required> $offset ]
+        Parameter #3 [ <optional> $length ]
+        Parameter #4 [ <optional> $case_sensitivity ]
+      }
+    }
+    Function [ <internal:standard> function strcoll ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str1 ]
+        Parameter #1 [ <required> $str2 ]
+      }
+    }
+    Function [ <internal:standard> function money_format ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <required> $value ]
+      }
+    }
+    Function [ <internal:standard> function substr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $start ]
+        Parameter #2 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:standard> function substr_replace ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $replace ]
+        Parameter #2 [ <required> $start ]
+        Parameter #3 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:standard> function quotemeta ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function ucfirst ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function lcfirst ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function ucwords ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function strtr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $from ]
+        Parameter #2 [ <optional> $to ]
+      }
+    }
+    Function [ <internal:standard> function addslashes ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function addcslashes ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $charlist ]
+      }
+    }
+    Function [ <internal:standard> function rtrim ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $character_mask ]
+      }
+    }
+    Function [ <internal:standard> function str_replace ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $search ]
+        Parameter #1 [ <required> $replace ]
+        Parameter #2 [ <required> $subject ]
+        Parameter #3 [ <optional> &$replace_count ]
+      }
+    }
+    Function [ <internal:standard> function str_ireplace ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $search ]
+        Parameter #1 [ <required> $replace ]
+        Parameter #2 [ <required> $subject ]
+        Parameter #3 [ <optional> &$replace_count ]
+      }
+    }
+    Function [ <internal:standard> function str_repeat ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $input ]
+        Parameter #1 [ <required> $mult ]
+      }
+    }
+    Function [ <internal:standard> function count_chars ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $input ]
+        Parameter #1 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:standard> function chunk_split ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $chunklen ]
+        Parameter #2 [ <optional> $ending ]
+      }
+    }
+    Function [ <internal:standard> function trim ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $character_mask ]
+      }
+    }
+    Function [ <internal:standard> function ltrim ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $character_mask ]
+      }
+    }
+    Function [ <internal:standard> function strip_tags ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $allowable_tags ]
+      }
+    }
+    Function [ <internal:standard> function similar_text ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str1 ]
+        Parameter #1 [ <required> $str2 ]
+        Parameter #2 [ <optional> &$percent ]
+      }
+    }
+    Function [ <internal:standard> function explode ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $separator ]
+        Parameter #1 [ <required> $str ]
+        Parameter #2 [ <optional> $limit ]
+      }
+    }
+    Function [ <internal:standard> function implode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $glue ]
+        Parameter #1 [ <required> $pieces ]
+      }
+    }
+    Function [ <internal:standard> function join ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $glue ]
+        Parameter #1 [ <required> $pieces ]
+      }
+    }
+    Function [ <internal:standard> function setlocale ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $category ]
+        Parameter #1 [ <required> $locale ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function localeconv ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function nl_langinfo ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $item ]
+      }
+    }
+    Function [ <internal:standard> function soundex ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function levenshtein ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $str1 ]
+        Parameter #1 [ <required> $str2 ]
+        Parameter #2 [ <required> $cost_ins ]
+        Parameter #3 [ <required> $cost_rep ]
+        Parameter #4 [ <required> $cost_del ]
+      }
+    }
+    Function [ <internal:standard> function chr ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $codepoint ]
+      }
+    }
+    Function [ <internal:standard> function ord ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $character ]
+      }
+    }
+    Function [ <internal:standard> function parse_str ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $encoded_string ]
+        Parameter #1 [ <optional> &$result ]
+      }
+    }
+    Function [ <internal:standard> function str_getcsv ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <optional> $delimiter ]
+        Parameter #2 [ <optional> $enclosure ]
+        Parameter #3 [ <optional> $escape ]
+      }
+    }
+    Function [ <internal:standard> function str_pad ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $input ]
+        Parameter #1 [ <required> $pad_length ]
+        Parameter #2 [ <optional> $pad_string ]
+        Parameter #3 [ <optional> $pad_type ]
+      }
+    }
+    Function [ <internal:standard> function chop ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $character_mask ]
+      }
+    }
+    Function [ <internal:standard> function strchr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $part ]
+      }
+    }
+    Function [ <internal:standard> function sprintf ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <required> $arg1 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function printf ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <optional> $arg1 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function vprintf ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <required> $args ]
+      }
+    }
+    Function [ <internal:standard> function vsprintf ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <required> $args ]
+      }
+    }
+    Function [ <internal:standard> function fprintf ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $format ]
+        Parameter #2 [ <optional> $arg1 ]
+        Parameter #3 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function vfprintf ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $format ]
+        Parameter #2 [ <required> $args ]
+      }
+    }
+    Function [ <internal:standard> function sscanf ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $format ]
+        Parameter #2 [ <optional> &$... ]
+      }
+    }
+    Function [ <internal:standard> function fscanf ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $format ]
+        Parameter #2 [ <optional> &$... ]
+      }
+    }
+    Function [ <internal:standard> function parse_url ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $url ]
+        Parameter #1 [ <optional> $component ]
+      }
+    }
+    Function [ <internal:standard> function urlencode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function urldecode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function rawurlencode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function rawurldecode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function http_build_query ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $formdata ]
+        Parameter #1 [ <optional> $prefix ]
+        Parameter #2 [ <optional> $arg_separator ]
+        Parameter #3 [ <optional> $enc_type ]
+      }
+    }
+    Function [ <internal:standard> function readlink ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function linkinfo ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function symlink ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $target ]
+        Parameter #1 [ <required> $link ]
+      }
+    }
+    Function [ <internal:standard> function link ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $target ]
+        Parameter #1 [ <required> $link ]
+      }
+    }
+    Function [ <internal:standard> function unlink ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function exec ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $command ]
+        Parameter #1 [ <optional> &$output ]
+        Parameter #2 [ <optional> &$return_value ]
+      }
+    }
+    Function [ <internal:standard> function system ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $command ]
+        Parameter #1 [ <optional> &$return_value ]
+      }
+    }
+    Function [ <internal:standard> function escapeshellcmd ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $command ]
+      }
+    }
+    Function [ <internal:standard> function escapeshellarg ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg ]
+      }
+    }
+    Function [ <internal:standard> function passthru ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $command ]
+        Parameter #1 [ <optional> &$return_value ]
+      }
+    }
+    Function [ <internal:standard> function shell_exec ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $cmd ]
+      }
+    }
+    Function [ <internal:standard> function proc_open ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $command ]
+        Parameter #1 [ <required> $descriptorspec ]
+        Parameter #2 [ <required> &$pipes ]
+        Parameter #3 [ <optional> $cwd ]
+        Parameter #4 [ <optional> $env ]
+        Parameter #5 [ <optional> $other_options ]
+      }
+    }
+    Function [ <internal:standard> function proc_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $process ]
+      }
+    }
+    Function [ <internal:standard> function proc_terminate ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $process ]
+        Parameter #1 [ <optional> $signal ]
+      }
+    }
+    Function [ <internal:standard> function proc_get_status ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $process ]
+      }
+    }
+    Function [ <internal:standard> function proc_nice ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $priority ]
+      }
+    }
+    Function [ <internal:standard> function rand ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $min ]
+        Parameter #1 [ <optional> $max ]
+      }
+    }
+    Function [ <internal:standard> function srand ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $seed ]
+      }
+    }
+    Function [ <internal:standard> function getrandmax ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function mt_rand ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $min ]
+        Parameter #1 [ <optional> $max ]
+      }
+    }
+    Function [ <internal:standard> function mt_srand ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $seed ]
+      }
+    }
+    Function [ <internal:standard> function mt_getrandmax ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function getservbyname ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $service ]
+        Parameter #1 [ <required> $protocol ]
+      }
+    }
+    Function [ <internal:standard> function getservbyport ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $port ]
+        Parameter #1 [ <required> $protocol ]
+      }
+    }
+    Function [ <internal:standard> function getprotobyname ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $name ]
+      }
+    }
+    Function [ <internal:standard> function getprotobynumber ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $proto ]
+      }
+    }
+    Function [ <internal:standard> function getmyuid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function getmygid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function getmypid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function getmyinode ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function getlastmod ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function base64_decode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $strict ]
+      }
+    }
+    Function [ <internal:standard> function base64_encode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function password_hash ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $password ]
+        Parameter #1 [ <required> $algo ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:standard> function password_get_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $hash ]
+      }
+    }
+    Function [ <internal:standard> function password_needs_rehash ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $hash ]
+        Parameter #1 [ <required> $algo ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:standard> function password_verify ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $password ]
+        Parameter #1 [ <required> $hash ]
+      }
+    }
+    Function [ <internal:standard> function convert_uuencode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:standard> function convert_uudecode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:standard> function abs ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function ceil ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function floor ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function round ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $number ]
+        Parameter #1 [ <optional> $precision ]
+        Parameter #2 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:standard> function sin ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function cos ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function tan ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function asin ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function acos ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function atan ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function atanh ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function atan2 ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $y ]
+        Parameter #1 [ <required> $x ]
+      }
+    }
+    Function [ <internal:standard> function sinh ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function cosh ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function tanh ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function asinh ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function acosh ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function expm1 ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function log1p ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function pi ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function is_finite ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $val ]
+      }
+    }
+    Function [ <internal:standard> function is_nan ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $val ]
+      }
+    }
+    Function [ <internal:standard> function is_infinite ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $val ]
+      }
+    }
+    Function [ <internal:standard> function pow ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $base ]
+        Parameter #1 [ <required> $exponent ]
+      }
+    }
+    Function [ <internal:standard> function exp ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function log ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $number ]
+        Parameter #1 [ <optional> $base ]
+      }
+    }
+    Function [ <internal:standard> function log10 ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function sqrt ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function hypot ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $num1 ]
+        Parameter #1 [ <required> $num2 ]
+      }
+    }
+    Function [ <internal:standard> function deg2rad ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function rad2deg ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $number ]
+      }
+    }
+    Function [ <internal:standard> function bindec ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $binary_number ]
+      }
+    }
+    Function [ <internal:standard> function hexdec ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $hexadecimal_number ]
+      }
+    }
+    Function [ <internal:standard> function octdec ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $octal_number ]
+      }
+    }
+    Function [ <internal:standard> function decbin ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $decimal_number ]
+      }
+    }
+    Function [ <internal:standard> function decoct ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $decimal_number ]
+      }
+    }
+    Function [ <internal:standard> function dechex ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $decimal_number ]
+      }
+    }
+    Function [ <internal:standard> function base_convert ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $number ]
+        Parameter #1 [ <required> $frombase ]
+        Parameter #2 [ <required> $tobase ]
+      }
+    }
+    Function [ <internal:standard> function number_format ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $number ]
+        Parameter #1 [ <optional> $num_decimal_places ]
+        Parameter #2 [ <optional> $dec_seperator ]
+        Parameter #3 [ <optional> $thousands_seperator ]
+      }
+    }
+    Function [ <internal:standard> function fmod ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $x ]
+        Parameter #1 [ <required> $y ]
+      }
+    }
+    Function [ <internal:standard> function inet_ntop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $in_addr ]
+      }
+    }
+    Function [ <internal:standard> function inet_pton ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ip_address ]
+      }
+    }
+    Function [ <internal:standard> function ip2long ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ip_address ]
+      }
+    }
+    Function [ <internal:standard> function long2ip ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $proper_address ]
+      }
+    }
+    Function [ <internal:standard> function getenv ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $varname ]
+      }
+    }
+    Function [ <internal:standard> function putenv ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $setting ]
+      }
+    }
+    Function [ <internal:standard> function getopt ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $options ]
+        Parameter #1 [ <optional> $opts ]
+      }
+    }
+    Function [ <internal:standard> function sys_getloadavg ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function microtime ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $get_as_float ]
+      }
+    }
+    Function [ <internal:standard> function gettimeofday ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $get_as_float ]
+      }
+    }
+    Function [ <internal:standard> function getrusage ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $who ]
+      }
+    }
+    Function [ <internal:standard> function uniqid ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $prefix ]
+        Parameter #1 [ <optional> $more_entropy ]
+      }
+    }
+    Function [ <internal:standard> function quoted_printable_decode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function quoted_printable_encode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function convert_cyr_string ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $from ]
+        Parameter #2 [ <required> $to ]
+      }
+    }
+    Function [ <internal:standard> function get_current_user ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function set_time_limit ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $seconds ]
+      }
+    }
+    Function [ <internal:standard> function header_register_callback ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:standard> function get_cfg_var ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $option_name ]
+      }
+    }
+    Function [ <internal, deprecated:standard> function magic_quotes_runtime ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $new_setting ]
+      }
+    }
+    Function [ <internal, deprecated:standard> function set_magic_quotes_runtime ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $new_setting ]
+      }
+    }
+    Function [ <internal:standard> function get_magic_quotes_gpc ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function get_magic_quotes_runtime ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function error_log ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $message ]
+        Parameter #1 [ <optional> $message_type ]
+        Parameter #2 [ <optional> $destination ]
+        Parameter #3 [ <optional> $extra_headers ]
+      }
+    }
+    Function [ <internal:standard> function error_get_last ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function call_user_func ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $function_name ]
+        Parameter #1 [ <optional> $parmeter ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function call_user_func_array ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $function_name ]
+        Parameter #1 [ <required> $parameters ]
+      }
+    }
+    Function [ <internal, deprecated:standard> function call_user_method ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $method_name ]
+        Parameter #1 [ <required> &$object ]
+        Parameter #2 [ <optional> $parameter ]
+        Parameter #3 [ <optional> $... ]
+      }
+    }
+    Function [ <internal, deprecated:standard> function call_user_method_array ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $method_name ]
+        Parameter #1 [ <required> &$object ]
+        Parameter #2 [ <required> $params ]
+      }
+    }
+    Function [ <internal:standard> function forward_static_call ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $function_name ]
+        Parameter #1 [ <optional> $parameter ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function forward_static_call_array ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $function_name ]
+        Parameter #1 [ <required> $parameters ]
+      }
+    }
+    Function [ <internal:standard> function serialize ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function unserialize ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $variable_representation ]
+      }
+    }
+    Function [ <internal:standard> function var_dump ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var ]
+        Parameter #1 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function var_export ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var ]
+        Parameter #1 [ <optional> $return ]
+      }
+    }
+    Function [ <internal:standard> function debug_zval_dump ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var ]
+        Parameter #1 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function print_r ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var ]
+        Parameter #1 [ <optional> $return ]
+      }
+    }
+    Function [ <internal:standard> function memory_get_usage ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $real_usage ]
+      }
+    }
+    Function [ <internal:standard> function memory_get_peak_usage ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $real_usage ]
+      }
+    }
+    Function [ <internal:standard> function register_shutdown_function ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $function_name ]
+      }
+    }
+    Function [ <internal:standard> function register_tick_function ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $function_name ]
+        Parameter #1 [ <optional> $arg ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function unregister_tick_function ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $function_name ]
+      }
+    }
+    Function [ <internal:standard> function highlight_file ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $file_name ]
+        Parameter #1 [ <optional> $return ]
+      }
+    }
+    Function [ <internal:standard> function show_source ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $file_name ]
+        Parameter #1 [ <optional> $return ]
+      }
+    }
+    Function [ <internal:standard> function highlight_string ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <optional> $return ]
+      }
+    }
+    Function [ <internal:standard> function php_strip_whitespace ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $file_name ]
+      }
+    }
+    Function [ <internal:standard> function ini_get ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $varname ]
+      }
+    }
+    Function [ <internal:standard> function ini_get_all ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $extension ]
+      }
+    }
+    Function [ <internal:standard> function ini_set ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $varname ]
+        Parameter #1 [ <required> $newvalue ]
+      }
+    }
+    Function [ <internal:standard> function ini_alter ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $varname ]
+        Parameter #1 [ <required> $newvalue ]
+      }
+    }
+    Function [ <internal:standard> function ini_restore ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $varname ]
+      }
+    }
+    Function [ <internal:standard> function get_include_path ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function set_include_path ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $new_include_path ]
+      }
+    }
+    Function [ <internal:standard> function restore_include_path ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function setcookie ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $name ]
+        Parameter #1 [ <optional> $value ]
+        Parameter #2 [ <optional> $expires ]
+        Parameter #3 [ <optional> $path ]
+        Parameter #4 [ <optional> $domain ]
+        Parameter #5 [ <optional> $secure ]
+      }
+    }
+    Function [ <internal:standard> function setrawcookie ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $name ]
+        Parameter #1 [ <optional> $value ]
+        Parameter #2 [ <optional> $expires ]
+        Parameter #3 [ <optional> $path ]
+        Parameter #4 [ <optional> $domain ]
+        Parameter #5 [ <optional> $secure ]
+      }
+    }
+    Function [ <internal:standard> function header ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $header ]
+        Parameter #1 [ <optional> $replace ]
+        Parameter #2 [ <optional> $http_response_code ]
+      }
+    }
+    Function [ <internal:standard> function header_remove ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $name ]
+      }
+    }
+    Function [ <internal:standard> function headers_sent ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> &$file ]
+        Parameter #1 [ <optional> &$line ]
+      }
+    }
+    Function [ <internal:standard> function headers_list ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function http_response_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $response_code ]
+      }
+    }
+    Function [ <internal:standard> function connection_aborted ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function connection_status ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ignore_user_abort ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $value ]
+      }
+    }
+    Function [ <internal:standard> function parse_ini_file ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $process_sections ]
+        Parameter #2 [ <optional> $scanner_mode ]
+      }
+    }
+    Function [ <internal:standard> function parse_ini_string ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ini_string ]
+        Parameter #1 [ <optional> $process_sections ]
+        Parameter #2 [ <optional> $scanner_mode ]
+      }
+    }
+    Function [ <internal:standard> function is_uploaded_file ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $path ]
+      }
+    }
+    Function [ <internal:standard> function move_uploaded_file ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <required> $new_path ]
+      }
+    }
+    Function [ <internal:standard> function gethostbyaddr ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ip_address ]
+      }
+    }
+    Function [ <internal:standard> function gethostbyname ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $hostname ]
+      }
+    }
+    Function [ <internal:standard> function gethostbynamel ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $hostname ]
+      }
+    }
+    Function [ <internal:standard> function gethostname ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function dns_check_record ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:standard> function checkdnsrr ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:standard> function dns_get_mx ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $hostname ]
+        Parameter #1 [ <required> &$mxhosts ]
+        Parameter #2 [ <optional> &$weight ]
+      }
+    }
+    Function [ <internal:standard> function getmxrr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $hostname ]
+        Parameter #1 [ <required> &$mxhosts ]
+        Parameter #2 [ <optional> &$weight ]
+      }
+    }
+    Function [ <internal:standard> function dns_get_record ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $hostname ]
+        Parameter #1 [ <optional> $type ]
+        Parameter #2 [ <optional> array or NULL &$authns ]
+        Parameter #3 [ <optional> array or NULL &$addtl ]
+        Parameter #4 [ <optional> $raw ]
+      }
+    }
+    Function [ <internal:standard> function intval ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var ]
+        Parameter #1 [ <optional> $base ]
+      }
+    }
+    Function [ <internal:standard> function floatval ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function doubleval ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function strval ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function boolval ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function gettype ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function settype ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$var ]
+        Parameter #1 [ <required> $type ]
+      }
+    }
+    Function [ <internal:standard> function is_null ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_resource ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_bool ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_long ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_float ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_int ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_integer ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_double ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_real ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_numeric ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:standard> function is_string ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_array ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_object ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
+    }
+    Function [ <internal:standard> function is_scalar ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:standard> function is_callable ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $var ]
+        Parameter #1 [ <optional> $syntax_only ]
+        Parameter #2 [ <optional> &$callable_name ]
+      }
+    }
+    Function [ <internal:standard> function pclose ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function popen ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $command ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:standard> function readfile ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $flags ]
+        Parameter #2 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function rewind ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function rmdir ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $dirname ]
+        Parameter #1 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function umask ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $mask ]
+      }
+    }
+    Function [ <internal:standard> function fclose ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function feof ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function fgetc ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function fgets ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:standard> function fgetss ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <optional> $length ]
+        Parameter #2 [ <optional> $allowable_tags ]
+      }
+    }
+    Function [ <internal:standard> function fread ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $length ]
+      }
+    }
+    Function [ <internal:standard> function fopen ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $mode ]
+        Parameter #2 [ <optional> $use_include_path ]
+        Parameter #3 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function fpassthru ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function ftruncate ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $size ]
+      }
+    }
+    Function [ <internal:standard> function fstat ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function fseek ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $offset ]
+        Parameter #2 [ <optional> $whence ]
+      }
+    }
+    Function [ <internal:standard> function ftell ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function fflush ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function fwrite ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $str ]
+        Parameter #2 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:standard> function fputs ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $str ]
+        Parameter #2 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:standard> function mkdir ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $pathname ]
+        Parameter #1 [ <optional> $mode ]
+        Parameter #2 [ <optional> $recursive ]
+        Parameter #3 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function rename ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $old_name ]
+        Parameter #1 [ <required> $new_name ]
+        Parameter #2 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function copy ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $source_file ]
+        Parameter #1 [ <required> $destination_file ]
+        Parameter #2 [ <required> $context ]
+      }
+    }
+    Function [ <internal:standard> function tempnam ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $dir ]
+        Parameter #1 [ <required> $prefix ]
+      }
+    }
+    Function [ <internal:standard> function tmpfile ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function file ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $flags ]
+        Parameter #2 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function file_get_contents ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $flags ]
+        Parameter #2 [ <optional> $context ]
+        Parameter #3 [ <optional> $offset ]
+        Parameter #4 [ <optional> $maxlen ]
+      }
+    }
+    Function [ <internal:standard> function file_put_contents ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <optional> $flags ]
+        Parameter #3 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function stream_select ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> &$read_streams ]
+        Parameter #1 [ <required> &$write_streams ]
+        Parameter #2 [ <required> &$except_streams ]
+        Parameter #3 [ <required> $tv_sec ]
+        Parameter #4 [ <optional> $tv_usec ]
+      }
+    }
+    Function [ <internal:standard> function stream_context_create ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $options ]
+        Parameter #1 [ <optional> $params ]
+      }
+    }
+    Function [ <internal:standard> function stream_context_set_params ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream_or_context ]
+        Parameter #1 [ <required> $options ]
+      }
+    }
+    Function [ <internal:standard> function stream_context_get_params ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_or_context ]
+      }
+    }
+    Function [ <internal:standard> function stream_context_set_option ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream_or_context ]
+        Parameter #1 [ <required> $wrappername ]
+        Parameter #2 [ <required> $optionname ]
+        Parameter #3 [ <required> $value ]
+      }
+    }
+    Function [ <internal:standard> function stream_context_get_options ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_or_context ]
+      }
+    }
+    Function [ <internal:standard> function stream_context_get_default ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:standard> function stream_context_set_default ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $options ]
+      }
+    }
+    Function [ <internal:standard> function stream_filter_prepend ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $filtername ]
+        Parameter #2 [ <optional> $read_write ]
+        Parameter #3 [ <optional> $filterparams ]
+      }
+    }
+    Function [ <internal:standard> function stream_filter_append ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $filtername ]
+        Parameter #2 [ <optional> $read_write ]
+        Parameter #3 [ <optional> $filterparams ]
+      }
+    }
+    Function [ <internal:standard> function stream_filter_remove ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream_filter ]
+      }
+    }
+    Function [ <internal:standard> function stream_socket_client ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $remoteaddress ]
+        Parameter #1 [ <optional> &$errcode ]
+        Parameter #2 [ <optional> &$errstring ]
+        Parameter #3 [ <optional> $timeout ]
+        Parameter #4 [ <optional> $flags ]
+        Parameter #5 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function stream_socket_server ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $localaddress ]
+        Parameter #1 [ <optional> &$errcode ]
+        Parameter #2 [ <optional> &$errstring ]
+        Parameter #3 [ <optional> $flags ]
+        Parameter #4 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function stream_socket_accept ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $serverstream ]
+        Parameter #1 [ <optional> $timeout ]
+        Parameter #2 [ <optional> &$peername ]
+      }
+    }
+    Function [ <internal:standard> function stream_socket_get_name ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $want_peer ]
+      }
+    }
+    Function [ <internal:standard> function stream_socket_recvfrom ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $amount ]
+        Parameter #2 [ <optional> $flags ]
+        Parameter #3 [ <optional> &$remote_addr ]
+      }
+    }
+    Function [ <internal:standard> function stream_socket_sendto ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <optional> $flags ]
+        Parameter #3 [ <optional> $target_addr ]
+      }
+    }
+    Function [ <internal:standard> function stream_socket_enable_crypto ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $enable ]
+        Parameter #2 [ <optional> $cryptokind ]
+        Parameter #3 [ <optional> $sessionstream ]
+      }
+    }
+    Function [ <internal:standard> function stream_socket_shutdown ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $how ]
+      }
+    }
+    Function [ <internal:standard> function stream_socket_pair ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $domain ]
+        Parameter #1 [ <required> $type ]
+        Parameter #2 [ <required> $protocol ]
+      }
+    }
+    Function [ <internal:standard> function stream_copy_to_stream ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $source ]
+        Parameter #1 [ <required> $dest ]
+        Parameter #2 [ <optional> $maxlen ]
+        Parameter #3 [ <optional> $pos ]
+      }
+    }
+    Function [ <internal:standard> function stream_get_contents ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $source ]
+        Parameter #1 [ <optional> $maxlen ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:standard> function stream_supports_lock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream ]
+      }
+    }
+    Function [ <internal:standard> function fgetcsv ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <optional> $length ]
+        Parameter #2 [ <optional> $delimiter ]
+        Parameter #3 [ <optional> $enclosure ]
+        Parameter #4 [ <optional> $escape ]
+      }
+    }
+    Function [ <internal:standard> function fputcsv ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $fields ]
+        Parameter #2 [ <optional> $delimiter ]
+        Parameter #3 [ <optional> $enclosure ]
+      }
+    }
+    Function [ <internal:standard> function flock ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $operation ]
+        Parameter #2 [ <optional> &$wouldblock ]
+      }
+    }
+    Function [ <internal:standard> function get_meta_tags ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $use_include_path ]
+      }
+    }
+    Function [ <internal:standard> function stream_set_read_buffer ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $buffer ]
+      }
+    }
+    Function [ <internal:standard> function stream_set_write_buffer ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $buffer ]
+      }
+    }
+    Function [ <internal:standard> function set_file_buffer ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $buffer ]
+      }
+    }
+    Function [ <internal:standard> function stream_set_chunk_size ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $chunk_size ]
+      }
+    }
+    Function [ <internal, deprecated:standard> function set_socket_blocking ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:standard> function stream_set_blocking ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:standard> function socket_set_blocking ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $socket ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:standard> function stream_get_meta_data ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function stream_get_line ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $maxlen ]
+        Parameter #2 [ <optional> $ending ]
+      }
+    }
+    Function [ <internal:standard> function stream_wrapper_register ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $protocol ]
+        Parameter #1 [ <required> $classname ]
+        Parameter #2 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:standard> function stream_register_wrapper ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $protocol ]
+        Parameter #1 [ <required> $classname ]
+        Parameter #2 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:standard> function stream_wrapper_unregister ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $protocol ]
+      }
+    }
+    Function [ <internal:standard> function stream_wrapper_restore ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $protocol ]
+      }
+    }
+    Function [ <internal:standard> function stream_get_wrappers ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function stream_get_transports ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function stream_resolve_include_path ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function stream_is_local ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stream ]
+      }
+    }
+    Function [ <internal:standard> function get_headers ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $url ]
+        Parameter #1 [ <optional> $format ]
+      }
+    }
+    Function [ <internal:standard> function stream_set_timeout ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $seconds ]
+        Parameter #2 [ <required> $microseconds ]
+      }
+    }
+    Function [ <internal:standard> function socket_set_timeout ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $seconds ]
+        Parameter #2 [ <required> $microseconds ]
+      }
+    }
+    Function [ <internal:standard> function socket_get_status ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:standard> function realpath ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $path ]
+      }
+    }
+    Function [ <internal:standard> function fnmatch ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $filename ]
+        Parameter #2 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:standard> function fsockopen ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $hostname ]
+        Parameter #1 [ <required> $port ]
+        Parameter #2 [ <optional> &$errno ]
+        Parameter #3 [ <optional> &$errstr ]
+        Parameter #4 [ <optional> $timeout ]
+      }
+    }
+    Function [ <internal:standard> function pfsockopen ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $hostname ]
+        Parameter #1 [ <required> $port ]
+        Parameter #2 [ <optional> &$errno ]
+        Parameter #3 [ <optional> &$errstr ]
+        Parameter #4 [ <optional> $timeout ]
+      }
+    }
+    Function [ <internal:standard> function pack ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <required> $arg1 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function unpack ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $format ]
+        Parameter #1 [ <required> $input ]
+      }
+    }
+    Function [ <internal:standard> function get_browser ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $browser_name ]
+        Parameter #1 [ <optional> $return_array ]
+      }
+    }
+    Function [ <internal:standard> function crypt ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $salt ]
+      }
+    }
+    Function [ <internal:standard> function opendir ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function closedir ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $dir_handle ]
+      }
+    }
+    Function [ <internal:standard> function chdir ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $directory ]
+      }
+    }
+    Function [ <internal:standard> function getcwd ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function rewinddir ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $dir_handle ]
+      }
+    }
+    Function [ <internal:standard> function readdir ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $dir_handle ]
+      }
+    }
+    Function [ <internal:standard> function dir ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $directory ]
+        Parameter #1 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function scandir ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $dir ]
+        Parameter #1 [ <optional> $sorting_order ]
+        Parameter #2 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:standard> function glob ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:standard> function fileatime ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function filectime ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function filegroup ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function fileinode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function filemtime ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function fileowner ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function fileperms ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function filesize ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function filetype ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function file_exists ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function is_writable ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function is_writeable ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function is_readable ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function is_executable ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function is_file ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function is_dir ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function is_link ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function stat ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function lstat ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:standard> function chown ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $user ]
+      }
+    }
+    Function [ <internal:standard> function chgrp ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $group ]
+      }
+    }
+    Function [ <internal:standard> function lchown ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $user ]
+      }
+    }
+    Function [ <internal:standard> function lchgrp ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $group ]
+      }
+    }
+    Function [ <internal:standard> function chmod ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:standard> function touch ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $time ]
+        Parameter #2 [ <optional> $atime ]
+      }
+    }
+    Function [ <internal:standard> function clearstatcache ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $clear_realpath_cache ]
+        Parameter #1 [ <optional> $filename ]
+      }
+    }
+    Function [ <internal:standard> function disk_total_space ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $path ]
+      }
+    }
+    Function [ <internal:standard> function disk_free_space ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $path ]
+      }
+    }
+    Function [ <internal:standard> function diskfreespace ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $path ]
+      }
+    }
+    Function [ <internal:standard> function realpath_cache_size ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function realpath_cache_get ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function mail ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $to ]
+        Parameter #1 [ <required> $subject ]
+        Parameter #2 [ <required> $message ]
+        Parameter #3 [ <optional> $additional_headers ]
+        Parameter #4 [ <optional> $additional_parameters ]
+      }
+    }
+    Function [ <internal:standard> function ezmlm_hash ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $addr ]
+      }
+    }
+    Function [ <internal:standard> function openlog ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ident ]
+        Parameter #1 [ <required> $option ]
+        Parameter #2 [ <required> $facility ]
+      }
+    }
+    Function [ <internal:standard> function syslog ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $priority ]
+        Parameter #1 [ <required> $message ]
+      }
+    }
+    Function [ <internal:standard> function closelog ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function lcg_value ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function metaphone ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $text ]
+        Parameter #1 [ <optional> $phones ]
+      }
+    }
+    Function [ <internal:standard> function ob_start ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $user_function ]
+        Parameter #1 [ <optional> $chunk_size ]
+        Parameter #2 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:standard> function ob_flush ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ob_clean ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ob_end_flush ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ob_end_clean ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ob_get_flush ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ob_get_clean ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ob_get_length ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ob_get_level ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ob_get_status ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $full_status ]
+      }
+    }
+    Function [ <internal:standard> function ob_get_contents ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ob_implicit_flush ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $flag ]
+      }
+    }
+    Function [ <internal:standard> function ob_list_handlers ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function ksort ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <optional> $sort_flags ]
+      }
+    }
+    Function [ <internal:standard> function krsort ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <optional> $sort_flags ]
+      }
+    }
+    Function [ <internal:standard> function natsort ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function natcasesort ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function asort ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <optional> $sort_flags ]
+      }
+    }
+    Function [ <internal:standard> function arsort ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <optional> $sort_flags ]
+      }
+    }
+    Function [ <internal:standard> function sort ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <optional> $sort_flags ]
+      }
+    }
+    Function [ <internal:standard> function rsort ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <optional> $sort_flags ]
+      }
+    }
+    Function [ <internal:standard> function usort ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <required> $cmp_function ]
+      }
+    }
+    Function [ <internal:standard> function uasort ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <required> $cmp_function ]
+      }
+    }
+    Function [ <internal:standard> function uksort ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <required> $cmp_function ]
+      }
+    }
+    Function [ <internal:standard> function shuffle ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function array_walk ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> &$input ]
+        Parameter #1 [ <required> $funcname ]
+        Parameter #2 [ <optional> $userdata ]
+      }
+    }
+    Function [ <internal:standard> function array_walk_recursive ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> &$input ]
+        Parameter #1 [ <required> $funcname ]
+        Parameter #2 [ <optional> $userdata ]
+      }
+    }
+    Function [ <internal:standard> function count ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var ]
+        Parameter #1 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:standard> function end ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function prev ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function next ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function reset ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function current ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function key ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function min ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <optional> $arg2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function max ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <optional> $arg2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function in_array ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $needle ]
+        Parameter #1 [ <required> $haystack ]
+        Parameter #2 [ <optional> $strict ]
+      }
+    }
+    Function [ <internal:standard> function array_search ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $needle ]
+        Parameter #1 [ <required> $haystack ]
+        Parameter #2 [ <optional> $strict ]
+      }
+    }
+    Function [ <internal:standard> function extract ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <optional> $extract_type ]
+        Parameter #2 [ <optional> $prefix ]
+      }
+    }
+    Function [ <internal:standard> function compact ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var_names ]
+        Parameter #1 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_fill ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $start_key ]
+        Parameter #1 [ <required> $num ]
+        Parameter #2 [ <required> $val ]
+      }
+    }
+    Function [ <internal:standard> function array_fill_keys ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $keys ]
+        Parameter #1 [ <required> $val ]
+      }
+    }
+    Function [ <internal:standard> function range ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $low ]
+        Parameter #1 [ <required> $high ]
+        Parameter #2 [ <optional> $step ]
+      }
+    }
+    Function [ <internal:standard> function array_multisort ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> &$arr1 ]
+        Parameter #1 [ <optional> &$SORT_ASC_or_SORT_DESC ]
+        Parameter #2 [ <optional> &$SORT_REGULAR_or_SORT_NUMERIC_or_SORT_STRING ]
+        Parameter #3 [ <optional> &$arr2 ]
+        Parameter #4 [ <optional> &$SORT_ASC_or_SORT_DESC ]
+        Parameter #5 [ <optional> &$SORT_REGULAR_or_SORT_NUMERIC_or_SORT_STRING ]
+      }
+    }
+    Function [ <internal:standard> function array_push ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> &$stack ]
+        Parameter #1 [ <required> $var ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_pop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$stack ]
+      }
+    }
+    Function [ <internal:standard> function array_shift ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$stack ]
+      }
+    }
+    Function [ <internal:standard> function array_unshift ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> &$stack ]
+        Parameter #1 [ <required> $var ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_splice ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> &$arg ]
+        Parameter #1 [ <required> $offset ]
+        Parameter #2 [ <optional> $length ]
+        Parameter #3 [ <optional> $replacement ]
+      }
+    }
+    Function [ <internal:standard> function array_slice ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $arg ]
+        Parameter #1 [ <required> $offset ]
+        Parameter #2 [ <optional> $length ]
+        Parameter #3 [ <optional> $preserve_keys ]
+      }
+    }
+    Function [ <internal:standard> function array_merge ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_merge_recursive ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_replace ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_replace_recursive ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_keys ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arg ]
+        Parameter #1 [ <optional> $search_value ]
+        Parameter #2 [ <optional> $strict ]
+      }
+    }
+    Function [ <internal:standard> function array_values ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg ]
+      }
+    }
+    Function [ <internal:standard> function array_count_values ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg ]
+      }
+    }
+    Function [ <internal:standard> function array_reverse ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $input ]
+        Parameter #1 [ <optional> $preserve_keys ]
+      }
+    }
+    Function [ <internal:standard> function array_reduce ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arg ]
+        Parameter #1 [ <required> $callback ]
+        Parameter #2 [ <optional> $initial ]
+      }
+    }
+    Function [ <internal:standard> function array_pad ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arg ]
+        Parameter #1 [ <required> $pad_size ]
+        Parameter #2 [ <required> $pad_value ]
+      }
+    }
+    Function [ <internal:standard> function array_flip ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg ]
+      }
+    }
+    Function [ <internal:standard> function array_change_key_case ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $input ]
+        Parameter #1 [ <optional> $case ]
+      }
+    }
+    Function [ <internal:standard> function array_rand ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $arg ]
+        Parameter #1 [ <optional> $num_req ]
+      }
+    }
+    Function [ <internal:standard> function array_unique ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg ]
+      }
+    }
+    Function [ <internal:standard> function array_intersect ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_intersect_key ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_intersect_ukey ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_key_compare_func ]
+      }
+    }
+    Function [ <internal:standard> function array_uintersect ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_data_compare_func ]
+      }
+    }
+    Function [ <internal:standard> function array_intersect_assoc ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_uintersect_assoc ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_data_compare_func ]
+      }
+    }
+    Function [ <internal:standard> function array_intersect_uassoc ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_key_compare_func ]
+      }
+    }
+    Function [ <internal:standard> function array_uintersect_uassoc ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_data_compare_func ]
+        Parameter #3 [ <required> $callback_key_compare_func ]
+      }
+    }
+    Function [ <internal:standard> function array_diff ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_diff_key ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_diff_ukey ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_key_comp_func ]
+      }
+    }
+    Function [ <internal:standard> function array_udiff ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_data_comp_func ]
+      }
+    }
+    Function [ <internal:standard> function array_diff_assoc ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_udiff_assoc ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_key_comp_func ]
+      }
+    }
+    Function [ <internal:standard> function array_diff_uassoc ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_data_comp_func ]
+      }
+    }
+    Function [ <internal:standard> function array_udiff_uassoc ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $arr1 ]
+        Parameter #1 [ <required> $arr2 ]
+        Parameter #2 [ <required> $callback_data_comp_func ]
+        Parameter #3 [ <required> $callback_key_comp_func ]
+      }
+    }
+    Function [ <internal:standard> function array_sum ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg ]
+      }
+    }
+    Function [ <internal:standard> function array_product ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg ]
+      }
+    }
+    Function [ <internal:standard> function array_filter ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $arg ]
+        Parameter #1 [ <optional> $callback ]
+      }
+    }
+    Function [ <internal:standard> function array_map ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $callback ]
+        Parameter #1 [ <required> $arg ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:standard> function array_chunk ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arg ]
+        Parameter #1 [ <required> $size ]
+        Parameter #2 [ <optional> $preserve_keys ]
+      }
+    }
+    Function [ <internal:standard> function array_combine ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $keys ]
+        Parameter #1 [ <required> $values ]
+      }
+    }
+    Function [ <internal:standard> function array_key_exists ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $search ]
+      }
+    }
+    Function [ <internal:standard> function pos ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$arg ]
+      }
+    }
+    Function [ <internal:standard> function sizeof ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var ]
+        Parameter #1 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:standard> function key_exists ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $search ]
+      }
+    }
+    Function [ <internal:standard> function assert ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $assertion ]
+      }
+    }
+    Function [ <internal:standard> function assert_options ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $what ]
+        Parameter #1 [ <optional> $value ]
+      }
+    }
+    Function [ <internal:standard> function version_compare ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ver1 ]
+        Parameter #1 [ <required> $ver2 ]
+        Parameter #2 [ <optional> $oper ]
+      }
+    }
+    Function [ <internal:standard> function ftok ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pathname ]
+        Parameter #1 [ <required> $proj ]
+      }
+    }
+    Function [ <internal:standard> function str_rot13 ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+    Function [ <internal:standard> function stream_get_filters ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function stream_filter_register ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filtername ]
+        Parameter #1 [ <required> $classname ]
+      }
+    }
+    Function [ <internal:standard> function stream_bucket_make_writeable ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $brigade ]
+      }
+    }
+    Function [ <internal:standard> function stream_bucket_prepend ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $brigade ]
+        Parameter #1 [ <required> $bucket ]
+      }
+    }
+    Function [ <internal:standard> function stream_bucket_append ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $brigade ]
+        Parameter #1 [ <required> $bucket ]
+      }
+    }
+    Function [ <internal:standard> function stream_bucket_new ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $buffer ]
+      }
+    }
+    Function [ <internal:standard> function output_add_rewrite_var ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $name ]
+        Parameter #1 [ <required> $value ]
+      }
+    }
+    Function [ <internal:standard> function output_reset_rewrite_vars ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:standard> function sys_get_temp_dir ] {
+
+      - Parameters [0] {
+      }
+    }
+  }
+
+  - Classes [3] {
+    Class [ <internal:standard> class __PHP_Incomplete_Class ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:standard> class php_user_filter ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [2] {
+        Property [ <default> public $filtername ]
+        Property [ <default> public $params ]
+      }
+
+      - Methods [3] {
+        Method [ <internal:standard> public method filter ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $in ]
+            Parameter #1 [ <required> $out ]
+            Parameter #2 [ <required> &$consumed ]
+            Parameter #3 [ <required> $closing ]
+          }
+        }
+
+        Method [ <internal:standard> public method onCreate ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:standard> public method onClose ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:standard> class Directory ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:standard> public method close ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $dir_handle ]
+          }
+        }
+
+        Method [ <internal:standard> public method rewind ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $dir_handle ]
+          }
+        }
+
+        Method [ <internal:standard> public method read ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $dir_handle ]
+          }
+        }
+      }
+    }
+  }
+}
+

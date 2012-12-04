@@ -1,0 +1,102 @@
+Extension [ <persistent> extension #91 xmlrpc version 0.51 ] {
+
+  - Functions {
+    Function [ <internal:xmlrpc> function xmlrpc_encode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_decode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $value ]
+        Parameter #1 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_decode_request ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $xml ]
+        Parameter #1 [ <required> &$method ]
+        Parameter #2 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_encode_request ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $method ]
+        Parameter #1 [ <required> $params ]
+        Parameter #2 [ <optional> $output_options ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_get_type ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_set_type ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$value ]
+        Parameter #1 [ <required> $type ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_is_fault ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_server_create ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_server_destroy ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $server ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_server_register_method ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $method_name ]
+        Parameter #2 [ <required> $function ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_server_call_method ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $xml ]
+        Parameter #2 [ <required> $user_data ]
+        Parameter #3 [ <optional> $output_options ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_parse_method_descriptions ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $xml ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_server_add_introspection_data ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $desc ]
+      }
+    }
+    Function [ <internal:xmlrpc> function xmlrpc_server_register_introspection_callback ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $function ]
+      }
+    }
+  }
+}
+

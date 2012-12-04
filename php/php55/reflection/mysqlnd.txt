@@ -1,0 +1,40 @@
+Extension [ <persistent> extension #56 mysqlnd version mysqlnd 5.0.11-dev - 20120503 - $Id: b0db48f5f71b45623b2b6aed210dd5b2464d06c4 $ ] {
+
+  - Dependencies {
+    Dependency [ standard (Required) ]
+  }
+
+  - INI {
+    Entry [ mysqlnd.collect_statistics <ALL> ]
+      Current = '1'
+    }
+    Entry [ mysqlnd.collect_memory_statistics <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ mysqlnd.debug <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ mysqlnd.trace_alloc <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ mysqlnd.net_cmd_buffer_size <ALL> ]
+      Current = '4096'
+    }
+    Entry [ mysqlnd.net_read_buffer_size <ALL> ]
+      Current = '32768'
+    }
+    Entry [ mysqlnd.net_read_timeout <SYSTEM> ]
+      Current = '31536000'
+    }
+    Entry [ mysqlnd.log_mask <ALL> ]
+      Current = '0'
+    }
+    Entry [ mysqlnd.mempool_default_size <ALL> ]
+      Current = '16000'
+    }
+    Entry [ mysqlnd.sha256_server_public_key <PERDIR> ]
+      Current = ''
+    }
+  }
+}
+

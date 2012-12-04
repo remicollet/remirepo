@@ -1,0 +1,70 @@
+Extension [ <persistent> extension #84 sysvmsg version <no_version> ] {
+
+  - Constants [5] {
+    Constant [ integer MSG_IPC_NOWAIT ] { 1 }
+    Constant [ integer MSG_EAGAIN ] { 11 }
+    Constant [ integer MSG_ENOMSG ] { 42 }
+    Constant [ integer MSG_NOERROR ] { 2 }
+    Constant [ integer MSG_EXCEPT ] { 4 }
+  }
+
+  - Functions {
+    Function [ <internal:sysvmsg> function msg_get_queue ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <optional> $perms ]
+      }
+    }
+    Function [ <internal:sysvmsg> function msg_send ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $queue ]
+        Parameter #1 [ <required> $msgtype ]
+        Parameter #2 [ <required> $message ]
+        Parameter #3 [ <optional> $serialize ]
+        Parameter #4 [ <optional> $blocking ]
+        Parameter #5 [ <optional> &$errorcode ]
+      }
+    }
+    Function [ <internal:sysvmsg> function msg_receive ] {
+
+      - Parameters [8] {
+        Parameter #0 [ <required> $queue ]
+        Parameter #1 [ <required> $desiredmsgtype ]
+        Parameter #2 [ <required> &$msgtype ]
+        Parameter #3 [ <required> $maxsize ]
+        Parameter #4 [ <required> &$message ]
+        Parameter #5 [ <optional> $unserialize ]
+        Parameter #6 [ <optional> $flags ]
+        Parameter #7 [ <optional> &$errorcode ]
+      }
+    }
+    Function [ <internal:sysvmsg> function msg_remove_queue ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $queue ]
+      }
+    }
+    Function [ <internal:sysvmsg> function msg_stat_queue ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $queue ]
+      }
+    }
+    Function [ <internal:sysvmsg> function msg_set_queue ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $queue ]
+        Parameter #1 [ <required> $data ]
+      }
+    }
+    Function [ <internal:sysvmsg> function msg_queue_exists ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $key ]
+      }
+    }
+  }
+}
+

@@ -1,0 +1,204 @@
+Extension [ <persistent> extension #28 xml version <no_version> ] {
+
+  - Dependencies {
+    Dependency [ libxml (Required) ]
+  }
+
+  - Constants [27] {
+    Constant [ integer XML_ERROR_NONE ] { 0 }
+    Constant [ integer XML_ERROR_NO_MEMORY ] { 1 }
+    Constant [ integer XML_ERROR_SYNTAX ] { 2 }
+    Constant [ integer XML_ERROR_NO_ELEMENTS ] { 3 }
+    Constant [ integer XML_ERROR_INVALID_TOKEN ] { 4 }
+    Constant [ integer XML_ERROR_UNCLOSED_TOKEN ] { 5 }
+    Constant [ integer XML_ERROR_PARTIAL_CHAR ] { 6 }
+    Constant [ integer XML_ERROR_TAG_MISMATCH ] { 7 }
+    Constant [ integer XML_ERROR_DUPLICATE_ATTRIBUTE ] { 8 }
+    Constant [ integer XML_ERROR_JUNK_AFTER_DOC_ELEMENT ] { 9 }
+    Constant [ integer XML_ERROR_PARAM_ENTITY_REF ] { 10 }
+    Constant [ integer XML_ERROR_UNDEFINED_ENTITY ] { 11 }
+    Constant [ integer XML_ERROR_RECURSIVE_ENTITY_REF ] { 12 }
+    Constant [ integer XML_ERROR_ASYNC_ENTITY ] { 13 }
+    Constant [ integer XML_ERROR_BAD_CHAR_REF ] { 14 }
+    Constant [ integer XML_ERROR_BINARY_ENTITY_REF ] { 15 }
+    Constant [ integer XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF ] { 16 }
+    Constant [ integer XML_ERROR_MISPLACED_XML_PI ] { 17 }
+    Constant [ integer XML_ERROR_UNKNOWN_ENCODING ] { 18 }
+    Constant [ integer XML_ERROR_INCORRECT_ENCODING ] { 19 }
+    Constant [ integer XML_ERROR_UNCLOSED_CDATA_SECTION ] { 20 }
+    Constant [ integer XML_ERROR_EXTERNAL_ENTITY_HANDLING ] { 21 }
+    Constant [ integer XML_OPTION_CASE_FOLDING ] { 1 }
+    Constant [ integer XML_OPTION_TARGET_ENCODING ] { 2 }
+    Constant [ integer XML_OPTION_SKIP_TAGSTART ] { 3 }
+    Constant [ integer XML_OPTION_SKIP_WHITE ] { 4 }
+    Constant [ string XML_SAX_IMPL ] { libxml }
+  }
+
+  - Functions {
+    Function [ <internal:xml> function xml_parser_create ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:xml> function xml_parser_create_ns ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $encoding ]
+        Parameter #1 [ <optional> $sep ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_object ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> &$obj ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_element_handler ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $shdl ]
+        Parameter #2 [ <required> $ehdl ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_character_data_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $hdl ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_processing_instruction_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $hdl ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_default_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $hdl ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_unparsed_entity_decl_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $hdl ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_notation_decl_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $hdl ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_external_entity_ref_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $hdl ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_start_namespace_decl_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $hdl ]
+      }
+    }
+    Function [ <internal:xml> function xml_set_end_namespace_decl_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $hdl ]
+      }
+    }
+    Function [ <internal:xml> function xml_parse ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <optional> $isfinal ]
+      }
+    }
+    Function [ <internal:xml> function xml_parse_into_struct ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <required> &$values ]
+        Parameter #3 [ <optional> &$index ]
+      }
+    }
+    Function [ <internal:xml> function xml_get_error_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $parser ]
+      }
+    }
+    Function [ <internal:xml> function xml_error_string ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $code ]
+      }
+    }
+    Function [ <internal:xml> function xml_get_current_line_number ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $parser ]
+      }
+    }
+    Function [ <internal:xml> function xml_get_current_column_number ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $parser ]
+      }
+    }
+    Function [ <internal:xml> function xml_get_current_byte_index ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $parser ]
+      }
+    }
+    Function [ <internal:xml> function xml_parser_free ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $parser ]
+      }
+    }
+    Function [ <internal:xml> function xml_parser_set_option ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $option ]
+        Parameter #2 [ <required> $value ]
+      }
+    }
+    Function [ <internal:xml> function xml_parser_get_option ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $parser ]
+        Parameter #1 [ <required> $option ]
+      }
+    }
+    Function [ <internal:xml> function utf8_encode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:xml> function utf8_decode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+  }
+}
+

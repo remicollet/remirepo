@@ -1,0 +1,225 @@
+Extension [ <persistent> extension #73 posix version <no_version> ] {
+
+  - Constants [9] {
+    Constant [ integer POSIX_F_OK ] { 0 }
+    Constant [ integer POSIX_X_OK ] { 1 }
+    Constant [ integer POSIX_W_OK ] { 2 }
+    Constant [ integer POSIX_R_OK ] { 4 }
+    Constant [ integer POSIX_S_IFREG ] { 32768 }
+    Constant [ integer POSIX_S_IFCHR ] { 8192 }
+    Constant [ integer POSIX_S_IFBLK ] { 24576 }
+    Constant [ integer POSIX_S_IFIFO ] { 4096 }
+    Constant [ integer POSIX_S_IFSOCK ] { 49152 }
+  }
+
+  - Functions {
+    Function [ <internal:posix> function posix_kill ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pid ]
+        Parameter #1 [ <required> $sig ]
+      }
+    }
+    Function [ <internal:posix> function posix_getpid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_getppid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_getuid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_setuid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uid ]
+      }
+    }
+    Function [ <internal:posix> function posix_geteuid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_seteuid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uid ]
+      }
+    }
+    Function [ <internal:posix> function posix_getgid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_setgid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $gid ]
+      }
+    }
+    Function [ <internal:posix> function posix_getegid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_setegid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $gid ]
+      }
+    }
+    Function [ <internal:posix> function posix_getgroups ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_getlogin ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_getpgrp ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_setsid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_setpgid ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pid ]
+        Parameter #1 [ <required> $pgid ]
+      }
+    }
+    Function [ <internal:posix> function posix_getpgid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $pid ]
+      }
+    }
+    Function [ <internal:posix> function posix_getsid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $pid ]
+      }
+    }
+    Function [ <internal:posix> function posix_uname ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_times ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_ctermid ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_ttyname ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fd ]
+      }
+    }
+    Function [ <internal:posix> function posix_isatty ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fd ]
+      }
+    }
+    Function [ <internal:posix> function posix_getcwd ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_mkfifo ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pathname ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:posix> function posix_mknod ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $pathname ]
+        Parameter #1 [ <required> $mode ]
+        Parameter #2 [ <optional> $major ]
+        Parameter #3 [ <optional> $minor ]
+      }
+    }
+    Function [ <internal:posix> function posix_access ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $file ]
+        Parameter #1 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:posix> function posix_getgrnam ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $name ]
+      }
+    }
+    Function [ <internal:posix> function posix_getgrgid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $gid ]
+      }
+    }
+    Function [ <internal:posix> function posix_getpwnam ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $username ]
+      }
+    }
+    Function [ <internal:posix> function posix_getpwuid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $uid ]
+      }
+    }
+    Function [ <internal:posix> function posix_getrlimit ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_get_last_error ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_errno ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:posix> function posix_strerror ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $errno ]
+      }
+    }
+    Function [ <internal:posix> function posix_initgroups ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $name ]
+        Parameter #1 [ <required> $base_group_id ]
+      }
+    }
+  }
+}
+

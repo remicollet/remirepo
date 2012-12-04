@@ -1,0 +1,329 @@
+Extension [ <persistent> extension #82 sqlite3 version 0.7-dev ] {
+
+  - INI {
+    Entry [ sqlite3.extension_dir <SYSTEM> ]
+      Current = ''
+    }
+  }
+
+  - Constants [11] {
+    Constant [ integer SQLITE3_ASSOC ] { 1 }
+    Constant [ integer SQLITE3_NUM ] { 2 }
+    Constant [ integer SQLITE3_BOTH ] { 3 }
+    Constant [ integer SQLITE3_INTEGER ] { 1 }
+    Constant [ integer SQLITE3_FLOAT ] { 2 }
+    Constant [ integer SQLITE3_TEXT ] { 3 }
+    Constant [ integer SQLITE3_BLOB ] { 4 }
+    Constant [ integer SQLITE3_NULL ] { 5 }
+    Constant [ integer SQLITE3_OPEN_READONLY ] { 1 }
+    Constant [ integer SQLITE3_OPEN_READWRITE ] { 2 }
+    Constant [ integer SQLITE3_OPEN_CREATE ] { 4 }
+  }
+
+  - Classes [3] {
+    Class [ <internal:sqlite3> class SQLite3 ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:sqlite3> static public method version ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> static public method escapeString ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [18] {
+        Method [ <internal:sqlite3> public method open ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <required> $flags ]
+            Parameter #2 [ <required> $encryption_key ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method close ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method exec ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $query ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method lastInsertRowID ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method lastErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method lastErrorMsg ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method busyTimeout ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $ms ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method loadExtension ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $shared_library ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method changes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method prepare ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $query ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method query ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $query ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method querySingle ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $query ]
+            Parameter #1 [ <optional> $entire_row ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method createFunction ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $callback ]
+            Parameter #2 [ <optional> $argument_count ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method createAggregate ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $step_callback ]
+            Parameter #2 [ <required> $final_callback ]
+            Parameter #3 [ <optional> $argument_count ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method createCollation ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method openBlob ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $table ]
+            Parameter #1 [ <required> $column ]
+            Parameter #2 [ <required> $rowid ]
+            Parameter #3 [ <optional> $dbname ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method enableExceptions ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $enableExceptions ]
+          }
+        }
+
+        Method [ <internal:sqlite3, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <required> $flags ]
+            Parameter #2 [ <required> $encryption_key ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:sqlite3> class SQLite3Stmt ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [9] {
+        Method [ <internal:sqlite3> public method paramCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method close ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method reset ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method clear ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method execute ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method bindParam ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $param_number ]
+            Parameter #1 [ <required> &$param ]
+            Parameter #2 [ <optional> $type ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method bindValue ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $param_number ]
+            Parameter #1 [ <required> $param ]
+            Parameter #2 [ <optional> $type ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method readOnly ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3, ctor> private method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $sqlite3 ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:sqlite3> class SQLite3Result ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:sqlite3> public method numColumns ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method columnName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $column_number ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method columnType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $column_number ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method fetchArray ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $mode ]
+          }
+        }
+
+        Method [ <internal:sqlite3> public method reset ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3> public method finalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sqlite3, ctor> private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+

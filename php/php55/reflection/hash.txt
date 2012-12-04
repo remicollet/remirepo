@@ -1,0 +1,169 @@
+Extension [ <persistent> extension #16 hash version 1.0 ] {
+
+  - Constants [32] {
+    Constant [ integer HASH_HMAC ] { 1 }
+    Constant [ integer MHASH_CRC32 ] { 0 }
+    Constant [ integer MHASH_MD5 ] { 1 }
+    Constant [ integer MHASH_SHA1 ] { 2 }
+    Constant [ integer MHASH_HAVAL256 ] { 3 }
+    Constant [ integer MHASH_RIPEMD160 ] { 5 }
+    Constant [ integer MHASH_TIGER ] { 7 }
+    Constant [ integer MHASH_GOST ] { 8 }
+    Constant [ integer MHASH_CRC32B ] { 9 }
+    Constant [ integer MHASH_HAVAL224 ] { 10 }
+    Constant [ integer MHASH_HAVAL192 ] { 11 }
+    Constant [ integer MHASH_HAVAL160 ] { 12 }
+    Constant [ integer MHASH_HAVAL128 ] { 13 }
+    Constant [ integer MHASH_TIGER128 ] { 14 }
+    Constant [ integer MHASH_TIGER160 ] { 15 }
+    Constant [ integer MHASH_MD4 ] { 16 }
+    Constant [ integer MHASH_SHA256 ] { 17 }
+    Constant [ integer MHASH_ADLER32 ] { 18 }
+    Constant [ integer MHASH_SHA224 ] { 19 }
+    Constant [ integer MHASH_SHA512 ] { 20 }
+    Constant [ integer MHASH_SHA384 ] { 21 }
+    Constant [ integer MHASH_WHIRLPOOL ] { 22 }
+    Constant [ integer MHASH_RIPEMD128 ] { 23 }
+    Constant [ integer MHASH_RIPEMD256 ] { 24 }
+    Constant [ integer MHASH_RIPEMD320 ] { 25 }
+    Constant [ integer MHASH_SNEFRU256 ] { 27 }
+    Constant [ integer MHASH_MD2 ] { 28 }
+    Constant [ integer MHASH_FNV132 ] { 29 }
+    Constant [ integer MHASH_FNV1A32 ] { 30 }
+    Constant [ integer MHASH_FNV164 ] { 31 }
+    Constant [ integer MHASH_FNV1A64 ] { 32 }
+    Constant [ integer MHASH_JOAAT ] { 33 }
+  }
+
+  - Functions {
+    Function [ <internal:hash> function hash ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $algo ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:hash> function hash_file ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $algo ]
+        Parameter #1 [ <required> $filename ]
+        Parameter #2 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:hash> function hash_hmac ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $algo ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <required> $key ]
+        Parameter #3 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:hash> function hash_hmac_file ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $algo ]
+        Parameter #1 [ <required> $filename ]
+        Parameter #2 [ <required> $key ]
+        Parameter #3 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:hash> function hash_init ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $algo ]
+        Parameter #1 [ <optional> $options ]
+        Parameter #2 [ <optional> $key ]
+      }
+    }
+    Function [ <internal:hash> function hash_update ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $context ]
+        Parameter #1 [ <required> $data ]
+      }
+    }
+    Function [ <internal:hash> function hash_update_stream ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $context ]
+        Parameter #1 [ <required> $handle ]
+        Parameter #2 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:hash> function hash_update_file ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $context ]
+        Parameter #1 [ <required> $filename ]
+        Parameter #2 [ <optional> $context ]
+      }
+    }
+    Function [ <internal:hash> function hash_final ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $context ]
+        Parameter #1 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:hash> function hash_copy ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $context ]
+      }
+    }
+    Function [ <internal:hash> function hash_algos ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:hash> function hash_pbkdf2 ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $algo ]
+        Parameter #1 [ <required> $password ]
+        Parameter #2 [ <required> $salt ]
+        Parameter #3 [ <required> $iterations ]
+        Parameter #4 [ <optional> $length ]
+        Parameter #5 [ <optional> $raw_output ]
+      }
+    }
+    Function [ <internal:hash> function mhash_keygen_s2k ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $hash ]
+        Parameter #1 [ <required> $input_password ]
+        Parameter #2 [ <required> $salt ]
+        Parameter #3 [ <required> $bytes ]
+      }
+    }
+    Function [ <internal:hash> function mhash_get_block_size ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $hash ]
+      }
+    }
+    Function [ <internal:hash> function mhash_get_hash_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $hash ]
+      }
+    }
+    Function [ <internal:hash> function mhash_count ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:hash> function mhash ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $hash ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <optional> $key ]
+      }
+    }
+  }
+}
+

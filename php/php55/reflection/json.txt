@@ -1,0 +1,82 @@
+Extension [ <persistent> extension #46 json version 1.2.1 ] {
+
+  - Constants [21] {
+    Constant [ integer JSON_HEX_TAG ] { 1 }
+    Constant [ integer JSON_HEX_AMP ] { 2 }
+    Constant [ integer JSON_HEX_APOS ] { 4 }
+    Constant [ integer JSON_HEX_QUOT ] { 8 }
+    Constant [ integer JSON_FORCE_OBJECT ] { 16 }
+    Constant [ integer JSON_NUMERIC_CHECK ] { 32 }
+    Constant [ integer JSON_UNESCAPED_SLASHES ] { 64 }
+    Constant [ integer JSON_PRETTY_PRINT ] { 128 }
+    Constant [ integer JSON_UNESCAPED_UNICODE ] { 256 }
+    Constant [ integer JSON_PARTIAL_OUTPUT_ON_ERROR ] { 512 }
+    Constant [ integer JSON_ERROR_NONE ] { 0 }
+    Constant [ integer JSON_ERROR_DEPTH ] { 1 }
+    Constant [ integer JSON_ERROR_STATE_MISMATCH ] { 2 }
+    Constant [ integer JSON_ERROR_CTRL_CHAR ] { 3 }
+    Constant [ integer JSON_ERROR_SYNTAX ] { 4 }
+    Constant [ integer JSON_ERROR_UTF8 ] { 5 }
+    Constant [ integer JSON_ERROR_RECURSION ] { 6 }
+    Constant [ integer JSON_ERROR_INF_OR_NAN ] { 7 }
+    Constant [ integer JSON_ERROR_UNSUPPORTED_TYPE ] { 8 }
+    Constant [ integer JSON_OBJECT_AS_ARRAY ] { 1 }
+    Constant [ integer JSON_BIGINT_AS_STRING ] { 2 }
+  }
+
+  - Functions {
+    Function [ <internal:json> function json_encode ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $value ]
+        Parameter #1 [ <optional> $options ]
+        Parameter #2 [ <optional> $depth ]
+      }
+    }
+    Function [ <internal:json> function json_decode ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $json ]
+        Parameter #1 [ <optional> $assoc ]
+        Parameter #2 [ <optional> $depth ]
+        Parameter #3 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:json> function json_last_error ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:json> function json_last_error_msg ] {
+
+      - Parameters [0] {
+      }
+    }
+  }
+
+  - Classes [1] {
+    Interface [ <internal:json> interface JsonSerializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:json> abstract public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,276 @@
+Extension [ <persistent> extension #55 mssql version <no_version> ] {
+
+  - INI {
+    Entry [ mssql.allow_persistent <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ mssql.max_persistent <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ mssql.max_links <SYSTEM> ]
+      Current = '-1'
+    }
+    Entry [ mssql.min_error_severity <ALL> ]
+      Current = '10'
+    }
+    Entry [ mssql.min_message_severity <ALL> ]
+      Current = '10'
+    }
+    Entry [ mssql.compatability_mode <ALL> ]
+      Current = '0'
+    }
+    Entry [ mssql.connect_timeout <ALL> ]
+      Current = '5'
+    }
+    Entry [ mssql.timeout <ALL> ]
+      Current = '60'
+    }
+    Entry [ mssql.textsize <ALL> ]
+      Current = '-1'
+    }
+    Entry [ mssql.textlimit <ALL> ]
+      Current = '-1'
+    }
+    Entry [ mssql.batchsize <ALL> ]
+      Current = '0'
+    }
+    Entry [ mssql.datetimeconvert <ALL> ]
+      Current = '1'
+    }
+    Entry [ mssql.secure_connection <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ mssql.max_procs <ALL> ]
+      Current = '-1'
+    }
+    Entry [ mssql.charset <ALL> ]
+      Current = ''
+    }
+  }
+
+  - Constants [13] {
+    Constant [ integer MSSQL_ASSOC ] { 1 }
+    Constant [ integer MSSQL_NUM ] { 2 }
+    Constant [ integer MSSQL_BOTH ] { 3 }
+    Constant [ integer SQLTEXT ] { 35 }
+    Constant [ integer SQLVARCHAR ] { 39 }
+    Constant [ integer SQLCHAR ] { 47 }
+    Constant [ integer SQLINT1 ] { 48 }
+    Constant [ integer SQLINT2 ] { 52 }
+    Constant [ integer SQLINT4 ] { 56 }
+    Constant [ integer SQLBIT ] { 50 }
+    Constant [ integer SQLFLT4 ] { 59 }
+    Constant [ integer SQLFLT8 ] { 62 }
+    Constant [ integer SQLFLTN ] { 109 }
+  }
+
+  - Functions {
+    Function [ <internal:mssql> function mssql_connect ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <optional> $servername ]
+        Parameter #1 [ <optional> $username ]
+        Parameter #2 [ <optional> $password ]
+        Parameter #3 [ <optional> $newlink ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_pconnect ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <optional> $servername ]
+        Parameter #1 [ <optional> $username ]
+        Parameter #2 [ <optional> $password ]
+        Parameter #3 [ <optional> $newlink ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_select_db ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $database_name ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_query ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $query ]
+        Parameter #1 [ <optional> $link_identifier ]
+        Parameter #2 [ <optional> $batch_size ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_fetch_batch ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_rows_affected ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_free_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_get_last_message ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:mssql> function mssql_num_rows ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_num_fields ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_fetch_field ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $field_offset ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_fetch_row ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_fetch_array ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $result_type ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_fetch_assoc ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result_id ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_fetch_object ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_field_length ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_field_name ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_field_type ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_data_seek ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result_identifier ]
+        Parameter #1 [ <required> $row_number ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_field_seek ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <optional> $field_offset ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_result ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $result ]
+        Parameter #1 [ <required> $row ]
+        Parameter #2 [ <required> $field ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_next_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $result_id ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_min_error_severity ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $severity ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_min_message_severity ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $severity ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_init ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $sp_name ]
+        Parameter #1 [ <optional> $link_identifier ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_bind ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $stmt ]
+        Parameter #1 [ <required> $param_name ]
+        Parameter #2 [ <required> &$var ]
+        Parameter #3 [ <required> $type ]
+        Parameter #4 [ <optional> $is_output ]
+        Parameter #5 [ <optional> $is_null ]
+        Parameter #6 [ <optional> $maxlen ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_execute ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stmt ]
+        Parameter #1 [ <optional> $skip_results ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_free_statement ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $stmt ]
+      }
+    }
+    Function [ <internal:mssql> function mssql_guid_string ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $binary ]
+        Parameter #1 [ <optional> $short_format ]
+      }
+    }
+  }
+}
+

@@ -1,0 +1,80 @@
+Extension [ <persistent> extension #14 gettext version <no_version> ] {
+
+  - Functions {
+    Function [ <internal:gettext> function textdomain ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $domain ]
+      }
+    }
+    Function [ <internal:gettext> function gettext ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $msgid ]
+      }
+    }
+    Function [ <internal:gettext> function _ ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $msgid ]
+      }
+    }
+    Function [ <internal:gettext> function dgettext ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $domain_name ]
+        Parameter #1 [ <required> $msgid ]
+      }
+    }
+    Function [ <internal:gettext> function dcgettext ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $domain_name ]
+        Parameter #1 [ <required> $msgid ]
+        Parameter #2 [ <required> $category ]
+      }
+    }
+    Function [ <internal:gettext> function bindtextdomain ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $domain_name ]
+        Parameter #1 [ <required> $dir ]
+      }
+    }
+    Function [ <internal:gettext> function ngettext ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $msgid1 ]
+        Parameter #1 [ <required> $msgid2 ]
+        Parameter #2 [ <required> $count ]
+      }
+    }
+    Function [ <internal:gettext> function dngettext ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $domain ]
+        Parameter #1 [ <required> $msgid1 ]
+        Parameter #2 [ <required> $msgid2 ]
+        Parameter #3 [ <required> $count ]
+      }
+    }
+    Function [ <internal:gettext> function dcngettext ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $domain ]
+        Parameter #1 [ <required> $msgid1 ]
+        Parameter #2 [ <required> $msgid2 ]
+        Parameter #3 [ <required> $count ]
+        Parameter #4 [ <required> $category ]
+      }
+    }
+    Function [ <internal:gettext> function bind_textdomain_codeset ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $domain ]
+        Parameter #1 [ <required> $codeset ]
+      }
+    }
+  }
+}
+

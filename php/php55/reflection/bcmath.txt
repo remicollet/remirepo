@@ -1,0 +1,89 @@
+Extension [ <persistent> extension #31 bcmath version <no_version> ] {
+
+  - INI {
+    Entry [ bcmath.scale <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Functions {
+    Function [ <internal:bcmath> function bcadd ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $left_operand ]
+        Parameter #1 [ <required> $right_operand ]
+        Parameter #2 [ <optional> $scale ]
+      }
+    }
+    Function [ <internal:bcmath> function bcsub ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $left_operand ]
+        Parameter #1 [ <required> $right_operand ]
+        Parameter #2 [ <optional> $scale ]
+      }
+    }
+    Function [ <internal:bcmath> function bcmul ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $left_operand ]
+        Parameter #1 [ <required> $right_operand ]
+        Parameter #2 [ <optional> $scale ]
+      }
+    }
+    Function [ <internal:bcmath> function bcdiv ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $left_operand ]
+        Parameter #1 [ <required> $right_operand ]
+        Parameter #2 [ <optional> $scale ]
+      }
+    }
+    Function [ <internal:bcmath> function bcmod ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $left_operand ]
+        Parameter #1 [ <required> $right_operand ]
+      }
+    }
+    Function [ <internal:bcmath> function bcpow ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $x ]
+        Parameter #1 [ <required> $y ]
+        Parameter #2 [ <optional> $scale ]
+      }
+    }
+    Function [ <internal:bcmath> function bcsqrt ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $operand ]
+        Parameter #1 [ <optional> $scale ]
+      }
+    }
+    Function [ <internal:bcmath> function bcscale ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $scale ]
+      }
+    }
+    Function [ <internal:bcmath> function bccomp ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $left_operand ]
+        Parameter #1 [ <required> $right_operand ]
+        Parameter #2 [ <optional> $scale ]
+      }
+    }
+    Function [ <internal:bcmath> function bcpowmod ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $x ]
+        Parameter #1 [ <required> $y ]
+        Parameter #2 [ <required> $mod ]
+        Parameter #3 [ <optional> $scale ]
+      }
+    }
+  }
+}
+

@@ -1,0 +1,378 @@
+Extension [ <persistent> extension #47 ldap version <no_version> ] {
+
+  - INI {
+    Entry [ ldap.max_links <SYSTEM> ]
+      Current = '-1'
+    }
+  }
+
+  - Constants [22] {
+    Constant [ integer LDAP_DEREF_NEVER ] { 0 }
+    Constant [ integer LDAP_DEREF_SEARCHING ] { 1 }
+    Constant [ integer LDAP_DEREF_FINDING ] { 2 }
+    Constant [ integer LDAP_DEREF_ALWAYS ] { 3 }
+    Constant [ integer LDAP_OPT_DEREF ] { 2 }
+    Constant [ integer LDAP_OPT_SIZELIMIT ] { 3 }
+    Constant [ integer LDAP_OPT_TIMELIMIT ] { 4 }
+    Constant [ integer LDAP_OPT_NETWORK_TIMEOUT ] { 20485 }
+    Constant [ integer LDAP_OPT_PROTOCOL_VERSION ] { 17 }
+    Constant [ integer LDAP_OPT_ERROR_NUMBER ] { 49 }
+    Constant [ integer LDAP_OPT_REFERRALS ] { 8 }
+    Constant [ integer LDAP_OPT_RESTART ] { 9 }
+    Constant [ integer LDAP_OPT_HOST_NAME ] { 48 }
+    Constant [ integer LDAP_OPT_ERROR_STRING ] { 50 }
+    Constant [ integer LDAP_OPT_MATCHED_DN ] { 51 }
+    Constant [ integer LDAP_OPT_SERVER_CONTROLS ] { 18 }
+    Constant [ integer LDAP_OPT_CLIENT_CONTROLS ] { 19 }
+    Constant [ integer LDAP_OPT_DEBUG_LEVEL ] { 20481 }
+    Constant [ integer LDAP_OPT_X_SASL_MECH ] { 24832 }
+    Constant [ integer LDAP_OPT_X_SASL_REALM ] { 24833 }
+    Constant [ integer LDAP_OPT_X_SASL_AUTHCID ] { 24834 }
+    Constant [ integer LDAP_OPT_X_SASL_AUTHZID ] { 24835 }
+  }
+
+  - Functions {
+    Function [ <internal:ldap> function ldap_connect ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $hostname ]
+        Parameter #1 [ <optional> $port ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_bind ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <optional> $bind_rdn ]
+        Parameter #2 [ <optional> $bind_password ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_sasl_bind ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <optional> $binddn ]
+        Parameter #2 [ <optional> $password ]
+        Parameter #3 [ <optional> $sasl_mech ]
+        Parameter #4 [ <optional> $sasl_realm ]
+        Parameter #5 [ <optional> $sasl_authz_id ]
+        Parameter #6 [ <optional> $props ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_unbind ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_read ] {
+
+      - Parameters [8] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $base_dn ]
+        Parameter #2 [ <required> $filter ]
+        Parameter #3 [ <optional> $attributes ]
+        Parameter #4 [ <optional> $attrsonly ]
+        Parameter #5 [ <optional> $sizelimit ]
+        Parameter #6 [ <optional> $timelimit ]
+        Parameter #7 [ <optional> $deref ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_list ] {
+
+      - Parameters [8] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $base_dn ]
+        Parameter #2 [ <required> $filter ]
+        Parameter #3 [ <optional> $attributes ]
+        Parameter #4 [ <optional> $attrsonly ]
+        Parameter #5 [ <optional> $sizelimit ]
+        Parameter #6 [ <optional> $timelimit ]
+        Parameter #7 [ <optional> $deref ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_search ] {
+
+      - Parameters [8] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $base_dn ]
+        Parameter #2 [ <required> $filter ]
+        Parameter #3 [ <optional> $attributes ]
+        Parameter #4 [ <optional> $attrsonly ]
+        Parameter #5 [ <optional> $sizelimit ]
+        Parameter #6 [ <optional> $timelimit ]
+        Parameter #7 [ <optional> $deref ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_free_result ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_count_entries ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_first_entry ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_next_entry ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_get_entries ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_first_attribute ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_entry_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_next_attribute ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_entry_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_get_attributes ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_entry_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_get_values ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_entry_identifier ]
+        Parameter #2 [ <required> $attribute ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_get_values_len ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_entry_identifier ]
+        Parameter #2 [ <required> $attribute ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_get_dn ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $result_entry_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_explode_dn ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $dn ]
+        Parameter #1 [ <required> $with_attrib ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_dn2ufn ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $dn ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_add ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $dn ]
+        Parameter #2 [ <required> $entry ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_delete ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $dn ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_modify ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $dn ]
+        Parameter #2 [ <required> $entry ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_mod_add ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $dn ]
+        Parameter #2 [ <required> $entry ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_mod_replace ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $dn ]
+        Parameter #2 [ <required> $entry ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_mod_del ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $dn ]
+        Parameter #2 [ <required> $entry ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_errno ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_err2str ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $errno ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_compare ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $dn ]
+        Parameter #2 [ <required> $attribute ]
+        Parameter #3 [ <required> $value ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_sort ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <required> $result ]
+        Parameter #2 [ <required> $sortfilter ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_rename ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $dn ]
+        Parameter #2 [ <required> $newrdn ]
+        Parameter #3 [ <required> $newparent ]
+        Parameter #4 [ <required> $deleteoldrdn ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_get_option ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $option ]
+        Parameter #2 [ <required> &$retval ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_set_option ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link_identifier ]
+        Parameter #1 [ <required> $option ]
+        Parameter #2 [ <required> $newval ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_first_reference ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <required> $result ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_next_reference ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <required> $entry ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_parse_reference ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <required> $entry ]
+        Parameter #2 [ <required> &$referrals ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_parse_result ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <required> $result ]
+        Parameter #2 [ <required> &$errcode ]
+        Parameter #3 [ <optional> &$matcheddn ]
+        Parameter #4 [ <optional> &$errmsg ]
+        Parameter #5 [ <optional> &$referrals ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_start_tls ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $link_identifier ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_set_rebind_proc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_control_paged_result ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <required> $pagesize ]
+        Parameter #2 [ <optional> $iscritical ]
+        Parameter #3 [ <optional> $cookie ]
+      }
+    }
+    Function [ <internal:ldap> function ldap_control_paged_result_response ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <required> $result ]
+        Parameter #2 [ <optional> &$cookie ]
+        Parameter #3 [ <optional> &$estimated ]
+      }
+    }
+  }
+}
+

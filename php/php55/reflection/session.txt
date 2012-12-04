@@ -1,0 +1,343 @@
+Extension [ <persistent> extension #22 session version <no_version> ] {
+
+  - Dependencies {
+    Dependency [ hash (Optional) ]
+    Dependency [ spl (Required) ]
+  }
+
+  - INI {
+    Entry [ session.save_path <ALL> ]
+      Current = ''
+    }
+    Entry [ session.name <ALL> ]
+      Current = 'PHPSESSID'
+    }
+    Entry [ session.save_handler <ALL> ]
+      Current = 'files'
+    }
+    Entry [ session.auto_start <ALL> ]
+      Current = '0'
+    }
+    Entry [ session.gc_probability <ALL> ]
+      Current = '1'
+    }
+    Entry [ session.gc_divisor <ALL> ]
+      Current = '100'
+    }
+    Entry [ session.gc_maxlifetime <ALL> ]
+      Current = '1440'
+    }
+    Entry [ session.serialize_handler <ALL> ]
+      Current = 'php'
+    }
+    Entry [ session.cookie_lifetime <ALL> ]
+      Current = '0'
+    }
+    Entry [ session.cookie_path <ALL> ]
+      Current = '/'
+    }
+    Entry [ session.cookie_domain <ALL> ]
+      Current = ''
+    }
+    Entry [ session.cookie_secure <ALL> ]
+      Current = ''
+    }
+    Entry [ session.cookie_httponly <ALL> ]
+      Current = ''
+    }
+    Entry [ session.use_cookies <ALL> ]
+      Current = '1'
+    }
+    Entry [ session.use_only_cookies <ALL> ]
+      Current = '1'
+    }
+    Entry [ session.referer_check <ALL> ]
+      Current = ''
+    }
+    Entry [ session.entropy_file <ALL> ]
+      Current = '/dev/urandom'
+    }
+    Entry [ session.entropy_length <ALL> ]
+      Current = '32'
+    }
+    Entry [ session.cache_limiter <ALL> ]
+      Current = 'nocache'
+    }
+    Entry [ session.cache_expire <ALL> ]
+      Current = '180'
+    }
+    Entry [ session.use_trans_sid <ALL> ]
+      Current = '0'
+    }
+    Entry [ session.hash_function <ALL> ]
+      Current = '0'
+    }
+    Entry [ session.hash_bits_per_character <ALL> ]
+      Current = '4'
+    }
+    Entry [ session.upload_progress.enabled <PERDIR> ]
+      Current = '1'
+    }
+    Entry [ session.upload_progress.cleanup <PERDIR> ]
+      Current = '1'
+    }
+    Entry [ session.upload_progress.prefix <PERDIR> ]
+      Current = 'upload_progress_'
+    }
+    Entry [ session.upload_progress.name <PERDIR> ]
+      Current = 'PHP_SESSION_UPLOAD_PROGRESS'
+    }
+    Entry [ session.upload_progress.freq <PERDIR> ]
+      Current = '1%'
+    }
+    Entry [ session.upload_progress.min_freq <PERDIR> ]
+      Current = '1'
+    }
+  }
+
+  - Constants [3] {
+    Constant [ integer PHP_SESSION_DISABLED ] { 0 }
+    Constant [ integer PHP_SESSION_NONE ] { 1 }
+    Constant [ integer PHP_SESSION_ACTIVE ] { 2 }
+  }
+
+  - Functions {
+    Function [ <internal:session> function session_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $name ]
+      }
+    }
+    Function [ <internal:session> function session_module_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $module ]
+      }
+    }
+    Function [ <internal:session> function session_save_path ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $path ]
+      }
+    }
+    Function [ <internal:session> function session_id ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $id ]
+      }
+    }
+    Function [ <internal:session> function session_regenerate_id ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $delete_old_session ]
+      }
+    }
+    Function [ <internal:session> function session_decode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:session> function session_encode ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:session> function session_start ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:session> function session_destroy ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:session> function session_unset ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:session> function session_set_save_handler ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $open ]
+        Parameter #1 [ <required> $close ]
+        Parameter #2 [ <required> $read ]
+        Parameter #3 [ <required> $write ]
+        Parameter #4 [ <required> $destroy ]
+        Parameter #5 [ <required> $gc ]
+      }
+    }
+    Function [ <internal:session> function session_cache_limiter ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $cache_limiter ]
+      }
+    }
+    Function [ <internal:session> function session_cache_expire ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $new_cache_expire ]
+      }
+    }
+    Function [ <internal:session> function session_set_cookie_params ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $lifetime ]
+        Parameter #1 [ <optional> $path ]
+        Parameter #2 [ <optional> $domain ]
+        Parameter #3 [ <optional> $secure ]
+        Parameter #4 [ <optional> $httponly ]
+      }
+    }
+    Function [ <internal:session> function session_get_cookie_params ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:session> function session_write_close ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:session> function session_status ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:session> function session_register_shutdown ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:session> function session_commit ] {
+
+      - Parameters [0] {
+      }
+    }
+  }
+
+  - Classes [2] {
+    Interface [ <internal:session> interface SessionHandlerInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:session> abstract public method open ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $save_path ]
+            Parameter #1 [ <required> $session_name ]
+          }
+        }
+
+        Method [ <internal:session> abstract public method close ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:session> abstract public method read ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:session> abstract public method write ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $val ]
+          }
+        }
+
+        Method [ <internal:session> abstract public method destroy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:session> abstract public method gc ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $maxlifetime ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:session> class SessionHandler implements SessionHandlerInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:session, prototype SessionHandlerInterface> public method open ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $save_path ]
+            Parameter #1 [ <required> $session_name ]
+          }
+        }
+
+        Method [ <internal:session, prototype SessionHandlerInterface> public method close ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:session, prototype SessionHandlerInterface> public method read ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:session, prototype SessionHandlerInterface> public method write ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $val ]
+          }
+        }
+
+        Method [ <internal:session, prototype SessionHandlerInterface> public method destroy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:session, prototype SessionHandlerInterface> public method gc ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $maxlifetime ]
+          }
+        }
+      }
+    }
+  }
+}
+

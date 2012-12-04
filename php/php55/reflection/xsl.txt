@@ -1,0 +1,136 @@
+Extension [ <persistent> extension #93 xsl version 0.1 ] {
+
+  - Dependencies {
+    Dependency [ libxml (Required) ]
+  }
+
+  - INI {
+    Entry [ xsl.security_prefs <ALL> ]
+      Current = '44'
+    }
+  }
+
+  - Constants [14] {
+    Constant [ integer XSL_CLONE_AUTO ] { 0 }
+    Constant [ integer XSL_CLONE_NEVER ] { -1 }
+    Constant [ integer XSL_CLONE_ALWAYS ] { 1 }
+    Constant [ integer XSL_SECPREF_NONE ] { 0 }
+    Constant [ integer XSL_SECPREF_READ_FILE ] { 2 }
+    Constant [ integer XSL_SECPREF_WRITE_FILE ] { 4 }
+    Constant [ integer XSL_SECPREF_CREATE_DIRECTORY ] { 8 }
+    Constant [ integer XSL_SECPREF_READ_NETWORK ] { 16 }
+    Constant [ integer XSL_SECPREF_WRITE_NETWORK ] { 32 }
+    Constant [ integer XSL_SECPREF_DEFAULT ] { 44 }
+    Constant [ integer LIBXSLT_VERSION ] { 10126 }
+    Constant [ string LIBXSLT_DOTTED_VERSION ] { 1.1.26 }
+    Constant [ integer LIBEXSLT_VERSION ] { 815 }
+    Constant [ string LIBEXSLT_DOTTED_VERSION ] { 1.1.26 }
+  }
+
+  - Classes [1] {
+    Class [ <internal:xsl> class XSLTProcessor ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [12] {
+        Method [ <internal:xsl> public method importStylesheet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $doc ]
+          }
+        }
+
+        Method [ <internal:xsl> public method transformToDoc ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $doc ]
+          }
+        }
+
+        Method [ <internal:xsl> public method transformToUri ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $doc ]
+            Parameter #1 [ <required> $uri ]
+          }
+        }
+
+        Method [ <internal:xsl> public method transformToXml ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $doc ]
+          }
+        }
+
+        Method [ <internal:xsl> public method setParameter ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $namespace ]
+            Parameter #1 [ <required> $name ]
+            Parameter #2 [ <optional> $value ]
+          }
+        }
+
+        Method [ <internal:xsl> public method getParameter ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $namespace ]
+            Parameter #1 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:xsl> public method removeParameter ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $namespace ]
+            Parameter #1 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:xsl> public method hasExsltSupport ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:xsl> public method registerPHPFunctions ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $restrict ]
+          }
+        }
+
+        Method [ <internal:xsl> public method setProfiling ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $filename ]
+          }
+        }
+
+        Method [ <internal:xsl> public method setSecurityPrefs ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $securityPrefs ]
+          }
+        }
+
+        Method [ <internal:xsl> public method getSecurityPrefs ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+

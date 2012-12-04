@@ -1,0 +1,55 @@
+Extension [ <persistent> extension #86 sysvshm version <no_version> ] {
+
+  - Functions {
+    Function [ <internal:sysvshm> function shm_attach ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <optional> $memsize ]
+        Parameter #2 [ <optional> $perm ]
+      }
+    }
+    Function [ <internal:sysvshm> function shm_remove ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $shm_identifier ]
+      }
+    }
+    Function [ <internal:sysvshm> function shm_detach ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $shm_identifier ]
+      }
+    }
+    Function [ <internal:sysvshm> function shm_put_var ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $shm_identifier ]
+        Parameter #1 [ <required> $variable_key ]
+        Parameter #2 [ <required> $variable ]
+      }
+    }
+    Function [ <internal:sysvshm> function shm_has_var ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $id ]
+        Parameter #1 [ <required> $variable_key ]
+      }
+    }
+    Function [ <internal:sysvshm> function shm_get_var ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $id ]
+        Parameter #1 [ <required> $variable_key ]
+      }
+    }
+    Function [ <internal:sysvshm> function shm_remove_var ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $id ]
+        Parameter #1 [ <required> $variable_key ]
+      }
+    }
+  }
+}
+

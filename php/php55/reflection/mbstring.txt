@@ -1,0 +1,562 @@
+Extension [ <persistent> extension #49 mbstring version <no_version> ] {
+
+  - INI {
+    Entry [ mbstring.language <ALL> ]
+      Current = 'neutral'
+    }
+    Entry [ mbstring.detect_order <ALL> ]
+      Current = ''
+    }
+    Entry [ mbstring.http_input <ALL> ]
+      Current = 'pass'
+    }
+    Entry [ mbstring.http_output <ALL> ]
+      Current = 'pass'
+    }
+    Entry [ mbstring.internal_encoding <ALL> ]
+      Current = ''
+    }
+    Entry [ mbstring.substitute_character <ALL> ]
+      Current = ''
+    }
+    Entry [ mbstring.func_overload <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ mbstring.encoding_translation <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ mbstring.http_output_conv_mimetypes <ALL> ]
+      Current = '^(text/|application/xhtml\+xml)'
+    }
+    Entry [ mbstring.strict_detection <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Constants [6] {
+    Constant [ integer MB_OVERLOAD_MAIL ] { 1 }
+    Constant [ integer MB_OVERLOAD_STRING ] { 2 }
+    Constant [ integer MB_OVERLOAD_REGEX ] { 4 }
+    Constant [ integer MB_CASE_UPPER ] { 0 }
+    Constant [ integer MB_CASE_LOWER ] { 1 }
+    Constant [ integer MB_CASE_TITLE ] { 2 }
+  }
+
+  - Functions {
+    Function [ <internal:mbstring> function mb_convert_case ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $sourcestring ]
+        Parameter #1 [ <required> $mode ]
+        Parameter #2 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strtoupper ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $sourcestring ]
+        Parameter #1 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strtolower ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $sourcestring ]
+        Parameter #1 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_language ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $language ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_internal_encoding ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_http_input ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_http_output ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_detect_order ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_substitute_character ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $substchar ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_parse_str ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $encoded_string ]
+        Parameter #1 [ <optional> &$result ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_output_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $contents ]
+        Parameter #1 [ <required> $status ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_preferred_mime_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strlen ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strpos ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strrpos ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_stripos ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strripos ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strstr ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $part ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strrchr ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $part ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_stristr ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $part ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strrichr ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $part ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_substr_count ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_substr ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $start ]
+        Parameter #2 [ <optional> $length ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strcut ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $start ]
+        Parameter #2 [ <optional> $length ]
+        Parameter #3 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strwidth ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_strimwidth ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $start ]
+        Parameter #2 [ <required> $width ]
+        Parameter #3 [ <optional> $trimmarker ]
+        Parameter #4 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_convert_encoding ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $to ]
+        Parameter #2 [ <optional> $from ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_detect_encoding ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $encoding_list ]
+        Parameter #2 [ <optional> $strict ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_list_encodings ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:mbstring> function mb_encoding_aliases ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_convert_kana ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $option ]
+        Parameter #2 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_encode_mimeheader ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $charset ]
+        Parameter #2 [ <optional> $transfer ]
+        Parameter #3 [ <optional> $linefeed ]
+        Parameter #4 [ <optional> $indent ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_decode_mimeheader ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $string ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_convert_variables ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $to ]
+        Parameter #1 [ <required> $from ]
+        Parameter #2 [ <required> &$... ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_encode_numericentity ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <required> $convmap ]
+        Parameter #2 [ <optional> $encoding ]
+        Parameter #3 [ <optional> $is_hex ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_decode_numericentity ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <required> $convmap ]
+        Parameter #2 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_send_mail ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $to ]
+        Parameter #1 [ <required> $subject ]
+        Parameter #2 [ <required> $message ]
+        Parameter #3 [ <optional> $additional_headers ]
+        Parameter #4 [ <optional> $additional_parameters ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_get_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_check_encoding ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $var ]
+        Parameter #1 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_regex_encoding ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_regex_set_options ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> &$registers ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_eregi ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> &$registers ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_replace ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $replacement ]
+        Parameter #2 [ <required> $string ]
+        Parameter #3 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_eregi_replace ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $replacement ]
+        Parameter #2 [ <required> $string ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_replace_callback ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $callback ]
+        Parameter #2 [ <required> $string ]
+        Parameter #3 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_split ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> $limit ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_match ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_search ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $pattern ]
+        Parameter #1 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_search_pos ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $pattern ]
+        Parameter #1 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_search_regs ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $pattern ]
+        Parameter #1 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_search_init ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <optional> $pattern ]
+        Parameter #2 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_search_getregs ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_search_getpos ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:mbstring> function mb_ereg_search_setpos ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $position ]
+      }
+    }
+    Function [ <internal:mbstring> function mbregex_encoding ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $encoding ]
+      }
+    }
+    Function [ <internal:mbstring> function mbereg ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> &$registers ]
+      }
+    }
+    Function [ <internal:mbstring> function mberegi ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> &$registers ]
+      }
+    }
+    Function [ <internal:mbstring> function mbereg_replace ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $replacement ]
+        Parameter #2 [ <required> $string ]
+        Parameter #3 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mberegi_replace ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $replacement ]
+        Parameter #2 [ <required> $string ]
+      }
+    }
+    Function [ <internal:mbstring> function mbsplit ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> $limit ]
+      }
+    }
+    Function [ <internal:mbstring> function mbereg_match ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pattern ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mbereg_search ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $pattern ]
+        Parameter #1 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mbereg_search_pos ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $pattern ]
+        Parameter #1 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mbereg_search_regs ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $pattern ]
+        Parameter #1 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mbereg_search_init ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <optional> $pattern ]
+        Parameter #2 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:mbstring> function mbereg_search_getregs ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:mbstring> function mbereg_search_getpos ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:mbstring> function mbereg_search_setpos ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $position ]
+      }
+    }
+  }
+}
+

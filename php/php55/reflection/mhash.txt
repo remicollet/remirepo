@@ -1,0 +1,3 @@
+Extension [ <persistent> extension #98 mhash version <no_version> ] {
+}
+

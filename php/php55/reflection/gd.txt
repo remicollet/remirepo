@@ -1,0 +1,888 @@
+Extension [ <persistent> extension #37 gd version <no_version> ] {
+
+  - INI {
+    Entry [ gd.jpeg_ignore_warning <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Constants [47] {
+    Constant [ integer IMG_GIF ] { 1 }
+    Constant [ integer IMG_JPG ] { 2 }
+    Constant [ integer IMG_JPEG ] { 2 }
+    Constant [ integer IMG_PNG ] { 4 }
+    Constant [ integer IMG_WBMP ] { 8 }
+    Constant [ integer IMG_XPM ] { 16 }
+    Constant [ integer IMG_COLOR_TILED ] { -5 }
+    Constant [ integer IMG_COLOR_STYLED ] { -2 }
+    Constant [ integer IMG_COLOR_BRUSHED ] { -3 }
+    Constant [ integer IMG_COLOR_STYLEDBRUSHED ] { -4 }
+    Constant [ integer IMG_COLOR_TRANSPARENT ] { -6 }
+    Constant [ integer IMG_ARC_ROUNDED ] { 0 }
+    Constant [ integer IMG_ARC_PIE ] { 0 }
+    Constant [ integer IMG_ARC_CHORD ] { 1 }
+    Constant [ integer IMG_ARC_NOFILL ] { 2 }
+    Constant [ integer IMG_ARC_EDGED ] { 4 }
+    Constant [ integer IMG_GD2_RAW ] { 1 }
+    Constant [ integer IMG_GD2_COMPRESSED ] { 2 }
+    Constant [ integer IMG_EFFECT_REPLACE ] { 0 }
+    Constant [ integer IMG_EFFECT_ALPHABLEND ] { 1 }
+    Constant [ integer IMG_EFFECT_NORMAL ] { 2 }
+    Constant [ integer IMG_EFFECT_OVERLAY ] { 3 }
+    Constant [ integer GD_BUNDLED ] { 1 }
+    Constant [ integer IMG_FILTER_NEGATE ] { 0 }
+    Constant [ integer IMG_FILTER_GRAYSCALE ] { 1 }
+    Constant [ integer IMG_FILTER_BRIGHTNESS ] { 2 }
+    Constant [ integer IMG_FILTER_CONTRAST ] { 3 }
+    Constant [ integer IMG_FILTER_COLORIZE ] { 4 }
+    Constant [ integer IMG_FILTER_EDGEDETECT ] { 5 }
+    Constant [ integer IMG_FILTER_GAUSSIAN_BLUR ] { 7 }
+    Constant [ integer IMG_FILTER_SELECTIVE_BLUR ] { 8 }
+    Constant [ integer IMG_FILTER_EMBOSS ] { 6 }
+    Constant [ integer IMG_FILTER_MEAN_REMOVAL ] { 9 }
+    Constant [ integer IMG_FILTER_SMOOTH ] { 10 }
+    Constant [ integer IMG_FILTER_PIXELATE ] { 11 }
+    Constant [ string GD_VERSION ] { 2.0.35 }
+    Constant [ integer GD_MAJOR_VERSION ] { 2 }
+    Constant [ integer GD_MINOR_VERSION ] { 0 }
+    Constant [ integer GD_RELEASE_VERSION ] { 35 }
+    Constant [ string GD_EXTRA_VERSION ] {  }
+    Constant [ integer PNG_NO_FILTER ] { 0 }
+    Constant [ integer PNG_FILTER_NONE ] { 8 }
+    Constant [ integer PNG_FILTER_SUB ] { 16 }
+    Constant [ integer PNG_FILTER_UP ] { 32 }
+    Constant [ integer PNG_FILTER_AVG ] { 64 }
+    Constant [ integer PNG_FILTER_PAETH ] { 128 }
+    Constant [ integer PNG_ALL_FILTERS ] { 248 }
+  }
+
+  - Functions {
+    Function [ <internal:gd> function gd_info ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:gd> function imagearc ] {
+
+      - Parameters [8] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $cx ]
+        Parameter #2 [ <required> $cy ]
+        Parameter #3 [ <required> $w ]
+        Parameter #4 [ <required> $h ]
+        Parameter #5 [ <required> $s ]
+        Parameter #6 [ <required> $e ]
+        Parameter #7 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imageellipse ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $cx ]
+        Parameter #2 [ <required> $cy ]
+        Parameter #3 [ <required> $w ]
+        Parameter #4 [ <required> $h ]
+        Parameter #5 [ <required> $color ]
+      }
+    }
+    Function [ <internal:gd> function imagechar ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $font ]
+        Parameter #2 [ <required> $x ]
+        Parameter #3 [ <required> $y ]
+        Parameter #4 [ <required> $c ]
+        Parameter #5 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagecharup ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $font ]
+        Parameter #2 [ <required> $x ]
+        Parameter #3 [ <required> $y ]
+        Parameter #4 [ <required> $c ]
+        Parameter #5 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorat ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $x ]
+        Parameter #2 [ <required> $y ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorallocate ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $red ]
+        Parameter #2 [ <required> $green ]
+        Parameter #3 [ <required> $blue ]
+      }
+    }
+    Function [ <internal:gd> function imagepalettecopy ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $dst ]
+        Parameter #1 [ <required> $src ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefromstring ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $image ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorclosest ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $red ]
+        Parameter #2 [ <required> $green ]
+        Parameter #3 [ <required> $blue ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorclosesthwb ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $red ]
+        Parameter #2 [ <required> $green ]
+        Parameter #3 [ <required> $blue ]
+      }
+    }
+    Function [ <internal:gd> function imagecolordeallocate ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $index ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorresolve ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $red ]
+        Parameter #2 [ <required> $green ]
+        Parameter #3 [ <required> $blue ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorexact ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $red ]
+        Parameter #2 [ <required> $green ]
+        Parameter #3 [ <required> $blue ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorset ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $color ]
+        Parameter #2 [ <required> $red ]
+        Parameter #3 [ <required> $green ]
+        Parameter #4 [ <required> $blue ]
+        Parameter #5 [ <optional> $alpha ]
+      }
+    }
+    Function [ <internal:gd> function imagecolortransparent ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <optional> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorstotal ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $im ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorsforindex ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $index ]
+      }
+    }
+    Function [ <internal:gd> function imagecopy ] {
+
+      - Parameters [8] {
+        Parameter #0 [ <required> $dst_im ]
+        Parameter #1 [ <required> $src_im ]
+        Parameter #2 [ <required> $dst_x ]
+        Parameter #3 [ <required> $dst_y ]
+        Parameter #4 [ <required> $src_x ]
+        Parameter #5 [ <required> $src_y ]
+        Parameter #6 [ <required> $src_w ]
+        Parameter #7 [ <required> $src_h ]
+      }
+    }
+    Function [ <internal:gd> function imagecopymerge ] {
+
+      - Parameters [9] {
+        Parameter #0 [ <required> $src_im ]
+        Parameter #1 [ <required> $dst_im ]
+        Parameter #2 [ <required> $dst_x ]
+        Parameter #3 [ <required> $dst_y ]
+        Parameter #4 [ <required> $src_x ]
+        Parameter #5 [ <required> $src_y ]
+        Parameter #6 [ <required> $src_w ]
+        Parameter #7 [ <required> $src_h ]
+        Parameter #8 [ <required> $pct ]
+      }
+    }
+    Function [ <internal:gd> function imagecopymergegray ] {
+
+      - Parameters [9] {
+        Parameter #0 [ <required> $src_im ]
+        Parameter #1 [ <required> $dst_im ]
+        Parameter #2 [ <required> $dst_x ]
+        Parameter #3 [ <required> $dst_y ]
+        Parameter #4 [ <required> $src_x ]
+        Parameter #5 [ <required> $src_y ]
+        Parameter #6 [ <required> $src_w ]
+        Parameter #7 [ <required> $src_h ]
+        Parameter #8 [ <required> $pct ]
+      }
+    }
+    Function [ <internal:gd> function imagecopyresized ] {
+
+      - Parameters [10] {
+        Parameter #0 [ <required> $dst_im ]
+        Parameter #1 [ <required> $src_im ]
+        Parameter #2 [ <required> $dst_x ]
+        Parameter #3 [ <required> $dst_y ]
+        Parameter #4 [ <required> $src_x ]
+        Parameter #5 [ <required> $src_y ]
+        Parameter #6 [ <required> $dst_w ]
+        Parameter #7 [ <required> $dst_h ]
+        Parameter #8 [ <required> $src_w ]
+        Parameter #9 [ <required> $src_h ]
+      }
+    }
+    Function [ <internal:gd> function imagecreate ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $x_size ]
+        Parameter #1 [ <required> $y_size ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatetruecolor ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $x_size ]
+        Parameter #1 [ <required> $y_size ]
+      }
+    }
+    Function [ <internal:gd> function imageistruecolor ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $im ]
+      }
+    }
+    Function [ <internal:gd> function imagetruecolortopalette ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $ditherFlag ]
+        Parameter #2 [ <required> $colorsWanted ]
+      }
+    }
+    Function [ <internal:gd> function imagesetthickness ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $thickness ]
+      }
+    }
+    Function [ <internal:gd> function imagefilledarc ] {
+
+      - Parameters [9] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $cx ]
+        Parameter #2 [ <required> $cy ]
+        Parameter #3 [ <required> $w ]
+        Parameter #4 [ <required> $h ]
+        Parameter #5 [ <required> $s ]
+        Parameter #6 [ <required> $e ]
+        Parameter #7 [ <required> $col ]
+        Parameter #8 [ <required> $style ]
+      }
+    }
+    Function [ <internal:gd> function imagefilledellipse ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $cx ]
+        Parameter #2 [ <required> $cy ]
+        Parameter #3 [ <required> $w ]
+        Parameter #4 [ <required> $h ]
+        Parameter #5 [ <required> $color ]
+      }
+    }
+    Function [ <internal:gd> function imagealphablending ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $blend ]
+      }
+    }
+    Function [ <internal:gd> function imagesavealpha ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $save ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorallocatealpha ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $red ]
+        Parameter #2 [ <required> $green ]
+        Parameter #3 [ <required> $blue ]
+        Parameter #4 [ <required> $alpha ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorresolvealpha ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $red ]
+        Parameter #2 [ <required> $green ]
+        Parameter #3 [ <required> $blue ]
+        Parameter #4 [ <required> $alpha ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorclosestalpha ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $red ]
+        Parameter #2 [ <required> $green ]
+        Parameter #3 [ <required> $blue ]
+        Parameter #4 [ <required> $alpha ]
+      }
+    }
+    Function [ <internal:gd> function imagecolorexactalpha ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $red ]
+        Parameter #2 [ <required> $green ]
+        Parameter #3 [ <required> $blue ]
+        Parameter #4 [ <required> $alpha ]
+      }
+    }
+    Function [ <internal:gd> function imagecopyresampled ] {
+
+      - Parameters [10] {
+        Parameter #0 [ <required> $dst_im ]
+        Parameter #1 [ <required> $src_im ]
+        Parameter #2 [ <required> $dst_x ]
+        Parameter #3 [ <required> $dst_y ]
+        Parameter #4 [ <required> $src_x ]
+        Parameter #5 [ <required> $src_y ]
+        Parameter #6 [ <required> $dst_w ]
+        Parameter #7 [ <required> $dst_h ]
+        Parameter #8 [ <required> $src_w ]
+        Parameter #9 [ <required> $src_h ]
+      }
+    }
+    Function [ <internal:gd> function imagerotate ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $angle ]
+        Parameter #2 [ <required> $bgdcolor ]
+        Parameter #3 [ <optional> $ignoretransparent ]
+      }
+    }
+    Function [ <internal:gd> function imageantialias ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $on ]
+      }
+    }
+    Function [ <internal:gd> function imagesettile ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $tile ]
+      }
+    }
+    Function [ <internal:gd> function imagesetbrush ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $brush ]
+      }
+    }
+    Function [ <internal:gd> function imagesetstyle ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $styles ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefrompng ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefromgif ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefromjpeg ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefromwbmp ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefromxbm ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefromxpm ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefromgd ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefromgd2 ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagecreatefromgd2part ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $srcX ]
+        Parameter #2 [ <required> $srcY ]
+        Parameter #3 [ <required> $width ]
+        Parameter #4 [ <required> $height ]
+      }
+    }
+    Function [ <internal:gd> function imagepng ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <optional> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagegif ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <optional> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagejpeg ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <optional> $filename ]
+        Parameter #2 [ <optional> $quality ]
+      }
+    }
+    Function [ <internal:gd> function imagewbmp ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <optional> $filename ]
+        Parameter #2 [ <optional> $foreground ]
+      }
+    }
+    Function [ <internal:gd> function imagegd ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <optional> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagegd2 ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <optional> $filename ]
+        Parameter #2 [ <optional> $chunk_size ]
+        Parameter #3 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:gd> function imagedestroy ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $im ]
+      }
+    }
+    Function [ <internal:gd> function imagegammacorrect ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $inputgamma ]
+        Parameter #2 [ <required> $outputgamma ]
+      }
+    }
+    Function [ <internal:gd> function imagefill ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $x ]
+        Parameter #2 [ <required> $y ]
+        Parameter #3 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagefilledpolygon ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $points ]
+        Parameter #2 [ <required> $num_pos ]
+        Parameter #3 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagefilledrectangle ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $x1 ]
+        Parameter #2 [ <required> $y1 ]
+        Parameter #3 [ <required> $x2 ]
+        Parameter #4 [ <required> $y2 ]
+        Parameter #5 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagefilltoborder ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $x ]
+        Parameter #2 [ <required> $y ]
+        Parameter #3 [ <required> $border ]
+        Parameter #4 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagefontwidth ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $font ]
+      }
+    }
+    Function [ <internal:gd> function imagefontheight ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $font ]
+      }
+    }
+    Function [ <internal:gd> function imageinterlace ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <optional> $interlace ]
+      }
+    }
+    Function [ <internal:gd> function imageline ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $x1 ]
+        Parameter #2 [ <required> $y1 ]
+        Parameter #3 [ <required> $x2 ]
+        Parameter #4 [ <required> $y2 ]
+        Parameter #5 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imageloadfont ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagepolygon ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $points ]
+        Parameter #2 [ <required> $num_pos ]
+        Parameter #3 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagerectangle ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $x1 ]
+        Parameter #2 [ <required> $y1 ]
+        Parameter #3 [ <required> $x2 ]
+        Parameter #4 [ <required> $y2 ]
+        Parameter #5 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagesetpixel ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $x ]
+        Parameter #2 [ <required> $y ]
+        Parameter #3 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagestring ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $font ]
+        Parameter #2 [ <required> $x ]
+        Parameter #3 [ <required> $y ]
+        Parameter #4 [ <required> $str ]
+        Parameter #5 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagestringup ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $font ]
+        Parameter #2 [ <required> $x ]
+        Parameter #3 [ <required> $y ]
+        Parameter #4 [ <required> $str ]
+        Parameter #5 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagesx ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $im ]
+      }
+    }
+    Function [ <internal:gd> function imagesy ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $im ]
+      }
+    }
+    Function [ <internal:gd> function imagedashedline ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $x1 ]
+        Parameter #2 [ <required> $y1 ]
+        Parameter #3 [ <required> $x2 ]
+        Parameter #4 [ <required> $y2 ]
+        Parameter #5 [ <required> $col ]
+      }
+    }
+    Function [ <internal:gd> function imagettfbbox ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $size ]
+        Parameter #1 [ <required> $angle ]
+        Parameter #2 [ <required> $font_file ]
+        Parameter #3 [ <required> $text ]
+      }
+    }
+    Function [ <internal:gd> function imagettftext ] {
+
+      - Parameters [8] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $size ]
+        Parameter #2 [ <required> $angle ]
+        Parameter #3 [ <required> $x ]
+        Parameter #4 [ <required> $y ]
+        Parameter #5 [ <required> $col ]
+        Parameter #6 [ <required> $font_file ]
+        Parameter #7 [ <required> $text ]
+      }
+    }
+    Function [ <internal:gd> function imageftbbox ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $size ]
+        Parameter #1 [ <required> $angle ]
+        Parameter #2 [ <required> $font_file ]
+        Parameter #3 [ <required> $text ]
+        Parameter #4 [ <optional> $extrainfo ]
+      }
+    }
+    Function [ <internal:gd> function imagefttext ] {
+
+      - Parameters [9] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $size ]
+        Parameter #2 [ <required> $angle ]
+        Parameter #3 [ <required> $x ]
+        Parameter #4 [ <required> $y ]
+        Parameter #5 [ <required> $col ]
+        Parameter #6 [ <required> $font_file ]
+        Parameter #7 [ <required> $text ]
+        Parameter #8 [ <optional> $extrainfo ]
+      }
+    }
+    Function [ <internal:gd> function imagepsloadfont ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $pathname ]
+      }
+    }
+    Function [ <internal:gd> function imagepsfreefont ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $font_index ]
+      }
+    }
+    Function [ <internal:gd> function imagepsencodefont ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $font_index ]
+        Parameter #1 [ <required> $filename ]
+      }
+    }
+    Function [ <internal:gd> function imagepsextendfont ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $font_index ]
+        Parameter #1 [ <required> $extend ]
+      }
+    }
+    Function [ <internal:gd> function imagepsslantfont ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $font_index ]
+        Parameter #1 [ <required> $slant ]
+      }
+    }
+    Function [ <internal:gd> function imagepstext ] {
+
+      - Parameters [12] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $text ]
+        Parameter #2 [ <required> $font ]
+        Parameter #3 [ <required> $size ]
+        Parameter #4 [ <required> $foreground ]
+        Parameter #5 [ <required> $background ]
+        Parameter #6 [ <required> $xcoord ]
+        Parameter #7 [ <required> $ycoord ]
+        Parameter #8 [ <optional> $space ]
+        Parameter #9 [ <optional> $tightness ]
+        Parameter #10 [ <optional> $angle ]
+        Parameter #11 [ <optional> $antialias ]
+      }
+    }
+    Function [ <internal:gd> function imagepsbbox ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $text ]
+        Parameter #1 [ <required> $font ]
+        Parameter #2 [ <required> $size ]
+        Parameter #3 [ <optional> $space ]
+        Parameter #4 [ <optional> $tightness ]
+        Parameter #5 [ <optional> $angle ]
+      }
+    }
+    Function [ <internal:gd> function imagetypes ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:gd> function jpeg2wbmp ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $f_org ]
+        Parameter #1 [ <required> $f_dest ]
+        Parameter #2 [ <required> $d_height ]
+        Parameter #3 [ <required> $d_width ]
+        Parameter #4 [ <required> $d_threshold ]
+      }
+    }
+    Function [ <internal:gd> function png2wbmp ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $f_org ]
+        Parameter #1 [ <required> $f_dest ]
+        Parameter #2 [ <required> $d_height ]
+        Parameter #3 [ <required> $d_width ]
+        Parameter #4 [ <required> $d_threshold ]
+      }
+    }
+    Function [ <internal:gd> function image2wbmp ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <optional> $filename ]
+        Parameter #2 [ <optional> $threshold ]
+      }
+    }
+    Function [ <internal:gd> function imagelayereffect ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $effect ]
+      }
+    }
+    Function [ <internal:gd> function imagexbm ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $filename ]
+        Parameter #2 [ <optional> $foreground ]
+      }
+    }
+    Function [ <internal:gd> function imagecolormatch ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $im1 ]
+        Parameter #1 [ <required> $im2 ]
+      }
+    }
+    Function [ <internal:gd> function imagefilter ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $filtertype ]
+        Parameter #2 [ <optional> $arg1 ]
+        Parameter #3 [ <optional> $arg2 ]
+        Parameter #4 [ <optional> $arg3 ]
+        Parameter #5 [ <optional> $arg4 ]
+      }
+    }
+    Function [ <internal:gd> function imageconvolution ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $im ]
+        Parameter #1 [ <required> $matrix3x3 ]
+        Parameter #2 [ <required> $div ]
+        Parameter #3 [ <required> $offset ]
+      }
+    }
+  }
+}
+

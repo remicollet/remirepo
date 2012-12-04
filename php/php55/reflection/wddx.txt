@@ -1,0 +1,46 @@
+Extension [ <persistent> extension #89 wddx version <no_version> ] {
+
+  - Functions {
+    Function [ <internal:wddx> function wddx_serialize_value ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var ]
+        Parameter #1 [ <optional> $comment ]
+      }
+    }
+    Function [ <internal:wddx> function wddx_serialize_vars ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $var_name ]
+        Parameter #1 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:wddx> function wddx_packet_start ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $comment ]
+      }
+    }
+    Function [ <internal:wddx> function wddx_packet_end ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $packet_id ]
+      }
+    }
+    Function [ <internal:wddx> function wddx_add_vars ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $packet_id ]
+        Parameter #1 [ <required> $var_name ]
+        Parameter #2 [ <optional> $... ]
+      }
+    }
+    Function [ <internal:wddx> function wddx_deserialize ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $packet ]
+      }
+    }
+  }
+}
+

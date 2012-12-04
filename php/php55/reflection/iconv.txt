@@ -1,0 +1,103 @@
+Extension [ <persistent> extension #17 iconv version <no_version> ] {
+
+  - INI {
+    Entry [ iconv.input_encoding <ALL> ]
+      Current = 'ISO-8859-1'
+    }
+    Entry [ iconv.output_encoding <ALL> ]
+      Current = 'ISO-8859-1'
+    }
+    Entry [ iconv.internal_encoding <ALL> ]
+      Current = 'ISO-8859-1'
+    }
+  }
+
+  - Constants [4] {
+    Constant [ string ICONV_IMPL ] { glibc }
+    Constant [ string ICONV_VERSION ] { 2.15 }
+    Constant [ integer ICONV_MIME_DECODE_STRICT ] { 1 }
+    Constant [ integer ICONV_MIME_DECODE_CONTINUE_ON_ERROR ] { 2 }
+  }
+
+  - Functions {
+    Function [ <internal:iconv> function iconv ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $in_charset ]
+        Parameter #1 [ <required> $out_charset ]
+        Parameter #2 [ <required> $str ]
+      }
+    }
+    Function [ <internal:iconv> function iconv_get_encoding ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:iconv> function iconv_set_encoding ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $type ]
+        Parameter #1 [ <required> $charset ]
+      }
+    }
+    Function [ <internal:iconv> function iconv_strlen ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <optional> $charset ]
+      }
+    }
+    Function [ <internal:iconv> function iconv_substr ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $offset ]
+        Parameter #2 [ <optional> $length ]
+        Parameter #3 [ <optional> $charset ]
+      }
+    }
+    Function [ <internal:iconv> function iconv_strpos ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+        Parameter #3 [ <optional> $charset ]
+      }
+    }
+    Function [ <internal:iconv> function iconv_strrpos ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $charset ]
+      }
+    }
+    Function [ <internal:iconv> function iconv_mime_encode ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $field_name ]
+        Parameter #1 [ <required> $field_value ]
+        Parameter #2 [ <optional> $preference ]
+      }
+    }
+    Function [ <internal:iconv> function iconv_mime_decode ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $encoded_string ]
+        Parameter #1 [ <optional> $mode ]
+        Parameter #2 [ <optional> $charset ]
+      }
+    }
+    Function [ <internal:iconv> function iconv_mime_decode_headers ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $headers ]
+        Parameter #1 [ <optional> $mode ]
+        Parameter #2 [ <optional> $charset ]
+      }
+    }
+  }
+}
+

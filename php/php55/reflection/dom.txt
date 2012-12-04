@@ -1,0 +1,3785 @@
+Extension [ <persistent> extension #34 dom version 20031129 ] {
+
+  - Dependencies {
+    Dependency [ libxml (Required) ]
+    Dependency [ domxml (Conflicts) ]
+  }
+
+  - Constants [45] {
+    Constant [ integer XML_ELEMENT_NODE ] { 1 }
+    Constant [ integer XML_ATTRIBUTE_NODE ] { 2 }
+    Constant [ integer XML_TEXT_NODE ] { 3 }
+    Constant [ integer XML_CDATA_SECTION_NODE ] { 4 }
+    Constant [ integer XML_ENTITY_REF_NODE ] { 5 }
+    Constant [ integer XML_ENTITY_NODE ] { 6 }
+    Constant [ integer XML_PI_NODE ] { 7 }
+    Constant [ integer XML_COMMENT_NODE ] { 8 }
+    Constant [ integer XML_DOCUMENT_NODE ] { 9 }
+    Constant [ integer XML_DOCUMENT_TYPE_NODE ] { 10 }
+    Constant [ integer XML_DOCUMENT_FRAG_NODE ] { 11 }
+    Constant [ integer XML_NOTATION_NODE ] { 12 }
+    Constant [ integer XML_HTML_DOCUMENT_NODE ] { 13 }
+    Constant [ integer XML_DTD_NODE ] { 14 }
+    Constant [ integer XML_ELEMENT_DECL_NODE ] { 15 }
+    Constant [ integer XML_ATTRIBUTE_DECL_NODE ] { 16 }
+    Constant [ integer XML_ENTITY_DECL_NODE ] { 17 }
+    Constant [ integer XML_NAMESPACE_DECL_NODE ] { 18 }
+    Constant [ integer XML_LOCAL_NAMESPACE ] { 18 }
+    Constant [ integer XML_ATTRIBUTE_CDATA ] { 1 }
+    Constant [ integer XML_ATTRIBUTE_ID ] { 2 }
+    Constant [ integer XML_ATTRIBUTE_IDREF ] { 3 }
+    Constant [ integer XML_ATTRIBUTE_IDREFS ] { 4 }
+    Constant [ integer XML_ATTRIBUTE_ENTITY ] { 6 }
+    Constant [ integer XML_ATTRIBUTE_NMTOKEN ] { 7 }
+    Constant [ integer XML_ATTRIBUTE_NMTOKENS ] { 8 }
+    Constant [ integer XML_ATTRIBUTE_ENUMERATION ] { 9 }
+    Constant [ integer XML_ATTRIBUTE_NOTATION ] { 10 }
+    Constant [ integer DOM_PHP_ERR ] { 0 }
+    Constant [ integer DOM_INDEX_SIZE_ERR ] { 1 }
+    Constant [ integer DOMSTRING_SIZE_ERR ] { 2 }
+    Constant [ integer DOM_HIERARCHY_REQUEST_ERR ] { 3 }
+    Constant [ integer DOM_WRONG_DOCUMENT_ERR ] { 4 }
+    Constant [ integer DOM_INVALID_CHARACTER_ERR ] { 5 }
+    Constant [ integer DOM_NO_DATA_ALLOWED_ERR ] { 6 }
+    Constant [ integer DOM_NO_MODIFICATION_ALLOWED_ERR ] { 7 }
+    Constant [ integer DOM_NOT_FOUND_ERR ] { 8 }
+    Constant [ integer DOM_NOT_SUPPORTED_ERR ] { 9 }
+    Constant [ integer DOM_INUSE_ATTRIBUTE_ERR ] { 10 }
+    Constant [ integer DOM_INVALID_STATE_ERR ] { 11 }
+    Constant [ integer DOM_SYNTAX_ERR ] { 12 }
+    Constant [ integer DOM_INVALID_MODIFICATION_ERR ] { 13 }
+    Constant [ integer DOM_NAMESPACE_ERR ] { 14 }
+    Constant [ integer DOM_INVALID_ACCESS_ERR ] { 15 }
+    Constant [ integer DOM_VALIDATION_ERR ] { 16 }
+  }
+
+  - Functions {
+    Function [ <internal:dom> function dom_import_simplexml ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $node ]
+      }
+    }
+  }
+
+  - Classes [31] {
+    Class [ <internal:dom> class DOMException extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+        Property [ <default> public $code ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMStringList ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:dom> public method item ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMNameList ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:dom> public method getName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:dom> public method getNamespaceURI ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMImplementationList ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:dom> public method item ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMImplementationSource ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:dom> public method getDomimplementation ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $features ]
+          }
+        }
+
+        Method [ <internal:dom> public method getDomimplementations ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $features ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMImplementation ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:dom> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom> public method hasFeature ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method createDocumentType ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $qualifiedName ]
+            Parameter #1 [ <required> $publicId ]
+            Parameter #2 [ <required> $systemId ]
+          }
+        }
+
+        Method [ <internal:dom> public method createDocument ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $qualifiedName ]
+            Parameter #2 [ <required> DOMDocumentType $docType ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [22] {
+        Method [ <internal:dom> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMNameSpaceNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:dom> class DOMDocumentFragment extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [24] {
+        Method [ <internal:dom, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method appendXML ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMDocument extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [55] {
+        Method [ <internal:dom> public method createElement ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $tagName ]
+            Parameter #1 [ <optional> $value ]
+          }
+        }
+
+        Method [ <internal:dom> public method createDocumentFragment ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method createTextNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:dom> public method createComment ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:dom> public method createCDATASection ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:dom> public method createProcessingInstruction ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $target ]
+            Parameter #1 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:dom> public method createAttribute ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method createEntityReference ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method getElementsByTagName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $tagName ]
+          }
+        }
+
+        Method [ <internal:dom> public method importNode ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $importedNode ]
+            Parameter #1 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom> public method createElementNS ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $qualifiedName ]
+            Parameter #2 [ <optional> $value ]
+          }
+        }
+
+        Method [ <internal:dom> public method createAttributeNS ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $qualifiedName ]
+          }
+        }
+
+        Method [ <internal:dom> public method getElementsByTagNameNS ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $localName ]
+          }
+        }
+
+        Method [ <internal:dom> public method getElementById ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $elementId ]
+          }
+        }
+
+        Method [ <internal:dom> public method adoptNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $source ]
+          }
+        }
+
+        Method [ <internal:dom> public method normalizeDocument ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method renameNode ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> DOMNode $node ]
+            Parameter #1 [ <required> $namespaceURI ]
+            Parameter #2 [ <required> $qualifiedName ]
+          }
+        }
+
+        Method [ <internal:dom> public method load ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $source ]
+            Parameter #1 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:dom> public method save ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $file ]
+          }
+        }
+
+        Method [ <internal:dom> public method loadXML ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $source ]
+            Parameter #1 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:dom> public method saveXML ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> DOMNode or NULL $node ]
+          }
+        }
+
+        Method [ <internal:dom, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $version ]
+            Parameter #1 [ <optional> $encoding ]
+          }
+        }
+
+        Method [ <internal:dom> public method validate ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method xinclude ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:dom> public method loadHTML ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $source ]
+            Parameter #1 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:dom> public method loadHTMLFile ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $source ]
+            Parameter #1 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:dom> public method saveHTML ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method saveHTMLFile ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $file ]
+          }
+        }
+
+        Method [ <internal:dom> public method schemaValidate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $filename ]
+          }
+        }
+
+        Method [ <internal:dom> public method schemaValidateSource ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $source ]
+          }
+        }
+
+        Method [ <internal:dom> public method relaxNGValidate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $filename ]
+          }
+        }
+
+        Method [ <internal:dom> public method relaxNGValidateSource ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $source ]
+          }
+        }
+
+        Method [ <internal:dom> public method registerNodeClass ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $baseClass ]
+            Parameter #1 [ <required> $extendedClass ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> <iterateable> class DOMNodeList implements Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:dom> public method item ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> <iterateable> class DOMNamedNodeMap implements Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:dom> public method getNamedItem ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method setNamedItem ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom> public method removeNamedItem ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method item ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $index ]
+          }
+        }
+
+        Method [ <internal:dom> public method getNamedItemNS ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $namespaceURI ]
+            Parameter #1 [ <optional> $localName ]
+          }
+        }
+
+        Method [ <internal:dom> public method setNamedItemNS ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom> public method removeNamedItemNS ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $namespaceURI ]
+            Parameter #1 [ <optional> $localName ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMCharacterData extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [27] {
+        Method [ <internal:dom> public method substringData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+          }
+        }
+
+        Method [ <internal:dom> public method appendData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom> public method insertData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom> public method deleteData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+          }
+        }
+
+        Method [ <internal:dom> public method replaceData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+            Parameter #2 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMAttr extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [24] {
+        Method [ <internal:dom> public method isId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <optional> $value ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMElement extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [41] {
+        Method [ <internal:dom> public method getAttribute ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method setAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:dom> public method removeAttribute ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method getAttributeNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method setAttributeNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMAttr $newAttr ]
+          }
+        }
+
+        Method [ <internal:dom> public method removeAttributeNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMAttr $oldAttr ]
+          }
+        }
+
+        Method [ <internal:dom> public method getElementsByTagName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method getAttributeNS ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $localName ]
+          }
+        }
+
+        Method [ <internal:dom> public method setAttributeNS ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $qualifiedName ]
+            Parameter #2 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:dom> public method removeAttributeNS ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $localName ]
+          }
+        }
+
+        Method [ <internal:dom> public method getAttributeNodeNS ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $localName ]
+          }
+        }
+
+        Method [ <internal:dom> public method setAttributeNodeNS ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMAttr $newAttr ]
+          }
+        }
+
+        Method [ <internal:dom> public method getElementsByTagNameNS ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $localName ]
+          }
+        }
+
+        Method [ <internal:dom> public method hasAttribute ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method hasAttributeNS ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $localName ]
+          }
+        }
+
+        Method [ <internal:dom> public method setIdAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $isId ]
+          }
+        }
+
+        Method [ <internal:dom> public method setIdAttributeNS ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $namespaceURI ]
+            Parameter #1 [ <required> $localName ]
+            Parameter #2 [ <required> $isId ]
+          }
+        }
+
+        Method [ <internal:dom> public method setIdAttributeNode ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMAttr $attr ]
+            Parameter #1 [ <required> $isId ]
+          }
+        }
+
+        Method [ <internal:dom, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <optional> $value ]
+            Parameter #2 [ <optional> $uri ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMText extends DOMCharacterData ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [32] {
+        Method [ <internal:dom> public method splitText ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset ]
+          }
+        }
+
+        Method [ <internal:dom> public method isWhitespaceInElementContent ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method isElementContentWhitespace ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom> public method replaceWholeText ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $content ]
+          }
+        }
+
+        Method [ <internal:dom, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $value ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method substringData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method appendData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method insertData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method deleteData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method replaceData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+            Parameter #2 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMComment extends DOMCharacterData ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [28] {
+        Method [ <internal:dom, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $value ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method substringData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method appendData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method insertData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method deleteData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method replaceData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+            Parameter #2 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMTypeinfo ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:dom> class DOMUserDataHandler ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:dom> public method handle ] {
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMDomError ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:dom> class DOMErrorHandler ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:dom> public method handleError ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMDomError $error ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMLocator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:dom> class DOMConfiguration ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:dom> public method setParameter ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:dom> public method getParameter ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $name ]
+          }
+        }
+
+        Method [ <internal:dom> public method canSetParameter ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $name ]
+            Parameter #1 [ <optional> $value ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMCdataSection extends DOMText ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [32] {
+        Method [ <internal:dom, overwrites DOMText, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMText> public method splitText ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMText> public method isWhitespaceInElementContent ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMText> public method isElementContentWhitespace ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMText> public method replaceWholeText ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $content ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method substringData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method appendData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method insertData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method deleteData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMCharacterData> public method replaceData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $count ]
+            Parameter #2 [ <required> $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMDocumentType extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [22] {
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMNotation extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [22] {
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMEntity extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [22] {
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMEntityReference extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [23] {
+        Method [ <internal:dom, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMProcessingInstruction extends DOMNode ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [23] {
+        Method [ <internal:dom, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <optional> $value ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method insertBefore ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <optional> DOMNode or NULL $refChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method replaceChild ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+            Parameter #1 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method removeChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $oldChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method appendChild ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $newChild ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasChildNodes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method cloneNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $deep ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method normalize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSupported ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method hasAttributes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method compareDocumentPosition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isSameNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $other ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isDefaultNamespace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $namespaceURI ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method lookupNamespaceUri ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method isEqualNode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMNode $arg ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getFeature ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $feature ]
+            Parameter #1 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method setUserData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $handler ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getUserData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getNodePath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method getLineNo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14N ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $exclusive ]
+            Parameter #1 [ <optional> $with_comments ]
+            Parameter #2 [ <optional> array or NULL $xpath ]
+            Parameter #3 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+
+        Method [ <internal:dom, inherits DOMNode> public method C14NFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $uri ]
+            Parameter #1 [ <optional> $exclusive ]
+            Parameter #2 [ <optional> $with_comments ]
+            Parameter #3 [ <optional> array or NULL $xpath ]
+            Parameter #4 [ <optional> array or NULL $ns_prefixes ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMStringExtend ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:dom> public method findOffset16 ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset32 ]
+          }
+        }
+
+        Method [ <internal:dom> public method findOffset32 ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset16 ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:dom> class DOMXPath ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:dom, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> DOMDocument $doc ]
+          }
+        }
+
+        Method [ <internal:dom> public method registerNamespace ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $prefix ]
+            Parameter #1 [ <required> $uri ]
+          }
+        }
+
+        Method [ <internal:dom> public method query ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $expr ]
+            Parameter #1 [ <optional> DOMNode or NULL $context ]
+            Parameter #2 [ <optional> $registerNodeNS ]
+          }
+        }
+
+        Method [ <internal:dom> public method evaluate ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $expr ]
+            Parameter #1 [ <optional> DOMNode or NULL $context ]
+            Parameter #2 [ <optional> $registerNodeNS ]
+          }
+        }
+
+        Method [ <internal:dom> public method registerPhpFunctions ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+

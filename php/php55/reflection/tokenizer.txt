@@ -1,0 +1,151 @@
+Extension [ <persistent> extension #27 tokenizer version 0.1 ] {
+
+  - Constants [130] {
+    Constant [ integer T_REQUIRE_ONCE ] { 258 }
+    Constant [ integer T_REQUIRE ] { 259 }
+    Constant [ integer T_EVAL ] { 260 }
+    Constant [ integer T_INCLUDE_ONCE ] { 261 }
+    Constant [ integer T_INCLUDE ] { 262 }
+    Constant [ integer T_LOGICAL_OR ] { 263 }
+    Constant [ integer T_LOGICAL_XOR ] { 264 }
+    Constant [ integer T_LOGICAL_AND ] { 265 }
+    Constant [ integer T_PRINT ] { 266 }
+    Constant [ integer T_SR_EQUAL ] { 268 }
+    Constant [ integer T_SL_EQUAL ] { 269 }
+    Constant [ integer T_XOR_EQUAL ] { 270 }
+    Constant [ integer T_OR_EQUAL ] { 271 }
+    Constant [ integer T_AND_EQUAL ] { 272 }
+    Constant [ integer T_MOD_EQUAL ] { 273 }
+    Constant [ integer T_CONCAT_EQUAL ] { 274 }
+    Constant [ integer T_DIV_EQUAL ] { 275 }
+    Constant [ integer T_MUL_EQUAL ] { 276 }
+    Constant [ integer T_MINUS_EQUAL ] { 277 }
+    Constant [ integer T_PLUS_EQUAL ] { 278 }
+    Constant [ integer T_BOOLEAN_OR ] { 279 }
+    Constant [ integer T_BOOLEAN_AND ] { 280 }
+    Constant [ integer T_IS_NOT_IDENTICAL ] { 281 }
+    Constant [ integer T_IS_IDENTICAL ] { 282 }
+    Constant [ integer T_IS_NOT_EQUAL ] { 283 }
+    Constant [ integer T_IS_EQUAL ] { 284 }
+    Constant [ integer T_IS_GREATER_OR_EQUAL ] { 285 }
+    Constant [ integer T_IS_SMALLER_OR_EQUAL ] { 286 }
+    Constant [ integer T_SR ] { 287 }
+    Constant [ integer T_SL ] { 288 }
+    Constant [ integer T_INSTANCEOF ] { 289 }
+    Constant [ integer T_UNSET_CAST ] { 290 }
+    Constant [ integer T_BOOL_CAST ] { 291 }
+    Constant [ integer T_OBJECT_CAST ] { 292 }
+    Constant [ integer T_ARRAY_CAST ] { 293 }
+    Constant [ integer T_STRING_CAST ] { 294 }
+    Constant [ integer T_DOUBLE_CAST ] { 295 }
+    Constant [ integer T_INT_CAST ] { 296 }
+    Constant [ integer T_DEC ] { 297 }
+    Constant [ integer T_INC ] { 298 }
+    Constant [ integer T_CLONE ] { 299 }
+    Constant [ integer T_NEW ] { 300 }
+    Constant [ integer T_EXIT ] { 301 }
+    Constant [ integer T_IF ] { 302 }
+    Constant [ integer T_ELSEIF ] { 303 }
+    Constant [ integer T_ELSE ] { 304 }
+    Constant [ integer T_ENDIF ] { 305 }
+    Constant [ integer T_LNUMBER ] { 306 }
+    Constant [ integer T_DNUMBER ] { 307 }
+    Constant [ integer T_STRING ] { 308 }
+    Constant [ integer T_STRING_VARNAME ] { 309 }
+    Constant [ integer T_VARIABLE ] { 310 }
+    Constant [ integer T_NUM_STRING ] { 311 }
+    Constant [ integer T_INLINE_HTML ] { 312 }
+    Constant [ integer T_CHARACTER ] { 313 }
+    Constant [ integer T_BAD_CHARACTER ] { 314 }
+    Constant [ integer T_ENCAPSED_AND_WHITESPACE ] { 315 }
+    Constant [ integer T_CONSTANT_ENCAPSED_STRING ] { 316 }
+    Constant [ integer T_ECHO ] { 317 }
+    Constant [ integer T_DO ] { 318 }
+    Constant [ integer T_WHILE ] { 319 }
+    Constant [ integer T_ENDWHILE ] { 320 }
+    Constant [ integer T_FOR ] { 321 }
+    Constant [ integer T_ENDFOR ] { 322 }
+    Constant [ integer T_FOREACH ] { 323 }
+    Constant [ integer T_ENDFOREACH ] { 324 }
+    Constant [ integer T_DECLARE ] { 325 }
+    Constant [ integer T_ENDDECLARE ] { 326 }
+    Constant [ integer T_AS ] { 327 }
+    Constant [ integer T_SWITCH ] { 328 }
+    Constant [ integer T_ENDSWITCH ] { 329 }
+    Constant [ integer T_CASE ] { 330 }
+    Constant [ integer T_DEFAULT ] { 331 }
+    Constant [ integer T_BREAK ] { 332 }
+    Constant [ integer T_CONTINUE ] { 333 }
+    Constant [ integer T_GOTO ] { 334 }
+    Constant [ integer T_FUNCTION ] { 335 }
+    Constant [ integer T_CONST ] { 336 }
+    Constant [ integer T_RETURN ] { 337 }
+    Constant [ integer T_YIELD ] { 267 }
+    Constant [ integer T_TRY ] { 338 }
+    Constant [ integer T_CATCH ] { 339 }
+    Constant [ integer T_FINALLY ] { 340 }
+    Constant [ integer T_THROW ] { 341 }
+    Constant [ integer T_USE ] { 342 }
+    Constant [ integer T_INSTEADOF ] { 343 }
+    Constant [ integer T_GLOBAL ] { 344 }
+    Constant [ integer T_PUBLIC ] { 345 }
+    Constant [ integer T_PROTECTED ] { 346 }
+    Constant [ integer T_PRIVATE ] { 347 }
+    Constant [ integer T_FINAL ] { 348 }
+    Constant [ integer T_ABSTRACT ] { 349 }
+    Constant [ integer T_STATIC ] { 350 }
+    Constant [ integer T_VAR ] { 351 }
+    Constant [ integer T_UNSET ] { 352 }
+    Constant [ integer T_ISSET ] { 353 }
+    Constant [ integer T_EMPTY ] { 354 }
+    Constant [ integer T_HALT_COMPILER ] { 355 }
+    Constant [ integer T_CLASS ] { 356 }
+    Constant [ integer T_TRAIT ] { 357 }
+    Constant [ integer T_INTERFACE ] { 358 }
+    Constant [ integer T_EXTENDS ] { 359 }
+    Constant [ integer T_IMPLEMENTS ] { 360 }
+    Constant [ integer T_OBJECT_OPERATOR ] { 361 }
+    Constant [ integer T_DOUBLE_ARROW ] { 362 }
+    Constant [ integer T_LIST ] { 363 }
+    Constant [ integer T_ARRAY ] { 364 }
+    Constant [ integer T_CALLABLE ] { 365 }
+    Constant [ integer T_CLASS_C ] { 366 }
+    Constant [ integer T_TRAIT_C ] { 367 }
+    Constant [ integer T_METHOD_C ] { 368 }
+    Constant [ integer T_FUNC_C ] { 369 }
+    Constant [ integer T_LINE ] { 370 }
+    Constant [ integer T_FILE ] { 371 }
+    Constant [ integer T_COMMENT ] { 372 }
+    Constant [ integer T_DOC_COMMENT ] { 373 }
+    Constant [ integer T_OPEN_TAG ] { 374 }
+    Constant [ integer T_OPEN_TAG_WITH_ECHO ] { 375 }
+    Constant [ integer T_CLOSE_TAG ] { 376 }
+    Constant [ integer T_WHITESPACE ] { 377 }
+    Constant [ integer T_START_HEREDOC ] { 378 }
+    Constant [ integer T_END_HEREDOC ] { 379 }
+    Constant [ integer T_DOLLAR_OPEN_CURLY_BRACES ] { 380 }
+    Constant [ integer T_CURLY_OPEN ] { 381 }
+    Constant [ integer T_PAAMAYIM_NEKUDOTAYIM ] { 382 }
+    Constant [ integer T_NAMESPACE ] { 383 }
+    Constant [ integer T_NS_C ] { 384 }
+    Constant [ integer T_DIR ] { 385 }
+    Constant [ integer T_NS_SEPARATOR ] { 386 }
+    Constant [ integer T_DOUBLE_COLON ] { 382 }
+  }
+
+  - Functions {
+    Function [ <internal:tokenizer> function token_get_all ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $source ]
+      }
+    }
+    Function [ <internal:tokenizer> function token_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $token ]
+      }
+    }
+  }
+}
+

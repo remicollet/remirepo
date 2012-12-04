@@ -1,0 +1,567 @@
+Extension [ <persistent> extension #32 curl version <no_version> ] {
+
+  - INI {
+    Entry [ curl.cainfo <SYSTEM> ]
+      Current = ''
+    }
+  }
+
+  - Constants [397] {
+    Constant [ integer CURLOPT_AUTOREFERER ] { 58 }
+    Constant [ integer CURLOPT_BINARYTRANSFER ] { 19914 }
+    Constant [ integer CURLOPT_BUFFERSIZE ] { 98 }
+    Constant [ integer CURLOPT_CAINFO ] { 10065 }
+    Constant [ integer CURLOPT_CAPATH ] { 10097 }
+    Constant [ integer CURLOPT_CLOSEPOLICY ] { 72 }
+    Constant [ integer CURLOPT_CONNECTTIMEOUT ] { 78 }
+    Constant [ integer CURLOPT_COOKIE ] { 10022 }
+    Constant [ integer CURLOPT_COOKIEFILE ] { 10031 }
+    Constant [ integer CURLOPT_COOKIEJAR ] { 10082 }
+    Constant [ integer CURLOPT_COOKIESESSION ] { 96 }
+    Constant [ integer CURLOPT_CRLF ] { 27 }
+    Constant [ integer CURLOPT_CUSTOMREQUEST ] { 10036 }
+    Constant [ integer CURLOPT_DNS_CACHE_TIMEOUT ] { 92 }
+    Constant [ integer CURLOPT_DNS_USE_GLOBAL_CACHE ] { 91 }
+    Constant [ integer CURLOPT_EGDSOCKET ] { 10077 }
+    Constant [ integer CURLOPT_ENCODING ] { 10102 }
+    Constant [ integer CURLOPT_FAILONERROR ] { 45 }
+    Constant [ integer CURLOPT_FILE ] { 10001 }
+    Constant [ integer CURLOPT_FILETIME ] { 69 }
+    Constant [ integer CURLOPT_FOLLOWLOCATION ] { 52 }
+    Constant [ integer CURLOPT_FORBID_REUSE ] { 75 }
+    Constant [ integer CURLOPT_FRESH_CONNECT ] { 74 }
+    Constant [ integer CURLOPT_FTPAPPEND ] { 50 }
+    Constant [ integer CURLOPT_FTPLISTONLY ] { 48 }
+    Constant [ integer CURLOPT_FTPPORT ] { 10017 }
+    Constant [ integer CURLOPT_FTP_USE_EPRT ] { 106 }
+    Constant [ integer CURLOPT_FTP_USE_EPSV ] { 85 }
+    Constant [ integer CURLOPT_HEADER ] { 42 }
+    Constant [ integer CURLOPT_HEADERFUNCTION ] { 20079 }
+    Constant [ integer CURLOPT_HTTP200ALIASES ] { 10104 }
+    Constant [ integer CURLOPT_HTTPGET ] { 80 }
+    Constant [ integer CURLOPT_HTTPHEADER ] { 10023 }
+    Constant [ integer CURLOPT_HTTPPROXYTUNNEL ] { 61 }
+    Constant [ integer CURLOPT_HTTP_VERSION ] { 84 }
+    Constant [ integer CURLOPT_INFILE ] { 10009 }
+    Constant [ integer CURLOPT_INFILESIZE ] { 14 }
+    Constant [ integer CURLOPT_INTERFACE ] { 10062 }
+    Constant [ integer CURLOPT_KRB4LEVEL ] { 10063 }
+    Constant [ integer CURLOPT_LOW_SPEED_LIMIT ] { 19 }
+    Constant [ integer CURLOPT_LOW_SPEED_TIME ] { 20 }
+    Constant [ integer CURLOPT_MAXCONNECTS ] { 71 }
+    Constant [ integer CURLOPT_MAXREDIRS ] { 68 }
+    Constant [ integer CURLOPT_NETRC ] { 51 }
+    Constant [ integer CURLOPT_NOBODY ] { 44 }
+    Constant [ integer CURLOPT_NOPROGRESS ] { 43 }
+    Constant [ integer CURLOPT_NOSIGNAL ] { 99 }
+    Constant [ integer CURLOPT_PORT ] { 3 }
+    Constant [ integer CURLOPT_POST ] { 47 }
+    Constant [ integer CURLOPT_POSTFIELDS ] { 10015 }
+    Constant [ integer CURLOPT_POSTQUOTE ] { 10039 }
+    Constant [ integer CURLOPT_PREQUOTE ] { 10093 }
+    Constant [ integer CURLOPT_PRIVATE ] { 10103 }
+    Constant [ integer CURLOPT_PROGRESSFUNCTION ] { 20056 }
+    Constant [ integer CURLOPT_PROXY ] { 10004 }
+    Constant [ integer CURLOPT_PROXYPORT ] { 59 }
+    Constant [ integer CURLOPT_PROXYTYPE ] { 101 }
+    Constant [ integer CURLOPT_PROXYUSERPWD ] { 10006 }
+    Constant [ integer CURLOPT_PUT ] { 54 }
+    Constant [ integer CURLOPT_QUOTE ] { 10028 }
+    Constant [ integer CURLOPT_RANDOM_FILE ] { 10076 }
+    Constant [ integer CURLOPT_RANGE ] { 10007 }
+    Constant [ integer CURLOPT_READDATA ] { 10009 }
+    Constant [ integer CURLOPT_READFUNCTION ] { 20012 }
+    Constant [ integer CURLOPT_REFERER ] { 10016 }
+    Constant [ integer CURLOPT_RESUME_FROM ] { 21 }
+    Constant [ integer CURLOPT_RETURNTRANSFER ] { 19913 }
+    Constant [ integer CURLOPT_SHARE ] { 10100 }
+    Constant [ integer CURLOPT_SSLCERT ] { 10025 }
+    Constant [ integer CURLOPT_SSLCERTPASSWD ] { 10026 }
+    Constant [ integer CURLOPT_SSLCERTTYPE ] { 10086 }
+    Constant [ integer CURLOPT_SSLENGINE ] { 10089 }
+    Constant [ integer CURLOPT_SSLENGINE_DEFAULT ] { 90 }
+    Constant [ integer CURLOPT_SSLKEY ] { 10087 }
+    Constant [ integer CURLOPT_SSLKEYPASSWD ] { 10026 }
+    Constant [ integer CURLOPT_SSLKEYTYPE ] { 10088 }
+    Constant [ integer CURLOPT_SSLVERSION ] { 32 }
+    Constant [ integer CURLOPT_SSL_CIPHER_LIST ] { 10083 }
+    Constant [ integer CURLOPT_SSL_VERIFYHOST ] { 81 }
+    Constant [ integer CURLOPT_SSL_VERIFYPEER ] { 64 }
+    Constant [ integer CURLOPT_STDERR ] { 10037 }
+    Constant [ integer CURLOPT_TIMECONDITION ] { 33 }
+    Constant [ integer CURLOPT_TIMEOUT ] { 13 }
+    Constant [ integer CURLOPT_TIMEVALUE ] { 34 }
+    Constant [ integer CURLOPT_TRANSFERTEXT ] { 53 }
+    Constant [ integer CURLOPT_UNRESTRICTED_AUTH ] { 105 }
+    Constant [ integer CURLOPT_UPLOAD ] { 46 }
+    Constant [ integer CURLOPT_URL ] { 10002 }
+    Constant [ integer CURLOPT_USERAGENT ] { 10018 }
+    Constant [ integer CURLOPT_USERPWD ] { 10005 }
+    Constant [ integer CURLOPT_VERBOSE ] { 41 }
+    Constant [ integer CURLOPT_WRITEFUNCTION ] { 20011 }
+    Constant [ integer CURLOPT_WRITEHEADER ] { 10029 }
+    Constant [ integer CURLCLOSEPOLICY_CALLBACK ] { 5 }
+    Constant [ integer CURLCLOSEPOLICY_LEAST_RECENTLY_USED ] { 2 }
+    Constant [ integer CURLCLOSEPOLICY_LEAST_TRAFFIC ] { 3 }
+    Constant [ integer CURLCLOSEPOLICY_OLDEST ] { 1 }
+    Constant [ integer CURLCLOSEPOLICY_SLOWEST ] { 4 }
+    Constant [ integer CURLE_ABORTED_BY_CALLBACK ] { 42 }
+    Constant [ integer CURLE_BAD_CALLING_ORDER ] { 44 }
+    Constant [ integer CURLE_BAD_CONTENT_ENCODING ] { 61 }
+    Constant [ integer CURLE_BAD_DOWNLOAD_RESUME ] { 36 }
+    Constant [ integer CURLE_BAD_FUNCTION_ARGUMENT ] { 43 }
+    Constant [ integer CURLE_BAD_PASSWORD_ENTERED ] { 46 }
+    Constant [ integer CURLE_COULDNT_CONNECT ] { 7 }
+    Constant [ integer CURLE_COULDNT_RESOLVE_HOST ] { 6 }
+    Constant [ integer CURLE_COULDNT_RESOLVE_PROXY ] { 5 }
+    Constant [ integer CURLE_FAILED_INIT ] { 2 }
+    Constant [ integer CURLE_FILE_COULDNT_READ_FILE ] { 37 }
+    Constant [ integer CURLE_FTP_ACCESS_DENIED ] { 9 }
+    Constant [ integer CURLE_FTP_BAD_DOWNLOAD_RESUME ] { 36 }
+    Constant [ integer CURLE_FTP_CANT_GET_HOST ] { 15 }
+    Constant [ integer CURLE_FTP_CANT_RECONNECT ] { 16 }
+    Constant [ integer CURLE_FTP_COULDNT_GET_SIZE ] { 32 }
+    Constant [ integer CURLE_FTP_COULDNT_RETR_FILE ] { 19 }
+    Constant [ integer CURLE_FTP_COULDNT_SET_ASCII ] { 29 }
+    Constant [ integer CURLE_FTP_COULDNT_SET_BINARY ] { 17 }
+    Constant [ integer CURLE_FTP_COULDNT_STOR_FILE ] { 25 }
+    Constant [ integer CURLE_FTP_COULDNT_USE_REST ] { 31 }
+    Constant [ integer CURLE_FTP_PORT_FAILED ] { 30 }
+    Constant [ integer CURLE_FTP_QUOTE_ERROR ] { 21 }
+    Constant [ integer CURLE_FTP_USER_PASSWORD_INCORRECT ] { 10 }
+    Constant [ integer CURLE_FTP_WEIRD_227_FORMAT ] { 14 }
+    Constant [ integer CURLE_FTP_WEIRD_PASS_REPLY ] { 11 }
+    Constant [ integer CURLE_FTP_WEIRD_PASV_REPLY ] { 13 }
+    Constant [ integer CURLE_FTP_WEIRD_SERVER_REPLY ] { 8 }
+    Constant [ integer CURLE_FTP_WEIRD_USER_REPLY ] { 12 }
+    Constant [ integer CURLE_FTP_WRITE_ERROR ] { 20 }
+    Constant [ integer CURLE_FUNCTION_NOT_FOUND ] { 41 }
+    Constant [ integer CURLE_GOT_NOTHING ] { 52 }
+    Constant [ integer CURLE_HTTP_NOT_FOUND ] { 22 }
+    Constant [ integer CURLE_HTTP_PORT_FAILED ] { 45 }
+    Constant [ integer CURLE_HTTP_POST_ERROR ] { 34 }
+    Constant [ integer CURLE_HTTP_RANGE_ERROR ] { 33 }
+    Constant [ integer CURLE_HTTP_RETURNED_ERROR ] { 22 }
+    Constant [ integer CURLE_LDAP_CANNOT_BIND ] { 38 }
+    Constant [ integer CURLE_LDAP_SEARCH_FAILED ] { 39 }
+    Constant [ integer CURLE_LIBRARY_NOT_FOUND ] { 40 }
+    Constant [ integer CURLE_MALFORMAT_USER ] { 24 }
+    Constant [ integer CURLE_OBSOLETE ] { 50 }
+    Constant [ integer CURLE_OK ] { 0 }
+    Constant [ integer CURLE_OPERATION_TIMEDOUT ] { 28 }
+    Constant [ integer CURLE_OPERATION_TIMEOUTED ] { 28 }
+    Constant [ integer CURLE_OUT_OF_MEMORY ] { 27 }
+    Constant [ integer CURLE_PARTIAL_FILE ] { 18 }
+    Constant [ integer CURLE_READ_ERROR ] { 26 }
+    Constant [ integer CURLE_RECV_ERROR ] { 56 }
+    Constant [ integer CURLE_SEND_ERROR ] { 55 }
+    Constant [ integer CURLE_SHARE_IN_USE ] { 57 }
+    Constant [ integer CURLE_SSL_CACERT ] { 60 }
+    Constant [ integer CURLE_SSL_CERTPROBLEM ] { 58 }
+    Constant [ integer CURLE_SSL_CIPHER ] { 59 }
+    Constant [ integer CURLE_SSL_CONNECT_ERROR ] { 35 }
+    Constant [ integer CURLE_SSL_ENGINE_NOTFOUND ] { 53 }
+    Constant [ integer CURLE_SSL_ENGINE_SETFAILED ] { 54 }
+    Constant [ integer CURLE_SSL_PEER_CERTIFICATE ] { 51 }
+    Constant [ integer CURLE_TELNET_OPTION_SYNTAX ] { 49 }
+    Constant [ integer CURLE_TOO_MANY_REDIRECTS ] { 47 }
+    Constant [ integer CURLE_UNKNOWN_TELNET_OPTION ] { 48 }
+    Constant [ integer CURLE_UNSUPPORTED_PROTOCOL ] { 1 }
+    Constant [ integer CURLE_URL_MALFORMAT ] { 3 }
+    Constant [ integer CURLE_URL_MALFORMAT_USER ] { 4 }
+    Constant [ integer CURLE_WRITE_ERROR ] { 23 }
+    Constant [ integer CURLINFO_CONNECT_TIME ] { 3145733 }
+    Constant [ integer CURLINFO_CONTENT_LENGTH_DOWNLOAD ] { 3145743 }
+    Constant [ integer CURLINFO_CONTENT_LENGTH_UPLOAD ] { 3145744 }
+    Constant [ integer CURLINFO_CONTENT_TYPE ] { 1048594 }
+    Constant [ integer CURLINFO_EFFECTIVE_URL ] { 1048577 }
+    Constant [ integer CURLINFO_FILETIME ] { 2097166 }
+    Constant [ integer CURLINFO_HEADER_OUT ] { 2 }
+    Constant [ integer CURLINFO_HEADER_SIZE ] { 2097163 }
+    Constant [ integer CURLINFO_HTTP_CODE ] { 2097154 }
+    Constant [ integer CURLINFO_LASTONE ] { 42 }
+    Constant [ integer CURLINFO_NAMELOOKUP_TIME ] { 3145732 }
+    Constant [ integer CURLINFO_PRETRANSFER_TIME ] { 3145734 }
+    Constant [ integer CURLINFO_PRIVATE ] { 1048597 }
+    Constant [ integer CURLINFO_REDIRECT_COUNT ] { 2097172 }
+    Constant [ integer CURLINFO_REDIRECT_TIME ] { 3145747 }
+    Constant [ integer CURLINFO_REQUEST_SIZE ] { 2097164 }
+    Constant [ integer CURLINFO_SIZE_DOWNLOAD ] { 3145736 }
+    Constant [ integer CURLINFO_SIZE_UPLOAD ] { 3145735 }
+    Constant [ integer CURLINFO_SPEED_DOWNLOAD ] { 3145737 }
+    Constant [ integer CURLINFO_SPEED_UPLOAD ] { 3145738 }
+    Constant [ integer CURLINFO_SSL_VERIFYRESULT ] { 2097165 }
+    Constant [ integer CURLINFO_STARTTRANSFER_TIME ] { 3145745 }
+    Constant [ integer CURLINFO_TOTAL_TIME ] { 3145731 }
+    Constant [ integer CURLMSG_DONE ] { 1 }
+    Constant [ integer CURLVERSION_NOW ] { 3 }
+    Constant [ integer CURLM_BAD_EASY_HANDLE ] { 2 }
+    Constant [ integer CURLM_BAD_HANDLE ] { 1 }
+    Constant [ integer CURLM_CALL_MULTI_PERFORM ] { -1 }
+    Constant [ integer CURLM_INTERNAL_ERROR ] { 4 }
+    Constant [ integer CURLM_OK ] { 0 }
+    Constant [ integer CURLM_OUT_OF_MEMORY ] { 3 }
+    Constant [ integer CURLPROXY_HTTP ] { 0 }
+    Constant [ integer CURLPROXY_SOCKS4 ] { 4 }
+    Constant [ integer CURLPROXY_SOCKS5 ] { 5 }
+    Constant [ integer CURLSHOPT_NONE ] { 0 }
+    Constant [ integer CURLSHOPT_SHARE ] { 1 }
+    Constant [ integer CURLSHOPT_UNSHARE ] { 2 }
+    Constant [ integer CURL_HTTP_VERSION_1_0 ] { 1 }
+    Constant [ integer CURL_HTTP_VERSION_1_1 ] { 2 }
+    Constant [ integer CURL_HTTP_VERSION_NONE ] { 0 }
+    Constant [ integer CURL_LOCK_DATA_COOKIE ] { 2 }
+    Constant [ integer CURL_LOCK_DATA_DNS ] { 3 }
+    Constant [ integer CURL_LOCK_DATA_SSL_SESSION ] { 4 }
+    Constant [ integer CURL_NETRC_IGNORED ] { 0 }
+    Constant [ integer CURL_NETRC_OPTIONAL ] { 1 }
+    Constant [ integer CURL_NETRC_REQUIRED ] { 2 }
+    Constant [ integer CURL_SSLVERSION_DEFAULT ] { 0 }
+    Constant [ integer CURL_SSLVERSION_SSLv2 ] { 2 }
+    Constant [ integer CURL_SSLVERSION_SSLv3 ] { 3 }
+    Constant [ integer CURL_SSLVERSION_TLSv1 ] { 1 }
+    Constant [ integer CURL_TIMECOND_IFMODSINCE ] { 1 }
+    Constant [ integer CURL_TIMECOND_IFUNMODSINCE ] { 2 }
+    Constant [ integer CURL_TIMECOND_LASTMOD ] { 3 }
+    Constant [ integer CURL_TIMECOND_NONE ] { 0 }
+    Constant [ integer CURL_VERSION_IPV6 ] { 1 }
+    Constant [ integer CURL_VERSION_KERBEROS4 ] { 2 }
+    Constant [ integer CURL_VERSION_LIBZ ] { 8 }
+    Constant [ integer CURL_VERSION_SSL ] { 4 }
+    Constant [ integer CURLOPT_HTTPAUTH ] { 107 }
+    Constant [ integer CURLAUTH_ANY ] { -17 }
+    Constant [ integer CURLAUTH_ANYSAFE ] { -18 }
+    Constant [ integer CURLAUTH_BASIC ] { 1 }
+    Constant [ integer CURLAUTH_DIGEST ] { 2 }
+    Constant [ integer CURLAUTH_GSSNEGOTIATE ] { 4 }
+    Constant [ integer CURLAUTH_NONE ] { 0 }
+    Constant [ integer CURLAUTH_NTLM ] { 8 }
+    Constant [ integer CURLINFO_HTTP_CONNECTCODE ] { 2097174 }
+    Constant [ integer CURLOPT_FTP_CREATE_MISSING_DIRS ] { 110 }
+    Constant [ integer CURLOPT_PROXYAUTH ] { 111 }
+    Constant [ integer CURLE_FILESIZE_EXCEEDED ] { 63 }
+    Constant [ integer CURLE_LDAP_INVALID_URL ] { 62 }
+    Constant [ integer CURLINFO_HTTPAUTH_AVAIL ] { 2097175 }
+    Constant [ integer CURLINFO_RESPONSE_CODE ] { 2097154 }
+    Constant [ integer CURLINFO_PROXYAUTH_AVAIL ] { 2097176 }
+    Constant [ integer CURLOPT_FTP_RESPONSE_TIMEOUT ] { 112 }
+    Constant [ integer CURLOPT_IPRESOLVE ] { 113 }
+    Constant [ integer CURLOPT_MAXFILESIZE ] { 114 }
+    Constant [ integer CURL_IPRESOLVE_V4 ] { 1 }
+    Constant [ integer CURL_IPRESOLVE_V6 ] { 2 }
+    Constant [ integer CURL_IPRESOLVE_WHATEVER ] { 0 }
+    Constant [ integer CURLE_FTP_SSL_FAILED ] { 64 }
+    Constant [ integer CURLFTPSSL_ALL ] { 3 }
+    Constant [ integer CURLFTPSSL_CONTROL ] { 2 }
+    Constant [ integer CURLFTPSSL_NONE ] { 0 }
+    Constant [ integer CURLFTPSSL_TRY ] { 1 }
+    Constant [ integer CURLOPT_FTP_SSL ] { 119 }
+    Constant [ integer CURLOPT_NETRC_FILE ] { 10118 }
+    Constant [ integer CURLFTPAUTH_DEFAULT ] { 0 }
+    Constant [ integer CURLFTPAUTH_SSL ] { 1 }
+    Constant [ integer CURLFTPAUTH_TLS ] { 2 }
+    Constant [ integer CURLOPT_FTPSSLAUTH ] { 129 }
+    Constant [ integer CURLOPT_FTP_ACCOUNT ] { 10134 }
+    Constant [ integer CURLOPT_TCP_NODELAY ] { 121 }
+    Constant [ integer CURLINFO_OS_ERRNO ] { 2097177 }
+    Constant [ integer CURLINFO_NUM_CONNECTS ] { 2097178 }
+    Constant [ integer CURLINFO_SSL_ENGINES ] { 4194331 }
+    Constant [ integer CURLINFO_COOKIELIST ] { 4194332 }
+    Constant [ integer CURLOPT_COOKIELIST ] { 10135 }
+    Constant [ integer CURLOPT_IGNORE_CONTENT_LENGTH ] { 136 }
+    Constant [ integer CURLOPT_FTP_SKIP_PASV_IP ] { 137 }
+    Constant [ integer CURLOPT_FTP_FILEMETHOD ] { 138 }
+    Constant [ integer CURLOPT_CONNECT_ONLY ] { 141 }
+    Constant [ integer CURLOPT_LOCALPORT ] { 139 }
+    Constant [ integer CURLOPT_LOCALPORTRANGE ] { 140 }
+    Constant [ integer CURLFTPMETHOD_MULTICWD ] { 1 }
+    Constant [ integer CURLFTPMETHOD_NOCWD ] { 2 }
+    Constant [ integer CURLFTPMETHOD_SINGLECWD ] { 3 }
+    Constant [ integer CURLINFO_FTP_ENTRY_PATH ] { 1048606 }
+    Constant [ integer CURLOPT_FTP_ALTERNATIVE_TO_USER ] { 10147 }
+    Constant [ integer CURLOPT_MAX_RECV_SPEED_LARGE ] { 30146 }
+    Constant [ integer CURLOPT_MAX_SEND_SPEED_LARGE ] { 30145 }
+    Constant [ integer CURLOPT_SSL_SESSIONID_CACHE ] { 150 }
+    Constant [ integer CURLE_SSH ] { 79 }
+    Constant [ integer CURLOPT_FTP_SSL_CCC ] { 154 }
+    Constant [ integer CURLOPT_SSH_AUTH_TYPES ] { 151 }
+    Constant [ integer CURLOPT_SSH_PRIVATE_KEYFILE ] { 10153 }
+    Constant [ integer CURLOPT_SSH_PUBLIC_KEYFILE ] { 10152 }
+    Constant [ integer CURLFTPSSL_CCC_ACTIVE ] { 2 }
+    Constant [ integer CURLFTPSSL_CCC_NONE ] { 0 }
+    Constant [ integer CURLFTPSSL_CCC_PASSIVE ] { 1 }
+    Constant [ integer CURLOPT_CONNECTTIMEOUT_MS ] { 156 }
+    Constant [ integer CURLOPT_HTTP_CONTENT_DECODING ] { 158 }
+    Constant [ integer CURLOPT_HTTP_TRANSFER_DECODING ] { 157 }
+    Constant [ integer CURLOPT_TIMEOUT_MS ] { 155 }
+    Constant [ integer CURLOPT_KRBLEVEL ] { 10063 }
+    Constant [ integer CURLOPT_NEW_DIRECTORY_PERMS ] { 160 }
+    Constant [ integer CURLOPT_NEW_FILE_PERMS ] { 159 }
+    Constant [ integer CURLOPT_APPEND ] { 50 }
+    Constant [ integer CURLOPT_DIRLISTONLY ] { 48 }
+    Constant [ integer CURLOPT_USE_SSL ] { 119 }
+    Constant [ integer CURLUSESSL_ALL ] { 3 }
+    Constant [ integer CURLUSESSL_CONTROL ] { 2 }
+    Constant [ integer CURLUSESSL_NONE ] { 0 }
+    Constant [ integer CURLUSESSL_TRY ] { 1 }
+    Constant [ integer CURLOPT_SSH_HOST_PUBLIC_KEY_MD5 ] { 10162 }
+    Constant [ integer CURLOPT_PROXY_TRANSFER_MODE ] { 166 }
+    Constant [ integer CURLINFO_REDIRECT_URL ] { 1048607 }
+    Constant [ integer CURLINFO_APPCONNECT_TIME ] { 3145761 }
+    Constant [ integer CURLINFO_PRIMARY_IP ] { 1048608 }
+    Constant [ integer CURLOPT_ADDRESS_SCOPE ] { 171 }
+    Constant [ integer CURLOPT_CRLFILE ] { 10169 }
+    Constant [ integer CURLOPT_ISSUERCERT ] { 10170 }
+    Constant [ integer CURLOPT_KEYPASSWD ] { 10026 }
+    Constant [ integer CURLSSH_AUTH_ANY ] { -1 }
+    Constant [ integer CURLSSH_AUTH_DEFAULT ] { -1 }
+    Constant [ integer CURLSSH_AUTH_HOST ] { 4 }
+    Constant [ integer CURLSSH_AUTH_KEYBOARD ] { 8 }
+    Constant [ integer CURLSSH_AUTH_NONE ] { 0 }
+    Constant [ integer CURLSSH_AUTH_PASSWORD ] { 2 }
+    Constant [ integer CURLSSH_AUTH_PUBLICKEY ] { 1 }
+    Constant [ integer CURLINFO_CERTINFO ] { 4194338 }
+    Constant [ integer CURLOPT_CERTINFO ] { 172 }
+    Constant [ integer CURLOPT_PASSWORD ] { 10174 }
+    Constant [ integer CURLOPT_POSTREDIR ] { 161 }
+    Constant [ integer CURLOPT_PROXYPASSWORD ] { 10176 }
+    Constant [ integer CURLOPT_PROXYUSERNAME ] { 10175 }
+    Constant [ integer CURLOPT_USERNAME ] { 10173 }
+    Constant [ integer CURLAUTH_DIGEST_IE ] { 16 }
+    Constant [ integer CURLINFO_CONDITION_UNMET ] { 2097187 }
+    Constant [ integer CURLOPT_NOPROXY ] { 10177 }
+    Constant [ integer CURLOPT_PROTOCOLS ] { 181 }
+    Constant [ integer CURLOPT_REDIR_PROTOCOLS ] { 182 }
+    Constant [ integer CURLOPT_SOCKS5_GSSAPI_NEC ] { 180 }
+    Constant [ integer CURLOPT_SOCKS5_GSSAPI_SERVICE ] { 10179 }
+    Constant [ integer CURLOPT_TFTP_BLKSIZE ] { 178 }
+    Constant [ integer CURLPROTO_ALL ] { -1 }
+    Constant [ integer CURLPROTO_DICT ] { 512 }
+    Constant [ integer CURLPROTO_FILE ] { 1024 }
+    Constant [ integer CURLPROTO_FTP ] { 4 }
+    Constant [ integer CURLPROTO_FTPS ] { 8 }
+    Constant [ integer CURLPROTO_HTTP ] { 1 }
+    Constant [ integer CURLPROTO_HTTPS ] { 2 }
+    Constant [ integer CURLPROTO_LDAP ] { 128 }
+    Constant [ integer CURLPROTO_LDAPS ] { 256 }
+    Constant [ integer CURLPROTO_SCP ] { 16 }
+    Constant [ integer CURLPROTO_SFTP ] { 32 }
+    Constant [ integer CURLPROTO_TELNET ] { 64 }
+    Constant [ integer CURLPROTO_TFTP ] { 2048 }
+    Constant [ integer CURLOPT_SSH_KNOWNHOSTS ] { 10183 }
+    Constant [ integer CURLINFO_RTSP_CLIENT_CSEQ ] { 2097189 }
+    Constant [ integer CURLINFO_RTSP_CSEQ_RECV ] { 2097191 }
+    Constant [ integer CURLINFO_RTSP_SERVER_CSEQ ] { 2097190 }
+    Constant [ integer CURLINFO_RTSP_SESSION_ID ] { 1048612 }
+    Constant [ integer CURLOPT_FTP_USE_PRET ] { 188 }
+    Constant [ integer CURLOPT_MAIL_FROM ] { 10186 }
+    Constant [ integer CURLOPT_MAIL_RCPT ] { 10187 }
+    Constant [ integer CURLOPT_RTSP_CLIENT_CSEQ ] { 193 }
+    Constant [ integer CURLOPT_RTSP_REQUEST ] { 189 }
+    Constant [ integer CURLOPT_RTSP_SERVER_CSEQ ] { 194 }
+    Constant [ integer CURLOPT_RTSP_SESSION_ID ] { 10190 }
+    Constant [ integer CURLOPT_RTSP_STREAM_URI ] { 10191 }
+    Constant [ integer CURLOPT_RTSP_TRANSPORT ] { 10192 }
+    Constant [ integer CURLPROTO_IMAP ] { 4096 }
+    Constant [ integer CURLPROTO_IMAPS ] { 8192 }
+    Constant [ integer CURLPROTO_POP3 ] { 16384 }
+    Constant [ integer CURLPROTO_POP3S ] { 32768 }
+    Constant [ integer CURLPROTO_RTSP ] { 262144 }
+    Constant [ integer CURLPROTO_SMTP ] { 65536 }
+    Constant [ integer CURLPROTO_SMTPS ] { 131072 }
+    Constant [ integer CURL_RTSPREQ_ANNOUNCE ] { 3 }
+    Constant [ integer CURL_RTSPREQ_DESCRIBE ] { 2 }
+    Constant [ integer CURL_RTSPREQ_GET_PARAMETER ] { 8 }
+    Constant [ integer CURL_RTSPREQ_OPTIONS ] { 1 }
+    Constant [ integer CURL_RTSPREQ_PAUSE ] { 6 }
+    Constant [ integer CURL_RTSPREQ_PLAY ] { 5 }
+    Constant [ integer CURL_RTSPREQ_RECEIVE ] { 11 }
+    Constant [ integer CURL_RTSPREQ_RECORD ] { 10 }
+    Constant [ integer CURL_RTSPREQ_SETUP ] { 4 }
+    Constant [ integer CURL_RTSPREQ_SET_PARAMETER ] { 9 }
+    Constant [ integer CURL_RTSPREQ_TEARDOWN ] { 7 }
+    Constant [ integer CURLINFO_LOCAL_IP ] { 1048617 }
+    Constant [ integer CURLINFO_LOCAL_PORT ] { 2097194 }
+    Constant [ integer CURLINFO_PRIMARY_PORT ] { 2097192 }
+    Constant [ integer CURLOPT_FNMATCH_FUNCTION ] { 20200 }
+    Constant [ integer CURLOPT_WILDCARDMATCH ] { 197 }
+    Constant [ integer CURLPROTO_RTMP ] { 524288 }
+    Constant [ integer CURLPROTO_RTMPE ] { 2097152 }
+    Constant [ integer CURLPROTO_RTMPS ] { 8388608 }
+    Constant [ integer CURLPROTO_RTMPT ] { 1048576 }
+    Constant [ integer CURLPROTO_RTMPTE ] { 4194304 }
+    Constant [ integer CURLPROTO_RTMPTS ] { 16777216 }
+    Constant [ integer CURL_FNMATCHFUNC_FAIL ] { 2 }
+    Constant [ integer CURL_FNMATCHFUNC_MATCH ] { 0 }
+    Constant [ integer CURL_FNMATCHFUNC_NOMATCH ] { 1 }
+    Constant [ integer CURLPROTO_GOPHER ] { 33554432 }
+    Constant [ integer CURLAUTH_ONLY ] { -2147483648 }
+    Constant [ integer CURLOPT_RESOLVE ] { 10203 }
+    Constant [ integer CURLOPT_TLSAUTH_PASSWORD ] { 10205 }
+    Constant [ integer CURLOPT_TLSAUTH_TYPE ] { 10206 }
+    Constant [ integer CURLOPT_TLSAUTH_USERNAME ] { 10204 }
+    Constant [ integer CURL_TLSAUTH_SRP ] { 1 }
+    Constant [ integer CURLOPT_ACCEPT_ENCODING ] { 10102 }
+    Constant [ integer CURLOPT_TRANSFER_ENCODING ] { 207 }
+    Constant [ integer CURLOPT_DNS_SERVERS ] { 10211 }
+  }
+
+  - Functions {
+    Function [ <internal:curl> function curl_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $url ]
+      }
+    }
+    Function [ <internal:curl> function curl_copy_handle ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ch ]
+      }
+    }
+    Function [ <internal:curl> function curl_version ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $version ]
+      }
+    }
+    Function [ <internal:curl> function curl_setopt ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ch ]
+        Parameter #1 [ <required> $option ]
+        Parameter #2 [ <required> $value ]
+      }
+    }
+    Function [ <internal:curl> function curl_setopt_array ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ch ]
+        Parameter #1 [ <required> array $options ]
+      }
+    }
+    Function [ <internal:curl> function curl_exec ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ch ]
+      }
+    }
+    Function [ <internal:curl> function curl_getinfo ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ch ]
+        Parameter #1 [ <optional> $option ]
+      }
+    }
+    Function [ <internal:curl> function curl_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ch ]
+      }
+    }
+    Function [ <internal:curl> function curl_errno ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ch ]
+      }
+    }
+    Function [ <internal:curl> function curl_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ch ]
+      }
+    }
+    Function [ <internal:curl> function curl_reset ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ch ]
+      }
+    }
+    Function [ <internal:curl> function curl_escape ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ch ]
+        Parameter #1 [ <required> $str ]
+      }
+    }
+    Function [ <internal:curl> function curl_unescape ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ch ]
+        Parameter #1 [ <required> $str ]
+      }
+    }
+    Function [ <internal:curl> function curl_multi_init ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:curl> function curl_multi_add_handle ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mh ]
+        Parameter #1 [ <required> $ch ]
+      }
+    }
+    Function [ <internal:curl> function curl_multi_remove_handle ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mh ]
+        Parameter #1 [ <required> $ch ]
+      }
+    }
+    Function [ <internal:curl> function curl_multi_select ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mh ]
+        Parameter #1 [ <optional> $timeout ]
+      }
+    }
+    Function [ <internal:curl> function curl_multi_exec ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mh ]
+        Parameter #1 [ <optional> &$still_running ]
+      }
+    }
+    Function [ <internal:curl> function curl_multi_getcontent ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $ch ]
+      }
+    }
+    Function [ <internal:curl> function curl_multi_info_read ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mh ]
+        Parameter #1 [ <optional> &$msgs_in_queue ]
+      }
+    }
+    Function [ <internal:curl> function curl_multi_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mh ]
+      }
+    }
+    Function [ <internal:curl> function curl_share_init ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:curl> function curl_share_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $sh ]
+      }
+    }
+    Function [ <internal:curl> function curl_share_setopt ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $sh ]
+        Parameter #1 [ <required> $option ]
+        Parameter #2 [ <required> $value ]
+      }
+    }
+  }
+}
+

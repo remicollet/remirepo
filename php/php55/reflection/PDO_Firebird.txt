@@ -1,0 +1,7 @@
+Extension [ <persistent> extension #65 PDO_Firebird version 0.3 ] {
+
+  - Dependencies {
+    Dependency [ pdo (Required) ]
+  }
+}
+

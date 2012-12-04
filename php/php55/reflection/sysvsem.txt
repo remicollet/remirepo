@@ -1,0 +1,33 @@
+Extension [ <persistent> extension #85 sysvsem version <no_version> ] {
+
+  - Functions {
+    Function [ <internal:sysvsem> function sem_get ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <optional> $max_acquire ]
+        Parameter #2 [ <optional> $perm ]
+        Parameter #3 [ <optional> $auto_release ]
+      }
+    }
+    Function [ <internal:sysvsem> function sem_acquire ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $sem_identifier ]
+      }
+    }
+    Function [ <internal:sysvsem> function sem_release ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $sem_identifier ]
+      }
+    }
+    Function [ <internal:sysvsem> function sem_remove ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $sem_identifier ]
+      }
+    }
+  }
+}
+

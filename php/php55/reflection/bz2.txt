@@ -1,0 +1,73 @@
+Extension [ <persistent> extension #8 bz2 version <no_version> ] {
+
+  - Functions {
+    Function [ <internal:bz2> function bzopen ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $file ]
+        Parameter #1 [ <required> $mode ]
+      }
+    }
+    Function [ <internal:bz2> function bzread ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $bz ]
+        Parameter #1 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:bz2> function bzwrite ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fp ]
+        Parameter #1 [ <required> $str ]
+        Parameter #2 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:bz2> function bzflush ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:bz2> function bzclose ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fp ]
+      }
+    }
+    Function [ <internal:bz2> function bzerrno ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bz ]
+      }
+    }
+    Function [ <internal:bz2> function bzerrstr ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bz ]
+      }
+    }
+    Function [ <internal:bz2> function bzerror ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bz ]
+      }
+    }
+    Function [ <internal:bz2> function bzcompress ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $source ]
+        Parameter #1 [ <required> $blocksize ]
+        Parameter #2 [ <optional> $workfactor ]
+      }
+    }
+    Function [ <internal:bz2> function bzdecompress ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $source ]
+        Parameter #1 [ <optional> $small ]
+      }
+    }
+  }
+}
+

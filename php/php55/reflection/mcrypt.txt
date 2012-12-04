@@ -1,0 +1,323 @@
+Extension [ <persistent> extension #50 mcrypt version <no_version> ] {
+
+  - INI {
+    Entry [ mcrypt.algorithms_dir <ALL> ]
+      Current = ''
+    }
+    Entry [ mcrypt.modes_dir <ALL> ]
+      Current = ''
+    }
+  }
+
+  - Constants [41] {
+    Constant [ integer MCRYPT_ENCRYPT ] { 0 }
+    Constant [ integer MCRYPT_DECRYPT ] { 1 }
+    Constant [ integer MCRYPT_DEV_RANDOM ] { 0 }
+    Constant [ integer MCRYPT_DEV_URANDOM ] { 1 }
+    Constant [ integer MCRYPT_RAND ] { 2 }
+    Constant [ string MCRYPT_3DES ] { tripledes }
+    Constant [ string MCRYPT_ARCFOUR_IV ] { arcfour-iv }
+    Constant [ string MCRYPT_ARCFOUR ] { arcfour }
+    Constant [ string MCRYPT_BLOWFISH ] { blowfish }
+    Constant [ string MCRYPT_BLOWFISH_COMPAT ] { blowfish-compat }
+    Constant [ string MCRYPT_CAST_128 ] { cast-128 }
+    Constant [ string MCRYPT_CAST_256 ] { cast-256 }
+    Constant [ string MCRYPT_CRYPT ] { crypt }
+    Constant [ string MCRYPT_DES ] { des }
+    Constant [ string MCRYPT_ENIGNA ] { crypt }
+    Constant [ string MCRYPT_GOST ] { gost }
+    Constant [ string MCRYPT_LOKI97 ] { loki97 }
+    Constant [ string MCRYPT_PANAMA ] { panama }
+    Constant [ string MCRYPT_RC2 ] { rc2 }
+    Constant [ string MCRYPT_RIJNDAEL_128 ] { rijndael-128 }
+    Constant [ string MCRYPT_RIJNDAEL_192 ] { rijndael-192 }
+    Constant [ string MCRYPT_RIJNDAEL_256 ] { rijndael-256 }
+    Constant [ string MCRYPT_SAFER64 ] { safer-sk64 }
+    Constant [ string MCRYPT_SAFER128 ] { safer-sk128 }
+    Constant [ string MCRYPT_SAFERPLUS ] { saferplus }
+    Constant [ string MCRYPT_SERPENT ] { serpent }
+    Constant [ string MCRYPT_THREEWAY ] { threeway }
+    Constant [ string MCRYPT_TRIPLEDES ] { tripledes }
+    Constant [ string MCRYPT_TWOFISH ] { twofish }
+    Constant [ string MCRYPT_WAKE ] { wake }
+    Constant [ string MCRYPT_XTEA ] { xtea }
+    Constant [ string MCRYPT_IDEA ] { idea }
+    Constant [ string MCRYPT_MARS ] { mars }
+    Constant [ string MCRYPT_RC6 ] { rc6 }
+    Constant [ string MCRYPT_SKIPJACK ] { skipjack }
+    Constant [ string MCRYPT_MODE_CBC ] { cbc }
+    Constant [ string MCRYPT_MODE_CFB ] { cfb }
+    Constant [ string MCRYPT_MODE_ECB ] { ecb }
+    Constant [ string MCRYPT_MODE_NOFB ] { nofb }
+    Constant [ string MCRYPT_MODE_OFB ] { ofb }
+    Constant [ string MCRYPT_MODE_STREAM ] { stream }
+  }
+
+  - Functions {
+    Function [ <internal, deprecated:mcrypt> function mcrypt_ecb ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $key ]
+        Parameter #2 [ <required> $data ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <required> $iv ]
+      }
+    }
+    Function [ <internal, deprecated:mcrypt> function mcrypt_cbc ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $key ]
+        Parameter #2 [ <required> $data ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <required> $iv ]
+      }
+    }
+    Function [ <internal, deprecated:mcrypt> function mcrypt_cfb ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $key ]
+        Parameter #2 [ <required> $data ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <required> $iv ]
+      }
+    }
+    Function [ <internal, deprecated:mcrypt> function mcrypt_ofb ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $key ]
+        Parameter #2 [ <required> $data ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <required> $iv ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_get_key_size ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $module ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_get_block_size ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $module ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_get_cipher_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $cipher ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_create_iv ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $size ]
+        Parameter #1 [ <required> $source ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_list_algorithms ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $lib_dir ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_list_modes ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $lib_dir ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_get_iv_size ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $module ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_encrypt ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $key ]
+        Parameter #2 [ <required> $data ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <required> $iv ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_decrypt ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $key ]
+        Parameter #2 [ <required> $data ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <required> $iv ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_module_open ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $cipher ]
+        Parameter #1 [ <required> $cipher_directory ]
+        Parameter #2 [ <required> $mode ]
+        Parameter #3 [ <required> $mode_directory ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_generic_init ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $td ]
+        Parameter #1 [ <required> $key ]
+        Parameter #2 [ <required> $iv ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_generic ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $td ]
+        Parameter #1 [ <required> $data ]
+      }
+    }
+    Function [ <internal:mcrypt> function mdecrypt_generic ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $td ]
+        Parameter #1 [ <required> $data ]
+      }
+    }
+    Function [ <internal, deprecated:mcrypt> function mcrypt_generic_end ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_generic_deinit ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_self_test ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_is_block_algorithm_mode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_is_block_algorithm ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_is_block_mode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_get_block_size ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_get_key_size ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_get_supported_key_sizes ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_get_iv_size ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_get_algorithms_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_enc_get_modes_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_module_self_test ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $algorithm ]
+        Parameter #1 [ <optional> $lib_dir ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_module_is_block_algorithm_mode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mode ]
+        Parameter #1 [ <optional> $lib_dir ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_module_is_block_algorithm ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $algorithm ]
+        Parameter #1 [ <optional> $lib_dir ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_module_is_block_mode ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mode ]
+        Parameter #1 [ <optional> $lib_dir ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_module_get_algo_block_size ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $algorithm ]
+        Parameter #1 [ <optional> $lib_dir ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_module_get_algo_key_size ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $algorithm ]
+        Parameter #1 [ <optional> $lib_dir ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_module_get_supported_key_sizes ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $algorithm ]
+        Parameter #1 [ <optional> $lib_dir ]
+      }
+    }
+    Function [ <internal:mcrypt> function mcrypt_module_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $td ]
+      }
+    }
+  }
+}
+

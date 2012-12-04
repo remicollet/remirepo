@@ -1,0 +1,6480 @@
+Extension [ <persistent> extension #21 SPL version 0.2 ] {
+
+  - Functions {
+    Function [ <internal:SPL> function spl_classes ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:SPL> function spl_autoload ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $class_name ]
+        Parameter #1 [ <optional> $file_extensions ]
+      }
+    }
+    Function [ <internal:SPL> function spl_autoload_extensions ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $file_extensions ]
+      }
+    }
+    Function [ <internal:SPL> function spl_autoload_register ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $autoload_function ]
+      }
+    }
+    Function [ <internal:SPL> function spl_autoload_unregister ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $autoload_function ]
+      }
+    }
+    Function [ <internal:SPL> function spl_autoload_functions ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:SPL> function spl_autoload_call ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $class_name ]
+      }
+    }
+    Function [ <internal:SPL> function class_parents ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $instance ]
+        Parameter #1 [ <optional> $autoload ]
+      }
+    }
+    Function [ <internal:SPL> function class_implements ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $what ]
+        Parameter #1 [ <optional> $autoload ]
+      }
+    }
+    Function [ <internal:SPL> function class_uses ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $what ]
+        Parameter #1 [ <optional> $autoload ]
+      }
+    }
+    Function [ <internal:SPL> function spl_object_hash ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $obj ]
+      }
+    }
+    Function [ <internal:SPL> function iterator_to_array ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> Traversable $iterator ]
+        Parameter #1 [ <optional> $use_keys ]
+      }
+    }
+    Function [ <internal:SPL> function iterator_count ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> Traversable $iterator ]
+      }
+    }
+    Function [ <internal:SPL> function iterator_apply ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> Traversable $iterator ]
+        Parameter #1 [ <required> $function ]
+        Parameter #2 [ <optional> array or NULL $args ]
+      }
+    }
+  }
+
+  - Classes [56] {
+    Class [ <internal:SPL> class LogicException extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class BadFunctionCallException extends LogicException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class BadMethodCallException extends BadFunctionCallException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class DomainException extends LogicException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class InvalidArgumentException extends LogicException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class LengthException extends LogicException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class OutOfRangeException extends LogicException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class RuntimeException extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class OutOfBoundsException extends RuntimeException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class OverflowException extends RuntimeException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class RangeException extends RuntimeException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class UnderflowException extends RuntimeException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class UnexpectedValueException extends RuntimeException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Interface [ <internal:SPL> interface RecursiveIterator extends Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:SPL> abstract public method hasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> abstract public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method current ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method next ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method key ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method valid ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method rewind ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator ] {
+
+      - Constants [4] {
+        Constant [ integer LEAVES_ONLY ] { 0 }
+        Constant [ integer SELF_FIRST ] { 1 }
+        Constant [ integer CHILD_FIRST ] { 2 }
+        Constant [ integer CATCH_GET_CHILD ] { 16 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [18] {
+        Method [ <internal:SPL, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Traversable $iterator ]
+            Parameter #1 [ <optional> $mode ]
+            Parameter #2 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getDepth ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getSubIterator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $level ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method beginIteration ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method endIteration ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method callHasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method callGetChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method beginChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method endChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method nextElement ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setMaxDepth ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $max_depth ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getMaxDepth ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:SPL> interface OuterIterator extends Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:SPL> abstract public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method current ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method next ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method key ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method valid ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method rewind ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class IteratorIterator implements Iterator, Traversable, OuterIterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:SPL, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Traversable $iterator ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> abstract class FilterIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [8] {
+        Method [ <internal:SPL, overwrites IteratorIterator, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Iterator $iterator ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> abstract public method accept ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> abstract class RecursiveFilterIterator extends FilterIterator implements Iterator, Traversable, OuterIterator, RecursiveIterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:SPL, overwrites FilterIterator, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> RecursiveIterator $iterator ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator> abstract public method accept ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class CallbackFilterIterator extends FilterIterator implements Iterator, Traversable, OuterIterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [8] {
+        Method [ <internal:SPL, overwrites FilterIterator, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Iterator $iterator ]
+            Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites FilterIterator, prototype FilterIterator> public method accept ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class RecursiveCallbackFilterIterator extends CallbackFilterIterator implements OuterIterator, Traversable, Iterator, RecursiveIterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:SPL, overwrites CallbackFilterIterator, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> RecursiveIterator $iterator ]
+            Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CallbackFilterIterator, prototype FilterIterator> public method accept ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class ParentIterator extends RecursiveFilterIterator implements RecursiveIterator, OuterIterator, Traversable, Iterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:SPL, overwrites RecursiveFilterIterator, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> RecursiveIterator $iterator ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites FilterIterator, prototype FilterIterator> public method accept ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveFilterIterator, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveFilterIterator, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:SPL> interface Countable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:SPL> abstract public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:SPL> interface SeekableIterator extends Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:SPL> abstract public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method current ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method next ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method key ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method valid ] {
+        }
+
+        Method [ <internal:Core, inherits Iterator> abstract public method rewind ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class LimitIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [9] {
+        Method [ <internal:SPL, overwrites IteratorIterator, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Iterator $iterator ]
+            Parameter #1 [ <optional> $offset ]
+            Parameter #2 [ <optional> $count ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getPosition ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class CachingIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator, ArrayAccess, Countable ] {
+
+      - Constants [6] {
+        Constant [ integer CALL_TOSTRING ] { 1 }
+        Constant [ integer CATCH_GET_CHILD ] { 16 }
+        Constant [ integer TOSTRING_USE_KEY ] { 2 }
+        Constant [ integer TOSTRING_USE_CURRENT ] { 4 }
+        Constant [ integer TOSTRING_USE_INNER ] { 8 }
+        Constant [ integer FULL_CACHE ] { 256 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [17] {
+        Method [ <internal:SPL, overwrites IteratorIterator, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Iterator $iterator ]
+            Parameter #1 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method hasNext ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $newval ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getCache ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class RecursiveCachingIterator extends CachingIterator implements Countable, ArrayAccess, Iterator, Traversable, OuterIterator, RecursiveIterator ] {
+
+      - Constants [6] {
+        Constant [ integer CALL_TOSTRING ] { 1 }
+        Constant [ integer CATCH_GET_CHILD ] { 16 }
+        Constant [ integer TOSTRING_USE_KEY ] { 2 }
+        Constant [ integer TOSTRING_USE_CURRENT ] { 4 }
+        Constant [ integer TOSTRING_USE_INNER ] { 8 }
+        Constant [ integer FULL_CACHE ] { 256 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [19] {
+        Method [ <internal:SPL, overwrites CachingIterator, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Iterator $iterator ]
+            Parameter #1 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator> public method hasNext ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $newval ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator> public method getCache ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits CachingIterator, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class NoRewindIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:SPL, overwrites IteratorIterator, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Iterator $iterator ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class AppendIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:SPL, overwrites IteratorIterator, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method append ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Iterator $iterator ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getIteratorIndex ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getArrayIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class InfiniteIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:SPL, overwrites IteratorIterator, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Iterator $iterator ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites IteratorIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits IteratorIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits IteratorIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits IteratorIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits IteratorIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits IteratorIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class RegexIterator extends FilterIterator implements Iterator, Traversable, OuterIterator ] {
+
+      - Constants [6] {
+        Constant [ integer USE_KEY ] { 1 }
+        Constant [ integer MATCH ] { 0 }
+        Constant [ integer GET_MATCH ] { 1 }
+        Constant [ integer ALL_MATCHES ] { 2 }
+        Constant [ integer SPLIT ] { 3 }
+        Constant [ integer REPLACE ] { 4 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [1] {
+        Property [ <default> public $replacement ]
+      }
+
+      - Methods [15] {
+        Method [ <internal:SPL, overwrites FilterIterator, ctor> public method __construct ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> Iterator $iterator ]
+            Parameter #1 [ <required> $regex ]
+            Parameter #2 [ <optional> $mode ]
+            Parameter #3 [ <optional> $flags ]
+            Parameter #4 [ <optional> $preg_flags ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites FilterIterator, prototype FilterIterator> public method accept ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getMode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setMode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $mode ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getPregFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setPregFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $preg_flags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getRegex ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Traversable, Iterator, RecursiveIterator ] {
+
+      - Constants [6] {
+        Constant [ integer USE_KEY ] { 1 }
+        Constant [ integer MATCH ] { 0 }
+        Constant [ integer GET_MATCH ] { 1 }
+        Constant [ integer ALL_MATCHES ] { 2 }
+        Constant [ integer SPLIT ] { 3 }
+        Constant [ integer REPLACE ] { 4 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [1] {
+        Property [ <default> public $replacement ]
+      }
+
+      - Methods [17] {
+        Method [ <internal:SPL, overwrites RegexIterator, ctor> public method __construct ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> RecursiveIterator $iterator ]
+            Parameter #1 [ <required> $regex ]
+            Parameter #2 [ <optional> $mode ]
+            Parameter #3 [ <optional> $flags ]
+            Parameter #4 [ <optional> $preg_flags ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RegexIterator, prototype FilterIterator> public method accept ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RegexIterator> public method getMode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RegexIterator> public method setMode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $mode ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits RegexIterator> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RegexIterator> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits RegexIterator> public method getPregFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RegexIterator> public method setPregFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $preg_flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits RegexIterator> public method getRegex ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilterIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class EmptyIterator implements Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIterator, Traversable, Iterator ] {
+
+      - Constants [12] {
+        Constant [ integer LEAVES_ONLY ] { 0 }
+        Constant [ integer SELF_FIRST ] { 1 }
+        Constant [ integer CHILD_FIRST ] { 2 }
+        Constant [ integer CATCH_GET_CHILD ] { 16 }
+        Constant [ integer BYPASS_CURRENT ] { 4 }
+        Constant [ integer BYPASS_KEY ] { 8 }
+        Constant [ integer PREFIX_LEFT ] { 0 }
+        Constant [ integer PREFIX_MID_HAS_NEXT ] { 1 }
+        Constant [ integer PREFIX_MID_LAST ] { 2 }
+        Constant [ integer PREFIX_END_HAS_NEXT ] { 3 }
+        Constant [ integer PREFIX_END_LAST ] { 4 }
+        Constant [ integer PREFIX_RIGHT ] { 5 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [22] {
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, ctor> public method __construct ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> Traversable $iterator ]
+            Parameter #1 [ <optional> $flags ]
+            Parameter #2 [ <optional> $caching_it_flags ]
+            Parameter #3 [ <optional> $mode ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype RecursiveIteratorIterator> public method beginIteration ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype RecursiveIteratorIterator> public method endIteration ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype RecursiveIteratorIterator> public method callHasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype RecursiveIteratorIterator> public method callGetChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype RecursiveIteratorIterator> public method beginChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype RecursiveIteratorIterator> public method endChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites RecursiveIteratorIterator, prototype RecursiveIteratorIterator> public method nextElement ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getPrefix ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setPrefixPart ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $part ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getEntry ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getPostfix ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveIteratorIterator> public method getDepth ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveIteratorIterator> public method getSubIterator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $level ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveIteratorIterator, prototype OuterIterator> public method getInnerIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveIteratorIterator> public method setMaxDepth ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $max_depth ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveIteratorIterator> public method getMaxDepth ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serializable, Countable ] {
+
+      - Constants [2] {
+        Constant [ integer STD_PROP_LIST ] { 1 }
+        Constant [ integer ARRAY_AS_PROPS ] { 2 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [22] {
+        Method [ <internal:SPL, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $array ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $newval ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL> public method append ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getArrayCopy ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method asort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method ksort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method uasort ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cmp_function ]
+          }
+        }
+
+        Method [ <internal:SPL> public method uksort ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cmp_function ]
+          }
+        }
+
+        Method [ <internal:SPL> public method natsort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method natcasesort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Serializable> public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Serializable> public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype IteratorAggregate> public method getIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method exchangeArray ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $array ]
+          }
+        }
+
+        Method [ <internal:SPL> public method setIteratorClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $iteratorClass ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getIteratorClass ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableIterator, Serializable, Countable ] {
+
+      - Constants [2] {
+        Constant [ integer STD_PROP_LIST ] { 1 }
+        Constant [ integer ARRAY_AS_PROPS ] { 2 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [24] {
+        Method [ <internal:SPL, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $array ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $newval ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL> public method append ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getArrayCopy ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method asort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method ksort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method uasort ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cmp_function ]
+          }
+        }
+
+        Method [ <internal:SPL> public method uksort ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cmp_function ]
+          }
+        }
+
+        Method [ <internal:SPL> public method natsort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method natcasesort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Serializable> public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Serializable> public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class RecursiveArrayIterator extends ArrayIterator implements Countable, Serializable, SeekableIterator, ArrayAccess, Traversable, Iterator, RecursiveIterator ] {
+
+      - Constants [1] {
+        Constant [ integer CHILD_ARRAYS_ONLY ] { 4 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [26] {
+        Method [ <internal:SPL, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $array ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $newval ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method append ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method getArrayCopy ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method asort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method ksort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method uasort ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cmp_function ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method uksort ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cmp_function ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method natsort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator> public method natcasesort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype Serializable> public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype Serializable> public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits ArrayIterator, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> class SplFileInfo ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [30] {
+        Method [ <internal:SPL, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $file_name ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL> final public method _bad_state_ex ] {
+        }
+
+        Method [ <internal:SPL> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, SeekableIterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [37] {
+        Method [ <internal:SPL, overwrites SplFileInfo, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $path ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites SplFileInfo, prototype SplFileInfo> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites SplFileInfo, prototype SplFileInfo> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites SplFileInfo, prototype SplFileInfo> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL> public method isDot ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites SplFileInfo, prototype SplFileInfo> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> final public method _bad_state_ex ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class FilesystemIterator extends DirectoryIterator implements SeekableIterator, Traversable, Iterator ] {
+
+      - Constants [12] {
+        Constant [ integer CURRENT_MODE_MASK ] { 240 }
+        Constant [ integer CURRENT_AS_PATHNAME ] { 32 }
+        Constant [ integer CURRENT_AS_FILEINFO ] { 0 }
+        Constant [ integer CURRENT_AS_SELF ] { 16 }
+        Constant [ integer KEY_MODE_MASK ] { 3840 }
+        Constant [ integer KEY_AS_PATHNAME ] { 0 }
+        Constant [ integer FOLLOW_SYMLINKS ] { 512 }
+        Constant [ integer KEY_AS_FILENAME ] { 256 }
+        Constant [ integer NEW_CURRENT_AND_KEY ] { 256 }
+        Constant [ integer OTHER_MODE_MASK ] { 12288 }
+        Constant [ integer SKIP_DOTS ] { 4096 }
+        Constant [ integer UNIX_PATHS ] { 8192 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [39] {
+        Method [ <internal:SPL, overwrites DirectoryIterator, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, overwrites DirectoryIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites DirectoryIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites DirectoryIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites DirectoryIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator> public method isDot ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> final public method _bad_state_ex ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator, Traversable, SeekableIterator, RecursiveIterator ] {
+
+      - Constants [12] {
+        Constant [ integer CURRENT_MODE_MASK ] { 240 }
+        Constant [ integer CURRENT_AS_PATHNAME ] { 32 }
+        Constant [ integer CURRENT_AS_FILEINFO ] { 0 }
+        Constant [ integer CURRENT_AS_SELF ] { 16 }
+        Constant [ integer KEY_MODE_MASK ] { 3840 }
+        Constant [ integer KEY_AS_PATHNAME ] { 0 }
+        Constant [ integer FOLLOW_SYMLINKS ] { 512 }
+        Constant [ integer KEY_AS_FILENAME ] { 256 }
+        Constant [ integer NEW_CURRENT_AND_KEY ] { 256 }
+        Constant [ integer OTHER_MODE_MASK ] { 12288 }
+        Constant [ integer SKIP_DOTS ] { 4096 }
+        Constant [ integer UNIX_PATHS ] { 8192 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [43] {
+        Method [ <internal:SPL, overwrites FilesystemIterator, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $allow_links ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getSubPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getSubPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator> public method isDot ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> final public method _bad_state_ex ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class GlobIterator extends FilesystemIterator implements Iterator, Traversable, SeekableIterator, Countable ] {
+
+      - Constants [12] {
+        Constant [ integer CURRENT_MODE_MASK ] { 240 }
+        Constant [ integer CURRENT_AS_PATHNAME ] { 32 }
+        Constant [ integer CURRENT_AS_FILEINFO ] { 0 }
+        Constant [ integer CURRENT_AS_SELF ] { 16 }
+        Constant [ integer KEY_MODE_MASK ] { 3840 }
+        Constant [ integer KEY_AS_PATHNAME ] { 0 }
+        Constant [ integer FOLLOW_SYMLINKS ] { 512 }
+        Constant [ integer KEY_AS_FILENAME ] { 256 }
+        Constant [ integer NEW_CURRENT_AND_KEY ] { 256 }
+        Constant [ integer OTHER_MODE_MASK ] { 12288 }
+        Constant [ integer SKIP_DOTS ] { 4096 }
+        Constant [ integer UNIX_PATHS ] { 8192 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [40] {
+        Method [ <internal:SPL, overwrites FilesystemIterator, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator> public method isDot ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> final public method _bad_state_ex ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversable, Iterator, SeekableIterator ] {
+
+      - Constants [4] {
+        Constant [ integer DROP_NEW_LINE ] { 1 }
+        Constant [ integer READ_AHEAD ] { 2 }
+        Constant [ integer SKIP_EMPTY ] { 4 }
+        Constant [ integer READ_CSV ] { 8 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [60] {
+        Method [ <internal:SPL, overwrites SplFileInfo, ctor> public method __construct ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $file_name ]
+            Parameter #1 [ <optional> $open_mode ]
+            Parameter #2 [ <optional> $use_include_path ]
+            Parameter #3 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method eof ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method fgets ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method fgetcsv ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $delimiter ]
+            Parameter #1 [ <optional> $enclosure ]
+            Parameter #2 [ <optional> $escape ]
+          }
+        }
+
+        Method [ <internal:SPL> public method fputcsv ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $fields ]
+            Parameter #1 [ <optional> $delimiter ]
+            Parameter #2 [ <optional> $enclosure ]
+          }
+        }
+
+        Method [ <internal:SPL> public method setCsvControl ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $delimiter ]
+            Parameter #1 [ <optional> $enclosure ]
+            Parameter #2 [ <optional> $escape ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getCsvControl ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method flock ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $operation ]
+            Parameter #1 [ <optional> &$wouldblock ]
+          }
+        }
+
+        Method [ <internal:SPL> public method fflush ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method ftell ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method fseek ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $pos ]
+            Parameter #1 [ <optional> $whence ]
+          }
+        }
+
+        Method [ <internal:SPL> public method fgetc ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method fpassthru ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method fgetss ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $allowable_tags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method fscanf ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $format ]
+          }
+        }
+
+        Method [ <internal:SPL> public method fwrite ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $str ]
+            Parameter #1 [ <optional> $length ]
+          }
+        }
+
+        Method [ <internal:SPL> public method fstat ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method ftruncate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $size ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setMaxLineLen ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $max_len ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getMaxLineLen ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $line_pos ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getCurrentLine ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, overwrites SplFileInfo, prototype SplFileInfo> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> final public method _bad_state_ex ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplTempFileObject extends SplFileObject implements SeekableIterator, Iterator, Traversable, RecursiveIterator ] {
+
+      - Constants [4] {
+        Constant [ integer DROP_NEW_LINE ] { 1 }
+        Constant [ integer READ_AHEAD ] { 2 }
+        Constant [ integer SKIP_EMPTY ] { 4 }
+        Constant [ integer READ_CSV ] { 8 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [60] {
+        Method [ <internal:SPL, overwrites SplFileObject, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $max_memory ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method eof ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fgets ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fgetcsv ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $delimiter ]
+            Parameter #1 [ <optional> $enclosure ]
+            Parameter #2 [ <optional> $escape ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fputcsv ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $fields ]
+            Parameter #1 [ <optional> $delimiter ]
+            Parameter #2 [ <optional> $enclosure ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method setCsvControl ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $delimiter ]
+            Parameter #1 [ <optional> $enclosure ]
+            Parameter #2 [ <optional> $escape ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method getCsvControl ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method flock ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $operation ]
+            Parameter #1 [ <optional> &$wouldblock ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fflush ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method ftell ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fseek ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $pos ]
+            Parameter #1 [ <optional> $whence ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fgetc ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fpassthru ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fgetss ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $allowable_tags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fscanf ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $format ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fwrite ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $str ]
+            Parameter #1 [ <optional> $length ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method fstat ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method ftruncate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $size ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method setMaxLineLen ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $max_len ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method getMaxLineLen ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $line_pos ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject> public method getCurrentLine ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileObject, prototype SplFileInfo> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> final public method _bad_state_ex ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAccess, Serializable ] {
+
+      - Constants [4] {
+        Constant [ integer IT_MODE_LIFO ] { 2 }
+        Constant [ integer IT_MODE_FIFO ] { 0 }
+        Constant [ integer IT_MODE_DELETE ] { 1 }
+        Constant [ integer IT_MODE_KEEP ] { 0 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [22] {
+        Method [ <internal:SPL> public method pop ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method shift ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method push ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL> public method unshift ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL> public method top ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method bottom ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method isEmpty ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setIteratorMode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getIteratorMode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $newval ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method prev ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Serializable> public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Serializable> public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess, Countable, Traversable, Iterator ] {
+
+      - Constants [4] {
+        Constant [ integer IT_MODE_LIFO ] { 2 }
+        Constant [ integer IT_MODE_FIFO ] { 0 }
+        Constant [ integer IT_MODE_DELETE ] { 1 }
+        Constant [ integer IT_MODE_KEEP ] { 0 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [24] {
+        Method [ <internal:SPL> public method enqueue ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL> public method dequeue ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method pop ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method shift ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method push ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method unshift ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method top ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method bottom ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method isEmpty ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method setIteratorMode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method getIteratorMode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $newval ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method prev ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Serializable> public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Serializable> public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess, Countable, Traversable, Iterator ] {
+
+      - Constants [4] {
+        Constant [ integer IT_MODE_LIFO ] { 2 }
+        Constant [ integer IT_MODE_FIFO ] { 0 }
+        Constant [ integer IT_MODE_DELETE ] { 1 }
+        Constant [ integer IT_MODE_KEEP ] { 0 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [22] {
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method pop ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method shift ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method push ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method unshift ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method top ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method bottom ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method isEmpty ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method setIteratorMode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method getIteratorMode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $newval ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList> public method prev ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Serializable> public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplDoublyLinkedList, prototype Serializable> public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> abstract class SplHeap implements Iterator, Traversable, Countable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [12] {
+        Method [ <internal:SPL> public method extract ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method insert ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL> public method top ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method isEmpty ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method recoverFromCorruption ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> abstract protected method compare ] {
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [12] {
+        Method [ <internal:SPL, overwrites SplHeap, prototype SplHeap> protected method compare ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $a ]
+            Parameter #1 [ <required> $b ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method extract ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method insert ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method top ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method isEmpty ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method recoverFromCorruption ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [12] {
+        Method [ <internal:SPL, overwrites SplHeap, prototype SplHeap> protected method compare ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $a ]
+            Parameter #1 [ <required> $b ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method extract ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method insert ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method top ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method isEmpty ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplHeap> public method recoverFromCorruption ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplPriorityQueue implements Iterator, Traversable, Countable ] {
+
+      - Constants [3] {
+        Constant [ integer EXTR_BOTH ] { 3 }
+        Constant [ integer EXTR_PRIORITY ] { 2 }
+        Constant [ integer EXTR_DATA ] { 1 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [13] {
+        Method [ <internal:SPL> public method compare ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $a ]
+            Parameter #1 [ <required> $b ]
+          }
+        }
+
+        Method [ <internal:SPL> public method insert ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <required> $priority ]
+          }
+        }
+
+        Method [ <internal:SPL> public method setExtractFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method top ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method extract ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method isEmpty ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method recoverFromCorruption ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:SPL> static public method fromArray ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <optional> $save_indexes ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [15] {
+        Method [ <internal:SPL, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $size ]
+          }
+        }
+
+        Method [ <internal:SPL> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method toArray ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setSize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $newval ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:SPL> interface SplObserver ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:SPL> abstract public method update ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> SplSubject $SplSubject ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:SPL> interface SplSubject ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:SPL> abstract public method attach ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> SplObserver $SplObserver ]
+          }
+        }
+
+        Method [ <internal:SPL> abstract public method detach ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> SplObserver $SplObserver ]
+          }
+        }
+
+        Method [ <internal:SPL> abstract public method notify ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class SplObjectStorage implements Countable, Iterator, Traversable, Serializable, ArrayAccess ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [21] {
+        Method [ <internal:SPL> public method attach ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $object ]
+            Parameter #1 [ <optional> $inf ]
+          }
+        }
+
+        Method [ <internal:SPL> public method detach ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+
+        Method [ <internal:SPL> public method contains ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+
+        Method [ <internal:SPL> public method addAll ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+
+        Method [ <internal:SPL> public method removeAll ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+
+        Method [ <internal:SPL> public method removeAllExcept ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getInfo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $info ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getHash ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Serializable> public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype Serializable> public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $object ]
+            Parameter #1 [ <optional> $inf ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+
+        Method [ <internal:SPL, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $object ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:SPL> <iterateable> class MultipleIterator implements Iterator, Traversable ] {
+
+      - Constants [4] {
+        Constant [ integer MIT_NEED_ANY ] { 0 }
+        Constant [ integer MIT_NEED_ALL ] { 1 }
+        Constant [ integer MIT_KEYS_NUMERIC ] { 0 }
+        Constant [ integer MIT_KEYS_ASSOC ] { 2 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [12] {
+        Method [ <internal:SPL, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL> public method attachIterator ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Iterator $iterator ]
+            Parameter #1 [ <optional> $infos ]
+          }
+        }
+
+        Method [ <internal:SPL> public method detachIterator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Iterator $iterator ]
+          }
+        }
+
+        Method [ <internal:SPL> public method containsIterator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Iterator $iterator ]
+          }
+        }
+
+        Method [ <internal:SPL> public method countIterators ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+

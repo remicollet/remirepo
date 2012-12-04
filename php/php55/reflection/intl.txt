@@ -1,0 +1,3970 @@
+Extension [ <persistent> extension #45 intl version 1.1.0 ] {
+
+  - INI {
+    Entry [ intl.default_locale <ALL> ]
+      Current = ''
+    }
+    Entry [ intl.error_level <ALL> ]
+      Current = '0'
+    }
+    Entry [ intl.use_exceptions <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Constants [171] {
+    Constant [ integer INTL_MAX_LOCALE_LEN ] { 80 }
+    Constant [ string INTL_ICU_VERSION ] { 4.8.1.1 }
+    Constant [ string INTL_ICU_DATA_VERSION ] { 4.8.1 }
+    Constant [ integer ULOC_ACTUAL_LOCALE ] { 0 }
+    Constant [ integer ULOC_VALID_LOCALE ] { 1 }
+    Constant [ integer GRAPHEME_EXTR_COUNT ] { 0 }
+    Constant [ integer GRAPHEME_EXTR_MAXBYTES ] { 1 }
+    Constant [ integer GRAPHEME_EXTR_MAXCHARS ] { 2 }
+    Constant [ integer U_USING_FALLBACK_WARNING ] { -128 }
+    Constant [ integer U_ERROR_WARNING_START ] { -128 }
+    Constant [ integer U_USING_DEFAULT_WARNING ] { -127 }
+    Constant [ integer U_SAFECLONE_ALLOCATED_WARNING ] { -126 }
+    Constant [ integer U_STATE_OLD_WARNING ] { -125 }
+    Constant [ integer U_STRING_NOT_TERMINATED_WARNING ] { -124 }
+    Constant [ integer U_SORT_KEY_TOO_SHORT_WARNING ] { -123 }
+    Constant [ integer U_AMBIGUOUS_ALIAS_WARNING ] { -122 }
+    Constant [ integer U_DIFFERENT_UCA_VERSION ] { -121 }
+    Constant [ integer U_ERROR_WARNING_LIMIT ] { -119 }
+    Constant [ integer U_ZERO_ERROR ] { 0 }
+    Constant [ integer U_ILLEGAL_ARGUMENT_ERROR ] { 1 }
+    Constant [ integer U_MISSING_RESOURCE_ERROR ] { 2 }
+    Constant [ integer U_INVALID_FORMAT_ERROR ] { 3 }
+    Constant [ integer U_FILE_ACCESS_ERROR ] { 4 }
+    Constant [ integer U_INTERNAL_PROGRAM_ERROR ] { 5 }
+    Constant [ integer U_MESSAGE_PARSE_ERROR ] { 6 }
+    Constant [ integer U_MEMORY_ALLOCATION_ERROR ] { 7 }
+    Constant [ integer U_INDEX_OUTOFBOUNDS_ERROR ] { 8 }
+    Constant [ integer U_PARSE_ERROR ] { 9 }
+    Constant [ integer U_INVALID_CHAR_FOUND ] { 10 }
+    Constant [ integer U_TRUNCATED_CHAR_FOUND ] { 11 }
+    Constant [ integer U_ILLEGAL_CHAR_FOUND ] { 12 }
+    Constant [ integer U_INVALID_TABLE_FORMAT ] { 13 }
+    Constant [ integer U_INVALID_TABLE_FILE ] { 14 }
+    Constant [ integer U_BUFFER_OVERFLOW_ERROR ] { 15 }
+    Constant [ integer U_UNSUPPORTED_ERROR ] { 16 }
+    Constant [ integer U_RESOURCE_TYPE_MISMATCH ] { 17 }
+    Constant [ integer U_ILLEGAL_ESCAPE_SEQUENCE ] { 18 }
+    Constant [ integer U_UNSUPPORTED_ESCAPE_SEQUENCE ] { 19 }
+    Constant [ integer U_NO_SPACE_AVAILABLE ] { 20 }
+    Constant [ integer U_CE_NOT_FOUND_ERROR ] { 21 }
+    Constant [ integer U_PRIMARY_TOO_LONG_ERROR ] { 22 }
+    Constant [ integer U_STATE_TOO_OLD_ERROR ] { 23 }
+    Constant [ integer U_TOO_MANY_ALIASES_ERROR ] { 24 }
+    Constant [ integer U_ENUM_OUT_OF_SYNC_ERROR ] { 25 }
+    Constant [ integer U_INVARIANT_CONVERSION_ERROR ] { 26 }
+    Constant [ integer U_INVALID_STATE_ERROR ] { 27 }
+    Constant [ integer U_COLLATOR_VERSION_MISMATCH ] { 28 }
+    Constant [ integer U_USELESS_COLLATOR_ERROR ] { 29 }
+    Constant [ integer U_NO_WRITE_PERMISSION ] { 30 }
+    Constant [ integer U_STANDARD_ERROR_LIMIT ] { 31 }
+    Constant [ integer U_BAD_VARIABLE_DEFINITION ] { 65536 }
+    Constant [ integer U_PARSE_ERROR_START ] { 65536 }
+    Constant [ integer U_MALFORMED_RULE ] { 65537 }
+    Constant [ integer U_MALFORMED_SET ] { 65538 }
+    Constant [ integer U_MALFORMED_SYMBOL_REFERENCE ] { 65539 }
+    Constant [ integer U_MALFORMED_UNICODE_ESCAPE ] { 65540 }
+    Constant [ integer U_MALFORMED_VARIABLE_DEFINITION ] { 65541 }
+    Constant [ integer U_MALFORMED_VARIABLE_REFERENCE ] { 65542 }
+    Constant [ integer U_MISMATCHED_SEGMENT_DELIMITERS ] { 65543 }
+    Constant [ integer U_MISPLACED_ANCHOR_START ] { 65544 }
+    Constant [ integer U_MISPLACED_CURSOR_OFFSET ] { 65545 }
+    Constant [ integer U_MISPLACED_QUANTIFIER ] { 65546 }
+    Constant [ integer U_MISSING_OPERATOR ] { 65547 }
+    Constant [ integer U_MISSING_SEGMENT_CLOSE ] { 65548 }
+    Constant [ integer U_MULTIPLE_ANTE_CONTEXTS ] { 65549 }
+    Constant [ integer U_MULTIPLE_CURSORS ] { 65550 }
+    Constant [ integer U_MULTIPLE_POST_CONTEXTS ] { 65551 }
+    Constant [ integer U_TRAILING_BACKSLASH ] { 65552 }
+    Constant [ integer U_UNDEFINED_SEGMENT_REFERENCE ] { 65553 }
+    Constant [ integer U_UNDEFINED_VARIABLE ] { 65554 }
+    Constant [ integer U_UNQUOTED_SPECIAL ] { 65555 }
+    Constant [ integer U_UNTERMINATED_QUOTE ] { 65556 }
+    Constant [ integer U_RULE_MASK_ERROR ] { 65557 }
+    Constant [ integer U_MISPLACED_COMPOUND_FILTER ] { 65558 }
+    Constant [ integer U_MULTIPLE_COMPOUND_FILTERS ] { 65559 }
+    Constant [ integer U_INVALID_RBT_SYNTAX ] { 65560 }
+    Constant [ integer U_INVALID_PROPERTY_PATTERN ] { 65561 }
+    Constant [ integer U_MALFORMED_PRAGMA ] { 65562 }
+    Constant [ integer U_UNCLOSED_SEGMENT ] { 65563 }
+    Constant [ integer U_ILLEGAL_CHAR_IN_SEGMENT ] { 65564 }
+    Constant [ integer U_VARIABLE_RANGE_EXHAUSTED ] { 65565 }
+    Constant [ integer U_VARIABLE_RANGE_OVERLAP ] { 65566 }
+    Constant [ integer U_ILLEGAL_CHARACTER ] { 65567 }
+    Constant [ integer U_INTERNAL_TRANSLITERATOR_ERROR ] { 65568 }
+    Constant [ integer U_INVALID_ID ] { 65569 }
+    Constant [ integer U_INVALID_FUNCTION ] { 65570 }
+    Constant [ integer U_PARSE_ERROR_LIMIT ] { 65571 }
+    Constant [ integer U_UNEXPECTED_TOKEN ] { 65792 }
+    Constant [ integer U_FMT_PARSE_ERROR_START ] { 65792 }
+    Constant [ integer U_MULTIPLE_DECIMAL_SEPARATORS ] { 65793 }
+    Constant [ integer U_MULTIPLE_DECIMAL_SEPERATORS ] { 65793 }
+    Constant [ integer U_MULTIPLE_EXPONENTIAL_SYMBOLS ] { 65794 }
+    Constant [ integer U_MALFORMED_EXPONENTIAL_PATTERN ] { 65795 }
+    Constant [ integer U_MULTIPLE_PERCENT_SYMBOLS ] { 65796 }
+    Constant [ integer U_MULTIPLE_PERMILL_SYMBOLS ] { 65797 }
+    Constant [ integer U_MULTIPLE_PAD_SPECIFIERS ] { 65798 }
+    Constant [ integer U_PATTERN_SYNTAX_ERROR ] { 65799 }
+    Constant [ integer U_ILLEGAL_PAD_POSITION ] { 65800 }
+    Constant [ integer U_UNMATCHED_BRACES ] { 65801 }
+    Constant [ integer U_UNSUPPORTED_PROPERTY ] { 65802 }
+    Constant [ integer U_UNSUPPORTED_ATTRIBUTE ] { 65803 }
+    Constant [ integer U_FMT_PARSE_ERROR_LIMIT ] { 65810 }
+    Constant [ integer U_BRK_INTERNAL_ERROR ] { 66048 }
+    Constant [ integer U_BRK_ERROR_START ] { 66048 }
+    Constant [ integer U_BRK_HEX_DIGITS_EXPECTED ] { 66049 }
+    Constant [ integer U_BRK_SEMICOLON_EXPECTED ] { 66050 }
+    Constant [ integer U_BRK_RULE_SYNTAX ] { 66051 }
+    Constant [ integer U_BRK_UNCLOSED_SET ] { 66052 }
+    Constant [ integer U_BRK_ASSIGN_ERROR ] { 66053 }
+    Constant [ integer U_BRK_VARIABLE_REDFINITION ] { 66054 }
+    Constant [ integer U_BRK_MISMATCHED_PAREN ] { 66055 }
+    Constant [ integer U_BRK_NEW_LINE_IN_QUOTED_STRING ] { 66056 }
+    Constant [ integer U_BRK_UNDEFINED_VARIABLE ] { 66057 }
+    Constant [ integer U_BRK_INIT_ERROR ] { 66058 }
+    Constant [ integer U_BRK_RULE_EMPTY_SET ] { 66059 }
+    Constant [ integer U_BRK_UNRECOGNIZED_OPTION ] { 66060 }
+    Constant [ integer U_BRK_MALFORMED_RULE_TAG ] { 66061 }
+    Constant [ integer U_BRK_ERROR_LIMIT ] { 66062 }
+    Constant [ integer U_REGEX_INTERNAL_ERROR ] { 66304 }
+    Constant [ integer U_REGEX_ERROR_START ] { 66304 }
+    Constant [ integer U_REGEX_RULE_SYNTAX ] { 66305 }
+    Constant [ integer U_REGEX_INVALID_STATE ] { 66306 }
+    Constant [ integer U_REGEX_BAD_ESCAPE_SEQUENCE ] { 66307 }
+    Constant [ integer U_REGEX_PROPERTY_SYNTAX ] { 66308 }
+    Constant [ integer U_REGEX_UNIMPLEMENTED ] { 66309 }
+    Constant [ integer U_REGEX_MISMATCHED_PAREN ] { 66310 }
+    Constant [ integer U_REGEX_NUMBER_TOO_BIG ] { 66311 }
+    Constant [ integer U_REGEX_BAD_INTERVAL ] { 66312 }
+    Constant [ integer U_REGEX_MAX_LT_MIN ] { 66313 }
+    Constant [ integer U_REGEX_INVALID_BACK_REF ] { 66314 }
+    Constant [ integer U_REGEX_INVALID_FLAG ] { 66315 }
+    Constant [ integer U_REGEX_LOOK_BEHIND_LIMIT ] { 66316 }
+    Constant [ integer U_REGEX_SET_CONTAINS_STRING ] { 66317 }
+    Constant [ integer U_REGEX_ERROR_LIMIT ] { 66324 }
+    Constant [ integer U_IDNA_PROHIBITED_ERROR ] { 66560 }
+    Constant [ integer U_IDNA_ERROR_START ] { 66560 }
+    Constant [ integer U_IDNA_UNASSIGNED_ERROR ] { 66561 }
+    Constant [ integer U_IDNA_CHECK_BIDI_ERROR ] { 66562 }
+    Constant [ integer U_IDNA_STD3_ASCII_RULES_ERROR ] { 66563 }
+    Constant [ integer U_IDNA_ACE_PREFIX_ERROR ] { 66564 }
+    Constant [ integer U_IDNA_VERIFICATION_ERROR ] { 66565 }
+    Constant [ integer U_IDNA_LABEL_TOO_LONG_ERROR ] { 66566 }
+    Constant [ integer U_IDNA_ZERO_LENGTH_LABEL_ERROR ] { 66567 }
+    Constant [ integer U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR ] { 66568 }
+    Constant [ integer U_IDNA_ERROR_LIMIT ] { 66569 }
+    Constant [ integer U_STRINGPREP_PROHIBITED_ERROR ] { 66560 }
+    Constant [ integer U_STRINGPREP_UNASSIGNED_ERROR ] { 66561 }
+    Constant [ integer U_STRINGPREP_CHECK_BIDI_ERROR ] { 66562 }
+    Constant [ integer U_ERROR_LIMIT ] { 66818 }
+    Constant [ integer IDNA_DEFAULT ] { 0 }
+    Constant [ integer IDNA_ALLOW_UNASSIGNED ] { 1 }
+    Constant [ integer IDNA_USE_STD3_RULES ] { 2 }
+    Constant [ integer IDNA_CHECK_BIDI ] { 4 }
+    Constant [ integer IDNA_CHECK_CONTEXTJ ] { 8 }
+    Constant [ integer IDNA_NONTRANSITIONAL_TO_ASCII ] { 16 }
+    Constant [ integer IDNA_NONTRANSITIONAL_TO_UNICODE ] { 32 }
+    Constant [ integer INTL_IDNA_VARIANT_2003 ] { 0 }
+    Constant [ integer INTL_IDNA_VARIANT_UTS46 ] { 1 }
+    Constant [ integer IDNA_ERROR_EMPTY_LABEL ] { 1 }
+    Constant [ integer IDNA_ERROR_LABEL_TOO_LONG ] { 2 }
+    Constant [ integer IDNA_ERROR_DOMAIN_NAME_TOO_LONG ] { 4 }
+    Constant [ integer IDNA_ERROR_LEADING_HYPHEN ] { 8 }
+    Constant [ integer IDNA_ERROR_TRAILING_HYPHEN ] { 16 }
+    Constant [ integer IDNA_ERROR_HYPHEN_3_4 ] { 32 }
+    Constant [ integer IDNA_ERROR_LEADING_COMBINING_MARK ] { 64 }
+    Constant [ integer IDNA_ERROR_DISALLOWED ] { 128 }
+    Constant [ integer IDNA_ERROR_PUNYCODE ] { 256 }
+    Constant [ integer IDNA_ERROR_LABEL_HAS_DOT ] { 512 }
+    Constant [ integer IDNA_ERROR_INVALID_ACE_LABEL ] { 1024 }
+    Constant [ integer IDNA_ERROR_BIDI ] { 2048 }
+    Constant [ integer IDNA_ERROR_CONTEXTJ ] { 4096 }
+  }
+
+  - Functions {
+    Function [ <internal:intl> function collator_create ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function collator_compare ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> Collator $object ]
+        Parameter #1 [ <required> $arg1 ]
+        Parameter #2 [ <required> $arg2 ]
+      }
+    }
+    Function [ <internal:intl> function collator_get_attribute ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> Collator $object ]
+        Parameter #1 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function collator_set_attribute ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> Collator $object ]
+        Parameter #1 [ <required> $arg1 ]
+        Parameter #2 [ <required> $arg2 ]
+      }
+    }
+    Function [ <internal:intl> function collator_get_strength ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> Collator $object ]
+      }
+    }
+    Function [ <internal:intl> function collator_set_strength ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> Collator $object ]
+        Parameter #1 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function collator_sort ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> Collator $object ]
+        Parameter #1 [ <required> array &$arr ]
+        Parameter #2 [ <optional> $sort_flags ]
+      }
+    }
+    Function [ <internal:intl> function collator_sort_with_sort_keys ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> Collator $object ]
+        Parameter #1 [ <required> array &$arr ]
+        Parameter #2 [ <optional> $sort_flags ]
+      }
+    }
+    Function [ <internal:intl> function collator_asort ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> Collator $object ]
+        Parameter #1 [ <required> array &$arr ]
+        Parameter #2 [ <optional> $sort_flags ]
+      }
+    }
+    Function [ <internal:intl> function collator_get_locale ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> Collator $object ]
+        Parameter #1 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function collator_get_error_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> Collator $object ]
+      }
+    }
+    Function [ <internal:intl> function collator_get_error_message ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> Collator $object ]
+      }
+    }
+    Function [ <internal:intl> function collator_get_sort_key ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> Collator $object ]
+        Parameter #1 [ <required> $arg1 ]
+        Parameter #2 [ <required> $arg2 ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_create ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $locale ]
+        Parameter #1 [ <required> $style ]
+        Parameter #2 [ <optional> $pattern ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_format ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $num ]
+        Parameter #2 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_parse ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $formatter ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> $type ]
+        Parameter #3 [ <optional> &$position ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_format_currency ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $num ]
+        Parameter #2 [ <required> $currency ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_parse_currency ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $formatter ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <required> &$currency ]
+        Parameter #3 [ <optional> &$position ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_set_attribute ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $attr ]
+        Parameter #2 [ <required> $value ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_get_attribute ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $attr ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_set_text_attribute ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $attr ]
+        Parameter #2 [ <required> $value ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_get_text_attribute ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $attr ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_set_symbol ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $attr ]
+        Parameter #2 [ <required> $symbol ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_get_symbol ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $attr ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_set_pattern ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_get_pattern ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $nf ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_get_locale ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_get_error_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $nf ]
+      }
+    }
+    Function [ <internal:intl> function numfmt_get_error_message ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $nf ]
+      }
+    }
+    Function [ <internal:intl> function normalizer_normalize ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $input ]
+        Parameter #1 [ <optional> $form ]
+      }
+    }
+    Function [ <internal:intl> function normalizer_is_normalized ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $input ]
+        Parameter #1 [ <optional> $form ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_default ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:intl> function locale_set_default ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_primary_language ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_script ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_region ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_keywords ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_display_script ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <required> $arg2 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_display_region ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <required> $arg2 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_display_name ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <required> $arg2 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_display_language ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <required> $arg2 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_display_variant ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <required> $arg2 ]
+      }
+    }
+    Function [ <internal:intl> function locale_compose ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function locale_parse ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function locale_get_all_variants ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function locale_filter_matches ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <required> $arg2 ]
+        Parameter #2 [ <required> $arg3 ]
+      }
+    }
+    Function [ <internal:intl> function locale_canonicalize ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function locale_lookup ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <required> $arg2 ]
+        Parameter #2 [ <required> $arg3 ]
+        Parameter #3 [ <required> $arg4 ]
+      }
+    }
+    Function [ <internal:intl> function locale_accept_from_http ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_create ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $locale ]
+        Parameter #1 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_format ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $args ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_format_message ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $locale ]
+        Parameter #1 [ <required> $pattern ]
+        Parameter #2 [ <required> $args ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_parse ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $nf ]
+        Parameter #1 [ <required> $source ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_parse_message ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $locale ]
+        Parameter #1 [ <required> $pattern ]
+        Parameter #2 [ <required> $source ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_set_pattern ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mf ]
+        Parameter #1 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_get_pattern ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_get_locale ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_get_error_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $nf ]
+      }
+    }
+    Function [ <internal:intl> function msgfmt_get_error_message ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $coll ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_create ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $locale ]
+        Parameter #1 [ <required> $date_type ]
+        Parameter #2 [ <required> $time_type ]
+        Parameter #3 [ <optional> $timezone_str ]
+        Parameter #4 [ <optional> $calendar ]
+        Parameter #5 [ <optional> $pattern ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_datetype ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_timetype ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_calendar ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_calendar_object ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_set_calendar ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mf ]
+        Parameter #1 [ <required> $calendar ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_locale ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_timezone_id ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_set_timezone_id ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mf ]
+        Parameter #1 [ <required> $timezone ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_timezone ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_set_timezone ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mf ]
+        Parameter #1 [ <required> $timezone ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_pattern ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_set_pattern ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $mf ]
+        Parameter #1 [ <required> $pattern ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_is_lenient ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_set_lenient ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_format ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $args ]
+        Parameter #1 [ <optional> $array ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_format_object ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $object ]
+        Parameter #1 [ <optional> $format ]
+        Parameter #2 [ <optional> $locale ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_parse ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $formatter ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> &$position ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_localtime ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $formatter ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <optional> &$position ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_error_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $nf ]
+      }
+    }
+    Function [ <internal:intl> function datefmt_get_error_message ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $coll ]
+      }
+    }
+    Function [ <internal:intl> function grapheme_strlen ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $string ]
+      }
+    }
+    Function [ <internal:intl> function grapheme_strpos ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:intl> function grapheme_stripos ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:intl> function grapheme_strrpos ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:intl> function grapheme_strripos ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+    Function [ <internal:intl> function grapheme_substr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <required> $start ]
+        Parameter #2 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:intl> function grapheme_strstr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $before_needle ]
+      }
+    }
+    Function [ <internal:intl> function grapheme_stristr ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $haystack ]
+        Parameter #1 [ <required> $needle ]
+        Parameter #2 [ <optional> $before_needle ]
+      }
+    }
+    Function [ <internal:intl> function grapheme_extract ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $arg1 ]
+        Parameter #1 [ <required> $arg2 ]
+        Parameter #2 [ <optional> $arg3 ]
+        Parameter #3 [ <optional> $arg4 ]
+        Parameter #4 [ <optional> &$arg5 ]
+      }
+    }
+    Function [ <internal:intl> function idn_to_ascii ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $domain ]
+        Parameter #1 [ <optional> $option ]
+        Parameter #2 [ <optional> $variant ]
+        Parameter #3 [ <optional> &$idn_info ]
+      }
+    }
+    Function [ <internal:intl> function idn_to_utf8 ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $domain ]
+        Parameter #1 [ <optional> $option ]
+        Parameter #2 [ <optional> $variant ]
+        Parameter #3 [ <optional> &$idn_info ]
+      }
+    }
+    Function [ <internal:intl> function resourcebundle_create ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $locale ]
+        Parameter #1 [ <required> $bundlename ]
+        Parameter #2 [ <optional> $fallback ]
+      }
+    }
+    Function [ <internal:intl> function resourcebundle_get ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $bundle ]
+        Parameter #1 [ <required> $index ]
+        Parameter #2 [ <optional> $fallback ]
+      }
+    }
+    Function [ <internal:intl> function resourcebundle_count ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bundle ]
+      }
+    }
+    Function [ <internal:intl> function resourcebundle_locales ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bundlename ]
+      }
+    }
+    Function [ <internal:intl> function resourcebundle_get_error_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bundle ]
+      }
+    }
+    Function [ <internal:intl> function resourcebundle_get_error_message ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bundle ]
+      }
+    }
+    Function [ <internal:intl> function transliterator_create ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $id ]
+        Parameter #1 [ <optional> $direction ]
+      }
+    }
+    Function [ <internal:intl> function transliterator_create_from_rules ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $rules ]
+        Parameter #1 [ <optional> $direction ]
+      }
+    }
+    Function [ <internal:intl> function transliterator_list_ids ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:intl> function transliterator_create_inverse ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> Transliterator $orig_trans ]
+      }
+    }
+    Function [ <internal:intl> function transliterator_transliterate ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $trans ]
+        Parameter #1 [ <required> $subject ]
+        Parameter #2 [ <optional> $start ]
+        Parameter #3 [ <optional> $end ]
+      }
+    }
+    Function [ <internal:intl> function transliterator_get_error_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> Transliterator $trans ]
+      }
+    }
+    Function [ <internal:intl> function transliterator_get_error_message ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> Transliterator $trans ]
+      }
+    }
+    Function [ <internal:intl> function intltz_create_time_zone ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $zoneId ]
+      }
+    }
+    Function [ <internal:intl> function intltz_from_date_time_zone ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlDateTimeZone $dateTimeZone ]
+      }
+    }
+    Function [ <internal:intl> function intltz_create_default ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:intl> function intltz_get_id ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_gmt ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:intl> function intltz_create_enumeration ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $countryOrRawOffset ]
+      }
+    }
+    Function [ <internal:intl> function intltz_count_equivalent_ids ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $zoneId ]
+      }
+    }
+    Function [ <internal:intl> function intltz_create_time_zone_id_enumeration ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $zoneType ]
+        Parameter #1 [ <optional> $region ]
+        Parameter #2 [ <optional> $rawOffset ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_canonical_id ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $zoneId ]
+        Parameter #1 [ <optional> &$isSystemID ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_region ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $zoneId ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_tz_data_version ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:intl> function intltz_get_equivalent_id ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $zoneId ]
+        Parameter #1 [ <required> $index ]
+      }
+    }
+    Function [ <internal:intl> function intltz_use_daylight_time ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_offset ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+        Parameter #1 [ <required> $date ]
+        Parameter #2 [ <required> $local ]
+        Parameter #3 [ <required> &$rawOffset ]
+        Parameter #4 [ <required> &$dstOffset ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_raw_offset ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+      }
+    }
+    Function [ <internal:intl> function intltz_has_same_rules ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+        Parameter #1 [ <optional> IntlTimeZone $otherTimeZone ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_display_name ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+        Parameter #1 [ <optional> $isDaylight ]
+        Parameter #2 [ <optional> $style ]
+        Parameter #3 [ <optional> $locale ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_dst_savings ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+      }
+    }
+    Function [ <internal:intl> function intltz_to_date_time_zone ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_error_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+      }
+    }
+    Function [ <internal:intl> function intltz_get_error_message ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlTimeZone $timeZone ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_create_instance ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $timeZone ]
+        Parameter #1 [ <optional> $locale ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_keyword_values_for_locale ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> $locale ]
+        Parameter #2 [ <required> $commonlyUsed ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_now ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_available_locales ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:intl> function intlcal_get ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_time ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_set_time ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $date ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_add ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+        Parameter #2 [ <required> $amount ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_set_time_zone ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $timeZone ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_after ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> IntlCalendar $otherCalendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_before ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> IntlCalendar $otherCalendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_set ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $fieldOrYear ]
+        Parameter #2 [ <required> $valueOrMonth ]
+        Parameter #3 [ <optional> $dayOfMonth ]
+        Parameter #4 [ <optional> $hour ]
+        Parameter #5 [ <optional> $minute ]
+        Parameter #6 [ <optional> $second ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_roll ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+        Parameter #2 [ <optional> $amountOrUpOrDown ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_clear ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <optional> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_field_difference ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $when ]
+        Parameter #2 [ <required> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_actual_maximum ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_actual_minimum ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_day_of_week_type ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $dayOfWeek ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_first_day_of_week ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_greatest_minimum ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_least_maximum ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_locale ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $localeType ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_maximum ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_minimal_days_in_first_week ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_minimum ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_time_zone ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_type ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_weekend_transition ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $dayOfWeek ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_in_daylight_time ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_is_equivalent_to ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> IntlCalendar $otherCalendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_is_lenient ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_is_set ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_is_weekend ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <optional> $date ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_set_first_day_of_week ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $dayOfWeek ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_set_lenient ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> $isLenient ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_equals ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+        Parameter #1 [ <required> IntlCalendar $otherCalendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_from_date_time ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $dateTime ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_to_date_time ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_error_code ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlcal_get_error_message ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlgregcal_create_instance ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <optional> $timeZoneOrYear ]
+        Parameter #1 [ <optional> $localeOrMonth ]
+        Parameter #2 [ <optional> $dayOfMonth ]
+        Parameter #3 [ <optional> $hour ]
+        Parameter #4 [ <optional> $minute ]
+        Parameter #5 [ <optional> $second ]
+      }
+    }
+    Function [ <internal:intl> function intlgregcal_set_gregorian_change ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlGregorianCalendar $calendar ]
+        Parameter #1 [ <required> $date ]
+      }
+    }
+    Function [ <internal:intl> function intlgregcal_get_gregorian_change ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> IntlGregorianCalendar $calendar ]
+      }
+    }
+    Function [ <internal:intl> function intlgregcal_is_leap_year ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> IntlGregorianCalendar $calendar ]
+        Parameter #1 [ <required> $year ]
+      }
+    }
+    Function [ <internal:intl> function intl_get_error_code ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:intl> function intl_get_error_message ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:intl> function intl_is_failure ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+    Function [ <internal:intl> function intl_error_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $arg1 ]
+      }
+    }
+  }
+
+  - Classes [18] {
+    Class [ <internal:intl> class Collator ] {
+
+      - Constants [24] {
+        Constant [ integer DEFAULT_VALUE ] { -1 }
+        Constant [ integer PRIMARY ] { 0 }
+        Constant [ integer SECONDARY ] { 1 }
+        Constant [ integer TERTIARY ] { 2 }
+        Constant [ integer DEFAULT_STRENGTH ] { 2 }
+        Constant [ integer QUATERNARY ] { 3 }
+        Constant [ integer IDENTICAL ] { 15 }
+        Constant [ integer OFF ] { 16 }
+        Constant [ integer ON ] { 17 }
+        Constant [ integer SHIFTED ] { 20 }
+        Constant [ integer NON_IGNORABLE ] { 21 }
+        Constant [ integer LOWER_FIRST ] { 24 }
+        Constant [ integer UPPER_FIRST ] { 25 }
+        Constant [ integer FRENCH_COLLATION ] { 0 }
+        Constant [ integer ALTERNATE_HANDLING ] { 1 }
+        Constant [ integer CASE_FIRST ] { 2 }
+        Constant [ integer CASE_LEVEL ] { 3 }
+        Constant [ integer NORMALIZATION_MODE ] { 4 }
+        Constant [ integer STRENGTH ] { 5 }
+        Constant [ integer HIRAGANA_QUATERNARY_MODE ] { 6 }
+        Constant [ integer NUMERIC_COLLATION ] { 7 }
+        Constant [ integer SORT_REGULAR ] { 0 }
+        Constant [ integer SORT_STRING ] { 1 }
+        Constant [ integer SORT_NUMERIC ] { 2 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:intl> static public method create ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [13] {
+        Method [ <internal:intl, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> public method compare ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+          }
+        }
+
+        Method [ <internal:intl> public method sort ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> array &$arr ]
+            Parameter #1 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:intl> public method sortWithSortKeys ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> array &$arr ]
+            Parameter #1 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:intl> public method asort ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> array &$arr ]
+            Parameter #1 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:intl> public method getAttribute ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> public method setAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+          }
+        }
+
+        Method [ <internal:intl> public method getStrength ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method setStrength ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> public method getLocale ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getSortKey ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> class NumberFormatter ] {
+
+      - Constants [73] {
+        Constant [ integer PATTERN_DECIMAL ] { 0 }
+        Constant [ integer DECIMAL ] { 1 }
+        Constant [ integer CURRENCY ] { 2 }
+        Constant [ integer PERCENT ] { 3 }
+        Constant [ integer SCIENTIFIC ] { 4 }
+        Constant [ integer SPELLOUT ] { 5 }
+        Constant [ integer ORDINAL ] { 6 }
+        Constant [ integer DURATION ] { 7 }
+        Constant [ integer PATTERN_RULEBASED ] { 9 }
+        Constant [ integer IGNORE ] { 0 }
+        Constant [ integer DEFAULT_STYLE ] { 1 }
+        Constant [ integer ROUND_CEILING ] { 0 }
+        Constant [ integer ROUND_FLOOR ] { 1 }
+        Constant [ integer ROUND_DOWN ] { 2 }
+        Constant [ integer ROUND_UP ] { 3 }
+        Constant [ integer ROUND_HALFEVEN ] { 4 }
+        Constant [ integer ROUND_HALFDOWN ] { 5 }
+        Constant [ integer ROUND_HALFUP ] { 6 }
+        Constant [ integer PAD_BEFORE_PREFIX ] { 0 }
+        Constant [ integer PAD_AFTER_PREFIX ] { 1 }
+        Constant [ integer PAD_BEFORE_SUFFIX ] { 2 }
+        Constant [ integer PAD_AFTER_SUFFIX ] { 3 }
+        Constant [ integer PARSE_INT_ONLY ] { 0 }
+        Constant [ integer GROUPING_USED ] { 1 }
+        Constant [ integer DECIMAL_ALWAYS_SHOWN ] { 2 }
+        Constant [ integer MAX_INTEGER_DIGITS ] { 3 }
+        Constant [ integer MIN_INTEGER_DIGITS ] { 4 }
+        Constant [ integer INTEGER_DIGITS ] { 5 }
+        Constant [ integer MAX_FRACTION_DIGITS ] { 6 }
+        Constant [ integer MIN_FRACTION_DIGITS ] { 7 }
+        Constant [ integer FRACTION_DIGITS ] { 8 }
+        Constant [ integer MULTIPLIER ] { 9 }
+        Constant [ integer GROUPING_SIZE ] { 10 }
+        Constant [ integer ROUNDING_MODE ] { 11 }
+        Constant [ integer ROUNDING_INCREMENT ] { 12 }
+        Constant [ integer FORMAT_WIDTH ] { 13 }
+        Constant [ integer PADDING_POSITION ] { 14 }
+        Constant [ integer SECONDARY_GROUPING_SIZE ] { 15 }
+        Constant [ integer SIGNIFICANT_DIGITS_USED ] { 16 }
+        Constant [ integer MIN_SIGNIFICANT_DIGITS ] { 17 }
+        Constant [ integer MAX_SIGNIFICANT_DIGITS ] { 18 }
+        Constant [ integer LENIENT_PARSE ] { 19 }
+        Constant [ integer POSITIVE_PREFIX ] { 0 }
+        Constant [ integer POSITIVE_SUFFIX ] { 1 }
+        Constant [ integer NEGATIVE_PREFIX ] { 2 }
+        Constant [ integer NEGATIVE_SUFFIX ] { 3 }
+        Constant [ integer PADDING_CHARACTER ] { 4 }
+        Constant [ integer CURRENCY_CODE ] { 5 }
+        Constant [ integer DEFAULT_RULESET ] { 6 }
+        Constant [ integer PUBLIC_RULESETS ] { 7 }
+        Constant [ integer DECIMAL_SEPARATOR_SYMBOL ] { 0 }
+        Constant [ integer GROUPING_SEPARATOR_SYMBOL ] { 1 }
+        Constant [ integer PATTERN_SEPARATOR_SYMBOL ] { 2 }
+        Constant [ integer PERCENT_SYMBOL ] { 3 }
+        Constant [ integer ZERO_DIGIT_SYMBOL ] { 4 }
+        Constant [ integer DIGIT_SYMBOL ] { 5 }
+        Constant [ integer MINUS_SIGN_SYMBOL ] { 6 }
+        Constant [ integer PLUS_SIGN_SYMBOL ] { 7 }
+        Constant [ integer CURRENCY_SYMBOL ] { 8 }
+        Constant [ integer INTL_CURRENCY_SYMBOL ] { 9 }
+        Constant [ integer MONETARY_SEPARATOR_SYMBOL ] { 10 }
+        Constant [ integer EXPONENTIAL_SYMBOL ] { 11 }
+        Constant [ integer PERMILL_SYMBOL ] { 12 }
+        Constant [ integer PAD_ESCAPE_SYMBOL ] { 13 }
+        Constant [ integer INFINITY_SYMBOL ] { 14 }
+        Constant [ integer NAN_SYMBOL ] { 15 }
+        Constant [ integer SIGNIFICANT_DIGIT_SYMBOL ] { 16 }
+        Constant [ integer MONETARY_GROUPING_SEPARATOR_SYMBOL ] { 17 }
+        Constant [ integer TYPE_DEFAULT ] { 0 }
+        Constant [ integer TYPE_INT32 ] { 1 }
+        Constant [ integer TYPE_INT64 ] { 2 }
+        Constant [ integer TYPE_DOUBLE ] { 3 }
+        Constant [ integer TYPE_CURRENCY ] { 4 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:intl> static public method create ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $style ]
+            Parameter #2 [ <optional> $pattern ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [16] {
+        Method [ <internal:intl, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $style ]
+            Parameter #2 [ <optional> $pattern ]
+          }
+        }
+
+        Method [ <internal:intl> public method format ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $num ]
+            Parameter #1 [ <optional> $type ]
+          }
+        }
+
+        Method [ <internal:intl> public method parse ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <optional> $type ]
+            Parameter #2 [ <optional> &$position ]
+          }
+        }
+
+        Method [ <internal:intl> public method formatCurrency ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $num ]
+            Parameter #1 [ <required> $currency ]
+          }
+        }
+
+        Method [ <internal:intl> public method parseCurrency ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> &$currency ]
+            Parameter #2 [ <optional> &$position ]
+          }
+        }
+
+        Method [ <internal:intl> public method setAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $attr ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:intl> public method getAttribute ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $attr ]
+          }
+        }
+
+        Method [ <internal:intl> public method setTextAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $attr ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:intl> public method getTextAttribute ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $attr ]
+          }
+        }
+
+        Method [ <internal:intl> public method setSymbol ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $attr ]
+            Parameter #1 [ <required> $symbol ]
+          }
+        }
+
+        Method [ <internal:intl> public method getSymbol ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $attr ]
+          }
+        }
+
+        Method [ <internal:intl> public method setPattern ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $pattern ]
+          }
+        }
+
+        Method [ <internal:intl> public method getPattern ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getLocale ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $type ]
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> class Normalizer ] {
+
+      - Constants [9] {
+        Constant [ integer NONE ] { 1 }
+        Constant [ integer FORM_D ] { 2 }
+        Constant [ integer NFD ] { 2 }
+        Constant [ integer FORM_KD ] { 3 }
+        Constant [ integer NFKD ] { 3 }
+        Constant [ integer FORM_C ] { 4 }
+        Constant [ integer NFC ] { 4 }
+        Constant [ integer FORM_KC ] { 5 }
+        Constant [ integer NFKC ] { 5 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:intl> static public method normalize ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+            Parameter #2 [ <required> $arg3 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method isNormalized ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+            Parameter #2 [ <required> $arg3 ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:intl> class Locale ] {
+
+      - Constants [10] {
+        Constant [ integer ACTUAL_LOCALE ] { 0 }
+        Constant [ integer VALID_LOCALE ] { 1 }
+        Constant [ null DEFAULT_LOCALE ] {  }
+        Constant [ string LANG_TAG ] { language }
+        Constant [ string EXTLANG_TAG ] { extlang }
+        Constant [ string SCRIPT_TAG ] { script }
+        Constant [ string REGION_TAG ] { region }
+        Constant [ string VARIANT_TAG ] { variant }
+        Constant [ string GRANDFATHERED_LANG_TAG ] { grandfathered }
+        Constant [ string PRIVATE_TAG ] { private }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [18] {
+        Method [ <internal:intl> static public method getDefault ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> static public method setDefault ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getPrimaryLanguage ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getScript ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getRegion ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getKeywords ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getDisplayScript ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getDisplayRegion ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getDisplayName ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getDisplayLanguage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getDisplayVariant ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method composeLocale ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method parseLocale ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getAllVariants ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method filterMatches ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+            Parameter #2 [ <required> $arg3 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method lookup ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $arg1 ]
+            Parameter #1 [ <required> $arg2 ]
+            Parameter #2 [ <required> $arg3 ]
+            Parameter #3 [ <required> $arg4 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method canonicalize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:intl> static public method acceptFromHttp ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:intl> class MessageFormatter ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [3] {
+        Method [ <internal:intl> static public method create ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $pattern ]
+          }
+        }
+
+        Method [ <internal:intl> static public method formatMessage ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $pattern ]
+            Parameter #2 [ <required> $args ]
+          }
+        }
+
+        Method [ <internal:intl> static public method parseMessage ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $pattern ]
+            Parameter #2 [ <required> $args ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [8] {
+        Method [ <internal:intl, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $pattern ]
+          }
+        }
+
+        Method [ <internal:intl> public method format ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $args ]
+          }
+        }
+
+        Method [ <internal:intl> public method parse ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $source ]
+          }
+        }
+
+        Method [ <internal:intl> public method setPattern ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $pattern ]
+          }
+        }
+
+        Method [ <internal:intl> public method getPattern ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getLocale ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> class IntlDateFormatter ] {
+
+      - Constants [7] {
+        Constant [ integer FULL ] { 0 }
+        Constant [ integer LONG ] { 1 }
+        Constant [ integer MEDIUM ] { 2 }
+        Constant [ integer SHORT ] { 3 }
+        Constant [ integer NONE ] { -1 }
+        Constant [ integer GREGORIAN ] { 1 }
+        Constant [ integer TRADITIONAL ] { 0 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:intl> static public method create ] {
+
+          - Parameters [6] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $datetype ]
+            Parameter #2 [ <required> $timetype ]
+            Parameter #3 [ <optional> $timezone ]
+            Parameter #4 [ <optional> $calendar ]
+            Parameter #5 [ <optional> $pattern ]
+          }
+        }
+
+        Method [ <internal:intl> static public method formatObject ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $object ]
+            Parameter #1 [ <optional> $format ]
+            Parameter #2 [ <optional> $locale ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [20] {
+        Method [ <internal:intl, ctor> public method __construct ] {
+
+          - Parameters [6] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $datetype ]
+            Parameter #2 [ <required> $timetype ]
+            Parameter #3 [ <optional> $timezone ]
+            Parameter #4 [ <optional> $calendar ]
+            Parameter #5 [ <optional> $pattern ]
+          }
+        }
+
+        Method [ <internal:intl> public method getDateType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getTimeType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getCalendar ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getCalendarObject ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method setCalendar ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $which ]
+          }
+        }
+
+        Method [ <internal:intl> public method getTimeZoneId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method setTimeZoneId ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $zone ]
+          }
+        }
+
+        Method [ <internal:intl> public method getTimeZone ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method setTimeZone ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $zone ]
+          }
+        }
+
+        Method [ <internal:intl> public method setPattern ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $pattern ]
+          }
+        }
+
+        Method [ <internal:intl> public method getPattern ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getLocale ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method setLenient ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $lenient ]
+          }
+        }
+
+        Method [ <internal:intl> public method isLenient ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method format ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $args ]
+            Parameter #1 [ <optional> $array ]
+          }
+        }
+
+        Method [ <internal:intl> public method parse ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <optional> &$position ]
+          }
+        }
+
+        Method [ <internal:intl> public method localtime ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <optional> &$position ]
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> <iterateable> class ResourceBundle implements Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:intl> static public method create ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $bundlename ]
+            Parameter #2 [ <optional> $fallback ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getLocales ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $bundlename ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:intl, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $locale ]
+            Parameter #1 [ <required> $bundlename ]
+            Parameter #2 [ <optional> $fallback ]
+          }
+        }
+
+        Method [ <internal:intl> public method get ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <optional> $fallback ]
+          }
+        }
+
+        Method [ <internal:intl> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> class Transliterator ] {
+
+      - Constants [2] {
+        Constant [ integer FORWARD ] { 0 }
+        Constant [ integer REVERSE ] { 1 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [3] {
+        Method [ <internal:intl> static public method create ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <optional> $direction ]
+          }
+        }
+
+        Method [ <internal:intl> static public method createFromRules ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $rules ]
+            Parameter #1 [ <optional> $direction ]
+          }
+        }
+
+        Method [ <internal:intl> static public method listIDs ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+
+      - Properties [1] {
+        Property [ <default> public $id ]
+      }
+
+      - Methods [5] {
+        Method [ <internal:intl, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method createInverse ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method transliterate ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $subject ]
+            Parameter #1 [ <optional> $start ]
+            Parameter #2 [ <optional> $end ]
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> class IntlTimeZone ] {
+
+      - Constants [11] {
+        Constant [ integer DISPLAY_SHORT ] { 1 }
+        Constant [ integer DISPLAY_LONG ] { 2 }
+        Constant [ integer DISPLAY_SHORT_GENERIC ] { 3 }
+        Constant [ integer DISPLAY_LONG_GENERIC ] { 4 }
+        Constant [ integer DISPLAY_SHORT_GMT ] { 5 }
+        Constant [ integer DISPLAY_LONG_GMT ] { 6 }
+        Constant [ integer DISPLAY_SHORT_COMMONLY_USED ] { 7 }
+        Constant [ integer DISPLAY_GENERIC_LOCATION ] { 8 }
+        Constant [ integer TYPE_ANY ] { 0 }
+        Constant [ integer TYPE_CANONICAL ] { 1 }
+        Constant [ integer TYPE_CANONICAL_LOCATION ] { 2 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [11] {
+        Method [ <internal:intl> static public method createTimeZone ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $zoneId ]
+          }
+        }
+
+        Method [ <internal:intl> static public method fromDateTimeZone ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $zoneId ]
+          }
+        }
+
+        Method [ <internal:intl> static public method createDefault ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> static public method getGMT ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> static public method createEnumeration ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $countryOrRawOffset ]
+          }
+        }
+
+        Method [ <internal:intl> static public method countEquivalentIDs ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $zoneId ]
+          }
+        }
+
+        Method [ <internal:intl> static public method createTimeZoneIDEnumeration ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $zoneType ]
+            Parameter #1 [ <optional> $region ]
+            Parameter #2 [ <optional> $rawOffset ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getCanonicalID ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $zoneId ]
+            Parameter #1 [ <optional> &$isSystemID ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getRegion ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $zoneId ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getTZDataVersion ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> static public method getEquivalentID ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $zoneId ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [11] {
+        Method [ <internal:intl, ctor> private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getID ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method useDaylightTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getOffset ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $date ]
+            Parameter #1 [ <required> $local ]
+            Parameter #2 [ <required> &$rawOffset ]
+            Parameter #3 [ <required> &$dstOffset ]
+          }
+        }
+
+        Method [ <internal:intl> public method getRawOffset ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method hasSameRules ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> IntlTimeZone $otherTimeZone ]
+          }
+        }
+
+        Method [ <internal:intl> public method getDisplayName ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $isDaylight ]
+            Parameter #1 [ <optional> $style ]
+            Parameter #2 [ <optional> $locale ]
+          }
+        }
+
+        Method [ <internal:intl> public method getDSTSavings ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method toDateTimeZone ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> class IntlCalendar ] {
+
+      - Constants [36] {
+        Constant [ integer FIELD_ERA ] { 0 }
+        Constant [ integer FIELD_YEAR ] { 1 }
+        Constant [ integer FIELD_MONTH ] { 2 }
+        Constant [ integer FIELD_WEEK_OF_YEAR ] { 3 }
+        Constant [ integer FIELD_WEEK_OF_MONTH ] { 4 }
+        Constant [ integer FIELD_DATE ] { 5 }
+        Constant [ integer FIELD_DAY_OF_YEAR ] { 6 }
+        Constant [ integer FIELD_DAY_OF_WEEK ] { 7 }
+        Constant [ integer FIELD_DAY_OF_WEEK_IN_MONTH ] { 8 }
+        Constant [ integer FIELD_AM_PM ] { 9 }
+        Constant [ integer FIELD_HOUR ] { 10 }
+        Constant [ integer FIELD_HOUR_OF_DAY ] { 11 }
+        Constant [ integer FIELD_MINUTE ] { 12 }
+        Constant [ integer FIELD_SECOND ] { 13 }
+        Constant [ integer FIELD_MILLISECOND ] { 14 }
+        Constant [ integer FIELD_ZONE_OFFSET ] { 15 }
+        Constant [ integer FIELD_DST_OFFSET ] { 16 }
+        Constant [ integer FIELD_YEAR_WOY ] { 17 }
+        Constant [ integer FIELD_DOW_LOCAL ] { 18 }
+        Constant [ integer FIELD_EXTENDED_YEAR ] { 19 }
+        Constant [ integer FIELD_JULIAN_DAY ] { 20 }
+        Constant [ integer FIELD_MILLISECONDS_IN_DAY ] { 21 }
+        Constant [ integer FIELD_IS_LEAP_MONTH ] { 22 }
+        Constant [ integer FIELD_FIELD_COUNT  ] { 23 }
+        Constant [ integer FIELD_DAY_OF_MONTH ] { 5 }
+        Constant [ integer DOW_SUNDAY ] { 1 }
+        Constant [ integer DOW_MONDAY ] { 2 }
+        Constant [ integer DOW_TUESDAY ] { 3 }
+        Constant [ integer DOW_WEDNESDAY ] { 4 }
+        Constant [ integer DOW_THURSDAY ] { 5 }
+        Constant [ integer DOW_FRIDAY ] { 6 }
+        Constant [ integer DOW_SATURDAY ] { 7 }
+        Constant [ integer DOW_TYPE_WEEKDAY ] { 0 }
+        Constant [ integer DOW_TYPE_WEEKEND ] { 1 }
+        Constant [ integer DOW_TYPE_WEEKEND_OFFSET ] { 2 }
+        Constant [ integer DOW_TYPE_WEEKEND_CEASE ] { 3 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [5] {
+        Method [ <internal:intl> static public method createInstance ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $timeZone ]
+            Parameter #1 [ <optional> $locale ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getKeywordValuesForLocale ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $locale ]
+            Parameter #2 [ <required> $commonlyUsed ]
+          }
+        }
+
+        Method [ <internal:intl> static public method getNow ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> static public method getAvailableLocales ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> static public method fromDateTime ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dateTime ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [36] {
+        Method [ <internal:intl, ctor> private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method getTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method setTime ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $date ]
+          }
+        }
+
+        Method [ <internal:intl> public method add ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $amount ]
+          }
+        }
+
+        Method [ <internal:intl> public method setTimeZone ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timeZone ]
+          }
+        }
+
+        Method [ <internal:intl> public method after ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> IntlCalendar $calendar ]
+          }
+        }
+
+        Method [ <internal:intl> public method before ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> IntlCalendar $calendar ]
+          }
+        }
+
+        Method [ <internal:intl> public method set ] {
+
+          - Parameters [6] {
+            Parameter #0 [ <required> $fieldOrYear ]
+            Parameter #1 [ <required> $valueOrMonth ]
+            Parameter #2 [ <optional> $dayOfMonth ]
+            Parameter #3 [ <optional> $hour ]
+            Parameter #4 [ <optional> $minute ]
+            Parameter #5 [ <optional> $second ]
+          }
+        }
+
+        Method [ <internal:intl> public method roll ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $amountOrUpOrDown ]
+          }
+        }
+
+        Method [ <internal:intl> public method clear ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method fieldDifference ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $when ]
+            Parameter #1 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method getActualMaximum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method getActualMinimum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method getDayOfWeekType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dayOfWeek ]
+          }
+        }
+
+        Method [ <internal:intl> public method getFirstDayOfWeek ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getGreatestMinimum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method getLeastMaximum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method getLocale ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $localeType ]
+          }
+        }
+
+        Method [ <internal:intl> public method getMaximum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method getMinimalDaysInFirstWeek ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getMinimum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method getTimeZone ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getWeekendTransition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dayOfWeek ]
+          }
+        }
+
+        Method [ <internal:intl> public method inDaylightTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method isEquivalentTo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> IntlCalendar $calendar ]
+          }
+        }
+
+        Method [ <internal:intl> public method isLenient ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method isSet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl> public method isWeekend ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $date ]
+          }
+        }
+
+        Method [ <internal:intl> public method setFirstDayOfWeek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dayOfWeek ]
+          }
+        }
+
+        Method [ <internal:intl> public method setLenient ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $isLenient ]
+          }
+        }
+
+        Method [ <internal:intl> public method equals ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> IntlCalendar $calendar ]
+          }
+        }
+
+        Method [ <internal:intl> public method toDateTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> class IntlGregorianCalendar extends IntlCalendar ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [5] {
+        Method [ <internal:intl, inherits IntlCalendar> static public method createInstance ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $timeZone ]
+            Parameter #1 [ <optional> $locale ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> static public method getKeywordValuesForLocale ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $locale ]
+            Parameter #2 [ <required> $commonlyUsed ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> static public method getNow ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> static public method getAvailableLocales ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> static public method fromDateTime ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dateTime ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [39] {
+        Method [ <internal:intl, overwrites IntlCalendar, ctor> public method __construct ] {
+
+          - Parameters [6] {
+            Parameter #0 [ <optional> $timeZoneOrYear ]
+            Parameter #1 [ <optional> $localeOrMonth ]
+            Parameter #2 [ <optional> $dayOfMonth ]
+            Parameter #3 [ <optional> $hour ]
+            Parameter #4 [ <optional> $minute ]
+            Parameter #5 [ <optional> $second ]
+          }
+        }
+
+        Method [ <internal:intl> public method setGregorianChange ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $date ]
+          }
+        }
+
+        Method [ <internal:intl> public method getGregorianChange ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method isLeapYear ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $year ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method setTime ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $date ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method add ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $amount ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method setTimeZone ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timeZone ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method after ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> IntlCalendar $calendar ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method before ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> IntlCalendar $calendar ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method set ] {
+
+          - Parameters [6] {
+            Parameter #0 [ <required> $fieldOrYear ]
+            Parameter #1 [ <required> $valueOrMonth ]
+            Parameter #2 [ <optional> $dayOfMonth ]
+            Parameter #3 [ <optional> $hour ]
+            Parameter #4 [ <optional> $minute ]
+            Parameter #5 [ <optional> $second ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method roll ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $amountOrUpOrDown ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method clear ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method fieldDifference ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $when ]
+            Parameter #1 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getActualMaximum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getActualMinimum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getDayOfWeekType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dayOfWeek ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getFirstDayOfWeek ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getGreatestMinimum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getLeastMaximum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getLocale ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $localeType ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getMaximum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getMinimalDaysInFirstWeek ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getMinimum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getTimeZone ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getWeekendTransition ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dayOfWeek ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method inDaylightTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method isEquivalentTo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> IntlCalendar $calendar ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method isLenient ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method isSet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method isWeekend ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $date ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method setFirstDayOfWeek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dayOfWeek ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method setLenient ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $isLenient ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method equals ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> IntlCalendar $calendar ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method toDateTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlCalendar> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> class Spoofchecker ] {
+
+      - Constants [7] {
+        Constant [ integer SINGLE_SCRIPT_CONFUSABLE ] { 1 }
+        Constant [ integer MIXED_SCRIPT_CONFUSABLE ] { 2 }
+        Constant [ integer WHOLE_SCRIPT_CONFUSABLE ] { 4 }
+        Constant [ integer ANY_CASE ] { 8 }
+        Constant [ integer SINGLE_SCRIPT ] { 16 }
+        Constant [ integer INVISIBLE ] { 32 }
+        Constant [ integer CHAR_LIMIT ] { 64 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:intl, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method isSuspicious ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $text ]
+            Parameter #1 [ <optional> &$error ]
+          }
+        }
+
+        Method [ <internal:intl> public method areConfusable ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $s1 ]
+            Parameter #1 [ <required> $s2 ]
+            Parameter #2 [ <optional> &$error ]
+          }
+        }
+
+        Method [ <internal:intl> public method setAllowedLocales ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $locale_list ]
+          }
+        }
+
+        Method [ <internal:intl> public method setChecks ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $checks ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> class IntlException extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:intl> <iterateable> class IntlIterator implements Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:intl, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> <iterateable> class IntlBreakIterator implements Traversable ] {
+
+      - Constants [19] {
+        Constant [ integer DONE ] { -1 }
+        Constant [ integer WORD_NONE ] { 0 }
+        Constant [ integer WORD_NONE_LIMIT ] { 100 }
+        Constant [ integer WORD_NUMBER ] { 100 }
+        Constant [ integer WORD_NUMBER_LIMIT ] { 200 }
+        Constant [ integer WORD_LETTER ] { 200 }
+        Constant [ integer WORD_LETTER_LIMIT ] { 300 }
+        Constant [ integer WORD_KANA ] { 300 }
+        Constant [ integer WORD_KANA_LIMIT ] { 400 }
+        Constant [ integer WORD_IDEO ] { 400 }
+        Constant [ integer WORD_IDEO_LIMIT ] { 500 }
+        Constant [ integer LINE_SOFT ] { 0 }
+        Constant [ integer LINE_SOFT_LIMIT ] { 100 }
+        Constant [ integer LINE_HARD ] { 100 }
+        Constant [ integer LINE_HARD_LIMIT ] { 200 }
+        Constant [ integer SENTENCE_TERM ] { 0 }
+        Constant [ integer SENTENCE_TERM_LIMIT ] { 100 }
+        Constant [ integer SENTENCE_SEP ] { 100 }
+        Constant [ integer SENTENCE_SEP_LIMIT ] { 200 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [6] {
+        Method [ <internal:intl> static public method createWordInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl> static public method createLineInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl> static public method createCharacterInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl> static public method createSentenceInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl> static public method createTitleInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl> static public method createCodePointInstance ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [15] {
+        Method [ <internal:intl, ctor> private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getText ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method setText ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"text" ]
+          }
+        }
+
+        Method [ <internal:intl> public method first ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method last ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method previous ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method next ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method following ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl> public method preceding ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl> public method isBoundary ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl> public method getLocale ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getPartsIterator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"key_type" ]
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> <iterateable> class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversable ] {
+
+      - Constants [19] {
+        Constant [ integer DONE ] { -1 }
+        Constant [ integer WORD_NONE ] { 0 }
+        Constant [ integer WORD_NONE_LIMIT ] { 100 }
+        Constant [ integer WORD_NUMBER ] { 100 }
+        Constant [ integer WORD_NUMBER_LIMIT ] { 200 }
+        Constant [ integer WORD_LETTER ] { 200 }
+        Constant [ integer WORD_LETTER_LIMIT ] { 300 }
+        Constant [ integer WORD_KANA ] { 300 }
+        Constant [ integer WORD_KANA_LIMIT ] { 400 }
+        Constant [ integer WORD_IDEO ] { 400 }
+        Constant [ integer WORD_IDEO_LIMIT ] { 500 }
+        Constant [ integer LINE_SOFT ] { 0 }
+        Constant [ integer LINE_SOFT_LIMIT ] { 100 }
+        Constant [ integer LINE_HARD ] { 100 }
+        Constant [ integer LINE_HARD_LIMIT ] { 200 }
+        Constant [ integer SENTENCE_TERM ] { 0 }
+        Constant [ integer SENTENCE_TERM_LIMIT ] { 100 }
+        Constant [ integer SENTENCE_SEP ] { 100 }
+        Constant [ integer SENTENCE_SEP_LIMIT ] { 200 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [6] {
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createWordInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createLineInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createCharacterInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createSentenceInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createTitleInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createCodePointInstance ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [19] {
+        Method [ <internal:intl, overwrites IntlBreakIterator, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $"rules" ]
+            Parameter #1 [ <optional> $"areCompiled" ]
+          }
+        }
+
+        Method [ <internal:intl> public method getRules ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getRuleStatus ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getRuleStatusVec ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl> public method getBinaryRules ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getText ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method setText ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"text" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method first ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method last ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method previous ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method next ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method following ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method preceding ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method isBoundary ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getLocale ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getPartsIterator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"key_type" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> <iterateable> class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversable ] {
+
+      - Constants [19] {
+        Constant [ integer DONE ] { -1 }
+        Constant [ integer WORD_NONE ] { 0 }
+        Constant [ integer WORD_NONE_LIMIT ] { 100 }
+        Constant [ integer WORD_NUMBER ] { 100 }
+        Constant [ integer WORD_NUMBER_LIMIT ] { 200 }
+        Constant [ integer WORD_LETTER ] { 200 }
+        Constant [ integer WORD_LETTER_LIMIT ] { 300 }
+        Constant [ integer WORD_KANA ] { 300 }
+        Constant [ integer WORD_KANA_LIMIT ] { 400 }
+        Constant [ integer WORD_IDEO ] { 400 }
+        Constant [ integer WORD_IDEO_LIMIT ] { 500 }
+        Constant [ integer LINE_SOFT ] { 0 }
+        Constant [ integer LINE_SOFT_LIMIT ] { 100 }
+        Constant [ integer LINE_HARD ] { 100 }
+        Constant [ integer LINE_HARD_LIMIT ] { 200 }
+        Constant [ integer SENTENCE_TERM ] { 0 }
+        Constant [ integer SENTENCE_TERM_LIMIT ] { 100 }
+        Constant [ integer SENTENCE_SEP ] { 100 }
+        Constant [ integer SENTENCE_SEP_LIMIT ] { 200 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [6] {
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createWordInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createLineInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createCharacterInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createSentenceInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createTitleInstance ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"locale" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> static public method createCodePointInstance ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [15] {
+        Method [ <internal:intl> public method getLastCodePoint ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getText ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method setText ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"text" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method first ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method last ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method previous ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method next ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method following ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method preceding ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method isBoundary ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $"offset" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getLocale ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getPartsIterator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $"key_type" ]
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getErrorCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlBreakIterator> public method getErrorMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:intl> <iterateable> class IntlPartsIterator extends IntlIterator implements Traversable, Iterator ] {
+
+      - Constants [3] {
+        Constant [ integer KEY_SEQUENTIAL ] { 0 }
+        Constant [ integer KEY_LEFT ] { 1 }
+        Constant [ integer KEY_RIGHT ] { 2 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:intl> public method getBreakIterator ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:intl, inherits IntlIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+

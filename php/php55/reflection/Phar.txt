@@ -1,0 +1,1733 @@
+Extension [ <persistent> extension #72 Phar version 2.0.1 ] {
+
+  - Dependencies {
+    Dependency [ apc (Optional) ]
+    Dependency [ bz2 (Optional) ]
+    Dependency [ openssl (Optional) ]
+    Dependency [ zlib (Optional) ]
+    Dependency [ standard (Optional) ]
+    Dependency [ spl (Required) ]
+  }
+
+  - INI {
+    Entry [ phar.readonly <ALL> ]
+      Current = '1'
+    }
+    Entry [ phar.require_hash <ALL> ]
+      Current = '1'
+    }
+    Entry [ phar.cache_list <SYSTEM> ]
+      Current = ''
+    }
+  }
+
+  - Classes [4] {
+    Class [ <internal:Phar> class PharException extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:Phar> <iterateable> class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, SeekableIterator, Traversable, Iterator, Countable, ArrayAccess ] {
+
+      - Constants [26] {
+        Constant [ integer CURRENT_MODE_MASK ] { 240 }
+        Constant [ integer CURRENT_AS_PATHNAME ] { 32 }
+        Constant [ integer CURRENT_AS_FILEINFO ] { 0 }
+        Constant [ integer CURRENT_AS_SELF ] { 16 }
+        Constant [ integer KEY_MODE_MASK ] { 3840 }
+        Constant [ integer KEY_AS_PATHNAME ] { 0 }
+        Constant [ integer FOLLOW_SYMLINKS ] { 512 }
+        Constant [ integer KEY_AS_FILENAME ] { 256 }
+        Constant [ integer NEW_CURRENT_AND_KEY ] { 256 }
+        Constant [ integer OTHER_MODE_MASK ] { 12288 }
+        Constant [ integer SKIP_DOTS ] { 4096 }
+        Constant [ integer UNIX_PATHS ] { 8192 }
+        Constant [ integer BZ2 ] { 8192 }
+        Constant [ integer GZ ] { 4096 }
+        Constant [ integer NONE ] { 0 }
+        Constant [ integer PHAR ] { 1 }
+        Constant [ integer TAR ] { 2 }
+        Constant [ integer ZIP ] { 3 }
+        Constant [ integer COMPRESSED ] { 61440 }
+        Constant [ integer PHP ] { 0 }
+        Constant [ integer PHPS ] { 1 }
+        Constant [ integer MD5 ] { 1 }
+        Constant [ integer OPENSSL ] { 16 }
+        Constant [ integer SHA1 ] { 2 }
+        Constant [ integer SHA256 ] { 3 }
+        Constant [ integer SHA512 ] { 4 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [15] {
+        Method [ <internal:Phar> final static public method apiVersion ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method canCompress ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $method ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method canWrite ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method createDefaultStub ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $index ]
+            Parameter #1 [ <optional> $webindex ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method getSupportedCompression ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method getSupportedSignatures ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method interceptFileFuncs ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method isValidPharFilename ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $executable ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method loadPhar ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $alias ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method mapPhar ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $alias ]
+            Parameter #1 [ <optional> $offset ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method running ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $retphar ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method mount ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $inphar ]
+            Parameter #1 [ <required> $externalfile ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method mungServer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $munglist ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method unlinkArchive ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $archive ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method webPhar ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <optional> $alias ]
+            Parameter #1 [ <optional> $index ]
+            Parameter #2 [ <optional> $f404 ]
+            Parameter #3 [ <optional> $mimetypes ]
+            Parameter #4 [ <optional> $rewrites ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [81] {
+        Method [ <internal:Phar, overwrites RecursiveDirectoryIterator, ctor> public method __construct ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $flags ]
+            Parameter #2 [ <optional> $alias ]
+            Parameter #3 [ <optional> $fileformat ]
+          }
+        }
+
+        Method [ <internal:Phar, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method addEmptyDir ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $dirname ]
+          }
+        }
+
+        Method [ <internal:Phar> public method addFile ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $localname ]
+          }
+        }
+
+        Method [ <internal:Phar> public method addFromString ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $localname ]
+            Parameter #1 [ <optional> $contents ]
+          }
+        }
+
+        Method [ <internal:Phar> public method buildFromDirectory ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $base_dir ]
+            Parameter #1 [ <optional> $regex ]
+          }
+        }
+
+        Method [ <internal:Phar> public method buildFromIterator ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $iterator ]
+            Parameter #1 [ <optional> $base_directory ]
+          }
+        }
+
+        Method [ <internal:Phar> public method compressFiles ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $compression_type ]
+          }
+        }
+
+        Method [ <internal:Phar> public method decompressFiles ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method compress ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $compression_type ]
+            Parameter #1 [ <optional> $file_ext ]
+          }
+        }
+
+        Method [ <internal:Phar> public method decompress ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $file_ext ]
+          }
+        }
+
+        Method [ <internal:Phar> public method convertToExecutable ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $format ]
+            Parameter #1 [ <optional> $compression_type ]
+            Parameter #2 [ <optional> $file_ext ]
+          }
+        }
+
+        Method [ <internal:Phar> public method convertToData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $format ]
+            Parameter #1 [ <optional> $compression_type ]
+            Parameter #2 [ <optional> $file_ext ]
+          }
+        }
+
+        Method [ <internal:Phar> public method copy ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $newfile ]
+            Parameter #1 [ <required> $oldfile ]
+          }
+        }
+
+        Method [ <internal:Phar, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method delete ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $entry ]
+          }
+        }
+
+        Method [ <internal:Phar> public method delMetadata ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method extractTo ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $pathto ]
+            Parameter #1 [ <optional> $files ]
+            Parameter #2 [ <optional> $overwrite ]
+          }
+        }
+
+        Method [ <internal:Phar> public method getAlias ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar, overwrites SplFileInfo, prototype SplFileInfo> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getMetadata ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getModified ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getSignature ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getStub ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getVersion ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method hasMetadata ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method isBuffering ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method isCompressed ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method isFileFormat ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fileformat ]
+          }
+        }
+
+        Method [ <internal:Phar, overwrites SplFileInfo, prototype SplFileInfo> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $entry ]
+          }
+        }
+
+        Method [ <internal:Phar, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $entry ]
+          }
+        }
+
+        Method [ <internal:Phar, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $entry ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:Phar, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $entry ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setAlias ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $alias ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setDefaultStub ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $index ]
+            Parameter #1 [ <optional> $webindex ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setMetadata ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $metadata ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setSignatureAlgorithm ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $algorithm ]
+            Parameter #1 [ <optional> $privatekey ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setStub ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $newstub ]
+            Parameter #1 [ <optional> $maxlen ]
+          }
+        }
+
+        Method [ <internal:Phar> public method startBuffering ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method stopBuffering ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveDirectoryIterator, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $allow_links ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveDirectoryIterator, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveDirectoryIterator> public method getSubPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveDirectoryIterator> public method getSubPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator> public method isDot ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> final public method _bad_state_ex ] {
+        }
+      }
+    }
+
+    Class [ <internal:Phar> <iterateable> class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, SeekableIterator, Traversable, Iterator, Countable, ArrayAccess ] {
+
+      - Constants [12] {
+        Constant [ integer CURRENT_MODE_MASK ] { 240 }
+        Constant [ integer CURRENT_AS_PATHNAME ] { 32 }
+        Constant [ integer CURRENT_AS_FILEINFO ] { 0 }
+        Constant [ integer CURRENT_AS_SELF ] { 16 }
+        Constant [ integer KEY_MODE_MASK ] { 3840 }
+        Constant [ integer KEY_AS_PATHNAME ] { 0 }
+        Constant [ integer FOLLOW_SYMLINKS ] { 512 }
+        Constant [ integer KEY_AS_FILENAME ] { 256 }
+        Constant [ integer NEW_CURRENT_AND_KEY ] { 256 }
+        Constant [ integer OTHER_MODE_MASK ] { 12288 }
+        Constant [ integer SKIP_DOTS ] { 4096 }
+        Constant [ integer UNIX_PATHS ] { 8192 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [15] {
+        Method [ <internal:Phar> final static public method apiVersion ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method canCompress ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $method ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method canWrite ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method createDefaultStub ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $index ]
+            Parameter #1 [ <optional> $webindex ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method getSupportedCompression ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method getSupportedSignatures ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method interceptFileFuncs ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> final static public method isValidPharFilename ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $executable ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method loadPhar ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $alias ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method mapPhar ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $alias ]
+            Parameter #1 [ <optional> $offset ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method running ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $retphar ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method mount ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $inphar ]
+            Parameter #1 [ <required> $externalfile ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method mungServer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $munglist ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method unlinkArchive ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $archive ]
+          }
+        }
+
+        Method [ <internal:Phar> final static public method webPhar ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <optional> $alias ]
+            Parameter #1 [ <optional> $index ]
+            Parameter #2 [ <optional> $f404 ]
+            Parameter #3 [ <optional> $mimetypes ]
+            Parameter #4 [ <optional> $rewrites ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [81] {
+        Method [ <internal:Phar, overwrites RecursiveDirectoryIterator, ctor> public method __construct ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $flags ]
+            Parameter #2 [ <optional> $alias ]
+            Parameter #3 [ <optional> $fileformat ]
+          }
+        }
+
+        Method [ <internal:Phar, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method addEmptyDir ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $dirname ]
+          }
+        }
+
+        Method [ <internal:Phar> public method addFile ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $localname ]
+          }
+        }
+
+        Method [ <internal:Phar> public method addFromString ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $localname ]
+            Parameter #1 [ <optional> $contents ]
+          }
+        }
+
+        Method [ <internal:Phar> public method buildFromDirectory ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $base_dir ]
+            Parameter #1 [ <optional> $regex ]
+          }
+        }
+
+        Method [ <internal:Phar> public method buildFromIterator ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $iterator ]
+            Parameter #1 [ <optional> $base_directory ]
+          }
+        }
+
+        Method [ <internal:Phar> public method compressFiles ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $compression_type ]
+          }
+        }
+
+        Method [ <internal:Phar> public method decompressFiles ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method compress ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $compression_type ]
+            Parameter #1 [ <optional> $file_ext ]
+          }
+        }
+
+        Method [ <internal:Phar> public method decompress ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $file_ext ]
+          }
+        }
+
+        Method [ <internal:Phar> public method convertToExecutable ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $format ]
+            Parameter #1 [ <optional> $compression_type ]
+            Parameter #2 [ <optional> $file_ext ]
+          }
+        }
+
+        Method [ <internal:Phar> public method convertToData ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $format ]
+            Parameter #1 [ <optional> $compression_type ]
+            Parameter #2 [ <optional> $file_ext ]
+          }
+        }
+
+        Method [ <internal:Phar> public method copy ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $newfile ]
+            Parameter #1 [ <required> $oldfile ]
+          }
+        }
+
+        Method [ <internal:Phar, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method delete ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $entry ]
+          }
+        }
+
+        Method [ <internal:Phar> public method delMetadata ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method extractTo ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $pathto ]
+            Parameter #1 [ <optional> $files ]
+            Parameter #2 [ <optional> $overwrite ]
+          }
+        }
+
+        Method [ <internal:Phar> public method getAlias ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar, overwrites SplFileInfo, prototype SplFileInfo> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getMetadata ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getModified ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getSignature ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getStub ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getVersion ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method hasMetadata ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method isBuffering ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method isCompressed ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method isFileFormat ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fileformat ]
+          }
+        }
+
+        Method [ <internal:Phar, overwrites SplFileInfo, prototype SplFileInfo> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $entry ]
+          }
+        }
+
+        Method [ <internal:Phar, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $entry ]
+          }
+        }
+
+        Method [ <internal:Phar, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $entry ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:Phar, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $entry ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setAlias ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $alias ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setDefaultStub ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $index ]
+            Parameter #1 [ <optional> $webindex ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setMetadata ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $metadata ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setSignatureAlgorithm ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $algorithm ]
+            Parameter #1 [ <optional> $privatekey ]
+          }
+        }
+
+        Method [ <internal:Phar> public method setStub ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $newstub ]
+            Parameter #1 [ <optional> $maxlen ]
+          }
+        }
+
+        Method [ <internal:Phar> public method startBuffering ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method stopBuffering ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveDirectoryIterator, prototype RecursiveIterator> public method hasChildren ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $allow_links ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveDirectoryIterator, prototype RecursiveIterator> public method getChildren ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveDirectoryIterator> public method getSubPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits RecursiveDirectoryIterator> public method getSubPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator> public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits FilesystemIterator> public method setFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator> public method isDot ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SeekableIterator> public method seek ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $position ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits DirectoryIterator, prototype SplFileInfo> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> final public method _bad_state_ex ] {
+        }
+      }
+    }
+
+    Class [ <internal:Phar> class PharFileInfo extends SplFileInfo ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [44] {
+        Method [ <internal:Phar, overwrites SplFileInfo, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $filename ]
+          }
+        }
+
+        Method [ <internal:Phar, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method chmod ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $perms ]
+          }
+        }
+
+        Method [ <internal:Phar> public method compress ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $compression_type ]
+          }
+        }
+
+        Method [ <internal:Phar> public method decompress ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method delMetadata ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getCompressedSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getCRC32 ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getContent ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getMetadata ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method getPharFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method hasMetadata ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method isCompressed ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $compression_type ]
+          }
+        }
+
+        Method [ <internal:Phar> public method isCRCChecked ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Phar> public method setMetadata ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $metadata ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFilename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getExtension ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getBasename ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $suffix ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getInode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getOwner ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getATime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getMTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getCTime ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isWritable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isReadable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isExecutable ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isFile ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isDir ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method isLink ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getLinkTarget ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getRealPath ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getFileInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method getPathInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method openFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $open_mode ]
+            Parameter #1 [ <optional> $use_include_path ]
+            Parameter #2 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setFileClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method setInfoClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $class_name ]
+          }
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> final public method _bad_state_ex ] {
+        }
+
+        Method [ <internal:SPL, inherits SplFileInfo> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+
