@@ -944,6 +944,7 @@ build --enable-force-cgi-redirect \
       --enable-calendar=shared \
       --enable-bcmath=shared \
       --with-bz2=shared \
+      --enable-ctype=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
       --enable-exif=shared \
       --enable-ftp=shared \
@@ -1016,7 +1017,7 @@ without_shared="--without-gd \
       --disable-json --without-pspell --disable-wddx \
       --without-curl --disable-posix --disable-xml \
       --disable-simplexml --disable-exif --without-gettext \
-      --without-iconv --disable-ftp --without-bz2 \
+      --without-iconv --disable-ftp --without-bz2 --disable-ctype \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1067,6 +1068,7 @@ build --enable-force-cgi-redirect \
       --enable-calendar=shared \
       --enable-bcmath=shared \
       --with-bz2=shared \
+      --enable-ctype=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
       --with-gettext=shared \
       --with-iconv=shared \
@@ -1296,7 +1298,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
-    simplexml bz2 calendar exif ftp gettext gmp iconv \
+    simplexml bz2 calendar ctype exif ftp gettext gmp iconv \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
@@ -1364,7 +1366,7 @@ cat files.sqlite3 >> files.pdo
 # Package json, zip, curl, phar and fileinfo in -common.
 cat files.json files.curl files.phar files.fileinfo \
     files.exif files.gettext files.iconv files.calendar \
-    files.ftp files.bz2 > files.common
+    files.ftp files.bz2 files.ctype > files.common
 %if %{with_zip}
 cat files.zip >> files.common
 %endif
@@ -1603,7 +1605,7 @@ fi
 %changelog
 * Tue Dec  4 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.4.201211301534
 - build simplexml and xml extensions shared (in php-xml)
-- build bz2, calendar, exif, ftp, gettext and iconv
+- build bz2, calendar, ctype, exif, ftp, gettext and iconv
   extensions shared (in php-common)
 - build gmp extension shared (in php-bcmath)
 
