@@ -3,7 +3,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.4.2
+Version:        1.4.3
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -85,12 +85,14 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
 %{pear_testdir}/%{pear_name}
-%{pear_datadir}/%{pear_name}
 %{pear_phpdir}/PHP
 %{_bindir}/phpcs
 
 
 %changelog
+* Tue Dec  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.3-1
+- upstream 1.4.3
+
 * Fri Nov  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.2-1
 - upstream 1.4.2
 
