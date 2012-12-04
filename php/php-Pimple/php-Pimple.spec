@@ -12,6 +12,7 @@ URL:           http://pimple.sensiolabs.org
 Source0:       https://github.com/fabpot/%{libname}/archive/v%{version}.tar.gz
 
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 # Test requires
 BuildRequires: php-common >= %{php_min_ver}
@@ -59,6 +60,7 @@ cp -pr tests/* %{buildroot}%{_datadir}/tests/%{name}/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.rst composer.json
 %{_datadir}/php/%{libname}
 %dir %{_datadir}/tests
@@ -66,6 +68,9 @@ cp -pr tests/* %{buildroot}%{_datadir}/tests/%{name}/
 
 
 %changelog
+* Mon Dec  3 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- backport for remi repo.
+
 * Sun Dec  2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0.0-2
 - Removed "5.3" from summary and description
 - Changed update tests' require path to use standard PHP include_path
