@@ -121,7 +121,7 @@ Patch99: php-wip.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}, gmp-devel
+BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 BuildRequires: libstdc++-devel, openssl-devel
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
@@ -246,7 +246,6 @@ Provides: php-fileinfo, php-fileinfo%{?_isa}
 Provides: php-filter, php-filter%{?_isa}
 Provides: php-ftp, php-ftp%{?_isa}
 Provides: php-gettext, php-gettext%{?_isa}
-Provides: php-gmp, php-gmp%{?_isa}
 Provides: php-hash, php-hash%{?_isa}
 Provides: php-mhash = %{version}, php-mhash%{?_isa} = %{version}
 Provides: php-iconv, php-iconv%{?_isa}
@@ -600,6 +599,8 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01, except
 # libbcmath is licensed under LGPLv2+
 License: PHP and LGPLv2+
+BuildRequires: gmp-devel
+Provides: php-gmp, php-gmp%{?_isa}
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php53-bcmath, php53u-bcmath, php54-bcmath, php55-bcmath
 
@@ -882,6 +883,9 @@ build() {
 if [ -f ../Zend/zend_language_parser.c ]; then
 mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 fi
+
+# Keep ereg static (build options vary per SAPI)
+# Always static: date, calendar, filter
 ln -sf ../configure
 %configure \
 	--cache-file=../config.cache \
@@ -900,9 +904,6 @@ ln -sf ../configure
 	--enable-gd-native-ttf \
 	--with-t1lib=%{_prefix} \
 	--without-gdbm \
-	--with-gettext \
-	--with-gmp \
-	--with-iconv \
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
@@ -943,9 +944,12 @@ build --enable-force-cgi-redirect \
       --enable-mbstring=shared \
       --enable-mbregex \
       --with-gd=shared \
+      --with-gmp=shared \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
       --enable-exif=shared \
+      --with-gettext=shared \
+      --with-iconv=shared \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1012,7 +1016,8 @@ without_shared="--without-gd \
       --without-sqlite3 --disable-phar --disable-fileinfo \
       --disable-json --without-pspell --disable-wddx \
       --without-curl --disable-posix --disable-xml \
-      --disable-simplexml --disable-exif \
+      --disable-simplexml --disable-exif --without-gettext \
+      --without-iconv \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1059,8 +1064,11 @@ build --enable-force-cgi-redirect \
       --enable-mbstring=shared \
       --enable-mbregex \
       --with-gd=shared \
+      --with-gmp=shared \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
+      --with-gettext=shared \
+      --with-iconv=shared \
       --enable-exif=shared \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
@@ -1286,7 +1294,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
-    simplexml exif \
+    simplexml exif gettext gmp iconv \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
@@ -1315,6 +1323,9 @@ EOF
 EOF
 
 done
+
+# The gmp module is packaged in php-bcmath
+cat files.gmp >>files.bcmath
 
 # The dom, xsl and xml* modules are all packaged in php-xml
 cat files.dom files.xsl files.xml{reader,writer} files.wddx \
@@ -1350,7 +1361,7 @@ cat files.sqlite3 >> files.pdo
 
 # Package json, zip, curl, phar and fileinfo in -common.
 cat files.json files.curl files.phar files.fileinfo \
-    files.exif > files.common
+    files.exif files.gettext files.iconv > files.common
 %if %{with_zip}
 cat files.zip >> files.common
 %endif
@@ -1588,8 +1599,9 @@ fi
 
 %changelog
 * Tue Dec  4 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.4.201211301534
-- build simplexml and xml extensions shared (provided by php-xml)
-- build exif extension shared (provided by php-common)
+- build simplexml and xml extensions shared (in php-xml)
+- build exif, gettext and iconv extensions shared (in php-common)
+- build gmp extension shared (in php-bcmath)
 
 * Mon Dec  3 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.3.201211301534
 - drop some old compatibility provides (php-api, php-zend-abi, php-pecl-*)
