@@ -63,7 +63,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -962,6 +962,7 @@ build --enable-force-cgi-redirect \
       --with-pdo-firebird=shared,%{_libdir}/firebird \
       --enable-dom=shared \
       --with-pgsql=shared \
+      --enable-xml=shared \
       --enable-wddx=shared \
       --with-snmp=shared,%{_prefix} \
       --enable-soap=shared \
@@ -1009,7 +1010,7 @@ without_shared="--without-gd \
       --disable-xmlreader --disable-xmlwriter \
       --without-sqlite3 --disable-phar --disable-fileinfo \
       --disable-json --without-pspell --disable-wddx \
-      --without-curl --disable-posix \
+      --without-curl --disable-posix --disable-xml \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1075,6 +1076,7 @@ build --enable-force-cgi-redirect \
       --with-pdo-firebird=shared,%{_libdir}/firebird \
       --enable-dom=shared \
       --with-pgsql=shared \
+      --enable-xml=shared \
       --enable-wddx=shared \
       --with-snmp=shared,%{_prefix} \
       --enable-soap=shared \
@@ -1287,26 +1289,30 @@ for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
 %endif
     enchant phar fileinfo intl \
     mcrypt tidy pdo_dblib mssql pspell curl wddx \
-    posix sysvshm sysvsem sysvmsg recode; do
-    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
+    posix sysvshm sysvsem sysvmsg recode xml; do
+if [ "$mod" = "wddx" ]
+then   ini=xml_${mod}.ini
+else   ini=${mod}.ini
+fi
+    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini} <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
-    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${mod}.ini <<EOF
+    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini} <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
     cat > files.${mod} <<EOF
 %attr(755,root,root) %{_libdir}/php/modules/${mod}.so
 %attr(755,root,root) %{_libdir}/php-zts/modules/${mod}.so
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${mod}.ini
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${ini}
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${ini}
 EOF
 
 done
 
 # The dom, xsl and xml* modules are all packaged in php-xml
-cat files.dom files.xsl files.xml{reader,writer} files.wddx > files.xml
+cat files.dom files.xsl files.xml{reader,writer} files.wddx >> files.xml
 
 # The mysql and mysqli modules are both packaged in php-mysql
 cat files.mysqli >> files.mysql
@@ -1574,6 +1580,9 @@ fi
 
 
 %changelog
+* Tue Dec  4 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.4.201211301534
+- build xml extension shared (provided by php-xml)
+
 * Mon Dec  3 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.3.201211301534
 - drop some old compatibility provides (php-api, php-zend-abi, php-pecl-*)
 - obsoletes php55-*
