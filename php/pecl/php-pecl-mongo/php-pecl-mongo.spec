@@ -1,16 +1,10 @@
-%{!?phpname:    %{expand: %%global phpname     php}}
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name mongo
 
-# Filter private shared provides
-%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
-%{?filter_setup}
-
-
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.3.0
+Version:      1.3.1
 Release:      1%{?dist}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -40,6 +34,13 @@ Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
+%endif
+
+# Filter private shared provides
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+%{?filter_setup}
 
 
 %description
@@ -132,6 +133,9 @@ fi
 
 
 %changelog
+* Tue Dec  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.1-1
+- update to 1.3.1
+
 * Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.0-1
 - update to 1.3.0
 - add new options allow_empty_keys, is_master_interval, ping_interval
