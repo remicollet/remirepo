@@ -20,7 +20,10 @@ Source1:        %{proj_name}.ini
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.3.0
+BuildRequires:  php-hash
+BuildRequires:  php-iconv
 BuildRequires:  php-json
+BuildRequires:  php-spl
 BuildRequires:  php-pear
 BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
@@ -32,7 +35,11 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+Requires:       php-hash
+Requires:       php-iconv
 Requires:       php-json
+Requires:       php-spl
+Conflicts:      php-event
 
 Provides:       php-pecl(%{proj_name})         = %{version}%{?prever}
 Provides:       php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
