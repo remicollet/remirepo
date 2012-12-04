@@ -256,7 +256,6 @@ Provides: php-phar, php-phar%{?_isa}
 Provides: php-pcre, php-pcre%{?_isa}
 Provides: php-reflection, php-reflection%{?_isa}
 Provides: php-session, php-session%{?_isa}
-Provides: php-shmop, php-shmop%{?_isa}
 Provides: php-sockets, php-sockets%{?_isa}
 Provides: php-spl, php-spl%{?_isa}
 Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
@@ -421,6 +420,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 Provides: php-posix, php-posix%{?_isa}
+Provides: php-shmop, php-shmop%{?_isa}
 Provides: php-sysvsem, php-sysvsem%{?_isa}
 Provides: php-sysvshm, php-sysvshm%{?_isa}
 Provides: php-sysvmsg, php-sysvmsg%{?_isa}
@@ -885,7 +885,7 @@ mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 fi
 
 # Keep ereg static (build options vary per SAPI)
-# Always static: date, filter
+# Always static: date, filter, hash (all features), session
 ln -sf ../configure
 %configure \
 	--cache-file=../config.cache \
@@ -914,7 +914,6 @@ ln -sf ../configure
 	--enable-sockets \
 	--with-kerberos \
 	--enable-ucd-snmp-hack \
-	--enable-shmop \
 	--with-libxml-dir=%{_prefix} \
 %if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
         --with-system-tzdata \
@@ -1001,6 +1000,7 @@ build --enable-force-cgi-redirect \
       --with-tidy=shared,%{_prefix} \
       --with-mssql=shared,%{_prefix} \
       --enable-sysvmsg=shared --enable-sysvshm=shared --enable-sysvsem=shared \
+      --enable-shmop=shared \
       --enable-posix=shared \
       --with-unixODBC=shared,%{_prefix} \
       --enable-fileinfo=shared \
@@ -1018,6 +1018,7 @@ without_shared="--without-gd \
       --without-curl --disable-posix --disable-xml \
       --disable-simplexml --disable-exif --without-gettext \
       --without-iconv --disable-ftp --without-bz2 --disable-ctype \
+      --disable-shmop \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1126,6 +1127,7 @@ build --enable-force-cgi-redirect \
       --with-tidy=shared,%{_prefix} \
       --with-mssql=shared,%{_prefix} \
       --enable-sysvmsg=shared --enable-sysvshm=shared --enable-sysvsem=shared \
+      --enable-shmop=shared \
       --enable-posix=shared \
       --with-unixODBC=shared,%{_prefix} \
       --enable-fileinfo=shared \
@@ -1306,7 +1308,7 @@ for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
 %endif
     enchant phar fileinfo intl \
     mcrypt tidy pdo_dblib mssql pspell curl wddx \
-    posix sysvshm sysvsem sysvmsg recode xml; do
+    posix shmop sysvshm sysvsem sysvmsg recode xml; do
 if [ "$mod" = "wddx" ]
 then   ini=xml_${mod}.ini
 else   ini=${mod}.ini
@@ -1354,7 +1356,7 @@ cat files.pdo_oci >> files.oci8
 cat files.pdo_firebird >> files.interbase
 
 # sysv* and posix in packaged in php-process
-cat files.sysv* files.posix > files.process
+cat files.shmop files.sysv* files.posix > files.process
 
 # Package sqlite3 and pdo_sqlite with pdo; isolating the sqlite dependency
 # isn't useful at this time since rpm itself requires sqlite.
@@ -1608,6 +1610,7 @@ fi
 - build bz2, calendar, ctype, exif, ftp, gettext and iconv
   extensions shared (in php-common)
 - build gmp extension shared (in php-bcmath)
+- build shmop extension shared (in php-process)
 
 * Mon Dec  3 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.3.201211301534
 - drop some old compatibility provides (php-api, php-zend-abi, php-pecl-*)
