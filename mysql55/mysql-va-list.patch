@@ -4,10 +4,10 @@ which is not required by the C spec, and is not true on ARM for instance.
 Per bug #744707.
 
 
-diff -Naur mysql-5.5.16.orig/sql-common/client_plugin.c mysql-5.5.16/sql-common/client_plugin.c
---- mysql-5.5.16.orig/sql-common/client_plugin.c	2011-09-09 11:56:39.000000000 -0400
-+++ mysql-5.5.16/sql-common/client_plugin.c	2011-10-16 23:00:00.708799138 -0400
-@@ -228,11 +228,13 @@
+diff -up mysql-5.5.28/sql-common/client_plugin.c.p12 mysql-5.5.28/sql-common/client_plugin.c
+--- mysql-5.5.28/sql-common/client_plugin.c.p12	2012-08-29 10:50:46.000000000 +0200
++++ mysql-5.5.28/sql-common/client_plugin.c	2012-12-06 14:22:54.494857607 +0100
+@@ -233,11 +233,13 @@ int mysql_client_plugin_init()
  {
    MYSQL mysql;
    struct st_mysql_client_plugin **builtin;
@@ -21,7 +21,7 @@ diff -Naur mysql-5.5.16.orig/sql-common/client_plugin.c mysql-5.5.16/sql-common/
  
    pthread_mutex_init(&LOCK_load_client_plugin, MY_MUTEX_INIT_SLOW);
    init_alloc_root(&mem_root, 128, 128);
-@@ -244,7 +246,7 @@
+@@ -249,7 +251,7 @@ int mysql_client_plugin_init()
    pthread_mutex_lock(&LOCK_load_client_plugin);
  
    for (builtin= mysql_client_builtins; *builtin; builtin++)
@@ -30,7 +30,7 @@ diff -Naur mysql-5.5.16.orig/sql-common/client_plugin.c mysql-5.5.16/sql-common/
  
    pthread_mutex_unlock(&LOCK_load_client_plugin);
  
-@@ -288,9 +290,13 @@
+@@ -293,9 +295,13 @@ struct st_mysql_client_plugin *
  mysql_client_register_plugin(MYSQL *mysql,
                               struct st_mysql_client_plugin *plugin)
  {
@@ -44,7 +44,7 @@ diff -Naur mysql-5.5.16.orig/sql-common/client_plugin.c mysql-5.5.16/sql-common/
    pthread_mutex_lock(&LOCK_load_client_plugin);
  
    /* make sure the plugin wasn't loaded meanwhile */
-@@ -302,7 +308,7 @@
+@@ -307,7 +313,7 @@ mysql_client_register_plugin(MYSQL *mysq
      plugin= NULL;
    }
    else

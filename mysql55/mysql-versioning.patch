@@ -4,10 +4,10 @@ forgotten the issue entirely.  So we now maintain our own list of exported
 symbols and jam it into the build with this hack.
 
 
-diff -Naur mysql-5.5.8.orig/libmysql/CMakeLists.txt mysql-5.5.8/libmysql/CMakeLists.txt
---- mysql-5.5.8.orig/libmysql/CMakeLists.txt	2010-12-03 12:58:26.000000000 -0500
-+++ mysql-5.5.8/libmysql/CMakeLists.txt	2010-12-21 21:00:07.135311386 -0500
-@@ -197,7 +197,7 @@
+diff -up mysql-5.5.28/libmysql/CMakeLists.txt.p7 mysql-5.5.28/libmysql/CMakeLists.txt
+--- mysql-5.5.28/libmysql/CMakeLists.txt.p7	2012-08-29 10:50:46.000000000 +0200
++++ mysql-5.5.28/libmysql/CMakeLists.txt	2012-12-06 14:15:03.905461517 +0100
+@@ -209,7 +209,7 @@ IF(NOT DISABLE_SHARED)
          SET(libmysql_link_flags)
        ENDIF()
        SET_TARGET_PROPERTIES(libmysql PROPERTIES LINK_FLAGS 

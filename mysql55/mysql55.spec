@@ -1,6 +1,17 @@
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%global with_systemd 1
+%else
+%global with_systemd 0
+%endif
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%global with_dtrace 1
+%else
+%global with_dtrace 0
+%endif
+
 Name: mysql
 Version: 5.5.28
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -58,21 +69,21 @@ Patch17: mysql-plugin-test.patch
 Patch18: mysql-cipherspec.patch
 Patch19: mysql-file-contents.patch
 Patch20: mysql-string-overflow.patch
-
-# RC patch for backports
-Patch21: mysql-readline.patch
+Patch21: mysql-dh1024.patch
+Patch22: mysql-cve-2012-5611.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: gperf, perl, readline-devel, openssl-devel
+BuildRequires: gperf
+BuildRequires: perl, readline-devel, openssl-devel
 BuildRequires: gcc-c++, cmake, ncurses-devel, zlib-devel, libaio-devel
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel >= 1.3
 %endif
 # make test requires time and ps
 BuildRequires: time procps
 # Socket and Time::HiRes are needed to run regression tests
 BuildRequires: perl(Socket), perl(Time::HiRes)
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 BuildRequires: systemd-units
 %endif
 
@@ -125,7 +136,7 @@ Requires: sh-utils
 Requires(pre): /usr/sbin/useradd
 Requires(post): chkconfig
 Requires(preun): chkconfig
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 # We require this to be present for %%{_prefix}/lib/tmpfiles.d
 Requires: systemd-units
 # Make sure it's there when scriptlets run, too
@@ -237,9 +248,8 @@ rm -f Docs/mysql.info
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
-
-# Remi specific patches
-%patch21 -p1 -b .readline
+%patch21 -p1
+%patch22 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
@@ -302,7 +312,7 @@ cmake . -DBUILD_CONFIG=mysql_release \
 	-DMYSQL_DATADIR="/var/lib/mysql" \
 	-DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
 	-DENABLED_LOCAL_INFILE=ON \
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%if %{with_dtrace}
 	-DENABLE_DTRACE=ON \
 %endif
 	-DWITH_EMBEDDED_SERVER=ON \
@@ -322,7 +332,7 @@ ar -x ../libmysqld.a
 rm -f sql_binlog.cc.o rpl_utility.cc.o
 gcc $CFLAGS $LDFLAGS -shared -Wl,-soname,libmysqld.so.0 -o libmysqld.so.0.0.1 \
 	*.o \
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%if %{with_dtrace}
 	../../probes_mysql.o \
 %endif
 	-lpthread -laio -lcrypt -lssl -lcrypto -lz -lrt -lstdc++ -ldl -lm -lc
@@ -412,11 +422,11 @@ install -m 0755 -d $RPM_BUILD_ROOT/var/lib/mysql
 
 mkdir -p $RPM_BUILD_ROOT/etc
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 sed -i -e '/user=mysql/d' $RPM_BUILD_ROOT/etc/my.cnf
 %endif
 
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 # install systemd unit files and scripts for handling server startup
 mkdir -p ${RPM_BUILD_ROOT}%{_unitdir}
 install -m 644 %{SOURCE11} ${RPM_BUILD_ROOT}%{_unitdir}/
@@ -537,7 +547,7 @@ echo -e "You should consider upgrading to a supported release.\n"
 %else
 if [ $1 = 1 ]; then
     # Initial installation
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 %else
     /sbin/chkconfig --add mysqld
@@ -551,7 +561,7 @@ fi
 # We can tell if a SysV version of mysql was previously installed by
 # checking to see if the initscript is present.
 %triggerun server -- mysql-server
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 if [ -f /etc/rc.d/init.d/mysqld ]; then
     # Save the current service runlevel info
     # User must manually run systemd-sysv-convert --apply mysqld
@@ -570,7 +580,7 @@ fi
 %else
 if [ $1 = 0 ]; then
     # Package removal, not upgrade
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
     /bin/systemctl --no-reload disable mysqld.service >/dev/null 2>&1 || :
     /bin/systemctl stop mysqld.service >/dev/null 2>&1 || :
 %else
@@ -589,7 +599,7 @@ fi
 %if 0%{?systemd_postun_with_restart:1}
 %systemd_postun_with_restart mysqld.service
 %else
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ]; then
     # Package upgrade, not uninstall
@@ -751,7 +761,7 @@ fi
 %{_datadir}/mysql/my-*.cnf
 %{_datadir}/mysql/config.*.ini
 
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 %{_unitdir}/mysqld.service
 %{_libexecdir}/mysqld-prepare-db-dir
 %{_libexecdir}/mysqld-wait-ready
@@ -799,6 +809,20 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Dec  8 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.28-3
+- sync with rawhide, rebuild for security
+- use with_systemd and with_dtrace macro instead of version test
+
+* Thu Dec  6 2012 Honza Horak <hhorak@redhat.com> 5.5.28-3
+- Rebase patches to not leave backup files when not applied smoothly
+
+* Wed Dec  5 2012 Tom Lane <tgl@redhat.com> 5.5.28-2
+- Add patch for CVE-2012-5611
+Resolves: #883642
+- Widen DH key length from 512 to 1024 bits to meet minimum requirements
+  of FIPS 140-2
+Related: #877124
+
 * Sat Sep 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.28-2
 - sync with rawhide
 
