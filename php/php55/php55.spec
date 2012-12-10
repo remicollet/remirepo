@@ -68,7 +68,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.6.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -892,8 +892,14 @@ if [ -f ../Zend/zend_language_parser.c ]; then
 mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 fi
 
-# Keep ereg static (build options vary per SAPI)
-# Always static: date, filter, hash (all features), session
+# Always static:
+# date, filter: not supported
+# ereg: build options vary per SAPI
+# hash: for PHAR_SIG_SHA256 and PHAR_SIG_SHA512
+# session: dep on hash, used by soap and wddx
+# pcre: used by filter, zip
+# pcntl, readline: only used by CLI sapi
+# zlib: used by image
 ln -sf ../configure
 %configure \
 	--cache-file=../config.cache \
@@ -919,7 +925,6 @@ ln -sf ../configure
 	--with-zlib \
 	--with-layout=GNU \
 	--enable-magic-quotes \
-	--enable-sockets \
 	--with-kerberos \
 	--enable-ucd-snmp-hack \
 	--with-libxml-dir=%{_prefix} \
@@ -960,6 +965,8 @@ build --enable-force-cgi-redirect \
       --enable-ftp=shared \
       --with-gettext=shared \
       --with-iconv=shared \
+      --enable-sockets=shared \
+      --enable-tokenizer=shared \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1029,7 +1036,7 @@ without_shared="--without-gd \
       --without-curl --disable-posix --disable-xml \
       --disable-simplexml --disable-exif --without-gettext \
       --without-iconv --disable-ftp --without-bz2 --disable-ctype \
-      --disable-shmop \
+      --disable-shmop --disable-sockets --disable-tokenizer \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1084,6 +1091,8 @@ build --enable-force-cgi-redirect \
       --enable-dba=shared --with-db4=%{_prefix} \
       --with-gettext=shared \
       --with-iconv=shared \
+      --enable-sockets=shared \
+      --enable-tokenizer=shared \
       --enable-exif=shared \
       --enable-ftp=shared \
       --with-xmlrpc=shared \
@@ -1312,6 +1321,7 @@ for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     simplexml bz2 calendar ctype exif ftp gettext gmp iconv \
+    sockets tokenizer \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
@@ -1379,7 +1389,8 @@ cat files.sqlite3 >> files.pdo
 # Package json, zip, curl, phar and fileinfo in -common.
 cat files.json files.curl files.phar files.fileinfo \
     files.exif files.gettext files.iconv files.calendar \
-    files.ftp files.bz2 files.ctype > files.common
+    files.ftp files.bz2 files.ctype files.sockets \
+    files.tokenizer > files.common
 %if %{with_zip}
 cat files.zip >> files.common
 %endif
@@ -1616,6 +1627,9 @@ fi
 
 
 %changelog
+* Mon Dec 10 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.6.201212100830
+- build sockets, tokenizer extensions shared
+
 * Mon Dec 10 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.5.201212100830
 - new snapshot
 - enable dtrace
