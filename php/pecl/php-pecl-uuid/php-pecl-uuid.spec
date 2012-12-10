@@ -5,7 +5,7 @@
 Summary:       Universally Unique Identifier extension for PHP
 Name:          php-pecl-uuid
 Version:       1.0.3
-Release:       3%{?dist}
+Release:       3%{?dist}.3
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid

@@ -6,7 +6,7 @@
 
 Name:           php-pecl-sqlite
 Version:        2.0.0
-Release:        0.3.svn%{svnver}%{?dist}.1
+Release:        0.3.svn%{svnver}%{?dist}.3
 Summary:        Extension for the SQLite V2 Embeddable SQL Database Engine
 Group:          Development/Languages
 License:        PHP

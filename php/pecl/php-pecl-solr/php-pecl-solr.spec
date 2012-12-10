@@ -7,7 +7,7 @@ Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           php-pecl-solr
 Version:        1.0.2
-Release:        4%{?dist}
+Release:        4%{?dist}.2
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -99,7 +99,7 @@ mv %{pecl_name}/package.xml .
 mv %{pecl_name} %{pecl_name}-%{version}
 %endif
 
-%{__php} -n %{SOURCE2} package.xml >CHANGELOG
+%{__php} %{SOURCE2} package.xml >CHANGELOG
 
 cd %{pecl_name}-%{version}
 # Fix version

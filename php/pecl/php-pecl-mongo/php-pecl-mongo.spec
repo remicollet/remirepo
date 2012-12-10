@@ -5,7 +5,7 @@
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
 Version:      1.3.1
-Release:      1%{?dist}
+Release:      1%{?dist}.2
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}

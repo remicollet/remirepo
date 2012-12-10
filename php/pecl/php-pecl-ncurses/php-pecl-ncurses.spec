@@ -5,7 +5,7 @@
 Summary:      Terminal screen handling and optimization package
 Name:         php-pecl-ncurses
 Version:      1.0.2
-Release:      1%{?dist}.1
+Release:      1%{?dist}.3
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/ncurses
@@ -46,7 +46,7 @@ line.
 
 %prep 
 %setup -c -q
-%{_bindir}/php -n %{SOURCE2} package.xml >CHANGELOG
+%{_bindir}/php %{SOURCE2} package.xml >CHANGELOG
 
 cat >%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module

@@ -4,7 +4,7 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
 Version:      1.4.2
-Release:      2%{?dist}.1
+Release:      2%{?dist}.2
 
 License:      PHP
 Group:        Development/Languages

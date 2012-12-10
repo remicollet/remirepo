@@ -5,7 +5,7 @@
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
 Version:       1.0.9
-Release:       1%{?dist}
+Release:       1%{?dist}.3
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp

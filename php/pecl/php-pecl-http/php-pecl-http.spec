@@ -7,7 +7,7 @@
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.12.%{prever}%{?dist}
+Release:        0.12.%{prever}%{?dist}.3
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -133,18 +133,24 @@ install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
 
 %check
 # Minimal load test for NTS extension
-ln -sf %{php_extdir}/json.so %{proj_name}-%{version}%{?prever}/modules
+modules=""
+for mod in json hash iconv; do
+  if [ -f %{php_extdir}/${mod}.so ]; then
+    ln -sf %{php_extdir}/${mod}.so    %{proj_name}-%{version}%{?prever}/modules
+    ln -sf %{php_ztsextdir}/${mod}.so %{proj_name}-zts/modules
+    modules="$modules --define extension=${mod}.so"
+  fi
+done
 %{__php} --no-php-ini \
     --define extension_dir=%{proj_name}-%{version}%{?prever}/modules \
-    --define extension=json.so \
+    $modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 # Minimal load test for ZTS extension
-ln -sf %{php_ztsextdir}/json.so %{proj_name}-zts/modules
 %{__ztsphp} --no-php-ini \
     --define extension_dir=%{proj_name}-zts/modules \
-    --define extension=json.so \
+    $modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 

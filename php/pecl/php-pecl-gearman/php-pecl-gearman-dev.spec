@@ -5,7 +5,7 @@
 
 Name:		php-pecl-gearman
 Version:	1.0.3
-Release:	1%{?dist}.1
+Release:	1%{?dist}.2
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools

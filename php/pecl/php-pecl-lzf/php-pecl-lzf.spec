@@ -4,7 +4,7 @@
 
 Name:           php-pecl-lzf
 Version:        1.6.2
-Release:        2%{?dist}.1
+Release:        2%{?dist}.3
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
