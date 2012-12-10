@@ -1,10 +1,9 @@
 %{!?__pear: %global __pear %{_bindir}/pear}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%global pear_name PHPUnit_Selenium
-%global channel pear.phpunit.de
+%global pear_name    PHPUnit_Selenium
+%global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        1.2.10
+Version:        1.2.11
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -16,17 +15,22 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
+BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(%{channel}/PHPUnit) >= 3.7.0
-Requires:       php-common >= 5.3.3
-Requires:       php-curl, php-dom
+Requires:       php-pear(%{pear_channel}/PHPUnit) >= 3.7.0
+Requires:       php(language) >= 5.3.3
+Requires:       php-curl
+Requires:       php-dom
 # phpci detected extensions
-Requires:       php-date, php-pcre, php-json, php-reflection, php-spl
+Requires:       php-date
+Requires:       php-pcre
+Requires:       php-json
+Requires:       php-reflection
+Requires:       php-spl
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -69,7 +73,7 @@ rm -rf %{buildroot}
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -87,6 +91,9 @@ fi
 
 
 %changelog
+* Mon Dec 10 2012 Remi Collet <remi@fedoraproject.org> - 1.2.11-1
+- Version 1.2.11 (stable) - API 1.2.1 (stable)
+
 * Mon Oct 22 2012 Remi Collet <remi@fedoraproject.org> - 1.2.10-1
 - Version 1.2.10 (stable) - API 1.2.1 (stable)
 
