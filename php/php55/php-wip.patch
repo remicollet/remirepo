@@ -1,11 +1,17 @@
---- ext/date/php_date.c.orig	2012-12-01 09:54:45.834231459 +0100
-+++ ext/date/php_date.c	2012-12-01 09:54:51.594252063 +0100
-@@ -1027,7 +1027,7 @@
- 			case 'H': length = slprintf(buffer, 32, "%02d", (int) t->h); break;
- 			case 'i': length = slprintf(buffer, 32, "%02d", (int) t->i); break;
- 			case 's': length = slprintf(buffer, 32, "%02d", (int) t->s); break;
--			case 'u': length = slprintf(buffer, 32, "%06d", (int) floor(t->f * 1000000)); break;
-+			case 'u': length = slprintf(buffer, 32, "%06d", (int) floor(t->f * 1000000 + 0.5)); break;
+--- acinclude.m4.old	2012-12-10 12:30:11.684122918 +0100
++++ acinclude.m4	2012-12-10 12:31:49.933474452 +0100
+@@ -2963,12 +2963,12 @@
+   cat>>Makefile.objects<<EOF
  
- 			/* timezone */
- 			case 'I': length = slprintf(buffer, 32, "%d", localtime ? offset->is_dst : 0); break;
+ $ac_bdir[$]ac_hdrobj: $abs_srcdir/$ac_provsrc
+-	dtrace -h -C -s $ac_srcdir[$]ac_provsrc -o \$[]@ && \$(SED) -ibak 's,PHP_,DTRACE_,g' \$[]@
++	CFLAGS="$(CFLAGS_CLEAN)" dtrace -h -C -s $ac_srcdir[$]ac_provsrc -o \$[]@ && \$(SED) -ibak 's,PHP_,DTRACE_,g' \$[]@
+ 
+ \$(PHP_DTRACE_OBJS): $ac_bdir[$]ac_hdrobj
+ 
+ $ac_bdir[$]ac_provsrc.o: \$(PHP_DTRACE_OBJS)
+-	dtrace -G -o \$[]@ -s $abs_srcdir/$ac_provsrc $dtrace_objs
++	CFLAGS="$(CFLAGS_CLEAN)" dtrace -G -o \$[]@ -s $abs_srcdir/$ac_provsrc $dtrace_objs
+ 
+ EOF
+ ])

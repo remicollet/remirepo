@@ -1,6 +1,6 @@
 # API/ABI check
 %global apiver      20121113
-%global zendver     20121128
+%global zendver     20121204
 %global pdover      20080721
 # Extension version
 %global oci8ver     1.4.9
@@ -42,6 +42,11 @@
 %{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
 %{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%global with_dtrace 1
+%else
+%global with_dtrace 0
+%endif
 %if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %global with_libzip  0
 %else
@@ -56,14 +61,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201211301534
+%global snapdate      201212100830
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -116,7 +121,8 @@ Patch45: php-5.4.8-ldap_r.patch
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
 
-# WIP https://bugs.php.net/63435
+# WIP dtrace patch
+# https://bugs.php.net/bug.php?id=63706
 Patch99: php-wip.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -138,6 +144,9 @@ BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
 %if %{with_libzip}
 BuildRequires: libzip-devel >= 0.10
+%endif
+%if %{with_dtrace}
+BuildRequires: systemtap-sdt-devel
 %endif
 %if 0%{?snapdate}
 BuildRequires: bison
@@ -735,8 +744,7 @@ echo CIBLE = %{name}-%{version}-%{release} oci8=%{with_oci8} fpm=%{with_fpm} lib
 httpd -V  | grep -q 'threaded:.*yes' && exit 1
 
 %if 0%{?snapdate}
-#setup -q -n php5.4-%{snapdate}
-%setup -q -n php-src
+%setup -q -n php5.5-%{snapdate}
 %else
 %setup -q -n php-%{version}%{?rcver}
 %endif
@@ -919,7 +927,10 @@ ln -sf ../configure
         --with-system-tzdata \
 %endif
 	--with-mhash \
-	$* 
+%if %{with_dtrace}
+	--enable-dtrace \
+%endif
+	$*
 if test $? != 0; then 
   tail -500 config.log
   : configure failed
@@ -1605,6 +1616,10 @@ fi
 
 
 %changelog
+* Mon Dec 10 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.5.201212100830
+- new snapshot
+- enable dtrace
+
 * Tue Dec  4 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.4.201211301534
 - build simplexml and xml extensions shared (in php-xml)
 - build bz2, calendar, ctype, exif, ftp, gettext and iconv
