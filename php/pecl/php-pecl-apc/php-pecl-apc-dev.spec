@@ -79,7 +79,9 @@ configuration, available on http://localhost/apc-panel/
 %setup -q -c 
 %if 0%{?svnrev}
 sed -e '/release/s/%{version}-dev/%{version}dev/' \
+    -e '/date/s/2012-??-??/2012-12-10/' \
     APC-%{version}/package.xml >package.xml
+grep date package.xml
 %endif
 
 cd APC-%{version}
