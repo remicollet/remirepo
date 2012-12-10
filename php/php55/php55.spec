@@ -893,12 +893,13 @@ mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 fi
 
 # Always static:
-# date, filter: not supported
+# date, filter, libxml, reflection, spl: not supported
 # ereg: build options vary per SAPI
 # hash: for PHAR_SIG_SHA256 and PHAR_SIG_SHA512
 # session: dep on hash, used by soap and wddx
 # pcre: used by filter, zip
 # pcntl, readline: only used by CLI sapi
+# openssl: for PHAR_SIG_OPENSSL
 # zlib: used by image
 ln -sf ../configure
 %configure \
