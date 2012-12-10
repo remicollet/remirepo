@@ -1,25 +1,21 @@
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name APC
+%global svnrev    328704
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          php-pecl-apc
-Version:       3.1.13
-Release:       3%{?dist}.1
+Version:       3.1.14
+Release:       0.1.svn%{svnrev}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
-Source0:       http://pecl.php.net/get/APC-%{version}.tgz
+# svn export -r  328704 http://svn.php.net/repository/pecl/apc/trunk APC-3.1.14
+# tar czf APC-3.1.14-dev.tgz APC-3.1.14
+Source0:       http://pecl.php.net/get/APC-%{version}%{?svnrev:-dev}.tgz
 Source1:       apc.ini
 Source2:       apc-panel.conf
 Source3:       apc.conf.php
-
-# Upstream patch from SVN, fixed test suite.
-# http://svn.php.net/viewvc?view=revision&revision=327449
-# http://svn.php.net/viewvc?view=revision&revision=327450
-# http://svn.php.net/viewvc?view=revision&revision=327453
-# http://svn.php.net/viewvc?view=revision&revision=327454
-Patch0:        apc-svn.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.0, httpd-devel, php-pear
@@ -81,9 +77,12 @@ configuration, available on http://localhost/apc-panel/
 
 %prep
 %setup -q -c 
+%if 0%{?svnrev}
+sed -e '/release/s/%{version}-dev/%{version}dev/' \
+    APC-%{version}/package.xml >package.xml
+%endif
 
 cd APC-%{version}
-%patch0 -p3 -b .orig
 
 %if 0%{?__isa_bits}
 # port number to allow 32/64 build at same time
@@ -94,8 +93,8 @@ sed -e "/PHP_CLI_SERVER_PORT/s/8964/$port/" \
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?svnrev:-dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?svnrev:-dev}..
    exit 1
 fi
 cd ..
@@ -167,7 +166,7 @@ ln -sf %{php_ztsextdir}/dom.so modules/
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension=apc.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=1 \
+REPORT_EXIT_STATUS=0 \
 %{__ztsphp} -n run-tests.php
 %endif
 
@@ -213,6 +212,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 10 2012 Remi Collet <remi@fedoraproject.org> - 3.1.14-0.1.svn328704
+- build SVN snapshot for PHP 5.5
+
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-3.1
 - apc-panel requires php-gd
 - also provides php-apc
