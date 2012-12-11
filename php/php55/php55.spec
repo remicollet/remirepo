@@ -61,7 +61,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201212100830
+%global snapdate      201212110630
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -608,14 +608,25 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01, except
 # libbcmath is licensed under LGPLv2+
 License: PHP and LGPLv2+
-BuildRequires: gmp-devel
-Provides: php-gmp, php-gmp%{?_isa}
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php53-bcmath, php53u-bcmath, php54-bcmath, php55-bcmath
 
 %description bcmath
 The php-bcmath package contains a dynamic shared object that will add
 support for using the bcmath library to PHP.
+
+%package gmp
+Summary: A module for PHP applications for using the GNU MP library
+Group: Development/Languages
+# All files licensed under PHP version 3.01
+License: PHP
+BuildRequires: gmp-devel
+Requires: php-common%{?_isa} = %{version}-%{release}
+Obsoletes: php53-gmp, php53u-gmp, php54-gmp, php55-gmp
+
+%description gmp
+These functions allow you to work with arbitrary-length integers
+using the GNU MP library.
 
 %package dba
 Summary: A database abstraction layer module for PHP applications
@@ -1352,9 +1363,6 @@ EOF
 
 done
 
-# The gmp module is packaged in php-bcmath
-cat files.gmp >>files.bcmath
-
 # The dom, xsl and xml* modules are all packaged in php-xml
 cat files.dom files.xsl files.xml{reader,writer} files.wddx \
     files.simplexml >> files.xml
@@ -1609,6 +1617,7 @@ fi
 %files soap -f files.soap
 %files bcmath -f files.bcmath
 %doc libbcmath_COPYING
+%files gmp -f files.gmp
 %files dba -f files.dba
 %files pdo -f files.pdo
 %files mcrypt -f files.mcrypt
@@ -1628,6 +1637,10 @@ fi
 
 
 %changelog
+* Tue Dec 11 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.6.201212110630
+- new snapshot
+- move gmp in new sub-package
+
 * Mon Dec 10 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.6.201212100830
 - build sockets, tokenizer extensions shared
 
