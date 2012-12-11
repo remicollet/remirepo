@@ -68,7 +68,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.7.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.8.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -127,7 +127,9 @@ Patch91: php-5.3.7-oci8conf.patch
 
 # WIP dtrace patch
 # https://bugs.php.net/bug.php?id=63706
-Patch99: php-wip.patch
+Patch100: php-wip.patch
+# https://bugs.php.net/bug.php?id=63738
+Patch101: php-wip2.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -787,7 +789,8 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 
 %patch91 -p1 -b .remi-oci8
 
-%patch99 -p0 -b .wip
+%patch100 -p0 -b .wip
+%patch101 -p1 -b .wip2
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1643,6 +1646,9 @@ fi
 
 
 %changelog
+* Tue Dec 11 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.8.201212110630
+- patch for unpack
+
 * Tue Dec 11 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.7.201212110630
 - prevent php_config.h changes across (otherwise identical) rebuilds
 - drop "Configure Command" from phpinfo output
