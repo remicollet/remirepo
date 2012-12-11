@@ -68,7 +68,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.6.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.7.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -115,6 +115,10 @@ Patch43: php-5.4.0-phpize.patch
 Patch44: php-5.4.5-system-libzip.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-5.4.8-ldap_r.patch
+# Make php_config.h constant across builds
+Patch46: php-5.4.9-fixheader.patch
+# drop "Configure command" from phpinfo output
+Patch47: php-5.4.9-phpinfo.patch
 
 # Fixes for tests
 
@@ -778,6 +782,8 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 %patch45 -p1 -b .ldap_r
 %endif
+%patch46 -p1 -b .fixheader
+%patch47 -p1 -b .phpinfo
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1637,6 +1643,10 @@ fi
 
 
 %changelog
+* Tue Dec 11 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.7.201212110630
+- prevent php_config.h changes across (otherwise identical) rebuilds
+- drop "Configure Command" from phpinfo output
+
 * Tue Dec 11 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.6.201212110630
 - new snapshot
 - move gmp in new sub-package
