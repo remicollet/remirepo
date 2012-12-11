@@ -69,7 +69,7 @@ Version: 5.4.9
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -124,6 +124,10 @@ Patch43: php-5.4.0-phpize.patch
 Patch44: php-5.4.5-system-libzip.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-5.4.8-ldap_r.patch
+# Make php_config.h constant across builds
+Patch46: php-5.4.9-fixheader.patch
+# drop "Configure command" from phpinfo output
+Patch47: php-5.4.9-phpinfo.patch
 
 # Fixes for tests
 
@@ -781,6 +785,8 @@ rm -f ext/json/utf8_to_utf16.*
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 %patch45 -p1 -b .ldap_r
 %endif
+%patch46 -p1 -b .fixheader
+%patch47 -p1 -b .phpinfo
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1619,6 +1625,12 @@ fi
 
 
 %changelog
+* Tue Dec 11 2012 Remi Collet <rcollet@redhat.com> 5.4.9-3
+- drop "Configure Command" from phpinfo output
+
+* Tue Dec 11 2012 Joe Orton <jorton@redhat.com> - 5.4.9-2
+- prevent php_config.h changes across (otherwise identical) rebuilds
+
 * Fri Nov 23 2012 Remi Collet <remi@fedoraproject.org> 5.4.9-2
 - add patch for https://bugs.php.net/63588
   duplicated implementation of php_next_utf8_char
