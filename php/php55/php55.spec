@@ -733,7 +733,7 @@ Group: System Environment/Libraries
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-BuildRequires: libicu-devel >= 3.6
+BuildRequires: libicu-devel >= 4.0
 Obsoletes: php53-intl, php53u-intl, php54-intl, php55-intl
 
 %description intl
