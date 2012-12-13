@@ -61,7 +61,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201212110630
+%global snapdate      201212121430
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -128,8 +128,6 @@ Patch91: php-5.3.7-oci8conf.patch
 # WIP dtrace patch
 # https://bugs.php.net/bug.php?id=63706
 Patch100: php-wip.patch
-# https://bugs.php.net/bug.php?id=63738
-Patch101: php-wip2.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -790,7 +788,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 %patch100 -p0 -b .wip
-%patch101 -p1 -b .wip2
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1646,6 +1643,9 @@ fi
 
 
 %changelog
+* Wed Dec 12 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.8.201212121430
+- new snapshot
+
 * Tue Dec 11 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.8.201212110630
 - patch for unpack
 
