@@ -18,6 +18,10 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
 
+# Fix for curl version older than 7.21.3
+# http://svn.php.net/viewvc?view=revision&revision=328773
+Patch0:         %{pecl_name}-curl.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.3.0
 BuildRequires:  php-hash
@@ -93,12 +97,16 @@ These are the files needed to compile programs using HTTP extension.
 %prep
 %setup -c -q 
 
-extver=$(sed -n '/#define PHP_HTTP_EXT_VERSION/{s/.* "//;s/".*$//;p}' %{proj_name}-%{version}%{?prever}/php_http.h)
+cd %{proj_name}-%{version}%{?prever}
+%patch0 -p1 -b .oldcurl
+
+extver=$(sed -n '/#define PHP_HTTP_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
+cd ..
 
 cp %{SOURCE1} %{pecl_name}.ini
 
