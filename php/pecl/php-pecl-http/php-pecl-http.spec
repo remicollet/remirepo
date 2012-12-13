@@ -3,11 +3,11 @@
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global prever    beta2
+%global prever    beta3
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.12.%{prever}%{?dist}.3
+Release:        0.13.%{prever}%{?dist}.1
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -53,6 +53,9 @@ Obsoletes:     php53-pecl-http
 Obsoletes:     php53u-pecl-http
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-http
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-http
 %endif
 
 # Filter shared private
@@ -185,6 +188,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 13 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.13.beta3
+- update to 2.0.0beta3
+
 * Thu Nov 29 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.12.beta2
 - update to 2.0.0beta2
 - also provides php-http
