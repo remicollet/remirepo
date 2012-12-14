@@ -143,7 +143,7 @@ install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
 
 
 %check
-# Minimal load test for NTS extension
+# Install needed extensions
 modules=""
 for mod in json hash iconv; do
   if [ -f %{php_extdir}/${mod}.so ]; then
@@ -152,6 +152,8 @@ for mod in json hash iconv; do
     modules="$modules --define extension=${mod}.so"
   fi
 done
+
+# Minimal load test for NTS extension
 %{__php} --no-php-ini \
     --define extension_dir=%{proj_name}-%{version}%{?prever}/modules \
     $modules \
