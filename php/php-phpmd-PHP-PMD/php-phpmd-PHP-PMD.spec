@@ -1,9 +1,9 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name PHP_PMD
-%global channel pear.phpmd.org
+%global pear_name    PHP_PMD
+%global pear_channel pear.phpmd.org
 
 Name:           php-phpmd-PHP-PMD
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -14,16 +14,23 @@ Source0:        http://pear.phpmd.org/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.6.0
-BuildRequires:  php-channel(%{channel})
+BuildRequires:  php-pear
+BuildRequires:  php-channel(%{pear_channel})
 
-Requires:       php-channel(%{channel})
-Requires:       php-xml >= 5.2.3
-Requires:       php-pear(pear.pdepend.org/PHP_Depend) >= 1.0.3
+Requires:       php-channel(%{pear_channel})
+Requires:       php(language) >= 5.2.3
+Requires:       php-dom
+Requires:       php-pcre
+Requires:       php-simplexml
+Requires:       php-spl
+# phpci detected
+Requires:       php-date
+Requires:       php-libxml
+Requires:       php-pear(pear.pdepend.org/PHP_Depend) >= 1.1.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -32,11 +39,11 @@ and aims to be a PHP equivalent of the well known Java tool PMD. PHPMD can
 be seen as an user friendly front-end application for the raw metrics 
 stream measured by PHP Depend.
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-%{__mv} package2.xml %{pear_name}-%{version}/%{name}.xml
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -45,20 +52,20 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-%{__rm} -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-%{__mkdir} -p $RPM_BUILD_ROOT%{pear_xmldir}
-%{__install} -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-%{__rm} -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -69,7 +76,7 @@ cd %{pear_name}-%{version}
 %postun
 if [ $1 -eq 0 ] ; then
   %{__pear} uninstall --nodeps --ignore-errors --register-only \
-    %{channel}/%{pear_name} >/dev/null || :
+    %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -83,6 +90,10 @@ fi
 %{_bindir}/phpmd
 
 %changelog
+* Fri Dec 14 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.1-1
+- upstream 1.4.1 for remi repo
+- spec cleanups
+
 * Sat Sep  8 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.0-1
 - upstream 1.4.0
 
