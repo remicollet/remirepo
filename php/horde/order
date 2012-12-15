@@ -67,7 +67,7 @@
 66 php-horde-Horde-Ldap         *   2.0.1                Exception, Util
 67 php-horde-Horde-Date-Parser  *   2.0.1   => BR(Date)  Date, Support
 68 php-horde-Horde-Rdo          +   2.0.1   =>           Db, Exception
-69 php-horde-Horde-Routes       +   2.0.1   =>           Exception, Util
+69 php-horde-Horde-Routes       *   2.0.1   =>           Exception, Util
 70 php-horde-Horde-Timezone     +   1.0.1   =>           Date, Icalendar, Vfs
 ---- apps -----
 php-horde-horde (Framework)     +   5.0.2
