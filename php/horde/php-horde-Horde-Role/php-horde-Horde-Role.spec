@@ -5,11 +5,11 @@
 
 Name:           php-horde-Horde-Role
 Version:        1.0.1
-Release:        3%{?dist}
+Release:        1%{?dist}
 Summary:        PEAR installer role used to install Horde components
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -20,7 +20,7 @@ BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.2.0
+Requires:       php-common >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
@@ -77,7 +77,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
 
-%{__pear}  config-set \
+%{__pear} config-set \
     horde_dir %{_datadir}/horde \
     system >/dev/null || :
 
@@ -97,13 +97,13 @@ fi
 %{pear_phpdir}/PEAR/Installer/Role/Horde.php
 %{pear_phpdir}/PEAR/Installer/Role/Horde.xml
 # Empty dir, used by horde apps.
-%{_datadir}/horde
+%dir %{_datadir}/horde
 
 
 %changelog
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 for remi repo
-- License is LGPLv2+
+- License is LGPLv2
 
 * Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
 - fix xml (install fails because of tasks:postinstallscript)
