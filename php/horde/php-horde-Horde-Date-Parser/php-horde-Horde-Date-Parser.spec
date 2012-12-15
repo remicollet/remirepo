@@ -9,7 +9,7 @@ Release:        1%{?dist}
 Summary:        Horde Date Parser
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -22,7 +22,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-date
 Requires:       php-ereg
 Requires:       php-pcre
@@ -41,9 +41,9 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Library for natural-language date parsing, with support for multiple
 languages and locales
 
+
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
@@ -95,8 +95,8 @@ fi
 
 
 %changelog
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
-* Sun Nov 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Sun Nov 18 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Initial package
