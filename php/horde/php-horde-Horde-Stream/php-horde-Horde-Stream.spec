@@ -9,7 +9,7 @@ Release:        1%{?dist}
 Summary:        Horde stream handler
 
 Group:          Development/Libraries
-License:        LGPL-2.1
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -22,7 +22,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-json
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
@@ -91,7 +91,7 @@ fi
 
 
 %changelog
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-1
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Update to 1.2.0 for remi repo
 
 * Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-1

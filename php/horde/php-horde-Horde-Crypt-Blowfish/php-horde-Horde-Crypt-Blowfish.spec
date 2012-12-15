@@ -9,14 +9,14 @@ Release:        1%{?dist}
 Summary:        Blowfish Encryption Library
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
-Requires:       php-hash
+BuildRequires:  php-hash
 BuildRequires:  php-mcrypt
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
@@ -24,7 +24,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-hash
 Requires:       php-mcrypt
 Requires:       php-openssl
@@ -88,14 +88,16 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
+# dir also owned by Horde_Crypt which is not required
+%dir %{pear_phpdir}/Horde/Crypt
 %{pear_phpdir}/Horde/Crypt/Blowfish
 %{pear_phpdir}/Horde/Crypt/Blowfish.php
 %{pear_testdir}/%{pear_name}
 
 
 %changelog
-* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 for remi repo (no change)
 
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Initial package

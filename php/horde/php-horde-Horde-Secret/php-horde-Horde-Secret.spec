@@ -9,7 +9,7 @@ Release:        1%{?dist}
 Summary:        Secret Encryption API
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -18,12 +18,12 @@ BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Crypt_Blowfish) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-hash
 Requires:       php-session
 Requires:       php-pear(PEAR) >= 1.7.0
@@ -100,7 +100,7 @@ fi
 
 
 %changelog
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - switch from Crypt_Blowfish to Horde_Crypt_Blowfish
 

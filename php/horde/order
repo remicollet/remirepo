@@ -1,19 +1,19 @@
-01 php-horde-Horde-Autoloader       2.0.1
-02 php-horde-Horde-Translation      2.0.1
-03 php-horde-Horde-Stream-Wrapper   2.0.1
-04 php-horde-Horde-Util             2.0.1
-05 php-horde-Horde-Exception        2.0.1   => Translation
-06 php-horde-Horde-Support          2.0.2   => Exception, Stream_Wrapper
-07 php-horde-Horde-Cli              2.0.1   => Support, Translation
-08 php-horde-Horde-Url              2.0.1   => Exception
-09 php-horde-Horde-Nls              2.0.1   => Util, Translation
-10 php-horde-Horde-Date             2.0.1   => Nls, Translation, Exception, Util
-11 php-horde-Horde-Http             2.0.1   => Exception, Support
+01 php-horde-Horde-Autoloader   =   2.0.1	
+02 php-horde-Horde-Translation  =   2.0.1
+03 php-horde-Horde-Stream-Wrapper = 2.0.1
+04 php-horde-Horde-Util         =   2.0.1
+05 php-horde-Horde-Exception    =   2.0.1   => Translation
+06 php-horde-Horde-Support      =   2.0.2   => Exception, Stream_Wrapper
+07 php-horde-Horde-Cli          =   2.0.1   => Support, Translation
+08 php-horde-Horde-Url          =   2.0.1   => Exception
+09 php-horde-Horde-Nls          =   2.0.1   => Util, Translation
+10 php-horde-Horde-Date         =   2.0.1   => Nls, Translation, Exception, Util
+11 php-horde-Horde-Http         =   2.0.1   => Exception, Support
 12 php-horde-Horde-Constraint       2.0.1
 13 php-horde-Horde-Thrift       *   2.0.1
 14 php-horde-Horde-Scribe       *   2.0.1   => Thrift
 15 php-horde-Horde-Log              2.0.1   => Constraint, Exception, Scribe
-16 php-horde-Horde-Test             2.1.0   => Support, Util, Cli, Log
+16 php-horde-Horde-Test         =   2.1.0   => Support, Util, Cli, Log
 17 php-horde-Horde-Image            2.0.1   => Exception, Support, Translation, Util
 18 php-horde-Horde-Browser          2.0.2   => Exception, Util
 19 php-horde-Horde-Lock             2.0.1   => Exception, Support, (Db, Log)
@@ -49,7 +49,7 @@
 48 php-horde-Horde-Notification     2.0.1   =>          Exception, Util
 49 php-horde-Horde-Icalendar        2.0.1   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
 50 php-horde-Horde-Stream       *   1.2.0   =>           Exception
-51 php-horde-Horde-Crypt-Blowfish + 1.0.1   =>
+51 php-horde-Horde-Crypt-Blowfish * 1.0.1   =>
 52 php-horde-Horde-Secret       *   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
 53 php-horde-Horde-Imap-Client      2.3.2   => BR(Stream, Mime), Exception, Mail, Mime, Util
 54 php-horde-Horde-SessionHandler + 2.0.1   => BR(Db), Exception, Util

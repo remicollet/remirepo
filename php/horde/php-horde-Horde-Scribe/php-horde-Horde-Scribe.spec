@@ -20,7 +20,7 @@ BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
@@ -79,7 +79,7 @@ fi
 
 
 %changelog
-* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo (no change)
 
 * Mon Nov  5 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
