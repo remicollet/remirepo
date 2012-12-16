@@ -1,15 +1,29 @@
 Name:		php-simplepie
 Version:	1.3.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Simple RSS Library in PHP
 
 Group:		Development/Libraries
 License:	BSD
 URL:		http://simplepie.org/
 Source0:	http://simplepie.org/downloads/simplepie_%{version}.zip
+
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:	noarch
+BuildRequires:	php-phpunit-PHPUnit
+
 Requires:	php-IDNA_Convert
+Requires:	php-curl
+Requires:	php-date
+Requires:	php-dom
+Requires:	php-iconv
+Requires:	php-libxml
+Requires:	php-mbstring
+Requires:	php-pcre
+Requires:	php-pdo
+Requires:	php-reflection
+Requires:	php-xml
+# Optional: memcache, xmlreader, zlib
 
 %description
 SimplePie is a very fast and easy-to-use class, written in PHP, that puts the 
@@ -29,9 +43,15 @@ chmod -x demo/for_the_demo/mediaplayer_readme.htm
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{_datadir}/php/%{name}
- 
+mkdir -p %{buildroot}/%{_datadir}/php/
+cp -ar library %{buildroot}/%{_datadir}/php/%{name}
 
+sed -e '/__FILE__/s/\..*$/;/' autoloader.php \
+    > %{buildroot}/%{_datadir}/php/%{name}/autoloader.php
+
+
+%check
+phpunit .
 
 
 %clean
@@ -44,8 +64,12 @@ rm -rf  %{buildroot}
 %{_datadir}/php/%{name}
 
 
-
 %changelog
+* Sun Dec 16 2012 Remi Collet <remi@fedoraproject.org> - 1.3.1-2
+- really install library
+- provides autoloader.php
+- run tests
+
 * Wed Dec 12 2012 Nick Bebout <nb@fedoraproject.org> - 1.3.1-1
 - Update to 1.3.1
 
