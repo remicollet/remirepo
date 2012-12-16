@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Rdo
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Rampage Data Objects
 
 Group:          Development/Libraries
@@ -19,6 +19,7 @@ BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -98,8 +99,11 @@ fi
 
 
 %changelog
+* Sun Dec 16 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- add BR on Horde_Db
+
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+- Update to 2.0.1
 
 * Sun Nov 18 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Initial package
