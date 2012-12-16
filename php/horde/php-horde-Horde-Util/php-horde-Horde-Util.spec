@@ -8,7 +8,7 @@
 
 Name:           php-horde-Horde-Util
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Utility Libraries
 
 Group:          Development/Libraries
@@ -39,9 +39,7 @@ Requires:       php-session
 Requires:       php-spl
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-# Optionnal
-Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Imap_Client) >= 3.0.0
+# Optionnal: Horde_Imap_Client not required to reduce build tree
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -110,6 +108,10 @@ fi
 
 
 %changelog
+* Sun Dec 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-2
+- drop optional dep on Horde_Imap_Client to
+  minimize build dependencies (of Horde_Test)
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
