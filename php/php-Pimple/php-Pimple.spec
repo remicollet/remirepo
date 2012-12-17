@@ -2,8 +2,8 @@
 %global php_min_ver 5.3.0
 
 Name:          php-%{libname}
-Version:       1.0.0
-Release:       2%{?dist}
+Version:       1.0.1
+Release:       1%{?dist}
 Summary:       A simple Dependency Injection Container for PHP
 
 Group:         Development/Libraries
@@ -68,6 +68,12 @@ cp -pr tests/* %{buildroot}%{_datadir}/tests/%{name}/
 
 
 %changelog
+* Mon Dec 17 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- backport 1.0.1 for remi repo.
+
+* Sun Dec 16 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0.1-1
+- Updated to upstream version 1.0.1
+
 * Mon Dec  3 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - backport for remi repo.
 
