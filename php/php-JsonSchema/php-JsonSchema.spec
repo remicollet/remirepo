@@ -13,9 +13,10 @@ License:   BSD
 URL:       https://github.com/justinrainbow/%{github_name}
 Source0:   %{url}/archive/%{version}.tar.gz
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 # Test build requires
-BuildRequires: php-common >= %{php_min_ver}
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 # Test build requires: phpci
 BuildRequires:  php-ctype
@@ -23,16 +24,16 @@ BuildRequires:  php-curl
 BuildRequires:  php-json
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
-%{?fedora:BuildRequires: php-filter}
+BuildRequires: php-filter
 
-Requires:  php-common >= %{php_min_ver}
+Requires:  php(language) >= %{php_min_ver}
 # phpci requires
 Requires:  php-ctype
 Requires:  php-curl
 Requires:  php-json
 Requires:  php-pcre
 Requires:  php-spl
-%{?fedora:Requires: php-filter}
+Requires:  php-filter
 
 %description
 A PHP implementation for validating JSON structures against a given schema.
@@ -72,11 +73,15 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
 %{_datadir}/php/%{lib_name}
 
 
 %changelog
+* Mon Dec 17 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-2
+- backport for remi repo.
+
 * Sun Dec  9 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.2.2-2
 - Fixed failing Mock/Koji builds
 - Removed "docs" directory from %%doc
