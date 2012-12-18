@@ -4,8 +4,8 @@
 
 Summary:       Yet Another Framework
 Name:          php-pecl-yaf
-Version:       2.2.7
-Release:       1%{?dist}
+Version:       2.2.8
+Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
@@ -32,6 +32,9 @@ Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 
@@ -142,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 18 2012 Remi Collet <remi@fedoraproject.org> - 2.2.8-1
+- version 2.2.8 (stable)
+
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.2.7-1
 - version 2.2.7 (stable)
 
