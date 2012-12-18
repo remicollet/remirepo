@@ -9,7 +9,7 @@ Release:        1%{?dist}
 Summary:        Horde Shared Permissions System
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 # /usr/lib/rpm/find-lang.sh from fedora 16
