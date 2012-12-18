@@ -4,7 +4,7 @@
 
 Name:           php-pecl-ssh2
 Version:        0.12
-Release:        1%{?dist}.3
+Release:        1%{?dist}.4
 Summary:        Bindings for the libssh2 library
 
 # http://pecl.php.net/bugs/bug.php?id=24364
@@ -34,6 +34,9 @@ Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 # Filter private shared

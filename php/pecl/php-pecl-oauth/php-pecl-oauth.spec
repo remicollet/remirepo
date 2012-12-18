@@ -4,7 +4,7 @@
 
 Name:           php-pecl-oauth
 Version:        1.2.3
-Release:        1%{?dist}.2
+Release:        1%{?dist}.3
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD
@@ -28,10 +28,13 @@ Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
-Obsoletes:     php53-pecl-oauth
-Obsoletes:     php53u-pecl-oauth
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-oauth
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 # Filter private shared

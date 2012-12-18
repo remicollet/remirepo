@@ -4,7 +4,7 @@
 
 Name:           php-pecl-sphinx
 Version:        1.2.0
-Release:        2%{?dist}.2
+Release:        2%{?dist}.3
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
@@ -31,6 +31,9 @@ Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 # Filter private shared

@@ -1,6 +1,6 @@
 # API/ABI check
 %global apiver      20121113
-%global zendver     20121204
+%global zendver     20121212
 %global pdover      20080721
 # Extension version
 %global oci8ver     1.4.9
@@ -61,14 +61,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201212121430
+%global snapdate      201212181230
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.8.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.9.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -125,9 +125,7 @@ Patch47: php-5.4.9-phpinfo.patch
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
 
-# WIP dtrace patch
-# https://bugs.php.net/bug.php?id=63706
-Patch100: php-wip.patch
+# WIP
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -787,7 +785,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 
 %patch91 -p1 -b .remi-oci8
 
-%patch100 -p0 -b .wip
+# wip patches
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1643,6 +1641,9 @@ fi
 
 
 %changelog
+* Tue Dec 18 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.9.201212181230
+- new snapshot
+
 * Wed Dec 12 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.8.201212121430
 - new snapshot
 

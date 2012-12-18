@@ -8,7 +8,7 @@ Summary:        Replacement for the standard PHP serializer
 Name:           php-pecl-igbinary
 Version:        1.1.2
 %if 0%{?gitver:1}
-Release:	    0.4.git%{gitver}%{?dist}
+Release:	    0.5.git%{gitver}%{?dist}
 Source0:	    igbinary-igbinary-1.1.1-15-g3b8ab7e.tar.gz
 %else
 Release:        2%{?dist}

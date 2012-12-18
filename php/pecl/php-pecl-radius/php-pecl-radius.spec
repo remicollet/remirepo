@@ -4,7 +4,7 @@
 
 Name:           php-pecl-radius
 Version:        1.2.5
-Release:        14%{?dist}.2
+Release:        14%{?dist}.3
 Summary:        Radius client library
 
 License:        BSD
@@ -34,6 +34,9 @@ Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 # Filter private shared

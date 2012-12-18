@@ -6,7 +6,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcached
 Version:      2.1.0
-Release:      6%{?dist}.3
+Release:      6%{?dist}.4
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -47,6 +47,9 @@ Obsoletes:     php53-pecl-memcached
 Obsoletes:     php53u-pecl-memcached
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-memcached
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-memcached
 %endif
 
 # Filter private shared

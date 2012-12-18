@@ -7,7 +7,7 @@
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.13.%{prever}%{?dist}.1
+Release:        0.13.%{prever}%{?dist}.2
 Summary:        Extended HTTP support
 
 License:        BSD

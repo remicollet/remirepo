@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcache
 Version:      3.0.7
-Release:      4%{?dist}.3
+Release:      4%{?dist}.4
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -37,6 +37,9 @@ Obsoletes:     php53-pecl-memcache
 Obsoletes:     php53u-pecl-memcache
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-memcache
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-memcache
 %endif
 
 # Filter private shared

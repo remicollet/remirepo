@@ -25,6 +25,7 @@ php-pecl-ssh2		0.12
 php-pecl-uuid		1.0.3
 php-pecl-xdebug		2.2.2dev => broken
 php-pecl-yaml		1.1.0
+php-pecl-yaf		2.2.8
 
 TODO:
 =====
@@ -42,7 +43,6 @@ php-pecl-rrd
 php-pecl-runkit
 php-pecl-selinux
 php-pecl-xhprof
-php-pecl-yaf
 php-redis
 php-shout
 php-xcache
