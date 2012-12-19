@@ -11,9 +11,10 @@ License:       MIT
 URL:           https://github.com/fzaninotto/%{libname}
 Source0:       %{url}/archive/v%{version}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Test build requires
-BuildRequires: php-common >= %{php_min_ver}
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 # Test build requires: phpci
 Requires:      php-date
@@ -22,7 +23,7 @@ Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
 
-Requires:      php-common >= %{php_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 Requires:      php-pear(pear.doctrine-project.org/DoctrineCommon)
 # phpci requires
 Requires:      php-date
@@ -64,11 +65,15 @@ cp -rp src/%{libname} %{buildroot}%{_datadir}/php/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE CHANGELOG readme.md composer.json
 %{_datadir}/php/%{libname}
 
 
 %changelog
+* Wed Dec 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.0-2
+- backport 1.1.0 for remi repo.
+
 * Sun Dec  9 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.0-2
 - Added php-pear(pear.doctrine-project.org/DoctrineCommon) require
 
