@@ -1,5 +1,4 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 
 %global pear_channel pear.doctrine-project.org
 %global pear_name    %(echo %{name} | sed -e 's/^php-doctrine-//' -e 's/-/_/g')
@@ -16,11 +15,12 @@ License:          MIT
 URL:              http://www.doctrine-project.org/projects/common.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
-Requires:         php-common >= 5.3.2
+Requires:         php(language) >= 5.3.2
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
@@ -88,6 +88,7 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Doctrine
@@ -95,6 +96,9 @@ fi
 
 
 %changelog
+* Wed Dec 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.3.0-2
+- backport 2.3.0 for remi repo.
+
 * Tue Dec 18 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.3.0-2
 - Updated description
 
