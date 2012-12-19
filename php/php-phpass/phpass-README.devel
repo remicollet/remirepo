@@ -1,0 +1,7 @@
+Included in this package are also a tiny PHP application demonstrating the use of the
+PasswordHash class, and a C reimplementation of the portable hashes (used for
+testing correctness of the primary implementation only).
+
+You can use the 'make' utility to compile the test C-code.
+
+See also this tutorial: http://www.openwall.com/articles/PHP-Users-Passwords
