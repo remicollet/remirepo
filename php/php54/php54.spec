@@ -65,11 +65,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.9
+Version: 5.4.10
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 3%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -99,20 +99,10 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
-# https://bugs.php.net/63361 - Header not installed
-Patch9: php-5.4.8-mysqli.patch
-# See http://bugs.php.net/63588
-Patch10: php-5.4.9-json.patch
 
 # Fixes for extension modules
-# https://bugs.php.net/63126 - DISABLE_AUTHENTICATOR ignores array
-Patch20: php-5.4.7-imap.patch
 # https://bugs.php.net/63171 no odbc call during timeout
 Patch21: php-5.4.7-odbctimer.patch
-# https://bugs.php.net/63149 check sqlite3_column_table_name
-Patch22: php-5.4.7-sqlite.patch
-# https://bugs.php.net/61557 crash in libxml
-Patch23: php-5.4.8-libxml.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -764,14 +754,9 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
-%patch9 -p1 -b .mysqliheaders
-%patch10 -p1 -b .63588
 rm -f ext/json/utf8_to_utf16.*
 
-%patch20 -p1 -b .imap
 %patch21 -p1 -b .odbctimer
-%patch22 -p1 -b .tablename
-%patch23 -p1 -b .libxmlcrash
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -1625,6 +1610,10 @@ fi
 
 
 %changelog
+* Wed Dec 19 2012 Remi Collet <rcollet@redhat.com> 5.4.10-1
+- update to 5.4.10
+- remove patches merged upstream
+
 * Tue Dec 11 2012 Remi Collet <rcollet@redhat.com> 5.4.9-3
 - drop "Configure Command" from phpinfo output
 
