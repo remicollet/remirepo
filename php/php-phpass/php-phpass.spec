@@ -5,11 +5,12 @@ Summary:        Portable password hashing framework for use in PHP applications
 
 License:        Public Domain
 URL:            http://www.openwall.com/phpass/
+Group:          Development/Libraries
 Source0:        http://www.openwall.com/phpass/phpass-0.3.tar.gz
 Source1:        phpass-README.devel
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-
 BuildRequires:  php-cli
 
 Requires:       php-common
@@ -45,12 +46,16 @@ php test.php | grep PASSED
 
 
 %files
+%defattr(-,root,root,-)
 %doc test.php c README.devel
 %dir %{_datadir}/php/phpass
 %{_datadir}/php/phpass/PasswordHash.php
 
 
 %changelog
+* Wed Dec 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.3-2
+- backport 0.3.2 for remi repo.
+
 * Sun Dec 16 2012 Gregor Tätzner <brummbq@fedoraproject.org> - 0.3-2
 - enabled tests
 
