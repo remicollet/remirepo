@@ -48,7 +48,7 @@ Faker is heavily inspired by Perl's Data::Faker
 
 # Remove executable bit from all PHP files
 # https://github.com/fzaninotto/Faker/pull/84
-find . -name '*.php' -executable | xargs chmod a-x
+find . -name '*.php' | xargs chmod a-x
 
 
 %build
