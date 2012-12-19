@@ -14,10 +14,11 @@ URL:            http://www.pluf.org/
 # following commands to generate the archive:
 # wget http://projects.ceondo.com/p/pluf/source/download/b1fed2e6d592d18527cfff6e78a5e14058708173 -O pluf-b1fed2e6d592d18527cfff6e78a5e14058708173.zip
 Source0:        %{shortname}-%{git}.zip
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       php-common >= 5.2.4
+Requires:       php(language) >= 5.2.4
 Requires:       php-gd
 Requires:       php-mbstring
 Requires:       php-mysql
@@ -57,6 +58,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0-3.gitb1fed2e
+- backport for remi repo.
+
 * Tue Dec 04 2012 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.0-3.gitb1fed2e
 - Update from git to satisfy Indefero dependancy https://bugzilla.redhat.com/show_bug.cgi?id=575956
 
