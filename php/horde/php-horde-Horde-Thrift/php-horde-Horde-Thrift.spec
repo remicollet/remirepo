@@ -9,6 +9,7 @@ Release:        2%{?dist}
 Summary:        Thrift
 
 Group:          Development/Libraries
+# http://bugs.horde.org/ticket/11908
 License:        ASL 2.0
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
