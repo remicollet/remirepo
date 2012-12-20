@@ -48,13 +48,13 @@
 47 php-horde-Horde-Crypt            2.1.0   =>           Exception, Mime, Stream-Filter, Translation, Util
 48 php-horde-Horde-Notification     2.0.1   =>          Exception, Util
 49 php-horde-Horde-Icalendar        2.0.1   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
-50 php-horde-Horde-Stream       *   1.2.0   =>           Exception
+50 php-horde-Horde-Stream       =   1.2.0   =>           Exception
 51 php-horde-Horde-Crypt-Blowfish = 1.0.1   =>
-52 php-horde-Horde-Secret       *   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
+52 php-horde-Horde-Secret       =   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
 53 php-horde-Horde-Imap-Client      2.3.2   => BR(Stream, Mime), Exception, Mail, Mime, Util
 54 php-horde-Horde-SessionHandler + 2.0.1   => BR(Db), Exception, Util
 55 php-horde-Horde-Share        +   2.0.1   => ****      Db, Exception, Group, Perms, Support, Translation, Url, Util
-56 php-horde-Horde-Role         *   1.0.1
+56 php-horde-Horde-Role         =   1.0.1
 57 php-horde-Horde-Mime-Viewer  +   2.0.1   => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
 58 php-horde-Horde-Itip             2.0.1   => BR(Icalendar), Icalendar, Mime
 59 php-horde-Horde-Text-Filter-Csstidy + 2.0.1 =>        Text-Filter
