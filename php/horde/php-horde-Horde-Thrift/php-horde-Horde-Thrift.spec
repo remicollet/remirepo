@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Thrift
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Thrift
 
 Group:          Development/Libraries
@@ -15,6 +15,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
@@ -74,11 +75,15 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
+%dir %{pear_phpdir}/Horde
 %{pear_phpdir}/Horde/Thrift
 %{pear_phpdir}/Horde/Thrift.php
 
 
 %changelog
+* Thu Dec 20 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- own /usr/share/pear/Horde
+
 * Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo (no change)
 
