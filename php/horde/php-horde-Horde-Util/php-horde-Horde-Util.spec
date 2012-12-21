@@ -7,7 +7,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Util
-Version:        2.0.1
+Version:        2.0.2
 Release:        2%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -108,6 +108,9 @@ fi
 
 
 %changelog
+* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+- Update to 2.0.2 for remi repo
+
 * Sun Dec 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-2
 - drop optional dep on Horde_Imap_Client to
   minimize build dependencies (of Horde_Test)
