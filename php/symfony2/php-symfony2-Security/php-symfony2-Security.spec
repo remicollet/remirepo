@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-Security
-Version:          2.1.5
+Version:          2.1.6
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -76,8 +76,7 @@ Optional dependencies: DoctrineCommon and DoctrineDBAL
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 # Patches
 cd %{pear_name}-%{version}
@@ -144,6 +143,9 @@ fi
 
 
 %changelog
+* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.6-1
+- update to 2.1.6 (no change)
+
 * Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.5-1
 - update to 2.1.5
 
