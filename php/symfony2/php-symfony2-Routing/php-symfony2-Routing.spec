@@ -7,7 +7,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             php-symfony2-Routing
-Version:          2.1.4
+Version:          2.1.5
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -64,7 +64,8 @@ Optional dependency: DoctrineCommon
 
 
 %prep
-%setup -q -c
+%setup -q -c -T
+tar xif %{SOURCE0}
 
 # Patches
 cd %{pear_name}-%{version}
@@ -135,6 +136,9 @@ fi
 
 
 %changelog
+* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.5-1
+- update to 2.1.5
+
 * Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.4-1
 - update to 2.1.4
 
