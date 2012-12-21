@@ -8,7 +8,7 @@
 
 Name:           php-horde-Horde-Mime
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde MIME Library
 
 Group:          Development/Libraries
@@ -17,6 +17,9 @@ URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 # /usr/lib/rpm/find-lang.sh from fedora 16
 Source1:        find-lang.sh
+
+# http://bugs.horde.org/ticket/11913
+Patch0:         %{pear_name}_php55.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -71,11 +74,14 @@ Provides methods for dealing with MIME (RFC 2045) and related e-mail (RFC
 %setup -q -c
 cd %{pear_name}-%{version}
 
+%patch0 -p0 -b .php55
+
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/Mime.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
 
@@ -143,6 +149,12 @@ fi
 
 
 %changelog
+* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-2
+- patch for php 5.5
+
+* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+- Update to 2.0.1 for remi repo
+
 * Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
