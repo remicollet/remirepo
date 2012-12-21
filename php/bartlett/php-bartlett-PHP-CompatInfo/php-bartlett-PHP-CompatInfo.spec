@@ -3,19 +3,13 @@
 %global pear_name   PHP_CompatInfo
 %global channel     bartlett.laurent-laville.org
 
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-%global withhtmldoc 1
-%else
-%global withhtmldoc 0
-%endif
-
-# TODO : link /usr/share/pear/data/PHP_CompatInfo/misc/jquery-1.5.min.js
+# TODO : link /usr/share/pear/data/PHP_CompatInfo/misc/jquery-min.js
 #        to system jquery when available, then fix License (BSD only)
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.10.0
-Release:        2%{?dist}
+Version:        2.11.0
+Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -24,12 +18,6 @@ License:        BSD and MIT
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
 
-# Remove unused asciidoc*.js scripts
-Patch1:         %{pear_name}-del.patch
-# Install generated doc using pear command
-Patch2:         %{pear_name}-addhtml.patch
-
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.0
@@ -37,11 +25,6 @@ BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.5.0
-%if %{withhtmldoc}
-# to build HTML documentation
-BuildRequires:  asciidoc >= 8.4.0
-BuildRequires:  source-highlight
-%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -70,11 +53,7 @@ version and extensions required for it to run. CLI version has many reports
 (extension, interface, class, function, constant) to display and ability to
 show content of dictionary references.
 
-%if %{withhtmldoc}
-HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/index.html
-%else
-Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
-%endif
+HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/html/index.html
 
 
 %prep
@@ -84,22 +63,9 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 cd %{pear_name}-%{version}%{?prever}
 mv -f ../package.xml %{name}.xml
 
-%patch1 -p1 -b .del
-%if %{withhtmldoc}
-%patch2 -p1 -b .addhtml
-%endif
-
 
 %build
 cd %{pear_name}-%{version}%{?prever}
-
-%if %{withhtmldoc}
-for page in index INSTALL CHANGELOG LICENSE phpci-book; do
-    asciidoc  -a linkcss -a icons -a theme=flask -a toc2 -n --safe \
-              -o $PWD/docs/$page.html  $PWD/docs/$page.txt || :
-    [ -f $PWD/docs/$page.html ] || exit 1
-done
-%endif
 
 
 %install
@@ -176,6 +142,10 @@ fi
 
 
 %changelog
+* Fri Dec 21 2012 Remi Collet <remi@fedoraproject.org> - 2.11.0-1
+- update to Version 2.11.0
+- html documentation is now provided by upstream
+
 * Mon Nov 26 2012 Remi Collet <remi@fedoraproject.org> - 2.10.0-2
 - generate documentation using asciidoc, without phing
 
