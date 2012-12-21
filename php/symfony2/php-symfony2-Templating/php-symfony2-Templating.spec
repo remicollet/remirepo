@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-Templating
-Version:          2.1.4
+Version:          2.1.5
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -53,7 +53,8 @@ blocks and layouts.
 
 
 %prep
-%setup -q -c
+%setup -q -c -T
+tar xif %{SOURCE0}
 
 # Patches
 cd %{pear_name}-%{version}
@@ -122,6 +123,9 @@ fi
 
 
 %changelog
+* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.5-1
+- update to 2.1.5 (no change)
+
 * Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.4-1
 - update to 2.1.4 (no change)
 
