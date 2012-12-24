@@ -61,7 +61,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201212181230
+%global snapdate      201212241030
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -80,8 +80,7 @@ Group: Development/Languages
 URL: http://www.php.net/
 
 %if 0%{?snapdate}
-# 5.4 snaphost are really 5.5...
-Source0: http://snaps.php.net/php5.5-%{snapdate}.tar.bz2
+Source0: http://snaps.php.net/php5.5-%{snapdate}.tar.xz
 %else
 Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.bz2
 %endif
@@ -1641,6 +1640,10 @@ fi
 
 
 %changelog
+* Mon Dec 24 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.9.201212241030
+- new snapshot
+- use xz compressed tarball
+
 * Tue Dec 18 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.9.201212181230
 - new snapshot
 
