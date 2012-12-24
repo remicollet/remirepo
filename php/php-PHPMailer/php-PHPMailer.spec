@@ -1,15 +1,17 @@
 Name:		php-PHPMailer
 Summary:	PHP email transport class with a lot of features
-Version:	5.2.1
+Version:	5.2.2
 Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 Source0:	http://phpmailer.apache-extras.org.codespot.com/files/PHPMailer_%{version}.tgz
-Patch1:		PHPMailer-5.2.1-php53.patch
 URL:		http://phpmailer.worxware.com/
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:	php-mbstring >= 5.1.0
 Buildarch:	noarch
+
+Requires:	php-mbstring
+
 
 %description
 Full Featured Email Transfer Class for PHP. PHPMailer features:
@@ -41,7 +43,25 @@ Full Featured Email Transfer Class for PHP. PHPMailer features:
 
 %setup -q -n PHPMailer_%{version}
 
-%patch1 -p 1
+pushd docs/phpdoc/js/prettify
+
+NONUTF="lang-apollo.js
+lang-vb.js
+lang-tex.js
+lang-vhdl.js
+lang-scala.js
+lang-lua.js
+lang-ml.js
+lang-wiki.js
+lang-sql.js
+lang-go.js" 
+
+for file in $NONUTF
+do
+	iconv -f iso-8859-1 -t utf-8 $file > $file.utf
+	mv $file.utf $file
+done
+popd
 
 
 #-------------------------------------------------------------------------------
@@ -113,9 +133,13 @@ rm -rf "${RPM_BUILD_ROOT}"
 %dir %{_datadir}/PHPMailer/language
 
 
-#-------------------------------------------------------------------------------
 %changelog
-#-------------------------------------------------------------------------------
+* Mon Dec 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.2.2-1
+- Update to 5.2.2, rebuild for remi repository
+
+* Sun Dec 23 2012 Johan Cwiklinski <johan AT x-tnd DOT be> - 5.2.2-1
+- Latest upstream release
+
 * Thu Mar 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.2.1-1
 - Update to 5.2.1, rebuild for remi repository
 
