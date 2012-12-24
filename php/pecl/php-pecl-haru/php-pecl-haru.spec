@@ -3,8 +3,8 @@
 
 Summary:      Haru PDF functions
 Name:         php-pecl-haru
-Version:      1.0.3
-Release:      2%{?dist}
+Version:      1.0.4
+Release:      1%{?dist}.1
 
 # https://bugs.php.net/60958 - Please Provides LICENSE file
 License:      PHP
@@ -26,6 +26,8 @@ Requires(postun): %{__pecl}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
+Provides:     php-%{pecl_name} = %{version}
+Provides:     php-%{pecl_name}%{?_isa} = %{version}
 Provides:     php-pecl(%{pecl_name}) = %{version}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -49,9 +51,6 @@ cat >%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
-
-# https://bugs.php.net/60959 - Version 1.0.3 reports as 1.0.1
-sed -i -e '/PHP_HARU_VERSION/s/1.0.1/%{version}/' %{pecl_name}-%{version}/php_haru.h
 
 # Check extension version
 extver=$(sed -n '/#define PHP_HARU_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_haru.h)
@@ -153,6 +152,10 @@ cd ../%{pecl_name}-zts
 
 
 %changelog
+* Mon Dec 24 2012 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- update to 1.0.4
+- also provides php-haru
+
 * Thu Feb 02 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - build against php 5.4
 
