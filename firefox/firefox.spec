@@ -345,7 +345,6 @@ for langpack in `ls firefox-langpacks/*.xpi`; do
   echo "%%lang($language) %{langpackdir}/${extensionID}.xpi" >> ../%{name}.lang
 done
 %{__rm} -rf firefox-langpacks
-%endif # build_langpacks
 
 # Install langpack workaround (see #707100, #821169)
 function create_default_langpack() {
@@ -372,6 +371,7 @@ create_default_langpack "pa-IN" "pa"
 create_default_langpack "pt-PT" "pt"
 create_default_langpack "sv-SE" "sv"
 create_default_langpack "zh-TW" "zh"
+%endif # build_langpacks
 
 # System extensions
 %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/mozilla/extensions/%{firefox_app_id}
