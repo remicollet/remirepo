@@ -102,6 +102,11 @@ Provides: mysql-client = %{version}-%{release}
 %global __perl_requires %{SOURCE999}
 %global __perllib_requires %{SOURCE999}
 
+# patch utility does automatically back-up of chunks that didn't apply
+# smoothly, but we don't want to create that files because they could be
+# included in RPM incorrectly
+%global _default_patch_flags --no-backup-if-mismatch
+
 %description
 MySQL is a multi-user, multi-threaded SQL database server. MySQL is a
 client/server implementation consisting of a server daemon (mysqld)
@@ -815,6 +820,7 @@ fi
 
 * Thu Dec  6 2012 Honza Horak <hhorak@redhat.com> 5.5.28-3
 - Rebase patches to not leave backup files when not applied smoothly
+- Use --no-backup-if-mismatch to prevent including backup files
 
 * Wed Dec  5 2012 Tom Lane <tgl@redhat.com> 5.5.28-2
 - Add patch for CVE-2012-5611
