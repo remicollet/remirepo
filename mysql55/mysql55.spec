@@ -10,8 +10,8 @@
 %endif
 
 Name: mysql
-Version: 5.5.28
-Release: 3%{?dist}
+Version: 5.5.29
+Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -70,7 +70,6 @@ Patch18: mysql-cipherspec.patch
 Patch19: mysql-file-contents.patch
 Patch20: mysql-string-overflow.patch
 Patch21: mysql-dh1024.patch
-Patch22: mysql-cve-2012-5611.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf
@@ -254,7 +253,6 @@ rm -f Docs/mysql.info
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
-%patch22 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
@@ -814,6 +812,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Dec 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.29-1
+- update to MySQL 5.5.29 Community Server GA
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-29.html
+
 * Sat Dec  8 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.28-3
 - sync with rawhide, rebuild for security
 - use with_systemd and with_dtrace macro instead of version test
