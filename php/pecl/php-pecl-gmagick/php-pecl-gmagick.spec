@@ -5,15 +5,12 @@
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.1
+Version:        1.1.2
 Release:        0.1.%{prever}%{?dist}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
 Source0:        http://pecl.php.net/get/gmagick-%{version}%{?prever}.tgz
-
-# https://bugs.php.net/60829  getColor don't accept second option
-Patch0:         gmagick.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  php-pear >= 1.4.7
@@ -24,16 +21,22 @@ Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 
-Provides:       php-pecl(%{pecl_name}) = %{version}%{?prever}
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 Conflicts:      php-pecl-imagick
 Conflicts:      php-magickwand
 
 # Other third party repo stuff
-Obsoletes:     php53-pecl-gmagick
-Obsoletes:     php53u-pecl-gmagick
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-gmagick
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 # Filter private shared
@@ -50,16 +53,12 @@ of images using the GraphicsMagick API.
 %setup -qc
 
 cd %{pecl_name}-%{version}%{?prever}
-%patch0 -p1 -b .options
 
 %if 0%{?fedora} <= 15   &&   0%{?rhel} <= 6
 # Remove know to fail tests (GM font config issue)
 # https://bugzilla.redhat.com/783906
 rm -f tests/gmagick-006-annotateimage.phpt
 %endif
-
-# Fix version
-sed -e '/PHP_GMAGICK_VERSION/s/1.1.0RC3/%{version}%{?prever}/' -i php_gmagick.h
 
 # Check extension version
 extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_gmagick.h)
@@ -171,6 +170,10 @@ fi
 
 
 %changelog
+* Fri Dec 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.2-0.1.RC1
+- Update to 1.1.2RC1
+- also provides php-gmagick
+
 * Wed Sep 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.1-0.1.RC1
 - Update to 1.1.1RC1
 
