@@ -1,6 +1,6 @@
-diff -up mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/Makefile.am.nodocs mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/Makefile.am
---- mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/Makefile.am.nodocs	2012-08-11 17:57:08.216320706 +0200
-+++ mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/Makefile.am	2012-08-11 18:01:21.206082661 +0200
+diff -up mysql-workbench-gpl-5.2.45-src/plugins/wb.doclib/Makefile.am.nodocs mysql-workbench-gpl-5.2.45-src/plugins/wb.doclib/Makefile.am
+--- mysql-workbench-gpl-5.2.45-src/plugins/wb.doclib/Makefile.am.nodocs	2012-12-27 16:42:48.000000000 +0100
++++ mysql-workbench-gpl-5.2.45-src/plugins/wb.doclib/Makefile.am	2012-12-29 11:42:54.426723085 +0100
 @@ -2,11 +2,5 @@
  pylibdir=$(libdir)/@PACKAGE@/modules
  
@@ -13,9 +13,9 @@ diff -up mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/Makefile.am.nodocs mys
 -res/DocLibrary/mysqldoclib.sqlite\
 -res/DocLibrary/mysqldoclib_webui.sqlite
 -
-diff -up mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/wb_doclib_grt.py.nodocs mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/wb_doclib_grt.py
---- mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/wb_doclib_grt.py.nodocs	2012-08-11 17:56:09.271140967 +0200
-+++ mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/wb_doclib_grt.py	2012-08-11 17:56:18.259168247 +0200
+diff -up mysql-workbench-gpl-5.2.45-src/plugins/wb.doclib/wb_doclib_grt.py.nodocs mysql-workbench-gpl-5.2.45-src/plugins/wb.doclib/wb_doclib_grt.py
+--- mysql-workbench-gpl-5.2.45-src/plugins/wb.doclib/wb_doclib_grt.py.nodocs	2012-12-29 11:45:01.843098903 +0100
++++ mysql-workbench-gpl-5.2.45-src/plugins/wb.doclib/wb_doclib_grt.py	2012-12-29 11:45:39.478209799 +0100
 @@ -91,47 +91,7 @@ server_port = None
  def openDocLib():
      global docLibTab
@@ -24,7 +24,7 @@ diff -up mysql-workbench-gpl-5.2.41-src/plugins/wb.doclib/wb_doclib_grt.py.nodoc
 -      if docLibTab is True: # this will be True if an external browser is used
 -          Utilities.open_url("http://localhost:%i"%server_port)
 -          return 1
--      App.get().select_view("wb.doclib")
+-      App.get().select_view(docLibTab)
 -      return 1
 -
 -    app = App.get()

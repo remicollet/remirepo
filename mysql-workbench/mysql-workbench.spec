@@ -10,7 +10,7 @@
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   5.2.44
+Version:   5.2.45
 Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
@@ -26,7 +26,7 @@ Source1:   stripdocs.sh
 
 # don't build extension, use system one
 # !!! This patch use versioned soname (libmysqlcppconn.so.6) !!!
-Patch1:    %{name}-5.2.43-cppconn.patch
+Patch1:    %{name}-5.2.45-cppconn.patch
 # Use system ctemplate
 Patch2:    %{name}-5.2.43-ctemplate.patch
 # Use system tinyxml
@@ -36,12 +36,12 @@ Patch4:    %{name}-5.2.43-antlr.patch
 # Use system antlr (and vsqlite) - NOT applied
 Patch5:    %{name}-5.2.44-antlr.patch
 # Disable broken AutoCompletion feature
-Patch6:    %{name}-5.2.43-noautocc.patch
+Patch6:    %{name}-5.2.45-noautocc.patch
 # Use system vsqlite++ (not ready) - NOT applied
 Patch7:    %{name}-5.2.44-vsqlite.patch
 
 # don't use bundled documentation, redirect to online doc
-Patch9:    %{name}-5.2.41-nodocs.patch
+Patch9:    %{name}-5.2.45-nodocs.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pcre-devel >= 3.9
@@ -239,6 +239,10 @@ fi
 
 
 %changelog
+* Sat Dec 29 2012 Remi Collet <remi@fedoraproject.org> 5.2.45-1
+- update to 5.2.45 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/relnotes/workbench/en/wb-news-5-2-45.html
+
 * Sat Oct 20 2012 Remi Collet <remi@fedoraproject.org> 5.2.44-1
 - update to 5.2.44 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/workbench/en/wb-news-5-2-44.html

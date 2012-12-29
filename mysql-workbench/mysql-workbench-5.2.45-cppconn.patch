@@ -1,6 +1,6 @@
-diff -up mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.cppconn mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp
---- mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.cppconn	2012-09-11 17:47:10.000000000 +0200
-+++ mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp	2012-09-13 18:09:32.129077029 +0200
+diff -up mysql-workbench-gpl-5.2.45-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.cppconn mysql-workbench-gpl-5.2.45-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp
+--- mysql-workbench-gpl-5.2.45-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp.cppconn	2012-12-27 16:43:00.000000000 +0100
++++ mysql-workbench-gpl-5.2.45-src/backend/wbprivate/sqlide/wb_sql_editor_form.cpp	2012-12-29 11:29:22.252002525 +0100
 @@ -49,7 +49,7 @@
  // this doesn't belong here, but there's no other workaround for having access to mysql_info
  // because of that we also need to link wbprivate directly to the connector, making their
@@ -10,9 +10,9 @@ diff -up mysql-workbench-gpl-5.2.43-src/backend/wbprivate/sqlide/wb_sql_editor_f
  
  #include <boost/foreach.hpp>
  #include <boost/scoped_ptr.hpp>
-diff -up mysql-workbench-gpl-5.2.43-src/backend/wbpublic/grtdb/diff_dbobjectmatch.cpp.cppconn mysql-workbench-gpl-5.2.43-src/backend/wbpublic/grtdb/diff_dbobjectmatch.cpp
---- mysql-workbench-gpl-5.2.43-src/backend/wbpublic/grtdb/diff_dbobjectmatch.cpp.cppconn	2012-09-11 17:47:11.000000000 +0200
-+++ mysql-workbench-gpl-5.2.43-src/backend/wbpublic/grtdb/diff_dbobjectmatch.cpp	2012-09-13 18:09:32.130077033 +0200
+diff -up mysql-workbench-gpl-5.2.45-src/backend/wbpublic/grtdb/diff_dbobjectmatch.cpp.cppconn mysql-workbench-gpl-5.2.45-src/backend/wbpublic/grtdb/diff_dbobjectmatch.cpp
+--- mysql-workbench-gpl-5.2.45-src/backend/wbpublic/grtdb/diff_dbobjectmatch.cpp.cppconn	2012-12-27 16:42:42.000000000 +0100
++++ mysql-workbench-gpl-5.2.45-src/backend/wbpublic/grtdb/diff_dbobjectmatch.cpp	2012-12-29 11:29:22.253002528 +0100
 @@ -22,7 +22,7 @@
  // this doesn't belong here, but there's no other workaround for having access to mysql_info
  // because of that we also need to link wbprivate directly to the connector, making their
@@ -22,9 +22,9 @@ diff -up mysql-workbench-gpl-5.2.43-src/backend/wbpublic/grtdb/diff_dbobjectmatc
  #include <cppconn/metadata.h>
  
  
-diff -up mysql-workbench-gpl-5.2.43-src/configure.in.cppconn mysql-workbench-gpl-5.2.43-src/configure.in
---- mysql-workbench-gpl-5.2.43-src/configure.in.cppconn	2012-09-11 17:47:20.000000000 +0200
-+++ mysql-workbench-gpl-5.2.43-src/configure.in	2012-09-13 18:09:32.130077033 +0200
+diff -up mysql-workbench-gpl-5.2.45-src/configure.in.cppconn mysql-workbench-gpl-5.2.45-src/configure.in
+--- mysql-workbench-gpl-5.2.45-src/configure.in.cppconn	2012-12-27 16:43:02.000000000 +0100
++++ mysql-workbench-gpl-5.2.45-src/configure.in	2012-12-29 11:29:22.254002532 +0100
 @@ -487,8 +487,6 @@ res/mysql.profiles/Makefile
  res/sqlidedata/Makefile
  ext/Makefile
@@ -34,9 +34,9 @@ diff -up mysql-workbench-gpl-5.2.43-src/configure.in.cppconn mysql-workbench-gpl
  ext/vsqlite++/Makefile
  ext/vsqlite++/src/sqlite/Makefile
  backend/Makefile
-diff -up mysql-workbench-gpl-5.2.43-src/ext/Makefile.am.cppconn mysql-workbench-gpl-5.2.43-src/ext/Makefile.am
---- mysql-workbench-gpl-5.2.43-src/ext/Makefile.am.cppconn	2012-09-11 17:47:07.000000000 +0200
-+++ mysql-workbench-gpl-5.2.43-src/ext/Makefile.am	2012-09-13 18:09:44.314125984 +0200
+diff -up mysql-workbench-gpl-5.2.45-src/ext/Makefile.am.cppconn mysql-workbench-gpl-5.2.45-src/ext/Makefile.am
+--- mysql-workbench-gpl-5.2.45-src/ext/Makefile.am.cppconn	2012-12-27 16:42:46.000000000 +0100
++++ mysql-workbench-gpl-5.2.45-src/ext/Makefile.am	2012-12-29 11:29:22.254002532 +0100
 @@ -7,7 +7,7 @@ if BUILD_ANTLR_RUNTIME
  antlr_dirs=antlr-runtime
  endif
@@ -46,9 +46,9 @@ diff -up mysql-workbench-gpl-5.2.43-src/ext/Makefile.am.cppconn mysql-workbench-
  
  if BUNDLE_UTILITIES
  all-am:
-diff -up mysql-workbench-gpl-5.2.43-src/frontend/linux/workbench/Makefile.am.cppconn mysql-workbench-gpl-5.2.43-src/frontend/linux/workbench/Makefile.am
---- mysql-workbench-gpl-5.2.43-src/frontend/linux/workbench/Makefile.am.cppconn	2012-09-11 17:46:58.000000000 +0200
-+++ mysql-workbench-gpl-5.2.43-src/frontend/linux/workbench/Makefile.am	2012-09-13 18:09:35.484090509 +0200
+diff -up mysql-workbench-gpl-5.2.45-src/frontend/linux/workbench/Makefile.am.cppconn mysql-workbench-gpl-5.2.45-src/frontend/linux/workbench/Makefile.am
+--- mysql-workbench-gpl-5.2.45-src/frontend/linux/workbench/Makefile.am.cppconn	2012-12-27 16:42:46.000000000 +0100
++++ mysql-workbench-gpl-5.2.45-src/frontend/linux/workbench/Makefile.am	2012-12-29 11:36:21.491488325 +0100
 @@ -38,7 +38,6 @@ INCLUDES=@GLIB_CFLAGS@ @SIGC_CFLAGS@ @GR
  	-I$(top_srcdir)/modules/wb.model/src\
  	-I$(top_srcdir)/modules/interfaces\
@@ -65,7 +65,7 @@ diff -up mysql-workbench-gpl-5.2.43-src/frontend/linux/workbench/Makefile.am.cpp
  	$(top_srcdir)/ext/scintilla/gtk/libwbscintilla.la\
  	$(top_srcdir)/library/canvas/src/libmdcanvasgtk.la\
  	$(top_srcdir)/library/canvas/src/libmdcanvas.la\
- 	$(top_srcdir)/library/mysql55-parser/libmysql55parser.la\
+ 	$(top_srcdir)/library/mysql-parser/libmysqlparser.la\
  	@CTEMPLATE_LIBS@\
  	@GNOME_LIBS@ @GRT_LIBS@ @PCRE_LIBS@ @GLIB_LIBS@ @CAIRO_LIBS@ @ZIP_LIBS@ @MYSQL_LIBS@ @SQLITE3_LIBS@\
 -	-lX11
@@ -73,9 +73,9 @@ diff -up mysql-workbench-gpl-5.2.43-src/frontend/linux/workbench/Makefile.am.cpp
  
  #precompiled.h.gch: precompiled.h
  #	$(CXXCOMPILE) precompiled.h -o precompiled.h.gch
-diff -up mysql-workbench-gpl-5.2.43-src/library/dbc/src/driver_manager.cpp.cppconn mysql-workbench-gpl-5.2.43-src/library/dbc/src/driver_manager.cpp
---- mysql-workbench-gpl-5.2.43-src/library/dbc/src/driver_manager.cpp.cppconn	2012-09-11 17:47:00.000000000 +0200
-+++ mysql-workbench-gpl-5.2.43-src/library/dbc/src/driver_manager.cpp	2012-09-13 18:09:35.485090511 +0200
+diff -up mysql-workbench-gpl-5.2.45-src/library/dbc/src/driver_manager.cpp.cppconn mysql-workbench-gpl-5.2.45-src/library/dbc/src/driver_manager.cpp
+--- mysql-workbench-gpl-5.2.45-src/library/dbc/src/driver_manager.cpp.cppconn	2012-12-27 16:42:54.000000000 +0100
++++ mysql-workbench-gpl-5.2.45-src/library/dbc/src/driver_manager.cpp	2012-12-29 11:29:22.255002536 +0100
 @@ -212,6 +212,8 @@ ConnectionWrapper DriverManager::getConn
  
  ConnectionWrapper DriverManager::getConnection(const db_mgmt_ConnectionRef &connectionProperties, boost::shared_ptr<TunnelConnection> tunnel, Authentication::Ref password, ConnectionInitSlot connection_init_slot)
