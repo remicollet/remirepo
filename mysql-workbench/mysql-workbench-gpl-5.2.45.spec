@@ -1,5 +1,5 @@
 %if !%{defined version}
-%define version		5.2.44
+%define version		5.2.45
 %endif
 %define release 1
 %define edition   gpl

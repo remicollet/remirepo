@@ -33,11 +33,11 @@ Patch2:    %{name}-5.2.43-ctemplate.patch
 Patch3:    %{name}-5.2.41-tinyxml.patch
 # Use system antlr (keep bundled vsqlite)
 Patch4:    %{name}-5.2.43-antlr.patch
-# Use system antlr (and vsqlite)
+# Use system antlr (and vsqlite) - NOT applied
 Patch5:    %{name}-5.2.44-antlr.patch
 # Disable broken AutoCompletion feature
 Patch6:    %{name}-5.2.43-noautocc.patch
-# Use system vsqlite++ (not ready)
+# Use system vsqlite++ (not ready) - NOT applied
 Patch7:    %{name}-5.2.44-vsqlite.patch
 
 # don't use bundled documentation, redirect to online doc
