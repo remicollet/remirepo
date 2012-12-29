@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcache
 Version:      3.0.7
-Release:      4%{?dist}.5
+Release:      5%{?dist}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -23,9 +23,10 @@ Patch1:       %{name}-3.0.5-get-mem-corrupt.patch
 # http://svn.php.net/viewvc?view=revision&revision=328202
 Patch2:       %{name}-3.0.7-bug59602.patch
 
-
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel php-pear, zlib-devel
+BuildRequires: php-devel
+BuildRequires: php-pear
+BuildRequires: zlib-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -38,13 +39,13 @@ Provides:     php-%{pecl_name} = %{version}
 Provides:     php-%{pecl_name}%{?_isa} = %{version}
 
 # Other third party repo stuff
-Obsoletes:     php53-pecl-memcache
-Obsoletes:     php53u-pecl-memcache
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-memcache
+Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-memcache
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 # Filter private shared
@@ -79,7 +80,7 @@ if test "x${extver}" != "x%{version}"; then
 fi
 popd
 
-%{__php} -n %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
+%{__php} %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
 
 cp -p %{SOURCE3} .
 
@@ -196,7 +197,7 @@ fi
 
 
 %changelog
-* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-4.5
+* Fri Dec 29 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-5
 - add patch for https://bugs.php.net/59602
   segfault in getExtendedStats
 
