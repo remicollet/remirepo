@@ -5,7 +5,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcache
 Version:      3.0.7
-Release:      4%{?dist}.4
+Release:      4%{?dist}.5
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -16,8 +16,13 @@ Source2:      xml2changelog
 Source3:      LICENSE
 
 # https://bugs.php.net/63142
-# http://svn.php.net/viewvc/pecl/memcache/branches/NON_BLOCKING_IO/memcache_pool.c?r1=327754&r2=327753&pathrev=327754
-Patch2:       php-pecl-memcache-3.0.5-get-mem-corrupt.patch
+# http://svn.php.net/viewvc?view=revision&revision=327754
+Patch1:       %{name}-3.0.5-get-mem-corrupt.patch
+
+# https://bugs.php.net/59602
+# http://svn.php.net/viewvc?view=revision&revision=328202
+Patch2:       %{name}-3.0.7-bug59602.patch
+
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel php-pear, zlib-devel
@@ -62,7 +67,8 @@ Memcache can be used as a PHP session handler.
 %setup -c -q
 
 pushd %{pecl_name}-%{version}
-%patch2 -p1 -b .get-mem-corrupt.patch
+%patch1 -p1 -b .get-mem-corrupt.patch
+%patch2 -p4 -b .bug54602
 
 # Chech version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_MEMCACHE_VERSION/{s/.* "//;s/".*$//;p}' php_memcache.h)
@@ -190,6 +196,10 @@ fi
 
 
 %changelog
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-4.5
+- add patch for https://bugs.php.net/59602
+  segfault in getExtendedStats
+
 * Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-4.1
 - also provides php-memcache
 
