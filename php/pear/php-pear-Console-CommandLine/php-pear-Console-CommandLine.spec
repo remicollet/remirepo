@@ -24,9 +24,12 @@ BuildArch:      noarch
 BuildRequires:  php-pear
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
 
+Requires:       php-dom
+Requires:       php-pcre
 Requires:       php-spl
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+
 Provides:       php-pear(%{pear_name}) = %{version}
 
 %description
@@ -108,6 +111,7 @@ fi
   columnWrap() in Default Renderer eats up lines with only a EOL
 - fix for https://pear.php.net/bugs/19683
   Unit tests are broken
+- clean requires
 
 * Thu Oct 25 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Version 1.2.0 (stable) - API 1.2.0 (stable)
