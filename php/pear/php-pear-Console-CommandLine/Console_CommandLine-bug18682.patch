@@ -1,0 +1,243 @@
+From 987dd5793550a1cb8930bb06cf8f384bdbbbf2a4 Mon Sep 17 00:00:00 2001
+From: David Jean Louis <izimobil@gmail.com>
+Date: Thu, 25 Oct 2012 10:13:42 +0200
+Subject: [PATCH] * Fixed bug #18682 (columnWrap() in Default Renderer eats up
+ lines with only a EOL) [izi, thanks Helgi] * Fixed bug
+ #18703 (No way to override reading of stdin with -) [izi,
+ thanks Gwynne Raskind] * Fixed unit tests [izi]
+
+---
+ Console/CommandLine.php                    |   18 +++++--
+ Console/CommandLine/Renderer/Default.php   |   10 +++-
+ package.xml                                |   30 ++++++++---
+ tests/console_commandline_addargument.phpt |   20 +++++--
+ tests/console_commandline_bug18682.phpt    |   79 ++++++++++++++++++++++++++++
+ 5 files changed, 142 insertions(+), 15 deletions(-)
+ create mode 100644 tests/console_commandline_bug18682.phpt
+
+diff --git a/Console/CommandLine.php b/Console/CommandLine.php
+index c1b01e1..0ccfb7c 100644
+--- a/Console/CommandLine.php
++++ b/Console/CommandLine.php
+@@ -176,6 +176,15 @@ class Console_CommandLine
+      */
+     public $force_options_defaults = false;
+ 
++ 
++   /**
++    * Boolean that tells the parser to treat a single - option as an argument
++    * instead of trying to read STDIN.
++    *
++    * @var bool $avoid_reading_stdin Whether to treat - as an argument
++    */
++    public $avoid_reading_stdin = false;
++
+     /**
+      * An array of Console_CommandLine_Option objects.
+      *
+@@ -999,7 +1008,8 @@ protected function parseToken($token, $result, &$args, $argc)
+         static $stopflag = false;
+         $last  = $argc === 0;
+         if (!$stopflag && $lastopt) {
+-            if (substr($token, 0, 1) == '-') {
++            if (strlen($token) > ($this->avoid_reading_stdin ? 1 : 0) &&
++                substr($token, 0, 1) == '-') {
+                 if ($lastopt->argument_optional) {
+                     $this->_dispatchAction($lastopt, '', $result);
+                     if ($lastopt->action != 'StoreArray') {
+@@ -1085,10 +1095,12 @@ protected function parseToken($token, $result, &$args, $argc)
+                 $lastopt = $opt;
+             }
+             $this->_dispatchAction($opt, $value, $result);
+-        } else if (!$stopflag && substr($token, 0, 1) == '-') {
++        } else if (!$stopflag &&
++                   strlen($token) > ($this->avoid_reading_stdin ? 1 : 0) &&
++                   substr($token, 0, 1) == '-') {
+             // a short option
+             $optname = substr($token, 0, 2);
+-            if ($optname == '-') {
++            if ($optname == '-' && !$this->avoid_reading_stdin) {
+                 // special case of "-": try to read stdin
+                 $args[] = file_get_contents('php://stdin');
+                 return;
+diff --git a/Console/CommandLine/Renderer/Default.php b/Console/CommandLine/Renderer/Default.php
+index 59ce33e..8f34b26 100644
+--- a/Console/CommandLine/Renderer/Default.php
++++ b/Console/CommandLine/Renderer/Default.php
+@@ -409,12 +409,18 @@ protected function columnWrap($text, $cw)
+     {
+         $tokens = explode("\n", $this->wrap($text));
+         $ret    = $tokens[0];
+-        $chunks = $this->wrap(trim(substr($text, strlen($ret))), 
+-            $this->line_width - $cw);
++        $text   = trim(substr($text, strlen($ret)));
++        if (empty($text)) {
++            return $ret;
++        }
++
++        $chunks = $this->wrap($text, $this->line_width - $cw);
+         $tokens = explode("\n", $chunks);
+         foreach ($tokens as $token) {
+             if (!empty($token)) {
+                 $ret .= "\n" . str_repeat(' ', $cw) . $token;
++            } else {
++                $ret .= "\n";
+             }
+         }
+         return $ret;
+diff --git a/tests/console_commandline_addargument.phpt b/tests/console_commandline_addargument.phpt
+index ca87c65..eb2e3af 100644
+--- a/tests/console_commandline_addargument.phpt
++++ b/tests/console_commandline_addargument.phpt
+@@ -27,11 +27,14 @@ $parser->addArgument('Some invalid name');
+ --EXPECTF--
+ array(4) {
+   ["arg1"]=>
+-  object(Console_CommandLine_Argument)#5 (7) {
++  object(Console_CommandLine_Argument)#5 (8) {
+     ["multiple"]=>
+     bool(false)
+     ["optional"]=>
+     bool(false)
++    ["choices"]=>
++    array(0) {
++    }
+     ["name"]=>
+     string(4) "arg1"
+     ["help_name"]=>
+@@ -45,11 +48,14 @@ array(4) {
+     }
+   }
+   ["arg2"]=>
+-  object(Console_CommandLine_Argument)#6 (7) {
++  object(Console_CommandLine_Argument)#6 (8) {
+     ["multiple"]=>
+     bool(true)
+     ["optional"]=>
+     bool(false)
++    ["choices"]=>
++    array(0) {
++    }
+     ["name"]=>
+     string(4) "arg2"
+     ["help_name"]=>
+@@ -63,11 +69,14 @@ array(4) {
+     }
+   }
+   ["arg3"]=>
+-  object(Console_CommandLine_Argument)#7 (7) {
++  object(Console_CommandLine_Argument)#7 (8) {
+     ["multiple"]=>
+     bool(true)
+     ["optional"]=>
+     bool(false)
++    ["choices"]=>
++    array(0) {
++    }
+     ["name"]=>
+     string(4) "arg3"
+     ["help_name"]=>
+@@ -81,11 +90,14 @@ array(4) {
+     }
+   }
+   ["arg4"]=>
+-  object(Console_CommandLine_Argument)#8 (7) {
++  object(Console_CommandLine_Argument)#8 (8) {
+     ["multiple"]=>
+     bool(false)
+     ["optional"]=>
+     bool(true)
++    ["choices"]=>
++    array(0) {
++    }
+     ["name"]=>
+     string(4) "arg4"
+     ["help_name"]=>
+diff --git a/tests/console_commandline_bug18682.phpt b/tests/console_commandline_bug18682.phpt
+new file mode 100644
+index 0000000..aa769c3
+--- /dev/null
++++ b/tests/console_commandline_bug18682.phpt
+@@ -0,0 +1,79 @@
++--TEST--
++Test for bug #18682: columnWrap() in Default Renderer eats up lines with only a EOL.
++--ARGS--
++cmd1 --help 2>&1
++--FILE--
++<?php
++
++require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'tests.inc.php';
++
++class Renderer extends Console_CommandLine_Renderer_Default {
++  protected function description() {
++    return $this->columnWrap($this->parser->description, 2);
++  }
++}
++
++$parser = new Console_CommandLine();
++$parser->accept(new Renderer);
++$parser->renderer->line_width = 75;
++$parser->addCommand('cmd1', array(
++    'description' => '
++Installs listed packages.
++
++local package.xml example:
++php pyrus.phar install package.xml
++
++local package archive example:
++php pyrus.phar install PackageName-1.2.0.tar
++
++remote package archive example:
++php pyrus.phar install http://www.example.com/PackageName-1.2.0.tgz
++
++Examples of an abstract package:
++php pyrus.phar install PackageName
++  installs PackageName from the default channel with stability preferred_state
++php pyrus.phar pear/PackageName
++  installs PackageName from the pear.php.net channel with stability preferred_state
++php pyrus.phar install channel://doc.php.net/PackageName
++  installs PackageName from the doc.php.net channel with stability preferred_state
++php pyrus.phar install PackageName-beta
++  installs PackageName from the default channel, beta or stable stability
++php pyrus.phar install PackageName-1.2.0
++  installs PackageName from the default channel, version 1.2.0'
++));
++$parser->parse();
++
++?>
++--EXPECTF--
++  Installs listed packages.
++
++  local package.xml example:
++  php pyrus.phar install package.xml
++
++  local package archive example:
++  php pyrus.phar install PackageName-1.2.0.tar
++
++  remote package archive example:
++  php pyrus.phar install http://www.example.com/PackageName-1.2.0.tgz
++
++  Examples of an abstract package:
++  php pyrus.phar install PackageName
++    installs PackageName from the default channel with stability
++  preferred_state
++  php pyrus.phar pear/PackageName
++    installs PackageName from the pear.php.net channel with stability
++  preferred_state
++  php pyrus.phar install channel://doc.php.net/PackageName
++    installs PackageName from the doc.php.net channel with stability
++  preferred_state
++  php pyrus.phar install PackageName-beta
++    installs PackageName from the default channel, beta or stable stability
++  php pyrus.phar install PackageName-1.2.0
++    installs PackageName from the default channel, version 1.2.0
++
++Usage:
++  %sconsole_commandline_bug18682.php
++  [options] cmd1 [options]
++
++Options:
++  -h, --help  show this help message and exit
+-- 
+1.7.10
+

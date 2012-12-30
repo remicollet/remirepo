@@ -1,0 +1,25 @@
+From 05eb12793b236ea631eef42d292e31a27746a6aa Mon Sep 17 00:00:00 2001
+From: Laurent Laville <laurent.laville@gmail.com>
+Date: Wed, 26 Dec 2012 16:03:20 +0100
+Subject: [PATCH] fix PEAR bug 19683
+
+---
+ tests/console_commandline_webrequest_2.phpt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/console_commandline_webrequest_2.phpt b/tests/console_commandline_webrequest_2.phpt
+index c9ad9da..1d6b029 100644
+--- a/tests/console_commandline_webrequest_2.phpt
++++ b/tests/console_commandline_webrequest_2.phpt
+@@ -15,7 +15,7 @@ $parser->parse();
+ Description of our parser goes here...
+ 
+ Usage:
+-  some_program [options] <simple> <multiple...>
++  some_program [options] simple [multiple1 multiple2 ...]
+ 
+ Options:
+   -t, --true                        test the StoreTrue action
+-- 
+1.7.10
+

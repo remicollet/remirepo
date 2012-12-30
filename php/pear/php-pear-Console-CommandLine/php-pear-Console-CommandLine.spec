@@ -4,7 +4,7 @@
 
 Name:           php-pear-Console-CommandLine
 Version:        1.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A full featured command line options and arguments parser
 
 Group:          Development/Libraries
@@ -12,12 +12,18 @@ License:        MIT
 URL:            http://pear.php.net/package/%{pear_name}
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
+# columnWrap() in Default Renderer eats up lines with only a EOL
+# https://pear.php.net/bugs/18682
+Patch1:         %{pear_name}-bug18682.patch
+# Unit tests are broken
+# https://pear.php.net/bugs/19683
+Patch2:         %{pear_name}-bug19683.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
 
-Requires:       php(language) >= 5.1.0
 Requires:       php-spl
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -39,8 +45,14 @@ Main features:
 
 %prep
 %setup -qc
+# because of our patches
+sed -e 's/md5sum=.*name/name/' -i package.xml
+
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
+
+%patch1 -p1 -b .bug18682
+%patch2 -p1 -b .bug19683
 
 
 %build
@@ -63,11 +75,6 @@ install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}
-
-# seems this ones need to be fixed for new feature
-rm -f tests/console_commandline_addargument.phpt \
-      tests/console_commandline_webrequest_2.phpt
-
 %{_bindir}/phpunit tests
 
 
@@ -96,6 +103,12 @@ fi
 
 
 %changelog
+* Sun Dec 30 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- fix for https://pear.php.net/bugs/18682
+  columnWrap() in Default Renderer eats up lines with only a EOL
+- fix for https://pear.php.net/bugs/19683
+  Unit tests are broken
+
 * Thu Oct 25 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Version 1.2.0 (stable) - API 1.2.0 (stable)
 
