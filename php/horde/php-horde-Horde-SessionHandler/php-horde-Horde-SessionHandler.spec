@@ -15,6 +15,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
@@ -23,7 +24,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-date
 Requires:       php-session
 Requires:       php-channel(%{pear_channel})
@@ -44,6 +45,7 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 %description
 Horde_SessionHandler defines an API for implementing custom session
 handlers for PHP.
+
 
 %prep
 %setup -q -c -T
@@ -105,9 +107,9 @@ fi
 
 
 %changelog
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
 
-* Sat Nov  3 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Sat Nov  3 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Initial package
 
