@@ -1,0 +1,13 @@
+Index: php_http_client_datashare.c
+===================================================================
+--- php_http_client_datashare.c	(révision 328937)
++++ php_http_client_datashare.c	(copie de travail)
+@@ -22,7 +22,7 @@
+ 	if (!h) {
+ 		free_h = h = emalloc(sizeof(*h));
+ 	}
+-	memset(h, sizeof(*h), 0);
++	memset(h, 0, sizeof(*h));
+ 
+ 	zend_llist_init(&h->clients, sizeof(zval *), ZVAL_PTR_DTOR, 0);
+ 	h->ops = ops;

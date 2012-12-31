@@ -3,11 +3,11 @@
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global prever    beta3
+%global prever    beta4
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.13.%{prever}%{?dist}.2
+Release:        0.14.%{prever}%{?dist}.1
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -18,9 +18,8 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
 
-# Fix for curl version older than 7.21.3
-# http://svn.php.net/viewvc?view=revision&revision=328773
-Patch0:         %{pecl_name}-curl.patch
+# fix memset arg order
+Patch1:         %{name}-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.3.0
@@ -98,7 +97,7 @@ These are the files needed to compile programs using HTTP extension.
 %setup -c -q 
 
 cd %{proj_name}-%{version}%{?prever}
-%patch0 -p1 -b .oldcurl
+%patch1 -p0 -b .build
 
 extver=$(sed -n '/#define PHP_HTTP_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -198,6 +197,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 31 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.14.beta4
+- update to 2.0.0beta4
+
 * Thu Dec 13 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.13.beta3
 - update to 2.0.0beta3
 
