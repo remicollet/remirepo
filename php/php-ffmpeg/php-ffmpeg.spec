@@ -4,14 +4,14 @@
 Name:           php-ffmpeg
 Version:        0.7.0
 %if 0%{?svn}
-Release:        0.1.svn%{svn}%{?dist}
+Release:        0.2.svn%{svn}%{?dist}.1
 %else
 Release:        1%{?dist}
 %endif
 Summary:        Extension to manipulate movie in PHP
 
 Group:          Development/Languages
-License:        GPLv2
+License:        GPLv2+
 URL:            http://ffmpeg-php.sourceforge.net/
 %if 0%{?svn}
 # svn export -r 678 https://ffmpeg-php.svn.sourceforge.net/svnroot/ffmpeg-php/trunk/ffmpeg-php ffmpeg-php-svn678
@@ -28,9 +28,13 @@ Patch1:         php-ffmpeg-php54.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  ffmpeg-devel >= 0.10, php-devel, php-gd
+BuildRequires:  ffmpeg-devel >= 0.10
+BuildRequires:  php-devel
+BuildRequires:  php-gd
+
 Obsoletes:      ffmpeg-php < %{version}
 Provides:       ffmpeg-php = %{version}-%{release}
+Provides:       ffmpeg-php%{?_isa} = %{version}-%{release}
 
 Requires:       php-gd%{?_isa}
 Requires:       php(zend-abi) = %{php_zend_api}
@@ -142,7 +146,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Sep 17 2010 Remi Collet <rpms@famillecollet.com> 0.7.0-0.1.svn678
+* Wed Jan  2 2013 Remi Collet <rpms@famillecollet.com> 0.7.0-0.2.svn678
+- rewrite patch for include using explicit path of each header
+  because of conflicts with system headers (time.h)
+
+* Mon Sep 17 2012 Remi Collet <rpms@famillecollet.com> 0.7.0-0.1.svn678
 - update to 0.7.0 svn snapshot revision 678
 - add patch for php 5.4
 - add ZTS extension

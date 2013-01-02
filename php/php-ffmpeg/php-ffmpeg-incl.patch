@@ -1,28 +1,43 @@
 diff -up ./config.m4.incl ./config.m4
 --- ./config.m4.incl	2009-07-02 19:15:48.000000000 +0200
-+++ ./config.m4	2012-09-17 06:31:46.733978790 +0200
-@@ -41,6 +41,18 @@ if test "$PHP_FFMPEG" != "no"; then
-       PHP_ADD_INCLUDE($i/include/libavdevice/)
-       FFMPEG_INC_FOUND=$i/include/libavcodec
-       break
++++ ./config.m4	2013-01-02 09:05:39.525828877 +0100
+@@ -33,13 +33,14 @@ if test "$PHP_FFMPEG" != "no"; then
+     elif test -f $i/include/libavcodec/avcodec.h; then
+       dnl ffmpeg svn revision 12194 and newer put each header in its own dir
+       dnl so we have to include them all.
+-      PHP_ADD_INCLUDE($i/include/libavcodec/)
+-      PHP_ADD_INCLUDE($i/include/libavformat/)
+-      PHP_ADD_INCLUDE($i/include/libavutil/)
+-      PHP_ADD_INCLUDE($i/include/libswscale/)
+-      PHP_ADD_INCLUDE($i/include/libavfilter/)
+-      PHP_ADD_INCLUDE($i/include/libavdevice/)
+-      FFMPEG_INC_FOUND=$i/include/libavcodec
++      PHP_ADD_INCLUDE($i/include)
++      FFMPEG_INC_FOUND=$i/include
++      break
 +    elif test -f $i/libavcodec/avcodec.h; then
 +      dnl ffmpeg svn revision 12194 and newer put each header in its own dir
 +      dnl ffmpeg-devel RPM install in /usr/include/ffmpeg/*
 +      PHP_ADD_INCLUDE($i)
-+      PHP_ADD_INCLUDE($i/libavcodec/)
-+      PHP_ADD_INCLUDE($i/libavformat/)
-+      PHP_ADD_INCLUDE($i/libavutil/)
-+      PHP_ADD_INCLUDE($i/libswscale/)
-+      PHP_ADD_INCLUDE($i/libavfilter/)
-+      PHP_ADD_INCLUDE($i/libavdevice/)
 +      FFMPEG_INC_FOUND=$i
-+      break
+       break
      fi
    done
+diff -up ./ffmpeg_errorhandler.c.incl ./ffmpeg_errorhandler.c
+--- ./ffmpeg_errorhandler.c.incl	2009-02-25 21:48:46.000000000 +0100
++++ ./ffmpeg_errorhandler.c	2013-01-02 09:05:39.525828877 +0100
+@@ -34,7 +34,7 @@
+  */
  
+ #include "php.h"
+-#include <avcodec.h>
++#include <libavcodec/avcodec.h>
+ 
+ /* {{{ ffmpeg_errorhandler()
+  */
 diff -up ./ffmpeg_frame.c.incl ./ffmpeg_frame.c
---- ./ffmpeg_frame.c.incl	2012-09-17 06:44:58.242810037 +0200
-+++ ./ffmpeg_frame.c	2012-09-17 06:44:07.729629307 +0200
+--- ./ffmpeg_frame.c.incl	2012-01-14 02:49:31.000000000 +0100
++++ ./ffmpeg_frame.c	2013-01-02 09:05:39.526828871 +0100
 @@ -57,7 +57,7 @@
     allow ffmpeg-php to be built without access to the php sources
     */
@@ -32,3 +47,84 @@ diff -up ./ffmpeg_frame.c.incl ./ffmpeg_frame.c
  
  #define FFMPEG_PHP_FETCH_IMAGE_RESOURCE(gd_img, ret) { \
      ZEND_GET_RESOURCE_TYPE_ID(le_gd, "gd"); \
+diff -up ./ffmpeg_frame.h.incl ./ffmpeg_frame.h
+--- ./ffmpeg_frame.h.incl	2009-06-22 06:22:21.000000000 +0200
++++ ./ffmpeg_frame.h	2013-01-02 09:05:39.527828864 +0100
+@@ -38,9 +38,9 @@
+ 
+ #include "php_version.h"
+ 
+-#include <avcodec.h>
+-#include <avformat.h>
+-#include <avutil.h>
++#include <libavcodec/avcodec.h>
++#include <libavformat/avformat.h>
++#include <libavutil/avutil.h>
+ 
+ #ifdef HAVE_CONFIG_H
+ #include "config.h"
+diff -up ./ffmpeg_movie.c.incl ./ffmpeg_movie.c
+--- ./ffmpeg_movie.c.incl	2012-01-14 02:49:31.000000000 +0100
++++ ./ffmpeg_movie.c	2013-01-02 09:07:37.865917445 +0100
+@@ -34,10 +34,10 @@
+ #include "php_globals.h"
+ #include "ext/standard/info.h"
+ 
+-#include <avcodec.h>
+-#include <avformat.h>
+-#include <pixfmt.h>
+-#include <pixdesc.h>
++#include <libavcodec/avcodec.h>
++#include <libavformat/avformat.h>
++#include <libavutil/pixfmt.h>
++#include <libavutil/pixdesc.h>
+ 
+ #ifdef HAVE_CONFIG_H
+ #include "config.h"
+diff -up ./ffmpeg-php.c.incl ./ffmpeg-php.c
+--- ./ffmpeg-php.c.incl	2012-01-14 02:49:31.000000000 +0100
++++ ./ffmpeg-php.c	2013-01-02 09:05:39.528828857 +0100
+@@ -39,11 +39,11 @@
+ 
+ #include "php.h"
+ 
+-#include <avcodec.h>
+-#include <avformat.h>
++#include <libavcodec/avcodec.h>
++#include <libavformat/avformat.h>
+ 
+ #if HAVE_SWSCALER
+-#include <swscale.h>
++#include <libswscale/swscale.h>
+ #endif
+ 
+ #include "php_ini.h"
+diff -up ./ffmpeg_tools.c.incl ./ffmpeg_tools.c
+--- ./ffmpeg_tools.c.incl	2009-06-22 06:22:21.000000000 +0200
++++ ./ffmpeg_tools.c	2013-01-02 09:05:39.529828850 +0100
+@@ -42,7 +42,7 @@
+ #include "ffmpeg_tools.h"
+ 
+ #if LIBAVCODEC_VERSION_MAJOR >= 52
+-#include <swscale.h>
++#include <libswscale/swscale.h>
+ 
+ /* {{{ ffmpeg_img_convert() 
+  * wrapper around ffmpeg image conversion routines
+diff -up ./ffmpeg_tools.h.incl ./ffmpeg_tools.h
+--- ./ffmpeg_tools.h.incl	2009-06-22 06:22:21.000000000 +0200
++++ ./ffmpeg_tools.h	2013-01-02 09:05:39.529828850 +0100
+@@ -36,11 +36,11 @@
+ #ifndef FFMPEG_TOOLS_H
+ #define FFMPEG_TOOLS_H
+ 
+-#include <avcodec.h>
++#include <libavcodec/avcodec.h>
+ 
+ #if LIBAVCODEC_VERSION_MAJOR >= 52
+ 
+-#include <swscale.h>
++#include <libswscale/swscale.h>
+ 
+ // Starting from this version, ImgReSampleContext doesn't exist anymore.
+ // This code implements the previous functions with a similar interface

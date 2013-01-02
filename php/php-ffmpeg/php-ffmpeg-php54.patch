@@ -1,15 +1,6 @@
 diff -up ffmpeg-php-svn678/ffmpeg_movie.c.php54 ffmpeg-php-svn678/ffmpeg_movie.c
 --- ffmpeg-php-svn678/ffmpeg_movie.c.php54	2012-09-17 06:08:57.113312219 +0200
 +++ ffmpeg-php-svn678/ffmpeg_movie.c	2012-09-17 06:12:10.425069883 +0200
-@@ -36,7 +36,7 @@
- 
- #include <avcodec.h>
- #include <avformat.h>
--#include <pixfmt.h>
-+#include <pixfmt.h>
- #include <pixdesc.h>
- 
- #ifdef HAVE_CONFIG_H
 @@ -315,7 +315,7 @@ FFMPEG_PHP_CONSTRUCTOR(ffmpeg_movie, __c
      } 
  
