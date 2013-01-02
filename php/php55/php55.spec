@@ -61,14 +61,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201212241030
+%global snapdate      201301021430
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.9.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.10.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1640,8 +1640,11 @@ fi
 
 
 %changelog
-* Mon Dec 24 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.9.201212241030
+* Wed Jan  2 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.10-201301021430
 - new snapshot
+
+* Mon Dec 24 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.9.201212241030
+- new snapshot (post alpha2)
 - use xz compressed tarball
 
 * Tue Dec 18 2012 Remi Collet <remi@fedoraproject.org> 5.5.0-0.9.201212181230
