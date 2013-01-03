@@ -14,6 +14,10 @@ Source0:        xdebug_2_2.tar.gz
 %else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
+
+# https://github.com/xdebug/xdebug/pull/51
+Patch0:         xdebug-build.patch
+
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
 License:        PHP
@@ -21,9 +25,10 @@ Group:          Development/Languages
 URL:            http://xdebug.org/
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-pear  >= 1:1.4.9-1.2
-BuildRequires:  php-devel >= 5.1.0
+BuildRequires:  php-pear
+BuildRequires:  php-devel
 BuildRequires:  libedit-devel
+BuildRequires:  libtool
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -75,6 +80,7 @@ mv xdebug-xdebug_2_2 %{pecl_name}-%{version}%{?prever}
 %endif
 
 cd %{pecl_name}-%{version}%{?prever}
+%patch0 -p1 -b .build
 
 # https://bugs.php.net/60330
 sed -i -e '/AC_PREREQ/s/2.60/2.59/' debugclient/configure.in
@@ -193,6 +199,7 @@ rm -rf %{buildroot}
 %changelog
 * Thu Jan  3 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.3.gite1b9127
 - new snapshot
+- add patch, see https://github.com/xdebug/xdebug/pull/51
 
 * Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.2.gite773b090fc
 - rebuild with new php 5.5 snaphost with zend_execute_ex
