@@ -11,7 +11,7 @@
 
 Name:           mydumper
 Version:        0.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A high-performance MySQL backup tool
 
 Group:          Applications/Databases
@@ -43,6 +43,8 @@ Documentation: /usr/share/doc/mydumper/html/index.html
 %prep
 %setup -q
 
+sed -e 's/-Werror//' -i CMakeLists.txt
+
 
 %build
 cmake -DCMAKE_INSTALL_PREFIX="%{_prefix}" .
@@ -73,6 +75,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan  3 2013 Remi Collet <remi@fedoraproject.org> - 0.2.3-2
+- don't break build because of warnings
+  (lot of deprecated glib calls on fedora 18)
+
 * Sun Apr 15 2012 Remi Collet <remi@fedoraproject.org> - 0.2.3-1
 - initial package
 
