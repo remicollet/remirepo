@@ -2,7 +2,7 @@ DONE:
 =====
 php-ffmpeg			0.7.0svn
 php-pecl-amqp		1.0.9
-php-pecl-apc		3.1.14dev
+php-pecl-apc		3.1.14
 php-pecl-gearman	1.0.3
 php-pecl-geoip		1.0.8
 php-pecl-gmagick	1.1.2RC1

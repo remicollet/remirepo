@@ -1,208 +1,56 @@
---- pecl/apc/trunk/tests/apc54_004.phpt	2012/09/03 17:19:06	327448
-+++ pecl/apc/trunk/tests/apc54_004.phpt	2012/09/03 17:31:18	327449
-@@ -31,63 +31,63 @@
+Index: apc_compile.c
+===================================================================
+--- apc_compile.c	(révision 328824)
++++ apc_compile.c	(copie de travail)
+@@ -2469,9 +2469,11 @@
+         dst->alias_len = src->alias_len;
+     }
  
- --EXPECTF--
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- <br />
--<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>/home/weltling/dws/src/apc_trunk/tests/index.php</b> on line <b>3</b><br />
-+<b>Notice</b>:  Undefined property: stdClass::$qwerty in <b>%s/tests/index.php</b> on line <b>3</b><br />
- done
---- pecl/apc/trunk/tests/apc54_018.phpt	2012/09/03 17:31:18	327449
-+++ pecl/apc/trunk/tests/apc54_018.phpt	2012/09/03 17:37:18	327450
-@@ -42,7 +42,7 @@
-   ["type"]=>
-   string(4) "user"
-   ["key"]=>
--  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
-+  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
-   ["value"]=>
-   string(%d) "%s"
-   ["num_hits"]=>
-@@ -67,7 +67,7 @@
-   ["type"]=>
-   string(4) "user"
-   ["key"]=>
--  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
-+  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
-   ["value"]=>
-   string(%d) "%s"
-   ["num_hits"]=>
-@@ -92,7 +92,7 @@
-   ["type"]=>
-   string(4) "user"
-   ["key"]=>
--  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
-+  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
-   ["value"]=>
-   string(%d) "%s"
-   ["num_hits"]=>
-@@ -117,7 +117,7 @@
-   ["type"]=>
-   string(4) "user"
-   ["key"]=>
--  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
-+  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
-   ["value"]=>
-   string(%d) "%s"
-   ["num_hits"]=>
-@@ -142,7 +142,7 @@
-   ["type"]=>
-   string(4) "user"
-   ["key"]=>
--  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
-+  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
-   ["value"]=>
-   string(%d) "%s"
-   ["num_hits"]=>
-@@ -167,7 +167,7 @@
-   ["type"]=>
-   string(4) "user"
-   ["key"]=>
--  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
-+  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
-   ["value"]=>
-   string(%d) "%s"
-   ["num_hits"]=>
-@@ -192,7 +192,7 @@
-   ["type"]=>
-   string(4) "user"
-   ["key"]=>
--  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
-+  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
-   ["value"]=>
-   string(%d) "%s"
-   ["num_hits"]=>
-@@ -217,7 +217,7 @@
-   ["type"]=>
-   string(4) "user"
-   ["key"]=>
--  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
-+  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
-   ["value"]=>
-   string(%d) "%s"
-   ["num_hits"]=>
-@@ -242,7 +242,7 @@
-   ["type"]=>
-   string(4) "user"
-   ["key"]=>
--  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf5675"
-+  string(42) "test-niko-asdfasdfasdfkjasdflkasjdfasf%d"
-   ["value"]=>
-   string(%d) "%s"
-   ["num_hits"]=>
---- pecl/apc/trunk/tests/apc54_020.phpt	2012/09/04 00:04:46	327452
-+++ pecl/apc/trunk/tests/apc54_020.phpt	2012/09/04 05:30:31	327453
-@@ -3,8 +3,8 @@
- --SKIPIF--
- <?php
-     require_once(dirname(__FILE__) . '/skipif.inc'); 
--    if (PHP_MAJOR_VERSION < 5 || (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION < 4)) {
--		die('skip PHP 5.4+ only');
-+    if (version_compare(PHP_VERSION, '5.4.6', '<')) {
-+		die('skip PHP 5.4.6+ only');
- 	}
- --FILE--
- <?php
---- pecl/apc/trunk/tests/server_test.inc	2012/09/04 05:30:31	327453
-+++ pecl/apc/trunk/tests/server_test.inc	2012/09/04 05:32:28	327454
-@@ -23,8 +23,11 @@
- 		2 => STDERR,
- 	);
++#ifndef ZEND_ENGINE_2_5
+     if (src->function) {
+         CHECK(dst->function = my_copy_function(NULL, src->function, ctxt TSRMLS_CC));
+     }
++#endif
  
--	$ext = (substr(PHP_OS, 0, 3) == 'WIN') ? 'php_apc.dll' : 'apc.so';
--	$php_args = "-d extension_dir=$doc_root/../modules -d extension=$ext";
-+	$php_args = getenv('TEST_PHP_ARGS');
-+	if (empty($php_args)) {
-+		$ext = (substr(PHP_OS, 0, 3) == 'WIN') ? 'php_apc.dll' : 'apc.so';
-+		$php_args = "-d extension_dir=$doc_root/../modules -d extension=$ext";
-+	}
- 	if ($php_opts) {
- 		$php_args = "$php_args -d " . implode(' -d ', $php_opts);;
- 	}
+     APC_COPY_TRAIT_METHOD(dst->trait_method, src->trait_method);
+ 
+@@ -2506,9 +2508,11 @@
+     }
+     memcpy(dst, src, sizeof(zend_trait_precedence));
+ 
++#ifndef ZEND_ENGINE_2_5
+     if (src->function) {
+         CHECK(dst->function = my_copy_function(NULL, src->function, ctxt TSRMLS_CC));
+     } 
++#endif
+ 
+     if (src->exclude_from_classes && *src->exclude_from_classes) {
+         int i = 0, num_classes = 0;
+Index: tests/apc54_error_010.phpt
+===================================================================
+--- tests/apc54_error_010.phpt	(révision 328955)
++++ tests/apc54_error_010.phpt	(copie de travail)
+@@ -23,8 +23,8 @@
+ }
+ 
+ class bar {
+-	use foo, c { c::test insteadof foo, b; }
+-	use foo, c { c::test insteadof foo, b; }
++	use foo, c { c::test insteadof foo; }
++	use foo, c { c::test insteadof foo; }
+ }
+ 
+ \$x = new bar;
+Index: tests/apc54_error_010_2.phpt
+===================================================================
+--- tests/apc54_error_010_2.phpt	(révision 328955)
++++ tests/apc54_error_010_2.phpt	(copie de travail)
+@@ -23,7 +23,7 @@
+ }
+ 
+ class bar {
+-	use foo, c { c::test insteadof foo, b; }
++	use foo, c { c::test insteadof foo; }
+ }
+ 
+ \$x = new bar;

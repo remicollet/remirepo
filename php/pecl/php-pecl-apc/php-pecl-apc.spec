@@ -4,8 +4,8 @@
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          php-pecl-apc
-Version:       3.1.13
-Release:       3%{?dist}.1
+Version:       3.1.14
+Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
@@ -14,15 +14,16 @@ Source1:       apc.ini
 Source2:       apc-panel.conf
 Source3:       apc.conf.php
 
-# Upstream patch from SVN, fixed test suite.
-# http://svn.php.net/viewvc?view=revision&revision=327449
-# http://svn.php.net/viewvc?view=revision&revision=327450
-# http://svn.php.net/viewvc?view=revision&revision=327453
-# http://svn.php.net/viewvc?view=revision&revision=327454
+# Upstream patches from SVN
+# http://svn.php.net/viewvc?view=revision&revision=328955
+# http://svn.php.net/viewvc?view=revision&revision=328956
+# http://svn.php.net/viewvc?view=revision&revision=328957
 Patch0:        apc-svn.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel >= 5.1.0, httpd-devel, php-pear
+BuildRequires: php-devel
+BuildRequires: php-pear
+BuildRequires: httpd-devel
 # Only for tests (used by some unit tests)
 BuildRequires: php-dom
 
@@ -33,6 +34,7 @@ Requires:      php(api) = %{php_core_api}
 
 Conflicts:     php-mmcache
 Conflicts:     php-eaccelerator
+Conflicts:     php-xcache
 Provides:      php-apc = %{version}
 Provides:      php-apc%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
@@ -43,6 +45,9 @@ Obsoletes:     php53-pecl-apc
 Obsoletes:     php53u-pecl-apc
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-apc
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-apc
 %endif
 
 # Filter private shared
@@ -80,10 +85,11 @@ configuration, available on http://localhost/apc-panel/
 
 
 %prep
-%setup -q -c 
+%setup -q -c -T
+tar xif %{SOURCE0}
 
 cd APC-%{version}
-%patch0 -p3 -b .orig
+%patch0 -p0 -b .php55
 
 %if 0%{?__isa_bits}
 # port number to allow 32/64 build at same time
@@ -169,6 +175,10 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
+%else
+: minimal load test
+%{__php}    -n -d extension_dir=%{pecl_name}-%{version}/modules     -d extension=apc.so -m | grep apc
+%{__ztsphp} -n -d extension_dir=%{pecl_name}-%{version}-zts/modules -d extension=apc.so -m | grep apc
 %endif
 
 
@@ -213,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan  3 2013 Remi Collet <remi@fedoraproject.org> - 3.1.14-1
+- Version 3.1.14 (beta) - API 3.1.0 (stable)
+
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-3.1
 - apc-panel requires php-gd
 - also provides php-apc
