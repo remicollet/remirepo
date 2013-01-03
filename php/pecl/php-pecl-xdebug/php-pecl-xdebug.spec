@@ -1,16 +1,16 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global gitver    e773b090fc
+%global gitver    e1b9127
 %global prever    dev
 
 Name:           php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.2
-Release:        0.2%{?gitver:.git%{gitver}}%{?dist}
+Release:        0.3%{?gitver:.git%{gitver}}%{?dist}
 %if 0%{?gitver:1}
 # https://github.com/xdebug/xdebug/archive/xdebug_2_2.tar.gz
-Source0:        xdebug-xdebug_2_2.tar.gz
+Source0:        xdebug_2_2.tar.gz
 %else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
@@ -191,14 +191,17 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-0.2.gite773b090fc
+* Thu Jan  3 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.3.gite1b9127
+- new snapshot
+
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.2.gite773b090fc
 - rebuild with new php 5.5 snaphost with zend_execute_ex
 
-* Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-0.1.gite773b090fc
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.1.gite773b090fc
 - update to git snapshot for php 5.5
 - also provides php-xdebug
 
-* Sun Sep  9 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-2
+* Sun Sep  9 2012 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
 - sync with rawhide, cleanups
 - obsoletes php53*, php54*
 
