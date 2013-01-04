@@ -1,38 +1,46 @@
 %{!?__pecl:         %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name xhprof
+%global gitver    b8c76ac5ab
 
 Name:           php-pecl-xhprof
 Version:        0.9.2
-Release:        5%{?dist}.1
+Release:        8%{?gitver:.git%{gitver}}%{?dist}
+
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
 License:        ASL 2.0
 URL:            http://pecl.php.net/package/%{pecl_name}
+%if 0%{?gitver:1}
+# https://github.com/facebook/xhprof/archive/master.tar.gz
+Source0:        %{pecl_name}-%{gitver}.tgz
+%else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 
-# From github
-Patch0:         %{pecl_name}-arginfo.patch
-Patch1:         %{pecl_name}-php54.patch
+# https://github.com/facebook/xhprof/pull/15
+Patch2:         %{pecl_name}-php55.patch
 
 # https://bugs.php.net/61262
-ExcludeArch:    ppc64
+ExclusiveArch: %{ix86} x86_64
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.2.0
-BuildRequires:  php-pear >= 1:1.4.0
+BuildRequires:  php-pear
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides:       php-pecl(%{pecl_name}) = %{version}
 
-# RPM 4.8
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Filter private provides
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -74,6 +82,10 @@ Documentation : %{_datadir}/doc/%{name}-%{version}/docs/index.html
 
 %prep
 %setup -c -q
+%if 0%{?gitver:1}
+mv %{pecl_name}-master/package.xml .
+mv %{pecl_name}-master %{pecl_name}-%{version}
+%endif
 
 # Extension configuration file
 cat >%{pecl_name}.ini <<EOF
@@ -108,8 +120,7 @@ Alias /xhprof /usr/share/xhprof/xhprof_html
 EOF
 
 cd %{pecl_name}-%{version}
-%patch0 -p1 -b .refl
-%patch1 -p1 -b .php54
+%patch2 -p1 -b .php55
 
 %if 0%{?__ztsphp:1}
 # duplicate for ZTS build
@@ -207,6 +218,15 @@ fi
 
 
 %changelog
+* Fri Jan  4 2013 Remi Collet <remi@fedoraproject.org> - 0.9.2-8.gitb8c76ac5ab
+- git snapshot + php 5.5 fix
+  https://github.com/facebook/xhprof/pull/15
+- also provides php-xhprof
+
+* Tue May 22 2012 Remi Collet <remi@fedoraproject.org> - 0.9.2-6
+- move from ExcludeArch: ppc64
+  to ExclusiveArch: %%{ix86} x86_64 because of cycle_timer()
+
 * Sun May 06 2012 Remi Collet <remi@fedoraproject.org> - 0.9.2-5
 - make configuration file compatible with apache 2.2 / 2.4
 
