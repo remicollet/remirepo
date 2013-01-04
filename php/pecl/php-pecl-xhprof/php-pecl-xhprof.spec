@@ -19,10 +19,10 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 
 # https://github.com/facebook/xhprof/pull/15
-Patch2:         %{pecl_name}-php55.patch
+Patch1:         %{pecl_name}-php55.patch
 
 # https://bugs.php.net/61262
-ExclusiveArch: %{ix86} x86_64
+ExclusiveArch:  %{ix86} x86_64
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.2.0
@@ -120,12 +120,10 @@ Alias /xhprof /usr/share/xhprof/xhprof_html
 EOF
 
 cd %{pecl_name}-%{version}
-%patch2 -p1 -b .php55
+%patch1 -p1 -b .php55
 
-%if 0%{?__ztsphp:1}
 # duplicate for ZTS build
 cp -r extension ext-zts
-%endif
 
 # not to be installed
 mv xhprof_html/docs ../docs
@@ -138,13 +136,11 @@ cd %{pecl_name}-%{version}/extension
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if 0%{?__ztsphp:1}
 cd ../ext-zts
 %{_bindir}/zts-phpize
 %configure \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
@@ -152,10 +148,8 @@ rm -rf %{buildroot}
 make install -C %{pecl_name}-%{version}/extension  INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
 
-%if 0%{?__ztsphp:1}
 make install -C %{pecl_name}-%{version}/ext-zts    INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-%endif
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -175,12 +169,10 @@ php --no-php-ini \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-%if 0%{?__ztsphp:1}
 %{__ztsphp} --no-php-ini \
     --define extension_dir=%{pecl_name}-%{version}/ext-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
-%endif
 
 
 %clean
@@ -204,10 +196,8 @@ fi
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
-%if 0%{?__ztsphp:1}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
-%endif
 
 
 %files -n xhprof
@@ -222,6 +212,7 @@ fi
 - git snapshot + php 5.5 fix
   https://github.com/facebook/xhprof/pull/15
 - also provides php-xhprof
+- cleanups
 
 * Tue May 22 2012 Remi Collet <remi@fedoraproject.org> - 0.9.2-6
 - move from ExcludeArch: ppc64
