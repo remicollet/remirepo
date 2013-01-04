@@ -29,7 +29,7 @@ php-pecl-uuid		1.0.3
 php-pecl-xdebug		2.2.2dev
 php-pecl-xhprof		0.9.2git
 php-pecl-yaml		1.1.0
-php-pecl-yaf		2.2.8
+php-pecl-yaf		2.2.9
 php-shout			0.9.2
 
 TODO:

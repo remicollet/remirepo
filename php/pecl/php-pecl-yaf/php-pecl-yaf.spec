@@ -4,8 +4,8 @@
 
 Summary:       Yet Another Framework
 Name:          php-pecl-yaf
-Version:       2.2.8
-Release:       1%{?dist}.2
+Version:       2.2.9
+Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
@@ -145,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  4 2013 Remi Collet <remi@fedoraproject.org> - 2.2.9-1
+- version 2.2.9 (stable)
+
 * Tue Dec 18 2012 Remi Collet <remi@fedoraproject.org> - 2.2.8-1
 - version 2.2.8 (stable)
 
