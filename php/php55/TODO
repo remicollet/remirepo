@@ -21,6 +21,7 @@ php-pecl-mysqlnd-ms	1.4.2
 php-pecl-ncurses	1.0.2
 php-pecl-oauth		1.2.3
 php-pecl-radius		1.2.5
+php-pecl-runkit		1.0.4git
 php-pecl-solr		1.0.2
 php-pecl-sphinx		1.2.0
 php-pecl-sqlite		2.0.0beta
@@ -43,7 +44,6 @@ php-pecl-mysqlnd-qc
 php-pecl-parsekit
 php-pecl-pdflib
 php-pecl-rrd
-php-pecl-runkit
 php-pecl-selinux
 php-redis
 php-xcache

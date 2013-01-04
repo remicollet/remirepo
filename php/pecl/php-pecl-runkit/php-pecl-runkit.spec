@@ -1,44 +1,49 @@
-%{!?__pecl:			%{expand:	%%global __pecl	%{_bindir}/pecl}}
+%{!?__pecl:  %{expand:    %%global __pecl    %{_bindir}/pecl}}
 
-%global		GIT	        a079457
-%global		pecl_name	runkit
+%global GIT          d069e23
+%global pecl_name    runkit
 
-Summary:		Mangle with user defined functions and classes
-Summary(ru):	Манипулирование пользовательскими функциями и классами
-Summary(pl):	Obróbka zdefiniowanych przez użytkownika funkcji i klas
-Name:		    php-pecl-%{pecl_name}
-Version:		1.0.4
-Release:		0.2%{?GIT:.git%{GIT}}%{?dist}
-License:		PHP
-Group:		    Development/Libraries
-#URL:			http://pecl.php.net/package/runkit/
+Summary:          Mangle with user defined functions and classes
+Summary(ru):      Манипулирование пользовательскими функциями и классами
+Summary(pl):      Obróbka zdefiniowanych przez użytkownika funkcji i klas
+Name:             php-pecl-%{pecl_name}
+Version:          1.0.4
+Release:          0.3%{?GIT:.git%{GIT}}%{?dist}.1
+License:          PHP
+Group:            Development/Libraries
+#URL:             http://pecl.php.net/package/runkit/
 # New upstream URL - https://bugs.php.net/bug.php?id=61189
-URL:			https://github.com/zenovich/runkit
+URL:              https://github.com/zenovich/runkit
 
 %if 0%{?GIT:1}
-# https://github.com/zenovich/runkit/tarball/a079457
-Source0:		zenovich-%{pecl_name}-%{GIT}.tar.gz
+# https://github.com/zenovich/runkit/tarball/d069e230
+Source0:          zenovich-%{pecl_name}-%{GIT}.tar.gz
 %else
-Source0:		http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:          http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 
-BuildRoot:	%{_tmppath}/%{name}-%{version}-root-%(id -u -n)
-BuildRequires:	php-pear
-BuildRequires:	php-devel
+BuildRoot:    %{_tmppath}/%{name}-%{version}-root-%(id -u -n)
+BuildRequires:    php-pear
+BuildRequires:    php-devel
 
-Requires(post):	%{__pecl}
-Requires(postun):	%{__pecl}
-Requires:		php(zend-abi) = %{php_zend_api}
-Requires:		php(api) = %{php_core_api}
+Requires(post):   %{__pecl}
+Requires(postun): %{__pecl}
+Requires:         php(zend-abi) = %{php_zend_api}
+Requires:         php(api) = %{php_core_api}
 
-Provides:		php-pecl(%{pecl_name}) = %{version}
-Provides:		php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:         php-%{pecl_name} = %{version}
+Provides:         php-%{pecl_name}%{?_isa} = %{version}
+Provides:         php-pecl(%{pecl_name}) = %{version}
+Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
-Obsoletes:     php53-pecl-runkit
-Obsoletes:     php53u-pecl-runkit
+Obsoletes:        php53-pecl-%{pecl_name}
+Obsoletes:        php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-runkit
+Obsoletes:        php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.4"
+Obsoletes:        php55-pecl-%{pecl_name}
 %endif
 
 # filter private shared
@@ -112,7 +117,7 @@ install -Dpm 0664 nts/package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %check
-# No test provided, just minimal load test
+# Minimal load test
 %{__php} --no-php-ini \
     --define extension_dir=%{buildroot}%{php_extdir} \
     --define extension=%{pecl_name}.so \
@@ -124,12 +129,28 @@ install -Dpm 0664 nts/package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
     -m | grep %{pecl_name}
 
 
+# Provided test suite
+cd nts
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension_dir=%{buildroot}%{php_extdir} -d extension=%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php
+
+cd ../zts
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d extension_dir=%{buildroot}%{php_ztsextdir} -d extension=%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php
+
+
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 
 %postun
 if [ "$1" -eq "0" ]; then
-	%{pecl_uninstall} %{pecl_name} >/dev/null || :
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
@@ -150,6 +171,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec  4 2012 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.3.d069e23
+- update to latest master snapshot
+- also provides php-runkit
+- run tests during build
+- cleanups
+
 * Wed Sep 12 2012 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.2.gita079457
 - standardize for remi repo, lot of cleanups
 - add ZTS extension
@@ -177,7 +204,7 @@ rm -rf %{buildroot}
 
 * Sun Apr 5 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9-11.CVS20090215
 - By suggestion in the bug https://fedorahosted.org/fedora-infrastructure/ticket/1298 try remove version specifications in requires:
-	Turn BuildRequires: php-pear >= 1.4.7, php-devel >= 5.0.0 to just BuildRequires: php-pear, php-devel
+    Turn BuildRequires: php-pear >= 1.4.7, php-devel >= 5.0.0 to just BuildRequires: php-pear, php-devel
 - Add more magick in Release tag: 11%%{?CVS:.CVS%%{CVS}}%%{?dist}
 
 * Tue Mar 17 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9-10.CVS20090215
@@ -229,80 +256,52 @@ rm -rf %{buildroot}
 - Rename %%{_modname} to peclName to unify SPECs.
 - Correct %%if 0%%{?CVS} to %%if 0%%{?CVS:1} - it is not integer!
 - Rename pethces to:
-	Patch0:		php-pecl-runkit-0.9-ZVAL_REFCOUNT.patch
-	Patch1:		php-pecl-runkit-0.9-ZVAL_ADDREF.patch
+    Patch0:        php-pecl-runkit-0.9-ZVAL_REFCOUNT.patch
+    Patch1:        php-pecl-runkit-0.9-ZVAL_ADDREF.patch
 
 * Mon Mar 10 2008 Pavel Alexeev <Pahan [ at ] Hubbitus [ DOT ] spb [ dOt.] su> - 0.9-0.CVS20080310.Hu.2
 - CVS20080310 build. (cvs -d :pserver:cvsread@cvs.php.net:/repository checkout pecl/runkit)
 - 0.9 stable are incompatible with php 5.3.0, build from CVS. Disable self patch0
 - Enable patch0. Rewritten and rename to fix ZVAL_REFCOUNT.patch
-	Hu.1
+    Hu.1
 - Add patch1. Fix wrong call ZVAL_ADDREF.patch
-	Hu.2
+    Hu.2
 
 * Sun Mar 9 2008 Pavel Alexeev <Pahan [ at ] Hubbitus [ DOT ] info> - 0.9-0.Hu.3
 - Add patch (self written) zval_ref.patch. It is allow build.
 - Agjust built dir:
-	BuildRoot:	%%{tmpdir}/%%{name}-%%{version}-root-%%(id -u -n)
-	to
-	BuildRoot:	%%{_tmppath}/%%{name}-%%{version}-root-%%(id -u -n)
-- Fix Release:		0%%{?dist}.Hu.2 -> Release:		0%%{?dist}.Hu.2
-	Hu.2
+    BuildRoot:    %%{tmpdir}/%%{name}-%%{version}-root-%%(id -u -n)
+    to
+    BuildRoot:    %%{_tmppath}/%%{name}-%%{version}-root-%%(id -u -n)
+- Fix Release:        0%%{?dist}.Hu.2 -> Release:        0%%{?dist}.Hu.2
+    Hu.2
 - Remove %%define _status beta and all apearance of %%{_status}
 - Remove %%define _sysconfdir /etc/php (it's already defined in system wide)
 - Remove Requires: %%{_sysconfdir}/conf.d
 - Change path %%{_sysconfdir}/conf.d to %%{_sysconfdir}/php.d:
-	Replace:
-		install -d $RPM_BUILD_ROOT{%%{_sysconfdir}/conf.d,%%{extensionsdir}}
-		to
-		install -d $RPM_BUILD_ROOT{%%{_sysconfdir}/php.d,%%{extensionsdir}}
+    Replace:
+        install -d $RPM_BUILD_ROOT{%%{_sysconfdir}/conf.d,%%{extensionsdir}}
+        to
+        install -d $RPM_BUILD_ROOT{%%{_sysconfdir}/php.d,%%{extensionsdir}}
 
-		%%config(noreplace) %%verify(not md5 mtime size) %%{_sysconfdir}/conf.d/%%{_modname}.ini
-		to
-		%%config(noreplace) %%verify(not md5 mtime size) %%{_sysconfdir}/php.d/%%{_modname}.ini
+        %%config(noreplace) %%verify(not md5 mtime size) %%{_sysconfdir}/conf.d/%%{_modname}.ini
+        to
+        %%config(noreplace) %%verify(not md5 mtime size) %%{_sysconfdir}/php.d/%%{_modname}.ini
 
-		cat <<'EOF' > $RPM_BUILD_ROOT%%{_sysconfdir}/conf.d/%%{_modname}.ini
-		to
-		cat <<'EOF' > $RPM_BUILD_ROOT%%{_sysconfdir}/php.d/%%{_modname}.ini
+        cat <<'EOF' > $RPM_BUILD_ROOT%%{_sysconfdir}/conf.d/%%{_modname}.ini
+        to
+        cat <<'EOF' > $RPM_BUILD_ROOT%%{_sysconfdir}/php.d/%%{_modname}.ini
 - Hu.3
 
 * Wed Feb 27 2008 Pavel Alexeev <Pahan [ at ] Hubbitus [ DOT ] info> - 0.9-0.Hu.0
 - Import from ftp://ftp.pld-linux.org/dists/2.0/PLD/SRPMS/SRPMS/php-pecl-runkit-0.4-5.src.rpm
 - Step to version 0.9
-	Release:		0{?dist}.Hu.0 (Was: Release:	0)
+    Release:        0{?dist}.Hu.0 (Was: Release:    0)
 - Remove defining %%date and:
-	* %%{date} PLD Team <feedback@pld-linux.org>
-	All persons listed below can be reached at <cvs_login>@pld-linux.org
+    * %%{date} PLD Team <feedback@pld-linux.org>
+    All persons listed below can be reached at <cvs_login>@pld-linux.org
  due to error: ошибка: %%changelog не в нисходящем хронологическом порядке
 - Small reformat of header spec
-- Change BuildRequires:	php-devel >= 3:5.0.0 to php-devel >= 5.0.0
--Remove BuildRequires:	rpmbuild(macros) >= 1.254
+- Change BuildRequires:    php-devel >= 3:5.0.0 to php-devel >= 5.0.0
+-Remove BuildRequires:    rpmbuild(macros) >= 1.254
 
-# Old, Legacy changelog in incorrect format simple commented:
-#$Log: php-pecl-runkit.spec,v $
-#Revision 1.4  2009/07/31 07:02:50  hubbitus
-#Apply patches only on PHP>=5.3.0. (Bug: https://bugzilla.redhat.com/show_bug.cgi?id=513096 )
-#
-#Revision 1.8  2005/12/22 12:12:04  glen
-#- rel 5 (rebuild with new php)
-#
-#Revision 1.7  2005/10/30 13:29:27  glen
-#- rel 4
-#
-#Revision 1.6  2005/10/29 00:05:14  glen
-#- rebuild with zts and debug requires
-#
-#Revision 1.5  2005/09/14 22:33:47  glen
-#- rel 2
-#
-#Revision 1.4  2005/09/14 13:37:00  glen
-#- conf.d and php api macros
-#
-#Revision 1.3  2005/09/13 21:16:43  glen
-#- superfluous BR libtool removed
-#
-#Revision 1.2  2005/07/27 22:08:17  qboosh
-#- more standard pl desc
-#
-#Revision 1.1  2005/07/26 20:23:48  adamg
-#- new
