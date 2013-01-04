@@ -1,9 +1,6 @@
-%global php_apiver %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%global php_extdi %(php-config --extension-dir 2>/dev/null || echo "undefined")
-
 Name:           php-shout
 Version:        0.9.2
-Release:        9%{?dist}
+Release:        12%{?dist}
 Summary:        PHP module for communicating with Icecast servers
 
 Group:          Development/Languages
@@ -11,24 +8,23 @@ License:        LGPLv2+
 URL:            http://phpshout.sourceforge.net/
 
 Source0:        http://downloads.sourceforge.net/phpshout/phpShout-%{version}.tar.gz
+
+# Fix build warnings, Remove deprecated call, define arginfo for reflection
+# https://sourceforge.net/tracker/?func=detail&aid=3599428&group_id=157641&atid=804644
+Patch0:         %{name}-modernize.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 # Will hopefully go away once libogg-devel and/or libshout-devel specify this BR:
 BuildRequires:  pkgconfig
 BuildRequires:  libshout-devel >= 2.1
 
-%if 0%{?php_zend_api:1}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-%else
-Requires: php-api = %{php_apiver}
-%endif
 
-# RPM 4.8
+# Filter private provides
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -47,11 +43,13 @@ details of the server communication.
 %prep
 %setup -q -c
 
-cp -r phpShout-%{version} phpShout-zts
-
 cd phpShout-%{version}
-chmod a-x *.[ch] TODO README INSTALL LICENSE
+%patch0 -p1 -b .modernize
 
+chmod a-x *.[ch] TODO README INSTALL LICENSE
+cd ..
+
+cp -r phpShout-%{version} phpShout-zts
 
 
 %build
@@ -106,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  4 2013  Remi Collet <remi@fedoraproject.org> - 0.9.2-12
+- modernize: remove deprecated calls, add arginfo for reflection
+
 * Sat Nov 26 2011  Remi Collet <Fedora@FamilleCollet.com> - 0.9.2-9
 - php 5.4 + zts build
 

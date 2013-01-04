@@ -1,0 +1,334 @@
+--- phpShout-0.9.2/php_shout.h	2013-01-04 07:42:00.767187630 +0100
++++ phpShout-0.9.2/php_shout.h	2013-01-04 09:17:02.462257549 +0100
+@@ -29,6 +29,37 @@
+ 
+ #define SHOUT_PORT 8000
+ 
++ZEND_BEGIN_ARG_INFO_EX(shout_create_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 1)
++  ZEND_ARG_INFO(0, host)
++  ZEND_ARG_INFO(0, user)
++  ZEND_ARG_INFO(0, password)
++  ZEND_ARG_INFO(0, format)
++  ZEND_ARG_INFO(0, protocol)
++ZEND_END_ARG_INFO()
++
++ZEND_BEGIN_ARG_INFO_EX(shout_none_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 0)
++ZEND_END_ARG_INFO()
++
++ZEND_BEGIN_ARG_INFO_EX(shout_onlylink_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 0)
++  ZEND_ARG_INFO(0, link)
++ZEND_END_ARG_INFO()
++
++ZEND_BEGIN_ARG_INFO_EX(shout_linkvalue_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 0)
++  ZEND_ARG_INFO(0, link)
++  ZEND_ARG_INFO(0, value)
++ZEND_END_ARG_INFO()
++
++ZEND_BEGIN_ARG_INFO_EX(shout_linkname_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 0)
++  ZEND_ARG_INFO(0, link)
++  ZEND_ARG_INFO(0, name)
++ZEND_END_ARG_INFO()
++
++ZEND_BEGIN_ARG_INFO_EX(shout_linknamevalue_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 0)
++  ZEND_ARG_INFO(0, link)
++  ZEND_ARG_INFO(0, name)
++  ZEND_ARG_INFO(0, value)
++ZEND_END_ARG_INFO()
++
+ extern zend_module_entry shout_module_entry;
+ 
+ PHP_MINIT_FUNCTION(shout);
+--- phpShout-0.9.2/shout.c	2013-01-04 07:42:00.767187630 +0100
++++ phpShout-0.9.2/shout.c	2013-01-04 09:16:53.365225161 +0100
+@@ -81,54 +81,54 @@
+  * Every user visible function must have an entry in shout_functions[].
+  */
+ zend_function_entry shout_functions[] = {
+-		PHP_FE(shout_get_all_persistent, NULL)
++		PHP_FE(shout_get_all_persistent, shout_none_arg_info)
+ 
+-		PHP_FE(shout_create, NULL)
+-		PHP_FE(shout_pcreate, NULL)
+-		PHP_FE(shout_connect, NULL)
+-		PHP_FALIAS(shout_open, shout_connect, NULL)	// Alias for shout_connect
+-		PHP_FE(shout_close,   NULL)
+-		PHP_FE(shout_send,    NULL)
+-		PHP_FE(shout_sync,    NULL)
+-
+-		PHP_FE(shout_get_connected, NULL)
+-		PHP_FE(shout_get_errno,     NULL)
+-		PHP_FE(shout_get_error,     NULL)
+-
+-		PHP_FE(shout_get_host,        NULL)
+-		PHP_FE(shout_get_port,        NULL)
+-		PHP_FE(shout_get_password,    NULL)
+-		PHP_FE(shout_get_mount,       NULL)
+-		PHP_FE(shout_get_name,        NULL)
+-		PHP_FE(shout_get_url,         NULL)
+-		PHP_FE(shout_get_genre,       NULL)
+-		PHP_FE(shout_get_user,        NULL)
+-		PHP_FE(shout_get_agent,       NULL)
+-		PHP_FE(shout_get_description, NULL)
+-		PHP_FE(shout_get_public,      NULL)
+-		PHP_FE(shout_get_format,      NULL)
+-		PHP_FE(shout_get_protocol,    NULL)
+-		PHP_FE(shout_get_nonblocking, NULL)
+-
+-		PHP_FE(shout_get_audio_info, NULL)
+-
+-		PHP_FE(shout_set_host,        NULL)
+-		PHP_FE(shout_set_port,        NULL)
+-		PHP_FE(shout_set_password,    NULL)
+-		PHP_FE(shout_set_mount,       NULL)
+-		PHP_FE(shout_set_name,        NULL)
+-		PHP_FE(shout_set_url,         NULL)
+-		PHP_FE(shout_set_genre,       NULL)
+-		PHP_FE(shout_set_user,        NULL)
+-		PHP_FE(shout_set_agent,       NULL)
+-		PHP_FE(shout_set_description, NULL)
+-		PHP_FE(shout_set_public,      NULL)
+-		PHP_FE(shout_set_format,      NULL)
+-		PHP_FE(shout_set_protocol,    NULL)
+-		PHP_FE(shout_set_nonblocking, NULL)
++		PHP_FE(shout_create,          shout_create_arg_info)
++		PHP_FE(shout_pcreate,         shout_create_arg_info)
++		PHP_FE(shout_connect,         shout_onlylink_arg_info)
++		PHP_FALIAS(shout_open,        shout_connect, shout_onlylink_arg_info)	// Alias for shout_connect
++		PHP_FE(shout_close,           shout_onlylink_arg_info)
++		PHP_FE(shout_send,            shout_linkvalue_arg_info)
++		PHP_FE(shout_sync,            shout_onlylink_arg_info)
++
++		PHP_FE(shout_get_connected,   shout_onlylink_arg_info)
++		PHP_FE(shout_get_errno,       shout_onlylink_arg_info)
++		PHP_FE(shout_get_error,       shout_onlylink_arg_info)
++
++		PHP_FE(shout_get_host,        shout_onlylink_arg_info)
++		PHP_FE(shout_get_port,        shout_onlylink_arg_info)
++		PHP_FE(shout_get_password,    shout_onlylink_arg_info)
++		PHP_FE(shout_get_mount,       shout_onlylink_arg_info)
++		PHP_FE(shout_get_name,        shout_onlylink_arg_info)
++		PHP_FE(shout_get_url,         shout_onlylink_arg_info)
++		PHP_FE(shout_get_genre,       shout_onlylink_arg_info)
++		PHP_FE(shout_get_user,        shout_onlylink_arg_info)
++		PHP_FE(shout_get_agent,       shout_onlylink_arg_info)
++		PHP_FE(shout_get_description, shout_onlylink_arg_info)
++		PHP_FE(shout_get_public,      shout_onlylink_arg_info)
++		PHP_FE(shout_get_format,      shout_onlylink_arg_info)
++		PHP_FE(shout_get_protocol,    shout_onlylink_arg_info)
++		PHP_FE(shout_get_nonblocking, shout_onlylink_arg_info)
++
++		PHP_FE(shout_get_audio_info,  shout_linkname_arg_info)
++
++		PHP_FE(shout_set_host,        shout_linkvalue_arg_info)
++		PHP_FE(shout_set_port,        shout_linkvalue_arg_info)
++		PHP_FE(shout_set_password,    shout_linkvalue_arg_info)
++		PHP_FE(shout_set_mount,       shout_linkvalue_arg_info)
++		PHP_FE(shout_set_name,        shout_linkvalue_arg_info)
++		PHP_FE(shout_set_url,         shout_linkvalue_arg_info)
++		PHP_FE(shout_set_genre,       shout_linkvalue_arg_info)
++		PHP_FE(shout_set_user,        shout_linkvalue_arg_info)
++		PHP_FE(shout_set_agent,       shout_linkvalue_arg_info)
++		PHP_FE(shout_set_description, shout_linkvalue_arg_info)
++		PHP_FE(shout_set_public,      shout_linkvalue_arg_info)
++		PHP_FE(shout_set_format,      shout_linkvalue_arg_info)
++		PHP_FE(shout_set_protocol,    shout_linkvalue_arg_info)
++		PHP_FE(shout_set_nonblocking, shout_linkvalue_arg_info)
+ 		
+-		PHP_FE(shout_set_metadata,   NULL)
+-		PHP_FE(shout_set_audio_info, NULL)
++		PHP_FE(shout_set_metadata,    shout_linknamevalue_arg_info)
++		PHP_FE(shout_set_audio_info,  shout_linknamevalue_arg_info)
+ 		{NULL, NULL, NULL}
+ };
+ /* }}} */
+@@ -362,13 +362,9 @@
+ 	char *hashed_details=NULL;
+ 	int hashed_details_length, port = SHOUT_PORT;
+ 	int format = 0, protocol = 0;
++	int hostlen, userlen, passlen;
+ 	php_shout_conn *shout=NULL;
+-//	void (*handler) (int);
+-	zval **z_host=NULL, **z_user=NULL, **z_password=NULL, **z_format=NULL, **z_protocol=NULL;
+ 	zend_bool free_host=0, free_host_port_mount=0;
+-	long connect_timeout;
+-
+-	connect_timeout = MySG(connect_timeout);
+ 
+ 	if (MySG(default_port) < 0) {
+ #if !defined(PHP_WIN32) && !defined(NETWARE)
+@@ -397,82 +393,9 @@
+ 	password = MySG(default_password);
+ 	format = MySG(default_format);
+ 	protocol = MySG(default_protocol);
+-	switch(ZEND_NUM_ARGS()) {
+-		case 1: {					
+-				if (zend_get_parameters_ex(1, &z_host)==FAILURE) {
+-					SHOUT_CREATE_RETURN_FALSE();
+-				}
+-			}
+-			break;
+-		case 2: {
+-				if (zend_get_parameters_ex(2, &z_host, &z_user) == FAILURE) {
+-					SHOUT_CREATE_RETURN_FALSE();
+-				}
+-				convert_to_string_ex(z_user);
+-				user = Z_STRVAL_PP(z_user);
+-			}
+-			break;
+-		case 3: {
+-				if (zend_get_parameters_ex(3, &z_host, &z_user, &z_password) == FAILURE) {
+-					SHOUT_CREATE_RETURN_FALSE();
+-				}
+-				convert_to_string_ex(z_user);
+-				convert_to_string_ex(z_password);
+-				user = Z_STRVAL_PP(z_user);
+-				password = Z_STRVAL_PP(z_password);
+-			}
+-			break;
+-		case 4: {
+-				if (zend_get_parameters_ex(4, &z_host, &z_user, &z_password, &z_format) == FAILURE) {
+-					SHOUT_CREATE_RETURN_FALSE();
+-				}
+-				convert_to_string_ex(z_user);
+-				convert_to_string_ex(z_password);
+-				convert_to_long_ex(z_format);
+-				user = Z_STRVAL_PP(z_user);
+-				password = Z_STRVAL_PP(z_password);
+-				format = Z_LVAL_PP(z_format);
+-			}
+-			break;
+-		case 5: {
+-				if (zend_get_parameters_ex(5, &z_host, &z_user, &z_password, &z_format, &z_protocol) == FAILURE) {
+-					SHOUT_CREATE_RETURN_FALSE();
+-				}
+-				convert_to_string_ex(z_user);
+-				convert_to_string_ex(z_password);
+-				convert_to_long_ex(z_format);
+-				convert_to_long_ex(z_protocol);
+-				user = Z_STRVAL_PP(z_user);
+-				password = Z_STRVAL_PP(z_password);
+-				format = Z_LVAL_PP(z_format);
+-				protocol = Z_LVAL_PP(z_protocol);
+-			}
+-			break;
+-		default:
+-			WRONG_PARAM_COUNT;
+-			break;
+-	}
+-
+-	if (z_host) {
+-		SEPARATE_ZVAL(z_host); // We may modify z_host if it contains a port, separate
+-		convert_to_string_ex(z_host);
+-		host_port_mount = Z_STRVAL_PP(z_host);
+-		if (z_user) {
+-			convert_to_string_ex(z_user);
+-			user = Z_STRVAL_PP(z_user);
+-			if (z_password) {
+-				convert_to_string_ex(z_password);
+-				password = Z_STRVAL_PP(z_password);
+-				if (z_format) {
+-					convert_to_long_ex(z_format);
+-					format = Z_LVAL_PP(z_format);
+-					if (z_protocol) {
+-						convert_to_long_ex(z_protocol);
+-						protocol = Z_LVAL_PP(z_protocol);
+-					}
+-				}
+-			}
+-		}
++
++	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|ssll", &host_port_mount, &hostlen, &user, &userlen, &password, &passlen, &format, &protocol) == FAILURE) {
++		SHOUT_CREATE_RETURN_FALSE();
+ 	}
+ #ifdef SHOUT_DEBUG
+ 	php_printf("Parsing host_port_mount='%s'\n", host_port_mount);
+@@ -753,16 +676,16 @@
+ 
+ 	ZEND_FETCH_RESOURCE2(shout, php_shout_conn *, &shout_link, id, "Shout Connection", le_link, le_plink);
+ 
+-	if (name == "host")             value = shout_get_host(shout->conn);
+-	else if (name == "password")    value = shout_get_password(shout->conn);
+-	else if (name == "mount")       value = shout_get_mount(shout->conn);
+-	else if (name == "name")        value = shout_get_name(shout->conn);
+-	else if (name == "url")         value = shout_get_url(shout->conn);
+-	else if (name == "genre")       value = shout_get_genre(shout->conn);
+-	else if (name == "user")        value = shout_get_user(shout->conn);
+-	else if (name == "agent")       value = shout_get_agent(shout->conn);
+-	else if (name == "description") value = shout_get_description(shout->conn);
+-	else if (name == "error")       value = shout_get_error(shout->conn);
++	if (!strcmp(name, "host"))             value = shout_get_host(shout->conn);
++	else if (!strcmp(name, "password"))    value = shout_get_password(shout->conn);
++	else if (!strcmp(name, "mount"))       value = shout_get_mount(shout->conn);
++	else if (!strcmp(name, "name"))        value = shout_get_name(shout->conn);
++	else if (!strcmp(name, "url"))         value = shout_get_url(shout->conn);
++	else if (!strcmp(name, "genre"))       value = shout_get_genre(shout->conn);
++	else if (!strcmp(name, "user"))        value = shout_get_user(shout->conn);
++	else if (!strcmp(name, "agent"))       value = shout_get_agent(shout->conn);
++	else if (!strcmp(name, "description")) value = shout_get_description(shout->conn);
++	else if (!strcmp(name, "error"))       value = shout_get_error(shout->conn);
+ 	else {
+ 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown string property '%s'", name);
+ 	}
+@@ -788,13 +711,13 @@
+ 
+ 	ZEND_FETCH_RESOURCE2(shout, php_shout_conn *, &shout_link, id, "Shout Connection", le_link, le_plink);
+ 
+-	if (name == "connected")        value = shout_get_connected(shout->conn);
+-	else if (name == "port")        value = shout_get_port(shout->conn);
+-	else if (name == "public")      value = shout_get_public(shout->conn);
+-	else if (name == "format")      value = shout_get_format(shout->conn);
+-	else if (name == "protocol")    value = shout_get_protocol(shout->conn);
+-	else if (name == "nonblocking") value = shout_get_nonblocking(shout->conn);
+-	else if (name == "errno")       value = shout_get_errno(shout->conn);
++	if (!strcmp(name, "connected"))        value = shout_get_connected(shout->conn);
++	else if (!strcmp(name, "port"))        value = shout_get_port(shout->conn);
++	else if (!strcmp(name, "public"))      value = shout_get_public(shout->conn);
++	else if (!strcmp(name, "format"))      value = shout_get_format(shout->conn);
++	else if (!strcmp(name, "protocol"))    value = shout_get_protocol(shout->conn);
++	else if (!strcmp(name, "nonblocking")) value = shout_get_nonblocking(shout->conn);
++	else if (!strcmp(name, "errno"))       value = shout_get_errno(shout->conn);
+ 
+ #ifdef SHOUT_DEBUG
+ 	php_printf("In get_int_param(), returning '%s'='%ld'\n", name, value);
+@@ -820,15 +743,15 @@
+ 	}
+ 	ZEND_FETCH_RESOURCE2(shout, php_shout_conn *, &shout_link, id, "Shout Connection", le_link, le_plink);
+ 
+-	if (name == "host")             retval = shout_set_host(shout->conn, setVal);
+-	else if (name == "password")    retval = shout_set_password(shout->conn, setVal);
+-	else if (name == "mount")       retval = shout_set_mount(shout->conn, setVal);
+-	else if (name == "name")        retval = shout_set_name(shout->conn, setVal);
+-	else if (name == "url")         retval = shout_set_url(shout->conn, setVal);
+-	else if (name == "genre")       retval = shout_set_genre(shout->conn, setVal);
+-	else if (name == "user")        retval = shout_set_user(shout->conn, setVal);
+-	else if (name == "agent")       retval = shout_set_agent(shout->conn, setVal);
+-	else if (name == "description") retval = shout_set_description(shout->conn, setVal);
++	if (!strcmp(name, "host"))             retval = shout_set_host(shout->conn, setVal);
++	else if (!strcmp(name, "password"))    retval = shout_set_password(shout->conn, setVal);
++	else if (!strcmp(name, "mount"))       retval = shout_set_mount(shout->conn, setVal);
++	else if (!strcmp(name, "name"))        retval = shout_set_name(shout->conn, setVal);
++	else if (!strcmp(name, "url"))         retval = shout_set_url(shout->conn, setVal);
++	else if (!strcmp(name, "genre"))       retval = shout_set_genre(shout->conn, setVal);
++	else if (!strcmp(name, "user"))        retval = shout_set_user(shout->conn, setVal);
++	else if (!strcmp(name, "agent"))       retval = shout_set_agent(shout->conn, setVal);
++	else if (!strcmp(name, "description")) retval = shout_set_description(shout->conn, setVal);
+ 
+ #ifdef SHOUT_DEBUG
+ 	php_printf("In set_string_param(), setting '%s'='%s'\n", name, SAFE_STRING(setVal));
+@@ -856,11 +779,11 @@
+ 
+ 	ZEND_FETCH_RESOURCE2(shout, php_shout_conn *, &shout_link, id, "Shout Connection", le_link, le_plink);
+ 
+-	if (name == "port")             retval = shout_set_port(shout->conn, setVal);
+-	else if (name == "public")      retval = shout_set_public(shout->conn, setVal);
+-	else if (name == "format")      retval = shout_set_format(shout->conn, setVal);
+-	else if (name == "protocol")    retval = shout_set_protocol(shout->conn, setVal);
+-	else if (name == "nonblocking") retval = shout_set_nonblocking(shout->conn, setVal);
++	if (!strcmp(name, "port"))             retval = shout_set_port(shout->conn, setVal);
++	else if (!strcmp(name, "public"))      retval = shout_set_public(shout->conn, setVal);
++	else if (!strcmp(name, "format"))      retval = shout_set_format(shout->conn, setVal);
++	else if (!strcmp(name, "protocol"))    retval = shout_set_protocol(shout->conn, setVal);
++	else if (!strcmp(name, "nonblocking")) retval = shout_set_nonblocking(shout->conn, setVal);
+ 
+ 	if (retval != SHOUTERR_SUCCESS) {
+ 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Error setting parameter '%s': %s", name, shout_get_error(shout->conn));

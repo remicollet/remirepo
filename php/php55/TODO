@@ -26,9 +26,10 @@ php-pecl-sphinx		1.2.0
 php-pecl-sqlite		2.0.0beta
 php-pecl-ssh2		0.12
 php-pecl-uuid		1.0.3
-php-pecl-xdebug		2.2.2dev => broken
+php-pecl-xdebug		2.2.2dev
 php-pecl-yaml		1.1.0
 php-pecl-yaf		2.2.8
+php-shout			0.9.2
 
 TODO:
 =====
@@ -45,6 +46,5 @@ php-pecl-runkit
 php-pecl-selinux
 php-pecl-xhprof
 php-redis
-php-shout
 php-xcache
 php-zmq
