@@ -60,7 +60,7 @@
 59 php-horde-Horde-Text-Filter-Csstidy + 2.0.1 =>        Text-Filter
 60 php-horde-Horde-Data             2.0.1   =>           Browser, Exception, Icalendar, Mime, Translation, Util
 61 php-horde-Horde-SyncMl           2.0.1   =>           Date, ICalandar, Log, Support, Util, Xml_Wbxml, Translation
-62 php-horde-Horde-Core         +   2.1.3   => BR(Role, Url, Injector, Group)
+62 php-horde-Horde-Core         +   2.1.4   => BR(Role, Url, Injector, Group)
 63 php-horde-Horde-Form             2.0.1   =>           Core, Date, Exception, Mime, Nls, Token, Translation, Util
 64 php-horde-Horde-Rpc          *   2.0.2   =>           Core, Exception, Perms, Serialize, Support, Translation, Util, Xml_Element
 65 php-horde-Horde-Memcache     *   2.0.1                Exception
