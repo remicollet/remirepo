@@ -1,22 +1,15 @@
 %{!?__pecl:      %{expand:   %%global __pecl   %{_bindir}/pecl}}
 
-#global   CVS        20120226
 %global   pecl_name  parsekit
 
 Summary:       PHP Opcode Analyser
 Name:          php-pecl-parsekit
 Version:       1.3.0
-Release:       1%{?CVS:.CVS%{CVS}}%{?dist}
+Release:       2%{?CVS:.CVS%{CVS}}%{?dist}
 License:       PHP
 URL:           http://pecl.php.net/package/parsekit
 Group:         Development/Libraries
-%if 0%{?CVS:1}
-# cvs -d :pserver:cvsread@cvs.php.net/repository export -D 2009-03-09 pecl/parsekit
-# tar cjf parsekit-1.2-CVS20090309.tar.bz2 -C pecl parsekit
-Source0:      %{pecl_name}-%{version}-CVS%{CVS}.tar.bz2
-%else
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-%endif
 
 # https://bugs.php.net/bug.php?id=61187
 Patch1:        php-pecl-parsekit-1.3-php-5.4.patch
@@ -31,21 +24,19 @@ Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
+Provides:      php-%{pecl_name} = %{version}
+Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
-Obsoletes:     php53-pecl-parsekit
-Obsoletes:     php53u-pecl-parsekit
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-parsekit
+Obsoletes:     php54-pecl-%{pecl_name}
 %endif
-
-# Other third party repo stuff
-Obsoletes:     php53-pecl-parsekit
-Obsoletes:     php53u-pecl-parsekit
-%if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-parsekit
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 # filter private shared
@@ -149,6 +140,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan  5 2013 Remi Collet <RPMS@famillecollet.com> - 1.3.0-2
+- also provides php-parsekit
+
 * Sun Oct  7 2012 Remi Collet <RPMS@famillecollet.com> - 1.3.0-1
 - latest changes from rawhide (rebase on upstream 1.3.0)
 
