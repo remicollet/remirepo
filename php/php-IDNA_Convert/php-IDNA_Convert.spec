@@ -1,19 +1,27 @@
 Name:		php-IDNA_Convert
-Version:	0.6.3
-Release:	6%{?dist}
+Version:	0.8.0
+Release:	1%{?dist}
 Summary:	Provides conversion of internationalized strings to UTF8
 
 Group:		Development/Libraries
 License:	LGPLv2+
 URL:		http://idnaconv.phlymail.de/
-Source0:	http://phlymail.com/download/Goodies/idna_convert_063.zip
+Source0:	http://phlymail.com/download/Goodies/idna_convert_080.zip
+
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:	noarch
-Requires:	php
+
+Requires:	php-iconv
+Requires:	php-mbstring
+Requires:	php-pcre
+Requires:	php-spl
+Requires:	php-xml
+
 
 %description
 This converter allows you to transfer domain names between the encoded 
 (Punycode) notation and the decoded (UTF-8) notation. 
+
 
 %prep
 %setup -qc
@@ -43,6 +51,10 @@ rm -rf ${buildroot}
 
 
 %changelog
+* Tue Jan  8 2013 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
+- update to 0.8.0
+- fix php extension dependencies, #862770
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -57,5 +69,6 @@ rm -rf ${buildroot}
 
 * Thu Apr 23 2009 David Nalley <david@gnsa.us> 0.6.3-2
 - Corrected license to LGPLv2+ from LGPLv2
+
 * Wed Apr 22 2009 David Nalley <david@gnsa.us> 0.6.3-1
 - Initial packaging efforts
