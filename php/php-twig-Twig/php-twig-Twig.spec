@@ -4,7 +4,7 @@
 %global pear_name    %(echo %{name} | sed -e 's/^php-twig-//' -e 's/-/_/g')
 
 Name:             php-twig-Twig
-Version:          1.11.1
+Version:          1.12.0
 Release:          1%{?dist}
 Summary:          Twig is a modern template engine for PHP
 
@@ -97,6 +97,9 @@ fi
 
 
 %changelog
+* Tue Jan  8 2013 Remi Collet <RPMS@FamilleCollet.com> 1.12.0-1
+- Update to 1.12.0 for remi repo
+
 * Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.11.1-1
 - Update to 1.11.1 for remi repo
 
