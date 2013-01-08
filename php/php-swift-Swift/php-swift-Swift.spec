@@ -3,7 +3,7 @@
 %global pear_name Swift
 
 Name:           php-swift-Swift
-Version:        4.2.2
+Version:        4.3.0
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -43,27 +43,27 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docdir
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
-mkdir -p $RPM_BUILD_ROOT%{pear_phpdir}/tmp
-mv $RPM_BUILD_ROOT%{pear_phpdir}/*.php \
-   $RPM_BUILD_ROOT%{pear_phpdir}/Swift \
-   $RPM_BUILD_ROOT%{pear_phpdir}/dependency_maps \
-   $RPM_BUILD_ROOT%{pear_phpdir}/tmp
-mv $RPM_BUILD_ROOT%{pear_phpdir}/tmp $RPM_BUILD_ROOT%{pear_phpdir}/Swift
+mkdir -p %{buildroot}%{pear_phpdir}/tmp
+mv %{buildroot}%{pear_phpdir}/*.php \
+   %{buildroot}%{pear_phpdir}/Swift \
+   %{buildroot}%{pear_phpdir}/dependency_maps \
+   %{buildroot}%{pear_phpdir}/tmp
+mv %{buildroot}%{pear_phpdir}/tmp $RPM_BUILD_ROOT%{pear_phpdir}/Swift
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -84,6 +84,9 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Tue Jan  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.3.0-1
+- upstream 4.3.0
+
 * Fri Oct 26 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.2.2-1
 - upstream 4.2.2
 
