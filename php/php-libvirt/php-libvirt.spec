@@ -6,7 +6,7 @@
 
 Name:		php-libvirt
 Version:	0.4.5
-Release:	1%{?dist}%{?extra_release}
+Release:	2%{?dist}%{?extra_release}
 Summary:	PHP language binding for Libvirt
 
 Group:		Development/Libraries
@@ -28,9 +28,6 @@ Requires:	libvirt >= %{req_libvirt_version}
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
 
-%define		debug_package	%{nil} 
-%global		_use_internal_dependency_generator	0
-
 %description
 PHP language bindings for Libvirt API. 
 For more details see: http://www.libvirt.org/php/
@@ -41,13 +38,18 @@ Group:		Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildArch:	noarch
 %endif
-Requires:	php-libvirt = %{version}
+Requires:	php-libvirt = %{version}-%{release}
 
 %description -n php-libvirt-doc
 PHP language bindings for Libvirt API. 
 For more details see: http://www.libvirt.org/php/ http://www.php.net/
 
 This package contain the document for php-libvirt.
+
+# Filter private provides
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+%{?filter_setup}
+
 
 %prep
 %setup -q -n libvirt-php-%{version}
@@ -66,6 +68,9 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 
+chmod +x %{buildroot}%{php_extdir}/%{extname}.so
+
+%check
 # simple module load test
 %{__php} --no-php-ini \
     --define extension_dir=src \
@@ -90,6 +95,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan  8 2013 Remi Collet <remi@fedoraproject.org> - 0.4.5-2
+- rebuild
+
 * Sun Nov 27 2011 Remi Collet <RPMS@FamilleCollet.com> - 0.4.5-1
 - update to 0.4.5
 - fix for php 5.4 (and some of compiler warnings)
