@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 16 && 0%{?rhel} < 7
+%if 0%{?fedora} < 18 && 0%{?rhel} < 7
 %define system_nss        0
 %else
 %define system_nss        1
@@ -33,9 +33,9 @@
 %global libvpx_version 1.0.0
 
 %if %{?system_nss}
-%global nspr_version 4.9.2
+%global nspr_version 4.9.3
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
-%global nss_version 3.13.5
+%global nss_version 3.14.1
 %global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
 %endif
 
@@ -82,7 +82,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        17.0.1
+Version:        18.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -107,7 +107,6 @@ Patch18:        xulrunner-16.0-jemalloc-ppc.patch
 Patch20:        mozilla-193-pkgconfig.patch
 
 # Upstream patches
-Patch49:        mozilla-746112.patch
 
 # ---------------------------------------------------
 
@@ -253,8 +252,6 @@ cd %{tarballdir}
 
 %patch20 -p2 -b .pk
 
-%patch49 -p2 -b .746112
-
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
 %if ! %{system_vpx}
@@ -324,7 +321,7 @@ echo "ac_add_options --disable-polyic" >> .mozconfig
 echo "ac_add_options --disable-tracejit" >> .mozconfig
 %endif
 
-%ifnarch %{ix86} x86_64 %{arm}
+%ifnarch %{ix86} x86_64
 echo "ac_add_options --disable-webrtc" >> .mozconfig
 %endif
 
@@ -351,8 +348,7 @@ cd %{tarballdir}
 #
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
-                      %{__sed} -e 's/-Wall//')
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-Wall//')
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
@@ -364,7 +360,7 @@ MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
 %endif
 
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS=$MOZ_OPT_FLAGS
+export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
 export LDFLAGS=$MOZ_LINK_FLAGS
 
 export PREFIX='%{_prefix}'
@@ -549,6 +545,16 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jan  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
+- Sync with rawhide, Update to 18.0
+
+* Mon Jan 7 2013 Martin Stransky <stransky@redhat.com> - 18.0-1
+- Update to 18.0
+
+* Thu Dec 13 2012 Peter Robinson <pbrobinson@fedoraproject.org> 17.0.1-3
+- Disable webrtc on ARM as it currently tries to build SSE on ARM (fix FTBFS)
+- Enable methodjit/tracejit on ARMv7 for more speed :) Fixes RHBZ 870548
+
 * Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-1
 - Sync with rawhide, Update to 17.0.1
 
