@@ -1,6 +1,7 @@
 DONE:
 =====
 php-ffmpeg			0.7.0svn
+php-idn				1.2c
 php-libvirt			0.4.5
 php-pecl-amqp		1.0.9
 php-pecl-apc		3.1.14
@@ -39,7 +40,6 @@ TODO:
 =====
 mlt-php
 php-digidoc
-php-idn
 php-pecl-bbcode
 php-pecl-mysqlnd-qc
 php-pecl-pdflib

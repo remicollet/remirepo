@@ -3,7 +3,7 @@
 Summary:	PHP API for GNU LibIDN
 Name:		php-idn
 Version:	1.2c
-Release:	3%{?dist}
+Release:	6%{?dist}
 License:	GPLv2+
 Group:		Development/Languages
 Source0:	http://php-idn.bayour.com/idn_%{version}.tar.gz
@@ -12,64 +12,91 @@ Source1:	idn.ini
 Patch0:         idn-php54.patch
 
 URL:		http://php-idn.bayour.com/
-BuildRequires:	php-devel >= 4.3.0, libidn-devel >= 0.4.0, autoconf, automake, libtool
-%if 0%{?rhel}%{?fedora} > 4
-%if 0%{?php_zend_api:1}
-Requires:	php(zend-abi) = %{php_zend_api}, php(api) = %{php_core_api}
-%else
-Requires:	php-api = %{php_apiver}
-%endif
-%if 0%(echo '%{?php_zend_api}' | sed -e 's/-.*//') >= 20090626
-Requires:	php-intl
-%endif
-%endif
+
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	php-devel >= 4.3.0, libidn-devel >= 0.4.0, autoconf, automake, libtool
+
+Requires:	php(zend-abi) = %{php_zend_api}
+Requires:	php(api) = %{php_core_api}
+Requires:	php-intl%{?_isa}
+
+# Filter private shared
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+%{?filter_setup}
+
 
 %description
 This is the PHP API for the GNU LibIDN software
 made by Simon Josefsson. It's intention is to
 have international characters in the DNS system.
 
-%prep
-%setup -q -n idn-%{version}
-%patch0 -p1 -b .php54
 
-export PHP_RPATH=no
-phpize
-%configure
+%prep
+%setup -q -c
+
+cd idn-%{version}
+%patch0 -p1 -b .php54
+cd ..
+
+cp -pr idn-%{version} idn-zts
+
 
 %build
+export PHP_RPATH=no
+
+cd idn-%{version}
+phpize
+%configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+cd ../idn-zts
+zts-phpize
+%configure  --with-php-config=%{_bindir}/zts-php-config
+make %{?_smp_mflags}
+
+
 %install
-rm -rf $RPM_BUILD_ROOT
-make install-modules INSTALL_ROOT=$RPM_BUILD_ROOT
-install -D -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/idn.ini
+rm -rf %{buildroot}
+make -C idn-%{version} \
+     install-modules INSTALL_ROOT=%{buildroot}
+make -C idn-zts \
+     install-modules INSTALL_ROOT=%{buildroot}
+
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/idn.ini
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/idn.ini
+
 
 %check
 # No test provided by upstream, so
 # minimal load test for the PHP extension
-php -n \
-    -d extension_dir=modules \
+%{__php} -n \
+    -d extension_dir=idn-%{version}/modules \
+    -d extension=idn.so -m \
+    | grep idn
+%{__ztsphp} -n \
+    -d extension_dir=idn-zts/modules \
     -d extension=idn.so -m \
     | grep idn
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
+
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGES COPYRIGHT CREDITS README.documentation THANX_TO idn.php
-%if 0%{?rhel}%{?fedora} > 4
-%{_libdir}/php/modules/idn.so
-%else
-%{_libdir}/php4/idn.so
-%endif
-%config(noreplace) %{_sysconfdir}/php.d/idn.ini
+%doc idn-%{version}/{CHANGES,COPYRIGHT,CREDITS,README.documentation,THANX_TO,idn.php}
+%config(noreplace) %{php_inidir}/idn.ini
+%config(noreplace) %{php_ztsinidir}/idn.ini
+%{php_extdir}/idn.so
+%{php_ztsextdir}/idn.so
+
 
 %changelog
-* Wed Dec 28 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-4
+* Tue Jan  8 2013 Remi Collet <remi@fedoraproject.org> - 1.2c-6
+- also build ZTS extension
+
+* Wed Dec 28 2011 Remi Collet <remi@fedoraproject.org> - 1.2c-3
 - build against php 5.4 with patch
 - add minimal load test
 
