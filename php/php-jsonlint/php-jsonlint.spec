@@ -11,14 +11,15 @@ License:       MIT
 URL:           https://github.com/Seldaek/%{libname}
 Source0:       %{url}/archive/%{version}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Test build requires
-BuildRequires: php-common >= %{php_min_ver}
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 # Test build requires: phpci
 BuildRequires: php-pcre
 
-Requires:      php-common >= %{php_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 # phpci requires
 Requires:      php-pcre
 
@@ -58,11 +59,15 @@ cp -rp src/Seld/JsonLint %{buildroot}%{_datadir}/php/Seld/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.mdown composer.json
 %dir %{_datadir}/php/Seld
      %{_datadir}/php/Seld/JsonLint
 
 
 %changelog
+* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.0-1
+- backport for remi repo
+
 * Mon Jan  7 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.0-1
 - Initial package
