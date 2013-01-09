@@ -4,18 +4,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Routes
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Horde Routes URL mapping system
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# http://bugs.horde.org/ticket/11894
-# Horde_Routes: Array to string conversion
-Patch0:         %{pear_name}-php54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -52,9 +48,7 @@ It is a port of a Python library, Routes, by Ben Bangert
 %setup -q -c
 
 cd %{pear_name}-%{version}
-%patch0 -p0 -b .php54
-sed -e '/Mapper.php/s/md5sum.*name/name/' \
-    ../package.xml >%{name}.xml
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -102,6 +96,10 @@ fi
 
 
 %changelog
+* Wed Jan  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2 for remi repo
+- drop patch merged upstream
+
 * Sat Dec 15 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - add patch for http://bugs.horde.org/ticket/11894
 
