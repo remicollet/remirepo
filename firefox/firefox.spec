@@ -1,5 +1,5 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 16 && 0%{?rhel} < 7
+%if 0%{?fedora} < 18 && 0%{?rhel} < 7
 %define system_nss        0
 %else
 %define system_nss        1
@@ -26,13 +26,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      17.0.1
-%global xulrunner_version_max  17.1
+%global xulrunner_version      18.0
+%global xulrunner_version_max  18.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20121129
+%global datelang               20130108
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
@@ -67,7 +67,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        17.0.1
+Version:        18.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -234,7 +234,7 @@ MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
 %endif
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS=$MOZ_OPT_FLAGS
+export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
@@ -474,6 +474,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
+- Update to 18.0
+
 * Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0.1-1
 - Sync with rawhide, Update to 17.0.1
 

@@ -12,7 +12,7 @@
 %endif
 
 # Use system sqlite?
-%if 0%{?fedora} < 18
+%if 0%{?fedora} <= 18
 %define system_sqlite     0
 %else
 %define system_sqlite     1
@@ -33,6 +33,7 @@
 %global libvpx_version 1.0.0
 
 %if %{?system_nss}
+# grep 'min_ns.*=[0-9]' configure
 %global nspr_version 4.9.3
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
 %global nss_version 3.14.1
@@ -40,7 +41,8 @@
 %endif
 
 %if %{?system_sqlite}
-%global sqlite_version 3.7.13
+# grep '^SQLITE_VERSION' configure
+%global sqlite_version 3.7.14.1
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
 %endif
@@ -107,6 +109,7 @@ Patch18:        xulrunner-16.0-jemalloc-ppc.patch
 Patch20:        mozilla-193-pkgconfig.patch
 
 # Upstream patches
+Patch100:       mozilla-677092-restartless-lang.patch
 
 # ---------------------------------------------------
 
@@ -250,7 +253,8 @@ cd %{tarballdir}
 %patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
 
-%patch20 -p2 -b .pk
+%patch20  -p2 -b .pk
+%patch100 -p1 -R -b .restartless-lang
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -314,16 +318,17 @@ echo "ac_add_options --with-float-abi=soft" >> .mozconfig
 echo "ac_add_options --disable-elf-hack" >> .mozconfig
 %endif
 
-%ifnarch %{ix86} x86_64
+%ifnarch %{ix86} x86_64 armv7hl armv7hnl
 echo "ac_add_options --disable-methodjit" >> .mozconfig
 echo "ac_add_options --disable-monoic" >> .mozconfig
 echo "ac_add_options --disable-polyic" >> .mozconfig
 echo "ac_add_options --disable-tracejit" >> .mozconfig
 %endif
 
-%ifnarch %{ix86} x86_64
+# Disable WebRTC because of Bug 304121
+#%ifnarch %{ix86} x86_64
 echo "ac_add_options --disable-webrtc" >> .mozconfig
-%endif
+#%endif
 
 #---------------------------------------------------------------------
 
@@ -353,7 +358,7 @@ MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-Wall//')
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
 %ifarch s390
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
+MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
 %endif
 %ifarch s390 %{arm} ppc
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
@@ -469,6 +474,9 @@ EOF
 %{__rm} -rf ${RPM_BUILD_ROOT}%{mozappdir}/dictionaries
 ln -s %{_datadir}/myspell ${RPM_BUILD_ROOT}%{mozappdir}/dictionaries
 
+# Remove tmp files
+find $RPM_BUILD_ROOT/%{mozappdir} -name '.mkdir.done' -exec rm -rf {} \;
+
 # ghost files
 %{__mkdir_p} $RPM_BUILD_ROOT%{mozappdir}/components
 touch $RPM_BUILD_ROOT%{mozappdir}/components/compreg.dat
@@ -529,9 +537,6 @@ fi
 %{mozappdir}/crashreporter.ini
 %{mozappdir}/Throbber-small.gif
 %endif
-%exclude %{mozappdir}/components/.mkdir.done
-%exclude %{mozappdir}/defaults/pref/.mkdir.done
-%exclude %{mozappdir}/modules/.mkdir.done
 
 %files devel
 %defattr(-,root,root,-)
@@ -545,8 +550,18 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
-* Tue Jan  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
+* Wed Jan 9 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
 - Sync with rawhide, Update to 18.0
+
+* Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-5
+- Added fix for langpacks
+
+* Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-4
+- Fixed source files
+- Disabled WebRTC due to rhbz#304121
+
+* Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-2
+- Disabled system sqlite on Fedora 18
 
 * Mon Jan 7 2013 Martin Stransky <stransky@redhat.com> - 18.0-1
 - Update to 18.0
