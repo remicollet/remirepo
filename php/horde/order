@@ -6,7 +6,6 @@ pear.horde.org Horde_Crypt          2.1.0 (stable) 2.1.1 (stable) 141kB
 pear.horde.org Horde_Crypt_Blowfish 1.0.1 (stable) 1.0.2 (stable) 24kB
 pear.horde.org Horde_Data           2.0.1 (stable) 2.0.2 (stable) 42kB
 pear.horde.org Horde_Date           2.0.1 (stable) 2.0.2 (stable) 58kB
-pear.horde.org Horde_Exception      2.0.1 (stable) 2.0.2 (stable) 24kB
 pear.horde.org Horde_Form           2.0.1 (stable) 2.0.2 (stable) 188kB
 pear.horde.org Horde_Icalendar      2.0.1 (stable) 2.0.2 (stable) 102kB
 pear.horde.org Horde_Image          2.0.1 (stable) 2.0.2 (stable) 753kB
@@ -16,7 +15,7 @@ pear.horde.org Horde_Itip           2.0.1 (stable) 2.0.2 (stable) 33kB
 02 php-horde-Horde-Translation  =   2.0.1
 03 php-horde-Horde-Stream-Wrapper = 2.0.1
 04 php-horde-Horde-Util         =   2.0.2
-05 php-horde-Horde-Exception    =   2.0.1   => Translation
+05 php-horde-Horde-Exception    =   2.0.2   => Translation
 06 php-horde-Horde-Support      =   2.0.2   => Exception, Stream_Wrapper
 07 php-horde-Horde-Cli          =   2.0.2   => Support, Translation
 08 php-horde-Horde-Url          =   2.0.1   => Exception
