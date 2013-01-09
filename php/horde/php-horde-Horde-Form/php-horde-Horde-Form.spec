@@ -6,7 +6,7 @@
 # Note : test not ready (old .phpt)
 
 Name:           php-horde-Horde-Form
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        Horde Form API
 
@@ -14,8 +14,6 @@ Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-# /usr/lib/rpm/find-lang.sh from fedora 16
-Source1:        find-lang.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -89,11 +87,12 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-%if 0%{?fedora} > 13
-%find_lang %{pear_name}
-%else
-sh %{SOURCE1} %{buildroot} %{pear_name}
-%endif
+for loc in locale/{??,??_??}
+do
+    lang=$(basename $loc)
+    test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc \
+         && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
 
 
 %post
@@ -107,21 +106,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files -f %{pear_name}-%{version}/%{pear_name}.lang
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Form
 %{pear_phpdir}/Horde/Form.php
 %{pear_testdir}/%{pear_name}
-# own locales (non standard) directories, .mo own by find_lang
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
-%dir %{pear_datadir}/%{pear_name}/locale/*
-%dir %{pear_datadir}/%{pear_name}/locale/*/LC_MESSAGES
 
 
 %changelog
+* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+- Update to 2.0.2 for remi repo
+- use local script instead of find_lang
+
 * Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
