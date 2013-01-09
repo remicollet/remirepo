@@ -1,5 +1,3 @@
-pear.horde.org Horde_Auth           2.0.1 (stable) 2.0.2 (stable) 51kB
-pear.horde.org Horde_Compress       2.0.1 (stable) 2.0.2 (stable) 35kB
 pear.horde.org Horde_Core           2.1.4 (stable) 2.1.5 (stable) 1352kB
 pear.horde.org Horde_Crypt          2.1.0 (stable) 2.1.1 (stable) 141kB
 pear.horde.org Horde_Crypt_Blowfish 1.0.1 (stable) 1.0.2 (stable) 24kB
@@ -36,7 +34,7 @@ pear.horde.org Horde_Itip           2.0.1 (stable) 2.0.2 (stable) 33kB
 25 php-horde-Horde-LoginTasks       2.0.1   => BR(Date), Date, Translation
 26 php-horde-Horde-Text-Flowed      2.0.1   =>           Util
 27 php-horde-Horde-Db               2.0.1   => BR(Cache), Date, Exception, Support
-28 php-horde-Horde-Auth             2.0.1   => BR(Db),   Exception, Util
+28 php-horde-Horde-Auth             2.0.2   => BR(Db),   Exception, Util
 29 php-horde-Horde-Token            2.0.1   => BR(Db, Url), Exception, Translation, Url, Util
 30 php-horde-Horde-Template         2.0.1
 31 php-horde-Horde-Xml-Element      2.0.1   =>           Exception
@@ -53,7 +51,7 @@ pear.horde.org Horde_Itip           2.0.1 (stable) 2.0.2 (stable) 33kB
 42 php-horde-Horde-Perms            2.0.1   => BR(Group), Db, Exception, Group, Util, Translation
 43 php-horde-Horde-Prefs            2.0.1   => BR(Db),   Exception, Mime, Translation, Util
 44 php-horde-Horde-Vfs              2.0.3   => BR(Db),   Exception, Translation, Util
-45 php-horde-Horde-Compress         2.0.1   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
+45 php-horde-Horde-Compress         2.0.2   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
 46 php-horde-Horde-History          2.0.1   => BR(Db),   Db, Exception
 47 php-horde-Horde-Crypt            2.1.0   =>           Exception, Mime, Stream-Filter, Translation, Util
 48 php-horde-Horde-Notification     2.0.1   =>          Exception, Util
