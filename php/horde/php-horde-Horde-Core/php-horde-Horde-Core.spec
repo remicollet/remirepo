@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.1.4
+Version:        2.1.5
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -242,6 +242,9 @@ fi
 
 
 %changelog
+* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.5-1
+- Update to 2.1.5 for remi repo
+
 * Sat Jan  5 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.4-1
 - Update to 2.1.4 for remi repo
 
