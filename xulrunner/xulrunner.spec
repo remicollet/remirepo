@@ -18,6 +18,13 @@
 %define system_sqlite     1
 %endif
 
+# Use system libpeg?
+%if 0%{?fedora} < 14
+%define system_jpeg       0
+%else
+%define system_jpeg       1
+%endif
+
 # Use system cairo?
 %define system_cairo      0
 
@@ -122,7 +129,9 @@ BuildRequires:  nss-static >= %{nss_version}
 BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
 BuildRequires:  libpng-devel
-BuildRequires:  libjpeg-devel
+%if %{system_jpeg}
+BuildRequires:  libjpeg-turbo-devel
+%endif
 BuildRequires:  zip
 BuildRequires:  bzip2-devel
 BuildRequires:  zlib-devel
@@ -193,7 +202,9 @@ Requires: nss-devel >= %{nss_build_version}
 # Library requirements (cairo-tee >= 1.10)
 Requires: cairo-devel >= %{cairo_version}
 %endif
-Requires: libjpeg-devel
+%if %{system_jpeg}
+Requires: libjpeg-turbo-devel
+%endif
 Requires: zip
 Requires: bzip2-devel
 Requires: zlib-devel
@@ -260,6 +271,9 @@ cd %{tarballdir}
 %{__cat} %{SOURCE10} \
 %if ! %{system_vpx}
   | grep -v with-system-libvpx     \
+%endif
+%if ! %{system_jpeg}
+  | grep -v with-system-jpeg     \
 %endif
   | tee .mozconfig
 
@@ -467,6 +481,9 @@ EOF
 # Install xpcshell
 %{__cp} objdir/dist/bin/xpcshell $RPM_BUILD_ROOT/%{mozappdir}
 
+# Fix libxpcom.so rights
+chmod 755 $RPM_BUILD_ROOT/%{mozappdir}/libxpcom.so
+
 # Install run-mozilla.sh
 %{__cp} objdir/dist/bin/run-mozilla.sh $RPM_BUILD_ROOT/%{mozappdir}
 
@@ -552,6 +569,10 @@ fi
 %changelog
 * Wed Jan 9 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
 - Sync with rawhide, Update to 18.0
+- use bunled libjpeg-turbo on EL-6
+
+* Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-6
+- Fixed missing libxpcom.so provides
 
 * Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-5
 - Added fix for langpacks
