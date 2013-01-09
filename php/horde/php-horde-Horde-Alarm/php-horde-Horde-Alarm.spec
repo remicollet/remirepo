@@ -125,7 +125,6 @@ fi
 %{pear_phpdir}/Horde/Alarm
 %{pear_phpdir}/Horde/Alarm.php
 %{pear_testdir}/%{pear_name}
-# own locales (non standard) directories, .mo own by find_lang
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
 %doc %{pear_datadir}/%{pear_name}/migration
