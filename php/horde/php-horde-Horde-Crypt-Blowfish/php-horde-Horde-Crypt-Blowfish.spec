@@ -70,7 +70,11 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit\
     -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
     -d date.timezone=UTC \
+%if 0%{?rhel} == 5
+    . || exit 0
+%else
     .
+%endif
 
 
 %post
@@ -98,6 +102,7 @@ fi
 %changelog
 * Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
 - Update to 1.0.2 for remi repo
+- skip test in EL-5
 
 * Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 for remi repo (no change)
