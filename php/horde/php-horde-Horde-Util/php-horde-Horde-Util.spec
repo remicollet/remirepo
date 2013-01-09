@@ -7,8 +7,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Util
-Version:        2.0.2
-Release:        2%{?dist}
+Version:        2.0.3
+Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
 Group:          Development/Libraries
@@ -108,6 +108,9 @@ fi
 
 
 %changelog
+* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+- Update to 2.0.3 for remi repo
+
 * Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 

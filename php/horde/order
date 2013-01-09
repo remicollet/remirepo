@@ -3,12 +3,11 @@ pear.horde.org Horde_Mime_Viewer 2.0.1 (stable) 2.0.2 (stable) 153kB
 pear.horde.org Horde_Perms       2.0.1 (stable) 2.0.2 (stable) 36kB
 pear.horde.org Horde_Prefs       2.0.1 (stable) 2.1.0 (stable) 52kB
 pear.horde.org Horde_Routes      2.0.1 (stable) 2.0.2 (stable) 44kB
-pear.horde.org Horde_Util        2.0.2 (stable) 2.0.3 (stable) 32kB
 
 01 php-horde-Horde-Autoloader   =   2.0.1
 02 php-horde-Horde-Translation  =   2.0.1
 03 php-horde-Horde-Stream-Wrapper = 2.0.1
-04 php-horde-Horde-Util         =   2.0.2
+04 php-horde-Horde-Util         =   2.0.3
 05 php-horde-Horde-Exception    =   2.0.2   => Translation
 06 php-horde-Horde-Support      =   2.0.2   => Exception, Stream_Wrapper
 07 php-horde-Horde-Cli          =   2.0.2   => Support, Translation
