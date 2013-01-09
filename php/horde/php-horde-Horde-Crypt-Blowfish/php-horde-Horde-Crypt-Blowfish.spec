@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt-Blowfish
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Blowfish Encryption Library
 
@@ -96,6 +96,9 @@ fi
 
 
 %changelog
+* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
+- Update to 1.0.2 for remi repo
+
 * Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 for remi repo (no change)
 

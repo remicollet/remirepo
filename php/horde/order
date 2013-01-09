@@ -1,5 +1,4 @@
 pear.horde.org Horde_Core           2.1.4 (stable) 2.1.5 (stable) 1352kB
-pear.horde.org Horde_Crypt_Blowfish 1.0.1 (stable) 1.0.2 (stable) 24kB
 pear.horde.org Horde_Data           2.0.1 (stable) 2.0.2 (stable) 42kB
 pear.horde.org Horde_Form           2.0.1 (stable) 2.0.2 (stable) 188kB
 pear.horde.org Horde_Icalendar      2.0.1 (stable) 2.0.2 (stable) 102kB
@@ -56,7 +55,7 @@ pear.horde.org Horde_Itip           2.0.1 (stable) 2.0.2 (stable) 33kB
 48 php-horde-Horde-Notification     2.0.1   =>          Exception, Util
 49 php-horde-Horde-Icalendar        2.0.1   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
 50 php-horde-Horde-Stream       =   1.2.0   =>           Exception
-51 php-horde-Horde-Crypt-Blowfish = 1.0.1   =>
+51 php-horde-Horde-Crypt-Blowfish = 1.0.2   =>
 52 php-horde-Horde-Secret       =   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
 53 php-horde-Horde-Imap-Client      2.4.2   => BR(Stream, Mime), Exception, Mail, Mime, Util
 54 php-horde-Horde-SessionHandler * 2.0.1   => BR(Db),   Exception, Util
