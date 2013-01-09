@@ -1,3 +1,20 @@
+pear.horde.org Horde_Alarm          2.0.2 (stable) 2.0.3 (stable) 34kB
+pear.horde.org Horde_Argv           2.0.2 (stable) 2.0.3 (stable) 47kB
+pear.horde.org Horde_Auth           2.0.1 (stable) 2.0.2 (stable) 51kB
+pear.horde.org Horde_Browser        2.0.2 (stable) 2.0.3 (stable) 35kB
+pear.horde.org Horde_Cli            2.0.1 (stable) 2.0.2 (stable) 26kB
+pear.horde.org Horde_Compress       2.0.1 (stable) 2.0.2 (stable) 35kB
+pear.horde.org Horde_Core           2.1.4 (stable) 2.1.5 (stable) 1352kB
+pear.horde.org Horde_Crypt          2.1.0 (stable) 2.1.1 (stable) 141kB
+pear.horde.org Horde_Crypt_Blowfish 1.0.1 (stable) 1.0.2 (stable) 24kB
+pear.horde.org Horde_Data           2.0.1 (stable) 2.0.2 (stable) 42kB
+pear.horde.org Horde_Date           2.0.1 (stable) 2.0.2 (stable) 58kB
+pear.horde.org Horde_Exception      2.0.1 (stable) 2.0.2 (stable) 24kB
+pear.horde.org Horde_Form           2.0.1 (stable) 2.0.2 (stable) 188kB
+pear.horde.org Horde_Icalendar      2.0.1 (stable) 2.0.2 (stable) 102kB
+pear.horde.org Horde_Image          2.0.1 (stable) 2.0.2 (stable) 753kB
+pear.horde.org Horde_Itip           2.0.1 (stable) 2.0.2 (stable) 33kB
+
 01 php-horde-Horde-Autoloader   =   2.0.1
 02 php-horde-Horde-Translation  =   2.0.1
 03 php-horde-Horde-Stream-Wrapper = 2.0.1
