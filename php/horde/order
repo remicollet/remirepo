@@ -1,4 +1,3 @@
-pear.horde.org Horde_LoginTasks  2.0.1 (stable) 2.0.2 (stable) 30kB
 pear.horde.org Horde_Mime_Viewer 2.0.1 (stable) 2.0.2 (stable) 153kB
 pear.horde.org Horde_Perms       2.0.1 (stable) 2.0.2 (stable) 36kB
 pear.horde.org Horde_Prefs       2.0.1 (stable) 2.1.0 (stable) 52kB
@@ -29,7 +28,7 @@ pear.horde.org Horde_Routes      2.0.1 (stable) 2.0.2 (stable) 44kB
 22 php-horde-Horde-Serialize        2.0.1   =>           Exception, Util
 23 php-horde-Horde-Xml-Wbxml        2.0.1   =>           Util
 24 php-horde-Horde-Stream-Filter    2.0.1
-25 php-horde-Horde-LoginTasks       2.0.1   => BR(Date), Date, Translation
+25 php-horde-Horde-LoginTasks       2.0.2   => BR(Date), Date, Translation
 26 php-horde-Horde-Text-Flowed      2.0.1   =>           Util
 27 php-horde-Horde-Db               2.0.1   => BR(Cache), Date, Exception, Support
 28 php-horde-Horde-Auth             2.0.2   => BR(Db),   Exception, Util
