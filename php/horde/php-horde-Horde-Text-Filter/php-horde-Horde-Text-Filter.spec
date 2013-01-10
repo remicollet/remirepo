@@ -3,8 +3,11 @@
 %global pear_name    Horde_Text_Filter
 %global pear_channel pear.horde.org
 
+# Need locales so only run when installed
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:           php-horde-Horde-Text-Filter
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
@@ -13,13 +16,18 @@ License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+# http://bugs.horde.org/ticket/11943
+Patch0:         %{pear_name}-php55.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
+%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -49,11 +57,15 @@ Common methods for fitering and converting text.
 %setup -q -c
 cd %{pear_name}-%{version}
 
+%patch0 -p0 -b .php55
+
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/Emails.php/s/md5sum=.*name=/name=/' \
+    -e '/Linkurls.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
 
@@ -82,18 +94,22 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 for loc in locale/{??,??_??}
 do
     lang=$(basename $loc)
-    test -d $loc && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
+    test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc \
+         && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
 
 
 %check
+%if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-# UTF8 issue on old RHEL-5 and Fedora 18
-# Need investigation
+# one test fails, need Investigation
 phpunit\
     -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
     -d date.timezone=UTC \
-    . || exit 0
+    .
+%else
+: Test disabled, missing '--with tests' option.
+%endif
 
 
 %post
@@ -119,6 +135,12 @@ fi
 
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-1
+- Update to 2.0.4 for remi repo
+- add option for test (need investigation)
+- add patch php 5.5 compatibility (preg_replace with eval)
+  http://bugs.horde.org/ticket/11943
+
 * Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
 - Update to 2.0.3 for remi repo
 
