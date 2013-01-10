@@ -10,8 +10,8 @@
 10 php-horde-Horde-Date         =   2.0.2   => Nls, Translation, Exception, Util
 11 php-horde-Horde-Http         =   2.0.1   => Exception, Support
 12 php-horde-Horde-Constraint   =   2.0.1
-13 php-horde-Horde-Thrift       *   2.0.1
-14 php-horde-Horde-Scribe       *   2.0.1   => Thrift
+13 php-horde-Horde-Thrift       =   2.0.1
+14 php-horde-Horde-Scribe       =   2.0.1   => Thrift
 15 php-horde-Horde-Log          =   2.0.1   => Constraint, Exception, Scribe
 16 php-horde-Horde-Test         =   2.1.0   => Support, Util, Cli, Log
 17 php-horde-Horde-Image            2.0.2   => Exception, Support, Translation, Util
@@ -49,7 +49,7 @@
 48 php-horde-Horde-Notification     2.0.1   =>          Exception, Util
 49 php-horde-Horde-Icalendar        2.0.2   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
 50 php-horde-Horde-Stream       =   1.2.0   =>           Exception
-51 php-horde-Horde-Crypt-Blowfish = 1.0.2   =>
+51 ...orde-Horde-Crypt-Blowfish =   1.0.2   =>
 52 php-horde-Horde-Secret       =   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
 53 php-horde-Horde-Imap-Client      2.4.2   => BR(Stream, Mime), Exception, Mail, Mime, Util
 54 php-horde-Horde-SessionHandler * 2.0.1   => BR(Db),   Exception, Util
@@ -57,7 +57,7 @@
 56 php-horde-Horde-Role         =   1.0.1
 57 php-horde-Horde-Mime-Viewer  +   2.0.2   => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
 58 php-horde-Horde-Itip             2.0.2   => BR(Icalendar), Icalendar, Mime
-59 php-horde-Horde-Text-Filter-Csstidy + 2.0.1 =>        Text-Filter
+59 ...Horde-Text-Filter-Csstidy +   2.0.1 =>        Text-Filter
 60 php-horde-Horde-Data             2.0.2   =>           Browser, Exception, Icalendar, Mime, Translation, Util
 61 php-horde-Horde-SyncMl           2.0.1   =>           Date, ICalandar, Log, Support, Util, Xml_Wbxml, Translation
 62 php-horde-Horde-Core         +   2.1.5   => BR(Role, Url, Injector, Group)
@@ -79,4 +79,5 @@ php-horde-kronolith (Calendars) +   4.0.2
 TODO content
 
 + : in progress
-* : submitted
+* : submitted by remi
+  : submitted by nb
