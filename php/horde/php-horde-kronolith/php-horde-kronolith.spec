@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.0.2
+Version:        4.0.3
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -217,6 +217,9 @@ fi
 
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.3-1
+- Update to 4.0.3 for remi repo
+
 * Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.2-1
 - Update to 4.0.2 for remi repo
 
