@@ -81,3 +81,6 @@ TODO content
 + : in progress
 * : submitted by remi
   : submitted by nb
+
+Bugzilla list of submitted reviews:
+https://bugzilla.redhat.com/buglist.cgi?list_id=947536&short_desc=horde&classification=Fedora&query_format=advanced&short_desc_type=allwordssubstr&component=Package%20Review&product=Fedora
