@@ -3,8 +3,11 @@
 %global pear_name    Horde_Vfs
 %global pear_channel pear.horde.org
 
+# currently all tests are skipped
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:           php-horde-Horde-Vfs
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Virtual File System API
 
@@ -18,9 +21,11 @@ BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
+%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -97,19 +102,21 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 for loc in locale/{??,??_??}
 do
     lang=$(basename $loc)
-    test -d $loc && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
+    test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc \
+         && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
 
 
 %check
+%if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-# Need investigation
-rm -f FileTest.php
-
 phpunit \
    -d date.timezone=UTC \
    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
    .
+%else
+: Test disabled, missing '--with tests' option.
+%endif
 
 
 %post
@@ -131,13 +138,16 @@ fi
 %{pear_phpdir}/Horde/Vfs
 %{pear_phpdir}/Horde/Vfs.php
 %{pear_testdir}/%{pear_name}
-# own locales (non standard) directories, .mo own by find_lang
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
 %{pear_datadir}/%{pear_name}/migration
 
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-1
+- Update to 2.0.4 for remi repo
+- add option for test (need investigation)
+
 * Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
 - Update to 2.0.3 for remi repo
 
