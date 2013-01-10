@@ -4,7 +4,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-FinderFacade
-Version:        1.0.5
+Version:        1.0.6
 Release:        1%{?dist}
 Summary:        Wrapper for Symfony Finder component
 
@@ -20,11 +20,12 @@ BuildRequires:  php-channel(%{channel})
 
 Requires:       php-pear(PEAR) >= 1.9.2
 Requires:       php-channel(%{channel})
-Requires:       php-common >= 5.3.3
+Requires:       php(language) >= 5.3.3
 Requires:       php-ctype
 Requires:       php-spl
 Requires:       php-pear(pear.netpirates.net/fDOMDocument) >= 1.3.1
 Requires:       php-pear(pear.symfony.com/Finder) >= 2.1.0
+Conflicts:      php-pear(pear.symfony.com/Finder) >= 2.1.99
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
@@ -83,6 +84,9 @@ fi
 
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- Version 1.0.6 (stable) - API 1.0.1 (stable)
+
 * Thu Oct 11 2012 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - Version 1.0.5 (stable) - API 1.0.1 (stable)
 - Initial packaging
