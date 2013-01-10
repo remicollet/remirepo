@@ -78,9 +78,10 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/SebastianBergmann/%{pear_name}
 %doc %{pear_docdir}/%{pear_name}
+%{pear_xmldir}/%{name}.xml
+%dir %{pear_phpdir}/SebastianBergmann
+%{pear_phpdir}/SebastianBergmann/%{pear_name}
 
 
 %changelog
