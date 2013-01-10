@@ -71,10 +71,10 @@
 70 php-horde-Horde-Timezone     +   1.0.1   =>           Date, Icalendar, Vfs
 ---- apps -----
 php-horde-horde (Framework)     +   5.0.3
-php-horde-kronolith (Calendars) +   4.0.3
-php-horde-turba (Address book)  +   4.0.1
 php-horde-content (Tags)        +   2.0.1
-php-horde-nag   (Tasks)         +   4.0.1
+php-horde-kronolith (Calendars) +   4.0.3
+php-horde-nag   (Tasks)         +   4.0.2
+php-horde-turba (Address book)  +   4.0.2
 
 TODO content
 
