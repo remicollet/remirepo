@@ -61,7 +61,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201301021430
+%global snapdate      201301100830
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1640,6 +1640,9 @@ fi
 
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.10-201301100830
+- new snapshot, alpha3
+
 * Wed Jan  2 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.10-201301021430
 - new snapshot
 
