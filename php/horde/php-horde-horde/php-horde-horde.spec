@@ -11,7 +11,7 @@
 # "horbe" sub-package, with apache stuff
 
 Name:           php-horde-horde
-Version:        5.0.2
+Version:        5.0.3
 Release:        2%{?dist}
 Summary:        Horde Application Framework
 

@@ -8,9 +8,12 @@ Release:        1%{?dist}
 Summary:        Read and write fstab files
 
 Group:          Development/Libraries
-License:        PHP License v3.0
+License:        PHP
 URL:            http://pear.php.net/package/File_Fstab
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
+
+# https://pear.php.net/bugs/bug.php?id=19781
+Source1:        LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -19,9 +22,10 @@ BuildRequires:  php-pear(PEAR)
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
-Requires:       php-pear(PEAR)
-Requires:       php-pear(PEAR) >= 1.4.0b1
-Provides:       php-pear(File_Fstab) = %{version}
+Requires:       php-pcre
+
+Provides:       php-pear(%{pear_name}) = %{version}
+
 
 %description
 File_Fstab is an easy-to-use package which can read & write UNIX fstab
@@ -34,12 +38,17 @@ class for that format.
 * Stable, functional interface.
 * Fully documented with PHPDoc.
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
+
+cp %{SOURCE1} LICENSE
 
 cd %{pear_name}-%{version}
+# https://pear.php.net/bugs/bug.php?id=19781
+sed -e '/Makefile/d' \
+    -e '/example.php/s/role="php"/role="doc"/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -48,20 +57,20 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -77,17 +86,12 @@ fi
 
 %files
 %defattr(-,root,root,-)
-
-
-
+%doc LICENSE
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
-# Expand this as needed to avoid owning dirs owned by our dependencies
-# and to avoid unowned dirs
-%{pear_phpdir}/File/Fstab.php
-%{pear_phpdir}/File/Fstab/Entry.php
-%{pear_phpdir}/example.php
-%{pear_datadir}/File_Fstab
-
+%{pear_phpdir}/File
 
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- initial package
