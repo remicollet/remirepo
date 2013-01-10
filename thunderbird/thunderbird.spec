@@ -59,14 +59,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        17.0
+Version:        17.0.2
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20121119.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20130110.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -263,6 +263,10 @@ echo "ac_add_options --enable-optimize" >> .mozconfig
 echo "ac_add_options --disable-elf-hack" >> .mozconfig
 %endif
 
+%ifnarch %{ix86} x86_64
+echo "ac_add_options --disable-webrtc" >> .mozconfig
+%endif
+
 #===============================================================================
 
 %build
@@ -275,20 +279,19 @@ cd %{tarballdir}
 #
 # Disable C++ exceptions since Mozilla code is not exception-safe
 # 
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
-                      %{__sed} -e 's/-Wall//')
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-Wall//')
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
 %ifarch s390
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
+MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
 %endif
 %ifarch s390 %{arm} ppc
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
 %endif
 
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS=$MOZ_OPT_FLAGS
+export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
 export LDFLAGS=$MOZ_LINK_FLAGS
 
 export PREFIX='%{_prefix}'
@@ -412,8 +415,8 @@ rm -rf $RPM_BUILD_ROOT%{mozappdir}/isp/en-US
 #===============================================================================
 
 %pre
-echo -e "\nWARNING : This %{name} RPM is not an official Fedora/Redhat build and it"
-echo -e "overrides the official one. Don't file bugs on Fedora Project nor Redhat."
+echo -e "\nWARNING : This %{name} RPM is not an official Fedora / Red Hat build and it"
+echo -e "overrides the official one. Don't file bugs on Fedora Project nor Red Hat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
 %if %{?fedora}%{!?fedora:99} <= 15
@@ -498,6 +501,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.2-1
+- Sync with rawhide, update to 17.0.2
+
+* Thu Jan 10 2013 Jan Horak <jhorak@redhat.com> - 17.0.2-1
+- Update to 17.0.2
+
 * Tue Nov 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0-1
 - Sync with rawhide, update to 17.0
 
