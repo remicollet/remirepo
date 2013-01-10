@@ -3,9 +3,12 @@
 %global pear_name    Horde_Token
 %global pear_channel pear.horde.org
 
+# Need locales so only run when installed
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:           php-horde-Horde-Token
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Horde Token API
 
 Group:          Development/Libraries
@@ -15,12 +18,15 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  gettext
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -54,7 +60,13 @@ retrieving, storing, and checking tokens.
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-cp ../package.xml %{name}.xml
+
+# Don't install .po and .pot files
+# Remove checksum for .mo, as we regenerate them
+sed -e '/%{pear_name}.po/d' \
+    -e '/Horde_Other.po/d' \
+    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -73,10 +85,25 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+# Locales
+for loc in locale/{??,??_??}
+do
+    lang=$(basename $loc)
+    test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc \
+         && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
+
 
 %check
+%if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit AllTests.php
+phpunit \
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
+%else
+: Test disabled, missing '--with tests' option.
+%endif
 
 
 %post
@@ -90,17 +117,25 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Token
 %{pear_phpdir}/Horde/Token.php
-%{pear_datadir}/%{pear_name}
 %{pear_testdir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}/locale
+%{pear_datadir}/%{pear_name}/migration
 
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+- Update to 2.0.2 for remi repo
+- new test layout (requires Horde_Test 2.1.0)
+- manage locales
+- add option for test (need investigation)
+
 * Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
