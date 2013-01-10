@@ -12,15 +12,13 @@
 
 Name:           php-horde-horde
 Version:        5.0.3
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://www.horde.org/apps/horde
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-# /usr/lib/rpm/find-lang.sh from fedora 16
-Source1:        find-lang.sh
 Source2:        horde.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -94,8 +92,19 @@ Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
-# Optionnal: Net_DNS2, Services_Weather, Horde_ActiveSync, Horde_Db, Horde_Feed, Horde_Oauth, Horde_Service_Facebook,
-#            Horde_Service_Twitter, Horde_Service_Weather, Horde_SyncMl, Console_Getopt, Console_Table, File_Find
+# Optionnal
+Requires:       php-pear(File_Find)
+Requires:       php-pear(File_Fstab)
+Requires:       php-pear(Console_Getopt)
+Requires:       php-pear(Console_Table)
+Requires:       php-pear(Net_DNS2)
+Requires:       php-pear(Services_Weather)
+Requires:       php-pear(Services_Weather)
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_SyncMl) >= 2.0.0
+
+# Optionnal: Horde_ActiveSync, Horde_Feed, Horde_Oauth, Horde_Service_Facebook,
+#            Horde_Service_Twitter, Horde_Service_Weather
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -153,16 +162,13 @@ cp %{buildroot}%{_sysconfdir}/horde/conf.php.dist \
 
 install -D -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
-%if 0%{?fedora} > 13
-%find_lang %{pear_name}
-%else
-sh %{SOURCE1} %{buildroot} %{pear_name}
-%endif
-for xml in locale/*/help.xml
+# Locales
+for loc in locale/{??,??_??}
 do
-    lang=$(basename $(dirname $xml))
-    echo "%%lang(${lang%_*}) %{pear_hordedir}/$xml" >> %{pear_name}.lang
-done
+    lang=$(basename $loc)
+    test -d %{buildroot}%{pear_hordedir}/$loc \
+         && echo "%%lang(${lang%_*}) %{pear_hordedir}/$loc"
+done | tee ../%{pear_name}.lang
 
 
 %clean
@@ -180,7 +186,7 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files -f %{pear_name}-%{version}/%{pear_name}.lang
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -208,10 +214,7 @@ fi
 %{pear_hordedir}/config
 %{pear_hordedir}/install
 %{pear_hordedir}/lib
-# own locales (non standard) directories, .mo own by find_lang
 %dir %{pear_hordedir}/locale
-%dir %{pear_hordedir}/locale/*
-%dir %{pear_hordedir}/locale/*/LC_MESSAGES
 %{pear_hordedir}/rpc
 %{pear_hordedir}/services
 %{pear_hordedir}/static
@@ -224,6 +227,11 @@ fi
 
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.0.3-1
+- Update to 5.0.3 for remi repo
+- use local script instead of find_lang
+- add more optional requires
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.2-2
 - fix apache config and rename to php-horde-horde.conf
 
