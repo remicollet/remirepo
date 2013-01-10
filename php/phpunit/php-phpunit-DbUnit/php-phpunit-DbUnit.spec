@@ -4,7 +4,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-DbUnit
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        DbUnit port for PHP/PHPUnit
 
@@ -23,6 +23,7 @@ Requires(postun): %{__pear}
 Requires:       php-pdo >= 5.3.3
 Requires:       php-pear(%{channel}/PHPUnit) >= 3.7.0
 Requires:       php-pear(pear.symfony.com/Yaml) >= 2.1.0
+Conflicts:      php-pear(pear.symfony.com/Yaml) >= 2.1.99
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -79,6 +80,9 @@ fi
 
 
 %changelog
+* Thu Jan 10 2013 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Version 1.2.2 (stable) - API 1.2.0 (stable)
+
 * Sat Oct  6 2012 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Version 1.2.1 (stable) - API 1.2.0 (stable)
 
