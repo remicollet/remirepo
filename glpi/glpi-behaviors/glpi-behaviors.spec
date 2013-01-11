@@ -2,7 +2,7 @@
 #global svnrelease   315
 
 Name:           glpi-behaviors
-Version:        0.83.3
+Version:        0.83.4
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,13 +20,13 @@ URL:            https://forge.indepnet.net/projects/behaviors
 # tar czf glpi-behaviors-0.83-315.tar.gz behaviors
 Source0:        glpi-behaviors-0.83-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1217/glpi-behaviors-0.83.3.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1408/glpi-behaviors-0.83.4.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.83.3
+Requires:       glpi >= 0.83.4
 Requires:       glpi <  0.84
 
 
@@ -80,6 +80,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 11 2013 Remi Collet <Fedora@FamilleCollet.com> - 0.83.4-1
+- version 0.83.4 for GLPI >= 0.83.4
+  https://forge.indepnet.net/projects/behaviors/versions/787
+
 * Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83.3-1
 - version 0.83.3 for GLPI 0.83.3
   https://forge.indepnet.net/projects/behaviors/versions/752
