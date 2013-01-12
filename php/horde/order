@@ -80,6 +80,7 @@ php-horde-kronolith (Calendars) +   4.0.3
 php-horde-nag   (Tasks)         +   4.0.2
 php-horde-turba (Address book)  +   4.0.2
 php-horde-imp (Webmail)         +   6.0.3
+php-horde-ingo (Filters)        +   3.0.2
 
 TODO content
 
