@@ -2,9 +2,12 @@
 %global pear_name    kronolith
 %global pear_channel pear.horde.org
 
+# TODO: test not ready
+# Fatal error: Call to a member function setShareCallback() on a non-object...
+
 Name:           php-horde-kronolith
 Version:        4.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based calendar
 
 Group:          Development/Libraries
@@ -103,6 +106,8 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 # TODO pear.horde.org/timeobjects >= 2.0.0, pear.horde.org/Horde_ActiveSync >= 2.0.0
 
 Provides:       php-pear(%{pear_channel}/kronolith) = %{version}
+Obsoletes:      kronolith < 4
+Provides:       kronolith  = %{version}
 
 
 %description
@@ -144,7 +149,12 @@ sed -e '/%{pear_name}.po/d' \
 
 %build
 cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+
+# Regenerate the locales
+for po in $(find locale -name \*.po)
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
@@ -217,6 +227,9 @@ fi
 
 
 %changelog
+* Sat Jan 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.3-2
+- obsoletes/provides kronolith
+
 * Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.3-1
 - Update to 4.0.3 for remi repo
 
