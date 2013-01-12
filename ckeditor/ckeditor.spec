@@ -37,6 +37,11 @@ mkdir doc
 mv %{name}/{CHANGES,LICENSE}.html doc/
 mv %{name}/_samples doc/
 
+# fix library path in provided samples
+sed -e 's:src="../ckeditor.js":src="/ckeditor/ckeditor.js":' \
+    -i doc/_samples/*.html
+
+
 # PHP Library
 mkdir php
 mv %{name}/*php php/
