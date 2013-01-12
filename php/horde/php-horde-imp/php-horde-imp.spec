@@ -1,0 +1,183 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%global pear_name    imp
+%global pear_channel pear.horde.org
+
+Name:           php-horde-imp
+Version:        6.0.3
+Release:        1%{?dist}
+Summary:        A web based webmail system
+
+Group:          Development/Libraries
+License:        GPL-2.0
+URL:            http://www.horde.org/apps/imp
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:      noarch
+BuildRequires:  gettext
+BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+
+Requires(post): %{__pear}
+Requires(postun): %{__pear}
+
+Requires:       php-common >= 5.3.0
+# extensions required from package.xml
+Requires:       php-dom
+Requires:       php-gettext
+Requires:       php-hash
+Requires:       php-json
+# extensions required from phpci analysis
+Requires:       php-date
+Requires:       php-ereg
+Requires:       php-filter
+Requires:       php-openssl
+Requires:       php-pcre
+Requires:       php-posix
+Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
+Conflicts:      php-pear(%{pear_channel}/horde) >= 6.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Auth) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Browser) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Compress) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Compress) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Crypt) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Editor) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Editor) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Form) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Icalendar) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Image) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Imap_Client) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Itip) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Itip) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_ListHeaders) >= 1.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_ListHeaders) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_LoginTasks) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Notification) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Perms) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Serialize) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_SpellChecker) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Text_Flowed) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Token) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Token) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Url) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
+# Optionnal
+Requires:       php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
+
+Provides:       php-pear(%{pear_channel}/imp) = %{version}
+
+
+%description
+IMP, the Internet Mail Program, is one of the most popular and widely
+deployed open source webmail applications in the world. It allows
+universal, web-based access to IMAP and POP3 mail servers and provides
+Ajax, mobile and traditional interfaces with a rich range of features
+normally found only in desktop email clients.
+
+
+%prep
+%setup -q -c
+[ -f package2.xml ] || mv package.xml package2.xml
+mv package2.xml %{pear_name}-%{version}/%{name}.xml
+
+cd %{pear_name}-%{version}
+
+
+%build
+cd %{pear_name}-%{version}
+# Empty build section, most likely nothing required.
+
+
+%install
+cd %{pear_name}-%{version}
+rm -rf $RPM_BUILD_ROOT
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+
+# Clean up unnecessary files
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+
+# Install XML package description
+mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
+install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%post
+%{__pear} install --nodeps --soft --force --register-only \
+    %{pear_xmldir}/%{name}.xml >/dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+    %{__pear} uninstall --nodeps --ignore-errors --register-only \
+        pear.horde.org/%{pear_name} >/dev/null || :
+fi
+
+
+%files
+%defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
+
+
+%{pear_xmldir}/%{name}.xml
+# Expand this as needed to avoid owning dirs owned by our dependencies
+# and to avoid unowned dirs
+
+
+%{pear_testdir}/imp
+%{_bindir}/imp-bounce-spam
+%{_bindir}/imp-mailbox-decode
+%{_bindir}/imp-query-imap-cache
+
+%changelog
+* Sat Jan 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.0.3-1
+- Initial package
