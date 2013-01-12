@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Core
 Version:        2.1.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
@@ -140,10 +140,13 @@ Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
-# Optionnal: Horde_ActiveSync, Horde_Editor, Horde_ElasticSearch, Horde_Kolab_Server
-#            Horde_Kolab_Session, Horde_Kolab_Storage
-#            Horde_Oauth, Horde_Service_Twitter, Horde_SpellChecker
-#            Text_CAPTCHA, Text_Figlet, Text_LanguageDetect
+# Optionnal
+Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_SpellChecker) >= 3.0.0
+
+# Horde_ActiveSync, Horde_Editor, Horde_ElasticSearch, Horde_Kolab_Server
+# Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Oauth,
+# Horde_Service_Twitter, Text_CAPTCHA, Text_Figlet, Text_LanguageDetect
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -242,6 +245,9 @@ fi
 
 
 %changelog
+* Sat Jan 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.5-2
+- add requires on Horde_SpellChecker
+
 * Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.5-1
 - Update to 2.1.5 for remi repo
 
