@@ -12,7 +12,7 @@
 
 Name:           php-horde-horde
 Version:        5.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -107,6 +107,8 @@ Requires:       php-pear(%{pear_channel}/Horde_SyncMl) >= 2.0.0
 #            Horde_Service_Twitter, Horde_Service_Weather
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Obsoletes:      horde < 5
+Provides:       horde = %{version}
 
 
 %description
@@ -227,6 +229,9 @@ fi
 
 
 %changelog
+* Sat Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.0.3-2
+- obsoletes/provides horde
+
 * Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.0.3-1
 - Update to 5.0.3 for remi repo
 - use local script instead of find_lang
