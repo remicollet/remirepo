@@ -118,6 +118,8 @@ Requires:       php-pecl(LZF)
 Requires:       php-pear(Net_DNS2)
 Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Crypt) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Editor) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Editor) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Form) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
@@ -136,13 +138,12 @@ Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Routes) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Routes) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_SpellChecker) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
-# Optionnal
-Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_SpellChecker) >= 3.0.0
 
 # Horde_ActiveSync, Horde_Editor, Horde_ElasticSearch, Horde_Kolab_Server
 # Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Oauth,
@@ -246,7 +247,7 @@ fi
 
 %changelog
 * Sat Jan 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.5-2
-- add requires on Horde_SpellChecker
+- add requires on Horde_Editor and Horde_SpellChecker
 
 * Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.5-1
 - Update to 2.1.5 for remi repo
