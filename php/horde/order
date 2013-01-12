@@ -71,7 +71,7 @@
 70 php-horde-Horde-Timezone     +   1.0.1   =>           Date, Icalendar, Vfs
 71 php-horde-Horde-ListHeaders  *   1.0.1   => BR(Mail)  Mail
 72 php-horde-Horde-SpellChecker *   2.1.0   =>           Exception, Util
-php-horde-Horde-Editor
+73 php-horde-Horde-Editor       *   2.0.1   =>           Role, Browser, Exception, Serialize
 
 ---- apps -----
 php-horde-horde (Framework)     +   5.0.3
