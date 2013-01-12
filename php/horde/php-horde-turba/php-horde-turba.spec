@@ -10,7 +10,7 @@
 
 Name:           php-horde-turba
 Version:        4.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based address book
 
 Group:          Development/Libraries
