@@ -34,8 +34,8 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
-The Horde_ListHeaders library parses Mailing List Headers as defined in RFC
-2369 & RFC 2919.
+The Horde_ListHeaders library parses Mailing List Headers as defined
+in RFC 2369 & RFC 2919.
 
 
 %prep
