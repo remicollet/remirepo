@@ -79,7 +79,11 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
+
 Provides:       php-pear(%{pear_channel}/turba) = %{version}
+Obsoletes:      turba < 4
+Provides:       turba = %{version}
+
 
 %description
 Turba is the Horde contact management application. Leveraging the Horde
@@ -196,6 +200,9 @@ fi
 
 
 %changelog
+* Sat Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.2-2
+- obsoletes/provides turba
+
 * Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.2-1
 - Update to 4.0.2 for remi repo
 
