@@ -92,7 +92,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
 Version:        18.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -111,6 +111,7 @@ Patch14:        xulrunner-2.0-chromium-types.patch
 Patch17:        xulrunner-15.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
 Patch18:        xulrunner-16.0-jemalloc-ppc.patch
+Patch19:        rhbz-304121.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -263,6 +264,7 @@ cd %{tarballdir}
 %patch14 -p2 -b .chromium-types
 %patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
+%patch19 -p2 -b .rhbz-304121
 
 %patch20  -p2 -b .pk
 %patch100 -p1 -R -b .restartless-lang
@@ -339,10 +341,9 @@ echo "ac_add_options --disable-polyic" >> .mozconfig
 echo "ac_add_options --disable-tracejit" >> .mozconfig
 %endif
 
-# Disable WebRTC because of Bug 304121
-#%ifnarch %{ix86} x86_64
+%ifnarch %{ix86} x86_64
 echo "ac_add_options --disable-webrtc" >> .mozconfig
-#%endif
+%endif
 
 #---------------------------------------------------------------------
 
@@ -567,6 +568,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-2
+- sync with rawhide, re-enable webrtc
+
+* Thu Jan 10 2013 Martin Stransky <stransky@redhat.com> - 18.0-7
+- Fixed Makefile generator (rhbz#304121)
+
 * Wed Jan 9 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
 - Sync with rawhide, Update to 18.0
 - use bunled libjpeg-turbo on EL-6
