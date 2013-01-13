@@ -1,0 +1,13 @@
+diff -up firefox-18.0/mozilla-release/media/webrtc/trunk/Makefile.old firefox-18.0/mozilla-release/media/webrtc/trunk/Makefile
+diff -up firefox-18.0/mozilla-release/media/webrtc/trunk/tools/gyp/pylib/gyp/generator/mozmake.py.old firefox-18.0/mozilla-release/media/webrtc/trunk/tools/gyp/pylib/gyp/generator/mozmake.py
+--- firefox-18.0/mozilla-release/media/webrtc/trunk/tools/gyp/pylib/gyp/generator/mozmake.py.old	2013-01-05 00:44:41.000000000 +0100
++++ firefox-18.0/mozilla-release/media/webrtc/trunk/tools/gyp/pylib/gyp/generator/mozmake.py	2013-01-10 14:48:58.418321640 +0100
+@@ -376,7 +376,7 @@ class MakefileGenerator(object):
+     WriteMakefile(output_file, data, build_file, depth, top,
+                   # we set srcdir up one directory, since the subdir
+                   # doesn't actually exist in the source directory
+-                  swapslashes(os.path.join(top, self.relative_srcdir, os.path.split(rel_path)[0])),
++                  swapslashes(os.path.normpath(os.path.join(top, self.relative_srcdir, os.path.split(rel_path)[0]))),
+                   self.relative_srcdir)
+     return True
+ 
