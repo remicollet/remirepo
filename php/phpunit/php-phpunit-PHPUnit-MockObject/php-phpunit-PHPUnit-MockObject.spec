@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name PHPUnit_MockObject
-%global channel pear.phpunit.de
+%global pear_name     PHPUnit_MockObject
+%global pear_channel  pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        1.2.1
+Version:        1.2.3
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -16,16 +15,20 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
+BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-soap >= 5.3.3
-Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
-Requires:       php-pear(%{channel}/PHPUnit) >= 3.7.0
+Requires:       php(language) >= 5.3.3
+Requires:       php-pcre
+Requires:       php-reflection
+Requires:       php-soap
+Requires:       php-spl
+Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.1.1
+Requires:       php-pear(%{pear_channel}/PHPUnit) >= 3.7.0
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -68,7 +71,7 @@ rm -rf %{buildroot}
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -80,6 +83,12 @@ fi
 
 
 %changelog
+* Sun Jan 13 2013 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- Version 1.2.3 (stable) - API 1.2.0 (stable)
+
+* Mon Nov  5 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Version 1.2.2 (stable) - API 1.2.0 (stable)
+
 * Sat Oct  6 2012 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Version 1.2.1 (stable) - API 1.2.0 (stable)
 
