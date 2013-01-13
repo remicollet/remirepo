@@ -8,14 +8,18 @@
 
 Name:           php-horde-Horde-Text-Filter
 Version:        2.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Text Filter API
 
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
-Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
+# remove non-free stuff
+# http://bugs.horde.org/ticket/11870
+# pear download Horde_Text_Filter
+# ./strip.sh %{version}
+Source0:        %{pear_name}-%{version}-strip.tgz
+Source1:        strip.sh
 # http://bugs.horde.org/ticket/11943
 Patch0:         %{pear_name}-php55.patch
 
@@ -135,6 +139,9 @@ fi
 
 
 %changelog
+* Sun Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-2
+- remove non-free stuff
+
 * Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-1
 - Update to 2.0.4 for remi repo
 - add option for test (need investigation)
