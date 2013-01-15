@@ -3,12 +3,9 @@
 %global pear_name    Horde_Token
 %global pear_channel pear.horde.org
 
-# Need locales so only run when installed
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
-
 Name:           php-horde-Horde-Token
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Token API
 
 Group:          Development/Libraries
@@ -21,12 +18,10 @@ BuildArch:      noarch
 BuildRequires:  gettext
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
-%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
-%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -95,15 +90,12 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
-%else
-: Test disabled, missing '--with tests' option.
-%endif
 
 
 %post
@@ -130,6 +122,9 @@ fi
 
 
 %changelog
+* Tue Jan 15 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
+- fix include_path to run test in mock
+
 * Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - new test layout (requires Horde_Test 2.1.0)
