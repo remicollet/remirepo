@@ -55,7 +55,7 @@
 54 php-horde-Horde-SessionHandler * 2.0.1   => BR(Db),   Exception, Util
 55 php-horde-Horde-Share        +   2.0.2   => ****      Db, Exception, Group, Perms, Support, Translation, Url, Util
 56 php-horde-Horde-Role         =   1.0.1
-57 php-horde-Horde-Mime-Viewer  +   2.0.2   => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
+57 php-horde-Horde-Mime-Viewer  *   2.0.2   => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
 58 php-horde-Horde-Itip             2.0.2   => BR(Icalendar), Icalendar, Mime
 59 ...Horde-Text-Filter-Csstidy *   2.0.1   =>           Text-Filter
 60 php-horde-Horde-Data             2.0.2   =>           Browser, Exception, Icalendar, Mime, Translation, Util
