@@ -5,11 +5,16 @@
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
 Version:	2.4.14
-Release:	1%{?dist}
+Release:	1%{?dist}.1
 
 License:	LGPLv2
 Group:		Development/Tools
-Source0:	http://%{pear_channel}/get/phing-%{version}.tgz
+
+# remove non-free stuff
+# pear download phing/phing
+# ./strip.sh %{version}
+Source0:	%{pear_name}-%{version}-strip.tgz
+Source1:	strip.sh
 URL:		http://phing.info/trac/
 
 BuildRoot:	    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -21,7 +26,6 @@ BuildRequires:	dos2unix
 Requires:	php(language) >= 5.2.0
 Requires:	php-cli
 Requires:	php-pear(PEAR) >= 1.8.0
-Requires:	php-pecl-xdebug >= 2.0.5
 Requires:	php-channel(%{pear_channel})
 
 # Optional
@@ -75,8 +79,6 @@ cd %{pear_name}-%{version}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
 
-# not in the archive dos2unix %{buildroot}/%{pear_docdir}/%{pear_name}/UPGRADE
-
 rm -rf %{buildroot}%{pear_metadir}/.??*
 
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -105,6 +107,15 @@ fi
 
 
 %changelog
+* Tue Jan 15 2013 Collet <RPMS@FamilleCollet.com> - 2.4.14-1.1
+- sync with rawhide, drop free stuff
+
+* Mon Jan 14 2013 Christof Damian <christof@damian.net> - 2.4.14-1
+- upstream 2.4.14
+- remove non-free stuff
+- remove optional xdebug requirement
+- use pear_metadir
+
 * Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.14-1
 - upstream 2.4.14, for remi repo
 
