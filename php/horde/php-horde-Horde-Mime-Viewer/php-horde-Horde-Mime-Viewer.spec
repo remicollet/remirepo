@@ -107,6 +107,14 @@ mkdir -p %{buildroot}%{pear_hordedir}/js
 ln -s %{_datadir}/syntaxhighlighter %{buildroot}%{pear_hordedir}/js/syntaxhighlighter
 
 
+%pre
+# directory replace by a link
+if [ -d %{pear_hordedir}/js/syntaxhighlighter ]
+then
+  rm -rf %{pear_hordedir}/js/syntaxhighlighter
+fi
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
