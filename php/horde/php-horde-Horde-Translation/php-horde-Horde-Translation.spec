@@ -8,15 +8,16 @@
 
 Name:           php-horde-Horde-Translation
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde translation library
 
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-# /usr/lib/rpm/find-lang.sh from fedora 16
-Source1:        find-lang.sh
+
+# See https://github.com/horde/horde/pull/27
+Patch0:         %{pear_name}-except.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -36,7 +37,7 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-gettext
 Requires:       php-spl
 
-Provides:       php-pear(%{pear_channel}/Horde_Translation) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -48,11 +49,15 @@ tar xif %{SOURCE0}
 
 cd %{pear_name}-%{version}
 
+%patch0 -p3 -b .old
+
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
+# Remove checksum for patched files
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/Gettext.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
 
@@ -76,16 +81,6 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
-
-%if 0%{?fedora} > 13
-%find_lang %{pear_name}
-%find_lang Horde_Other
-%else
-sh %{SOURCE1} %{buildroot} %{pear_name}
-sh %{SOURCE1} %{buildroot} Horde_Other
-%endif
-cat Horde_Other.lang >> %{pear_name}.lang
-cat %{pear_name}.lang
 
 
 %check
@@ -111,26 +106,27 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files -f %{pear_name}-%{version}/%{pear_name}.lang
+%files
 %defattr(-,root,root,-)
-# own locales (non standard) directories, .mo own by find_lang
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Horde
 %{pear_phpdir}/Horde/Translation
 %{pear_phpdir}/Horde/Translation.php
-%doc %{pear_docdir}/Horde_Translation
-# own locales (non standard) directories, .mo own by find_lang
-%dir %{pear_testdir}/Horde_Translation
-%dir %{pear_testdir}/Horde_Translation/Horde
-%dir %{pear_testdir}/Horde_Translation/Horde/Translation
-%dir %{pear_testdir}/Horde_Translation/Horde/Translation/locale
-%dir %{pear_testdir}/Horde_Translation/Horde/Translation/locale/de
-%dir %{pear_testdir}/Horde_Translation/Horde/Translation/locale/de/LC_MESSAGES
-%{pear_testdir}/Horde_Translation/Horde/Translation/*.php
-%{pear_testdir}/Horde_Translation/Horde/Translation/phpunit.xml
+%doc %{pear_docdir}/%{pear_name}
+%dir %{pear_testdir}/%{pear_name}
+%dir %{pear_testdir}/%{pear_name}/Horde
+%dir %{pear_testdir}/%{pear_name}/Horde/Translation
+%dir %{pear_testdir}/%{pear_name}/Horde/Translation/locale
+%lang(de) %{pear_testdir}/%{pear_name}/Horde/Translation/locale/de
+%{pear_testdir}/%{pear_name}/Horde/Translation/*.php
+%{pear_testdir}/%{pear_name}/Horde/Translation/phpunit.xml
 
 
 %changelog
+* Tue Jan 15 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- patch for http://bugs.horde.org/ticket/11958
+  Allow to run unit tests for a not installed component
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 

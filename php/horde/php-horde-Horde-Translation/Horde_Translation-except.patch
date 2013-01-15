@@ -1,0 +1,28 @@
+From 64f3fd80a8f084d2d305274bed8d60a9fd2bb5fd Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Tue, 15 Jan 2013 13:45:43 +0100
+Subject: [PATCH] dont raise exception when running unit tests
+
+---
+ framework/Translation/lib/Horde/Translation/Handler/Gettext.php |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/framework/Translation/lib/Horde/Translation/Handler/Gettext.php b/framework/Translation/lib/Horde/Translation/Handler/Gettext.php
+index f0d460f..0b44861 100644
+--- a/framework/Translation/lib/Horde/Translation/Handler/Gettext.php
++++ b/framework/Translation/lib/Horde/Translation/Handler/Gettext.php
+@@ -40,7 +40,10 @@ class Horde_Translation_Handler_Gettext implements Horde_Translation_Handler
+     public function __construct($domain, $path)
+     {
+         if (!is_dir($path)) {
+-            throw new InvalidArgumentException("$path is not a directory");
++            // dont raise exception when running unit tests (for not installed package)
++            if (!isset($_SERVER['argv'][0]) || !strpos($_SERVER['argv'][0], 'phpunit')) {
++                throw new InvalidArgumentException("$path is not a directory");
++            }
+         }
+         $this->_gettext = function_exists('_');
+         if (!$this->_gettext) {
+-- 
+1.7.10
+
