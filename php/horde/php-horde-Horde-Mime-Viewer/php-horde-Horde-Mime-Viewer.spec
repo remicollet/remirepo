@@ -5,17 +5,17 @@
 
 Name:           php-horde-Horde-Mime-Viewer
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde MIME Viewer Library
 
 Group:          Development/Libraries
-# Horde_Mime_Viewer extension is LGPLv2, syntaxhighlighter is LGPLv3 or MIT
-License:        LGPLv2 and LGPLv3 or MIT
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
@@ -24,7 +24,8 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       syntaxhighlighter
+Requires:       php-common >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-libxml
@@ -57,15 +58,18 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 %description
 Provides rendering drivers for MIME data.
 
+
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
+# Don't install syntaxhighlighter, use system one
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/LICENSE/s/role="horde"/role="doc"/' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/syntaxhighlighter/d' \
     ../package.xml >%{name}.xml
 
 
@@ -97,6 +101,11 @@ do
          && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
 
+# Create a symlink to system ckeditor
+# Can't be relative as hordedir defined somewhere else
+mkdir -p %{buildroot}%{pear_hordedir}/js
+ln -s %{_datadir}/syntaxhighlighter %{buildroot}%{pear_hordedir}/js/syntaxhighlighter
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -124,13 +133,16 @@ fi
 
 
 %changelog
-* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+* Tue Jan 15 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
+- use system syntaxhighlighter
+
+* Wed Jan  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - use local script instead of find_lang
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Initial package
 
