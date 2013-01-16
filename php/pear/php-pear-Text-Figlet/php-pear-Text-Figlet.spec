@@ -1,20 +1,16 @@
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Text_Password
+%global pear_name Text_Figlet
 
-# TODO tests are not compatible with recent PHPUnit (ok in svn)
-
-Name:           php-pear-Text-Password
-Version:        1.1.1
+Name:           php-pear-Text-Figlet
+Version:        1.0.2
 Release:        1%{?dist}
-Summary:        Creating passwords with PHP
+Summary:        Render text using FIGlet fonts
 
 Group:          Development/Libraries
-License:        PHP
-URL:            http://pear.php.net/package/Text_Password
+License:        PHP License
+URL:            http://pear.php.net/package/Text_Figlet
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
-# https://pear.php.net/bugs/19787
-Source1:        LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -23,23 +19,17 @@ BuildRequires:  php-pear(PEAR)
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
-
-Provides:       php-pear(%{pear_name}) = %{version}
-
+Provides:       php-pear(Text_Figlet) = %{version}
 
 %description
-Text_Password allows one to create pronounceable and unpronounceable
-passwords. The full functional range is explained in the manual at
-http://pear.php.net/manual/.
-
+Engine for use FIGlet fonts to rendering text
 
 %prep
 %setup -q -c
-
-cp %{SOURCE1} LICENSE
+[ -f package2.xml ] || mv package.xml package2.xml
+mv package2.xml %{pear_name}-%{version}/%{name}.xml
 
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
 
 
 %build
@@ -48,20 +38,20 @@ cd %{pear_name}-%{version}
 
 
 %install
-rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf $RPM_BUILD_ROOT
+%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
+install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 
 %post
@@ -77,13 +67,15 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
+%doc %{pear_docdir}/%{pear_name}
+
+
 %{pear_xmldir}/%{name}.xml
-%dir %{pear_phpdir}/Text
-%{pear_phpdir}/Text/Password.php
-%{pear_testdir}/%{pear_name}
+# Expand this as needed to avoid owning dirs owned by our dependencies
+# and to avoid unowned dirs
+%{pear_phpdir}/Text/Figlet.php
+%{pear_datadir}/Text_Figlet
+
 
 
 %changelog
-* Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
-- Initial package
