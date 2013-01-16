@@ -8,7 +8,7 @@ Release:        1%{?dist}
 Summary:        Generation of CAPTCHAs
 
 Group:          Development/Libraries
-License:        BSD License
+License:        BSD
 URL:            http://pear.php.net/package/Text_CAPTCHA
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
@@ -18,21 +18,26 @@ BuildRequires:  php-pear(PEAR)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php-gd
 Requires:       php-pear(PEAR)
 Requires:       php-pear(Text_Password)
-Requires:       php-pear(PEAR) >= 1.4.0b1
-Provides:       php-pear(Text_CAPTCHA) = %{version}
+# Optional
+Requires:       php-pear(Numbers_Words)
+Requires:       php-pear(Text_Figlet)
+Requires:       php-pear(Image_Text)
+
+Provides:       php-pear(%{pear_name}) = %{version}
 
 %description
 Implementation of CAPTCHAs (completely automated public Turing test to tell
 computers and humans apart)
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
 
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -41,20 +46,20 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -71,19 +76,11 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
-
-
 %{pear_xmldir}/%{name}.xml
-# Expand this as needed to avoid owning dirs owned by our dependencies
-# and to avoid unowned dirs
-%{pear_phpdir}/Text/CAPTCHA/Driver/Equation.php
-%{pear_phpdir}/Text/CAPTCHA/Driver/Figlet.php
-%{pear_phpdir}/Text/CAPTCHA/Driver/Image.php
-%{pear_phpdir}/Text/CAPTCHA/Driver/Numeral.php
-%{pear_phpdir}/Text/CAPTCHA/Driver/Word.php
+%{pear_phpdir}/Text/CAPTCHA
 %{pear_phpdir}/Text/CAPTCHA.php
 
 
-
-
 %changelog
+* Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 0.4.3-1
+- Initial package
