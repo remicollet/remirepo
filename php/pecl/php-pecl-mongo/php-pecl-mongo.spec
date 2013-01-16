@@ -4,7 +4,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.3.2
+Version:      1.3.3
 Release:      1%{?dist}.1
 License:      ASL 2.0
 Group:        Development/Languages
@@ -44,8 +44,8 @@ Obsoletes:     php55-pecl-%{pecl_name}
 
 
 %description
-This package provides an interface for communicating with the MongoDB database
-in PHP.
+This package provides an interface for communicating with the
+MongoDB database in PHP.
 
 
 %prep 
@@ -133,6 +133,9 @@ fi
 
 
 %changelog
+* Wed Jan 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.3.3-1
+- update to 1.3.2
+
 * Wed Dec 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.2-1
 - update to 1.3.2
 
