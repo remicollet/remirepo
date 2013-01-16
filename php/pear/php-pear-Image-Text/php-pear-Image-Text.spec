@@ -43,7 +43,7 @@ font size for a given text box.
 %prep
 %setup -q -c
 
-cp %{SOURCE1} LICENSE
+cp %{SOURCE2} LICENSE
 
 cd %{pear_name}-%{version}
 # remove README (how to install and run test)
