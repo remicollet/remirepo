@@ -11,6 +11,8 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.php.net/package/Text_CAPTCHA
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
+# https://pear.php.net/bugs/19790
+Source1:        LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -36,8 +38,14 @@ computers and humans apart)
 %prep
 %setup -q -c
 
+cp %{SOURCE1} LICENSE
+
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+# fix wrong-file-end-of-line-encoding
+sed -e 's/\r//' -i examples/CAPTCHA_Word_test.php
+# remove checksum for altered file
+sed -e '/CAPTCHA_Word_test.php/s/md5sum.*name/name/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -75,6 +83,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc LICENSE
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Text/CAPTCHA
