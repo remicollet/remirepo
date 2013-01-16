@@ -5,21 +5,22 @@
 
 Name:           php-horde-Horde-Core
 Version:        2.1.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
-License:        LGPL-2.1
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
-# To run unit tests
+# To run unit tests (minimal)
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
@@ -27,7 +28,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-gettext
@@ -145,9 +146,9 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
 
-# Horde_ActiveSync, Horde_Editor, Horde_ElasticSearch, Horde_Kolab_Server
-# Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Oauth,
-# Horde_Service_Twitter, Text_CAPTCHA, Text_Figlet, Text_LanguageDetect
+# Horde_ActiveSync, Horde_ElasticSearch, Horde_Kolab_Server
+# Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Oauth, Horde_Service_Twitter
+# PEAR: Text_CAPTCHA, Text_Figlet, Text_LanguageDetect
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -200,9 +201,10 @@ done | tee ../%{pear_name}.lang
 
 
 %check
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+phpunit \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
 
@@ -232,7 +234,6 @@ fi
 %{pear_phpdir}/Horde/*.php
 %{pear_phpdir}/Horde.php
 %{pear_testdir}/%{pear_name}
-# own locales (non standard) directories, .mo own by find_lang
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
 %{pear_datadir}/%{pear_name}/migration
@@ -246,35 +247,38 @@ fi
 
 
 %changelog
-* Sat Jan 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.5-2
+* Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-3
+- spec cleanups
+
+* Sat Jan 12 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-2
 - add requires on Horde_Editor and Horde_SpellChecker
 
-* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.5-1
-- Update to 2.1.5 for remi repo
+* Wed Jan  9 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- Update to 2.1.5
 
-* Sat Jan  5 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.4-1
-- Update to 2.1.4 for remi repo
+* Sat Jan  5 2013 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- Update to 2.1.4
 
-* Fri Dec 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.3-1
-- Update to 2.1.3 for remi repo
+* Fri Dec 28 2012 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- Update to 2.1.3
 
-* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.2-1
-- Update to 2.1.2 for remi repo
+* Fri Dec 21 2012 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
 
-* Thu Dec 13 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.1-1
-- Update to 2.1.1 for remi repo
+* Thu Dec 13 2012 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
 
-* Sat Dec  8 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.0-1
-- Update to 2.1.0 for remi repo
+* Sat Dec  8 2012 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
 
-* Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-1
-- Update to 2.0.4 for remi repo
+* Tue Nov 27 2012 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
 
-* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
-- Update to 2.0.3 for remi repo
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
 
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Initial package
