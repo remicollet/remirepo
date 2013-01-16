@@ -1,0 +1,76 @@
+From eefe220034aeb37c9b755e6ac262887b4c92040c Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 16 Jan 2013 08:50:19 +0100
+Subject: [PATCH] Fix Horde_Share: test fails (Bug #11966)
+
+Rename Horde_Share_Test_Base::callback() to callbackSetShareOb()
+Avoid name conflict with PHPUnit_Framework_Assert::callback()
+---
+ framework/Share/test/Horde/Share/Base.php           |    2 +-
+ framework/Share/test/Horde/Share/Kolab/MockTest.php |    4 ++--
+ framework/Share/test/Horde/Share/Sql/Base.php       |    2 +-
+ framework/Share/test/Horde/Share/Sqlng/Base.php     |    2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/framework/Share/test/Horde/Share/Base.php b/framework/Share/test/Horde/Share/Base.php
+index d2fb25c..1df3be6 100644
+--- a/framework/Share/test/Horde/Share/Base.php
++++ b/framework/Share/test/Horde/Share/Base.php
+@@ -585,7 +585,7 @@ public function renameShare()
+         $this->assertArrayHasKey('joeshare', self::$share->listAllShares());
+     }
+ 
+-    public function callback($share)
++    public function callbackSetShareOb($share)
+     {
+         $share->setShareOb(new Horde_Support_Stub());
+         $this->assertEquals($share, unserialize(serialize($share)));
+diff --git a/framework/Share/test/Horde/Share/Kolab/MockTest.php b/framework/Share/test/Horde/Share/Kolab/MockTest.php
+index b56f747..88c1f78 100644
+--- a/framework/Share/test/Horde/Share/Kolab/MockTest.php
++++ b/framework/Share/test/Horde/Share/Kolab/MockTest.php
+@@ -231,7 +231,7 @@ public function testRemoveShare()
+ 
+     public function testCallback()
+     {
+-        $this->callback(new Horde_Share_Object_Sql(array()));
++        $this->callbackSetShareOb(new Horde_Share_Object_Sql(array()));
+     }
+ 
+     protected function switchAuth($user)
+@@ -251,4 +251,4 @@ protected function getCache()
+ 
+  - Check extra API calls in SQL driver
+  - add server test
+-*/
+\ No newline at end of file
++*/
+diff --git a/framework/Share/test/Horde/Share/Sql/Base.php b/framework/Share/test/Horde/Share/Sql/Base.php
+index 1b0fc3e..417a43e 100644
+--- a/framework/Share/test/Horde/Share/Sql/Base.php
++++ b/framework/Share/test/Horde/Share/Sql/Base.php
+@@ -184,7 +184,7 @@ public function testRenameShare()
+ 
+     public function testCallback()
+     {
+-        $this->callback(new Horde_Share_Object_Sql(array()));
++        $this->callbackSetShareOb(new Horde_Share_Object_Sql(array()));
+     }
+ 
+     public static function setUpBeforeClass()
+diff --git a/framework/Share/test/Horde/Share/Sqlng/Base.php b/framework/Share/test/Horde/Share/Sqlng/Base.php
+index f658fc5..a10fc9d 100644
+--- a/framework/Share/test/Horde/Share/Sqlng/Base.php
++++ b/framework/Share/test/Horde/Share/Sqlng/Base.php
+@@ -185,7 +185,7 @@ public function testRenameShare()
+ 
+     public function testCallback()
+     {
+-        parent::callback(new Horde_Share_Object_Sqlng(array()));
++        $this->callbackSetShareOb(new Horde_Share_Object_Sqlng(array()));
+     }
+ 
+     public static function setUpBeforeClass()
+-- 
+1.7.10
+

@@ -3,13 +3,9 @@
 %global pear_name    Horde_Share
 %global pear_channel pear.horde.org
 
-# not ready
-# Fatal error: Cannot make static method PHPUnit_Framework_Assert::callback() non static in class Horde_Share_Test_Base
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
-
 Name:           php-horde-Horde-Share
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Shared Permissions System
 
 Group:          Development/Libraries
@@ -17,19 +13,25 @@ License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+# http://bugs.horde.org/ticket/11966
+# https://github.com/horde/horde/pull/28
+Patch0:         %{pear_name}-tests.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
-%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-%endif
+BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
@@ -62,11 +64,15 @@ owns or has access to.
 %setup -q -c
 cd %{pear_name}-%{version}
 
+%patch0 -p 3 -b .orig
+
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
+# Remove checksum for patched files
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/test/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
 
@@ -101,15 +107,12 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-   -d date.timezone=UTC \
-   -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
-   .
-%else
-: Test disabled, missing '--with tests' option.
-%endif
+    -d include_path=$src/lib:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 
 
 %post
@@ -134,14 +137,17 @@ fi
 
 
 %changelog
-* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+* Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
+- add patch for http://bugs.horde.org/ticket/11966
+- always run tests
+
+* Thu Jan 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - use local script instead of find_lang
 - add option for test (need investigation)
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
-* Sat Nov  3 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Sat Nov  3 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Initial package
-

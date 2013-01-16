@@ -53,7 +53,7 @@
 52 php-horde-Horde-Secret       =   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
 53 php-horde-Horde-Imap-Client      2.4.2   => BR(Stream, Mime), Exception, Mail, Mime, Util
 54 php-horde-Horde-SessionHandler * 2.0.1   => BR(Db),   Exception, Util
-55 php-horde-Horde-Share        +   2.0.2   => ****      Db, Exception, Group, Perms, Support, Translation, Url, Util
+55 php-horde-Horde-Share        *   2.0.2   => BR(Group, Perms, Injector) Db, Exception, Group, Perms, Support, Translation, Url, Util
 56 php-horde-Horde-Role         =   1.0.1
 57 php-horde-Horde-Mime-Viewer  *   2.0.2   => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
 58 php-horde-Horde-Itip             2.0.2   => BR(Icalendar), Icalendar, Mime
