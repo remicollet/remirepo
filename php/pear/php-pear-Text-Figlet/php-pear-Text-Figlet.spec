@@ -8,9 +8,11 @@ Release:        1%{?dist}
 Summary:        Render text using FIGlet fonts
 
 Group:          Development/Libraries
-License:        PHP License
+License:        PHP
 URL:            http://pear.php.net/package/Text_Figlet
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
+# https://pear.php.net/bugs/19788
+Source1:        LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -18,18 +20,28 @@ BuildRequires:  php-pear(PEAR)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php-pcre
+Requires:       php-zip
 Requires:       php-pear(PEAR)
-Provides:       php-pear(Text_Figlet) = %{version}
+
+Provides:       php-pear(%{pear_name}) = %{version}
+
 
 %description
 Engine for use FIGlet fonts to rendering text
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
+
+cp %{SOURCE1} .
 
 cd %{pear_name}-%{version}
+# Fix wrong-file-end-of-line-encoding
+sed -e 's/\r//' -i docs/README.TXT
+# Remove checksum for altered files
+sed -e '/README.TXT/s/md5sum=.*name/name/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -38,20 +50,20 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -67,15 +79,14 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc LICENSE
 %doc %{pear_docdir}/%{pear_name}
-
-
 %{pear_xmldir}/%{name}.xml
-# Expand this as needed to avoid owning dirs owned by our dependencies
-# and to avoid unowned dirs
+%dir %{pear_phpdir}/Text
 %{pear_phpdir}/Text/Figlet.php
-%{pear_datadir}/Text_Figlet
-
+%{pear_datadir}/%{pear_name}
 
 
 %changelog
+* Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Initial package
