@@ -145,10 +145,12 @@ Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
+Requires:       php-pear(Text_CAPTCHA)
+Requires:       php-pear(Text_Figlet)
 
 # Horde_ActiveSync, Horde_ElasticSearch, Horde_Kolab_Server
 # Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Oauth, Horde_Service_Twitter
-# PEAR: Text_CAPTCHA, Text_Figlet, Text_LanguageDetect
+# PEAR: Text_LanguageDetect
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -249,9 +251,10 @@ fi
 %changelog
 * Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-3
 - spec cleanups
+- more optional requires Text_CAPTCHA and Text_Figlet
 
 * Sat Jan 12 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-2
-- add requires on Horde_Editor and Horde_SpellChecker
+- add optional requires on Horde_Editor and Horde_SpellChecker
 
 * Wed Jan  9 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - Update to 2.1.5
