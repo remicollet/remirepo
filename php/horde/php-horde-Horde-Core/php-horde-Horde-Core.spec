@@ -28,6 +28,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       prototype
 Requires:       php-common >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
@@ -117,6 +118,8 @@ Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
 # Optional
 Requires:       php-pecl(LZF)
 Requires:       php-pear(Net_DNS2)
+Requires:       php-pear(Text_CAPTCHA)
+Requires:       php-pear(Text_Figlet)
 Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Crypt) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Editor) >= 2.0.0
@@ -145,8 +148,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
-Requires:       php-pear(Text_CAPTCHA)
-Requires:       php-pear(Text_Figlet)
 
 # Horde_ActiveSync, Horde_ElasticSearch, Horde_Kolab_Server
 # Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Oauth, Horde_Service_Twitter
@@ -165,8 +166,10 @@ Framework.
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
+# Don't install prototype, use system one
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
+    -e '/prototype.js/d' \
     -e '/LICENSE/s/role="horde"/role="doc"/' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
@@ -200,6 +203,10 @@ do
     test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc && \
          echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
+
+# Create a symlink to system prototype
+# Can't be relative as hordedir defined somewhere else
+ln -s %{_datadir}/prototype/prototype.js %{buildroot}%{pear_hordedir}/js/prototype.js
 
 
 %check
@@ -252,6 +259,7 @@ fi
 * Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-3
 - spec cleanups
 - more optional requires Text_CAPTCHA and Text_Figlet
+- use system prototype
 
 * Sat Jan 12 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-2
 - add optional requires on Horde_Editor and Horde_SpellChecker
