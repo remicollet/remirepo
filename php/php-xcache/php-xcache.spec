@@ -2,8 +2,8 @@
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
-Version:       3.0.0
-Release:       2%{?dist}
+Version:       3.0.1
+Release:       1%{?dist}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -190,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 17 2013 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- bugfixes version
+
 * Sat Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 3.0.0-1.1
 - upstream have fixed the sources (review #859504)
 
