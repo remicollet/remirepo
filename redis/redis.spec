@@ -13,7 +13,7 @@
 %endif
 
 Name:             redis
-Version:          2.6.8
+Version:          2.6.9
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
@@ -176,11 +176,18 @@ fi
 
 
 %changelog
+* Thu Jan 17 2013 Remi Collet <remi@fedoraproject.org> - 2.6.9-1
+- Redis 2.6.9
+  upgrade urgency: MODERATE if you use replication.
+
 * Fri Jan 11 2013 Remi Collet <remi@fedoraproject.org> - 2.6.8-1
-- Redis 2.6.8 (upgrade urgency: moderate)
+- Redis 2.6.8
+  upgrade urgency: MODERATE if you use Lua scripting. Otherwise LOW.
 
 * Tue Dec  4 2012 Remi Collet <remi@fedoraproject.org> - 2.6.7-1
-- Redis 2.6.7 (upgrade urgency: moderate)
+- Redis 2.6.7
+  upgrade urgency: MODERATE (unless you BLPOP using the same
+  key multiple times).
 
 * Fri Nov 23 2012 Remi Collet <remi@fedoraproject.org> - 2.6.5-1
 - Redis 2.6.5 (upgrade urgency: moderate)
