@@ -8,7 +8,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.11.0
+Version:        2.12.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -38,10 +38,9 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.0
 Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.5.0
 Requires:       php-pear(Console_CommandLine) >= 1.2.0
-Requires:       php-pear(components.ez.no/Base) >= 1.8
-Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6.1
-Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
-Requires:       php-pear(pear.phpunit.de/PHP_Timer)
+# Optional
+Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
+Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
 # Optional and not yet availalble php-pear(Net_Growl) >= 2.2.2
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
@@ -142,6 +141,11 @@ fi
 
 
 %changelog
+* Thu Jan 17 2013 Remi Collet <remi@fedoraproject.org> - 2.12.0-1
+- update to Version 2.12.0
+- drop dependency on eZ components
+- raise PHPUnit dependency to 3.6.0
+
 * Fri Dec 21 2012 Remi Collet <remi@fedoraproject.org> - 2.11.0-1
 - update to Version 2.11.0
 - html documentation is now provided by upstream
