@@ -43,6 +43,9 @@ Obsoletes:     php53u-pecl-xdebug
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-xdebug
 %endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-xdebug
+%endif
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
