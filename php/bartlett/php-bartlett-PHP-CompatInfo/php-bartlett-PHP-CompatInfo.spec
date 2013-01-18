@@ -8,7 +8,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.12.0
+Version:        2.12.1
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -72,7 +72,7 @@ version and extensions required for it to run. CLI version has many reports
 (extension, interface, class, function, constant) to display and ability to
 show content of dictionary references.
 
-HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/html/
+HTML Documentation:  %{pear_docdir}/%{pear_name}/html/index.html
 
 This package provides experimental references for PHP 5.5.
 
@@ -124,7 +124,6 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 # Fix wrong-script-end-of-line-encoding
 sed -i -e 's/\r//' %{buildroot}%{_bindir}/phpci
-sed -i -e 's/\r//' %{buildroot}%{pear_docdir}/%{pear_name}/README.markdown
 
 # Create default package configuration
 sed -e '/reference=/s/PHP5/ALL/' \
@@ -184,6 +183,10 @@ fi
 
 
 %changelog
+* Fri Jan 18 2013 Remi Collet <remi@fedoraproject.org> - 2.12.1-1
+- update to Version 2.12.1
+- fix path to documentation in description
+
 * Thu Jan 17 2013 Remi Collet <remi@fedoraproject.org> - 2.12.0-1
 - update to Version 2.12.0
 - drop dependency on eZ components
