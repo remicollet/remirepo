@@ -1,22 +1,19 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global gitver    e1b9127
+%global commit    b44a72afb6bb70c762e6df04a7bf50a4573c5e44
+%global gitver    %(c=%{commit}; echo ${c:0:7})
 %global prever    dev
 
 Name:           php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.2
-Release:        0.3%{?gitver:.git%{gitver}}%{?dist}
+Release:        0.4%{?gitver:.git%{gitver}}%{?dist}
 %if 0%{?gitver:1}
-# https://github.com/xdebug/xdebug/archive/xdebug_2_2.tar.gz
-Source0:        xdebug_2_2.tar.gz
+Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
-
-# https://github.com/xdebug/xdebug/pull/51
-Patch0:         xdebug-build.patch
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -75,12 +72,11 @@ Xdebug also provides:
 %setup -qc
 %if 0%{?gitver:1}
 sed -e '/release/s/2.2.1/%{version}%{?prever}/' \
-    xdebug-xdebug_2_2/package.xml >package.xml
-mv xdebug-xdebug_2_2 %{pecl_name}-%{version}%{?prever}
+    %{pecl_name}-%{commit}/package.xml >package.xml
+mv %{pecl_name}-%{commit} %{pecl_name}-%{version}%{?prever}
 %endif
 
 cd %{pecl_name}-%{version}%{?prever}
-%patch0 -p1 -b .build
 
 # https://bugs.php.net/60330
 sed -i -e '/AC_PREREQ/s/2.60/2.59/' debugclient/configure.in
@@ -197,6 +193,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 18 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.4.gitb44a72a
+- new snapshot
+- drop our patch, merged upstream
+
 * Thu Jan  3 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.3.gite1b9127
 - new snapshot
 - add patch, see https://github.com/xdebug/xdebug/pull/51
