@@ -1,0 +1,27 @@
+From 95d27dc13f2fadb20659f6bb99a2d81631585407 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sun, 2 Dec 2012 08:36:14 +0100
+Subject: [PATCH 11/17] fix order in intl
+
+---
+ PHP/CompatInfo/Reference/intl.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/PHP/CompatInfo/Reference/intl.php b/PHP/CompatInfo/Reference/intl.php
+index 68eadcb..86c6d3d 100644
+--- a/PHP/CompatInfo/Reference/intl.php
++++ b/PHP/CompatInfo/Reference/intl.php
+@@ -311,9 +311,9 @@ class PHP_CompatInfo_Reference_Intl
+             'datefmt_set_timezone'              => array('5.5.0-dev', ''),
+ 
+             'intlgregcal_create_instance'       => array('5.5.0-dev', ''),
+-            'intlgregcal_set_gregorian_change'  => array('5.5.0-dev', ''),
+             'intlgregcal_get_gregorian_change'  => array('5.5.0-dev', ''),
+             'intlgregcal_is_leap_year'          => array('5.5.0-dev', ''),
++            'intlgregcal_set_gregorian_change'  => array('5.5.0-dev', ''),
+ 
+             'intlcal_add'                       => array('5.5.0-dev', ''),
+             'intlcal_after'                     => array('5.5.0-dev', ''),
+-- 
+1.7.11.7
+

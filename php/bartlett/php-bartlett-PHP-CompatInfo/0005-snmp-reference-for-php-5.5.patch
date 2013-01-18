@@ -1,0 +1,24 @@
+From f064bbca8b556fcf38b036f0f7673af6fd35f73b Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 1 Dec 2012 19:51:01 +0100
+Subject: [PATCH 05/17] snmp reference for php 5.5
+
+---
+ PHP/CompatInfo/Reference/snmp.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/PHP/CompatInfo/Reference/snmp.php b/PHP/CompatInfo/Reference/snmp.php
+index 608f10a..45f1961 100644
+--- a/PHP/CompatInfo/Reference/snmp.php
++++ b/PHP/CompatInfo/Reference/snmp.php
+@@ -78,6 +78,7 @@ class PHP_CompatInfo_Reference_Snmp
+         $release = false;
+         $items = array(
+             'SNMP'                           => array('5.4.0', ''),
++            'SNMPException'                  => array('5.4.0', ''),
+         );
+         $this->applyFilter($release, $items, $classes);
+ 
+-- 
+1.7.11.7
+

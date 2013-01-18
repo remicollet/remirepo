@@ -1,0 +1,36 @@
+From 344bd579ee8f74f16fd2088d47362dc4d70c7f7c Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sun, 30 Dec 2012 10:05:23 +0100
+Subject: [PATCH 13/17] use LATEST_PHP_5_4 macro
+
+---
+ PHP/CompatInfo/Reference/standard.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/PHP/CompatInfo/Reference/standard.php b/PHP/CompatInfo/Reference/standard.php
+index 5defb23..80ad678 100644
+--- a/PHP/CompatInfo/Reference/standard.php
++++ b/PHP/CompatInfo/Reference/standard.php
+@@ -333,8 +333,8 @@ class PHP_CompatInfo_Reference_Standard
+             'passthru'                       => array('4.0.0', ''),
+             'pclose'                         => array('4.0.0', ''),
+             'pfsockopen'                     => array('4.0.0', ''),
+-            'php_logo_guid'                  => array('4.0.0', '5.4.9'),
+-            'php_real_logo_guid'             => array('4.0.0', '5.4.9'),
++            'php_logo_guid'                  => array('4.0.0', self::LATEST_PHP_5_4),
++            'php_real_logo_guid'             => array('4.0.0', self::LATEST_PHP_5_4),
+             'phpcredits'                     => array('4.0.0', ''),
+             'phpinfo'                        => array('4.0.0', ''),
+             'phpversion'                     => array('4.0.0', ''),
+@@ -437,7 +437,7 @@ class PHP_CompatInfo_Reference_Standard
+             'usleep'                         => array('4.0.0', ''),
+             'usort'                          => array('4.0.0', ''),
+             'var_dump'                       => array('4.0.0', ''),
+-            'zend_logo_guid'                 => array('4.0.0', '5.4.9'),
++            'zend_logo_guid'                 => array('4.0.0', self::LATEST_PHP_5_4),
+         );
+         $this->applyFilter($release, $items, $functions);
+ 
+-- 
+1.7.11.7
+

@@ -1,0 +1,58 @@
+From 15b732e5d955c58c9d9390151bf09a926e45f9b5 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sun, 2 Dec 2012 07:22:18 +0100
+Subject: [PATCH 08/17] Fix json reference for PHP 5.5
+
+---
+ PHP/CompatInfo/Reference/json.php | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/PHP/CompatInfo/Reference/json.php b/PHP/CompatInfo/Reference/json.php
+index 1a7b291..06d00e7 100644
+--- a/PHP/CompatInfo/Reference/json.php
++++ b/PHP/CompatInfo/Reference/json.php
+@@ -113,6 +113,12 @@ class PHP_CompatInfo_Reference_Json
+         );
+         $this->applyFilter($release, $items, $functions);
+ 
++        $release = '5.5.0';       // soon
++        $items = array(
++            'json_last_error_msg'            => array('5.5.0-dev', ''),
++        );
++        $this->applyFilter($release, $items, $functions);
++
+         return $functions;
+     }
+ 
+@@ -156,12 +162,6 @@ class PHP_CompatInfo_Reference_Json
+         );
+         $this->applyFilter($release, $items, $constants);
+ 
+-        $release = '5.3.14';      // 2012-06-06
+-        $items = array(
+-            'JSON_PARTIAL_OUTPUT_ON_ERROR'   => array('5.3.14', '5.3.14'),
+-        );
+-        $this->applyFilter($release, $items, $constants);
+-
+         $release = '5.4.0';       // 2012-03-01
+         $items = array(
+             'JSON_BIGINT_AS_STRING'          => array('5.4.0', ''),
+@@ -172,6 +172,15 @@ class PHP_CompatInfo_Reference_Json
+         );
+         $this->applyFilter($release, $items, $constants);
+ 
++        $release = '5.5.0';      // soon
++        $items = array(
++            'JSON_PARTIAL_OUTPUT_ON_ERROR'   => array('5.5.0-dev', ''),
++            'JSON_ERROR_RECURSION'           => array('5.5.0-dev', ''),
++            'JSON_ERROR_INF_OR_NAN'          => array('5.5.0-dev', ''),
++            'JSON_ERROR_UNSUPPORTED_TYPE'    => array('5.5.0-dev', ''),
++        );
++        $this->applyFilter($release, $items, $constants);
++
+         return $constants;
+     }
+ 
+-- 
+1.7.11.7
+

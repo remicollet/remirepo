@@ -1,0 +1,68 @@
+From 92c973781339b78ad0bdae57c162cca4d454ce19 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 1 Dec 2012 19:42:53 +0100
+Subject: [PATCH 04/17] standard reference for php 5.5
+
+---
+ PHP/CompatInfo/Reference/standard.php | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/PHP/CompatInfo/Reference/standard.php b/PHP/CompatInfo/Reference/standard.php
+index ede6788..5defb23 100644
+--- a/PHP/CompatInfo/Reference/standard.php
++++ b/PHP/CompatInfo/Reference/standard.php
+@@ -333,8 +333,8 @@ class PHP_CompatInfo_Reference_Standard
+             'passthru'                       => array('4.0.0', ''),
+             'pclose'                         => array('4.0.0', ''),
+             'pfsockopen'                     => array('4.0.0', ''),
+-            'php_logo_guid'                  => array('4.0.0', ''),
+-            'php_real_logo_guid'             => array('4.0.0', ''),
++            'php_logo_guid'                  => array('4.0.0', '5.4.9'),
++            'php_real_logo_guid'             => array('4.0.0', '5.4.9'),
+             'phpcredits'                     => array('4.0.0', ''),
+             'phpinfo'                        => array('4.0.0', ''),
+             'phpversion'                     => array('4.0.0', ''),
+@@ -437,7 +437,7 @@ class PHP_CompatInfo_Reference_Standard
+             'usleep'                         => array('4.0.0', ''),
+             'usort'                          => array('4.0.0', ''),
+             'var_dump'                       => array('4.0.0', ''),
+-            'zend_logo_guid'                 => array('4.0.0', ''),
++            'zend_logo_guid'                 => array('4.0.0', '5.4.9'),
+         );
+         $this->applyFilter($release, $items, $functions);
+ 
+@@ -749,6 +749,16 @@ class PHP_CompatInfo_Reference_Standard
+         );
+         $this->applyFilter($release, $items, $functions);
+ 
++        $release = '5.5.0';       // soon
++        $items = array(
++            'boolval'                        => array('5.5.0-dev', ''),
++            'password_get_info'              => array('5.5.0-dev', ''),
++            'password_hash'                  => array('5.5.0-dev', ''),
++            'password_needs_rehash'          => array('5.5.0-dev', ''),
++            'password_verify'                => array('5.5.0-dev', ''),
++        );
++        $this->applyFilter($release, $items, $functions);
++
+         return $functions;
+     }
+ 
+@@ -1174,6 +1184,14 @@ class PHP_CompatInfo_Reference_Standard
+         );
+         $this->applyFilter($release, $items, $constants);
+ 
++        $release = '5.5.0';       // soon
++        $items = array(
++            'PASSWORD_DEFAULT'                  => array('5.5.0-dev', ''),
++            'PASSWORD_BCRYPT'                   => array('5.5.0-dev', ''),
++            'PASSWORD_BCRYPT_DEFAULT_COST'      => array('5.5.0-dev', ''),
++        );
++        $this->applyFilter($release, $items, $constants);
++
+         return $constants;
+     }
+ 
+-- 
+1.7.11.7
+

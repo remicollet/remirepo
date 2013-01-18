@@ -18,6 +18,26 @@ License:        BSD and MIT
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
 
+# Update reference for PHP 5.5
+# https://github.com/remicollet/php-compat-info/commits/issue-php55
+Patch1:         0001-cuirl-reference-for-php-5.5.patch
+Patch2:         0002-hash-reference-for-php-5.5.patch
+Patch3:         0003-tokoniser-reference-for-php-5.5.patch
+Patch4:         0004-standard-reference-for-php-5.5.patch
+Patch5:         0005-snmp-reference-for-php-5.5.patch
+Patch6:         0006-openssl-reference-for-php-5.5.patch
+Patch7:         0007-mysqli-reference-for-php-5.5.patch
+Patch8:         0008-Fix-json-reference-for-PHP-5.5.patch
+Patch9:         0009-Fix-intl-reference-for-PHP-5.5.patch
+Patch10:        0010-fix-Core-reference-for-PHP-5.5.patch
+Patch11:        0011-fix-order-in-intl.patch
+Patch12:        0012-curl-reference-for-php-5.5-more.patch
+Patch13:        0013-use-LATEST_PHP_5_4-macro.patch
+Patch14:        0014-curl-reference-for-php-5.5-more.patch
+Patch15:        0015-mysqli-new-constant.patch
+Patch16:        0016-MYSQLI_OPT_CAN_HANDLE_EXPIRED_PASSWORDS-is-5.4.12.patch
+Patch17:        0017-data-reference-for-php-5.5-date-immutable.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.0
@@ -52,7 +72,9 @@ version and extensions required for it to run. CLI version has many reports
 (extension, interface, class, function, constant) to display and ability to
 show content of dictionary references.
 
-HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/html/index.html
+HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/html/
+
+This package provides experimental references for PHP 5.5.
 
 
 %prep
@@ -60,7 +82,28 @@ HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/html/index.html
 
 # Package is V2
 cd %{pear_name}-%{version}%{?prever}
-mv -f ../package.xml %{name}.xml
+
+%patch1  -p1
+%patch2  -p1
+%patch3  -p1
+%patch4  -p1
+%patch5  -p1
+%patch6  -p1
+%patch7  -p1
+%patch8  -p1
+%patch9  -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+
+# remove checksum for patched files
+sed -e 's/md5sum.*name/name/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -145,6 +188,7 @@ fi
 - update to Version 2.12.0
 - drop dependency on eZ components
 - raise PHPUnit dependency to 3.6.0
+- update References for PHP 5.5 (non yet merged by upstream)
 
 * Fri Dec 21 2012 Remi Collet <remi@fedoraproject.org> - 2.11.0-1
 - update to Version 2.11.0

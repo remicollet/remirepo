@@ -1,0 +1,24 @@
+From 461b03375329f2f2ace7b96b0274473e5544f0c2 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 1 Dec 2012 20:25:58 +0100
+Subject: [PATCH 07/17] mysqli reference for php 5.5
+
+---
+ PHP/CompatInfo/Reference/mysqli.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/PHP/CompatInfo/Reference/mysqli.php b/PHP/CompatInfo/Reference/mysqli.php
+index a6f1b0c..82e7e8f 100644
+--- a/PHP/CompatInfo/Reference/mysqli.php
++++ b/PHP/CompatInfo/Reference/mysqli.php
+@@ -319,6 +319,7 @@ class PHP_CompatInfo_Reference_Mysqli
+             'MYSQLI_RPL_MASTER'              => array('5.0.0', self::LATEST_PHP_5_2),
+             'MYSQLI_RPL_SLAVE'               => array('5.0.0', self::LATEST_PHP_5_2),
+             'MYSQLI_SERVER_PS_OUT_PARAMS'    => array('5.3.4', ''),
++            'MYSQLI_SERVER_PUBLIC_KEY'       => array('5.5.0-dev', ''),
+             'MYSQLI_SERVER_QUERY_NO_GOOD_INDEX_USED'
+                                              => array('5.3.0', ''),
+             'MYSQLI_SERVER_QUERY_NO_INDEX_USED'
+-- 
+1.7.11.7
+

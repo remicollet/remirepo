@@ -1,0 +1,29 @@
+From 723084d34270773b434740c9ca4fabd1a99ffa26 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 1 Dec 2012 18:26:57 +0100
+Subject: [PATCH 02/17] hash reference for php 5.5
+
+---
+ PHP/CompatInfo/Reference/hash.php | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/PHP/CompatInfo/Reference/hash.php b/PHP/CompatInfo/Reference/hash.php
+index 616af0b..1f44f63 100644
+--- a/PHP/CompatInfo/Reference/hash.php
++++ b/PHP/CompatInfo/Reference/hash.php
+@@ -120,6 +120,12 @@ class PHP_CompatInfo_Reference_Hash
+         );
+         $this->applyFilter($release, $items, $functions);
+ 
++        $release = '5.5.0';       // soon
++        $items = array(
++            'hash_pbkdf2'                    => array('5.5.0-dev', ''),
++        );
++        $this->applyFilter($release, $items, $functions);
++
+         return $functions;
+     }
+ 
+-- 
+1.7.11.7
+
