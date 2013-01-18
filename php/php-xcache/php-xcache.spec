@@ -1,5 +1,8 @@
 %global ext_name     xcache
 
+# TODO : consider splitting pages in another subpackage
+#        to avoid httpd dependency
+
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
 Version:       3.0.1
