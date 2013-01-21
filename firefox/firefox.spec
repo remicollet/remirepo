@@ -477,6 +477,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
 - Update to 18.0
 
+* Tue Dec 18 2012 Martin Stransky <stransky@redhat.com> - 17.0.1-2
+- Fix bug 878831 - Please enable gfx.color_management.enablev4=true
+
 * Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 17.0.1-1
 - Sync with rawhide, Update to 17.0.1
 
