@@ -121,7 +121,7 @@ fi
 
 %changelog
 * Mon Jan 21 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.7-1
-- update to 2.1.7 (no change)
+- update to 2.1.7 (no code change)
 
 * Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.6-1
 - update to 2.1.6 (no change)
