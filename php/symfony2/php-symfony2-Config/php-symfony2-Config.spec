@@ -60,7 +60,6 @@ cd %{pear_name}-%{version}
 cd ..
 
 # Modify PEAR package.xml file:
-# - Remove .gitattributes file
 # - Remove .gitignore file
 # - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
