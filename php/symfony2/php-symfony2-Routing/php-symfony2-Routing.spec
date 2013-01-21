@@ -7,7 +7,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             php-symfony2-Routing
-Version:          2.1.6
+Version:          2.1.7
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -72,13 +72,11 @@ cd %{pear_name}-%{version}
 cd ..
 
 # Modify PEAR package.xml file:
-# - Remove .gitattributes file
 # - Remove .gitignore file
 # - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
 # - Remove md5sum from bootsrap.php file since it was patched
-sed -e '/\.gitattributes/d' \
-    -e '/\.gitignore/d' \
+sed -e '/\.gitignore/d' \
     -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/Tests/s/role="php"/role="test"/' \
@@ -135,6 +133,9 @@ fi
 
 
 %changelog
+* Mon Jan 21 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.7-1
+- update to 2.1.7 (no code change)
+
 * Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.6-1
 - update to 2.1.6 (no change)
 
