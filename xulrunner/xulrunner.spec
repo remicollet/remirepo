@@ -118,6 +118,7 @@ Patch20:        mozilla-193-pkgconfig.patch
 
 # Upstream patches
 Patch100:       mozilla-677092-restartless-lang.patch
+Patch101:       mozilla-791626.patch
 
 # ---------------------------------------------------
 
@@ -268,6 +269,7 @@ cd %{tarballdir}
 
 %patch20  -p2 -b .pk
 %patch100 -p1 -R -b .restartless-lang
+%patch101 -p1 -b .791626
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -568,6 +570,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jan 15 2013 Martin Stransky <stransky@redhat.com> - 18.0-8
+- Added fix for NM regression (mozbz#791626)
+
 * Sun Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-2
 - sync with rawhide, re-enable webrtc
 
