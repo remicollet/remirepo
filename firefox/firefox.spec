@@ -1,5 +1,5 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 18 && 0%{?rhel} < 7
+%if 0%{?fedora} < 16 && 0%{?rhel} < 7
 %define system_nss        0
 %else
 %define system_nss        1
@@ -26,13 +26,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      18.0
+%global xulrunner_version      18.0.1
 %global xulrunner_version_max  18.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130108
+%global datelang               20130121
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
@@ -67,7 +67,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        18.0
+Version:        18.0.1
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -474,6 +474,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Jan 21 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0.1-1
+- Update to 18.0.1
+
 * Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
 - Update to 18.0
 

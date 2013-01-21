@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 18 && 0%{?rhel} < 7
+%if 0%{?fedora} < 16 && 0%{?rhel} < 7
 %define system_nss        0
 %else
 %define system_nss        1
@@ -12,7 +12,7 @@
 %endif
 
 # Use system sqlite?
-%if 0%{?fedora} <= 18
+%if 0%{?fedora} < 19
 %define system_sqlite     0
 %else
 %define system_sqlite     1
@@ -91,8 +91,8 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        18.0
-Release:        2%{?pre_tag}%{?dist}
+Version:        18.0.1
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -117,7 +117,7 @@ Patch19:        rhbz-304121.patch
 Patch20:        mozilla-193-pkgconfig.patch
 
 # Upstream patches
-Patch100:       mozilla-677092-restartless-lang.patch
+#Patch100:       mozilla-677092-restartless-lang.patch
 Patch101:       mozilla-791626.patch
 
 # ---------------------------------------------------
@@ -268,7 +268,7 @@ cd %{tarballdir}
 %patch19 -p2 -b .rhbz-304121
 
 %patch20  -p2 -b .pk
-%patch100 -p1 -R -b .restartless-lang
+#patch100 -p1 -R -b .restartless-lang
 %patch101 -p1 -b .791626
 
 %{__rm} -f .mozconfig
@@ -570,6 +570,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Jan 21 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0.1-1
+- Update to 18.0.1
+
 * Tue Jan 15 2013 Martin Stransky <stransky@redhat.com> - 18.0-8
 - Added fix for NM regression (mozbz#791626)
 
