@@ -16,6 +16,7 @@ License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Test build requires
 BuildRequires: php-common >= %{php_min_ver}
@@ -96,16 +97,21 @@ cp -rp test/* %{buildroot}%{_datadir}/tests/%{name}/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE AUTHORS README.rst composer.json
 %{_datadir}/php/%{lib_name}
 %{_bindir}/raven
 
 %files tests
+%defattr(-,root,root,-)
 %dir %{_datadir}/tests
      %{_datadir}/tests/%{name}
 
 
 %changelog
+* Wed Jan 23 2013 Remi Collet <remi@fedoraproject.org> 0.4.0-2
+- backport 0.4.0 for remi repo.
+
 * Tue Jan 22 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.4.0-2
 - Updated bin install from "install" to "install -pm 755"
 
