@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.4.2
+Version:        2.5.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -104,14 +104,10 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%if 0%{?fedora} >= 18
-: no test as php segfault, need investigation
-%else
 phpunit\
     -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
-%endif
 
 
 %post
@@ -137,6 +133,9 @@ fi
 
 
 %changelog
+* Wed Jan 23 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.5.0-1
+- Update to 2.5.0 for remi repo
+
 * Sat Jan  5 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-1
 - Update to 2.4.2 for remi repo
 
