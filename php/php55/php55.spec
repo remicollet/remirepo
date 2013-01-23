@@ -61,14 +61,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201301170830
+%global snapdate      201301230630
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.11.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.12.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1640,6 +1640,9 @@ fi
 
 
 %changelog
+* Wed Jan 23 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.12-201301230630
+- new snapshot, alpha4
+
 * Thu Jan 17 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.11-201301170830
 - new snapshot
 - fix php.conf to allow MultiViews managed by php scripts
