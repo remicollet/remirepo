@@ -13,6 +13,7 @@ License:   MIT
 URL:       http://www.php-fig.org
 Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  php-common >= 5.3.0
@@ -42,12 +43,16 @@ cp -rp Psr/Log %{buildroot}%{_datadir}/php/Psr/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
 %dir %{_datadir}/php/Psr
      %{_datadir}/php/Psr/Log
 
 
 %changelog
+* Wed Jan 23 2013 Remi Collet <remi@fedoraproject.org> 1.0.0-2
+- backport 1.0.0 for remi repo.
+
 * Tue Jan 22 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0.0-2
 - Updated URL
 - Added php-date require
