@@ -5,6 +5,7 @@ php-idn				1.2c
 php-libvirt			0.4.5
 php-pecl-amqp		1.0.9
 php-pecl-apc		3.1.14
+php-pecl-bbcode		1.0.3b1
 php-pecl-gearman	1.0.3
 php-pecl-geoip		1.0.8
 php-pecl-gmagick	1.1.2RC1
@@ -44,7 +45,6 @@ TODO:
 =====
 mlt-php
 php-digidoc
-php-pecl-bbcode
 php-pecl-mysqlnd-qc
 php-pecl-pdflib
 php-xcache	=> not ready

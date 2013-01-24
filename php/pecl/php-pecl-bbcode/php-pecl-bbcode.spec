@@ -6,7 +6,7 @@
 Summary:      BBCode parsing Extension
 Name:         php-pecl-bbcode
 Version:      1.0.3
-Release:      0.2.%{pre}%{?dist}
+Release:      0.3.%{pre}%{?dist}
 # pecl extension is PHP, bbcode2 is BSD, bstrlib (from bstring) is BSD
 License:      PHP and BSD
 Group:        Development/Languages
@@ -20,16 +20,18 @@ BuildRequires: php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Provides:     php-pecl(%{pecl_name}) = %{version}%{?pre}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
+Provides:     php-pecl(%{pecl_name}) = %{version}%{?pre}
+Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
+Provides:     php-%{pecl_name} = %{version}%{?pre}
+Provides:     php-%{pecl_name}%{?_isa} = %{version}%{?pre}
 
-# RPM 4.8
+
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
 
 
 %description
@@ -115,6 +117,9 @@ fi
 
 
 %changelog
+* Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-0.3.b1
+- also provides php-bbcode
+
 * Mon Nov 14 2011 Remi Collet <remi@fedoraproject.org> - 1.0.3-0.2.b1
 - build against php 5.4
 
