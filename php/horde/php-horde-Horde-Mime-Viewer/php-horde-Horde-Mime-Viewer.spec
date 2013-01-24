@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Mime-Viewer
 Version:        2.0.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Horde MIME Viewer Library
 
 Group:          Development/Libraries
@@ -101,20 +101,6 @@ do
          && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
 
-# Create a symlink to system ckeditor
-# Can't be relative as hordedir defined somewhere else
-mkdir -p %{buildroot}%{pear_hordedir}/js
-ln -s %{_datadir}/syntaxhighlighter %{buildroot}%{pear_hordedir}/js/syntaxhighlighter
-
-
-%pre
-# directory replace by a link
-lib=%{pear_hordedir}/js/syntaxhighlighter
-if [ -d $lib -a ! -L $lib ]
-then
-  rm -rf $lib
-fi
-
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -136,12 +122,12 @@ fi
 %{pear_testdir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
-# Web files
-%dir %{pear_hordedir}/js
-%{pear_hordedir}/js/syntaxhighlighter
 
 
 %changelog
+* Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-3
+- use Alias for system JS
+
 * Tue Jan 15 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
 - use system syntaxhighlighter
 
