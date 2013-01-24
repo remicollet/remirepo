@@ -5,7 +5,7 @@
 Summary: SELinux binding for PHP scripting language
 Name: php-pecl-selinux
 Version: 0.3.1
-Release: 9%{?dist}
+Release: 9%{?dist}.1
 License: PHP
 Group: Development/Languages
 URL: http://pecl.php.net/package/%{pecl_name}
@@ -22,12 +22,17 @@ Requires: php(api) = %{php_core_api}
 
 Provides: php-pecl(%{pecl_name}) = %{version}
 Provides: php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides: php-%{pecl_name} = %{version}
+Provides: php-%{pecl_name}%{?_isa} = %{version}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 # Filter private shared
@@ -116,6 +121,9 @@ fi
 
 
 %changelog
+* Thu Jan 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 0.3.1-9.1
+- also provides php-selinux
+
 * Sun Oct 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.3.1-9
 - bump release (fedora >= 17 rebuild)
 
