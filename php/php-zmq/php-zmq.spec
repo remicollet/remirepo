@@ -2,7 +2,7 @@
 %global version 0.6.0
 
 # Temporarily using git checkout since the release version won't build anymore.
-%global release 7.20120613git516bd6f
+%global release 8.20120613git516bd6f
 
 Name:          php-zmq
 Version:       %{version}
@@ -89,6 +89,12 @@ make test
 
 
 %changelog
+* Thu Jan 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 0.6.0-8.20120613git516bd6f
+- rebuild
+
+* Mon Nov 05 2012 Ralph Bean <rbean@redhat.com> - 0.6.0-8.20120613git516bd6f
+- Add ABI check to conform with PHP guidelines.
+
 * Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.6.0-7.20120613git516bd6f
 - Rebuilt against zeromq3 when available (fedora >= 17 and RHEL >= 6)
 - build ZTS extension
