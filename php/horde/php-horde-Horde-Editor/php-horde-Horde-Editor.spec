@@ -86,6 +86,15 @@ ln -s %{_datadir}/ckeditor %{buildroot}%{pear_hordedir}/js/ckeditor
 rm -rf %{buildroot}
 
 
+%pre
+# directory replace by a link
+lib=%{pear_hordedir}/js/ckeditor
+if [ -d $lib -a ! -L $lib ]
+then
+  rm -rf $lib
+fi
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :

@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Core
 Version:        2.1.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
@@ -29,6 +29,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       prototype
+Requires:       scriptaculous
 Requires:       php-common >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
@@ -166,10 +167,11 @@ Framework.
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
-# Don't install prototype, use system one
+# Don't install prototype, scriptaculous, use system one
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/prototype.js/d' \
+    -e '/scriptaculous/d' \
     -e '/LICENSE/s/role="horde"/role="doc"/' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
@@ -204,9 +206,10 @@ do
          echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
 
-# Create a symlink to system prototype
+# Create a symlink to system prototype and scriptaculous
 # Can't be relative as hordedir defined somewhere else
 ln -s %{_datadir}/prototype/prototype.js %{buildroot}%{pear_hordedir}/js/prototype.js
+ln -s %{_datadir}/scriptaculous          %{buildroot}%{pear_hordedir}/js/scriptaculous
 
 
 %check
@@ -216,6 +219,15 @@ phpunit \
     -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
+
+
+%pre
+# directory replace by a link
+lib=%{pear_hordedir}/js/scriptaculous
+if [ -d $lib -a ! -L $lib ]
+then
+  rm -rf $lib
+fi
 
 
 %post
@@ -256,6 +268,9 @@ fi
 
 
 %changelog
+* Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-4
+- use system scriptaculous
+
 * Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-3
 - spec cleanups
 - more optional requires Text_CAPTCHA and Text_Figlet

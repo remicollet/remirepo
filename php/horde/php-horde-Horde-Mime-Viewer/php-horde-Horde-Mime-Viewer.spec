@@ -109,9 +109,10 @@ ln -s %{_datadir}/syntaxhighlighter %{buildroot}%{pear_hordedir}/js/syntaxhighli
 
 %pre
 # directory replace by a link
-if [ -d %{pear_hordedir}/js/syntaxhighlighter ]
+lib=%{pear_hordedir}/js/syntaxhighlighter
+if [ -d $lib -a ! -L $lib ]
 then
-  rm -rf %{pear_hordedir}/js/syntaxhighlighter
+  rm -rf $lib
 fi
 
 
