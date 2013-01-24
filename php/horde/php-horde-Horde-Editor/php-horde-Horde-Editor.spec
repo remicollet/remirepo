@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Editor
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Editor API
 
 Group:          Development/Libraries
@@ -75,24 +75,9 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-# Create a symlink to system ckeditor
-# Can't be relative as hordedir defined somewhere else
-# I will prefer an Alias, but https://bugzilla.redhat.com/894567
-mkdir -p %{buildroot}%{pear_hordedir}/js
-ln -s %{_datadir}/ckeditor %{buildroot}%{pear_hordedir}/js/ckeditor
-
 
 %clean
 rm -rf %{buildroot}
-
-
-%pre
-# directory replace by a link
-lib=%{pear_hordedir}/js/ckeditor
-if [ -d $lib -a ! -L $lib ]
-then
-  rm -rf $lib
-fi
 
 
 %post
@@ -112,10 +97,11 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Editor
 %{pear_phpdir}/Horde/Editor.php
-%dir %{pear_hordedir}/js
-%{pear_hordedir}/js/ckeditor
 
 
 %changelog
+* Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- use Alias for system JS
+
 * Sat Jan 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Initial package
