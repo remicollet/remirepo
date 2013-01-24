@@ -12,7 +12,7 @@
 
 Name:           php-horde-horde
 Version:        5.0.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -30,6 +30,14 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# Web stuff
+Requires:       mod_php
+Requires:       httpd
+Requires:       prototype-httpd
+Requires:       scriptaculous-httpd
+Requires:       syntaxhighlighter-httpd
+Requires:       ckeditor
+# PHP stuff
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.0.0
@@ -229,6 +237,9 @@ fi
 
 
 %changelog
+* Thu Jan 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.0.3-3
+- define Alias for JavaScript Libraries
+
 * Sat Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.0.3-2
 - obsoletes/provides horde
 
