@@ -34,6 +34,7 @@ php-pecl-xdebug		2.2.2dev
 php-pecl-xhprof		0.9.2git
 php-pecl-yaml		1.1.0
 php-pecl-yaf		2.2.9
+php-redis			2.2.2
 php-shout			0.9.2
 php-zmq				0.6.0
 
@@ -46,6 +47,5 @@ php-pecl-mysqlnd-qc
 php-pecl-pdflib
 php-pecl-rrd
 php-pecl-selinux
-php-redis
 php-xcache	=> not ready
 
