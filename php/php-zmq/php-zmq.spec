@@ -6,7 +6,7 @@
 
 Name:          php-zmq
 Version:       %{version}
-Release:       %{release}%{?dist}
+Release:       %{release}%{?dist}.1
 Summary:       PHP 0MQ/zmq/zeromq extension
 # See https://github.com/mkoppanen/php-zmq/pull/58 for discussion
 License:       BSD
