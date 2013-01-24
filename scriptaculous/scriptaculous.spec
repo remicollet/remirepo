@@ -6,8 +6,6 @@ Group:        Applications/Internet
 License:      MIT
 URL:          http://script.aculo.us/
 
-# We cannot use the archive tarball from github
-# as we don't have yet requirement for build (rake, sprockets)
 Source0:      http://script.aculo.us/dist/%{name}-js-%{version}.zip
 Source1:      %{name}.conf
 
