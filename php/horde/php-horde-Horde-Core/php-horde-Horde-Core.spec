@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Core
 Version:        2.1.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
@@ -206,11 +206,6 @@ do
          echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
 
-# Create a symlink to system prototype and scriptaculous
-# Can't be relative as hordedir defined somewhere else
-ln -s %{_datadir}/prototype/prototype.js %{buildroot}%{pear_hordedir}/js/prototype.js
-ln -s %{_datadir}/scriptaculous          %{buildroot}%{pear_hordedir}/js/scriptaculous
-
 
 %check
 src=$(pwd)/%{pear_name}-%{version}
@@ -219,15 +214,6 @@ phpunit \
     -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
-
-
-%pre
-# directory replace by a link
-lib=%{pear_hordedir}/js/scriptaculous
-if [ -d $lib -a ! -L $lib ]
-then
-  rm -rf $lib
-fi
 
 
 %post
@@ -263,11 +249,13 @@ fi
 %{pear_hordedir}/js/date
 %{pear_hordedir}/js/jquery.mobile
 %{pear_hordedir}/js/map
-%{pear_hordedir}/js/scriptaculous
 %{pear_hordedir}/js/*js
 
 
 %changelog
+* Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-5
+- use Alias for system JS
+
 * Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-4
 - use system scriptaculous
 
