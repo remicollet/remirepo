@@ -6,7 +6,7 @@
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
 Version:      1.1.0
-Release:      1%{?dist}
+Release:      1%{?dist}.1
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
@@ -27,13 +27,13 @@ Requires:     php(api) = %{php_core_api}
 Conflicts:    rrdtool-php
 Provides:     php-pecl(%{pecl_name}) = %{version}%{?pre}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
+Provides:     php-%{pecl_name} = %{version}%{?pre}
+Provides:     php-%{pecl_name}%{?_isa} = %{version}%{?pre}
 
 
-# RPM 4.8
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_dir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
 
 
 %description
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1.1
+- also provides php-rrd
+
 * Sun Aug 12 2012 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Version 1.1.0 (stable), api 1.1.0 (stable)
 
