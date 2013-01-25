@@ -3,7 +3,7 @@
 %global pear_name Text_CAPTCHA
 
 Name:           php-pear-Text-CAPTCHA
-Version:        0.4.3
+Version:        0.4.4
 Release:        1%{?dist}
 Summary:        Generation of CAPTCHAs
 
@@ -11,8 +11,6 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.php.net/package/Text_CAPTCHA
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
-# https://pear.php.net/bugs/19790
-Source1:        LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -37,8 +35,6 @@ computers and humans apart)
 
 %prep
 %setup -q -c
-
-cp %{SOURCE1} LICENSE
 
 cd %{pear_name}-%{version}
 # fix wrong-file-end-of-line-encoding
@@ -83,7 +79,6 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Text/CAPTCHA
@@ -91,5 +86,9 @@ fi
 
 
 %changelog
+* Fri Jan 25 2013 Remi Collet <remi@fedoraproject.org> - 0.4.4-1
+- Version 0.4.4 (alpha) - API 0.4.0 (alpha)
+- LICENSE is now provided by upstream
+
 * Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 0.4.3-1
 - Initial package
