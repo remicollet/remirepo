@@ -16,6 +16,7 @@ License:       ASL 2.0
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Test build requires
 BuildRequires: php-common >= %{php_min_ver}
@@ -89,14 +90,19 @@ cp -rp tests/* %{buildroot}%{_datadir}/tests/%{name}/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.rst CHANGELOG.md composer.json
 %{_datadir}/php/%{lib_name}
 
 %files tests
+%defattr(-,root,root,-)
 %dir %{_datadir}/tests
      %{_datadir}/tests/%{name}
 
 
 %changelog
+* Fri Jan 25 2013 Remi Collet <RPMS@famillecollet.com> 1.1.1-1
+- backport 1.1.1 for remi repo
+
 * Wed Jan 23 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.1-1
 - Initial package
