@@ -87,7 +87,7 @@ fi
 
 %changelog
 * Sat Jan 26 2013 Remi Collet <remi@fedoraproject.org> - 0.4.5-1
-- Version 0.4.4 (alpha) - API 0.4.0 (alpha) - no change
+- Version 0.4.5 (alpha) - API 0.4.0 (alpha) - no change
 
 * Fri Jan 25 2013 Remi Collet <remi@fedoraproject.org> - 0.4.4-1
 - Version 0.4.4 (alpha) - API 0.4.0 (alpha)
