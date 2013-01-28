@@ -61,14 +61,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201301230630
+%global snapdate      201301281030
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.12.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.13.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1199,10 +1199,13 @@ export SKIP_ONLINE_TESTS=1
 unset TZ LANG LC_ALL
 if ! make test; then
   set +x
-  for f in `find .. -name \*.diff -type f -print`; do
-    echo "TEST FAILURE: $f --"
-    cat "$f"
-    echo "-- $f result ends."
+  for f in $(find .. -name \*.diff -type f -print); do
+    if ! grep -q XFAIL "${f/.diff/.phpt}"
+    then
+      echo "TEST FAILURE: $f --"
+      cat "$f"
+      echo -e "\n-- $f result ends."
+    fi
   done
   set -x
   #exit 1
@@ -1640,6 +1643,10 @@ fi
 
 
 %changelog
+* Mon Jan 28 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.13-201301281030
+- new snapshot
+- don't display XFAIL tests in report
+
 * Wed Jan 23 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.12-201301230630
 - new snapshot, alpha4
 
