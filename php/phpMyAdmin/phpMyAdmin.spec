@@ -1,7 +1,7 @@
 #global prever rc1
 
 Name: phpMyAdmin
-Version: 3.5.5
+Version: 3.5.6
 Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -17,6 +17,7 @@ Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/toba-0.2.zip
 Source13: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.4.zip
 Source14: http://downloads.sourceforge.net/sourceforge/phpmyadmin/blueorange-1.0b.zip
 Source15: http://downloads.sourceforge.net/sourceforge/phpmyadmin/cleanstrap-1.0.zip
+Source16: http://downloads.sourceforge.net/sourceforge/phpmyadmin/metro-1.0.zip
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -65,7 +66,7 @@ grep '^define' libraries/vendor_config.php
 # to avoid rpmlint warnings
 find . -name \*.php -exec chmod -x {} \;
 
-for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14} %{SOURCE15}
+for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14} %{SOURCE15} %{SOURCE16}
 do
     %{__unzip} -q $archive -d themes
 done
@@ -125,6 +126,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Mon Jan 28 2013 Remi Collet <rpms@famillecollet.com> 3.5.6-1
+- Upstream released 3.5.6 (bugfix)
+- add theme metro 1.0
+
 * Thu Dec 20 2012 Remi Collet <rpms@famillecollet.com> 3.5.5-1
 - Upstream released 3.5.5 (bugfix)
 - add theme cleanstrap 1.0
