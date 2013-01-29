@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mime-Viewer
-Version:        2.0.2
-Release:        3%{?dist}
+Version:        2.0.3
+Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
 
 Group:          Development/Libraries
@@ -125,6 +125,9 @@ fi
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+- Update to 2.0.3 for remi repo
+
 * Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-3
 - use Alias for system JS
 
