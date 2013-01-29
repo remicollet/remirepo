@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Prefs
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Preferences API
 
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.2.0-1
+- Update to 2.2.0 for remi repo
+
 * Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.0-1
 - Update to 2.1.0 for remi repo
 - use local script instead of find_lang
