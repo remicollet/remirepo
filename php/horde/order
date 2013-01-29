@@ -3,13 +3,11 @@ pear.horde.org Horde_Icalendar   2.0.2 (stable) 2.0.3 (stable) 98kB
 pear.horde.org Horde_Image       2.0.2 (stable) 2.0.3 (stable) 753kB
 pear.horde.org Horde_Itip        2.0.2 (stable) 2.0.3 (stable) 34kB
 pear.horde.org Horde_Ldap        2.0.1 (stable) 2.0.2 (stable) 62kB
-pear.horde.org Horde_Mime        2.0.2 (stable) 2.0.3 (stable) 89kB
 pear.horde.org Horde_Mime_Viewer 2.0.2 (stable) 2.0.3 (stable) 153kB
 pear.horde.org Horde_Perms       2.0.2 (stable) 2.0.3 (stable) 37kB
 pear.horde.org Horde_Prefs       2.1.0 (stable) 2.2.0 (stable) 52kB
 pear.horde.org Horde_Rpc         2.0.2 (stable) 2.0.3 (stable) 61kB
 pear.horde.org Horde_Timezone    1.0.1 (stable) 1.0.2 (stable) 19.6kB
-pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
 
 
 01 php-horde-Horde-Autoloader   =   2.0.1
@@ -19,7 +17,7 @@ pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
 05 php-horde-Horde-Exception    =   2.0.2   => Translation
 06 php-horde-Horde-Support      =   2.0.3   => Exception, Stream_Wrapper
 07 php-horde-Horde-Cli          =   2.0.3   => Support, Translation
-08 php-horde-Horde-Url          =   2.0.1   => Exception
+08 php-horde-Horde-Url          =   2.1.0   => Exception
 09 php-horde-Horde-Nls          =   2.0.2   => Util, Translation
 10 php-horde-Horde-Date         =   2.0.3   => Nls, Translation, Exception, Util
 11 php-horde-Horde-Http         =   2.0.1   => Exception, Support
@@ -53,7 +51,7 @@ pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
 38 php-horde-Horde-Controller       2.0.1   =>           Exception, Injector, Log, Support, Util
 39 php-horde-Horde-View             2.0.1   => BR(Controller), Exception, Support, Util
 40 php-horde-Horde-Mail             2.0.3   =>           Exception, Mime, Stream-Filter
-41 php-horde-Horde-Mime             2.0.2   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
+41 php-horde-Horde-Mime             2.0.3   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 42 php-horde-Horde-Perms            2.0.2   => BR(Group), Db, Exception, Group, Util, Translation
 43 php-horde-Horde-Prefs            2.1.0   => BR(Db),   Exception, Mime, Translation, Util
 44 php-horde-Horde-Vfs              2.0.4   => BR(Db),   Exception, Translation, Util
