@@ -3,11 +3,11 @@
 %global pear_name    Horde_Icalendar
 %global pear_channel pear.horde.org
 
-# Need investigation
+# Need investigation (only fail in mock)
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Icalendar
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        iCalendar API
 
@@ -129,6 +129,9 @@ fi
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+- Update to 2.0.3 for remi repo
+
 * Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - use local script instead of find_lang
