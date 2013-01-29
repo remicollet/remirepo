@@ -1,5 +1,4 @@
 pear.horde.org Horde_Core        2.1.5 (stable) 2.1.6 (stable) 1360kB
-pear.horde.org Horde_Date        2.0.2 (stable) 2.0.3 (stable) 58kB
 pear.horde.org Horde_Editor      2.0.1 (stable) 2.0.2 (stable) 718kB
 pear.horde.org Horde_Form        2.0.2 (stable) 2.0.3 (stable) 188kB
 pear.horde.org Horde_Icalendar   2.0.2 (stable) 2.0.3 (stable) 98kB
@@ -26,7 +25,7 @@ pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
 07 php-horde-Horde-Cli          =   2.0.3   => Support, Translation
 08 php-horde-Horde-Url          =   2.0.1   => Exception
 09 php-horde-Horde-Nls          =   2.0.2   => Util, Translation
-10 php-horde-Horde-Date         =   2.0.2   => Nls, Translation, Exception, Util
+10 php-horde-Horde-Date         =   2.0.3   => Nls, Translation, Exception, Util
 11 php-horde-Horde-Http         =   2.0.1   => Exception, Support
 12 php-horde-Horde-Constraint   =   2.0.1
 13 php-horde-Horde-Thrift       =   2.0.1
