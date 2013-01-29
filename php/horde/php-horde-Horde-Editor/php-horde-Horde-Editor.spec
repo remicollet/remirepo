@@ -4,18 +4,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Editor
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Horde Editor API
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# Change path of ckeditor to a subdir of /js
-# See http://bugs.horde.org/ticket/11950
-Patch0:         %{pear_name}-path.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -50,13 +46,13 @@ embedding javascript RTE editors in a web page.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-# Don't install ckeditor, use system one
-# Remove md5sum for patched file
-%patch0 -p1 -b .path
 sed -e '/name="js/d' \
-    -e '/Ckeditor.php/s/md5sum=.*name/name/' \
     ../package.xml >%{name}.xml
 
+if [ ! -d  js/ckeditor ]; then
+   : Check js/ckeditor path
+   exit 1
+fi
 
 %build
 cd %{pear_name}-%{version}
@@ -100,6 +96,10 @@ fi
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+- Update to 2.0.2 for remi repo
+- drop merged patch for http://bugs.horde.org/ticket/11950
+
 * Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - use Alias for system JS
 
