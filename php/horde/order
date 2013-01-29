@@ -1,3 +1,27 @@
+pear.horde.org Horde_Auth        2.0.2 (stable) 2.0.3 (stable) 52kB
+pear.horde.org Horde_Cli         2.0.2 (stable) 2.0.3 (stable) 26kB
+pear.horde.org Horde_Compress    2.0.2 (stable) 2.0.3 (stable) 35kB
+pear.horde.org Horde_Core        2.1.5 (stable) 2.1.6 (stable) 1360kB
+pear.horde.org Horde_Crypt       2.1.1 (stable) 2.1.2 (stable) 140kB
+pear.horde.org Horde_Data        2.0.2 (stable) 2.0.3 (stable) 42kB
+pear.horde.org Horde_Date        2.0.2 (stable) 2.0.3 (stable) 58kB
+pear.horde.org Horde_Editor      2.0.1 (stable) 2.0.2 (stable) 718kB
+pear.horde.org Horde_Form        2.0.2 (stable) 2.0.3 (stable) 188kB
+pear.horde.org Horde_Icalendar   2.0.2 (stable) 2.0.3 (stable) 98kB
+pear.horde.org Horde_Image       2.0.2 (stable) 2.0.3 (stable) 753kB
+pear.horde.org Horde_Itip        2.0.2 (stable) 2.0.3 (stable) 34kB
+pear.horde.org Horde_Ldap        2.0.1 (stable) 2.0.2 (stable) 62kB
+pear.horde.org Horde_Mime        2.0.2 (stable) 2.0.3 (stable) 89kB
+pear.horde.org Horde_Mime_Viewer 2.0.2 (stable) 2.0.3 (stable) 153kB
+pear.horde.org Horde_Perms       2.0.2 (stable) 2.0.3 (stable) 37kB
+pear.horde.org Horde_Prefs       2.1.0 (stable) 2.2.0 (stable) 52kB
+pear.horde.org Horde_Rpc         2.0.2 (stable) 2.0.3 (stable) 61kB
+pear.horde.org Horde_Support     2.0.2 (stable) 2.0.3 (stable) 23kB
+pear.horde.org Horde_Timezone    1.0.1 (stable) 1.0.2 (stable) 19.6kB
+pear.horde.org Horde_Token       2.0.2 (stable) 2.0.3 (stable) 30kB
+pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
+
+
 01 php-horde-Horde-Autoloader   =   2.0.1
 02 php-horde-Horde-Translation  =   2.0.1
 03 php-horde-Horde-Stream-Wrapper = 2.0.1
@@ -19,7 +43,7 @@
 19 php-horde-Horde-Lock             2.0.1   => Exception, Support, (Db, Log)
 20 php-horde-Horde-Cache            2.0.1   => Exception, Util
 ---- with test unit ----
-21 php-horde-Horde-Argv             2.0.3   =>           Exception, Translation
+21 php-horde-Horde-Argv             2.0.4   =>           Exception, Translation
 22 php-horde-Horde-Serialize        2.0.1   =>           Exception, Util
 23 php-horde-Horde-Xml-Wbxml        2.0.1   =>           Util
 24 php-horde-Horde-Stream-Filter    2.0.1
