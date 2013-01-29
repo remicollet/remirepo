@@ -3,12 +3,12 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Timezone
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Timezone library
 
 Group:          Development/Libraries
-# http://bugs.horde.org/ticket/11967 missing COPYING file
+#  missing COPYING file
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
@@ -18,8 +18,9 @@ BuildArch:      noarch
 BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
-# To run unit tests (not ready for 2.1.0 layout, ok in git, wait for 1.0.2)
-# BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -65,6 +66,13 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+%check
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit\
+    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -79,6 +87,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Timezone
 %{pear_phpdir}/Horde/Timezone.php
@@ -86,5 +95,10 @@ fi
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
+- Update to 1.0.2 for remi repo
+- license now provided http://bugs.horde.org/ticket/11967
+- new test layout
+
 * Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Initial package
