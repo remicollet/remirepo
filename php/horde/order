@@ -1,4 +1,3 @@
-pear.horde.org Horde_Perms       2.0.2 (stable) 2.0.3 (stable) 37kB
 pear.horde.org Horde_Prefs       2.1.0 (stable) 2.2.0 (stable) 52kB
 pear.horde.org Horde_Rpc         2.0.2 (stable) 2.0.3 (stable) 61kB
 
@@ -45,7 +44,7 @@ pear.horde.org Horde_Rpc         2.0.2 (stable) 2.0.3 (stable) 61kB
 39 php-horde-Horde-View             2.0.1   => BR(Controller), Exception, Support, Util
 40 php-horde-Horde-Mail             2.0.3   =>           Exception, Mime, Stream-Filter
 41 php-horde-Horde-Mime             2.0.3   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
-42 php-horde-Horde-Perms            2.0.2   => BR(Group), Db, Exception, Group, Util, Translation
+42 php-horde-Horde-Perms            2.0.3   => BR(Group), Db, Exception, Group, Util, Translation
 43 php-horde-Horde-Prefs            2.1.0   => BR(Db),   Exception, Mime, Translation, Util
 44 php-horde-Horde-Vfs              2.0.4   => BR(Db),   Exception, Translation, Util
 45 php-horde-Horde-Compress         2.0.3   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
