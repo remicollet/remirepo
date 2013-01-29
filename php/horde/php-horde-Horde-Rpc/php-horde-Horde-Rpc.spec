@@ -7,7 +7,7 @@
 # so, don't run it during rpmbuild
 
 Name:           php-horde-Horde-Rpc
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde RPC API
 
@@ -132,6 +132,9 @@ fi
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3 for remi repo
+
 * Thu Dec 27 2012 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - don't use find_lang
