@@ -1,4 +1,3 @@
-pear.horde.org Horde_Cli         2.0.2 (stable) 2.0.3 (stable) 26kB
 pear.horde.org Horde_Compress    2.0.2 (stable) 2.0.3 (stable) 35kB
 pear.horde.org Horde_Core        2.1.5 (stable) 2.1.6 (stable) 1360kB
 pear.horde.org Horde_Crypt       2.1.1 (stable) 2.1.2 (stable) 140kB
@@ -27,7 +26,7 @@ pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
 04 php-horde-Horde-Util         =   2.0.3
 05 php-horde-Horde-Exception    =   2.0.2   => Translation
 06 php-horde-Horde-Support      =   2.0.2   => Exception, Stream_Wrapper
-07 php-horde-Horde-Cli          =   2.0.2   => Support, Translation
+07 php-horde-Horde-Cli          =   2.0.3   => Support, Translation
 08 php-horde-Horde-Url          =   2.0.1   => Exception
 09 php-horde-Horde-Nls          =   2.0.2   => Util, Translation
 10 php-horde-Horde-Date         =   2.0.2   => Nls, Translation, Exception, Util
