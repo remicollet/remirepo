@@ -1,5 +1,4 @@
 pear.horde.org Horde_Core        2.1.5 (stable) 2.1.6 (stable) 1360kB
-pear.horde.org Horde_Crypt       2.1.1 (stable) 2.1.2 (stable) 140kB
 pear.horde.org Horde_Data        2.0.2 (stable) 2.0.3 (stable) 42kB
 pear.horde.org Horde_Date        2.0.2 (stable) 2.0.3 (stable) 58kB
 pear.horde.org Horde_Editor      2.0.1 (stable) 2.0.2 (stable) 718kB
@@ -66,7 +65,7 @@ pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
 44 php-horde-Horde-Vfs              2.0.4   => BR(Db),   Exception, Translation, Util
 45 php-horde-Horde-Compress         2.0.3   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
 46 php-horde-Horde-History          2.0.1   => BR(Db),   Db, Exception
-47 php-horde-Horde-Crypt            2.1.1   =>           Exception, Mime, Stream-Filter, Translation, Util
+47 php-horde-Horde-Crypt            2.1.2   =>           Exception, Mime, Stream-Filter, Translation, Util
 48 php-horde-Horde-Notification     2.0.1   =>          Exception, Util
 49 php-horde-Horde-Icalendar        2.0.2   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
 50 php-horde-Horde-Stream       =   1.2.0   =>           Exception

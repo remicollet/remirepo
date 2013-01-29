@@ -7,7 +7,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Crypt
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Horde Cryptography API
 
@@ -133,8 +133,11 @@ fi
 
 
 %changelog
-* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.2-1
+- Update to 2.1.2 for remi repo
+
+* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.1-1
+- Update to 2.1.1 for remi repo
 - use local script instead of find_lang
 - new test layout (requires Horde_Test 2.1.0)
 - add option for test (can't be run in mock)
