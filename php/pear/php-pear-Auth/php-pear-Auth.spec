@@ -128,7 +128,7 @@ fi
 - rebuild
 
 * Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 1.6.4-1
-- Updated to 1.6.2 (stable), API 1.5.0 (stable)
+- Updated to 1.6.4 (stable), API 1.5.0 (stable)
 - add link to upstream bugs
   https://pear.php.net/bugs/19805 : missing LICENSE
   https://pear.php.net/bugs/19806 : md5.js
