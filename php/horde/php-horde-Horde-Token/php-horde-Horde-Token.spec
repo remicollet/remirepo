@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Token
-Version:        2.0.2
-Release:        2%{?dist}
+Version:        2.0.3
+Release:        1%{?dist}
 Summary:        Horde Token API
 
 Group:          Development/Libraries
@@ -122,6 +122,9 @@ fi
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+- Update to 2.0.3 for remi repo
+
 * Tue Jan 15 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
 - fix include_path to run test in mock
 

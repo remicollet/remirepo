@@ -10,7 +10,6 @@ pear.horde.org Horde_Prefs       2.1.0 (stable) 2.2.0 (stable) 52kB
 pear.horde.org Horde_Rpc         2.0.2 (stable) 2.0.3 (stable) 61kB
 pear.horde.org Horde_Support     2.0.2 (stable) 2.0.3 (stable) 23kB
 pear.horde.org Horde_Timezone    1.0.1 (stable) 1.0.2 (stable) 19.6kB
-pear.horde.org Horde_Token       2.0.2 (stable) 2.0.3 (stable) 30kB
 pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
 
 
@@ -43,7 +42,7 @@ pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
 26 php-horde-Horde-Text-Flowed      2.0.1   =>           Util
 27 php-horde-Horde-Db               2.0.1   => BR(Cache), Date, Exception, Support
 28 php-horde-Horde-Auth             2.0.3   => BR(Db),   Exception, Util
-29 php-horde-Horde-Token            2.0.2   => BR(Db, Url), Exception, Translation, Url, Util
+29 php-horde-Horde-Token            2.0.3   => BR(Db, Url), Exception, Translation, Url, Util
 30 php-horde-Horde-Template         2.0.1
 31 php-horde-Horde-Xml-Element      2.0.1   =>           Exception
 32 php-horde-Horde-Alarm            2.0.3   => BR(Date), Date, Exception, Translation
