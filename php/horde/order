@@ -1,5 +1,4 @@
 pear.horde.org Horde_Core        2.1.5 (stable) 2.1.6 (stable) 1360kB
-pear.horde.org Horde_Data        2.0.2 (stable) 2.0.3 (stable) 42kB
 pear.horde.org Horde_Date        2.0.2 (stable) 2.0.3 (stable) 58kB
 pear.horde.org Horde_Editor      2.0.1 (stable) 2.0.2 (stable) 718kB
 pear.horde.org Horde_Form        2.0.2 (stable) 2.0.3 (stable) 188kB
@@ -78,7 +77,7 @@ pear.horde.org Horde_Url         2.0.1 (stable) 2.1.0 (stable) 15.5kB
 57 php-horde-Horde-Mime-Viewer  *   2.0.2   => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
 58 php-horde-Horde-Itip             2.0.2   => BR(Icalendar), Icalendar, Mime
 59 ...Horde-Text-Filter-Csstidy *   2.0.1   =>           Text-Filter
-60 php-horde-Horde-Data             2.0.2   =>           Browser, Exception, Icalendar, Mime, Translation, Util
+60 php-horde-Horde-Data             2.0.3   =>           Browser, Exception, Icalendar, Mime, Translation, Util
 61 php-horde-Horde-SyncMl           2.0.2   =>           Date, ICalandar, Log, Support, Util, Xml_Wbxml, Translation
 62 php-horde-Horde-Core         +   2.1.5   => BR(Role, Url, Injector, Group)
 63 php-horde-Horde-Form             2.0.2   =>           Core, Date, Exception, Mime, Nls, Token, Translation, Util
