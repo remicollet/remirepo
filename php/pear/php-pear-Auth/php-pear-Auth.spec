@@ -3,22 +3,26 @@
 
 Name:           php-pear-Auth
 Version:        1.6.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Authentication provider for PHP
 Group:          Development/Libraries
 License:        PHP
 URL:            http://pear.php.net/package/Auth
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
-#Patch0:         %{name}-1.6.1-md5sum.patch
+# https://pear.php.net/bugs/19805
+Source1:        PHP-LICENSE-3.01
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.4.9-1.2
+BuildRequires:  php-pear
 
-Provides:        php-pear(%{pear_name}) = %{version}
 Requires:        php-pear(Net_POP3) >= 1.3.0
 Requires:        php-imap
 Requires:        php-ldap
+Requires:        php-pcre
+Requires:        php-session
 Requires:        php-soap
+Requires:        php-xml
 Requires:        php-pear(DB) >= 1.6.0
 Requires:        php-pear(File_Passwd) >= 1.1.0
 Requires:        php-pear(HTTP_Client) >= 1.1.0
@@ -26,6 +30,8 @@ Requires:        php-pear(Log) >= 1.9.10
 Requires:        php-pear(Net_POP3) >= 1.3.0
 Requires:        php-pear(MDB2) >= 2.0
 Requires:        php-pear(SOAP) >= 0.9.0
+
+Provides:        php-pear(%{pear_name}) = %{version}
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -52,38 +58,39 @@ Requires:       %{name} = %{version}-%{release}
 %description radius
 This package adds a RADIUS container for the PHP Auth system.
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
+
+cp %{SOURCE1} LICENSE
+
 cd %{pear_name}-%{version}
 
-# Fix end of line encodings
-# %patch0 -p0 -b .md5sum
-%{__sed} -i 's/\r//' README.Auth
-
+# https://pear.php.net/bugs/19806
 sed -e '/md5.js/s/role="data"/role="php"/' \
-    -i %{pear_name}.xml
+    ../package.xml >%{pear_name}.xml
 
 
 %build
 cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
+
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --offline --nodeps --installroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --force --nodeps --installroot %{buildroot} %{pear_name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
+
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -99,6 +106,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc LICENSE
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
 %{pear_phpdir}/%{pear_name}*
@@ -114,7 +122,18 @@ fi
 %defattr(-,root,root,-)
 %{pear_phpdir}/%{pear_name}/Container/RADIUS.php
 
+
 %changelog
+* Tue Jan 29 2013 Remi Collet <rpms@fedoraproject.org> - 1.6.4-2
+- rebuild
+
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 1.6.4-1
+- Updated to 1.6.2 (stable), API 1.5.0 (stable)
+- add link to upstream bugs
+  https://pear.php.net/bugs/19805 : missing LICENSE
+  https://pear.php.net/bugs/19806 : md5.js
+- doc in /usr/share/doc/pear
+
 * Tue Aug 21 2012 Remi Collet <remi@fedoraproject.org> - 1.6.4-1
 - update to 1.6.4 for remi repo
 - move doc to /usr/share/doc/pear
