@@ -7,7 +7,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Url
-Version:        2.0.1
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Url class
 
@@ -97,6 +97,9 @@ fi
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.0-1
+- Update to 2.1.0 for remi repo
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
