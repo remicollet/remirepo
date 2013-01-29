@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.1.5
-Release:        5%{?dist}
+Version:        2.1.6
+Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
@@ -253,6 +253,9 @@ fi
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.6-1
+- Update to 2.1.6 for remi repo
+
 * Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-5
 - use Alias for system JS
 
