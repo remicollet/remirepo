@@ -13,6 +13,7 @@ License:        MIT
 URL:            https://github.com/ircmaxell/password_compat
 Source0:        https://github.com/ircmaxell/%{real_name}/archive/%{commit}/%{real_name}-%{version}-%{shortcommit}.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
@@ -51,6 +52,7 @@ cd test
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE.md README.md composer.json
 %dir %{_datadir}/php/%{real_name}
 %{_datadir}/php/%{real_name}/*
@@ -60,6 +62,9 @@ cd test
 
 
 %changelog
+* Tue Jan 29 2013 Remi Collet <rpms@fedoraproject.org> - 1.0.0-4.git5815cf
+- backport for remi repo
+
 * Tue Jan 29 2013 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.0.0-4.git5815cf
 - License was not incorrect...
 - Directory not owned
