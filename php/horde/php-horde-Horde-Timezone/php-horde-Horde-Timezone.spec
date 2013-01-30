@@ -10,7 +10,7 @@ Summary:        Timezone library
 Group:          Development/Libraries
 #  missing COPYING file
 License:        LGPLv2
-URL:            http://pear.horde.org
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -35,7 +35,7 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Icalendar) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
 
-Provides:       php-pear(%{pear_channel}/Horde_Timezone) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -91,11 +91,11 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Timezone
 %{pear_phpdir}/Horde/Timezone.php
-%{pear_testdir}/Horde_Timezone
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
-* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.0.2-1
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2 for remi repo
 - license now provided http://bugs.horde.org/ticket/11967
 - new test layout
