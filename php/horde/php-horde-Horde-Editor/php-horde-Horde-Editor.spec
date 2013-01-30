@@ -96,7 +96,7 @@ fi
 
 
 %changelog
-* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - drop merged patch for http://bugs.horde.org/ticket/11950
 
