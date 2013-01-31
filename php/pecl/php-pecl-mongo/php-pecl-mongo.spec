@@ -4,7 +4,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.3.3
+Version:      1.3.4
 Release:      1%{?dist}.1
 License:      ASL 2.0
 Group:        Development/Languages
@@ -133,8 +133,11 @@ fi
 
 
 %changelog
+* Thu Jan 31 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.3.4-1
+- update to 1.3.4
+
 * Wed Jan 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.3.3-1
-- update to 1.3.2
+- update to 1.3.3
 
 * Wed Dec 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.3.2-1
 - update to 1.3.2
@@ -193,7 +196,7 @@ fi
 * Fri Aug 19 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.3-1
 - update to 1.2.3
 
-* Mon Jul 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.1-1
+* Sun Jul 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.2.1-1
 - rebuild for remi repo
 
 * Sun Jul 17 2011 Christof Damian <christof@damian.net> - 1.2.1-1
