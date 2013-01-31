@@ -1756,7 +1756,7 @@ fi
 * Fri Jul 20 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-1
 - update to 5.4.5
 
-* Sat Jul 05 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-0.2.RC1
+* Sat Jul 07 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-0.2.RC1
 - update patch for system libzip
 
 * Wed Jul 04 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-0.1.RC1
@@ -1915,7 +1915,7 @@ fi
 * Mon Apr  4 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-3
 - enable mhash extension (emulated by hash extension)
 
-* Wed Mar 29 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-2
+* Tue Mar 29 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-2
 - fix relocated (php53) build
 
 * Thu Mar 17 2011 Remi Collet <Fedora@famillecollet.com> 5.3.6-1
@@ -1971,10 +1971,10 @@ fi
 - add php-fpm sub-package
 - systzdata-v7.patch
 
-* Tue Apr 26 2010 Remi Collet <rpms@famillecollet.com> 5.3.2-2
+* Tue Apr 27 2010 Remi Collet <rpms@famillecollet.com> 5.3.2-2
 - garbage collector upstream  patches
 
-* Thu Mar  5 2010 Remi Collet <rpms@famillecollet.com> 5.3.2-1.###.remi
+* Fri Mar  5 2010 Remi Collet <rpms@famillecollet.com> 5.3.2-1.###.remi
 - update to 5.3.2
 
 * Wed Feb 24 2010 Remi Collet <rpms@famillecollet.com> 5.3.2-0.2.RC3.###.remi
@@ -2092,7 +2092,7 @@ fi
 - (re)enable mime-magic
 - use bundled GD (build fails with system one)
 
-* Tue Aug 20 2008 Remi Collet <rpms@famillecollet.com> 5.3.0-0.1.alpha2-dev.200808200630.fc9.remi
+* Wed Aug 20 2008 Remi Collet <rpms@famillecollet.com> 5.3.0-0.1.alpha2-dev.200808200630.fc9.remi
 - new snapshot (5.3.0alpha2-dev)
 - use system GD instead of bundled GD when >= 2.0.35 (Fedora >= 6)
 
@@ -2152,7 +2152,7 @@ fi
 * Fri Jul 18 2008 Remi Collet <rpms@famillecollet.com> 5.3.0-0.dev.200807181430.fc9.remi
 - first 5.3.0 build
 
-* Sat May 11 2008 Remi Collet <rpms@famillecollet.com> 5.2.6-2.###.remi
+* Sun May 11 2008 Remi Collet <rpms@famillecollet.com> 5.2.6-2.###.remi
 - sync with rawhide (add php-pspell)
 
 * Thu May  8 2008 Joe Orton <jorton@redhat.com> 5.2.6-2
@@ -2345,7 +2345,7 @@ fi
 * Sun Aug 20 2006 Remi Collet <rpms@famillecollet.com> 5.1.5-1.fc{3,4,5}.remi
 - update to 5.1.5
 
-* Sat Jul 24 2006 Remi Collet <rpms@famillecollet.com> 5.1.4-3.fc{3,4,5}.remi
+* Mon Jul 24 2006 Remi Collet <rpms@famillecollet.com> 5.1.4-3.fc{3,4,5}.remi
 - path to install libmbfl headers : http://bugs.php.net/bug.php?id=37103
 
 * Sat Jun 24 2006 Remi Collet <rpms@famillecollet.com> 5.1.4-2.fc{3,4,5}.remi

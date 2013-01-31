@@ -1837,7 +1837,7 @@ fi
 * Fri Jul 20 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-1
 - update to 5.4.5
 
-* Sat Jul 05 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-0.2.RC1
+* Sat Jul 07 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-0.2.RC1
 - update patch for system libzip
 
 * Wed Jul 04 2012 Remi Collet <RPMS@famillecollet.com> 5.4.5-0.1.RC1
