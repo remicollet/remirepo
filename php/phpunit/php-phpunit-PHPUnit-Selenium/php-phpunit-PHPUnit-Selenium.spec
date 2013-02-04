@@ -92,7 +92,7 @@ fi
 
 %changelog
 * Mon Feb 04 2013 Remi Collet <remi@fedoraproject.org> - 1.2.12-1
-- Update to 1.2.12
+- Version 1.2.12 (stable) - API 1.2.1 (stable)
 
 * Mon Dec 10 2012 Remi Collet <remi@fedoraproject.org> - 1.2.11-1
 - Version 1.2.11 (stable) - API 1.2.1 (stable)
