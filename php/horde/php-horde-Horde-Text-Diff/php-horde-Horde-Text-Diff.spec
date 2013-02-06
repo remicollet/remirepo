@@ -94,6 +94,7 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
+%dir %{pear_phpdir}/Horde/Text
 %{pear_phpdir}/Horde/Text/Diff
 %{pear_phpdir}/Horde/Text/Diff.php
 %{pear_testdir}/%{pear_name}
