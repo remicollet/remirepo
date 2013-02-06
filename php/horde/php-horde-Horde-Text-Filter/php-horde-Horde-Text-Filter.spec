@@ -29,7 +29,6 @@ BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
-Requires:       php-tidy
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
