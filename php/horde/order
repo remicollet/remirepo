@@ -14,23 +14,23 @@
 14 php-horde-Horde-Scribe       =   2.0.1   => Thrift
 15 php-horde-Horde-Log          =   2.0.1   => Constraint, Exception, Scribe
 16 php-horde-Horde-Test         =   2.1.0   => Support, Util, Cli, Log
-17 php-horde-Horde-Image            2.0.3   => Exception, Support, Translation, Util
+17 php-horde-Horde-Image        ?   2.0.3   => Exception, Support, Translation, Util
 18 php-horde-Horde-Browser      =   2.0.3   => Exception, Util
-19 php-horde-Horde-Lock             2.0.1   => Exception, Support, (Db, Log)
+19 php-horde-Horde-Lock         ?   2.0.1   => Exception, Support, (Db, Log)
 20 php-horde-Horde-Cache        =   2.0.1   => Exception, Util
 ---- with test unit ----
-21 php-horde-Horde-Argv             2.0.4   =>           Exception, Translation
-22 php-horde-Horde-Serialize        2.0.1   =>           Exception, Util
-23 php-horde-Horde-Xml-Wbxml        2.0.1   =>           Util
-24 php-horde-Horde-Stream-Filter    2.0.1
-25 php-horde-Horde-LoginTasks       2.0.2   => BR(Date), Date, Translation
+21 php-horde-Horde-Argv         ?   2.0.4   =>           Exception, Translation
+22 php-horde-Horde-Serialize    ?   2.0.1   =>           Exception, Util
+23 php-horde-Horde-Xml-Wbxml    *   2.0.1   =>           Util
+24 ...-Horde-Stream-Filter      ?   2.0.1
+25 php-horde-Horde-LoginTasks   ?   2.0.2   => BR(Date), Date, Translation
 26 php-horde-Horde-Text-Flowed      2.0.1   =>           Util
 27 php-horde-Horde-Db               2.0.1   => BR(Cache), Date, Exception, Support
 28 php-horde-Horde-Auth             2.0.3   => BR(Db),   Exception, Util
 29 php-horde-Horde-Token            2.0.3   => BR(Db, Url), Exception, Translation, Url, Util
 30 php-horde-Horde-Template         2.0.1
-31 php-horde-Horde-Xml-Element      2.0.1   =>           Exception
-32 php-horde-Horde-Alarm            2.0.3   => BR(Date), Date, Exception, Translation
+31 php-horde-Horde-Xml-Element  *   2.0.1   =>           Exception
+32 php-horde-Horde-Alarm        ?   2.0.3   => BR(Date), Date, Exception, Translation
 33 php-horde-Horde-Text-Diff        2.0.1   =>           Exception, Util
 34 php-horde-Horde-Text-Filter      2.0.4   =>           Exception, Util
 35 php-horde-Horde-Group            2.0.1   => BR(Db),   Exception, Util
@@ -84,7 +84,8 @@ php-horde-ingo (Filters)        +   3.0.2
 
 TODO content
 
-+ : in progress
++ : in progress (not yet submitted)
+? : under review (by remi)
 * : submitted by remi
 **: approved but not yet imported
   : submitted by nb
