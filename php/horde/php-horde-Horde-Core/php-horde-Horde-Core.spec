@@ -45,7 +45,7 @@ Requires:       php-sockets
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Alarm) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
