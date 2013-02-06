@@ -5,17 +5,18 @@
 
 Name:           php-horde-Horde-Xml-Wbxml
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Provides an API for encoding and decoding WBXML documents
 
 Group:          Development/Libraries
-License:        LGPLv2+
-URL:            http://pear.horde.org
+License:        LGPLv2
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
@@ -25,7 +26,8 @@ BuildRequires:  libwbxml
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
@@ -52,6 +54,7 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 PHPRC=../php.ini %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -71,6 +74,10 @@ phpunit\
     .
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -86,17 +93,21 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
+%dir %{pear_phpdir}/Horde/Xml
 %{pear_phpdir}/Horde/Xml/Wbxml
 %{pear_phpdir}/Horde/Xml/Wbxml.php
 %{pear_testdir}/%{pear_name}
 
 
 %changelog
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Wed Feb  6 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- cleanups for review
 
-* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
+
+* Thu Nov  1 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.3-1
 - Initial package
