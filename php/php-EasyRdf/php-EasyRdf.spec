@@ -2,6 +2,15 @@
 # lib/EasyRdf/Parser/Json.php are conditional
 %global php_min_ver 5.2.8
 
+%if 0%{?fedora} > 9 || 0%{?rhel} > 5
+%global with_test 1
+%else
+# need raptor 1.4.17
+%global with_test 0
+%endif
+
+# TODO see for php-redland not yet available in remirepo
+
 Name:          php-EasyRdf
 Version:       0.7.2
 Release:       3%{?dist}
@@ -12,29 +21,32 @@ License:       BSD
 URL:           http://www.easyrdf.org
 Source0:       %{url}/downloads/easyrdf-%{version}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-BuildRequires: php-common >= %{php_min_ver}
+BuildRequires: php(language) >= %{php_min_ver}
+%if %{with_test}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires: graphviz-gd
-BuildRequires: raptor
+BuildRequires: graphviz
+BuildRequires: raptor >= 1.4.17
 # phpci
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-dom
 BuildRequires: php-json
 BuildRequires: php-pcre
-BuildRequires: php-redland
+#BuildRequires: php-redland
 BuildRequires: php-spl
 BuildRequires: php-xml
+%endif
 
-Requires:      php-common >= %{php_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 # phpci requires
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-dom
 Requires:      php-json
 Requires:      php-pcre
-Requires:      php-redland
+#Requires:      php-redland
 Requires:      php-spl
 Requires:      php-xml
 
@@ -129,23 +141,38 @@ sed 's/testSerialiseSvg/SKIP_TEST_testSerialiseSvg/' \
     -i test/EasyRdf/Serialiser/GraphVizTest.php
 %endif
 
+%if %{with_test}
+: graphviz have optional gif support
+sed 's/testSerialiseGif/SKIP_TEST_testSerialiseGif/' \
+    -i test/EasyRdf/Serialiser/GraphVizTest.php
+
 make test-lib
+%else
+: test suite disabled
+%endif
 
 
 %files
+%defattr(-,root,root,-)
 %doc *.md composer.json
 %{_datadir}/php/EasyRdf.php
 %{_datadir}/php/EasyRdf
 
 %files doc
+%defattr(-,root,root,-)
 %doc LICENSE.md docs examples
 
 %files test
+%defattr(-,root,root,-)
 %dir %{_datadir}/tests
      %{_datadir}/tests/%{name}
 
 
 %changelog
+* Thu Feb  7 2013 Remi Collet <remi@fedoraproject.org> - 0.7.2-3
+- backport 0.7.2 for remi repo.
+- disable tests on RHEL-5 (requires raptor 1.4.17)
+
 * Mon Feb 04 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.7.2-3
 - Added note in %%description about optional dependencies
 - Temporarily skip "EasyRdf_Serialiser_GraphVizTest::testSerialiseSvg" test
