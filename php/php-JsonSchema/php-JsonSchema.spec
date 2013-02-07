@@ -1,17 +1,21 @@
-%global lib_name    JsonSchema
-%global github_name json-schema
+%global github_owner   justinrainbow
+%global github_name    json-schema
+%global github_version 1.2.4
+%global github_commit  e26066573e11fef790ec9bdfaf7c98ccf35728d9
 
-%global php_min_ver 5.3.0
+%global php_min_ver    5.3.3
 
-Name:      php-%{lib_name}
-Version:   1.2.2
-Release:   2%{?dist}
-Summary:   PHP implementation of JSON schema
+%global lib_name       JsonSchema
 
-Group:     Development/Libraries
-License:   BSD
-URL:       https://github.com/justinrainbow/%{github_name}
-Source0:   %{url}/archive/%{version}.tar.gz
+Name:          php-%{lib_name}
+Version:       %{github_version}
+Release:       1%{?dist}
+Summary:       PHP implementation of JSON schema
+
+Group:         Development/Libraries
+License:       BSD
+URL:           https://github.com/%{github_owner}/%{github_name}
+Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -19,21 +23,21 @@ BuildArch: noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 # Test build requires: phpci
-BuildRequires:  php-ctype
-BuildRequires:  php-curl
-BuildRequires:  php-json
-BuildRequires:  php-pcre
-BuildRequires:  php-spl
+BuildRequires: php-ctype
+BuildRequires: php-curl
+BuildRequires: php-json
+BuildRequires: php-pcre
+BuildRequires: php-spl
 BuildRequires: php-filter
 
-Requires:  php(language) >= %{php_min_ver}
-# phpci requires
-Requires:  php-ctype
-Requires:  php-curl
-Requires:  php-json
-Requires:  php-pcre
-Requires:  php-spl
-Requires:  php-filter
+Requires:      php(language) >= %{php_min_ver}
+# phpci
+Requires:      php-ctype
+Requires:      php-curl
+Requires:      php-json
+Requires:      php-pcre
+Requires:      php-spl
+Requires:      php-filter
 
 %description
 A PHP implementation for validating JSON structures against a given schema.
@@ -42,12 +46,12 @@ See http://json-schema.org for more details.
 
 
 %prep
-%setup -q -n %{github_name}-%{version}
+%setup -q -n %{github_name}-%{github_commit}
 
 # Clean up unnecessary files
 find . -type f -name '.git*' -delete
 
-# Create PSR-0 autoloader for tests
+# Create autoloader for tests
 ( cat <<'AUTOLOAD'
 <?php
 spl_autoload_register(function ($class) {
@@ -68,8 +72,11 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %check
-%{_bindir}/phpunit --bootstrap=autoload.php -d date.timezone="UTC" \
-    -d include_path="src:tests:.:/usr/share/pear" .
+%{_bindir}/phpunit \
+    -d include_path="./src:./tests:.:%{pear_phpdir}" \
+    -d date.timezone="UTC" \
+    --bootstrap=./autoload.php \
+    .
 
 
 %files
@@ -79,6 +86,13 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Thu Feb  7 2013 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
+- backport 1.2.4 for remi repo.
+
+* Mon Feb 04 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.2.4-1
+- Updated to upstream version 1.2.4
+- Updates per new Fedora packaging guidelines for Git repos
+
 * Mon Dec 17 2012 Remi Collet <remi@fedoraproject.org> - 1.2.2-2
 - backport for remi repo.
 

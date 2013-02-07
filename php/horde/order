@@ -24,7 +24,7 @@
 23 php-horde-Horde-Xml-Wbxml    *   2.0.1   =>           Util
 24 ...-Horde-Stream-Filter      ?   2.0.1
 25 php-horde-Horde-LoginTasks   ?   2.0.2   => BR(Date), Date, Translation
-26 php-horde-Horde-Text-Flowed      2.0.1   =>           Util
+26 php-horde-Horde-Text-Flowed  ?   2.0.1   =>           Util
 27 php-horde-Horde-Db               2.0.1   => BR(Cache), Date, Exception, Support
 28 php-horde-Horde-Auth             2.0.3   => BR(Db),   Exception, Util
 29 php-horde-Horde-Token            2.0.3   => BR(Db, Url), Exception, Translation, Url, Util
