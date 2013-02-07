@@ -14,11 +14,12 @@ License:          MIT
 URL:              http://guzzlephp.org
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
-Requires:         php-common >= 5.3.2
+Requires:         php(language) >= 5.3.2
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires:         php-pear(pear.symfony.com/EventDispatcher) >= 2.1.0
@@ -36,7 +37,7 @@ Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
-%{?fedora:Requires: php-filter}
+Requires:         php-filter
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -115,12 +116,16 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/%{pear_name}
 
 
 %changelog
+* Thu Feb  7 2013 Remi Collet <remi@fedoraproject.org> - 3.1.2-1
+- backport 3.1.2 for remi repo.
+
 * Mon Feb 04 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 3.1.2-1
 - Updated to upstream version 3.1.2
 - Removed bundled cert
