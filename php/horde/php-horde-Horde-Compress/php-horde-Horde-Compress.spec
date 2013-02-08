@@ -3,12 +3,9 @@
 %global pear_name    Horde_Compress
 %global pear_channel pear.horde.org
 
-# can run test which requires locales to be installed
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
-
 Name:           php-horde-Horde-Compress
 Version:        2.0.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Compression API
 
 Group:          Development/Libraries
@@ -21,11 +18,9 @@ BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
-%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
-%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -91,15 +86,12 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
-%else
-: Test disabled, missing '--with tests' option.
-%endif
 
 
 %post
@@ -124,7 +116,10 @@ fi
 
 
 %changelog
-* Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.3-2
+* Fri Feb  8 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-3
+- fix test script include_path for locale
+
+* Wed Feb  6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.3-2
 - Update for review
 
 * Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
