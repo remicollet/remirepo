@@ -10,7 +10,7 @@
 %endif
 
 Name: mysql
-Version: 5.5.29
+Version: 5.5.30
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -811,6 +811,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Feb  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.30-1
+- update to MySQL 5.5.30 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-30.html
+
 * Wed Jan  2 2013 Tom Lane <tgl@redhat.com> 5.5.29-1
 - Update to MySQL 5.5.29, for various fixes described at
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-29.html
