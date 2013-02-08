@@ -8,11 +8,11 @@
 
 Name:           php-horde-Horde-Compress
 Version:        2.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Compression API
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -124,20 +124,23 @@ fi
 
 
 %changelog
-* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
-- Update to 2.0.3 for remi repo
+* Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.3-2
+- Update for review
 
-* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
+* Wed Jan  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
 - use local script instead of find_lang
 - new test layout (requires Horde_Test 2.1.0)
 - add option for test (can't be run in mock)
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
 
-* Sat Nov  3 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Sat Nov  3 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Mon Jun 25 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.7-2
 - Fix requires
