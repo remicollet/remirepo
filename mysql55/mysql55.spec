@@ -101,9 +101,8 @@ Provides: mysql-client = %{version}-%{release}
 %global __perl_requires %{SOURCE999}
 %global __perllib_requires %{SOURCE999}
 
-# patch utility does automatically back-up of chunks that didn't apply
-# smoothly, but we don't want to create that files because they could be
-# included in RPM incorrectly
+# By default, patch(1) creates backup files when chunks apply with offsets.
+# Turn that off to ensure such files don't get included in RPMs (cf bz#884755).
 %global _default_patch_flags --no-backup-if-mismatch
 
 %description
@@ -812,6 +811,12 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Wed Jan  2 2013 Tom Lane <tgl@redhat.com> 5.5.29-1
+- Update to MySQL 5.5.29, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-29.html
+- Fix inaccurate default for socket location in mysqld-wait-ready
+Resolves: #890535
+
 * Fri Dec 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.29-1
 - update to MySQL 5.5.29 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-29.html

@@ -25,7 +25,7 @@ get_mysql_option(){
 # Defaults here had better match what mysqld_safe will default to
 get_mysql_option mysqld datadir "/var/lib/mysql"
 datadir="$result"
-get_mysql_option mysqld socket "$datadir/mysql.sock"
+get_mysql_option mysqld socket "/var/lib/mysql/mysql.sock"
 socketfile="$result"
 
 # Wait for the server to come up or for the mysqld process to disappear
