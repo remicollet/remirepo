@@ -24,7 +24,7 @@
 %define mysql_vendor_2          Sun Microsystems, Inc.
 %define mysql_vendor            Oracle and/or its affiliates
 
-%define mysql_version   5.5.29
+%define mysql_version   5.5.30
 
 %define mysqld_user     mysql
 %define mysqld_group    mysql
@@ -241,10 +241,10 @@
 Name:           MySQL%{product_suffix}
 Summary:        MySQL: a very fast and reliable SQL database server
 Group:          Applications/Databases
-Version:        5.5.29
+Version:        5.5.30
 Release:        %{release}%{?distro_releasetag:.%{distro_releasetag}}
 Distribution:   %{distro_description}
-License:        Copyright (c) 2000, 2012, %{mysql_vendor}. All rights reserved. Under %{license_type} license as shown in the Description field.
+License:        Copyright (c) 2000, 2013, %{mysql_vendor}. All rights reserved. Under %{license_type} license as shown in the Description field.
 Source:         http://www.mysql.com/Downloads/MySQL-5.5/%{src_dir}.tar.gz
 URL:            http://www.mysql.com/
 Packager:       MySQL Release Engineering <mysql-build@oss.oracle.com>
@@ -370,7 +370,6 @@ For a description of MySQL see the base MySQL RPM or http://www.mysql.com/
 Summary:	MySQL - Shared libraries
 Group:		Applications/Databases
 Provides:	MySQL-shared
-Conflicts:	mysql-libs mysql-libs-advanced
 Obsoletes:	MySQL-shared-standard MySQL-shared-pro
 Obsoletes:	MySQL-shared-pro-cert MySQL-shared-pro-gpl
 Obsoletes:	MySQL-shared-pro-gpl-cert MySQL-shared
