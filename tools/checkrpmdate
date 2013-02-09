@@ -1,42 +1,55 @@
 #!/usr/bin/php
 <?php
-if (!isset($_SERVER['argv'][1])) {
-	die("usage checkrpmdate <specfile>\n");
-}
-if (!file_exists($_SERVER['argv'][1])) {
-	die("File not found\n");
-}
-$text =  file_get_contents($_SERVER['argv'][1]);
-$lines = explode("\n", $text);
+function checkSpec($spec) {
+	printf("+ checking date in %s\n", $spec);
+	
+	$text =  file_get_contents($spec);
+	$lines = explode("\n", $text);
 
-$key = array_search("%changelog", $lines);
-if (!$key) {
-	die("%changelog not found\n");
-}
-$lines = array_slice($lines, $key);
-$nbok = $nbko = 0;
-foreach ($lines as $line) {
-	if (preg_match('/^\* (([[:alpha:]]{3}) ([[:alpha:]]{3}) *([[:digit:]]{1,2}) ([[:digit:]]{4}))/', $line, $reg)) {
-		$d0 = $reg[4].' '.$reg[3].' '.$reg[5];
-		$t  = strtotime($d0);
-		$d1 = date("D M d Y", $t);
-		$d2 = date("D M  j Y", $t);
-		if ($d1 == $reg[1] || $d2 == $reg[1]) {
-			$nbok++;
-		} else {
-			echo $reg[1].": should be $d1\n";
+	$key = array_search("%changelog", $lines);
+	if (!$key) {
+		die("%changelog not found\n");
+	}
+	$lines = array_slice($lines, $key);
+	$nbok = $nbko = 0;
+	foreach ($lines as $line) {
+		if (preg_match('/^\* (([[:alpha:]]{3}) ([[:alpha:]]{3}) *([[:digit:]]{1,2}) ([[:digit:]]{4}))/', $line, $reg)) {
+			$d0 = $reg[4].' '.$reg[3].' '.$reg[5];
+			$t  = strtotime($d0);
+			$d1 = date("D M d Y", $t);
+			$d2 = date("D M  j Y", $t);
+			if ($d1 == $reg[1] || $d2 == $reg[1]) {
+				$nbok++;
+			} else {
+				echo $reg[1].": should be $d1\n";
+				$nbko++;
+			}
+		} else if (substr($line,0,1)=='*') {
+			echo "$line: should start with a date\n";
 			$nbko++;
 		}
-	} else if (substr($line,0,1)=='*') {
-		echo "$line: should start with a date\n";
-		$nbko++;
+	}
+	if (!$nbko) {
+		if ($nbok) {
+			echo "$nbok dates found are ok\n";
+		} else  {
+			echo "No date found\n";
+		}
 	}
 }
-if (!$nbko) {
-	if ($nbok) {
-		echo "$nbok dates found are ok\n";
-	} else  {
-		echo "No date found\n";
+if (isset($_SERVER['argv'][1])
+	&& ($_SERVER['argv'][1]=='-h' || $_SERVER['argv'][1]=='--help')) {
+	die("usage checkrpmdate [ specfile ]\n");
+
+} else if (isset($_SERVER['argv'][1])) {
+	if (file_exists($_SERVER['argv'][1])) {
+		checkSpec($_SERVER['argv'][1]);
+	} else {
+		die("File not found\n");
+	}
+} else {
+	foreach(glob("*.spec") as $file) {
+		checkSpec($file);
 	}
 }
 
