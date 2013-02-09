@@ -5,22 +5,24 @@
 
 Name:           php-horde-Horde-Tree
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Tree API
 
 Group:          Development/Libraries
-License:        GPL+
-URL:            http://pear.horde.org
+License:        LGPLv2
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-spl
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
@@ -82,11 +84,14 @@ fi
 
 
 %changelog
-* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo (no change)
+* Sat Feb  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- cleanups for review
 
-* Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
+
+* Fri Nov  2 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Thu Jun 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.1-1
 - Upgrade to 1.0.1
