@@ -4,17 +4,18 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.5.0
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
@@ -25,7 +26,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-date
 Requires:       php-hash
 Requires:       php-openssl
@@ -103,9 +104,10 @@ done | tee ../%{pear_name}.lang
 
 
 %check
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+phpunit \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
 
@@ -125,6 +127,7 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
+%dir %{pear_phpdir}/Horde/Imap
 %{pear_phpdir}/Horde/Imap/Client
 %{pear_phpdir}/Horde/Imap/Client.php
 %{pear_testdir}/%{pear_name}
@@ -133,49 +136,52 @@ fi
 
 
 %changelog
-* Wed Jan 23 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.5.0-1
-- Update to 2.5.0 for remi repo
+* Sat Feb 09 2013 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- Update to 2.6.0
 
-* Sat Jan  5 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-1
-- Update to 2.4.2 for remi repo
+* Wed Jan 23 2013 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- Update to 2.5.0
 
-* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.1-1
-- Update to 2.4.1 for remi repo
+* Sat Jan  5 2013 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- Update to 2.4.2
 
-* Tue Dec 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.0-1
-- Update to 2.4.0 for remi repo
+* Fri Dec 21 2012 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- Update to 2.4.1
 
-* Sat Dec  8 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.3.2-1
-- Update to 2.3.2 for remi repo
+* Tue Dec 18 2012 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- Update to 2.4.0
 
-* Tue Dec  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.3.0-1
-- Update to 2.3.0 for remi repo
+* Sat Dec  8 2012 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- Update to 2.3.2
 
-* Wed Nov 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.3-1
-- Update to 2.2.3 for remi repo
+* Tue Dec  4 2012 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
 
-* Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.2-1
-- Update to 2.2.2 for remi repo
+* Wed Nov 28 2012 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- Update to 2.2.3
+
+* Tue Nov 27 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- Update to 2.2.2
 - review locale management
 
-* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.1-1
-- Update to 2.2.1 for remi repo
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1
 
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.2.0-1
-- Update to 2.2.0 for remi repo
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
 
-* Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.6-1
-- Update to 2.1.6 for remi repo
+* Mon Nov 12 2012 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
+- Update to 2.1.6
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.5-1
-- Update to 2.1.5 for remi repo
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- Update to 2.1.5
 
-* Tue Nov  6 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.3-1
-- Update to 2.1.3 for remi repo
+* Tue Nov  6 2012 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- Update to 2.1.3
 
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.1-1
-- Update to 2.1.1 for remi repo
+* Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
 
-* Sat Nov  3 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Sat Nov  3 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
