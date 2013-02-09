@@ -3,14 +3,15 @@
 %global tarversion gpl-%{version}-src
 
 # Use system cppconn if a compatible upstream version exists
-%global cppconnver 1.1.1
+# http://bugs.mysql.com/68326 (ABI is not stable)
+%global cppconnver 1.1.2
 
 # "script_templates" (and some others) shouldn't be compiled
 %global _python_bytecompile_errors_terminate_build 0
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   5.2.45
+Version:   5.2.46
 Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
@@ -25,6 +26,7 @@ Source0:   %{name}-nodocs-%{version}.tar.xz
 Source1:   stripdocs.sh
 
 # don't build extension, use system one
+# http://bugs.mysql.com/68324
 # !!! This patch use versioned soname (libmysqlcppconn.so.6) !!!
 Patch1:    %{name}-5.2.45-cppconn.patch
 # Use system ctemplate
@@ -36,11 +38,13 @@ Patch4:    %{name}-5.2.43-antlr.patch
 # Use system antlr (and vsqlite) - NOT applied
 Patch5:    %{name}-5.2.44-antlr.patch
 # Disable broken AutoCompletion feature
-Patch6:    %{name}-5.2.45-noautocc.patch
+# http://bugs.mysql.com/68327
+Patch6:    %{name}-5.2.46-noautocc.patch
 # Use system vsqlite++ (not ready) - NOT applied
 Patch7:    %{name}-5.2.44-vsqlite.patch
 
 # don't use bundled documentation, redirect to online doc
+# http://bugs.mysql.com/68325
 Patch9:    %{name}-5.2.45-nodocs.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -239,6 +243,16 @@ fi
 
 
 %changelog
+* Sat Feb  9 2013 Remi Collet <remi@fedoraproject.org> 5.2.46-1
+- update to 5.2.46 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/relnotes/workbench/en/wb-news-5-2-46.html
+- raise dependency on mysql-connector-c++ 1.1.2
+- add link to upstream bugs
+  http://bugs.mysql.com/68324 use system cppcon
+  http://bugs.mysql.com/68325 build without doc
+  http://bugs.mysql.com/68326 cppconn ABI is not stable
+  http://bugs.mysql.com/68327 segfault in auto completion
+
 * Sat Dec 29 2012 Remi Collet <remi@fedoraproject.org> 5.2.45-1
 - update to 5.2.45 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/relnotes/workbench/en/wb-news-5-2-45.html
@@ -464,7 +478,7 @@ fi
 * Sat Mar 21 2009 Remi Collet <RPMS@famillecollet.com> 5.1.9-1
 - update to 5.1.9 beta
 
-* Sun Jan 13 2009 Remi Collet <RPMS@famillecollet.com> 5.1.7-1
+* Sun Jan 11 2009 Remi Collet <RPMS@famillecollet.com> 5.1.7-1
 - update to 5.1.7 alpha
 
 * Sat Dec 13 2008 Remi Collet <RPMS@famillecollet.com> 5.1.5-1
