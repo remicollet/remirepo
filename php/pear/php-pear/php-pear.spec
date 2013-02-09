@@ -1,7 +1,7 @@
 %global peardir %{_datadir}/pear
 
 %global getoptver 1.3.1
-%global arctarver 1.3.10
+%global arctarver 1.3.11
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.0.4
@@ -14,7 +14,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 12%{?dist}
+Release: 12%{?dist}.1
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -216,6 +216,9 @@ rm new-pear.conf
 
 
 %changelog
+* Sat Feb  9 2013 Remi Collet <remi@fedoraproject.org> 1:1.9.4-15
+- update Archive_Tar to 1.3.11
+
 * Fri Nov  9 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-12
 - provides value for %%{pear_metadir}
 
