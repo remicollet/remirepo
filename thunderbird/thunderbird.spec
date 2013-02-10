@@ -60,7 +60,7 @@
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
 Version:        17.0.2
-Release:        1%{?dist}
+Release:        3%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -79,6 +79,7 @@ Source100:      find-external-requires
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
+Patch9:         mozilla-791626.patch
 
 # Build patches
 Patch104:       xulrunner-10.0-gcc47.patch
@@ -89,6 +90,7 @@ Patch200:       thunderbird-8.0-enable-addons.patch
 # PPC fixes
 Patch300:       xulrunner-16.0-jemalloc-ppc.patch
 Patch301:       rhbz-855923.patch
+Patch302:       mozilla-746112.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -195,7 +197,9 @@ cd %{tarballdir}
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch8 -p3 -b .secondary-ipc
+%patch9 -p1 -b .791626
 %patch104 -p1 -b .gcc47
+%patch302 -p2 -b .746112
 cd ..
 
 %patch200 -p1 -b .addons
@@ -300,7 +304,7 @@ export LIBDIR='%{_libdir}'
 MOZ_SMP_FLAGS=-j1
 # On x86 architectures, Mozilla can build up to 4 jobs at once in parallel,
 # however builds tend to fail on other arches when building in parallel.
-%ifarch %{ix86} x86_64
+%ifarch %{ix86} x86_64 ppc ppc64
 [ -z "$RPM_BUILD_NCPUS" ] && \
      RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
 [ "$RPM_BUILD_NCPUS" -ge 2 ] && MOZ_SMP_FLAGS=-j2
@@ -501,6 +505,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Tue Jan 15 2013 Martin Stransky <stransky@redhat.com> - 17.0.2-3
+- Added fix for NM regression (mozbz#791626)
+
+* Tue Jan 15 2013 Jan Horak <jhorak@redhat.com> - 17.0.2-2
+- Added mozilla-746112 patch to fix crash on ppc(64)
+
 * Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.2-1
 - Sync with rawhide, update to 17.0.2
 
