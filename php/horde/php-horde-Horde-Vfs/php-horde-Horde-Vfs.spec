@@ -9,13 +9,16 @@
 
 Name:           php-horde-Horde-Vfs
 Version:        2.0.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Virtual File System API
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+# https://github.com/horde/horde/pull/29
+Patch0:         %{name}-shebang.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -77,6 +80,9 @@ object-based and array-based interfaces to directory listings.
 
 %prep
 %setup -q -c
+
+%patch0 -p0 -b .shebang
+
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
@@ -154,6 +160,9 @@ fi
 
 
 %changelog
+* Sun Feb 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-3
+- fix shebang, https://github.com/horde/horde/pull/29
+
 * Sun Feb 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
 - cleanups for review
 
