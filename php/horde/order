@@ -38,13 +38,13 @@
 37 php-horde-Horde-Injector     *   2.0.1   =>           Exception
 38 php-horde-Horde-Controller   ?   2.0.1   =>           Exception, Injector, Log, Support, Util
 39 php-horde-Horde-View         *   2.0.1   => BR(Controller), Exception, Support, Util
-40 php-horde-Horde-Mail         -   2.0.3   =>           Exception, Mime, Stream-Filter
+40 php-horde-Horde-Mail         ?   2.0.3   =>           Exception, Mime, Stream-Filter
 41 php-horde-Horde-Mime         -   2.0.3   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 42 php-horde-Horde-Perms        -   2.0.3   => BR(Group), Db, Exception, Group, Util, Translation
 43 php-horde-Horde-Prefs        -   2.2.0   => BR(Db),   Exception, Mime, Translation, Util
 44 php-horde-Horde-Vfs          *   2.0.4   => BR(Db),   Auth, Db, Exception, Translation, Util, Mime, Perms
 45 php-horde-Horde-Compress     ?   2.0.3   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
-46 php-horde-Horde-History          2.0.1   => BR(Db),   Db, Exception
+46 php-horde-Horde-History      *   2.0.1   => BR(Db),   Db, Exception
 47 php-horde-Horde-Crypt            2.1.2   =>           Exception, Mime, Stream-Filter, Translation, Util
 48 php-horde-Horde-Notification     2.0.1   =>          Exception, Util
 49 php-horde-Horde-Icalendar    -   2.0.3   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
