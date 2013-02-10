@@ -27,7 +27,7 @@
 %if %{?system_nss}
 %global nspr_version 4.9.2
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
-%global nss_version 3.13.5
+%global nss_version 3.13.6
 %global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
 %endif
 %define cairo_version 1.10.0

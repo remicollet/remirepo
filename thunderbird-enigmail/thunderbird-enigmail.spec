@@ -27,7 +27,7 @@
 
 %if %{?system_nss}
 %global nspr_version 4.9.2
-%global nss_version 3.13.3
+%global nss_version 3.13.6
 %endif
 %if %{?system_cairo}
 %global cairo_version 1.10.0
@@ -45,7 +45,7 @@
 %global thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 %global enimail_app_id     \{847b3a00-7ab1-11d4-8f02-006008948af5\}
 
-%global thunver  17.0
+%global thunver  17.0.2
 %global thunmax  18.0
 
 # The tarball is pretty inconsistent with directory structure.
@@ -64,7 +64,7 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.5.0
+Version:        1.5.1
 Release:        1%{?dist}
 URL:            http://enigmail.mozdev.org/
 # All files licensed under MPL 1.1/GPL 2.0/LGPL 2.1
@@ -83,6 +83,7 @@ Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{versi
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
+Patch9:         mozilla-791626.patch
 
 # Build patches
 Patch104:       xulrunner-10.0-gcc47.patch
@@ -93,6 +94,7 @@ Patch200:       thunderbird-8.0-enable-addons.patch
 # PPC fixes
 Patch300:       xulrunner-16.0-jemalloc-ppc.patch
 Patch301:       rhbz-855923.patch
+Patch302:       mozilla-746112.patch
 
 # Enigmail patch
 
@@ -177,7 +179,9 @@ cd %{tarballdir}
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch8 -p3 -b .secondary-ipc
+%patch9 -p1 -b .791626
 %patch104 -p1 -b .gcc47
+%patch302 -p2 -b .746112
 cd ..
 
 %patch200 -p1 -b .addons
@@ -242,6 +246,10 @@ echo "ac_add_options --enable-optimize" >> .mozconfig
 echo "ac_add_options --disable-elf-hack" >> .mozconfig
 %endif
 
+%ifnarch %{ix86} x86_64
+echo "ac_add_options --disable-webrtc" >> .mozconfig
+%endif
+
 # ===== Enigmail work =====
 %if 0%{?CVS}
 mkdir mailnews/extensions/enigmail
@@ -254,7 +262,7 @@ pushd mailnews/extensions/enigmail
 # All tarballs (as well as CVS) will *always* report as 1.4a1pre (or whatever
 # the next major version would be). This is because I create builds from trunk
 # and simply label the result as 1.3.x.
-sed -i -e '/em:version/s/1.5/%{version}/' package/install.rdf
+sed -i -e '/em:version/s/1.6a1pre/%{version}/' package/install.rdf
 grep '<em:version>%{version}</em:version>' package/install.rdf || exit 1
 # Apply Enigmail patch here
 popd
@@ -280,20 +288,19 @@ cd %{tarballdir}
 #
 # Disable C++ exceptions since Mozilla code is not exception-safe
 #
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
-                      %{__sed} -e 's/-Wall//')
+MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-Wall//')
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
 %ifarch s390
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
+MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
 %endif
 %ifarch s390 %{arm} ppc
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
 %endif
 
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS=$MOZ_OPT_FLAGS
+export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
 export LDFLAGS=$MOZ_LINK_FLAGS
 
 export PREFIX='%{_prefix}'
@@ -302,7 +309,7 @@ export LIBDIR='%{_libdir}'
 MOZ_SMP_FLAGS=-j1
 # On x86 architectures, Mozilla can build up to 4 jobs at once in parallel,
 # however builds tend to fail on other arches when building in parallel.
-%ifarch %{ix86} x86_64
+%ifarch %{ix86} x86_64 ppc ppc64
 [ -z "$RPM_BUILD_NCPUS" ] && \
      RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
 [ "$RPM_BUILD_NCPUS" -ge 2 ] && MOZ_SMP_FLAGS=-j2
@@ -341,6 +348,9 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Sun Feb 10 2013 Remi Collet <remi@fedoraproject.org> 1.5.1-1
+- Enigmail 1.5.1 for Thunderbird 17.0.2
+
 * Sun Dec 30 2012 Remi Collet <remi@fedoraproject.org> 1.5.0-1
 - Enigmail 1.5.0 for Thunderbird 17
 
@@ -360,7 +370,7 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 * Mon Aug 27 2012 Remi Collet <remi@fedoraproject.org> 1.4.4-2
 - Enigmail 1.4.4 for Thunderbird 15.0
 
-* Wed Aug 21 2012 Remi Collet <remi@fedoraproject.org> 1.4.4-1
+* Tue Aug 21 2012 Remi Collet <remi@fedoraproject.org> 1.4.4-1
 - Enigmail 1.4.4 for Thunderbird 14.0
 
 * Sat Jul 21 2012 Remi Collet <remi@fedoraproject.org> 1.4.3-1
