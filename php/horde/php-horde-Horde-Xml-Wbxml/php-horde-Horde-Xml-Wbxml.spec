@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Xml-Wbxml
 Version:        2.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Provides an API for encoding and decoding WBXML documents
 
 Group:          Development/Libraries
@@ -28,6 +28,8 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-common >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-pcre
+Requires:       php-xml
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
@@ -41,8 +43,7 @@ documents. WBXML is used in SyncML for transferring smaller amounts of data
 with wireless devices.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 cp ../package.xml %{name}.xml
@@ -56,7 +57,7 @@ cd %{pear_name}-%{version}
 %install
 rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-PHPRC=../php.ini %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
 rm -rf %{buildroot}%{pear_metadir}/.??*
@@ -100,6 +101,9 @@ fi
 
 
 %changelog
+* Sun Feb 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-3
+- missing requires, from review #908357
+
 * Wed Feb  6 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - cleanups for review
 
