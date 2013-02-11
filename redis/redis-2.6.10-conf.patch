@@ -1,7 +1,6 @@
-diff -up redis-2.6.0-rc6/redis.conf.orig redis-2.6.0-rc6/redis.conf
---- redis-2.6.0-rc6/redis.conf.orig	2012-08-30 17:04:18.167789269 +0200
-+++ redis-2.6.0-rc6/redis.conf	2012-08-30 17:04:36.102834301 +0200
-@@ -18,7 +18,7 @@ daemonize no
+--- redis-2.6.10/redis.conf.orig	2013-02-11 13:24:39.000000000 +0100
++++ redis-2.6.10/redis.conf	2013-02-11 19:05:09.533275700 +0100
+@@ -18,7 +18,7 @@
  
  # When running daemonized, Redis writes a pid file in /var/run/redis.pid by
  # default. You can specify a custom pid file location here.
@@ -10,7 +9,7 @@ diff -up redis-2.6.0-rc6/redis.conf.orig redis-2.6.0-rc6/redis.conf
  
  # Accept connections on the specified port, default is 6379.
  # If port 0 is specified Redis will not listen on a TCP socket.
-@@ -27,7 +27,7 @@ port 6379
+@@ -27,7 +27,7 @@
  # If you want you can bind a single interface, if the bind option is not
  # specified all the interfaces will listen for incoming connections.
  #
@@ -19,7 +18,7 @@ diff -up redis-2.6.0-rc6/redis.conf.orig redis-2.6.0-rc6/redis.conf
  
  # Specify the path for the unix socket that will be used to listen for
  # incoming connections. There is no default, so Redis will not listen
-@@ -50,7 +50,7 @@ loglevel notice
+@@ -66,7 +66,7 @@
  # Specify the log file name. Also 'stdout' can be used to force
  # Redis to log on the standard output. Note that if you use standard
  # output for logging but daemonize, logs will be sent to /dev/null
@@ -28,8 +27,8 @@ diff -up redis-2.6.0-rc6/redis.conf.orig redis-2.6.0-rc6/redis.conf
  
  # To enable logging to the system logger, just set 'syslog-enabled' to yes,
  # and optionally update the other syslog parameters to suit your needs.
-@@ -134,7 +134,7 @@ dbfilename dump.rdb
- # Also the Append Only File will be created inside this directory.
+@@ -150,7 +150,7 @@
+ # The Append Only File will also be created inside this directory.
  # 
  # Note that you must specify a directory here, not a file name.
 -dir ./

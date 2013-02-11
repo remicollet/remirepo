@@ -13,7 +13,7 @@
 %endif
 
 Name:             redis
-Version:          2.6.9
+Version:          2.6.10
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
@@ -25,7 +25,7 @@ Source1:          %{name}.logrotate
 Source2:          %{name}.init
 Source3:          %{name}.service
 # Update configuration for Fedora
-Patch0:           %{name}-2.6.0-redis.conf.patch
+Patch0:           %{name}-2.6.10-conf.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if !0%{?el5}
@@ -176,6 +176,11 @@ fi
 
 
 %changelog
+* Mon Feb 11 2013 Remi Collet <remi@fedoraproject.org> - 2.6.10-1
+- Redis 2.6.10
+  upgrade urgency: MODERATE, this release contains many non
+  critical fixes and many small improvements.
+
 * Thu Jan 17 2013 Remi Collet <remi@fedoraproject.org> - 2.6.9-1
 - Redis 2.6.9
   upgrade urgency: MODERATE if you use replication.
@@ -234,7 +239,7 @@ fi
 * Sat Feb 04 2012 Silas Sewell <silas@sewell.org> - 2.4.7-1
 - Update to redis 2.4.7
 
-* Tue Feb 01 2012 Fabian Deutsch <fabiand@fedoraproject.org> - 2.4.6-4
+* Wed Feb 01 2012 Fabian Deutsch <fabiand@fedoraproject.org> - 2.4.6-4
 - Fixed a typo in the spec
 
 * Tue Jan 31 2012 Fabian Deutsch <fabiand@fedoraproject.org> - 2.4.6-3
@@ -274,7 +279,7 @@ fi
 - Update to redis 2.0.2
 - Disable checks section for el5
 
-* Fri Sep 11 2010 Silas Sewell <silas@sewell.ch> - 2.0.1-1
+* Sat Sep 11 2010 Silas Sewell <silas@sewell.ch> - 2.0.1-1
 - Update to redis 2.0.1
 
 * Sat Sep 04 2010 Silas Sewell <silas@sewell.ch> - 2.0.0-1
