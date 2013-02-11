@@ -21,7 +21,7 @@
 ---- with test unit ----
 21 php-horde-Horde-Argv         ?   2.0.4   =>           Exception, Translation
 22 php-horde-Horde-Serialize    ?   2.0.1   =>           Exception, Util
-23 php-horde-Horde-Xml-Wbxml    *   2.0.1   =>           Util
+23 php-horde-Horde-Xml-Wbxml    =   2.0.1   =>           Util
 24 ...-Horde-Stream-Filter      ?   2.0.1
 25 php-horde-Horde-LoginTasks   ?   2.0.2   => BR(Date), Date, Translation
 26 php-horde-Horde-Text-Flowed  ?   2.0.1   =>           Util
@@ -29,9 +29,9 @@
 28 php-horde-Horde-Auth         -   2.0.3   => BR(Db),   Exception, Util
 29 php-horde-Horde-Token        ?   2.0.3   => BR(Db, Url), Exception, Translation, Url, Util
 30 php-horde-Horde-Template     ?   2.0.1
-31 php-horde-Horde-Xml-Element  *   2.0.1   =>           Exception
+31 php-horde-Horde-Xml-Element  =   2.0.1   =>           Exception
 32 php-horde-Horde-Alarm        ?   2.0.3   => BR(Date), Date, Exception, Translation
-33 php-horde-Horde-Text-Diff    *   2.0.1   =>           Exception, Util
+33 php-horde-Horde-Text-Diff    =   2.0.1   =>           Exception, Util
 34 php-horde-Horde-Text-Filter  *   2.0.4   => BR(Text-Flowed), Exception, Util, Text_Flowed, Translation
 35 php-horde-Horde-Group        ?   2.0.1   => BR(Db),   Exception, Util
 36 php-horde-Horde-Tree         *   2.0.1   =>           Exception, Url, Util
@@ -45,7 +45,7 @@
 44 php-horde-Horde-Vfs          *   2.0.4   => BR(Db),   Auth, Db, Exception, Translation, Util, Mime, Perms
 45 php-horde-Horde-Compress     ?   2.0.3   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
 46 php-horde-Horde-History      *   2.0.1   => BR(Db),   Db, Exception
-47 php-horde-Horde-Crypt            2.1.2   =>           Exception, Mime, Stream-Filter, Translation, Util
+47 php-horde-Horde-Crypt        *   2.1.2   =>           Exception, Mime, Stream-Filter, Translation, Util
 48 php-horde-Horde-Notification     2.0.1   =>          Exception, Util
 49 php-horde-Horde-Icalendar    -   2.0.3   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
 50 php-horde-Horde-Stream       =   1.2.0   =>           Exception
