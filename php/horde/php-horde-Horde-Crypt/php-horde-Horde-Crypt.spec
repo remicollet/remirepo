@@ -3,37 +3,35 @@
 %global pear_name    Horde_Crypt
 %global pear_channel pear.horde.org
 
-# can run test which requires locales to be installed
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
-
 Name:           php-horde-Horde-Crypt
 Version:        2.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Cryptography API
 
 Group:          Development/Libraries
 License:        LGPLv2
-URL:            http://pear.horde.org
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
-%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 %if 0%{?rhel} < 6
 # Don't work with GnuPG 2
 BuildRequires:  gnupg < 2
 %endif
-%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-date
+Requires:       php-hash
+Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
@@ -48,9 +46,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
-# Optional
-Requires:       php-hash
-Requires:       php-openssl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -99,15 +94,12 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
-%else
-: Test disabled, missing '--with tests' option.
-%endif
 
 
 %post
@@ -133,6 +125,9 @@ fi
 
 
 %changelog
+* Mon Feb 11 2013 Remi Collet <remi@fedoraproject.org> - 2.1.2-2
+- cleanups for review
+
 * Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.2-1
 - Update to 2.1.2 for remi repo
 
