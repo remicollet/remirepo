@@ -1,5 +1,11 @@
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%global with_dtrace 1
+%else
+%global with_dtrace 0
+%endif
+
 Name: compat-mysql55
-Version: 5.5.11
+Version: 5.5.30
 Release: 1%{?dist}
 Summary: MySQL shared libraries
 Group: Applications/Databases
@@ -28,23 +34,23 @@ Patch5: mysql-stack-guard.patch
 Patch6: mysql-chain-certs.patch
 Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
-# Patch9: mysql-disable-test.patch
-Patch10: mysql-embedded-crash.patch
-Patch11: mysql-home.patch
-Patch12: mysql-plugin-bool.patch
-Patch13: mysql-s390-tsc.patch
-
-# RC patch for backports
-Patch21: mysql-readline.patch
+Patch10: mysql-plugin-bool.patch
+Patch11: mysql-s390-tsc.patch
+Patch14: mysql-va-list.patch
+Patch15: mysql-netdevname.patch
+Patch16: mysql-logrotate.patch
+Patch17: mysql-plugin-test.patch
+Patch18: mysql-cipherspec.patch
+Patch19: mysql-file-contents.patch
+Patch20: mysql-string-overflow.patch
+Patch21: mysql-dh1024.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
 BuildRequires: gcc-c++, cmake, ncurses-devel, zlib-devel, libaio-devel
-%if 0%{?fedora} >= 12
+%if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel >= 1.3
 %endif
-# This is required old EL4
-BuildRequires: bison
 
 
 %description
@@ -79,13 +85,16 @@ rm -f Docs/mysql.info
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-# %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
-# Backports specific patches
-%patch21 -p1 -b .readline
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
 
 # upstream has fallen down badly on symbol versioning, do it ourselves
 cp %{SOURCE8} libmysql/libmysql.version
@@ -124,16 +133,12 @@ cmake . -DBUILD_CONFIG=mysql_release \
 	-DINSTALL_SUPPORTFILESDIR=share/mysql \
 	-DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
 	-DENABLED_LOCAL_INFILE=ON \
-%if 0%{?fedora} >= 12
+%if %{with_dtrace}
 	-DENABLE_DTRACE=ON \
 %endif
 	-DWITH_EMBEDDED_SERVER=ON \
 	-DWITH_READLINE=ON \
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 5
 	-DWITH_SSL=system \
-%else
-	-DWITH_SSL=bundled \
-%endif
 	-DWITH_ZLIB=system
 
 make %{?_smp_mflags} VERBOSE=1
@@ -208,6 +213,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Feb 11 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.30-1
+- update to 5.5.30
+
 * Fri Apr 15 2011 Remi Collet <RPMS@FamilleCollet.com> - 5.5.11-1
 - first RPM
 

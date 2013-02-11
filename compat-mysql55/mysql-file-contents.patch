@@ -1,0 +1,27 @@
+Upstream chooses to install INFO_SRC and INFO_BIN into the docs dir, which
+breaks at least two packaging commandments, so we put them into $libdir
+instead.  That means we have to hack the file_contents regression test
+to know about this.
+
+Recommendation they change is at http://bugs.mysql.com/bug.php?id=61425
+
+
+diff -Naur mysql-5.5.21.orig/mysql-test/t/file_contents.test mysql-5.5.21/mysql-test/t/file_contents.test
+--- mysql-5.5.21.orig/mysql-test/t/file_contents.test	2012-01-31 06:28:15.000000000 -0500
++++ mysql-5.5.21/mysql-test/t/file_contents.test	2012-02-27 17:18:57.716087918 -0500
+@@ -31,6 +31,15 @@
+   } else {
+     # RedHat: version number in directory name
+     $dir_docs = glob "$dir_docs/MySQL-server*";
++
++    # All the above is entirely wacko, because these files are not docs;
++    # they should be kept in libdir instead.  mtr does not provide a nice
++    # way to find libdir though, so we have to kluge it like this:
++    if (-d "/usr/lib64/mysql") {
++	$dir_docs = "/usr/lib64/mysql";
++    } else {
++	$dir_docs = "/usr/lib/mysql";
++    }
+   }
+ } else {
+   # tar.gz package, Windows, or developer work (in BZR)
