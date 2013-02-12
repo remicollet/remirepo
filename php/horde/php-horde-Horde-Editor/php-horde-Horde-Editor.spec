@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Editor
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde Editor API
 
@@ -96,6 +96,9 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3 (no change)
+
 * Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - drop merged patch for http://bugs.horde.org/ticket/11950

@@ -1,4 +1,3 @@
-pear.horde.org Horde_Editor      2.0.2 (stable) 2.0.3 (stable) 728kB
 pear.horde.org Horde_Itip        2.0.3 (stable) 2.0.4 (stable) 34kB
 pear.horde.org Horde_Mime        2.0.3 (stable) 2.0.4 (stable) 89kB
 pear.horde.org Horde_Test        2.1.0 (stable) 2.2.0 (stable) 19.9kB
@@ -80,7 +79,7 @@ pear.horde.org content           2.0.1 (stable) 2.0.2 (stable) 21kB
 70 php-horde-Horde-Timezone     *   1.0.2   => BR(Date)  Date, Icalendar, Vfs
 71 php-horde-Horde-ListHeaders  *   1.0.1   => BR(Mail)  Mail
 72 php-horde-Horde-SpellChecker =   2.1.0   =>           Exception, Util
-73 php-horde-Horde-Editor       **  2.0.2   =>           Role, Browser, Exception, Serialize
+73 php-horde-Horde-Editor       **  2.0.3   =>           Role, Browser, Exception, Serialize
 
 ---- apps -----
 php-horde-horde (Framework)     +   5.0.3
