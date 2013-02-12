@@ -9,8 +9,8 @@
 # "horde-turba" sub package with apache stuff
 
 Name:           php-horde-turba
-Version:        4.0.2
-Release:        2%{?dist}
+Version:        4.0.3
+Release:        1%{?dist}
 Summary:        A web based address book
 
 Group:          Development/Libraries
@@ -21,14 +21,15 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php-common >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
-Requires:       php(language) >= 5.3.0
 Requires:       php-gettext
 Requires:       php-date
 Requires:       php-hash
@@ -154,9 +155,13 @@ rm -rf %{buildroot}
 
 
 %check
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/Turba
 : tests not ready
-#phpunit AllTests.php
+#phpunit\
+#    -d include_path=$src/lib:.:%{pear_phpdir} \
+#    -d date.timezone=UTC \
+#    .
 
 
 %post
@@ -200,6 +205,9 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 4.0.3-1
+- Update to 4.0.3
+
 * Sat Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.2-2
 - obsoletes/provides turba
 
