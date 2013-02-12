@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Filter
-Version:        2.0.4
-Release:        3%{?dist}
+Version:        2.0.5
+Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
 Group:          Development/Libraries
@@ -13,12 +13,10 @@ License:        LGPLv2+
 URL:            http://pear.horde.org
 # remove non-free stuff
 # http://bugs.horde.org/ticket/11870
-# pear download Horde_Text_Filter
+# pear download horde/Horde_Text_Filter
 # ./strip.sh %{version}
 Source0:        %{pear_name}-%{version}-strip.tgz
 Source1:        strip.sh
-# http://bugs.horde.org/ticket/11943
-Patch0:         %{pear_name}-php55.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -58,15 +56,11 @@ Common methods for fitering and converting text.
 %setup -q -c
 cd %{pear_name}-%{version}
 
-%patch0 -p0 -b .php55
-
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
-    -e '/Emails.php/s/md5sum=.*name=/name=/' \
-    -e '/Linkurls.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
 
@@ -105,14 +99,11 @@ done | tee ../%{pear_name}.lang
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-# Skip this one for now - need investigation
-sed -e 's/testHtml2TextSpacing/SKIP_testHtml2TextSpacing/' \
-    -i Html2textTest.php
 # Skip this one for now - need investigation (failed only in mock)
 sed -e 's/testXss/SKIP_testXss/' \
     -i XssTest.php
 
-# Can't work as we drop this now free stuff
+# Can't work as we drop this non free stuff
 rm -f JsminTest.php
 
 phpunit \
@@ -148,6 +139,9 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+
 * Wed Feb  6 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-3
 - cleanups for review
 - always run tests but skip 2 for now
