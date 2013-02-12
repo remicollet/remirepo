@@ -1,9 +1,9 @@
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.12
+Version:        3.1.13
 Release:        1%{?dist}
 
-Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
+Source0:         http://www.smarty.net/files/Smarty-%{version}.tar.gz
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -12,7 +12,10 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 Requires:       php(language) >= 5.2.0
-Requires:       php-date, php-mbstring, php-pcre, php-spl
+Requires:       php-date
+Requires:       php-mbstring
+Requires:       php-pcre
+Requires:       php-tokenizer
 
 
 %description
@@ -53,6 +56,21 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 3.1.12-1
+- backport 3.1.13 for remi repo
+
+* Tue Feb 12 2013 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.1.13-1
+- Last upstream release
+- Missing mbstring require
+
+* Sun Nov 25 2012 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.1.12-2
+- Really fix requires (see bz #700179 comment #30)
+
+* Sun Nov 25 2012 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.1.12-1
+- Update to 3.1.12
+- Remove CVE-2012-4437 patch that has been included in that release
+- Requires php-common instead of php
+
 * Sat Sep 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 3.1.12-1
 - update to 3.1.12 for remi repo
 
@@ -87,7 +105,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.20-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
-* Mon Nov 02 2008 Christopher Stone <chris.stone@gmail.com> 2.6.20-2
+* Sun Nov 02 2008 Christopher Stone <chris.stone@gmail.com> 2.6.20-2
 - Add security patch (bz #469648)
 - Add RHL dist tag conditional for Requires
 
