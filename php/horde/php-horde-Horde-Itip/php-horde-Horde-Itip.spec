@@ -3,33 +3,29 @@
 %global pear_name    Horde_Itip
 %global pear_channel pear.horde.org
 
-# Need investigation
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
-
 Name:           php-horde-Horde-Itip
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        iTip invitation response handling
 
 Group:          Development/Libraries
-License:        LGPL-2.1
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
-%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
-%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-date
 Requires:       php-pcre
 Requires:       php-pear(PEAR) >= 1.7.0
@@ -38,6 +34,9 @@ Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Icalendar) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
+# Optional
+Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Prefs) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -88,15 +87,12 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
-%else
-: Test disabled, missing '--with tests' option.
-%endif
 
 
 %post
@@ -122,6 +118,10 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+- run test during build
+
 * Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
 - Update to 2.0.3 for remi repo
 
