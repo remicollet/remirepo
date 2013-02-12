@@ -41,7 +41,7 @@
 40 php-horde-Horde-Mail         ?   2.0.3   =>           Exception, Mime, Stream-Filter
 41 php-horde-Horde-Mime         -   2.0.4   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 42 php-horde-Horde-Perms        -   2.0.3   => BR(Group), Db, Exception, Group, Util, Translation
-43 php-horde-Horde-Prefs        -   2.2.0   => BR(Db),   Exception, Mime, Translation, Util
+43 php-horde-Horde-Prefs        -   2.3.0   => BR(Db),   Exception, Mime, Translation, Util
 44 php-horde-Horde-Vfs          *   2.0.4   => BR(Db),   Auth, Db, Exception, Translation, Util, Mime, Perms
 45 php-horde-Horde-Compress     ?   2.0.3   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
 46 php-horde-Horde-History      *   2.0.1   => BR(Db),   Db, Exception
@@ -74,7 +74,7 @@
 73 php-horde-Horde-Editor       **  2.0.3   =>           Role, Browser, Exception, Serialize
 
 ---- apps -----
-php-horde-horde (Framework)     +   5.0.3
+php-horde-horde (Framework)     +   5.0.4
 php-horde-content (Tags)        +   2.0.2
 php-horde-kronolith (Calendars) +   4.0.3
 php-horde-nag   (Tasks)         +   4.0.2

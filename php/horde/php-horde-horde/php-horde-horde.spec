@@ -11,12 +11,12 @@
 # "horbe" sub-package, with apache stuff
 
 Name:           php-horde-horde
-Version:        5.0.3
-Release:        3%{?dist}
+Version:        5.0.4
+Release:        1%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://www.horde.org/apps/horde
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 Source2:        horde.conf
@@ -24,7 +24,8 @@ Source2:        horde.conf
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
-BuildRequires:  php-pear
+BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
@@ -38,6 +39,20 @@ Requires:       scriptaculous-httpd
 Requires:       syntaxhighlighter-httpd
 Requires:       ckeditor
 # PHP stuff
+Requires:       php-common >= 5.3.0
+Requires:       php-calendar
+Requires:       php-date
+Requires:       php-fileinfo
+Requires:       php-gettext
+Requires:       php-hash
+Requires:       php-iconv
+Requires:       php-libxml
+Requires:       php-pcre
+Requires:       php-posix
+Requires:       php-session
+Requires:       php-soap
+Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.0.0
@@ -237,28 +252,31 @@ fi
 
 
 %changelog
-* Thu Jan 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.0.3-3
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 5.0.4-1
+- Update to 5.0.4
+
+* Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 5.0.3-3
 - define Alias for JavaScript Libraries
 
-* Sat Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.0.3-2
+* Sun Jan 13 2013 Remi Collet <remi@fedoraproject.org> - 5.0.3-2
 - obsoletes/provides horde
 
-* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.0.3-1
-- Update to 5.0.3 for remi repo
+* Thu Jan 10 2013 Remi Collet <remi@fedoraproject.org> - 5.0.3-1
+- Update to 5.0.3
 - use local script instead of find_lang
 - add more optional requires
 
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.2-2
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 5.0.2-2
 - fix apache config and rename to php-horde-horde.conf
 
-* Thu Nov 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.2-1
-- update to 5.0.2 for remi repo
+* Thu Nov 15 2012 Remi Collet <remi@fedoraproject.org> - 5.0.2-1
+- update to 5.0.2
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.1-1
-- update to 5.0.1 for remi repo
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 5.0.1-1
+- update to 5.0.1
 
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.0-2
+* Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 5.0.0-2
 - fix locale
 
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.0.0-1
+* Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 5.0.0-1
 - Initial package
