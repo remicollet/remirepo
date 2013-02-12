@@ -9,23 +9,30 @@
 # "horde-content" sub package with apache stuff
 
 Name:           php-horde-content
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        Tagging application
 
 Group:          Development/Libraries
-License:        BSD-2-Clause
-URL:            http://pear.horde.org
+License:        BSD
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR)
+BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php-common >= 5.3.0
+Requires:       php-date
+Requires:       php-gettext
+Requires:       php-json
+Requires:       php-pcre
+Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
@@ -108,7 +115,7 @@ ln -s %{_sysconfdir}/horde/%{pear_name} %{buildroot}%{pear_hordedir}/%{pear_name
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.horde.org/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -134,5 +141,8 @@ fi
 
 
 %changelog
-* Sun Nov 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
+* Sun Nov 18 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Initial package
