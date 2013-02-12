@@ -1,24 +1,25 @@
 Name:           remi-release
 Version:        %{rhel}
 %if %{rhel} >= 6
-Release:        1%{?dist}
+Release:        2%{?dist}
 %else
-Release:        8%{?dist}
+Release:        9%{?dist}
 %endif
 Summary:        YUM configuration for remi repository
-Summary(fr):	Configuration de YUM pour le dépôt remi
+Summary(fr):    Configuration de YUM pour le dépôt remi
 
 Group:          System Environment/Base
 License:        GPL
 URL:            http://remi.collet.free.fr
 Source0:        RPM-GPG-KEY-remi
-Source1:	remi-el.repo
+Source1:        remi-el.repo
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
 
 Requires:       yum
 Requires:       redhat-release >= %{rhel}
 Requires:       epel-release >= %{rhel}
+
 
 %description
 This package contains yum configuration for the "remi" RPM Repository, 
@@ -36,15 +37,12 @@ l'option --enablerepo=remi de yum.
 
 %prep
 %setup -c -T
-%if 0%{?rhel} >= 5
-sed -e 's/VERSION/$releasever/' %{SOURCE1} | tee remi.repo
-%else
 sed -e "s/VERSION/%{rhel}/" %{SOURCE1} | tee remi.repo
-%endif
 
 
 %build
 echo empty build
+
 
 %install
 rm -rf %{buildroot}
@@ -55,6 +53,7 @@ rm -rf %{buildroot}
 # YUM
 %{__install} -Dp -m 644 remi.repo %{buildroot}%{_sysconfdir}/yum.repos.d/remi.repo
 
+
 %clean
 rm -rf %{buildroot}
 
@@ -64,6 +63,10 @@ rm -rf %{buildroot}
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 5-9 and 6-2
+- add debuginfo repo
+- drop failovermethod option (switch to roundrobin)
+
 * Sat Nov 13 2010 Remi Collet <RPMS@FamilleCollet.com> - 6-1.el6.remi
 - EL-6 rebuild
 
