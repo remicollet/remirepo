@@ -1,20 +1,20 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Test
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Test
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde testing base classes
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
@@ -44,8 +44,7 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Horde-specific PHPUnit base classes.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
@@ -87,6 +86,9 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.1.0-1
 - Update to 2.1.0 for remi repo
 
