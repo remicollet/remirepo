@@ -1,11 +1,9 @@
-pear.horde.org Horde_Util        2.0.3 (stable) 2.1.0 (stable) 32kB
-pear.horde.org Horde_View        2.0.1 (stable) 2.0.2 (stable) 43kB
 pear.horde.org content           2.0.1 (stable) 2.0.2 (stable) 21kB
 
 01 php-horde-Horde-Autoloader   =   2.0.1
 02 php-horde-Horde-Translation  =   2.0.1
 03 php-horde-Horde-Stream-Wrapper = 2.0.1
-04 php-horde-Horde-Util         =   2.0.3
+04 php-horde-Horde-Util         =   2.1.0
 05 php-horde-Horde-Exception    =   2.0.3   => Translation
 06 php-horde-Horde-Support      =   2.0.3   => Exception, Stream_Wrapper
 07 php-horde-Horde-Cli          =   2.0.3   => Support, Translation
@@ -41,7 +39,7 @@ pear.horde.org content           2.0.1 (stable) 2.0.2 (stable) 21kB
 36 php-horde-Horde-Tree         *   2.0.1   =>           Exception, Url, Util
 37 php-horde-Horde-Injector     *   2.0.1   =>           Exception
 38 php-horde-Horde-Controller   ?   2.0.1   =>           Exception, Injector, Log, Support, Util
-39 php-horde-Horde-View         *   2.0.1   => BR(Controller), Exception, Support, Util
+39 php-horde-Horde-View         *   2.0.2   => BR(Controller), Exception, Support, Util
 40 php-horde-Horde-Mail         ?   2.0.3   =>           Exception, Mime, Stream-Filter
 41 php-horde-Horde-Mime         -   2.0.4   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 42 php-horde-Horde-Perms        -   2.0.3   => BR(Group), Db, Exception, Group, Util, Translation

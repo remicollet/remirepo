@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-View
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Horde View API
 
 Group:          Development/Libraries
@@ -76,13 +76,12 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-# Ignore test results for now ( > vs /> ) need investigation
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
     -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
-    . || exit 0
+    .
 
 
 %post
@@ -106,6 +105,9 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
 * Sun Feb 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - cleanups for review
 
