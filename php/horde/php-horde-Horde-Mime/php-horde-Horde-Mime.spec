@@ -7,12 +7,12 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -23,7 +23,7 @@ BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 %if %{with_tests}
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 %endif
 
 Requires(post): %{__pear}
@@ -54,7 +54,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter) >= 3.0.0
-Requires:       php-intl
 Requires:       php-pear(Net_DNS2)
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -108,9 +107,10 @@ done | tee ../%{pear_name}.lang
 
 %check
 %if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+phpunit \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
 %else
@@ -142,6 +142,9 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
 - Update to 2.0.3 for remi repo
 - drop merged patch for http://bugs.horde.org/ticket/11913
