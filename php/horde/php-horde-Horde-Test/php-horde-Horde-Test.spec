@@ -9,7 +9,7 @@ Summary:        Horde testing base classes
 
 Group:          Development/Libraries
 License:        LGPLv2
-URL:            http://pear.horde.org
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root

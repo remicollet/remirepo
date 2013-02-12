@@ -12,7 +12,7 @@ Summary:        Horde Exception Handler
 
 Group:          Development/Libraries
 License:        LGPLv2
-URL:            http://pear.horde.org
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -35,7 +35,7 @@ Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
 
-Provides:       php-pear(%{pear_channel}/Horde_Exception) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -77,6 +77,7 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+# Locales
 for loc in locale/{??,??_??}
 do
     lang=$(basename $loc)
@@ -114,9 +115,9 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Exception
 %{pear_phpdir}/Horde/Exception.php
-%dir %{pear_datadir}/Horde_Exception
-%dir %{pear_datadir}/Horde_Exception/locale
-%{pear_testdir}/Horde_Exception
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}/locale
+%{pear_testdir}/%{pear_name}
 
 
 %changelog

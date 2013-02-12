@@ -12,7 +12,7 @@ Summary:        Horde Utility Libraries
 
 Group:          Development/Libraries
 License:        LGPLv2
-URL:            http://pear.horde.org
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -37,11 +37,12 @@ Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-session
 Requires:       php-spl
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 # Optionnal: Horde_Imap_Client not required to reduce build tree
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 These classes provide functionality useful for all kind of applications.
@@ -90,7 +91,7 @@ phpunit \
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.horde.org/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -104,7 +105,7 @@ fi
 %{pear_phpdir}/Horde/String.php
 %{pear_phpdir}/Horde/Util.php
 %{pear_phpdir}/Horde/Variables.php
-%{pear_testdir}/Horde_Util
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
