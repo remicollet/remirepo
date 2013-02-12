@@ -1,3 +1,4 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    kronolith
 %global pear_channel pear.horde.org
@@ -6,25 +7,26 @@
 # Fatal error: Call to a member function setShareCallback() on a non-object...
 
 Name:           php-horde-kronolith
-Version:        4.0.3
-Release:        2%{?dist}
+Version:        4.0.4
+Release:        1%{?dist}
 Summary:        A web based calendar
 
 Group:          Development/Libraries
-License:        GPLv2+
+License:        GPLv2
 URL:            http://www.horde.org/apps/kronolith
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
+BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
+Requires:       php-common >= 5.3.0
 Requires:       php-date
 Requires:       php-gettext
 Requires:       php-intl
@@ -227,6 +229,9 @@ fi
 
 
 %changelog
+* Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 4.0.4-1
+- Update to 4.0.4
+
 * Sat Jan 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.3-2
 - obsoletes/provides kronolith
 
