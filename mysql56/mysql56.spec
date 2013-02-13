@@ -87,8 +87,13 @@ BuildRequires: systemd-units
 %endif
 
 Requires: grep, fileutils
-Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires: real-%{name}-libs%{?_isa} = %{version}-%{release}
 Requires: bash
+
+# We can use real- prefix to distinguish from other MySQL implementations
+# like MariaDB unambiguously
+Provides: real-%{name} = %{version}-%{release}
+Provides: real-%{name}%{?_isa} = %{version}-%{release}
 
 # MySQL (with caps) is upstream's spelling of their own RPMs for mysql
 Conflicts: MySQL
@@ -116,11 +121,13 @@ contains the standard MySQL client programs and generic MySQL files.
 Summary: The shared libraries required for MySQL clients
 Group: Applications/Databases
 Requires: /sbin/ldconfig
+Provides: real-%{name}-libs = %{version}-%{release}
+Provides: real-%{name}-libs%{?_isa} = %{version}-%{release}
 Obsoletes: compat-mysql55 <= %{version}
 %if 0%{?rhel} == 5
 # EL-5 mysql 5.0.x have no mysql/mysql-libs
 # This circular dep. should make update simpler
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: real-%{name}%{?_isa} = %{version}-%{release}
 %endif
 
 %description libs
@@ -133,8 +140,8 @@ MySQL server.
 
 Summary: The MySQL server and related files
 Group: Applications/Databases
-Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires: real-%{name}%{?_isa} = %{version}-%{release}
+Requires: real-%{name}-libs%{?_isa} = %{version}-%{release}
 Requires: sh-utils
 Requires(pre): /usr/sbin/useradd
 Requires(post): chkconfig
@@ -158,6 +165,8 @@ Requires(postun): initscripts
 # mysqlhotcopy needs DBI/DBD support
 Requires: perl-DBI, perl-DBD-MySQL
 Conflicts: MySQL-server
+Provides: real-%{name}-server = %{version}-%{release}
+Provides: real-%{name}-server%{?_isa} = %{version}-%{release}
 
 %description server
 MySQL is a multi-user, multi-threaded SQL database server. MySQL is a
@@ -169,10 +178,12 @@ the MySQL server and some accompanying files and directories.
 
 Summary: Files for development of MySQL applications
 Group: Applications/Databases
-Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires: real-%{name}%{?_isa} = %{version}-%{release}
+Requires: real-%{name}-libs%{?_isa} = %{version}-%{release}
 Requires: openssl-devel%{?_isa}
 Conflicts: MySQL-devel
+Provides: real-%{name}-devel = %{version}-%{release}
+Provides: real-%{name}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 MySQL is a multi-user, multi-threaded SQL database server. This
@@ -183,6 +194,8 @@ developing MySQL client applications.
 
 Summary: MySQL as an embeddable library
 Group: Applications/Databases
+Provides: real-%{name}-embedded = %{version}-%{release}
+Provides: real-%{name}-embedded%{?_isa} = %{version}-%{release}
 
 %description embedded
 MySQL is a multi-user, multi-threaded SQL database server. This
@@ -193,8 +206,10 @@ into a client application instead of running as a separate process.
 
 Summary: Development files for MySQL as an embeddable library
 Group: Applications/Databases
-Requires: %{name}-embedded%{?_isa} = %{version}-%{release}
-Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+Requires: real-%{name}-embedded%{?_isa} = %{version}-%{release}
+Requires: real-%{name}-devel%{?_isa} = %{version}-%{release}
+Provides: real-%{name}-embedded-devel = %{version}-%{release}
+Provides: real-%{name}-embedded-devel%{?_isa} = %{version}-%{release}
 
 %description embedded-devel
 MySQL is a multi-user, multi-threaded SQL database server. This
@@ -205,8 +220,10 @@ the embedded version of the MySQL server.
 
 Summary: MySQL benchmark scripts and data
 Group: Applications/Databases
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: real-%{name}%{?_isa} = %{version}-%{release}
 Conflicts: MySQL-bench
+Provides: real-%{name}-bench = %{version}-%{release}
+Provides: real-%{name}-bench%{?_isa} = %{version}-%{release}
 
 %description bench
 MySQL is a multi-user, multi-threaded SQL database server. This
@@ -217,10 +234,12 @@ MySQL.
 
 Summary: The test suite distributed with MySQL
 Group: Applications/Databases
-Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: %{name}-libs%{?_isa} = %{version}-%{release}
-Requires: %{name}-server%{?_isa} = %{version}-%{release}
+Requires: real-%{name}%{?_isa} = %{version}-%{release}
+Requires: real-%{name}-libs%{?_isa} = %{version}-%{release}
+Requires: real-%{name}-server%{?_isa} = %{version}-%{release}
 Conflicts: MySQL-test
+Provides: real-%{name}-test  = %{version}-%{release}
+Provides: real-%{name}-test%{?_isa} = %{version}-%{release}
 
 %description test
 MySQL is a multi-user, multi-threaded SQL database server. This
