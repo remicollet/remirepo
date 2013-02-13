@@ -1,0 +1,10 @@
+[Unit]
+Description=Disk Cache Cleaning Daemon for Apache HTTP Server
+After=httpd.service
+
+[Service]
+Type=forking
+User=apache
+PIDFile=/run/httpd/htcacheclean/pid
+EnvironmentFile=/etc/sysconfig/htcacheclean
+ExecStart=/usr/sbin/htcacheclean -P /run/httpd/htcacheclean/pid -d $INTERVAL -p $CACHE_ROOT -l $LIMIT $OPTIONS

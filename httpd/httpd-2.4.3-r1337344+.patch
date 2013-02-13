@@ -137,7 +137,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1341930
 +
 +install-suexec-caps:
 +	@if test -f $(builddir)/support/suexec; then \
-+            echo Skipping setcap for 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec; \
++            setcap 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec; \
  	fi
  
  suexec:
