@@ -1,0 +1,29 @@
+From e67a2b9e471a7bc0b774b9056bb38745b7187969 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Mon, 11 Feb 2013 09:10:51 +0100
+Subject: [PATCH] Fixed bug #64142 (dval to lval different behavior on ppc64)
+
+See discussion on internals
+http://marc.info/?t=136042277700003&r=1&w=2
+---
+ NEWS                  | 3 +++
+ Zend/zend_operators.h | 3 ++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Zend/zend_operators.h b/Zend/zend_operators.h
+index 02a96dd..047b92e 100644
+--- a/Zend/zend_operators.h
++++ b/Zend/zend_operators.h
+@@ -79,7 +79,8 @@ static zend_always_inline long zend_dval_to_lval(double d)
+ #else
+ static zend_always_inline long zend_dval_to_lval(double d)
+ {
+-	if (d > LONG_MAX) {
++	/* >= as (double)LONG_MAX is outside signed range */
++	if (d >= LONG_MAX) {
+ 		return (long)(unsigned long) d;
+ 	}
+ 	return (long) d;
+-- 
+1.7.11.5
+
