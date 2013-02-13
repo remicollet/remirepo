@@ -1,6 +1,6 @@
 Name:           mod_evasive
 Version:        1.10.1
-Release:        13%{?dist}
+Release:        15%{?dist}
 Summary:        Denial of Service evasion module for Apache
 
 Group:          System Environment/Daemons
@@ -54,6 +54,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.10.1-15
+- rebuild for remi repo and httpd 2.4
+
+* Mon Nov 26 2012 Ján ONDREJ (SAL) <ondrejj(at)salstar.sk> - 1.10.1-15
+- fix configuration file for new version (#879269)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10.1-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.1-4
 - rebuild for remi repo and httpd 2.4
 
