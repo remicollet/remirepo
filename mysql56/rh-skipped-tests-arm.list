@@ -1,0 +1,8 @@
+
+# Disable perfschema.func_file_io and perfschema.func_mutex, which fail
+# because cycle counter returns 0 every time on ARM architectures.
+# This is caused by missing hardware performance counter support on ARM.
+# Discussion about fixing that can be found in RH bug #741325.
+
+perfschema.func_file_io   : rhbz#773116 cycle counter does not work on arm
+perfschema.func_mutex     : rhbz#773116 cycle counter does not work on arm

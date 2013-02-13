@@ -1,0 +1,11 @@
+# Configuration file for the mysqld service.
+
+# Server timeout during service start
+STARTTIMEOUT=120
+
+# Server timeout during service stop
+STOPTIMEOUT=60
+
+# Other options to pass to the server (p.e. --federated)
+MYOPTIONS=
+

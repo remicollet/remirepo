@@ -1,0 +1,22 @@
+Adjust openssl_1.result to match actual output when using OpenSSL.
+
+The given expected result seems to be yaSSL-specific, as of mysql 5.5.14.
+Upstream at http://bugs.mysql.com/bug.php?id=61827
+
+
+diff -Naur mysql-5.5.14.orig/mysql-test/r/openssl_1.result mysql-5.5.14/mysql-test/r/openssl_1.result
+--- mysql-5.5.14.orig/mysql-test/r/openssl_1.result	2011-06-21 12:42:40.000000000 -0400
++++ mysql-5.5.14/mysql-test/r/openssl_1.result	2011-07-11 18:52:39.925070616 -0400
+@@ -44,9 +44,9 @@
+ drop user ssl_user1@localhost, ssl_user2@localhost,
+ ssl_user3@localhost, ssl_user4@localhost, ssl_user5@localhost;
+ drop table t1;
+-mysqltest: Could not open connection 'default': 2026 SSL connection error: ASN: bad other signature confirmation
+-mysqltest: Could not open connection 'default': 2026 SSL connection error: ASN: bad other signature confirmation
+-mysqltest: Could not open connection 'default': 2026 SSL connection error: ASN: bad other signature confirmation
++mysqltest: Could not open connection 'default': 2026 SSL connection error: error:00000001:lib(0):func(0):reason(1)
++mysqltest: Could not open connection 'default': 2026 SSL connection error: error:00000001:lib(0):func(0):reason(1)
++mysqltest: Could not open connection 'default': 2026 SSL connection error: error:00000001:lib(0):func(0):reason(1)
+ SSL error: Unable to get private key from ''
+ mysqltest: Could not open connection 'default': 2026 SSL connection error: Unable to get private key
+ SSL error: Unable to get certificate from ''

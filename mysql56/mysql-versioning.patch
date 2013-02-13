@@ -1,0 +1,19 @@
+The symbol versioning solution for libmysqlclient in mysql 5.1 was pretty
+awful (export everything) and as of 5.5.8 the cmake build scripts have
+forgotten the issue entirely.  So we now maintain our own list of exported
+symbols and jam it into the build with this hack.
+
+MySQL 5.6 still use soname .18 and manage a very different list
+So keep our list for compatitility.
+
+--- mysql-5.6.10/libmysql/CMakeLists.txt.orig	2013-02-13 09:44:02.368490458 +0100
++++ mysql-5.6.10/libmysql/CMakeLists.txt	2013-02-13 09:44:06.674509715 +0100
+@@ -221,7 +221,7 @@
+       SET(libmysql_link_flags
+         "${libmysql_link_flags} ${LINK_FLAG_NO_UNDEFINED}")
+       SET(libmysql_link_flags
+-        "${libmysql_link_flags} -Wl,--version-script=libmysql.ver")
++        "${libmysql_link_flags} -Wl,--version-script=libmysql.version")
+       SET_TARGET_PROPERTIES(libmysql
+         PROPERTIES LINK_FLAGS "${libmysql_link_flags}")
+     ENDIF() 

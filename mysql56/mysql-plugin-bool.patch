@@ -1,0 +1,42 @@
+Fix plugin boolean variables to receive the value "1", not "-1", when they
+are set to 1.  Aside from being bizarre, the existing behavior is unportable:
+machines where char is unsigned print "255" instead.  Filed upstream at
+http://bugs.mysql.com/bug.php?id=59905
+
+
+diff -up mysql-5.5.28/mysql-test/suite/sys_vars/r/rpl_semi_sync_master_enabled_basic.result.p10 mysql-5.5.28/mysql-test/suite/sys_vars/r/rpl_semi_sync_master_enabled_basic.result
+--- mysql-5.5.28/mysql-test/suite/sys_vars/r/rpl_semi_sync_master_enabled_basic.result.p10	2012-08-29 10:50:47.000000000 +0200
++++ mysql-5.5.28/mysql-test/suite/sys_vars/r/rpl_semi_sync_master_enabled_basic.result	2012-12-06 14:20:53.078755855 +0100
+@@ -45,7 +45,7 @@ set session rpl_semi_sync_master_enabled
+ ERROR HY000: Variable 'rpl_semi_sync_master_enabled' is a GLOBAL variable and should be set with SET GLOBAL
+ select @@global.rpl_semi_sync_master_enabled;
+ @@global.rpl_semi_sync_master_enabled
+--1
++1
+ select @@session.rpl_semi_sync_master_enabled;
+ ERROR HY000: Variable 'rpl_semi_sync_master_enabled' is a GLOBAL variable
+ show global variables like 'rpl_semi_sync_master_enabled';
+diff -up mysql-5.5.28/mysql-test/suite/sys_vars/r/rpl_semi_sync_slave_enabled_basic.result.p10 mysql-5.5.28/mysql-test/suite/sys_vars/r/rpl_semi_sync_slave_enabled_basic.result
+--- mysql-5.5.28/mysql-test/suite/sys_vars/r/rpl_semi_sync_slave_enabled_basic.result.p10	2012-08-29 10:50:47.000000000 +0200
++++ mysql-5.5.28/mysql-test/suite/sys_vars/r/rpl_semi_sync_slave_enabled_basic.result	2012-12-06 14:20:53.078755855 +0100
+@@ -45,7 +45,7 @@ set session rpl_semi_sync_slave_enabled=
+ ERROR HY000: Variable 'rpl_semi_sync_slave_enabled' is a GLOBAL variable and should be set with SET GLOBAL
+ select @@global.rpl_semi_sync_slave_enabled;
+ @@global.rpl_semi_sync_slave_enabled
+--1
++1
+ select @@session.rpl_semi_sync_slave_enabled;
+ ERROR HY000: Variable 'rpl_semi_sync_slave_enabled' is a GLOBAL variable
+ show global variables like 'rpl_semi_sync_slave_enabled';
+diff -up mysql-5.5.28/sql/sql_plugin.cc.p10 mysql-5.5.28/sql/sql_plugin.cc
+--- mysql-5.5.28/sql/sql_plugin.cc.p10	2012-08-29 10:50:46.000000000 +0200
++++ mysql-5.5.28/sql/sql_plugin.cc	2012-12-06 14:20:53.078755855 +0100
+@@ -2094,7 +2094,7 @@ static int check_func_bool(THD *thd, str
+       goto err;
+     result= (int) tmp;
+   }
+-  *(my_bool *) save= -result;
++  *(my_bool *) save= result ? true : false;
+   return 0;
+ err:
+   return 1;
