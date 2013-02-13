@@ -61,7 +61,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201302121230
+%global snapdate      201302131030
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -128,7 +128,7 @@ Patch91: php-5.3.7-oci8conf.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}
+BuildRequires: bzip2-devel, curl-devel >= 7.9
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 BuildRequires: libstdc++-devel, openssl-devel
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
@@ -634,6 +634,7 @@ Summary: A database abstraction layer module for PHP applications
 Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
+BuildRequires: %{db_devel}, gdbm-devel, tokyocabinet-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php53-dba, php53u-dba, php54-dba, php55-dba
 
@@ -976,6 +977,8 @@ build --enable-force-cgi-redirect \
       --with-bz2=shared \
       --enable-ctype=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
+                          --with-gdbm=%{_prefix} \
+                          --with-tcadb=%{_prefix} \
       --enable-exif=shared \
       --enable-ftp=shared \
       --with-gettext=shared \
@@ -1104,6 +1107,8 @@ build --enable-force-cgi-redirect \
       --with-bz2=shared \
       --enable-ctype=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
+                          --with-gdbm=%{_prefix} \
+                          --with-tcadb=%{_prefix} \
       --with-gettext=shared \
       --with-iconv=shared \
       --enable-sockets=shared \
@@ -1643,6 +1648,9 @@ fi
 
 
 %changelog
+* Wed Feb 13 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.16-201302131030
+- enable tokyocabinet and gdbm dba handlers
+
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.15-201302121230
 - new snapshot
 

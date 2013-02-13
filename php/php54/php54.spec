@@ -132,7 +132,7 @@ Patch91: php-5.3.7-oci8conf.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}, gmp-devel
+BuildRequires: bzip2-devel, curl-devel >= 7.9, gmp-devel
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 BuildRequires: libstdc++-devel, openssl-devel
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
@@ -628,6 +628,7 @@ Summary: A database abstraction layer module for PHP applications
 Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
+BuildRequires: %{db_devel}, gdbm-devel, tokyocabinet-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php53-dba, php53u-dba, php54-dba
 
@@ -990,6 +991,8 @@ build --enable-force-cgi-redirect \
       --with-gd=shared \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
+                          --with-gdbm=%{_prefix} \
+                          --with-tcadb=%{_prefix} \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1102,6 +1105,8 @@ build --enable-force-cgi-redirect \
       --with-gd=shared \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
+                          --with-gdbm=%{_prefix} \
+                          --with-tcadb=%{_prefix} \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1618,6 +1623,9 @@ fi
 
 
 %changelog
+* Wed Feb 13 2013 Remi Collet <remi@fedoraproject.org> 5.4.11-2
+- enable tokyocabinet and gdbm dba handlers
+
 * Wed Feb 13 2013 Remi Collet <rcollet@redhat.com> 5.4.11-2
 - upstream patch (5.4.13) to fix dval to lval conversion
   https://bugs.php.net/64142
