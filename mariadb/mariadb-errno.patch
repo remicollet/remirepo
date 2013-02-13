@@ -1,0 +1,20 @@
+"extern int errno" is just a really bad idea.
+
+diff -up mariadb-5.5.28a/include/my_sys.h.p1 mariadb-5.5.28a/include/my_sys.h
+--- mariadb-5.5.28a/include/my_sys.h.p1	2012-12-17 16:06:12.942346553 +0100
++++ mariadb-5.5.28a/include/my_sys.h	2012-12-17 16:06:51.085361555 +0100
+@@ -189,13 +189,8 @@ extern void my_large_free(uchar *ptr);
+ #define my_safe_alloca(size, min_length) ((size <= min_length) ? my_alloca(size) : my_malloc(size,MYF(MY_FAE)))
+ #define my_safe_afree(ptr, size, min_length) ((size <= min_length) ? my_afree(ptr) : my_free(ptr))
+ 
+-#ifndef errno				/* did we already get it? */
+-#ifdef HAVE_ERRNO_AS_DEFINE
+ #include <errno.h>			/* errno is a define */
+-#else
+-extern int errno;			/* declare errno */
+-#endif
+-#endif					/* #ifndef errno */
++
+ extern char *home_dir;			/* Home directory for user */
+ extern const char *my_progname;		/* program-name (printed in errors) */
+ extern const char *my_progname_short;	/* like above but without directory */

@@ -1,0 +1,43 @@
+These issues were found by Coverity static analysis tool, for more info
+see messages by particular fixes (messages belong to 5.1.61).
+
+Filed upstream at http://bugs.mysql.com/bug.php?id=64631
+
+
+Error: BUFFER_SIZE_WARNING:
+/builddir/build/BUILD/mysql-5.1.61/sql/sql_prepare.cc:2749: buffer_size_warning: Calling strncpy with a maximum size argument of 512 bytes on destination array "this->stmt->last_error" of size 512 bytes might leave the destination string unterminated.
+
+
+diff -up mariadb-5.5.28a/sql/sql_prepare.cc.p20 mariadb-5.5.28a/sql/sql_prepare.cc
+--- mariadb-5.5.28a/sql/sql_prepare.cc.p20	2012-11-28 16:49:36.000000000 +0100
++++ mariadb-5.5.28a/sql/sql_prepare.cc	2012-12-17 17:45:24.232151645 +0100
+@@ -2975,7 +2975,7 @@ void mysql_stmt_get_longdata(THD *thd, c
+   {
+     stmt->state= Query_arena::STMT_ERROR;
+     stmt->last_errno= thd->stmt_da->sql_errno();
+-    strncpy(stmt->last_error, thd->stmt_da->message(), MYSQL_ERRMSG_SIZE);
++    strncpy(stmt->last_error, thd->stmt_da->message(), sizeof(stmt->last_error)-1);
+   }
+   thd->stmt_da= save_stmt_da;
+   thd->warning_info= save_warinig_info;
+
+
+
+
+Error: STRING_OVERFLOW:
+/builddir/build/BUILD/mysql-5.1.61/storage/innodb_plugin/handler/ha_innodb.cc:6544: fixed_size_dest: You might overrun the 512 byte fixed-size string "name2" by copying "name" without checking the length.
+/builddir/build/BUILD/mysql-5.1.61/storage/innodb_plugin/handler/ha_innodb.cc:6544: parameter_as_source: Note: This defect has an elevated risk because the source argument is a parameter of the current function.
+
+diff -up mariadb-5.5.28a/sql/sql_trigger.cc.p20 mariadb-5.5.28a/sql/sql_trigger.cc
+diff -up mariadb-5.5.28a/storage/innobase/handler/ha_innodb.cc.p20 mariadb-5.5.28a/storage/innobase/handler/ha_innodb.cc
+--- mariadb-5.5.28a/storage/innobase/handler/ha_innodb.cc.p20	2012-11-28 16:49:36.000000000 +0100
++++ mariadb-5.5.28a/storage/innobase/handler/ha_innodb.cc	2012-12-17 17:45:24.239151651 +0100
+@@ -7094,7 +7094,7 @@ ha_innobase::create(
+ 
+ 	ut_a(strlen(name) < sizeof(name2));
+ 
+-	strcpy(name2, name);
++	strncpy(name2, name, sizeof(name2)-1);
+ 
+ 	normalize_table_name(norm_name, name2);
+ 

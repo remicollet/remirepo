@@ -1,0 +1,18 @@
+The symbol versioning solution for libmysqlclient in mysql 5.1 was pretty
+awful (export everything) and as of 5.5.8 the cmake build scripts have
+forgotten the issue entirely.  So we now maintain our own list of exported
+symbols and jam it into the build with this hack.
+
+
+diff -up mariadb-5.5.29/libmysql/CMakeLists.txt.p5 mariadb-5.5.29/libmysql/CMakeLists.txt
+--- mariadb-5.5.29/libmysql/CMakeLists.txt.p5	2013-01-29 15:12:46.000000000 +0100
++++ mariadb-5.5.29/libmysql/CMakeLists.txt	2013-02-01 10:44:28.449544405 +0100
+@@ -363,7 +363,7 @@ IF(NOT DISABLE_SHARED)
+         SET(libmysql_link_flags)
+       ENDIF()
+       SET_TARGET_PROPERTIES(libmysql PROPERTIES LINK_FLAGS 
+-        "${libmysql_link_flags} ${LINK_FLAG_NO_UNDEFINED} ${VERSION_SCRIPT_LINK_FLAGS}")
++        "${libmysql_link_flags} -Wl,--version-script=libmysql.version ${LINK_FLAG_NO_UNDEFINED}")
+     ENDIF() 
+     # clean direct output needs to be set several targets have the same name
+     #(mysqlclient in this case)

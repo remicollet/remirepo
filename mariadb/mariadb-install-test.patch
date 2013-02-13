@@ -1,0 +1,54 @@
+Improve the documentation that will be installed in the mysql-test RPM.
+
+diff -up mariadb-5.5.28a/mysql-test/README.p3 mariadb-5.5.28a/mysql-test/README
+--- mariadb-5.5.28a/mysql-test/README.p3	2012-12-17 16:18:20.824636407 +0100
++++ mariadb-5.5.28a/mysql-test/README	2012-12-17 16:21:21.598707120 +0100
+@@ -1,15 +1,26 @@
+-This directory contains a test suite for the MySQL daemon. To run
+-the currently existing test cases, simply execute ./mysql-test-run in
+-this directory. It will fire up the newly built mysqld and test it.
+-
+-Note that you do not have to have to do "make install", and you could
+-actually have a co-existing MySQL installation. The tests will not
+-conflict with it. To run the test suite in a source directory, you
+-must do make first.
+-
+-All tests must pass. If one or more of them fail on your system, please
+-read the following manual section for instructions on how to report the
+-problem:
++This directory contains a test suite for the MariaDB daemon. To run
++the currently existing test cases, execute ./mysql-test-run in
++this directory.
++
++For use in Red Hat distributions, you should run the script as user mysql,
++so the best bet is something like
++       cd /usr/share/mysql-test
++       sudo -u mysql ./mysql-test-run --skip-test-list=rh-skipped-tests.list
++This will use the installed mysql executables, but will run a private copy
++of the server process (using data files within /usr/share/mysql-test),
++so you need not start the mysqld service beforehand.
++
++The "--skip-test-list=rh-skipped-tests.list" option excludes tests that are
++known to fail on one or more Red-Hat-supported platforms.  You can omit it
++if you want to check whether such failures occur for you.  Documentation
++about the reasons for omitting such tests can be found in the file
++rh-skipped-tests.list.
++
++To clean up afterwards, remove the created "var" subdirectory, eg
++       sudo -u mysql rm -rf /usr/share/mysql-test/var
++
++If one or more tests fail on your system, please read the following manual
++section for instructions on how to report the problem:
+ 
+ http://kb.askmonty.org/v/reporting-bugs
+ 
+@@ -26,7 +37,8 @@ other relevant options.
+ 
+ With no test cases named on the command line, mysql-test-run falls back
+ to the normal "non-extern" behavior. The reason for this is that some
+-tests cannot run with an external server.
++tests cannot run with an external server (because they need to control the
++options with which the server is started).
+ 
+ You can create your own test cases. To create a test case, create a new
+ file in the t subdirectory using a text editor. The file should have a .test

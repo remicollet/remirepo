@@ -1,0 +1,14 @@
+# Disable the outfile_loaddata test, which as of 5.1.38 is giving
+# platform-dependent results, with the "expected" results being arguably the
+# wrong ones.  This is upstream at http://bugs.mysql.com/bug.php?id=46895
+# (note that upstream has also disabled it, but only for Solaris, so we still
+# need to disable it here).
+# Still broken in 5.5.14, despite alleged fix.
+
+outfile_loaddata          : bug#46895 code wrong, expected results wrong too
+
+# Disable innodb.innodb, which is showing platform-dependent results
+# as of 5.5.9.  Upstream at http://bugs.mysql.com/bug.php?id=60155
+
+innodb.innodb             : bug#60155 has platform-dependent results
+
