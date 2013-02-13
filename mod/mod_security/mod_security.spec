@@ -5,15 +5,18 @@
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
 %{!?_httpd_moddir:    %{expand: %%global _httpd_moddir    %%{_libdir}/httpd/modules}}
 
+%global with_mlogc 0%{?fedora} || 0%{?rhel} <= 6
+
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.7.1
-Release: 3%{?dist}
+Version: 2.7.2
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: https://github.com/downloads/SpiderLabs/ModSecurity/modsecurity-apache_%{version}.tar.gz
+Source: http://www.modsecurity.org/tarball/%{version}/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
+Source2: 10-mod_security.conf
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
 
@@ -22,6 +25,7 @@ ModSecurity is an open source intrusion detection and prevention engine
 for web applications. It operates embedded into the web server, acting
 as a powerful umbrella - shielding web applications from attacks.
 
+%if %with_mlogc
 %package -n     mlogc
 Summary:        ModSecurity Audit Log Collector
 Group:          System Environment/Daemons
@@ -29,6 +33,7 @@ Requires:       mod_security
 
 %description -n mlogc
 This package contains the ModSecurity Audit Log Collector.
+%endif
 
 %prep
 %setup -q -n modsecurity-apache_%{version}
@@ -56,24 +61,24 @@ install -m0755 apache2/.libs/mod_security2.so %{buildroot}%{_httpd_moddir}/mod_s
 
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 # 2.4-style
-sed -n /^LoadModule/p %{SOURCE1} > 10-mod_security.conf
-sed    /LoadModule/d  %{SOURCE1} > mod_security.conf
-touch -r %{SOURCE1} *.conf
-install -Dp -m0644 mod_security.conf %{buildroot}%{_httpd_confdir}/mod_security.conf
-install -Dp -m0644 10-mod_security.conf %{buildroot}%{_httpd_modconfdir}/10-mod_security.conf
+install -Dp -m0644 %{SOURCE2} %{buildroot}%{_httpd_modconfdir}/10-mod_security.conf
+install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
+sed  -i 's/Include/IncludeOptional/'  %{buildroot}%{_httpd_confdir}/mod_security.conf
 %else
 # 2.2-style
-install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
+install -d -m0755 %{buildroot}%{_httpd_confdir}
+cat %{SOURCE2} %{SOURCE1} > %{buildroot}%{_httpd_confdir}/mod_security.conf
 %endif
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}
 
 # mlogc
+%if %with_mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc/data
 install -m0755 mlogc/mlogc %{buildroot}%{_bindir}/mlogc
 install -m0755 mlogc/mlogc-batch-load.pl %{buildroot}%{_bindir}/mlogc-batch-load
 install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
-
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -90,6 +95,7 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
 %attr(770,apache,root) %dir %{_localstatedir}/lib/%{name}
 
+%if %with_mlogc
 %files -n mlogc
 %defattr (-,root,root)
 %doc mlogc/INSTALL
@@ -98,9 +104,24 @@ rm -rf %{buildroot}
 %attr(0770,root,apache) %dir %{_localstatedir}/log/mlogc/data
 %attr(0755,root,root) %{_bindir}/mlogc
 %attr(0755,root,root) %{_bindir}/mlogc-batch-load
+%endif
 
 %changelog
-* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.67.1-3
+* Wed Feb 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.7.2-1
+- Update to 2.7.1, backport for remi repo and httpd 2.4
+
+* Fri Jan 25 2013 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.2-1
+- Update to 2.7.2
+- Update source url in the spec.
+
+* Thu Nov 22 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.1-5
+- Use conditional for loading mod_unique_id (rhbz #879264)
+- Fix syntax errors on httpd 2.4.x by using IncludeOptional (rhbz #879264, comment #2)
+
+* Mon Nov 19 2012 Peter Vrabec <pvrabec@redhat.com> 2.7.1-4
+- mlogc subpackage is not provided on RHEL7
+
+* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.7.1-3
 - Update to 2.7.1, backport for remi repo and httpd 2.4
 
 * Thu Nov 15 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.1-3
