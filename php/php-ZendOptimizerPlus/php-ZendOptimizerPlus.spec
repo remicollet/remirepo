@@ -1,11 +1,12 @@
 %global owner      zend-dev
 %global extname    ZendOptimizerPlus
-%global commit     aafc1456b0ae7212321250ca7915c8da076e7f6e
+%global commit     afb43f5650da2d24f03ce893bcd5123c12aba3fd
 %global short      %(c=%{commit}; echo ${c:0:7})
+%global prever     -dev
 
 Name:          php-ZendOptimizerPlus
 Version:       7.0.0
-Release:       0.1.git%{short}%{?dist}.1
+Release:       0.2.git%{short}%{?dist}.1
 Summary:       The Zend Optimizer+
 
 Group:         Development/Libraries
@@ -20,6 +21,7 @@ BuildRequires: php-devel
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
+# Only one opcode cache could be enabled
 Conflicts:     php-eaccelerator
 Conflicts:     php-xcache
 Conflicts:     php-pecl-apc
@@ -44,8 +46,8 @@ mv %{extname}-%{commit} NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define ACCELERATOR_VERSION/{s/.* "//;s/".*$//;p}' NTS/ZendAccelerator.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 
@@ -102,7 +104,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/README
+%doc NTS/{LICENSE,README}
 %config(noreplace) %{php_inidir}/%{extname}.ini
 %config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
@@ -110,5 +112,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 14 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.2.gitafb43f5
+- new snapshot
+- better default configuration file (new upstream recommendation)
+- License file now provided by upstream
+
 * Wed Feb 13 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.1.gitaafc145
 - initial package
