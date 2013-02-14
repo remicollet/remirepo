@@ -93,6 +93,8 @@ rm -rf %{buildroot}
 
 
 %check
+: Minimal load test of the built extensions
+
 %{__php} \
     -n -d zend_extension=%{buildroot}%{php_extdir}/%{extname}.so \
     -m | grep "Zend Optimizer+"

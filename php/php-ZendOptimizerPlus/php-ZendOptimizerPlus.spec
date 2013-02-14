@@ -1,12 +1,14 @@
+%{!?php_inidir: %{expand: %%global php_inidir %{_sysconfdir}/php.d}}
 %global owner      zend-dev
 %global extname    ZendOptimizerPlus
-%global commit     afb43f5650da2d24f03ce893bcd5123c12aba3fd
+%global commit     a84b588208dfbc96b75281b7ff9e097e52f71a04
 %global short      %(c=%{commit}; echo ${c:0:7})
 %global prever     -dev
+%global with_zts   0%{?__ztsphp:1}
 
 Name:          php-ZendOptimizerPlus
 Version:       7.0.0
-Release:       0.2.git%{short}%{?dist}.1
+Release:       0.3.git%{short}%{?dist}
 Summary:       The Zend Optimizer+
 
 Group:         Development/Libraries
@@ -15,7 +17,6 @@ URL:           https://github.com/%{owner}/%{extname}
 Source0:       %{url}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
 Source1:       %{extname}.ini
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 
 Requires:      php(zend-abi) = %{php_zend_api}
@@ -53,8 +54,10 @@ fi
 
 cp %{SOURCE1} %{extname}.ini
 
+%if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
+%endif
 
 
 %build
@@ -65,53 +68,61 @@ cd NTS
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --enable-optimizer-plus \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
-rm -rf %{buildroot}
-
 install -d -m 755 %{buildroot}%{php_inidir}
 sed -e 's:@EXTPATH@:%{php_extdir}:' \
     %{extname}.ini >%{buildroot}%{php_inidir}/%{extname}.ini
 
+make -C NTS install INSTALL_ROOT=%{buildroot}
+
+%if %{with_zts}
 install -d -m 755 %{buildroot}%{php_ztsinidir}
 sed -e 's:@EXTPATH@:%{php_ztsextdir}:' \
     %{extname}.ini >%{buildroot}%{php_ztsinidir}/%{extname}.ini
 
-make -C NTS install INSTALL_ROOT=%{buildroot}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-
-
-%clean
-rm -rf %{buildroot}
+%endif
 
 
 %check
-%{__php} \
+: Minimal load test of the built extensions
+
+%{_bindir}/php \
     -n -d zend_extension=%{buildroot}%{php_extdir}/%{extname}.so \
     -m | grep "Zend Optimizer+"
 
+%if %{with_zts}
 %{__ztsphp} \
     -n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{extname}.so \
     -m | grep "Zend Optimizer+"
+%endif
 
 
 %files
-%defattr(-,root,root,-)
 %doc NTS/{LICENSE,README}
 %config(noreplace) %{php_inidir}/%{extname}.ini
-%config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_ztsextdir}/%{extname}.so
+%endif
 
 
 %changelog
+* Thu Feb 14 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.3.gita84b588
+- make zts build optional
+
 * Thu Feb 14 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.2.gitafb43f5
 - new snapshot
 - better default configuration file (new upstream recommendation)
