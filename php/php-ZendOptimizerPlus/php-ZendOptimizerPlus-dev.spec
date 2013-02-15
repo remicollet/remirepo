@@ -1,18 +1,20 @@
 %global owner      zend-dev
 %global extname    ZendOptimizerPlus
-%global commit     afb43f5650da2d24f03ce893bcd5123c12aba3fd
+%global commit     2b6eede1d3e2fa7151a5cb07c20cf66504e6e066
 %global short      %(c=%{commit}; echo ${c:0:7})
 %global prever     -dev
 
 Name:          php-ZendOptimizerPlus
 Version:       7.0.0
-Release:       0.2.git%{short}%{?dist}.1
+Release:       0.4.git%{short}%{?dist}.1
 Summary:       The Zend Optimizer+
 
 Group:         Development/Libraries
 License:       PHP
 URL:           https://github.com/%{owner}/%{extname}
 Source0:       %{url}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
+# this extension must be loaded before XDebug
+# So uppercase Z if before lowercase X (LANG=C order)
 Source1:       %{extname}.ini
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -114,6 +116,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 15 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.4.git2b6eede
+- new snapshot (ZTS fixes)
+
 * Thu Feb 14 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.2.gitafb43f5
 - new snapshot
 - better default configuration file (new upstream recommendation)

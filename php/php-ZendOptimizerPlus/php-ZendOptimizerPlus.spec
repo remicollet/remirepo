@@ -1,20 +1,22 @@
 %{!?php_inidir: %{expand: %%global php_inidir %{_sysconfdir}/php.d}}
 %global owner      zend-dev
 %global extname    ZendOptimizerPlus
-%global commit     a84b588208dfbc96b75281b7ff9e097e52f71a04
+%global commit     2b6eede1d3e2fa7151a5cb07c20cf66504e6e066
 %global short      %(c=%{commit}; echo ${c:0:7})
 %global prever     -dev
 %global with_zts   0%{?__ztsphp:1}
 
 Name:          php-ZendOptimizerPlus
 Version:       7.0.0
-Release:       0.3.git%{short}%{?dist}
+Release:       0.4.git%{short}%{?dist}
 Summary:       The Zend Optimizer+
 
 Group:         Development/Libraries
 License:       PHP
 URL:           https://github.com/%{owner}/%{extname}
 Source0:       %{url}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
+# this extension must be loaded before XDebug
+# So uppercase Z if before lowercase X (LANG=C order)
 Source1:       %{extname}.ini
 
 BuildRequires: php-devel
@@ -120,6 +122,9 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 
 %changelog
+* Fri Feb 15 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.4.git2b6eede
+- new snapshot (ZTS fixes)
+
 * Thu Feb 14 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.3.gita84b588
 - make zts build optional
 
