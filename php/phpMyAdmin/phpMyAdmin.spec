@@ -1,7 +1,7 @@
 #global prever rc1
 
 Name: phpMyAdmin
-Version: 3.5.6
+Version: 3.5.7
 Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -126,6 +126,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Fri Feb 15 2013 Remi Collet <rpms@famillecollet.com> 3.5.7-1
+- Upstream released 3.5.7 (bugfix)
+
 * Mon Jan 28 2013 Remi Collet <rpms@famillecollet.com> 3.5.6-1
 - Upstream released 3.5.6 (bugfix)
 - add theme metro 1.0
