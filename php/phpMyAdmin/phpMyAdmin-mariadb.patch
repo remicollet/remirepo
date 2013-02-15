@@ -1,0 +1,11 @@
+--- phpMyAdmin-3.5.7-all-languages/libraries/common.lib.php~	2013-02-15 14:20:13.675872709 +0100
++++ phpMyAdmin-3.5.7-all-languages/libraries/common.lib.php	2013-02-15 14:20:34.185961593 +0100
+@@ -3752,7 +3752,7 @@
+     $server_type = 'MySQL';
+     if (PMA_DRIZZLE) {
+         $server_type = 'Drizzle';
+-    } else if (strpos(PMA_MYSQL_STR_VERSION, 'mariadb') !== false) {
++    } else if (strpos(strtolower(PMA_MYSQL_STR_VERSION), 'mariadb') !== false) {
+         $server_type = 'MariaDB';
+     } else if (stripos(PMA_MYSQL_VERSION_COMMENT, 'percona') !== false) {
+         $server_type = 'Percona Server';
