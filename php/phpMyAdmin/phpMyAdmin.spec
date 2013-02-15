@@ -19,6 +19,10 @@ Source14: http://downloads.sourceforge.net/sourceforge/phpmyadmin/blueorange-1.0
 Source15: http://downloads.sourceforge.net/sourceforge/phpmyadmin/cleanstrap-1.0.zip
 Source16: http://downloads.sourceforge.net/sourceforge/phpmyadmin/metro-1.0.zip
 
+# http://sourceforge.net/p/phpmyadmin/bugs/3828/
+# MariaDB reported as MySQL
+Patch0:   %{name}-mariadb.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: unzip
@@ -44,6 +48,8 @@ is available in 50 languages
 
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
+
+%patch0 -p1
 
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
@@ -128,6 +134,8 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 %changelog
 * Fri Feb 15 2013 Remi Collet <rpms@famillecollet.com> 3.5.7-1
 - Upstream released 3.5.7 (bugfix)
+- patch for http://sourceforge.net/p/phpmyadmin/bugs/3828/
+  MariaDB reported as MySQL
 
 * Mon Jan 28 2013 Remi Collet <rpms@famillecollet.com> 3.5.6-1
 - Upstream released 3.5.6 (bugfix)
