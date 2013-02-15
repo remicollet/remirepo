@@ -1,3 +1,14 @@
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%global with_systemd 1
+%else
+%global with_systemd 0
+%endif
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+%global with_dtrace 1
+%else
+%global with_dtrace 0
+%endif
+
 Name: mariadb
 Version: 5.5.29
 Release: 5%{?dist}
@@ -15,7 +26,7 @@ License: GPLv2 with exceptions and LGPLv2 and BSD
 %global obsoleted_mysql_evr 5.6-0
 
 # Should mariadb obsolete mysql?
-%{!?obsoletemysql:%global obsoletemysql 1}
+%{!?obsoletemysql:%global obsoletemysql 0}
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest:%global runselftest 1}
@@ -54,9 +65,15 @@ Patch12: mariadb-dh1024.patch
 Patch13: mariadb-man-plugin.patch
 Patch14: mariadb-buffer.patch
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, readline-devel, openssl-devel
 BuildRequires: cmake, ncurses-devel, zlib-devel, libaio-devel
-BuildRequires: systemd-units, systemtap-sdt-devel
+%if %{with_dtrace}
+BuildRequires: systemtap-sdt-devel >= 1.3
+%endif
+%if %{with_systemd}
+BuildRequires: systemd-units
+%endif
 # make test requires time and ps
 BuildRequires: time procps
 # perl modules needed to run regression tests
@@ -82,6 +99,9 @@ Conflicts: real-mysql
 %endif
 # mysql-cluster used to be built from this SRPM, but no more
 Obsoletes: mysql-cluster < 5.1.44
+# Virtual provides present in upstream's RPM (used by some app)
+Provides: mysql-client = %{version}-%{release}
+
  
 # When rpm 4.9 is universal, this could be cleaned up:
 %global __perl_requires %{SOURCE999}
@@ -107,6 +127,12 @@ Provides: mysql-libs = %{version}-%{release}
 Provides: mysql-libs%{?_isa} = %{version}-%{release}
 Provides: real-%{name}-libs = %{version}-%{release}
 Provides: real-%{name}-libs%{?_isa} = %{version}-%{release}
+Obsoletes: compat-mysql55 <= %{version}
+%if 0%{?rhel} == 5
+# EL-5 mysql 5.0.x have no mysql/mysql-libs
+# This circular dep. should make update simpler
+Requires: real-%{name}%{?_isa} = %{version}-%{release}
+%endif
 %if 0%obsoletemysql
 Obsoletes: mysql-libs < %{obsoleted_mysql_evr}
 %else
@@ -127,6 +153,7 @@ Requires: real-%{name}%{?_isa} = %{version}-%{release}
 Requires: real-%{name}-libs%{?_isa} = %{version}-%{release}
 Requires: sh-utils
 Requires(pre): /usr/sbin/useradd
+%if %{with_systemd}
 # We require this to be present for %%{_prefix}/lib/tmpfiles.d
 Requires: systemd-units
 # Make sure it's there when scriptlets run, too
@@ -137,6 +164,13 @@ Requires(postun): systemd-units
 # is not valid.  We can use %%post because this particular %%triggerun script
 # should fire just after this package is installed.
 Requires(post): systemd-sysv
+%else
+Requires(post): chkconfig
+Requires(preun): chkconfig
+# This is for /sbin/service
+Requires(preun): initscripts
+Requires(postun): initscripts
+%endif
 # mysqlhotcopy needs DBI/DBD support
 Requires: perl-DBI, perl-DBD-MySQL
 Conflicts: MySQL-server
@@ -358,7 +392,9 @@ cmake . -DBUILD_CONFIG=mysql_release \
 	-DMYSQL_DATADIR="/var/lib/mysql" \
 	-DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
 	-DENABLED_LOCAL_INFILE=ON \
+%if %{with_dtrace}
 	-DENABLE_DTRACE=ON \
+%endif
 	-DWITH_EMBEDDED_SERVER=ON \
 	-DWITH_READLINE=ON \
 	-DWITH_SSL=system \
