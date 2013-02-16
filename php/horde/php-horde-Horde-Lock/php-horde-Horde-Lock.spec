@@ -5,11 +5,11 @@
 
 Name:           php-horde-Horde-Lock
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Resource Locking System
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -85,11 +85,17 @@ fi
 
 
 %changelog
-* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo (no change)
+* Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.1-3
+- Update for review
 
-* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Tue Feb 5 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.1-2
+- Update for review
+
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1 (no change)
+
+* Thu Nov  1 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.1-1
 - Initial package
