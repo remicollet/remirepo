@@ -5,11 +5,11 @@
 
 Name:           php-horde-Horde-Argv
 Version:        2.0.4
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Horde command-line argument parsing package
 
 Group:          Development/Libraries
-License:        BSD
+License:        BSD and LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -111,25 +111,31 @@ fi
 
 
 %changelog
-* Wed Jan 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-2
+* Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.4-4
+- Update for review
+
+* Tue Feb 5 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.4-3
+- Use php-common instead of php(language), remove BuildRoot
+
+* Wed Jan 30 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
 - enable tests during build
 
-* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-1
-- Update to 2.0.4 for remi repo
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
 
-* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
-- Update to 2.0.3 for remi repo
+* Wed Jan  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
 - use local script instead of find_lang
 
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
 - make test optional (need locale)
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
 
-* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Thu Nov  1 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 - run test during rpmbuild
 
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.5-1
