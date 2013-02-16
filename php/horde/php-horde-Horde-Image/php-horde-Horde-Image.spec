@@ -8,11 +8,11 @@
 
 Name:           php-horde-Horde-Image
 Version:        2.0.3
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Image API
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        GPLv2+ and LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -140,23 +140,26 @@ fi
 
 
 %changelog
-* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
-- Update to 2.0.3 for remi repo
+* Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.3-3
+- Update for review
 
-* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
+* Wed Jan  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
 - manage locales
 - new test layout (requires Horde_Test 2.1.0)
 
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
 
-* Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
+* Mon Nov  5 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - cleanups
 - requires php-pear(XML_SVG)
 
-* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Thu Nov  1 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Thu Jun 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.10-1
 - Upgrade to 1.0.10
