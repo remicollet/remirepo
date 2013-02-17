@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Text-Flowed
 Version:        2.0.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Horde API for flowed text as per RFC 3676
 
 Group:          Development/Libraries
@@ -24,7 +24,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
-Requires:       php-cre
+Requires:       php-pcre
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Sun Feb 17 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-4
+- fix dependencies
+
 * Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.1-3
 - Update for review
 
