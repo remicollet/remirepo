@@ -1,0 +1,12 @@
+--- msgpack-0.5.5/msgpack_unpack.h.old	2013-02-19 04:03:35.000000000 +0100
++++ msgpack-0.5.5/msgpack_unpack.h	2013-02-20 09:55:53.969440978 +0100
+@@ -67,6 +67,9 @@
+ int msgpack_unserialize_map_item(
+     msgpack_unserialize_data *unpack, zval **container, zval *key, zval *val);
+ 
++void msgpack_serialize_var_destroy(msgpack_serialize_data_t *var_hash);
++void msgpack_serialize_var_init(msgpack_serialize_data_t *var_hash);
++
+ /* template functions */
+ #define msgpack_unpack_struct(name)    struct template ## name
+ #define msgpack_unpack_func(ret, name) ret template ## name
