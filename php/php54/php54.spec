@@ -65,11 +65,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.11
+Version: 5.4.12
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1623,6 +1623,10 @@ fi
 
 
 %changelog
+* Wed Feb 20 2013 Remi Collet <remi@fedoraproject.org> 5.4.12-1
+- update to 5.4.12
+- security fixes for CVE-2013-1635 and CVE-2013-1643
+
 * Wed Feb 13 2013 Remi Collet <remi@fedoraproject.org> 5.4.11-2
 - enable tokyocabinet and gdbm dba handlers
 
