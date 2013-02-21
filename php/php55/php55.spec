@@ -61,14 +61,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201302131030
+%global snapdate      201302211230
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.15.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.16.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1648,6 +1648,9 @@ fi
 
 
 %changelog
+* Thu Feb 21 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.16-201302211230
+- new snapshot (post alpha 5)
+
 * Wed Feb 13 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.16-201302131030
 - enable tokyocabinet and gdbm dba handlers
 
