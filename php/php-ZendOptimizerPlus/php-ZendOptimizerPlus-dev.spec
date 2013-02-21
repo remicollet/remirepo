@@ -1,12 +1,12 @@
 %global owner      zend-dev
 %global extname    ZendOptimizerPlus
-%global commit     2b6eede1d3e2fa7151a5cb07c20cf66504e6e066
+%global commit     3a06991ffda1ed6baa1c6004e2f113347955a3e1
 %global short      %(c=%{commit}; echo ${c:0:7})
 %global prever     -dev
 
 Name:          php-ZendOptimizerPlus
 Version:       7.0.0
-Release:       0.4.git%{short}%{?dist}.1
+Release:       0.6.git%{short}%{?dist}.1
 Summary:       The Zend Optimizer+
 
 Group:         Development/Libraries
@@ -82,11 +82,12 @@ install -d -m 755 %{buildroot}%{php_inidir}
 sed -e 's:@EXTPATH@:%{php_extdir}:' \
     %{extname}.ini >%{buildroot}%{php_inidir}/%{extname}.ini
 
+make -C NTS install INSTALL_ROOT=%{buildroot}
+
 install -d -m 755 %{buildroot}%{php_ztsinidir}
 sed -e 's:@EXTPATH@:%{php_ztsextdir}:' \
     %{extname}.ini >%{buildroot}%{php_ztsinidir}/%{extname}.ini
 
-make -C NTS install INSTALL_ROOT=%{buildroot}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 
@@ -110,12 +111,16 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc NTS/{LICENSE,README}
 %config(noreplace) %{php_inidir}/%{extname}.ini
-%config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
+
+%config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_ztsextdir}/%{extname}.so
 
 
 %changelog
+* Thu Feb 21 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.6.git3a06991
+- newsnapshot
+
 * Fri Feb 15 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.4.git2b6eede
 - new snapshot (ZTS fixes)
 
