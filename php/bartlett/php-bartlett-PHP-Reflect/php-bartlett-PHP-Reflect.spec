@@ -3,16 +3,10 @@
 %global channel   bartlett.laurent-laville.org
 %global pear_name PHP_Reflect
 
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-%global withhtmldoc 1
-%else
-%global withhtmldoc 0
-%endif
-
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.5.0
-Release:        2%{?dist}
+Version:        1.6.0
+Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -20,22 +14,12 @@ License:        BSD
 URL:            http://bartlett.laurent-laville.org/
 Source0:        http://%{channel}/get/%{pear_name}-%{version}%{?prever}.tgz
 
-# Don't install .js (unused)
-Patch1:         PHP_Reflect-deljs.patch
-# Install generated doc using pear command
-Patch2:         PHP_Reflect-addhtml.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
-%if %{withhtmldoc}
-# to build HTML documentation
-BuildRequires:  asciidoc >= 8.4.0
-BuildRequires:  source-highlight
-%endif
 
 Requires:       php-pear(PEAR) >= 1.9.0
 Requires(post): %{__pear}
@@ -52,11 +36,7 @@ Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
 PHP_Reflect adds the ability to reverse-engineer classes, interfaces,
 functions, constants and more, by connecting php callbacks to other tokens.
 
-%if %{withhtmldoc}
-HTML Documentation:  %{pear_docdir}/%{pear_name}/docs/index.html
-%else
-Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
-%endif
+HTML Documentation:  %{pear_docdir}/%{pear_name}/html/index.html
 
 
 %prep
@@ -66,24 +46,9 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 cd %{pear_name}-%{version}%{?prever}
 mv -f ../package.xml %{name}.xml
 
-%patch1 -p1 -b .deljs
-%if %{withhtmldoc}
-%patch2 -p1 -b .addhtml
-%endif
-
 
 %build
 cd %{pear_name}-%{version}%{?prever}
-
-%if %{withhtmldoc}
-for page in index INSTALL CHANGELOG LICENSE phpreflect-book \
-            sources/scanFile sources/scanFunctionArguments \
-            sources/Token sources/Autoload sources/Reflect ; do
-    asciidoc  -a linkcss -a icons -a theme=flask -a toc2 -n --safe \
-              -o $PWD/docs/$page.html  $PWD/docs/$page.txt || :
-    [ -f $PWD/docs/$page.html ] || exit 1
-done
-%endif
 
 
 %install
@@ -135,6 +100,10 @@ fi
 
 
 %changelog
+* Fri Feb 22 2013 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- Version 1.6.0 (stable) - API 1.6.0 (stable)
+- html documentation is now provided by upstream
+
 * Mon Nov 26 2012 Remi Collet <remi@fedoraproject.org> - 1.5.0-2
 - generate documentation using asciidoc, without phing
 
