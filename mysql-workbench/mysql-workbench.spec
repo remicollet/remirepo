@@ -11,7 +11,7 @@
 
 Summary:   A MySQL visual database modeling, administration and querying tool
 Name:      mysql-workbench
-Version:   5.2.46
+Version:   5.2.47
 Release:   1%{?dist}
 Group:     Applications/Databases
 License:   GPLv2 with exceptions
@@ -243,6 +243,10 @@ fi
 
 
 %changelog
+* Fri Feb 22 2013 Remi Collet <remi@fedoraproject.org> 5.2.47-1
+- update to 5.2.47 Community (OSS) Edition (GPL)
+  http://dev.mysql.com/doc/relnotes/workbench/en/wb-news-5-2-47.html
+
 * Sat Feb  9 2013 Remi Collet <remi@fedoraproject.org> 5.2.46-1
 - update to 5.2.46 Community (OSS) Edition (GPL)
   http://dev.mysql.com/doc/relnotes/workbench/en/wb-news-5-2-46.html
