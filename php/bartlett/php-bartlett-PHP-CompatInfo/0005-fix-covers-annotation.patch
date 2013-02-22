@@ -1,0 +1,25 @@
+From fa13cf28168ca1b8c1cdc4cf01641479d17e5462 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 4 Feb 2013 11:14:52 +0100
+Subject: [PATCH 5/6] fix @covers annotation
+
+---
+ tests/Reference/CurlTest.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/Reference/CurlTest.php b/tests/Reference/CurlTest.php
+index 9deb8db..667e562 100644
+--- a/tests/Reference/CurlTest.php
++++ b/tests/Reference/CurlTest.php
+@@ -37,7 +37,7 @@ class PHP_CompatInfo_Reference_CurlTest
+      * @covers PHP_CompatInfo_Reference_Curl::getExtensions
+      * @covers PHP_CompatInfo_Reference_Curl::getFunctions
+      * @covers PHP_CompatInfo_Reference_Curl::getConstants
+-     * @covers PHP_CompatInfo_Reference_Curl::getFunctions
++     * @covers PHP_CompatInfo_Reference_Curl::getClasses
+      * @return void
+      */
+     protected function setUp()
+-- 
+1.7.11.7
+

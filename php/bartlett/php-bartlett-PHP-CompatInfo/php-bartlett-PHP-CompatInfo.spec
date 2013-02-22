@@ -8,7 +8,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.12.1
+Version:        2.13.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -37,6 +37,12 @@ Patch14:        0014-curl-reference-for-php-5.5-more.patch
 Patch15:        0015-mysqli-new-constant.patch
 Patch16:        0016-MYSQLI_OPT_CAN_HANDLE_EXPIRED_PASSWORDS-is-5.4.12.patch
 Patch17:        0017-data-reference-for-php-5.5-date-immutable.patch
+Patch18:        0001-new-curl-change-in-php-5.5.patch
+Patch19:        0002-new-filter-changes-in-php-5.5.patch
+Patch20:        0003-new-curl-changes-in-php-5.5.patch
+Patch21:        0004-new-intl-changes-in-php-5.5.patch
+Patch22:        0005-fix-covers-annotation.patch
+Patch23:        0006-fix-mysqli-reference-for-php-5.5-trans.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -44,7 +50,7 @@ BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.5.0
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.6.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -56,7 +62,7 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.5.0
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.6.0
 Requires:       php-pear(Console_CommandLine) >= 1.2.0
 # Optional
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
@@ -100,6 +106,12 @@ cd %{pear_name}-%{version}%{?prever}
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
 
 # remove checksum for patched files
 sed -e 's/md5sum.*name/name/' \
@@ -183,6 +195,10 @@ fi
 
 
 %changelog
+* Fri Feb 22 2013 Remi Collet <remi@fedoraproject.org> - 2.13.0-1
+- Update to 2.13.0
+- raise dependencies, PHP_Reflect 1.6.0
+
 * Fri Jan 18 2013 Remi Collet <remi@fedoraproject.org> - 2.12.1-1
 - update to Version 2.12.1
 - fix path to documentation in description
