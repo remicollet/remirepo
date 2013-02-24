@@ -41,7 +41,7 @@
 
 %if %{?system_nss}
 # grep 'min_ns.*=[0-9]' configure
-%global nspr_version 4.9.3
+%global nspr_version 4.9.4
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
 %global nss_version 3.14.1
 %global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
@@ -63,6 +63,7 @@
 %global beta_version  0
 %global rc_version    0
 
+%global tarballname   firefox
 %global mozappdir     %{_libdir}/%{name}
 %global tarballdir    mozilla-release
 
@@ -91,14 +92,12 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        18.0.2
+Version:        19.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
-# You can get sources at ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_ver}/source
-#Source0:        %{name}-%{version}%{?pre_version}.source.tar.bz2
-Source0:        firefox-%{version}%{?pre_version}.source.tar.bz2
+Source0:        ftp://ftp.mozilla.org/pub/%{tarballname}/releases/%{version}%{?pre_version}/source/%{tarballname}-%{version}%{?pre_version}.source.tar.bz2
 Source10:       %{shortname}-mozconfig
 Source11:       %{shortname}-mozconfig-debuginfo
 Source12:       %{shortname}-redhat-default-prefs.js
@@ -115,9 +114,11 @@ Patch19:        rhbz-304121.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
+Patch21:        rhbz-911314.patch
 
 # Upstream patches
 Patch101:       mozilla-791626.patch
+Patch102:       mozilla-239254.patch
 
 # ---------------------------------------------------
 
@@ -267,7 +268,12 @@ cd %{tarballdir}
 %patch19 -p2 -b .rhbz-304121
 
 %patch20  -p2 -b .pk
+%ifarch ppc ppc64
+%patch21  -p1 -b .ppc
+%endif
+
 %patch101 -p1 -b .791626
+%patch102 -p1 -b .239254
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -568,6 +574,16 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Feb 23 2013 Remi Collet <RPMS@FamilleCollet.com> - 19.0-1
+- Update to 19.0
+
+* Wed Feb 20 2013 Martin Stransky <stransky@redhat.com> - 19.0-2
+- Added fix for rhbz#911314 (ppc only)
+
+* Mon Feb 18 2013 Martin Stransky <stransky@redhat.com> - 19.0-1
+- Update to 19.0
+- Added fix for mozbz#239254
+
 * Wed Feb  6 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0.2-1
 - Update to 18.0.2
 
