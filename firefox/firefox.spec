@@ -26,13 +26,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      18.0.2
-%global xulrunner_version_max  18.1
+%global xulrunner_version      19.0
+%global xulrunner_version_max  19.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130206
+%global datelang               20130219
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
@@ -67,7 +67,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        18.0.2
+Version:        19.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -396,7 +396,7 @@ echo -e "Fedora / Red Hat build and it overrides the official one."
 echo -e "Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 15
+%if %{?fedora}%{!?fedora:99} <= 16
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -474,6 +474,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Feb 23 2013 Remi Collet <RPMS@FamilleCollet.com> - 19.0-1
+- Update to 19.0
+
+* Tue Feb 19 2013 Jan Horak <jhorak@redhat.com> - 19.0-1
+- Update to 19.0
+
 * Wed Feb  6 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0.2-1
 - Update to 18.0.2
 
