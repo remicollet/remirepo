@@ -8,7 +8,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.13.1
+Version:        2.13.2
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -51,7 +51,7 @@ BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.6.1
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.2.1
+Requires:       php(language) >= 5.2.1
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-libxml
@@ -189,6 +189,9 @@ fi
 
 
 %changelog
+* Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.13.2-1
+- Update to 2.13.2
+
 * Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.13.1-1
 - Update to 2.13.1
 - raise dependencies, PHP_Reflect 1.6.1
