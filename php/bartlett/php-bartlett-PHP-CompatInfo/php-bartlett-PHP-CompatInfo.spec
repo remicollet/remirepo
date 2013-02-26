@@ -8,7 +8,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.13.0
+Version:        2.13.1
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -24,7 +24,6 @@ Patch1:         0001-cuirl-reference-for-php-5.5.patch
 Patch2:         0002-hash-reference-for-php-5.5.patch
 Patch3:         0003-tokoniser-reference-for-php-5.5.patch
 Patch4:         0004-standard-reference-for-php-5.5.patch
-Patch5:         0005-snmp-reference-for-php-5.5.patch
 Patch6:         0006-openssl-reference-for-php-5.5.patch
 Patch7:         0007-mysqli-reference-for-php-5.5.patch
 Patch8:         0008-Fix-json-reference-for-PHP-5.5.patch
@@ -34,8 +33,6 @@ Patch11:        0011-fix-order-in-intl.patch
 Patch12:        0012-curl-reference-for-php-5.5-more.patch
 Patch13:        0013-use-LATEST_PHP_5_4-macro.patch
 Patch14:        0014-curl-reference-for-php-5.5-more.patch
-Patch15:        0015-mysqli-new-constant.patch
-Patch16:        0016-MYSQLI_OPT_CAN_HANDLE_EXPIRED_PASSWORDS-is-5.4.12.patch
 Patch17:        0017-data-reference-for-php-5.5-date-immutable.patch
 Patch18:        0001-new-curl-change-in-php-5.5.patch
 Patch19:        0002-new-filter-changes-in-php-5.5.patch
@@ -93,7 +90,6 @@ cd %{pear_name}-%{version}%{?prever}
 %patch2  -p1
 %patch3  -p1
 %patch4  -p1
-%patch5  -p1
 %patch6  -p1
 %patch7  -p1
 %patch8  -p1
@@ -103,8 +99,6 @@ cd %{pear_name}-%{version}%{?prever}
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
-%patch15 -p1
-%patch16 -p1
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
@@ -195,6 +189,9 @@ fi
 
 
 %changelog
+* Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.13.1-1
+- Update to 2.13.1
+
 * Fri Feb 22 2013 Remi Collet <remi@fedoraproject.org> - 2.13.0-1
 - Update to 2.13.0
 - raise dependencies, PHP_Reflect 1.6.0
