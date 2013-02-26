@@ -1,7 +1,10 @@
+pear.horde.org Horde_Core        2.2.0 (stable) 2.3.0 (stable) 1396kB
+pear.horde.org Horde_Imap_Client 2.6.0 (stable) 2.7.0 (stable) 166kB
+
 01 php-horde-Horde-Autoloader   =   2.0.1
 02 php-horde-Horde-Translation  =   2.0.1
 03 php-horde-Horde-Stream-Wrapper = 2.0.1
-04 php-horde-Horde-Util         =   2.1.0
+04 php-horde-Horde-Util         =   2.2.0
 05 php-horde-Horde-Exception    =   2.0.3   => Translation
 06 php-horde-Horde-Support      =   2.0.3   => Exception, Stream_Wrapper
 07 php-horde-Horde-Cli          =   2.0.3   => Support, Translation

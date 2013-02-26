@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Util
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -109,6 +109,9 @@ fi
 
 
 %changelog
+* Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
