@@ -5,7 +5,7 @@
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.6.0
+Version:        1.6.1
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -100,6 +100,9 @@ fi
 
 
 %changelog
+* Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
+- Update to 1.6.1
+
 * Fri Feb 22 2013 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
 - Version 1.6.0 (stable) - API 1.6.0 (stable)
 - html documentation is now provided by upstream
