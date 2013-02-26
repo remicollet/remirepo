@@ -1,14 +1,14 @@
 %global github_owner   getsentry
 %global github_name    raven-php
-%global github_version 0.4.0
-%global github_commit  80ff1fec353834de5d6bf57ca6834eddde14aba9
+%global github_version 0.5.1
+%global github_commit  cf3505369911d8f4ce3eb59dc9e1baba29cf72cf
 
 %global lib_name       Raven
 %global php_min_ver    5.2.4
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       A PHP client for Sentry
 
 Group:         Development/Libraries
@@ -18,11 +18,11 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commi
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# Test build requires
-BuildRequires: php-common >= %{php_min_ver}
+# For tests
+BuildRequires: php(language) >= %{php_min_ver}
 # composer.json lists PHPUnit version 3.7, but tests pass with 3.6+
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# Test build requires: phpci
+# For tests: phpci
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-hash
@@ -34,8 +34,8 @@ BuildRequires: php-sockets
 BuildRequires: php-spl
 BuildRequires: php-zlib
 
-Requires:      php-common >= %{php_min_ver}
-# phpci requires
+Requires:      php(language) >= %{php_min_ver}
+# phpci
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-hash
@@ -109,6 +109,15 @@ cp -rp test/* %{buildroot}%{_datadir}/tests/%{name}/
 
 
 %changelog
+* Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> 0.5.1-1
+- backport 0.5.1 for remi repo.
+
+* Sun Feb 24 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.5.1-1
+- Updated to upstream version 0.5.1
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Jan 23 2013 Remi Collet <remi@fedoraproject.org> 0.4.0-2
 - backport 0.4.0 for remi repo.
 
