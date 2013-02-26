@@ -5,11 +5,11 @@
 
 Name:           php-horde-Horde-Text-Filter
 Version:        2.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Text Filter API
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 # remove non-free stuff
 # http://bugs.horde.org/ticket/11870
@@ -145,6 +145,9 @@ fi
 
 
 %changelog
+* Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
+- fix License (review #908389)
+
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 
