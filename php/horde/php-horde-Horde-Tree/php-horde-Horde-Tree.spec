@@ -9,6 +9,7 @@ Release:        2%{?dist}
 Summary:        Horde Tree API
 
 Group:          Development/Libraries
+# http://bugs.horde.org/ticket/12070
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz

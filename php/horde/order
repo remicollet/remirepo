@@ -30,7 +30,7 @@
 29 php-horde-Horde-Token        ?   2.0.3   => BR(Db, Url), Exception, Translation, Url, Util
 30 php-horde-Horde-Template     ?   2.0.1
 31 php-horde-Horde-Xml-Element  =   2.0.1   =>           Exception
-32 php-horde-Horde-Alarm        *   2.0.3   => BR(Date), Date, Exception, Translation
+32 php-horde-Horde-Alarm        =   2.0.3   => BR(Date), Date, Exception, Translation
 33 php-horde-Horde-Text-Diff    =   2.0.1   =>           Exception, Util
 34 php-horde-Horde-Text-Filter  *   2.0.5   => BR(Text-Flowed), Exception, Util, Text_Flowed, Translation
 35 php-horde-Horde-Group        ?   2.0.1   => BR(Db),   Exception, Util
