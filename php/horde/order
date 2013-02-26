@@ -1,5 +1,4 @@
 pear.horde.org Horde_Core        2.2.0 (stable) 2.3.0 (stable) 1396kB
-pear.horde.org Horde_Imap_Client 2.6.0 (stable) 2.7.0 (stable) 166kB
 
 01 php-horde-Horde-Autoloader   =   2.0.1
 02 php-horde-Horde-Translation  =   2.0.1
@@ -54,7 +53,7 @@ pear.horde.org Horde_Imap_Client 2.6.0 (stable) 2.7.0 (stable) 166kB
 50 php-horde-Horde-Stream       =   1.2.0   =>           Exception
 51 ...orde-Horde-Crypt-Blowfish =   1.0.2   =>
 52 php-horde-Horde-Secret       =   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
-53 php-horde-Horde-Imap-Client  *   2.6.0   => BR(Stream, Mime), Exception, Mail, Mime, Stream, Util, Cache, Secret, Stream_Filter
+53 php-horde-Horde-Imap-Client  *   2.7.0   => BR(Stream, Mime), Exception, Mail, Mime, Stream, Util, Cache, Secret, Stream_Filter
 54 ...-Horde-SessionHandler     *   2.0.1   => BR(Db),   Exception, Util
 55 php-horde-Horde-Share        *   2.0.2   => BR(Group, Perms, Injector) Db, Exception, Group, Perms, Support, Translation, Url, Util
 56 php-horde-Horde-Role         =   1.0.1
