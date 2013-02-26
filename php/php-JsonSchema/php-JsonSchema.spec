@@ -1,7 +1,7 @@
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.2.4
-%global github_commit  e26066573e11fef790ec9bdfaf7c98ccf35728d9
+%global github_version 1.3.0
+%global github_commit  93907953341530a748aa88a5380c418eb774b895
 
 %global php_min_ver    5.3.3
 
@@ -19,10 +19,10 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-# Test build requires
+# For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# Test build requires: phpci
+# For tests: phpci
 BuildRequires: php-ctype
 BuildRequires: php-curl
 BuildRequires: php-json
@@ -86,6 +86,12 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- backport 1.3.0 for remi repo.
+
+* Sun Feb 24 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3.0-1
+- Updated to upstream version 1.3.0
+
 * Thu Feb  7 2013 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
 - backport 1.2.4 for remi repo.
 
