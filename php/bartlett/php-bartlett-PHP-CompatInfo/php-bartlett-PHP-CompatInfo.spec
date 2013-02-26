@@ -47,7 +47,7 @@ BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.6.0
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.6.1
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -59,7 +59,7 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.6.0
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.6.1
 Requires:       php-pear(Console_CommandLine) >= 1.2.0
 # Optional
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
@@ -191,6 +191,7 @@ fi
 %changelog
 * Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.13.1-1
 - Update to 2.13.1
+- raise dependencies, PHP_Reflect 1.6.1
 
 * Fri Feb 22 2013 Remi Collet <remi@fedoraproject.org> - 2.13.0-1
 - Update to 2.13.0
