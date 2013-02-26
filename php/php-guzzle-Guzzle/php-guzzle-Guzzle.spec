@@ -5,7 +5,7 @@
 %global pear_name    Guzzle
 
 Name:             php-guzzle-%{pear_name}
-Version:          3.1.2
+Version:          3.2.0
 Release:          1%{?dist}
 Summary:          PHP HTTP client library and framework for building RESTful web service clients
 
@@ -69,7 +69,7 @@ Optional dependencies:
 
 # Need to help upstream figure out why these files are showing up in package.xml
 # as role="data" instead of role="doc"
-# https://github.com/guzzle/guzzle/blob/v3.1.1/phing/tasks/GuzzlePearPharPackageTask.php#L146
+# https://github.com/guzzle/guzzle/blob/master/phing/tasks/GuzzlePearPharPackageTask.php#L146
 sed '/\.md"/s/role="data"/role="doc"/' -i package.xml
 
 # Remove bundled cert
@@ -123,6 +123,12 @@ fi
 
 
 %changelog
+* Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- backport 3.2.0 for remi repo.
+
+* Fri Feb 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 3.2.0-1
+- Updated to upstream version 3.2.0
+
 * Thu Feb  7 2013 Remi Collet <remi@fedoraproject.org> - 3.1.2-1
 - backport 3.1.2 for remi repo.
 
