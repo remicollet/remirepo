@@ -21,7 +21,7 @@ VideoLAN client and the Xine navigation plugin.
 %package devel
 Summary:     Header files and development libraries for %{name}
 Group:       Development/Libraries
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name}%{?_isa} = %{version}-%{release}
 Requires:    pkgconfig
 
 %description devel
