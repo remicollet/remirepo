@@ -131,6 +131,9 @@ fi
 * Wed Feb 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
 - Update to 2.1.8
 
+* Wed Feb 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
+- Update to 2.1.8
+
 * Mon Jan 21 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.7-1
 - update to 2.1.7
 
