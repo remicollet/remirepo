@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-Filesystem
-Version:          2.1.7
+Version:          2.1.8
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -115,6 +115,9 @@ fi
 
 
 %changelog
+* Wed Feb 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
+- Update to 2.1.8
+
 * Mon Jan 21 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.7-1
 - update to 2.1.7 (no code change)
 
