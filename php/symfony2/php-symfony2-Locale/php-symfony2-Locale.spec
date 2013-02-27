@@ -7,7 +7,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             php-symfony2-Locale
-Version:          2.1.7
+Version:          2.1.8
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -150,7 +150,7 @@ fi
 %dir %{pear_phpdir}/Symfony/Component
 %dir %{pear_phpdir}/Symfony/Component/%{pear_name}
      %{pear_phpdir}/Symfony/Component/%{pear_name}/Exception
-     %{pear_phpdir}/Symfony/Component/%{pear_name}/Locale.php
+     %{pear_phpdir}/Symfony/Component/%{pear_name}/*.php
 %dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources
 %dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data
 %dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49
@@ -167,6 +167,9 @@ fi
 
 
 %changelog
+* Wed Feb 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
+- Update to 2.1.8
+
 * Mon Jan 21 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.7-1
 - update to 2.1.7
 
