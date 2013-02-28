@@ -1,14 +1,14 @@
 %{!?php_inidir: %{expand: %%global php_inidir %{_sysconfdir}/php.d}}
 %global owner      zend-dev
 %global extname    ZendOptimizerPlus
-%global commit     3a06991ffda1ed6baa1c6004e2f113347955a3e1
+%global commit     d39a49a5340643483f6a94f391328b2d46a24d3b
 %global short      %(c=%{commit}; echo ${c:0:7})
 %global prever     -dev
 %global with_zts   0%{?__ztsphp:1}
 
 Name:          php-ZendOptimizerPlus
 Version:       7.0.0
-Release:       0.6.git%{short}%{?dist}
+Release:       0.7.git%{short}%{?dist}
 Summary:       The Zend Optimizer+
 
 Group:         Development/Libraries
@@ -54,8 +54,6 @@ if test "x${extver}" != "x%{version}%{?prever}"; then
    exit 1
 fi
 
-cp %{SOURCE1} %{extname}.ini
-
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
@@ -81,32 +79,44 @@ make %{?_smp_mflags}
 
 
 %install
-install -d -m 755 %{buildroot}%{php_inidir}
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{extname}.ini
 sed -e 's:@EXTPATH@:%{php_extdir}:' \
-    %{extname}.ini >%{buildroot}%{php_inidir}/%{extname}.ini
+    -i %{buildroot}%{php_inidir}/%{extname}.ini
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 %if %{with_zts}
-install -d -m 755 %{buildroot}%{php_ztsinidir}
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{extname}.ini
 sed -e 's:@EXTPATH@:%{php_ztsextdir}:' \
-    %{extname}.ini >%{buildroot}%{php_ztsinidir}/%{extname}.ini
+    -i %{buildroot}%{php_ztsinidir}/%{extname}.ini
 
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 %endif
 
 
 %check
-: Minimal load test of the built extensions
-
+cd NTS
 %{_bindir}/php \
     -n -d zend_extension=%{buildroot}%{php_extdir}/%{extname}.so \
     -m | grep "Zend Optimizer+"
 
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_extdir}/%{extname}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php
+
 %if %{with_zts}
+cd ../ZTS
 %{__ztsphp} \
     -n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{extname}.so \
     -m | grep "Zend Optimizer+"
+
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{extname}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php
 %endif
 
 
@@ -122,8 +132,12 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 
 %changelog
+* Thu Feb 28 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.7.gitd39a49a
+- new snapshot
+- run test suite during build
+
 * Thu Feb 21 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.6.git3a06991
-- newsnapshot
+- new snapshot
 
 * Fri Feb 15 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.4.git2b6eede
 - new snapshot (ZTS fixes)
