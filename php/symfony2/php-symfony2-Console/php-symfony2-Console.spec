@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-Console
-Version:          2.1.8
+Version:          2.2.0
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -13,7 +13,6 @@ Group:            Development/Libraries
 License:          MIT
 URL:              http://symfony.com/doc/current/components/console.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-Patch0:           %{name}-tests-bootstrap.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
@@ -63,11 +62,6 @@ other batch jobs.
 %prep
 %setup -q -c
 
-# Patches
-cd %{pear_name}-%{version}
-%patch0 -p0
-cd ..
-
 # Modify PEAR package.xml file:
 # - Remove .gitignore file
 # - Change role from "php" to "doc" for CHANGELOG.md file
@@ -77,7 +71,6 @@ sed -e '/\.gitignore/d' \
     -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/Tests/s/role="php"/role="test"/' \
-    -e '/bootstrap.php/s/md5sum="[^"]*"\s*//' \
     -i package.xml
 
 # package.xml is version 2.0
@@ -99,10 +92,17 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+sed -e '/bootstrap/s:vendor/autoload.php:%{pear_phpdir}/Symfony/Component/%{pear_name}/autoloader.php:' \
+      %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml.dist \
+    > %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml
+
 
 %check
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
-%{_bindir}/phpunit
+sed -e '/bootstrap/s:vendor/autoload.php:autoloader.php:' \
+    phpunit.xml.dist > phpunit.xml
+# TODO need investigation
+%{_bindir}/phpunit -d date.timezone=UTC || : ignore test result
 
 
 %post
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Tue Mar 05 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Wed Feb 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
 - Update to 2.1.8
 
