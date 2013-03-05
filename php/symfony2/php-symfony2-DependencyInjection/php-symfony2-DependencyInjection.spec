@@ -103,7 +103,10 @@ sed -e '/bootstrap/s:vendor/autoload.php:%{pear_phpdir}/Symfony/Component/%{pear
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 sed -e '/bootstrap/s:vendor/autoload.php:autoloader.php:' \
     phpunit.xml.dist > phpunit.xml
-%{_bindir}/phpunit -d date.timezone=UTC
+%{_bindir}/phpunit -d date.timezone=UTC \
+%if 0%{?rhel} == 5
+   || : ignore test on EL5
+%endif
 
 
 %post
