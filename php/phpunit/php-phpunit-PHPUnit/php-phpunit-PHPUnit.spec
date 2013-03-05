@@ -3,7 +3,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        3.7.14
+Version:        3.7.15
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -14,6 +14,7 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{pear_channel})
 
@@ -34,8 +35,7 @@ Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.1.1
 Requires:       php-pear(%{pear_channel}/PHP_CodeCoverage) >= 1.2.1
 Conflicts:      php-pear(%{pear_channel}/PHP_CodeCoverage) >  1.2.99
 Requires:       php-pear(%{pear_channel}/PHP_Timer) >= 1.0.2
-Requires:       php-pear(pear.symfony.com/Yaml) >= 2.1.0
-Conflicts:      php-pear(pear.symfony.com/Yaml) >= 2.1.99
+Requires:       php-pear(pear.symfony.com/Yaml) >= 2.2.0
 # PHPUnit Extensions (yes, with circular dependency on PHPUnit)
 Requires:       php-pear(%{pear_channel}/PHPUnit_MockObject) >= 1.2.0
 Conflicts:      php-pear(%{pear_channel}/PHPUnit_MockObject) >  1.2.99
@@ -117,6 +117,9 @@ fi
 
 
 %changelog
+* Tue Mar 05 2013 Remi Collet <remi@fedoraproject.org> - 3.7.15-1
+- Update to 3.7.15
+
 * Thu Feb 14 2013 Remi Collet <remi@fedoraproject.org> - 3.7.14-1
 - Update to 3.7.14
 
