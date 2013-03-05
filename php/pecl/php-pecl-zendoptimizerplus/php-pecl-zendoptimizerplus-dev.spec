@@ -1,25 +1,26 @@
-%global owner      zend-dev
-%global extname    ZendOptimizerPlus
-%global commit     d39a49a5340643483f6a94f391328b2d46a24d3b
-%global short      %(c=%{commit}; echo ${c:0:7})
-%global prever     -dev
+%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%global prjname    ZendOptimizerPlus
+%global extname    zendoptimizerplus
 
-Name:          php-ZendOptimizerPlus
+Name:          php-pecl-%{extname}
 Version:       7.0.0
-Release:       0.7.git%{short}%{?dist}.1
+Release:       1%{?dist}.1
 Summary:       The Zend Optimizer+
 
 Group:         Development/Libraries
 License:       PHP
-URL:           https://github.com/%{owner}/%{extname}
-Source0:       %{url}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
+URL:           http://pecl.php.net/package/%{prjname}
+Source0:       http://pecl.php.net/get/%{extname}-%{version}.tgz
 # this extension must be loaded before XDebug
 # So uppercase Z if before lowercase X (LANG=C order)
-Source1:       %{extname}.ini
+Source1:       %{prjname}.ini
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel
+BuildRequires: php-devel >= 5.2.0
+BuildRequires: php-pear
 
+Requires(post): %{__pecl}
+Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
@@ -27,6 +28,15 @@ Requires:      php(api) = %{php_core_api}
 Conflicts:     php-eaccelerator
 Conflicts:     php-xcache
 Conflicts:     php-pecl-apc
+Obsoletes:     php-ZendOptimizerPlus < 7.0.0-1
+Provides:      php-pecl(%{extname}) = %{version}
+Provides:      php-pecl(%{extname})%{?_isa} = %{version}
+Provides:      php-%{extname} = %{version}-%{release}
+Provides:      php-%{extname}%{?_isa} = %{version}-%{release}
+Provides:      php-pecl(%{prjname}) = %{version}
+Provides:      php-pecl(%{prjname})%{?_isa} = %{version}
+Provides:      php-%{prjname} = %{version}-%{release}
+Provides:      php-%{prjname}%{?_isa} = %{version}-%{release}
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -44,7 +54,7 @@ bytecode optimization patterns that make code execution faster.
 %prep
 %setup -q -c
 
-mv %{extname}-%{commit} NTS
+mv %{extname}-%{version} NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define ACCELERATOR_VERSION/{s/.* "//;s/".*$//;p}' NTS/ZendAccelerator.h)
@@ -76,17 +86,20 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{extname}.ini
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{prjname}.ini
 sed -e 's:@EXTPATH@:%{php_extdir}:' \
-    -i %{buildroot}%{php_inidir}/%{extname}.ini
+    -i %{buildroot}%{php_inidir}/%{prjname}.ini
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
-install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{extname}.ini
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{prjname}.ini
 sed -e 's:@EXTPATH@:%{php_ztsextdir}:' \
-    -i %{buildroot}%{php_ztsinidir}/%{extname}.ini
+    -i %{buildroot}%{php_ztsinidir}/%{prjname}.ini
 
 make -C ZTS install INSTALL_ROOT=%{buildroot}
+
+# Install XML package description
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %clean
@@ -96,38 +109,53 @@ rm -rf %{buildroot}
 %check
 cd NTS
 %{__php} \
-    -n -d zend_extension=%{buildroot}%{php_extdir}/%{extname}.so \
+    -n -d zend_extension=%{buildroot}%{php_extdir}/%{prjname}.so \
     -m | grep "Zend Optimizer+"
 
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_extdir}/%{extname}.so" \
+TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_extdir}/%{prjname}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php
 
 cd ../ZTS
 %{__ztsphp} \
-    -n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{extname}.so \
+    -n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{prjname}.so \
     -m | grep "Zend Optimizer+"
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{extname}.so" \
+TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{prjname}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
 
 
+%post
+%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+
+
+%postun
+if [ $1 -eq 0 ] ; then
+    %{pecl_uninstall} %{extname} >/dev/null || :
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %doc NTS/{LICENSE,README}
-%config(noreplace) %{php_inidir}/%{extname}.ini
-%{php_extdir}/%{extname}.so
+%config(noreplace) %{php_inidir}/%{prjname}.ini
+%{php_extdir}/%{prjname}.so
 
-%config(noreplace) %{php_ztsinidir}/%{extname}.ini
-%{php_ztsextdir}/%{extname}.so
+%config(noreplace) %{php_ztsinidir}/%{prjname}.ini
+%{php_ztsextdir}/%{prjname}.so
+
+%{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Tue Mar  5 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-1
+- official PECL release, version 7.0.0 (beta)
+
 * Thu Feb 28 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.7.gitd39a49a
 - new snapshot
 - run test suite during build
