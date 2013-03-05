@@ -1,5 +1,7 @@
 ** php-symfony2-Yaml   (required for PHPUnit)
+** php-symfony2-Finder
 ** php-symfony2-ClassLoader
+    BR => Finder
 ** php-symfony2-Config
 ** php-symfony2-Console
 ** php-symfony2-CssSelector
@@ -9,7 +11,6 @@
     (Config, Yaml)
 ** php-symfony2-EventDispatcher
     BR => DependencyInjection
-** php-symfony2-Finder
 ** php-symfony2-HttpFoundation
 ** php-symfony2-Locale
 ** php-symfony2-Process
