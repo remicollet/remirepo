@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Share
-Version:        2.0.2
-Release:        2%{?dist}
+Version:        2.0.3
+Release:        1%{?dist}
 Summary:        Horde Shared Permissions System
 
 Group:          Development/Libraries
@@ -13,13 +13,9 @@ License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
-# http://bugs.horde.org/ticket/11966
-# https://github.com/horde/horde/pull/28
-Patch0:         %{pear_name}-tests.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
@@ -31,7 +27,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
@@ -64,15 +60,12 @@ owns or has access to.
 %setup -q -c
 cd %{pear_name}-%{version}
 
-%patch0 -p 3 -b .orig
-
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 # Remove checksum for patched files
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
-    -e '/test/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
 
@@ -137,6 +130,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
 - add patch for http://bugs.horde.org/ticket/11966
 - always run tests

@@ -4,7 +4,6 @@ pear.horde.org Horde_Memcache       2.0.1 (stable) 2.0.2 (stable) 13.6kB
 pear.horde.org Horde_Mime_Viewer    2.0.3 (stable) 2.0.4 (stable) 153kB
 pear.horde.org Horde_Rdo            2.0.1 (stable) 2.0.2 (stable) 34kB
 pear.horde.org Horde_SessionHandler 2.0.1 (stable) 2.0.2 (stable) 21kB
-pear.horde.org Horde_Share          2.0.2 (stable) 2.0.3 (stable) 59kB
 pear.horde.org Horde_SyncMl         2.0.2 (stable) 2.0.3 (stable) 132kB
 
 01 php-horde-Horde-Autoloader   =   2.0.1
@@ -63,7 +62,7 @@ pear.horde.org Horde_SyncMl         2.0.2 (stable) 2.0.3 (stable) 132kB
 52 php-horde-Horde-Secret       =   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
 53 php-horde-Horde-Imap-Client  *   2.7.1   => BR(Stream, Mime), Exception, Mail, Mime, Stream, Util, Cache, Secret, Stream_Filter
 54 ...-Horde-SessionHandler     *   2.0.1   => BR(Db),   Exception, Util
-55 php-horde-Horde-Share        *   2.0.2   => BR(Group, Perms, Injector) Db, Exception, Group, Perms, Support, Translation, Url, Util
+55 php-horde-Horde-Share        *   2.0.3   => BR(Group, Perms, Injector) Db, Exception, Group, Perms, Support, Translation, Url, Util
 56 php-horde-Horde-Role         =   1.0.1
 57 php-horde-Horde-Mime-Viewer  *   2.0.3   => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
 58 php-horde-Horde-Itip         *   2.0.4   => BR(Icalendar), Icalendar, Mime, Prefs
