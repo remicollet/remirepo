@@ -10,7 +10,6 @@ pear.horde.org Horde_Group          2.0.1 (stable) 2.0.2 (stable) 19.6kB
 pear.horde.org Horde_History        2.0.1 (stable) 2.0.2 (stable) 16.8kB
 pear.horde.org Horde_Icalendar      2.0.3 (stable) 2.0.4 (stable) 98kB
 pear.horde.org Horde_Imap_Client    2.7.0 (stable) 2.7.1 (stable) 165kB
-pear.horde.org Horde_Lock           2.0.1 (stable) 2.0.2 (stable) 15.5kB
 pear.horde.org Horde_Mail           2.0.3 (stable) 2.0.4 (stable) 28kB
 pear.horde.org Horde_Memcache       2.0.1 (stable) 2.0.2 (stable) 13.6kB
 pear.horde.org Horde_Mime_Viewer    2.0.3 (stable) 2.0.4 (stable) 153kB
@@ -43,7 +42,7 @@ pear.horde.org Horde_Tree           2.0.1 (stable) 2.0.2 (stable) 18.4kB
 16 php-horde-Horde-Test         =   2.2.1   => Support, Util, Cli, Log
 17 php-horde-Horde-Image        =   2.0.4   => Exception, Support, Translation, Util
 18 php-horde-Horde-Browser      =   2.0.3   => Exception, Util
-19 php-horde-Horde-Lock         =   2.0.1   => Exception, Support, (Db, Log)
+19 php-horde-Horde-Lock         =   2.0.2   => Exception, Support, (Db, Log)
 20 php-horde-Horde-Cache        =   2.0.1   => Exception, Util
 ---- with test unit ----
 21 php-horde-Horde-Argv         =   2.0.4   =>           Exception, Translation

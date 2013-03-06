@@ -3,9 +3,12 @@
 %global pear_name    Horde_Lock
 %global pear_channel pear.horde.org
 
+# Can run test because of circular dependency with Horde_Test
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:           php-horde-Horde-Lock
-Version:        2.0.1
-Release:        3%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Horde Resource Locking System
 
 Group:          Development/Libraries
@@ -17,6 +20,10 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -65,6 +72,19 @@ mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
+%check
+%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
+%else
+: Test disabled, missing '--with tests' option.
+%endif
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -82,9 +102,14 @@ fi
 %{pear_phpdir}/Horde/Lock
 %{pear_phpdir}/Horde/Lock.php
 %{pear_datadir}/%{pear_name}
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+- run test when build with --with tests options
+
 * Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.1-3
 - Update for review
 
