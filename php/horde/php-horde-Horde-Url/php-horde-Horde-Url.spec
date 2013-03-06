@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Url
 %global pear_channel pear.horde.org
@@ -12,12 +11,13 @@ Release:        1%{?dist}
 Summary:        Horde Url class
 
 Group:          Development/Libraries
-License:        LGPLv2+
-URL:            http://pear.horde.org
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+License:        LGPLv2
+URL:            http://%{pear_channel}
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
@@ -42,8 +42,7 @@ This class represents a single URL and provides methods for manipulating
 URLs.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
@@ -99,6 +98,7 @@ fi
 %changelog
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
+- fix License
 
 * Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.1.0-1
 - Update to 2.1.0 for remi repo

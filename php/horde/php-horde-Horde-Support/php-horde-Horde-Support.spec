@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Support
 %global pear_channel pear.horde.org
@@ -13,11 +12,12 @@ Summary:        Horde support package
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://pear.horde.org
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
@@ -28,10 +28,11 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
-Requires:       php-channel(%{pear_channel})
 Requires:       php-date
 Requires:       php-pcre
 Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 2.0.0
