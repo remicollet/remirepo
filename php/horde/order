@@ -1,4 +1,3 @@
-pear.horde.org Horde_Rdo            2.0.1 (stable) 2.0.2 (stable) 34kB
 pear.horde.org Horde_SessionHandler 2.0.1 (stable) 2.0.2 (stable) 21kB
 
 01 php-horde-Horde-Autoloader   =   2.0.1
@@ -71,7 +70,7 @@ pear.horde.org Horde_SessionHandler 2.0.1 (stable) 2.0.2 (stable) 21kB
 65 php-horde-Horde-Memcache     *   2.0.2                Exception
 66 php-horde-Horde-Ldap         =   2.0.2                Exception, Util
 67 php-horde-Horde-Date-Parser  =   2.0.2   => BR(Date)  Date, Support
-68 php-horde-Horde-Rdo          *   2.0.1   => BR(Db)    Db, Exception
+68 php-horde-Horde-Rdo          *   2.0.2   => BR(Db)    Db, Exception
 69 php-horde-Horde-Routes       =   2.0.2   =>           Exception, Util
 70 php-horde-Horde-Timezone     *   1.0.2   => BR(Date)  Date, Icalendar, Vfs
 71 php-horde-Horde-ListHeaders  *   1.0.1   => BR(Mail)  Mail
