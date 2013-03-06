@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-SessionHandler
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        Horde Session Handler API
 
@@ -78,6 +78,7 @@ rm -rf %{buildroot}
 
 
 %check
+# Some tests fails when memcache extension available, need investigation
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit\
     -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
@@ -107,6 +108,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1
 

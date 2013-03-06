@@ -1,5 +1,3 @@
-pear.horde.org Horde_SessionHandler 2.0.1 (stable) 2.0.2 (stable) 21kB
-
 01 php-horde-Horde-Autoloader   =   2.0.1
 02 php-horde-Horde-Translation  =   2.0.1
 03 php-horde-Horde-Stream-Wrapper = 2.0.1
@@ -56,7 +54,7 @@ pear.horde.org Horde_SessionHandler 2.0.1 (stable) 2.0.2 (stable) 21kB
 51 ...orde-Horde-Crypt-Blowfish =   1.0.2   =>
 52 php-horde-Horde-Secret       =   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
 53 php-horde-Horde-Imap-Client  *   2.7.1   => BR(Stream, Mime), Exception, Mail, Mime, Stream, Util, Cache, Secret, Stream_Filter
-54 ...-Horde-SessionHandler     *   2.0.1   => BR(Db),   Exception, Util
+54 ...-Horde-SessionHandler     *   2.0.2   => BR(Db),   Exception, Util
 55 php-horde-Horde-Share        *   2.0.3   => BR(Group, Perms, Injector) Db, Exception, Group, Perms, Support, Translation, Url, Util
 56 php-horde-Horde-Role         =   1.0.1
 57 php-horde-Horde-Mime-Viewer  *   2.0.4   => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
