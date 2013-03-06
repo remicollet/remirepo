@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Filter
-Version:        2.0.5
-Release:        2%{?dist}
+Version:        2.1.0
+Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
 Group:          Development/Libraries
@@ -145,6 +145,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
 - fix License (review #908389)
 
