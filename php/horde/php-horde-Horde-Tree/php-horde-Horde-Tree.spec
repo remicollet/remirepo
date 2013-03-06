@@ -4,12 +4,11 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Tree
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Horde Tree API
 
 Group:          Development/Libraries
-# http://bugs.horde.org/ticket/12070
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
@@ -85,6 +84,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
 * Sat Feb  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - cleanups for review
 

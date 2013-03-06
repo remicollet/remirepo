@@ -13,7 +13,6 @@ pear.horde.org Horde_Rdo            2.0.1 (stable) 2.0.2 (stable) 34kB
 pear.horde.org Horde_SessionHandler 2.0.1 (stable) 2.0.2 (stable) 21kB
 pear.horde.org Horde_Share          2.0.2 (stable) 2.0.3 (stable) 59kB
 pear.horde.org Horde_SyncMl         2.0.2 (stable) 2.0.3 (stable) 132kB
-pear.horde.org Horde_Tree           2.0.1 (stable) 2.0.2 (stable) 18.4kB
 
 01 php-horde-Horde-Autoloader   =   2.0.1
 02 php-horde-Horde-Translation  =   2.0.1
@@ -52,7 +51,7 @@ pear.horde.org Horde_Tree           2.0.1 (stable) 2.0.2 (stable) 18.4kB
 33 php-horde-Horde-Text-Diff    =   2.0.2   =>           Exception, Util
 34 php-horde-Horde-Text-Filter  =   2.1.0   => BR(Text-Flowed), Exception, Util, Text_Flowed, Translation
 35 php-horde-Horde-Group        ?   2.0.2   => BR(Db),   Exception, Util
-36 php-horde-Horde-Tree         =   2.0.1   =>           Exception, Url, Util
+36 php-horde-Horde-Tree         =   2.0.2   =>           Exception, Url, Util
 37 php-horde-Horde-Injector     =   2.0.1   =>           Exception
 38 php-horde-Horde-Controller   ?   2.0.1   =>           Exception, Injector, Log, Support, Util
 39 php-horde-Horde-View         *   2.0.2   => BR(Controller), Exception, Support, Util
