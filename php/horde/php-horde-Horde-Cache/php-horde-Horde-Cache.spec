@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cache
-Version:        2.0.1
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde Caching API
 
@@ -31,7 +31,8 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optional dependencies
-Requires:       php-pecl(LZF)
+Requires:       php-pear(%{pear_channel}/Horde_Compress_Fast) >= 1.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Compress_Fast) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
@@ -97,6 +98,10 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+- requires Horde_Compress_Fast instead of LZF
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
