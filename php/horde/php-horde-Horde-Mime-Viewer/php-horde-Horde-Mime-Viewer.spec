@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mime-Viewer
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
 
@@ -15,7 +15,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
@@ -25,7 +25,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       syntaxhighlighter
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-libxml
@@ -125,6 +125,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3 for remi repo
 
