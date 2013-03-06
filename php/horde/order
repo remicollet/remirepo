@@ -1,5 +1,4 @@
 pear.horde.org Horde_Alarm          2.0.3 (stable) 2.0.4 (stable) 34kB
-pear.horde.org Horde_Argv           2.0.4 (stable) 2.0.5 (stable) 62kB
 pear.horde.org Horde_Auth           2.0.3 (stable) 2.0.4 (stable) 53kB
 pear.horde.org Horde_Core           2.3.0 (stable) 2.4.1 (stable) 1397kB
 pear.horde.org Horde_Crypt          2.1.2 (stable) 2.1.3 (stable) 140kB
@@ -45,7 +44,7 @@ pear.horde.org Horde_Tree           2.0.1 (stable) 2.0.2 (stable) 18.4kB
    ...-Horde-Compress-Fast      ?   1.0.1   => Exception
 20 php-horde-Horde-Cache        =   2.0.3   => Exception, Util, Compress_Fast
 ---- with test unit ----
-21 php-horde-Horde-Argv         =   2.0.4   =>           Exception, Translation
+21 php-horde-Horde-Argv         =   2.0.5   =>           Exception, Translation
 22 php-horde-Horde-Serialize    =   2.0.1   =>           Exception, Util
 23 php-horde-Horde-Xml-Wbxml    =   2.0.1   =>           Util
 24 ...-Horde-Stream-Filter      ?   2.0.1

@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Argv
-Version:        2.0.4
-Release:        4%{?dist}
+Version:        2.0.5
+Release:        1%{?dist}
 Summary:        Horde command-line argument parsing package
 
 Group:          Development/Libraries
@@ -111,6 +111,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+
 * Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.4-4
 - Update for review
 
