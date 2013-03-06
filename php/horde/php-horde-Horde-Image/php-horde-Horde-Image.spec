@@ -7,8 +7,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Image
-Version:        2.0.3
-Release:        3%{?dist}
+Version:        2.0.4
+Release:        1%{?dist}
 Summary:        Horde Image API
 
 Group:          Development/Libraries
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.3-3
 - Update for review
 
