@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-Security
-Version:          2.1.8
+Version:          2.2.0
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -13,7 +13,6 @@ Group:            Development/Libraries
 License:          MIT
 URL:              http://symfony.com/components
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-Patch0:           %{name}-tests-bootstrap.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
@@ -22,12 +21,12 @@ BuildRequires:    php-channel(%{pear_channel})
 # Test requires
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) >= 2.1.0
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.1.0
-BuildRequires:    php-pear(%{pear_channel}/HttpKernel) >= 2.1.0
-BuildRequires:    php-pear(%{pear_channel}/Form) >= 2.1.0
-BuildRequires:    php-pear(%{pear_channel}/Routing) >= 2.1.0
-BuildRequires:    php-pear(%{pear_channel}/Validator) >= 2.1.0
+BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/HttpKernel) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Form) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Routing) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Validator) >= 2.2.0
 # TODO: Add DoctrineCommon and DoctrineDBAL (>=2.2,<2.4-dev) when available
 # Test requires: phpci
 BuildRequires:    php-date
@@ -42,9 +41,9 @@ BuildRequires:    php-spl
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
-Requires:         php-pear(%{pear_channel}/EventDispatcher) >= 2.1.0
-Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.1.0
-Requires:         php-pear(%{pear_channel}/HttpKernel) >= 2.1.0
+Requires:         php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/HttpKernel) >= 2.2.0
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 # phpci requires
@@ -57,11 +56,11 @@ Requires:         php-pdo
 Requires:         php-reflection
 Requires:         php-spl
 # Optional requires
-Requires:         php-pear(%{pear_channel}/ClassLoader) >= 2.1.0
-Requires:         php-pear(%{pear_channel}/Finder) >= 2.1.0
-Requires:         php-pear(%{pear_channel}/Form) >= 2.1.0
-Requires:         php-pear(%{pear_channel}/Routing) >= 2.1.0
-Requires:         php-pear(%{pear_channel}/Validator) >= 2.1.0
+Requires:         php-pear(%{pear_channel}/ClassLoader) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Finder) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Form) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Routing) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Validator) >= 2.2.0
 # TODO: Add DoctrineDBAL (>=2.2,<2.4-dev) when available
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -78,11 +77,6 @@ Optional dependencies: DoctrineCommon and DoctrineDBAL
 %prep
 %setup -q -c
 
-# Patches
-cd %{pear_name}-%{version}
-%patch0 -p0
-cd ..
-
 # Modify PEAR package.xml file:
 # - Remove .gitignore file
 # - Change role from "php" to "doc" for CHANGELOG.md file
@@ -92,7 +86,6 @@ sed -e '/\.gitignore/d' \
     -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/Tests/s/role="php"/role="test"/' \
-    -e '/bootstrap.php/s/md5sum="[^"]*"\s*//' \
     -i package.xml
 
 # package.xml is version 2.0
@@ -114,10 +107,19 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+sed -e '/bootstrap/s:vendor/autoload.php:%{pear_phpdir}/Symfony/Component/%{pear_name}/autoloader.php:' \
+      %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml.dist \
+    > %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml
+
 
 %check
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
-%{_bindir}/phpunit
+# TODO need investigation
+%if 0
+sed -e '/bootstrap/s:vendor/autoload.php:autoloader.php:' \
+    phpunit.xml.dist > phpunit.xml
+%{_bindir}/phpunit -d date.timezone=UTC
+%endif
 
 
 %post
@@ -141,6 +143,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Wed Feb 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
 - Update to 2.1.8
 
