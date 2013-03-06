@@ -28,6 +28,7 @@
     HttpFoundation, EventDispatcher (BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder)
 ** php-symfony2-Routing
     (Config, Yaml) BR => HttpKernel
+** php-symfony2-PropertyAccess
 ** php-symfony2-Form
     EventDispatcher, Validator, Locale, OptionsResolver (DependencyInjection, HttpFoundation)
 ** php-symfony2-Security
