@@ -1,4 +1,3 @@
-pear.horde.org Horde_Alarm          2.0.3 (stable) 2.0.4 (stable) 34kB
 pear.horde.org Horde_Core           2.3.0 (stable) 2.4.1 (stable) 1397kB
 pear.horde.org Horde_Crypt          2.1.2 (stable) 2.1.3 (stable) 140kB
 pear.horde.org Horde_Date_Parser    2.0.1 (stable) 2.0.2 (stable) 29kB
@@ -52,7 +51,7 @@ pear.horde.org Horde_Tree           2.0.1 (stable) 2.0.2 (stable) 18.4kB
 29 php-horde-Horde-Token        ?   2.0.3   => BR(Db, Url), Exception, Translation, Url, Util
 30 php-horde-Horde-Template     ?   2.0.1
 31 php-horde-Horde-Xml-Element  =   2.0.1   =>           Exception
-32 php-horde-Horde-Alarm        =   2.0.3   => BR(Date), Date, Exception, Translation
+32 php-horde-Horde-Alarm        =   2.0.4   => BR(Date), Date, Exception, Translation
 33 php-horde-Horde-Text-Diff    =   2.0.1   =>           Exception, Util
 34 php-horde-Horde-Text-Filter  =   2.0.5   => BR(Text-Flowed), Exception, Util, Text_Flowed, Translation
 35 php-horde-Horde-Group        ?   2.0.1   => BR(Db),   Exception, Util
