@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.7.0
+Version:        2.7.1
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -15,7 +15,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
@@ -26,7 +26,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-hash
 Requires:       php-openssl
@@ -136,6 +136,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
+- Update to 2.7.1
+
 * Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - Update to 2.7.0
 
