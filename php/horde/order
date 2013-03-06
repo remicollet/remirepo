@@ -8,7 +8,6 @@ pear.horde.org Horde_Date_Parser    2.0.1 (stable) 2.0.2 (stable) 29kB
 pear.horde.org Horde_Db             2.0.1 (stable) 2.0.2 (stable) 104kB
 pear.horde.org Horde_Group          2.0.1 (stable) 2.0.2 (stable) 19.6kB
 pear.horde.org Horde_History        2.0.1 (stable) 2.0.2 (stable) 16.8kB
-pear.horde.org Horde_Http           2.0.1 (stable) 2.0.2 (stable) 12.2kB
 pear.horde.org Horde_Icalendar      2.0.3 (stable) 2.0.4 (stable) 98kB
 pear.horde.org Horde_Image          2.0.3 (stable) 2.0.4 (stable) 753kB
 pear.horde.org Horde_Imap_Client    2.7.0 (stable) 2.7.1 (stable) 165kB
@@ -38,7 +37,7 @@ pear.horde.org Horde_Tree           2.0.1 (stable) 2.0.2 (stable) 18.4kB
 08 php-horde-Horde-Url          =   2.2.0   => Exception
 09 php-horde-Horde-Nls          =   2.0.2   => Util, Translation
 10 php-horde-Horde-Date         =   2.0.4   => Nls, Translation, Exception, Util
-11 php-horde-Horde-Http         =   2.0.1   => Exception, Support
+11 php-horde-Horde-Http         =   2.0.2   => Exception, Support
 12 php-horde-Horde-Constraint   =   2.0.1
 13 php-horde-Horde-Thrift       =   2.0.1
 14 php-horde-Horde-Scribe       =   2.0.1   => Thrift
