@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Serialize
-Version:        2.0.1
-Release:        3%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Data Encapulation API
 
 Group:          Development/Libraries
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
 * Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.1-3
 - Update for review
  
