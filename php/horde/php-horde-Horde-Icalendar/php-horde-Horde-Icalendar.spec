@@ -3,29 +3,25 @@
 %global pear_name    Horde_Icalendar
 %global pear_channel pear.horde.org
 
-# Need investigation (only fail in mock)
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
-
 Name:           php-horde-Horde-Icalendar
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        iCalendar API
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
-%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
-%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -96,15 +92,11 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-%if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
     -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
-%else
-: Test disabled, missing '--with tests' option.
-%endif
 
 
 %post
@@ -129,6 +121,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
 - Update to 2.0.3 for remi repo
 
