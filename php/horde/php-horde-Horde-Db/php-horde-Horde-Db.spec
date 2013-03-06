@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Db
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        Horde Database Libraries
 
@@ -68,12 +68,12 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
-# Not ready
-#phpunit\
-#    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
-#    -d date.timezone=UTC \
-#    .
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 
 
 %post
@@ -98,6 +98,10 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+- enable tests during build
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
