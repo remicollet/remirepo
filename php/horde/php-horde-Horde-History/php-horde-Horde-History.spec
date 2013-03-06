@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-History
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        API for tracking the history of an object
 
 Group:          Development/Libraries
@@ -69,11 +69,6 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-
-# Need investigation
-# InvalidArgumentException: The guid needs to be a string!
-sed -e 's/testMethodLogHasParameterStringGuid/SKIP_TEST_testMethodLogHasParameterStringGuid/' -i InterfaceTest.php
-
 phpunit \
     -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
@@ -102,6 +97,9 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
 * Sun Feb 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - cleanups for review
 
