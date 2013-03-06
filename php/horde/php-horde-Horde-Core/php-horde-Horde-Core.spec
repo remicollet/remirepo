@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.3.0
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -60,6 +60,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Cli) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Cli) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Compress) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Compress) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Compress_Fast) >= 1.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Compress_Fast) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Controller) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Controller) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
@@ -117,7 +119,6 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
 # Optional
-Requires:       php-pecl(LZF)
 Requires:       php-pear(Net_DNS2)
 Requires:       php-pear(Text_CAPTCHA)
 Requires:       php-pear(Text_Figlet)
@@ -141,6 +142,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Queue) >= 1.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Queue) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Routes) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Routes) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
@@ -237,6 +240,7 @@ fi
 %{pear_phpdir}/Horde/Registry
 %{pear_phpdir}/Horde/Script
 %{pear_phpdir}/Horde/Session
+%{pear_phpdir}/Horde/Shutdown
 %{pear_phpdir}/Horde/Themes
 %{pear_phpdir}/Horde/*.php
 %{pear_phpdir}/Horde.php
@@ -253,6 +257,11 @@ fi
 
 
 %changelog
+* Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- Update to 2.4.1
+- remove dependency on LZF
+- add dependencies on Horde_Compress_Fast and Horde_Queue
+
 * Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - Update to 2.3.0
 
