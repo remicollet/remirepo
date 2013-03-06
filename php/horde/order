@@ -1,7 +1,6 @@
 pear.horde.org Horde_Core           2.3.0 (stable) 2.4.1 (stable) 1397kB
 pear.horde.org Horde_Crypt          2.1.2 (stable) 2.1.3 (stable) 140kB
 pear.horde.org Horde_Date_Parser    2.0.1 (stable) 2.0.2 (stable) 29kB
-pear.horde.org Horde_Group          2.0.1 (stable) 2.0.2 (stable) 19.6kB
 pear.horde.org Horde_History        2.0.1 (stable) 2.0.2 (stable) 16.8kB
 pear.horde.org Horde_Icalendar      2.0.3 (stable) 2.0.4 (stable) 98kB
 pear.horde.org Horde_Imap_Client    2.7.0 (stable) 2.7.1 (stable) 165kB
@@ -52,7 +51,7 @@ pear.horde.org Horde_Tree           2.0.1 (stable) 2.0.2 (stable) 18.4kB
 32 php-horde-Horde-Alarm        =   2.0.4   => BR(Date), Date, Exception, Translation
 33 php-horde-Horde-Text-Diff    =   2.0.2   =>           Exception, Util
 34 php-horde-Horde-Text-Filter  =   2.1.0   => BR(Text-Flowed), Exception, Util, Text_Flowed, Translation
-35 php-horde-Horde-Group        ?   2.0.1   => BR(Db),   Exception, Util
+35 php-horde-Horde-Group        ?   2.0.2   => BR(Db),   Exception, Util
 36 php-horde-Horde-Tree         =   2.0.1   =>           Exception, Url, Util
 37 php-horde-Horde-Injector     =   2.0.1   =>           Exception
 38 php-horde-Horde-Controller   ?   2.0.1   =>           Exception, Injector, Log, Support, Util
