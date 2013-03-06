@@ -22,7 +22,6 @@ pear.horde.org Horde_Serialize      2.0.1 (stable) 2.0.2 (stable) 15.7kB
 pear.horde.org Horde_SessionHandler 2.0.1 (stable) 2.0.2 (stable) 21kB
 pear.horde.org Horde_Share          2.0.2 (stable) 2.0.3 (stable) 59kB
 pear.horde.org Horde_SyncMl         2.0.2 (stable) 2.0.3 (stable) 132kB
-pear.horde.org Horde_Test           2.2.0 (stable) 2.2.1 (stable) 20.0kB
 pear.horde.org Horde_Text_Diff      2.0.1 (stable) 2.0.2 (stable) 29kB
 pear.horde.org Horde_Text_Filter    2.0.5 (stable) 2.1.0 (stable) 51kB
 pear.horde.org Horde_Tree           2.0.1 (stable) 2.0.2 (stable) 18.4kB
@@ -42,7 +41,7 @@ pear.horde.org Horde_Tree           2.0.1 (stable) 2.0.2 (stable) 18.4kB
 13 php-horde-Horde-Thrift       =   2.0.1
 14 php-horde-Horde-Scribe       =   2.0.1   => Thrift
 15 php-horde-Horde-Log          =   2.0.1   => Constraint, Exception, Scribe
-16 php-horde-Horde-Test         =   2.2.0   => Support, Util, Cli, Log
+16 php-horde-Horde-Test         =   2.2.1   => Support, Util, Cli, Log
 17 php-horde-Horde-Image        =   2.0.3   => Exception, Support, Translation, Util
 18 php-horde-Horde-Browser      =   2.0.3   => Exception, Util
 19 php-horde-Horde-Lock         =   2.0.1   => Exception, Support, (Db, Log)
