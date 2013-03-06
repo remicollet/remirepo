@@ -75,6 +75,7 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
+%dir %{pear_phpdir}/Horde
 %{pear_phpdir}/Horde/Queue
 
 
