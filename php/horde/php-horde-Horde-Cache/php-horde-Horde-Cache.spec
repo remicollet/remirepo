@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Cache
 %global pear_channel pear.horde.org
@@ -9,12 +8,13 @@ Release:        1%{?dist}
 Summary:        Horde Caching API
 
 Group:          Development/Libraries
-License:        LGPLv2+
-URL:            http://pear.horde.org
+License:        LGPLv2
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
@@ -53,8 +53,7 @@ Optional dependencies:
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 cp ../package.xml %{name}.xml
@@ -101,6 +100,7 @@ fi
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - requires Horde_Compress_Fast instead of LZF
+- fix License
 
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
