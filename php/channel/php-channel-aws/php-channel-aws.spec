@@ -11,12 +11,15 @@ License:    Public Domain
 URL:        http://aws.amazon.com/sdkforphp
 Source0:    http://pear.amazonwebservices.com/channel.xml
 
-BuildArch:  noarch
-BuildRequires:  php-pear >= 1:1.4.9-1.2
-Requires:   php-pear(PEAR)
-Requires(post):     %{__pear}
-Requires(postun):   %{__pear}
-Provides:   php-channel(%{channelname})
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:        noarch
+BuildRequires:    php-pear
+Requires:         php-pear(PEAR)
+Requires(post):   %{__pear}
+Requires(postun): %{__pear}
+
+Provides:         php-channel(%{channelname})
+
 
 %description
 This package adds the Amazon Web Services channel which allows PEAR packages
@@ -50,10 +53,14 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %{pear_xmldir}/%{channelname}.xml
 
 
 %changelog
+* Thu Mar 07 2013 Remi Collet <rpms@famillecollet.com> - 1.3-3
+- backport for remi repo
+
 * Mon Dec 17 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.3-3
 - fix mixed use of tabs and spaces
 - eliminate macro in the changelog
