@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Date
 %global pear_channel pear.horde.org
@@ -12,15 +11,15 @@ Release:        1%{?dist}
 Summary:        Horde Date package
 
 Group:          Development/Libraries
-License:        LGPLv2+
-URL:            http://pear.horde.org
+License:        LGPLv2
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  gettext
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  gettext
 %if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
@@ -86,6 +85,7 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+# Locales
 for loc in locale/{??,??_??}
 do
     lang=$(basename $loc)
@@ -131,6 +131,7 @@ fi
 %changelog
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
+- fix License
 
 * Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
 - Update to 2.0.3 for remi repo

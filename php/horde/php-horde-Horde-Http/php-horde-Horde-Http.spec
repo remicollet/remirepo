@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Http
 %global pear_channel pear.horde.org
@@ -13,7 +12,7 @@ Summary:        Horde HTTP libraries
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://pear.horde.org
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -30,7 +29,7 @@ Requires(postun): %{__pear}
 
 Requires:       php(language) >= 5.3.0
 Requires:       php-pcre
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
@@ -48,8 +47,7 @@ This package provides a set of classes for making HTTP requests.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
@@ -101,7 +99,7 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Http
 %{pear_phpdir}/Horde/Http.php
-%{pear_testdir}/Horde_Http
+%{pear_testdir}/%{pear_name}
 
 
 %changelog

@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Serialize
 %global pear_channel pear.horde.org
@@ -15,6 +14,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
@@ -23,7 +23,11 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
-Requires:       php-bz2 php-json php-wddx php-zlib php-pecl(LZF)
+Requires:       php-bz2
+Requires:       php-json
+Requires:       php-wddx
+Requires:       php-zlib
+Requires:       php-pecl(LZF)
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
@@ -96,7 +100,7 @@ fi
 
 * Wed Feb 6 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.1-3
 - Update for review
- 
+
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1
 
