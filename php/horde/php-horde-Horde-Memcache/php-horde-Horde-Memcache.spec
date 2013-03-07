@@ -5,11 +5,11 @@
 
 Name:           php-horde-Horde-Memcache
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Memcache API
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -80,10 +80,13 @@ fi
 
 
 %changelog
+* Thu Mar 07 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
+- fix License (LGPLv2) from review #873736
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
 * Thu Nov  1 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
