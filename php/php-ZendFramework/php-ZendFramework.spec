@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.1
+Version:         1.12.2
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -824,6 +824,21 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Thu Mar 07 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.12.2-1
+- backport 1.12.2
+
+* Mon Mar 04 2013 Felix Kaechele <heffer@fedoraproject.org> - 1.12.2-1
+- update to 1.12.2
+- fixes Twitter API
+- 50+ other bugfixes
+- full changelog http://framework.zend.com/changelog/1.12.2
+
+* Thu Dec 27 2012 Felix Kaechele <heffer@fedoraproject.org> - 1.12.1-1
+- update to 1.12.1
+- full changelog http://framework.zend.com/changelog/1.12.1
+- fixes CVE-2012-5657 aka ZF2012-05: Potential XML eXternal Entity injection
+ vectors in Zend Framework 1 Zend_Feed component
+
 * Thu Dec 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.12.1-1
 - update to 1.12.1
 
