@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 16 && 0%{?rhel} < 7
+%if 0%{?fedora} < 16
 %define system_nss        0
 %else
 %define system_nss        1
@@ -18,8 +18,8 @@
 %define system_sqlite     1
 %endif
 
-# Use system libpeg?
-%if 0%{?fedora} < 14
+# Use system libpeg (and libjpeg-turbo) ?
+%if 0%{?fedora} < 14 && 0%{?rhel} < 6
 %define system_jpeg       0
 %else
 %define system_jpeg       1
@@ -92,7 +92,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        19.0
+Version:        19.0.2
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -574,6 +574,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Mar  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 19.0.2-1
+- Update to 19.0.2 (security)
+
 * Sat Feb 23 2013 Remi Collet <RPMS@FamilleCollet.com> - 19.0-1
 - Update to 19.0
 

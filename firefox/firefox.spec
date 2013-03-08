@@ -1,5 +1,5 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 16 && 0%{?rhel} < 7
+%if 0%{?fedora} < 16
 %define system_nss        0
 %else
 %define system_nss        1
@@ -11,6 +11,13 @@
 %endif
 
 %define system_cairo      0
+
+# Use system libpeg (and libjpeg-turbo) ?
+%if 0%{?fedora} < 14 && 0%{?rhel} < 6
+%define system_jpeg       0
+%else
+%define system_jpeg       1
+%endif
 
 # Separated plugins are supported on x86(64) only
 %ifarch %{ix86} x86_64
@@ -26,13 +33,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      19.0
+%global xulrunner_version      19.0.2
 %global xulrunner_version_max  19.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130219
+%global datelang               20130308
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
@@ -67,7 +74,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        19.0
+Version:        19.0.2
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -160,6 +167,9 @@ cd %{tarballdir}
 %if ! %{system_vpx}
   | grep -v with-system-libvpx     \
 %endif
+%if ! %{system_jpeg}
+  | grep -v with-system-jpeg     \
+%endif
   | tee .mozconfig
 
 %if %{official_branding}
@@ -183,7 +193,7 @@ echo "ac_add_options --with-libxul-sdk=\
 echo "ac_add_options --disable-ipc" >> .mozconfig
 %endif
 
-%if 0%{?fedora} < 14
+%if ! %{system_jpeg}
 echo "ac_add_options --disable-libjpeg-turbo" >> .mozconfig
 %endif
 
@@ -474,6 +484,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Fri Mar  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 19.0.2-1
+- Update to 19.0.2 (security)
+
 * Sat Feb 23 2013 Remi Collet <RPMS@FamilleCollet.com> - 19.0-1
 - Update to 19.0
 
