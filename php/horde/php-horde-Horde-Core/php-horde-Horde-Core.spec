@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.4.1
+Version:        2.4.2
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -16,7 +16,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
@@ -30,7 +30,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       prototype
 Requires:       scriptaculous
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-gettext
@@ -257,6 +257,9 @@ fi
 
 
 %changelog
+* Fri Mar 08 2013 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- Update to 2.4.2
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
 - Update to 2.4.1
 - remove dependency on LZF
