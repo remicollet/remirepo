@@ -5,8 +5,4 @@
 <IfModule prefork.c>
   LoadModule php5_module modules/libphp5.so
 </IfModule>
-<IfModule !prefork.c>
-  LoadModule php5_module modules/libphp5-zts.so
-</IfModule>
-
 

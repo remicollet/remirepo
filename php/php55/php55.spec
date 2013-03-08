@@ -27,6 +27,12 @@
 %global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
 %global with_fpm 1
 
+# Build mysql/mysqli/pdo extensions using libmysqlclient or only mysqlnd
+%global with_libmysql 0
+
+# Build ZTS extension or only NTS
+%global with_zts 1
+
 %if 0%{?__isa_bits:1}
 %global isasuffix -%{__isa_bits}
 %else
@@ -61,14 +67,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201302281430
+%global snapdate      201303081230
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.16.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.17.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -93,6 +99,7 @@ Source6: php-fpm.service
 Source7: php-fpm.logrotate
 Source8: php-fpm.sysconfig
 Source9: php.modconf
+Source10: php.ztsmodconf
 Source99: php-fpm.init
 
 # Build fixes
@@ -153,10 +160,13 @@ BuildRequires: systemtap-sdt-devel
 BuildRequires: bison
 %endif
 
-Obsoletes: php-dbg, php3, phpfi, stronghold-php, php-zts < 5.3.7
+Obsoletes: php-dbg, php3, phpfi, stronghold-php
 Obsoletes: php53, php53u, php54, php55
+%if %{with_zts}
+Obsoletes: php-zts < 5.3.7
 Provides: php-zts = %{version}-%{release}
 Provides: php-zts%{?_isa} = %{version}-%{release}
+%endif
 
 Requires: httpd-mmn = %{_httpd_mmn}
 Provides: mod_php = %{version}-%{release}
@@ -292,8 +302,10 @@ Requires: php-cli%{?_isa} = %{version}-%{release}, autoconf, automake
 Requires: pcre-devel%{?_isa}
 %endif
 Obsoletes: php-pecl-pdo-devel
+%if %{with_zts}
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
+%endif
 Obsoletes: php53-devel, php53u-devel, php54-devel, php55-devel
 
 %description devel
@@ -357,6 +369,7 @@ a database access abstraction layer to PHP.  This module provides
 a common interface for accessing MySQL, PostgreSQL or other 
 databases.
 
+%if %{with_libmysql}
 %package mysql
 Summary: A module for PHP applications that use MySQL databases
 Group: Development/Languages
@@ -378,6 +391,7 @@ MySQL database support to PHP. MySQL is an object-relational database
 management system. PHP is an HTML-embeddable scripting language. If
 you need MySQL support for PHP applications, you will need to install
 this package and the php package.
+%endif
 
 %package mysqlnd
 Summary: A module for PHP applications that use MySQL databases
@@ -391,6 +405,9 @@ Provides: php-mysql%{?_isa} = %{version}-%{release}
 Provides: php-mysqli = %{version}-%{release}
 Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
+%if ! %{with_libmysql}
+Obsoletes: php-mysql < %{version}-%{release}
+%endif
 Obsoletes: php53-mysqlnd, php53u-mysqlnd, php54-mysqlnd, php55-mysqlnd
 
 %description mysqlnd
@@ -802,7 +819,10 @@ cp ext/phar/LICENSE phar_LICENSE
 cp ext/bcmath/libbcmath/COPYING.LIB libbcmath_COPYING
 
 # Multiple builds for multiple SAPIs
-mkdir build-cgi build-apache build-embedded build-zts build-ztscli \
+mkdir build-cgi build-apache build-embedded \
+%if %{with_zts}
+    build-zts build-ztscli \
+%endif
 %if %{with_fpm}
     build-fpm
 %endif
@@ -1061,11 +1081,16 @@ without_shared="--without-gd \
 pushd build-apache
 build --with-apxs2=%{_httpd_apxs} \
       --libdir=%{_libdir}/php \
+%if %{with_libmysql}
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
       --with-pdo-mysql=shared,%{mysql_config} \
       --without-pdo-sqlite \
+%else
+      --without-mysql \
+      --disable-pdo \
+%endif
       ${without_shared}
 popd
 
@@ -1074,7 +1099,8 @@ popd
 pushd build-fpm
 build --enable-fpm \
       --libdir=%{_libdir}/php \
-      --without-mysql --disable-pdo \
+      --without-mysql \
+      --disable-pdo \
       ${without_shared}
 popd
 %endif
@@ -1087,6 +1113,7 @@ build --enable-embed \
       ${without_shared}
 popd
 
+%if %{with_zts}
 # Build a special thread-safe (mainly for modules)
 pushd build-ztscli
 
@@ -1184,16 +1211,23 @@ build --with-apxs2=%{_httpd_apxs} \
       --libdir=%{_libdir}/php-zts \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
+%if %{with_libmysql}
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
       --with-pdo-mysql=shared,%{mysql_config} \
       --without-pdo-sqlite \
+%else
+      --without-mysql \
+      --disable-pdo \
+%endif
       ${without_shared}
 popd
 
 ### NOTE!!! EXTENSION_DIR was changed for the -zts build, so it must remain
 ### the last SAPI to be built.
+%endif
+
 
 %check
 %if %runselftest
@@ -1219,6 +1253,7 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 %endif
 
 %install
+%if %{with_zts}
 # Install the extensions for the ZTS version
 make -C build-ztscli install \
      INSTALL_ROOT=$RPM_BUILD_ROOT
@@ -1231,14 +1266,17 @@ mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysqli.so \
 mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/pdo_mysql.so \
    $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/pdo_mysqlnd.so
 
+%if %{with_libmysql}
 # Install the extensions for the ZTS version modules for libmysql
 make -C build-zts install-modules \
      INSTALL_ROOT=$RPM_BUILD_ROOT
+%endif
 
 # rename ZTS binary
 mv $RPM_BUILD_ROOT%{_bindir}/php        $RPM_BUILD_ROOT%{_bindir}/zts-php
 mv $RPM_BUILD_ROOT%{_bindir}/phpize     $RPM_BUILD_ROOT%{_bindir}/zts-phpize
 mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/zts-php-config
+%endif
 
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
@@ -1262,9 +1300,11 @@ mv $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqli.so \
 mv $RPM_BUILD_ROOT%{_libdir}/php/modules/pdo_mysql.so \
    $RPM_BUILD_ROOT%{_libdir}/php/modules/pdo_mysqlnd.so
 
+%if %{with_libmysql}
 # Install the mysql extension build with libmysql
 make -C build-apache install-modules \
      INSTALL_ROOT=$RPM_BUILD_ROOT
+%endif
 
 # Install the default configuration file and icons
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/
@@ -1279,22 +1319,32 @@ install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/php
 install -m 755 -d $RPM_BUILD_ROOT%{_httpd_moddir}
 install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd_moddir}
 
+%if %{with_zts}
 # install the ZTS DSO
 install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd_moddir}/libphp5-zts.so
+%endif
 
 # Apache config fragment
 %if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
 # Single config file with httpd < 2.4 (fedora <= 17)
 install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
+%if %{with_zts}
+cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
+%endif
 cat %{SOURCE1} >>$RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
 %else
 # Dual config file with httpd >= 2.4 (fedora >= 18)
 install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-php.conf
+%if %{with_zts}
+cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_modconfdir}/10-php.conf
+%endif
 install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
 %endif
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
+%if %{with_zts}
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
+%endif
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 
@@ -1340,19 +1390,23 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
 
 # Generate files lists and stub .ini files for each subpackage
-for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
+for mod in pgsql odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     simplexml bz2 calendar ctype exif ftp gettext gmp iconv \
     sockets tokenizer \
-    pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
+    pdo pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
     sqlite3 \
 %endif
     enchant phar fileinfo intl \
     mcrypt tidy pdo_dblib mssql pspell curl wddx \
-    posix shmop sysvshm sysvsem sysvmsg recode xml; do
+    posix shmop sysvshm sysvsem sysvmsg recode xml \
+%if %{with_libmysql}
+    mysql mysqli pdo_mysql \
+%endif
+    ; do
 if [ "$mod" = "wddx" ]
 then   ini=xml_${mod}.ini
 else   ini=${mod}.ini
@@ -1361,15 +1415,19 @@ fi
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
+%if %{with_zts}
     cat > $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini} <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
+%endif
     cat > files.${mod} <<EOF
 %attr(755,root,root) %{_libdir}/php/modules/${mod}.so
-%attr(755,root,root) %{_libdir}/php-zts/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${ini}
+%if %{with_zts}
+%attr(755,root,root) %{_libdir}/php-zts/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${ini}
+%endif
 EOF
 
 done
@@ -1379,7 +1437,10 @@ cat files.dom files.xsl files.xml{reader,writer} files.wddx \
     files.simplexml >> files.xml
 
 # The mysql and mysqli modules are both packaged in php-mysql
+%if %{with_libmysql}
 cat files.mysqli >> files.mysql
+cat files.pdo_mysql >> files.mysql
+%endif
 # mysqlnd
 cat files.mysqlnd_mysql \
     files.mysqlnd_mysqli \
@@ -1388,7 +1449,6 @@ cat files.mysqlnd_mysql \
 
 # Split out the PDO modules
 cat files.pdo_dblib >> files.mssql
-cat files.pdo_mysql >> files.mysql
 cat files.pdo_pgsql >> files.pgsql
 cat files.pdo_odbc >> files.odbc
 %if %{with_oci8}
@@ -1421,6 +1481,9 @@ sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
     -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
     -e "s/@PHP_VERSION@/%{version}/" \
+%if ! %{with_zts}
+    -e "/zts/d" \
+%endif
     < %{SOURCE3} > macros.php
 install -m 644 -c macros.php \
            $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.php
@@ -1528,7 +1591,9 @@ fi
 %files
 %defattr(-,root,root)
 %{_httpd_moddir}/libphp5.so
+%if %{with_zts}
 %{_httpd_moddir}/libphp5-zts.so
+%endif
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
 %config(noreplace) %{_httpd_confdir}/php.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
@@ -1545,11 +1610,13 @@ fi
 %doc php.ini-*
 %config(noreplace) %{_sysconfdir}/php.ini
 %dir %{_sysconfdir}/php.d
-%dir %{_sysconfdir}/php-zts.d
 %dir %{_libdir}/php
 %dir %{_libdir}/php/modules
+%if %{with_zts}
+%dir %{_sysconfdir}/php-zts.d
 %dir %{_libdir}/php-zts
 %dir %{_libdir}/php-zts/modules
+%endif
 %dir %{_localstatedir}/lib/php
 %dir %{_datadir}/php
 
@@ -1593,14 +1660,16 @@ fi
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
+%{_includedir}/php
+%{_libdir}/php/build
+%if %{with_zts}
 %{_bindir}/zts-php-config
+%{_includedir}/php-zts
 %{_bindir}/zts-phpize
 # usefull only to test other module during build
 %{_bindir}/zts-php
-%{_includedir}/php
-%{_includedir}/php-zts
-%{_libdir}/php/build
 %{_libdir}/php-zts/build
+%endif
 %{_mandir}/man1/php-config.1*
 %config %{_sysconfdir}/rpm/macros.php
 
@@ -1610,7 +1679,9 @@ fi
 %{_libdir}/libphp5-%{embed_version}.so
 
 %files pgsql -f files.pgsql
+%if %{with_libmysql}
 %files mysql -f files.mysql
+%endif
 %files odbc -f files.odbc
 %files imap -f files.imap
 %files ldap -f files.ldap
@@ -1648,6 +1719,11 @@ fi
 
 
 %changelog
+* Fri Mar  8 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.17-201303081230
+- new snapshot (post alpha 6)
+- make php-mysql package optional and disabled
+- make ZTS build optional (still enabled)
+
 * Thu Feb 28 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.16-201302281430
 - new snapshot
 
