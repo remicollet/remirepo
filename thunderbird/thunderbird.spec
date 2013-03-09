@@ -14,6 +14,7 @@
 %else
 %define system_sqlite 1
 %endif
+
 %if 0%{?fedora} < 15
 %define system_cairo      0
 %define system_vpx        0
@@ -22,9 +23,17 @@
 %define system_vpx        1
 %endif
 
+# Use system libpeg (and libjpeg-turbo) ?
+%if 0%{?fedora} < 14 && 0%{?rhel} < 6
+%define system_jpeg       0
+%else
+%define system_jpeg       1
+%endif
+
 %define build_langpacks 1
 
 %if %{?system_nss}
+# grep 'min_ns.*=[0-9]' configure
 %global nspr_version 4.9.2
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
 %global nss_version 3.13.6
@@ -33,6 +42,7 @@
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
 %if %{?system_sqlite}
+# grep '^SQLITE_VERSION' configure
 %define sqlite_version 3.7.13
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
@@ -59,14 +69,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        17.0.3
+Version:        17.0.4
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
-Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
+Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}esr/source/thunderbird-%{version}esr.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20130219.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20130309.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -111,7 +121,9 @@ BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
 BuildRequires:  libnotify-devel >= %{libnotify_version}
 BuildRequires:  libpng-devel
-BuildRequires:  libjpeg-devel
+%if %{system_jpeg}
+BuildRequires:  libjpeg-turbo-devel
+%endif
 BuildRequires:  zip
 BuildRequires:  bzip2-devel
 BuildRequires:  zlib-devel, gzip, zip, unzip, xz
@@ -223,9 +235,12 @@ cat %{SOURCE10} 		\
 %if ! %{system_vpx}
   | grep -v with-system-libvpx     \
 %endif
+%if ! %{system_jpeg}
+  | grep -v with-system-jpeg     \
+%endif
   | tee .mozconfig
 
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
+%if ! %{system_jpeg}
 echo "ac_add_options --disable-libjpeg-turbo"  >> .mozconfig
 %endif
 
@@ -505,8 +520,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Sat Mar  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.4-1
+- Update to 17.0.4esr
+
 * Sun Feb 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.3-1
-- Sync with rawhide, update to 17.0
+- Sync with rawhide, update to 17.0.3
 
 * Tue Feb 19 2013 Jan Horak <jhorak@redhat.com> - 17.0.3-1
 - Update to 17.0.3
