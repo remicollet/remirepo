@@ -6,16 +6,20 @@ Version:        1.3
 Release:        3%{?dist}
 Summary:        Adds the Dropbox-PHP channel to PEAR
 
+Group:          Development/Languages
 License:        Public Domain
 URL:            http://www.dropbox-php.com/
 Source0:        http://%{channelname}/channel.xml
 
-BuildArch:  noarch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
-Requires:   php-pear(PEAR)
-Requires(post):     %{__pear}
-Requires(postun):   %{__pear}
-Provides:   php-channel(%{channelname})
+
+Requires:         php-pear(PEAR)
+Requires(post):   %{__pear}
+Requires(postun): %{__pear}
+
+Provides:         php-channel(%{channelname})
 
 %description
 This package adds the Dropbox-PHP channel which allows PEAR packages
@@ -49,11 +53,15 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %{pear_xmldir}/%{name}.xml
 
 
 
 %changelog
+* Sat Mar 09 2013 Remi Collet <rpms@famillecollet.com> - 1.3-3
+- backport for remi repo
+
 * Thu Feb 28 2013 Gregor Tätzner <brummbq@fedoraproject.org> - 1.3-3
 - channelname: pear.dropbox-php.com
 
