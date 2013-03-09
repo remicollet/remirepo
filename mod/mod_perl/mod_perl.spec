@@ -7,21 +7,23 @@
 
 Name:           mod_perl
 Version:        2.0.7
-Release:        10%{?dist}
+Release:        12.20130221svn1448242%{?dist}
 Summary:        An embedded Perl interpreter for the Apache HTTP Server
 
 Group:          System Environment/Daemons
 License:        ASL 2.0
 URL:            http://perl.apache.org/
-Source0:        http://perl.apache.org/dist/mod_perl-%{version}.tar.gz
+# The source for this package was pulled from upstream's vcs.  Use the
+# following commands to generate the tarball:
+#  svn export -r 1448242 https://svn.apache.org/repos/asf/perl/modperl/branches/httpd24 mod_perl-2.0.7-svn1448242
+#  tar czvf mod_perl-2.0.7-svn1448242.tar.gz mod_perl-2.0.7-svn1448242
+Source0:        mod_perl-2.0.7-svn1448242.tar.gz
+#Source0:       http://perl.apache.org/dist/mod_perl-%{version}.tar.gz
 Source1:        perl.conf
 Source2:        perl.module.conf
-Patch0:         mod_perl-2.0.4-multilib.patch
 Patch1:         mod_perl-2.0.4-inline.patch
 Patch2:         mod_perl-2.0.5-nolfs.patch
-Patch3:         mod_perl-short-name.patch
-Patch4:         mod_perl-httpd24.patch
-Patch5:         mod_perl-httpd24-maps.patch
+#Patch3:         mod_perl-short-name.patch
 
 BuildRequires:  perl-devel, perl(ExtUtils::Embed)
 BuildRequires:  httpd-devel >= 2.4.0, httpd, gdbm-devel
@@ -73,13 +75,10 @@ modules that use mod_perl.
 
 
 %prep
-%setup -q -n %{name}-%{version}
-%patch0 -p1
+%setup -q -n %{name}-%{version}-svn1448242
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
+#%patch3 -p1
 
 %build
 
@@ -102,17 +101,18 @@ CFLAGS="$RPM_OPT_FLAGS -fpic" %{__perl} Makefile.PL </dev/null \
          MP_APXS=%{_httpd_apxs} \
          MP_APR_CONFIG=%{_bindir}/apr-1-config
 
-make source_scan
-make xs_generate
-
-CFLAGS="$RPM_OPT_FLAGS -fpic" %{__perl} Makefile.PL </dev/null \
-         PREFIX=$RPM_BUILD_ROOT/%{_prefix} \
-         INSTALLDIRS=vendor \
-         MP_APXS=%{_httpd_apxs} \
-         MP_APR_CONFIG=%{_bindir}/apr-1-config
+# This is not needed now when we are using httpd24 branch, but I will keep
+# it here in case someone will have to regenerate *.xs files again.
+#make source_scan
+#make xs_generate
+#CFLAGS="$RPM_OPT_FLAGS -fpic" %{__perl} Makefile.PL </dev/null \
+#         PREFIX=$RPM_BUILD_ROOT/%{_prefix} \
+#         INSTALLDIRS=vendor \
+#         MP_APXS=%{_httpd_apxs} \
+#         MP_APR_CONFIG=%{_bindir}/apr-1-config
 
 make -C src/modules/perl %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS -fpic"
-make
+make %{?_smp_mflags}
 
 %install
 install -d -m 755 $RPM_BUILD_ROOT%{_httpd_moddir}
@@ -181,9 +181,20 @@ find "$RPM_BUILD_ROOT" -type f -name *.orig -exec rm -f {} \;
 %files devel -f devel.files
 %{_includedir}/httpd/*
 %{perl_vendorarch}/Apache/Test*.pm
+%{perl_vendorarch}/MyTest
 %{_mandir}/man3/Apache::Test*.3pm*
 
 %changelog
+* Sat Mar  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.7-12.20130221svn1448242
+- sync with rawhide, backport for remi repo
+
+* Thu Feb 21 2013 Jan Kaluza <jkaluza@redhat.com> - 2.0.7-12.20130221svn1448242
+- update to httpd24 svn branch which provides much more better compatibility
+  with httpd-2.4
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.7-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Feb 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.7-10
 - sync with rawhide, backport for remi repo
 
