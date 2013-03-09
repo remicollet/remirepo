@@ -6,9 +6,9 @@ http://svn.apache.org/viewvc?view=revision&revision=1332643
 
 http://svn.apache.org/viewvc?view=revision&revision=1345599
 
---- httpd-2.4.2/modules/ssl/mod_ssl.c.r1332643+
-+++ httpd-2.4.2/modules/ssl/mod_ssl.c
-@@ -260,6 +260,18 @@ static const command_rec ssl_config_cmds
+--- httpd-2.4.4/modules/ssl/mod_ssl.c.r1332643+
++++ httpd-2.4.4/modules/ssl/mod_ssl.c
+@@ -272,6 +272,18 @@ static const command_rec ssl_config_cmds
      AP_END_CMD
  };
  
@@ -27,8 +27,8 @@ http://svn.apache.org/viewvc?view=revision&revision=1345599
  /*
   *  the various processing hooks
   */
---- httpd-2.4.2/modules/ssl/mod_ssl.h.r1332643+
-+++ httpd-2.4.2/modules/ssl/mod_ssl.h
+--- httpd-2.4.4/modules/ssl/mod_ssl.h.r1332643+
++++ httpd-2.4.4/modules/ssl/mod_ssl.h
 @@ -63,5 +63,26 @@ APR_DECLARE_OPTIONAL_FN(int, ssl_proxy_e
  
  APR_DECLARE_OPTIONAL_FN(int, ssl_engine_disable, (conn_rec *));
@@ -56,9 +56,9 @@ http://svn.apache.org/viewvc?view=revision&revision=1345599
 +
  #endif /* __MOD_SSL_H__ */
  /** @} */
---- httpd-2.4.2/modules/ssl/ssl_engine_init.c.r1332643+
-+++ httpd-2.4.2/modules/ssl/ssl_engine_init.c
-@@ -681,6 +681,11 @@ static void ssl_init_ctx_callbacks(serve
+--- httpd-2.4.4/modules/ssl/ssl_engine_init.c.r1332643+
++++ httpd-2.4.4/modules/ssl/ssl_engine_init.c
+@@ -725,6 +725,11 @@ static void ssl_init_ctx_callbacks(serve
  #endif
  
      SSL_CTX_set_info_callback(ctx, ssl_callback_Info);
@@ -70,8 +70,8 @@ http://svn.apache.org/viewvc?view=revision&revision=1345599
  }
  
  static void ssl_init_ctx_verify(server_rec *s,
---- httpd-2.4.2/modules/ssl/ssl_engine_io.c.r1332643+
-+++ httpd-2.4.2/modules/ssl/ssl_engine_io.c
+--- httpd-2.4.4/modules/ssl/ssl_engine_io.c.r1332643+
++++ httpd-2.4.4/modules/ssl/ssl_engine_io.c
 @@ -28,6 +28,7 @@
                                    core keeps dumping.''
                                              -- Unknown    */
@@ -88,7 +88,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1345599
  } bio_filter_in_ctx_t;
  
  /*
-@@ -1364,6 +1366,26 @@ static apr_status_t ssl_io_filter_input(
+@@ -1385,6 +1387,26 @@ static apr_status_t ssl_io_filter_input(
          APR_BRIGADE_INSERT_TAIL(bb, bucket);
      }
  
@@ -115,7 +115,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1345599
      return APR_SUCCESS;
  }
  
-@@ -1845,6 +1867,7 @@ static void ssl_io_input_add_filter(ssl_
+@@ -1866,6 +1888,7 @@ static void ssl_io_input_add_filter(ssl_
      inctx->block = APR_BLOCK_READ;
      inctx->pool = c->pool;
      inctx->filter_ctx = filter_ctx;
@@ -123,8 +123,8 @@ http://svn.apache.org/viewvc?view=revision&revision=1345599
  }
  
  /* The request_rec pointer is passed in here only to ensure that the
---- httpd-2.4.2/modules/ssl/ssl_engine_kernel.c.r1332643+
-+++ httpd-2.4.2/modules/ssl/ssl_engine_kernel.c
+--- httpd-2.4.4/modules/ssl/ssl_engine_kernel.c.r1332643+
++++ httpd-2.4.4/modules/ssl/ssl_engine_kernel.c
 @@ -29,6 +29,7 @@
                                    time I was too famous.''
                                              -- Unknown                */
@@ -133,11 +133,10 @@ http://svn.apache.org/viewvc?view=revision&revision=1345599
  #include "util_md5.h"
  
  static void ssl_configure_env(request_rec *r, SSLConnRec *sslconn);
-@@ -2164,3 +2165,86 @@ int ssl_callback_SessionTicket(SSL *ssl,
-     return -1;
+@@ -2161,6 +2162,90 @@ int ssl_callback_SessionTicket(SSL *ssl,
  }
- #endif
-+
+ #endif /* HAVE_TLS_SESSION_TICKETS */
+ 
 +#ifdef HAVE_TLS_NPN
 +/*
 + * This callback function is executed when SSL needs to decide what protocols
@@ -219,9 +218,14 @@ http://svn.apache.org/viewvc?view=revision&revision=1345599
 +    *size_out = size;
 +    return SSL_TLSEXT_ERR_OK;
 +}
-+#endif
---- httpd-2.4.2/modules/ssl/ssl_private.h.r1332643+
-+++ httpd-2.4.2/modules/ssl/ssl_private.h
++
++#endif /* HAVE_TLS_NPN */
++
+ #ifndef OPENSSL_NO_SRP
+ 
+ int ssl_callback_SRPServerParams(SSL *ssl, int *ad, void *arg)
+--- httpd-2.4.4/modules/ssl/ssl_private.h.r1332643+
++++ httpd-2.4.4/modules/ssl/ssl_private.h
 @@ -139,6 +139,11 @@
  #define HAVE_FIPS
  #endif
@@ -234,7 +238,7 @@ http://svn.apache.org/viewvc?view=revision&revision=1345599
  #if (OPENSSL_VERSION_NUMBER >= 0x10000000)
  #define MODSSL_SSL_CIPHER_CONST const
  #define MODSSL_SSL_METHOD_CONST const
-@@ -807,6 +812,7 @@ int          ssl_callback_ServerNameIndi
+@@ -840,6 +845,7 @@ int          ssl_callback_ServerNameIndi
  int         ssl_callback_SessionTicket(SSL *, unsigned char *, unsigned char *,
                                         EVP_CIPHER_CTX *, HMAC_CTX *, int);
  #endif

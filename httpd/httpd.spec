@@ -13,8 +13,8 @@
 
 Summary: Apache HTTP Server
 Name: httpd
-Version: 2.4.3
-Release: 15%{?dist}
+Version: 2.4.4
+Release: 2%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -40,6 +40,7 @@ Source21: ssl.conf
 Source22: welcome.conf
 Source23: manual.conf
 Source24: 00-systemd.conf
+Source25: 01-session.conf
 # Documentation
 Source30: README.confd
 Source40: htcacheclean.service
@@ -51,16 +52,15 @@ Patch3: httpd-2.4.1-deplibs.patch
 Patch5: httpd-2.4.3-layout.patch
 Patch6: httpd-2.4.3-apctl-systemd.patch
 # Features/functional changes
-Patch23: httpd-2.4.1-export.patch
+Patch23: httpd-2.4.4-export.patch
 Patch24: httpd-2.4.1-corelimit.patch
 Patch25: httpd-2.4.1-selinux.patch
-Patch26: httpd-2.4.3-r1337344+.patch
+Patch26: httpd-2.4.4-r1337344+.patch
 Patch27: httpd-2.4.2-icons.patch
-Patch28: httpd-2.4.2-r1332643+.patch
+Patch28: httpd-2.4.4-r1332643+.patch
 Patch29: httpd-2.4.3-mod_systemd.patch
 # Bug fixes
 Patch50: httpd-2.4.2-r1374214+.patch
-Patch51: httpd-2.4.3-r1387633+.patch
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -156,6 +156,15 @@ Requires: apr-util-ldap
 The mod_ldap and mod_authnz_ldap modules add support for LDAP
 authentication to the Apache HTTP Server.
 
+%package -n mod_session
+Group: System Environment/Daemons
+Summary: Session interface for the Apache HTTP Server
+Requires: httpd = 0:%{version}-%{release}, httpd-mmn = %{mmnisa}
+
+%description -n mod_session
+The mod_session module and associated backends provide an abstract
+interface for storing and accessing per-user session data.
+
 %prep
 %setup -q
 %patch1 -p1 -b .apctl
@@ -173,7 +182,6 @@ authentication to the Apache HTTP Server.
 %patch29 -p1 -b .systemd
 
 %patch50 -p1 -b .r1374214+
-%patch51 -p1 -b .r1387633
 
 # Patch in the vendor string
 sed -i '/^#define PLATFORM/s/Unix/%{vstring}/' os/unix/os.h
@@ -243,7 +251,6 @@ export LYNX_PATH=/usr/bin/links
         --enable-cgid --enable-cgi \
         --enable-authn-anon --enable-authn-alias \
         --disable-imagemap  \
-        --disable-session
 	$*
 make %{?_smp_mflags}
 
@@ -266,7 +273,7 @@ install -m 644 $RPM_SOURCE_DIR/README.confd \
     $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/README
 for f in 00-base.conf 00-mpm.conf 00-lua.conf 01-cgi.conf 00-dav.conf \
          00-proxy.conf 00-ssl.conf 01-ldap.conf 00-proxyhtml.conf \
-         01-ldap.conf 00-systemd.conf; do
+         01-ldap.conf 00-systemd.conf 01-session.conf; do
   install -m 644 -p $RPM_SOURCE_DIR/$f \
         $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.modules.d/$f
 done
@@ -521,6 +528,7 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_sysconfdir}/httpd/conf.modules.d/00-ssl.conf
 %exclude %{_sysconfdir}/httpd/conf.modules.d/00-proxyhtml.conf
 %exclude %{_sysconfdir}/httpd/conf.modules.d/01-ldap.conf
+%exclude %{_sysconfdir}/httpd/conf.modules.d/01-session.conf
 
 %config(noreplace) %{_sysconfdir}/sysconfig/ht*
 %{_prefix}/lib/tmpfiles.d/httpd.conf
@@ -537,10 +545,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/httpd
 %dir %{_libdir}/httpd/modules
 %{_libdir}/httpd/modules/mod*.so
+%exclude %{_libdir}/httpd/modules/mod_auth_form.so
 %exclude %{_libdir}/httpd/modules/mod_ssl.so
 %exclude %{_libdir}/httpd/modules/mod_*ldap.so
 %exclude %{_libdir}/httpd/modules/mod_proxy_html.so
 %exclude %{_libdir}/httpd/modules/mod_xml2enc.so
+%exclude %{_libdir}/httpd/modules/mod_session*.so
 
 %dir %{contentdir}
 %dir %{contentdir}/icons
@@ -599,6 +609,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/mod_*ldap.so
 %config(noreplace) %{_sysconfdir}/httpd/conf.modules.d/01-ldap.conf
 
+%files -n mod_session
+%defattr(-,root,root)
+%{_libdir}/httpd/modules/mod_session*.so
+%{_libdir}/httpd/modules/mod_auth_form.so
+%config(noreplace) %{_sysconfdir}/httpd/conf.modules.d/01-session.conf
+
 %files devel
 %defattr(-,root,root)
 %{_includedir}/httpd
@@ -610,6 +626,22 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Sat Mar  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.4.4-2
+- sync with rawhide, update to 2.4.4, rebuild for remi repo
+
+* Tue Feb 26 2013 Joe Orton <jorton@redhat.com> - 2.4.4-2
+- really package mod_auth_form in mod_session (#915438)
+
+* Tue Feb 26 2013 Joe Orton <jorton@redhat.com> - 2.4.4-1
+- update to 2.4.4
+- fix duplicate ownership of mod_session config (#914901)
+
+* Fri Feb 22 2013 Joe Orton <jorton@redhat.com> - 2.4.3-17
+- add mod_session subpackage, move mod_auth_form there (#894500)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.3-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Feb 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.4.3-15
 - sync with rawhide, rebuild for remi repo
 
