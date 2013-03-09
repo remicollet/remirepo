@@ -1,5 +1,4 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %global pear_name %(echo %{name} | sed -e 's/^php-dropbox-php-//' -e 's/-/_/g')
 %global channelname pear.dropbox-php.com
 
@@ -8,12 +7,13 @@ Version:        1.0.0
 Release:        4%{?dist}
 Summary:        Library for integrating dropbox with PHP
 
+Group:          Development/Libraries
 License:        MIT
 URL:            http://www.dropbox-php.com/
 Source0:        http://%{channelname}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-
 BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{channelname})
 
@@ -46,7 +46,7 @@ mv package.xml %{pear_name}-%{version}/%{name}.xml
 
 
 %build
-
+# nothing
 
 %install
 cd %{pear_name}-%{version}
@@ -73,12 +73,16 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/%{pear_name}
 
 
 %changelog
+* Sat Mar 09 2013 Remi Collet <rpms@famillecollet.com> - 1.0.0-4
+- backport for remi repo
+
 * Thu Mar 07 2013 Gregor Tätzner <brummbq@fedoraproject.org> - 1.0.0-4
 - require php-pecl(oauth) instead of php-oauth
 - add note about optional dep to wordpress and zend
