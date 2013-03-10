@@ -1,24 +1,27 @@
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name APC
-%global svnrev    328828
+%global svnrev    329724
+# TODO rev >= 329725 have opcache default on (so need to be fixed)
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          php-pecl-apc
-Version:       3.1.14
+Version:       3.1.15
 Release:       0.1.svn%{svnrev}%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
-# svn export -r  328828 http://svn.php.net/repository/pecl/apc/trunk APC-3.1.14
-# tar czf APC-3.1.14-dev.tgz APC-3.1.14
+# svn export -r  329724 http://svn.php.net/repository/pecl/apc/trunk APC-3.1.15
+# tar czf APC-3.1.15-dev.tgz APC-3.1.15
 Source0:       http://pecl.php.net/get/APC-%{version}%{?svnrev:-dev}.tgz
-Source1:       apc.ini
+Source1:       apc-dev.ini
 Source2:       apc-panel.conf
 Source3:       apc.conf.php
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel >= 5.1.0, httpd-devel, php-pear
+BuildRequires: php-devel
+BuildRequires: php-pear
+BuildRequires: httpd-devel
 # Only for tests (used by some unit tests)
 BuildRequires: php-dom
 
@@ -27,8 +30,6 @@ Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-Conflicts:     php-mmcache
-Conflicts:     php-eaccelerator
 Provides:      php-apc = %{version}
 Provides:      php-apc%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
@@ -39,6 +40,9 @@ Obsoletes:     php53-pecl-apc
 Obsoletes:     php53u-pecl-apc
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-apc
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-apc
 %endif
 
 # Filter private shared
@@ -78,8 +82,8 @@ configuration, available on http://localhost/apc-panel/
 %prep
 %setup -q -c 
 %if 0%{?svnrev}
-sed -e '/release/s/%{version}-dev/%{version}dev/' \
-    -e '/date/s/2012-??-??/2012-12-10/' \
+sed -e "/release/s/%{version}/%{version}dev/" \
+    -e "/date/s/2013-??-??/2013-03-10/" \
     APC-%{version}/package.xml >package.xml
 grep date package.xml
 %endif
@@ -159,7 +163,7 @@ ln -sf %{php_extdir}/dom.so modules/
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension=apc.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=1 \
+REPORT_EXIT_STATUS=0 \
 %{_bindir}/php -n run-tests.php
 
 cd ../%{pecl_name}-%{version}-zts
@@ -170,6 +174,10 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=0 \
 %{__ztsphp} -n run-tests.php
+%else
+: minimal load test
+%{__php}    -n -d extension_dir=%{pecl_name}-%{version}/modules     -d extension=apc.so -m | grep apc
+%{__ztsphp} -n -d extension_dir=%{pecl_name}-%{version}-zts/modules -d extension=apc.so -m | grep apc
 %endif
 
 
@@ -214,6 +222,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 10 2013 Remi Collet <remi@fedoraproject.org> - 3.1.15-0.1.svn329724
+- update to 3.1.15dev (svn snaphot) with new directive to enable opcache
+  (default disabled) and allow to cache user data and use zendoptimizerplus
+
 * Tue Dec 18 2012 Remi Collet <remi@fedoraproject.org> - 3.1.14-0.1.svn328828
 - new snapshot
 
