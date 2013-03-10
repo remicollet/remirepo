@@ -8,7 +8,7 @@
 
 Name:             php-symfony2-HttpKernel
 Version:          2.2.0
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -24,6 +24,7 @@ BuildRequires:    php-channel(%{pear_channel})
 # Test requires
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:    php-PsrLog >= 1.0.0
 BuildRequires:    php-pear(%{pear_channel}/BrowserKit) >= 2.2.0
 BuildRequires:    php-pear(%{pear_channel}/ClassLoader) >= 2.2.0
 BuildRequires:    php-pear(%{pear_channel}/Config) >= 2.2.0
@@ -50,6 +51,7 @@ BuildRequires:    php-tokenizer
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
+Requires:         php-PsrLog >= 1.0.0
 Requires:         php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
 Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
 Requires(post):   %{__pear}
@@ -126,7 +128,9 @@ sed -e '/bootstrap/s:vendor/autoload.php:%{pear_phpdir}/Symfony/Component/%{pear
 
 %check
 %if %{with_tests}
-cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
+cd %{pear_name}-%{version}
+ln -s /usr/share/php/Psr Psr
+cd Symfony/Component/%{pear_name}
 sed -e '/bootstrap/s:vendor/autoload.php:autoloader.php:' \
     phpunit.xml.dist > phpunit.xml
 %{_bindir}/phpunit -d date.timezone=UTC
@@ -156,6 +160,9 @@ fi
 
 
 %changelog
+* Sun Mar 10 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-2
+- add Requires: php-PsrLog
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
