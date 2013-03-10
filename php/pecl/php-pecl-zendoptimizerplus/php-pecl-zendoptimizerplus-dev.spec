@@ -4,7 +4,7 @@
 
 Name:          php-pecl-%{extname}
 Version:       7.0.0
-Release:       1%{?dist}.1
+Release:       2%{?dist}
 Summary:       The Zend Optimizer+
 
 Group:         Development/Libraries
@@ -27,7 +27,8 @@ Requires:      php(api) = %{php_core_api}
 # Only one opcode cache could be enabled
 Conflicts:     php-eaccelerator
 Conflicts:     php-xcache
-Conflicts:     php-pecl-apc
+# APC 3.1.15 offer an option to disable opcache
+Conflicts:     php-pecl-apc < 3.1.15
 Obsoletes:     php-ZendOptimizerPlus < 7.0.0-1
 Provides:      php-pecl(%{extname}) = %{version}
 Provides:      php-pecl(%{extname})%{?_isa} = %{version}
@@ -153,6 +154,9 @@ fi
 
 
 %changelog
+* Sun Mar 10 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-2
+- allow to install with APC >= 3.1.15 (user data cache)
+
 * Tue Mar  5 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-1
 - official PECL release, version 7.0.0 (beta)
 
