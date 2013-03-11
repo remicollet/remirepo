@@ -21,9 +21,10 @@ License:       MIT
 URL:           http://symfony.com/doc/master/cmf/components/routing.html
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
-BuildRequires: php-common >= %{php_min_ver}
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires: php-pear(pear.symfony.com/Routing) >= %{symfony_min_ver}
 BuildRequires: php-pear(pear.symfony.com/Routing) <  %{symfony_max_ver}
@@ -34,7 +35,7 @@ BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 
-Requires:      php-common >= %{php_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 Requires:      php-pear(pear.symfony.com/Routing) >= %{symfony_min_ver}
 Requires:      php-pear(pear.symfony.com/Routing) <  %{symfony_max_ver}
 Requires:      php-pear(pear.symfony.com/HttpKernel) >= %{symfony_min_ver}
@@ -96,11 +97,12 @@ cp -rp * %{buildroot}%{_datadir}/php/Symfony/Cmf/Component/Routing/
 
 %check
 %{_bindir}/phpunit \
-    -d include_path="%{buildroot}%{_datadir}/php:%{pear_phpdir}" \
+    -d include_path="%{buildroot}%{_datadir}/php:%{pear_phpdir}:%{_datadir}/php" \
     -c phpunit.xml.dist
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
 %dir %{_datadir}/php/Symfony/Cmf
 %dir %{_datadir}/php/Symfony/Cmf/Component
@@ -113,6 +115,9 @@ cp -rp * %{buildroot}%{_datadir}/php/Symfony/Cmf/Component/Routing/
 
 
 %changelog
+* Mon Mar 11 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.alpha4.20130306git4706313
+- backport for remi repo.
+
 * Sat Mar 09 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0.0-0.3.alpha4.20130306git4706313
 - Added additional commits (snapshot) beyond tagged version 1.0.0-alpha4 which
   include several Symfony 2.2 fixes
