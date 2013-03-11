@@ -23,9 +23,10 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 
-Requires:      php-common >= %{php_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 Requires:      php-pear(pear.symfony.com/Process) >= %{symfony_min_ver}
 Requires:      php-pear(pear.symfony.com/Process) <  %{symfony_max_ver}
 # phpci
@@ -83,11 +84,15 @@ cp -rp src/Assetic %{buildroot}%{_datadir}/php/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md composer.json
 %{_datadir}/php/Assetic
 
 
 %changelog
+* Mon Mar 11 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.2.alpha4
+- backport for remi repo.
+
 * Sat Mar 09 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.0-0.2.alpha4
 - Updated to upstream pre-release version 1.1.0-alpha4
 
