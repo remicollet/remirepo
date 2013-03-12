@@ -11,14 +11,13 @@
 
 Summary:      A query cache plugin for mysqlnd
 Name:         php-pecl-mysqlnd-qc
-Version:      1.1.1
-Release:      3%{?dist}.1
-Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Version:      1.2.0
+Release:      1%{?dist}.1
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/mysqlnd_qc
 
-
+Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # From http://www.php.net/manual/en/mysqlnd-qc.configuration.php
 Source1:      mysqlnd_qc.ini
 
@@ -78,9 +77,6 @@ These are the files needed to compile programs using mysqlnd_qc extension.
 %prep 
 %setup -c -q
 
-# Fix version
-sed -i -e '/MYSQLND_QC_VERSION_STR/s/1.1.0/1.1.1/' %{pecl_name}-*/php_mysqlnd_qc.h
-
 # Check version (often broken)
 extver=$(sed -n '/#define MYSQLND_QC_VERSION_STR/{s/.* "//;s/".*$//;p}' %{pecl_name}-*/php_mysqlnd_qc.h)
 if test "x${extver}" != "x%{version}%{?prever:-}%{?prever}"; then
@@ -91,15 +87,19 @@ fi
 
 cp %{SOURCE1} %{pecl_name}.ini
 
-cp -r %{pecl_name}-%{version} %{pecl_name}-zts
+mv %{pecl_name}-%{version} %{pecl_name}-nts
+
+cp -r %{pecl_name}-nts %{pecl_name}-zts
 
 
 %build
-cd %{pecl_name}-%{version}
+cd %{pecl_name}-nts
 
-#LDFLAGS="$(pkg-config libmemcached --libs) -lpthread %{__global_ldflags}"
-#export LDFLAGS
 %{_bindir}/phpize
+
+# required by libmemcached
+LIBS="-lpthread"
+export LIBS
 
 # don't use --enable-mysqlnd-qc-apc because:
 # APC is onlysupported if both APC and MySQL Query Cache are compiled statically
@@ -115,7 +115,6 @@ cd %{pecl_name}-%{version}
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure \
@@ -129,7 +128,6 @@ cd ../%{pecl_name}-zts
 %endif
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
@@ -137,18 +135,15 @@ rm -rf %{buildroot}
 # for short-circuit
 rm -f %{pecl_name}-*/modules/{sqlite3,mysqlnd}.so
 
-make install -C %{pecl_name}-%{version} INSTALL_ROOT=%{buildroot}
+make install -C %{pecl_name}-nts INSTALL_ROOT=%{buildroot}
+make install -C %{pecl_name}-zts INSTALL_ROOT=%{buildroot}
+
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
-
-%if 0%{?__ztsphp:1}
-make install -C %{pecl_name}-zts        INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-%endif
-
 
 
 %clean
@@ -166,7 +161,7 @@ fi
 
 
 %check
-cd %{pecl_name}-%{version}
+cd %{pecl_name}-nts
 ln -s %{php_extdir}/mysqlnd.so modules/
 %if %{withsqlite}
 ln -s %{php_extdir}/sqlite3.so modules/
@@ -182,7 +177,6 @@ php -n -q \
     -d extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-%if 0%{?__ztsphp:1}
 cd ../%{pecl_name}-zts
 ln -s %{php_ztsextdir}/mysqlnd.so modules/
 %if %{withsqlite}
@@ -198,32 +192,29 @@ zts-php -n -q \
 %endif
     -d extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
-%endif
 
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_name}-%{version}/{CHANGES,CREDITS,LICENSE,README}
-%doc %{pecl_name}-%{version}/web
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%doc %{pecl_name}-nts/{CHANGES,CREDITS,LICENSE,README}
+%doc %{pecl_name}-nts/web
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
-%if 0%{?__ztsphp:1}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
-%{php_ztsextdir}/%{pecl_name}.so
-%endif
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/php/ext/%{pecl_name}
-
-%if 0%{?__ztsphp:1}
 %{php_ztsincldir}/ext/%{pecl_name}
-%endif
 
 
 %changelog
+* Tue Mar 12 2013  Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0-alpha
+
 * Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.1.1-3.1
 - also provides php-mysqlnd_qc
 
