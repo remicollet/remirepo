@@ -4,8 +4,8 @@
 
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
-Version:	2.4.14
-Release:	1%{?dist}.1
+Version:	2.5.0
+Release:	1%{?dist}
 
 License:	LGPLv2
 Group:		Development/Tools
@@ -19,6 +19,7 @@ URL:		http://phing.info/trac/
 
 BuildRoot:	    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	    noarch
+BuildRequires:	php(language) >= 5.2.0
 BuildRequires:	php-pear(PEAR) >= 1.8.0
 BuildRequires:	php-channel(%{pear_channel})
 BuildRequires:	dos2unix
@@ -107,8 +108,11 @@ fi
 
 
 %changelog
+* Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- Update to 2.5.0
+
 * Tue Jan 15 2013 Collet <RPMS@FamilleCollet.com> - 2.4.14-1.1
-- sync with rawhide, drop free stuff
+- sync with rawhide, drop non free stuff
 
 * Mon Jan 14 2013 Christof Damian <christof@damian.net> - 2.4.14-1
 - upstream 2.4.14
