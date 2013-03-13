@@ -1671,7 +1671,7 @@ fi
 %{_libdir}/php-zts/build
 %endif
 %{_mandir}/man1/php-config.1*
-%config %{_sysconfdir}/rpm/macros.php
+%{_sysconfdir}/rpm/macros.php
 
 %files embedded
 %defattr(-,root,root,-)

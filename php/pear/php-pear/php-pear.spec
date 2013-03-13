@@ -202,7 +202,7 @@ rm new-pear.conf
 %{peardir}
 %{_bindir}/*
 %config(noreplace) %{_sysconfdir}/pear.conf
-%config %{_sysconfdir}/rpm/macros.pear
+%{_sysconfdir}/rpm/macros.pear
 %dir %{_localstatedir}/cache/php-pear
 %dir %{_localstatedir}/www/html
 %dir %{_sysconfdir}/pear
