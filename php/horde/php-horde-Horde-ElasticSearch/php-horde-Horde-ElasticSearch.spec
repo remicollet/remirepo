@@ -1,6 +1,7 @@
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Horde_ElasticSearch
+%global pear_name    Horde_ElasticSearch
+%global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-ElasticSearch
 Version:        1.0.2
@@ -8,35 +9,38 @@ Release:        1%{?dist}
 Summary:        Horde ElasticSearch client
 
 Group:          Development/Libraries
-License:        BSD-2-Clause
-URL:            http://pear.horde.org/package/Horde_ElasticSearch
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+License:        BSD
+URL:            http://%{pear_channel}
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR)
+BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(PEAR)
-Requires:       php-pear(pear.horde.org/Horde_Exception) >= 2.0.0
-Requires:       php-pear(pear.horde.org/Horde_Exception) < 3.0.0alpha1
-Requires:       php-pear(pear.horde.org/Horde_Http) >= 2.0.0
-Requires:       php-pear(pear.horde.org/Horde_Http) < 3.0.0alpha1
+Requires:       php(language) >= 5.3.0
+Requires:       php-json
 Requires:       php-pear(PEAR) >= 1.7.0
-Provides:       php-pear(pear.horde.org/Horde_ElasticSearch) = %{version}
-BuildRequires:  php-channel(pear.horde.org)
-Requires:       php-channel(pear.horde.org)
+Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Http) >= 3.0.0
+
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 Lightweight API for ElasticSearch (http://www.elasticsearch.org/).
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
 
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -45,20 +49,20 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -68,24 +72,17 @@ rm -rf $RPM_BUILD_ROOT
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.horde.org/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
-
-
 %{pear_xmldir}/%{name}.xml
-# Expand this as needed to avoid owning dirs owned by our dependencies
-# and to avoid unowned dirs
-%{pear_phpdir}/Horde/ElasticSearch/Client.php
-%{pear_phpdir}/Horde/ElasticSearch/Exception.php
-%{pear_phpdir}/Horde/ElasticSearch/Index.php
-%{pear_phpdir}/Horde/ElasticSearch/Type.php
-
-
+%{pear_phpdir}/Horde/ElasticSearch
 
 
 %changelog
+* Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- initial package

@@ -19,6 +19,7 @@
 19 php-horde-Horde-Lock         =   2.0.2   => Exception, Support, (Db, Log)
    ...-Horde-Compress-Fast      *   1.0.1   => Exception
    php-horde-Horde-Queue        *   1.0.0
+   ...-Horde-ElasticSearch      *   1.0.2   => Exception, Http
 20 php-horde-Horde-Cache        =   2.0.3   => Exception, Util, Compress_Fast
 ---- with test unit ----
 21 php-horde-Horde-Argv         =   2.0.5   =>           Exception, Translation
