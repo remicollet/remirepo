@@ -10,7 +10,7 @@
 
 Name:           php-horde-content
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Tagging application
 
 Group:          Development/Libraries
@@ -20,14 +20,14 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-gettext
 Requires:       php-json
@@ -55,7 +55,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Argv) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Argv) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Controller) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Controller) >= 3.0.0
-# TODO Horde_ElasticSearch >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_ElasticSearch) >= 1.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_ElasticSearch) >= 2.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -65,8 +66,7 @@ This application provides tagging support for the other Horde applications.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 (
@@ -141,6 +141,9 @@ fi
 
 
 %changelog
+* Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
+- add dependency on Horde_ElasticSearch
+
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 
