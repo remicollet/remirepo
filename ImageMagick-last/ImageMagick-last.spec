@@ -1,5 +1,7 @@
-%global VER 6.7.8
-%global Patchlevel 10
+%global VER        6.8.3
+%global Patchlevel 9
+%global incsuffixe -6
+%global libsuffixe -6.Q16
 
 %if 0%{?rhel} >= 6 || 0%{?fedora} >= 5
 %define withdjvu 1
@@ -116,6 +118,9 @@ Group: Documentation
 %description doc
 ImageMagick documentation, this package contains usage (for the
 commandline tools) and API (for the libraries) documentation in html format.
+
+    %{_datadir}/doc/ImageMagick%{?incsuffixe}/www/
+
 Note this documentation can also be found on the ImageMagick website:
 http://www.imagemagick.org/
 
@@ -205,7 +210,6 @@ make
 rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-cp -a www/source $RPM_BUILD_ROOT%{_datadir}/doc/ImageMagick-%{VER}
 # Delete *ONLY* _libdir/*.la files! .la files used internally to handle plugins - BUG#185237!!!
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
@@ -233,36 +237,6 @@ if [ -z perl-pkg-files ] ; then
     exit -1
 fi
 
-# fix multilib issues
-%ifarch x86_64 s390x ia64 ppc64 alpha sparc64
-%define wordsize 64
-%else
-%define wordsize 32
-%endif
-
-mv $RPM_BUILD_ROOT%{_includedir}/ImageMagick/magick/magick-config.h \
-   $RPM_BUILD_ROOT%{_includedir}/ImageMagick/magick/magick-config-%{wordsize}.h
-
-cat >$RPM_BUILD_ROOT%{_includedir}/ImageMagick/magick/magick-config.h <<EOF
-#ifndef IMAGEMAGICK_MULTILIB
-#define IMAGEMAGICK_MULTILIB
-
-#include <bits/wordsize.h>
-
-#if __WORDSIZE == 32
-# include "magick-config-32.h"
-#elif __WORDSIZE == 64
-# include "magick-config-64.h"
-#else
-# error "unexpected value for __WORDSIZE macro"
-#endif
-
-#endif
-EOF
-
-# Fonts must be packaged separately. It does nothave matter and demos work without it.
-rm PerlMagick/demo/Generic.ttf
-
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -287,10 +261,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc ChangeLog
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
-%{_libdir}/libMagickCore.so.5*
-%{_libdir}/libMagickWand.so.5*
+%{_libdir}/libMagickCore%{?libsuffixe}.so.1*
+%{_libdir}/libMagickWand%{?libsuffixe}.so.1*
 %{_libdir}/ImageMagick-%{VER}
-%{_datadir}/ImageMagick-%{VER}
+%{_datadir}/ImageMagick%{?incsuffixe}
 %if %{withdjvu}
 %exclude %{_libdir}/ImageMagick-%{VER}/modules-Q16/coders/djvu.*
 %endif
@@ -303,15 +277,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/Magick-config
 %{_bindir}/MagickWand-config
 %{_bindir}/Wand-config
-%{_libdir}/libMagickCore.so
-%{_libdir}/libMagickWand.so
+%{_libdir}/libMagickCore%{?libsuffixe}.so
+%{_libdir}/libMagickWand%{?libsuffixe}.so
+%{_libdir}/pkgconfig/MagickCore%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/MagickCore.pc
+%{_libdir}/pkgconfig/ImageMagick%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/ImageMagick.pc
+%{_libdir}/pkgconfig/MagickWand%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/MagickWand.pc
+%{_libdir}/pkgconfig/Wand%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/Wand.pc
-%dir %{_includedir}/ImageMagick
-%{_includedir}/ImageMagick/magick
-%{_includedir}/ImageMagick/wand
+%dir %{_includedir}/ImageMagick%{?incsuffixe}
+%{_includedir}/ImageMagick%{?incsuffixe}/magick
+%{_includedir}/ImageMagick%{?incsuffixe}/wand
 %{_mandir}/man1/Magick-config.*
 %{_mandir}/man1/MagickCore-config.*
 %{_mandir}/man1/Wand-config.*
@@ -325,22 +303,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(-,root,root,-)
-%doc %{_datadir}/doc/ImageMagick-%{VER}
+%doc %{_datadir}/doc/ImageMagick%{?incsuffixe}
 
 %files c++
 %defattr(-,root,root,-)
 %doc Magick++/AUTHORS Magick++/ChangeLog Magick++/NEWS Magick++/README
 %doc www/Magick++/COPYING
-%{_libdir}/libMagick++.so.5*
+%{_libdir}/libMagick++%{?libsuffixe}.so.1*
 
 %files c++-devel
 %defattr(-,root,root,-)
 %doc Magick++/examples
 %{_bindir}/Magick++-config
-%{_includedir}/ImageMagick/Magick++
-%{_includedir}/ImageMagick/Magick++.h
-%{_libdir}/libMagick++.so
+%{_includedir}/ImageMagick%{?incsuffixe}/Magick++
+%{_includedir}/ImageMagick%{?incsuffixe}/Magick++.h
+%{_libdir}/libMagick++%{?libsuffixe}.so
+%{_libdir}/pkgconfig/Magick++%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/Magick++.pc
+%{_libdir}/pkgconfig/ImageMagick++%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/ImageMagick++.pc
 %{_mandir}/man1/Magick++-config.*
 
@@ -351,6 +331,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.3.9-1
+- update to 6.8.3-9
+
 * Wed Aug 15 2012 Remi Collet <RPMS@FamilleCollet.com> - 6.7.8.10-1
 - rename to ImageMagick-last
 - update to 6.7.8-10 (soname bump to .5)
