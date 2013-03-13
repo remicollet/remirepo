@@ -6,16 +6,18 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
 Version:       3.1.0
-Release:       0.7.%{prever}%{?dist}
+Release:       0.8.%{prever}%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
-Source:        http://pecl.php.net/get/imagick-%{version}%{?prever}.tgz
+Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
+# http://svn.php.net/viewvc?view=revision&revision=329769
+Patch0:        %{pecl_name}-incl.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.3, php-pear
-%if 0%{?fedora} >= 17
+%if 0%{?fedora} > 20
 BuildRequires: ImageMagick-devel >= 6.7.5
 %else
 BuildRequires: ImageMagick-last-devel >= 6.7.5
@@ -61,6 +63,8 @@ extension = %{pecl_name}.so
 ;imagick.locale_fix=0
 ;imagick.progress_monitor=0
 EOF
+
+%patch0 -p0 -b .inclpath
 
 cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-%{version}-zts
 
@@ -134,6 +138,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 13 2013 Remi Collet <rpms@famillecollet.com> - 3.1.0-0.8.RC2
+- rebuild against new ImageMagick-last version 6.8.3.9
+
 * Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.5.RC2
 - also provides php-imagick
 
