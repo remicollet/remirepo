@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Core
 Version:        2.4.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
@@ -126,6 +126,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Crypt) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Editor) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Editor) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_ElasticSearch) >= 1.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_ElasticSearch) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Form) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
@@ -153,7 +155,7 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
 
-# Horde_ActiveSync, Horde_ElasticSearch, Horde_Kolab_Server
+# Horde_ActiveSync, Horde_Kolab_Server
 # Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Oauth, Horde_Service_Twitter
 # PEAR: Text_LanguageDetect
 
@@ -257,6 +259,9 @@ fi
 
 
 %changelog
+* Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 2.4.3-2
+- add dependency on Horde_ElasticSearch
+
 * Tue Mar 12 2013 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
 - Update to 2.4.3
 
