@@ -3,7 +3,7 @@
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
 Version:       1.0.9
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -16,7 +16,7 @@ Patch0:        magickwand-php54.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 4.3.0, autoconf, automake, libtool
-%if 0%{?fedora} >= 17
+%if 0%{?fedora} > 20
 BuildRequires: ImageMagick-devel >= 6.7.5
 %else
 BuildRequires: ImageMagick-last-devel >= 6.7.5
@@ -25,11 +25,10 @@ BuildRequires: ImageMagick-last-devel >= 6.7.5
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-# RPM 4.8
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
+
 
 
 %description
@@ -41,21 +40,27 @@ functionality and progress monitoring.
 %prep
 %setup -q -c
 
-%patch0 -p0 -b .php54
+cd MagickWandForPHP-%{version}
+%patch0 -p1 -b .php54
 
 # fix version
-sed -i -e /MAGICKWAND_VERSION/s/1.0.8/1.0.9/ MagickWandForPHP-%{version}/magickwand.h
+sed -i -e /MAGICKWAND_VERSION/s/1.0.8/1.0.9/ magickwand.h
 
 # Check version
-extver=$(sed -n '/#define MAGICKWAND_VERSION/{s/.* "//;s/".*$//;p}' MagickWandForPHP-%{version}/magickwand.h)
+extver=$(sed -n '/#define MAGICKWAND_VERSION/{s/.* "//;s/".*$//;p}' magickwand.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
 fi
 
 # Fix incorrect end-of-line encoding
-sed -i 's/\r//' MagickWandForPHP-%{version}/README
+sed -i 's/\r//' README
 
+# Hack for lib
+sed -e '/PHP_ADD_LIBRARY_WITH_PATH/d' \
+    -i config.m4
+
+cd ..
 cp -pr MagickWandForPHP-%{version} MagickWandForPHP-%{version}-zts
 
 
@@ -109,6 +114,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 13 2013 Remi Collet <rpms@famillecollet.com> 1.0.9-4
+- rebuild against new ImageMagick-last version 6.8.3.9
+
 * Thu Aug 16 2012 Remi Collet <rpms@famillecollet.com> 1.0.9-3
 - rebuild against new ImageMagick-last version 6.7.8.10
 
