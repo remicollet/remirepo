@@ -22,16 +22,68 @@ Intel(R) Core(TM) i5 CPU         760  @ 2.80GHz
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0b12) Gecko/20100101 Firefox/4.0b12				 237.4
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0) Gecko/20100101 Firefox/4.0 (rc1)				 235.1
 	Mozilla/5.0 (X11; Linux x86_64; rv:2.0) Gecko/20100101 Firefox/4.0 (rc2)				 225.1
-        Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1                                   211.3
-        Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b5                                     219.4
-        Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b5                                     228.4
-        Mozilla/5.0 (X11; Linux x86_64; rv:6.0) Gecko/20100101 Firefox/6.0                                       224.8
-        Mozilla/5.0 (X11; Linux x86_64; rv:7.0) Gecko/20100101 Firefox/7.0                                       221.7
+	Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1					 211.3
+	Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b5					 219.4
+	Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0b5					 228.4
+	Mozilla/5.0 (X11; Linux x86_64; rv:6.0) Gecko/20100101 Firefox/6.0						 224.8
+	Mozilla/5.0 (X11; Linux x86_64; rv:7.0) Gecko/20100101 Firefox/7.0						 221.7
 	Mozilla/5.0 (X11; Linux x86_64; rv:9.0.1) Gecko/20100101 Firefox/9.0.1					 197.9
 	Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0					 209.4
 	Mozilla/5.0 (X11; Linux x86_64; rv:11.0) Gecko/20100101 Firefox/11.0					 255.5
 	Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/12.0					 246.1
+	Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0					 222.2
 
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0
+============================================
+RESULTS (means and 95% confidence intervals)
+--------------------------------------------
+Total:                 222.2ms +/- 12.2%
+--------------------------------------------
+
+  3d:                   33.9ms +/- 1.2%
+    cube:               13.0ms +/- 2.6%
+    morph:               5.0ms +/- 0.0%
+    raytrace:           15.9ms +/- 1.4%
+
+  access:               17.4ms +/- 6.8%
+    binary-trees:        2.6ms +/- 14.2%
+    fannkuch:            8.0ms +/- 4.2%
+    nbody:               3.5ms +/- 32.3%
+    nsieve:              3.3ms +/- 10.5%
+
+  bitops:               13.9ms +/- 11.0%
+    3bit-bits-in-byte:   0.9ms +/- 25.1%
+    bits-in-byte:        5.7ms +/- 25.1%
+    bitwise-and:         3.7ms +/- 9.3%
+    nsieve-bits:         3.6ms +/- 13.9%
+
+  controlflow:           2.9ms +/- 21.6%
+    recursive:           2.9ms +/- 21.6%
+
+  crypto:               24.3ms +/- 8.3%
+    aes:                10.8ms +/- 12.4%
+    md5:                 9.3ms +/- 15.4%
+    sha1:                4.2ms +/- 19.3%
+
+  date:                 43.0ms +/- 64.9%
+    format-tofte:       31.8ms +/- 87.1%
+    format-xparb:       11.2ms +/- 2.7%
+
+  math:                 16.1ms +/- 1.4%
+    cordic:              3.1ms +/- 7.3%
+    partial-sums:       10.0ms +/- 0.0%
+    spectral-norm:       3.0ms +/- 0.0%
+
+  regexp:               11.9ms +/- 3.4%
+    dna:                11.9ms +/- 3.4%
+
+  string:               58.8ms +/- 4.5%
+    base64:              4.4ms +/- 8.4%
+    fasta:               7.5ms +/- 10.3%
+    tagcloud:           16.1ms +/- 3.3%
+    unpack-code:        23.6ms +/- 9.4%
+    validate-input:      7.2ms +/- 4.2%
 ==============================================================================
 Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/12.0
 ============================================

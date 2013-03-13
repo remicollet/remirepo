@@ -1,0 +1,40 @@
+==========================================================================
+Kraken JavaScript Benchmark Results
+	http://krakenbenchmark.mozilla.com/kraken-1.1/driver.html
+==========================================================================
+
+Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0	2068.5
+
+==============================================================================
+Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0
+===============================================
+RESULTS (means and 95% confidence intervals)
+-----------------------------------------------
+Total:                       2068.5ms +/- 1.7%
+-----------------------------------------------
+
+  ai:                         131.0ms +/- 1.1%
+    astar:                    131.0ms +/- 1.1%
+
+  audio:                      741.9ms +/- 3.7%
+    beat-detection:           251.7ms +/- 5.0%
+    dft:                      153.6ms +/- 5.3%
+    fft:                      160.8ms +/- 10.8%
+    oscillator:               175.8ms +/- 7.0%
+
+  imaging:                    494.8ms +/- 2.8%
+    gaussian-blur:            202.7ms +/- 1.4%
+    darkroom:                 169.1ms +/- 1.5%
+    desaturate:               123.0ms +/- 10.4%
+
+  json:                       141.8ms +/- 9.5%
+    parse-financial:           78.4ms +/- 1.4%
+    stringify-tinderbox:       63.4ms +/- 21.3%
+
+  stanford:                   559.0ms +/- 4.0%
+    crypto-aes:               125.0ms +/- 2.3%
+    crypto-ccm:               128.4ms +/- 1.4%
+    crypto-pbkdf2:            226.9ms +/- 10.7%
+    crypto-sha256-iterative:   78.7ms +/- 1.3%
+==============================================
+
