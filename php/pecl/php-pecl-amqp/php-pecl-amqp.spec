@@ -1,11 +1,10 @@
 %{!?__pecl:   %{expand: %%global __pecl   %{_bindir}/pecl}}
 %global pecl_name   amqp
 
-
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
 Version:       1.0.9
-Release:       1%{?dist}.4
+Release:       3%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -31,6 +30,9 @@ Obsoletes:     php53-pecl-amqp
 Obsoletes:     php53u-pecl-amqp
 %if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-amqp
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-amqp
 %endif
 
 
@@ -160,6 +162,9 @@ fi
 
 
 %changelog
+* Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 1.0.9-3
+- rebuild for new librabbitmq
+
 * Tue Nov 13 2012 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
 - update to 1.0.9
 
