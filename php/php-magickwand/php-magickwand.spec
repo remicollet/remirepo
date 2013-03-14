@@ -1,25 +1,26 @@
-%global pecl_name magickwand
+%global pecl_name     magickwand
+%global mainversion   1.0.9
+%global patchlevel    2
 
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
-Version:       1.0.9
-Release:       4%{?dist}.1
+Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
+Release:       1%{?dist}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
 # Only latest version is always kept on: http://www.magickwand.org/download/php/
-Source0:       http://image_magick.veidrodis.com/image_magick/php/MagickWandForPHP-%{version}.tar.bz2
+Source0:       http://image_magick.veidrodis.com/image_magick/php/MagickWandForPHP-%{mainversion}%{?patchlevel:-%{patchlevel}}.tar.bz2
 Source1:       magickwand.ini
-
-Patch0:        magickwand-php54.patch
 
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel >= 4.3.0, autoconf, automake, libtool
+BuildRequires: php-devel
+BuildRequires: autoconf, automake, libtool
 %if 0%{?fedora} > 20
-BuildRequires: ImageMagick-devel >= 6.7.5
+BuildRequires: ImageMagick-devel >= 6.8.2
 %else
-BuildRequires: ImageMagick-last-devel >= 6.7.5
+BuildRequires: ImageMagick-last-devel >= 6.8.2
 %endif
 
 Requires:      php(zend-abi) = %{php_zend_api}
@@ -40,11 +41,10 @@ functionality and progress monitoring.
 %prep
 %setup -q -c
 
-cd MagickWandForPHP-%{version}
-%patch0 -p1 -b .php54
+cd MagickWandForPHP-%{mainversion}
 
 # fix version
-sed -i -e /MAGICKWAND_VERSION/s/1.0.8/1.0.9/ magickwand.h
+sed -i -e /MAGICKWAND_VERSION/s/1.0.8/%{version}/ magickwand.h
 
 # Check version
 extver=$(sed -n '/#define MAGICKWAND_VERSION/{s/.* "//;s/".*$//;p}' magickwand.h)
@@ -56,23 +56,19 @@ fi
 # Fix incorrect end-of-line encoding
 sed -i 's/\r//' README
 
-# Hack for lib
-sed -e '/PHP_ADD_LIBRARY_WITH_PATH/d' \
-    -i config.m4
-
 cd ..
-cp -pr MagickWandForPHP-%{version} MagickWandForPHP-%{version}-zts
+cp -pr MagickWandForPHP-%{mainversion} MagickWandForPHP-%{mainversion}-zts
 
 
 %build
 export PHP_RPATH=no
 
-cd MagickWandForPHP-%{version}
+cd MagickWandForPHP-%{mainversion}
 %{_bindir}/phpize
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../MagickWandForPHP-%{version}-zts
+cd ../MagickWandForPHP-%{mainversion}-zts
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
@@ -80,8 +76,8 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-make -C MagickWandForPHP-%{version}     install-modules INSTALL_ROOT=%{buildroot}
-make -C MagickWandForPHP-%{version}-zts install-modules INSTALL_ROOT=%{buildroot}
+make -C MagickWandForPHP-%{mainversion}     install-modules INSTALL_ROOT=%{buildroot}
+make -C MagickWandForPHP-%{mainversion}-zts install-modules INSTALL_ROOT=%{buildroot}
 
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{pecl_name}.ini
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
@@ -90,12 +86,12 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %check
 # simple module load test
 %{__php} --no-php-ini \
-    --define extension_dir=MagickWandForPHP-%{version}/modules \
+    --define extension_dir=MagickWandForPHP-%{mainversion}/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=MagickWandForPHP-%{version}-zts/modules \
+    --define extension_dir=MagickWandForPHP-%{mainversion}-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -106,7 +102,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc MagickWandForPHP-%{version}/{AUTHOR,ChangeLog,CREDITS,LICENSE,README,TODO}
+%doc MagickWandForPHP-%{mainversion}/{AUTHOR,ChangeLog,CREDITS,LICENSE,README,TODO}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -114,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 14 2013 Remi Collet <rpms@famillecollet.com> 1.0.9.2-1
+- update to 1.0.9-2
+
 * Wed Mar 13 2013 Remi Collet <rpms@famillecollet.com> 1.0.9-4
 - rebuild against new ImageMagick-last version 6.8.3.9
 
