@@ -5,7 +5,7 @@
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
