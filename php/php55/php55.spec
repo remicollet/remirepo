@@ -5,6 +5,9 @@
 # Extension version
 %global oci8ver     1.4.9
 
+# Adds -z now to the linker flags
+%global _hardened_build 1
+
 # version used for php embedded library soname
 %global embed_version 5.5
 
@@ -24,14 +27,15 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
-%global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
-%global with_fpm 1
+%global with_oci8     %{?_with_oci8:1}%{!?_with_oci8:0}
+
+%global with_fpm      1
 
 # Build mysql/mysqli/pdo extensions using libmysqlclient or only mysqlnd
 %global with_libmysql 0
 
 # Build ZTS extension or only NTS
-%global with_zts 1
+%global with_zts      1
 
 %if 0%{?__isa_bits:1}
 %global isasuffix -%{__isa_bits}
@@ -67,14 +71,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201303081230
+%global snapdate      201303141230
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.17.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.18.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1719,9 +1723,14 @@ fi
 
 
 %changelog
+* Thu Mar 14 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.18-201314081230
+- new snapshot
+- hardened build (links with -z now option)
+- remove %%config from /etc/rpm/macros.php
+
 * Fri Mar  8 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.17-201303081230
 - new snapshot (post alpha 6)
-- make php-mysql package optional and disabled
+- make php-mysql package optional (and disabled)
 - make ZTS build optional (still enabled)
 
 * Thu Feb 28 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.16-201302281430
