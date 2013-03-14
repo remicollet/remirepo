@@ -65,7 +65,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.12
+Version: 5.4.13
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -103,10 +103,6 @@ Patch8: php-5.4.7-libdb.patch
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
 Patch21: php-5.4.7-odbctimer.patch
-# https://bugs.php.net/64128 buit-in web server is broken on ppc64
-Patch22: php-5.4.11-select.patch
-# https://bugs.php.net/64142 dval to lval issue on ppc64
-Patch23: php-5.4.11-conv.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -124,7 +120,6 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Fixes for tests
-Patch50: php-5.4.11-sockets.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
@@ -763,8 +758,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 rm -f ext/json/utf8_to_utf16.*
 
 %patch21 -p1 -b .odbctimer
-%patch22 -p1 -b .select
-%patch23 -p1 -b .conv
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -780,7 +773,6 @@ rm -f ext/json/utf8_to_utf16.*
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
-%patch50 -p1 -b .sockets
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1623,9 +1615,14 @@ fi
 
 
 %changelog
+* Thu Mar 14 2013 Remi Collet <rcollet@redhat.com> 5.4.13-1
+- update to 5.4.13
+- security fixes for CVE-2013-1635 and CVE-2013-1643
+- Remove %%config from %%{_sysconfdir}/rpm/macros.*
+  (https://fedorahosted.org/fpc/ticket/259)
+
 * Wed Feb 20 2013 Remi Collet <remi@fedoraproject.org> 5.4.12-1
 - update to 5.4.12
-- security fixes for CVE-2013-1635 and CVE-2013-1643
 
 * Wed Feb 13 2013 Remi Collet <remi@fedoraproject.org> 5.4.11-2
 - enable tokyocabinet and gdbm dba handlers
