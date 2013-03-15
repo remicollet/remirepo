@@ -45,7 +45,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{phpname}
-Version: 5.3.19
+Version: 5.3.23
 Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
@@ -1499,6 +1499,10 @@ fi
 %endif
 
 %changelog
+* Fri Mar 15 2013 Remi Collet <remi@fedoraproject.org> 5.3.23-1
+- update to 5.3.19
+- security fixes for CVE-2013-1635 and CVE-2013-1643
+
 * Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> 5.3.19-1
 - update to 5.3.19
 - provides php-xmlreader and php-xmlwriter
