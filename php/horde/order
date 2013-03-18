@@ -17,9 +17,9 @@
 17 php-horde-Horde-Image        =   2.0.4   => Exception, Support, Translation, Util
 18 php-horde-Horde-Browser      =   2.0.3   => Exception, Util
 19 php-horde-Horde-Lock         =   2.0.2   => Exception, Support, (Db, Log)
-   ...-Horde-Compress-Fast      *   1.0.1   => Exception
-   php-horde-Horde-Queue        *   1.0.0
-   ...-Horde-ElasticSearch      *   1.0.2   => Exception, Http
+   ...-Horde-Compress-Fast      =   1.0.1   => Exception
+   php-horde-Horde-Queue        =   1.0.0
+   ...-Horde-ElasticSearch      =   1.0.2   => Exception, Http
 20 php-horde-Horde-Cache        =   2.0.3   => Exception, Util, Compress_Fast
 ---- with test unit ----
 21 php-horde-Horde-Argv         =   2.0.5   =>           Exception, Translation
@@ -66,7 +66,7 @@
 62 php-horde-Horde-Core         *   2.4.3   => BR(Role, Url, Injector, Group)
 63 php-horde-Horde-Form         -   2.0.3   =>           Core, Date, Exception, Mime, Nls, Token, Translation, Util
 64 php-horde-Horde-Rpc          *   2.0.3   =>           Core, Exception, Perms, Serialize, Support, Translation, Util, Xml_Element
-65 php-horde-Horde-Memcache     *   2.0.2                Exception
+65 php-horde-Horde-Memcache     =   2.0.2                Exception
 66 php-horde-Horde-Ldap         =   2.0.2                Exception, Util
 67 php-horde-Horde-Date-Parser  =   2.0.2   => BR(Date)  Date, Support
 68 php-horde-Horde-Rdo          *   2.0.2   => BR(Db)    Db, Exception
