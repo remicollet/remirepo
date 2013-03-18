@@ -54,7 +54,7 @@
 %{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-%global with_dtrace 0
+%global with_dtrace 1
 %else
 %global with_dtrace 0
 %endif
@@ -330,6 +330,10 @@ Provides:  php-pecl-zendoptimizerplus = %{opcachever}
 Provides:  php-pecl-zendoptimizerplus%{?_isa} = %{opcachever}
 Provides:  php-pecl(opcache) = %{opcachever}
 Provides:  php-pecl(opcache)%{?_isa} = %{opcachever}
+# Only one opcode cache could be enabled
+Conflicts: php-xcache
+# APC 3.1.15 offer an option to disable opcache
+Conflicts: php-pecl-apc < 3.1.15
 
 %description opcache
 The Zend Optimizer+ provides faster PHP execution through opcode caching and
