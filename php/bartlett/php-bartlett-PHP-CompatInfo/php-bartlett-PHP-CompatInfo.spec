@@ -9,7 +9,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.14.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -19,7 +19,7 @@ URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
 
 # Update reference for PHP 5.5
-# https://github.com/remicollet/php-compat-info/commits/issue-php55
+# https://github.com/llaville/php-compat-info/commits/php-5.5
 Patch1:         0001-cuirl-reference-for-php-5.5.patch
 Patch2:         0002-hash-reference-for-php-5.5.patch
 Patch3:         0003-tokoniser-reference-for-php-5.5.patch
@@ -34,13 +34,13 @@ Patch12:        0012-curl-reference-for-php-5.5-more.patch
 Patch13:        0013-use-LATEST_PHP_5_4-macro.patch
 Patch14:        0014-curl-reference-for-php-5.5-more.patch
 Patch17:        0017-data-reference-for-php-5.5-date-immutable.patch
-Patch18:        0001-new-curl-change-in-php-5.5.patch
-Patch19:        0002-new-filter-changes-in-php-5.5.patch
-Patch20:        0003-new-curl-changes-in-php-5.5.patch
-Patch21:        0004-new-intl-changes-in-php-5.5.patch
-Patch22:        0005-fix-covers-annotation.patch
-Patch23:        0006-fix-mysqli-reference-for-php-5.5-trans.patch
-Patch24:        0001-fix-gd-reference-for-php-5.5.0alpha6.patch
+Patch18:        0018-new-curl-change-in-php-5.5.patch
+Patch19:        0019-new-filter-changes-in-php-5.5.patch
+Patch20:        0020-new-curl-changes-in-php-5.5.patch
+Patch21:        0021-new-intl-changes-in-php-5.5.patch
+Patch22:        0022-fix-covers-annotation.patch
+Patch23:        0023-fix-mysqli-reference-for-php-5.5-trans.patch
+Patch24:        0024-fix-gd-reference-for-php-5.5.0alpha6.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -193,6 +193,10 @@ fi
 
 
 %changelog
+* Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 2.14.0-2
+- provides phpci
+- cleanups
+
 * Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 2.14.0-1
 - Update to 2.14.0
 
