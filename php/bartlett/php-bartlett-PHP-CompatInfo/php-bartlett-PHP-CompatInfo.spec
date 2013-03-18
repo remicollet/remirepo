@@ -9,7 +9,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.14.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -41,6 +41,9 @@ Patch21:        0021-new-intl-changes-in-php-5.5.patch
 Patch22:        0022-fix-covers-annotation.patch
 Patch23:        0023-fix-mysqli-reference-for-php-5.5-trans.patch
 Patch24:        0024-fix-gd-reference-for-php-5.5.0alpha6.patch
+
+# https://github.com/llaville/php-compat-info/issues/76
+Patch25:        %{pear_name}-2.14.0.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -110,6 +113,7 @@ cd %{pear_name}-%{version}%{?prever}
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
+%patch25 -p1
 
 # remove checksum for patched files
 sed -e 's/md5sum.*name/name/' \
@@ -193,6 +197,10 @@ fi
 
 
 %changelog
+* Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 2.14.0-3
+- add patch for broken extension report
+  https://github.com/llaville/php-compat-info/issues/76
+
 * Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 2.14.0-2
 - provides phpci
 - cleanups
