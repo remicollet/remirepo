@@ -1,14 +1,14 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global commit    b44a72afb6bb70c762e6df04a7bf50a4573c5e44
+%global commit    b1ce1e3ecc95c2e24d2df73cffce7e501df53215
 %global gitver    %(c=%{commit}; echo ${c:0:7})
 %global prever    dev
 
 Name:           php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.2
-Release:        0.4%{?gitver:.git%{gitver}}%{?dist}
+Release:        0.5%{?gitver:.git%{gitver}}%{?dist}
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
@@ -160,12 +160,12 @@ EOF
 # only check if build extension can be loaded
 %{_bindir}/php \
     --no-php-ini \
-    --define zend_extension=%{pecl_name}-%{version}%{?prever}/modules/%{pecl_name}.so \
+    --define zend_extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep Xdebug
 
 %{_bindir}/zts-php \
     --no-php-ini \
-    --define zend_extension=%{pecl_name}-zts/modules/%{pecl_name}.so \
+    --define zend_extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep Xdebug
 
 
@@ -196,6 +196,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.5.gitb1ce1e3
+- new snapshot
+
 * Fri Jan 18 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.4.gitb44a72a
 - new snapshot
 - drop our patch, merged upstream
