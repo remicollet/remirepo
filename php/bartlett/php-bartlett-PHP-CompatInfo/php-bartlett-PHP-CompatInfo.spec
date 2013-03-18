@@ -44,6 +44,7 @@ Patch24:        0001-fix-gd-reference-for-php-5.5.0alpha6.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.2.1
 BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
@@ -68,6 +69,7 @@ Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
 # Optional and not yet availalble php-pear(Net_Growl) >= 2.2.2
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
+Provides:       phpci = %{version}%{?prever}
 
 
 %description
