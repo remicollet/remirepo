@@ -3,6 +3,7 @@
 %global zendver     20121212
 %global pdover      20080721
 # Extension version
+%global opcachever  7.0.1-dev
 %global oci8ver     1.4.9
 
 # Adds -z now to the linker flags
@@ -53,7 +54,7 @@
 %{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-%global with_dtrace 1
+%global with_dtrace 0
 %else
 %global with_dtrace 0
 %endif
@@ -71,14 +72,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201303141230
+%global snapdate      201303180830
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.18.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.19.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -104,6 +105,8 @@ Source7: php-fpm.logrotate
 Source8: php-fpm.sysconfig
 Source9: php.modconf
 Source10: php.ztsmodconf
+# Configuration files for some extensions
+Source50: opcache.ini
 Source99: php-fpm.init
 
 # Build fixes
@@ -316,6 +319,24 @@ Obsoletes: php53-devel, php53u-devel, php54-devel, php55-devel
 The php-devel package contains the files needed for building PHP
 extensions. If you need to compile your own PHP extensions, you will
 need to install this package.
+
+%package opcache
+Summary:   The Zend Optimizer+
+Group:     Development/Languages
+License:   PHP
+Requires:  php-common%{?_isa} = %{version}-%{release}
+Obsoletes: php-pecl-zendoptimizerplus
+Provides:  php-pecl-zendoptimizerplus = %{opcachever}
+Provides:  php-pecl-zendoptimizerplus%{?_isa} = %{opcachever}
+Provides:  php-pecl(opcache) = %{opcachever}
+Provides:  php-pecl(opcache)%{?_isa} = %{opcachever}
+
+%description opcache
+The Zend Optimizer+ provides faster PHP execution through opcode caching and
+optimization. It improves PHP performance by storing precompiled script
+bytecode in the shared memory. This eliminates the stages of reading code from
+the disk and compiling it on future access. In addition, it applies a few
+bytecode optimization patterns that make code execution faster.
 
 %package imap
 Summary: A module for PHP applications that use IMAP
@@ -875,6 +896,13 @@ if test "$ver" != "%{oci8ver}"; then
    exit 1
 fi
 
+ver=$(sed -n '/#define ACCELERATOR_VERSION /{s/.* "//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
+if test "$ver" != "%{opcachever}"; then
+   : Error: Upstream PHAR version is now ${ver}, expecting %{opcachever}.
+   : Update the opcachever macro and rebuild.
+   exit 1
+fi
+
 # https://bugs.php.net/63362 - Not needed but installed headers.
 # Drop some Windows specific headers to avoid installation,
 # before build to ensure they are really not needed.
@@ -892,6 +920,9 @@ chmod 644 README.*
 
 # php-fpm configuration files for tmpfiles.d
 echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
+
+# Some extensions have their own configuration file
+cp %{SOURCE50} .
 
 
 %build
@@ -991,6 +1022,7 @@ pushd build-cgi
 build --enable-force-cgi-redirect \
       --libdir=%{_libdir}/php \
       --enable-pcntl \
+      --enable-opcache \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
@@ -1072,6 +1104,7 @@ popd
 
 without_shared="--without-gd \
       --disable-dom --disable-dba --without-unixODBC \
+      --disable-opcache \
       --disable-xmlreader --disable-xmlwriter \
       --without-sqlite3 --disable-phar --disable-fileinfo \
       --disable-json --without-pspell --disable-wddx \
@@ -1128,6 +1161,7 @@ build --enable-force-cgi-redirect \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
       --enable-pcntl \
+      --enable-opcache \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
@@ -1398,7 +1432,7 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     simplexml bz2 calendar ctype exif ftp gettext gmp iconv \
-    sockets tokenizer \
+    sockets tokenizer opcache \
     pdo pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
@@ -1415,16 +1449,23 @@ if [ "$mod" = "wddx" ]
 then   ini=xml_${mod}.ini
 else   ini=${mod}.ini
 fi
-    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini} <<EOF
+    if [ -f ${ini} ]; then
+      sed -e 's:@EXTPATH@:%{_libdir}/php/modules:' \
+             ${ini} >$RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini}
+      sed -e 's:@EXTPATH@:%{_libdir}/php-zts/modules:' \
+             ${ini} >$RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini}
+    else
+      cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini} <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
 %if %{with_zts}
-    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini} <<EOF
+      cat > $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini} <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
 %endif
+    fi
     cat > files.${mod} <<EOF
 %attr(755,root,root) %{_libdir}/php/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${ini}
@@ -1716,6 +1757,7 @@ fi
 %files interbase -f files.interbase
 %files enchant -f files.enchant
 %files mysqlnd -f files.mysqlnd
+%files opcache -f files.opcache
 
 %if %{with_oci8}
 %files oci8 -f files.oci8
@@ -1723,7 +1765,12 @@ fi
 
 
 %changelog
-* Thu Mar 14 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.18-201314081230
+* Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.19-201303180830
+- new snapshot
+- temporary disable dtrace
+- new extension opcache in php-opccache sub-package
+
+* Thu Mar 14 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.18-201303141230
 - new snapshot
 - hardened build (links with -z now option)
 - remove %%config from /etc/rpm/macros.php
