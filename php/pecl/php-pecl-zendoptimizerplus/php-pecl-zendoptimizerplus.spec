@@ -2,21 +2,30 @@
 %{!?__php:      %{expand: %%global __php      %{_bindir}/php}}
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 %global with_zts   0%{?__ztsphp:1}
-%global prjname    ZendOptimizerPlus
-%global extname    zendoptimizerplus
+%global owner      zend-dev
+%global commit     cef6093956bee5446207d5919fc9d30be58aa245
+%global short      %(c=%{commit}; echo ${c:0:7})
+%global prever     dev
+%global proj_name  ZendOptimizerPlus
+%global pecl_name  zendoptimizerplus
+%global plug_name  opcache
 
-Name:          php-pecl-%{extname}
-Version:       7.0.0
-Release:       2%{?dist}
+Name:          php-pecl-%{pecl_name}
+Version:       7.0.1
+Release:       0.1.git%{short}%{?dist}
 Summary:       The Zend Optimizer+
 
 Group:         Development/Libraries
 License:       PHP
-URL:           http://pecl.php.net/package/%{prjname}
-Source0:       http://pecl.php.net/get/%{extname}-%{version}.tgz
+URL:           http://pecl.php.net/package/%{proj_name}
+%if 0%{?commit:1}
+Source0:       https://github.com/%{owner}/%{proj_name}/archive/%{commit}/%{proj_name}-%{version}-%{short}.tar.gz
+%else
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 # this extension must be loaded before XDebug
-# So uppercase Z if before lowercase X (LANG=C order)
-Source1:       %{prjname}.ini
+# So "opcache" if before "xdebug"
+Source1:       %{plug_name}.ini
 
 BuildRequires: php-devel >= 5.2.0
 BuildRequires: php-pear
@@ -31,14 +40,10 @@ Conflicts:     php-eaccelerator
 Conflicts:     php-xcache
 # APC 3.1.15 offer an option to disable opcache
 Conflicts:     php-pecl-apc < 3.1.15
-Provides:      php-pecl(%{extname}) = %{version}
-Provides:      php-pecl(%{extname})%{?_isa} = %{version}
-Provides:      php-%{extname} = %{version}-%{release}
-Provides:      php-%{extname}%{?_isa} = %{version}-%{release}
-Provides:      php-pecl(%{prjname}) = %{version}
-Provides:      php-pecl(%{prjname})%{?_isa} = %{version}
-Provides:      php-%{prjname} = %{version}-%{release}
-Provides:      php-%{prjname}%{?_isa} = %{version}-%{release}
+Provides:      php-pecl(%{plug_name}) = %{version}%{?prever}
+Provides:      php-pecl(%{plug_name})%{?_isa} = %{version}%{?prever}
+Provides:      php-%{plug_name} = %{version}-%{release}
+Provides:      php-%{plug_name}%{?_isa} = %{version}-%{release}
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -55,13 +60,18 @@ bytecode optimization patterns that make code execution faster.
 
 %prep
 %setup -q -c
-
-mv %{extname}-%{version} NTS
+%if 0%{?commit:1}
+mv %{proj_name}-%{commit} NTS
+sed -e '/release/s/7.0.0/%{version}%{prever}/' \
+    NTS/package.xml >package.xml
+%else
+mv %{pecl_name}-%{version} NTS
+%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define ACCELERATOR_VERSION/{s/.* "//;s/".*$//;p}' NTS/ZendAccelerator.h)
-if test "x${extver}" != "x%{version}%{?prever}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
+if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
 fi
 
@@ -90,16 +100,16 @@ make %{?_smp_mflags}
 
 
 %install
-install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{prjname}.ini
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{plug_name}.ini
 sed -e 's:@EXTPATH@:%{php_extdir}:' \
-    -i %{buildroot}%{php_inidir}/%{prjname}.ini
+    -i %{buildroot}%{php_inidir}/%{plug_name}.ini
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 %if %{with_zts}
-install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{prjname}.ini
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{plug_name}.ini
 sed -e 's:@EXTPATH@:%{php_ztsextdir}:' \
-    -i %{buildroot}%{php_ztsinidir}/%{prjname}.ini
+    -i %{buildroot}%{php_ztsinidir}/%{plug_name}.ini
 
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 %endif
@@ -111,11 +121,11 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 %check
 cd NTS
 %{__php} \
-    -n -d zend_extension=%{buildroot}%{php_extdir}/%{prjname}.so \
+    -n -d zend_extension=%{buildroot}%{php_extdir}/%{plug_name}.so \
     -m | grep "Zend Optimizer+"
 
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_extdir}/%{prjname}.so" \
+TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_extdir}/%{plug_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php
@@ -123,11 +133,11 @@ REPORT_EXIT_STATUS=1 \
 %if %{with_zts}
 cd ../ZTS
 %{__ztsphp} \
-    -n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{prjname}.so \
+    -n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{plug_name}.so \
     -m | grep "Zend Optimizer+"
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{prjname}.so" \
+TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{plug_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
@@ -140,24 +150,27 @@ REPORT_EXIT_STATUS=1 \
 
 %postun
 if [ $1 -eq 0 ] ; then
-    %{pecl_uninstall} %{extname} >/dev/null || :
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
 %files
 %doc NTS/{LICENSE,README}
-%config(noreplace) %{php_inidir}/%{prjname}.ini
-%{php_extdir}/%{prjname}.so
+%config(noreplace) %{php_inidir}/%{plug_name}.ini
+%{php_extdir}/%{plug_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{prjname}.ini
-%{php_ztsextdir}/%{prjname}.so
+%config(noreplace) %{php_ztsinidir}/%{plug_name}.ini
+%{php_ztsextdir}/%{plug_name}.so
 %endif
 
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 7.0.1-0.1.gitcef6093
+- update to git snapshot, with new name (opcache)
+
 * Sun Mar 10 2013 Remi Collet <remi@fedoraproject.org> - 7.0.0-2
 - allow to install with APC >= 3.1.15 (user data cache)
 
