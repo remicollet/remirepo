@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.2
+Version:         1.12.3
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -824,6 +824,14 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Mon Mar 18 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.12.3-1
+- backport 1.12.3
+
+* Fri Mar 15 2013 Felix Kaechele <heffer@fedoraproject.org> - 1.12.3-1
+- update to 1.12.3
+- more 3rdparty API fixes
+- full changelog http://framework.zend.com/changelog/1.12.3
+
 * Thu Mar 07 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.12.2-1
 - backport 1.12.2
 
@@ -954,14 +962,14 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 * Sat Jun 12 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10.5-1
 - update to 1.10.5 which contains over 60 bugfixes
 
-* Fri May 13 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10.4-1
+* Fri May 14 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10.4-1
 - rebuild for remi repository
 
 * Thu May 13 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10.4-1
 - about 180 bugfixes since 1.10.2 (http://framework.zend.com/changelog/1.10.4)
 - fixes ZF2010-07: Potential Security Issues in Bundled Dojo Library
 
-* Thu Mar  5 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10.2-1
+* Fri Mar  5 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.10.2-1
 - rebuild for remi repository
 
 * Wed Mar 03 2010 Felix Kaechele <heffer@fedoraproject.org> - 1.10.2-1
@@ -1117,5 +1125,5 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 - split up documentation into subpackages
 - description BE->AE
 
-* Thu Oct 30 2007 Alexander Kahl <akahl@iconmobile.com> - 1.0.2-1
+* Tue Oct 30 2007 Alexander Kahl <akahl@iconmobile.com> - 1.0.2-1
 - initial release

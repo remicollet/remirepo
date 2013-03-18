@@ -8,7 +8,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.13.2
+Version:        2.14.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -40,6 +40,7 @@ Patch20:        0003-new-curl-changes-in-php-5.5.patch
 Patch21:        0004-new-intl-changes-in-php-5.5.patch
 Patch22:        0005-fix-covers-annotation.patch
 Patch23:        0006-fix-mysqli-reference-for-php-5.5-trans.patch
+Patch24:        0001-fix-gd-reference-for-php-5.5.0alpha6.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -106,6 +107,7 @@ cd %{pear_name}-%{version}%{?prever}
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
 
 # remove checksum for patched files
 sed -e 's/md5sum.*name/name/' \
@@ -189,6 +191,9 @@ fi
 
 
 %changelog
+* Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 2.14.0-1
+- Update to 2.14.0
+
 * Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 2.13.2-1
 - Update to 2.13.2
 
