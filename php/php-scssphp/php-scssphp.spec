@@ -16,6 +16,7 @@ License:       MIT or GPLv3
 URL:           http://leafo.net/%{github_name}
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 BuildRequires: help2man
 # For tests
@@ -78,6 +79,7 @@ install -p -m 644 pscss.1 %{buildroot}%{_mandir}/man1/
 
 
 %files
+%defattr(-,root,root,-)
 %doc *.md composer.json
 %doc %{_mandir}/man1/pscss.1*
 %{_datadir}/php/%{github_name}
@@ -85,6 +87,9 @@ install -p -m 644 pscss.1 %{buildroot}%{_mandir}/man1/
 
 
 %changelog
+* Tue Mar 19 2013 Remi Collet <remi@fedoraproject.org> 0.0.5-1
+- backport 0.0.5 for remi repo.
+
 * Sat Mar 16 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.0.5-1
 - Updated to version 0.0.5
 - php-cli => php(language)
