@@ -21,6 +21,7 @@ URL:           http://jmsyst.com/libs/%{github_name}
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-strip.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Test build requires
 BuildRequires: php(language) >= %{php_min_ver}
@@ -77,12 +78,16 @@ cp -rp src/JMS/Parser %{buildroot}%{_datadir}/php/JMS/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
 %dir %{_datadir}/php/JMS
      %{_datadir}/php/JMS/Parser
 
 
 %changelog
+* Tue Mar 19 2013 Remi Collet <remi@fedoraproject.org> 1.0.0-3
+- backport 1.0.0 for remi repo.
+
 * Mon Mar 18 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0.0-3
 - Added %%{name}-strip.sh as Source1
 
