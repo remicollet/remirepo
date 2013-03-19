@@ -23,6 +23,7 @@ URL:           http://jmsyst.com/libs/%{github_name}
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-strip.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Test build requires
 BuildRequires: php(language) >= %{php_min_ver}
@@ -99,11 +100,15 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
 %{_datadir}/php/%{lib_name}
 
 
 %changelog
+* Tue Mar 19 2013 Remi Collet <remi@fedoraproject.org> 0.2.0-2
+- backport 0.2.0 for remi repo.
+
 * Mon Mar 18 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.2.0-2
 - Added %%{name}-strip.sh as Source1
 
