@@ -7,7 +7,10 @@ License:   MIT and UCD and Public Domain
 URL:       http://www.icu-project.org/
 Source0:   http://download.icu-project.org/files/icu4c/49.1.1/icu4c-49_1_1-src.tgz
 Source1:   icu-config.sh
+
+BuildRoot:     %{_tmppath}/%{name}-%{version}-root
 BuildRequires: doxygen, autoconf, python
+
 Requires: lib%{name} = %{version}-%{release}
 
 Patch1: icu.8198.revert.icu5431.patch
@@ -172,6 +175,9 @@ make %{?_smp_mflags} -C source check
 %doc source/__docs/%{name}/html/*
 
 %changelog
+* Wed Mar 20 2013 Remi Collet <RPMS@famillecollet.com> - 49.1.1-8
+- backport for remi repo for EL-5
+
 * Wed Mar 06 2013 Eike Rathke <erack@redhat.com> - 49.1.1-8
 - Resolves: rhbz#918168 CVE-2013-0900 race condition allows DoS
 
