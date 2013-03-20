@@ -79,7 +79,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.20.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.20.%{?snapdate}%{?rcver}%{?dist}.1
 %else
 Release: 2%{?dist}
 %endif
@@ -1274,6 +1274,10 @@ popd
 %check
 %if %runselftest
 cd build-apache
+
+# Double stack size (required by bug54268.phpt)
+ulimit -s 16384
+
 # Run tests, using the CLI SAPI
 export NO_INTERACTION=1 REPORT_EXIT_STATUS=1 MALLOC_CHECK_=2
 export SKIP_ONLINE_TESTS=1
