@@ -1,0 +1,244 @@
+diff -up PEAR/Command/Install.php.metadata PEAR/Command/Install.php
+--- PEAR/Command/Install.php.metadata	2011-07-07 00:11:24.000000000 +0200
++++ PEAR/Command/Install.php	2012-09-26 16:02:29.829393773 +0200
+@@ -556,7 +556,13 @@ Run post-installation scripts in package
+             $packrootphp_dir = $this->installer->_prependPath(
+                 $this->config->get('php_dir', null, 'pear.php.net'),
+                 $options['packagingroot']);
+-            $instreg = new PEAR_Registry($packrootphp_dir); // other instreg!
++            $metadata_dir = $this->config->get('metadata_dir', null, 'pear.php.net');
++            if ($metadata_dir) {
++                $metadata_dir = $this->installer->_prependPath(
++                    $metadata_dir,
++                    $options['packagingroot']);
++            }
++            $instreg = new PEAR_Registry($packrootphp_dir, false, false, $metadata_dir); // other instreg!
+ 
+             if ($this->config->get('verbose') > 2) {
+                 $this->ui->outputData('using package root: ' . $options['packagingroot']);
+diff -up PEAR/Config.php.metadata PEAR/Config.php
+--- PEAR/Config.php.metadata	2011-07-07 00:11:24.000000000 +0200
++++ PEAR/Config.php	2012-09-26 16:02:29.831393779 +0200
+@@ -87,6 +87,13 @@ if (getenv('PHP_PEAR_INSTALL_DIR')) {
+     }
+ }
+ 
++// Default for metadata_dir
++if (getenv('PHP_PEAR_METADATA_DIR')) {
++    define('PEAR_CONFIG_DEFAULT_METADATA_DIR', getenv('PHP_PEAR_METADATA_DIR'));
++} else {
++    define('PEAR_CONFIG_DEFAULT_METADATA_DIR', '');
++}
++
+ // Default for ext_dir
+ if (getenv('PHP_PEAR_EXTENSION_DIR')) {
+     define('PEAR_CONFIG_DEFAULT_EXT_DIR', getenv('PHP_PEAR_EXTENSION_DIR'));
+@@ -398,6 +405,13 @@ class PEAR_Config extends PEAR
+             'prompt' => 'PEAR directory',
+             'group' => 'File Locations',
+             ),
++        'metadata_dir' => array(
++            'type' => 'directory',
++            'default' => PEAR_CONFIG_DEFAULT_METADATA_DIR,
++            'doc' => 'directory where metadata files are installed (registry, filemap, channels, ...)',
++            'prompt' => 'PEAR metadata directory',
++            'group' => 'File Locations',
++            ),
+         'ext_dir' => array(
+             'type' => 'directory',
+             'default' => PEAR_CONFIG_DEFAULT_EXT_DIR,
+@@ -647,7 +661,9 @@ class PEAR_Config extends PEAR
+             $this->configuration['default'][$key] = $info['default'];
+         }
+ 
+-        $this->_registry['default'] = &new PEAR_Registry($this->configuration['default']['php_dir']);
++        $this->_registry['default'] = &new PEAR_Registry(
++            $this->configuration['default']['php_dir'], false, false,
++            $this->configuration['default']['metadata_dir']);
+         $this->_registry['default']->setConfig($this, false);
+         $this->_regInitialized['default'] = false;
+         //$GLOBALS['_PEAR_Config_instance'] = &$this;
+@@ -754,7 +770,9 @@ class PEAR_Config extends PEAR
+         $this->configuration[$layer] = $data;
+         $this->_setupChannels();
+         if (!$this->_noRegistry && ($phpdir = $this->get('php_dir', $layer, 'pear.php.net'))) {
+-            $this->_registry[$layer] = &new PEAR_Registry($phpdir);
++            $this->_registry[$layer] = &new PEAR_Registry(
++                $phpdir, false, false,
++                $this->get('metadata_dir', $layer, 'pear.php.net'));
+             $this->_registry[$layer]->setConfig($this, false);
+             $this->_regInitialized[$layer] = false;
+         } else {
+@@ -911,7 +929,9 @@ class PEAR_Config extends PEAR
+ 
+         $this->_setupChannels();
+         if (!$this->_noRegistry && ($phpdir = $this->get('php_dir', $layer, 'pear.php.net'))) {
+-            $this->_registry[$layer] = &new PEAR_Registry($phpdir);
++            $this->_registry[$layer] = &new PEAR_Registry(
++                $phpdir, false, false,
++                $this->get('metadata_dir', $layer, 'pear.php.net'));
+             $this->_registry[$layer]->setConfig($this, false);
+             $this->_regInitialized[$layer] = false;
+         } else {
+@@ -1604,7 +1624,9 @@ class PEAR_Config extends PEAR
+ 
+                 if (!is_object($this->_registry[$layer])) {
+                     if ($phpdir = $this->get('php_dir', $layer, 'pear.php.net')) {
+-                        $this->_registry[$layer] = &new PEAR_Registry($phpdir);
++                        $this->_registry[$layer] = &new PEAR_Registry(
++                            $phpdir, false, false,
++                            $this->get('metadata_dir', $layer, 'pear.php.net'));
+                         $this->_registry[$layer]->setConfig($this, false);
+                         $this->_regInitialized[$layer] = false;
+                     } else {
+@@ -2087,8 +2109,9 @@ class PEAR_Config extends PEAR
+                 if ($layer == 'ftp' || !isset($this->_registry[$layer])) {
+                     continue;
+                 }
+-                $this->_registry[$layer] =
+-                    &new PEAR_Registry($this->get('php_dir', $layer, 'pear.php.net'));
++                $this->_registry[$layer] = &new PEAR_Registry(
++                    $this->get('php_dir', $layer, 'pear.php.net'), false, false,
++                    $this->get('metadata_dir', $layer, 'pear.php.net'));
+                 $this->_registry[$layer]->setConfig($this, false);
+                 $this->_regInitialized[$layer] = false;
+             }
+diff -up PEAR/DependencyDB.php.metadata PEAR/DependencyDB.php
+--- PEAR/DependencyDB.php.metadata	2011-07-07 00:11:24.000000000 +0200
++++ PEAR/DependencyDB.php	2012-09-26 16:02:29.832393782 +0200
+@@ -122,8 +122,11 @@ class PEAR_DependencyDB
+ 
+         $this->_registry = &$this->_config->getRegistry();
+         if (!$depdb) {
+-            $this->_depdb = $this->_config->get('php_dir', null, 'pear.php.net') .
+-                DIRECTORY_SEPARATOR . '.depdb';
++            $dir = $this->_config->get('metadata_dir', null, 'pear.php.net');
++            if (!$dir) {
++                $dir = $this->_config->get('php_dir', null, 'pear.php.net');
++            }
++            $this->_depdb =  $dir . DIRECTORY_SEPARATOR . '.depdb';
+         } else {
+             $this->_depdb = $depdb;
+         }
+@@ -766,4 +769,4 @@ class PEAR_DependencyDB
+             );
+         }
+     }
+-}
+\ Pas de fin de ligne à la fin du fichier
++}
+diff -up PEAR/Installer.php.metadata PEAR/Installer.php
+--- PEAR/Installer.php.metadata	2011-07-07 00:11:24.000000000 +0200
++++ PEAR/Installer.php	2012-09-26 16:03:15.079556967 +0200
+@@ -1162,15 +1162,6 @@ class PEAR_Installer extends PEAR_Downlo
+ 
+         $pkgname = $pkg->getName();
+         $channel = $pkg->getChannel();
+-        if (isset($this->_options['packagingroot'])) {
+-            $regdir = $this->_prependPath(
+-                $this->config->get('php_dir', null, 'pear.php.net'),
+-                $this->_options['packagingroot']);
+-
+-            $packrootphp_dir = $this->_prependPath(
+-                $this->config->get('php_dir', null, $channel),
+-                $this->_options['packagingroot']);
+-        }
+ 
+         if (isset($options['installroot'])) {
+             $this->config->setInstallRoot($options['installroot']);
+@@ -1182,7 +1173,21 @@ class PEAR_Installer extends PEAR_Downlo
+             $this->config->setInstallRoot(false);
+             $this->_registry = &$this->config->getRegistry();
+             if (isset($this->_options['packagingroot'])) {
+-                $installregistry = &new PEAR_Registry($regdir);
++                $regdir = $this->_prependPath(
++                    $this->config->get('php_dir', null, 'pear.php.net'),
++                    $this->_options['packagingroot']);
++
++                $metadata_dir = $this->config->get('metadata_dir', null, 'pear.php.net');
++                if ($metadata_dir) {
++                    $metadata_dir = $this->_prependPath(
++                        $metadata_dir,
++                        $this->_options['packagingroot']);
++                }
++                $packrootphp_dir = $this->_prependPath(
++                    $this->config->get('php_dir', null, $channel),
++                    $this->_options['packagingroot']);
++
++                $installregistry = &new PEAR_Registry($regdir, false, false, $metadata_dir);
+                 if (!$installregistry->channelExists($channel, true)) {
+                     // we need to fake a channel-discover of this channel
+                     $chanobj = $this->_registry->getChannel($channel, true);
+@@ -1820,4 +1825,4 @@ class PEAR_Installer extends PEAR_Downlo
+     }
+ 
+     // }}}
+-}
+\ Pas de fin de ligne à la fin du fichier
++}
+diff --git a/PEAR/Registry.php b/PEAR/Registry.php
+index 3a7bbb1..17de529 100644
+--- PEAR/Registry.php
++++ PEAR/Registry.php
+@@ -132,23 +132,26 @@ class PEAR_Registry extends PEAR
+      * @access public
+      */
+     function PEAR_Registry($pear_install_dir = PEAR_INSTALL_DIR, $pear_channel = false,
+-                           $pecl_channel = false)
++                           $pecl_channel = false, $pear_metadata_dir = '')
+     {
+         parent::PEAR();
+-        $this->setInstallDir($pear_install_dir);
++        $this->setInstallDir($pear_install_dir, $pear_metadata_dir);
+         $this->_pearChannel = $pear_channel;
+         $this->_peclChannel = $pecl_channel;
+         $this->_config      = false;
+     }
+ 
+-    function setInstallDir($pear_install_dir = PEAR_INSTALL_DIR)
++    function setInstallDir($pear_install_dir = PEAR_INSTALL_DIR, $pear_metadata_dir = '')
+     {
+         $ds = DIRECTORY_SEPARATOR;
+         $this->install_dir = $pear_install_dir;
+-        $this->channelsdir = $pear_install_dir.$ds.'.channels';
+-        $this->statedir    = $pear_install_dir.$ds.'.registry';
+-        $this->filemap     = $pear_install_dir.$ds.'.filemap';
+-        $this->lockfile    = $pear_install_dir.$ds.'.lock';
++        if (!$pear_metadata_dir) {
++            $pear_metadata_dir = $pear_install_dir;
++        }
++        $this->channelsdir = $pear_metadata_dir.$ds.'.channels';
++        $this->statedir    = $pear_metadata_dir.$ds.'.registry';
++        $this->filemap     = $pear_metadata_dir.$ds.'.filemap';
++        $this->lockfile    = $pear_metadata_dir.$ds.'.lock';
+     }
+ 
+     function hasWriteAccess()
+@@ -181,7 +184,7 @@ class PEAR_Registry extends PEAR
+     {
+         $this->_config = &$config;
+         if ($resetInstallDir) {
+-            $this->setInstallDir($config->get('php_dir'));
++            $this->setInstallDir($config->get('php_dir'), $config->get('metadata_dir'));
+         }
+     }
+ 
+@@ -328,9 +331,9 @@ class PEAR_Registry extends PEAR
+                 $this->_dependencyDB = &PEAR_DependencyDB::singleton($this->_config);
+                 if (PEAR::isError($this->_dependencyDB)) {
+                     // attempt to recover by removing the dep db
+-                    if (file_exists($this->_config->get('php_dir', null, 'pear.php.net') .
++                    if (file_exists($this->_config->get('metadata_dir', null, 'pear.php.net') .
+                         DIRECTORY_SEPARATOR . '.depdb')) {
+-                        @unlink($this->_config->get('php_dir', null, 'pear.php.net') .
++                        @unlink($this->_config->get('metadata_dir', null, 'pear.php.net') .
+                             DIRECTORY_SEPARATOR . '.depdb');
+                     }
+ 
+@@ -2328,4 +2331,4 @@ class PEAR_Registry extends PEAR
+         }
+         return $ret;
+     }
+-}
+\ No newline at end of file
++}
