@@ -1,46 +1,61 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
-Version: 7.21.7
-Release: 5%{?dist}.2
+Version: 7.27.0
+Release: 7%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
 Source2: curlbuild.h
 Source3: hide_selinux.c
 
-# add a new option CURLOPT_GSSAPI_DELEGATION (#719939)
-Patch1: 0001-curl-7.21.7-a7864c4.patch
+# eliminate unnecessary inotify events on upload via file protocol (#844385)
+Patch1: 0001-curl-7.27.0-1f8518c5.patch
 
-# fix SIGSEGV of curl -O -J given more than one URLs (#723075)
-Patch2: 0002-curl-7.21.7-5eb2396.patch
-Patch5: 0005-curl-7.21.7-61ae7e9.patch
+# do not crash if MD5 fingerprint is not provided by libssh2
+Patch2: 0002-curl-7.27.0-f05e5136.patch
 
-# introduce the --delegation option of curl (#730444)
-Patch3: 0003-curl-7.21.7-5538904.patch
+# fix a syntax error in curl-config (#871317)
+Patch3: 0003-curl-7.27.0-382429e7.patch
 
-# initialize NSS with no database if the selected database is broken (#728562)
-Patch4: 0004-curl-7.21.7-d6f319f.patch
+# do not print misleading NSS error codes
+Patch4: 0004-curl-7.27.0-52b6eda4.patch
 
-# break busy loops in tests 502, 555, and 573
-Patch6: 0006-curl-7.21.7-3445fa2.patch
+# update the links to cipher-suites supported by NSS
+Patch5: 0005-curl-7.27.0-f208bf5a.patch
+
+# prevent NSS from crashing on client auth hook failure
+Patch6: 0006-curl-7.27.0-68d2830e.patch
+
+# clear session cache if a client cert from file is used
+Patch7: 0007-curl-7.27.0-b36f1d26.patch
+
+# fix error messages for CURLE_SSL_{CACERT,CRL}_BADFILE
+Patch8: 0008-curl-7.27.0-26613d78.patch
+
+# fix buffer overflow when negotiating SASL DIGEST-MD5 auth (CVE-2013-0249)
+Patch9: 0009-curl-7.27.0-f206d6c0.patch
+
+# curl_global_init() now accepts the CURL_GLOBAL_ACK_EINTR flag
+Patch10: 0010-curl-7.27.0-57ccdfa8.patch
 
 # patch making libcurl multilib ready
-Patch101: 0101-curl-7.21.1-multilib.patch
+Patch101: 0101-curl-7.27.0-multilib.patch
 
 # prevent configure script from discarding -g in CFLAGS (#496778)
-Patch102: 0102-curl-7.21.2-debug.patch
+Patch102: 0102-curl-7.27.0-debug.patch
 
 # use localhost6 instead of ip6-localhost in the curl test-suite
 Patch104: 0104-curl-7.19.7-localhost6.patch
-
-# exclude test1112 from the test suite (#565305)
-Patch105: 0105-curl-7.21.3-disable-test1112.patch
 
 # disable valgrind for certain test-cases (libssh2 problem)
 Patch106: 0106-curl-7.21.0-libssh2-valgrind.patch
 
 # work around valgrind bug (#678518)
 Patch107: 0107-curl-7.21.4-libidn-valgrind.patch
+
+# Fix character encoding of docs, which are of mixed encoding originally so
+# a simple iconv can't fix them
+Patch108: 0108-curl-7.27.0-utf8.patch
 
 Provides: webclient
 URL: http://curl.haxx.se/
@@ -58,7 +73,7 @@ BuildRequires: stunnel
 BuildRequires: zlib-devel
 
 # valgrind is not available on s390(x), sparc or arm5
-%ifnarch s390 s390x %{sparc} %{arm}
+%ifnarch s390 s390x %{sparc} %{arm} ppc
 BuildRequires: valgrind
 %endif
 
@@ -68,8 +83,8 @@ Requires: libcurl = %{version}-%{release}
 # to ensure that we have the necessary symbols available (#525002, #642796)
 %global libssh2_version %(pkg-config --modversion libssh2 2>/dev/null || echo 0)
 
-# older version doesn't provides "ldap_init_fd"
-%global openldap_version 2.3.43-12.el5_6.5
+# older version than 12.el5_6.5 doesn't provides "ldap_init_fd"
+%global openldap_version 2.3.43-25.el5_8.1
 
 %description
 curl is a command line tool for transferring data with URL syntax, supporting
@@ -119,20 +134,17 @@ documentation of the library, too.
 %prep
 %setup -q
 
-# Convert docs to UTF-8
-# NOTE: we do this _before_ applying of all patches, which are already UTF-8
-for f in CHANGES README; do
-    iconv -f iso-8859-1 -t utf8 < ${f} > ${f}.utf8
-    mv -f ${f}.utf8 ${f}
-done
-
-# upstream patches (already applied)
+# upstream patches
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
 
 # Fedora patches
 %patch101 -p1
@@ -140,10 +152,7 @@ done
 %patch104 -p1
 %patch106 -p1
 %patch107 -p1
-
-# exclude test1112 from the test suite (#565305)
-%patch105 -p1
-rm -f tests/data/test1112
+%patch108 -p1
 
 # replace hard wired port numbers in the test suite
 %ifarch x86_64
@@ -207,12 +216,15 @@ DISABLED=
 %install
 rm -rf $RPM_BUILD_ROOT
 
-make DESTDIR=$RPM_BUILD_ROOT INSTALL="%{__install} -p" install
+make DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p" install
 
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/libcurl.la
 
 install -d $RPM_BUILD_ROOT%{_datadir}/aclocal
 install -m 644 docs/libcurl/libcurl.m4 $RPM_BUILD_ROOT%{_datadir}/aclocal
+
+# drop man page for a script we do not distribute
+rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/mk-ca-bundle.1
 
 # Make libcurl-devel multilib-ready (bug #488922)
 %ifarch x86_64
@@ -258,6 +270,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Mon Oct 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.27.0-7
+- sync with 7.27.0-7 from F18
+
 * Mon Oct 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.21.7-5.2
 - dump release and build against libssh2 1.2.7
 

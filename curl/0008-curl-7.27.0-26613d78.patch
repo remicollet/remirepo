@@ -1,0 +1,30 @@
+From afd2d98b4a9c69fb47048122629fd4be1d40f906 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Tue, 15 Jan 2013 12:58:08 +0100
+Subject: [PATCH 3/3] nss: fix error messages for CURLE_SSL_{CACERT,CRL}_BADFILE
+
+Do not use the error messages from NSS for errors not occurring in NSS.
+
+[upstream commit 26613d781725e39b0f601301a65c64e146977d8f]
+---
+ lib/nss.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+diff --git a/lib/nss.c b/lib/nss.c
+index f97090a..c5dcf52 100644
+--- a/lib/nss.c
++++ b/lib/nss.c
+@@ -1096,10 +1096,8 @@ static bool is_nss_error(CURLcode err)
+   switch(err) {
+   case CURLE_PEER_FAILED_VERIFICATION:
+   case CURLE_SSL_CACERT:
+-  case CURLE_SSL_CACERT_BADFILE:
+   case CURLE_SSL_CERTPROBLEM:
+   case CURLE_SSL_CONNECT_ERROR:
+-  case CURLE_SSL_CRL_BADFILE:
+   case CURLE_SSL_ISSUER_ERROR:
+     return true;
+ 
+-- 
+1.7.1
+

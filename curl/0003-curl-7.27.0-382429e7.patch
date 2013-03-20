@@ -1,0 +1,32 @@
+From 382429e7601de68564f08a88cc867dbcd6e2556a Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Tue, 7 Aug 2012 14:13:09 +0200
+Subject: [PATCH] curl-config: parentheses fix
+
+Braces, not parentheses, should be used for shell variable names.
+
+Bug: http://curl.haxx.se/bug/view.cgi?id=3551460
+Reported by: Edward Sheldrake
+---
+ curl-config.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/curl-config.in b/curl-config.in
+index a3ca8b5..731761c 100644
+--- a/curl-config.in
++++ b/curl-config.in
+@@ -135,9 +135,9 @@ while test $# -gt 0; do
+           CPPFLAG_CURL_STATICLIB=""
+         fi
+        	if test "X@includedir@" = "X/usr/include"; then
+-          echo "$(CPPFLAG_CURL_STATICLIB)"
++          echo "$CPPFLAG_CURL_STATICLIB"
+         else
+-          echo "$(CPPFLAG_CURL_STATICLIB)-I@includedir@"
++          echo "${CPPFLAG_CURL_STATICLIB}-I@includedir@"
+         fi
+        	;;
+ 
+-- 
+1.7.1
+

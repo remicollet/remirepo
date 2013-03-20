@@ -1,0 +1,197 @@
+From ce515e993fe7bc7e95549317fe5180b196454d4c Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Wed, 12 Sep 2012 16:06:18 +0200
+Subject: [PATCH 1/3] ssh: move the fingerprint checking code to a separate fnc
+
+---
+ lib/ssh.c |   71 +++++++++++++++++++++++++++++++++---------------------------
+ 1 files changed, 39 insertions(+), 32 deletions(-)
+
+diff --git a/lib/ssh.c b/lib/ssh.c
+index c76a48e..4455d44 100644
+--- a/lib/ssh.c
++++ b/lib/ssh.c
+@@ -635,6 +635,43 @@ static CURLcode ssh_knownhost(struct connectdata *conn)
+   return result;
+ }
+ 
++static bool ssh_check_fingerprint(struct connectdata *conn)
++{
++  struct ssh_conn *sshc = &conn->proto.sshc;
++  struct SessionHandle *data = conn->data;
++  const char *pubkey_md5 = data->set.str[STRING_SSH_HOST_PUBLIC_KEY_MD5];
++  char md5buffer[33];
++  int i;
++
++  const char *fingerprint = libssh2_hostkey_hash(sshc->ssh_session,
++      LIBSSH2_HOSTKEY_HASH_MD5);
++
++  /* The fingerprint points to static storage (!), don't free() it. */
++  for(i = 0; i < 16; i++)
++    snprintf(&md5buffer[i*2], 3, "%02x", (unsigned char) fingerprint[i]);
++  infof(data, "SSH MD5 fingerprint: %s\n", md5buffer);
++
++  /* Before we authenticate we check the hostkey's MD5 fingerprint
++   * against a known fingerprint, if available.
++   */
++  if(pubkey_md5 && strlen(pubkey_md5) == 32) {
++    if(!strequal(md5buffer, pubkey_md5)) {
++      failf(data,
++          "Denied establishing ssh session: mismatch md5 fingerprint. "
++          "Remote %s is not equal to %s", md5buffer, pubkey_md5);
++      state(conn, SSH_SESSION_FREE);
++      sshc->actualcode = CURLE_PEER_FAILED_VERIFICATION;
++      return sshc->actualcode;
++    }
++    else {
++      infof(data, "MD5 checksum match!\n");
++      /* as we already matched, we skip the check for known hosts */
++      return CURLE_OK;
++    }
++  }
++  else
++    return ssh_knownhost(conn);
++}
+ 
+ /*
+  * ssh_statemach_act() runs the SSH state machine as far as it can without
+@@ -650,10 +687,8 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
+   struct SSHPROTO *sftp_scp = data->state.proto.ssh;
+   struct ssh_conn *sshc = &conn->proto.sshc;
+   curl_socket_t sock = conn->sock[FIRSTSOCKET];
+-  const char *fingerprint;
+-  char md5buffer[33];
+   char *new_readdir_line;
+-  int rc = LIBSSH2_ERROR_NONE, i;
++  int rc = LIBSSH2_ERROR_NONE;
+   int err;
+   int seekerr = CURL_SEEKFUNC_OK;
+   *block = 0; /* we're not blocking by default */
+@@ -694,35 +729,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
+        * against our known hosts. How that is handled (reading from file,
+        * whatever) is up to us.
+        */
+-      fingerprint = libssh2_hostkey_hash(sshc->ssh_session,
+-                                         LIBSSH2_HOSTKEY_HASH_MD5);
+-
+-      /* The fingerprint points to static storage (!), don't free() it. */
+-      for(i = 0; i < 16; i++)
+-        snprintf(&md5buffer[i*2], 3, "%02x", (unsigned char) fingerprint[i]);
+-      infof(data, "SSH MD5 fingerprint: %s\n", md5buffer);
+-
+-      /* Before we authenticate we check the hostkey's MD5 fingerprint
+-       * against a known fingerprint, if available.
+-       */
+-      if(data->set.str[STRING_SSH_HOST_PUBLIC_KEY_MD5] &&
+-         strlen(data->set.str[STRING_SSH_HOST_PUBLIC_KEY_MD5]) == 32) {
+-        if(!strequal(md5buffer,
+-                     data->set.str[STRING_SSH_HOST_PUBLIC_KEY_MD5])) {
+-          failf(data,
+-                "Denied establishing ssh session: mismatch md5 fingerprint. "
+-                "Remote %s is not equal to %s",
+-                md5buffer, data->set.str[STRING_SSH_HOST_PUBLIC_KEY_MD5]);
+-          state(conn, SSH_SESSION_FREE);
+-          result = sshc->actualcode = CURLE_PEER_FAILED_VERIFICATION;
+-        }
+-        else
+-          infof(data, "MD5 checksum match!\n");
+-        /* as we already matched, we skip the check for known hosts */
+-      }
+-      else
+-        result = ssh_knownhost(conn);
+-
++      result = ssh_check_fingerprint(conn);
+       if(!result)
+         state(conn, SSH_AUTHLIST);
+       break;
+-- 
+1.7.1
+
+
+From f05e51362f310cb04b0ad8d086b9cf693aad5c9d Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Wed, 12 Sep 2012 16:18:36 +0200
+Subject: [PATCH 2/3] ssh: do not crash if MD5 fingerprint is not provided by libssh2
+
+The MD5 fingerprint cannot be computed when running in FIPS mode.
+---
+ lib/ssh.c |   22 ++++++++++++++--------
+ 1 files changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/lib/ssh.c b/lib/ssh.c
+index 4455d44..466566c 100644
+--- a/lib/ssh.c
++++ b/lib/ssh.c
+@@ -646,19 +646,25 @@ static bool ssh_check_fingerprint(struct connectdata *conn)
+   const char *fingerprint = libssh2_hostkey_hash(sshc->ssh_session,
+       LIBSSH2_HOSTKEY_HASH_MD5);
+ 
+-  /* The fingerprint points to static storage (!), don't free() it. */
+-  for(i = 0; i < 16; i++)
+-    snprintf(&md5buffer[i*2], 3, "%02x", (unsigned char) fingerprint[i]);
+-  infof(data, "SSH MD5 fingerprint: %s\n", md5buffer);
++  if(fingerprint) {
++    /* The fingerprint points to static storage (!), don't free() it. */
++    for(i = 0; i < 16; i++)
++      snprintf(&md5buffer[i*2], 3, "%02x", (unsigned char) fingerprint[i]);
++    infof(data, "SSH MD5 fingerprint: %s\n", md5buffer);
++  }
+ 
+   /* Before we authenticate we check the hostkey's MD5 fingerprint
+    * against a known fingerprint, if available.
+    */
+   if(pubkey_md5 && strlen(pubkey_md5) == 32) {
+-    if(!strequal(md5buffer, pubkey_md5)) {
+-      failf(data,
+-          "Denied establishing ssh session: mismatch md5 fingerprint. "
+-          "Remote %s is not equal to %s", md5buffer, pubkey_md5);
++    if(!fingerprint || !strequal(md5buffer, pubkey_md5)) {
++      if(fingerprint)
++        failf(data,
++            "Denied establishing ssh session: mismatch md5 fingerprint. "
++            "Remote %s is not equal to %s", md5buffer, pubkey_md5);
++      else
++        failf(data,
++            "Denied establishing ssh session: md5 fingerprint not available");
+       state(conn, SSH_SESSION_FREE);
+       sshc->actualcode = CURLE_PEER_FAILED_VERIFICATION;
+       return sshc->actualcode;
+-- 
+1.7.1
+
+
+From 1ab6c353635760e8e25bacc13ae0cab2f97f7338 Mon Sep 17 00:00:00 2001
+From: Marc Hoersken <info@marc-hoersken.de>
+Date: Fri, 14 Sep 2012 14:48:55 +0200
+Subject: [PATCH 3/3] ssh.c: Fixed warning: implicit conversion from enumeration type
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/ssh.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/ssh.c b/lib/ssh.c
+index 466566c..e8b7172 100644
+--- a/lib/ssh.c
++++ b/lib/ssh.c
+@@ -635,7 +635,7 @@ static CURLcode ssh_knownhost(struct connectdata *conn)
+   return result;
+ }
+ 
+-static bool ssh_check_fingerprint(struct connectdata *conn)
++static CURLcode ssh_check_fingerprint(struct connectdata *conn)
+ {
+   struct ssh_conn *sshc = &conn->proto.sshc;
+   struct SessionHandle *data = conn->data;
+@@ -736,7 +736,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
+        * whatever) is up to us.
+        */
+       result = ssh_check_fingerprint(conn);
+-      if(!result)
++      if(result == CURLE_OK)
+         state(conn, SSH_AUTHLIST);
+       break;
+ 
+-- 
+1.7.1
+

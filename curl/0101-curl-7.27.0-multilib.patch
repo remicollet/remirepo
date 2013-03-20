@@ -7,7 +7,7 @@ diff --git a/curl-config.in b/curl-config.in
 index 150004d..95d0759 100644
 --- a/curl-config.in
 +++ b/curl-config.in
-@@ -74,7 +74,7 @@ while test $# -gt 0; do
+@@ -75,7 +75,7 @@ while test $# -gt 0; do
  	;;
  
      --cc)
@@ -16,7 +16,7 @@ index 150004d..95d0759 100644
  	;;
  
      --prefix)
-@@ -136,24 +136,14 @@ while test $# -gt 0; do
+@@ -142,24 +142,14 @@ while test $# -gt 0; do
         	;;
  
      --libs)
@@ -26,9 +26,9 @@ index 150004d..95d0759 100644
 -	   CURLLIBDIR=""
 -	fi
 -	if test "X@REQUIRE_LIB_DEPS@" = "Xyes"; then
--	  echo ${CURLLIBDIR}-lcurl @LDFLAGS@ @LIBCURL_LIBS@ @LIBS@
+-	  echo ${CURLLIBDIR}-lcurl @LIBCURL_LIBS@ @LIBS@
 -	else
--	  echo ${CURLLIBDIR}-lcurl @LDFLAGS@ @LIBS@
+-	  echo ${CURLLIBDIR}-lcurl @LIBS@
 -	fi
 +	pkg-config libcurl --libs
  	;;
@@ -39,7 +39,7 @@ index 150004d..95d0759 100644
  
      --configure)
 -      echo @CONFIGURE_OPTIONS@
-+	pkg-config libcurl --variable=configure_options | sed 's/^"//;s/"$//'
++      pkg-config libcurl --variable=configure_options | sed 's/^"//;s/"$//'
      ;;
  
      *)
@@ -47,7 +47,7 @@ diff --git a/docs/curl-config.1 b/docs/curl-config.1
 index c4f4e2b..3e0ea60 100644
 --- a/docs/curl-config.1
 +++ b/docs/curl-config.1
-@@ -65,7 +65,9 @@ be listed using uppercase and are separated by newlines. There may be none,
+@@ -65,7 +65,9 @@ be listed using uppercase and are separa
  one, or several protocols in the list. (Added in 7.13.0)
  .IP "--static-libs"
  Shows the complete set of libs and other linker options you will need in order

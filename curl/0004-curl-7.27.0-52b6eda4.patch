@@ -1,0 +1,115 @@
+From fea7914a32b7d7a8ec4bbf4de0c2be74a32969bb Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Thu, 9 Aug 2012 09:40:00 +0200
+Subject: [PATCH 1/2] nss: do not print misleading NSS error codes
+
+[upstream commit 52b6eda4f2a006e33358c6964ef6a00b09ae59ab]
+---
+ lib/nss.c |   42 ++++++++++++++++++++++++++++++------------
+ 1 files changed, 30 insertions(+), 12 deletions(-)
+
+diff --git a/lib/nss.c b/lib/nss.c
+index b11796c..a8e08f4 100644
+--- a/lib/nss.c
++++ b/lib/nss.c
+@@ -1084,17 +1084,31 @@ int Curl_nss_close_all(struct SessionHandle *data)
+   return 0;
+ }
+ 
+-/* return true if the given error code is related to a client certificate */
+-static bool is_cc_error(PRInt32 err)
++/* return true if NSS can provide error code (and possibly msg) for the error */
++static bool is_nss_error(CURLcode err)
+ {
+   switch(err) {
+-  case SSL_ERROR_BAD_CERT_ALERT:
++  case CURLE_PEER_FAILED_VERIFICATION:
++  case CURLE_SSL_CACERT:
++  case CURLE_SSL_CACERT_BADFILE:
++  case CURLE_SSL_CERTPROBLEM:
++  case CURLE_SSL_CONNECT_ERROR:
++  case CURLE_SSL_CRL_BADFILE:
++  case CURLE_SSL_ISSUER_ERROR:
+     return true;
+ 
+-  case SSL_ERROR_REVOKED_CERT_ALERT:
+-    return true;
++  default:
++    return false;
++  }
++}
+ 
++/* return true if the given error code is related to a client certificate */
++static bool is_cc_error(PRInt32 err)
++{
++  switch(err) {
++  case SSL_ERROR_BAD_CERT_ALERT:
+   case SSL_ERROR_EXPIRED_CERT_ALERT:
++  case SSL_ERROR_REVOKED_CERT_ALERT:
+     return true;
+ 
+   default:
+@@ -1388,6 +1402,7 @@ CURLcode Curl_nss_connect(struct connectdata *conn, int sockindex)
+   time_left = Curl_timeleft(data, NULL, TRUE);
+   if(time_left < 0L) {
+     failf(data, "timed out before SSL handshake");
++    curlerr = CURLE_OPERATION_TIMEDOUT;
+     goto error;
+   }
+   timeout = PR_MillisecondsToInterval((PRUint32) time_left);
+@@ -1432,15 +1447,18 @@ CURLcode Curl_nss_connect(struct connectdata *conn, int sockindex)
+   /* reset the flag to avoid an infinite loop */
+   data->state.ssl_connect_retry = FALSE;
+ 
+-  err = PR_GetError();
+-  if(is_cc_error(err))
+-    curlerr = CURLE_SSL_CERTPROBLEM;
++  if(is_nss_error(curlerr)) {
++    /* read NSPR error code */
++    err = PR_GetError();
++    if(is_cc_error(err))
++      curlerr = CURLE_SSL_CERTPROBLEM;
+ 
+-  /* print the error number and error string */
+-  infof(data, "NSS error %d (%s)\n", err, nss_error_to_name(err));
++    /* print the error number and error string */
++    infof(data, "NSS error %d (%s)\n", err, nss_error_to_name(err));
+ 
+-  /* print a human-readable message describing the error if available */
+-  nss_print_error_message(data, err);
++    /* print a human-readable message describing the error if available */
++    nss_print_error_message(data, err);
++  }
+ 
+   if(model)
+     PR_Close(model);
+-- 
+1.7.1
+
+
+From b00ba010d0cd0a6ee77692fd4e38e6680b07a82e Mon Sep 17 00:00:00 2001
+From: Marc Hoersken <info@marc-hoersken.de>
+Date: Tue, 11 Sep 2012 09:49:23 +0200
+Subject: [PATCH 2/2] nss.c: Fixed warning: 'err' may be used uninitialized in this function
+
+[upstream commit e6ba0487013085afc5bc1ca7d7c8a15a13367ba6]
+---
+ lib/nss.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lib/nss.c b/lib/nss.c
+index a8e08f4..fef7c3d 100644
+--- a/lib/nss.c
++++ b/lib/nss.c
+@@ -1173,7 +1173,7 @@ static CURLcode nss_load_ca_certificates(struct connectdata *conn,
+ 
+ CURLcode Curl_nss_connect(struct connectdata *conn, int sockindex)
+ {
+-  PRInt32 err;
++  PRErrorCode err = 0;
+   PRFileDesc *model = NULL;
+   PRBool ssl2 = PR_FALSE;
+   PRBool ssl3 = PR_FALSE;
+-- 
+1.7.1
+

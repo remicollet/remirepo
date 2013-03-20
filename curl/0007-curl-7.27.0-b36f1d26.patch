@@ -1,0 +1,55 @@
+From fefd7cdcde39c56651f6e2c32be9cd79354ffdc4 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 11 Jan 2013 10:24:21 +0100
+Subject: [PATCH 2/3] nss: clear session cache if a client cert from file is used
+
+This commit fixes a regression introduced in 052a08ff.
+
+NSS caches certs/keys returned by the SSL_GetClientAuthDataHook callback
+and if we connect second time to the same server, the cached cert/key
+pair is used.  If we use multiple client certificates for different
+paths on the same server, we need to clear the session cache to force
+NSS to call the hook again.  The commit 052a08ff prevented the session
+cache from being cleared if a client certificate from file was used.
+
+The condition is now fixed to cover both cases: consssl->client_nickname
+is not NULL if a client certificate from the NSS database is used and
+connssl->obj_clicert is not NULL if a client certificate from file is
+used.
+
+Review by: Kai Engert
+
+[upstream commit b36f1d26f830453ebaa17238f9bd1e396f618720]
+---
+ lib/nss.c |   12 ++++++++----
+ 1 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/lib/nss.c b/lib/nss.c
+index 794eccb..f97090a 100644
+--- a/lib/nss.c
++++ b/lib/nss.c
+@@ -1058,13 +1058,17 @@ void Curl_nss_close(struct connectdata *conn, int sockindex)
+        as closed to avoid double close */
+     fake_sclose(conn->sock[sockindex]);
+     conn->sock[sockindex] = CURL_SOCKET_BAD;
++
++    if((connssl->client_nickname != NULL) || (connssl->obj_clicert != NULL))
++      /* A server might require different authentication based on the
++       * particular path being requested by the client.  To support this
++       * scenario, we must ensure that a connection will never reuse the
++       * authentication data from a previous connection. */
++      SSL_InvalidateSession(connssl->handle);
++
+     if(connssl->client_nickname != NULL) {
+       free(connssl->client_nickname);
+       connssl->client_nickname = NULL;
+-
+-      /* force NSS to ask again for a client cert when connecting
+-       * next time to the same server */
+-      SSL_InvalidateSession(connssl->handle);
+     }
+     /* destroy all NSS objects in order to avoid failure of NSS shutdown */
+     Curl_llist_destroy(connssl->obj_list, NULL);
+-- 
+1.7.1
+

@@ -1,0 +1,86 @@
+ CHANGES |   16 ++++++++--------
+ README  |    2 +-
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/CHANGES b/CHANGES
+index 2335841..d4d37c2 100644
+--- a/CHANGES
++++ b/CHANGES
+@@ -272,7 +272,7 @@ Daniel Stenberg (9 Jul 2012)
+ 
+ - cookie: fixed typo in comment
+ 
+-- [Christian Hägele brought this change]
++- [Christian HÃ¤gele brought this change]
+ 
+   https_getsock: provided for schannel backend as well
+   
+@@ -454,7 +454,7 @@ Yang Tse (3 Jul 2012)
+   testcurl.pl: fix missing semicolon
+ 
+ Daniel Stenberg (2 Jul 2012)
+-- [Christian Hägele brought this change]
++- [Christian HÃ¤gele brought this change]
+ 
+   unicode NTLM SSPI: heap corruption fixed
+   
+@@ -2563,18 +2563,18 @@ Daniel Stenberg (1 Apr 2012)
+   Reported by: Michael Wallner
+ 
+ Steve Holme (31 Mar 2012)
+-- [Gökhan Şengün brought this change]
++- [GÃ¶khan ÅengÃ¼n brought this change]
+ 
+   smtp: Add support for DIGEST-MD5 authentication
+ 
+-- [Gökhan Şengün brought this change]
++- [GÃ¶khan ÅengÃ¼n brought this change]
+ 
+   smtp: Cody tidy up of md5 digest length
+   
+   Replaced the hard coded md5 digest length (16) with a preprocessor
+   constant
+ 
+-- [Gökhan Şengün brought this change]
++- [GÃ¶khan ÅengÃ¼n brought this change]
+ 
+   md5: Add support for calculating the md5 sum of buffers incrementally
+   
+@@ -3866,7 +3866,7 @@ Daniel Stenberg (20 Dec 2011)
+   This offers an alternative to the existing Curl_socket_ready() API which
+   only checks one socket for read and one for write.
+ 
+-- [Cédric Deltheil brought this change]
++- [CeÌdric Deltheil brought this change]
+ 
+   curl.h: add __ANDROID__ macro check
+   
+@@ -4079,7 +4079,7 @@ Daniel Stenberg (12 Dec 2011)
+   linking with a static openssl requires a set of more libs to be linked
+   on Windows.
+   
+-  Thanks also to Steve Holme and Martin Storsj� for additional feedback.
++  Thanks also to Steve Holme and Martin Storsjö for additional feedback.
+   
+   Bug: http://curl.haxx.se/mail/lib-2011-12/0063.html
+   Reported by: Ward Willats
+@@ -5333,7 +5333,7 @@ Daniel Stenberg (25 Sep 2011)
+   damaging.
+   
+   Bug: http://curl.haxx.se/bug/view.cgi?id=3413181
+-  Reported by: Taneli V�h�kangas
++  Reported by: Taneli Vähäkangas
+ 
+ Yang Tse (24 Sep 2011)
+ - curl tool: fix a compiler warning
+diff --git a/README b/README
+index 2ffacc3..cfd6760 100644
+--- a/README
++++ b/README
+@@ -45,5 +45,5 @@ GIT
+ NOTICE
+ 
+   Curl contains pieces of source code that is Copyright (c) 1998, 1999
+-  Kungliga Tekniska H�gskolan. This notice is included here to comply with the
++  Kungliga Tekniska Högskolan. This notice is included here to comply with the
+   distribution terms.

@@ -1,0 +1,158 @@
+From fba5ed6d23b8fab97150da2b49a35236a8f4684c Mon Sep 17 00:00:00 2001
+From: Zdenek Pavlas <zpavlas@redhat.com>
+Date: Mon, 11 Mar 2013 14:57:07 +0100
+Subject: [PATCH] curl_global_init: accept the CURL_GLOBAL_ACK_EINTR flag
+
+The flag can be used in pycurl-based applications where using the multi
+interface would not be acceptable because of the performance lost caused
+by implementing the select() loop in python.
+
+Bug: http://curl.haxx.se/bug/view.cgi?id=1168
+Downstream Bug: https://bugzilla.redhat.com/919127
+
+[upstream commit 57ccdfa8d2bb6275388223f4676cd623ebd01697]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ docs/libcurl/curl_global_init.3  |    4 ++++
+ docs/libcurl/symbols-in-versions |    1 +
+ include/curl/curl.h              |    1 +
+ lib/easy.c                       |    6 +++++-
+ lib/select.c                     |   17 ++---------------
+ lib/select.h                     |    6 ++++++
+ 6 files changed, 19 insertions(+), 16 deletions(-)
+
+diff --git a/docs/libcurl/curl_global_init.3 b/docs/libcurl/curl_global_init.3
+index d91e1bd..6a08383 100644
+--- a/docs/libcurl/curl_global_init.3
++++ b/docs/libcurl/curl_global_init.3
+@@ -70,6 +70,10 @@ Initialise nothing extra. This sets no bit.
+ .B CURL_GLOBAL_DEFAULT
+ A sensible default. It will init both SSL and Win32. Right now, this equals
+ the functionality of the \fBCURL_GLOBAL_ALL\fP mask.
++.TP
++.B CURL_GLOBAL_ACK_EINTR
++When this flag is set, curl will acknowledge EINTR condition when connecting
++or when waiting for data.  Otherwise, curl waits until full timeout elapses.
+ .SH RETURN VALUE
+ If this function returns non-zero, something went wrong and you cannot use the
+ other curl functions.
+diff --git a/docs/libcurl/symbols-in-versions b/docs/libcurl/symbols-in-versions
+index 41705fd..c528208 100644
+--- a/docs/libcurl/symbols-in-versions
++++ b/docs/libcurl/symbols-in-versions
+@@ -612,6 +612,7 @@ CURL_GLOBAL_DEFAULT             7.8
+ CURL_GLOBAL_NOTHING             7.8
+ CURL_GLOBAL_SSL                 7.8
+ CURL_GLOBAL_WIN32               7.8.1
++CURL_GLOBAL_ACK_EINTR           7.30.0
+ CURL_HTTP_VERSION_1_0           7.9.1
+ CURL_HTTP_VERSION_1_1           7.9.1
+ CURL_HTTP_VERSION_NONE          7.9.1
+diff --git a/include/curl/curl.h b/include/curl/curl.h
+index 2cad282..63e7056 100644
+--- a/include/curl/curl.h
++++ b/include/curl/curl.h
+@@ -2022,6 +2022,7 @@ typedef enum {
+ #define CURL_GLOBAL_ALL (CURL_GLOBAL_SSL|CURL_GLOBAL_WIN32)
+ #define CURL_GLOBAL_NOTHING 0
+ #define CURL_GLOBAL_DEFAULT CURL_GLOBAL_ALL
++#define CURL_GLOBAL_ACK_EINTR (1<<2)
+ 
+ 
+ /*****************************************************************************
+diff --git a/lib/easy.c b/lib/easy.c
+index 6e8ff77..88f4a60 100644
+--- a/lib/easy.c
++++ b/lib/easy.c
+@@ -267,6 +267,8 @@ CURLcode curl_global_init(long flags)
+   }
+ #endif
+ 
++  Curl_ack_eintr = flags & CURL_GLOBAL_ACK_EINTR;
++
+   init_flags  = flags;
+ 
+   /* Preset pseudo-random number sequence. */
+@@ -459,9 +461,11 @@ CURLcode curl_easy_perform(CURL *easy)
+        select. This whole alternative version should probably rather use the
+        curl_multi_socket() approach. */
+ 
+-    if(rc == -1)
++    if(rc == -1) {
+       /* select error */
++      code = CURLE_RECV_ERROR;
+       break;
++    }
+ 
+     /* timeout or data to send/receive => loop! */
+   } while(still_running);
+diff --git a/lib/select.c b/lib/select.c
+index 40673ec..bb8b773 100644
+--- a/lib/select.c
++++ b/lib/select.c
+@@ -50,11 +50,8 @@
+ 
+ #define elapsed_ms  (int)curlx_tvdiff(curlx_tvnow(), initial_tv)
+ 
+-#ifdef CURL_ACKNOWLEDGE_EINTR
+-#define error_not_EINTR (1)
+-#else
+-#define error_not_EINTR (error != EINTR)
+-#endif
++int Curl_ack_eintr = 0;
++#define error_not_EINTR (Curl_ack_eintr || error != EINTR)
+ 
+ /*
+  * Internal function used for waiting a specific amount of ms
+@@ -67,10 +64,6 @@
+  * Timeout resolution, accuracy, as well as maximum supported
+  * value is system dependent, neither factor is a citical issue
+  * for the intended use of this function in the library.
+- * On non-DOS and non-Winsock platforms, when compiled with
+- * CURL_ACKNOWLEDGE_EINTR defined, EINTR condition is honored
+- * and function might exit early without awaiting full timeout,
+- * otherwise EINTR will be ignored and full timeout will elapse.
+  *
+  * Return values:
+  *   -1 = system call error, invalid timeout value, or interrupted
+@@ -133,9 +126,6 @@ int Curl_wait_ms(int timeout_ms)
+  * A negative timeout value makes this function wait indefinitely,
+  * unles no valid file descriptor is given, when this happens the
+  * negative timeout is ignored and the function times out immediately.
+- * When compiled with CURL_ACKNOWLEDGE_EINTR defined, EINTR condition
+- * is honored and function might exit early without awaiting timeout,
+- * otherwise EINTR will be ignored.
+  *
+  * Return values:
+  *   -1 = system call error or fd >= FD_SETSIZE
+@@ -347,9 +337,6 @@ int Curl_socket_check(curl_socket_t readfd0, /* two sockets to read from */
+  * A negative timeout value makes this function wait indefinitely,
+  * unles no valid file descriptor is given, when this happens the
+  * negative timeout is ignored and the function times out immediately.
+- * When compiled with CURL_ACKNOWLEDGE_EINTR defined, EINTR condition
+- * is honored and function might exit early without awaiting timeout,
+- * otherwise EINTR will be ignored.
+  *
+  * Return values:
+  *   -1 = system call error or fd >= FD_SETSIZE
+diff --git a/lib/select.h b/lib/select.h
+index b50604b..4f0e464 100644
+--- a/lib/select.h
++++ b/lib/select.h
+@@ -99,6 +99,12 @@ int Curl_socket_check(curl_socket_t readfd, curl_socket_t readfd2,
+ 
+ int Curl_poll(struct pollfd ufds[], unsigned int nfds, int timeout_ms);
+ 
++/* On non-DOS and non-Winsock platforms, when Curl_ack_eintr is set,
++ * EINTR condition is honored and function might exit early without
++ * awaiting full timeout.  Otherwise EINTR will be ignored and full
++ * timeout will elapse. */
++extern int Curl_ack_eintr;
++
+ int Curl_wait_ms(int timeout_ms);
+ 
+ #ifdef TPF
+-- 
+1.7.1
+

@@ -1,0 +1,58 @@
+ configure            |   15 ++++-----------
+ m4/curl-compilers.m4 |   15 ++++-----------
+ 2 files changed, 8 insertions(+), 22 deletions(-)
+
+diff --git a/configure b/configure
+index d3ecf69..6d8f085 100755
+--- a/configure
++++ b/configure
+@@ -15093,18 +15093,11 @@ $as_echo "yes" >&6; }
+     gccvhi=`echo $gccver | cut -d . -f1`
+     gccvlo=`echo $gccver | cut -d . -f2`
+     compiler_num=`(expr $gccvhi "*" 100 + $gccvlo) 2>/dev/null`
+-    flags_dbg_all="-g -g0 -g1 -g2 -g3"
+-    flags_dbg_all="$flags_dbg_all -ggdb"
+-    flags_dbg_all="$flags_dbg_all -gstabs"
+-    flags_dbg_all="$flags_dbg_all -gstabs+"
+-    flags_dbg_all="$flags_dbg_all -gcoff"
+-    flags_dbg_all="$flags_dbg_all -gxcoff"
+-    flags_dbg_all="$flags_dbg_all -gdwarf-2"
+-    flags_dbg_all="$flags_dbg_all -gvms"
++    flags_dbg_all=""
+     flags_dbg_yes="-g"
+-    flags_dbg_off="-g0"
+-    flags_opt_all="-O -O0 -O1 -O2 -O3 -Os"
+-    flags_opt_yes="-O2"
++    flags_dbg_off=""
++    flags_opt_all=""
++    flags_opt_yes=""
+     flags_opt_off="-O0"
+ 
+       if test -z "$SED"; then
+diff --git a/m4/curl-compilers.m4 b/m4/curl-compilers.m4
+index 1ea4d17..868d65a 100644
+--- a/m4/curl-compilers.m4
++++ b/m4/curl-compilers.m4
+@@ -148,18 +148,11 @@ AC_DEFUN([CURL_CHECK_COMPILER_GNU_C], [
+     gccvhi=`echo $gccver | cut -d . -f1`
+     gccvlo=`echo $gccver | cut -d . -f2`
+     compiler_num=`(expr $gccvhi "*" 100 + $gccvlo) 2>/dev/null`
+-    flags_dbg_all="-g -g0 -g1 -g2 -g3"
+-    flags_dbg_all="$flags_dbg_all -ggdb"
+-    flags_dbg_all="$flags_dbg_all -gstabs"
+-    flags_dbg_all="$flags_dbg_all -gstabs+"
+-    flags_dbg_all="$flags_dbg_all -gcoff"
+-    flags_dbg_all="$flags_dbg_all -gxcoff"
+-    flags_dbg_all="$flags_dbg_all -gdwarf-2"
+-    flags_dbg_all="$flags_dbg_all -gvms"
++    flags_dbg_all=""
+     flags_dbg_yes="-g"
+-    flags_dbg_off="-g0"
+-    flags_opt_all="-O -O0 -O1 -O2 -O3 -Os"
+-    flags_opt_yes="-O2"
++    flags_dbg_off=""
++    flags_opt_all=""
++    flags_opt_yes=""
+     flags_opt_off="-O0"
+     CURL_CHECK_DEF([_WIN32], [], [silent])
+   else
