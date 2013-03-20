@@ -1,0 +1,96 @@
+diff -ru icu.orig/source/common/unicode/unistr.h icu/source/common/unicode/unistr.h
+--- icu.orig/source/common/unicode/unistr.h	2009-07-28 16:02:03.000000000 +0100
++++ icu/source/common/unicode/unistr.h	2009-07-28 16:36:48.000000000 +0100
+@@ -4048,7 +4048,7 @@
+ 
+ {
+   // This dstSize value will be checked explicitly
+-  return extract(start, _length, dst, dst!=0 ? 0xffffffff : 0, codepage);
++  return extract(start, _length, dst, dst!=0 ? (((size_t)dst >= ((size_t)-1) - UINT32_MAX) ? (((char*)UINT32_MAX) - dst) : UINT32_MAX) : 0, codepage);
+ }
+ 
+ #endif
+diff -ru icu.orig/source/test/intltest/dadrcal.cpp icu/source/test/intltest/dadrcal.cpp
+--- icu.orig/source/test/intltest/dadrcal.cpp	2009-07-28 16:01:10.000000000 +0100
++++ icu/source/test/intltest/dadrcal.cpp	2009-07-28 16:52:15.000000000 +0100
+@@ -114,7 +114,7 @@
+                     + UnicodeString(" - "));
+             continue;
+         }
+-        testSetting.extract(0, testSetting.length(), toCalLoc, (const char*)0);
++        testSetting.extract(0, testSetting.length(), toCalLoc, sizeof(toCalLoc)-1, (const char*)0);
+         fromCalendar = Calendar::createInstance(toCalLoc, status);
+         if (U_FAILURE(status)) {
+             errln(caseString+": Unable to instantiate calendar for "
+@@ -371,7 +371,7 @@
+     // build to calendar
+     UnicodeString testSetting = settings->getString("ToCalendar", status);
+     if (U_SUCCESS(status)) {
+-        testSetting.extract(0, testSetting.length(), toCalLoc, (const char*)0);
++        testSetting.extract(0, testSetting.length(), toCalLoc, sizeof(toCalLoc)-1, (const char*)0);
+         toCalendar = Calendar::createInstance(toCalLoc, status);
+         if (U_FAILURE(status)) {
+             errln("Unable to instantiate ToCalendar for "+testSetting);
+@@ -394,7 +394,7 @@
+         Calendar *fromCalendar= NULL;
+         UnicodeString locale = currentCase->getString("locale", status);
+         if (U_SUCCESS(status)) {
+-            locale.extract(0, locale.length(), fromCalLoc, (const char*)0); // default codepage.  Invariant codepage doesn't have '@'!
++            locale.extract(0, locale.length(), fromCalLoc, sizeof(fromCalLoc)-1, (const char*)0); // default codepage.  Invariant codepage doesn't have '@'!
+             fromCalendar = Calendar::createInstance(fromCalLoc, status);
+             if (U_FAILURE(status)) {
+                 errln("Unable to instantiate fromCalendar for "+locale);
+@@ -464,7 +464,7 @@
+                 logln("---");
+             }
+             logln(testSetting + "---");
+-            testSetting.extract(0, testSetting.length(), testType, "");
++            testSetting.extract(0, testSetting.length(), testType, sizeof(testType)-1, "");
+         } else {
+             errln("Unable to extract 'Type'. Skipping..");
+             continue;
+diff -ru icu.orig/source/test/intltest/dadrcoll.cpp icu/source/test/intltest/dadrcoll.cpp
+--- icu.orig/source/test/intltest/dadrcoll.cpp	2009-07-28 16:01:10.000000000 +0100
++++ icu/source/test/intltest/dadrcoll.cpp	2009-07-28 16:49:56.000000000 +0100
+@@ -179,7 +179,7 @@
+     testSetting = settings->getString("TestLocale", intStatus);
+     if(U_SUCCESS(intStatus)) {
+       char localeName[256];
+-      testSetting.extract(0, testSetting.length(), localeName, "");
++      testSetting.extract(0, testSetting.length(), localeName, sizeof(localeName)-1, "");
+       col = Collator::createInstance(localeName, status);
+       if(U_SUCCESS(status)) {
+         logln("Testing collator for locale "+testSetting);
+diff -ru icu.orig/source/test/intltest/dadrfmt.cpp icu/source/test/intltest/dadrfmt.cpp
+--- icu.orig/source/test/intltest/dadrfmt.cpp	2009-07-28 16:01:10.000000000 +0100
++++ icu/source/test/intltest/dadrfmt.cpp	2009-07-28 16:50:36.000000000 +0100
+@@ -149,7 +149,7 @@
+         DateFormat *format = NULL;
+         
+         // Process: 'locale'
+-        locale.extract(0, locale.length(), calLoc, (const char*)0); // default codepage.  Invariant codepage doesn't have '@'!
++        locale.extract(0, locale.length(), calLoc, sizeof(calLoc)-1, (const char*)0); // default codepage.  Invariant codepage doesn't have '@'!
+         Locale loc(calLoc);
+         if(spec.startsWith(kPATTERN)) {
+             pattern = UnicodeString(spec,kPATTERN.length());
+@@ -323,7 +323,7 @@
+                 logln("---");
+             }
+             logln(testSetting + "---");
+-            testSetting.extract(0, testSetting.length(), testType, "");
++            testSetting.extract(0, testSetting.length(), testType, sizeof(testType)-1, "");
+         } else {
+             errln("Unable to extract 'Type'. Skipping..");
+             continue;
+diff -ru icu.orig/source/test/intltest/loctest.cpp icu/source/test/intltest/loctest.cpp
+--- icu.orig/source/test/intltest/loctest.cpp	2009-07-28 16:01:10.000000000 +0100
++++ icu/source/test/intltest/loctest.cpp	2009-07-28 16:51:30.000000000 +0100
+@@ -616,7 +616,7 @@
+     {
+       char *ch;
+       ch = new char[l.length() + 1];
+-      ch[l.extract(0, 0x7fffffff, ch, "")] = 0;
++      ch[l.extract(0, 0x7fffffff, ch, l.length(), "")] = 0;
+       setFromPOSIXID(ch);
+       delete [] ch;
+     }

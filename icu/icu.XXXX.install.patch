@@ -1,0 +1,11 @@
+--- icu/source/Makefile.in.orig	2009-08-31 21:15:03.000000000 +0100
++++ icu/source/Makefile.in	2009-08-31 21:19:23.000000000 +0100
+@@ -146,7 +146,7 @@
+ install-doc: doc
+ 	$(RM) -r $(DESTDIR)$(docdir)/$(docsubdir)
+ 	$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(docsubdir)
+-	$(INSTALL_DATA) doc/html/* $(DESTDIR)$(docdir)/$(docsubdir)
++	cp -r doc/html/* $(DESTDIR)$(docdir)/$(docsubdir)
+ endif
+ 
+ $(DESTDIR)$(pkglibdir)/%: $(top_srcdir)/../data/%
