@@ -1,0 +1,185 @@
+alias rpmdate='LC_ALL="C" date +"%a %b %d %Y"'
+alias build='rpmbuild      --define "_source_filedigest_algorithm 0" --define "_specdir $(pwd)" --define "_sourcedir $(pwd)"'
+alias msrpm='rpmbuild  -bs --define "_source_filedigest_algorithm 0" --define "_specdir $(pwd)" --define "_sourcedir $(pwd)" --define "dist .remi" $(basename $(pwd)).spec'
+alias rhpkg='echo NO PLEASE, use fedpkg'
+
+#alias mockfc3="setarch  i686 mock -r fc3  --arch i386 rebuild "
+#alias mockfc4="setarch  i686 mock -r fc4  --arch i386 rebuild "
+#alias mockfc5="setarch  i686 mock -r fc5  --arch i386 rebuild "
+#alias mockfc6x="               mock --configdir=/var/lib/mock/etc -r fc6x               rebuild "
+#alias mockfc7i="setarch i686   mock --configdir=/var/lib/mock/etc -r fc7i   --arch i386 rebuild "
+#alias mockfc7x="               mock --configdir=/var/lib/mock/etc -r fc7x               rebuild "
+
+#alias mockfc6i="setarch i686   mock --configdir=/var/lib/mock/etc -r fc6i   --arch i386 rebuild "
+#alias mockfc8i="setarch i686   mock --configdir=/var/lib/mock/etc -r fc8i   --arch i386 rebuild "
+#alias mockfc8x="               mock --configdir=/var/lib/mock/etc -r fc8x               rebuild "
+#alias mockfc9i="setarch i686   mock --configdir=/var/lib/mock/etc -r fc9i   --arch i386 rebuild "
+#alias mockfc9x="               mock --configdir=/var/lib/mock/etc -r fc9x               rebuild "
+#alias mockfc9it="setarch i686  mock --configdir=/var/lib/mock/etc -r fc9it  --arch i386 rebuild "
+#alias mockfc9xt="              mock --configdir=/var/lib/mock/etc -r fc9xt              rebuild "
+#alias mockfc10i="setarch i686  mock --configdir=/var/lib/mock/etc -r fc10i  --arch i386 rebuild "
+#alias mockfc10x="              mock --configdir=/var/lib/mock/etc -r fc10x              rebuild "
+#alias mockfc10it="setarch i686 mock --configdir=/var/lib/mock/etc -r fc10it --arch i386 rebuild "
+#alias mockfc10xt="             mock --configdir=/var/lib/mock/etc -r fc10xt             rebuild "
+
+#alias mockfc11i="setarch i686  mock --configdir=/var/lib/mock/etc -r fc11i  --arch i586 rebuild "
+#alias mockfc11x="              mock --configdir=/var/lib/mock/etc -r fc11x              rebuild "
+#alias mockfc11it="setarch i686 mock --configdir=/var/lib/mock/etc -r fc11it --arch i586 rebuild "
+#alias mockfc11xt="             mock --configdir=/var/lib/mock/etc -r fc11xt             rebuild "
+
+#alias mockfc12i="setarch i686  mock --configdir=/var/lib/mock/etc -r fc12i  --arch i686 rebuild "
+#alias mockfc12it="setarch i686 mock --configdir=/var/lib/mock/etc -r fc12it --arch i686 rebuild "
+#alias mockfc12x="              mock --configdir=/var/lib/mock/etc -r fc12x              rebuild "
+#alias mockfc12xt="             mock --configdir=/var/lib/mock/etc -r fc12xt             rebuild "
+
+alias mockfc13i="setarch i686  mock --configdir=/var/lib/mock/etc -r fc13i  --arch i686 rebuild "
+alias mockfc13it="setarch i686 mock --configdir=/var/lib/mock/etc -r fc13it --arch i686 rebuild "
+alias mockfc13x="              mock --configdir=/var/lib/mock/etc -r fc13x              rebuild "
+alias mockfc13xt="             mock --configdir=/var/lib/mock/etc -r fc13xt             rebuild "
+
+alias mockfc14i="setarch i686  mock --configdir=/var/lib/mock/etc -r fc14i  --arch i686 rebuild "
+alias mockfc14it="setarch i686 mock --configdir=/var/lib/mock/etc -r fc14it --arch i686 rebuild "
+alias mockfc14x="              mock --configdir=/var/lib/mock/etc -r fc14x              rebuild "
+alias mockfc14xt="             mock --configdir=/var/lib/mock/etc -r fc14xt             rebuild "
+
+alias mockfc15i="setarch i686  mock --configdir=/var/lib/mock/etc -r fc15i  --arch i686 rebuild "
+alias mockfc15it="setarch i686 mock --configdir=/var/lib/mock/etc -r fc15it --arch i686 rebuild "
+alias mockfc15x="              mock --configdir=/var/lib/mock/etc -r fc15x              rebuild "
+alias mockfc15xt="             mock --configdir=/var/lib/mock/etc -r fc15xt             rebuild "
+
+alias mockfc16i="setarch i686  mock --configdir=/var/lib/mock/etc -r fc16i  --arch i686 rebuild "
+alias mockfc16it="setarch i686 mock --configdir=/var/lib/mock/etc -r fc16it --arch i686 rebuild "
+alias mockfc16x="              mock --configdir=/var/lib/mock/etc -r fc16x              rebuild "
+alias mockfc16xt="             mock --configdir=/var/lib/mock/etc -r fc16xt             rebuild "
+alias mockfc16xd="             mock --configdir=/var/lib/mock/etc -r fc16xd             rebuild "
+
+alias mockfc17i="setarch i686  mock --configdir=/var/lib/mock/etc -r fc17i  --arch i686 rebuild "
+alias mockfc17it="setarch i686 mock --configdir=/var/lib/mock/etc -r fc17it --arch i686 rebuild "
+alias mockfc17x="              mock --configdir=/var/lib/mock/etc -r fc17x              rebuild "
+alias mockfc17xt="             mock --configdir=/var/lib/mock/etc -r fc17xt             rebuild "
+alias mockfc17xd="             mock --configdir=/var/lib/mock/etc -r fc17xd             rebuild "
+
+alias mockfc18i="setarch i686  mock --configdir=/var/lib/mock/etc -r fc18i  --arch i686 rebuild "
+alias mockfc18it="setarch i686 mock --configdir=/var/lib/mock/etc -r fc18it --arch i686 rebuild "
+alias mockfc18x="              mock --configdir=/var/lib/mock/etc -r fc18x              rebuild "
+alias mockfc18xt="             mock --configdir=/var/lib/mock/etc -r fc18xt             rebuild "
+alias mockfc18xd="             mock --configdir=/var/lib/mock/etc -r fc18xd             rebuild "
+
+alias mockel4i="setarch i686  mock --configdir=/var/lib/mock/etc -r el4i  --arch i386 rebuild "
+alias mockel4it="setarch i686 mock --configdir=/var/lib/mock/etc -r el4it --arch i386 rebuild "
+alias mockel4x="              mock --configdir=/var/lib/mock/etc -r el4x              rebuild "
+alias mockel4xt="             mock --configdir=/var/lib/mock/etc -r el4xt             rebuild "
+
+alias mockel5i="setarch i686  mock --configdir=/var/lib/mock/etc -r el5i  --arch i386 rebuild "
+alias mockel5it="setarch i686 mock --configdir=/var/lib/mock/etc -r el5it --arch i386 rebuild "
+alias mockel5x="              mock --configdir=/var/lib/mock/etc -r el5x              rebuild "
+alias mockel5xt="             mock --configdir=/var/lib/mock/etc -r el5xt             rebuild "
+alias mockel53="              mock --configdir=/var/lib/mock/etc -r el53              rebuild "
+
+alias mockel6i="setarch i686  mock --configdir=/var/lib/mock/etc -r el6i  --arch i686 rebuild "
+alias mockel6it="setarch i686 mock --configdir=/var/lib/mock/etc -r el6it --arch i686 rebuild "
+alias mockel6x="              mock --configdir=/var/lib/mock/etc -r el6x              rebuild "
+alias mockel6xt="             mock --configdir=/var/lib/mock/etc -r el6xt             rebuild "
+
+alias mockdevi="setarch i686 mock -r fedora-devel-i386   rebuild "
+alias mockdevx="             mock -r fedora-devel-x86_64 rebuild "
+
+mockall() 
+{
+quiet=""
+if [ "$1" = "-q" ]; then
+    quiet="--quiet"
+    shift
+fi
+
+if [ -f "$1" ]; then
+  for i in $(seq 18 -1 13)
+  do
+    echo -n $(date +%X) fc$i
+    setarch i686  mock $quiet --configdir=/var/lib/mock/etc -r fc${i}i --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  echo -n $(date +%X) el6
+  setarch i686    mock $quiet --configdir=/var/lib/mock/etc -r el6i    --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  echo -n $(date +%X) el5
+  setarch i686    mock $quiet --configdir=/var/lib/mock/etc -r el5i    --arch i386 rebuild $1 && echo " Ok." || echo " Error !"
+  date +%X
+else
+  echo "file not found p$1'"
+fi
+}
+
+mockallt() 
+{
+quiet=""
+if [ "$1" = "-q" ]; then
+    quiet="--quiet"
+    shift
+fi
+
+if [ -f "$1" ]; then
+  for i in $(seq 18 -1 17)
+  do
+    echo -n $(date +%X) fc$i
+    setarch i686  mock $quiet --configdir=/var/lib/mock/etc -r fc${i}it  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  echo -n $(date +%X) el6
+  setarch   i686  mock $quiet --configdir=/var/lib/mock/etc -r el6it     --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  echo -n $(date +%X) el5
+  setarch   i686  mock $quiet --configdir=/var/lib/mock/etc -r el5it     --arch i386 rebuild $1 && echo " Ok." || echo " Error !"
+  date +%X
+else
+  echo "file not found p$1'"
+fi
+}
+
+mockallx() 
+{
+quiet=""
+if [ "$1" = "-q" ]; then
+    quiet="--quiet"
+    shift
+fi
+
+if [ -f "$1" ]; then
+  for i in $(seq 18 -1 13)
+  do
+    echo -n $(date +%X) fc$i
+    mock $quiet --configdir=/var/lib/mock/etc -r fc${i}x rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  for i in $(seq 6 -1 5)
+  do
+    echo -n $(date +%X) el$i
+    mock $quiet --configdir=/var/lib/mock/etc -r el${i}x rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  date +%X
+else
+  echo "file not found '$1'"
+fi
+}
+
+mockallxt() 
+{
+quiet=""
+if [ "$1" = "-q" ]; then
+    quiet="--quiet"
+    shift
+fi
+
+if [ -f "$1" ]; then
+  for i in $(seq 18 -1 17)
+  do
+    echo -n $(date +%X) fc$i
+    mock $quiet --configdir=/var/lib/mock/etc -r fc${i}xt rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  for i in $(seq 6 -1 5)
+  do
+    echo -n $(date +%X) el$i
+    mock $quiet --configdir=/var/lib/mock/etc -r el${i}xt rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  date +%X
+else
+  echo "file not found '$1'"
+fi
+}
+
+
