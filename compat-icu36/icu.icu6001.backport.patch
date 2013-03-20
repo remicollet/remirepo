@@ -1,0 +1,741 @@
+diff -ru icu.5797/source/common/ucnv2022.c icu/source/common/ucnv2022.c
+--- icu.5797/source/common/ucnv2022.c	2009-06-02 14:45:31.000000000 +0100
++++ icu/source/common/ucnv2022.c	2009-06-02 15:05:10.000000000 +0100
+@@ -3399,11 +3399,19 @@
+             /* include ASCII for JP */
+             sa->addRange(sa->set, 0, 0x7f);
+         }
+-        if(jpCharsetMasks[cnvData->version]&CSM(HWKANA_7BIT)) {
++        if(cnvData->version==3 || cnvData->version==4 || which==UCNV_ROUNDTRIP_AND_FALLBACK_SET) {
+             /*
+-             * TODO(markus): If and when ucnv_getUnicodeSet() supports fallbacks,
+-             * we need to include half-width Katakana for all JP variants because
+-             * JIS X 0208 has hardcoded fallbacks for them.
++             * Do not test (jpCharsetMasks[cnvData->version]&CSM(HWKANA_7BIT))!=0
++             * because the bit is on for all JP versions although only versions 3 & 4 (JIS7 & JIS8)
++             * use half-width Katakana.
++             * This is because all ISO-2022-JP variants are lenient in that they accept (in toUnicode)
++             * half-width Katakana via the ESC ( I sequence.
++             * However, we only emit (fromUnicode) half-width Katakana according to the
++             * definition of each variant.
++             *
++             * When including fallbacks,
++             * we need to include half-width Katakana Unicode code points for all JP variants because
++             * JIS X 0208 has hardcoded fallbacks for them (which map to full-width Katakana).
+              */
+             /* include half-width Katakana for JP */
+             sa->addRange(sa->set, HWKANA_START, HWKANA_END);
+@@ -3457,6 +3465,12 @@
+                  * corresponding to JIS X 0208.
+                  */
+                 filter=UCNV_SET_FILTER_SJIS;
++            } else if(i==KSC5601) {
++                /*
++                 * Some of the KSC 5601 tables (convrtrs.txt has this aliases on multiple tables)
++                 * are broader than GR94.
++                 */
++                filter=UCNV_SET_FILTER_GR94DBCS;
+             } else {
+                 filter=UCNV_SET_FILTER_NONE;
+             }
+@@ -3472,6 +3486,9 @@
+     sa->remove(sa->set, 0x0e);
+     sa->remove(sa->set, 0x0f);
+     sa->remove(sa->set, 0x1b);
++
++    /* ISO 2022 converters do not convert C1 controls either */
++    sa->removeRange(sa->set, 0x80, 0x9f);
+ }
+ 
+ static const UConverterImpl _ISO2022Impl={
+diff -ru icu.5797/source/common/ucnv_ext.c icu/source/common/ucnv_ext.c
+--- icu.5797/source/common/ucnv_ext.c	2009-06-02 14:45:31.000000000 +0100
++++ icu/source/common/ucnv_ext.c	2009-06-02 15:12:21.000000000 +0100
+@@ -946,7 +946,7 @@
+ ucnv_extGetUnicodeSetString(const UConverterSharedData *sharedData,
+                             const int32_t *cx,
+                             const USetAdder *sa,
+-                            UConverterUnicodeSet which,
++                            UBool useFallback,
+                             int32_t minLength,
+                             UChar32 c,
+                             UChar s[UCNV_EXT_MAX_UCHARS], int32_t length,
+@@ -966,7 +966,7 @@
+     value=*fromUSectionValues++;
+ 
+     if( value!=0 &&
+-        UCNV_EXT_FROM_U_IS_ROUNDTRIP(value) &&
++        (UCNV_EXT_FROM_U_IS_ROUNDTRIP(value) || useFallback) &&
+         UCNV_EXT_FROM_U_GET_LENGTH(value)>=minLength
+     ) {
+         if(c>=0) {
+@@ -987,12 +987,14 @@
+             /* no mapping, do nothing */
+         } else if(UCNV_EXT_FROM_U_IS_PARTIAL(value)) {
+             ucnv_extGetUnicodeSetString(
+-                sharedData, cx, sa, which, minLength,
++                sharedData, cx, sa, useFallback, minLength,
+                 U_SENTINEL, s, length+1,
+                 (int32_t)UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value),
+                 pErrorCode);
+-        } else if(((value&(UCNV_EXT_FROM_U_ROUNDTRIP_FLAG|UCNV_EXT_FROM_U_RESERVED_MASK))==
+-                           UCNV_EXT_FROM_U_ROUNDTRIP_FLAG) &&
++        } else if((useFallback ?
++                      (value&UCNV_EXT_FROM_U_RESERVED_MASK)==0 :
++                      ((value&(UCNV_EXT_FROM_U_ROUNDTRIP_FLAG|UCNV_EXT_FROM_U_RESERVED_MASK))==
++                          UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)) &&
+                   UCNV_EXT_FROM_U_GET_LENGTH(value)>=minLength
+         ) {
+             sa->addString(sa->set, s, length+1);
+@@ -1004,6 +1006,7 @@
+ ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
+                       const USetAdder *sa,
+                       UConverterUnicodeSet which,
++                      UConverterSetFilter filter,
+                       UErrorCode *pErrorCode) {
+     const int32_t *cx;
+     const uint16_t *stage12, *stage3, *ps2, *ps3;
+@@ -1011,6 +1014,7 @@
+ 
+     uint32_t value;
+     int32_t st1, stage1Length, st2, st3, minLength;
++    UBool useFallback;
+ 
+     UChar s[UCNV_EXT_MAX_UCHARS];
+     UChar32 c;
+@@ -1027,12 +1031,20 @@
+ 
+     stage1Length=cx[UCNV_EXT_FROM_U_STAGE_1_LENGTH];
+ 
++    useFallback=(UBool)(which==UCNV_ROUNDTRIP_AND_FALLBACK_SET);
++
+     /* enumerate the from-Unicode trie table */
+     c=0; /* keep track of the current code point while enumerating */
+ 
+-    if(sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY) {
++    if( sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ||
++        filter==UCNV_SET_FILTER_DBCS_ONLY ||
++        filter==UCNV_SET_FILTER_SJIS ||
++        filter==UCNV_SET_FILTER_GR94DBCS
++    ) {
+         /* DBCS-only, ignore single-byte results */
+         minLength=2;
++    } else if(filter==UCNV_SET_FILTER_2022_CN) {
++        minLength=3;
+     } else {
+         minLength=1;
+     }
+@@ -1064,14 +1076,41 @@
+                             length=0;
+                             U16_APPEND_UNSAFE(s, length, c);
+                             ucnv_extGetUnicodeSetString(
+-                                sharedData, cx, sa, which, minLength,
++                                sharedData, cx, sa, useFallback, minLength,
+                                 c, s, length,
+                                 (int32_t)UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value),
+                                 pErrorCode);
+-                        } else if(((value&(UCNV_EXT_FROM_U_ROUNDTRIP_FLAG|UCNV_EXT_FROM_U_RESERVED_MASK))==
+-                                           UCNV_EXT_FROM_U_ROUNDTRIP_FLAG) &&
++                        } else if((useFallback ?
++                                      (value&UCNV_EXT_FROM_U_RESERVED_MASK)==0 :
++                                      ((value&(UCNV_EXT_FROM_U_ROUNDTRIP_FLAG|UCNV_EXT_FROM_U_RESERVED_MASK))==
++                                          UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)) &&
+                                   UCNV_EXT_FROM_U_GET_LENGTH(value)>=minLength
+                         ) {
++                            switch(filter) {
++                            case UCNV_SET_FILTER_2022_CN:
++                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==3 && UCNV_EXT_FROM_U_GET_DATA(value)<=0x82ffff)) {
++                                    continue;
++                                }
++                                break;
++                            case UCNV_SET_FILTER_SJIS:
++                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==2 && (value=UCNV_EXT_FROM_U_GET_DATA(value))>=0x8140 && value<=0xeffc)) {
++                                    continue;
++                                }
++                                break;
++                            case UCNV_SET_FILTER_GR94DBCS:
++                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==2 &&
++                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_DATA(value)) - 0xa1a1)<=(0xfefe - 0xa1a1) &&
++                                     (uint8_t)(value - 0xa1)<=(0xfe - 0xa1))) {
++                                    continue;
++                                }
++                                break;
++                            default:
++                                /*
++                                 * UCNV_SET_FILTER_NONE,
++                                 * or UCNV_SET_FILTER_DBCS_ONLY which is handled via minLength
++                                 */
++                                break;
++                            }
+                             sa->add(sa->set, c);
+                         }
+                     } while((++c&0xf)!=0);
+diff -ru icu.5797/source/common/ucnv_ext.h icu/source/common/ucnv_ext.h
+--- icu.5797/source/common/ucnv_ext.h	2009-06-02 14:45:31.000000000 +0100
++++ icu/source/common/ucnv_ext.h	2009-06-02 15:05:10.000000000 +0100
+@@ -382,10 +382,20 @@
+                            UConverterFromUnicodeArgs *pArgs, int32_t srcIndex,
+                            UErrorCode *pErrorCode);
+ 
++/*
++ * Add code points and strings to the set according to the extension mappings.
++ * Limitation on the UConverterSetFilter:
++ * The filters currently assume that they are used with 1:1 mappings.
++ * They only apply to single input code points, and then they pass through
++ * only mappings with single-charset-code results.
++ * For example, the Shift-JIS filter only works for 2-byte results and tests
++ * that those 2 bytes are in the JIS X 0208 range of Shift-JIS.
++ */
+ U_CFUNC void
+ ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
+                       const USetAdder *sa,
+                       UConverterUnicodeSet which,
++                      UConverterSetFilter filter,
+                       UErrorCode *pErrorCode);
+ 
+ /* toUnicode helpers -------------------------------------------------------- */
+diff -ru icu.5797/source/common/ucnvhz.c icu/source/common/ucnvhz.c
+--- icu.5797/source/common/ucnvhz.c	2009-06-02 14:45:31.000000000 +0100
++++ icu/source/common/ucnvhz.c	2009-06-02 15:05:10.000000000 +0100
+@@ -528,6 +528,7 @@
+     sa->add(sa->set, 0x7e);
+ 
+     /* add all of the code points that the sub-converter handles */
++    /* ucnv_MBCSGetFilteredUnicodeSetForUnicode(((UConverterDataHZ*)cnv->extraInfo)->gbConverter->sharedData, sa, which, UCNV_SET_FILTER_GR94DBCS, pErrorCode); */
+     ((UConverterDataHZ*)cnv->extraInfo)->
+         gbConverter->sharedData->impl->
+             getUnicodeSet(((UConverterDataHZ*)cnv->extraInfo)->gbConverter,
+diff -ru icu.5797/source/common/ucnv_lmb.c icu/source/common/ucnv_lmb.c
+--- icu.5797/source/common/ucnv_lmb.c	2009-06-02 14:45:31.000000000 +0100
++++ icu/source/common/ucnv_lmb.c	2009-06-02 15:09:13.000000000 +0100
+@@ -536,7 +536,7 @@
+     NULL,\
+     NULL,\
+     _LMBCSSafeClone,\
+-    _LMBCSGetUnicodeSet\
++    ucnv_getCompleteUnicodeSet\
+ };\
+ static const UConverterStaticData _LMBCSStaticData##n={\
+   sizeof(UConverterStaticData),\
+@@ -662,15 +662,14 @@
+     return &newLMBCS->cnv;
+ }
+ 
+-static void
+-_LMBCSGetUnicodeSet(const UConverter *cnv,
+-                   const USetAdder *sa,
+-                   UConverterUnicodeSet which,
+-                   UErrorCode *pErrorCode) {
+-    /* all but U+F6xx, see LMBCS explanation above (search for F6xx) */
+-    sa->addRange(sa->set, 0, 0xf5ff);
+-    sa->addRange(sa->set, 0xf700, 0x10ffff);
+-}
++/*
++ * There used to be a _LMBCSGetUnicodeSet() function here (up to svn revision 20117)
++ * which added all code points except for U+F6xx
++ * because those cannot be represented in the Unicode group.
++ * However, it turns out that windows-950 has roundtrips for all of U+F6xx
++ * which means that LMBCS can convert all Unicode code points after all.
++ * We now simply use ucnv_getCompleteUnicodeSet().
++ */
+ 
+ /* 
+    Here's the basic helper function that we use when converting from
+diff -ru icu.5797/source/common/ucnvmbcs.c icu/source/common/ucnvmbcs.c
+--- icu.5797/source/common/ucnvmbcs.c	2009-06-02 14:45:31.000000000 +0100
++++ icu/source/common/ucnvmbcs.c	2009-06-02 15:12:40.000000000 +0100
+@@ -463,9 +463,23 @@
+ 
+     if(mbcsTable->outputType==MBCS_OUTPUT_1) {
+         const uint16_t *stage2, *stage3, *results;
++        uint16_t minValue;
+ 
+         results=(const uint16_t *)mbcsTable->fromUnicodeBytes;
+ 
++        /*
++         * Set a threshold variable for selecting which mappings to use.
++         * See ucnv_MBCSSingleFromBMPWithOffsets() and
++         * MBCS_SINGLE_RESULT_FROM_U() for details.
++         */
++        if(which==UCNV_ROUNDTRIP_SET) {
++            /* use only roundtrips */
++            minValue=0xf00;
++        } else /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
++            /* use all roundtrip and fallback results */
++            minValue=0x800;
++        }
++
+         for(st1=0; st1<maxStage1; ++st1) {
+             st2=table[st1];
+             if(st2>maxStage1) {
+@@ -475,15 +489,8 @@
+                         /* read the stage 3 block */
+                         stage3=results+st3;
+ 
+-                        /*
+-                         * Add code points for which the roundtrip flag is set.
+-                         * Once we get a set for fallback mappings, we have to use
+-                         * a threshold variable with a value of 0x800.
+-                         * See ucnv_MBCSSingleFromBMPWithOffsets() and
+-                         * MBCS_SINGLE_RESULT_FROM_U() for details.
+-                         */
+                         do {
+-                            if(*stage3++>=0xf00) {
++                            if(*stage3++>=minValue) {
+                                 sa->add(sa->set, c);
+                             }
+                         } while((++c&0xf)!=0);
+@@ -500,9 +507,12 @@
+         const uint8_t *stage3, *bytes;
+         uint32_t st3Multiplier;
+         uint32_t value;
++        UBool useFallback;
+ 
+         bytes=mbcsTable->fromUnicodeBytes;
+ 
++        useFallback=(UBool)(which==UCNV_ROUNDTRIP_AND_FALLBACK_SET);
++
+         switch(mbcsTable->outputType) {
+         case MBCS_OUTPUT_3:
+         case MBCS_OUTPUT_4_EUC:
+@@ -529,9 +539,8 @@
+                         st3>>=16;
+ 
+                         /*
+-                         * Add code points for which the roundtrip flag is set.
+-                         * Once we get a set for fallback mappings, we have to check
+-                         * non-roundtrip stage 3 results for whether they are 0.
++                         * Add code points for which the roundtrip flag is set,
++                         * or which map to non-zero bytes if we use fallbacks.
+                          * See ucnv_MBCSFromUnicodeWithOffsets() for details.
+                          */
+                         switch(filter) {
+@@ -539,6 +548,23 @@
+                             do {
+                                 if(st3&1) {
+                                     sa->add(sa->set, c);
++                                    stage3+=st3Multiplier;
++                                } else if(useFallback) {
++                                    uint8_t b=0;
++                                    switch(st3Multiplier) {
++                                    case 4:
++                                        b|=*stage3++;
++                                    case 3:
++                                        b|=*stage3++;
++                                    case 2:
++                                        b|=stage3[0]|stage3[1];
++                                        stage3+=2;
++                                    default:
++                                        break;
++                                    }
++                                    if(b!=0) {
++                                        sa->add(sa->set, c);
++                                    }
+                                 }
+                                 st3>>=1;
+                             } while((++c&0xf)!=0);
+@@ -546,7 +572,7 @@
+                         case UCNV_SET_FILTER_DBCS_ONLY:
+                              /* Ignore single-byte results (<0x100). */
+                             do {
+-                                if((st3&1)!=0 && *((const uint16_t *)stage3)>=0x100) {
++                                if(((st3&1)!=0 || useFallback) && *((const uint16_t *)stage3)>=0x100) {
+                                     sa->add(sa->set, c);
+                                 }
+                                 st3>>=1;
+@@ -556,7 +582,7 @@
+                         case UCNV_SET_FILTER_2022_CN:
+                              /* Only add code points that map to CNS 11643 planes 1 & 2 for non-EXT ISO-2022-CN. */
+                             do {
+-                                if((st3&1)!=0 && ((value=*stage3)==0x81 || value==0x82)) {
++                                if(((st3&1)!=0 || useFallback) && ((value=*stage3)==0x81 || value==0x82)) {
+                                     sa->add(sa->set, c);
+                                 }
+                                 st3>>=1;
+@@ -566,7 +592,20 @@
+                         case UCNV_SET_FILTER_SJIS:
+                              /* Only add code points that map to Shift-JIS codes corresponding to JIS X 0208. */
+                             do {
+-                                if((st3&1)!=0 && (value=*((const uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
++                                if(((st3&1)!=0 || useFallback) && (value=*((const uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
++                                    sa->add(sa->set, c);
++                                }
++                                st3>>=1;
++                                stage3+=2;  /* +=st3Multiplier */
++                            } while((++c&0xf)!=0);
++                            break;
++                        case UCNV_SET_FILTER_GR94DBCS:
++                            /* Only add code points that map to ISO 2022 GR 94 DBCS codes (each byte A1..FE). */
++                            do {
++                                if( ((st3&1)!=0 || useFallback) &&
++                                    (uint16_t)((value=*((const uint16_t *)stage3)) - 0xa1a1)<=(0xfefe - 0xa1a1) &&
++                                    (uint8_t)(value - 0xa1)<=(0xfe - 0xa1)
++                                ) {
+                                     sa->add(sa->set, c);
+                                 }
+                                 st3>>=1;
+@@ -587,7 +626,7 @@
+         }
+     }
+ 
+-    ucnv_extGetUnicodeSet(sharedData, sa, which, pErrorCode);
++    ucnv_extGetUnicodeSet(sharedData, sa, which, filter, pErrorCode);
+ }
+ 
+ U_CFUNC void
+diff -ru icu.5797/source/common/ucnvmbcs.h icu/source/common/ucnvmbcs.h
+--- icu.5797/source/common/ucnvmbcs.h	2009-06-02 14:45:31.000000000 +0100
++++ icu/source/common/ucnvmbcs.h	2009-06-02 15:05:10.000000000 +0100
+@@ -399,6 +399,7 @@
+     UCNV_SET_FILTER_DBCS_ONLY,
+     UCNV_SET_FILTER_2022_CN,
+     UCNV_SET_FILTER_SJIS,
++    UCNV_SET_FILTER_GR94DBCS,
+     UCNV_SET_FILTER_COUNT
+ } UConverterSetFilter;
+ 
+diff -ru icu.5797/source/common/ucnv_set.c icu/source/common/ucnv_set.c
+--- icu.5797/source/common/ucnv_set.c	2009-06-02 14:45:31.000000000 +0100
++++ icu/source/common/ucnv_set.c	2009-06-02 15:05:10.000000000 +0100
+@@ -1,7 +1,7 @@
+ /*
+ *******************************************************************************
+ *
+-*   Copyright (C) 2003-2005, International Business Machines
++*   Copyright (C) 2003-2007, International Business Machines
+ *   Corporation and others.  All Rights Reserved.
+ *
+ *******************************************************************************
+@@ -52,7 +52,8 @@
+             uset_add,
+             uset_addRange,
+             uset_addString,
+-            uset_remove
++            uset_remove,
++            uset_removeRange
+         };
+         sa.set=setFillIn;
+ 
+diff -ru icu.5797/source/common/unicode/ucnv.h icu/source/common/unicode/ucnv.h
+--- icu.5797/source/common/unicode/ucnv.h	2009-06-02 14:45:30.000000000 +0100
++++ icu/source/common/unicode/ucnv.h	2009-06-02 15:05:10.000000000 +0100
+@@ -870,6 +870,8 @@
+ typedef enum UConverterUnicodeSet {
+     /** Select the set of roundtrippable Unicode code points. @stable ICU 2.6 */
+     UCNV_ROUNDTRIP_SET,
++    /** Select the set of Unicode code points with roundtrip or fallback mappings. @draft ICU 4.0 */
++    UCNV_ROUNDTRIP_AND_FALLBACK_SET,
+     /** Number of UConverterUnicodeSet selectors. @stable ICU 2.6 */
+     UCNV_SET_COUNT
+ } UConverterUnicodeSet;
+@@ -878,11 +880,16 @@
+ /**
+  * Returns the set of Unicode code points that can be converted by an ICU converter.
+  *
+- * The current implementation returns only one kind of set (UCNV_ROUNDTRIP_SET):
++ * Returns one of several kinds of set:
++ *
++ * 1. UCNV_ROUNDTRIP_SET
++ *
+  * The set of all Unicode code points that can be roundtrip-converted
+- * (converted without any data loss) with the converter.
++ * (converted without any data loss) with the converter (ucnv_fromUnicode()).
+  * This set will not include code points that have fallback mappings
+  * or are only the result of reverse fallback mappings.
++ * This set will also not include PUA code points with fallbacks, although
++ * ucnv_fromUnicode() will always uses those mappings despite ucnv_setFallback().
+  * See UTR #22 "Character Mapping Markup Language"
+  * at http://www.unicode.org/reports/tr22/
+  *
+@@ -893,6 +900,12 @@
+  *   by comparing its roundtrip set with the set of ExemplarCharacters from
+  *   ICU's locale data or other sources
+  *
++ * 2. UCNV_ROUNDTRIP_AND_FALLBACK_SET
++ *
++ * The set of all Unicode code points that can be converted with the converter (ucnv_fromUnicode())
++ * when fallbacks are turned on (see ucnv_setFallback()).
++ * This set includes all code points with roundtrips and fallbacks (but not reverse fallbacks).
++ *
+  * In the future, there may be more UConverterUnicodeSet choices to select
+  * sets with different properties.
+  *
+diff -ru icu.5797/source/common/uset_imp.h icu/source/common/uset_imp.h
+--- icu.5797/source/common/uset_imp.h	2009-06-02 14:45:31.000000000 +0100
++++ icu/source/common/uset_imp.h	2009-06-02 15:05:10.000000000 +0100
+@@ -36,6 +36,9 @@
+ typedef void U_CALLCONV
+ USetRemove(USet *set, UChar32 c);
+ 
++typedef void U_CALLCONV
++USetRemoveRange(USet *set, UChar32 start, UChar32 end);
++
+ /**
+  * Interface for adding items to a USet, to keep low-level code from
+  * statically depending on the USet implementation.
+@@ -47,6 +50,7 @@
+     USetAddRange *addRange;
+     USetAddString *addString;
+     USetRemove *remove;
++    USetRemoveRange *removeRange;
+ };
+ typedef struct USetAdder USetAdder;
+ 
+diff -ru icu.5797/source/test/intltest/convtest.cpp icu/source/test/intltest/convtest.cpp
+--- icu.5797/source/test/intltest/convtest.cpp	2009-06-02 14:45:18.000000000 +0100
++++ icu/source/test/intltest/convtest.cpp	2009-06-02 15:09:31.000000000 +0100
+@@ -59,6 +59,7 @@
+         case 0: name="TestToUnicode"; if (exec) TestToUnicode(); break;
+         case 1: name="TestFromUnicode"; if (exec) TestFromUnicode(); break;
+         case 2: name="TestGetUnicodeSet"; if (exec) TestGetUnicodeSet(); break;
++        case 3: name="TestGetUnicodeSet2"; if (exec) TestGetUnicodeSet2(); break;
+         default: name=""; break; //needed to end loop
+     }
+ }
+@@ -454,6 +455,183 @@
+     }
+ }
+ 
++U_CDECL_BEGIN
++static void U_CALLCONV
++getUnicodeSetCallback(const void *context,
++                      UConverterFromUnicodeArgs *fromUArgs,
++                      const UChar* codeUnits,
++                      int32_t length,
++                      UChar32 codePoint,
++                      UConverterCallbackReason reason,
++                      UErrorCode *pErrorCode) {
++    if(reason<=UCNV_IRREGULAR) {
++        ((UnicodeSet *)context)->remove(codePoint);  // the converter cannot convert this code point
++        *pErrorCode=U_ZERO_ERROR;                    // skip
++    }  // else ignore the reset, close and clone calls.
++}
++U_CDECL_END
++
++// Compare ucnv_getUnicodeSet() with the set of characters that can be converted.
++void
++ConversionTest::TestGetUnicodeSet2() {
++    // Build a string with all code points.
++    UChar32 cpLimit;
++    int32_t s0Length;
++    if(quick) {
++        cpLimit=s0Length=0x10000;  // BMP only
++    } else {
++        cpLimit=0x110000;
++        s0Length=0x10000+0x200000;  // BMP + surrogate pairs
++    }
++    UChar *s0=new UChar[s0Length];
++    if(s0==NULL) {
++        return;
++    }
++    UChar *s=s0;
++    UChar32 c;
++    UChar c2;
++    // low BMP
++    for(c=0; c<=0xd7ff; ++c) {
++        *s++=(UChar)c;
++    }
++    // trail surrogates
++    for(c=0xdc00; c<=0xdfff; ++c) {
++        *s++=(UChar)c;
++    }
++    // lead surrogates
++    // (after trails so that there is not even one surrogate pair in between)
++    for(c=0xd800; c<=0xdbff; ++c) {
++        *s++=(UChar)c;
++    }
++    // high BMP
++    for(c=0xe000; c<=0xffff; ++c) {
++        *s++=(UChar)c;
++    }
++    // supplementary code points = surrogate pairs
++    if(cpLimit==0x110000) {
++        for(c=0xd800; c<=0xdbff; ++c) {
++            for(c2=0xdc00; c2<=0xdfff; ++c2) {
++                *s++=(UChar)c;
++                *s++=c2;
++            }
++        }
++    }
++
++    static const char *const cnvNames[]={
++        "UTF-8",
++        "UTF-7",
++        "UTF-16",
++        "US-ASCII",
++        "ISO-8859-1",
++        "windows-1252",
++        "Shift-JIS",
++        "ibm-1390",  // EBCDIC_STATEFUL table
++        "ibm-16684",  // DBCS-only extension table based on EBCDIC_STATEFUL table
++        // "HZ", TODO(markus): known bug, the set incorrectly contains [\u02CA\u02CB\u02D9\u2010\u2013\u2015...]
++        "ISO-2022-JP",
++        "JIS7",
++        "ISO-2022-CN",
++        "ISO-2022-CN-EXT",
++        "LMBCS"
++    };
++    char buffer[1024];
++    int32_t i;
++    for(i=0; i<LENGTHOF(cnvNames); ++i) {
++        UErrorCode errorCode=U_ZERO_ERROR;
++        UConverter *cnv=cnv_open(cnvNames[i], errorCode);
++        if(U_FAILURE(errorCode)) {
++            errln("failed to open converter %s - %s", cnvNames[i], u_errorName(errorCode));
++            continue;
++        }
++        UnicodeSet expected;
++        ucnv_setFromUCallBack(cnv, getUnicodeSetCallback, &expected, NULL, NULL, &errorCode);
++        if(U_FAILURE(errorCode)) {
++            errln("failed to set the callback on converter %s - %s", cnvNames[i], u_errorName(errorCode));
++            ucnv_close(cnv);
++            continue;
++        }
++        UConverterUnicodeSet which;
++        for(which=UCNV_ROUNDTRIP_SET; which<UCNV_SET_COUNT; which=(UConverterUnicodeSet)((int)which+1)) {
++            if(which==UCNV_ROUNDTRIP_AND_FALLBACK_SET) {
++                ucnv_setFallback(cnv, TRUE);
++            }
++            expected.add(0, cpLimit-1);
++            s=s0;
++            UBool flush;
++            do {
++                char *t=buffer;
++                flush=(UBool)(s==s0+s0Length);
++                ucnv_fromUnicode(cnv, &t, buffer+sizeof(buffer), (const UChar **)&s, s0+s0Length, NULL, flush, &errorCode);
++                if(U_FAILURE(errorCode)) {
++                    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
++                        errorCode=U_ZERO_ERROR;
++                        continue;
++                    } else {
++                        break;  // unexpected error, should not occur
++                    }
++                }
++            } while(!flush);
++            UnicodeSet set;
++            ucnv_getUnicodeSet(cnv, (USet *)&set, which, &errorCode);
++            if(cpLimit<0x110000) {
++                set.remove(cpLimit, 0x10ffff);
++            }
++            if(which==UCNV_ROUNDTRIP_SET) {
++                // ignore PUA code points because they will be converted even if they
++                // are fallbacks and when other fallbacks are turned off,
++                // but ucnv_getUnicodeSet(UCNV_ROUNDTRIP_SET) delivers true roundtrips
++                expected.remove(0xe000, 0xf8ff);
++                expected.remove(0xf0000, 0xffffd);
++                expected.remove(0x100000, 0x10fffd);
++                set.remove(0xe000, 0xf8ff);
++                set.remove(0xf0000, 0xffffd);
++                set.remove(0x100000, 0x10fffd);
++            }
++            if(set!=expected) {
++                // First try to see if we have different sets because ucnv_getUnicodeSet()
++                // added strings: The above conversion method does not tell us what strings might be convertible.
++                // Remove strings from the set and compare again.
++                // Unfortunately, there are no good, direct set methods for finding out whether there are strings
++                // in the set, nor for enumerating or removing just them.
++                // Intersect all code points with the set. The intersection will not contain strings.
++                UnicodeSet temp(0, 0x10ffff);
++                temp.retainAll(set);
++                set=temp;
++            }
++            if(set!=expected) {
++                UnicodeSet diffSet;
++                UnicodeString out;
++
++                // are there items that must be in the set but are not?
++                (diffSet=expected).removeAll(set);
++                if(!diffSet.isEmpty()) {
++                    diffSet.toPattern(out, TRUE);
++                    if(out.length()>100) {
++                        out.replace(100, 0x7fffffff, ellipsis, LENGTHOF(ellipsis));
++                    }
++                    errln("error: ucnv_getUnicodeSet(\"%s\") is missing items - which set: %d",
++                            cnvNames[i], which);
++                    errln(out);
++                }
++
++                // are there items that must not be in the set but are?
++                (diffSet=set).removeAll(expected);
++                if(!diffSet.isEmpty()) {
++                    diffSet.toPattern(out, TRUE);
++                    if(out.length()>100) {
++                        out.replace(100, 0x7fffffff, ellipsis, LENGTHOF(ellipsis));
++                    }
++                    errln("error: ucnv_getUnicodeSet(\"%s\") contains unexpected items - which set: %d",
++                            cnvNames[i], which);
++                    errln(out);
++                }
++            }
++        }
++    }
++
++    delete [] s0;
++}
++
+ // open testdata or ICU data converter ------------------------------------- ***
+ 
+ UConverter *
+diff -ru icu.5797/source/test/intltest/convtest.h icu/source/test/intltest/convtest.h
+--- icu.5797/source/test/intltest/convtest.h	2009-06-02 14:45:18.000000000 +0100
++++ icu/source/test/intltest/convtest.h	2009-06-02 15:05:10.000000000 +0100
+@@ -64,6 +64,7 @@
+     void TestToUnicode();
+     void TestFromUnicode();
+     void TestGetUnicodeSet();
++    void TestGetUnicodeSet2();
+ 
+ private:
+     UBool
+diff -ru icu.5797/source/test/testdata/conversion.txt icu/source/test/testdata/conversion.txt
+--- icu.5797/source/test/testdata/conversion.txt	2009-06-02 14:45:18.000000000 +0100
++++ icu/source/test/testdata/conversion.txt	2009-06-02 15:25:04.000000000 +0100
+@@ -1198,16 +1198,29 @@
+         // versions of ISO-2022-JP
+         {
+           "ISO-2022-JP",
+-          "[\x00-\x0d\x10-\x1a\x1c-\x7f\xa5\u0391-\u03a1\u203e\uff61-\uff9f\u4e00\u4e01\uffe5]",
+-          "[\x0e\x0f\x1b\u0100-\u0113\u0385-\u038a\u4e02\u4e27-\u4e29\ufa0e-\ufa2d\uffe6-\U0010ffff]",
++          "[\x00-\x0d\x10-\x1a\x1c-\x7f\xa5\u0391-\u03a1\u2015\u203e\u4e00\u4e01\uffe5]",
++          "[\x0e\x0f\x1b\u0100-\u0113\u0385-\u038a\u2014\u301c\u4e02\u4e27-\u4e29\u4fe0\u663b\u9eb5\ufa0e-\ufa2d\uff61-\uff9f\uffe4\uffe6-\U0010ffff]",
+           :int{0}
+         }
+         {
+           "ISO-2022-JP-2",
+-          "[\x00-\x0d\x10-\x1a\x1c-\u0113\u0384-\u0386\u0388-\u038a\u0390-\u03a1\u203e\uff61-\uff9f\u4e00-\u4e05\uffe6]",
+-          "[\x0e\x0f\x1b\uffe7-\U0010ffff]",
++          "[\x00-\x0d\x10-\x1a\x1c-\x7f\xa0-\u0113\u0384-\u0386\u0388-\u038a\u0390-\u03a1\u203e\u4e00-\u4e05\u4fe0\u663b\uffe6]",
++          "[\x0e\x0f\x1b\uff61-\uff9f\uffe4\uffe7-\U0010ffff]",
+           :int{0}
+         }
++        {
++          "JIS7",
++          "[\x00-\x0d\x10-\x1a\x1c-\x7f\xa0-\u0113\u0384-\u0386\u0388-\u038a\u0390-\u03a1\u203e\u4e00-\u4e05\u4fe0\u663b\uff61-\uff9f\uffe6]",
++          "[\x0e\x0f\x1b\uffe4\uffe7-\U0010ffff]",
++          :int{0}
++        }
++        // with fallbacks
++        {
++          "ISO-2022-JP",
++          "[\x00-\x0d\x10-\x1a\x1c-\x7f\xa5\u0391-\u03a1\u2014\u2015\u203e\u301c\u4e00\u4e01\u4fe0\u9eb5\uff61-\uff9f\uffe5]",
++          "[\x0e\x0f\x1b\xa6\u0100-\u0113\u0385-\u038a\u4e02\u4e27-\u4e29\u663b\ufa0e-\ufa2d\uffe4\uffe6-\U0010ffff]",
++          :int{1}
++        }
+ 
+         // versions of ISO-2022-CN
+         {
+@@ -1223,6 +1236,14 @@
+           :int{0}
+         }
+ 
++        // LMBCS
++        {
++          "LMBCS",
++          "[\x00-\U0010ffff]",
++          "[]",
++          :int{0}
++        }
++
+         // DBCS-only
+         {
+           "ibm-971",

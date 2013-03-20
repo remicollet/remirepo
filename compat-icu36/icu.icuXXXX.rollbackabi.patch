@@ -1,0 +1,131 @@
+diff -ru icu.5691/source/common/ucnv2022.c icu/source/common/ucnv2022.c
+--- icu.5691/source/common/ucnv2022.c	2009-06-02 16:07:36.000000000 +0100
++++ icu/source/common/ucnv2022.c	2009-06-02 16:21:56.000000000 +0100
+@@ -3566,7 +3566,7 @@
+             /* include ASCII for JP */
+             sa->addRange(sa->set, 0, 0x7f);
+         }
+-        if(cnvData->version==3 || cnvData->version==4 || which==UCNV_ROUNDTRIP_AND_FALLBACK_SET) {
++        if(cnvData->version==3 || cnvData->version==4) {
+             /*
+              * Do not test (jpCharsetMasks[cnvData->version]&CSM(HWKANA_7BIT))!=0
+              * because the bit is on for all JP versions although only versions 3 & 4 (JIS7 & JIS8)
+diff -ru icu.5691/source/common/ucnv_ext.c icu/source/common/ucnv_ext.c
+--- icu.5691/source/common/ucnv_ext.c	2009-06-02 16:07:36.000000000 +0100
++++ icu/source/common/ucnv_ext.c	2009-06-02 16:23:12.000000000 +0100
+@@ -1031,7 +1031,7 @@
+ 
+     stage1Length=cx[UCNV_EXT_FROM_U_STAGE_1_LENGTH];
+ 
+-    useFallback=(UBool)(which==UCNV_ROUNDTRIP_AND_FALLBACK_SET);
++    useFallback=(UBool)(FALSE);
+ 
+     /* enumerate the from-Unicode trie table */
+     c=0; /* keep track of the current code point while enumerating */
+diff -ru icu.5691/source/common/ucnvmbcs.c icu/source/common/ucnvmbcs.c
+--- icu.5691/source/common/ucnvmbcs.c	2009-06-02 16:07:36.000000000 +0100
++++ icu/source/common/ucnvmbcs.c	2009-06-02 16:23:50.000000000 +0100
+@@ -340,7 +340,7 @@
+ 
+ /* Miscellaneous ------------------------------------------------------------ */
+ 
+-#if 0  /* Replaced by ucnv_MBCSGetFilteredUnicodeSetForUnicode() until we implement ucnv_getUnicodeSet() with reverse fallbacks. */
++/* Replaced by ucnv_MBCSGetFilteredUnicodeSetForUnicode() until we implement ucnv_getUnicodeSet() with reverse fallbacks. */
+ 
+ /* similar to ucnv_MBCSGetNextUChar() but recursive */
+ static void
+@@ -434,8 +434,6 @@
+         pErrorCode);
+ }
+ 
+-#endif
+-
+ U_CFUNC void
+ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
+                                          const USetAdder *sa,
+@@ -511,7 +509,7 @@
+ 
+         bytes=mbcsTable->fromUnicodeBytes;
+ 
+-        useFallback=(UBool)(which==UCNV_ROUNDTRIP_AND_FALLBACK_SET);
++        useFallback=(UBool)(FALSE);
+ 
+         switch(mbcsTable->outputType) {
+         case MBCS_OUTPUT_3:
+diff -ru icu.5691/source/common/ucnvmbcs.h icu/source/common/ucnvmbcs.h
+--- icu.5691/source/common/ucnvmbcs.h	2009-06-02 16:07:36.000000000 +0100
++++ icu/source/common/ucnvmbcs.h	2009-06-02 16:23:50.000000000 +0100
+@@ -363,7 +363,8 @@
+ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
+                           UErrorCode *pErrorCode);
+ 
+-#if 0  /* Replaced by ucnv_MBCSGetFilteredUnicodeSetForUnicode() until we implement ucnv_getUnicodeSet() with reverse fallbacks. */
++/* Replaced by ucnv_MBCSGetFilteredUnicodeSetForUnicode() until we implement ucnv_getUnicodeSet() with reverse fallbacks. */
++
+ /*
+  * Internal function returning a UnicodeSet for toUnicode() conversion.
+  * Currently only used for ISO-2022-CN, and only handles roundtrip mappings.
+@@ -378,7 +379,6 @@
+                            UConverterUnicodeSet which,
+                            uint8_t state, int32_t lowByte, int32_t highByte,
+                            UErrorCode *pErrorCode);
+-#endif
+ 
+ /*
+  * Internal function returning a UnicodeSet for toUnicode() conversion.
+diff -ru icu.5691/source/common/unicode/ucnv.h icu/source/common/unicode/ucnv.h
+--- icu.5691/source/common/unicode/ucnv.h	2009-06-02 16:07:32.000000000 +0100
++++ icu/source/common/unicode/ucnv.h	2009-06-02 16:20:18.000000000 +0100
+@@ -870,8 +870,6 @@
+ typedef enum UConverterUnicodeSet {
+     /** Select the set of roundtrippable Unicode code points. @stable ICU 2.6 */
+     UCNV_ROUNDTRIP_SET,
+-    /** Select the set of Unicode code points with roundtrip or fallback mappings. @draft ICU 4.0 */
+-    UCNV_ROUNDTRIP_AND_FALLBACK_SET,
+     /** Number of UConverterUnicodeSet selectors. @stable ICU 2.6 */
+     UCNV_SET_COUNT
+ } UConverterUnicodeSet;
+@@ -880,16 +878,11 @@
+ /**
+  * Returns the set of Unicode code points that can be converted by an ICU converter.
+  *
+- * Returns one of several kinds of set:
+- *
+- * 1. UCNV_ROUNDTRIP_SET
+- *
++ * The current implementation returns only one kind of set (UCNV_ROUNDTRIP_SET):
+  * The set of all Unicode code points that can be roundtrip-converted
+- * (converted without any data loss) with the converter (ucnv_fromUnicode()).
++ * (converted without any data loss) with the converter.
+  * This set will not include code points that have fallback mappings
+  * or are only the result of reverse fallback mappings.
+- * This set will also not include PUA code points with fallbacks, although
+- * ucnv_fromUnicode() will always uses those mappings despite ucnv_setFallback().
+  * See UTR #22 "Character Mapping Markup Language"
+  * at http://www.unicode.org/reports/tr22/
+  *
+@@ -900,12 +893,6 @@
+  *   by comparing its roundtrip set with the set of ExemplarCharacters from
+  *   ICU's locale data or other sources
+  *
+- * 2. UCNV_ROUNDTRIP_AND_FALLBACK_SET
+- *
+- * The set of all Unicode code points that can be converted with the converter (ucnv_fromUnicode())
+- * when fallbacks are turned on (see ucnv_setFallback()).
+- * This set includes all code points with roundtrips and fallbacks (but not reverse fallbacks).
+- *
+  * In the future, there may be more UConverterUnicodeSet choices to select
+  * sets with different properties.
+  *
+diff -ru icu.5691/source/test/intltest/convtest.cpp icu/source/test/intltest/convtest.cpp
+--- icu.5691/source/test/intltest/convtest.cpp	2009-06-02 16:07:21.000000000 +0100
++++ icu/source/test/intltest/convtest.cpp	2009-06-02 16:24:08.000000000 +0100
+@@ -552,7 +552,7 @@
+         }
+         UConverterUnicodeSet which;
+         for(which=UCNV_ROUNDTRIP_SET; which<UCNV_SET_COUNT; which=(UConverterUnicodeSet)((int)which+1)) {
+-            if(which==UCNV_ROUNDTRIP_AND_FALLBACK_SET) {
++            if(FALSE) {
+                 ucnv_setFallback(cnv, TRUE);
+             }
+             expected.add(0, cpLimit-1);

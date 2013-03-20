@@ -1,0 +1,14 @@
+--- icu.orig/source/layout/IndicClassTables.cpp	2007-02-09 14:26:04.000000000 +0000
++++ icu/source/layout/IndicClassTables.cpp	2007-02-13 15:41:52.000000000 +0000
+@@ -117,7 +117,11 @@
+     _rv, _xx, _ct, _ct, _xx, _ct, _ct, _ct, _ct, _ct, _xx, _xx, _nu, _xx, _dr, _dl, // 0AB0 - 0ABF
+     _dr, _db, _db, _db, _db, _da, _xx, _da, _da, _dr, _xx, _dr, _dr, _vr, _xx, _xx, // 0AC0 - 0ACF
+     _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, // 0AD0 - 0ADF
++#if 1
++    _iv, _xx, _db, _db, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx  // 0AE0 - 0AEF
++#else
+     _iv, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx  // 0AE0 - 0AEF
++#endif
+ };
+ 
+ #if 1

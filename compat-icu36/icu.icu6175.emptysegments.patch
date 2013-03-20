@@ -1,0 +1,535 @@
+diff -ru icu.6002/source/common/ucnv2022.c icu/source/common/ucnv2022.c
+--- icu.6002/source/common/ucnv2022.c	2009-06-02 15:38:08.000000000 +0100
++++ icu/source/common/ucnv2022.c	2009-06-02 15:40:20.000000000 +0100
+@@ -201,6 +201,7 @@
+ #ifdef U_ENABLE_GENERIC_ISO_2022
+     UBool isFirstBuffer;
+ #endif
++    UBool isEmptySegment;
+     char name[30];
+     char locale[3];
+ }UConverterDataISO2022;
+@@ -609,6 +610,7 @@
+     if(choice<=UCNV_RESET_TO_UNICODE) {
+         uprv_memset(&myConverterData->toU2022State, 0, sizeof(ISO2022State));
+         myConverterData->key = 0;
++        myConverterData->isEmptySegment = FALSE;
+     }
+     if(choice!=UCNV_RESET_TO_UNICODE) {
+         uprv_memset(&myConverterData->fromU2022State, 0, sizeof(ISO2022State));
+@@ -814,6 +816,7 @@
+             if(chosenConverterName == NULL) {
+                 /* SS2 or SS3 */
+                 *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
++                _this->toUCallbackReason = UCNV_UNASSIGNED;
+                 return;
+             }
+ 
+@@ -935,6 +938,8 @@
+     }
+     if(U_SUCCESS(*err)) {
+         _this->toULength = 0;
++    } else if(*err==U_UNSUPPORTED_ESCAPE_SEQUENCE) {
++        _this->toUCallbackReason = UCNV_UNASSIGNED;
+     }
+ }
+ 
+@@ -1986,6 +1991,7 @@
+                     continue;
+                 } else {
+                     /* only JIS7 uses SI/SO, not ISO-2022-JP-x */
++                    myData->isEmptySegment = FALSE;	/* reset this, we have a different error */
+                     break;
+                 }
+ 
+@@ -1997,21 +2003,39 @@
+                     continue;
+                 } else {
+                     /* only JIS7 uses SI/SO, not ISO-2022-JP-x */
++                    myData->isEmptySegment = FALSE;	/* reset this, we have a different error */
+                     break;
+                 }
+ 
+             case ESC_2022:
+                 mySource--;
+ escape:
+-                changeState_2022(args->converter,&(mySource), 
+-                    mySourceLimit, ISO_2022_JP,err);
++                {
++                    const char * mySourceBefore = mySource;
++                    int8_t toULengthBefore = args->converter->toULength;
++
++                    changeState_2022(args->converter,&(mySource),
++                        mySourceLimit, ISO_2022_JP,err);
++
++                    /* If in ISO-2022-JP only and we successully completed an escape sequence, but previous segment was empty, create an error */
++                    if(myData->version==0 && myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
++                        *err = U_ILLEGAL_ESCAPE_SEQUENCE;
++                        args->converter->toUCallbackReason = UCNV_IRREGULAR;
++                        args->converter->toULength = toULengthBefore + (mySource - mySourceBefore);
++                    }
++                }
+ 
+                 /* invalid or illegal escape sequence */
+                 if(U_FAILURE(*err)){
+                     args->target = myTarget;
+                     args->source = mySource;
++                    myData->isEmptySegment = FALSE;	/* Reset to avoid future spurious errors */
+                     return;
+                 }
++                /* If we successfully completed an escape sequence, we begin a new segment, empty so far */
++                if(myData->key==0) {
++                    myData->isEmptySegment = TRUE;
++                }
+                 continue;
+ 
+             /* ISO-2022-JP does not use single-byte (C1) SS2 and SS3 */
+@@ -2028,6 +2052,7 @@
+                 /* falls through */
+             default:
+                 /* convert one or two bytes */
++                myData->isEmptySegment = FALSE;
+                 cs = (StateEnum)pToU2022State->cs[pToU2022State->g];
+                 if( (uint8_t)(mySourceChar - 0xa1) <= (0xdf - 0xa1) && myData->version==4 &&
+                     !IS_JP_DBCS(cs)
+@@ -2524,15 +2549,27 @@
+ 
+             if(mySourceChar==UCNV_SI){
+                 myData->toU2022State.g = 0;
++                if (myData->isEmptySegment) {
++                    myData->isEmptySegment = FALSE;	/* we are handling it, reset to avoid future spurious errors */
++                    *err = U_ILLEGAL_ESCAPE_SEQUENCE;
++                    args->converter->toUCallbackReason = UCNV_IRREGULAR;
++                    args->converter->toUBytes[0] = mySourceChar;
++                    args->converter->toULength = 1;
++                    args->target = myTarget;
++                    args->source = mySource;
++                    return;
++                }
+                 /*consume the source */
+                 continue;
+             }else if(mySourceChar==UCNV_SO){
+                 myData->toU2022State.g = 1;
++                myData->isEmptySegment = TRUE;	/* Begin a new segment, empty so far */
+                 /*consume the source */
+                 continue;
+             }else if(mySourceChar==ESC_2022){
+                 mySource--;
+ escape:
++                myData->isEmptySegment = FALSE;	/* Any invalid ESC sequences will be detected separately, so just reset this */
+                 changeState_2022(args->converter,&(mySource), 
+                                 mySourceLimit, ISO_2022_KR, err);
+                 if(U_FAILURE(*err)){
+@@ -2543,6 +2580,7 @@
+                 continue;
+             }   
+ 
++            myData->isEmptySegment = FALSE;	/* Any invalid char errors will be detected separately, so just reset this */
+             if(myData->toU2022State.g == 1) {
+                 if(mySource < mySourceLimit) {
+                     char trailByte;
+@@ -3075,27 +3113,52 @@
+             switch(mySourceChar){
+             case UCNV_SI:
+                 pToU2022State->g=0;
++                if (myData->isEmptySegment) {
++                    myData->isEmptySegment = FALSE;	/* we are handling it, reset to avoid future spurious errors */
++                    *err = U_ILLEGAL_ESCAPE_SEQUENCE;
++                    args->converter->toUCallbackReason = UCNV_IRREGULAR;
++                    args->converter->toUBytes[0] = mySourceChar;
++                    args->converter->toULength = 1;
++                    args->target = myTarget;
++                    args->source = mySource;
++                    return;
++                }
+                 continue;
+ 
+             case UCNV_SO:
+                 if(pToU2022State->cs[1] != 0) {
+                     pToU2022State->g=1;
++                    myData->isEmptySegment = TRUE;	/* Begin a new segment, empty so far */
+                     continue;
+                 } else {
+                     /* illegal to have SO before a matching designator */
++                    myData->isEmptySegment = FALSE;	/* Handling a different error, reset this to avoid future spurious errs */
+                     break;
+                 }
+ 
+             case ESC_2022:
+                 mySource--;
+ escape:
+-                changeState_2022(args->converter,&(mySource), 
+-                    mySourceLimit, ISO_2022_CN,err);
++                {
++                    const char * mySourceBefore = mySource;
++                    int8_t toULengthBefore = args->converter->toULength;
++
++                    changeState_2022(args->converter,&(mySource),
++                        mySourceLimit, ISO_2022_CN,err);
++
++                    /* After SO there must be at least one character before a designator (designator error handled separately) */
++                    if(myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
++                        *err = U_ILLEGAL_ESCAPE_SEQUENCE;
++                        args->converter->toUCallbackReason = UCNV_IRREGULAR;
++                        args->converter->toULength = toULengthBefore + (mySource - mySourceBefore);
++                    }
++                }
+ 
+                 /* invalid or illegal escape sequence */
+                 if(U_FAILURE(*err)){
+                     args->target = myTarget;
+                     args->source = mySource;
++                    myData->isEmptySegment = FALSE;	/* Reset to avoid future spurious errors */
+                     return;
+                 }
+                 continue;
+@@ -3109,6 +3172,7 @@
+                 /* falls through */
+             default:
+                 /* convert one or two bytes */
++                myData->isEmptySegment = FALSE;
+                 if(pToU2022State->g != 0) {
+                     if(mySource < mySourceLimit) {
+                         UConverterSharedData *cnv;
+diff -ru icu.6002/source/common/ucnv_bld.c icu/source/common/ucnv_bld.c
+--- icu.6002/source/common/ucnv_bld.c	2009-06-02 15:38:05.000000000 +0100
++++ icu/source/common/ucnv_bld.c	2009-06-02 15:38:31.000000000 +0100
+@@ -914,6 +914,7 @@
+     myUConverter->subCharLen = mySharedConverterData->staticData->subCharLen;
+     myUConverter->subChars = (uint8_t *)myUConverter->subUChars;
+     uprv_memcpy(myUConverter->subChars, mySharedConverterData->staticData->subChar, myUConverter->subCharLen);
++    myUConverter->toUCallbackReason = UCNV_ILLEGAL; /* default reason to invoke (*fromCharErrorBehaviour) */
+ 
+     if(mySharedConverterData->impl->open != NULL) {
+         mySharedConverterData->impl->open(myUConverter, realName, locale, options, err);
+diff -ru icu.6002/source/common/ucnv_bld.h icu/source/common/ucnv_bld.h
+--- icu.6002/source/common/ucnv_bld.h	2009-06-02 15:38:08.000000000 +0100
++++ icu/source/common/ucnv_bld.h	2009-06-02 15:38:31.000000000 +0100
+@@ -226,6 +226,9 @@
+     char preToU[UCNV_EXT_MAX_BYTES];
+     int8_t preFromULength, preToULength;    /* negative: replay */
+     int8_t preToUFirstLength;               /* length of first character */
++
++    /* new fields for ICU 4.0 */
++    UConverterCallbackReason toUCallbackReason; /* (*fromCharErrorBehaviour) reason, set when error is detected */
+ };
+ 
+ U_CDECL_END /* end of UConverter */
+diff -ru icu.6002/source/common/ucnv.c icu/source/common/ucnv.c
+--- icu.6002/source/common/ucnv.c	2009-06-02 15:38:05.000000000 +0100
++++ icu/source/common/ucnv.c	2009-06-02 15:38:31.000000000 +0100
+@@ -1473,11 +1473,14 @@
+             cnv->toULength=0;
+ 
+             /* call the callback function */
++            if(cnv->toUCallbackReason==UCNV_ILLEGAL && *err==U_INVALID_CHAR_FOUND) {
++                cnv->toUCallbackReason = UCNV_UNASSIGNED;
++            }
+             cnv->fromCharErrorBehaviour(cnv->toUContext, pArgs,
+                 cnv->invalidCharBuffer, errorInputLength,
+-                (*err==U_INVALID_CHAR_FOUND || *err==U_UNSUPPORTED_ESCAPE_SEQUENCE) ?
+-                    UCNV_UNASSIGNED : UCNV_ILLEGAL,
++                cnv->toUCallbackReason,
+                 err);
++            cnv->toUCallbackReason = UCNV_ILLEGAL; /* reset to default value */
+ 
+             /*
+              * loop back to the offset handling
+diff -ru icu.6002/source/common/ucnvhz.c icu/source/common/ucnvhz.c
+--- icu.6002/source/common/ucnvhz.c	2009-06-02 15:38:08.000000000 +0100
++++ icu/source/common/ucnvhz.c	2009-06-02 15:38:31.000000000 +0100
+@@ -59,6 +59,7 @@
+     UBool isEscapeAppended;
+     UBool isStateDBCS;
+     UBool isTargetUCharDBCS;
++    UBool isEmptySegment;
+ }UConverterDataHZ;
+ 
+ 
+@@ -98,6 +99,7 @@
+         cnv->mode=0;
+         if(cnv->extraInfo != NULL){
+             ((UConverterDataHZ*)cnv->extraInfo)->isStateDBCS = FALSE;
++            ((UConverterDataHZ*)cnv->extraInfo)->isEmptySegment = FALSE;
+         }
+     }
+     if(choice!=UCNV_RESET_TO_UNICODE) {
+@@ -130,6 +132,10 @@
+ *   from-GB code '~}' ($7E7D) is outside the defined GB range.)
+ *
+ *   Source: RFC 1842
++*
++*   Note that the formal syntax in RFC 1842 is invalid. I assume that the
++*   intended definition of single-byte-segment is as follows (pedberg):
++*   single-byte-segment = single-byte-seq 1*single-byte-char
+ */
+ 
+ 
+@@ -168,12 +174,23 @@
+                         args->offsets[myTarget - args->target]=(int32_t)(mySource - args->source - 2);
+                     }
+                     *(myTarget++)=(UChar)mySourceChar;
++                    myData->isEmptySegment = FALSE;
+                     continue;
+                 case UCNV_OPEN_BRACE:
+-                    myData->isStateDBCS = TRUE;
+-                    continue;
+                 case UCNV_CLOSE_BRACE:
+-                    myData->isStateDBCS = FALSE;
++                    myData->isStateDBCS = (mySourceChar == UCNV_OPEN_BRACE);
++                    if (myData->isEmptySegment) {
++                        myData->isEmptySegment = FALSE; /* we are handling it, reset to avoid future spurious errors */
++                        *err = U_ILLEGAL_ESCAPE_SEQUENCE;
++                        args->converter->toUCallbackReason = UCNV_IRREGULAR;
++                        args->converter->toUBytes[0] = UCNV_TILDE;
++                        args->converter->toUBytes[1] = mySourceChar;
++                        args->converter->toULength = 2;
++                        args->target = myTarget;
++                        args->source = mySource;
++                        return;
++                    }
++                    myData->isEmptySegment = TRUE;
+                     continue;
+                 default:
+                      /* if the first byte is equal to TILDE and the trail byte
+@@ -181,6 +198,7 @@
+                      */
+                     mySourceChar = 0x7e00 | mySourceChar;
+                     targetUniChar = 0xffff;
++                    myData->isEmptySegment = FALSE; /* different error here, reset this to avoid spurious future error */
+                     break;
+                 }
+             } else if(myData->isStateDBCS) {
+@@ -191,6 +209,7 @@
+                     } else {
+                         /* add another bit to distinguish a 0 byte from not having seen a lead byte */
+                         args->converter->toUnicodeStatus = (uint32_t) (mySourceChar | 0x100);
++                        myData->isEmptySegment = FALSE; /* the segment has something, either valid or will produce a different error, so reset this */
+                     }
+                     continue;
+                 }
+@@ -218,8 +237,10 @@
+                     continue;
+                 } else if(mySourceChar <= 0x7f) {
+                     targetUniChar = (UChar)mySourceChar;  /* ASCII */
++                    myData->isEmptySegment = FALSE; /* the segment has something valid */
+                 } else {
+                     targetUniChar = 0xffff;
++                    myData->isEmptySegment = FALSE; /* different error here, reset this to avoid spurious future error */
+                 }
+             }
+             if(targetUniChar < 0xfffe){
+diff -ru icu.6002/source/test/cintltst/nucnvtst.c icu/source/test/cintltst/nucnvtst.c
+--- icu.6002/source/test/cintltst/nucnvtst.c	2009-06-02 15:37:53.000000000 +0100
++++ icu/source/test/cintltst/nucnvtst.c	2009-06-02 15:40:52.000000000 +0100
+@@ -81,6 +81,7 @@
+ static void TestJitterbug2411(void);
+ #endif
+ 
++static void TestJitterbug6175(void);
+ static void TestRoundTrippingAllUTF(void);
+ static void TestConv(const uint16_t in[],
+                      int len,
+@@ -294,6 +295,7 @@
+ #if !UCONFIG_NO_LEGACY_CONVERSION
+    addTest(root, &TestJitterbug2346, "tsconv/nucnvtst/TestJitterbug2346");
+    addTest(root, &TestJitterbug2411, "tsconv/nucnvtst/TestJitterbug2411");
++   addTest(root, &TestJitterbug6175, "tsconv/nucnvtst/TestJitterbug6175");
+ #endif
+ 
+ }
+@@ -4454,6 +4456,70 @@
+     free(offsets);
+ }
+ 
++/* Tests for empty segments in ISO-2022-JP/KR/CN, HZ, check that UConverterCallbackReason is UCNV_IRREGULAR */
++typedef struct {
++    const char *    converterName;
++    const char *    inputText;
++    int             inputTextLength;
++} EmptySegmentTest;
++
++/* Callback for TestJitterbug6175, should only get called for empty segment errors */
++static void UCNV_TO_U_CALLBACK_EMPTYSEGMENT( const void *context, UConverterToUnicodeArgs *toArgs, const char* codeUnits,
++                                             int32_t length, UConverterCallbackReason reason, UErrorCode * err ) {
++    if (reason > UCNV_IRREGULAR) {
++        return;
++    }
++    if (reason != UCNV_IRREGULAR) {
++        log_err("toUnicode callback invoked for empty segment but reason is not UCNV_IRREGULAR\n");
++    }
++    /* Standard stuff below from UCNV_TO_U_CALLBACK_SUBSTITUTE */
++    *err = U_ZERO_ERROR;
++    ucnv_cbToUWriteSub(toArgs,0,err);
++}
++
++enum { kEmptySegmentToUCharsMax = 64 };
++static void TestJitterbug6175(void) {
++    static const char  iso2022jp_a[] = { 0x61, 0x62, 0x1B,0x24,0x42, 0x1B,0x28,0x42, 0x63, 0x64, 0x0D, 0x0A };
++    static const char  iso2022kr_a[] = { 0x1B,0x24,0x29,0x43, 0x61, 0x0E, 0x0F, 0x62, 0x0D, 0x0A };
++    static const char  iso2022cn_a[] = { 0x61, 0x1B,0x24,0x29,0x41, 0x62, 0x0E, 0x0F, 0x1B,0x24,0x2A,0x48, 0x1B,0x4E, 0x6A,0x65, 0x63, 0x0D, 0x0A };
++    static const char  iso2022cn_b[] = { 0x61, 0x1B,0x24,0x29,0x41, 0x62, 0x0E, 0x1B,0x24,0x29,0x47, 0x68,0x64, 0x0F, 0x63, 0x0D, 0x0A };
++    static const char  hzGB2312_a[]  = { 0x61, 0x62, 0x7E,0x7B, 0x7E,0x7D, 0x63, 0x64 };
++    static const EmptySegmentTest emptySegmentTests[] = {
++        /* converterName inputText    inputTextLength */
++        { "ISO-2022-JP", iso2022jp_a, sizeof(iso2022jp_a) },
++        { "ISO-2022-KR", iso2022kr_a, sizeof(iso2022kr_a) },
++        { "ISO-2022-CN", iso2022cn_a, sizeof(iso2022cn_a) },
++        { "ISO-2022-CN", iso2022cn_b, sizeof(iso2022cn_b) },
++        { "HZ-GB-2312",  hzGB2312_a,  sizeof(hzGB2312_a)  },
++        /* terminator: */
++        { NULL,          NULL,        0,                  }
++    };
++    const EmptySegmentTest * testPtr;
++    for (testPtr = emptySegmentTests; testPtr->converterName != NULL; ++testPtr) {
++        UErrorCode   err = U_ZERO_ERROR;
++        UConverter * cnv = ucnv_open(testPtr->converterName, &err);
++        if (U_FAILURE(err)) {
++            log_data_err("Unable to open %s converter: %s\n", testPtr->converterName, u_errorName(err));
++            return;
++        }
++        ucnv_setToUCallBack(cnv, UCNV_TO_U_CALLBACK_EMPTYSEGMENT, NULL, NULL, NULL, &err);
++        if (U_FAILURE(err)) {
++            log_data_err("Unable to setToUCallBack for %s converter: %s\n", testPtr->converterName, u_errorName(err));
++            ucnv_close(cnv);
++            return;
++        }
++        {
++            UChar         toUChars[kEmptySegmentToUCharsMax];
++            UChar *       toUCharsPtr = toUChars;
++            const UChar * toUCharsLimit = toUCharsPtr + kEmptySegmentToUCharsMax;
++            const char *  inCharsPtr = testPtr->inputText;
++            const char *  inCharsLimit = inCharsPtr + testPtr->inputTextLength;
++            ucnv_toUnicode(cnv, &toUCharsPtr, toUCharsLimit, &inCharsPtr, inCharsLimit, NULL, TRUE, &err);
++        }
++        ucnv_close(cnv);
++    }
++}
++
+ static void
+ TestEBCDIC_STATEFUL() {
+     /* test input */
+diff -ru icu.6002/source/test/testdata/conversion.txt icu/source/test/testdata/conversion.txt
+--- icu.6002/source/test/testdata/conversion.txt	2009-06-02 15:37:54.000000000 +0100
++++ icu/source/test/testdata/conversion.txt	2009-06-02 15:40:52.000000000 +0100
+@@ -199,6 +199,21 @@
+           :intvector{ 0, 5, 7, 9, 9, 9, 9, 9, 9, 9, 9, 12 },
+           :int{1}, :int{1}, "", "&", :bin{""}
+         }
++        // empty segment (using substitution and stop)
++        {
++          "ISO-2022-KR",
++          :bin{ 1b242943610e0f620d0a },
++          "a\uFFFDb\u000D\u000A",
++          :intvector{ 4, 6, 7, 8, 9 },
++          :int{1}, :int{1}, "", "?", :bin{""}
++        }
++        {
++          "ISO-2022-KR",
++          :bin{ 1b242943610e0f620d0a },
++          "a",
++          :intvector{ 4 },
++          :int{1}, :int{1}, "illesc", ".", :bin{"0f"}
++        }
+ 
+         // ISO-2022-JP
+ 
+@@ -249,6 +264,21 @@
+           :bin{ 41c15c1b284a5cc242 }, "A\uff81\\\xa5\uff82B", :intvector{ 0, 1, 2, 6, 7, 8 },
+           :int{1}, :int{1}, "", ".", :bin{""}
+         }
++        // empty segment (using substitution and stop)
++        {
++          "ISO-2022-JP",
++          :bin{ 61621b24421b284263640d0a },
++          "ab\uFFFDcd\u000D\u000A",
++          :intvector{ 0, 1, 5, 8, 9, 10, 11 },
++          :int{1}, :int{1}, "", "?", :bin{""}
++        }
++        {
++          "ISO-2022-JP",
++          :bin{ 61621b24421b284263640d0a },
++          "ab",
++          :intvector{ 0, 1 },
++          :int{1}, :int{1}, "illesc", ".", :bin{"1b2842"}
++        }
+ 
+         // ISO-2022-CN
+ 
+@@ -319,6 +349,36 @@
+           :bin{ 411b242b491b4f2121 }, "\x41", :intvector{ 0 },
+           :int{1}, :int{1}, "unsuppesc", ".", :bin{ 1b242b49 }
+         }
++        // empty segment 1 (using substitution and stop)
++        {
++          "ISO-2022-CN",
++          :bin{ 611b242941620e0f1b242a481b4e6a65630d0a },
++          "ab\uFFFD\u994Cc\u000D\u000A",
++          :intvector{ 0, 5, 7, 14, 16, 17, 18 },
++          :int{1}, :int{1}, "", "?", :bin{""}
++        }
++        {
++          "ISO-2022-CN",
++          :bin{ 611b242941620e0f1b242a481b4e6a65630d0a },
++          "ab",
++          :intvector{ 0, 5 },
++          :int{1}, :int{1}, "illesc", ".", :bin{"0f"}
++        }
++        // empty segment 2 (using substitution and stop)
++        {
++          "ISO-2022-CN",
++          :bin{ 611b242941620e1b24294768640f630d0a },
++          "ab\uFFFD\u5F70c\u000D\u000A",
++          :intvector{ 0, 5, 7, 11, 14, 15, 16 },
++          :int{1}, :int{1}, "", "?", :bin{""}
++        }
++        {
++          "ISO-2022-CN",
++          :bin{ 611b242941620e1b24294768640f630d0a },
++          "ab",
++          :intvector{ 0, 5 },
++          :int{1}, :int{1}, "illesc", ".", :bin{"1b242947"}
++        }
+ 
+         // ISO-2022 SBCS
+         // [U_ENABLE_GENERIC_ISO_2022]
+@@ -333,6 +393,39 @@
+         //  :int{1}, :int{1}, "", ".", :bin{""}
+         //}
+ 
++        // HZ-GB-2312
++
++        // empty segment 1 (using substitution and stop)
++        {
++          "HZ-GB-2312",
++          :bin{ 61627e7b7e7d6364 },
++          "ab\uFFFDcd",
++          :intvector{ 0, 1, 4, 6, 7 },
++          :int{1}, :int{1}, "", "?", :bin{""}
++        }
++        {
++          "HZ-GB-2312",
++          :bin{ 61627e7b7e7d63640d0a },
++          "ab",
++          :intvector{ 0, 1 },
++          :int{1}, :int{1}, "illesc", ".", :bin{"7e7d"}
++        }
++        // empty segment 2 & legal redundant switches (using substitution and stop)
++        {
++          "HZ-GB-2312",
++          :bin{ 61627e7b323b3f557e7b7e7b523b7e7d63647e7d65667e7d7e7d },
++          "ab\u4E0D\u7A7A\uFFFD\u4E00cdef\uFFFD",
++          :intvector{ 0, 1, 4, 6, 10, 12, 16, 17, 20, 21, 24 },
++          :int{1}, :int{1}, "", "?", :bin{""}
++        }
++        {
++          "HZ-GB-2312",
++          :bin{ 61627e7b323b3f557e7b7e7b523b7e7d63647e7d65667e7d7e7d },
++          "ab\u4E0D\u7A7A",
++          :intvector{ 0, 1, 4, 6 },
++          :int{1}, :int{1}, "illesc", ".", :bin{"7e7b"}
++        }
++
+         // DBCS-only extensions
+         {
+           "ibm-970",

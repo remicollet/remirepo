@@ -1,0 +1,107 @@
+--- icu.orig/source/layout/IndicReordering.cpp	2006-12-21 09:24:42.000000000 +0000
++++ icu/source/layout/IndicReordering.cpp	2006-12-21 09:16:15.000000000 +0000
+@@ -50,6 +50,14 @@
+ #define distFeatureMask 0x00010000UL
+ #define initFeatureMask 0x00008000UL
+ 
++// TODO: Find better names for these!
++#define tagArray4 (loclFeatureMask | nuktFeatureMask | akhnFeatureMask | vatuFeatureMask | presFeatureMask | blwsFeatureMask | abvsFeatureMask | pstsFeatureMask | halnFeatureMask | blwmFeatureMask | abvmFeatureMask | distFeatureMask)
++#define tagArray3 (pstfFeatureMask | tagArray4)
++#define tagArray2 (halfFeatureMask | tagArray3)
++#define tagArray1 (blwfFeatureMask | tagArray2)
++#define tagArray0 (rphfFeatureMask | tagArray1)
++
++
+ class IndicReorderingOutput : public UMemory {
+ private:
+     le_int32   fOutIndex;
+@@ -154,6 +162,27 @@
+         fSMabove = fSMbelow = 0;
+     }
+ 
++    void swapChars(int a, int b)
++    {
++	LEErrorCode success = LE_NO_ERROR;
++        LEUnicode temp_char;
++        le_uint32 temp_index;
++        FeatureMask temp_tag;
++
++        temp_char = fOutChars[fOutIndex + b];
++	temp_index = fGlyphStorage.getCharIndex(fOutIndex + b, success);
++        temp_tag = fGlyphStorage.getAuxData(fOutIndex + b, success);
++
++        fOutChars[fOutIndex + b] = fOutChars[fOutIndex + a];
++        le_uint32 toswap = fGlyphStorage.getCharIndex(fOutIndex + a, success);
++        fGlyphStorage.setCharIndex(fOutIndex + b,  toswap, success);
++        fGlyphStorage.setAuxData(fOutIndex + b, tagArray3, success);
++
++        fOutChars[fOutIndex + a] = temp_char;
++        fGlyphStorage.setCharIndex(fOutIndex + a, temp_index, success);
++        fGlyphStorage.setAuxData(fOutIndex + a, temp_tag, success);
++    }
++
+     void writeChar(LEUnicode ch, le_uint32 charIndex, FeatureMask charFeatures)
+     {
+         LEErrorCode success = LE_NO_ERROR;
+@@ -335,13 +364,6 @@
+     C_DOTTED_CIRCLE = 0x25CC
+ };
+ 
+-// TODO: Find better names for these!
+-#define tagArray4 (loclFeatureMask | nuktFeatureMask | akhnFeatureMask | vatuFeatureMask | presFeatureMask | blwsFeatureMask | abvsFeatureMask | pstsFeatureMask | halnFeatureMask | blwmFeatureMask | abvmFeatureMask | distFeatureMask)
+-#define tagArray3 (pstfFeatureMask | tagArray4)
+-#define tagArray2 (halfFeatureMask | tagArray3)
+-#define tagArray1 (blwfFeatureMask | tagArray2)
+-#define tagArray0 (rphfFeatureMask | tagArray1)
+-
+ static const FeatureMap featureMap[] =
+ {
+     {loclFeatureTag, loclFeatureMask},
+@@ -629,6 +651,21 @@
+                 output.writeChar(chars[i], i, tagArray4);
+             }
+ 
++            /* for the special conjuction of Cons+0x0d4d+0x0d31 or Cons+0x0d4d+0x0d30 of Malayalam */
++            if ((baseConsonant - 2 >= 0) &&
++                (chars[baseConsonant - 1] == 0x0d4d) &&
++		((chars[baseConsonant] == 0x0d31) || 
++		 (chars[baseConsonant] == 0x0d30)) &&
++                ((chars[baseConsonant - 2] >= 0x0d15) &&
++                 (chars[baseConsonant - 2] <= 0x0d39)))  {
++               if (baseConsonant < 3 || chars[baseConsonant - 3] != 0x0d4d) {
++                    output.swapChars(-1, -3);
++
++		    if (mpreFixups)
++		        mpreFixups->reduce();
++		}
++            }
++
+             if ((classTable->scriptFlags & SF_MATRAS_AFTER_BASE) != 0) {
+                 output.writeMbelow();
+                 output.writeSMbelow(); // FIXME: there are no SMs in these scripts...
+--- icu.orig/source/layout/MPreFixups.h	2006-11-10 09:42:47.000000000 +0000
++++ icu/source/layout/MPreFixups.h	2006-12-21 09:13:47.000000000 +0000
+@@ -31,6 +31,8 @@
+     
+     void apply(LEGlyphStorage &glyphStorage);
+ 
++    void reduce();
++
+ private:
+     FixupData *fFixupData;
+     le_int32   fFixupCount;
+--- icu.orig/source/layout/MPreFixups.cpp	2006-11-10 09:42:47.000000000 +0000
++++ icu/source/layout/MPreFixups.cpp	2006-12-21 09:16:33.000000000 +0000
+@@ -40,6 +40,12 @@
+     }
+ }
+ 
++void MPreFixups::reduce()
++{
++    if (fFixupCount > 0)
++        fFixupCount--;
++}
++
+ void MPreFixups::apply(LEGlyphStorage &glyphStorage)
+ {
+     for (le_int32 fixup = 0; fixup < fFixupCount; fixup += 1) {

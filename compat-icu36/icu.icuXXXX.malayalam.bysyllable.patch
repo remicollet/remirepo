@@ -1,0 +1,250 @@
+diff -ruN icu.orig/source/layout/IndicReordering.h icu/source/layout/IndicReordering.h
+--- icu.orig/source/layout/IndicReordering.h	2007-04-27 10:28:22.000000000 +0100
++++ icu/source/layout/IndicReordering.h	2007-04-27 10:39:22.000000000 +0100
+@@ -142,6 +142,7 @@
+     // do not instantiate
+     IndicReordering();
+ 
++public:
+     static le_int32 findSyllable(const IndicClassTable *classTable, const LEUnicode *chars, le_int32 prev, le_int32 charCount);
+ 
+ };
+diff -ruN icu.orig/source/layout/LayoutEngine.cpp icu/source/layout/LayoutEngine.cpp
+--- icu.orig/source/layout/LayoutEngine.cpp	2007-04-27 10:28:22.000000000 +0100
++++ icu/source/layout/LayoutEngine.cpp	2007-04-27 10:39:22.000000000 +0100
+@@ -14,6 +14,7 @@
+ #include "CanonShaping.h"
+ #include "HanLayoutEngine.h"
+ #include "HangulLayoutEngine.h"
++#include "MalayalamLayoutEngine.h"
+ #include "IndicLayoutEngine.h"
+ #include "KhmerLayoutEngine.h"
+ #include "ThaiLayoutEngine.h"
+@@ -451,11 +452,13 @@
+ 
+     if (gsubTable != NULL && gsubTable->coversScript(scriptTag = OpenTypeLayoutEngine::getScriptTag(scriptCode))) {
+         switch (scriptCode) {
++        case mlymScriptCode:
++            result = new MalayalamOpenTypeLayoutEngine(fontInstance, scriptCode, languageCode, typoFlags, gsubTable);
++	    break;
+         case bengScriptCode:
+         case devaScriptCode:
+         case gujrScriptCode:
+         case kndaScriptCode:
+-        case mlymScriptCode:
+         case oryaScriptCode:
+         case guruScriptCode:
+         case tamlScriptCode:
+@@ -512,11 +515,13 @@
+             result = new GXLayoutEngine(fontInstance, scriptCode, languageCode, morphTable);
+         } else {
+             switch (scriptCode) {
++            case mlymScriptCode:
++                result = new MalayalamOpenTypeLayoutEngine(fontInstance, scriptCode, languageCode, typoFlags);
++	        break;
+             case bengScriptCode:
+             case devaScriptCode:
+             case gujrScriptCode:
+             case kndaScriptCode:
+-            case mlymScriptCode:
+             case oryaScriptCode:
+             case guruScriptCode:
+             case tamlScriptCode:
+diff -ruN icu.orig/source/layout/LEGlyphStorage.h icu/source/layout/LEGlyphStorage.h
+--- icu.orig/source/layout/LEGlyphStorage.h	2007-04-27 10:28:22.000000000 +0100
++++ icu/source/layout/LEGlyphStorage.h	2007-04-27 10:43:54.000000000 +0100
+@@ -413,6 +413,8 @@
+      */
+     void adoptGlyphArray(LEGlyphStorage &from);
+ 
++    void appendGlyphStorage(LEGlyphStorage &from);
++
+     /**
+      * Delete the char indices array and replace it with the one
+      * in <code>from</code>. Set the char indices array pointer
+diff -ruN icu.orig/source/layout/Makefile.in icu/source/layout/Makefile.in
+--- icu.orig/source/layout/Makefile.in	2007-04-27 10:28:22.000000000 +0100
++++ icu/source/layout/Makefile.in	2007-04-27 10:39:22.000000000 +0100
+@@ -66,6 +66,7 @@
+ ArabicLayoutEngine.o \
+ GXLayoutEngine.o \
+ HanLayoutEngine.o \
++MalayalamLayoutEngine.o \
+ IndicLayoutEngine.o \
+ LayoutEngine.o \
+ ContextualGlyphSubstProc.o \
+diff -ruN icu.orig/source/layout/MalayalamLayoutEngine.cpp icu/source/layout/MalayalamLayoutEngine.cpp
+--- icu.orig/source/layout/MalayalamLayoutEngine.cpp	1970-01-01 01:00:00.000000000 +0100
++++ icu/source/layout/MalayalamLayoutEngine.cpp	2007-04-27 10:44:26.000000000 +0100
+@@ -0,0 +1,126 @@
++
++/*
++ *
++ * (C) Copyright IBM Corp. 1998-2005 - All Rights Reserved
++ *
++ */
++
++#include "LETypes.h"
++#include "LayoutEngine.h"
++#include "OpenTypeLayoutEngine.h"
++#include "MalayalamLayoutEngine.h"
++#include "ScriptAndLanguageTags.h"
++
++#include "GlyphSubstitutionTables.h"
++#include "GlyphDefinitionTables.h"
++#include "GlyphPositioningTables.h"
++
++#include "GDEFMarkFilter.h"
++#include "LEGlyphStorage.h"
++
++#include "IndicReordering.h"
++
++#include <stdio.h>
++
++U_NAMESPACE_BEGIN
++
++UOBJECT_DEFINE_RTTI_IMPLEMENTATION(MalayalamOpenTypeLayoutEngine)
++
++void LEGlyphStorage::appendGlyphStorage(LEGlyphStorage &from)
++{
++    if (fInsertionList) applyInsertions();
++    if (from.fInsertionList) from.applyInsertions();
++    if ((!fInsertionList) && (from.fInsertionList))
++    {
++        fInsertionList = from.fInsertionList;
++        from.fInsertionList = NULL;
++    }
++
++    if (!from.fGlyphCount)
++        return;
++
++    le_int32 newGlyphCount = fGlyphCount + from.fGlyphCount;
++
++    fGlyphs = (LEGlyphID*)LE_GROW_ARRAY(fGlyphs, newGlyphCount);
++    LE_ARRAY_COPY(fGlyphs+fGlyphCount, from.fGlyphs, from.fGlyphCount);
++
++    le_int32 nLargestIndex = 0;
++    if (fGlyphCount)
++    {
++        for (le_int32 i = 0; i < fGlyphCount; ++i)
++        {
++            if (fCharIndices[i] > nLargestIndex)
++                nLargestIndex = fCharIndices[i];
++        }
++        nLargestIndex+=1;
++    }
++    fCharIndices = (le_int32 *)LE_GROW_ARRAY(fCharIndices, newGlyphCount);
++    for (le_int32 i = 0; i < from.fGlyphCount; ++i)
++        fCharIndices[fGlyphCount+i] = from.fCharIndices[i] + nLargestIndex;
++
++    fAuxData = (le_uint32 *)LE_GROW_ARRAY(fAuxData, newGlyphCount);
++    LE_ARRAY_COPY(fAuxData+fGlyphCount, from.fAuxData, from.fGlyphCount);
++
++    fGlyphCount = newGlyphCount;
++}
++
++le_int32 MalayalamOpenTypeLayoutEngine::glyphPostProcessing(LEGlyphStorage &tempGlyphStorage, LEGlyphStorage &glyphStorage, LEErrorCode &success)
++{
++    if (LE_FAILURE(success)) {
++        return 0;
++    }
++
++    glyphStorage.appendGlyphStorage(tempGlyphStorage);
++
++    return glyphStorage.getGlyphCount();
++}
++
++
++le_int32 MalayalamOpenTypeLayoutEngine::computeGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft, LEGlyphStorage &glyphStorage, LEErrorCode &success)
++{
++    if (LE_FAILURE(success)) {
++        return 0;
++    }
++
++    if (chars == NULL || offset < 0 || count < 0 || max < 0 || offset >= max || offset + count > max) {
++        success = LE_ILLEGAL_ARGUMENT_ERROR;
++        return 0;
++    }
++
++    le_int32 outGlyphCount=0;
++
++    const IndicClassTable *classTable = IndicClassTable::getScriptClassTable(fScriptCode);
++    le_int32 prev = 0;
++    while (prev < count)
++    { 
++        le_int32 outCharCount=0, fakeGlyphCount=0;
++        LEUnicode *outChars = NULL;
++        LEGlyphStorage fakeGlyphStorage;
++
++        le_int32 syllable = IndicReordering::findSyllable(classTable, chars+offset, prev, count);
++        outCharCount = characterProcessing(chars+prev, offset, syllable-prev, max, rightToLeft, outChars, fakeGlyphStorage, success);
++
++        if (LE_FAILURE(success)) {
++            return 0;
++        }
++
++        if (outChars != NULL) {
++            fakeGlyphCount = glyphProcessing(outChars, 0, outCharCount, outCharCount, rightToLeft, fakeGlyphStorage, success);
++            LE_DELETE_ARRAY(outChars); // FIXME: a subclass may have allocated this, in which case this delete might not work...
++        } else {
++            fakeGlyphCount = glyphProcessing(chars+prev, offset, syllable-prev, max, rightToLeft, fakeGlyphStorage, success);
++        }
++
++        if (LE_FAILURE(success)) {
++            return 0;
++        }
++
++        outGlyphCount = glyphPostProcessing(fakeGlyphStorage, glyphStorage, success);
++
++        prev = syllable;
++    }
++
++    return outGlyphCount;
++}
++
++U_NAMESPACE_END
+diff -ruN icu.orig/source/layout/MalayalamLayoutEngine.h icu/source/layout/MalayalamLayoutEngine.h
+--- icu.orig/source/layout/MalayalamLayoutEngine.h	1970-01-01 01:00:00.000000000 +0100
++++ icu/source/layout/MalayalamLayoutEngine.h	2007-04-27 10:39:52.000000000 +0100
+@@ -0,0 +1,41 @@
++
++/*
++ *
++ * (C) Copyright IBM Corp. 1998-2005 - All Rights Reserved
++ *
++ */
++
++#ifndef __MALAYALAMLAYOUTENGINE_H
++#define __MALAYALAMLAYOUTENGINE_H
++
++#include "IndicLayoutEngine.h"
++
++U_NAMESPACE_BEGIN
++
++class MalayalamOpenTypeLayoutEngine : public IndicOpenTypeLayoutEngine
++{
++public:
++    MalayalamOpenTypeLayoutEngine(const LEFontInstance *fontInstance, le_int32 scriptCode, le_int32 languageCode,
++                            le_int32 typoFlags, const GlyphSubstitutionTableHeader *gsubTable) :
++        IndicOpenTypeLayoutEngine(fontInstance, scriptCode, languageCode, typoFlags, gsubTable)
++
++    {}
++
++    MalayalamOpenTypeLayoutEngine(const LEFontInstance *fontInstance, le_int32 scriptCode, le_int32 languageCode,
++			      le_int32 typoFlags) :
++        IndicOpenTypeLayoutEngine(fontInstance, scriptCode, languageCode, typoFlags)
++
++    {}
++
++    virtual UClassID getDynamicClassID() const;
++    static UClassID getStaticClassID();
++
++protected:
++    virtual le_int32 glyphPostProcessing(LEGlyphStorage &tempGlyphStorage, LEGlyphStorage &glyphStorage, LEErrorCode &success);
++
++    virtual le_int32 computeGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft, LEGlyphStorage &glyphStorage, LEErrorCode &success);
++};
++
++U_NAMESPACE_END
++#endif
++

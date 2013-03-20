@@ -1,0 +1,14 @@
+--- icu.orig/source/layout/CoverageTables.cpp	2007-01-09 12:57:41.000000000 +0000
++++ icu/source/layout/CoverageTables.cpp	2007-01-09 12:59:09.000000000 +0000
+@@ -44,6 +44,11 @@
+     le_uint16 count = SWAPW(glyphCount);
+     le_uint8 bit = OpenTypeUtilities::highBit(count);
+     le_uint16 power = 1 << bit;
++
++    if (count == 0) {
++        return -1;
++    }
++
+     le_uint16 extra = count - power;
+     le_uint16 probe = power;
+     le_uint16 index = 0;

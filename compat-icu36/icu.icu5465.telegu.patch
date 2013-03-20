@@ -1,0 +1,29 @@
+--- icu.orig/source/layout/IndicClassTables.cpp	2007-02-05 14:44:17.000000000 +0000
++++ icu/source/layout/IndicClassTables.cpp	2007-02-05 14:47:49.000000000 +0000
+@@ -145,6 +145,7 @@
+ };
+ 
+ // FIXME: Should some of the bb's be pb's? (KA, NA, MA, YA, VA, etc. (approx 13))
++#if 0
+ static const IndicClassTable::CharClass teluCharClasses[] =
+ {
+     _xx, _mp, _mp, _mp, _xx, _iv, _iv, _iv, _iv, _iv, _iv, _iv, _iv, _xx, _iv, _iv, // 0C00 - 0C0F
+@@ -155,6 +156,18 @@
+     _xx, _xx, _xx, _xx, _xx, _da, _m2, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, // 0C50 - 0C5F
+     _iv, _iv, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx  // 0C60 - 0C6F
+ };
++#else
++static const IndicClassTable::CharClass teluCharClasses[] =
++{   
++    _xx, _mp, _mp, _mp, _xx, _iv, _iv, _iv, _iv, _iv, _iv, _iv, _iv, _xx, _iv, _iv, /* 0C00 - 0C0F */
++    _iv, _xx, _iv, _iv, _iv, _bb, _bb, _bb, _bb, _bb, _bb, _bb, _bb, _bb, _bb, _bb, /* 0C10 - 0C1F */
++    _bb, _bb, _bb, _bb, _bb, _bb, _bb, _bb, _bb, _xx, _bb, _bb, _bb, _bb, _bb, _bb, /* 0C20 - 0C2F */
++    _bb, _bb, _bb, _bb, _xx, _bb, _bb, _bb, _bb, _bb, _xx, _xx, _xx, _xx, _da, _da, /* 0C30 - 0C3F */
++    _da, _dr, _dr, _dr, _dr, _xx, _da, _da, _s1, _xx, _da, _da, _da, _vr, _xx, _xx, /* 0C40 - 0C4F */
++    _xx, _xx, _xx, _xx, _xx, _da, _db, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, /* 0C50 - 0C5F */
++    _iv, _iv, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx  /* 0C60 - 0C6F */
++};
++#endif
+ 
+ // U+CC3 and U+CC4 are _lm here not _dr since the Kannada rendering
+ // rules want them below and to the right of the entire cluster

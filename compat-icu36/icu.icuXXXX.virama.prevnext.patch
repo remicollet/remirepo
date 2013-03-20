@@ -1,0 +1,98 @@
+diff -ur icu.orig/source/common/rbbi.cpp icu/source/common/rbbi.cpp
+--- icu.orig/source/common/rbbi.cpp	2006-10-05 11:54:13.000000000 +0100
++++ icu/source/common/rbbi.cpp	2006-10-05 11:57:31.000000000 +0100
+@@ -879,6 +879,22 @@
+     RBBI_END        // state machine processing is after end of user text.
+ };
+ 
++#define VIRAMA_SCRIPT(wc)        ((wc) >= 0x0901 && (wc) <= 0x17FF)
++#define VIRAMA(wc) ((wc) == 0x094D || \
++                    (wc) == 0x09CD || \
++                    (wc) == 0x0A4D || \
++                    (wc) == 0x0ACD || \
++                    (wc) == 0x0B4D || \
++                    (wc) == 0x0BCD || \
++                    (wc) == 0x0C4D || \
++                    (wc) == 0x0CCD || \
++                    (wc) == 0x0D4D || \
++                    (wc) == 0x0DCA || \
++                    (wc) == 0x0E3A || \
++                    (wc) == 0x0F84 || \
++                    (wc) == 0x1039 || \
++                    (wc) == 0x17D2 || \
++                    (wc) == 0x200D)
+ 
+ //-----------------------------------------------------------------------------------
+ //
+@@ -896,6 +911,7 @@
+     RBBIRunMode         mode;
+     
+     RBBIStateTableRow  *row;
++    UChar32             prevchar;
+     UChar32             c;
+     int32_t             lookaheadStatus = 0;
+     int32_t             lookaheadTagIdx = 0;
+@@ -919,6 +935,7 @@
+     // if we're already at the end of the text, return DONE.
+     initialPosition = (int32_t)UTEXT_GETNATIVEINDEX(fText); 
+     result          = initialPosition;
++    prevchar        = 0;
+     c               = UTEXT_NEXT32(fText);
+     if (fData == NULL || c==U_SENTINEL) {
+         return BreakIterator::DONE;
+@@ -1001,6 +1018,11 @@
+ 
+         // State Transition - move machine to its next state
+         //
++        if (VIRAMA_SCRIPT(c) && VIRAMA(prevchar))
++        {
++                state = START_STATE;
++                row = (RBBIStateTableRow *) (tableData + tableRowLen * state);
++        }
+         state = row->fNextState[category];
+         row = (RBBIStateTableRow *)
+             // (statetable->fTableData + (statetable->fRowLen * state));
+@@ -1059,6 +1081,7 @@
+         //    the input position.  The next iteration will be processing the
+         //    first real input character.
+         if (mode == RBBI_RUN) {
++            prevchar = c;
+             c = UTEXT_NEXT32(fText);
+         } else {
+             if (mode == RBBI_START) {
+@@ -1107,6 +1130,7 @@
+     int16_t             category        = 0;
+     RBBIRunMode         mode;
+     RBBIStateTableRow  *row;
++    UChar32             prevchar;
+     UChar32             c;
+     int32_t             lookaheadStatus = 0;
+     int32_t             result          = 0;
+@@ -1135,6 +1159,7 @@
+     //  Set up the starting char.
+     initialPosition = (int32_t)UTEXT_GETNATIVEINDEX(fText);
+     result          = initialPosition;
++    prevchar        = 0;
+     c               = UTEXT_PREVIOUS32(fText);
+ 
+     //  Set the initial state for the state machine
+@@ -1218,6 +1243,11 @@
+ 
+         // State Transition - move machine to its next state
+         //
++	if (VIRAMA_SCRIPT(prevchar) && VIRAMA(c))
++        {
++                state = START_STATE;
++                row = (RBBIStateTableRow *) (statetable->fTableData + (statetable->fRowLen * state));
++        }
+         state = row->fNextState[category];
+         row = (RBBIStateTableRow *)
+             (statetable->fTableData + (statetable->fRowLen * state));
+@@ -1269,6 +1299,7 @@
+         //    the input position.  The next iteration will be processing the
+         //    first real input character.
+         if (mode == RBBI_RUN) {
++            prevchar = c;
+             c = UTEXT_PREVIOUS32(fText);
+         } else {            
+             if (mode == RBBI_START) {

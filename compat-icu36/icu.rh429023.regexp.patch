@@ -1,0 +1,307 @@
+diff -ru icu.orig/source/common/uvectr32.cpp icu/source/common/uvectr32.cpp
+--- icu.orig/source/common/uvectr32.cpp	2003-08-27 02:01:30.000000000 +0100
++++ icu/source/common/uvectr32.cpp	2008-01-22 08:37:06.000000000 +0000
+@@ -1,6 +1,6 @@
+ /*
+ ******************************************************************************
+-* Copyright (C) 1999-2003, International Business Machines Corporation and   *
++* Copyright (C) 1999-2008, International Business Machines Corporation and   *
+ * others. All Rights Reserved.                                               *
+ ******************************************************************************
+ *   Date        Name        Description
+@@ -26,6 +26,7 @@
+ UVector32::UVector32(UErrorCode &status) :
+     count(0),
+     capacity(0),
++    maxCapacity(0),
+     elements(NULL)
+ {
+     _init(DEFUALT_CAPACITY, status);
+@@ -34,6 +35,7 @@
+ UVector32::UVector32(int32_t initialCapacity, UErrorCode &status) :
+     count(0),
+     capacity(0),
++    maxCapacity(0),
+     elements(0)
+ {
+     _init(initialCapacity, status);
+@@ -46,6 +48,9 @@
+     if (initialCapacity < 1) {
+         initialCapacity = DEFUALT_CAPACITY;
+     }
++    if (maxCapacity>0 && maxCapacity<initialCapacity) {
++        initialCapacity = maxCapacity;
++    }
+     elements = (int32_t *)uprv_malloc(sizeof(int32_t)*initialCapacity);
+     if (elements == 0) {
+         status = U_MEMORY_ALLOCATION_ERROR;
+@@ -189,21 +194,35 @@
+ UBool UVector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
+     if (capacity >= minimumCapacity) {
+         return TRUE;
+-    } else {
+-        int32_t newCap = capacity * 2;
+-        if (newCap < minimumCapacity) {
+-            newCap = minimumCapacity;
+-        }
+-        int32_t* newElems = (int32_t *)uprv_malloc(sizeof(int32_t)*newCap);
+-        if (newElems == 0) {
+-            status = U_MEMORY_ALLOCATION_ERROR;
+-            return FALSE;
+-        }
+-        uprv_memcpy(newElems, elements, sizeof(elements[0]) * count);
+-        uprv_free(elements);
+-        elements = newElems;
+-        capacity = newCap;
+-        return TRUE;
++    }
++    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
++        status = U_BUFFER_OVERFLOW_ERROR;
++        return FALSE;
++    }
++    int32_t newCap = capacity * 2;
++    if (newCap < minimumCapacity) {
++        newCap = minimumCapacity;
++    }
++    if (maxCapacity > 0 && newCap > maxCapacity) {
++        newCap = maxCapacity;
++    }
++    int32_t* newElems = (int32_t *)uprv_malloc(sizeof(int32_t)*newCap);
++    if (newElems == 0) {
++        status = U_MEMORY_ALLOCATION_ERROR;
++        return FALSE;
++    }
++    uprv_memcpy(newElems, elements, sizeof(elements[0]) * count);
++    uprv_free(elements);
++    elements = newElems;
++    capacity = newCap;
++    return TRUE;
++}
++
++void UVector32::setMaxCapacity(int32_t limit) {
++    U_ASSERT(limit >= 0);
++    maxCapacity = limit;
++    if (maxCapacity < 0) {
++        maxCapacity = 0;
+     }
+ }
+ 
+diff -ru icu.orig/source/common/uvectr32.h icu/source/common/uvectr32.h
+--- icu.orig/source/common/uvectr32.h	2006-01-18 03:52:04.000000000 +0000
++++ icu/source/common/uvectr32.h	2008-01-22 08:37:07.000000000 +0000
+@@ -1,6 +1,6 @@
+ /*
+ **********************************************************************
+-*   Copyright (C) 1999-2006, International Business Machines
++*   Copyright (C) 1999-2008, International Business Machines
+ *   Corporation and others.  All Rights Reserved.
+ **********************************************************************
+ */
+@@ -61,6 +61,8 @@
+     int32_t   count;
+ 
+     int32_t   capacity;
++    
++    int32_t   maxCapacity;   // Limit beyond which capacity is not permitted to grow.
+ 
+     int32_t*  elements;
+ 
+@@ -162,6 +164,14 @@
+     int32_t *getBuffer() const;
+ 
+     /**
++     * Set the maximum allowed buffer capacity for this vector/stack.
++     * Default with no limit set is unlimited, go until malloc() fails.
++     * A Limit of zero means unlimited capacity.
++     * Units are vector elements (32 bits each), not bytes.
++     */
++    void setMaxCapacity(int32_t limit);
++
++    /**
+      * ICU "poor man's RTTI", returns a UClassID for this class.
+      */
+     static UClassID U_EXPORT2 getStaticClassID();
+@@ -221,7 +231,9 @@
+ }
+ 
+ inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
+-    ensureCapacity(count+size, status);
++    if (ensureCapacity(count+size, status) == FALSE) {
++        return NULL;
++    }
+     int32_t  *rp = elements+count;
+     count += size;
+     return rp;
+diff -ru icu.orig/source/i18n/regexcmp.cpp icu/source/i18n/regexcmp.cpp
+--- icu.orig/source/i18n/regexcmp.cpp	2006-02-02 04:37:14.000000000 +0000
++++ icu/source/i18n/regexcmp.cpp	2008-01-22 08:37:06.000000000 +0000
+@@ -1187,14 +1187,17 @@
+             // Because capture groups can be forward-referenced by back-references,
+             //  we fill the operand with the capture group number.  At the end
+             //  of compilation, it will be changed to the variable's location.
+-            U_ASSERT(groupNum > 0);
+-            int32_t  op;
+-            if (fModeFlags & UREGEX_CASE_INSENSITIVE) {
+-                op = URX_BUILD(URX_BACKREF_I, groupNum);
++            if (groupNum < 1) { 
++                error(U_REGEX_INVALID_BACK_REF);
+             } else {
+-                op = URX_BUILD(URX_BACKREF, groupNum);
++                int32_t  op;
++                if (fModeFlags & UREGEX_CASE_INSENSITIVE) {
++                    op = URX_BUILD(URX_BACKREF_I, groupNum);
++                } else {
++                    op = URX_BUILD(URX_BACKREF, groupNum);
++                }
++                fRXPat->fCompiledPat->addElement(op, *fStatus);
+             }
+-            fRXPat->fCompiledPat->addElement(op, *fStatus);
+         }
+         break;
+ 
+diff -ru icu.orig/source/i18n/rematch.cpp icu/source/i18n/rematch.cpp
+--- icu.orig/source/i18n/rematch.cpp	2005-08-25 19:02:20.000000000 +0100
++++ icu/source/i18n/rematch.cpp	2008-01-22 08:37:44.000000000 +0000
+@@ -30,6 +30,15 @@
+ 
+ U_NAMESPACE_BEGIN
+ 
++// Limit the size of the back track stack, to avoid system failures caused
++//   by heap exhaustion.  Units are in 32 bit words, not bytes.
++// This value puts ICU's limits higher than most other regexp implementations,
++//  which use recursion rather than the heap, and take more storage per
++//  backtrack point.
++// This constant is _temporary_.  Proper API to control the value will added.
++//
++static const int32_t BACKTRACK_STACK_CAPACITY = 8000000;
++
+ //-----------------------------------------------------------------------------
+ //
+ //   Constructor and Destructor
+@@ -53,6 +62,8 @@
+     }
+     if (fStack == NULL || fData == NULL) {
+         fDeferredStatus = U_MEMORY_ALLOCATION_ERROR;
++    } else {
++        fStack->setMaxCapacity(BACKTRACK_STACK_CAPACITY);
+     }
+         
+     reset(*RegexStaticSets::gStaticSets->fEmptyString);
+@@ -78,6 +89,8 @@
+     }
+     if (fStack == NULL || fData == NULL) {
+         status = U_MEMORY_ALLOCATION_ERROR;
++    } else {
++        fStack->setMaxCapacity(BACKTRACK_STACK_CAPACITY);
+     }
+     reset(input);
+ }
+@@ -102,6 +115,8 @@
+     }
+     if (fStack == NULL || fData == NULL) {
+         status = U_MEMORY_ALLOCATION_ERROR;
++    } else {
++        fStack->setMaxCapacity(BACKTRACK_STACK_CAPACITY);
+     }
+     reset(*RegexStaticSets::gStaticSets->fEmptyString);
+ }
+@@ -1015,6 +1030,14 @@
+ inline REStackFrame *RegexMatcher::StateSave(REStackFrame *fp, int32_t savePatIdx, int32_t frameSize, UErrorCode &status) {
+     // push storage for a new frame. 
+     int32_t *newFP = fStack->reserveBlock(frameSize, status);
++    if (newFP == NULL) {
++        // Heap allocation error on attempted stack expansion.
++        // We need to return a writable stack frame, so just return the
++        //    previous frame.  The match operation will stop quickly
++        //    becuase of the error status, after which the frame will never
++        //    be looked at again.
++        return fp;
++    }
+     fp = (REStackFrame *)(newFP - frameSize);  // in case of realloc of stack.
+     
+     // New stack frame = copy of old top frame.
+@@ -1030,8 +1053,8 @@
+     fp->fPatIdx = savePatIdx;
+     return (REStackFrame *)newFP;
+ }
+-    
+-            
++
++
+ //--------------------------------------------------------------------------------
+ //
+ //   MatchAt      This is the actual matching engine.
+@@ -2262,6 +2285,7 @@
+         }
+ 
+         if (U_FAILURE(status)) {
++            isMatch = FALSE;
+             break;
+         }
+     }
+diff -ru icu.orig/source/test/intltest/regextst.cpp icu/source/test/intltest/regextst.cpp
+--- icu.orig/source/test/intltest/regextst.cpp	2005-07-05 19:39:00.000000000 +0100
++++ icu/source/test/intltest/regextst.cpp	2008-01-22 08:38:21.000000000 +0000
+@@ -66,6 +66,10 @@
+         case 6: name = "PerlTests";
+             if (exec) PerlTests();
+             break;
++        case 7: name = "Bug 6149";
++            if (exec) Bug6149();
++            break;
++            
+ 
+ 
+         default: name = "";
+@@ -1637,6 +1641,13 @@
+     // UnicodeSet containing a string
+     REGEX_ERR("abc[{def}]xyz", 1, 10, U_REGEX_SET_CONTAINS_STRING);
+ 
++    
++    // Invalid Back Reference \0
++    //    For ICU 3.8 and earlier
++    //    For ICU versions newer than 3.8, \0 introduces an octal escape.
++    //
++    REGEX_ERR("(ab)\\0", 1, 6, U_REGEX_INVALID_BACK_REF);
++
+ }
+ 
+ 
+@@ -2119,6 +2130,26 @@
+ }
+ 
+ 
++//--------------------------------------------------------------
++//
++//  Bug6149   Verify limits to heap expansion for backtrack stack.
++//             Use this pattern,
++//                 "(a?){1,}"
++//             The zero-length match will repeat forever.
++//                (That this goes into a loop is another bug)
++//
++//---------------------------------------------------------------
++void RegexTest::Bug6149() {
++    UnicodeString pattern("(a?){1,}");
++    UnicodeString s("xyz");
++    uint32_t flags = 0;
++    UErrorCode status = U_ZERO_ERROR;
++    
++    RegexMatcher  matcher(pattern, s, flags, status);
++    UBool result = false;
++    REGEX_ASSERT_FAIL(result=matcher.matches(status), U_BUFFER_OVERFLOW_ERROR);
++    REGEX_ASSERT(result == FALSE);
++ }
+ 
+ #endif  /* !UCONFIG_NO_REGULAR_EXPRESSIONS  */
+ 
+diff -ru icu.orig/source/test/intltest/regextst.h icu/source/test/intltest/regextst.h
+--- icu.orig/source/test/intltest/regextst.h	2003-12-03 06:58:28.000000000 +0000
++++ icu/source/test/intltest/regextst.h	2008-01-22 08:37:06.000000000 +0000
+@@ -30,6 +30,7 @@
+     virtual void Extended();
+     virtual void Errors();
+     virtual void PerlTests();
++    virtual void Bug6149();
+ 
+     // The following functions are internal to the regexp tests.
+     virtual UBool doRegexLMTest(const char *pat, const char *text, UBool looking, UBool match, int line);

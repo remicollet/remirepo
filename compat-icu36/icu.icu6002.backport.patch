@@ -1,0 +1,397 @@
+diff -ru icu.6001/source/common/ucnv_ext.c icu/source/common/ucnv_ext.c
+--- icu.6001/source/common/ucnv_ext.c	2009-06-02 15:29:01.000000000 +0100
++++ icu/source/common/ucnv_ext.c	2009-06-02 15:29:18.000000000 +0100
+@@ -1036,15 +1036,13 @@
+     /* enumerate the from-Unicode trie table */
+     c=0; /* keep track of the current code point while enumerating */
+ 
+-    if( sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ||
+-        filter==UCNV_SET_FILTER_DBCS_ONLY ||
+-        filter==UCNV_SET_FILTER_SJIS ||
+-        filter==UCNV_SET_FILTER_GR94DBCS
++    if(filter==UCNV_SET_FILTER_2022_CN) {
++        minLength=3;
++    } else if( sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ||
++               filter!=UCNV_SET_FILTER_NONE
+     ) {
+         /* DBCS-only, ignore single-byte results */
+         minLength=2;
+-    } else if(filter==UCNV_SET_FILTER_2022_CN) {
+-        minLength=3;
+     } else {
+         minLength=1;
+     }
+@@ -1104,6 +1102,13 @@
+                                     continue;
+                                 }
+                                 break;
++                            case UCNV_SET_FILTER_HZ:
++                                if(!(UCNV_EXT_FROM_U_GET_LENGTH(value)==2 &&
++                                     (uint16_t)((value=UCNV_EXT_FROM_U_GET_DATA(value))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
++                                     (uint8_t)(value-0xa1)<=(0xfe - 0xa1))) {
++                                    continue;
++                                }
++                                break;
+                             default:
+                                 /*
+                                  * UCNV_SET_FILTER_NONE,
+diff -ru icu.6001/source/common/ucnvhz.c icu/source/common/ucnvhz.c
+--- icu.6001/source/common/ucnvhz.c	2009-06-02 15:29:01.000000000 +0100
++++ icu/source/common/ucnvhz.c	2009-06-02 15:29:15.000000000 +0100
+@@ -72,7 +72,7 @@
+     cnv->extraInfo = uprv_malloc(sizeof(UConverterDataHZ));
+     if(cnv->extraInfo != NULL){
+         uprv_memset(cnv->extraInfo, 0, sizeof(UConverterDataHZ));
+-        ((UConverterDataHZ*)cnv->extraInfo)->gbConverter = ucnv_open("ibm-1386",errorCode);
++        ((UConverterDataHZ*)cnv->extraInfo)->gbConverter = ucnv_open("GBK",errorCode);
+     }
+     else {
+         *errorCode = U_MEMORY_ALLOCATION_ERROR;
+@@ -141,7 +141,7 @@
+     UChar *myTarget = args->target;
+     const char *mySourceLimit = args->sourceLimit;
+     UChar32 targetUniChar = 0x0000;
+-    UChar mySourceChar = 0x0000;
++    int32_t mySourceChar = 0x0000;
+     UConverterDataHZ* myData=(UConverterDataHZ*)(args->converter->extraInfo);
+     tempBuf[0]=0; 
+     tempBuf[1]=0;
+@@ -156,90 +156,71 @@
+             
+             mySourceChar= (unsigned char) *mySource++;
+ 
+-            switch(mySourceChar){
++            if(args->converter->mode == UCNV_TILDE) {
++                /* second byte after ~ */
++                args->converter->mode=0;
++                switch(mySourceChar) {
+                 case 0x0A:
+-                    if(args->converter->mode ==UCNV_TILDE){
+-                        args->converter->mode=0;
+-                        
+-                    }
+-                    *(myTarget++)=(UChar)mySourceChar;
++                    /* no output for ~\n (line-continuation marker) */
+                     continue;
+-            
+                 case UCNV_TILDE:
+-                    if(args->converter->mode ==UCNV_TILDE){
+-                        *(myTarget++)=(UChar)mySourceChar;
+-                        args->converter->mode=0;
+-                        continue;
+-                        
++                    if(args->offsets) {
++                        args->offsets[myTarget - args->target]=(int32_t)(mySource - args->source - 2);
+                     }
+-                    else if(args->converter->toUnicodeStatus !=0){
+-                        args->converter->mode=0;
+-                        break;
+-                    }
+-                    else{
+-                        args->converter->mode = UCNV_TILDE;
+-                        continue;
+-                    }
+-                
+-                
++                    *(myTarget++)=(UChar)mySourceChar;
++                    continue;
+                 case UCNV_OPEN_BRACE:
+-                    if(args->converter->mode == UCNV_TILDE){
+-                        args->converter->mode=0;
+-                        myData->isStateDBCS = TRUE;
+-                        continue;
+-                    }
+-                    else{
+-                        break;
+-                    }
+-               
+-                
++                    myData->isStateDBCS = TRUE;
++                    continue;
+                 case UCNV_CLOSE_BRACE:
+-                    if(args->converter->mode == UCNV_TILDE){
+-                        args->converter->mode=0;
+-                         myData->isStateDBCS = FALSE;
+-                        continue;
+-                    }
+-                    else{
+-                        break;
+-                    }
+-                
++                    myData->isStateDBCS = FALSE;
++                    continue;
+                 default:
+                      /* if the first byte is equal to TILDE and the trail byte
+                      * is not a valid byte then it is an error condition
+                      */
+-                    if(args->converter->mode == UCNV_TILDE){
+-                        args->converter->mode=0;
+-                        mySourceChar= (UChar)(((UCNV_TILDE+0x80) << 8) | ((mySourceChar & 0x00ff)+0x80));
+-                        goto SAVE_STATE;
+-                    }
+-                    
++                    mySourceChar = 0x7e00 | mySourceChar;
++                    targetUniChar = 0xffff;
+                     break;
+-
+-            }
+-             
+-            if(myData->isStateDBCS){
++                }
++            } else if(myData->isStateDBCS) {
+                 if(args->converter->toUnicodeStatus == 0x00){
+-                    args->converter->toUnicodeStatus = (UChar) mySourceChar;
++                    /* lead byte */
++                    if(mySourceChar == UCNV_TILDE) {
++                        args->converter->mode = UCNV_TILDE;
++                    } else {
++                        /* add another bit to distinguish a 0 byte from not having seen a lead byte */
++                        args->converter->toUnicodeStatus = (uint32_t) (mySourceChar | 0x100);
++                    }
+                     continue;
+                 }
+                 else{
+-                    tempBuf[0] = (char) (args->converter->toUnicodeStatus+0x80) ;
+-                    tempBuf[1] = (char) (mySourceChar+0x80);
+-                    mySourceChar= (UChar)(((args->converter->toUnicodeStatus+0x80) << 8) | ((mySourceChar & 0x00ff)+0x80));
++                    /* trail byte */
++                    uint32_t leadByte = args->converter->toUnicodeStatus & 0xff;
++                    if( (uint8_t)(leadByte - 0x21) <= (0x7d - 0x21) &&
++                        (uint8_t)(mySourceChar - 0x21) <= (0x7e - 0x21)
++                    ) {
++                        tempBuf[0] = (char) (leadByte+0x80) ;
++                        tempBuf[1] = (char) (mySourceChar+0x80);
++                        targetUniChar = ucnv_MBCSSimpleGetNextUChar(myData->gbConverter->sharedData,
++                            tempBuf, 2, args->converter->useFallback);
++                    } else {
++                        targetUniChar = 0xffff;
++                    }
++                    /* add another bit so that the code below writes 2 bytes in case of error */
++                    mySourceChar= 0x10000 | (leadByte << 8) | mySourceChar;
+                     args->converter->toUnicodeStatus =0x00;
+-                    targetUniChar = ucnv_MBCSSimpleGetNextUChar(myData->gbConverter->sharedData,
+-                        tempBuf, 2, args->converter->useFallback);
+                 }
+             }
+             else{
+-                if(args->converter->fromUnicodeStatus == 0x00){
+-                    targetUniChar = ucnv_MBCSSimpleGetNextUChar(myData->gbConverter->sharedData,
+-                        mySource - 1, 1, args->converter->useFallback);
+-                }
+-                else{
+-                    goto SAVE_STATE;
++                if(mySourceChar == UCNV_TILDE) {
++                    args->converter->mode = UCNV_TILDE;
++                    continue;
++                } else if(mySourceChar <= 0x7f) {
++                    targetUniChar = (UChar)mySourceChar;  /* ASCII */
++                } else {
++                    targetUniChar = 0xffff;
+                 }
+-
+             }
+             if(targetUniChar < 0xfffe){
+                 if(args->offsets) {
+@@ -248,26 +229,17 @@
+ 
+                 *(myTarget++)=(UChar)targetUniChar;
+             }
+-            else if(targetUniChar>=0xfffe){
+-SAVE_STATE:
++            else /* targetUniChar>=0xfffe */ {
+                 if(targetUniChar == 0xfffe){
+                     *err = U_INVALID_CHAR_FOUND;
+                 }
+                 else{
+                     *err = U_ILLEGAL_CHAR_FOUND;
+                 }
+-                if(myData->isStateDBCS){
+-                    /* this should never occur since isStateDBCS is set to true 
+-                     * only after tempBuf[0] and tempBuf[1]
+-                     * are set to the input ..  just to please BEAM 
+-                     */
+-                    if(tempBuf[0]==0 || tempBuf[1]==0){
+-                        *err = U_INTERNAL_PROGRAM_ERROR;
+-                    }else{
+-                        args->converter->toUBytes[0] = (uint8_t)(tempBuf[0]-0x80);
+-                        args->converter->toUBytes[1] = (uint8_t)(tempBuf[1]-0x80);
+-                        args->converter->toULength=2;
+-                    }
++                if(mySourceChar > 0xff){
++                    args->converter->toUBytes[0] = (uint8_t)(mySourceChar >> 8);
++                    args->converter->toUBytes[1] = (uint8_t)mySourceChar;
++                    args->converter->toULength=2;
+                 }
+                 else{
+                     args->converter->toUBytes[0] = (uint8_t)mySourceChar;
+@@ -328,16 +300,21 @@
+                 escSeq = TILDE_ESCAPE;
+                 CONCAT_ESCAPE_MACRO(args, myTargetIndex, targetLength, escSeq,err,len,mySourceIndex);
+                 continue;
+-            }
+-            else{
++            } else if(mySourceChar <= 0x7f) {
++                length = 1;
++                targetUniChar = mySourceChar;
++            } else {
+                 length= ucnv_MBCSFromUChar32(myConverterData->gbConverter->sharedData,
+                     mySourceChar,&targetUniChar,args->converter->useFallback);
+-
+-            }
+-            /* only DBCS or SBCS characters are expected*/
+-            /* DB haracters with high bit set to 1 are expected */
+-            if(length > 2 || length==0 ||(((targetUniChar & 0x8080) != 0x8080)&& length==2)){
+-                targetUniChar= missingCharMarker;
++                /* we can only use lead bytes 21..7D and trail bytes 21..7E */
++                if( length == 2 &&
++                    (uint16_t)(targetUniChar - 0xa1a1) <= (0xfdfe - 0xa1a1) &&
++                    (uint8_t)(targetUniChar - 0xa1) <= (0xfe - 0xa1)
++                ) {
++                    targetUniChar -= 0x8080;
++                } else {
++                    targetUniChar = missingCharMarker;
++                }
+             }
+             if (targetUniChar != missingCharMarker){
+                myConverterData->isTargetUCharDBCS = isTargetUCharDBCS = (UBool)(targetUniChar>0x00FF);     
+@@ -360,22 +337,22 @@
+             
+                 if(isTargetUCharDBCS){
+                     if( myTargetIndex <targetLength){
+-                        myTarget[myTargetIndex++] =(char) ((targetUniChar >> 8) -0x80);
++                        myTarget[myTargetIndex++] =(char) (targetUniChar >> 8);
+                         if(offsets){
+                             *(offsets++) = mySourceIndex-1;
+                         }
+                         if(myTargetIndex < targetLength){
+-                            myTarget[myTargetIndex++] =(char) ((targetUniChar & 0x00FF) -0x80);
++                            myTarget[myTargetIndex++] =(char) targetUniChar;
+                             if(offsets){
+                                 *(offsets++) = mySourceIndex-1;
+                             }
+                         }else{
+-                            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) ((targetUniChar & 0x00FF) -0x80);
++                            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) targetUniChar;
+                             *err = U_BUFFER_OVERFLOW_ERROR;
+                         } 
+                     }else{
+-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =(char) ((targetUniChar >> 8) -0x80);
+-                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) ((targetUniChar & 0x00FF) -0x80);
++                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =(char) (targetUniChar >> 8);
++                        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = (char) targetUniChar;
+                         *err = U_BUFFER_OVERFLOW_ERROR;
+                     }
+ 
+@@ -524,15 +501,14 @@
+                   const USetAdder *sa,
+                   UConverterUnicodeSet which,
+                   UErrorCode *pErrorCode) {
+-    /* the tilde '~' is hardcoded in the converter */
+-    sa->add(sa->set, 0x7e);
++    /* HZ converts all of ASCII */
++    sa->addRange(sa->set, 0, 0x7f);
+ 
+     /* add all of the code points that the sub-converter handles */
+-    /* ucnv_MBCSGetFilteredUnicodeSetForUnicode(((UConverterDataHZ*)cnv->extraInfo)->gbConverter->sharedData, sa, which, UCNV_SET_FILTER_GR94DBCS, pErrorCode); */
+-    ((UConverterDataHZ*)cnv->extraInfo)->
+-        gbConverter->sharedData->impl->
+-            getUnicodeSet(((UConverterDataHZ*)cnv->extraInfo)->gbConverter,
+-                          sa, which, pErrorCode);
++    ucnv_MBCSGetFilteredUnicodeSetForUnicode(
++        ((UConverterDataHZ*)cnv->extraInfo)->gbConverter->sharedData,
++        sa, which, UCNV_SET_FILTER_HZ,
++        pErrorCode);
+ }
+ 
+ static const UConverterImpl _HZImpl={
+diff -ru icu.6001/source/common/ucnvmbcs.c icu/source/common/ucnvmbcs.c
+--- icu.6001/source/common/ucnvmbcs.c	2009-06-02 15:29:01.000000000 +0100
++++ icu/source/common/ucnvmbcs.c	2009-06-02 15:35:01.000000000 +0100
+@@ -612,6 +612,19 @@
+                                 stage3+=2;  /* +=st3Multiplier */
+                             } while((++c&0xf)!=0);
+                             break;
++                        case UCNV_SET_FILTER_HZ:
++                            /* Only add code points that are suitable for HZ DBCS (lead byte A1..FD). */
++                            do {
++                                if( ((st3&1)!=0 || useFallback) &&
++                                    (uint16_t)((value=*((const uint16_t *)stage3))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
++                                    (uint8_t)(value - 0xa1)<=(0xfe - 0xa1)
++                                ) {
++                                    sa->add(sa->set, c);
++                                }
++                                st3>>=1;
++                                stage3+=2;  /* +=st3Multiplier */
++                            } while((++c&0xf)!=0);
++                            break;
+                         default:
+                             *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
+                             return;
+diff -ru icu.6001/source/common/ucnvmbcs.h icu/source/common/ucnvmbcs.h
+--- icu.6001/source/common/ucnvmbcs.h	2009-06-02 15:29:01.000000000 +0100
++++ icu/source/common/ucnvmbcs.h	2009-06-02 15:29:15.000000000 +0100
+@@ -400,6 +400,7 @@
+     UCNV_SET_FILTER_2022_CN,
+     UCNV_SET_FILTER_SJIS,
+     UCNV_SET_FILTER_GR94DBCS,
++    UCNV_SET_FILTER_HZ,
+     UCNV_SET_FILTER_COUNT
+ } UConverterSetFilter;
+ 
+diff -ru icu.6001/source/test/cintltst/ncnvtst.c icu/source/test/cintltst/ncnvtst.c
+--- icu.6001/source/test/cintltst/ncnvtst.c	2009-06-02 15:28:46.000000000 +0100
++++ icu/source/test/cintltst/ncnvtst.c	2009-06-02 15:29:15.000000000 +0100
+@@ -1928,7 +1928,7 @@
+ #if !UCONFIG_NO_LEGACY_CONVERSION
+         { "UTF-8", 0, 0xd7ff, 0xe000, 0x10ffff, 0xd800, 0xdfff },
+         { "windows-1251", 0, 0x7f, 0x410, 0x44f, 0x3000, 0xd7ff },
+-        { "HZ", 0x410, 0x44f, 0x4e00, 0x4eff, 0xac00, 0xd7ff },
++        /* HZ test case fixed and moved to intltest's conversion.txt, ticket #6002 */
+         { "shift-jis", 0x3041, 0x3093, 0x30a1, 0x30f3, 0x900, 0x1cff }
+ #else
+         { "UTF-8", 0, 0xd7ff, 0xe000, 0x10ffff, 0xd800, 0xdfff }
+diff -ru icu.6001/source/test/intltest/convtest.cpp icu/source/test/intltest/convtest.cpp
+--- icu.6001/source/test/intltest/convtest.cpp	2009-06-02 15:28:46.000000000 +0100
++++ icu/source/test/intltest/convtest.cpp	2009-06-02 15:29:15.000000000 +0100
+@@ -527,7 +527,7 @@
+         "Shift-JIS",
+         "ibm-1390",  // EBCDIC_STATEFUL table
+         "ibm-16684",  // DBCS-only extension table based on EBCDIC_STATEFUL table
+-        // "HZ", TODO(markus): known bug, the set incorrectly contains [\u02CA\u02CB\u02D9\u2010\u2013\u2015...]
++        "HZ",
+         "ISO-2022-JP",
+         "JIS7",
+         "ISO-2022-CN",
+diff -ru icu.6001/source/test/testdata/conversion.txt icu/source/test/testdata/conversion.txt
+--- icu.6001/source/test/testdata/conversion.txt	2009-06-02 15:28:46.000000000 +0100
++++ icu/source/test/testdata/conversion.txt	2009-06-02 15:29:15.000000000 +0100
+@@ -48,6 +48,14 @@
+     toUnicode {
+       Headers { "charset", "bytes", "unicode", "offsets", "flush", "fallbacks", "errorCode", "callback", "invalidChars" }
+       Cases {
++        // test that HZ limits its byte values to lead bytes 21..7d and trail bytes 21..7e
++        {
++          "HZ",
++          :bin{ 7e7b21212120217e217f772100007e217e7d207e7e807e0a2b },
++          "\u3000\ufffd\u3013\ufffd\u9ccc\ufffd\ufffd ~\ufffd+",
++          :intvector{ 2,4,6,8,10,12,14,18,19,21,24 },
++          :int{1}, :int{1}, "", "?", :bin{""}
++        }
+         // improve coverage of ISO-2022-JP converter with hardcoded JIS X 0201 and
+         // using the Shift-JIS table for JIS X 0208 (ticket #5797)
+         {
+@@ -1244,6 +1252,14 @@
+           :int{0}
+         }
+ 
++        // HZ
++        {
++          "HZ",
++          "[\u0410-\u044f\u4e00\u4e01\u4e03]",
++          "[\u4e02\u4e04-\u4e06\uac00-\ud7ff]",
++          :int{0}
++        }
++        
+         // DBCS-only
+         {
+           "ibm-971",
