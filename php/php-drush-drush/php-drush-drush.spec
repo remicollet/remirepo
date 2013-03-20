@@ -29,6 +29,7 @@ Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides:         drupal6-drush = %{version}-%{release}
 Obsoletes:        drupal6-drush < %{version}-%{release}
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -172,6 +173,7 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %doc %{_mandir}/man1/drush.1*
 %{pear_xmldir}/%{name}.xml
@@ -181,6 +183,9 @@ fi
 
 
 %changelog
+* Wed Mar 20 2013 Remi Collet <remi@fedoraproject.org> 5.8.0-2
+- backport 5.8.0 for remi repo.
+
 * Sun Mar 17 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 5.8.0-2
 - Removed drush.bat
 - Fixed rpmlint wrong-file-end-of-line-encoding warning
