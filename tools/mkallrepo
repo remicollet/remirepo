@@ -1,0 +1,65 @@
+#!/bin/sh
+
+TMPSIG=$(mktemp)
+TMPLNK=$(mktemp)
+
+cd /home/rpmbuild/site/rpms
+
+#for dep in *.{i386,ppc,ppc64,x86_64} fedora/*/*/{i386,ppc,ppc64,x86_64}
+for dep in fedora/{12,13,14,15,16,17,18}/*/{i386,x86_64} enterprise/{5,6}/*/{i386,x86_64}
+do
+	arch=${dep##*/}
+
+	LST=""
+	if [ -d $dep/repodata -a $dep -nt $dep/repodata -a ! -f $dep/.closed ]
+	then	echo "== Nouveaux RPM dans $dep =="
+		if [ $arch = x86_64 ]
+		then
+			find $dep -name \*.rpm -a -newer $dep/repodata -print >>$TMPSIG
+		else
+			find $dep -name \*.noarch.rpm -a -newer $dep/repodata -print >>$TMPLNK
+			find $dep -name \*.i?86.rpm -a -newer $dep/repodata -print  >>$TMPSIG
+		fi
+		
+	fi
+	
+done
+find SRPMS -name \*.rpm -a -newer SRPMS/repodata -print >>$TMPSIG
+
+
+if [ -s $TMPSIG ]
+then	echo "À signer:"; sort < $TMPSIG
+	echo "== Signature des $(cat $TMPSIG | wc -l) nouveaux RPM =="
+	if rpmsign --addsign $(cat $TMPSIG)
+	then	echo done.
+	else 	exit 1
+	fi
+else 	echo "Rien à signer."
+fi
+
+if [ -s $TMPLNK ]
+then	echo "== Création des liens (noarch) =="
+	cat $TMPLNK | while read dest
+	do
+		srce=${dest/\/ppc64/\/x86_64}
+		srce=${srce/\/ppc/\/x86_64}
+		srce=${srce/\/i386/\/x86_64}
+
+		ln -f $srce $dest && echo $dest
+	done
+else 	echo "Rien à lier."
+fi
+
+#for dep in *.{i386,ppc,ppc64,x86_64} fedora/*/*/{i386,ppc,ppc64,x86_64}
+for dep in SRPMS fedora/{12,13,14,15,16,17,18}/*/{i386,x86_64} enterprise/{5,6}/*/{i386,x86_64}
+do
+	if [ -d $dep/repodata -a $dep -nt $dep/repodata -a ! -f $dep/.closed ]
+	then	echo "== Actualisation de $dep =="
+		pushd $dep
+		mkrepo nocheck
+		touch repodata
+		popd	
+	#else	echo "== $dep est à jour =="
+	fi
+done
+

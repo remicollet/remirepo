@@ -1,0 +1,65 @@
+#!/bin/sh
+#set -x
+TMP=/tmp/liste.$(basename $PWD)
+
+if [ ${1:-check} != nocheck ]; then
+	echo "+ Controle des signatures"
+	rpm -K *.rpm | grep -v 'gpg OK' | cut -d: -f1 | tee $TMP
+	if [ -s $TMP ]
+	then	rpmsign --addsign $(cat $TMP)
+	else	echo OK.
+	fi
+fi
+
+echo "+ Nettoyage des anciens"
+
+repomanage --old --keep=2 . | tee $TMP
+LST=$(cat $TMP)
+
+if [ -z "$LST" ]
+then	echo OK.
+else	mv $LST /data/rpms/old/
+fi
+
+nom=${PWD#/home/rpmbuild/site/rpms/}
+if [ "$nom" = "SRPMS" ]
+then
+  dis=fedora
+  ver=17
+else
+  dis=${nom%%/*}
+  ver=${nom#$dis/}
+  ver=${ver%%/*}
+fi
+
+cache=/home/rpmbuild/site/rpms/.createrepocache/$nom
+mkdir -p $cache
+if [ $dis == fedora -a $ver -ge 11 ]
+then	check=sha256
+elif [ $dis == enterprise -a $ver -ge 6 ]
+then	check=sha256
+else	check=sha
+fi
+echo "+ Génération des meta + sql ($check)"
+createrepo --workers 4 		 \
+           --cachedir $cache 	 \
+           --checksum $check 	 \
+           --unique-md-filenames \
+           --compress-type=bz2   \
+           --database .
+
+if [ -d headers ]
+then
+	echo "+ Génération des headers"
+	yum-arch .
+fi
+
+echo "+ Génération repoview"
+nom=${PWD#/home/rpmbuild/site/rpms/}
+echo repoview --url http://rpms.famillecollet.com/$nom \
+	--template-dir /home/rpmbuild/site/rpms/repotmpl \
+	--title "Les RPM de Remi - ${nom//\// - }" .
+LANG=C repoview --url http://rpms.famillecollet.com/$nom \
+	--template-dir /home/rpmbuild/site/rpms/repotmpl \
+	--title "Les RPM de Remi - ${nom//\// - }" .
+

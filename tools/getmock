@@ -1,0 +1,158 @@
+#!/bin/bash
+
+cd /home/rpmbuild/site/rpms
+
+function getOneMock() {
+case $1 in
+*i)	dep=${1%i}
+	;;
+*x)	dep=${1%x}
+	;;
+*)	dep=$1
+	;;
+esac
+case $dep in 
+el*)	dep=${dep#el}
+	type=enterprise
+	;;
+fc*)	dep=${dep#fc}
+	type=fedora
+	;;
+*)	echo Connais pas $dep
+	;;
+esac
+
+
+if [ -d $type/$dep/${2-remi}/x86_64 ]
+then
+	cible=$type/$dep/${2-remi}/
+	debug=$type/$dep/debug-${2-remi}/
+else 
+	echo "$1 n'est pas un dépôt"
+	exit 2
+fi
+
+if   [ -d /var/lib/mock/${1}/repodata ]; then
+	src=/var/lib/mock/${1}
+
+elif   [ -d /var/lib/mock/${1}i/result ]; then
+	src=/var/lib/mock/${1}i/result
+
+elif [ -d /var/lib/mock/$1/result ]; then
+	src=/var/lib/mock/$1/result
+else
+	echo "$1 n'est pas un dossier mock"
+	exit 2
+fi
+
+echo Copie de $src vers $cible
+for i in $src/*.rpm
+do
+	j=$(basename $i)
+	case $j in 
+		*.src.rpm)	echo " " $i ignored
+			;;
+		xulrunner-last-debuginfo*)	echo " " $i ignored
+			;;
+		firefox-debuginfo*)		echo " " $i ignored
+			;;
+		thunderbird-debuginfo*)	echo " " $i ignored
+			;;
+		*debuginfo*x86_64.rpm)
+			if [ -f ${debug}x86_64/$j ]; then
+				echo " " $i already there
+			elif [ -d ${debug}x86_64 ]; then
+				cp $i ${debug}x86_64 && echo + $i copied debuginfo x86_64
+			else
+				echo " " $i ignored
+			fi
+			;;
+		*debuginfo*86.rpm)
+			if [ -f ${debug}i386/$j ]; then
+				echo " " $i already there
+			elif [ -d ${debug}i386 ]; then
+				cp $i ${debug}i386 && echo + $i copied debuginfo i386
+			else
+				echo " " $i ignored
+			fi
+			;;
+		*.noarch.rpm)	
+			if [ -f ${cible}x86_64/$j ]; then
+				echo " " $i already there
+			else
+				cp $i ${cible}x86_64 && echo + $i copied x86_64
+				[ -d ${cible}ppc    -a ! -f ${cible}ppc/.closed ]  \
+					&& ln ${cible}x86_64/$j ${cible}ppc/$j \
+					&& echo + $i linked ppc
+				[ -d ${cible}ppc64  -a ! -f ${cible}ppc64/.closed ] \
+					&& ln ${cible}					/$j ${cible}ppc64/$j  \
+					&& echo + $i linked ppc64
+				[ -d ${cible}i386 ] \
+					&& ln ${cible}x86_64/$j ${cible}i386/$j \
+					&& echo + $i linked x86_64
+			fi
+			;;
+		*.i?86.rpm)	
+			if [ -f ${cible}i386/$j ]; then
+				echo " " $i already there
+			else
+				cp $i ${cible}i386 && echo + $i copied i686
+			fi
+			;;
+		*.x86_64.rpm)	
+			if [ -f ${cible}x86_64/$j ]; then
+				echo " " $i already there
+			else
+				cp $i ${cible}x86_64 && echo + $i copied x86_64
+			fi
+			;;
+		*)		echo Aucun RPM disponible
+			;;
+	esac
+done
+}
+
+if [ $# = 0 ]; then
+	echo usage $0 nomdépôt  [ prefix ]
+	exit 1
+fi
+
+opt=remi
+if [ $1 = test ]; then
+	opt=test
+	shift
+fi
+if [ $1 = php53 ]; then
+	opt=php53
+	shift
+fi
+if [ $1 = devs -o $1 = dev ]; then
+	opt=devs
+	shift
+fi
+
+if [ $1 = all ]; then
+	for i in $(seq 13 18)
+	do
+		getOneMock fc${i}i $opt
+	done
+	for i in $(seq 5 6)
+	do
+		getOneMock el${i}i $opt
+	done
+elif [ $1 = allx ]; then
+	for i in $(seq 13 18)
+	do
+		getOneMock fc${i}x $opt
+	done
+	for i in $(seq 5 6)
+	do
+		getOneMock el${i}x $opt
+	done
+else
+	for i in $*
+	do
+		getOneMock $i $opt
+	done
+fi
+

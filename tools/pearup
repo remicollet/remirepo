@@ -1,0 +1,23 @@
+#!/bin/sh
+
+vendor="Remi Collet <remi@fedoraproject.org>"
+rpmdate=$(LC_ALL="C" date +"%a %b %d %Y")
+
+if [ $# -lt 2 ]; then
+    echo "usage $0 old new"
+    exit 1
+fi
+
+sed -e "/^Version:/s/$1/$2/" \
+    -e '/^Release:/s/[0-9].*$/1%{?dist}/' \
+    -e "s/%changelog/%changelog\n* $rpmdate $vendor - $2-1\n- Update to $2\n/" \
+    -e 's/\$RPM_BUILD_ROOT/%{buildroot}/' \
+    -i *spec
+
+spectool -g -S *spec
+
+tar xf *-$1.tgz package.xml && mv package.xml package-$1.xml
+tar xf *-$2.tgz package.xml && mv package.xml package-$2.xml
+
+colordiff package-$1.xml package-$2.xml
+
