@@ -50,7 +50,6 @@ Includes and definitions for developing with icu.
 %package -n lib%{name}-doc
 Summary: Documentation for International Components for Unicode
 Group:   Documentation
-BuildArch: noarch
 
 %description -n lib%{name}-doc
 %{summary}.
@@ -67,6 +66,7 @@ BuildArch: noarch
 
 %build
 cd source
+sed -e '/AC_PREREQ/s/2.63/2.59/' -i configure.in
 autoconf
 CFLAGS='%optflags -fno-strict-aliasing'
 CXXFLAGS='%optflags -fno-strict-aliasing'
@@ -144,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc source/__docs/%{name}/html/*
 
 %changelog
+* Wed Mar 20 2013 Remi Collet <RPMS@famillecollet.com> - 4.2.1-9.1
+- backport for remi repo for EL-5 from RHEL-6 spec
+
 * Mon Dec 12 2011 Caolan McNamara <caolanm@redhat.com> - 4.2.1-9.1
 - Resolves: rhbz#766539 CVE-2011-4599 localeID overflow
 
