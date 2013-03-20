@@ -14,7 +14,7 @@ php-pecl-http		2.0.0beta4
 php-pecl-haru		1.0.4
 php-pecl-igbinary	1.1.2dev
 php-pecl-imagick	3.1.0RC2
-php-pecl-lzf		1.6.2
+php-pecl-lzf		1.6.2		*
 php-pecl-mailparse	2.1.6
 php-pecl-memcache	3.0.7
 php-pecl-memcached	2.1.0

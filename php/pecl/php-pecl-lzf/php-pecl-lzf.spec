@@ -4,7 +4,7 @@
 
 Name:           php-pecl-lzf
 Version:        1.6.2
-Release:        2%{?dist}.4
+Release:        2%{?dist}.5
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -16,7 +16,7 @@ Patch0:         php-lzf-rm-bundled-libs.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
-BuildRequires:  php-pear >= 1:1.4.0
+BuildRequires:  php-pear
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 5
 BuildRequires:  liblzf-devel
 %endif
@@ -32,13 +32,13 @@ Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
-Obsoletes:      php53-pecl-memcache
-Obsoletes:      php53u-pecl-memcache
+Obsoletes:      php53-pecl-lzf
+Obsoletes:      php53u-pecl-lzf
 %if "%{php_version}" > "5.4"
-Obsoletes:      php54-pecl-memcache
+Obsoletes:      php54-pecl-lzf
 %endif
 %if "%{php_version}" > "5.5"
-Obsoletes:      php55-pecl-memcache
+Obsoletes:      php55-pecl-lzf
 %endif
 
 # Filter private shared
