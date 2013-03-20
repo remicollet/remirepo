@@ -24,14 +24,25 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-Provides:       php-pecl(pdflib) = %{version}-%{release}
-Provides:       php-pdflib = %{version}-%{release}
 
-# RPM 4.8
+Provides:       php-%{pecl_name} = %{version}%{?prever}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}%{?prever}
+Provides:       php-pecl(%{pecl_name}) = %{version}%{?prever}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
+
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
+%endif
 
 
 %description
@@ -52,7 +63,7 @@ http://www.pdflib.com/developer-center/technical-documentation/php-howto
 
 %prep 
 %setup -c -q
-%{_bindir}/php -n %{SOURCE2} package.xml >CHANGELOG
+%{_bindir}/php %{SOURCE2} package.xml >CHANGELOG
 
 # Check version
 extver=$(sed -n '/#define PHP_PDFLIB_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_pdflib.h)
@@ -143,6 +154,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 20 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.9-2
+- cleanups
+
 * Sat Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.9-1
 - update to 2.1.9
 
