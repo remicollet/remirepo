@@ -18,7 +18,7 @@ Source:         http://pecl.php.net/get/pdflib-%{version}.tgz
 Source2:        xml2changelog
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel, pdflib-lite-devel, php-pear
+BuildRequires:  php-devel, pdflib-lite-devel, php-pear, php-xml
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
