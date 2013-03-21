@@ -5,7 +5,7 @@
 Summary:       PHP Opcode Analyser
 Name:          php-pecl-parsekit
 Version:       1.3.0
-Release:       2%{?CVS:.CVS%{CVS}}%{?dist}
+Release:       2%{?CVS:.CVS%{CVS}}%{?dist}.1
 License:       PHP
 URL:           http://pecl.php.net/package/parsekit
 Group:         Development/Libraries

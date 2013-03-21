@@ -12,7 +12,7 @@
 Summary:      A query cache plugin for mysqlnd
 Name:         php-pecl-mysqlnd-qc
 Version:      1.2.0
-Release:      1%{?dist}.1
+Release:      1%{?dist}.2
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/mysqlnd_qc

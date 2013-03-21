@@ -8,7 +8,7 @@ Summary(ru):      Манипулирование пользовательски�
 Summary(pl):      Obróbka zdefiniowanych przez użytkownika funkcji i klas
 Name:             php-pecl-%{pecl_name}
 Version:          1.0.4
-Release:          0.3%{?GIT:.git%{GIT}}%{?dist}.1
+Release:          0.3%{?GIT:.git%{GIT}}%{?dist}.2
 License:          PHP
 Group:            Development/Libraries
 #URL:             http://pecl.php.net/package/runkit/

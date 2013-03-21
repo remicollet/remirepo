@@ -4,7 +4,7 @@
 Summary:      Wrapper around the gpgme library
 Name:         php-pecl-gnupg
 Version:      1.3.2
-Release:      3%{?dist}.4
+Release:      3%{?dist}.5
 
 License:      BSD
 Group:        Development/Languages

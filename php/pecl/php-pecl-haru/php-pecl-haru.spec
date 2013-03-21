@@ -4,7 +4,7 @@
 Summary:      Haru PDF functions
 Name:         php-pecl-haru
 Version:      1.0.4
-Release:      1%{?dist}.1
+Release:      1%{?dist}.2
 
 # https://bugs.php.net/60958 - Please Provides LICENSE file
 License:      PHP
