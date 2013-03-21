@@ -4,7 +4,7 @@
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
 Version:       1.0.9
-Release:       3%{?dist}.2
+Release:       3%{?dist}.3
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -26,13 +26,13 @@ Provides:         php-pecl(%{pecl_name}) = %{version}
 Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
-Obsoletes:     php53-pecl-amqp
-Obsoletes:     php53u-pecl-amqp
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-amqp
+Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-amqp
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 

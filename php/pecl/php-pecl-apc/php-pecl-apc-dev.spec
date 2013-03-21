@@ -7,7 +7,7 @@
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          php-pecl-apc
 Version:       3.1.15
-Release:       0.1.svn%{svnrev}%{?dist}.1
+Release:       0.1.svn%{svnrev}%{?dist}.2
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC

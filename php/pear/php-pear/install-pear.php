@@ -72,6 +72,9 @@ for ($i = 0; $i < sizeof($argv); $i++) {
     } elseif ($arg == '-o' || $arg == '--download') {
         $download_dir = $argv[$i+1];
         $i++;
+    } elseif ($arg == '-m' || $arg == '--metadata') {
+        $metadata_dir = $argv[$i+1];
+        $i++;
     } elseif ($arg == '-t' || $arg == '--temp') {
         $temp_dir = $argv[$i+1];
         $i++;
@@ -159,6 +162,10 @@ if (!empty($test_dir)) {
 if (!empty($with_dir)) {
     $ds = DIRECTORY_SEPARATOR;
     $config->set('php_dir', $with_dir, 'default');
+    // Metadata
+    if (!empty($metadata_dir)) {
+        $config->set('metadata_dir', $metadata_dir, 'default');
+    }
     if (empty($doc_dir)) {
         $config->set('doc_dir', $with_dir . $ds . 'doc', 'default');
     }
@@ -230,7 +237,7 @@ $options['upgrade'] = true;
 $install_root = getenv('INSTALL_ROOT');
 if (!empty($install_root)) {
     $options['packagingroot'] = $install_root;
-    $reg = &new PEAR_Registry($options['packagingroot']);
+    $reg = &new PEAR_Registry($options['packagingroot'], false, false, $metadata_dir);
 } else {
     $reg = $config->getRegistry('default');
 }

@@ -13,7 +13,7 @@
 %pear_datadir %(%{__pear} config-get data_dir 2> /dev/null || echo undefined)
 %pear_cfgdir  %(%{__pear} config-get cfg_dir  2> /dev/null || echo undefined)
 %pear_wwwdir  %(%{__pear} config-get www_dir  2> /dev/null || echo undefined)
-%pear_metadir %{pear_phpdir}
+%pear_metadir %(%{__pear} config-get metadata_dir 2> /dev/null || echo undefined)
 
 #
 # Define PECL directories used in php-pecl-* spec files:

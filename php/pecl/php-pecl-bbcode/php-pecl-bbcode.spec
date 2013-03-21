@@ -6,7 +6,7 @@
 Summary:      BBCode parsing Extension
 Name:         php-pecl-bbcode
 Version:      1.0.3
-Release:      0.3.%{pre}%{?dist}
+Release:      0.3.%{pre}%{?dist}.1
 # pecl extension is PHP, bbcode2 is BSD, bstrlib (from bstring) is BSD
 License:      PHP and BSD
 Group:        Development/Languages
@@ -27,6 +27,16 @@ Provides:     php-pecl(%{pecl_name}) = %{version}%{?pre}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
 Provides:     php-%{pecl_name} = %{version}%{?pre}
 Provides:     php-%{pecl_name}%{?_isa} = %{version}%{?pre}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
+%endif
 
 
 # Filter private shared object

@@ -1,5 +1,5 @@
 #!/bin/sh
-exec /usr/bin/php -C -n -q \
+exec /usr/bin/php -C -q \
     -d include_path=/usr/share/pear \
     -d date.timezone=UTC \
     -d output_buffering=1 \

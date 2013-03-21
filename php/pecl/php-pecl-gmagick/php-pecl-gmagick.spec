@@ -6,15 +6,16 @@
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
 Version:        1.1.2
-Release:        0.1.%{prever}%{?dist}
+Release:        0.1.%{prever}%{?dist}.1
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
 Source0:        http://pecl.php.net/get/gmagick-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
-BuildRequires:  php-pear >= 1.4.7
-BuildRequires:  php-devel >= 5.1.3, GraphicsMagick-devel >= 1.2.6
+BuildRequires:  php-pear
+BuildRequires:  php-devel
+BuildRequires:  GraphicsMagick-devel >= 1.2.6
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}

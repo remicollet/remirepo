@@ -8,7 +8,7 @@
 Name:           php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.2
-Release:        0.5%{?gitver:.git%{gitver}}%{?dist}
+Release:        0.5%{?gitver:.git%{gitver}}%{?dist}.1
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
@@ -38,13 +38,13 @@ Provides:       php-pecl(Xdebug) = %{version}
 Provides:       php-pecl(Xdebug)%{?_isa} = %{version}
 
 # Other third party repo stuff
-Obsoletes:     php53-pecl-xdebug
-Obsoletes:     php53u-pecl-xdebug
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-xdebug
+Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-xdebug
+Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
 # Filter private shared

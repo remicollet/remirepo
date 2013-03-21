@@ -6,7 +6,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
 Version:       3.1.0
-Release:       0.8.%{prever}%{?dist}.2
+Release:       0.8.%{prever}%{?dist}.3
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
