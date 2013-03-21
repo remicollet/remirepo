@@ -7,7 +7,7 @@
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.14.%{prever}%{?dist}.2
+Release:        0.15.%{prever}%{?dist}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -20,6 +20,7 @@ Source1:        %{proj_name}.ini
 
 # fix memset arg order
 Patch1:         %{name}-build.patch
+Patch2:         %{name}-php55.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.3.0
@@ -98,6 +99,7 @@ These are the files needed to compile programs using HTTP extension.
 
 cd %{proj_name}-%{version}%{?prever}
 %patch1 -p0 -b .build
+%patch2 -p1 -b .php55
 
 extver=$(sed -n '/#define PHP_HTTP_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -197,6 +199,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 21 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.15.beta4
+- fix build with php 5.5.0beta1
+
 * Sun Dec 31 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.14.beta4
 - update to 2.0.0beta4
 

@@ -1,0 +1,43 @@
+diff -ru pecl_http-zts/php_http_client_datashare.c pecl_http-2.0.0beta4/php_http_client_datashare.c
+--- pecl_http-zts/php_http_client_datashare.c	2013-03-21 12:54:46.601262693 +0100
++++ pecl_http-2.0.0beta4/php_http_client_datashare.c	2013-03-21 13:17:05.103056205 +0100
+@@ -261,7 +261,7 @@
+ 		return &php_http_property_proxy_init(NULL, object, member, NULL TSRMLS_CC)->myself;
+ 	}
+ 
+-	return zend_get_std_object_handlers()->get_property_ptr_ptr(object, member PHP_HTTP_ZEND_LITERAL_CC TSRMLS_CC);
++	return zend_get_std_object_handlers()->get_property_ptr_ptr(object, member PHP_HTTP_ZEND_LITERAL_TCC TSRMLS_CC);
+ }
+ 
+ 
+diff -ru pecl_http-zts/php_http_message.c pecl_http-2.0.0beta4/php_http_message.c
+--- pecl_http-zts/php_http_message.c	2012-12-31 12:54:50.000000000 +0100
++++ pecl_http-2.0.0beta4/php_http_message.c	2013-03-21 13:16:47.435992961 +0100
+@@ -1097,7 +1097,7 @@
+ 	}
+ 	zval_ptr_dtor(&copy);
+ 
+-	return zend_get_std_object_handlers()->get_property_ptr_ptr(object, member PHP_HTTP_ZEND_LITERAL_CC TSRMLS_CC);
++	return zend_get_std_object_handlers()->get_property_ptr_ptr(object, member PHP_HTTP_ZEND_LITERAL_TCC TSRMLS_CC);
+ }
+ 
+ static zval *php_http_message_object_read_prop(zval *object, zval *member, int type PHP_HTTP_ZEND_LITERAL_DC TSRMLS_DC)
+diff -ru pecl_http-zts/php_http_misc.h pecl_http-2.0.0beta4/php_http_misc.h
+--- pecl_http-zts/php_http_misc.h	2012-12-31 12:54:50.000000000 +0100
++++ pecl_http-2.0.0beta4/php_http_misc.h	2013-03-21 13:16:07.416849571 +0100
+@@ -128,6 +128,7 @@
+ #	define PHP_HTTP_ZEND_LITERAL_DC 
+ #	define PHP_HTTP_ZEND_LITERAL_CC
+ #	define PHP_HTTP_ZEND_LITERAL_CCN
++#	define PHP_HTTP_ZEND_LITERAL_TCC
+ #	define ZVAL_COPY_VALUE(zv, arr) do { \
+ 		(zv)->value = (arr)->value; \
+ 		Z_TYPE_P(zv) = Z_TYPE_P(arr); \
+@@ -136,6 +137,7 @@
+ #	define PHP_HTTP_ZEND_LITERAL_DC , const zend_literal *literal_key
+ #	define PHP_HTTP_ZEND_LITERAL_CC , (literal_key)
+ #	define PHP_HTTP_ZEND_LITERAL_CCN , NULL
++#	define PHP_HTTP_ZEND_LITERAL_TCC , BP_VAR_RW , (literal_key)
+ #endif
+ 
+ #define INIT_PZVAL_ARRAY(zv, ht) \
