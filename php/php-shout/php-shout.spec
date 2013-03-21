@@ -1,6 +1,6 @@
 Name:           php-shout
 Version:        0.9.2
-Release:        12%{?dist}
+Release:        12%{?dist}.1
 Summary:        PHP module for communicating with Icecast servers
 
 Group:          Development/Languages

@@ -1,24 +1,26 @@
 %global php_apiver %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
 
-Summary:	PHP API for GNU LibIDN
-Name:		php-idn
-Version:	1.2c
-Release:	6%{?dist}
-License:	GPLv2+
-Group:		Development/Languages
-Source0:	http://php-idn.bayour.com/idn_%{version}.tar.gz
-Source1:	idn.ini
+Summary:       PHP API for GNU LibIDN
+Name:          php-idn
+Version:       1.2c
+Release:       6%{?dist}.1
+License:       GPLv2+
+Group:         Development/Languages
+Source0:       http://php-idn.bayour.com/idn_%{version}.tar.gz
+Source1:       idn.ini
 
-Patch0:         idn-php54.patch
+Patch0:        idn-php54.patch
 
-URL:		http://php-idn.bayour.com/
+URL:           http://php-idn.bayour.com/
 
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:	php-devel >= 4.3.0, libidn-devel >= 0.4.0, autoconf, automake, libtool
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: php-devel
+BuildRequires: libidn-devel >= 0.4.0
+BuildRequires: autoconf, automake, libtool
 
-Requires:	php(zend-abi) = %{php_zend_api}
-Requires:	php(api) = %{php_core_api}
-Requires:	php-intl%{?_isa}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
+Requires:       php-intl%{?_isa}
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}

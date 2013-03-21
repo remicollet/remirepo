@@ -18,7 +18,7 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          php-%{ext_name}
 Version:       2.2.2
-Release:       5%{?gitver:.git%{gitver}}%{?dist}.1
+Release:       5%{?gitver:.git%{gitver}}%{?dist}.2
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/nicolasff/phpredis

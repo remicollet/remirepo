@@ -4,7 +4,7 @@
 Name:           php-ffmpeg
 Version:        0.7.0
 %if 0%{?svn}
-Release:        0.2.svn%{svn}%{?dist}.1
+Release:        0.2.svn%{svn}%{?dist}.2
 %else
 Release:        1%{?dist}
 %endif

@@ -6,7 +6,7 @@
 
 Name:		php-libvirt
 Version:	0.4.5
-Release:	2%{?dist}%{?extra_release}
+Release:	2%{?dist}%{?extra_release}.1
 Summary:	PHP language binding for Libvirt
 
 Group:		Development/Libraries
