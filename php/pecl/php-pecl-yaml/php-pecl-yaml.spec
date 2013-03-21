@@ -5,7 +5,7 @@
 Summary:       PHP Bindings for yaml
 Name:          php-pecl-yaml
 Version:       1.1.0
-Release:       2%{?dist}.3
+Release:       2%{?dist}.4
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml

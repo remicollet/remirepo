@@ -6,7 +6,7 @@
 Summary:       API for communicating with MessagePack serialization
 Name:          php-pecl-msgpack
 Version:       0.5.5
-Release:       1%{?dist}.1
+Release:       1%{?dist}.2
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack

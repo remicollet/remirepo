@@ -4,7 +4,7 @@
 
 Name:           php-pecl-radius
 Version:        1.2.5
-Release:        14%{?dist}.3
+Release:        14%{?dist}.4
 Summary:        Radius client library
 
 License:        BSD

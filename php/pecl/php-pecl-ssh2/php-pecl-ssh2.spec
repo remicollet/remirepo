@@ -4,7 +4,7 @@
 
 Name:           php-pecl-ssh2
 Version:        0.12
-Release:        1%{?dist}.4
+Release:        1%{?dist}.5
 Summary:        Bindings for the libssh2 library
 
 # http://pecl.php.net/bugs/bug.php?id=24364

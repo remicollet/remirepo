@@ -5,7 +5,7 @@
 Summary:      Terminal screen handling and optimization package
 Name:         php-pecl-ncurses
 Version:      1.0.2
-Release:      1%{?dist}.4
+Release:      1%{?dist}.5
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/ncurses
@@ -27,7 +27,7 @@ Requires:     php(api) = %{php_core_api}
 Obsoletes:    php-ncurses < 5.3.0
 Provides:     php-ncurses = 5.3.0
 Provides:     php-ncurses%{?_isa} = 5.3.0
-Provides:     php-pecl(%{pecl_name}) = %{version}-%{release}
+Provides:     php-pecl(%{pecl_name}) = %{version}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff

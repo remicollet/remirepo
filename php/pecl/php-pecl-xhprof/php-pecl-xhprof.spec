@@ -5,7 +5,7 @@
 
 Name:           php-pecl-xhprof
 Version:        0.9.2
-Release:        8%{?gitver:.git%{gitver}}%{?dist}
+Release:        8%{?gitver:.git%{gitver}}%{?dist}.1
 
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
@@ -37,6 +37,16 @@ Provides:       php-%{pecl_name} = %{version}
 Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
+%endif
 
 # Filter private provides
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}

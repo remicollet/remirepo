@@ -4,7 +4,7 @@
 
 Name:           php-pecl-oauth
 Version:        1.2.3
-Release:        1%{?dist}.3
+Release:        1%{?dist}.4
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD

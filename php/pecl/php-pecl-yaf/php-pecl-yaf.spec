@@ -5,7 +5,7 @@
 Summary:       Yet Another Framework
 Name:          php-pecl-yaf
 Version:       2.2.9
-Release:       1%{?dist}.1
+Release:       1%{?dist}.2
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf

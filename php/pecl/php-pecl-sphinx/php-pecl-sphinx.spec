@@ -4,7 +4,7 @@
 
 Name:           php-pecl-sphinx
 Version:        1.2.0
-Release:        2%{?dist}.3
+Release:        2%{?dist}.4
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
@@ -14,7 +14,7 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libsphinxclient-devel
 BuildRequires:  php-pear
-BuildRequires:  php-devel >= 5.1.3
+BuildRequires:  php-devel
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
