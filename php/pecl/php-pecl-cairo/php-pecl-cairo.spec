@@ -5,7 +5,7 @@
 
 Name:           php-pecl-cairo
 Version:        0.3.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
@@ -25,7 +25,21 @@ Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
+
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
+%endif
 
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -157,6 +171,9 @@ fi
 
 
 %changelog
+* Thu Aug  9 2012 Remi Collet <remi@fedoraproject.org> - 0.3.2-4
+- also provides php-cairo
+
 * Thu Aug  9 2012 Remi Collet <remi@fedoraproject.org> - 0.3.2-3
 - add patch for https://bugs.php.net/61882
 - (re)enabling test result on fedora > 13
