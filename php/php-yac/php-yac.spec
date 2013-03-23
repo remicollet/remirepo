@@ -7,7 +7,7 @@
 Name:           php-yac
 Summary:        Shared memory user data cache for PHP
 Version:        0.1.0
-Release:        0.1%{?gitver:.git%{gitver}}%{?dist}
+Release:        0.1%{?gitver:.git%{gitver}}%{?dist}.1
 Source0:        https://github.com/laruence/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 
 License:        PHP
