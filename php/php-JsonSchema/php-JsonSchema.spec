@@ -1,9 +1,9 @@
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.3.0
-%global github_commit  93907953341530a748aa88a5380c418eb774b895
+%global github_version 1.3.1
+%global github_commit  40cb851130a4cdbff7f680b77f6979b0e785c544
 
-%global php_min_ver    5.3.3
+%global php_min_ver    5.3.0
 
 %global lib_name       JsonSchema
 
@@ -86,6 +86,12 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Sat Mar 23 2013 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- backport 1.3.1 for remi repo.
+
+* Thu Mar 21 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3.1-1
+- Updated to upstream version 1.3.1
+
 * Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - backport 1.3.0 for remi repo.
 
