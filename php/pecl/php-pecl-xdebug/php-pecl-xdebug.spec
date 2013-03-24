@@ -1,14 +1,14 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name xdebug
-%global commit    b1ce1e3ecc95c2e24d2df73cffce7e501df53215
-%global gitver    %(c=%{commit}; echo ${c:0:7})
-%global prever    dev
+#global commit    b1ce1e3ecc95c2e24d2df73cffce7e501df53215
+#global gitver    %(c=%{commit}; echo ${c:0:7})
+#global prever    dev
 
 Name:           php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.2
-Release:        0.5%{?gitver:.git%{gitver}}%{?dist}.1
+Release:        1%{?gitver:.git%{gitver}}%{?dist}.1
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
@@ -80,14 +80,6 @@ mv %{pecl_name}-%{commit} %{pecl_name}-%{version}%{?prever}
 %endif
 
 cd %{pecl_name}-%{version}%{?prever}
-
-# https://bugs.php.net/60330
-sed -i -e '/AC_PREREQ/s/2.60/2.59/' debugclient/configure.in
-grep AC_PREREQ debugclient/configure.in
-
-# fix rpmlint warnings
-iconv -f iso8859-1 -t utf-8 Changelog > Changelog.conv && mv -f Changelog.conv Changelog
-chmod -x *.[ch]
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
@@ -196,6 +188,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 24 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- update to 2.2.2 (stable)
+
 * Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-0.5.gitb1ce1e3
 - new snapshot
 
