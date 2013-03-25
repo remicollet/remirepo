@@ -3,7 +3,7 @@
 %global zendver     20121212
 %global pdover      20080721
 # Extension version
-%global opcachever  7.0.1-dev
+%global opcachever  7.0.2-dev
 %global oci8ver     1.4.9
 
 # Adds -z now to the linker flags
@@ -72,14 +72,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201303201430
+%global snapdate      201303251230
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.20.%{?snapdate}%{?rcver}%{?dist}.1
+Release: 0.21.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -139,6 +139,8 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
+Patch99: php-5.5.0-wip.patch
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -325,9 +327,9 @@ Summary:   The Zend Optimizer+
 Group:     Development/Languages
 License:   PHP
 Requires:  php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php-pecl-zendoptimizerplus
-Provides:  php-pecl-zendoptimizerplus = %{opcachever}
-Provides:  php-pecl-zendoptimizerplus%{?_isa} = %{opcachever}
+Obsoletes: php-pecl-zendopcache
+Provides:  php-pecl-zendopcache = %{opcachever}
+Provides:  php-pecl-zendopcache%{?_isa} = %{opcachever}
 Provides:  php-pecl(opcache) = %{opcachever}
 Provides:  php-pecl(opcache)%{?_isa} = %{opcachever}
 # Only one opcode cache could be enabled
@@ -832,6 +834,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
+%patch99 -p1 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -928,6 +931,10 @@ echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 # Some extensions have their own configuration file
 cp %{SOURCE50} .
 
+# Regenerated bison files
+rm Zend/zend_{language,ini}_parser.[ch]
+./genfiles
+
 
 %build
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
@@ -995,7 +1002,7 @@ ln -sf ../configure
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
-        --with-pcre-regex=%{_prefix} \
+	--with-pcre-regex=%{_prefix} \
 %endif
 	--with-zlib \
 	--with-layout=GNU \
@@ -1004,7 +1011,7 @@ ln -sf ../configure
 	--enable-ucd-snmp-hack \
 	--with-libxml-dir=%{_prefix} \
 %if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
-        --with-system-tzdata \
+	--with-system-tzdata \
 %endif
 	--with-mhash \
 %if %{with_dtrace}
@@ -1773,6 +1780,10 @@ fi
 
 
 %changelog
+* Mon Mar 25 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.21-201303251230
+- new snapshot
+- generated parser using system bison, test for https://bugs.php.net/64503
+
 * Wed Mar 20 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.20-201303201430
 - new snapshot (beta1)
 
