@@ -1,14 +1,14 @@
 %{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
 %{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
 %global pecl_name apcu
-%global commit    6d20302a79eacf6f920bc7ba3e81368fb93f6a08
+%global commit    647cb2b285cf6acd3fd394c4d56d278e28f721f3
 %global gitver    %(c=%{commit}; echo ${c:0:7})
 %global with_zts  0%{?__ztsphp:1}
 
 Name:           php-apcu
 Summary:        Shared memory user data cache for PHP
 Version:        4.0.0
-Release:        0.2%{?gitver:.git%{gitver}}%{?dist}.1
+Release:        0.3%{?gitver:.git%{gitver}}%{?dist}
 Source0:        https://github.com/krakjoe/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
@@ -84,10 +84,6 @@ configuration, available on http://localhost/apcu-panel/
 %prep
 %setup -qc
 mv %{pecl_name}-%{commit} NTS
-
-# Temporary hack
-sed -e '/PHP_CLI_SERVER_PORT/s/8000/8000+PHP_INT_SIZE/' \
-    -i NTS/tests/server_test.inc
 
 %if %{with_zts}
 # duplicate for ZTS build
@@ -195,6 +191,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 25 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.3.git647cb2b
+- new snapshot with our pull request
+- allow to run test suite simultaneously on 32/64 arch
+- build warning free
+
 * Mon Mar 25 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.2.git6d20302
 - new snapshot with full APC compatibility
 
