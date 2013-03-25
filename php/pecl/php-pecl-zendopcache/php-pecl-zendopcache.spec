@@ -2,27 +2,19 @@
 %{!?__php:      %{expand: %%global __php      %{_bindir}/php}}
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 %global with_zts   0%{?__ztsphp:1}
-%global owner      zend-dev
-%global commit     cef6093956bee5446207d5919fc9d30be58aa245
-%global short      %(c=%{commit}; echo ${c:0:7})
-%global prever     dev
-%global proj_name  ZendOptimizerPlus
-%global pecl_name  zendoptimizerplus
+%global proj_name  ZendOpcache
+%global pecl_name  zendopcache
 %global plug_name  opcache
 
 Name:          php-pecl-%{pecl_name}
 Version:       7.0.1
-Release:       0.1.git%{short}%{?dist}
-Summary:       The Zend Optimizer+
+Release:       1%{?dist}
+Summary:       The Zend OPcache
 
 Group:         Development/Libraries
 License:       PHP
 URL:           http://pecl.php.net/package/%{proj_name}
-%if 0%{?commit:1}
-Source0:       https://github.com/%{owner}/%{proj_name}/archive/%{commit}/%{proj_name}-%{version}-%{short}.tar.gz
-%else
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-%endif
 # this extension must be loaded before XDebug
 # So "opcache" if before "xdebug"
 Source1:       %{plug_name}.ini
@@ -51,7 +43,7 @@ Provides:      php-%{plug_name}%{?_isa} = %{version}-%{release}
 
 
 %description
-The Zend Optimizer+ provides faster PHP execution through opcode caching and
+The Zend OPcache provides faster PHP execution through opcode caching and
 optimization. It improves PHP performance by storing precompiled script
 bytecode in the shared memory. This eliminates the stages of reading code from
 the disk and compiling it on future access. In addition, it applies a few
@@ -60,13 +52,7 @@ bytecode optimization patterns that make code execution faster.
 
 %prep
 %setup -q -c
-%if 0%{?commit:1}
-mv %{proj_name}-%{commit} NTS
-sed -e '/release/s/7.0.0/%{version}%{prever}/' \
-    NTS/package.xml >package.xml
-%else
 mv %{pecl_name}-%{version} NTS
-%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define ACCELERATOR_VERSION/{s/.* "//;s/".*$//;p}' NTS/ZendAccelerator.h)
@@ -122,7 +108,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 cd NTS
 %{__php} \
     -n -d zend_extension=%{buildroot}%{php_extdir}/%{plug_name}.so \
-    -m | grep "Zend Optimizer+"
+    -m | grep "Zend OPcache"
 
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_extdir}/%{plug_name}.so" \
@@ -134,7 +120,7 @@ REPORT_EXIT_STATUS=1 \
 cd ../ZTS
 %{__ztsphp} \
     -n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{plug_name}.so \
-    -m | grep "Zend Optimizer+"
+    -m | grep "Zend OPcache"
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{plug_name}.so" \
@@ -168,6 +154,10 @@ fi
 
 
 %changelog
+* Mon Mar 25 2013 Remi Collet <remi@fedoraproject.org> - 7.0.1-1
+- official PECL release, version 7.0.1 (beta)
+- rename to php-pecl-zendopcache
+
 * Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 7.0.1-0.1.gitcef6093
 - update to git snapshot, with new name (opcache)
 
