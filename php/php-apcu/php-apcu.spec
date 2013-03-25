@@ -1,14 +1,14 @@
 %{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
 %{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
 %global pecl_name apcu
-%global commit    44e8dd480eb923760eabdee8e3159e730e7c46fe
+%global commit    6d20302a79eacf6f920bc7ba3e81368fb93f6a08
 %global gitver    %(c=%{commit}; echo ${c:0:7})
 %global with_zts  0%{?__ztsphp:1}
 
 Name:           php-apcu
 Summary:        Shared memory user data cache for PHP
 Version:        4.0.0
-Release:        0.1%{?gitver:.git%{gitver}}%{?dist}.1
+Release:        0.2%{?gitver:.git%{gitver}}%{?dist}.1
 Source0:        https://github.com/krakjoe/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
@@ -23,6 +23,13 @@ BuildRequires:  php-devel
 
 # Should be a drop in replacement for APC, will Obsolete it in the future
 Conflicts:      php-pecl-apc
+# Same provides than APC, this is a drop in replacement
+Provides:       php-apc = %{version}
+Provides:       php-apc%{?_isa} = %{version}
+Provides:       php-pecl-apc = %{version}
+Provides:       php-pecl-apc%{?_isa} = %{version}
+Provides:       php-pecl(APC) = %{version}
+Provides:       php-pecl(APC)%{?_isa} = %{version}
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -126,6 +133,11 @@ install -D -m 644 -p %{SOURCE3} \
 %check
 cd NTS
 
+# Check than both extensions are reported (BC mode)
+%{_bindir}/php -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
+%{_bindir}/php -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apc$'
+
+# Upstream test suite
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
@@ -134,6 +146,9 @@ REPORT_EXIT_STATUS=1 \
 
 %if %{with_zts}
 cd ../ZTS
+
+%{__ztsphp}    -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
+%{__ztsphp}    -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apc$'
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
@@ -176,5 +191,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 25 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.2.git6d20302
+- new snapshot with full APC compatibility
+
 * Sat Mar 23 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.1.git44e8dd4
 - initial package, version 4.0.0
