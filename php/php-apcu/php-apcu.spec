@@ -85,6 +85,10 @@ configuration, available on http://localhost/apcu-panel/
 %setup -qc
 mv %{pecl_name}-%{commit} NTS
 
+# Temporary hack
+sed -e '/PHP_CLI_SERVER_PORT/s/8000/8000+PHP_INT_SIZE/' \
+    -i NTS/tests/server_test.inc
+
 %if %{with_zts}
 # duplicate for ZTS build
 cp -pr NTS ZTS

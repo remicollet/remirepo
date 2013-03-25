@@ -90,12 +90,8 @@ grep date package.xml
 
 cd APC-%{version}
 
-%if 0%{?__isa_bits}
-# port number to allow 32/64 build at same time
-port=$(expr %{__isa_bits} + 8900)
-sed -e "/PHP_CLI_SERVER_PORT/s/8964/$port/" \
+sed -e "/PHP_CLI_SERVER_PORT/s/8964/8960+PHP_INT_SIZE/" \
     -i tests/server_test.inc
-%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
