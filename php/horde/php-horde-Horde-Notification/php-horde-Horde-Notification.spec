@@ -97,11 +97,11 @@ fi
 * Tue Mar 26 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - cleanups before review
 
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
 
-* Sat Nov  3 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Sat Nov  3 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Thu Jun 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.1-1
 - Initial package
