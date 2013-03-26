@@ -1,14 +1,14 @@
 %{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
 %{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
 %global pecl_name apcu
-%global commit    647cb2b285cf6acd3fd394c4d56d278e28f721f3
+%global commit    4322fad60f018f10f533ac4946799ef4e3dbd0fd
 %global gitver    %(c=%{commit}; echo ${c:0:7})
 %global with_zts  0%{?__ztsphp:1}
 
 Name:           php-apcu
 Summary:        Shared memory user data cache for PHP
 Version:        4.0.0
-Release:        0.3%{?gitver:.git%{gitver}}%{?dist}
+Release:        0.4%{?gitver:.git%{gitver}}%{?dist}
 Source0:        https://github.com/krakjoe/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
@@ -191,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 26 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.4.git4322fad
+- new snapshot (test before release)
+
 * Mon Mar 25 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.3.git647cb2b
 - new snapshot with our pull request
 - allow to run test suite simultaneously on 32/64 arch
