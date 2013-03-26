@@ -5,7 +5,7 @@
 
 Name:           php-pecl-cairo
 Version:        0.3.2
-Release:        4%{?dist}
+Release:        4%{?dist}.1
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
@@ -16,10 +16,10 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Patch0:         pecl-cairo-php_streams.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  cairo-devel >= 1.4
+BuildRequires:  cairo-devel
 BuildRequires:  freetype-devel
 BuildRequires:  php-devel
-BuildRequires:  php-pear >= 1:1.4.0
+BuildRequires:  php-pear
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
