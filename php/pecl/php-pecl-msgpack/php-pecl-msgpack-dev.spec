@@ -1,8 +1,5 @@
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
-%global with_zts    0%{?__ztsphp:1}
 %global pecl_name   msgpack
 
 Summary:       API for communicating with MessagePack serialization
@@ -17,6 +14,7 @@ Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # https://github.com/msgpack/msgpack-php/issues/16
 Patch0:        %{pecl_name}.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 BuildRequires: php-pear
 
@@ -29,6 +27,17 @@ Provides:      php-%{pecl_name} = %{version}
 Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
+%endif
+
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -78,10 +87,8 @@ if test "x${extver}" != "x%{version}"; then
 fi
 cd ..
 
-%if %{with_zts}
 # duplicate for ZTS build
 cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
-%endif
 
 # Drop in the bit of configuration
 cat > %{pecl_name}.ini << 'EOF'
@@ -102,24 +109,21 @@ cd %{pecl_name}-%{version}
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if %{with_zts}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
+rm -rf %{buildroot}
 # Install the NTS stuff
 make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
 # Install the ZTS stuff
-%if %{with_zts}
 make -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -134,7 +138,6 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
-%if %{with_zts}
 cd ../%{pecl_name}-zts
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
@@ -142,7 +145,6 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
-%endif
 
 
 %post
@@ -155,25 +157,26 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-, root, root, 0755)
 %doc %{pecl_name}-%{version}/{ChangeLog,CREDITS,LICENSE,README.md}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
-%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
-%endif
 
 
 %files devel
+%defattr(-, root, root, 0755)
 %{php_incldir}/ext/%{pecl_name}
-
-%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
-%endif
 
 
 %changelog
