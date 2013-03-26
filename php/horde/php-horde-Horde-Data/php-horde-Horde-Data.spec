@@ -9,12 +9,13 @@ Release:        1%{?dist}
 Summary:        Horde Data API
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
@@ -96,9 +97,10 @@ done | tee ../%{pear_name}.lang
 
 
 %check
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
 
