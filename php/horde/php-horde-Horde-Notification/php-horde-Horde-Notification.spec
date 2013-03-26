@@ -31,6 +31,11 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+# Optional
+Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Alarm) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

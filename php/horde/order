@@ -49,7 +49,7 @@
 45 php-horde-Horde-Compress     =   2.0.3   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
 46 php-horde-Horde-History      *   2.0.2   => BR(Db),   Db, Exception
 47 php-horde-Horde-Crypt        =   2.1.3   =>           Exception, Mime, Stream-Filter, Translation, Util
-48 php-horde-Horde-Notification *   2.0.1   =>           Exception, Util
+48 php-horde-Horde-Notification *   2.0.1   =>           Exception, Util, Alarm, Nls
 49 php-horde-Horde-Icalendar    -   2.0.4   => BR(Date), Date, Exception, Mail, Mime, Support, Translation, Util
 50 php-horde-Horde-Stream       =   1.2.0   =>           Exception
 51 ...orde-Horde-Crypt-Blowfish =   1.0.2   =>
