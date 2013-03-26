@@ -42,7 +42,7 @@
 38 php-horde-Horde-Controller   =   2.0.1   =>           Exception, Injector, Log, Support, Util
 39 php-horde-Horde-View         *   2.0.2   => BR(Controller), Exception, Support, Util
 40 php-horde-Horde-Mail         =   2.0.4   =>           Exception, Mime, Stream-Filter
-41 php-horde-Horde-Mime         -   2.0.4   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
+41 php-horde-Horde-Mime         ?   2.0.4   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 42 php-horde-Horde-Perms        -   2.1.0   => BR(Group), Db, Exception, Group, Util, Translation
 43 php-horde-Horde-Prefs        -   2.3.2   => BR(Db),   Exception, Mime, Translation, Util
 44 php-horde-Horde-Vfs          =   2.0.4   => BR(Db),   Auth, Db, Exception, Translation, Util, Mime, Perms
@@ -61,8 +61,8 @@
 57 php-horde-Horde-Mime-Viewer  *   2.0.4   => BR(Role), Browser, Compress, Exception, Mime, Text_Filter, Text_Flowed, Util, Translation
 58 php-horde-Horde-Itip         *   2.0.4   => BR(Icalendar), Icalendar, Mime, Prefs
 59 ...Horde-Text-Filter-Csstidy *   2.0.1   =>           Text-Filter
-60 php-horde-Horde-Data         -   2.0.3   =>           Browser, Exception, Icalendar, Mime, Translation, Util
-61 php-horde-Horde-SyncMl           2.0.3   =>           Date, ICalandar, Log, Support, Util, Xml_Wbxml, Translation
+60 php-horde-Horde-Data         ?   2.0.3   =>           Browser, Exception, Icalendar, Mime, Translation, Util
+61 php-horde-Horde-SyncMl       *   2.0.3   =>           Date, ICalandar, Log, Support, Util, Xml_Wbxml, Translation
 62 php-horde-Horde-Core         *   2.4.3   => BR(Role, Url, Injector, Group)
 63 php-horde-Horde-Form         -   2.0.3   =>           Core, Date, Exception, Mime, Nls, Token, Translation, Util
 64 php-horde-Horde-Rpc          *   2.0.3   =>           Core, Exception, Perms, Serialize, Support, Translation, Util, Xml_Element

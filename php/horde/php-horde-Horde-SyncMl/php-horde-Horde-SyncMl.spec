@@ -3,23 +3,24 @@
 %global pear_name    Horde_SyncMl
 %global pear_channel pear.horde.org
 
+# No run of unit tests - because tests are not ready (oudated)
+
 Name:           php-horde-Horde-SyncMl
 Version:        2.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde_SyncMl provides an API for processing SyncML requests
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
-# To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -93,10 +94,12 @@ do
          && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
 
-
-%check
-cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-# not ready (old phpt) phpunit -d date.timezone=UTC .
+# make rpmlint happy
+for fic in %{buildroot}%{pear_testdir}/%{pear_name}/Horde/SyncMl/*.php
+do
+  sed -e '/s^#!/s:/usr/bin/env php:%{_bindir}/php:' -i $fic
+  chmod +x $fic
+done
 
 
 %post
@@ -123,18 +126,21 @@ fi
 
 
 %changelog
+* Tue Mar 26 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
+- cleanups before review
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 
-* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+* Thu Jan 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
 - use local script instead of find_lang
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
 
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.8-1
 - Initial package
