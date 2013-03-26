@@ -4,8 +4,8 @@
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.3.5
-Release:      1%{?dist}.2
+Version:      1.3.6
+Release:      1%{?dist}.1
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -133,6 +133,9 @@ fi
 
 
 %changelog
+* Tue Mar 26 2013 Remi Collet <remi@fedoraproject.org> - 1.3.6-1
+- Update to 1.3.6
+
 * Fri Mar 15 2013 Remi Collet <remi@fedoraproject.org> - 1.3.5-1
 - Update to 1.3.5
 
