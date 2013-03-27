@@ -26,7 +26,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
-Requires:       php-ldap
+Requires:       php-pdo
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
@@ -48,6 +48,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Image) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Ldap) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Ldap) >= 3.0.0
 # TODO Horde_Imsp, Kolab_Storage
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
