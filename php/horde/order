@@ -54,7 +54,7 @@
 50 php-horde-Horde-Stream       =   1.2.0   =>           Exception
 51 ...orde-Horde-Crypt-Blowfish =   1.0.2   =>
 52 php-horde-Horde-Secret       =   2.0.2   => BR(Horde-Crypt-Blowfish) Exception, Support
-53 php-horde-Horde-Imap-Client  *   2.7.2   => BR(Stream, Mime), Exception, Mail, Mime, Stream, Util, Cache, Secret, Stream_Filter
+53 php-horde-Horde-Imap-Client  *   2.8.0   => BR(Stream, Mime), Exception, Mail, Mime, Stream, Util, Cache, Secret, Stream_Filter
 54 ...-Horde-SessionHandler     *   2.0.2   => BR(Db),   Exception, Util
 55 php-horde-Horde-Share        *   2.0.3   => BR(Group, Perms, Injector) Db, Exception, Group, Perms, Support, Translation, Url, Util
 56 php-horde-Horde-Role         =   1.0.1
