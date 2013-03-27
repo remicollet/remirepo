@@ -1,7 +1,4 @@
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
 %global pecl_name apcu
-%global with_zts  0%{?__ztsphp:1}
 
 Name:           php-pecl-apcu
 Summary:        APC User Cache
@@ -97,10 +94,8 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
-%if %{with_zts}
 # duplicate for ZTS build
 cp -pr NTS ZTS
-%endif
 
 
 %build
@@ -109,12 +104,10 @@ cd NTS
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
@@ -124,10 +117,8 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
 # Install the ZTS stuff
-%if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -159,7 +150,6 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
-%if %{with_zts}
 cd ../ZTS
 
 %{__ztsphp}    -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
@@ -170,7 +160,6 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
-%endif
 
 
 %clean
@@ -185,17 +174,13 @@ rm -rf %{buildroot}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
-%if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
-%endif
 
 %files devel
 %defattr(-,root,root,-)
 %{php_incldir}/ext/%{pecl_name}
-%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
-%endif
 
 %files -n apcu-panel
 %defattr(-,root,root,-)

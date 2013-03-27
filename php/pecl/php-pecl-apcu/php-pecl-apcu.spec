@@ -16,7 +16,6 @@ License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/APCu
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
 
@@ -74,9 +73,7 @@ These are the files needed to compile programs using APCu.
 %package -n apcu-panel
 Summary:       APCu control panel
 Group:         Applications/Internet
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch:     noarch
-%endif
 Requires:      %{name} = %{version}-%{release}
 Requires:      mod_php, httpd, php-gd
 #Obsoletes:     apc-panel
@@ -118,7 +115,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{pecl_name}.ini
@@ -173,12 +169,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-, root, root, 0755)
 %doc NTS/{NOTICE,LICENSE,README.md}
 %{pecl_xmldir}/%{name}.xml
 
@@ -191,7 +182,6 @@ rm -rf %{buildroot}
 %endif
 
 %files devel
-%defattr(-,root,root,-)
 %{php_incldir}/ext/%{pecl_name}
 %if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
