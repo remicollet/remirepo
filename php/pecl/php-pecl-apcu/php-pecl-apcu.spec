@@ -1,29 +1,32 @@
 %{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
 %{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
 %global pecl_name apcu
-%global commit    4322fad60f018f10f533ac4946799ef4e3dbd0fd
-%global gitver    %(c=%{commit}; echo ${c:0:7})
 %global with_zts  0%{?__ztsphp:1}
 
-Name:           php-apcu
-Summary:        Shared memory user data cache for PHP
+Name:           php-pecl-apcu
+Summary:        APC User Cache
 Version:        4.0.0
-Release:        0.4%{?gitver:.git%{gitver}}%{?dist}
-Source0:        https://github.com/krakjoe/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
+Release:        1%{?dist}.1
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
 
 License:        PHP
 Group:          Development/Languages
-URL:            https://github.com/krakjoe/yac
+URL:            http://pecl.php.net/package/APCu
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
+BuildRequires:  php-pear
 
-# Should be a drop in replacement for APC, will Obsolete it in the future
-Conflicts:      php-pecl-apc
+Obsoletes:      php-apcu < 4.0.0-1
+Provides:       php-apcu = %{version}
+Provides:       php-apcu%{?_isa} = %{version}
+Provides:       php-pecl(apcu) = %{version}
+Provides:       php-pecl(apcu)%{?_isa} = %{version}
 # Same provides than APC, this is a drop in replacement
+Conflicts:      php-pecl-apc
 Provides:       php-apc = %{version}
 Provides:       php-apc%{?_isa} = %{version}
 Provides:       php-pecl-apc = %{version}
@@ -38,7 +41,7 @@ Provides:       php-pecl(APC)%{?_isa} = %{version}
 
 %description
 APCu is userland caching: APC stripped of opcode caching in preparation
-for the deployment of Zend Optimizer+ as the primary solution to opcode
+for the deployment of Zend OPcache as the primary solution to opcode
 caching in future versions of PHP.
 
 APCu has a revised and simplified codebase, by the time the PECL release
@@ -62,6 +65,7 @@ Summary:       APCu developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      php-devel%{?_isa}
+#Obsoletes:     php-pecl-apc-devel
 
 %description devel
 These are the files needed to compile programs using APCu.
@@ -75,6 +79,7 @@ BuildArch:     noarch
 %endif
 Requires:      %{name} = %{version}-%{release}
 Requires:      mod_php, httpd, php-gd
+#Obsoletes:     apc-panel
 
 %description  -n apcu-panel
 This package provides the APCu control panel, with Apache
@@ -83,7 +88,14 @@ configuration, available on http://localhost/apcu-panel/
 
 %prep
 %setup -qc
-mv %{pecl_name}-%{commit} NTS
+mv %{pecl_name}-%{version} NTS
+
+# Sanity check, really often broken
+extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_apc.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}.
+   exit 1
+fi
 
 %if %{with_zts}
 # duplicate for ZTS build
@@ -116,6 +128,9 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{pecl_name}.ini
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
+
+# Install the package XML file
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Install the Control Panel
 # Pages
@@ -165,6 +180,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root, 0755)
 %doc NTS/{NOTICE,LICENSE,README.md}
+%{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -191,6 +207,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 27 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
+- first pecl release
+- rename from php-apcu to php-pecl-apcu
+
 * Tue Mar 26 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.4.git4322fad
 - new snapshot (test before release)
 
