@@ -30,23 +30,24 @@ Requires:       php-dom
 Requires:       php-libxml
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Http) >= 3.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Http) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Xml_Element) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Xml_Element) >= 3.0.0
-Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Conflicts:      php-pear(%{pear_channel}/Horde_Xml_Element) >= 3.0.0
 Requires:       php-channel(%{pear_channel})
+
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 Support for working with feed formats such as RSS and Atom.
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
-
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -67,7 +68,7 @@ mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 # fix rpmlint warning, fix shebang
-for fic in %{buildroot}%{pear_docdir}/%{pear_name}/examples/*.php 
+for fic in %{buildroot}%{pear_docdir}/%{pear_name}/examples/*.php
 do
   sed -e 's:@php_bin@:%{_bindir}/php:' -i $fic
 done

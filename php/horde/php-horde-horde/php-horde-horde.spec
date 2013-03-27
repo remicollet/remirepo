@@ -24,7 +24,7 @@ Source2:        horde.conf
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
@@ -39,7 +39,7 @@ Requires:       scriptaculous-httpd
 Requires:       syntaxhighlighter-httpd
 Requires:       ckeditor
 # PHP stuff
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-calendar
 Requires:       php-date
 Requires:       php-fileinfo
@@ -71,6 +71,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Feed) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Feed) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Form) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
@@ -126,7 +128,7 @@ Requires:       php-pear(Services_Weather)
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SyncMl) >= 2.0.0
 
-# Optionnal: Horde_ActiveSync, Horde_Feed, Horde_Oauth, Horde_Service_Facebook,
+# Optionnal: Horde_ActiveSync, Horde_Oauth, Horde_Service_Facebook,
 #            Horde_Service_Twitter, Horde_Service_Weather
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
