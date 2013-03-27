@@ -1,16 +1,16 @@
-Name:		php-PHPMailer
-Summary:	PHP email transport class with a lot of features
-Version:	5.2.2
-Release:	1%{?dist}
-License:	LGPLv2+
-Group:		System Environment/Libraries
-Source0:	http://phpmailer.apache-extras.org.codespot.com/files/PHPMailer_%{version}.tgz
-URL:		http://phpmailer.worxware.com/
+Name:       php-PHPMailer
+Summary:    PHP email transport class with a lot of features
+Version:    5.2.4
+Release:    1%{?dist}
+License:    LGPLv2+
+Group:      System Environment/Libraries
+Source0:    http://phpmailer.apache-extras.org.codespot.com/files/PHPMailer_%{version}.tgz
+URL:        http://phpmailer.worxware.com/
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Buildarch:	noarch
+BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Buildarch:  noarch
 
-Requires:	php-mbstring
+Requires:   php-mbstring
 
 
 %description
@@ -58,8 +58,8 @@ lang-go.js"
 
 for file in $NONUTF
 do
-	iconv -f iso-8859-1 -t utf-8 $file > $file.utf
-	mv $file.utf $file
+  iconv -f iso-8859-1 -t utf-8 $file > $file.utf
+  mv $file.utf $file
 done
 popd
 
@@ -68,15 +68,14 @@ popd
 %build
 #-------------------------------------------------------------------------------
 
-#	Make sure all file lines are \n terminated.
+# Make sure all file lines are \n terminated.
 
 find . -type f -exec sed -i -e 's/[\r\t ]*$//' '{}' ';'
 
-#	Change default language path.
+# Change default language path.
 
-sed -i -e								\
-    "/function SetLanguage/s#'language/'#'%{_datadir}/PHPMailer/language/'#" \
-    class.phpmailer.php
+sed -e "/function SetLanguage/s#'language/'#'%{_datadir}/PHPMailer/language/'#" \
+    -i class.phpmailer.php
 
 
 #-------------------------------------------------------------------------------
@@ -85,32 +84,29 @@ sed -i -e								\
 
 rm -rf "${RPM_BUILD_ROOT}"
 
-#	install directories.
+# install directories.
 
 install -p -d -m 755 "${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
 install -p -d -m 755 "${RPM_BUILD_ROOT}/%{_datadir}/PHPMailer/language/"
 
 
-#	Install class files.
+# Install class files.
 
-install -p -m 644							\
-	class.phpmailer.php "${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
-install -p -m 644 class.smtp.php "${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
-install -p -m 644 class.pop3.php "${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
+install -p -m 644 class.phpmailer.php ${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/
+install -p -m 644 class.smtp.php      ${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/
+install -p -m 644 class.pop3.php      ${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/
 
+# Install language files (these are not gettextized).
 
-#	Install language files (these are not gettextized).
+install -p -m 644 language/*.php ${RPM_BUILD_ROOT}/%{_datadir}/PHPMailer/language
 
-install -p -m 644 language/*.php					\
-	"${RPM_BUILD_ROOT}/%{_datadir}/PHPMailer/language"
-
-#	Tag language files.
+# Tag language files.
 
 (
-	cd "${RPM_BUILD_ROOT}"
-	find ".%{_datadir}/PHPMailer/language" -name "phpmailer.lang-*.php" |
-		sed -e 's/^\.//'					\
-		    -e 's#^.*/phpmailer\.lang-\(.*\)\.php$#%lang(\1) &#'
+ cd "${RPM_BUILD_ROOT}"
+ find ".%{_datadir}/PHPMailer/language" -name "phpmailer.lang-*.php" |
+  sed -e 's/^\.//' \
+      -e 's#^.*/phpmailer\.lang-\(.*\)\.php$#%lang(\1) &#'
 ) > files.list
 
 
@@ -124,7 +120,6 @@ rm -rf "${RPM_BUILD_ROOT}"
 #-------------------------------------------------------------------------------
 %files -f files.list
 #-------------------------------------------------------------------------------
-
 %defattr(-, root, root, -)
 %doc docs/* README LICENSE changelog.txt
 %doc examples
@@ -134,6 +129,9 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 
 %changelog
+* Wed Mar 27 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.2.4-1
+- Update to 5.2.4
+
 * Mon Dec 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.2.2-1
 - Update to 5.2.2, rebuild for remi repository
 
