@@ -40,6 +40,7 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
+
 %description
 This package allows to convert Kolab data objects from XML to data arrays.
 

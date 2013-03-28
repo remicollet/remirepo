@@ -39,8 +39,8 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
-This package reads/writes entries in the Kolab user
- database stored in LDAP.
+This package reads/writes entries in the Kolab user database stored in LDAP.
+
 
 %prep
 %setup -q -c
