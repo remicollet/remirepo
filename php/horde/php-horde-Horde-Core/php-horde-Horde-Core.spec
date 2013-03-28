@@ -138,6 +138,10 @@ Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Image) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Imap_Client) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Kolab_Session) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Kolab_Session) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Ldap) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Ldap) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
@@ -155,8 +159,8 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
 
-# Horde_ActiveSync, Horde_Kolab_Server
-# Horde_Kolab_Session, Horde_Kolab_Storage, Horde_Oauth, Horde_Service_Twitter
+# Horde_ActiveSync
+# Horde_Oauth, Horde_Service_Twitter
 # PEAR: Text_LanguageDetect
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}

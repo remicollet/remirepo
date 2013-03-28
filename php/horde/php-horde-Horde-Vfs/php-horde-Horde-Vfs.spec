@@ -53,12 +53,13 @@ Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Auth) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Kolab_Session) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Kolab_Session) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Perms) >= 3.0.0
 # skip Horde_Core (avoid circular dependency)
-# TODO Horde_Kolab_Session
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
