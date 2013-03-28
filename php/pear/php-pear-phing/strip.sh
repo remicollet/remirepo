@@ -8,7 +8,13 @@ if [ -f $name-$1.tgz ]; then
 	tar tf $name-$1.tgz | sort >$list.old
 
 	rm -r $name-$1/tasks/ext/jsmin
-	sed -e '/tasks\/ext\/jsmin/d' -i package.xml
+
+	sed -e '/^jsmin=/d' \
+		-i $name-$1/tasks/defaults.properties
+
+	sed -e '/tasks\/ext\/jsmin/d' \
+		-e '/defaults.properties/s/md5sum.*name/name/' \
+		-i package.xml
 
 	tar czf $name-$1-strip.tgz package.xml $name-$1
 	tar tf $name-$1-strip.tgz | grep -v '/$' | sort >$list.new

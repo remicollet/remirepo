@@ -5,7 +5,7 @@
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
 Version:	2.5.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 License:	LGPLv2
 Group:		Development/Tools
@@ -108,6 +108,9 @@ fi
 
 
 %changelog
+* Thu Mar 28 2013 Remi Collet <remi@fedoraproject.org> - 2.5.0-2
+- remove jsmin from task/defaults.properties
+
 * Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - Update to 2.5.0
 
