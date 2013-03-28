@@ -72,14 +72,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201303251230
-#global rcver         RC1
+#global snapdate      201303251230
+%global rcver         beta2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.21.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.22.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -93,7 +93,7 @@ URL: http://www.php.net/
 %if 0%{?snapdate}
 Source0: http://snaps.php.net/php5.5-%{snapdate}.tar.xz
 %else
-Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.bz2
+Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
 %endif
 Source1: php.conf
 Source2: php.ini
@@ -139,7 +139,6 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-Patch99: php-5.5.0-wip.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -323,7 +322,7 @@ extensions. If you need to compile your own PHP extensions, you will
 need to install this package.
 
 %package opcache
-Summary:   The Zend Optimizer+
+Summary:   The Zend OPcache
 Group:     Development/Languages
 License:   PHP
 Requires:  php-common%{?_isa} = %{version}-%{release}
@@ -338,7 +337,7 @@ Conflicts: php-xcache
 Conflicts: php-pecl-apc < 3.1.15
 
 %description opcache
-The Zend Optimizer+ provides faster PHP execution through opcode caching and
+The Zend OPcache provides faster PHP execution through opcode caching and
 optimization. It improves PHP performance by storing precompiled script
 bytecode in the shared memory. This eliminates the stages of reading code from
 the disk and compiling it on future access. In addition, it applies a few
@@ -834,7 +833,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
-%patch99 -p1 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -932,8 +930,10 @@ echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 cp %{SOURCE50} .
 
 # Regenerated bison files
-rm Zend/zend_{language,ini}_parser.[ch]
-./genfiles
+# to force, rm Zend/zend_{language,ini}_parser.[ch]
+if [ ! -f Zend/zend_language_parser.c ]; then
+  ./genfiles
+fi
 
 
 %build
@@ -1780,6 +1780,11 @@ fi
 
 
 %changelog
+* Thu Mar 28 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.22.beta2
+- update to 5.5.0beta2
+- Zend Optimizer+ renamed to Zend OPcache
+- sync provided configuration with upstream
+
 * Mon Mar 25 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.21-201303251230
 - new snapshot
 - generated parser using system bison, test for https://bugs.php.net/64503
