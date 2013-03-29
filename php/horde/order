@@ -48,7 +48,6 @@
 40 php-horde-Horde-Mail         =   2.0.4   =>           Exception, Mime, Stream-Filter
 41 php-horde-Horde-Mime         =   2.0.4   =>           Exception, Mail, Stream-Filter, Support, Text-Flowed, Translation, Util
 42 php-horde-Horde-Perms        =   2.1.0   => BR(Group), Db, Exception, Group, Util, Translation
-43 php-horde-Horde-Prefs        =   2.3.2   => BR(Db),   Exception, Mime, Translation, Util
 45 php-horde-Horde-Compress     =   2.0.3   => BR(Stream-Filter), Exception, Translation, Util, Stream-Filter
 46 php-horde-Horde-History      *   2.0.2   => BR(Db),   Db, Exception
 47 php-horde-Horde-Crypt        =   2.1.3   =>           Exception, Mime, Stream-Filter, Translation, Util
@@ -60,6 +59,7 @@
 53 php-horde-Horde-Imap-Client  *   2.8.1   => BR(Stream, Mime), Exception, Mail, Mime, Stream, Util, Cache, Secret, Stream_Filter
    ...-Horde-Kolab-Session      *   2.0.2   => BR(Imap_Client, Kolab_Server), Exception, Log
    ...-Horde-Kolab-Storage      *   2.0.4   => BR(Cache, History, Imap_Client, Kolab_Format), Exception, Mime, Translation, Support, Util
+43 php-horde-Horde-Prefs        =   2.3.2   => BR(Db),   Exception, Mime, Translation, Util
 44 php-horde-Horde-Vfs          =   2.0.4   => BR(Db),   Auth, Db, Exception, Translation, Util, Mime, Perms, Kolab_Session
 54 ...-Horde-SessionHandler     *   2.0.2   => BR(Db),   Exception, Util
 55 php-horde-Horde-Share        *   2.0.3   => BR(Group, Perms, Injector) Db, Exception, Group, Perms, Support, Translation, Url, Util, Kolab_Storage
