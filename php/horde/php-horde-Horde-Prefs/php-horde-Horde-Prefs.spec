@@ -52,7 +52,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Ldap) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Ldap) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 3.0.0
-# TODO Horde_Imsp
+Requires:       php-pear(%{pear_channel}/Horde_Imsp) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Imsp) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

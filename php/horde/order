@@ -2,6 +2,7 @@
 02 php-horde-Horde-Constraint   =   2.0.1
 03 php-horde-Horde-Stream-Wrapper = 2.0.1
 04 php-horde-Horde-Translation  =   2.0.1
+   php-horde-Horde-Imsp         *   2.0.3
 05 php-horde-Horde-Util         =   2.2.1
 06 php-horde-Horde-Queue        =   1.0.0
 07 php-horde-Horde-Thrift       =   2.0.1
@@ -59,7 +60,7 @@
 53 php-horde-Horde-Imap-Client  *   2.8.1   => BR(Stream, Mime), Exception, Mail, Mime, Stream, Util, Cache, Secret, Stream_Filter
    ...-Horde-Kolab-Session      *   2.0.2   => BR(Imap_Client, Kolab_Server), Exception, Log
    ...-Horde-Kolab-Storage      *   2.0.4   => BR(Cache, History, Imap_Client, Kolab_Format), Exception, Mime, Translation, Support, Util
-43 php-horde-Horde-Prefs        =   2.3.2   => BR(Db),   Exception, Mime, Translation, Util
+43 php-horde-Horde-Prefs        =   2.3.2   => BR(Db),   Exception, Mime, Translation, Util, Horde-Kolab-Storage, Horde_Imsp
 44 php-horde-Horde-Vfs          =   2.0.4   => BR(Db),   Auth, Db, Exception, Translation, Util, Mime, Perms, Kolab_Session
 54 ...-Horde-SessionHandler     *   2.0.2   => BR(Db),   Exception, Util
 55 php-horde-Horde-Share        *   2.0.3   => BR(Group, Perms, Injector) Db, Exception, Group, Perms, Support, Translation, Url, Util, Kolab_Storage
