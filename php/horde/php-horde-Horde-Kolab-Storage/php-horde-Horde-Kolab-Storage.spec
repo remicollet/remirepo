@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Kolab-Storage
 Version:        2.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
 Group:          Development/Libraries
@@ -55,8 +55,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Imap_Client) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_History) >= 3.0.0
-Conflicts:      php-pear(HTTP_Request)
-# TODO Requires: php-pear(Net_IMAP) >= 1.1.0
+Requires:       php-pear(HTTP_Request)
+Requires:       php-pear(Net_IMAP) >= 1.1.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -160,5 +160,8 @@ fi
 
 
 %changelog
+* Fri Mar 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-2
+- add requires on Net_IMAP
+
 * Thu Mar 28 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-1
 - initial package
