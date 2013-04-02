@@ -8,7 +8,7 @@
 Summary:       API for communicating with MessagePack serialization
 Name:          php-pecl-msgpack
 Version:       0.5.5
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
@@ -19,6 +19,7 @@ Patch0:        %{pecl_name}.patch
 
 BuildRequires: php-devel
 BuildRequires: php-pear
+BuildRequires: msgpack-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -66,6 +67,9 @@ These are the files needed to compile programs using MessagePack serializer.
 
 cd %{pecl_name}-%{version}
 %patch0 -p1 -b .build
+
+# use system library
+rm -rf msgpack
 
 # When this file will be removed, clean the description.
 [ -f EXPERIMENTAL ] || exit 1
@@ -177,6 +181,9 @@ fi
 
 
 %changelog
+* Tue Apr  2 2013 Remi Collet <remi@fedoraproject.org> - 0.5.5-3
+- use system msgpack library headers
+
 * Wed Mar 26 2013 Remi Collet <remi@fedoraproject.org> - 0.5.5-2
 - cleanups
 
