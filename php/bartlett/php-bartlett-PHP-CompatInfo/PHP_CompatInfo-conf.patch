@@ -1,0 +1,18 @@
+--- PHP_CompatInfo-2.14.1/phpcompatinfo.xml.dist	2013-04-01 18:17:03.000000000 +0200
++++ PHP_CompatInfo-2.14.1/phpcompatinfo.xml	2013-04-02 10:15:27.000000000 +0200
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="utf-8" ?>
+ <phpcompatinfo
+-    reference="PHP5"
++    reference="ALL"
+     report="summary"
+     reportFileAppend="false"
+     cacheDriver="file"
+@@ -12,6 +12,7 @@
+ 
+     <cache id="file">
+         <options>
++            <save_path>/tmp/phpci-%{USER}</save_path>
+             <gc_probability>1</gc_probability>
+             <gc_maxlifetime>86400</gc_maxlifetime>
+         </options>

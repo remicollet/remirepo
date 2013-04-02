@@ -8,8 +8,8 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.14.0
-Release:        3%{?dist}
+Version:        2.14.1
+Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -17,6 +17,11 @@ Group:          Development/Libraries
 License:        BSD and MIT
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
+
+# Update configuration for best experience
+# Reference = ALL known extension (instead of installed ones)
+# Make cache / save_path user specific
+Patch0:         %{pear_name}-conf.patch
 
 # Update reference for PHP 5.5
 # https://github.com/llaville/php-compat-info/commits/php-5.5
@@ -41,9 +46,8 @@ Patch21:        0021-new-intl-changes-in-php-5.5.patch
 Patch22:        0022-fix-covers-annotation.patch
 Patch23:        0023-fix-mysqli-reference-for-php-5.5-trans.patch
 Patch24:        0024-fix-gd-reference-for-php-5.5.0alpha6.patch
-
-# https://github.com/llaville/php-compat-info/issues/76
-Patch25:        %{pear_name}-2.14.0.patch
+Patch25:        0025-array_column.patch
+Patch26:        0026-fix-gd-reference-for-php-5.5.0beta2.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -92,6 +96,12 @@ This package provides experimental references for PHP 5.5.
 # Package is V2
 cd %{pear_name}-%{version}%{?prever}
 
+# Copy upstream default configuration
+cp phpcompatinfo.xml.dist phpcompatinfo.xml
+# Apply our changes
+%patch0  -p1 -b .rpm
+
+# PHP 5.5 updated references
 %patch1  -p1
 %patch2  -p1
 %patch3  -p1
@@ -114,6 +124,7 @@ cd %{pear_name}-%{version}%{?prever}
 %patch23 -p1
 %patch24 -p1
 %patch25 -p1
+%patch26 -p1
 
 # remove checksum for patched files
 sed -e 's/md5sum.*name/name/' \
@@ -140,9 +151,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 sed -i -e 's/\r//' %{buildroot}%{_bindir}/phpci
 
 # Create default package configuration
-sed -e '/reference=/s/PHP5/ALL/' \
-     %{buildroot}%{pear_cfgdir}/%{pear_name}/phpcompatinfo.xml.dist \
-    >%{buildroot}%{pear_cfgdir}/%{pear_name}/phpcompatinfo.xml
+install -pm 644 phpcompatinfo.xml %{buildroot}%{pear_cfgdir}/%{pear_name}/
 
 
 %check
@@ -197,6 +206,10 @@ fi
 
 
 %changelog
+* Tue Apr 02 2013 Remi Collet <remi@fedoraproject.org> - 2.14.1-1
+- Update to 2.14.1
+- make cache path user dependent
+
 * Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 2.14.0-3
 - add patch for broken extension report
   https://github.com/llaville/php-compat-info/issues/76
