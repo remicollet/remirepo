@@ -1,10 +1,10 @@
-%global github_owner   schmittjoh
-%global github_name    metadata
-%global github_version 1.1.1
-%global github_commit  84088bc4f6e2387ec8b549bffc1e037107572f5a
+%global github_owner    schmittjoh
+%global github_name     metadata
+%global github_version  1.3.0
+%global github_commit   f2ab7883f6f915d40bfc38a70e0ead5f130610dc
 
-%global lib_name       Metadata
-%global php_min_ver    5.3.0
+%global lib_name        Metadata
+%global php_min_ver     5.3.0
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
@@ -21,6 +21,8 @@ BuildArch:     noarch
 # Test build requires
 BuildRequires: php-common >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires: php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.0
+BuildRequires: php-pear(pear.doctrine-project.org/DoctrineCommon) <  2.4
 # Test build requires: phpci
 BuildRequires: php-date
 BuildRequires: php-reflection
@@ -42,25 +44,11 @@ The metadata classes are used to abstract away that source and provide a common
 interface for all of them.
 
 
-%package tests
-Summary:  Test suite for %{name}
-Group:    Development/Libraries
-Requires: %{name} = %{version}-%{release}
-
-%description tests
-%{summary}.
-
-
 %prep
 %setup -q -n %{github_name}-%{github_commit}
 
-# PHPUnit config
-sed 's:\(\./\)\?tests/:./:' -i phpunit.xml.dist
-mv phpunit.xml.dist tests/
-
 # Rewrite tests' bootstrap (which uses Composer autoloader) with simple
 # autoloader that uses include path
-mv tests/bootstrap.php tests/bootstrap.php.dist
 ( cat <<'AUTOLOAD'
 <?php
 spl_autoload_register(function ($class) {
@@ -79,14 +67,9 @@ AUTOLOAD
 mkdir -p -m 755 %{buildroot}%{_datadir}/php
 cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
-mkdir -p -m 755 %{buildroot}%{_datadir}/tests/%{name}
-cp -rp tests/* %{buildroot}%{_datadir}/tests/%{name}/
-
 
 %check
-%{_bindir}/phpunit \
-    -d include_path="./src:./tests:.:%{pear_phpdir}:%{_datadir}/php" \
-    -c tests/phpunit.xml.dist
+%{_bindir}/phpunit -d include_path="./src:./tests:.:%{pear_phpdir}"
 
 
 %files
@@ -94,13 +77,15 @@ cp -rp tests/* %{buildroot}%{_datadir}/tests/%{name}/
 %doc LICENSE README.rst CHANGELOG.md composer.json
 %{_datadir}/php/%{lib_name}
 
-%files tests
-%defattr(-,root,root,-)
-%dir %{_datadir}/tests
-     %{_datadir}/tests/%{name}
-
 
 %changelog
+* Tue Apr  2 2013 Remi Collet <RPMS@famillecollet.com> 1.3.0-1
+- backport 1.3.0 for remi repo
+
+* Sat Mar 30 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3.0-1
+- Updated to version 1.3.0
+- Removed tests sub-package
+
 * Fri Jan 25 2013 Remi Collet <RPMS@famillecollet.com> 1.1.1-1
 - backport 1.1.1 for remi repo
 
