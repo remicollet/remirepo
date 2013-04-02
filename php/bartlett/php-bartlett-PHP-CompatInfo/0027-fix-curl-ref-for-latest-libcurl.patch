@@ -1,0 +1,118 @@
+diff --git a/PHP/CompatInfo/Reference/curl.php b/PHP/CompatInfo/Reference/curl.php
+index cbfc2f0..507bea0 100644
+--- a/PHP/CompatInfo/Reference/curl.php
++++ b/PHP/CompatInfo/Reference/curl.php
+@@ -416,6 +416,7 @@ class PHP_CompatInfo_Reference_Curl
+             'CURLOPT_LOCALPORTRANGE'         => array('5.5.0-dev', ''),
+             'CURLOPT_LOW_SPEED_LIMIT'        => array('4.0.2', ''),
+             'CURLOPT_LOW_SPEED_TIME'         => array('4.0.2', ''),
++            'CURLOPT_MAIL_AUTH'              => array('5.5.0-dev', ''),
+             'CURLOPT_MAIL_FROM'              => array('5.5.0-dev', ''),
+             'CURLOPT_MAIL_RCPT'              => array('5.5.0-dev', ''),
+             'CURLOPT_MAXCONNECTS'            => array('4.0.2', ''),
+@@ -470,6 +471,7 @@ class PHP_CompatInfo_Reference_Curl
+             'CURLOPT_RTSP_TRANSPORT'         => array('5.5.0-dev', ''),
+             'CURLOPT_SAFE_UPLOAD'            => array('5.5.0-dev', ''),
+             'CURLOPT_SHARE'                  => array('5.5.0-dev', ''),
++            'CURLOPT_SSL_OPTIONS'            => array('5.5.0-dev', ''),
+             'CURLOPT_SOCKS5_GSSAPI_NEC'      => array('5.5.0-dev', ''),
+             'CURLOPT_SOCKS5_GSSAPI_SERVICE'  => array('5.5.0-dev', ''),
+             'CURLOPT_SSH_AUTH_TYPES'         => array('5.3.0', ''),
+@@ -492,6 +494,9 @@ class PHP_CompatInfo_Reference_Curl
+             'CURLOPT_SSL_VERIFYHOST'         => array('4.0.2', ''),
+             'CURLOPT_SSL_VERIFYPEER'         => array('4.0.2', ''),
+             'CURLOPT_STDERR'                 => array('4.0.2', ''),
++            'CURLOPT_TCP_KEEPALIVE'          => array('5.5.0-dev', ''),
++            'CURLOPT_TCP_KEEPIDLE'           => array('5.5.0-dev', ''),
++            'CURLOPT_TCP_KEEPINTVL'          => array('5.5.0-dev', ''),
+             'CURLOPT_TCP_NODELAY'            => array('5.2.1', ''),
+             'CURLOPT_TELNETOPTIONS'          => array('5.5.0-dev', ''),
+             'CURLOPT_TFTP_BLKSIZE'           => array('5.5.0-dev', ''),
+@@ -567,6 +572,8 @@ class PHP_CompatInfo_Reference_Curl
+             'CURLSSH_AUTH_PASSWORD'          => array('5.3.0', ''),
+             'CURLSSH_AUTH_PUBLICKEY'         => array('5.3.0', ''),
+ 
++            'CURLSSLOPT_ALLOW_BEAST'         => array('5.5.0-dev', ''),
++
+             'CURLUSESSL_ALL'                 => array('5.5.0-dev', ''),
+             'CURLUSESSL_CONTROL'             => array('5.5.0-dev', ''),
+             'CURLUSESSL_NONE'                => array('5.5.0-dev', ''),
+diff --git a/tests/Reference/CurlTest.php b/tests/Reference/CurlTest.php
+index 667e562..05acc5e 100644
+--- a/tests/Reference/CurlTest.php
++++ b/tests/Reference/CurlTest.php
+@@ -121,7 +121,73 @@ class PHP_CompatInfo_Reference_CurlTest
+                     $this->optionalconstants,
+                     'CURLINFO_LOCAL_IP',
+                     'CURLINFO_LOCAL_PORT',
+-                    'CURLINFO_PRIMARY_PORT'
++                    'CURLINFO_PRIMARY_PORT',
++                    'CURLOPT_FNMATCH_FUNCTION',
++                    'CURLOPT_WILDCARDMATCH',
++                    'CURLPROTO_RTMP',
++                    'CURLPROTO_RTMPE',
++                    'CURLPROTO_RTMPS',
++                    'CURLPROTO_RTMPT',
++                    'CURLPROTO_RTMPTE',
++                    'CURLPROTO_RTMPTS',
++                    'CURL_FNMATCHFUNC_FAIL',
++                    'CURL_FNMATCHFUNC_MATCH',
++                    'CURL_FNMATCHFUNC_NOMATCH'
++                );
++            }
++            if ($ver<0x071502) { /* Available since 7.21.2 */
++                array_push(
++                    $this->optionalconstants,
++                        'CURLPROTO_GOPHER'
++                );
++            }
++            if ($ver<0x071503) { /* Available since 7.21.3 */
++                array_push(
++                    $this->optionalconstants,
++                        'CURLAUTH_ONLY',
++                        'CURLOPT_RESOLVE'
++                );
++            }
++            if ($ver<0x071504) { /* Available since 7.21.4 */
++                array_push(
++                    $this->optionalconstants,
++                        'CURLOPT_TLSAUTH_PASSWORD',
++                        'CURLOPT_TLSAUTH_TYPE',
++                        'CURLOPT_TLSAUTH_USERNAME',
++                        'CURL_TLSAUTH_SRP'
++                );
++            }
++            if ($ver<0x071506) { /* Available since 7.21.6 */
++                array_push(
++                    $this->optionalconstants,
++                        'CURLOPT_ACCEPT_ENCODING',
++                        'CURLOPT_TRANSFER_ENCODING'
++                );
++            }
++            if ($ver<0x071600) { /* Available since 7.22.0 */
++                array_push(
++                    $this->optionalconstants,
++                        'CURLGSSAPI_DELEGATION_FLAG',
++                        'CURLGSSAPI_DELEGATION_POLICY_FLAG',
++                        'CURLOPT_GSSAPI_DELEGATION'
++                );
++            }
++            if ($ver<0x071800) { /* Available since 7.24.0 */
++                array_push(
++                    $this->optionalconstants,
++                        'CURLOPT_ACCEPTTIMEOUT_MS',
++                        'CURLOPT_DNS_SERVERS'
++                );
++            }
++            if ($ver<0x071900) { /* Available since 7.25.0 */
++                array_push(
++                    $this->optionalconstants,
++                        'CURLOPT_MAIL_AUTH',
++                        'CURLOPT_SSL_OPTIONS',
++                        'CURLOPT_TCP_KEEPALIVE',
++                        'CURLOPT_TCP_KEEPIDLE',
++                        'CURLOPT_TCP_KEEPINTVL',
++                        'CURLSSLOPT_ALLOW_BEAST'
+                 );
+             }
+         }
