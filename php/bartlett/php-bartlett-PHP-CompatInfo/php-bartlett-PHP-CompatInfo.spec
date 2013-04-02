@@ -48,6 +48,7 @@ Patch23:        0023-fix-mysqli-reference-for-php-5.5-trans.patch
 Patch24:        0024-fix-gd-reference-for-php-5.5.0alpha6.patch
 Patch25:        0025-array_column.patch
 Patch26:        0026-fix-gd-reference-for-php-5.5.0beta2.patch
+Patch27:        0027-fix-curl-ref-for-latest-libcurl.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -125,6 +126,7 @@ cp phpcompatinfo.xml.dist phpcompatinfo.xml
 %patch24 -p1
 %patch25 -p1
 %patch26 -p1
+%patch27 -p1
 
 # remove checksum for patched files
 sed -e 's/md5sum.*name/name/' \
