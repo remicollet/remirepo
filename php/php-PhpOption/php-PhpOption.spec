@@ -1,7 +1,7 @@
 %global github_owner   schmittjoh
 %global github_name    php-option
-%global github_version 1.1.0
-%global github_commit  617bd84bf0d918da79b06ac6765b5390b83b1321
+%global github_version 1.2.0
+%global github_commit  24e55357ced5bb041da1416711737b9e144505b4
 
 %global lib_name       PhpOption
 %global php_min_ver    5.3.0
@@ -18,14 +18,14 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# Test build requires
+# For tests
 BuildRequires: php-common >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# Test build requires: phpci
+# For tests: phpci
 BuildRequires: php-spl
 
 Requires:      php-common >= %{php_min_ver}
-# phpci requires
+# phpci
 Requires:      php-spl
 
 %description
@@ -50,25 +50,11 @@ API developer to provide more concise API methods, and empowers the API user in
 how he consumes these methods.
 
 
-%package tests
-Summary:  Test suite for %{name}
-Group:    Development/Libraries
-Requires: %{name} = %{version}-%{release}
-
-%description tests
-%{summary}.
-
-
 %prep
 %setup -q -n %{github_name}-%{github_commit}
 
-# PHPUnit config
-sed 's:\(\./\)\?tests/:./:' -i phpunit.xml.dist
-mv phpunit.xml.dist tests/
-
 # Rewrite tests' bootstrap (which uses Composer autoloader) with simple
 # autoloader that uses include path
-mv tests/bootstrap.php tests/bootstrap.php.dist
 ( cat <<'AUTOLOAD'
 <?php
 spl_autoload_register(function ($class) {
@@ -87,14 +73,9 @@ AUTOLOAD
 mkdir -p -m 755 %{buildroot}%{_datadir}/php
 cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
-mkdir -p -m 755 %{buildroot}%{_datadir}/tests/%{name}
-cp -rp tests/* %{buildroot}%{_datadir}/tests/%{name}/
-
 
 %check
-%{_bindir}/phpunit \
-    -d include_path="./src:./tests:.:%{pear_phpdir}" \
-    -c tests/phpunit.xml.dist
+%{_bindir}/phpunit -d include_path="./src:./tests:.:%{pear_phpdir}"
 
 
 %files
@@ -102,13 +83,14 @@ cp -rp tests/* %{buildroot}%{_datadir}/tests/%{name}/
 %doc LICENSE README.md composer.json
 %{_datadir}/php/%{lib_name}
 
-%files tests
-%defattr(-,root,root,-)
-%dir %{_datadir}/tests
-     %{_datadir}/tests/%{name}
-
-
 %changelog
+* Tue Apr  2 2013 Remi Collet <RPMS@famillecollet.com> 1.2.0-1
+- backport 1.2.0 for remi repo
+
+* Sat Mar 30 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.2.0-1
+- Updated to version 1.2.0
+- Removed tests sub-package
+
 * Fri Jan 25 2013 Remi Collet <RPMS@famillecollet.com> 1.1.0-1
 - backport 1.1.0 for remi repo
 
