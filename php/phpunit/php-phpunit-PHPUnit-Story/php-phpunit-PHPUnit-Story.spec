@@ -4,7 +4,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-Story
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Story extension for PHPUnit to facilitate Behaviour-Driven Development
 
@@ -15,13 +15,13 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.2.7
+BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.2.7
+Requires:       php(language) >= 5.3.3
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.4
 Requires:       php-channel(%{pear_channel})
@@ -80,5 +80,8 @@ fi
 
 
 %changelog
+* Wed Apr 03 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2 (no change)
+
 * Thu Mar 28 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
 - initial package
