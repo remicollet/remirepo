@@ -8,7 +8,7 @@
 		"Horde_Exception":["Horde_Test"],
 		"Horde_Support":["Horde_Test"],
 		"Horde_Translation":["Horde_Test"],
-		"Horde_Util":["Horde_Test"],
+		"Horde_Util":["Horde_Test","Horde_Imap_Client"],
 		"Horde_Log":["Horde_Test"],
 		"Horde_Mail":["Horde_Mime"],
 		"Horde_Date":["Horde_Icalendar"],

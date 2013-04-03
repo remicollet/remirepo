@@ -114,9 +114,7 @@ function loadFiles($verb) {
             unset($found[$k]);
         }
     }
-    if (count($found)) {
-        echo "Missing packages: ".implode(', ', $found)."\n";
-    }
+    $conf['missing'] = $found;
 }
 
 function showBuildOrder($verb) {
@@ -185,7 +183,6 @@ function showBuildOrder($verb) {
 function getRequires($name, $res=array()) {
     global $conf, $packs;
 
-//    echo "getRequires($name):".implode(', ',$res)."\n";
     if (in_array($name, $res) || !isset($packs[$name])) {
         return $res;
     }
@@ -203,7 +200,11 @@ function scanOptional($verb) {
 
     if (!$verb) return;
 
-    echo "\nOptional requires\n";
+    if (count($conf['missing'])) {
+        echo "\nMissing packages:\n\t".implode("\n\t", $conf['missing'])."\n";
+    }
+
+    echo "Optional requires\n";
 
     foreach ($packs as $pack) {
         $first = true;
@@ -238,8 +239,9 @@ function scanOptional($verb) {
             // Not explicit
             } else {
                 // Not implicit
-                if (in_array($n, $req)) {
-                } else {
+                if (!in_array($n, $req)
+                    && !(in_array($n, $conf['missing']))
+                    && !(isset($conf['ignore'][$pack['name']]) && in_array($n, $conf['ignore'][$pack['name']]))) {
                     if ($first) {
                         $first = false;
                         echo $pack['name']."\n";

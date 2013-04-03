@@ -1,13 +1,12 @@
 	kronolith Missing BuildRequires on Horde_Test
 	nag Missing BuildRequires on Horde_Test
-Missing packages: horde_lz4, Horde_Oauth, Horde_Service_Twitter, Horde_Service_Facebook, Horde_Service_Weather, timeobjects
    1 Horde_Constraint          2.0.1       I: Horde_Test 
    2 Horde_Queue               1.0.0        
    3 Horde_Role                1.0.1        
    4 Horde_Stream_Wrapper      2.0.1        
    5 Horde_Thrift              2.0.1        
    6 Horde_Translation         2.0.1       I: Horde_Test 
-   7 Horde_Util                2.2.1       I: Horde_Test 
+   7 Horde_Util                2.2.1       I: Horde_Test, Horde_Imap_Client 
    8 Horde_Exception           2.0.3       I: Horde_Test R: Horde_Translation
    9 Horde_Imsp                2.0.3        R: Horde_Translation
   10 Horde_Memcache            2.0.2        R: Horde_Exception
