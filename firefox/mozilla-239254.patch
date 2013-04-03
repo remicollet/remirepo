@@ -1,0 +1,483 @@
+# HG changeset patch
+# Parent cb34bd8957ec517c72d506f7c439e3af1950e38d
+# User Martin Stransky <stransky@redhat.com>
+Bug 239254 - [Linux] Support disk cache on a local path, r=michal.novotny
+
+diff --git a/netwerk/cache/nsCacheService.cpp b/netwerk/cache/nsCacheService.cpp
+--- a/netwerk/cache/nsCacheService.cpp
++++ b/netwerk/cache/nsCacheService.cpp
+@@ -712,27 +712,18 @@ nsCacheProfilePrefObserver::ReadPrefs(ns
+             nsCOMPtr<nsIFile> profDir;
+             NS_GetSpecialDirectory(NS_APP_USER_PROFILE_50_DIR,
+                                    getter_AddRefs(profDir));
+             NS_GetSpecialDirectory(NS_APP_USER_PROFILE_LOCAL_50_DIR,
+                                    getter_AddRefs(directory));
+             if (!directory)
+                 directory = profDir;
+             else if (profDir) {
+-                bool same;
+-                if (NS_SUCCEEDED(profDir->Equals(directory, &same)) && !same) {
+-                    // We no longer store the cache directory in the main
+-                    // profile directory, so we should cleanup the old one.
+-                    rv = profDir->AppendNative(NS_LITERAL_CSTRING("Cache"));
+-                    if (NS_SUCCEEDED(rv)) {
+-                        bool exists;
+-                        if (NS_SUCCEEDED(profDir->Exists(&exists)) && exists)
+-                            nsDeleteDir::DeleteDir(profDir, false);
+-                    }
+-                }
++                nsCacheService::MoveOrRemoveDiskCache(profDir, directory, 
++                                                      "Cache");
+             }
+         }
+         // use file cache in build tree only if asked, to avoid cache dir litter
+         if (!directory && PR_GetEnv("NECKO_DEV_ENABLE_DISK_CACHE")) {
+             rv = NS_GetSpecialDirectory(NS_XPCOM_CURRENT_PROCESS_DIR,
+                                         getter_AddRefs(directory));
+         }
+         if (directory)
+@@ -788,16 +779,20 @@ nsCacheProfilePrefObserver::ReadPrefs(ns
+             // try to get the profile directory (there may not be a profile yet)
+             nsCOMPtr<nsIFile> profDir;
+             NS_GetSpecialDirectory(NS_APP_USER_PROFILE_50_DIR,
+                                    getter_AddRefs(profDir));
+             NS_GetSpecialDirectory(NS_APP_USER_PROFILE_LOCAL_50_DIR,
+                                    getter_AddRefs(directory));
+             if (!directory)
+                 directory = profDir;
++            else if (profDir) {
++                nsCacheService::MoveOrRemoveDiskCache(profDir, directory, 
++                                                      "OfflineCache");
++            }
+         }
+ #if DEBUG
+         if (!directory) {
+             // use current process directory during development
+             rv = NS_GetSpecialDirectory(NS_XPCOM_CURRENT_PROCESS_DIR,
+                                         getter_AddRefs(directory));
+         }
+ #endif
+@@ -3012,16 +3007,67 @@ nsCacheService::SetDiskSmartSize_Locked(
+         DispatchToCacheIOThread(event);
+     } else {
+         return NS_ERROR_FAILURE;
+     }
+ 
+     return NS_OK;
+ }
+ 
++void
++nsCacheService::MoveOrRemoveDiskCache(nsIFile *aOldCacheDir, 
++                                      nsIFile *aNewCacheDir,
++                                      const char *aCacheSubdir)
++{
++    bool same;
++    if (NS_FAILED(aOldCacheDir->Equals(aNewCacheDir, &same)) || same)
++        return;
++
++    nsCOMPtr<nsIFile> aOldCacheSubdir;
++    aOldCacheDir->Clone(getter_AddRefs(aOldCacheSubdir));
++
++    nsresult rv = aOldCacheSubdir->AppendNative(
++        nsDependentCString(aCacheSubdir));
++    if (NS_FAILED(rv))
++        return;
++
++    bool exists;
++    if (NS_FAILED(aOldCacheSubdir->Exists(&exists)) || !exists)
++        return;
++
++    nsCOMPtr<nsIFile> aNewCacheSubdir;
++    aNewCacheDir->Clone(getter_AddRefs(aNewCacheSubdir));
++
++    rv = aNewCacheSubdir->AppendNative(nsDependentCString(aCacheSubdir));
++    if (NS_FAILED(rv))
++        return;
++    
++    nsAutoCString newPath;
++    rv = aNewCacheSubdir->GetNativePath(newPath);
++    if (NS_FAILED(rv))
++        return;
++        
++    if (NS_SUCCEEDED(aNewCacheSubdir->Exists(&exists)) && !exists) {
++        // New cache directory does not exist, try to move the old one here
++        // rename needs an empty target directory
++        rv = aNewCacheSubdir->Create(nsIFile::DIRECTORY_TYPE, 0777); 
++        if (NS_SUCCEEDED(rv)) {
++            nsAutoCString oldPath;
++            rv = aOldCacheSubdir->GetNativePath(oldPath);
++            if (NS_FAILED(rv))
++                return;
++            if(rename(oldPath.get(), newPath.get()) == 0)
++                return;
++        }
++    }
++    
++    // Delay delete by 1 minute to avoid IO thrash on startup.
++    nsDeleteDir::DeleteDir(aOldCacheSubdir, false, 60000);
++}
++
+ static bool
+ IsEntryPrivate(nsCacheEntry* entry)
+ {
+     return entry->IsPrivate();
+ }
+ 
+ void
+ nsCacheService::LeavePrivateBrowsing()
+diff --git a/netwerk/cache/nsCacheService.h b/netwerk/cache/nsCacheService.h
+--- a/netwerk/cache/nsCacheService.h
++++ b/netwerk/cache/nsCacheService.h
+@@ -194,16 +194,20 @@ public:
+ 
+     static void      SetMemoryCache();
+ 
+     static void      SetCacheCompressionLevel(int32_t level);
+ 
+     // Starts smart cache size computation if disk device is available
+     static nsresult  SetDiskSmartSize();
+ 
++    static void      MoveOrRemoveDiskCache(nsIFile *aOldCacheDir,
++                                           nsIFile *aNewCacheDir,
++                                           const char *aCacheSubdir);
++
+     nsresult         Init();
+     void             Shutdown();
+ 
+     static bool      IsInitialized()
+     {
+       if (!gService) {
+           return false;
+       }
+diff --git a/startupcache/StartupCache.cpp b/startupcache/StartupCache.cpp
+--- a/startupcache/StartupCache.cpp
++++ b/startupcache/StartupCache.cpp
+@@ -168,16 +168,30 @@ StartupCache::Init()
+     nsCOMPtr<nsIFile> file;
+     rv = NS_GetSpecialDirectory("ProfLDS",
+                                 getter_AddRefs(file));
+     if (NS_FAILED(rv)) {
+       // return silently, this will fail in mochitests's xpcshell process.
+       return rv;
+     }
+ 
++    nsCOMPtr<nsIFile> profDir;
++    NS_GetSpecialDirectory("ProfDS", getter_AddRefs(profDir));
++    if (profDir) {
++      bool same;
++      if (NS_SUCCEEDED(profDir->Equals(file, &same)) && !same) {
++        // We no longer store the startup cache in the main profile
++        // directory, so we should cleanup the old one.
++        if (NS_SUCCEEDED(
++              profDir->AppendNative(NS_LITERAL_CSTRING("startupCache")))) {
++          profDir->Remove(true);
++        }
++      }
++    }
++
+     rv = file->AppendNative(NS_LITERAL_CSTRING("startupCache"));
+     NS_ENSURE_SUCCESS(rv, rv);
+ 
+     // Try to create the directory if it's not there yet
+     rv = file->Create(nsIFile::DIRECTORY_TYPE, 0777);
+     if (NS_FAILED(rv) && rv != NS_ERROR_FILE_ALREADY_EXISTS)
+       return rv;
+ 
+diff --git a/toolkit/xre/nsXREDirProvider.cpp b/toolkit/xre/nsXREDirProvider.cpp
+--- a/toolkit/xre/nsXREDirProvider.cpp
++++ b/toolkit/xre/nsXREDirProvider.cpp
+@@ -1170,18 +1170,32 @@ nsXREDirProvider::GetUserDataDirectoryHo
+ #elif defined(MOZ_WIDGET_GONK)
+   rv = NS_NewNativeLocalFile(NS_LITERAL_CSTRING("/data/b2g"), true,
+                              getter_AddRefs(localDir));
+ #elif defined(XP_UNIX)
+   const char* homeDir = getenv("HOME");
+   if (!homeDir || !*homeDir)
+     return NS_ERROR_FAILURE;
+ 
+-  rv = NS_NewNativeLocalFile(nsDependentCString(homeDir), true,
+-                             getter_AddRefs(localDir));
++  if (aLocal) {
++    // If $XDG_CACHE_HOME is defined use it, otherwise use $HOME/.cache.
++    const char* cacheHome = getenv("XDG_CACHE_HOME");
++    if (cacheHome && *cacheHome) {
++      rv = NS_NewNativeLocalFile(nsDependentCString(cacheHome), true,
++                                 getter_AddRefs(localDir));
++    } else {
++      rv = NS_NewNativeLocalFile(nsDependentCString(homeDir), true,
++                                 getter_AddRefs(localDir));
++      if (NS_SUCCEEDED(rv))
++        rv = localDir->AppendNative(NS_LITERAL_CSTRING(".cache"));
++    }
++  } else {
++    rv = NS_NewNativeLocalFile(nsDependentCString(homeDir), true,
++                               getter_AddRefs(localDir));
++  }
+ #else
+ #error "Don't know how to get product dir on your platform"
+ #endif
+ 
+   NS_IF_ADDREF(*aFile = localDir);
+   return rv;
+ }
+ 
+@@ -1256,17 +1270,17 @@ nsXREDirProvider::GetUserDataDirectory(n
+                                        const nsACString* aProfileName,
+                                        const nsACString* aAppName,
+                                        const nsACString* aVendorName)
+ {
+   nsCOMPtr<nsIFile> localDir;
+   nsresult rv = GetUserDataDirectoryHome(getter_AddRefs(localDir), aLocal);
+   NS_ENSURE_SUCCESS(rv, rv);
+ 
+-  rv = AppendProfilePath(localDir, aProfileName, aAppName, aVendorName);
++  rv = AppendProfilePath(localDir, aProfileName, aAppName, aVendorName, aLocal);
+   NS_ENSURE_SUCCESS(rv, rv);
+ 
+ #ifdef DEBUG_jungshik
+   nsAutoCString cwd;
+   localDir->GetNativePath(cwd);
+   printf("nsXREDirProvider::GetUserDataDirectory: %s\n", cwd.get());
+ #endif
+   rv = EnsureDirectoryExists(localDir);
+@@ -1377,17 +1391,18 @@ nsXREDirProvider::AppendSysUserExtension
+   return NS_OK;
+ }
+ 
+ 
+ nsresult
+ nsXREDirProvider::AppendProfilePath(nsIFile* aFile,
+                                     const nsACString* aProfileName,
+                                     const nsACString* aAppName,
+-                                    const nsACString* aVendorName)
++                                    const nsACString* aVendorName,
++                                    bool aLocal)
+ {
+   NS_ASSERTION(aFile, "Null pointer!");
+   
+   if (!gAppData) {
+     return NS_ERROR_FAILURE;
+   }
+ 
+   nsAutoCString profile;
+@@ -1439,28 +1454,31 @@ nsXREDirProvider::AppendProfilePath(nsIF
+   // The parent of this directory is set in GetUserDataDirectoryHome
+   // XXX: handle gAppData->profile properly
+   // XXXsmaug ...and the rest of the profile creation!
+   MOZ_ASSERT(!aAppName,
+              "Profile creation for external applications is not implemented!");
+   rv = aFile->AppendNative(nsDependentCString("mozilla"));
+   NS_ENSURE_SUCCESS(rv, rv);
+ #elif defined(XP_UNIX)
+-  // Make it hidden (i.e. using the ".")
+-  nsAutoCString folder(".");
++  nsAutoCString folder;
++  // Make it hidden (by starting with "."), except when local (the
++  // profile is already under ~/.cache or XDG_CACHE_HOME).
++  if (!aLocal)
++    folder.Assign('.');
+ 
+   if (!profile.IsEmpty()) {
+     // Skip any leading path characters
+     const char* profileStart = profile.get();
+     while (*profileStart == '/' || *profileStart == '\\')
+       profileStart++;
+ 
+     // On the off chance that someone wanted their folder to be hidden don't
+     // let it become ".."
+-    if (*profileStart == '.')
++    if (*profileStart == '.' && !aLocal)
+       profileStart++;
+ 
+     folder.Append(profileStart);
+     ToLowerCase(folder);
+ 
+     rv = AppendProfileString(aFile, folder.BeginReading());
+   }
+   else {
+diff --git a/toolkit/xre/nsXREDirProvider.h b/toolkit/xre/nsXREDirProvider.h
+--- a/toolkit/xre/nsXREDirProvider.h
++++ b/toolkit/xre/nsXREDirProvider.h
+@@ -109,17 +109,18 @@ protected:
+   static nsresult EnsureDirectoryExists(nsIFile* aDirectory);
+   void EnsureProfileFileExists(nsIFile* aFile);
+ 
+   // Determine the profile path within the UAppData directory. This is different
+   // on every major platform.
+   static nsresult AppendProfilePath(nsIFile* aFile,
+                                     const nsACString* aProfileName,
+                                     const nsACString* aAppName,
+-                                    const nsACString* aVendorName);
++                                    const nsACString* aVendorName,
++                                    bool aLocal);
+ 
+   static nsresult AppendSysUserExtensionPath(nsIFile* aFile);
+ 
+   // Internal helper that splits a path into components using the '/' and '\\'
+   // delimiters.
+   static inline nsresult AppendProfileString(nsIFile* aFile, const char* aPath);
+ 
+   // Calculate and register extension and theme bundle directories.
+# HG changeset patch
+# User Tim Taubert <ttaubert@mozilla.com>
+# Date 1360362227 -3600
+# Node ID 873170d2679ac23114f22543cee3214a940abef3
+Bug 239254 - [Linux] Migrate existing thumbnails to their new local path
+
+diff --git a/browser/components/thumbnails/PageThumbs.jsm b/browser/components/thumbnails/PageThumbs.jsm
+--- a/browser/components/thumbnails/PageThumbs.jsm
++++ b/browser/components/thumbnails/PageThumbs.jsm
+@@ -7,17 +7,17 @@
+ this.EXPORTED_SYMBOLS = ["PageThumbs", "PageThumbsStorage"];
+ 
+ const Cu = Components.utils;
+ const Cc = Components.classes;
+ const Ci = Components.interfaces;
+ 
+ const HTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
+ const PREF_STORAGE_VERSION = "browser.pagethumbnails.storage_version";
+-const LATEST_STORAGE_VERSION = 2;
++const LATEST_STORAGE_VERSION = 3;
+ 
+ const EXPIRATION_MIN_CHUNK_SIZE = 50;
+ const EXPIRATION_INTERVAL_SECS = 3600;
+ 
+ /**
+  * Name of the directory in the profile that contains the thumbnails.
+  */
+ const THUMBNAIL_DIRECTORY = "thumbnails";
+@@ -359,47 +359,51 @@ let PageThumbsStorageMigrator = {
+ 
+   set currentVersion(aVersion) {
+     Services.prefs.setIntPref(PREF_STORAGE_VERSION, aVersion);
+   },
+ 
+   migrate: function Migrator_migrate() {
+     let version = this.currentVersion;
+ 
+-    if (version < 1) {
+-      this.removeThumbnailsFromRoamingProfile();
+-    }
+-    if (version < 2) {
+-      this.renameThumbnailsFolder();
++    // Storage version 1 never made it to beta.
++    // At the time of writing only Windows had (ProfD != ProfLD) and we
++    // needed to move thumbnails from the roaming profile to the locale
++    // one so that they're not needlessly included in backups and/or
++    // written via SMB.
++
++    // Storage version 2 also never made it to beta.
++    // The thumbnail folder structure has been changed and old thumbnails
++    // were not migrated. Instead, we just renamed the current folder to
++    // "<name>-old" and will remove it later.
++
++    if (version < 3) {
++      this.migrateToVersion3();
+     }
+ 
+     this.currentVersion = LATEST_STORAGE_VERSION;
+   },
+ 
+-  removeThumbnailsFromRoamingProfile:
+-  function Migrator_removeThumbnailsFromRoamingProfile() {
+-    let local = FileUtils.getDir("ProfLD", [THUMBNAIL_DIRECTORY]);
++  /**
++   * Bug 239254 added support for having the disk cache and thumbnail
++   * directories on a local path (i.e. ~/.cache/) under Linux. We'll first
++   * try to move the old thumbnails to their new location. If that's not
++   * possible (because ProfD might be on a different file system than
++   * ProfLD) we'll just discard them.
++   */
++  migrateToVersion3: function Migrator_migrateToVersion3() {
++    let local = FileUtils.getDir("ProfLD", [THUMBNAIL_DIRECTORY], true);
+     let roaming = FileUtils.getDir("ProfD", [THUMBNAIL_DIRECTORY]);
+ 
+-    if (!roaming.equals(local) && roaming.exists()) {
+-      roaming.followLinks = false;
+-      try {
+-        roaming.remove(true);
+-      } catch (e) {
+-        // The directory might not exist or we're not permitted to remove it.
+-      }
+-    }
+-  },
+-
+-  renameThumbnailsFolder: function Migrator_renameThumbnailsFolder() {
+-    let dir = FileUtils.getDir("ProfLD", [THUMBNAIL_DIRECTORY]);
+-    try {
+-      dir.moveTo(null, dir.leafName + "-old");
+-    } catch (e) {
+-      // The directory might not exist or we're not permitted to rename it.
++    if (!roaming.equals(local)) {
++      PageThumbsWorker.postMessage({
++        type: "moveOrDeleteAllThumbnails",
++        from: roaming.path,
++        to: local.path
++      });
+     }
+   }
+ };
+ 
+ let PageThumbsExpiration = {
+   _filters: [],
+ 
+   init: function Expiration_init() {
+diff --git a/browser/components/thumbnails/PageThumbsWorker.js b/browser/components/thumbnails/PageThumbsWorker.js
+--- a/browser/components/thumbnails/PageThumbsWorker.js
++++ b/browser/components/thumbnails/PageThumbsWorker.js
+@@ -20,16 +20,19 @@ let PageThumbsWorker = {
+ 
+     switch (msg.type) {
+       case "removeFile":
+         data.result = this.removeFile(msg);
+         break;
+       case "expireFilesInDirectory":
+         data.result = this.expireFilesInDirectory(msg);
+         break;
++      case "moveOrDeleteAllThumbnails":
++        data.result = this.moveOrDeleteAllThumbnails(msg);
++        break;
+       default:
+         data.result = false;
+         data.detail = "message not understood";
+         break;
+     }
+ 
+     self.postMessage(data);
+   },
+@@ -62,12 +65,35 @@ let PageThumbsWorker = {
+   getFileEntriesInDirectory:
+   function Worker_getFileEntriesInDirectory(aPath, aSkipFiles) {
+     let skip = new Set(aSkipFiles);
+     let iter = new OS.File.DirectoryIterator(aPath);
+ 
+     return [entry
+             for (entry in iter)
+             if (!entry.isDir && !entry.isSymLink && !skip.has(entry.name))];
++  },
++
++  moveOrDeleteAllThumbnails:
++  function Worker_moveOrDeleteAllThumbnails(msg) {
++    if (!OS.File.exists(msg.from))
++      return true;
++
++    let iter = new OS.File.DirectoryIterator(msg.from);
++    for (let entry in iter) {
++      if (!entry.isDir && !entry.isSymLink) {
++        let from = OS.Path.join(msg.from, entry.name);
++        let to = OS.Path.join(msg.to, entry.name);
++
++        try {
++          OS.File.move(from, to, {noOverwrite: true, noCopy: true});
++        } catch (e) {
++          OS.File.remove(from);
++        }
++      }
++    }
++
++    OS.File.removeEmptyDir(msg.from);
++    return true;
+   }
+ };
+ 
+ self.onmessage = PageThumbsWorker.handleMessage.bind(PageThumbsWorker);

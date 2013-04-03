@@ -1,5 +1,5 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 16
+%if 0%{?fedora} < 17
 %define system_nss        0
 %else
 %define system_nss        1
@@ -33,13 +33,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      19.0.2
-%global xulrunner_version_max  19.1
+%global xulrunner_version      20.0
+%global xulrunner_version_max  20.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130308
+%global datelang               20130401
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
@@ -74,7 +74,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        19.0.2
+Version:        20.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -100,6 +100,7 @@ Patch15:        firefox-15.0-enable-addons.patch
 Patch16:        firefox-duckduckgo.patch
 
 # Upstream patches
+Patch100:       mozilla-239254.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -153,6 +154,7 @@ cd %{tarballdir}
 %patch16 -p1 -b .duckduckgo
 
 # Upstream patches
+%patch100 -p1 -b .239254
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -438,6 +440,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %defattr(-,root,root,-)
 %{_bindir}/firefox
 %{mozappdir}/firefox
+%{mozappdir}/firefox-bin
 %doc %{_mandir}/man1/*
 %dir %{_datadir}/mozilla/extensions/%{firefox_app_id}
 %dir %{_libdir}/mozilla/extensions/%{firefox_app_id}
@@ -484,6 +487,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Apr  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 20.0-1
+- Update to 20.0, sync with rawhide
+
+* Mon Apr 1 2013 Martin Stransky <stransky@redhat.com> - 20.0-1
+- Updated to 20.0
+
+* Mon Mar 18 2013 Martin Stransky <stransky@redhat.com> - 19.0.2-2
+- Added fix for mozbz#239254 - local cache dir
+
 * Fri Mar  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 19.0.2-1
 - Update to 19.0.2 (security)
 

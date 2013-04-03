@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 16
+%if 0%{?fedora} < 17
 %define system_nss        0
 %else
 %define system_nss        1
@@ -43,13 +43,13 @@
 # grep 'min_ns.*=[0-9]' configure
 %global nspr_version 4.9.4
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
-%global nss_version 3.14.1
+%global nss_version 3.14.3
 %global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
 %endif
 
 %if %{?system_sqlite}
 # grep '^SQLITE_VERSION' configure
-%global sqlite_version 3.7.14.1
+%global sqlite_version 3.7.15.2
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
 %endif
@@ -92,7 +92,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        19.0.2
+Version:        20.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -115,10 +115,12 @@ Patch19:        rhbz-304121.patch
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
 Patch21:        rhbz-911314.patch
+Patch22:        rhbz-928353.patch
 
 # Upstream patches
 Patch101:       mozilla-791626.patch
 Patch102:       mozilla-239254.patch
+Patch104:       mozilla-844883.patch
 
 # ---------------------------------------------------
 
@@ -153,6 +155,7 @@ BuildRequires:  curl-devel
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
+#BuildRequires:  autoconf213
 BuildRequires:  yasm
 
 Requires:       mozilla-filesystem
@@ -270,6 +273,13 @@ cd %{tarballdir}
 %patch20  -p2 -b .pk
 %ifarch ppc ppc64
 %patch21  -p1 -b .ppc
+%patch104 -p1 -b .844883
+%endif
+
+%if 0%{?fedora} >= 19
+%ifarch %{ix86}
+%patch22  -p2
+%endif
 %endif
 
 %patch101 -p1 -b .791626
@@ -541,7 +551,6 @@ fi
 %{mozappdir}/components/*.so
 %{mozappdir}/components/*.manifest
 %{mozappdir}/omni.ja
-%{mozappdir}/plugins
 %{mozappdir}/*.so
 %{mozappdir}/mozilla-xremote-client
 %{mozappdir}/run-mozilla.sh
@@ -570,10 +579,32 @@ fi
 %{_libdir}/%{shortname}-devel-*/*
 %{_libdir}/pkgconfig/*.pc
 %{mozappdir}/xpcshell
+%{mozappdir}/js-gdb.py
+%ghost %{mozappdir}/js-gdb.pyc
+%ghost %{mozappdir}/js-gdb.pyo
+
 
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Apr  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 20.0-1
+- Update to 20.0, sync with rawhide
+
+* Wed Apr 3 2013 Martin Stransky <stransky@redhat.com> - 20.0-3
+- A workaround for Bug 928353 - firefox i686 crashes
+  for a number of web pages
+
+* Tue Mar 19 2013 Martin Stransky <stransky@redhat.com> - 20.0-1
+- Update to latest upstream (20.0)
+
+* Tue Mar 19 2013 Martin Stransky <stransky@redhat.com> - 19.0.2-4
+- Added fix for rhbz#913284 - Firefox segfaults
+  in mozilla::gfx::AlphaBoxBlur::BoxBlur_C() on PPC64
+
+* Tue Mar 19 2013 Martin Stransky <stransky@redhat.com> - 19.0.2-3
+- Added fix for mozbz#826171/rhbz#922904 - strndup implementation
+  in memory/build/mozmemory_wrap.c is broken
+
 * Fri Mar  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 19.0.2-1
 - Update to 19.0.2 (security)
 

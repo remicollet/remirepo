@@ -1,0 +1,114 @@
+diff -r -U2 xulrunner-20.0/mozilla-release/config/Makefile.in xulrunner-20.0.new/mozilla-release/config/Makefile.in
+--- xulrunner-20.0/mozilla-release/config/Makefile.in	2013-03-26 18:17:37.000000000 -0400
++++ xulrunner-20.0.new/mozilla-release/config/Makefile.in	2013-03-30 01:50:11.109526990 -0400
+@@ -38,5 +38,5 @@
+ 
+ ifdef GNU_CC
+-MODULE_OPTIMIZE_FLAGS = -O3
++MODULE_OPTIMIZE_FLAGS = -Os
+ endif
+ 
+diff -r -U2 xulrunner-20.0/mozilla-release/configure.in xulrunner-20.0.new/mozilla-release/configure.in
+--- xulrunner-20.0/mozilla-release/configure.in	2013-03-26 18:17:37.000000000 -0400
++++ xulrunner-20.0.new/mozilla-release/configure.in	2013-03-30 01:50:03.474547207 -0400
+@@ -1848,5 +1848,5 @@
+     HOST_CFLAGS="$HOST_CFLAGS -DXP_UNIX -DXP_MACOSX -DNO_X11"
+     HOST_NSPR_MDCPUCFG='\"md/_darwin.cfg\"'
+-    HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-O3}"
++    HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-Os}"
+     ;;
+ 
+@@ -1854,5 +1854,5 @@
+     HOST_CFLAGS="$HOST_CFLAGS -DXP_UNIX"
+     HOST_NSPR_MDCPUCFG='\"md/_linux.cfg\"'
+-    HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-O3}"
++    HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-Os}"
+     ;;
+ 
+@@ -1961,5 +1961,5 @@
+     MKSHLIB='$(CXX) $(CXXFLAGS) $(DSO_PIC_CFLAGS) $(DSO_LDOPTS) -o $@'
+     MKCSHLIB='$(CC) $(CFLAGS) $(DSO_PIC_CFLAGS) $(DSO_LDOPTS) -o $@'
+-    MOZ_OPTIMIZE_FLAGS="-O3"
++    MOZ_OPTIMIZE_FLAGS="-Os"
+     _PEDANTIC=
+     # Statically disable jemalloc on 10.5 and 32-bit 10.6.  See bug 702250.
+@@ -2106,5 +2106,5 @@
+             MOZ_OPTIMIZE_SIZE_TWEAK="-finline-limit=50"
+         esac
+-        MOZ_PGO_OPTIMIZE_FLAGS="-O3"
++        MOZ_PGO_OPTIMIZE_FLAGS="-Os"
+         MOZ_OPTIMIZE_FLAGS="-Os -freorder-blocks $MOZ_OPTIMIZE_SIZE_TWEAK"
+         MOZ_DEBUG_FLAGS="-g"
+diff -r -U2 xulrunner-20.0/mozilla-release/js/src/config/Makefile.in xulrunner-20.0.new/mozilla-release/js/src/config/Makefile.in
+--- xulrunner-20.0/mozilla-release/js/src/config/Makefile.in	2013-03-26 18:17:46.000000000 -0400
++++ xulrunner-20.0.new/mozilla-release/js/src/config/Makefile.in	2013-03-30 01:51:03.443862662 -0400
+@@ -27,5 +27,5 @@
+ 
+ ifdef GNU_CC
+-MODULE_OPTIMIZE_FLAGS = -O3
++MODULE_OPTIMIZE_FLAGS = -Os
+ endif
+ 
+diff -r -U2 xulrunner-20.0/mozilla-release/js/src/configure.in xulrunner-20.0.new/mozilla-release/js/src/configure.in
+--- xulrunner-20.0/mozilla-release/js/src/configure.in	2013-03-26 18:17:46.000000000 -0400
++++ xulrunner-20.0.new/mozilla-release/js/src/configure.in	2013-03-30 01:50:46.254052920 -0400
+@@ -1443,5 +1443,5 @@
+     HOST_CFLAGS="$HOST_CFLAGS -DXP_UNIX -DXP_MACOSX -DNO_X11"
+     HOST_NSPR_MDCPUCFG='\"md/_darwin.cfg\"'
+-    HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-O3}"
++    HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-Os}"
+     ;;
+ 
+@@ -1449,5 +1449,5 @@
+     HOST_CFLAGS="$HOST_CFLAGS -DXP_UNIX"
+     HOST_NSPR_MDCPUCFG='\"md/_linux.cfg\"'
+-    HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-O3}"
++    HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-Os}"
+     ;;
+ 
+@@ -1554,5 +1554,5 @@
+     MKSHLIB='$(CXX) $(CXXFLAGS) $(DSO_PIC_CFLAGS) $(DSO_LDOPTS) -o $@'
+     MKCSHLIB='$(CC) $(CFLAGS) $(DSO_PIC_CFLAGS) $(DSO_LDOPTS) -o $@'
+-    MOZ_OPTIMIZE_FLAGS="-O3 -fno-stack-protector"
++    MOZ_OPTIMIZE_FLAGS="-Os -fno-stack-protector"
+     _PEDANTIC=
+     CFLAGS="$CFLAGS -fno-common"
+@@ -1648,5 +1648,5 @@
+ 
+     MOZ_GFX_OPTIMIZE_MOBILE=1
+-    MOZ_OPTIMIZE_FLAGS="-O3 -freorder-blocks -fno-reorder-functions"
++    MOZ_OPTIMIZE_FLAGS="-Os -freorder-blocks -fno-reorder-functions"
+     # The Maemo builders don't know about this flag
+     MOZ_ARM_VFP_FLAGS="-mfpu=vfp"
+@@ -1668,6 +1668,6 @@
+             MOZ_OPTIMIZE_SIZE_TWEAK="-finline-limit=50"
+         esac
+-        MOZ_PGO_OPTIMIZE_FLAGS="-O3"
+-        MOZ_OPTIMIZE_FLAGS="-O3 -freorder-blocks $MOZ_OPTIMIZE_SIZE_TWEAK"
++        MOZ_PGO_OPTIMIZE_FLAGS="-Os"
++        MOZ_OPTIMIZE_FLAGS="-Os -freorder-blocks $MOZ_OPTIMIZE_SIZE_TWEAK"
+         MOZ_DEBUG_FLAGS="-g"
+     fi
+diff -r -U2 xulrunner-20.0/mozilla-release/memory/jemalloc/src/configure xulrunner-20.0.new/mozilla-release/memory/jemalloc/src/configure
+--- xulrunner-20.0/mozilla-release/memory/jemalloc/src/configure	2013-03-26 18:17:58.000000000 -0400
++++ xulrunner-20.0.new/mozilla-release/memory/jemalloc/src/configure	2013-03-30 01:51:38.533133311 -0400
+@@ -5279,7 +5279,7 @@
+ TCFLAGS="${CFLAGS}"
+ if test "x${CFLAGS}" = "x" ; then
+-  CFLAGS="-O3"
++  CFLAGS="-Os"
+ else
+-  CFLAGS="${CFLAGS} -O3"
++  CFLAGS="${CFLAGS} -Os"
+ fi
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+diff -r -U2 xulrunner-20.0/mozilla-release/memory/jemalloc/src/configure.ac xulrunner-20.0.new/mozilla-release/memory/jemalloc/src/configure.ac
+--- xulrunner-20.0/mozilla-release/memory/jemalloc/src/configure.ac	2013-03-26 18:17:58.000000000 -0400
++++ xulrunner-20.0.new/mozilla-release/memory/jemalloc/src/configure.ac	2013-03-30 01:51:15.753872639 -0400
+@@ -574,5 +574,5 @@
+   if test "x${optimize}" = "xyes" ; then
+     if test "x$GCC" = "xyes" ; then
+-      JE_CFLAGS_APPEND([-O3])
++      JE_CFLAGS_APPEND([-Os])
+       JE_CFLAGS_APPEND([-funroll-loops])
+     elif test "x$je_cv_msvc" = "xyes" ; then
