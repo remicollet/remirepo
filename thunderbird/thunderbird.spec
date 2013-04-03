@@ -69,14 +69,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        17.0.4
+Version:        17.0.5
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}/source/thunderbird-%{version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20130311.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20130402.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -438,7 +438,7 @@ echo -e "\nWARNING : This %{name} RPM is not an official Fedora / Red Hat build 
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Red Hat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 15
+%if %{?fedora}%{!?fedora:99} <= 16
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -520,6 +520,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Wed Apr  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.5-1
+- Update to 17.0.5, sync with rawhide
+
+* Tue Apr  2 2013 Jan Horak <jhorak@redhat.com> - 17.0.5-1
+- Update to 17.0.5
+
 * Tue Mar 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.4-1
 - Update to 17.0.4
 
