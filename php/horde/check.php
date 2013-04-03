@@ -21,6 +21,9 @@ function loadConf($verb) {
     if (!is_array($conf['ignore'])) {
         $conf['ignore'] = array();
     }
+    if (!isset($conf['channel'])) {
+        $conf['channel'] = "pear.php.net";
+    }
 
     return $conf;
 }
@@ -32,7 +35,7 @@ function loadFiles($verb) {
 
     $packs = array();
     $found = array();
-    foreach(glob("php-horde-*") as $file) {
+    foreach(glob("php-*") as $file) {
 
         $spec = @fopen("$file/$file.spec", "r") 
             or die("*** Can't read $file/$file.spec\n");
@@ -86,7 +89,7 @@ function loadFiles($verb) {
 
         if (isset($xml->dependencies->required->package)) {
             foreach($xml->dependencies->required->package as $dep) {
-                if ($dep->channel=='pear.horde.org') {
+                if ($dep->channel==$conf['channel']) {
                     $n = (string)$dep->name;
                     $packs[$name]['mandatory'][] = $n;
                     $found[$n] = $n;
@@ -95,7 +98,7 @@ function loadFiles($verb) {
         }
         if (isset($xml->dependencies->optional->package)) {
             foreach($xml->dependencies->optional->package as $dep) {
-                if ($dep->channel=='pear.horde.org') {
+                if ($dep->channel==$conf['channel']) {
                     $n = (string)$dep->name;
                     if ($n == 'Horde_Test') {
                         if (!in_array($n, $breq)) {

@@ -1,4 +1,5 @@
 {
+	"channel":"pear.horde.org",
 	"blacklist":[
 		"Horde_ActiveSync"
 	],
