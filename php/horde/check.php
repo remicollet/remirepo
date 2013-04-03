@@ -2,12 +2,31 @@
 <?php
 
 $packs = array();
+$conf = array();
+
+function loadConf($verb) {
+    if ($verb) echo "Reading configuration\n";
+
+    $conf = array();
+    $json = file_get_contents(__DIR__."/check.json");
+    if ($json) {
+        $conf = json_decode($json, true);
+    }
+    if (!is_array($conf)) {
+        $conf = array();
+    }
+    if (!is_array($conf['blacklist'])) {
+        $conf['blacklist'] = array();
+    }
+    if (!is_array($conf['ignore'])) {
+        $conf['ignore'] = array();
+    }
+
+    return $conf;
+}
 
 function loadFiles($verb) {
-    global $packs;
-
-    // Non free packages
-    $blacklist = array('Horde_ActiveSync');
+    global $conf, $packs;
 
     if ($verb) echo "Reading packages\n";
 
@@ -83,7 +102,7 @@ function loadFiles($verb) {
                             printf("\t%s Missing BuildRequires on %s\n", ($verb ? "*" : $name), $n);
                         }
                     } else if ($verb 
-                               && !in_array($n, $blacklist)
+                               && !in_array($n, $conf['blacklist'])
                                && !in_array($n, $req)) {
                        echo "\t  Missing optional Requires on $n\n";
                     }
@@ -93,7 +112,7 @@ function loadFiles($verb) {
         }
     }
     foreach ($found as $k => $v) {
-        if (key_exists($k, $packs) || in_array($v, $blacklist)) {
+        if (key_exists($k, $packs) || in_array($v, $conf['blacklist'])) {
             unset($found[$k]);
         }
     }
@@ -103,26 +122,8 @@ function loadFiles($verb) {
 }
 
 function showBuildOrder($verb) {
-    global $packs;
+    global $conf, $packs;
 
-    // Ignore depency, to allow build order
-    $ignore = array(
-        // Allow to build Horde_Test
-        'Horde_Cli'             => array('Horde_Test'),
-        'Horde_Constraint'      => array('Horde_Test'),
-        'Horde_Exception'       => array('Horde_Test'),
-        'Horde_Support'         => array('Horde_Test'),
-        'Horde_Translation'     => array('Horde_Test'),
-        'Horde_Util'            => array('Horde_Test'),
-        'Horde_Log'             => array('Horde_Test'),
-        // Circular dependency
-        'Horde_Mail'            => array('Horde_Mime'),
-        // TO clean
-        'Horde_Date'            => array('Horde_Icalendar'),
-        'Horde_Cache'           => array('Horde_Db'),
-        'Horde_Notification'    => array('Horde_Alarm'),
-        'Horde_Form'            => array('Horde_Core'),
-    );
     if ($verb) echo "Build order\n";
 
     $todo = $packs;
@@ -136,7 +137,7 @@ function showBuildOrder($verb) {
             // Can build ?
             foreach($pack['build'] as $need) {
                 if (!array_key_exists($need, $done)
-                    && !(isset($ignore[$pack['name']]) && in_array($need, $ignore[$pack['name']]))) {
+                    && !(isset($conf['ignore'][$pack['name']]) && in_array($need, $conf['ignore'][$pack['name']]))) {
                     $ok = false;
                 }
             }
@@ -145,7 +146,7 @@ function showBuildOrder($verb) {
                 $cant[$pack['name']] = array();
                 foreach ($pack['requires'] as $need) {
                     if (!array_key_exists($need, $done)
-                        && !(isset($ignore[$pack['name']]) && in_array($need, $ignore[$pack['name']]))) {
+                        && !(isset($conf['ignore'][$pack['name']]) && in_array($need, $conf['ignore'][$pack['name']]))) {
                         $cant[$pack['name']][] = $need;
                         $ok = false;
                     }   
@@ -157,9 +158,9 @@ function showBuildOrder($verb) {
             if ($ok) {
                 $done[$key] = $pack;
                 unset($todo[$key]);
-                if (isset($ignore[$key])) {
-                    $tmp = array_diff($pack['build'], $ignore[$key]);
-                    $ir  = "I: ".implode(', ', $ignore[$key]);
+                if (isset($conf['ignore'][$key])) {
+                    $tmp = array_diff($pack['build'], $conf['ignore'][$key]);
+                    $ir  = "I: ".implode(', ', $conf['ignore'][$key]);
                 } else {
                     $tmp = $pack['build'];
                     $ir  = '';
@@ -182,6 +183,7 @@ function showBuildOrder($verb) {
 }
 
 $verb = in_array('-v', $_SERVER['argv']);
+$conf = loadConf($verb);
 loadFiles($verb);
 showBuildOrder($verb);
 
