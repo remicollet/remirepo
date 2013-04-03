@@ -8,14 +8,17 @@
 
 Name:           php-pear-Net-IMAP
 Version:        1.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Provides an implementation of the IMAP protocol
 
 Group:          Development/Libraries
-License:        PHP
+# https://pear.php.net/bugs/19875
+# tests/* are GPL
+# docs/* are PHP version 2
+# NET/* are PHP
+License:        GPLv2+ and PHP
 URL:            http://%{pear_channel}/package/%{pear_name}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-# https://pear.php.net/bugs/19875
 Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -98,5 +101,8 @@ fi
 
 
 %changelog
+* Wed Apr  3 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
+- fix license, from review comment #929214
+
 * Fri Mar 29 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - initial pakage
