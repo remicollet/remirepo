@@ -55,10 +55,12 @@ function loadFiles($verb) {
         }
         if ($ver && $name) {
             $packs[$name] = array(
-                'name'     => $name,
-                'version'  => $ver,
-                'build'    => array_unique($breq),
-                'requires' => array_unique($req),
+                'name'      => $name,
+                'version'   => $ver,
+                'build'     => array_unique($breq),
+                'requires'  => array_unique($req),
+                'mandatory' => array(),
+                'optional'  => array(),
             );
             if ($verb) {
                 echo "+ $name version $ver\n";
@@ -86,9 +88,7 @@ function loadFiles($verb) {
             foreach($xml->dependencies->required->package as $dep) {
                 if ($dep->channel=='pear.horde.org') {
                     $n = (string)$dep->name;
-                    if (!in_array($n, $req)) {
-                        printf("\t%s Missing Requires on %s\n", ($verb ? "*" : $name), $n);
-                    }
+                    $packs[$name]['mandatory'][] = $n;
                     $found[$n] = $n;
                 }
             }
@@ -101,10 +101,8 @@ function loadFiles($verb) {
                         if (!in_array($n, $breq)) {
                             printf("\t%s Missing BuildRequires on %s\n", ($verb ? "*" : $name), $n);
                         }
-                    } else if ($verb 
-                               && !in_array($n, $conf['blacklist'])
-                               && !in_array($n, $req)) {
-                       echo "\t  Missing optional Requires on $n\n";
+                    } else {
+                       $packs[$name]['optional'][] = $n;
                     }
                     $found[$n] = $n;
                 }
@@ -180,10 +178,81 @@ function showBuildOrder($verb) {
             die("*** Broken build order\n");
         }
     }
+    // Use build order
+    $packs = $done;
+}
+
+function getRequires($name, $res=array()) {
+    global $conf, $packs;
+
+//    echo "getRequires($name):".implode(', ',$res)."\n";
+    if (in_array($name, $res) || !isset($packs[$name])) {
+        return $res;
+    }
+    $res[] = $name;
+    foreach($packs[$name]['requires'] as $n) {
+        if (!in_array($n, $res)) {
+            $res = array_unique(array_merge($res, getRequires($n, $res)));
+        }
+    }
+    return ($res);
+}
+
+function scanOptional($verb) {
+    global $conf, $packs;
+
+    if (!$verb) return;
+
+    echo "\nOptional requires\n";
+
+    foreach ($packs as $pack) {
+        $first = true;
+        $req   = array();
+        foreach ($pack['mandatory'] as $n) {
+            if (in_array($n, $pack['requires'])) {
+                $req = getRequires($n, $req);
+            } else {
+                if ($first) {
+                    $first = false;
+                    echo $pack['name']."\n";
+                }
+                echo "\t* $n mandatory, missing\n";
+            }
+        }
+        foreach ($pack['optional'] as $n) {
+            if (in_array($n, $conf['blacklist'])) {
+                continue;
+            }
+            // Explicit requires
+            if (in_array($n, $pack['requires'])) {
+                $req = getRequires($n, $req);
+                // Implicit requires
+                if (in_array($n, $req)) {
+                    if ($first) {
+                        $first = false;
+                        echo $pack['name']."\n";
+                    }
+                    echo "\t- $n optional and implicitly required\n";
+                }
+
+            // Not explicit
+            } else {
+                // Not implicit
+                if (in_array($n, $req)) {
+                } else {
+                    if ($first) {
+                        $first = false;
+                        echo $pack['name']."\n";
+                    }
+                    echo "\t+ $n  optional, missing\n";
+                }
+            }
+        }
+    }
 }
 
 $verb = in_array('-v', $_SERVER['argv']);
 $conf = loadConf($verb);
 loadFiles($verb);
 showBuildOrder($verb);
-
+scanOptional($verb);
