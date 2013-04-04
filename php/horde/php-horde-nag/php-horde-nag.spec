@@ -24,6 +24,7 @@ BuildRequires:  gettext
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
