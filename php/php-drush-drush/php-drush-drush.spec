@@ -17,7 +17,7 @@
 
 Name:             php-drush-%{pear_name}
 Version:          5.8.0
-Release:          2%{?dist}
+Release:          4%{?dist}
 Summary:          Command line shell and Unix scripting interface for Drupal
 
 Group:            Development/Libraries
@@ -26,21 +26,24 @@ URL:              http://www.drush.org
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
-Provides:         drupal6-drush = %{version}-%{release}
 Obsoletes:        drupal6-drush < %{version}-%{release}
+Provides:         drupal6-drush = %{version}-%{release}
+Obsoletes:        drupal7-drush < %{version}-%{release}
+Provides:         drupal7-drush = %{version}-%{release}
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+BuildRequires:    php-pear(Console_Table)
 BuildRequires:    help2man
 %if %{with_tests}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit) >= 3.5
 %endif
 
 Requires:         php-cli >= 5.2
-Requires:         php-channel(%{pear_channel})
 Requires:         php-pear(PEAR)
+Requires:         php-channel(%{pear_channel})
 Requires:         php-pear(Console_Table)
 Requires:         git >= 1.7
 Requires(post):   %{__pear}
@@ -183,6 +186,15 @@ fi
 
 
 %changelog
+* Thu Apr  4 2013 Remi Collet <remi@fedoraproject.org> 5.8.0-4
+- backport rawhide changes for remi repo.
+
+* Wed Apr 03 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 5.8.0-4
+- Added obsolete and virtual provide of drupal7-drush
+
+* Wed Apr 03 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 5.8.0-3
+- Added php-pear(Console_Table) build require
+
 * Wed Mar 20 2013 Remi Collet <remi@fedoraproject.org> 5.8.0-2
 - backport 5.8.0 for remi repo.
 
