@@ -4,7 +4,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phpcpd
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -25,6 +25,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(pear.phpunit.de/FinderFacade) >= 1.0.4
 Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.4
+Requires:       php-pear(pear.phpunit.de/Version) >= 1.0.0
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6 
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
@@ -88,6 +89,10 @@ fi
 
 
 %changelog
+* Thu Apr 04 2013 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Update to 1.4.1
+- new dependency on pear.phpunit.de/Version
+
 * Thu Oct 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.0-1
 - Update to 1.4.0
 - use FinderFacade instead of File_Iterator
