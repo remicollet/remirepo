@@ -3,8 +3,8 @@
 %define pecl_name sphinx
 
 Name:           php-pecl-sphinx
-Version:        1.2.0
-Release:        2%{?dist}.4
+Version:        1.3.0
+Release:        1%{?dist}.1
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Thu Apr 04 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+
 * Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-2.1
 - also provides php-sphinx
 
