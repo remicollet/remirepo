@@ -72,14 +72,14 @@
 %global db_devel  libdb-devel
 %endif
 
-#global snapdate      201303251230
-%global rcver         beta2
+%global snapdate      201304040630
+#global rcver         beta2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.22.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.23.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1006,9 +1006,7 @@ ln -sf ../configure
 %endif
 	--with-zlib \
 	--with-layout=GNU \
-	--enable-magic-quotes \
 	--with-kerberos \
-	--enable-ucd-snmp-hack \
 	--with-libxml-dir=%{_prefix} \
 %if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
 	--with-system-tzdata \
@@ -1030,8 +1028,7 @@ make %{?_smp_mflags}
 # Build /usr/bin/php-cgi with the CGI SAPI, and all the shared extensions
 pushd build-cgi
 
-build --enable-force-cgi-redirect \
-      --libdir=%{_libdir}/php \
+build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --enable-opcache \
       --with-imap=shared --with-imap-ssl \
@@ -1076,7 +1073,6 @@ build --enable-force-cgi-redirect \
       --with-xsl=shared,%{_prefix} \
       --enable-xmlreader=shared --enable-xmlwriter=shared \
       --with-curl=shared,%{_prefix} \
-      --enable-fastcgi \
       --enable-pdo=shared \
       --with-pdo-odbc=shared,unixODBC,%{_prefix} \
       --with-pdo-mysql=shared,mysqlnd \
@@ -1166,8 +1162,7 @@ popd
 pushd build-ztscli
 
 EXTENSION_DIR=%{_libdir}/php-zts/modules
-build --enable-force-cgi-redirect \
-      --includedir=%{_includedir}/php-zts \
+build --includedir=%{_includedir}/php-zts \
       --libdir=%{_libdir}/php-zts \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
@@ -1216,7 +1211,6 @@ build --enable-force-cgi-redirect \
       --with-xsl=shared,%{_prefix} \
       --enable-xmlreader=shared --enable-xmlwriter=shared \
       --with-curl=shared,%{_prefix} \
-      --enable-fastcgi \
       --enable-pdo=shared \
       --with-pdo-odbc=shared,unixODBC,%{_prefix} \
       --with-pdo-mysql=shared,mysqlnd \
@@ -1780,6 +1774,10 @@ fi
 
 
 %changelog
+* Thu Apr  4 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.23-201304040630
+- new snapshot
+- clean old deprecated options
+
 * Thu Mar 28 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.22.beta2
 - update to 5.5.0beta2
 - Zend Optimizer+ renamed to Zend OPcache
