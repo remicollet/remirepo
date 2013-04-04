@@ -3,7 +3,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.4.4
+Version:        1.4.5
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -59,11 +59,11 @@ install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/tests
 
-# Version 1.4.4 : Tests: 230, Assertions: 150, Failures: 1, Skipped: 3.
+# Version 1.4.5 : Tests: 232, Assertions: 150, Skipped: 3.
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --verbose \
-  AllTests.php || : ignore test results for now
+  AllTests.php
 
 
 %clean
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Thu Apr 04 2013 Remi Collet <remi@fedoraproject.org> - 1.4.5-1
+- Update to 1.4.5
+
 * Thu Feb 07 2013 Remi Collet <remi@fedoraproject.org> - 1.4.4-1
 - Update to 1.4.4
 
