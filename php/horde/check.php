@@ -229,7 +229,6 @@ function scanOptional($verb) {
             }
             // Explicit requires
             if (in_array($n, $pack['requires'])) {
-                $req = getRequires($n, $req);
                 // Implicit requires
                 if (in_array($n, $req)) {
                     if ($first) {
@@ -237,6 +236,8 @@ function scanOptional($verb) {
                         echo $pack['name']."\n";
                     }
                     echo "\t- $n optional and implicitly required\n";
+                } else {
+                    $req = getRequires($n, $req);
                 }
 
             // Not explicit
