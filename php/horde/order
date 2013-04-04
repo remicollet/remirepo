@@ -25,7 +25,7 @@
 ---- with test unit ----
 66 php-horde-Horde-Ldap         =   2.0.2   =>           Exception, Util
    ...-Horde-Kolab-Format       =   2.0.3   =>           Exception, Support
-21 php-horde-Horde-Argv         =   2.0.5   =>           Exception, Translation
+21 php-horde-Horde-Argv         =   2.0.6   =>           Exception, Translation
 22 php-horde-Horde-Serialize    =   2.0.2   =>           Exception, Util
 23 php-horde-Horde-Xml-Wbxml    =   2.0.1   =>           Util
 24 ...-Horde-Stream-Filter      =   2.0.1
