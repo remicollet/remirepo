@@ -148,6 +148,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Oauth) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Oauth) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Queue) >= 1.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Queue) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Routes) >= 2.0.0
@@ -159,8 +161,8 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
 
-# Horde_ActiveSync
-# Horde_Oauth, Horde_Service_Twitter
+# Horde_ActiveSync (non free)
+# Horde_Service_Twitter
 # PEAR: Text_LanguageDetect
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
