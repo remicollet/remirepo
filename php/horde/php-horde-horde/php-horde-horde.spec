@@ -3,16 +3,9 @@
 %global pear_name    horde
 %global pear_channel pear.horde.org
 
-# TODO :
-# static -> /var/lib
-# /var/log
-# cron (alarm)
-# config: Image, Log
-# "horbe" sub-package, with apache stuff
-
 Name:           php-horde-horde
 Version:        5.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -124,16 +117,19 @@ Requires:       php-pear(Console_Getopt)
 Requires:       php-pear(Console_Table)
 Requires:       php-pear(Net_DNS2)
 Requires:       php-pear(Services_Weather)
-Requires:       php-pear(Services_Weather)
-Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_SyncMl) >= 2.0.0
-
-# Optionnal: Horde_ActiveSync, Horde_Oauth, Horde_Service_Facebook,
-#            Horde_Service_Twitter, Horde_Service_Weather
+# Optional but implicitly required
+#               Horde_Db, Horde_Feed, Horde_Oauth, Horde_SyncMl
+# Optionnal but TODO
+#               Horde_ActiveSync, Horde_Service_Facebook,
+#               Horde_Service_Twitter, Horde_Service_Weather
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+%if 0%{?fedora} > 19
 Obsoletes:      horde < 5
 Provides:       horde = %{version}
+%else
+Conflicts:      horde < 5
+%endif
 
 
 %description
@@ -222,7 +218,7 @@ fi
 %attr(0640,apache,apache) %config %{_sysconfdir}/horde/*.dist
 %attr(0660,apache,apache) %config(noreplace) %{_sysconfdir}/horde/*.php
 %attr(0660,apache,apache) %config %{_sysconfdir}/horde/*.xml
-%attr(0640,apache,apache) %config %{_sysconfdir}/horde/registry.d/README
+%attr(0640,apache,apache) %{_sysconfdir}/horde/registry.d/README
 %{pear_xmldir}/%{name}.xml
 %{_bindir}/horde-active-sessions
 %{_bindir}/horde-alarms
@@ -254,6 +250,9 @@ fi
 
 
 %changelog
+* Fri Apr  5 2013 Remi Collet <remi@fedoraproject.org> - 5.0.4-2
+- improves optional dependencies
+
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 5.0.4-1
 - Update to 5.0.4
 
