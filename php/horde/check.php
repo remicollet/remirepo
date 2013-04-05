@@ -211,7 +211,10 @@ function scanOptional($verb) {
 
     foreach ($packs as $pack) {
         $first = true;
-        $req   = array();
+
+        // add current package to avoid circular dep issue.
+        $req   = array($pack['name']);
+
         foreach ($pack['mandatory'] as $n) {
             if (in_array($n, $pack['requires'])) {
                 $req = getRequires($n, $req);
@@ -236,9 +239,8 @@ function scanOptional($verb) {
                         echo $pack['name']."\n";
                     }
                     echo "\t- $n optional and implicitly required\n";
-                } else {
-                    $req = getRequires($n, $req);
                 }
+                $req = getRequires($n, $req);
 
             // Not explicit
             } else {
