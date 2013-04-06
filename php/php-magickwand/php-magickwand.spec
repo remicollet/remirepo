@@ -20,7 +20,7 @@ Source1:       magickwand.ini
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel
 BuildRequires: autoconf, automake, libtool
-%if 0%{?fedora} > 20
+%if 0%{?fedora} >= 20
 BuildRequires: ImageMagick-devel >= 6.8.2
 Requires:      ImageMagick-libs  >= %{imbuildver}
 %else
