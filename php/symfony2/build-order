@@ -21,5 +21,5 @@ Build order
 	Routing                   2.2.1      BR: Config, HttpKernel, Yaml  R: Config, Yaml
 	Translation               2.2.1      BR: Config, Yaml  R: Config, Yaml
 	Validator                 2.2.1      BR: HttpFoundation, Locale, Yaml  R: HttpFoundation, Yaml
-	Form                      2.2.0      BR: EventDispatcher, Locale, OptionsResolver, HttpFoundation, Validator, PropertyAccess  R: EventDispatcher, Locale, OptionsResolver, PropertyAccess, HttpFoundation, Validator
+	Form                      2.2.1      BR: EventDispatcher, Locale, OptionsResolver, HttpFoundation, Validator, PropertyAccess  R: EventDispatcher, Locale, OptionsResolver, PropertyAccess, HttpFoundation, Validator
 	Security                  2.2.0      BR: EventDispatcher, HttpFoundation, HttpKernel, Form, Routing, Validator  R: EventDispatcher, HttpFoundation, HttpKernel, ClassLoader, Finder, Form, Routing, Validator
