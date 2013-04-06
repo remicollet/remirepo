@@ -2,10 +2,13 @@
 %global mainversion   1.0.9
 %global patchlevel    2
 
+# We don't really rely on upstream ABI
+%global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
+
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       1%{?dist}.2
+Release:       2%{?dist}.1
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -19,8 +22,10 @@ BuildRequires: php-devel
 BuildRequires: autoconf, automake, libtool
 %if 0%{?fedora} > 20
 BuildRequires: ImageMagick-devel >= 6.8.2
+Requires:      ImageMagick-libs  >= %{imbuildver}
 %else
 BuildRequires: ImageMagick-last-devel >= 6.8.2
+Requires:      ImageMagick-last-libs  >= %{imbuildver}
 %endif
 
 Requires:      php(zend-abi) = %{php_zend_api}
@@ -119,6 +124,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr  6 2013 Remi Collet <rpms@famillecollet.com> 1.0.9.2-2
+- rebuild against new ImageMagick-last version 6.8.4-6
+- improve dependency on ImageMagick library
+
 * Thu Mar 14 2013 Remi Collet <rpms@famillecollet.com> 1.0.9.2-1
 - update to 1.0.9-2
 
