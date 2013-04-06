@@ -15,7 +15,7 @@ Build order
 	Yaml                      2.2.1        
 	BrowserKit                2.2.1      BR: CssSelector, DomCrawler, Process  R: DomCrawler, Process
 	ClassLoader               2.2.1      BR: Finder  
-	DependencyInjection       2.2.0      BR: Config, Yaml  R: Config, Yaml
+	DependencyInjection       2.2.1      BR: Config, Yaml  R: Config, Yaml
 	EventDispatcher           2.2.0      BR: DependencyInjection  R: DependencyInjection
 	HttpKernel                2.2.0      BR: BrowserKit, ClassLoader, Config, Console, DependencyInjection, EventDispatcher, Finder, HttpFoundation, Process I: Routing R: EventDispatcher, HttpFoundation, BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder
 	Routing                   2.2.0      BR: Config, HttpKernel, Yaml  R: Config, Yaml
