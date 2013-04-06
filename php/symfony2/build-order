@@ -17,7 +17,7 @@ Build order
 	ClassLoader               2.2.1      BR: Finder  
 	DependencyInjection       2.2.1      BR: Config, Yaml  R: Config, Yaml
 	EventDispatcher           2.2.1      BR: DependencyInjection  R: DependencyInjection
-	HttpKernel                2.2.0      BR: BrowserKit, ClassLoader, Config, Console, DependencyInjection, EventDispatcher, Finder, HttpFoundation, Process I: Routing R: EventDispatcher, HttpFoundation, BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder
+	HttpKernel                2.2.1      BR: BrowserKit, ClassLoader, Config, Console, DependencyInjection, EventDispatcher, Finder, HttpFoundation, Process I: Routing R: EventDispatcher, HttpFoundation, BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder
 	Routing                   2.2.0      BR: Config, HttpKernel, Yaml  R: Config, Yaml
 	Translation               2.2.0      BR: Config, Yaml  R: Config, Yaml
 	Validator                 2.2.0      BR: HttpFoundation, Locale, Yaml  R: HttpFoundation, Yaml
