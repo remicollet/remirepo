@@ -71,7 +71,6 @@ specification.
 # Symfony2 %{pear_name} PEAR package.
 
 set_include_path(
-    '%{pear_phpdir}'.PATH_SEPARATOR.
     '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
     get_include_path()
 );
@@ -132,12 +131,11 @@ install -pm 0644 ../phpunit.autoloader.php \
 %check
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 
-sed 's#./phpunit.autoloader.php#./autoloader.php#' -i phpunit.xml.dist
+cp ../../../../phpunit.autoloader.php .
 
-%{_bindir}/phpunit -d date.timezone="UTC" \
-    || : Temporarily ignore failed tests
-# As phpunit requires this package, and because of stupid autoload
-# old / system version is used during test run
+%{_bindir}/phpunit \
+   -d include_path="%{buildroot}%{pear_phpdir}:.:%{pear_phpdir}" \
+   -d date.timezone="UTC"
 
 
 %post
