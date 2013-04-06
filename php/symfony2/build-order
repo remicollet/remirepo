@@ -4,7 +4,7 @@
 	DomCrawler                2.2.1      BR: CssSelector  R: CssSelector
 	Filesystem                2.2.1        
 	Finder                    2.2.1        
-	HttpFoundation            2.2.0        
+	HttpFoundation            2.2.1        
 	Locale                    2.2.0        
 	OptionsResolver           2.2.0        
 	Process                   2.2.0        
