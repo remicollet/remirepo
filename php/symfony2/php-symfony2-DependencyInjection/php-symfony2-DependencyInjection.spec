@@ -1,10 +1,10 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
-%global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global pear_name    DependencyInjection
 %global php_min_ver  5.3.3
 
-Name:             php-symfony2-DependencyInjection
+Name:             php-symfony2-%{pear_name}
 Version:          2.2.0
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
@@ -16,17 +16,18 @@ Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
+
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
-# Test requires
+# For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires:    php-pear(%{pear_channel}/Config) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Config) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Yaml) >= 2.2.0
-# Test requires: phpci
-BuildRequires:    php-ctype
+BuildRequires:    php-pear(%{pear_channel}/Yaml) <  2.3.0
+# For tests: phpci
 BuildRequires:    php-dom
-BuildRequires:    php-libxml
 BuildRequires:    php-pcre
 BuildRequires:    php-phar
 BuildRequires:    php-reflection
@@ -38,18 +39,18 @@ Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
-# phpci requires
-Requires:         php-ctype
+# phpci
 Requires:         php-dom
-Requires:         php-libxml
 Requires:         php-pcre
 Requires:         php-phar
 Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
-# Optional requires
+# Optional
 Requires:         php-pear(%{pear_channel}/Config) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Config) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Yaml) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Yaml) <  2.3.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -64,15 +65,46 @@ Service Container (http://symfony.com/doc/current/book/service_container.html).
 %prep
 %setup -q -c
 
+# Create PHPUnit autoloader
+( cat <<'PHPUNIT_AUTOLOADER'
+<?php
+
+# This file was created by RPM packaging and is not part of the original
+# Symfony2 %{pear_name} PEAR package.
+
+set_include_path(
+    '%{pear_phpdir}'.PATH_SEPARATOR.
+    '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
+    get_include_path()
+);
+
+spl_autoload_register(function ($class) {
+    if ('\\' == $class[0]) {
+        $class = substr($class, 1);
+    }
+
+    $file = str_replace('\\', '/', $class).'.php';
+    @include $file;
+});
+PHPUNIT_AUTOLOADER
+) > phpunit.autoloader.php
+
+# Update PHPUnit config
+sed -e 's#vendor/autoload.php#./phpunit.autoloader.php#' \
+    -i %{pear_name}-%{version}/Symfony/Component/%{pear_name}/phpunit.xml.dist
+
 # Modify PEAR package.xml file:
+# - Remove .gitattributes file
 # - Remove .gitignore file
 # - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
-# - Remove md5sum from bootsrap.php file since it was patched
-sed -e '/\.gitignore/d' \
+# - Remove md5sum from phpunit.xml.dist file since it was updated
+sed -e '/\.gitattributes/d' \
+    -e '/\.gitignore/d' \
     -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
-    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/Tests/s/role="php"/role="test"/' \
+    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
+    -e '/phpunit.xml.dist/s/md5sum="[^"]*"\s*//' \
     -i package.xml
 
 # package.xml is version 2.0
@@ -94,16 +126,17 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-sed -e '/bootstrap/s:vendor/autoload.php:%{pear_phpdir}/Symfony/Component/%{pear_name}/autoloader.php:' \
-      %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml.dist \
-    > %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml
+# Install PHPUnit autoloader
+install -pm 0644 ../phpunit.autoloader.php \
+    %{buildroot}/%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/
 
 
 %check
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
-sed -e '/bootstrap/s:vendor/autoload.php:autoloader.php:' \
-    phpunit.xml.dist > phpunit.xml
-%{_bindir}/phpunit -d date.timezone=UTC \
+
+sed 's#./phpunit.autoloader.php#./autoloader.php#' -i phpunit.xml.dist
+
+%{_bindir}/phpunit -d date.timezone="UTC" \
 %if 0%{?rhel} == 5
    || : ignore test on EL5
 %endif
@@ -130,6 +163,11 @@ fi
 
 
 %changelog
+* Sat Mar 23 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.0-1
+- Updated to 2.2.0
+- Removed tests' bootstrap patch
+- Removed php-ctype and php-libxml requires
+
 * Tue Mar 05 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
