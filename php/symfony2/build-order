@@ -11,7 +11,7 @@ Build order
 	Process                   2.2.1        
 	PropertyAccess            2.2.1        
 	Serializer                2.2.1        
-	Templating                2.2.0        
+	Templating                2.2.1        
 	Yaml                      2.2.0        
 	BrowserKit                2.2.0      BR: CssSelector, DomCrawler, Process  R: DomCrawler, Process
 	ClassLoader               2.2.0      BR: Finder  
