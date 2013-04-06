@@ -1,14 +1,13 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
-%global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global pear_name    HttpKernel
 %global php_min_ver  5.3.3
-# Broken: require_once(Symfony/Component/HttpKernel/Tests/some_controller_function.php)
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
-Name:             php-symfony2-HttpKernel
-Version:          2.2.0
-Release:          2%{?dist}
+
+Name:             php-symfony2-%{pear_name}
+Version:          2.2.1
+Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
@@ -18,26 +17,42 @@ Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
+
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
-%if %{with_tests}
-# Test requires
+# For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-PsrLog >= 1.0.0
 BuildRequires:    php-pear(%{pear_channel}/BrowserKit) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/BrowserKit) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/ClassLoader) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/ClassLoader) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Config) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Config) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Console) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Console) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Finder) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Finder) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Process) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Process) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Routing) >= 2.2.0
-# Test requires: phpci
+BuildRequires:    php-pear(%{pear_channel}/Routing) <  2.3.0
+# Awaiting https://github.com/symfony/symfony/issues/7318
+#BuildRequires:    php-pear(%{pear_channel}/Stopwatch) >= 2.2.0
+#BuildRequires:    php-pear(%{pear_channel}/Stopwatch) <  2.3.0
+BuildRequires:    php-PsrLog >= 1.0
+BuildRequires:    php-PsrLog <  2.0
+# For tests: phpci
 BuildRequires:    php-date
+BuildRequires:    php-hash
 BuildRequires:    php-json
+BuildRequires:    php-mbstring
 BuildRequires:    php-pcre
 BuildRequires:    php-pdo
 BuildRequires:    php-pdo_mysql
@@ -46,19 +61,23 @@ BuildRequires:    php-reflection
 BuildRequires:    php-session
 BuildRequires:    php-spl
 BuildRequires:    php-tokenizer
-%endif
 
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
-Requires:         php-PsrLog >= 1.0.0
 Requires:         php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/EventDispatcher) <  2.3.0
 Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/HttpFoundation) <  2.3.0
+Requires:         php-PsrLog >= 1.0
+Requires:         php-PsrLog <  2.0
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
-# phpci requires
+# phpci
 Requires:         php-date
+Requires:         php-hash
 Requires:         php-json
+Requires:         php-mbstring
 Requires:         php-pcre
 Requires:         php-pdo
 Requires:         php-pdo_mysql
@@ -67,13 +86,19 @@ Requires:         php-reflection
 Requires:         php-session
 Requires:         php-spl
 Requires:         php-tokenizer
-# Optional requires
+# Optional
 Requires:         php-pear(%{pear_channel}/BrowserKit) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/BrowserKit) <  2.3.0
 Requires:         php-pear(%{pear_channel}/ClassLoader) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/ClassLoader) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Config) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Config) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Console) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Console) <  2.3.0
 Requires:         php-pear(%{pear_channel}/DependencyInjection) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/DependencyInjection) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Finder) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Finder) <  2.3.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -85,21 +110,51 @@ It takes a Request as an input and should return a Response as an output.
 Using this interface makes your code compatible with all frameworks using
 the Symfony2 components. And this will give you many cool features for free.
 
-Optional dependencies: memcache, memcached, mongo
+Optional dependencies: memcache, memcached, mongo, xdebug
 
 
 %prep
 %setup -q -c
 
+# Create PHPUnit autoloader
+( cat <<'PHPUNIT_AUTOLOADER'
+<?php
+
+# This file was created by RPM packaging and is not part of the original
+# Symfony2 %{pear_name} PEAR package.
+
+set_include_path(
+    '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
+    get_include_path()
+);
+
+spl_autoload_register(function ($class) {
+    if ('\\' == $class[0]) {
+        $class = substr($class, 1);
+    }
+
+    $file = str_replace('\\', '/', $class).'.php';
+    @include $file;
+});
+PHPUNIT_AUTOLOADER
+) > phpunit.autoloader.php
+
+# Update PHPUnit config
+sed -e 's#vendor/autoload.php#./phpunit.autoloader.php#' \
+    -i %{pear_name}-%{version}/Symfony/Component/%{pear_name}/phpunit.xml.dist
+
 # Modify PEAR package.xml file:
+# - Remove .gitattributes file
 # - Remove .gitignore file
 # - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
-# - Remove md5sum from bootsrap.php file since it was patched
-sed -e '/\.gitignore/d' \
+# - Remove md5sum from phpunit.xml.dist file since it was updated
+sed -e '/\.gitattributes/d' \
+    -e '/\.gitignore/d' \
     -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
-    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/Tests/s/role="php"/role="test"/' \
+    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
+    -e '/phpunit.xml.dist/s/md5sum="[^"]*"\s*//' \
     -i package.xml
 
 # package.xml is version 2.0
@@ -121,22 +176,25 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-sed -e '/bootstrap/s:vendor/autoload.php:%{pear_phpdir}/Symfony/Component/%{pear_name}/autoloader.php:' \
-      %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml.dist \
-    > %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml
+# Install PHPUnit autoloader
+install -pm 0644 ../phpunit.autoloader.php \
+    %{buildroot}/%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/
 
 
 %check
-%if %{with_tests}
-cd %{pear_name}-%{version}
-ln -s /usr/share/php/Psr Psr
-cd Symfony/Component/%{pear_name}
-sed -e '/bootstrap/s:vendor/autoload.php:autoloader.php:' \
-    phpunit.xml.dist > phpunit.xml
-%{_bindir}/phpunit -d date.timezone=UTC
-%else
-: Tests skipped, missing '--with tests' option
-%endif
+cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
+
+cp ../../../../phpunit.autoloader.php .
+
+# Remove tests requiring unavailable Stopwatch package
+rm -f Tests/Debug/TraceableEventDispatcherTest.php
+
+# Remove this test with use vendor/autoload.php
+rm Tests/ClientTest.php
+
+%{_bindir}/phpunit \
+   -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
+   -d date.timezone="UTC"
 
 
 %post
@@ -160,6 +218,14 @@ fi
 
 
 %changelog
+* Sat Apr 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1
+
+* Wed Mar 13 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.0-1
+- Updated to 2.2.0
+- Removed tests' bootstrap patch
+- Added php-PsrLog and php-hash requires
+
 * Sun Mar 10 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-2
 - add Requires: php-PsrLog
 
