@@ -10,7 +10,7 @@ Build order
 	OptionsResolver           2.2.1        
 	Process                   2.2.1        
 	PropertyAccess            2.2.1        
-	Serializer                2.2.0        
+	Serializer                2.2.1        
 	Templating                2.2.0        
 	Yaml                      2.2.0        
 	BrowserKit                2.2.0      BR: CssSelector, DomCrawler, Process  R: DomCrawler, Process
