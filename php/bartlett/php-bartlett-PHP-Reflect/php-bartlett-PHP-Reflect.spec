@@ -1,11 +1,10 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global channel   bartlett.laurent-laville.org
 %global pear_name PHP_Reflect
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.6.1
+Version:        1.6.2
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -19,7 +18,7 @@ BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
+BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 
 Requires:       php-pear(PEAR) >= 1.9.0
 Requires(post): %{__pear}
@@ -69,7 +68,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}%{?prever}
 
-# Version 1.3.0 : OK (34 tests, 55 assertions)
+# Version 1.6.2 : OK (Tests: 49, Assertions: 110, Skipped: 1)
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --bootstrap %{buildroot}%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
@@ -100,6 +99,9 @@ fi
 
 
 %changelog
+* Sat Apr 06 2013 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
+- Update to 1.6.2
+
 * Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
 - Update to 1.6.1
 
