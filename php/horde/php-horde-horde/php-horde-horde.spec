@@ -117,11 +117,13 @@ Requires:       php-pear(Console_Getopt)
 Requires:       php-pear(Console_Table)
 Requires:       php-pear(Net_DNS2)
 Requires:       php-pear(Services_Weather)
+Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Service_Weather) >= 3.0.0
 # Optional but implicitly required
 #               Horde_Db, Horde_Feed, Horde_Oauth, Horde_SyncMl
 # Optionnal but TODO
 #               Horde_ActiveSync, Horde_Service_Facebook,
-#               Horde_Service_Twitter, Horde_Service_Weather
+#               Horde_Service_Twitter
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 %if 0%{?fedora} > 19
