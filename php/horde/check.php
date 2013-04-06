@@ -123,7 +123,7 @@ function loadFiles($verb) {
 function showBuildOrder($verb) {
     global $conf, $packs;
 
-    if ($verb) echo "Build order\n";
+    echo "Build order\n";
 
     $todo = $packs;
     $done = array();
@@ -166,7 +166,8 @@ function showBuildOrder($verb) {
                 }
                 $br = (count($tmp) ? "BR: ".implode(', ', $tmp) : '');
                 $rr = (count($pack['requires']) ? "R: ".implode(', ', $pack['requires']) : '');
-                printf("%4d %-25s %-10s %s %s %s\n", $i++, $pack['name'], $pack['version'], $br, $ir, $rr);
+                printf("\t%-25s %-10s %s %s %s\n", $pack['name'], $pack['version'], $br, $ir, $rr);
+                $i++;
             }
         }
         if ($j == $i) {
