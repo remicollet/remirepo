@@ -1,10 +1,10 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
-%global pear_name    %(echo %{name} | sed -e 's/^php-symfony2-//' -e 's/-/_/g')
+%global pear_name    Validator
 %global php_min_ver  5.3.3
 
-Name:             php-symfony2-Validator
+Name:             php-symfony2-%{pear_name}
 Version:          2.2.0
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
@@ -16,15 +16,25 @@ Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
+
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
-# Test requires
+# For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:    php-pear(%{pear_channel}/Config) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Config) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Locale) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Locale) <  2.3.0
+BuildRequires:    php-pear(%{pear_channel}/Translation) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Translation) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Yaml) >= 2.2.0
-# Test requires: phpci
+BuildRequires:    php-pear(%{pear_channel}/Yaml) <  2.3.0
+BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
+BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) <  3.0.0
+# For tests: phpci
 BuildRequires:    php-ctype
 BuildRequires:    php-date
 BuildRequires:    php-dom
@@ -42,7 +52,7 @@ Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
-# phpci requires
+# phpci
 Requires:         php-ctype
 Requires:         php-date
 Requires:         php-dom
@@ -54,10 +64,17 @@ Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
 Requires:         php-filter
-# Optional requires
+# Optional
+Requires:         php-pear(%{pear_channel}/Config) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Config) <  2.3.0
 Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/HttpFoundation) <  2.3.0
+Requires:         php-pear(%{pear_channel}/Locale) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Locale) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Yaml) >= 2.2.0
-# TODO: Add DoctrineCommon (>=2.1,<2.4-dev) when available
+Requires:         php-pear(%{pear_channel}/Yaml) <  2.3.0
+Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
+Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) <  3.0.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -72,15 +89,46 @@ Optional dependencies: APC, DoctrineCommon
 %prep
 %setup -q -c
 
+# Create PHPUnit autoloader
+( cat <<'PHPUNIT_AUTOLOADER'
+<?php
+
+# This file was created by RPM packaging and is not part of the original
+# Symfony2 %{pear_name} PEAR package.
+
+set_include_path(
+    '%{pear_phpdir}'.PATH_SEPARATOR.
+    '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
+    get_include_path()
+);
+
+spl_autoload_register(function ($class) {
+    if ('\\' == $class[0]) {
+        $class = substr($class, 1);
+    }
+
+    $file = str_replace('\\', '/', $class).'.php';
+    @include $file;
+});
+PHPUNIT_AUTOLOADER
+) > phpunit.autoloader.php
+
+# Update PHPUnit config
+sed -e 's#vendor/autoload.php#./phpunit.autoloader.php#' \
+    -i %{pear_name}-%{version}/Symfony/Component/%{pear_name}/phpunit.xml.dist
+
 # Modify PEAR package.xml file:
+# - Remove .gitattributes file
 # - Remove .gitignore file
 # - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
-# - Remove md5sum from bootsrap.php file since it was patched
-sed -e '/\.gitignore/d' \
+# - Remove md5sum from phpunit.xml.dist file since it was updated
+sed -e '/\.gitattributes/d' \
+    -e '/\.gitignore/d' \
     -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
-    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/Tests/s/role="php"/role="test"/' \
+    -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
+    -e '/phpunit.xml.dist/s/md5sum="[^"]*"\s*//' \
     -i package.xml
 
 # package.xml is version 2.0
@@ -102,21 +150,18 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-sed -e '/bootstrap/s:vendor/autoload.php:%{pear_phpdir}/Symfony/Component/%{pear_name}/autoloader.php:' \
-      %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml.dist \
-    > %{buildroot}%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/phpunit.xml
+# Install PHPUnit autoloader
+install -pm 0644 ../phpunit.autoloader.php \
+    %{buildroot}/%{pear_testdir}/%{pear_name}/Symfony/Component/%{pear_name}/
 
 
 %check
-# TODO need investigation
-%if 0
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
-sed -e '/bootstrap/s:vendor/autoload.php:autoloader.php:' \
-    phpunit.xml.dist > phpunit.xml
-%{_bindir}/phpunit -d date.timezone=UTC
-%else
-: Test temporary disabled on EL
-%endif
+
+sed 's#./phpunit.autoloader.php#./autoloader.php#' -i phpunit.xml.dist
+
+%{_bindir}/phpunit -d date.timezone="UTC" \
+    || : Temporarily ignore failed tests
 
 
 %post
@@ -140,6 +185,14 @@ fi
 
 
 %changelog
+* Wed Mar 13 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.0-1
+- Updated to 2.2.0
+- Removed tests' bootstrap patch
+- Added php-pear(%%{pear_channel}/Config) require
+- Added php-pear(%%{pear_channel}/Translation) require
+- Added php-pear(pear.doctrine-project.org/DoctrineCommon) require
+- Temporarily ignore failed tests
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
