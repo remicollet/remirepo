@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.0
+Version:          2.2.1
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -150,6 +150,9 @@ fi
 
 
 %changelog
+* Sat Apr 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1
+
 * Wed Mar 13 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.0-1
 - Updated to 2.2.0
 - Removed tests' bootstrap patch
