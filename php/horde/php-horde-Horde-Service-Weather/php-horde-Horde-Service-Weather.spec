@@ -37,16 +37,16 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Http) >= 3.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Http) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Url) >= 3.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Url) >= 3.0.0
 # Not documented, detected by phpci
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 3.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Serialize) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
