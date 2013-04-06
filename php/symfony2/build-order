@@ -7,7 +7,7 @@
 	HttpFoundation            2.2.1        
 	Locale                    2.2.1        
 	OptionsResolver           2.2.1        
-	Process                   2.2.0        
+	Process                   2.2.1        
 	PropertyAccess            2.2.0       I: Form 
 	Serializer                2.2.0        
 	Templating                2.2.0        
