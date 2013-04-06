@@ -2,7 +2,7 @@
 	Console                   2.2.1        
 	CssSelector               2.2.1        
 	DomCrawler                2.2.1      BR: CssSelector  R: CssSelector
-	Filesystem                2.2.0        
+	Filesystem                2.2.1        
 	Finder                    2.2.0        
 	HttpFoundation            2.2.0        
 	Locale                    2.2.0        
