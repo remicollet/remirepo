@@ -13,7 +13,7 @@ Build order
 	Serializer                2.2.1        
 	Templating                2.2.1        
 	Yaml                      2.2.1        
-	BrowserKit                2.2.0      BR: CssSelector, DomCrawler, Process  R: DomCrawler, Process
+	BrowserKit                2.2.1      BR: CssSelector, DomCrawler, Process  R: DomCrawler, Process
 	ClassLoader               2.2.0      BR: Finder  
 	DependencyInjection       2.2.0      BR: Config, Yaml  R: Config, Yaml
 	EventDispatcher           2.2.0      BR: DependencyInjection  R: DependencyInjection
