@@ -1,5 +1,5 @@
-%global VER        6.8.3
-%global Patchlevel 9
+%global VER        6.8.4
+%global Patchlevel 6
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -331,6 +331,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr  6 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.4.6-1
+- update to 6.8.4-6
+
 * Wed Mar 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.3.9-1
 - update to 6.8.3-9
 
