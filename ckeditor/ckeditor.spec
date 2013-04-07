@@ -1,19 +1,18 @@
 Name:		ckeditor
-Version:	3.6.6
+Version:	4.1
 Release:	1%{?dist}
 Summary:	WYSIWYG text editor to be used inside web pages
 
 Group:		Applications/Internet
 License:	GPLv2+ or LGPLv2+ or MPLv1.1+
 URL:		http://ckeditor.com/
-Source0:	http://download.cksource.com/CKEditor/CKEditor/CKEditor%20%{version}/ckeditor_%{version}.tar.gz
+Source0:	http://download.cksource.com/CKEditor/CKEditor/CKEditor%20%{version}/ckeditor_%{version}_standard.tar.gz
 Source1:	%{name}.conf
 
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:	noarch
 
 Requires:	httpd
-Requires:	php-common
 
 
 %description
@@ -27,24 +26,14 @@ OpenOffice.
 %prep
 %setup -q -c
 
-# uneeded files
-rm  -f %{name}/.htaccess
-rm  -f %{name}/INSTALL.html
-rm -rf %{name}/_source
-
 # documentation
 mkdir doc
-mv %{name}/{CHANGES,LICENSE}.html doc/
-mv %{name}/_samples doc/
+mv %{name}/*.md doc/
+mv %{name}/samples doc/
 
 # fix library path in provided samples
 sed -e 's:src="../ckeditor.js":src="/ckeditor/ckeditor.js":' \
-    -i doc/_samples/*.html
-
-
-# PHP Library
-mkdir php
-mv %{name}/*php php/
+    -i doc/samples/*.html
 
 
 %build
@@ -54,12 +43,13 @@ mv %{name}/*php php/
 %install
 rm -rf %{buildroot}
 
-# PHP
-mkdir -p %{buildroot}%{_datadir}/php/%{name}
-cp -p php/ckeditor_php5.php %{buildroot}%{_datadir}/php/%{name}/ckeditor.php
 
 # Javascript
-cp -rp %{name} %{buildroot}%{_datadir}/%{name}
+mkdir -p %{buildroot}%{_datadir}
+cp -rp %{name} %{buildroot}%{_datadir}/
+
+# Hack for compatibility with 3.6 (used by horde)
+ln -s ckeditor.js %{buildroot}%{_datadir}/ckeditor/ckeditor_basic.js
 
 # Apache
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
@@ -75,10 +65,16 @@ rm -rf %{buildroot}
 %doc doc/*
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/%{name}
-%{_datadir}/php/%{name}
 
 
 %changelog
+* Sun Apr  7 2013 Remi Collet <remi@fedoraproject.org> - 4.1-1
+- Update to 4.1
+- provided ckeditor_basic for compatibility
+
+* Tue Mar 19 2013 Orion Poplawski <orion@cora.nwra.com> 4.0.2-1
+- Update to 4.0.2
+
 * Sat Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 3.6.6-1
 - backport for remi repo
 - update to 3.6.6
