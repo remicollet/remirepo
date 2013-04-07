@@ -43,7 +43,6 @@ sed -e 's:src="../ckeditor.js":src="/ckeditor/ckeditor.js":' \
 %install
 rm -rf %{buildroot}
 
-
 # Javascript
 mkdir -p %{buildroot}%{_datadir}
 cp -rp %{name} %{buildroot}%{_datadir}/
@@ -70,7 +69,8 @@ rm -rf %{buildroot}
 %changelog
 * Sun Apr  7 2013 Remi Collet <remi@fedoraproject.org> - 4.1-1
 - Update to 4.1
-- provided ckeditor_basic for compatibility
+- provided ckeditor_basic.js for compatibility with 3.6
+- don't provide default alias, #910590
 
 * Tue Mar 19 2013 Orion Poplawski <orion@cora.nwra.com> 4.0.2-1
 - Update to 4.0.2
