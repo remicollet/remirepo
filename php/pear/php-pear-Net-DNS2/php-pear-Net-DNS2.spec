@@ -25,14 +25,16 @@ Requires:       php-pear(PEAR)
 # extensions detected by phpci
 Requires:       php-ctype
 Requires:       php-date
-Requires:       php-filter
+Requires:       php-hash
 Requires:       php-json
-Requires:       php-mhash
-Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-shmop
 Requires:       php-sockets
 Requires:       php-spl
+# Optional
+Requires:       php-filter
+Requires:       php-mhash
+Requires:       php-openssl
 
 Provides:       php-pear(%{pear_name}) = %{version}
 
@@ -82,6 +84,10 @@ rm -rf %{buildroot}
 
 
 %check
+# https://pear.php.net/bugs/19886
+sed -e 's/<?$/<?php/' \
+    -i %{buildroot}%{pear_testdir}/%{pear_name}/tests/Net_DNS2_DNSSECTest.php
+
 if ping -c 1 google.com &>/dev/null
 then
   suite=AllTests.php
