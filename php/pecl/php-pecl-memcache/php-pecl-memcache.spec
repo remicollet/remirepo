@@ -1,32 +1,30 @@
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name memcache
+# Not ready, some failed UDP tests. Neded investigation.
+%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcache
-Version:      3.0.7
-Release:      5%{?dist}.2
+Version:      3.0.8
+Release:      1%{?dist}.1
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
-# https://bugs.php.net/63141
-Source3:      LICENSE
-
-# https://bugs.php.net/63142
-# http://svn.php.net/viewvc?view=revision&revision=327754
-Patch1:       %{name}-3.0.5-get-mem-corrupt.patch
-
-# https://bugs.php.net/59602
-# http://svn.php.net/viewvc?view=revision&revision=328202
-Patch2:       %{name}-3.0.7-bug59602.patch
+# Missing in official archive
+# http://svn.php.net/viewvc/pecl/memcache/branches/NON_BLOCKING_IO/tests/connect.inc?view=co
+Source3:      connect.inc
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel
 BuildRequires: php-pear
 BuildRequires: zlib-devel
+%if %{with_tests}
+BuildRequires: memcached
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -68,8 +66,6 @@ Memcache can be used as a PHP session handler.
 %setup -c -q
 
 pushd %{pecl_name}-%{version}
-%patch1 -p1 -b .get-mem-corrupt.patch
-%patch2 -p4 -b .bug54602
 
 # Chech version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_MEMCACHE_VERSION/{s/.* "//;s/".*$//;p}' php_memcache.h)
@@ -81,8 +77,6 @@ fi
 popd
 
 %{__php} %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
-
-cp -p %{SOURCE3} .
 
 cat >%{pecl_name}.ini << 'EOF'
 ; ----- Enable %{pecl_name} extension module
@@ -170,6 +164,33 @@ install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
+cd %{pecl_name}-%{version}
+cp %{SOURCE3} tests
+sed -e "s:/var/run/memcached/memcached.sock:$PWD/memcached.sock:" \
+    -i tests/connect.inc
+
+# Launch the daemons
+memcached -p 11211 -U 11211      -d -P $PWD/memcached1.pid
+memcached -p 11212 -U 11212      -d -P $PWD/memcached2.pid
+memcached -s $PWD/memcached.sock -d -P $PWD/memcached3.pid
+
+# Run the test Suite
+ret=0
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php || ret=1
+
+# Cleanup
+if [ -f memcached2.pid ]; then
+   kill $(cat memcached?.pid)
+fi
+
+exit $ret
+%endif
+
 
 %clean
 rm -rf %{buildroot}
@@ -187,7 +208,7 @@ fi
 
 %files
 %defattr(-, root, root, -)
-%doc CHANGELOG %{pecl_name}-%{version}/CREDITS %{pecl_name}-%{version}/README LICENSE
+%doc CHANGELOG %{pecl_name}-%{version}/{CREDITS,README,LICENSE}
 %doc %{pecl_name}-%{version}/example.php %{pecl_name}-%{version}/memcache.php
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
@@ -197,6 +218,9 @@ fi
 
 
 %changelog
+* Mon Apr 08 2013 Remi Collet <remi@fedoraproject.org> - 3.0.8-1
+- Update to 3.0.8
+
 * Fri Dec 29 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-5
 - add patch for https://bugs.php.net/59602
   segfault in getExtendedStats
