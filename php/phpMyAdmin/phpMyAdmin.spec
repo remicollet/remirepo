@@ -1,7 +1,7 @@
 #global prever rc1
 
 Name: phpMyAdmin
-Version: 3.5.7
+Version: 3.5.8
 Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -18,10 +18,6 @@ Source13: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.4.z
 Source14: http://downloads.sourceforge.net/sourceforge/phpmyadmin/blueorange-1.0b.zip
 Source15: http://downloads.sourceforge.net/sourceforge/phpmyadmin/cleanstrap-1.0.zip
 Source16: http://downloads.sourceforge.net/sourceforge/phpmyadmin/metro-1.0.zip
-
-# http://sourceforge.net/p/phpmyadmin/bugs/3828/
-# MariaDB reported as MySQL
-Patch0:   %{name}-mariadb.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -48,8 +44,6 @@ is available in 50 languages
 
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
-
-%patch0 -p1
 
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
@@ -132,6 +126,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Mon Apr  8 2013 Remi Collet <rpms@famillecollet.com> 3.5.8-1
+- Upstream released 3.5.7 (bugfix)
+
 * Fri Feb 15 2013 Remi Collet <rpms@famillecollet.com> 3.5.7-1
 - Upstream released 3.5.7 (bugfix)
 - patch for http://sourceforge.net/p/phpmyadmin/bugs/3828/
