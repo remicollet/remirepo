@@ -76,7 +76,7 @@ if test "x${extver}" != "x%{version}"; then
 fi
 popd
 
-%{__php} %{SOURCE2} package.xml | tee CHANGELOG | head -n 5
+%{__php} %{SOURCE2} package.xml | tee CHANGELOG | head -n 8
 
 cat >%{pecl_name}.ini << 'EOF'
 ; ----- Enable %{pecl_name} extension module
@@ -141,11 +141,12 @@ rm -rf %{buildroot}
 make -C %{pecl_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
 
+# Drop in the bit of configuration
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+
 make -C %{pecl_name}-%{version}-zts \
      install INSTALL_ROOT=%{buildroot}
 
-# Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
@@ -210,11 +211,12 @@ fi
 %defattr(-, root, root, -)
 %doc CHANGELOG %{pecl_name}-%{version}/{CREDITS,README,LICENSE}
 %doc %{pecl_name}-%{version}/example.php %{pecl_name}-%{version}/memcache.php
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
-%{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%{php_extdir}/%{pecl_name}.so
+
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
 
 
 %changelog
