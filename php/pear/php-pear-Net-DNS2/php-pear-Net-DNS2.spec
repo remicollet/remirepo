@@ -2,8 +2,8 @@
 %global pear_name Net_DNS2
 
 Name:           php-pear-Net-DNS2
-Version:        1.2.5
-Release:        2%{?dist}
+Version:        1.3.0
+Release:        1%{?dist}
 Summary:        PHP Resolver library used to communicate with a DNS server
 
 Group:          Development/Libraries
@@ -22,9 +22,17 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
 
-# extensions detected by phpci (+ php-filter, not yet available in EL)
-Requires:       php-ctype, php-date, php-json, php-openssl, php-mhash
-Requires:       php-pcre, php-shmop, php-sockets, php-spl
+# extensions detected by phpci
+Requires:       php-ctype
+Requires:       php-date
+Requires:       php-filter
+Requires:       php-json
+Requires:       php-mhash
+Requires:       php-openssl
+Requires:       php-pcre
+Requires:       php-shmop
+Requires:       php-sockets
+Requires:       php-spl
 
 Provides:       php-pear(%{pear_name}) = %{version}
 
@@ -109,6 +117,9 @@ fi
 
 
 %changelog
+* Mon Apr 08 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 1.2.5-1
 - Update to 1.2.5
 
