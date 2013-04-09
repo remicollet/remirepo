@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-Token
 Version:        2.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Token API
 
 Group:          Development/Libraries
@@ -67,7 +67,12 @@ sed -e '/%{pear_name}.po/d' \
 
 %build
 cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+
+# Regenerate the locales
+for po in $(find locale -name \*.po)
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
@@ -123,26 +128,29 @@ fi
 
 
 %changelog
-* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
-- Update to 2.0.3 for remi repo
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- regenerate the locale during build
+
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
 
 * Tue Jan 15 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
 - fix include_path to run test in mock
 
-* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+* Thu Jan 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
 - new test layout (requires Horde_Test 2.1.0)
 - manage locales
 - add option for test (need investigation)
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
 
-* Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
+* Fri Nov  2 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - run test during build
 
-* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Thu Nov  1 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Thu Jun 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.1.7-1
 - Upgrade to 1.1.7
