@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Mime
 %global pear_channel pear.horde.org
@@ -12,12 +11,15 @@ Release:        1%{?dist}
 Summary:        Horde MIME Library
 
 Group:          Development/Libraries
-License:        LGPLv2
+# lib/Horde/Mime.php is BSD and LGPLv2
+# other files are LGPLv2
+License:        LGPLv2 and BSD
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
@@ -34,7 +36,7 @@ Requires:       php-date
 Requires:       php-fileinfo
 Requires:       php-pcre
 Requires:       php-spl
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
@@ -55,6 +57,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter) >= 3.0.0
+Requires:       php-intl
 Requires:       php-pear(Net_DNS2)
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -146,6 +149,9 @@ fi
 * Tue Apr 09 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 - Requires Horde_Support >= 2.1.0
+
+* Tue Mar 26 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.4-2
+- Update for review
 
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4

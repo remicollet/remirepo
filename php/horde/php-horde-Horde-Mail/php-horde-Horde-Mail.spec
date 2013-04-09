@@ -18,7 +18,8 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
 # To run unit tests
@@ -32,6 +33,7 @@ Requires:       php-intl
 Requires:       php-pcre
 Requires:       php-posix
 Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
@@ -118,19 +120,22 @@ fi
 * Tue Apr 09 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 
+* Wed Mar 20 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.4-1
+- Update for review
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
-* Thu Dec 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+* Thu Dec 27 2012 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3 for remi repo
 
-* Tue Dec  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+* Tue Dec  4 2012 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 
-* Sat Nov 17 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Sat Nov 17 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
-* Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Fri Nov  2 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
 * Thu Jun 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.2.0-1

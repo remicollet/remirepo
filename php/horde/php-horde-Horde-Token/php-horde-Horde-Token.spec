@@ -5,11 +5,11 @@
 
 Name:           php-horde-Horde-Token
 Version:        2.0.3
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Horde Token API
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -128,8 +128,11 @@ fi
 
 
 %changelog
-* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+* Tue Apr  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-4
 - regenerate the locale during build
+
+* Wed Mar 20 2013 Nick Bebout <nb@fedoraproject.org> - 2.0.3-3
+- Update for review
 
 * Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
