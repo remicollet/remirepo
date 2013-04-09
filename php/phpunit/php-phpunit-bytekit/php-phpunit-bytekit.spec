@@ -4,20 +4,23 @@
 
 Name:           php-phpunit-bytekit
 Version:        1.1.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A command-line tool built on the PHP Bytekit extension
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://github.com/sebastianbergmann/bytekit-cli
 Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+Patch0:         symfony_2.2.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.4
+BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{channel})
 
-Requires:       php-common >= 5.3.3
+Requires:       php(language) >= 5.3.3
+Requires:       php-pear(PEAR) >= 1.9.4
 Requires:       php-channel(%{channel})
 Requires:       php-pear(pear.symfony.com/Finder) >= 2.1.0
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
@@ -37,6 +40,7 @@ analysis tasks.
 
 %prep
 %setup -q -c
+%patch0 -p1 -b .orig
 [ -f package2.xml ] || mv package.xml package2.xml
 mv package2.xml %{pear_name}-%{version}/%{name}.xml
 cd %{pear_name}-%{version}
@@ -53,7 +57,7 @@ rm -rf %{buildroot} docdir
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf %{buildroot}%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -84,6 +88,14 @@ fi
 
 
 %changelog
+* Tue Apr  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.3-2
+- pull symfony 2.2 patch from rawhide
+
+* Mon Apr 01 2013 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.1.3-1
+- Fix metadata location, FTBFS #914373
+- upstream 1.1.3
+- Symfony 2.2 patch
+
 * Mon Aug 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.3-1
 - update to 1.1.3
 - add requires php-pear(pear.symfony.com/Finder) >= 2.1.0RC1
