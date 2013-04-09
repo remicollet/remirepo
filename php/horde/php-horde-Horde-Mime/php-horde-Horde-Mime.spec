@@ -7,7 +7,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.0.4
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -24,6 +24,7 @@ BuildRequires:  gettext
 %if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Support) >= 2.1.0
 %endif
 
 Requires(post): %{__pear}
@@ -41,7 +42,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Filter) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.1.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Text_Flowed) >= 3.0.0
@@ -142,6 +143,10 @@ fi
 
 
 %changelog
+* Tue Apr 09 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+- Requires Horde_Support >= 2.1.0
+
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
