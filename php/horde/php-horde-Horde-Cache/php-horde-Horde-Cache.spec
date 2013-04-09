@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cache
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde Caching API
 
@@ -26,17 +26,19 @@ Requires:       php-hash
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/Horde_Compress_Fast) >= 1.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Compress_Fast) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optional dependencies
-Requires:       php-pear(%{pear_channel}/Horde_Compress_Fast) >= 1.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Compress_Fast) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Memcache) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Memcache) >= 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -97,6 +99,11 @@ fi
 
 
 %changelog
+* Tue Apr 09 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+- Requires Horde_Compress_Fast is now mandatory
+- Requires Horde-Memcache (optional)
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - requires Horde_Compress_Fast instead of LZF
