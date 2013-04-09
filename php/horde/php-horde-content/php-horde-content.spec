@@ -75,9 +75,7 @@ cat .htaccess
 echo "</Directory>"
 ) | tee ../httpd.conf
 
-
-# Don't install .po and .pot files
-# Remove checksum for .mo, as we regenerate them
+# Remove htaccess as we provide httpd.conf
 sed -e '/htaccess/d' \
     ../package.xml >%{name}.xml
 

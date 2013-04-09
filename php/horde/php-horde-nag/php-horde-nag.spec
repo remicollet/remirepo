@@ -123,7 +123,12 @@ sed -e '/%{pear_name}.po/d' \
 
 %build
 cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+
+# Regenerate the locales
+for po in $(find locale -name \*.po)
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
