@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Support
-Version:        2.0.4
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde support package
 
@@ -104,6 +104,9 @@ fi
 
 
 %changelog
+* Tue Apr 09 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
