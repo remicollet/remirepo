@@ -72,14 +72,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201304040630
-#global rcver         beta2
+#global snapdate      201304040630
+%global rcver         beta3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.23.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.24.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -984,38 +984,38 @@ fi
 # zlib: used by image
 ln -sf ../configure
 %configure \
-	--cache-file=../config.cache \
-	--with-libdir=%{_lib} \
-	--with-config-file-path=%{_sysconfdir} \
-	--with-config-file-scan-dir=%{_sysconfdir}/php.d \
-	--disable-debug \
-	--with-pic \
-	--disable-rpath \
-	--without-pear \
-	--with-exec-dir=%{_bindir} \
-	--with-freetype-dir=%{_prefix} \
-	--with-png-dir=%{_prefix} \
-	--with-xpm-dir=%{_prefix} \
-	--enable-gd-native-ttf \
-	--with-t1lib=%{_prefix} \
-	--without-gdbm \
-	--with-jpeg-dir=%{_prefix} \
-	--with-openssl \
+    --cache-file=../config.cache \
+    --with-libdir=%{_lib} \
+    --with-config-file-path=%{_sysconfdir} \
+    --with-config-file-scan-dir=%{_sysconfdir}/php.d \
+    --disable-debug \
+    --with-pic \
+    --disable-rpath \
+    --without-pear \
+    --with-exec-dir=%{_bindir} \
+    --with-freetype-dir=%{_prefix} \
+    --with-png-dir=%{_prefix} \
+    --with-xpm-dir=%{_prefix} \
+    --enable-gd-native-ttf \
+    --with-t1lib=%{_prefix} \
+    --without-gdbm \
+    --with-jpeg-dir=%{_prefix} \
+    --with-openssl \
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
-	--with-pcre-regex=%{_prefix} \
+    --with-pcre-regex=%{_prefix} \
 %endif
-	--with-zlib \
-	--with-layout=GNU \
-	--with-kerberos \
-	--with-libxml-dir=%{_prefix} \
+    --with-zlib \
+    --with-layout=GNU \
+    --with-kerberos \
+    --with-libxml-dir=%{_prefix} \
 %if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
-	--with-system-tzdata \
+    --with-system-tzdata \
 %endif
-	--with-mhash \
+    --with-mhash \
 %if %{with_dtrace}
-	--enable-dtrace \
+    --enable-dtrace \
 %endif
-	$*
+    $*
 if test $? != 0; then 
   tail -500 config.log
   : configure failed
@@ -1025,7 +1025,7 @@ fi
 make %{?_smp_mflags}
 }
 
-# Build /usr/bin/php-cgi with the CGI SAPI, and all the shared extensions
+# Build /usr/bin/php-cgi with the CGI SAPI, and most shared extensions
 pushd build-cgi
 
 build --libdir=%{_libdir}/php \
@@ -1774,6 +1774,9 @@ fi
 
 
 %changelog
+* Wed Apr 10 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.24.beta3
+- update to 5.5.0beta3
+
 * Thu Apr  4 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.23-201304040630
 - new snapshot
 - clean old deprecated options
