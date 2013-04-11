@@ -75,7 +75,7 @@ mv %{pecl_name}-%{version} NTS
 %endif
 
 cd NTS
-%patch0 -p1 -b .blacklist
+%patch0 -p1
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define ACCELERATOR_VERSION/{s/.* "//;s/".*$//;p}' ZendAccelerator.h)
