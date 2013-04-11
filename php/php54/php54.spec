@@ -65,7 +65,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.13
+Version: 5.4.14
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -949,10 +949,8 @@ ln -sf ../configure
 	--with-layout=GNU \
 	--enable-exif \
 	--enable-ftp \
-	--enable-magic-quotes \
 	--enable-sockets \
 	--with-kerberos \
-	--enable-ucd-snmp-hack \
 	--enable-shmop \
 	--enable-calendar \
         --with-libxml-dir=%{_prefix} \
@@ -974,8 +972,7 @@ make %{?_smp_mflags}
 # Build /usr/bin/php-cgi with the CGI SAPI, and all the shared extensions
 pushd build-cgi
 
-build --enable-force-cgi-redirect \
-      --libdir=%{_libdir}/php \
+build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
@@ -1007,7 +1004,6 @@ build --enable-force-cgi-redirect \
       --with-xsl=shared,%{_prefix} \
       --enable-xmlreader=shared --enable-xmlwriter=shared \
       --with-curl=shared,%{_prefix} \
-      --enable-fastcgi \
       --enable-pdo=shared \
       --with-pdo-odbc=shared,unixODBC,%{_prefix} \
       --with-pdo-mysql=shared,mysqlnd \
@@ -1085,8 +1081,7 @@ popd
 pushd build-ztscli
 
 EXTENSION_DIR=%{_libdir}/php-zts/modules
-build --enable-force-cgi-redirect \
-      --includedir=%{_includedir}/php-zts \
+build --includedir=%{_includedir}/php-zts \
       --libdir=%{_libdir}/php-zts \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
@@ -1122,7 +1117,6 @@ build --enable-force-cgi-redirect \
       --with-xsl=shared,%{_prefix} \
       --enable-xmlreader=shared --enable-xmlwriter=shared \
       --with-curl=shared,%{_prefix} \
-      --enable-fastcgi \
       --enable-pdo=shared \
       --with-pdo-odbc=shared,unixODBC,%{_prefix} \
       --with-pdo-mysql=shared,mysqlnd \
@@ -1405,11 +1399,11 @@ rm -f README.{Zeus,QNX,CVS-RULES}
 
 
 %pre common
-echo -e "\nWARNING : These %{name}-* RPM are not official Fedora/Redhat build and"
-echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Redhat.\n"
+echo -e "\nWARNING : These %{name}-* RPM are not official Fedora / Red Hat build and"
+echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 15
+%if %{?fedora}%{!?fedora:99} <= 16
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -1615,6 +1609,10 @@ fi
 
 
 %changelog
+* Thu Apr 11 2013 Remi Collet <rcollet@redhat.com> 5.4.14-1
+- update to 5.4.11
+- clean old deprecated options
+
 * Thu Mar 14 2013 Remi Collet <rcollet@redhat.com> 5.4.13-1
 - update to 5.4.13
 - security fixes for CVE-2013-1635 and CVE-2013-1643
