@@ -1610,7 +1610,7 @@ fi
 
 %changelog
 * Thu Apr 11 2013 Remi Collet <rcollet@redhat.com> 5.4.14-1
-- update to 5.4.11
+- update to 5.4.14
 - clean old deprecated options
 
 * Thu Mar 14 2013 Remi Collet <rcollet@redhat.com> 5.4.13-1
