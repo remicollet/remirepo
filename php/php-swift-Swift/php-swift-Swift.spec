@@ -3,7 +3,7 @@
 %global pear_name Swift
 
 Name:           php-swift-Swift
-Version:        4.3.0
+Version:        4.3.1
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -55,7 +55,7 @@ mv %{buildroot}%{pear_phpdir}/*.php \
    %{buildroot}%{pear_phpdir}/Swift \
    %{buildroot}%{pear_phpdir}/dependency_maps \
    %{buildroot}%{pear_phpdir}/tmp
-mv %{buildroot}%{pear_phpdir}/tmp $RPM_BUILD_ROOT%{pear_phpdir}/Swift
+mv %{buildroot}%{pear_phpdir}/tmp %{buildroot}%{pear_phpdir}/Swift
 
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
@@ -84,6 +84,9 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Thu Apr 11 2013 Remi Collet <remi@fedoraproject.org> - 4.3.1-1
+- Update to 4.3.1
+
 * Tue Jan  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.3.0-1
 - upstream 4.3.0
 
