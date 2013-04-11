@@ -79,7 +79,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.24.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.25.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -107,6 +107,7 @@ Source9: php.modconf
 Source10: php.ztsmodconf
 # Configuration files for some extensions
 Source50: opcache.ini
+Source51: opcache-default.blacklist
 Source99: php-fpm.init
 
 # Build fixes
@@ -132,6 +133,8 @@ Patch45: php-5.4.8-ldap_r.patch
 Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
+# Allow wildcard il opcache.backlist_filename
+Patch48: php-5.5.0-opcache.patch
 
 # Fixes for tests
 
@@ -829,6 +832,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+%patch48 -p1 -b .opcache
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1529,6 +1533,9 @@ cat files.json files.curl files.phar files.fileinfo \
 cat files.zip >> files.common
 %endif
 
+# The default Zend OPcache blacklist file
+install -m 755 %{SOURCE51} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/opcache-default.blacklist
+
 # Install the macros file:
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
@@ -1767,13 +1774,17 @@ fi
 %files enchant -f files.enchant
 %files mysqlnd -f files.mysqlnd
 %files opcache -f files.opcache
-
+%config(noreplace) %{_sysconfdir}/php.d/opcache-default.blacklist
 %if %{with_oci8}
 %files oci8 -f files.oci8
 %endif
 
 
 %changelog
+* Thu Apr 11 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.25.beta3
+- allow wildcard in opcache.blacklist_filename and provide
+  default /etc/php.d/opcache-default.blacklist
+
 * Wed Apr 10 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.24.beta3
 - update to 5.5.0beta3
 
