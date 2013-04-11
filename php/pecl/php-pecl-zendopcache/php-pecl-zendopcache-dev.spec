@@ -9,7 +9,7 @@
 
 Name:          php-pecl-%{pecl_name}
 Version:       7.0.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
@@ -23,6 +23,11 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # this extension must be loaded before XDebug
 # So "opcache" if before "xdebug"
 Source1:       %{plug_name}.ini
+Source2:       %{plug_name}-default.blacklist
+
+# Allow comments in blacklist content
+# Allow wildcard in blacklist filename
+Patch0:        %{plug_name}-blacklist.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.2.0
@@ -69,12 +74,16 @@ sed -e '/release/s/7.0.0/%{version}%{prever}/' \
 mv %{pecl_name}-%{version} NTS
 %endif
 
+cd NTS
+%patch0 -p1 -b .blacklist
+
 # Sanity check, really often broken
-extver=$(sed -n '/#define ACCELERATOR_VERSION/{s/.* "//;s/".*$//;p}' NTS/ZendAccelerator.h)
+extver=$(sed -n '/#define ACCELERATOR_VERSION/{s/.* "//;s/".*$//;p}' ZendAccelerator.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
 fi
+cd ..
 
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
@@ -110,6 +119,9 @@ sed -e 's:@EXTPATH@:%{php_ztsextdir}:' \
     -i %{buildroot}%{php_ztsinidir}/%{plug_name}.ini
 
 make -C ZTS install INSTALL_ROOT=%{buildroot}
+
+# The default Zend OPcache blacklist file
+install -D -p -m 644 %{SOURCE2} %{buildroot}%{php_inidir}/%{plug_name}-default.blacklist
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -156,6 +168,7 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc NTS/{LICENSE,README}
+%config(noreplace) %{php_inidir}/%{plug_name}-default.blacklist
 %config(noreplace) %{php_inidir}/%{plug_name}.ini
 %{php_extdir}/%{plug_name}.so
 
@@ -166,6 +179,10 @@ fi
 
 
 %changelog
+* Thu Apr 11 2013 Remi Collet <rcollet@redhat.com> - 7.0.1-2
+- allow wildcard in opcache.blacklist_filename and provide
+  default /etc/php.d/opcache-default.blacklist
+
 * Mon Mar 25 2013 Remi Collet <remi@fedoraproject.org> - 7.0.1-1
 - official PECL release, version 7.0.1 (beta)
 - rename to php-pecl-zendopcache
