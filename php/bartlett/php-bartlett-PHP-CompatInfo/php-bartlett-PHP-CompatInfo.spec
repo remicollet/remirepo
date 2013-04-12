@@ -62,7 +62,7 @@ BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.6.1
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.6.2
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
