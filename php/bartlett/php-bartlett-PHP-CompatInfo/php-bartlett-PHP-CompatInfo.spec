@@ -9,7 +9,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.15.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -17,6 +17,7 @@ Group:          Development/Libraries
 License:        BSD and MIT
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
+Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpci.1
 
 # Update configuration for best experience
 # Reference = ALL known extension (instead of installed ones)
@@ -163,6 +164,9 @@ sed -i -e 's/\r//' %{buildroot}%{_bindir}/phpci
 # Create default package configuration
 install -pm 644 phpcompatinfo.xml %{buildroot}%{pear_cfgdir}/%{pear_name}/
 
+# Install the man page
+mkdir -p %{buildroot}%{_mandir}/man1
+install -pm 644 %{SOURCE1} %{buildroot}%{_mandir}/man1/phpci.1
 
 %check
 cd %{pear_name}-%{version}%{?prever}
@@ -213,9 +217,13 @@ fi
 %{pear_testdir}/%{pear_name}
 %{pear_datadir}/%{pear_name}
 %{_bindir}/phpci
+%{_mandir}/man1/phpci.*
 
 
 %changelog
+* Fri Apr 12 2013 Remi Collet <remi@fedoraproject.org> - 2.15.0-2
+- add upstream man page (from github)
+
 * Fri Apr 12 2013 Remi Collet <remi@fedoraproject.org> - 2.15.0-1
 - Update to 2.15.0
 - raise dependencies, PHP_Reflect 1.6.2
