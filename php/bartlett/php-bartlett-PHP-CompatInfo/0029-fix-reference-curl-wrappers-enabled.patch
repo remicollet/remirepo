@@ -1,0 +1,49 @@
+From 2b72e131738149824ae06904ea7a1505ceb72da8 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 4 Apr 2013 11:17:07 +0200
+Subject: [PATCH] fix curl ref for php 5.4.15 (CURL_WRAPPERS_ENABLE)
+
+---
+ PHP/CompatInfo/Reference/curl.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/PHP/CompatInfo/Reference/curl.php b/PHP/CompatInfo/Reference/curl.php
+index 507bea0..a5f6488 100644
+--- a/PHP/CompatInfo/Reference/curl.php
++++ b/PHP/CompatInfo/Reference/curl.php
+@@ -172,6 +172,7 @@ public function getConstants($extension = null, $version = null, $condition = nu
+             'CURL_VERSION_KERBEROS4'         => array('4.0.2', ''),
+             'CURL_VERSION_LIBZ'              => array('4.0.2', ''),
+             'CURL_VERSION_SSL'               => array('4.0.2', ''),
++            'CURL_WRAPPERS_ENABLE'           => array('5.4.15', ''),
+             'CURL_WRITEFUNC_PAUSE'           => array('5.5.0-dev', ''),
+ 
+             'CURLAUTH_ANY'                   => array('4.0.2', ''),
+-- 
+1.8.1.5
+
+From 519b2819557c82a7b34825a71e9c72359fe1d5e7 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 6 Apr 2013 07:00:29 +0200
+Subject: [PATCH]  fix curl ref for php 5.4.15 (CURL_WRAPPERS_ENABLED)
+
+---
+ PHP/CompatInfo/Reference/curl.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/PHP/CompatInfo/Reference/curl.php b/PHP/CompatInfo/Reference/curl.php
+index a5f6488..879208f 100644
+--- a/PHP/CompatInfo/Reference/curl.php
++++ b/PHP/CompatInfo/Reference/curl.php
+@@ -172,7 +172,7 @@ public function getConstants($extension = null, $version = null, $condition = nu
+             'CURL_VERSION_KERBEROS4'         => array('4.0.2', ''),
+             'CURL_VERSION_LIBZ'              => array('4.0.2', ''),
+             'CURL_VERSION_SSL'               => array('4.0.2', ''),
+-            'CURL_WRAPPERS_ENABLE'           => array('5.4.15', ''),
++            'CURL_WRAPPERS_ENABLED'          => array('5.4.15', ''),
+             'CURL_WRITEFUNC_PAUSE'           => array('5.5.0-dev', ''),
+ 
+             'CURLAUTH_ANY'                   => array('4.0.2', ''),
+-- 
+1.8.1.5
+

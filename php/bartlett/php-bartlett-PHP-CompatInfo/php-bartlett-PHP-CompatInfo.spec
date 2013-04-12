@@ -8,7 +8,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.14.1
+Version:        2.15.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -49,6 +49,10 @@ Patch24:        0024-fix-gd-reference-for-php-5.5.0alpha6.patch
 Patch25:        0025-array_column.patch
 Patch26:        0026-fix-gd-reference-for-php-5.5.0beta2.patch
 Patch27:        0027-fix-curl-ref-for-latest-libcurl.patch
+Patch28:        0028-fix-reference-for-datetimeinterface.patch
+Patch29:        0029-fix-reference-curl-wrappers-enabled.patch
+Patch30:        0030-fix-sphinx-test.patch
+Patch31:        0031-fix-opcache-reference-php550beta3.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -69,7 +73,7 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.6.1
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.6.2
 Requires:       php-pear(Console_CommandLine) >= 1.2.0
 # Optional
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
@@ -127,6 +131,10 @@ cp phpcompatinfo.xml.dist phpcompatinfo.xml
 %patch25 -p1
 %patch26 -p1
 %patch27 -p1
+%patch28 -p1
+%patch29 -p1
+%patch30 -p1
+%patch31 -p1
 
 # remove checksum for patched files
 sed -e 's/md5sum.*name/name/' \
@@ -208,6 +216,11 @@ fi
 
 
 %changelog
+* Fri Apr 12 2013 Remi Collet <remi@fedoraproject.org> - 2.15.0-1
+- Update to 2.15.0
+- raise dependencies, PHP_Reflect 1.6.2
+- add more patches for PHP 5.5 reference
+
 * Tue Apr 02 2013 Remi Collet <remi@fedoraproject.org> - 2.14.1-1
 - Update to 2.14.1
 - make cache path user dependent
@@ -334,7 +347,7 @@ fi
 - Version 2.1.0 (stable) - API 2.1.0 (stable)
 - fix documentation for asciidoc 8.4
 
-* Sat Jun 02 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-1
+* Sat Jun 04 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-1
 - Version 2.0.0 (stable) - API 2.0.0 (stable)
 - add HTML documentation
 
@@ -344,7 +357,7 @@ fi
 * Fri Mar 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-0.2.RC3
 - Version 2.0.0RC3
 
-* Wed Feb 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-0.1.RC2
+* Wed Feb 23 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-0.1.RC2
 - Version 2.0.0RC2
 - Initial Release
 
