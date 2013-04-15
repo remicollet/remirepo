@@ -9,7 +9,7 @@
 Summary:       Couchbase Server PHP extension
 Name:          php-pecl-couchbase
 Version:       1.1.4
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
