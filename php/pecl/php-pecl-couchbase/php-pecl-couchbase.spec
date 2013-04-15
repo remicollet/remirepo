@@ -19,6 +19,7 @@ BuildRequires: php-devel >= 5.3.0
 BuildRequires: php-pear
 BuildRequires: httpd-devel
 BuildRequires: pcre-devel
+BuildRequires: libcouchbase-devel
 # for tests
 BuildRequires: php-json
 
