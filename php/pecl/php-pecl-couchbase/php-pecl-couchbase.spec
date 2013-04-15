@@ -17,8 +17,7 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tg
 
 BuildRequires: php-devel >= 5.3.0
 BuildRequires: php-pear
-BuildRequires: httpd-devel
-BuildRequires: pcre-devel
+BuildRequires: zlib-devel
 BuildRequires: libcouchbase-devel
 # for tests
 BuildRequires: php-json
@@ -48,12 +47,6 @@ in a Couchbase Server.
 tar xif %{SOURCE0}
 
 mv %{pecl_name}-%{version} NTS
-
-cat > %{pecl_name}.ini << 'EOF'
-; Enable %{pecl_name} extension module
-extension=%{pecl_name}.so
-
-EOF
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_COUCHBASE_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_couchbase.h)
@@ -90,12 +83,12 @@ rm -f */modules/json.so
 
 # Install the NTS stuff
 make install -C NTS INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
+install -D -m 644 NTS/example/%{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
 
 # Install the ZTS stuff
 %if %{with_zts}
 make install -C ZTS INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+install -D -m 644 ZTS/example/%{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
 %endif
 
 # Install the package XML file
