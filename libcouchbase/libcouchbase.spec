@@ -5,6 +5,12 @@
 # Tests require some need which are downloaded during make
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 6
+%global with_dtrace 1
+%else
+%global with_dtrace 0
+%endif
+
 Name:          libcouchbase
 Version:       2.0.5
 Release:       1%{?dist}
@@ -20,8 +26,13 @@ Source11:      http://files.couchbase.com/maven2/org/couchbase/mock/CouchbaseMoc
 %endif
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: autoconf
+BuildRequires: libtool
 BuildRequires: cyrus-sasl-devel
+BuildRequires: libevent-devel >= 1.4
+BuildRequires: libev-devel >= 1.4
+%if %{with_dtrace}
+BuildRequires: systemtap-sdt-devel >= 1.8
+%endif
 
 
 %description
@@ -66,11 +77,16 @@ EOF
 %if %{with_tests}
 cp %{SOURCE10} gtest-1.6.0.zip
 cp %{SOURCE11} tests/CouchbaseMock.jar
-
 %endif
+
 
 %build
 autoreconf -i --force
+
+# Hack for manpage layout
+sed -e '/manpage_layout=/s/=.*/=bsd/' \
+    -i configure
+
 %{configure} \
 %if ! %{with_tests}
     --disable-tests \
@@ -92,8 +108,9 @@ rm -f %{buildroot}%{_libdir}/*.la
 %defattr(-,root,root,-)
 %doc LICENSE RELEASE_NOTES.markdown
 %{_libdir}/%{name}.so.*
-# Plugins
+# Backends
 %{_libdir}/%{name}_libevent.so
+%{_libdir}/%{name}_libev.so
 
 %files devel
 %defattr(-,root,root,-)
