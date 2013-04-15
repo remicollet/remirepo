@@ -92,7 +92,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        20.0
+Version:        20.0.1
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -587,6 +587,12 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Apr 15 2013 Remi Collet <RPMS@FamilleCollet.com> - 20.0.1-1
+- Update to 20.0.1, sync with rawhide
+
+* Fri Apr 5 2013 Martin Stransky <stransky@redhat.com> - 20.0-4
+- Updated rhbz-911314.patch for xulrunner 20
+
 * Wed Apr  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 20.0-1
 - Update to 20.0, sync with rawhide
 
