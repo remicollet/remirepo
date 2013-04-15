@@ -14,6 +14,11 @@ License:       ASL 2.0
 URL:           http://www.couchbase.com/develop/c/current
 Source0:       https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
+%if %{with_tests}
+Source10:      http://googletest.googlecode.com/files/gtest-1.6.0.zip
+Source11:      http://files.couchbase.com/maven2/org/couchbase/mock/CouchbaseMock/0.5-SNAPSHOT/CouchbaseMock-0.5-20120726.220757-19.jar
+%endif
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: autoconf
 BuildRequires: cyrus-sasl-devel
@@ -58,6 +63,11 @@ m4_define([VERSION_NUMBER], [%{version}])
 m4_define([GIT_CHANGESET],[%{gh_commit}])
 EOF
 
+%if %{with_tests}
+cp %{SOURCE10} gtest-1.6.0.zip
+cp %{SOURCE11} tests/CouchbaseMock.jar
+
+%endif
 
 %build
 autoreconf -i --force
@@ -101,6 +111,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 
 %check
 %if %{with_tests}
+make check
 %else
 : check disabled, missing '--with tests' option
 %endif
