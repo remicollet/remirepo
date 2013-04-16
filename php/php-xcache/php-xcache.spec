@@ -1,17 +1,24 @@
 %global ext_name     xcache
+%global svnrev       1234
 
 # TODO : consider splitting pages in another subpackage
 #        to avoid httpd dependency
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
-Version:       3.0.1
-Release:       1%{?dist}
+Version:       3.1.0
+Release:       0.1.svn%{svnrev}%{?dist}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
 
+%if 0%{?svnrev}
+# svn co -r 1234 svn://svn.lighttpd.net/xcache/trunk xcache-3.1.0
+# tar czf xcache-svn1234.tgz xcache-3.1.0
+Source0:       xcache-svn1234.tgz
+%else
 Source0:       http://xcache.lighttpd.net/pub/Releases/%{version}/%{ext_name}-%{version}.tar.gz
+%endif
 Source1:       xcache-httpd.conf
 
 # Relocation of configuration files to /etc/xcache
@@ -24,7 +31,7 @@ Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
 # Only one opcode cache can be installed
-Conflicts:     php-pecl-apc
+Conflicts:     php-pecl-apc < 3.1.15
 Conflicts:     php-eaccelerator
 
 # Other third party repo stuff
@@ -32,6 +39,9 @@ Obsoletes: php53-xcache
 Obsoletes: php53u-xcache
 %if "%{php_version}" > "5.4"
 Obsoletes: php54-xcache
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes: php55-xcache
 %endif
 
 # Filter private shared object
@@ -84,8 +94,8 @@ cd nts
 
 # Sanity check, really often broken
 extver=$(sed -n '/define XCACHE_VERSION/{s/.* "//;s/".*$//;p}' xcache.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?svnrev:-dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?svnrev:-dev}.
    exit 1
 fi
 cd ..
@@ -193,6 +203,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 16 2013 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.1.svn1234
+- update to SVN snapshot for php 5.5 compatibility
+
 * Thu Jan 17 2013 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - bugfixes version
 
