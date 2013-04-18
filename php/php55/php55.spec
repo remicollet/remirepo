@@ -72,14 +72,14 @@
 %global db_devel  libdb-devel
 %endif
 
-#global snapdate      201304040630
-%global rcver         beta3
+%global snapdate      201304181030
+#global rcver         beta3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.25.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.26.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -126,15 +126,13 @@ Patch42: php-5.3.1-systzdata-v10.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
-Patch44: php-5.4.5-system-libzip.patch
+Patch44: php-5.5.0-system-libzip.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-5.4.8-ldap_r.patch
 # Make php_config.h constant across builds
 Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
-# Allow wildcard il opcache.backlist_filename
-Patch48: php-5.5.0-opcache.patch
 
 # Fixes for tests
 
@@ -832,7 +830,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
-%patch48 -p1 -b .opcache
 
 %patch91 -p1 -b .remi-oci8
 
@@ -978,8 +975,7 @@ mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 fi
 
 # Always static:
-# date, filter, libxml, reflection, spl: not supported
-# ereg: build options vary per SAPI
+# date, ereg, filter, libxml, reflection, spl: not supported
 # hash: for PHAR_SIG_SHA256 and PHAR_SIG_SHA512
 # session: dep on hash, used by soap and wddx
 # pcre: used by filter, zip
@@ -1463,10 +1459,8 @@ then   ini=xml_${mod}.ini
 else   ini=${mod}.ini
 fi
     if [ -f ${ini} ]; then
-      sed -e 's:@EXTPATH@:%{_libdir}/php/modules:' \
-             ${ini} >$RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini}
-      sed -e 's:@EXTPATH@:%{_libdir}/php-zts/modules:' \
-             ${ini} >$RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini}
+      cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini}
+      cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini}
     else
       cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini} <<EOF
 ; Enable ${mod} extension module
@@ -1781,6 +1775,12 @@ fi
 
 
 %changelog
+* Thu Apr 18 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.26-201304181030
+- new snapshot
+- zend_extension doesn't requires full path
+- refresh system libzip patch
+- drop opcache patch merged upstream
+
 * Thu Apr 11 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.25.beta3
 - allow wildcard in opcache.blacklist_filename and provide
   default /etc/php.d/opcache-default.blacklist
