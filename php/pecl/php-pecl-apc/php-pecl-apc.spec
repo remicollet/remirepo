@@ -1,24 +1,21 @@
-%{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
+%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name APC
+%global svnrev    329913
 
 Summary:       APC caches and optimizes PHP intermediate code
 Name:          php-pecl-apc
-Version:       3.1.14
-Release:       1%{?dist}.1
+Version:       3.1.15
+Release:       0.3.svn%{svnrev}%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/APC
-Source0:       http://pecl.php.net/get/APC-%{version}.tgz
+# svn export -r  329913 http://svn.php.net/repository/pecl/apc/trunk APC-3.1.15
+# tar czf APC-3.1.15-dev.tgz APC-3.1.15
+Source0:       http://pecl.php.net/get/APC-%{version}%{?svnrev:-dev}.tgz
 Source1:       apc.ini
 Source2:       apc-panel.conf
 Source3:       apc.conf.php
-
-# Upstream patches from SVN
-# http://svn.php.net/viewvc?view=revision&revision=328955
-# http://svn.php.net/viewvc?view=revision&revision=328956
-# http://svn.php.net/viewvc?view=revision&revision=328957
-Patch0:        apc-svn.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
@@ -32,9 +29,6 @@ Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-Conflicts:     php-mmcache
-Conflicts:     php-eaccelerator
-Conflicts:     php-xcache
 Provides:      php-apc = %{version}
 Provides:      php-apc%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
@@ -85,26 +79,39 @@ configuration, available on http://localhost/apc-panel/
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
+%if 0%{?svnrev}
+sed -e "/release/s/%{version}/%{version}dev/" \
+    -e "/date/s/2013-??-??/2013-03-25/" \
+    APC-%{version}/package.xml >package.xml
+%endif
 
 cd APC-%{version}
-%patch0 -p0 -b .php55
 
-%if 0%{?__isa_bits}
-# port number to allow 32/64 build at same time
-port=$(expr %{__isa_bits} + 8900)
-sed -e "/PHP_CLI_SERVER_PORT/s/8964/$port/" \
-    -i tests/server_test.inc
+%if "%{php_version}" > "5.5"
+# With PHP > 5.5, disable
+sed -e '/apc.enable_opcode_cache/s/1/0/' \
+    -i php_apc.c
+sed -e '/apc.enable_opcode_cache/s/1/0/' \
+    %{SOURCE1} > ../apc.ini
+%else
+# With PHP < 5.4, enable
+sed -e '/apc.enable_opcode_cache/s/0/1/' \
+    -i php_apc.c
+sed -e '/apc.enable_opcode_cache/s/0/1/' \
+    %{SOURCE1} > ../apc.ini
 %endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?svnrev:-dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?svnrev:-dev}..
    exit 1
 fi
 cd ..
+
+# Fix the charset of NOTICE
+iconv -f iso-8859-1 -t utf8 APC-%{version}/NOTICE >NOTICE
 
 # duplicate for ZTS build
 cp -pr APC-%{version} APC-%{version}-zts
@@ -124,21 +131,15 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-# Install the NTS stuff
-pushd APC-%{version}
-make install INSTALL_ROOT=%{buildroot}
 
-# Fix the charset of NOTICE
-iconv -f iso-8859-1 -t utf8 NOTICE >NOTICE.utf8
-mv NOTICE.utf8 NOTICE
-popd
-install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/apc.ini
+# Install the NTS stuff
+make install -C APC-%{version} INSTALL_ROOT=%{buildroot}
+
+install -D -m 644 apc.ini %{buildroot}%{php_inidir}/apc.ini
 
 # Install the ZTS stuff
-pushd APC-%{version}-zts
-make install INSTALL_ROOT=%{buildroot}
-popd
-install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/apc.ini
+make install -C APC-%{version}-zts INSTALL_ROOT=%{buildroot}
+install -D -m 644 apc.ini %{buildroot}%{php_ztsinidir}/apc.ini
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -164,7 +165,7 @@ ln -sf %{php_extdir}/dom.so modules/
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension=apc.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=1 \
+REPORT_EXIT_STATUS=0 \
 %{_bindir}/php -n run-tests.php
 
 cd ../%{pecl_name}-%{version}-zts
@@ -173,12 +174,16 @@ ln -sf %{php_ztsextdir}/dom.so modules/
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=dom.so -d extension=apc.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=1 \
+REPORT_EXIT_STATUS=0 \
 %{__ztsphp} -n run-tests.php
 %else
 : minimal load test
-%{__php}    -n -d extension_dir=%{pecl_name}-%{version}/modules     -d extension=apc.so -m | grep apc
-%{__ztsphp} -n -d extension_dir=%{pecl_name}-%{version}-zts/modules -d extension=apc.so -m | grep apc
+%{__php} -n \
+   -d extension_dir=%{pecl_name}-%{version}/modules \
+   -d extension=apc.so -m | grep apc
+%{__ztsphp}    -n \
+   -d extension_dir=%{pecl_name}-%{version}-zts/modules \
+   -d extension=apc.so -m | grep apc
 %endif
 
 
@@ -198,9 +203,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc APC-%{version}/TECHNOTES.txt APC-%{version}/CHANGELOG APC-%{version}/LICENSE
-%doc APC-%{version}/NOTICE        APC-%{version}/TODO      APC-%{version}/apc.php
-%doc APC-%{version}/INSTALL
+%doc APC-%{version}/{TECHNOTES.txt,CHANGELOG,LICENSE,INSTALL,TODO,apc.php}
+%doc NOTICE
 %config(noreplace) %{php_inidir}/apc.ini
 %{php_extdir}/apc.so
 %{pecl_xmldir}/%{name}.xml
@@ -223,8 +227,22 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 17 2013 Remi Collet <remi@fedoraproject.org> - 3.1.15-0.3.svn329913
+- update to latest snapshot
+- switch most configuration to upstream default
+
+* Sun Mar 10 2013 Remi Collet <remi@fedoraproject.org> - 3.1.15-0.1.svn329724
+- update to 3.1.15dev (svn snaphot) with new directive to enable opcache
+  (default disabled) and allow to cache user data and use zendoptimizerplus
+
 * Thu Jan  3 2013 Remi Collet <remi@fedoraproject.org> - 3.1.14-1
 - Version 3.1.14 (beta) - API 3.1.0 (stable)
+
+* Tue Dec 18 2012 Remi Collet <remi@fedoraproject.org> - 3.1.14-0.1.svn328828
+- new snapshot
+
+* Mon Dec 10 2012 Remi Collet <remi@fedoraproject.org> - 3.1.14-0.1.svn328704
+- build SVN snapshot for PHP 5.5
 
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 3.1.13-3.1
 - apc-panel requires php-gd
