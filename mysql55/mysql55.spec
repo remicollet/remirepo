@@ -70,6 +70,8 @@ Patch18: mysql-cipherspec.patch
 Patch19: mysql-file-contents.patch
 Patch20: mysql-string-overflow.patch
 Patch21: mysql-dh1024.patch
+# http://bugs.mysql.com/68999
+Patch22: mysql-openssl.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf
@@ -271,6 +273,7 @@ rm -f Docs/mysql.info
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
+%patch22 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
