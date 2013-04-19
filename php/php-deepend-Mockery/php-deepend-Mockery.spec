@@ -3,7 +3,7 @@
 %global channel pear.survivethedeepend.com
 
 Name:           php-deepend-Mockery
-Version:        0.7.2
+Version:        0.8.0
 Release:        1%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
@@ -45,22 +45,22 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT docdir
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__rm} -rf %{buildroot} docdir
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-%{__rm} -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+%{__rm} -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-%{__mkdir} -p $RPM_BUILD_ROOT%{pear_xmldir}
-%{__install} -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+%{__mkdir} -p %{buildroot}%{pear_xmldir}
+%{__install} -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 mkdir docdir
 %{__cp} %{SOURCE1} %{SOURCE2} docdir
 
 
 %clean
-%{__rm} -rf $RPM_BUILD_ROOT
+%{__rm} -rf %{buildroot}
 
 
 %post
@@ -83,6 +83,12 @@ fi
 %doc %{pear_name}-%{version}/docdir/*
 
 %changelog
+* Fri Apr 19 2013 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
+- Update to 0.8.0 (backport)
+
+* Thu Apr 18 2013 Christof Damian <christof@damian.net> - 0.8.0-1
+- upstream 0.8.0
+
 * Sun Mar 04 2012 Remi Collet <RPMS@FamilleCollet.com> - 0.7.2-1
 - upstream 0.7.2, rebuild for remi repository
 
