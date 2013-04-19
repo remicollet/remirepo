@@ -57,7 +57,7 @@ Build order
 	Horde_History             2.0.2      BR: Horde_Test, Horde_Db  R: Horde_Db, Horde_Exception
 	Horde_Lock                2.0.2      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Support, Horde_Db, Horde_Log
 	Horde_Mail                2.0.5      BR: Horde_Test I: Horde_Mime R: Horde_Exception, Horde_Mime, Horde_Stream_Filter
-	Horde_Mime                2.1.0      BR: Horde_Test, Horde_Support  R: Horde_Exception, Horde_Mail, Horde_Stream_Filter, Horde_Support, Horde_Text_Flowed, Horde_Translation, Horde_Util, Horde_Nls, Horde_Text_Filter
+	Horde_Mime                2.1.1      BR: Horde_Test, Horde_Support  R: Horde_Exception, Horde_Mail, Horde_Stream_Filter, Horde_Support, Horde_Text_Flowed, Horde_Translation, Horde_Util, Horde_Nls, Horde_Text_Filter
 	Horde_Mime_Viewer         2.0.4      BR: Horde_Role  R: Horde_Role, Horde_Browser, Horde_Compress, Horde_Exception, Horde_Mime, Horde_Text_Filter, Horde_Text_Flowed, Horde_Util, Horde_Translation
 	Horde_Perms               2.1.0      BR: Horde_Test, Horde_Group  R: Horde_Db, Horde_Exception, Horde_Group, Horde_Util, Horde_Translation, Horde_Tree
 	Horde_Rdo                 2.0.2      BR: Horde_Test, Horde_Db  R: Horde_Db, Horde_Exception
@@ -68,7 +68,7 @@ Build order
 	Horde_Crypt               2.1.3      BR: Horde_Test  R: Horde_Exception, Horde_Mime, Horde_Stream_Filter, Horde_Translation, Horde_Util
 	Horde_Form                2.0.3       I: Horde_Core R: Horde_Core, Horde_Date, Horde_Exception, Horde_Mail, Horde_Mime, Horde_Nls, Horde_Token, Horde_Translation, Horde_Util
 	Horde_Icalendar           2.0.4      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Exception, Horde_Mail, Horde_Mime, Horde_Support, Horde_Translation, Horde_Util
-	Horde_Imap_Client         2.8.1      BR: Horde_Test, Horde_Stream, Horde_Mime  R: Horde_Exception, Horde_Mail, Horde_Mime, Horde_Stream, Horde_Util, Horde_Cache, Horde_Secret, Horde_Stream_Filter
+	Horde_Imap_Client         2.8.2      BR: Horde_Test, Horde_Stream, Horde_Mime  R: Horde_Exception, Horde_Mail, Horde_Mime, Horde_Stream, Horde_Util, Horde_Cache, Horde_Secret, Horde_Stream_Filter
 	Horde_Kolab_Server        2.0.2      BR: Horde_Test  R: Horde_Auth, Horde_Exception, Horde_Date, Horde_Ldap
 	Horde_Kolab_Session       2.0.1      BR: Horde_Test, Horde_Imap_Client, Horde_Kolab_Server  R: Horde_Exception, Horde_Imap_Client, Horde_Kolab_Server, Horde_Log
 	Horde_Kolab_Storage       2.0.4      BR: Horde_Test, Horde_Cache, Horde_History, Horde_Imap_Client, Horde_Kolab_Format  R: Horde_Cache, Horde_Exception, Horde_Kolab_Format, Horde_Mime, Horde_Translation, Horde_Support, Horde_Util, Horde_Imap_Client, Horde_History

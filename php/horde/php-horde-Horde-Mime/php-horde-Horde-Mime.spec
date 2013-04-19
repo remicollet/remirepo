@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -146,6 +146,9 @@ fi
 
 
 %changelog
+* Fri Apr 19 2013 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+
 * Tue Apr 09 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 - Requires Horde_Support >= 2.1.0
@@ -156,21 +159,21 @@ fi
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
-* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
-- Update to 2.0.3 for remi repo
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
 - drop merged patch for http://bugs.horde.org/ticket/11913
 
-* Sat Jan  5 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+* Sat Jan  5 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
 
-* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-2
+* Fri Dec 21 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - patch for php 5.5
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
 
-* Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Fri Nov  2 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.4.1-1
 - Initial package
