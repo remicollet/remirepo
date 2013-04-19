@@ -3,8 +3,8 @@
 
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
-Version:       1.0.9
-Release:       3%{?dist}.3
+Version:       1.0.10
+Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -54,7 +54,7 @@ from any queue.
 cd %{pecl_name}-%{version}
 
 # Upstream often forget to change this
-extver=$(sed -n '/"Version"/{s/.*"1/1/;s/".*$//;p}' amqp.c)
+extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
@@ -162,6 +162,9 @@ fi
 
 
 %changelog
+* Fri Apr 19 2013 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
+- Update to 1.0.10
+
 * Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 1.0.9-3
 - rebuild for new librabbitmq
 
