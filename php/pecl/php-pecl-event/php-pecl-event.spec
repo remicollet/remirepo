@@ -10,7 +10,10 @@ Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
-Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://bugs.php.net/64679
+Patch0:        %{pecl_name}.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel > 5.4
@@ -58,6 +61,8 @@ Version 1.0.0 introduces:
 
 cd %{pecl_name}-%{version}
 
+%patch0 -p1 -b .orig
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
 if test "x${extver}" != "x%{version}"; then
@@ -77,13 +82,14 @@ EOF
 
 
 %build
+# --with-event-pthreads cause test failure
+
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 %configure \
     --with-event-core \
     --with-event-extra \
     --with-event-openssl \
-    --with-event-pthreads \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -93,7 +99,6 @@ cd ../%{pecl_name}-zts
     --with-event-core \
     --with-event-extra \
     --with-event-openssl \
-    --with-event-pthreads \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
@@ -120,10 +125,12 @@ if [ -f %{php_extdir}/sockets.so ]; then
   OPTS="-d extension=sockets.so"
 fi
 
+# https://bugs.php.net/64680
+SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules $OPTS -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
 cd ../%{pecl_name}-zts
@@ -132,10 +139,11 @@ if [ -f %{php_ztsextdir}/sockets.so ]; then
   OPTS="-d extension=sockets.so"
 fi
 
+SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules $OPTS -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
 
 

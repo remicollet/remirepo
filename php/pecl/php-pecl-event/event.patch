@@ -1,0 +1,11 @@
+--- event-1.6.1/classes/listener.c~	2013-04-17 21:04:23.000000000 +0200
++++ event-1.6.1/classes/listener.c	2013-04-20 09:11:52.608891682 +0200
+@@ -272,7 +272,7 @@
+ 	PHP_EVENT_FETCH_BASE(base, zbase);
+ 
+ 	if (Z_TYPE_PP(ppztarget) == IS_STRING) {
+-		struct sockaddr_storage *ss;
++		struct sockaddr_storage ss;
+ 		socklen_t ss_len = sizeof(ss);
+ 		memset(&ss, 0, sizeof(ss));
+ 
