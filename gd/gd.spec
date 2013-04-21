@@ -8,7 +8,6 @@ Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?prever}.tgz
-Patch0:        gd-2.0.33-freetype.patch
 Patch3:        gd-2.0.34-multilib.patch
 Patch4:        gd-loop.patch
 Patch5:        gd-2.0.34-sparc64.patch
@@ -68,7 +67,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 
 %prep
 %setup -q -n gd-%{version}
-#seems uneeded patch0 -p1 -b .freetype
 #patch3 -p1 -b .mlib
 #patch4 -p1 -b .loop
 #patch6 -p1 -b .overflow
