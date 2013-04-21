@@ -1,0 +1,33 @@
+diff -up gd-2.1.0/config/gdlib-config.in.multilib gd-2.1.0/config/gdlib-config.in
+--- gd-2.1.0/config/gdlib-config.in.multilib	2013-04-21 16:58:17.820010758 +0200
++++ gd-2.1.0/config/gdlib-config.in	2013-04-21 16:59:27.896317922 +0200
+@@ -7,9 +7,10 @@
+ # installation directories
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
+-libdir=@libdir@
++libdir=`pkg-config gdlib --variable=libdir`
+ includedir=@includedir@
+ bindir=@bindir@
++ldflags=`pkg-config gdlib --variable=ldflags`
+ 
+ usage()
+ {
+@@ -68,7 +69,7 @@ while test $# -gt 0; do
+ 	echo @GDLIB_REVISION@
+ 	;;
+     --ldflags)
+-	echo @LDFLAGS@
++	echo $ldflags
+ 	;;
+     --libs)
+ 	echo -lgd @LIBS@ @LIBICONV@
+@@ -83,7 +84,7 @@ while test $# -gt 0; do
+ 	echo "GD library  @VERSION@"
+ 	echo "includedir: $includedir"
+ 	echo "cflags:     -I@includedir@"
+-	echo "ldflags:    @LDFLAGS@"
++	echo "ldflags:    $ldflags"
+ 	echo "libs:       @LIBS@ @LIBICONV@"
+ 	echo "libdir:     $libdir"
+ 	echo "features:   @FEATURES@"

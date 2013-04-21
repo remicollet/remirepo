@@ -7,8 +7,8 @@ Release:       0.1.preview%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
-Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?prever}.tgz
-Patch3:        gd-2.0.34-multilib.patch
+Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?prever}.tar.xz
+Patch1:        gd-2.1.0-multilib.patch
 Patch4:        gd-loop.patch
 Patch5:        gd-2.0.34-sparc64.patch
 Patch6:        gd-2.0.35-overflow.patch
@@ -24,17 +24,16 @@ Patch15:       gd-sa3.patch
 Patch16:       gd-sa4.patch
 Patch17:       gd-aarch64.patch
 
-# https://bitbucket.org/libgd/gd-libgd/pull-request/4
-Patch20:       gd-gdcalloc.patch
-
 BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
+BuildRequires: libvpx-devel
 BuildRequires: libX11-devel
 BuildRequires: libXpm-devel
 BuildRequires: zlib-devel
 BuildRequires: pkgconfig
+BuildRequires: chrpath
 # we need cmake for building test suite
 BuildRequires: cmake
 
@@ -66,6 +65,7 @@ Requires: freetype-devel%{?_isa}
 Requires: fontconfig-devel%{?_isa}
 Requires: libjpeg-devel%{?_isa}
 Requires: libpng-devel%{?_isa}
+Requires: libvpx-devel%{?_isa}
 Requires: libX11-devel%{?_isa}
 Requires: libXpm-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
@@ -78,7 +78,7 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 
 %prep
 %setup -q -n gd-%{version}
-#patch3 -p1 -b .mlib
+%patch1 -p1 -b .mlib
 #patch4 -p1 -b .loop
 #patch6 -p1 -b .overflow
 #patch5 -p1 -b .sparc64 
@@ -94,19 +94,8 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 #patch16 -p1 -b .sa4
 #patch17 -p1 -b .aarch64
 
-# Missing sources
-sed -e '/SOURCES/s/$/ gd_bmp.c bmp.h gd_tga.c gd_tga.h/' \
-    -i src/Makefile.am
-
-# Export gdCalloc
-%patch20 -p1 -b .gdcalloc
-
-# Disable failed tests
-sed -e '/bmp_im2im/d'      -i tests/bmp/CMakeLists.txt
-sed -e '/gdimageline_aa/d' -i tests/gdimageline/CMakeLists.txt
-
-# Generate autotool stuff
-./bootstrap.sh
+# Generate autotool stuff (when build git git archive)
+[ -f configure ] || ./bootstrap.sh
 
 %build
 #cmake -DENABLE_PNG=1 \
@@ -126,10 +115,18 @@ make install INSTALL='install -p' DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
+# Using the last resort to remove rpath, another tricks didn't help
+chrpath --delete $RPM_BUILD_ROOT%{_bindir}/{pngtogd,gdparttopng,annotate,gdcmpgif,gdtopng,webpng,pngtogd2,gd2togif,gd2copypal,giftogd2,gd2topng}
+
 
 %check
 top=$(pwd)
 pushd tests
+
+# Disable failed tests
+sed -e '/bmp_im2im/d'      -i bmp/CMakeLists.txt
+sed -e '/gdimageline_aa/d' -i gdimageline/CMakeLists.txt
+
 cmake -DBUILD_TEST=1 \
       -DGD_INCLUDE_DIR="$top/src" \
       -DGD_LIBS_DIR="$top/src/.libs" \
