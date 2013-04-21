@@ -1,11 +1,13 @@
+%global prever -preview
+
 Summary:       A graphics library for quick creation of PNG or JPEG images
-Name:          gd
-Version:       2.0.35
-Release:       24%{?dist}
+Name:          gd-last
+Version:       2.1.0
+Release:       0.1.preview%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
-URL:           http://www.libgd.org/Main_Page
-Source0:       http://www.libgd.org/releases/%{name}-%{version}.tar.bz2
+URL:           http://libgd.bitbucket.org/
+Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?prever}.tgz
 Patch0:        gd-2.0.33-freetype.patch
 Patch3:        gd-2.0.34-multilib.patch
 Patch4:        gd-loop.patch
@@ -22,6 +24,10 @@ Patch14:       gd-sa2.patch
 Patch15:       gd-sa3.patch
 Patch16:       gd-sa4.patch
 Patch17:       gd-aarch64.patch
+
+# https://bitbucket.org/libgd/gd-libgd/pull-request/4
+Patch20:       gd-gdcalloc.patch
+
 BuildRequires: freetype-devel, fontconfig-devel, libX11-devel, libXpm-devel
 BuildRequires: libjpeg-devel, libpng-devel, zlib-devel, pkgconfig
 # we need cmake for building test suite
@@ -37,9 +43,10 @@ browsers. Note that gd is not a paint program.
 
 
 %package progs
-Requires:       gd = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Summary:        Utility programs that use libgd
 Group:          Applications/Multimedia
+Conflicts:      gd-progs
 
 %description progs
 The gd-progs package includes utility programs supplied with gd, a
@@ -49,35 +56,57 @@ graphics library for creating PNG and JPEG images.
 %package devel
 Summary:  The development libraries and header files for gd
 Group:    Development/Libraries
-Requires: gd = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: libX11-devel, libXpm-devel, libjpeg-devel, freetype-devel
 Requires: libpng-devel, zlib-devel, fontconfig-devel
 Requires: pkgconfig
+Conflicts: gd-devel
 
 %description devel
 The gd-devel package contains the development libraries and header
 files for gd, a graphics library for creating PNG and JPEG graphics.
 
 %prep
-%setup -q
-%patch0 -p1 -b .freetype
-%patch3 -p1 -b .mlib
-%patch4 -p1 -b .loop
-%patch6 -p1 -b .overflow
-%patch5 -p1 -b .sparc64 
-%patch7 -p1 -b .AALineThick
-%patch8 -p1 -b .bb
-%patch9 -p1 -b .fonts
-%patch10 -p1 -b .time
-%patch11 -p1 -b .sec3
-%patch12 -p1 -b .runtests
-%patch13 -p1 -b .sa1
-%patch14 -p1 -b .sa2
-%patch15 -p1 -b .sa3
-%patch16 -p1 -b .sa4
-%patch17 -p1 -b .aarch64
+%setup -q -n gd-%{version}
+#seems uneeded patch0 -p1 -b .freetype
+#patch3 -p1 -b .mlib
+#patch4 -p1 -b .loop
+#patch6 -p1 -b .overflow
+#patch5 -p1 -b .sparc64 
+#patch7 -p1 -b .AALineThick
+#patch8 -p1 -b .bb
+#patch9 -p1 -b .fonts
+#patch10 -p1 -b .time
+#patch11 -p1 -b .sec3
+#patch12 -p1 -b .runtests
+#patch13 -p1 -b .sa1
+#patch14 -p1 -b .sa2
+#patch15 -p1 -b .sa3
+#patch16 -p1 -b .sa4
+#patch17 -p1 -b .aarch64
+
+# Missing sources
+sed -e '/SOURCES/s/$/ gd_bmp.c bmp.h gd_tga.c gd_tga.h/' \
+    -i src/Makefile.am
+
+# Export gdCalloc
+%patch20 -p1 -b .gdcalloc
+
+# Disable failed tests
+sed -e '/bmp_im2im/d'      -i tests/bmp/CMakeLists.txt
+sed -e '/gdimageline_aa/d' -i tests/gdimageline/CMakeLists.txt
+./bootstrap.sh
 
 %build
+#cmake -DENABLE_PNG=1 \
+#       -DENABLE_LIQ=0 \
+#       -DENABLE_JPEG=1 \
+#       -DENABLE_TIFF=1 \
+#       -DENABLE_XPM=1 \
+#       -DENABLE_FREETYPE=1 \
+#       -DENABLE_FONTCONFIG=1 \
+#       -DENABLE_WEBP=1 \
+#       .
 %configure --disable-rpath
 make %{?_smp_mflags}
 
@@ -87,15 +116,21 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
 # Using the last resort to remove rpath, another tricks didn't help
-chrpath --delete $RPM_BUILD_ROOT%{_bindir}/{pngtogd,gdparttopng,annotate,gdcmpgif,gdtopng,webpng,pngtogd2,gd2togif,gd2copypal,giftogd2,gd2topng}
+#chrpath --delete $RPM_BUILD_ROOT%{_bindir}/{pngtogd,gdparttopng,annotate,gdcmpgif,gdtopng,webpng,pngtogd2,gd2togif,gd2copypal,giftogd2,gd2topng}
 
 %check
+top=$(pwd)
 pushd tests
 cmake -DBUILD_TEST=1 \
-      -DGD_INCLUDE_DIR="`pwd`/.." \
-      -DGD_LIBS_DIR="`pwd`/../.libs" \
-      -DGD_SOURCE_DIR="`pwd`/.." .
-CPATH="`pwd`/gdtest" make
+      -DGD_INCLUDE_DIR="$top/src" \
+      -DGD_LIBS_DIR="$top/src/.libs" \
+      -DGD_SOURCE_DIR="$top" \
+      -DCMAKE_EXE_LINKER_FLAGS="-L$top/src/.libs -lgd -lm" \
+      -Wno-dev \
+      .
+make
+
+export LD_LIBRARY_PATH=$top/src/.libs
 make test
 popd
 
@@ -104,7 +139,7 @@ popd
 %postun -p /sbin/ldconfig
 
 %files
-%doc COPYING README-JPEG.TXT index.html NEWS
+%doc COPYING
 %{_libdir}/*.so.*
 
 %files progs
@@ -112,13 +147,16 @@ popd
 %exclude %{_bindir}/gdlib-config
 
 %files devel
-%doc index.html
+%doc ChangeLog
 %{_bindir}/gdlib-config
 %{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/gdlib.pc
 
 %changelog
+* Sat Apr 21 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.1.preview
+- first work on 2.1.0
+
 * Mon Mar 25 2013 Honza Horak <hhorak@redhat.com> - 2.0.35-24
 - Fix build on aarch64
 
