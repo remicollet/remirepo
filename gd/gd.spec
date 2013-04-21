@@ -27,10 +27,16 @@ Patch17:       gd-aarch64.patch
 # https://bitbucket.org/libgd/gd-libgd/pull-request/4
 Patch20:       gd-gdcalloc.patch
 
-BuildRequires: freetype-devel, fontconfig-devel, libX11-devel, libXpm-devel
-BuildRequires: libjpeg-devel, libpng-devel, zlib-devel, pkgconfig
+BuildRequires: freetype-devel
+BuildRequires: fontconfig-devel
+BuildRequires: libjpeg-devel
+BuildRequires: libpng-devel
+BuildRequires: libX11-devel
+BuildRequires: libXpm-devel
+BuildRequires: zlib-devel
+BuildRequires: pkgconfig
 # we need cmake for building test suite
-BuildRequires: cmake, chrpath
+BuildRequires: cmake
 
 %description
 The gd graphics library allows your code to quickly draw images
@@ -56,10 +62,15 @@ graphics library for creating PNG and JPEG images.
 Summary:  The development libraries and header files for gd
 Group:    Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: libX11-devel, libXpm-devel, libjpeg-devel, freetype-devel
-Requires: libpng-devel, zlib-devel, fontconfig-devel
-Requires: pkgconfig
+Requires: freetype-devel%{?_isa}
+Requires: fontconfig-devel%{?_isa}
+Requires: libjpeg-devel%{?_isa}
+Requires: libpng-devel%{?_isa}
+Requires: libX11-devel%{?_isa}
+Requires: libXpm-devel%{?_isa}
+Requires: zlib-devel%{?_isa}
 Conflicts: gd-devel
+
 
 %description devel
 The gd-devel package contains the development libraries and header
@@ -93,6 +104,8 @@ sed -e '/SOURCES/s/$/ gd_bmp.c bmp.h gd_tga.c gd_tga.h/' \
 # Disable failed tests
 sed -e '/bmp_im2im/d'      -i tests/bmp/CMakeLists.txt
 sed -e '/gdimageline_aa/d' -i tests/gdimageline/CMakeLists.txt
+
+# Generate autotool stuff
 ./bootstrap.sh
 
 %build
@@ -113,8 +126,6 @@ make install INSTALL='install -p' DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
-# Using the last resort to remove rpath, another tricks didn't help
-#chrpath --delete $RPM_BUILD_ROOT%{_bindir}/{pngtogd,gdparttopng,annotate,gdcmpgif,gdtopng,webpng,pngtogd2,gd2togif,gd2copypal,giftogd2,gd2topng}
 
 %check
 top=$(pwd)
@@ -131,6 +142,7 @@ make
 export LD_LIBRARY_PATH=$top/src/.libs
 make test
 popd
+
 
 %post -p /sbin/ldconfig
 
@@ -151,8 +163,9 @@ popd
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/gdlib.pc
 
+
 %changelog
-* Sat Apr 21 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.1.preview
+* Sun Apr 21 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.1.preview
 - first work on 2.1.0
 
 * Mon Mar 25 2013 Honza Horak <hhorak@redhat.com> - 2.0.35-24
@@ -412,7 +425,7 @@ popd
 * Tue Jun 27 2000 Nalin Dahyabhai <nalin@redhat.com> 
 - update to 1.8.3
 
-* Sat Jun  4 2000 Nalin Dahyabhai <nalin@redhat.com> 
+* Sun Jun  4 2000 Nalin Dahyabhai <nalin@redhat.com> 
 - rebuild in new environment
 
 * Mon May 22 2000 Nalin Dahyabhai <nalin@redhat.com> 
