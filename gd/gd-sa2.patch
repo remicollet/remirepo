@@ -1,0 +1,515 @@
+The following issues have been found by Coverity static analysis tool:
+
+Error: RESOURCE_LEAK (CWE-404): [#def25]
+gd-2.0.35/gd.c:2436: cond_false: Condition "overflow2(4 /* sizeof (int) */, srcW)", taking false branch
+gd-2.0.35/gd.c:2438: if_end: End of if statement
+gd-2.0.35/gd.c:2439: cond_false: Condition "overflow2(4 /* sizeof (int) */, srcH)", taking false branch
+gd-2.0.35/gd.c:2441: if_end: End of if statement
+gd-2.0.35/gd.c:2442: alloc_fn: Storage is returned from allocation function "gdMalloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: alloc_fn: Storage is returned from allocation function "malloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: return_alloc_fn: Directly returning storage allocated by "malloc(size_t)".
+gd-2.0.35/gd.c:2442: var_assign: Assigning: "stx" = storage returned from "gdMalloc(4UL * srcW)".
+gd-2.0.35/gd.c:2443: cond_false: Condition "!stx", taking false branch
+gd-2.0.35/gd.c:2445: if_end: End of if statement
+gd-2.0.35/gd.c:2448: cond_true: Condition "!sty", taking true branch
+gd-2.0.35/gd.c:2449: leaked_storage: Variable "stx" going out of scope leaks the storage it points to.
+
+Error: RESOURCE_LEAK (CWE-404): [#def26]
+gd-2.0.35/gd.c:2016: cond_false: Condition "!im->tile", taking false branch
+gd-2.0.35/gd.c:2018: if_end: End of if statement
+gd-2.0.35/gd.c:2021: cond_true: Condition "nc == -5", taking true branch
+gd-2.0.35/gd.c:2024: alloc_fn: Storage is returned from allocation function "gdCalloc(size_t, size_t)".
+gd-2.0.35/gdhelpers.c:79:3: alloc_fn: Storage is returned from allocation function "calloc(size_t, size_t)".
+gd-2.0.35/gdhelpers.c:79:3: return_alloc_fn: Directly returning storage allocated by "calloc(size_t, size_t)".
+gd-2.0.35/gd.c:2024: var_assign: Assigning: "pts" = storage returned from "gdCalloc(8UL * im->sy, 4UL)".
+gd-2.0.35/gd.c:2025: cond_false: Condition "!pts", taking false branch
+gd-2.0.35/gd.c:2027: if_end: End of if statement
+gd-2.0.35/gd.c:2029: cond_true: Condition "i < im->sy", taking true branch
+gd-2.0.35/gd.c:2032: cond_true: Condition "!pts[i]", taking true branch
+gd-2.0.35/gd.c:2033: cond_false: Condition "i >= 0", taking false branch
+gd-2.0.35/gd.c:2035: loop_end: Reached end of loop
+gd-2.0.35/gd.c:2036: leaked_storage: Variable "pts" going out of scope leaks the storage it points to.
+
+Error: RESOURCE_LEAK (CWE-404): [#def27]
+gd-2.0.35/gd.c:2016: cond_false: Condition "!im->tile", taking false branch
+gd-2.0.35/gd.c:2018: if_end: End of if statement
+gd-2.0.35/gd.c:2021: cond_true: Condition "nc == -5", taking true branch
+gd-2.0.35/gd.c:2024: alloc_fn: Storage is returned from allocation function "gdCalloc(size_t, size_t)".
+gd-2.0.35/gdhelpers.c:79:3: alloc_fn: Storage is returned from allocation function "calloc(size_t, size_t)".
+gd-2.0.35/gdhelpers.c:79:3: return_alloc_fn: Directly returning storage allocated by "calloc(size_t, size_t)".
+gd-2.0.35/gd.c:2024: var_assign: Assigning: "pts" = storage returned from "gdCalloc(8UL * im->sy, 4UL)".
+gd-2.0.35/gd.c:2025: cond_false: Condition "!pts", taking false branch
+gd-2.0.35/gd.c:2027: if_end: End of if statement
+gd-2.0.35/gd.c:2029: cond_true: Condition "i < im->sy", taking true branch
+gd-2.0.35/gd.c:2032: cond_false: Condition "!pts[i]", taking false branch
+gd-2.0.35/gd.c:2037: if_end: End of if statement
+gd-2.0.35/gd.c:2038: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gd.c:2029: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gd.c:2029: cond_true: Condition "i < im->sy", taking true branch
+gd-2.0.35/gd.c:2032: cond_false: Condition "!pts[i]", taking false branch
+gd-2.0.35/gd.c:2037: if_end: End of if statement
+gd-2.0.35/gd.c:2038: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gd.c:2029: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gd.c:2029: cond_false: Condition "i < im->sy", taking false branch
+gd-2.0.35/gd.c:2038: loop_end: Reached end of loop
+gd-2.0.35/gd.c:2041: cond_true: Condition "!stack", taking true branch
+gd-2.0.35/gd.c:2042: leaked_storage: Variable "pts" going out of scope leaks the storage it points to.
+
+Error: RESOURCE_LEAK (CWE-404): [#def28]
+gd-2.0.35/gd.c:2803: cond_false: Condition "!fgets(s, 160, fd)", taking false branch
+gd-2.0.35/gd.c:2806: if_end: End of if statement
+gd-2.0.35/gd.c:2810: cond_false: Condition "!sp", taking false branch
+gd-2.0.35/gd.c:2813: if_end: End of if statement
+gd-2.0.35/gd.c:2817: cond_false: Condition "!sp", taking false branch
+gd-2.0.35/gd.c:2820: if_end: End of if statement
+gd-2.0.35/gd.c:2823: cond_false: Condition "!w", taking false branch
+gd-2.0.35/gd.c:2826: if_end: End of if statement
+gd-2.0.35/gd.c:2827: cond_false: Condition "!fgets(s, 160, fd)", taking false branch
+gd-2.0.35/gd.c:2830: if_end: End of if statement
+gd-2.0.35/gd.c:2834: cond_false: Condition "!sp", taking false branch
+gd-2.0.35/gd.c:2837: if_end: End of if statement
+gd-2.0.35/gd.c:2841: cond_false: Condition "!sp", taking false branch
+gd-2.0.35/gd.c:2844: if_end: End of if statement
+gd-2.0.35/gd.c:2847: cond_false: Condition "!h", taking false branch
+gd-2.0.35/gd.c:2850: if_end: End of if statement
+gd-2.0.35/gd.c:2852: cond_false: Condition "!fgets(s, 160, fd)", taking false branch
+gd-2.0.35/gd.c:2855: if_end: End of if statement
+gd-2.0.35/gd.c:2857: alloc_fn: Storage is returned from allocation function "gdImageCreate(int, int)".
+gd-2.0.35/gd.c:76:3: cond_false: Condition "overflow2(8 /* sizeof (unsigned char *) */, sy)", taking false branch
+gd-2.0.35/gd.c:78:3: if_end: End of if statement
+gd-2.0.35/gd.c:79:3: cond_false: Condition "overflow2(8 /* sizeof (unsigned char *) */, sx)", taking false branch
+gd-2.0.35/gd.c:81:3: if_end: End of if statement
+gd-2.0.35/gd.c:83:3: alloc_fn: Storage is returned from allocation function "gdMalloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: alloc_fn: Storage is returned from allocation function "malloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: return_alloc_fn: Directly returning storage allocated by "malloc(size_t)".
+gd-2.0.35/gd.c:83:3: var_assign: Assigning: "im" = "gdMalloc(7304UL)".
+gd-2.0.35/gd.c:84:2: cond_false: Condition "!im", taking false branch
+gd-2.0.35/gd.c:86:2: if_end: End of if statement
+gd-2.0.35/gd.c:88:3: noescape: Resource "im" is not freed or pointed-to in function "memset(void *, int, size_t)".
+gd-2.0.35/gd.c:91:2: cond_false: Condition "!im->pixels", taking false branch
+gd-2.0.35/gd.c:94:2: if_end: End of if statement
+gd-2.0.35/gd.c:101:3: cond_true: Condition "i < sy", taking true branch
+gd-2.0.35/gd.c:105:4: cond_false: Condition "!im->pixels[i]", taking false branch
+gd-2.0.35/gd.c:114:4: if_end: End of if statement
+gd-2.0.35/gd.c:116:5: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gd.c:101:3: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gd.c:101:3: cond_true: Condition "i < sy", taking true branch
+gd-2.0.35/gd.c:105:4: cond_false: Condition "!im->pixels[i]", taking false branch
+gd-2.0.35/gd.c:114:4: if_end: End of if statement
+gd-2.0.35/gd.c:116:5: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gd.c:101:3: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gd.c:101:3: cond_true: Condition "i < sy", taking true branch
+gd-2.0.35/gd.c:105:4: cond_false: Condition "!im->pixels[i]", taking false branch
+gd-2.0.35/gd.c:114:4: if_end: End of if statement
+gd-2.0.35/gd.c:116:5: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gd.c:101:3: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gd.c:101:3: cond_false: Condition "i < sy", taking false branch
+gd-2.0.35/gd.c:116:5: loop_end: Reached end of loop
+gd-2.0.35/gd.c:124:3: cond_true: Condition "i < 256", taking true branch
+gd-2.0.35/gd.c:130:5: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gd.c:124:3: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gd.c:124:3: cond_true: Condition "i < 256", taking true branch
+gd-2.0.35/gd.c:130:5: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gd.c:124:3: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gd.c:124:3: cond_false: Condition "i < 256", taking false branch
+gd-2.0.35/gd.c:130:5: loop_end: Reached end of loop
+gd-2.0.35/gd.c:137:3: return_alloc: Returning allocated memory "im".
+gd-2.0.35/gd.c:2857: var_assign: Assigning: "im" = storage returned from "gdImageCreate(w, h)".
+gd-2.0.35/gd.c:2858: cond_false: Condition "!im", taking false branch
+gd-2.0.35/gd.c:2860: if_end: End of if statement
+gd-2.0.35/gd.c:2862: noescape: Resource "im" is not freed or pointed-to in function "gdImageColorAllocate(gdImagePtr, int, int, int)".
+gd-2.0.35/gd.c:478:51: noescape: "gdImageColorAllocate(gdImagePtr, int, int, int)" does not free or save its pointer parameter "im".
+gd-2.0.35/gd.c:2863: noescape: Resource "im" is not freed or pointed-to in function "gdImageColorAllocate(gdImagePtr, int, int, int)".
+gd-2.0.35/gd.c:478:51: noescape: "gdImageColorAllocate(gdImagePtr, int, int, int)" does not free or save its pointer parameter "im".
+gd-2.0.35/gd.c:2866: cond_false: Condition "i < bytes", taking false branch
+gd-2.0.35/gd.c:2913: loop_end: Reached end of loop
+gd-2.0.35/gd.c:2916: leaked_storage: Variable "im" going out of scope leaks the storage it points to.
+
+Error: RESOURCE_LEAK (CWE-404): [#def29]
+gd-2.0.35/gdft.c:881: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:883: cond_true: Condition "(strex->flags & 1) == 1", taking true branch
+gd-2.0.35/gdft.c:888: alloc_fn: Storage is returned from allocation function "gdCacheCreate(int, gdCacheTestFn_t, gdCacheFetchFn_t, gdCacheReleaseFn_t)".
+gd-2.0.35/gdcache.c:73:3: alloc_fn: Storage is returned from allocation function "gdMalloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: alloc_fn: Storage is returned from allocation function "malloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: return_alloc_fn: Directly returning storage allocated by "malloc(size_t)".
+gd-2.0.35/gdcache.c:73:3: var_assign: Assigning: "head" = "gdMalloc(48UL)".
+gd-2.0.35/gdcache.c:74:2: cond_false: Condition "!head", taking false branch
+gd-2.0.35/gdcache.c:76:2: if_end: End of if statement
+gd-2.0.35/gdcache.c:83:3: return_alloc: Returning allocated memory "head".
+gd-2.0.35/gdft.c:888: var_assign: Assigning: "tc_cache" = storage returned from "gdCacheCreate(32, tweenColorTest(void *, void *), tweenColorFetch(char **, void *), tweenColorRelease(void *))".
+gd-2.0.35/gdft.c:893: cond_true: Condition "!fontCache", taking true branch
+gd-2.0.35/gdft.c:895: cond_false: Condition "gdFontCacheSetup() != 0", taking false branch
+gd-2.0.35/gdft.c:899: if_end: End of if statement
+gd-2.0.35/gdft.c:905: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:906: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:909: if_end: End of if statement
+gd-2.0.35/gdft.c:912: cond_false: Condition "!font", taking false branch
+gd-2.0.35/gdft.c:917: if_end: End of if statement
+gd-2.0.35/gdft.c:921: cond_true: Condition "brect", taking true branch
+gd-2.0.35/gdft.c:935: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:937: cond_true: Condition "strex->flags & 4", taking true branch
+gd-2.0.35/gdft.c:942: cond_true: Condition "strex->flags & 0x10", taking true branch
+gd-2.0.35/gdft.c:948: cond_true: Condition "strex->flags & 2", taking true branch
+gd-2.0.35/gdft.c:953: cond_true: Condition "strex->flags & 0x80", taking true branch
+gd-2.0.35/gdft.c:954: cond_false: Condition "0", taking false branch
+gd-2.0.35/gdft.c:954: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:956: if_end: End of if statement
+gd-2.0.35/gdft.c:969: cond_false: Condition "FT_Set_Char_Size(face, 0, (FT_F26Dot6)(ptsize * 64), 300, 300)", taking false branch
+gd-2.0.35/gdft.c:974: if_end: End of if statement
+gd-2.0.35/gdft.c:976: cond_true: Condition "render", taking true branch
+gd-2.0.35/gdft.c:980: cond_false: Condition "FT_Set_Char_Size(face, 0, (FT_F26Dot6)(ptsize * 64), hdpi, vdpi)", taking false branch
+gd-2.0.35/gdft.c:985: if_end: End of if statement
+gd-2.0.35/gdft.c:988: cond_true: Condition "fg < 0", taking true branch
+gd-2.0.35/gdft.c:993: cond_true: Condition "i < face->num_charmaps", taking true branch
+gd-2.0.35/gdft.c:998: cond_true: Condition "encoding == 0", taking true branch
+gd-2.0.35/gdft.c:1000: cond_true: Condition "charmap->encoding == FT_ENCODING_MS_SYMBOL", taking true branch
+gd-2.0.35/gdft.c:1006: break: Breaking from loop
+gd-2.0.35/gdft.c:1070: loop_end: Reached end of loop
+gd-2.0.35/gdft.c:1071: cond_true: Condition "encodingfound", taking true branch
+gd-2.0.35/gdft.c:1074: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:1080: if_end: End of if statement
+gd-2.0.35/gdft.c:1083: cond_false: Condition "encoding == 1", taking false branch
+gd-2.0.35/gdft.c:1098: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_true: Condition "ch == 13", taking true branch
+gd-2.0.35/gdft.c:1122: continue: Continuing loop
+gd-2.0.35/gdft.c:1355: loop: Looping back
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_true: Condition "ch == 13", taking true branch
+gd-2.0.35/gdft.c:1122: continue: Continuing loop
+gd-2.0.35/gdft.c:1355: loop: Looping back
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_false: Condition "ch == 13", taking false branch
+gd-2.0.35/gdft.c:1123: if_end: End of if statement
+gd-2.0.35/gdft.c:1125: cond_true: Condition "ch == 10", taking true branch
+gd-2.0.35/gdft.c:1133: continue: Continuing loop
+gd-2.0.35/gdft.c:1355: loop: Looping back
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_false: Condition "ch == 13", taking false branch
+gd-2.0.35/gdft.c:1123: if_end: End of if statement
+gd-2.0.35/gdft.c:1125: cond_false: Condition "ch == 10", taking false branch
+gd-2.0.35/gdft.c:1134: if_end: End of if statement
+gd-2.0.35/gdft.c:1137: switch: Switch case value "0"
+gd-2.0.35/gdft.c:1139: switch_case: Reached case "0"
+gd-2.0.35/gdft.c:1147: cond_true: Condition "charmap->encoding == FT_ENCODING_MS_SYMBOL", taking true branch
+gd-2.0.35/gdft.c:1160: break: Breaking from switch
+gd-2.0.35/gdft.c:1218: switch_end: Reached end of switch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:1224: cond_false: Condition "strex->flags & 8", taking false branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "!(face->face_flags & (4L /* 1L << 2 */))", taking true branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "face->face_flags & (64L /* 1L << 6 */)", taking true branch
+gd-2.0.35/gdft.c:1224: cond_false: Condition "previous", taking false branch
+gd-2.0.35/gdft.c:1231: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "i", taking true branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "strex->flags & 0x10", taking true branch
+gd-2.0.35/gdft.c:1242: cond_true: Condition "!xshow_alloc", taking true branch
+gd-2.0.35/gdft.c:1245: cond_false: Condition "!strex->xshow", taking false branch
+gd-2.0.35/gdft.c:1247: if_end: End of if statement
+gd-2.0.35/gdft.c:1249: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:1256: if_end: End of if statement
+gd-2.0.35/gdft.c:1264: cond_false: Condition "err", taking false branch
+gd-2.0.35/gdft.c:1269: if_end: End of if statement
+gd-2.0.35/gdft.c:1273: cond_true: Condition "brect", taking true branch
+gd-2.0.35/gdft.c:1281: cond_false: Condition "ch == 32", taking false branch
+gd-2.0.35/gdft.c:1286: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1295: cond_false: Condition "i == 0", taking false branch
+gd-2.0.35/gdft.c:1301: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1302: cond_true: Condition "glyph_min.x < total_min.x", taking true branch
+gd-2.0.35/gdft.c:1304: cond_true: Condition "glyph_min.y < total_min.y", taking true branch
+gd-2.0.35/gdft.c:1306: cond_true: Condition "glyph_max.x > total_max.x", taking true branch
+gd-2.0.35/gdft.c:1308: cond_true: Condition "glyph_max.y > total_max.y", taking true branch
+gd-2.0.35/gdft.c:1313: cond_true: Condition "render", taking true branch
+gd-2.0.35/gdft.c:1319: cond_false: Condition "err", taking false branch
+gd-2.0.35/gdft.c:1324: if_end: End of if statement
+gd-2.0.35/gdft.c:1329: cond_true: Condition "image->format != FT_GLYPH_FORMAT_BITMAP", taking true branch
+gd-2.0.35/gdft.c:1332: cond_false: Condition "err", taking false branch
+gd-2.0.35/gdft.c:1337: if_end: End of if statement
+gd-2.0.35/gdft.c:1344: noescape: Resource "tc_cache" is not freed or pointed-to in function "gdft_draw_bitmap(gdCache_head_t *, gdImage *, int, FT_Bitmap, int, int)".
+gd-2.0.35/gdft.c:614:36: noescape: "gdft_draw_bitmap(gdCache_head_t *, gdImage *, int, FT_Bitmap, int, int)" does not free or save its pointer parameter "tc_cache".
+gd-2.0.35/gdft.c:1355: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gdft.c:1110: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_false: Condition "ch == 13", taking false branch
+gd-2.0.35/gdft.c:1123: if_end: End of if statement
+gd-2.0.35/gdft.c:1125: cond_false: Condition "ch == 10", taking false branch
+gd-2.0.35/gdft.c:1134: if_end: End of if statement
+gd-2.0.35/gdft.c:1137: switch: Switch case value "0"
+gd-2.0.35/gdft.c:1139: switch_case: Reached case "0"
+gd-2.0.35/gdft.c:1147: cond_true: Condition "charmap->encoding == FT_ENCODING_MS_SYMBOL", taking true branch
+gd-2.0.35/gdft.c:1160: break: Breaking from switch
+gd-2.0.35/gdft.c:1218: switch_end: Reached end of switch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:1224: cond_false: Condition "strex->flags & 8", taking false branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "!(face->face_flags & (4L /* 1L << 2 */))", taking true branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "face->face_flags & (64L /* 1L << 6 */)", taking true branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "previous", taking true branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "glyph_index", taking true branch
+gd-2.0.35/gdft.c:1229: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:1231: if_end: End of if statement
+gd-2.0.35/gdft.c:1238: cond_true: Condition "i", taking true branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "strex->flags & 0x10", taking true branch
+gd-2.0.35/gdft.c:1242: cond_false: Condition "!xshow_alloc", taking false branch
+gd-2.0.35/gdft.c:1250: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1250: cond_true: Condition "xshow_pos + 20 > xshow_alloc", taking true branch
+gd-2.0.35/gdft.c:1253: cond_false: Condition "!strex->xshow", taking false branch
+gd-2.0.35/gdft.c:1255: if_end: End of if statement
+gd-2.0.35/gdft.c:1264: cond_false: Condition "err", taking false branch
+gd-2.0.35/gdft.c:1269: if_end: End of if statement
+gd-2.0.35/gdft.c:1273: cond_true: Condition "brect", taking true branch
+gd-2.0.35/gdft.c:1281: cond_false: Condition "ch == 32", taking false branch
+gd-2.0.35/gdft.c:1286: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1295: cond_false: Condition "i == 0", taking false branch
+gd-2.0.35/gdft.c:1301: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1302: cond_true: Condition "glyph_min.x < total_min.x", taking true branch
+gd-2.0.35/gdft.c:1304: cond_true: Condition "glyph_min.y < total_min.y", taking true branch
+gd-2.0.35/gdft.c:1306: cond_true: Condition "glyph_max.x > total_max.x", taking true branch
+gd-2.0.35/gdft.c:1308: cond_true: Condition "glyph_max.y > total_max.y", taking true branch
+gd-2.0.35/gdft.c:1313: cond_true: Condition "render", taking true branch
+gd-2.0.35/gdft.c:1319: cond_false: Condition "err", taking false branch
+gd-2.0.35/gdft.c:1324: if_end: End of if statement
+gd-2.0.35/gdft.c:1329: cond_true: Condition "image->format != FT_GLYPH_FORMAT_BITMAP", taking true branch
+gd-2.0.35/gdft.c:1332: cond_false: Condition "err", taking false branch
+gd-2.0.35/gdft.c:1337: if_end: End of if statement
+gd-2.0.35/gdft.c:1344: noescape: Resource "tc_cache" is not freed or pointed-to in function "gdft_draw_bitmap(gdCache_head_t *, gdImage *, int, FT_Bitmap, int, int)".
+gd-2.0.35/gdft.c:614:36: noescape: "gdft_draw_bitmap(gdCache_head_t *, gdImage *, int, FT_Bitmap, int, int)" does not free or save its pointer parameter "tc_cache".
+gd-2.0.35/gdft.c:1355: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gdft.c:1110: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_false: Condition "ch == 13", taking false branch
+gd-2.0.35/gdft.c:1123: if_end: End of if statement
+gd-2.0.35/gdft.c:1125: cond_false: Condition "ch == 10", taking false branch
+gd-2.0.35/gdft.c:1134: if_end: End of if statement
+gd-2.0.35/gdft.c:1137: switch: Switch case value "0"
+gd-2.0.35/gdft.c:1139: switch_case: Reached case "0"
+gd-2.0.35/gdft.c:1147: cond_true: Condition "charmap->encoding == FT_ENCODING_MS_SYMBOL", taking true branch
+gd-2.0.35/gdft.c:1160: break: Breaking from switch
+gd-2.0.35/gdft.c:1218: switch_end: Reached end of switch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:1224: cond_false: Condition "strex->flags & 8", taking false branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "!(face->face_flags & (4L /* 1L << 2 */))", taking true branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "face->face_flags & (64L /* 1L << 6 */)", taking true branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "previous", taking true branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "glyph_index", taking true branch
+gd-2.0.35/gdft.c:1229: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:1231: if_end: End of if statement
+gd-2.0.35/gdft.c:1238: cond_true: Condition "i", taking true branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "strex->flags & 0x10", taking true branch
+gd-2.0.35/gdft.c:1242: cond_false: Condition "!xshow_alloc", taking false branch
+gd-2.0.35/gdft.c:1250: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1250: cond_true: Condition "xshow_pos + 20 > xshow_alloc", taking true branch
+gd-2.0.35/gdft.c:1253: cond_true: Condition "!strex->xshow", taking true branch
+gd-2.0.35/gdft.c:1254: leaked_storage: Variable "tc_cache" going out of scope leaks the storage it points to.
+
+Error: RESOURCE_LEAK (CWE-404): [#def30]
+gd-2.0.35/gdft.c:881: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:883: cond_true: Condition "(strex->flags & 1) == 1", taking true branch
+gd-2.0.35/gdft.c:888: alloc_fn: Storage is returned from allocation function "gdCacheCreate(int, gdCacheTestFn_t, gdCacheFetchFn_t, gdCacheReleaseFn_t)".
+gd-2.0.35/gdcache.c:73:3: alloc_fn: Storage is returned from allocation function "gdMalloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: alloc_fn: Storage is returned from allocation function "malloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: return_alloc_fn: Directly returning storage allocated by "malloc(size_t)".
+gd-2.0.35/gdcache.c:73:3: var_assign: Assigning: "head" = "gdMalloc(48UL)".
+gd-2.0.35/gdcache.c:74:2: cond_false: Condition "!head", taking false branch
+gd-2.0.35/gdcache.c:76:2: if_end: End of if statement
+gd-2.0.35/gdcache.c:83:3: return_alloc: Returning allocated memory "head".
+gd-2.0.35/gdft.c:888: var_assign: Assigning: "tc_cache" = storage returned from "gdCacheCreate(32, tweenColorTest(void *, void *), tweenColorFetch(char **, void *), tweenColorRelease(void *))".
+gd-2.0.35/gdft.c:893: cond_true: Condition "!fontCache", taking true branch
+gd-2.0.35/gdft.c:895: cond_false: Condition "gdFontCacheSetup() != 0", taking false branch
+gd-2.0.35/gdft.c:899: if_end: End of if statement
+gd-2.0.35/gdft.c:905: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:906: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:909: if_end: End of if statement
+gd-2.0.35/gdft.c:912: cond_false: Condition "!font", taking false branch
+gd-2.0.35/gdft.c:917: if_end: End of if statement
+gd-2.0.35/gdft.c:921: cond_true: Condition "brect", taking true branch
+gd-2.0.35/gdft.c:935: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:937: cond_true: Condition "strex->flags & 4", taking true branch
+gd-2.0.35/gdft.c:942: cond_true: Condition "strex->flags & 0x10", taking true branch
+gd-2.0.35/gdft.c:948: cond_true: Condition "strex->flags & 2", taking true branch
+gd-2.0.35/gdft.c:953: cond_true: Condition "strex->flags & 0x80", taking true branch
+gd-2.0.35/gdft.c:954: cond_false: Condition "0", taking false branch
+gd-2.0.35/gdft.c:954: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:956: if_end: End of if statement
+gd-2.0.35/gdft.c:969: cond_false: Condition "FT_Set_Char_Size(face, 0, (FT_F26Dot6)(ptsize * 64), 300, 300)", taking false branch
+gd-2.0.35/gdft.c:974: if_end: End of if statement
+gd-2.0.35/gdft.c:976: cond_true: Condition "render", taking true branch
+gd-2.0.35/gdft.c:980: cond_false: Condition "FT_Set_Char_Size(face, 0, (FT_F26Dot6)(ptsize * 64), hdpi, vdpi)", taking false branch
+gd-2.0.35/gdft.c:985: if_end: End of if statement
+gd-2.0.35/gdft.c:988: cond_true: Condition "fg < 0", taking true branch
+gd-2.0.35/gdft.c:993: cond_true: Condition "i < face->num_charmaps", taking true branch
+gd-2.0.35/gdft.c:998: cond_true: Condition "encoding == 0", taking true branch
+gd-2.0.35/gdft.c:1000: cond_false: Condition "charmap->encoding == FT_ENCODING_MS_SYMBOL", taking false branch
+gd-2.0.35/gdft.c:1000: cond_false: Condition "charmap->encoding == FT_ENCODING_UNICODE", taking false branch
+gd-2.0.35/gdft.c:1000: cond_false: Condition "charmap->encoding == FT_ENCODING_ADOBE_CUSTOM", taking false branch
+gd-2.0.35/gdft.c:1000: cond_false: Condition "charmap->encoding == FT_ENCODING_ADOBE_STANDARD", taking false branch
+gd-2.0.35/gdft.c:1007: if_end: End of if statement
+gd-2.0.35/gdft.c:1008: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:1040: if_end: End of if statement
+gd-2.0.35/gdft.c:1070: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gdft.c:993: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gdft.c:993: cond_true: Condition "i < face->num_charmaps", taking true branch
+gd-2.0.35/gdft.c:998: cond_true: Condition "encoding == 0", taking true branch
+gd-2.0.35/gdft.c:1000: cond_false: Condition "charmap->encoding == FT_ENCODING_MS_SYMBOL", taking false branch
+gd-2.0.35/gdft.c:1000: cond_false: Condition "charmap->encoding == FT_ENCODING_UNICODE", taking false branch
+gd-2.0.35/gdft.c:1000: cond_false: Condition "charmap->encoding == FT_ENCODING_ADOBE_CUSTOM", taking false branch
+gd-2.0.35/gdft.c:1000: cond_false: Condition "charmap->encoding == FT_ENCODING_ADOBE_STANDARD", taking false branch
+gd-2.0.35/gdft.c:1007: if_end: End of if statement
+gd-2.0.35/gdft.c:1008: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:1040: if_end: End of if statement
+gd-2.0.35/gdft.c:1070: loop: Jumping back to the beginning of the loop
+gd-2.0.35/gdft.c:993: loop_begin: Jumped back to beginning of loop
+gd-2.0.35/gdft.c:993: cond_false: Condition "i < face->num_charmaps", taking false branch
+gd-2.0.35/gdft.c:1070: loop_end: Reached end of loop
+gd-2.0.35/gdft.c:1071: cond_false: Condition "encodingfound", taking false branch
+gd-2.0.35/gdft.c:1076: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1079: leaked_storage: Variable "tc_cache" going out of scope leaks the storage it points to.
+
+Error: RESOURCE_LEAK (CWE-404): [#def31]
+gd-2.0.35/gdft.c:881: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:883: cond_true: Condition "(strex->flags & 1) == 1", taking true branch
+gd-2.0.35/gdft.c:888: alloc_fn: Storage is returned from allocation function "gdCacheCreate(int, gdCacheTestFn_t, gdCacheFetchFn_t, gdCacheReleaseFn_t)".
+gd-2.0.35/gdcache.c:73:3: alloc_fn: Storage is returned from allocation function "gdMalloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: alloc_fn: Storage is returned from allocation function "malloc(size_t)".
+gd-2.0.35/gdhelpers.c:85:3: return_alloc_fn: Directly returning storage allocated by "malloc(size_t)".
+gd-2.0.35/gdcache.c:73:3: var_assign: Assigning: "head" = "gdMalloc(48UL)".
+gd-2.0.35/gdcache.c:74:2: cond_false: Condition "!head", taking false branch
+gd-2.0.35/gdcache.c:76:2: if_end: End of if statement
+gd-2.0.35/gdcache.c:83:3: return_alloc: Returning allocated memory "head".
+gd-2.0.35/gdft.c:888: var_assign: Assigning: "tc_cache" = storage returned from "gdCacheCreate(32, tweenColorTest(void *, void *), tweenColorFetch(char **, void *), tweenColorRelease(void *))".
+gd-2.0.35/gdft.c:893: cond_true: Condition "!fontCache", taking true branch
+gd-2.0.35/gdft.c:895: cond_false: Condition "gdFontCacheSetup() != 0", taking false branch
+gd-2.0.35/gdft.c:899: if_end: End of if statement
+gd-2.0.35/gdft.c:905: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:906: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:909: if_end: End of if statement
+gd-2.0.35/gdft.c:912: cond_false: Condition "!font", taking false branch
+gd-2.0.35/gdft.c:917: if_end: End of if statement
+gd-2.0.35/gdft.c:921: cond_true: Condition "brect", taking true branch
+gd-2.0.35/gdft.c:935: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:937: cond_true: Condition "strex->flags & 4", taking true branch
+gd-2.0.35/gdft.c:942: cond_true: Condition "strex->flags & 0x10", taking true branch
+gd-2.0.35/gdft.c:948: cond_true: Condition "strex->flags & 2", taking true branch
+gd-2.0.35/gdft.c:953: cond_true: Condition "strex->flags & 0x80", taking true branch
+gd-2.0.35/gdft.c:954: cond_false: Condition "0", taking false branch
+gd-2.0.35/gdft.c:954: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:956: if_end: End of if statement
+gd-2.0.35/gdft.c:969: cond_false: Condition "FT_Set_Char_Size(face, 0, (FT_F26Dot6)(ptsize * 64), 300, 300)", taking false branch
+gd-2.0.35/gdft.c:974: if_end: End of if statement
+gd-2.0.35/gdft.c:976: cond_true: Condition "render", taking true branch
+gd-2.0.35/gdft.c:980: cond_false: Condition "FT_Set_Char_Size(face, 0, (FT_F26Dot6)(ptsize * 64), hdpi, vdpi)", taking false branch
+gd-2.0.35/gdft.c:985: if_end: End of if statement
+gd-2.0.35/gdft.c:988: cond_true: Condition "fg < 0", taking true branch
+gd-2.0.35/gdft.c:993: cond_true: Condition "i < face->num_charmaps", taking true branch
+gd-2.0.35/gdft.c:998: cond_true: Condition "encoding == 0", taking true branch
+gd-2.0.35/gdft.c:1000: cond_true: Condition "charmap->encoding == FT_ENCODING_MS_SYMBOL", taking true branch
+gd-2.0.35/gdft.c:1006: break: Breaking from loop
+gd-2.0.35/gdft.c:1070: loop_end: Reached end of loop
+gd-2.0.35/gdft.c:1071: cond_true: Condition "encodingfound", taking true branch
+gd-2.0.35/gdft.c:1074: if_fallthrough: Falling through to end of if statement
+gd-2.0.35/gdft.c:1080: if_end: End of if statement
+gd-2.0.35/gdft.c:1083: cond_false: Condition "encoding == 1", taking false branch
+gd-2.0.35/gdft.c:1098: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_true: Condition "ch == 13", taking true branch
+gd-2.0.35/gdft.c:1122: continue: Continuing loop
+gd-2.0.35/gdft.c:1355: loop: Looping back
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_true: Condition "ch == 13", taking true branch
+gd-2.0.35/gdft.c:1122: continue: Continuing loop
+gd-2.0.35/gdft.c:1355: loop: Looping back
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_false: Condition "ch == 13", taking false branch
+gd-2.0.35/gdft.c:1123: if_end: End of if statement
+gd-2.0.35/gdft.c:1125: cond_true: Condition "ch == 10", taking true branch
+gd-2.0.35/gdft.c:1133: continue: Continuing loop
+gd-2.0.35/gdft.c:1355: loop: Looping back
+gd-2.0.35/gdft.c:1110: cond_true: Condition "*next", taking true branch
+gd-2.0.35/gdft.c:1117: cond_false: Condition "ch == 13", taking false branch
+gd-2.0.35/gdft.c:1123: if_end: End of if statement
+gd-2.0.35/gdft.c:1125: cond_false: Condition "ch == 10", taking false branch
+gd-2.0.35/gdft.c:1134: if_end: End of if statement
+gd-2.0.35/gdft.c:1137: switch: Switch case value "0"
+gd-2.0.35/gdft.c:1139: switch_case: Reached case "0"
+gd-2.0.35/gdft.c:1147: cond_true: Condition "charmap->encoding == FT_ENCODING_MS_SYMBOL", taking true branch
+gd-2.0.35/gdft.c:1160: break: Breaking from switch
+gd-2.0.35/gdft.c:1218: switch_end: Reached end of switch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:1224: cond_false: Condition "strex->flags & 8", taking false branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "!(face->face_flags & (4L /* 1L << 2 */))", taking true branch
+gd-2.0.35/gdft.c:1224: cond_true: Condition "face->face_flags & (64L /* 1L << 6 */)", taking true branch
+gd-2.0.35/gdft.c:1224: cond_false: Condition "previous", taking false branch
+gd-2.0.35/gdft.c:1231: else_branch: Reached else branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "i", taking true branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "strex", taking true branch
+gd-2.0.35/gdft.c:1238: cond_true: Condition "strex->flags & 0x10", taking true branch
+gd-2.0.35/gdft.c:1242: cond_true: Condition "!xshow_alloc", taking true branch
+gd-2.0.35/gdft.c:1245: cond_true: Condition "!strex->xshow", taking true branch
+gd-2.0.35/gdft.c:1246: leaked_storage: Variable "tc_cache" going out of scope leaks the storage it points to.
+
+
+diff -up gd-2.0.35/gd.c.sa2 gd-2.0.35/gd.c
+--- gd-2.0.35/gd.c.sa2	2012-12-05 17:01:03.989841899 +0100
++++ gd-2.0.35/gd.c	2012-12-05 17:06:58.283055944 +0100
+@@ -2028,12 +2028,17 @@ void _gdImageFillTiled(gdImagePtr im, in
+ 			for (--i ; i >= 0; i--) {
+ 				gdFree(pts[i]);
+ 			}
++			gdFree(pts);
+ 			return;
+ 		}
+ 	}
+ 
+ 	stack = (struct seg *)gdMalloc(sizeof(struct seg) * ((int)(im->sy*im->sx)/4));
+ 	if (!stack) {
++		for (i=0; i<im->sy;i++) {
++			gdFree(pts[i]);
++		}
++		gdFree(pts);
+ 		return;
+ 	}
+ 	sp = stack;
+@@ -2441,6 +2446,7 @@ BGD_DECLARE(void) gdImageCopyResized (gd
+ 
+   sty = (int *) gdMalloc (sizeof (int) * srcH);
+ 	if (!sty) {
++		gdFree(stx);
+ 		return;
+ 	}
+ 
+@@ -2908,7 +2914,6 @@ BGD_DECLARE(gdImagePtr) gdImageCreateFro
+     }
+   /* Shouldn't happen */
+   fprintf (stderr, "Error: bug in gdImageCreateFromXbm!\n");
+-  return 0;
+ fail:
+   gdImageDestroy (im);
+   return 0;
+diff -up gd-2.0.35/gdft.c.sa2 gd-2.0.35/gdft.c
+--- gd-2.0.35/gdft.c.sa2	2012-12-05 17:30:16.884852950 +0100
++++ gd-2.0.35/gdft.c	2012-12-05 17:11:42.635217211 +0100
+@@ -1076,6 +1076,7 @@ BGD_DECLARE(char *) gdImageStringFTEx (g
+     {
+       /* No character set found! */
+       gdMutexUnlock (gdFontCacheMutex);
++      gdCacheDelete (tc_cache);
+       return "No character set found";
+     }
+ 
+@@ -1243,6 +1244,7 @@ fprintf(stderr,"dpi=%d,%d metric_res=%d
+ 			xshow_alloc = 100;
+ 			strex->xshow = gdMalloc(xshow_alloc);
+ 			if (!strex->xshow) {
++	  			gdCacheDelete (tc_cache);
+ 				return 0;
+ 			}
+ 			xshow_pos = 0;
+@@ -1251,6 +1253,7 @@ fprintf(stderr,"dpi=%d,%d metric_res=%d
+ 		xshow_alloc += 100;
+ 		strex->xshow = gdRealloc(strex->xshow, xshow_alloc);
+ 		if (!strex->xshow) {
++	  		gdCacheDelete (tc_cache);
+ 			return 0;
+ 		}
+ 	}

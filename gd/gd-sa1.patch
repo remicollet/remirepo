@@ -1,0 +1,59 @@
+These issues were found by Coverity static analysis tool
+
+Error: DEADCODE (CWE-561): [#def3]
+gd-2.0.35/gd.c:3494: cond_cannot_single: Condition "dx == 0L", taking false branch. Now the value of "dx" cannot be equal to 0.
+gd-2.0.35/gd.c:3502: cannot_single: At condition "dx == 0L", the value of "dx" cannot be equal to 0.
+gd-2.0.35/gd.c:3502: dead_error_condition: The condition "dx == 0L" cannot be true.
+gd-2.0.35/gd.c:3502: dead_error_line: Execution cannot reach this expression "dy == 0L" inside statement "if (dx == 0L && dy == 0L){
+...".
+
+Error: DEADCODE (CWE-561): [#def4]
+gd-2.0.35/gd.c:1085: cond_cannot_single: Condition "dx == 0", taking false branch. Now the value of "dx" cannot be equal to 0.
+gd-2.0.35/gd.c:1097: cannot_single: At condition "dx == 0", the value of "dx" cannot be equal to 0.
+gd-2.0.35/gd.c:1097: dead_error_condition: The condition "dx == 0" cannot be true.
+gd-2.0.35/gd.c:1097: dead_error_line: Execution cannot reach this expression "dy == 0" inside statement "if (dx == 0 && dy == 0){
+  ...".
+
+
+diff -up gd-2.0.35/gd.c.sa1 gd-2.0.35/gd.c
+--- gd-2.0.35/gd.c.sa1	2012-12-05 16:23:09.289667430 +0100
++++ gd-2.0.35/gd.c	2012-12-05 16:30:41.634854587 +0100
+@@ -1094,11 +1094,6 @@ BGD_DECLARE(void) gdImageLine (gdImagePt
+     {
+       /* More-or-less horizontal. use wid for vertical stroke */
+       /* Doug Claar: watch out for NaN in atan2 (2.0.5) */
+-      if ((dx == 0) && (dy == 0))
+-	{
+-	  wid = 1;
+-	}
+-      else
+ 	{
+ 	  /* 2.0.12: Michael Schwartz: divide rather than multiply;
+ 	     TBB: but watch out for /0! */
+@@ -3490,6 +3485,12 @@ static void gdImageAALine (gdImagePtr im
+ 	dx = x2 - x1;
+ 	dy = y2 - y1;
+ 
++	if (dx == 0 && dy == 0) {
++		/* TBB: allow setting points */
++		gdImageSetAAPixelColor(im, x1, y1, col, 0xFF);
++		return;
++	}
++
+ 	/* Axis aligned lines */
+ 	if (dx == 0) {
+ 		gdImageVLine(im, x1, y1, y2, col);
+@@ -3499,12 +3500,7 @@ static void gdImageAALine (gdImagePtr im
+ 		return;
+ 	}
+ 
+-	if (dx == 0 && dy == 0) {
+-		/* TBB: allow setting points */
+-		gdImageSetAAPixelColor(im, x1, y1, col, 0xFF);
+-		return;
+-	}
+-	else { 
++	{ 
+ 	    double ag; 
+ 	    if (abs(dy) < abs(dx))  
+ 		ag  = cos (atan2 (dy, dx)); 

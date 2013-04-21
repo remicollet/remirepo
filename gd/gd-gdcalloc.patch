@@ -1,0 +1,25 @@
+diff --git a/src/gd.h b/src/gd.h
+index 50dfe7f..1a33e98 100644
+--- a/src/gd.h
++++ b/src/gd.h
+@@ -729,6 +729,7 @@ BGD_DECLARE(void) gdImagePngCtxEx (gdImagePtr im, gdIOCtx * out, int level);
+ BGD_DECLARE(void) gdImageWBMP (gdImagePtr image, int fg, FILE * out);
+ BGD_DECLARE(void) gdImageWBMPCtx (gdImagePtr image, int fg, gdIOCtx * out);
+ 
++BGD_DECLARE(void *) gdCalloc (size_t nmemb, size_t size);
+ /* Guaranteed to correctly free memory returned by the gdImage*Ptr
+    functions */
+ BGD_DECLARE(void) gdFree (void *m);
+diff --git a/src/gdhelpers.c b/src/gdhelpers.c
+index 577e9d5..0e6cf61 100644
+--- a/src/gdhelpers.c
++++ b/src/gdhelpers.c
+@@ -61,7 +61,7 @@ gd_strtok_r (char *s, char *sep, char **state)
+ 	return result;
+ }
+ 
+-void *
++BGD_DECLARE(void *)
+ gdCalloc (size_t nmemb, size_t size)
+ {
+ 	return calloc (nmemb, size);
