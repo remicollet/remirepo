@@ -1,11 +1,11 @@
-#global prever   -preview
-%global commit    8f475527ece74a82ac503bbc3e11aaaa7ff1c57e
+#global prever    -preview
+%global commit    83f5b748c3c14d6d0df879bccf340620982ca515
 %global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       0.3.%{short}%{?dist}
+Release:       0.4.%{short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -35,8 +35,7 @@ BuildRequires: libXpm-devel
 BuildRequires: zlib-devel
 BuildRequires: pkgconfig
 BuildRequires: libtool
-# we need cmake for building test suite
-BuildRequires: cmake
+
 
 %description
 The gd graphics library allows your code to quickly draw images
@@ -115,21 +114,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
 
 %check
-top=$(pwd)
-pushd tests
-
-cmake -DBUILD_TEST=1 \
-      -DGD_INCLUDE_DIR="$top/src" \
-      -DGD_LIBS_DIR="$top/src/.libs" \
-      -DGD_SOURCE_DIR="$top" \
-      -DCMAKE_EXE_LINKER_FLAGS="-L$top/src/.libs -lgd -lm" \
-      -Wno-dev \
-      .
-make
-
-export LD_LIBRARY_PATH=$top/src/.libs
-make test
-popd
+make check
 
 
 %post -p /sbin/ldconfig
@@ -153,6 +138,10 @@ popd
 
 
 %changelog
+* Mon Apr 22 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.4.83f5b74
+- pull latest upstream changes
+- make check doesn't need cmake anymore
+
 * Mon Apr 22 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.3.8f47552
 - pull latest upstream changes
 - all tests ok
