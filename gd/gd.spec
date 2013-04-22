@@ -1,13 +1,21 @@
-%global prever -preview
+#global prever   -preview
+%global commit    69aaf712d58f0304bb3498f1803abbd20c08c7f5
+%global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       0.1.preview%{?dist}
+Release:       0.2.%{short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
+%if 0%{?commit:1}
+# git clone git@bitbucket.org:libgd/gd-libgd.git; cd gd-libgd
+# git archive  --format=tgz --output=gd-2.1.0-$(git rev-parse master).tgz --prefix=gd-2.1.0/  master
+Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}-%{commit}.tgz
+%else
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?prever}.tar.xz
+%endif
 Patch1:        gd-2.1.0-multilib.patch
 # Need work:
 Patch4:        gd-loop.patch
@@ -147,6 +155,9 @@ popd
 
 
 %changelog
+* Mon Apr 22 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.2.69aaf71
+- pull latest upstream changes
+
 * Sun Apr 21 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.1.preview
 - first work on 2.1.0
 
