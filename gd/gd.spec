@@ -12,7 +12,6 @@ Patch1:        gd-2.1.0-multilib.patch
 # Need work:
 Patch4:        gd-loop.patch
 Patch5:        gd-2.0.34-sparc64.patch
-Patch6:        gd-2.0.35-overflow.patch
 Patch7:        gd-2.0.35-AALineThick.patch
 Patch8:        gd-2.0.33-BoxBound.patch
 Patch10:       gd-2.0.35-time.patch
@@ -76,7 +75,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %setup -q -n gd-%{version}
 %patch1 -p1 -b .mlib
 #patch4 -p1 -b .loop
-#patch6 -p1 -b .overflow
 #patch5 -p1 -b .sparc64 
 #patch7 -p1 -b .AALineThick
 #patch8 -p1 -b .bb
