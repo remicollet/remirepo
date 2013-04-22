@@ -17,6 +17,7 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 # Change for package
 Patch0:         %{pecl_name}-ini.patch
 # http://svn.php.net/viewvc?view=revision&revision=329705
+# http://svn.php.net/viewvc?view=revision&revision=330133
 Patch1:         %{pecl_name}-php55.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -99,9 +100,7 @@ These are the files needed to compile programs using HTTP extension.
 
 cd %{proj_name}-%{version}
 %patch0 -p1 -b .rpmconf
-%if "%{php_version}" > "5.5"
 %patch1 -p3 -b .php55
-%endif
 
 extver=$(sed -n '/#define PHP_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}"; then

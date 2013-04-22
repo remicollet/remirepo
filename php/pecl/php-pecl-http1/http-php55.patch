@@ -49,3 +49,36 @@
  #	define ZEND_LITERAL_KEY_DC
  #	define ZEND_LITERAL_KEY_CC
  #	define ZEND_LITERAL_NIL_CC
+Index: missing.h
+===================================================================
+--- pecl/http/trunk/missing.h	(révision 330132)
++++ pecl/http/trunk/missing.h	(copie de travail)
+@@ -21,11 +21,15 @@
+ #define ZEND_ENGINE_2_4
+ #endif
+ 
++#if defined(PHP_VERSION_ID) && (PHP_VERSION_ID >= 50500)
++#	define ZEND_GET_PPTR_TYPE_DC , int type
++#	define ZEND_GET_PPTR_TYPE_CC , type
++#else
++#	define ZEND_GET_PPTR_TYPE_DC
++#	define ZEND_GET_PPTR_TYPE_CC
++#endif
++
+ #if defined(PHP_VERSION_ID) && (PHP_VERSION_ID >= 50399)
+-#	if defined(PHP_VERSION_ID) && (PHP_VERSION_ID >= 50500)
+-#		define ZEND_GET_PPTR_TYPE_DC , int type
+-#		define ZEND_GET_PPTR_TYPE_CC , type
+-#endif
+ #	define ZEND_LITERAL_KEY_DC , const zend_literal *_zend_literal_key
+ #	define ZEND_LITERAL_KEY_CC , _zend_literal_key
+ #	define ZEND_LITERAL_NIL_CC , NULL
+@@ -46,8 +50,6 @@
+ 	}
+ 
+ #else
+-#	define ZEND_GET_PPTR_TYPE_DC
+-#	define ZEND_GET_PPTR_TYPE_CC
+ #	define ZEND_LITERAL_KEY_DC
+ #	define ZEND_LITERAL_KEY_CC
+ #	define ZEND_LITERAL_NIL_CC
