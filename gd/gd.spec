@@ -13,7 +13,6 @@ Patch1:        gd-2.1.0-multilib.patch
 Patch4:        gd-loop.patch
 Patch7:        gd-2.0.35-AALineThick.patch
 Patch8:        gd-2.0.33-BoxBound.patch
-Patch10:       gd-2.0.35-time.patch
 Patch12:       gd-2.0.35-runtests.patch
 Patch13:       gd-sa1.patch
 
@@ -75,7 +74,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 #patch4 -p1 -b .loop
 #patch7 -p1 -b .AALineThick
 #patch8 -p1 -b .bb
-#patch10 -p1 -b .time
 #patch12 -p1 -b .runtests
 #patch13 -p1 -b .sa1
 
