@@ -1,11 +1,11 @@
 #global prever   -preview
-%global commit    69aaf712d58f0304bb3498f1803abbd20c08c7f5
+%global commit    8f475527ece74a82ac503bbc3e11aaaa7ff1c57e
 %global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       0.2.%{short}%{?dist}
+Release:       0.3.%{short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -17,6 +17,7 @@ Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}-%{co
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?prever}.tar.xz
 %endif
 Patch1:        gd-2.1.0-multilib.patch
+
 # Need work:
 Patch4:        gd-loop.patch
 Patch7:        gd-2.0.35-AALineThick.patch
@@ -79,6 +80,7 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %prep
 %setup -q -n gd-%{version}
 %patch1 -p1 -b .mlib
+
 #patch4 -p1 -b .loop
 #patch7 -p1 -b .AALineThick
 #patch8 -p1 -b .bb
@@ -116,10 +118,6 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 top=$(pwd)
 pushd tests
 
-# Disable failed tests
-sed -e '/bmp_im2im/d'      -i bmp/CMakeLists.txt
-sed -e '/gdimageline_aa/d' -i gdimageline/CMakeLists.txt
-
 cmake -DBUILD_TEST=1 \
       -DGD_INCLUDE_DIR="$top/src" \
       -DGD_LIBS_DIR="$top/src/.libs" \
@@ -155,6 +153,10 @@ popd
 
 
 %changelog
+* Mon Apr 22 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.3.8f47552
+- pull latest upstream changes
+- all tests ok
+
 * Mon Apr 22 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.2.69aaf71
 - pull latest upstream changes
 
