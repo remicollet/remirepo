@@ -14,7 +14,6 @@ Patch5:        gd-2.0.34-sparc64.patch
 Patch6:        gd-2.0.35-overflow.patch
 Patch7:        gd-2.0.35-AALineThick.patch
 Patch8:        gd-2.0.33-BoxBound.patch
-Patch9:        gd-2.0.34-fonts.patch
 Patch10:       gd-2.0.35-time.patch
 Patch11:       gd-2.0.35-security3.patch
 Patch12:       gd-2.0.35-runtests.patch
@@ -84,7 +83,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 #patch5 -p1 -b .sparc64 
 #patch7 -p1 -b .AALineThick
 #patch8 -p1 -b .bb
-#patch9 -p1 -b .fonts
 #patch10 -p1 -b .time
 #patch11 -p1 -b .sec3
 #patch12 -p1 -b .runtests
@@ -98,15 +96,14 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 [ -f configure ] || ./bootstrap.sh
 
 %build
-#cmake -DENABLE_PNG=1 \
-#       -DENABLE_LIQ=0 \
-#       -DENABLE_JPEG=1 \
-#       -DENABLE_TIFF=1 \
-#       -DENABLE_XPM=1 \
-#       -DENABLE_FREETYPE=1 \
-#       -DENABLE_FONTCONFIG=1 \
-#       -DENABLE_WEBP=1 \
-#       .
+# Provide a correct default font search path
+CFLAGS="$RPM_OPT_FLAGS -DDEFAULT_FONTPATH='\"\
+/usr/share/fonts/bitstream-vera:\
+/usr/share/fonts/dejavu:\
+/usr/share/fonts/default/Type1:\
+/usr/share/X11/fonts/Type1:\
+/usr/share/fonts/liberation\"'"
+
 %configure --disable-rpath
 make %{?_smp_mflags}
 
