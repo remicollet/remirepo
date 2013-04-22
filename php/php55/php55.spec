@@ -58,6 +58,11 @@
 %else
 %global with_dtrace 0
 %endif
+%if 0%{?fedora} < 20
+%global with_libgd   0
+%else
+%global with_libgd   1
+%endif
 %if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %global with_libzip  0
 %else
@@ -72,7 +77,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201304181030
+%global snapdate      201304221230
 #global rcver         beta3
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -140,7 +145,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-
+Patch99: php-5.5.0-wip.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -642,9 +647,19 @@ Group: Development/Languages
 # libgd is licensed under BSD
 License: PHP and BSD
 Requires: php-common%{?_isa} = %{version}-%{release}
+BuildRequires: t1lib-devel
+%if %{with_libgd}
+BuildRequires: gd-last-devel
+%else
 # Required to build the bundled GD library
-BuildRequires: libjpeg-devel, libpng-devel, freetype-devel
-BuildRequires: libXpm-devel, t1lib-devel
+BuildRequires: libjpeg-devel
+BuildRequires: libpng-devel
+BuildRequires: freetype-devel
+BuildRequires: libXpm-devel
+BuildRequires: libXpm-devel
+BuildRequires: libvpx-devel
+%endif
+
 Obsoletes: php53-gd, php53u-gd, php54-gd, php55-gd
 
 %description gd
@@ -834,6 +849,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
+%patch99 -p1 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -996,6 +1012,7 @@ ln -sf ../configure
     --with-freetype-dir=%{_prefix} \
     --with-png-dir=%{_prefix} \
     --with-xpm-dir=%{_prefix} \
+    --with-vpx-dir=%{_prefix} \
     --enable-gd-native-ttf \
     --with-t1lib=%{_prefix} \
     --without-gdbm \
@@ -1034,7 +1051,11 @@ build --libdir=%{_libdir}/php \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
+%if %{with_libgd}
+      --with-gd=shared,%{_prefix} \
+%else
       --with-gd=shared \
+%endif
       --with-gmp=shared \
       --enable-calendar=shared \
       --enable-bcmath=shared \
@@ -1171,7 +1192,11 @@ build --includedir=%{_includedir}/php-zts \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
+%if %{with_libgd}
+      --with-gd=shared,%{_prefix} \
+%else
       --with-gd=shared \
+%endif
       --with-gmp=shared \
       --enable-calendar=shared \
       --enable-bcmath=shared \
@@ -1775,6 +1800,10 @@ fi
 
 
 %changelog
+* Mon Apr 22 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.27-201304221230
+- new snapshot
+- try build with system gd 2.1.0
+
 * Thu Apr 18 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.26-201304181030
 - new snapshot
 - zend_extension doesn't requires full path
