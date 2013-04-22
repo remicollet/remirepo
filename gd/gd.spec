@@ -9,13 +9,13 @@ License:       MIT
 URL:           http://libgd.bitbucket.org/
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?prever}.tar.xz
 Patch1:        gd-2.1.0-multilib.patch
+# Need work:
 Patch4:        gd-loop.patch
 Patch5:        gd-2.0.34-sparc64.patch
 Patch6:        gd-2.0.35-overflow.patch
 Patch7:        gd-2.0.35-AALineThick.patch
 Patch8:        gd-2.0.33-BoxBound.patch
 Patch10:       gd-2.0.35-time.patch
-Patch11:       gd-2.0.35-security3.patch
 Patch12:       gd-2.0.35-runtests.patch
 Patch13:       gd-sa1.patch
 Patch14:       gd-sa2.patch
@@ -84,7 +84,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 #patch7 -p1 -b .AALineThick
 #patch8 -p1 -b .bb
 #patch10 -p1 -b .time
-#patch11 -p1 -b .sec3
 #patch12 -p1 -b .runtests
 #patch13 -p1 -b .sa1
 #patch14 -p1 -b .sa2
