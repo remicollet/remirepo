@@ -18,7 +18,6 @@ Patch8:        gd-2.0.33-BoxBound.patch
 Patch10:       gd-2.0.35-time.patch
 Patch12:       gd-2.0.35-runtests.patch
 Patch13:       gd-sa1.patch
-Patch14:       gd-sa2.patch
 Patch15:       gd-sa3.patch
 Patch16:       gd-sa4.patch
 Patch17:       gd-aarch64.patch
@@ -86,7 +85,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 #patch10 -p1 -b .time
 #patch12 -p1 -b .runtests
 #patch13 -p1 -b .sa1
-#patch14 -p1 -b .sa2
 #patch15 -p1 -b .sa3
 #patch16 -p1 -b .sa4
 #patch17 -p1 -b .aarch64
