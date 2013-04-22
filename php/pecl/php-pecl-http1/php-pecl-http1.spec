@@ -99,7 +99,9 @@ These are the files needed to compile programs using HTTP extension.
 
 cd %{proj_name}-%{version}
 %patch0 -p1 -b .rpmconf
+%if "%{php_version}" > "5.5"
 %patch1 -p3 -b .php55
+%endif
 
 extver=$(sed -n '/#define PHP_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}"; then
