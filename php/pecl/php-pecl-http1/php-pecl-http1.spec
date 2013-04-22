@@ -4,7 +4,7 @@
 %global proj_name pecl_http
 %global pecl_name http
 
-Name:           php-pecl-http
+Name:           php-pecl-http1
 Version:        1.7.5
 Release:        1%{?dist}.1
 Summary:        Extended HTTP support
@@ -77,6 +77,10 @@ capabilities.
 
 It provides powerful request functionality, if built with CURL
 support. Parallel requests are available for PHP 5 and greater.
+
+Note:
+. php-pecl-http1 provides API version 1
+. php-pecl-http  provides API version 2
 
 
 %package devel
