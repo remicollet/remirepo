@@ -11,13 +11,11 @@ Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?pr
 Patch1:        gd-2.1.0-multilib.patch
 # Need work:
 Patch4:        gd-loop.patch
-Patch5:        gd-2.0.34-sparc64.patch
 Patch7:        gd-2.0.35-AALineThick.patch
 Patch8:        gd-2.0.33-BoxBound.patch
 Patch10:       gd-2.0.35-time.patch
 Patch12:       gd-2.0.35-runtests.patch
 Patch13:       gd-sa1.patch
-Patch17:       gd-aarch64.patch
 
 BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
@@ -28,7 +26,7 @@ BuildRequires: libX11-devel
 BuildRequires: libXpm-devel
 BuildRequires: zlib-devel
 BuildRequires: pkgconfig
-BuildRequires: chrpath
+BuildRequires: libtool
 # we need cmake for building test suite
 BuildRequires: cmake
 
@@ -75,16 +73,20 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %setup -q -n gd-%{version}
 %patch1 -p1 -b .mlib
 #patch4 -p1 -b .loop
-#patch5 -p1 -b .sparc64 
 #patch7 -p1 -b .AALineThick
 #patch8 -p1 -b .bb
 #patch10 -p1 -b .time
 #patch12 -p1 -b .runtests
 #patch13 -p1 -b .sa1
-#patch17 -p1 -b .aarch64
 
-# Generate autotool stuff (when build git git archive)
-[ -f configure ] || ./bootstrap.sh
+sed -e s'/HAVE_FREETYPE/HAVE_LIBFREETYPE/' -i configure.ac
+
+# (re)generate autotool stuff
+if [ -f configure ]; then
+   autoreconf -fi
+else
+   ./bootstrap.sh
+fi
 
 %build
 # Provide a correct default font search path
@@ -102,9 +104,6 @@ make %{?_smp_mflags}
 make install INSTALL='install -p' DESTDIR=$RPM_BUILD_ROOT 
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
-
-# Using the last resort to remove rpath, another tricks didn't help
-chrpath --delete $RPM_BUILD_ROOT%{_bindir}/{pngtogd,gdparttopng,annotate,gdcmpgif,gdtopng,webpng,pngtogd2,gd2togif,gd2copypal,giftogd2,gd2topng}
 
 
 %check
