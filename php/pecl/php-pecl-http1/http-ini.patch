@@ -1,0 +1,12 @@
+--- pecl_http-1.7.5/docs/http.ini~	2013-03-03 08:15:01.000000000 +0100
++++ pecl_http-1.7.5/docs/http.ini	2013-04-22 18:55:54.000000000 +0200
+@@ -1,7 +1,6 @@
+-; example INI file for pecl/http
+-; $Id: http.ini 229420 2007-02-09 14:19:40Z mike $
++; Enable HTTP extension module
++extension=http.so
+ 
+-[http]
+ ; enable if you want to transform all errors to exceptions (PHP >= 5 only)
+ ;http.only_exceptions = 1
+ 

@@ -1,0 +1,51 @@
+--- pecl/http/trunk/http_message_object.c	2013/03/08 11:05:00	329704
++++ pecl/http/trunk/http_message_object.c	2013/03/08 12:59:52	329705
+@@ -150,7 +150,7 @@
+ #define http_message_object_write_prop _http_message_object_write_prop
+ static void _http_message_object_write_prop(zval *object, zval *member, zval *value ZEND_LITERAL_KEY_DC TSRMLS_DC);
+ #define http_message_object_get_prop_ptr _http_message_object_get_prop_ptr
+-static zval **_http_message_object_get_prop_ptr(zval *object, zval *member ZEND_LITERAL_KEY_DC TSRMLS_DC);
++static zval **_http_message_object_get_prop_ptr(zval *object, zval *member ZEND_GET_PPTR_TYPE_DC ZEND_LITERAL_KEY_DC TSRMLS_DC);
+ #define http_message_object_get_props _http_message_object_get_props
+ static HashTable *_http_message_object_get_props(zval *object TSRMLS_DC);
+ 
+@@ -564,7 +564,7 @@
+ 	freeObject(o);
+ }
+ 
+-static zval **_http_message_object_get_prop_ptr(zval *object, zval *member ZEND_LITERAL_KEY_DC TSRMLS_DC) {
++static zval **_http_message_object_get_prop_ptr(zval *object, zval *member ZEND_GET_PPTR_TYPE_DC ZEND_LITERAL_KEY_DC TSRMLS_DC) {
+ 	getObjectEx(http_message_object, obj, object);
+ 	http_message_object_prophandler *handler;
+ 	
+@@ -573,7 +573,7 @@
+ 		return NULL;
+ 	}
+ 
+-	return zend_get_std_object_handlers()->get_property_ptr_ptr(object, member ZEND_LITERAL_KEY_CC TSRMLS_CC);
++	return zend_get_std_object_handlers()->get_property_ptr_ptr(object, member ZEND_GET_PPTR_TYPE_CC ZEND_LITERAL_KEY_CC TSRMLS_CC);
+ }
+ 
+ static zval *_http_message_object_read_prop(zval *object, zval *member, int type ZEND_LITERAL_KEY_DC TSRMLS_DC)
+--- pecl/http/trunk/missing.h	2013/03/08 11:05:00	329704
++++ pecl/http/trunk/missing.h	2013/03/08 12:59:52	329705
+@@ -22,6 +22,10 @@
+ #endif
+ 
+ #if defined(PHP_VERSION_ID) && (PHP_VERSION_ID >= 50399)
++#	if defined(PHP_VERSION_ID) && (PHP_VERSION_ID >= 50500)
++#		define ZEND_GET_PPTR_TYPE_DC , int type
++#		define ZEND_GET_PPTR_TYPE_CC , type
++#endif
+ #	define ZEND_LITERAL_KEY_DC , const zend_literal *_zend_literal_key
+ #	define ZEND_LITERAL_KEY_CC , _zend_literal_key
+ #	define ZEND_LITERAL_NIL_CC , NULL
+@@ -42,6 +46,8 @@
+ 	}
+ 
+ #else
++#	define ZEND_GET_PPTR_TYPE_DC
++#	define ZEND_GET_PPTR_TYPE_CC
+ #	define ZEND_LITERAL_KEY_DC
+ #	define ZEND_LITERAL_KEY_CC
+ #	define ZEND_LITERAL_NIL_CC
