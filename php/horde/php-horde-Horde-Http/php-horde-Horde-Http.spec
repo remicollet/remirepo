@@ -7,7 +7,7 @@
 
 Name:           php-horde-Horde-Http
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde HTTP libraries
 
 Group:          Development/Libraries
@@ -37,13 +37,15 @@ Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
 # Optionnal
 Requires:       php-curl
-Requires:       php-pecl-http
+# php-pecl-http v1 optional but not available (only v2)
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
 This package provides a set of classes for making HTTP requests.
+
+Optional dependency: php-pecl-http1
 
 
 %prep
@@ -103,6 +105,9 @@ fi
 
 
 %changelog
+* Tue Apr 23 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
+- drop optional dependency on php-pecl-http (need v1)
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 
