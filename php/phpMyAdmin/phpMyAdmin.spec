@@ -1,7 +1,7 @@
 #global prever rc1
 
 Name: phpMyAdmin
-Version: 3.5.8
+Version: 3.5.8.1
 Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -101,7 +101,7 @@ rm -rf %{buildroot}%{_datadir}/%{pkgname}/libraries/php-gettext
 rm -rf %{buildroot}
 
 
-%if %{?fedora}%{!?fedora:99} <= 15
+%if %{?fedora}%{!?fedora:99} <= 16
 %pre
 echo -e "\nWARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
@@ -126,8 +126,12 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Wed Apr 24 2013 Remi Collet <rpms@famillecollet.com> 3.5.8.1-1
+- Upstream released 3.5.8.1 (security)
+  fix PMASA-2013-2, PMASA-2013-3, PMASA-2013-4 and PMASA-2013-5
+
 * Mon Apr  8 2013 Remi Collet <rpms@famillecollet.com> 3.5.8-1
-- Upstream released 3.5.7 (bugfix)
+- Upstream released 3.5.8 (bugfix)
 
 * Fri Feb 15 2013 Remi Collet <rpms@famillecollet.com> 3.5.7-1
 - Upstream released 3.5.7 (bugfix)
