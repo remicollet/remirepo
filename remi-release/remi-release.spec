@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 19-1.fc19.remi
+- Fedora release 19 (Schrödinger's Cat)
+
 * Sun Oct 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 18-1.fc18.remi
 - Fedora release 18 (Spherical Cow)
 

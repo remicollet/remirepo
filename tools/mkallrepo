@@ -6,7 +6,7 @@ TMPLNK=$(mktemp)
 cd /home/rpmbuild/site/rpms
 
 #for dep in *.{i386,ppc,ppc64,x86_64} fedora/*/*/{i386,ppc,ppc64,x86_64}
-for dep in fedora/{12,13,14,15,16,17,18}/*/{i386,x86_64} enterprise/{5,6}/*/{i386,x86_64}
+for dep in fedora/{13,14,15,16,17,18,19}/*/{i386,x86_64} enterprise/{5,6}/*/{i386,x86_64}
 do
 	arch=${dep##*/}
 
@@ -51,7 +51,7 @@ else 	echo "Rien à lier."
 fi
 
 #for dep in *.{i386,ppc,ppc64,x86_64} fedora/*/*/{i386,ppc,ppc64,x86_64}
-for dep in SRPMS fedora/{12,13,14,15,16,17,18}/*/{i386,x86_64} enterprise/{5,6}/*/{i386,x86_64}
+for dep in SRPMS fedora/{13,14,15,16,17,18,19}/*/{i386,x86_64} enterprise/{5,6}/*/{i386,x86_64}
 do
 	if [ -d $dep/repodata -a $dep -nt $dep/repodata -a ! -f $dep/.closed ]
 	then	echo "== Actualisation de $dep =="
