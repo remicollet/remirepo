@@ -1,11 +1,11 @@
 #global prever    -preview
-%global commit    83f5b748c3c14d6d0df879bccf340620982ca515
+%global commit    4640bbeeec9675254b140b09c75570e2f2693202
 %global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       0.4.%{short}%{?dist}
+Release:       0.5.%{short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -27,8 +27,10 @@ Patch13:       gd-sa1.patch
 
 BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
+BuildRequires: gettext-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
+BuildRequires: libtiff-devel
 BuildRequires: libvpx-devel
 BuildRequires: libX11-devel
 BuildRequires: libXpm-devel
@@ -65,6 +67,7 @@ Requires: freetype-devel%{?_isa}
 Requires: fontconfig-devel%{?_isa}
 Requires: libjpeg-devel%{?_isa}
 Requires: libpng-devel%{?_isa}
+Requires: libtiff-devel%{?_isa}
 Requires: libvpx-devel%{?_isa}
 Requires: libX11-devel%{?_isa}
 Requires: libXpm-devel%{?_isa}
@@ -85,8 +88,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 #patch8 -p1 -b .bb
 #patch12 -p1 -b .runtests
 #patch13 -p1 -b .sa1
-
-sed -e s'/HAVE_FREETYPE/HAVE_LIBFREETYPE/' -i configure.ac
 
 # (re)generate autotool stuff
 if [ -f configure ]; then
@@ -138,6 +139,10 @@ make check
 
 
 %changelog
+* Wed Apr 24 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.5.4640bbe
+- pull latest upstream changes
+- add missing BR for gettext and libtiff
+
 * Mon Apr 22 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.4.83f5b74
 - pull latest upstream changes
 - make check doesn't need cmake anymore
