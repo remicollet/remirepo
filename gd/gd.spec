@@ -22,7 +22,6 @@ Patch1:        gd-2.1.0-multilib.patch
 Patch4:        gd-loop.patch
 Patch7:        gd-2.0.35-AALineThick.patch
 Patch8:        gd-2.0.33-BoxBound.patch
-Patch12:       gd-2.0.35-runtests.patch
 Patch13:       gd-sa1.patch
 
 BuildRequires: freetype-devel
@@ -86,7 +85,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 #patch4 -p1 -b .loop
 #patch7 -p1 -b .AALineThick
 #patch8 -p1 -b .bb
-#patch12 -p1 -b .runtests
 #patch13 -p1 -b .sa1
 
 # (re)generate autotool stuff
