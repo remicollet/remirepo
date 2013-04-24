@@ -77,14 +77,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201304221230
-#global rcver         beta3
+#global snapdate      201304221230
+%global rcver         beta4
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.26.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.27.%{?snapdate}%{?rcver}%{?dist}.1
 %else
 Release: 2%{?dist}
 %endif
@@ -849,7 +849,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
-%patch99 -p1 -b .wip
+#patch99 -p1 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1800,6 +1800,9 @@ fi
 
 
 %changelog
+* Thu Apr 25 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.27.beta3
+- update to 5.5.0beta4
+
 * Mon Apr 22 2013 Remi Collet <remi@fedoraproject.org> 5.5.0-0.27-201304221230
 - new snapshot
 - try build with system gd 2.1.0
