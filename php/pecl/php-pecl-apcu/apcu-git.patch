@@ -1,0 +1,38 @@
+From d192f6081164ba5ec5b05dce8e5c0b50b5d7b35d Mon Sep 17 00:00:00 2001
+From: krakjoe <joe.watkins@live.co.uk>
+Date: Thu, 28 Mar 2013 20:27:16 +0000
+Subject: [PATCH] forcefully align frequent structs (gcc >= 3.1), in testing
+ (windows anyone?) stop crash in cli when cache is disabled by configuration
+ and some userland functions are executed
+
+---
+ apc.h           |  5 ++++-
+ apc_cache.c     |  4 ++--
+ apc_cache_api.h | 12 +++++++-----
+ php_apc.c       |  3 +--
+ 4 files changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/php_apc.c b/php_apc.c
+index 9849580..6dc0184 100644
+--- a/php_apc.c
++++ b/php_apc.c
+@@ -499,7 +499,7 @@ static void apc_store_helper(INTERNAL_FUNCTION_PARAMETERS, const zend_bool exclu
+         return;
+     }
+ 
+-    if (!key) {
++    if (!key || !APCG(enabled)) {
+         /* cannot work without key */
+         RETURN_FALSE;
+     }
+@@ -941,7 +941,6 @@ void *apc_erealloc_wrapper(void *ptr, size_t size) {
+     HashTable  *h_vars;
+     apc_bd_t *bd;
+ 
+-
+     if (!APCG(enabled)) {
+         apc_warning("APC is not enabled, apc_bin_dump not available." TSRMLS_CC);
+         RETURN_FALSE;
+-- 
+1.8.1.6
+

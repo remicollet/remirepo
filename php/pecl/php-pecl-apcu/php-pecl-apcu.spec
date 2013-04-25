@@ -6,11 +6,13 @@
 Name:           php-pecl-apcu
 Summary:        APC User Cache
 Version:        4.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
+
+Patch0:         %{pecl_name}-git.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -87,12 +89,16 @@ configuration, available on http://localhost/apcu-panel/
 %setup -qc
 mv %{pecl_name}-%{version} NTS
 
+cd NTS
+%patch0 -p1 -b .fromgit
+
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_apc.h)
+extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}.
    exit 1
 fi
+cd ..
 
 %if %{with_zts}
 # duplicate for ZTS build
@@ -197,6 +203,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Apr 25 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-2
+- fix segfault when used from command line
+
 * Wed Mar 27 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
 - first pecl release
 - rename from php-apcu to php-pecl-apcu
