@@ -1734,6 +1734,7 @@ fi
 # log owned by apache for log
 %attr(770,apache,root) %dir %{_localstatedir}/log/php-fpm
 %{_mandir}/man8/php-fpm.8*
+%dir %{_datadir}/fpm
 %{_datadir}/fpm/status.html
 %endif
 
