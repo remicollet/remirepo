@@ -1,11 +1,11 @@
 #global prever    -preview
-%global commit    4640bbeeec9675254b140b09c75570e2f2693202
+%global commit    20015feb2daaab43b641b21fc88fc59cacb824fc
 %global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       0.5.%{short}%{?dist}
+Release:       0.6.%{short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -17,12 +17,6 @@ Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}-%{co
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?prever}.tar.xz
 %endif
 Patch1:        gd-2.1.0-multilib.patch
-
-# Need work:
-Patch4:        gd-loop.patch
-Patch7:        gd-2.0.35-AALineThick.patch
-Patch8:        gd-2.0.33-BoxBound.patch
-Patch13:       gd-sa1.patch
 
 BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
@@ -51,7 +45,8 @@ browsers. Note that gd is not a paint program.
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Summary:        Utility programs that use libgd
 Group:          Applications/Multimedia
-Conflicts:      gd-progs
+Conflicts:      gd-progs < %{version}
+Provides:       gd-progs = %{version}-%{release}
 
 %description progs
 The gd-progs package includes utility programs supplied with gd, a
@@ -71,7 +66,9 @@ Requires: libvpx-devel%{?_isa}
 Requires: libX11-devel%{?_isa}
 Requires: libXpm-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
-Conflicts: gd-devel
+
+Conflicts: gd-devel < %{version}
+Provides:  gd-devel = %{version}-%{release}
 
 
 %description devel
@@ -81,11 +78,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %prep
 %setup -q -n gd-%{version}
 %patch1 -p1 -b .mlib
-
-#patch4 -p1 -b .loop
-#patch7 -p1 -b .AALineThick
-#patch8 -p1 -b .bb
-#patch13 -p1 -b .sa1
 
 # (re)generate autotool stuff
 if [ -f configure ]; then
@@ -137,6 +129,9 @@ make check
 
 
 %changelog
+* Fri Apr 26 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.6.20015fe
+- pull latest upstream changes
+
 * Wed Apr 24 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.5.4640bbe
 - pull latest upstream changes
 - add missing BR for gettext and libtiff
