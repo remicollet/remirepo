@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name fDOMDocument
 %global channel   pear.netpirates.net
 
 Name:           php-theseer-fDOMDocument
-Version:        1.3.2
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        An Extension to PHP standard DOM
 
@@ -15,6 +14,7 @@ Source0:        http://%{channel}/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-pear(PEAR) >= 1.9.1
 BuildRequires:  php-channel(%{channel})
 # For test
@@ -22,11 +22,13 @@ BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires:  php-dom
 BuildRequires:  php-libxml
 
-Requires:       php-pear(PEAR) >= 1.9.1
-Requires:       php-channel(%{channel})
-Requires:       php-common >= 5.3.3
+Requires:       php(language) >= 5.3.3
 Requires:       php-dom
 Requires:       php-libxml
+Requires:       php-pcre
+Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.9.1
+Requires:       php-channel(%{channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
@@ -96,6 +98,9 @@ fi
 
 
 %changelog
+* Fri Apr 26 2013 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- Update to 1.4.0
+
 * Sun Oct 28 2012 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - Version 1.3.2 (stable) - API 1.3.0 (stable)
 - run test units
