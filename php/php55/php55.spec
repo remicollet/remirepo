@@ -84,7 +84,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.28.%{?snapdate}%{?rcver}%{?dist}.1
+Release: 0.28.%{?snapdate}%{?rcver}%{?dist}.2
 %else
 Release: 2%{?dist}
 %endif
@@ -283,7 +283,6 @@ Provides: php-gettext, php-gettext%{?_isa}
 Provides: php-hash, php-hash%{?_isa}
 Provides: php-mhash = %{version}, php-mhash%{?_isa} = %{version}
 Provides: php-iconv, php-iconv%{?_isa}
-Provides: php-json, php-json%{?_isa}
 Provides: php-libxml, php-libxml%{?_isa}
 Provides: php-openssl, php-openssl%{?_isa}
 Provides: php-phar, php-phar%{?_isa}
@@ -299,7 +298,7 @@ Provides: php-zip, php-zip%{?_isa}
 Obsoletes: php-pecl-zip
 %endif
 Provides: php-zlib, php-zlib%{?_isa}
-Obsoletes: php-openssl, php-pecl-json, php-json, php-pecl-phar, php-pecl-Fileinfo
+Obsoletes: php-openssl, php-pecl-phar, php-pecl-Fileinfo
 Obsoletes: php-mhash < 5.3.0
 Obsoletes: php53-mhash, php53u-mhash
 Obsoletes: php53-common, php53u-common, php54-common, php55-common
@@ -360,13 +359,22 @@ BuildRequires: krb5-devel, openssl-devel, libc-client-devel
 Obsoletes: php53-imap, php53u-imap, php54-imap, php55-imap
 
 %description imap
-The php-imap package contains a dynamic shared object (DSO) for the
-Apache Web server. When compiled into Apache, the php-imap module will
-add IMAP (Internet Message Access Protocol) support to PHP. IMAP is a
-protocol for retrieving and uploading e-mail messages on mail
-servers. PHP is an HTML-embedded scripting language. If you need IMAP
-support for PHP applications, you will need to install this package
-and the php package.
+The php-imap module will add IMAP (Internet Message Access Protocol)
+support to PHP. IMAP is a protocol for retrieving and uploading e-mail
+messages on mail servers. PHP is an HTML-embedded scripting language.
+
+%package Json
+Summary: Support for JSON serialization.
+Group: Development/Languages
+License: PHP
+Requires: php-common%{?_isa} = %{version}-%{release}
+Provides: php-json, php-json%{?_isa}
+Obsoletes: php-pecl-json < 1.3.0
+Conflicts: php-pecl-json >= 1.3.0
+
+%description Json
+The php-Json module will add support for JSON (JavaScript Object Notation)
+serialization to PHP.
 
 %package ldap
 Summary: A module for PHP applications that use LDAP
@@ -379,12 +387,10 @@ BuildRequires: cyrus-sasl-devel, openldap-devel, openssl-devel
 Obsoletes: php53-ldap, php53u-ldap, php54-ldap, php55-ldap
 
 %description ldap
-The php-ldap package is a dynamic shared object (DSO) for the Apache
-Web server that adds Lightweight Directory Access Protocol (LDAP)
+The php-ldap adds Lightweight Directory Access Protocol (LDAP)
 support to PHP. LDAP is a set of protocols for accessing directory
 services over the Internet. PHP is an HTML-embedded scripting
-language. If you need LDAP support for PHP applications, you will
-need to install this package in addition to the php package.
+language.
 
 %package pdo
 Summary: A database access abstraction module for PHP applications
@@ -468,9 +474,8 @@ BuildRequires: krb5-devel, openssl-devel, postgresql-devel
 Obsoletes: php53-pgsql, php53u-pgsql, php54-pgsql, php55-pgsql
 
 %description pgsql
-The php-pgsql package includes a dynamic shared object (DSO) that can
-be compiled in to the Apache Web server to add PostgreSQL database
-support to PHP. PostgreSQL is an object-relational database management
+The php-pgsql package add PostgreSQL database support to PHP.
+PostgreSQL is an object-relational database management
 system that supports almost all SQL constructs. PHP is an
 HTML-embedded scripting language. If you need back-end support for
 PostgreSQL, you should install this package in addition to the main
@@ -649,7 +654,7 @@ License: PHP and BSD
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: t1lib-devel
 %if %{with_libgd}
-BuildRequires: gd-last-devel
+BuildRequires: gd-devel
 %else
 # Required to build the bundled GD library
 BuildRequires: libjpeg-devel
@@ -1543,8 +1548,8 @@ cat files.pdo_sqlite >> files.pdo
 cat files.sqlite3 >> files.pdo
 %endif
 
-# Package json, zip, curl, phar and fileinfo in -common.
-cat files.json files.curl files.phar files.fileinfo \
+# Package zip, curl, phar and fileinfo in -common.
+cat files.curl files.phar files.fileinfo \
     files.exif files.gettext files.iconv files.calendar \
     files.ftp files.bz2 files.ctype files.sockets \
     files.tokenizer > files.common
@@ -1765,6 +1770,7 @@ fi
 %endif
 %files odbc -f files.odbc
 %files imap -f files.imap
+%files Json -f files.json
 %files ldap -f files.ldap
 %files snmp -f files.snmp
 %files xml -f files.xml
@@ -1801,6 +1807,10 @@ fi
 
 
 %changelog
+* Sat Apr 27 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.28.beta4.2
+- new sub-package for json extension
+- review some sub-packages description
+
 * Thu Apr 25 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.28.beta4
 - update to 5.5.0beta4, rebuild with new sources
 
