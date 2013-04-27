@@ -9,7 +9,7 @@
 Summary:       Support for JSON serialization
 Name:          php-pecl-json
 Version:       1.3.0
-Release:       0.1%{?dist}
+Release:       0.2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/remicollet/pecl-json-c
@@ -180,5 +180,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr 27 2013 Remi Collet <rcollet@redhat.com> - 1.3.0-0.2
+- rebuild with latest changes
+
 * Sat Apr 27 2013 Remi Collet <rcollet@redhat.com> - 1.3.0-0.1
 - initial package

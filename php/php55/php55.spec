@@ -364,7 +364,7 @@ support to PHP. IMAP is a protocol for retrieving and uploading e-mail
 messages on mail servers. PHP is an HTML-embedded scripting language.
 
 %package Json
-Summary: Support for JSON serialization.
+Summary: Support for JSON serialization
 Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
