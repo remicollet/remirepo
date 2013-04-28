@@ -93,6 +93,7 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
+%dir %{pear_phpdir}/TheSeer
 %{pear_phpdir}/TheSeer/%{pear_name}
 %{pear_testdir}/%{pear_name}
 
