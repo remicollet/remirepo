@@ -3,7 +3,7 @@
 %global channel   pear.netpirates.net
 
 Name:           php-theseer-fDOMDocument
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        An Extension to PHP standard DOM
 
@@ -98,6 +98,9 @@ fi
 
 
 %changelog
+* Sun Apr 28 2013 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Update to 1.4.1
+
 * Fri Apr 26 2013 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Update to 1.4.0
 
