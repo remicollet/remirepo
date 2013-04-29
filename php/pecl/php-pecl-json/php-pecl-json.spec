@@ -9,7 +9,7 @@
 Summary:       Support for JSON serialization
 Name:          php-pecl-json
 Version:       1.3.0
-Release:       0.2%{?dist}
+Release:       0.3%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/remicollet/pecl-json-c
@@ -21,6 +21,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.3.0
 BuildRequires: php-pear
 BuildRequires: pcre-devel
+BuildRequires: json-c-devel >= 0.11
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -81,7 +82,7 @@ cd ..
 
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
-extension = %{pecl_name}.so
+extension = %{pecl_name}-c.so
 EOF
 
 %if %{with_zts}
@@ -93,13 +94,17 @@ cp -pr %{pecl_name}-%{version}%{?prever}  %{pecl_name}-zts
 %build
 cd %{pecl_name}-%{version}%{?prever}
 %{_bindir}/phpize
-%configure --with-php-config=%{_bindir}/php-config
+%configure \
+  --with-libjson \
+  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
-%configure --with-php-config=%{_bindir}/zts-php-config
+%configure \
+  --with-libjson \
+  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
 
@@ -109,13 +114,20 @@ rm -rf %{buildroot}
 # Install the NTS stuff
 make -C %{pecl_name}-%{version}%{?prever} \
      install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}-c.ini
+
+# Hack to avoid some conflict (debuginfo)
+mv %{buildroot}%{php_extdir}/%{pecl_name}.so \
+   %{buildroot}%{php_extdir}/%{pecl_name}-c.so \
 
 # Install the ZTS stuff
 %if %{with_zts}
 make -C %{pecl_name}-zts \
      install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}-c.ini
+
+mv %{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
+   %{buildroot}%{php_ztsextdir}/%{pecl_name}-c.so \
 %endif
 
 # Install the package XML file
@@ -160,13 +172,13 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc %{pecl_name}-%{version}%{?prever}/{LICENSE,CREDITS,README.md}
 
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%{php_extdir}/%{pecl_name}.so
+%config(noreplace) %{php_inidir}/%{pecl_name}-c.ini
+%{php_extdir}/%{pecl_name}-c.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%{php_ztsextdir}/%{pecl_name}.so
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}-c.so
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}-c.ini
 %endif
 
 
@@ -180,6 +192,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 29 2013 Remi Collet <rcollet@redhat.com> - 1.3.0-0.3
+- rebuild with latest changes
+- use system json-c library
+- temporarily rename to jsonc-c.so
+
 * Sat Apr 27 2013 Remi Collet <rcollet@redhat.com> - 1.3.0-0.2
 - rebuild with latest changes
 
