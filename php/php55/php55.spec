@@ -32,6 +32,8 @@
 
 %global with_fpm      1
 
+%global with_json     1
+
 # Build mysql/mysqli/pdo extensions using libmysqlclient or only mysqlnd
 %global with_libmysql 0
 
@@ -77,14 +79,14 @@
 %global db_devel  libdb-devel
 %endif
 
-#global snapdate      201304221230
-%global rcver         beta4
+%global snapdate      201304291030
+#global rcver         beta4
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.28.%{?snapdate}%{?rcver}%{?dist}.2
+Release: 0.29.%{?snapdate}%{?rcver}%{?dist}.2
 %else
 Release: 2%{?dist}
 %endif
@@ -293,6 +295,10 @@ Provides: php-sockets, php-sockets%{?_isa}
 Provides: php-spl, php-spl%{?_isa}
 Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
 Provides: php-tokenizer, php-tokenizer%{?_isa}
+%if %{with_json}
+Provides: php-json, php-json%{?_isa}
+Obsoletes: php-pecl-json < 1.3.0
+%endif
 %if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
 Obsoletes: php-pecl-zip
@@ -362,19 +368,6 @@ Obsoletes: php53-imap, php53u-imap, php54-imap, php55-imap
 The php-imap module will add IMAP (Internet Message Access Protocol)
 support to PHP. IMAP is a protocol for retrieving and uploading e-mail
 messages on mail servers. PHP is an HTML-embedded scripting language.
-
-%package Json
-Summary: Support for JSON serialization
-Group: Development/Languages
-License: PHP
-Requires: php-common%{?_isa} = %{version}-%{release}
-Provides: php-json, php-json%{?_isa}
-Obsoletes: php-pecl-json < 1.3.0
-Conflicts: php-pecl-json >= 1.3.0
-
-%description Json
-The php-Json module will add support for JSON (JavaScript Object Notation)
-serialization to PHP.
 
 %package ldap
 Summary: A module for PHP applications that use LDAP
@@ -1110,7 +1103,11 @@ build --libdir=%{_libdir}/php \
 %else
       --without-sqlite3 \
 %endif
+%if %{with_json}
       --enable-json=shared \
+%else
+      --disable-json
+%endif
 %if %{with_zip}
       --enable-zip=shared \
 %endif
@@ -1252,7 +1249,11 @@ build --includedir=%{_includedir}/php-zts \
 %else
       --without-sqlite3 \
 %endif
+%if %{with_json}
       --enable-json=shared \
+%else
+      --disable-json
+%endif
 %if %{with_zip}
       --enable-zip=shared \
 %endif
@@ -1553,6 +1554,9 @@ cat files.curl files.phar files.fileinfo \
     files.exif files.gettext files.iconv files.calendar \
     files.ftp files.bz2 files.ctype files.sockets \
     files.tokenizer > files.common
+%if %{with_json}
+cat files.json >> files.common
+%endif
 %if %{with_zip}
 cat files.zip >> files.common
 %endif
@@ -1770,7 +1774,6 @@ fi
 %endif
 %files odbc -f files.odbc
 %files imap -f files.imap
-%files Json -f files.json
 %files ldap -f files.ldap
 %files snmp -f files.snmp
 %files xml -f files.xml
@@ -1807,9 +1810,10 @@ fi
 
 
 %changelog
-* Sat Apr 27 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.28.beta4.2
-- new sub-package for json extension
+* Sat Apr 27 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.29.201304291030
+- new snapshot
 - review some sub-packages description
+- add option to disable json extension
 
 * Thu Apr 25 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.28.beta4
 - update to 5.5.0beta4, rebuild with new sources
