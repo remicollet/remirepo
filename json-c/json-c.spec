@@ -1,12 +1,16 @@
+%global reldate 20130402
+
 Name:		json-c
-Version:	0.10
-Release:	2%{?dist}
+Version:	0.11
+Release:	1%{?dist}
 Summary:	A JSON implementation in C
 Group:		Development/Libraries
 License:	MIT
 URL:		https://github.com/json-c/json-c/wiki
-Source0:	https://github.com/downloads/%{name}/%{name}/%{name}-%{version}.tar.gz
+Source0:	https://github.com/json-c/json-c/archive/json-c-%{version}-%{reldate}.tar.gz
+
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+BuildRequires: libtool
 
 
 %description
@@ -33,7 +37,7 @@ BuildArch:	noarch
 This package contains the reference manual for json-c.
 
 %prep
-%setup -q
+%setup -q -n json-c-json-c-%{version}-%{reldate}
 
 for doc in ChangeLog; do
  iconv -f iso-8859-1 -t utf8 $doc > $doc.new &&
@@ -41,16 +45,15 @@ for doc in ChangeLog; do
  mv $doc.new $doc
 done
 
-# Hack...
-sed -e 's/json_object.c/json_object.c json_object_iterator.c/' \
-    -e 's/json_object.h/json_object.h json_object_iterator.h/' \
-    -e 's/json_object.lo/json_object.lo json_object_iterator.lo/' \
-    -i Makefile.in
+# regenerate auto stuff to avoid rpath issue
+autoreconf -fi
 
 
 %build
-%configure --enable-shared --disable-static
-make %{?_smp_mflags}
+%configure --enable-shared --disable-static --disable-rpath
+#make %{?_smp_mflags}
+make
+
 
 %install
 rm -rf %{buildroot}
@@ -59,29 +62,49 @@ make install DESTDIR=%{buildroot}
 # Get rid of la files
 rm -rf %{buildroot}%{_libdir}/*.la
 
+# yum cannot replace a dir by a link
+# so switch the dir names
+rm %{buildroot}%{_includedir}/json
+mv %{buildroot}%{_includedir}/json-c \
+   %{buildroot}%{_includedir}/json
+ln -s json \
+   %{buildroot}%{_includedir}/json-c
+
 
 %clean
 rm -rf %{buildroot}
 
+
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
+
 
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README README.html
 %{_libdir}/libjson.so.*
+%{_libdir}/libjson-c.so.*
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/json/
+%{_includedir}/json
+%{_includedir}/json-c
 %{_libdir}/libjson.so
+%{_libdir}/libjson-c.so
 %{_libdir}/pkgconfig/json.pc
+%{_libdir}/pkgconfig/json-c.pc
 
 %files doc
 %defattr(-,root,root,-)
 %doc doc/html/*
 
+
 %changelog
+* Mon Apr 29 2013 Remi Collet <remi@fedoraproject.org> - 0.11-1
+- update to 0.11
+- fix source0
+- enable both json and json-c libraries
+
 * Sat Nov 24 2012 Remi Collet <remi@fedoraproject.org> - 0.10-2
 - build json_object_iterator
 
