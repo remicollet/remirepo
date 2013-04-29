@@ -24,7 +24,7 @@ index c6ac3ea..2599386 100644
 +    ERROR=$?
 +    ;;
 +graceful)
-+    /usr/bin/systemctl restart httpd.service
++    /usr/bin/systemctl reload httpd.service
 +    ERROR=$?
 +    ;;
 +graceful-stop)

@@ -1,0 +1,83 @@
+diff --git a/modules/ssl/ssl_engine_config.c b/modules/ssl/ssl_engine_config.c
+index 15993f1..53ed6f1 100644
+--- a/modules/ssl/ssl_engine_config.c
++++ b/modules/ssl/ssl_engine_config.c
+@@ -55,6 +55,7 @@ SSLModConfigRec *ssl_config_global_create(server_rec *s)
+     mc = (SSLModConfigRec *)apr_palloc(pool, sizeof(*mc));
+     mc->pPool = pool;
+     mc->bFixed = FALSE;
++    mc->sni_required = FALSE;
+ 
+     /*
+      * initialize per-module configuration
+diff --git a/modules/ssl/ssl_engine_init.c b/modules/ssl/ssl_engine_init.c
+index bf1f0e4..a7523de 100644
+--- a/modules/ssl/ssl_engine_init.c
++++ b/modules/ssl/ssl_engine_init.c
+@@ -409,7 +409,7 @@ int ssl_init_Module(apr_pool_t *p, apr_pool_t *plog,
+     /*
+      * Configuration consistency checks
+      */
+-    ssl_init_CheckServers(base_server, ptemp);
++    ssl_init_CheckServers(mc, base_server, ptemp);
+ 
+     /*
+      *  Announce mod_ssl and SSL library in HTTP Server field
+@@ -1475,7 +1475,7 @@ void ssl_init_ConfigureServer(server_rec *s,
+     }
+ }
+ 
+-void ssl_init_CheckServers(server_rec *base_server, apr_pool_t *p)
++void ssl_init_CheckServers(SSLModConfigRec *mc, server_rec *base_server, apr_pool_t *p)
+ {
+     server_rec *s, *ps;
+     SSLSrvConfigRec *sc;
+@@ -1557,6 +1557,7 @@ void ssl_init_CheckServers(server_rec *base_server, apr_pool_t *p)
+     }
+ 
+     if (conflict) {
++        mc->sni_required = TRUE;
+ #ifdef OPENSSL_NO_TLSEXT
+         ap_log_error(APLOG_MARK, APLOG_WARNING, 0, base_server, APLOGNO(01917)
+                      "Init: You should not use name-based "
+diff --git a/modules/ssl/ssl_engine_kernel.c b/modules/ssl/ssl_engine_kernel.c
+index bc9e26b..2460f01 100644
+--- a/modules/ssl/ssl_engine_kernel.c
++++ b/modules/ssl/ssl_engine_kernel.c
+@@ -164,6 +164,7 @@ int ssl_hook_ReadReq(request_rec *r)
+         return DECLINED;
+     }
+ #ifndef OPENSSL_NO_TLSEXT
++    if (myModConfig(r->server)->sni_required) {
+     if ((servername = SSL_get_servername(ssl, TLSEXT_NAMETYPE_host_name))) {
+         char *host, *scope_id;
+         apr_port_t port;
+@@ -206,6 +207,7 @@ int ssl_hook_ReadReq(request_rec *r)
+                      " virtual host");
+         return HTTP_FORBIDDEN;
+     }
++    }
+ #endif
+     SSL_set_app_data2(ssl, r);
+ 
+diff --git a/modules/ssl/ssl_private.h b/modules/ssl/ssl_private.h
+index 75fc0e3..31dbfa9 100644
+--- a/modules/ssl/ssl_private.h
++++ b/modules/ssl/ssl_private.h
+@@ -554,6 +554,7 @@ typedef struct {
+     struct {
+         void *pV1, *pV2, *pV3, *pV4, *pV5, *pV6, *pV7, *pV8, *pV9, *pV10;
+     } rCtx;
++    BOOL            sni_required;
+ } SSLModConfigRec;
+ 
+ /** Structure representing configured filenames for certs and keys for
+@@ -786,7 +787,7 @@ const char *ssl_cmd_SSLFIPS(cmd_parms *cmd, void *dcfg, int flag);
+ int          ssl_init_Module(apr_pool_t *, apr_pool_t *, apr_pool_t *, server_rec *);
+ void         ssl_init_Engine(server_rec *, apr_pool_t *);
+ void         ssl_init_ConfigureServer(server_rec *, apr_pool_t *, apr_pool_t *, SSLSrvConfigRec *);
+-void         ssl_init_CheckServers(server_rec *, apr_pool_t *);
++void         ssl_init_CheckServers(SSLModConfigRec *mc, server_rec *, apr_pool_t *);
+ STACK_OF(X509_NAME)
+             *ssl_init_FindCAList(server_rec *, apr_pool_t *, const char *, const char *);
+ void         ssl_init_Child(apr_pool_t *, server_rec *);

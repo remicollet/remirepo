@@ -14,7 +14,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.4
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -59,8 +59,11 @@ Patch26: httpd-2.4.4-r1337344+.patch
 Patch27: httpd-2.4.2-icons.patch
 Patch28: httpd-2.4.4-r1332643+.patch
 Patch29: httpd-2.4.3-mod_systemd.patch
+Patch30: httpd-2.4.4-cachehardmax.patch
+Patch31: httpd-2.4.4-sslmultiproxy.patch
 # Bug fixes
 Patch50: httpd-2.4.2-r1374214+.patch
+Patch51: httpd-2.4.3-sslsninotreq.patch
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -180,8 +183,11 @@ interface for storing and accessing per-user session data.
 %patch27 -p1 -b .icons
 %patch28 -p1 -b .r1332643+
 %patch29 -p1 -b .systemd
+%patch30 -p1 -b .cachehardmax
+%patch31 -p1 -b .sslmulti
 
 %patch50 -p1 -b .r1374214+
+%patch51 -p1 -b .sninotreq
 
 # Patch in the vendor string
 sed -i '/^#define PLATFORM/s/Unix/%{vstring}/' os/unix/os.h
@@ -210,7 +216,7 @@ autoheader && autoconf || exit 1
 %{__perl} -pi -e "s:\@exp_installbuilddir\@:%{_libdir}/httpd/build:g" \
 	support/apxs.in
 
-export CFLAGS=$RPM_OPT_FLAGS
+export CFLAGS="$RPM_OPT_FLAGS -DFCGI_DUMP_ENV_VARS -DFCGI_DUMP_HEADERS"
 export LDFLAGS="-Wl,-z,relro,-z,now"
 
 # Hard-code path to links to avoid unnecessary builddep
@@ -626,6 +632,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Mon Apr 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.4.4-5
+- sync with rawhide, rebuild for remi repo
+- add -DDFCGI_DUMP_ENV_VARS -DFCGI_DUMP_HEADERS
+
+* Thu Apr 18 2013 Jan Kaluza <jkaluza@redhat.com> - 2.4.4-5
+- execute systemctl reload as result of apachectl graceful
+- mod_ssl: ignore SNI hints unless required by config
+- mod_cache: forward-port CacheMaxExpire "hard" option
+- mod_ssl: fall back on another module's proxy hook if mod_ssl proxy
+  is not configured.
+
 * Tue Apr 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.4.4-4
 - sync with rawhide, rebuild for remi repo
 

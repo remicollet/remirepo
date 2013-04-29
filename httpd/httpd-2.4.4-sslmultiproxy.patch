@@ -1,0 +1,95 @@
+diff --git a/modules/ssl/mod_ssl.c b/modules/ssl/mod_ssl.c
+index 6ea367c..3cbd08f 100644
+--- a/modules/ssl/mod_ssl.c
++++ b/modules/ssl/mod_ssl.c
+@@ -378,6 +378,9 @@ static SSLConnRec *ssl_init_connection_ctx(conn_rec *c)
+     return sslconn;
+ }
+ 
++static typeof(ssl_proxy_enable) *othermod_proxy_enable;
++static typeof(ssl_engine_disable) *othermod_engine_disable;
++
+ int ssl_proxy_enable(conn_rec *c)
+ {
+     SSLSrvConfigRec *sc;
+@@ -386,6 +389,12 @@ int ssl_proxy_enable(conn_rec *c)
+     sc = mySrvConfig(sslconn->server);
+ 
+     if (!sc->proxy_enabled) {
++        if (othermod_proxy_enable) {
++            ap_log_cerror(APLOG_MARK, APLOG_DEBUG, 0, c,
++                          "mod_ssl proxy not configured, passing through to other module.");
++            return othermod_proxy_enable(c);
++        }
++
+         ap_log_cerror(APLOG_MARK, APLOG_ERR, 0, c, APLOGNO(01961)
+                       "SSL Proxy requested for %s but not enabled "
+                       "[Hint: SSLProxyEngine]", sc->vhost_id);
+@@ -405,6 +414,10 @@ int ssl_engine_disable(conn_rec *c)
+ 
+     SSLConnRec *sslconn = myConnConfig(c);
+ 
++    if (othermod_engine_disable) {
++        othermod_engine_disable(c);
++    }
++
+     if (sslconn) {
+         sc = mySrvConfig(sslconn->server);
+     }
+@@ -590,6 +603,9 @@ static void ssl_register_hooks(apr_pool_t *p)
+     ap_hook_post_read_request(ssl_hook_ReadReq, pre_prr,NULL, APR_HOOK_MIDDLE);
+ 
+     ssl_var_register(p);
++    
++    othermod_proxy_enable = APR_RETRIEVE_OPTIONAL_FN(ssl_proxy_enable);
++    othermod_engine_disable = APR_RETRIEVE_OPTIONAL_FN(ssl_engine_disable);
+ 
+     APR_REGISTER_OPTIONAL_FN(ssl_proxy_enable);
+     APR_REGISTER_OPTIONAL_FN(ssl_engine_disable);
+diff --git a/modules/ssl/ssl_engine_vars.c b/modules/ssl/ssl_engine_vars.c
+index 536e6b1..c508fff 100644
+--- a/modules/ssl/ssl_engine_vars.c
++++ b/modules/ssl/ssl_engine_vars.c
+@@ -53,10 +53,15 @@ static void  ssl_var_lookup_ssl_cipher_bits(SSL *ssl, int *usekeysize, int *algk
+ static char *ssl_var_lookup_ssl_version(apr_pool_t *p, char *var);
+ static char *ssl_var_lookup_ssl_compress_meth(SSL *ssl);
+ 
++static APR_OPTIONAL_FN_TYPE(ssl_is_https) *othermod_is_https;
++static APR_OPTIONAL_FN_TYPE(ssl_var_lookup) *othermod_var_lookup;
++
+ static int ssl_is_https(conn_rec *c)
+ {
+     SSLConnRec *sslconn = myConnConfig(c);
+-    return sslconn && sslconn->ssl;
++    
++    return (sslconn && sslconn->ssl)
++        || (othermod_is_https && othermod_is_https(c));
+ }
+ 
+ static const char var_interface[] = "mod_ssl/" AP_SERVER_BASEREVISION;
+@@ -106,6 +111,9 @@ void ssl_var_register(apr_pool_t *p)
+ {
+     char *cp, *cp2;
+ 
++    othermod_is_https = APR_RETRIEVE_OPTIONAL_FN(ssl_is_https);
++    othermod_var_lookup = APR_RETRIEVE_OPTIONAL_FN(ssl_var_lookup);
++
+     APR_REGISTER_OPTIONAL_FN(ssl_is_https);
+     APR_REGISTER_OPTIONAL_FN(ssl_var_lookup);
+     APR_REGISTER_OPTIONAL_FN(ssl_ext_list);
+@@ -241,6 +249,15 @@ char *ssl_var_lookup(apr_pool_t *p, server_rec *s, conn_rec *c, request_rec *r,
+      */
+     if (result == NULL && c != NULL) {
+         SSLConnRec *sslconn = myConnConfig(c);
++
++        if (strlen(var) > 4 && strcEQn(var, "SSL_", 4)
++            && (!sslconn || !sslconn->ssl) && othermod_var_lookup) {
++            /* For an SSL_* variable, if mod_ssl is not enabled for
++             * this connection and another SSL module is present, pass
++             * through to that module. */
++            return othermod_var_lookup(p, s, c, r, var);
++        }
++
+         if (strlen(var) > 4 && strcEQn(var, "SSL_", 4)
+             && sslconn && sslconn->ssl)
+             result = ssl_var_lookup_ssl(p, c, r, var+4);
