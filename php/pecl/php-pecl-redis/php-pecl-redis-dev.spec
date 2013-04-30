@@ -1,8 +1,6 @@
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name  redis
-%global with_zts   0%{?__ztsphp:1}
 
 %if 0%{?fedora} >= 18
 %ifarch ppc64
@@ -17,14 +15,14 @@
 %endif
 
 Summary:       Extension for communicating with the Redis key-value store
-Name:          php-%{pecl_name}
+Name:          php-pecl-redis
 Version:       2.2.3
-Release:       1%{?dist}.1
+Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
-URL:           https://github.com/nicolasff/phpredis
+URL:           http://pecl.php.net/package/redis
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# No test in pecl archive - https://github.com/nicolasff/phpredis/issues/332
+# https://github.com/nicolasff/phpredis/issues/332 - missing tests
 Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -39,6 +37,9 @@ Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 # php-pecl-igbinary missing php-pecl(igbinary)%{?_isa}
 Requires:      php-pecl-igbinary%{?_isa}
+Obsoletes:     php-redis < %{version}
+Provides:      php-redis = %{version}-%{release}
+Provides:      php-redis%{?_isa} = %{version}-%{release}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -61,6 +62,7 @@ some doesn't work with an old redis server version.
 
 # rename source folder
 mv %{pecl_name}-%{version} nts
+# tests folder from github archive
 mv phpredis-%{version}/tests nts/tests
 
 # Sanity check, really often broken
@@ -70,10 +72,8 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
-%if %{with_zts}
 # duplicate for ZTS build
 cp -pr nts zts
-%endif
 
 # Drop in the bit of configuration
 cat > %{pecl_name}.ini << 'EOF'
@@ -97,7 +97,6 @@ cd nts
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if %{with_zts}
 cd ../zts
 %{_bindir}/zts-phpize
 %configure \
@@ -106,7 +105,6 @@ cd ../zts
     --enable-redis-igbinary \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
@@ -119,10 +117,8 @@ make -C nts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
 # Install the ZTS stuff
-%if %{with_zts}
 make -C zts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -137,14 +133,12 @@ php --no-php-ini \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-%if %{with_zts}
 ln -sf %{php_ztsextdir}/igbinary.so zts/modules/igbinary.so
 %{__ztsphp} --no-php-ini \
     --define extension_dir=zts/modules \
     --define extension=igbinary.so \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
-%endif
 
 %if %{with_test}
 cd nts/tests
@@ -211,16 +205,14 @@ rm -rf %{buildroot}
 %{php_extdir}/%{pecl_name}.so
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 
-%if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
-%endif
 
 
 %changelog
 * Tue Apr 30 2013 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - update to 2.2.3
-- upstream moved to pecl
+- upstream moved to pecl, rename from php-redis to php-pecl-redis
 
 * Tue Sep 11 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-5.git6f7087f
 - more docs and improved description

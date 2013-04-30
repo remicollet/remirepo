@@ -17,17 +17,16 @@
 %endif
 
 Summary:       Extension for communicating with the Redis key-value store
-Name:          php-%{pecl_name}
+Name:          php-pecl-redis
 Version:       2.2.3
-Release:       1%{?dist}.1
+Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
-URL:           https://github.com/nicolasff/phpredis
+URL:           http://pecl.php.net/package/redis
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# No test in pecl archive - https://github.com/nicolasff/phpredis/issues/332
+# https://github.com/nicolasff/phpredis/issues/332 - missing tests
 Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 BuildRequires: php-pecl-igbinary-devel
 # to run Test suite
@@ -39,6 +38,9 @@ Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 # php-pecl-igbinary missing php-pecl(igbinary)%{?_isa}
 Requires:      php-pecl-igbinary%{?_isa}
+Obsoletes:     php-redis < %{version}
+Provides:      php-redis = %{version}-%{release}
+Provides:      php-redis%{?_isa} = %{version}-%{release}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -61,6 +63,7 @@ some doesn't work with an old redis server version.
 
 # rename source folder
 mv %{pecl_name}-%{version} nts
+# tests folder from github archive
 mv phpredis-%{version}/tests nts/tests
 
 # Sanity check, really often broken
@@ -110,7 +113,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # for short circuit
 rm -f ?ts/modules/igbinary.so
 
@@ -199,12 +201,7 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %doc nts/{COPYING,CREDITS,README.markdown,arrays.markdown}
 %{pecl_xmldir}/%{name}.xml
 
@@ -220,7 +217,7 @@ rm -rf %{buildroot}
 %changelog
 * Tue Apr 30 2013 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - update to 2.2.3
-- upstream moved to pecl
+- upstream moved to pecl, rename from php-redis to php-pecl-redis
 
 * Tue Sep 11 2012 Remi Collet <remi@fedoraproject.org> - 2.2.2-5.git6f7087f
 - more docs and improved description
