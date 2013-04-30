@@ -151,6 +151,11 @@ ln -sf %{php_ztsextdir}/igbinary.so zts/modules/igbinary.so
 %if %{with_test}
 cd nts/tests
 
+# this test requires redis >= 2.6.9
+# https://github.com/nicolasff/phpredis/pull/333
+sed -e s/testClient/SKIP_testClient/ \
+    -i TestRedis.php
+
 # Launch redis server
 mkdir -p {run,log,lib}/redis
 sed -e "s:/var:$PWD:" \
