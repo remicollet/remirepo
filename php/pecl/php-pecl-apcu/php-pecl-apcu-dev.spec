@@ -2,14 +2,12 @@
 
 Name:           php-pecl-apcu
 Summary:        APC User Cache
-Version:        4.0.0
-Release:        2%{?dist}.1
+Version:        4.0.1
+Release:        1%{?dist}.1
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
-
-Patch0:         %{pecl_name}-git.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -25,7 +23,7 @@ Provides:       php-apcu%{?_isa} = %{version}
 Provides:       php-pecl(apcu) = %{version}
 Provides:       php-pecl(apcu)%{?_isa} = %{version}
 # Same provides than APC, this is a drop in replacement
-Conflicts:      php-pecl-apc
+Conflicts:      php-pecl-apc < 4
 Provides:       php-apc = %{version}
 Provides:       php-apc%{?_isa} = %{version}
 Provides:       php-pecl-apc = %{version}
@@ -90,7 +88,6 @@ configuration, available on http://localhost/apcu-panel/
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1 -b .fromgit
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
@@ -168,6 +165,16 @@ REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
 
 
+%post
+%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+
+
+%postun
+if [ $1 -eq 0 ] ; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+fi
+
+
 %clean
 rm -rf %{buildroot}
 
@@ -198,6 +205,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 30 2013 Remi Collet <remi@fedoraproject.org> - 4.0.1-1
+- Update to 4.0.1
+- add missing scriptlet
+- fix Conflicts
+
 * Thu Apr 25 2013 Remi Collet <remi@fedoraproject.org> - 4.0.0-2
 - fix segfault when used from command line
 
