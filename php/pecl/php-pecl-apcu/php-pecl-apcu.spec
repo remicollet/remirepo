@@ -1,5 +1,6 @@
 %{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
 %{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
+%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 %global pecl_name apcu
 %global with_zts  0%{?__ztsphp:1}
 
@@ -18,6 +19,11 @@ URL:            http://pecl.php.net/package/APCu
 
 BuildRequires:  php-devel
 BuildRequires:  php-pear
+
+Requires(post): %{__pecl}
+Requires(postun): %{__pecl}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
 Obsoletes:      php-apcu < 4.0.0-1
 Provides:       php-apcu = %{version}

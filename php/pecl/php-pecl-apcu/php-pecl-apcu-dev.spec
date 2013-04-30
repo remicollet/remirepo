@@ -1,3 +1,5 @@
+%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+
 %global pecl_name apcu
 
 Name:           php-pecl-apcu
@@ -16,6 +18,11 @@ URL:            http://pecl.php.net/package/APCu
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
+
+Requires(post): %{__pecl}
+Requires(postun): %{__pecl}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
 Obsoletes:      php-apcu < 4.0.0-1
 Provides:       php-apcu = %{version}
