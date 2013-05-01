@@ -1,0 +1,23 @@
+--- Sabre_DAV-1.6.5/Sabre/DAV/Browser/Plugin.php	2012-10-04 08:02:37.000000000 -0400
++++ SabreDAV/lib/Sabre/DAV/Browser/Plugin.php	2013-04-11 14:29:08.000000000 -0400
+@@ -439,14 +439,14 @@
+      */
+     protected function getLocalAssetPath($assetName) {
+ 
++        $assetDir = __DIR__ . '/assets/';
++        $path = $assetDir . $assetName;
++
+         // Making sure people aren't trying to escape from the base path.
+-        $assetSplit = explode('/', $assetName);
+-        if (in_array('..',$assetSplit)) {
+-            throw new Sabre_DAV_Exception('Incorrect asset path');
++        if (strpos(realpath($path), realpath($assetDir)) === 0) {
++            return $path;
+         }
+-        $path = __DIR__ . '/assets/' . $assetName;
+-        return $path;
+-
++        throw new Sabre_DAV_Exception_Forbidden('Path does not exist, or escaping from the base path was detected');
+     }
+ 
+     /**

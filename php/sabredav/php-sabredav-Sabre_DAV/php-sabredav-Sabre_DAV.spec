@@ -4,13 +4,14 @@
 
 Name:           php-sabredav-Sabre_DAV
 Version:        1.6.5
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Sabre_DAV is a WebDAV framework for PHP
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://code.google.com/p/sabredav
 Source0:        http://pear.sabredav.org/get/%{pear_name}-%{version}.tgz
+Patch1:         sabreDav_BrowserPluginFix.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -39,8 +40,10 @@ is meant to cover the entire standard.
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
+%patch1 -p0
+
+sed -e '/Plugin.php/s/md5sum.*name/name/' \
+  package.xml > %{pear_name}-%{version}/%{pear_name}.xml
 
 
 %build
@@ -78,6 +81,13 @@ fi
 
 
 %changelog
+* Wed May  1 2013 Remi Collet <RPMS@FamilleCollet.com> 1.6.5-4
+- sync with rawhide, backport for remi repo
+
+* Sun Apr 28 2013 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.5-4
+- added security patch that fixes bugs 951568 951569 951562
+- added --ignore-errors flag to pear install macro to accept the patch
+
 * Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.6.5-1
 - backport for remi repo
 
