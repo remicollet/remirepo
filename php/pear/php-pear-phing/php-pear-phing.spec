@@ -5,7 +5,7 @@
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
 Version:	2.5.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 License:	LGPLv2
 Group:		Development/Tools
@@ -15,10 +15,12 @@ Group:		Development/Tools
 # ./strip.sh %{version}
 Source0:	%{pear_name}-%{version}-strip.tgz
 Source1:	strip.sh
+
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL:		http://phing.info/trac/
 
-BuildRoot:	    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch:	    noarch
+BuildArch:	noarch
+
 BuildRequires:	php(language) >= 5.2.0
 BuildRequires:	php-pear(PEAR) >= 1.8.0
 BuildRequires:	php-channel(%{pear_channel})
@@ -108,6 +110,12 @@ fi
 
 
 %changelog
+* Wed May  1 2013 Remi Collet <remi@fedoraproject.org> - 2.5.0-3
+- clean more non-free stuff
+
+* Sat Apr 20 2013 Christof Damian <christof@damian.net> - 2.5.0-2
+- remove more mentions of non-free stuff
+
 * Thu Mar 28 2013 Remi Collet <remi@fedoraproject.org> - 2.5.0-2
 - remove jsmin from task/defaults.properties
 
