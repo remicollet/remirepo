@@ -1,8 +1,6 @@
-#global prever rc1
-
 Name: phpMyAdmin
-Version: 3.5.8.1
-Release: %{?prever:0.}1%{?prever:.%prever}%{?dist}
+Version: 4.0.0
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -11,24 +9,40 @@ URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.bz2
 Source2: phpMyAdmin.htaccess
 
-Source10: http://downloads.sourceforge.net/sourceforge/phpmyadmin/darkblue_orange-2.11.zip
-Source11: http://downloads.sourceforge.net/sourceforge/phpmyadmin/graphite-1.0.zip
-Source12: http://downloads.sourceforge.net/sourceforge/phpmyadmin/toba-0.2.zip
-Source13: http://downloads.sourceforge.net/sourceforge/phpmyadmin/paradice-3.4.zip
-Source14: http://downloads.sourceforge.net/sourceforge/phpmyadmin/blueorange-1.0b.zip
-Source15: http://downloads.sourceforge.net/sourceforge/phpmyadmin/cleanstrap-1.0.zip
-Source16: http://downloads.sourceforge.net/sourceforge/phpmyadmin/metro-1.0.zip
-
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: unzip
 
 Requires:  webserver
 Requires:  php(language) >= 5.2.0
+Requires:  php-bcmath
+Requires:  php-bz2
+Requires:  php-ctype
+Requires:  php-curl
+Requires:  php-date
+Requires:  php-filter
 Requires:  php-gd
+Requires:  php-gettext
+Requires:  php-gmp
+Requires:  php-hash
+Requires:  php-iconv
+Requires:  php-pecl(imagick)
+Requires:  php-json
+Requires:  php-libxml
 Requires:  php-mbstring
 Requires:  php-mcrypt
-Requires:  php-mysql
+Requires:  php-mysqli
+Requires:  php-openssl
+Requires:  php-pcre
+Requires:  php-recode
+Requires:  php-session
+Requires:  php-simplexml
+Requires:  php-spl
+Requires:  php-tidy
+Requires:  php-xml
+Requires:  php-xmlwriter
+Requires:  php-zip
+Requires:  php-zlib
 Requires:  php-php-gettext
 Provides:  phpmyadmin = %{version}-%{release}
 Obsoletes: phpMyAdmin3
@@ -66,10 +80,10 @@ grep '^define' libraries/vendor_config.php
 # to avoid rpmlint warnings
 find . -name \*.php -exec chmod -x {} \;
 
-for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14} %{SOURCE15} %{SOURCE16}
-do
-    %{__unzip} -q $archive -d themes
-done
+#for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14} %{SOURCE15} %{SOURCE16}
+#do
+#    %{__unzip} -q $archive -d themes
+#done
 
 
 %build
@@ -115,7 +129,7 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README LICENSE Documentation.txt
+%doc ChangeLog README LICENSE
 %{_datadir}/%{name}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
@@ -126,12 +140,24 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
-* Wed Apr 24 2013 Remi Collet <rpms@famillecollet.com> 3.5.8.1-1
-- Upstream released 3.5.8.1 (security)
-  fix PMASA-2013-2, PMASA-2013-3, PMASA-2013-4 and PMASA-2013-5
+* Fri May  3 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-1
+- update to 4.0.0 finale
 
-* Mon Apr  8 2013 Remi Collet <rpms@famillecollet.com> 3.5.8-1
-- Upstream released 3.5.8 (bugfix)
+* Sun Apr 28 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-0.5.rc4
+- 4.0.0-rc4
+
+* Wed Apr 24 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-0.4.rc3
+- 4.0.0-rc3
+
+* Tue Apr 16 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-0.3.rc2
+- 4.0.0-rc2
+
+* Thu Apr  4 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-0.2.rc1
+- 4.0.0-rc1
+
+* Wed Mar 27 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-0.1.beta3
+- 4.0.0-beta3
+- remove all additional themes
 
 * Fri Feb 15 2013 Remi Collet <rpms@famillecollet.com> 3.5.7-1
 - Upstream released 3.5.7 (bugfix)
