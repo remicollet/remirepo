@@ -79,14 +79,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201305020630
+%global snapdate      201305041230
 #global rcver         beta4
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.29.%{?snapdate}%{?rcver}%{?dist}.4
+Release: 0.30.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -147,7 +147,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-#Patch99: php-5.5.0-wip.patch
+Patch99: php-5.5.0-wip.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -847,7 +847,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
-#patch99 -p1 -b .wip
+%patch99 -p1 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1810,6 +1810,9 @@ fi
 
 
 %changelog
+* Sat Apr 27 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.30.201305041230
+- test build for libgd
+
 * Sat Apr 27 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.29.201304291030
 - new snapshot
 - review some sub-packages description
