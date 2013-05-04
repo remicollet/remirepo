@@ -6,12 +6,16 @@ Name:		php-aws-sdk
 Version:	1.6.2
 Release:	4%{?dist}
 Summary:	Amazon Web Services framework for PHP
+Group:		Development/Libraries
 
-#The entire source code is ASL 2.0 except lib/cachecore/, lib/requestcore/, lib/yaml/ which are BSD and lib/dom/ which is MIT
+#The entire source code is ASL 2.0 except
+# lib/cachecore/, lib/requestcore/, lib/yaml/ which are BSD
+# lib/dom/ which is MIT
 License:	ASL 2.0 and BSD and MIT
 URL:		http://aws.amazon.com/sdkforphp/
 Source0:	http://pear.amazonwebservices.com/get/sdk-%{version}.tgz
 
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:	noarch
 BuildRequires:	php-pear(PEAR)
 BuildRequires:	php-channel(%{channelname})
@@ -19,7 +23,7 @@ BuildRequires:	php-channel(%{channelname})
 Requires(post):		%{__pear}
 Requires(postun):	%{__pear}
 
-Requires:	php-common >= 5.2
+Requires:	php(language) >= 5.2
 Requires:	php-pear(PEAR)
 Requires:	php-channel(%{channelname})
 Requires:	php-xml
@@ -54,11 +58,7 @@ cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
 # Clean up unnecessary files
-%if 0%{?rhel}
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
-%else
 rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
-%endif
 
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
@@ -82,12 +82,16 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/AWSSDKforPHP/
 
 
 %changelog
+* Sat May 04 2013 Remi Collet <remi@fedoraproject.org> - 1.6.2-4
+- backport 1.6.2 for remi repo
+
 * Wed May 01 2013 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.2-4
 - Add dependencies
 - Add license clarification
