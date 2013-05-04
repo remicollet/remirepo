@@ -1,0 +1,23 @@
+--- roundcubemail-0.9.0-dep/program/include/iniset.php	2013-04-15 13:43:00.000000000 -0700
++++ roundcubemail-0.9.0-dep/program/include/iniset.php.new	2013-05-01 16:59:49.434415736 -0700
+@@ -44,7 +44,8 @@
+ }
+ 
+ if (!defined('RCMAIL_CONFIG_DIR')) {
+-    define('RCMAIL_CONFIG_DIR', INSTALL_PATH . 'config');
++#    define('RCMAIL_CONFIG_DIR', INSTALL_PATH . 'config');
++    define('RCMAIL_CONFIG_DIR', '/etc/roundcubemail');
+ }
+ 
+ if (!defined('RCUBE_LOCALIZATION_DIR')) {
+--- roundcubemail-0.9.0-dep/program/lib/Roundcube/bootstrap.php	2013-04-15 13:43:01.000000000 -0700
++++ roundcubemail-0.9.0-dep/program/lib/Roundcube/bootstrap.php.new	2013-05-01 17:13:34.657216045 -0700
+@@ -64,7 +64,7 @@
+ }
+ 
+ if (!defined('RCUBE_CONFIG_DIR')) {
+-    define('RCUBE_CONFIG_DIR', RCUBE_INSTALL_PATH . 'config/');
++    define('RCUBE_CONFIG_DIR', '/etc/roundcubemail');
+ }
+ 
+ if (!defined('RCUBE_PLUGINS_DIR')) {

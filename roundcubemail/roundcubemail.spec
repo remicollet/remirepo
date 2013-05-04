@@ -1,7 +1,7 @@
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  0.8.6
+Version:  0.9.0
 Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
@@ -12,9 +12,9 @@ Source0: http://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}
 Source1: roundcubemail.conf
 Source2: roundcubemail.logrotate
 Source4: roundcubemail-README.fedora
-# Non-upstremable: Adjusts config path to Fedora policy
-Patch6: roundcubemail-0.4.1-confpath.patch
-Patch7: roundcubemail-0.8.1-strict.patch
+
+# Non-upstreamable: Adjusts config path to Fedora policy
+Patch6: roundcubemail-0.9.0-confpath.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root%(%{__id_u} -n)
@@ -32,8 +32,10 @@ Requires: php-json
 Requires: php-ldap
 Requires: php-mbstring
 Requires: php-mcrypt
+Requires: php-mysql
 Requires: php-pcre
 Requires: php-posix
+Requires: php-pdo
 Requires: php-pspell
 Requires: php-session
 Requires: php-simplexml
@@ -41,13 +43,10 @@ Requires: php-sockets
 Requires: php-spl
 Requires: php-xml
 Requires: php-pear(Auth_SASL)
-Requires: php-pear(DB)
 Requires: php-pear(Mail_Mime)
 Requires: php-pear(Net_SMTP)
 Requires: php-pear(Net_Socket)
 Requires: php-pear(Mail_mimeDecode)
-Requires: php-pear(MDB2) >= 2.5.0
-Requires: php-pear(MDB2_Driver_mysql)
 Requires: php-pear(Net_IDNA2)
 
 %description
@@ -56,14 +55,13 @@ with an application-like user interface. It provides full
 functionality you expect from an e-mail client, including MIME
 support, address book, folder manipulation, message searching
 and spell checking. RoundCube Webmail is written in PHP and 
-requires the MySQL database or the PostgreSQL database. The user
-interface is fully skinnable using XHTML and CSS 2.
+requires a database: MySQL, PostgreSQL and SQLite are known to
+work. The user interface is fully skinnable using XHTML and
+CSS 2.
 
 %prep
 %setup -q -n roundcubemail-%{version}-dep
-
-%patch6 -p0
-%patch7 -p0
+%patch6 -p1
 
 # fix permissions and remove any .htaccess files
 find . -type f -print | xargs chmod a-x
@@ -73,12 +71,8 @@ find . -name \.htaccess -print | xargs rm -f
 sed -i 's|temp/|${_tmppath}|' config/main.inc.php.dist
 sed -i 's|config/|%{_sysconfdir}/roundcubemail/|' config/main.inc.php.dist
 sed -i 's|logs/|%{_logdir}/roundcubemail/|' config/main.inc.php.dist
-sed -i 's|logs/|%{_logdir}/roundcubemail/|' program/include/main.inc
-sed -i 's|config/|%{_sysconfdir}/roundcubemail/|' program/include/main.inc
 
-# remove any reference to sqlite in config file so people don't mistakely
-# assume it works
-sed -i '/sqlite/d' config/db.inc.php.dist
+# ??? - Jon, this could do with a comment; fixing carriage returns? (adamw)
 sed -i 's/\r//' SQL/mssql.initial.sql
 
 %build
@@ -96,7 +90,9 @@ cp -pr * %{buildroot}%{roundcubedir}
 #ln -s ../../../pear/Mail %{buildroot}%{roundcubedir}/program/lib/Mail
 #ln -s ../../../pear/Net %{buildroot}%{roundcubedir}/program/lib/Net
 
+# drop the installer and the update.sh script which depends on it
 rm -rf %{buildroot}%{roundcubedir}/installer
+rm -f %{buildroot}%{roundcubedir}/bin/update.sh
 
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
 cp -pr %SOURCE1 %{buildroot}%{_sysconfdir}/httpd/conf.d
@@ -155,6 +151,20 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
 %changelog
+* Sat May  4 2013 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
+- backport 0.9.0 for remi repo in sync with rawhide
+
+* Wed May 01 2013 Adam Williamson <awilliam@redhat.com> - 0.9.0-1
+- latest upstream
+- drop MDB2 dependencies, add php-pdo dependency (upstream now using
+  pdo not MDB2)
+- drop the update.sh script as it requires the installer framework we
+  don't ship
+- update the Fedora README for changes to sqlite and update process
+- drop strict.patch, upstream actually merged it years ago, just in
+  a slightly different format, and we kept dumbly diffing it
+- drop references to obsolete patches (all merged upstream long ago)
+
 * Thu Mar 28 2013 Remi Collet <remi@fedoraproject.org> - 0.8.6-1
 - backport 0.8.6 for remi repo
 

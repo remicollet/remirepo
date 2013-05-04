@@ -1,24 +1,40 @@
 Regarding database availability:
 
-In addition to MySQL and PostgreSQL, upstream Roundcubemail includes support
-for SQLite.  This has been disabled in the Fedora version (for the time being)
-because Roundcube requires the SQLite2-compatible mainline PHP SQLite extension.
-This extension is unavailable in Fedora in favor of the SQLite3-compatible PDO
-SQLite extension (php-pdo package).  For this reason, we have disabled SQLite
-support in Roundcube.  If upstream releases a new version that supports the 
-PDO extension, or if SQLite2 support for PHP becomes available in Fedora, we
-will re-enable SQLite support in Roundcubemail.
+Prior to version 0.9.0, SQLite support was disabled in the Fedora package
+because Roundcube required the SQLite2-compatible mainline PHP SQLite extension.
+As of version 0.9.0, upstream Roundcube has switched to the PDO extension for
+database support, and so SQLite support has been re-enabled in the Fedora
+package.
 
-Jon Ciesla
-05/11/2007
+Jon Ciesla, Adam Williamson
+2013-05-01
 
-Additional installation information:
+Additional installation and update information:
 
-In your installation process, you'll need to modify db.inc.php and main.inc.php.  
-In Fedora, these are located in /etc/roundcubemail.  These will work in this location,
-and should not be moved.  They will not be modified at upgrade, so you may want to 
-check the .rpmnew files at that time so see if you need to migrate your settings to 
-the new file.
+In your installation process, you'll need to modify db.inc.php and
+main.inc.php.  In Fedora, these are located in /etc/roundcubemail.  These will
+work in this location, and should not be moved.  They will not be modified on
+package updates, so you may want to check the .rpmnew files at that time to see
+if you need to migrate your settings to the new file.  Also, you should apply
+changes to the database schema at this time. Each time upstream Roundcube
+changes the database schema, they provide the appropriate commands in a .sql
+file in /usr/share/doc/roundcubemail-0.9.0/SQL/(database) - there is one
+directory each for MySQL, PostgreSQL and SQLite. The filenames reflect the date
+on which the changes in that file were made upstream, and a comment in each
+file notes which versions it applies to. So when Roundcube is updated, check
+the appropriate directory for your database provider, and apply the appropriate
+changes to your database. There is a PHP script that attempts to aid you with
+this process located at /usr/share/roundcubemail/bin/updatedb.sh which you can
+call if you can work out the necessary parameters.
 
-Jon Ciesla
-10/20/2009
+The Roundcube installer is not included in the Fedora package, as its method of
+operation is not compatible with distribution packaging. As a consequence of
+this, the /usr/share/roundcubemail/bin/update.sh script which upstream
+documentation advises you to run on updates is not present in the Fedora
+package: it depends on the installer framework. All this script does is to
+check for configuration file and database schema updates as described above,
+and walk you through applying them; so long as you follow the steps outlined
+here on updates, you should be fine.
+
+Jon Ciesla, Adam Williamson
+2013-05-01
