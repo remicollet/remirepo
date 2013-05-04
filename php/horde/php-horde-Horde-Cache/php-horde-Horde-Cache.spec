@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cache
-Version:        2.0.4
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Caching API
 
@@ -33,12 +33,13 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optional dependencies
-Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.3
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Memcache) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Memcache) >= 3.0.0
+# Not yet available Horde_Mongo, mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -99,6 +100,10 @@ fi
 
 
 %changelog
+* Sat May 04 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+- raise dependency for Horde_Db >= 2.0.3
+
 * Tue Apr 09 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 - Requires Horde_Compress_Fast is now mandatory
