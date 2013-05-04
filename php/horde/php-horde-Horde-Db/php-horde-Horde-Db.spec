@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Db
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde Database Libraries
 
@@ -25,6 +25,8 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Autoloader) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
@@ -43,8 +45,7 @@ Horde database/SQL abstraction layer
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 cp ../package.xml %{name}.xml
@@ -98,6 +99,9 @@ fi
 
 
 %changelog
+* Sat May 04 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 - enable tests during build
