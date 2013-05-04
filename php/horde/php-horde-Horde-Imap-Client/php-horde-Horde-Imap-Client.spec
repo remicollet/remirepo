@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.8.2
+Version:        2.9.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -22,6 +22,7 @@ BuildRequires:  gettext
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -44,15 +45,15 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Stream) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optionnal
-Requires:       php-imap
 Requires:       php-json
 Requires:       php-mbstring
 Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Cache) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Secret) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Filter) >= 3.0.0
+# Optional and implicilyt required :
+#   Horde_Compress_Fast, Horde_Db, Horde_Stream_Filter
+# Not yet available Horde_Mongo, mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -132,9 +133,14 @@ fi
 %{pear_testdir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
+%{pear_datadir}/%{pear_name}/migration
 
 
 %changelog
+* Sat May 04 2013 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
+- Update to 2.9.0
+- drop optional requires imap
+
 * Fri Apr 19 2013 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
 - Update to 2.8.2
 
