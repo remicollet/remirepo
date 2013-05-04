@@ -45,8 +45,14 @@ Amazon Simple Storage Service (Amazon S3), Amazon Elastic Compute Cloud
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
+
+sed -e '/_samples/s/role="php"/role="doc"/' \
+    -e '/_docs/s/role="php"/role="doc"/' \
+    -e '/_compatibility_test/s/role="php"/role="doc"/' \
+    -e '/_sql/s/role="php"/role="doc"/' \
+    -e '/LICENSE/s/role="php"/role="doc"/' \
+    -e '/README/s/role="php"/role="doc"/' \
+    package.xml >%{pear_name}-%{version}/%{name}.xml
 
 
 %build
@@ -64,11 +70,6 @@ rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
 
- 
-mv $RPM_BUILD_ROOT%{pear_phpdir}/AWSSDKforPHP/_samples $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/
-mv $RPM_BUILD_ROOT%{pear_phpdir}/AWSSDKforPHP/_compatibility_test $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/
-mv $RPM_BUILD_ROOT%{pear_phpdir}/AWSSDKforPHP/_docs/* $RPM_BUILD_ROOT%{pear_docdir}/%{pear_name}/_docs/
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/AWSSDKforPHP/_docs/
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
