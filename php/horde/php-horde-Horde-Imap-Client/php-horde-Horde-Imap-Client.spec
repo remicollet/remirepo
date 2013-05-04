@@ -47,12 +47,14 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optionnal
 Requires:       php-json
 Requires:       php-mbstring
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Cache) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Secret) >= 3.0.0
 # Optional and implicilyt required :
-#   Horde_Compress_Fast, Horde_Db, Horde_Stream_Filter
+#   Horde_Compress_Fast, Horde_Stream_Filter
 # Not yet available Horde_Mongo, mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
