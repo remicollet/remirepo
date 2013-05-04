@@ -1,11 +1,11 @@
 #global prever    -preview
-%global commit    20015feb2daaab43b641b21fc88fc59cacb824fc
+%global commit    ba8f21afb5fb3a35aa32f9700bfc2527b2c888a3
 %global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       0.6.%{short}%{?dist}
+Release:       0.7.%{short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -129,6 +129,9 @@ make check
 
 
 %changelog
+* Sat May  3 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.7.ba8f21a
+- pull latest upstream changes
+
 * Fri Apr 26 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.6.20015fe
 - pull latest upstream changes
 
