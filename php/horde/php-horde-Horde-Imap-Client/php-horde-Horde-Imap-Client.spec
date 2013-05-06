@@ -47,10 +47,10 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optionnal
 Requires:       php-json
 Requires:       php-mbstring
-Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Cache) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Secret) >= 3.0.0
 # Optional and implicilyt required :
@@ -142,6 +142,7 @@ fi
 * Sat May 04 2013 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
 - Update to 2.9.0
 - drop optional requires imap
+- add optional dependency on Horde_Db
 
 * Fri Apr 19 2013 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
 - Update to 2.8.2

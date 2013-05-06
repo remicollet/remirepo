@@ -33,13 +33,12 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optional dependencies
-#Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.3
-#Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Memcache) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Memcache) >= 3.0.0
-# Not yet available Horde_Mongo, mongo
+# Optional and omitted to avoid circular dep : Horde_Db
+# Optional and not yet available: Horde_Mongo, mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -49,10 +48,6 @@ This package provides a simple, functional caching API, with the option to
 store the cached data on the filesystem, in one of the PHP opcode cache
 systems (APC, eAcclerator, XCache, or Zend Performance Suite's content
 cache), memcached, or an SQL table.
-
-Optional dependencies:
-- php-pecl-apc or php-xcache
-- php-horde-Horde-Memcache
 
 
 %prep

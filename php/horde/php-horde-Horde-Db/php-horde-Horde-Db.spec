@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Db
 %global pear_channel pear.horde.org
@@ -15,7 +14,8 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
@@ -24,9 +24,12 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-ereg
+Requires:       php-pcre
+Requires:       php-spl
+Requires:       php-pdo
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Autoloader) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
@@ -34,6 +37,8 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
 # Optionnal
+Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Autoloader) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Cache) >= 3.0.0
 
@@ -112,10 +117,10 @@ fi
 - Update to 2.0.2
 - enable tests during build
 
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
-* Fri Nov  2 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Fri Nov  2 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
 * Thu Jun 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.2.1-1
