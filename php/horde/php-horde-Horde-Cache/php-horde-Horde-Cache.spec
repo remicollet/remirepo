@@ -35,6 +35,8 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optional dependencies
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mongo) >= 1.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Mongo) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Memcache) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Memcache) >= 3.0.0
 # Optional and omitted to avoid circular dep : Horde_Db
