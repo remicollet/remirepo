@@ -3,7 +3,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        1.2.12
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Mon May 06 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+
 * Mon Feb 04 2013 Remi Collet <remi@fedoraproject.org> - 1.2.12-1
 - Version 1.2.12 (stable) - API 1.2.1 (stable)
 
