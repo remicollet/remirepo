@@ -79,7 +79,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201305041230
+%global snapdate      201305060630
 #global rcver         beta4
 
 Summary: PHP scripting language for creating dynamic web sites
