@@ -1,16 +1,20 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name %(echo %{name} | sed -e 's/^php-sabredav-//' -e 's/-/_/g')
+%global pear_name   Sabre_CardDAV
 %global channelname pear.sabredav.org
+%global mainver     1.8.5
 
 Name:           php-sabredav-Sabre_CardDAV
-Version:        1.6.5
-Release:        2%{?dist}
+Version:        1.8.3
+Release:        1%{?dist}
 Summary:        Provides CardDAV support to Sabre_DAV
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://code.google.com/p/sabredav
-Source0:        http://pear.sabredav.org/get/%{pear_name}-%{version}.tgz
+# https://github.com/fruux/sabre-dav/issues/336
+# Please update PEAR channel
+Source0:        http://sabredav.googlecode.com/files/SabreDAV-%{mainver}.zip
+Source1:        %{name}.xml
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -20,15 +24,14 @@ BuildRequires:  php-channel(%{channelname})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
-Requires:       php-common >= 5.1
 Requires:       php-pdo
 Requires:       php-xml
 Requires:       php-pear(PEAR)
 Requires:       php-channel(%{channelname})
-Requires:       php-pear(%{channelname}/Sabre)
-Requires:       php-pear(%{channelname}/Sabre_DAV)
-Requires:       php-pear(%{channelname}/Sabre_DAVACL)
-Requires:       php-pear(%{channelname}/Sabre_VObject)
+Requires:       php-pear(%{channelname}/Sabre)         >= 1.0.1
+Requires:       php-pear(%{channelname}/Sabre_DAV)     >= 1.8.5
+Requires:       php-pear(%{channelname}/Sabre_DAVACL)  >= 1.8.4
+Requires:       php-pear(%{channelname}/Sabre_VObject) >= 2.0.7
 
 Provides:       php-pear(%{pear_name}) = %{version}
 Provides:       php-pear(%{channelname}/%{pear_name}) = %{version}
@@ -36,30 +39,52 @@ Provides:       php-pear(%{channelname}/%{pear_name}) = %{version}
 %description
 CardDAV plugin for Sabre, Adds support for CardDAV in Sabre_DAV.
 
+
 %prep
-%setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
+%setup -q -n SabreDAV
+
+cp %{SOURCE1} .
+mv lib/Sabre Sabre
+
+# Check version
+extver=$(sed -n "/VERSION/{s/.* '//;s/'.*$//;p}" Sabre/CardDAV/Version.php)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
+
+# Check files
+touch error.lst
+for fic in $(find Sabre/CardDAV -type f)
+do
+  grep $fic %{name}.xml || echo $fic >> error.lst
+done
+
+if [ -s error.lst ]; then
+  : Missing in %{name}.xml
+  cat error.lst
+  exit 1
+fi
+
 
 %build
 # Empty build section, most likely nothing required.
 
 
 %install
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{pear_name}.xml >/dev/null || :
+    %{pear_xmldir}/%{name}.xml >/dev/null || :
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -71,11 +96,15 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{pear_name}.xml
+%{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Sabre/CardDAV
 
 
 %changelog
+* Tue May  7 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.3-1
+- update to 1.8.3
+  use our own package.xml as upstream doesn't use pear anymore
+
 * Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.6.5-2
 - backport for remi repo
 

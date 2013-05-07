@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0">
+ <name>Sabre_CardDAV</name>
+ <channel>pear.sabredav.org</channel>
+ <summary>Sabre_CardDAV provides CardDAV extensions to SabreDAV</summary>
+ <description>Sabre_CardDAV provides CardDAV support to Sabre_DAV.
+
+Feature list:
+* Multi-user addressbook server
+* ACL support
+* Support for OS/X, iOS, Evolution and probably more
+* Hook-ins for creating a global \&apos;directory\&apos;.</description>
+ <lead>
+  <name>Evert Pot</name>
+  <user>Evert Pot</user>
+  <email>evert@rooftopsolutions.nl</email>
+  <active>true</active>
+ </lead>
+ <date>2012-10-04</date>
+ <time>12:02:39</time>
+ <version>
+  <release>1.8.3</release>
+  <api>1.8.3</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://code.google.com/p/sabredav/wiki/License">Modified BSD</license>
+ <notes>
+New release. Read the ChangeLog and announcement for more details
+ </notes>
+ <contents>
+  <dir name="/">
+   <file name="Sabre/CardDAV/Backend/PDO.php" role="php" />
+   <file name="Sabre/CardDAV/Property/SupportedAddressData.php" role="php" />
+   <file name="Sabre/CardDAV/AddressBook.php" role="php" />
+   <file name="Sabre/CardDAV/AddressBookQueryParser.php" role="php" />
+   <file name="Sabre/CardDAV/AddressBookRoot.php" role="php" />
+   <file name="Sabre/CardDAV/Card.php" role="php" />
+   <file name="Sabre/CardDAV/IAddressBook.php" role="php" />
+   <file name="Sabre/CardDAV/ICard.php" role="php" />
+   <file name="Sabre/CardDAV/IDirectory.php" role="php" />
+   <file name="Sabre/CardDAV/Plugin.php" role="php" />
+   <file name="Sabre/CardDAV/UserAddressBooks.php" role="php" />
+   <file name="Sabre/CardDAV/Version.php" role="php" />
+   <file name="examples/sql/sqlite.addressbooks.sql" role="doc" />
+   <file name="examples/addressbookserver.php" role="doc" />
+   <file name="Sabre/CardDAV/VCFExportPlugin.php" role="doc" />
+   <file name="Sabre/CardDAV/Backend/BackendInterface.php" role="doc" />
+   <file name="Sabre/CardDAV/Backend/AbstractBackend.php" role="doc" />
+   <file name="ChangeLog" role="doc" />
+   <file name="LICENSE" role="doc" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.3.1</min>
+   </php>
+   <pearinstaller>
+    <min>1.9</min>
+   </pearinstaller>
+   <package>
+    <name>Sabre</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.0.0</min>
+   </package>
+   <package>
+    <name>Sabre_HTTP</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.6.0</min>
+   </package>
+   <package>
+    <name>Sabre_DAV</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.6.0</min>
+   </package>
+   <package>
+    <name>Sabre_DAVACL</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.6.0</min>
+   </package>
+   <package>
+    <name>Sabre_VObject</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.3.0</min>
+   </package>
+  </required>
+ </dependencies>
+ <phprelease />
+</package>
