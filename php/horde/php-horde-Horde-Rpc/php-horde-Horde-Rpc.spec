@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Rpc
 %global pear_channel pear.horde.org
@@ -12,13 +11,14 @@ Release:        1%{?dist}
 Summary:        Horde RPC API
 
 Group:          Development/Libraries
-License:        LGPL-2.1
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
@@ -35,6 +35,8 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Dav) >= 1.0.0
+Conflicts:      php-pear(%{pear_channel}/Horde_Dav) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
@@ -52,13 +54,9 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Xml_Element) >= 3.0.0
 # Optional
 Requires:       php-soap
 Requires:       php-xmlrpc
-Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Http) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Lock) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Lock) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SyncMl) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_SyncMl) >= 3.0.0
-# TODO  Horde_ActiveSync
+# Optional and implicitly requires: Horde_Http, Horde_Lock
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
