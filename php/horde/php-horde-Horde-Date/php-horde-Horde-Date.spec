@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Date
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Horde Date package
 
@@ -57,10 +57,15 @@ Package for creating and manipulating dates.
 
 cd %{pear_name}-%{version}
 
+# Silent warning for preg_replace(): The /e modifier is deprecated
+sed -e 's/preg_replace/@preg_replace/' \
+    -i lib/Horde/Date.php
+
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/Date.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
 
@@ -129,6 +134,9 @@ fi
 
 
 %changelog
+* Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 - fix License
