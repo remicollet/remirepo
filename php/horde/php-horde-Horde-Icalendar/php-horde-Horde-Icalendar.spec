@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Icalendar
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Icalendar
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        iCalendar API
 
@@ -109,6 +108,7 @@ if [ $1 -eq 0 ] ; then
         %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
+
 %files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
@@ -121,6 +121,9 @@ fi
 
 
 %changelog
+* Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
