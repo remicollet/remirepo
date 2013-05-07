@@ -1,0 +1,36 @@
+--- Sabre/autoload.php	2010-04-28 15:05:53.000000000 +0200
++++ Sabre/autoload.php	2013-05-07 13:32:38.808004076 +0200
+@@ -15,9 +15,9 @@
+ 
+ function Sabre_autoload($className) {
+ 
+-    if(strpos($className,'Sabre_')===0) {
++    if(strpos($className,'Sabre\\')===0) {
+ 
+-        include dirname(__FILE__) . '/' . str_replace('_','/',substr($className,6)) . '.php';
++        include dirname(__FILE__) . '/' . str_replace('\\','/',substr($className,6)) . '.php';
+ 
+     }
+ 
+--- php-sabredav-Sabre.xml	2010-04-28 15:05:53.000000000 +0200
++++ php-sabredav-Sabre.xml	2013-05-07 13:35:58.000000000 +0200
+@@ -15,8 +15,8 @@
+  <date>2010-04-28</date>
+  <time>15:05:53</time>
+  <version>
+-  <release>1.0.0</release>
+-  <api>1.0.0</api>
++  <release>1.0.1</release>
++  <api>1.0.1</api>
+  </version>
+  <stability>
+   <release>stable</release>
+@@ -28,7 +28,7 @@
+  </notes>
+  <contents>
+   <dir name="/">
+-   <file md5sum="0bbb0bd9fec4fd55382d1e75ae6e396e" name="Sabre/autoload.php" role="php" />
++   <file name="Sabre/autoload.php" role="php" />
+    <file md5sum="fe15d5f0e285d1f105071b8e7ea97ae1" name="LICENSE" role="doc" />
+   </dir>
+  </contents>

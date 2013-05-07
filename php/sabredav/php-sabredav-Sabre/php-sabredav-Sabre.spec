@@ -1,16 +1,22 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name %(echo %{name} | sed -e 's/^php-sabredav-//' -e 's/-/_/g')
+%global pear_name   Sabre
 %global channelname pear.sabredav.org
+%global origver     1.0.0
 
 Name:           php-sabredav-Sabre
-Version:        1.0.0
-Release:        6%{?dist}
+Version:        1.0.1
+Release:        1%{?dist}
 Summary:        Base for Sabre_DAV packages
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://code.google.com/p/sabredav
-Source0:        http://pear.sabredav.org/get/%{pear_name}-%{version}.tgz
+Source0:        http://pear.sabredav.org/get/%{pear_name}-%{origver}.tgz
+
+# https://github.com/fruux/sabre-dav/issues/336
+# Please update PEAR channel
+# Fix autoload to use namespace and force version
+Patch0:         %{name}.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -18,7 +24,6 @@ BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{channelname})
 
 Requires:       php-pear(PEAR)
-Requires:       php-common >= 5.1
 Requires:       php-pdo
 Requires:       php-xml
 Requires:       php-mbstring
@@ -35,27 +40,32 @@ The Base SabreDAV package provides some functionality used by all packages.
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
+cd %{pear_name}-%{origver}
+mv ../package.xml %{name}.xml
+
+# Fix autoload to use namespace and force version
+%patch0 -p0
+
 
 %build
 # Empty build section, most likely nothing required.
 
+
 %install
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+cd %{pear_name}-%{origver}
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{pear_name}.xml >/dev/null || :
+    %{pear_xmldir}/%{name}.xml >/dev/null || :
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -67,11 +77,15 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{pear_name}.xml
+%{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/%{pear_name}
 
 
 %changelog
+* Tue May  7 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.5-1
+- update to 1.0.1 (use namespace)
+  use our own package.xml as upstream doesn't use pear anymore
+
 * Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.3-3
 - backport for remi repo
 
