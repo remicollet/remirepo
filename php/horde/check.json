@@ -15,6 +15,7 @@
 		"Horde_Date":["Horde_Icalendar"],
 		"Horde_Cache":["Horde_Db"],
 		"Horde_Notification":["Horde_Alarm"],
-		"Horde_Form":["Horde_Core"]
+		"Horde_Form":["Horde_Core"],
+		"Horde_Vfs":["Horde_Core"]
 	}
 }
