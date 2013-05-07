@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Token
-Version:        2.0.3
-Release:        4%{?dist}
+Version:        2.0.4
+Release:        1%{?dist}
 Summary:        Horde Token API
 
 Group:          Development/Libraries
@@ -43,6 +43,7 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+# Optional and implicitly required: Horde_Mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -128,6 +129,9 @@ fi
 
 
 %changelog
+* Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Tue Apr  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-4
 - regenerate the locale during build
 
