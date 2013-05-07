@@ -1,17 +1,20 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name %(echo %{name} | sed -e 's/^php-sabredav-//' -e 's/-/_/g')
+%global pear_name   Sabre_DAV
 %global channelname pear.sabredav.org
+%global mainver     1.8.5
 
 Name:           php-sabredav-Sabre_DAV
-Version:        1.6.5
-Release:        4%{?dist}
+Version:        1.8.5
+Release:        1%{?dist}
 Summary:        Sabre_DAV is a WebDAV framework for PHP
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://code.google.com/p/sabredav
-Source0:        http://pear.sabredav.org/get/%{pear_name}-%{version}.tgz
-Patch1:         sabreDav_BrowserPluginFix.patch
+# https://github.com/fruux/sabre-dav/issues/336
+# Please update PEAR channel
+Source0:        http://sabredav.googlecode.com/files/SabreDAV-%{mainver}.zip
+Source1:        %{name}.xml
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -27,8 +30,8 @@ Requires:       php-channel(%{channelname})
 Requires:       php-xml
 Requires:       php-mbstring
 Requires:       php-pdo
-Requires:       php-pear(%{channelname}/Sabre)
-Requires:       php-pear(%{channelname}/Sabre_HTTP)
+Requires:       php-pear(%{channelname}/Sabre)      >= 1.0.1
+Requires:       php-pear(%{channelname}/Sabre_HTTP) >= 1.8.1
 
 Provides:       php-pear(%{pear_name}) = %{version}
 Provides:       php-pear(%{channelname}/%{pear_name}) = %{version}
@@ -39,11 +42,30 @@ is meant to cover the entire standard.
 
 
 %prep
-%setup -q -c
-%patch1 -p0
+%setup -q -n SabreDAV
 
-sed -e '/Plugin.php/s/md5sum.*name/name/' \
-  package.xml > %{pear_name}-%{version}/%{pear_name}.xml
+cp %{SOURCE1} .
+mv lib/Sabre Sabre
+
+# Check version
+extver=$(sed -n "/VERSION/{s/.* '//;s/'.*$//;p}" Sabre/DAV/Version.php)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
+
+# Check files
+touch error.lst
+for fic in $(find Sabre/DAV -type f)
+do
+  grep $fic %{name}.xml || echo $fic >> error.lst
+done
+
+if [ -s error.lst ]; then
+  : Missing in %{name}.xml
+  cat error.lst
+  exit 1
+fi
 
 
 %build
@@ -51,20 +73,19 @@ sed -e '/Plugin.php/s/md5sum.*name/name/' \
 
 
 %install
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{pear_name}.xml >/dev/null || :
+    %{pear_xmldir}/%{name}.xml >/dev/null || :
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -76,11 +97,15 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{pear_name}.xml
+%{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Sabre/DAV
 
 
 %changelog
+* Tue May  7 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.5-1
+- update to 1.8.5
+  use our own package.xml as upstream doesn't use pear anymore
+
 * Wed May  1 2013 Remi Collet <RPMS@FamilleCollet.com> 1.6.5-4
 - sync with rawhide, backport for remi repo
 

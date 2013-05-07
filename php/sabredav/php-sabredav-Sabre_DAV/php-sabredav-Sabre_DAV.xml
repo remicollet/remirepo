@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0">
+ <name>Sabre_DAV</name>
+ <channel>pear.sabredav.org</channel>
+ <summary>Sabre_DAV is a WebDAV framework for PHP.</summary>
+ <description>SabreDAV allows you to easily integrate WebDAV access into your existing PHP application.
+
+Feature List:
+* Fully WebDAV (class 1, 2, 3) compliant
+* Supports Windows clients, OS/X, DavFS, Cadaver, and pretty much everything we&apos;ve come accross
+* Custom property support
+* RFC4918-compliant
+* Authentication support
+* Plugin system</description>
+ <lead>
+  <name>Evert Pot</name>
+  <user>Evert Pot</user>
+  <email>evert@rooftopsolutions.nl</email>
+  <active>true</active>
+ </lead>
+ <date>2012-10-04</date>
+ <time>12:02:37</time>
+ <version>
+  <release>1.8.5</release>
+  <api>1.8.5</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://code.google.com/p/sabredav/wiki/License">Modified BSD</license>
+ <notes>
+New release. Read the ChangeLog and announcement for more details
+ </notes>
+ <contents>
+  <dir name="/">
+   <file name="Sabre/DAV/Auth/Backend/AbstractBasic.php" role="php" />
+   <file name="Sabre/DAV/Auth/Backend/AbstractDigest.php" role="php" />
+   <file name="Sabre/DAV/Auth/Backend/Apache.php" role="php" />
+   <file name="Sabre/DAV/Auth/Backend/File.php" role="php" />
+   <file name="Sabre/DAV/Auth/Backend/PDO.php" role="php" />
+   <file name="Sabre/DAV/Auth/Plugin.php" role="php" />
+   <file name="Sabre/DAV/Browser/assets/icons/addressbook.png" role="php" />
+   <file name="Sabre/DAV/Browser/assets/icons/calendar.png" role="php" />
+   <file name="Sabre/DAV/Browser/assets/icons/card.png" role="php" />
+   <file name="Sabre/DAV/Browser/assets/icons/collection.png" role="php" />
+   <file name="Sabre/DAV/Browser/assets/icons/file.png" role="php" />
+   <file name="Sabre/DAV/Browser/assets/icons/parent.png" role="php" />
+   <file name="Sabre/DAV/Browser/assets/icons/principal.png" role="php" />
+   <file name="Sabre/DAV/Browser/assets/favicon.ico" role="php" />
+   <file name="Sabre/DAV/Browser/GuessContentType.php" role="php" />
+   <file name="Sabre/DAV/Browser/MapGetToPropFind.php" role="php" />
+   <file name="Sabre/DAV/Browser/Plugin.php" role="php" />
+   <file name="Sabre/DAV/Exception/BadRequest.php" role="php" />
+   <file name="Sabre/DAV/Exception/Conflict.php" role="php" />
+   <file name="Sabre/DAV/Exception/ConflictingLock.php" role="php" />
+   <file name="Sabre/DAV/Exception/FileNotFound.php" role="php" />
+   <file name="Sabre/DAV/Exception/Forbidden.php" role="php" />
+   <file name="Sabre/DAV/Exception/InsufficientStorage.php" role="php" />
+   <file name="Sabre/DAV/Exception/InvalidResourceType.php" role="php" />
+   <file name="Sabre/DAV/Exception/LockTokenMatchesRequestUri.php" role="php" />
+   <file name="Sabre/DAV/Exception/Locked.php" role="php" />
+   <file name="Sabre/DAV/Exception/MethodNotAllowed.php" role="php" />
+   <file name="Sabre/DAV/Exception/NotAuthenticated.php" role="php" />
+   <file name="Sabre/DAV/Exception/NotFound.php" role="php" />
+   <file name="Sabre/DAV/Exception/NotImplemented.php" role="php" />
+   <file name="Sabre/DAV/Exception/PaymentRequired.php" role="php" />
+   <file name="Sabre/DAV/Exception/PreconditionFailed.php" role="php" />
+   <file name="Sabre/DAV/Exception/RequestedRangeNotSatisfiable.php" role="php" />
+   <file name="Sabre/DAV/Exception/UnsupportedMediaType.php" role="php" />
+   <file name="Sabre/DAV/FS/Directory.php" role="php" />
+   <file name="Sabre/DAV/FS/File.php" role="php" />
+   <file name="Sabre/DAV/FS/Node.php" role="php" />
+   <file name="Sabre/DAV/FSExt/Directory.php" role="php" />
+   <file name="Sabre/DAV/FSExt/File.php" role="php" />
+   <file name="Sabre/DAV/FSExt/Node.php" role="php" />
+   <file name="Sabre/DAV/Locks/Backend/FS.php" role="php" />
+   <file name="Sabre/DAV/Locks/Backend/File.php" role="php" />
+   <file name="Sabre/DAV/Locks/Backend/PDO.php" role="php" />
+   <file name="Sabre/DAV/Locks/LockInfo.php" role="php" />
+   <file name="Sabre/DAV/Locks/Plugin.php" role="php" />
+   <file name="Sabre/DAV/Mount/Plugin.php" role="php" />
+   <file name="Sabre/DAV/Property/GetLastModified.php" role="php" />
+   <file name="Sabre/DAV/Property/Href.php" role="php" />
+   <file name="Sabre/DAV/Property/HrefList.php" role="php" />
+   <file name="Sabre/DAV/Property/IHref.php" role="php" />
+   <file name="Sabre/DAV/Property/LockDiscovery.php" role="php" />
+   <file name="Sabre/DAV/Property/ResourceType.php" role="php" />
+   <file name="Sabre/DAV/Property/Response.php" role="php" />
+   <file name="Sabre/DAV/Property/ResponseList.php" role="php" />
+   <file name="Sabre/DAV/Property/SupportedLock.php" role="php" />
+   <file name="Sabre/DAV/Property/SupportedReportSet.php" role="php" />
+   <file name="Sabre/DAV/Tree/Filesystem.php" role="php" />
+   <file name="Sabre/DAV/Client.php" role="php" />
+   <file name="Sabre/DAV/Collection.php" role="php" />
+   <file name="Sabre/DAV/Exception.php" role="php" />
+   <file name="Sabre/DAV/File.php" role="php" />
+   <file name="Sabre/DAV/ICollection.php" role="php" />
+   <file name="Sabre/DAV/IExtendedCollection.php" role="php" />
+   <file name="Sabre/DAV/IFile.php" role="php" />
+   <file name="Sabre/DAV/INode.php" role="php" />
+   <file name="Sabre/DAV/IProperties.php" role="php" />
+   <file name="Sabre/DAV/IQuota.php" role="php" />
+   <file name="Sabre/DAV/Node.php" role="php" />
+   <file name="Sabre/DAV/ObjectTree.php" role="php" />
+   <file name="Sabre/DAV/Property.php" role="php" />
+   <file name="Sabre/DAV/Server.php" role="php" />
+   <file name="Sabre/DAV/ServerPlugin.php" role="php" />
+   <file name="Sabre/DAV/SimpleCollection.php" role="php" />
+   <file name="Sabre/DAV/SimpleFile.php" role="php" />
+   <file name="Sabre/DAV/StringUtil.php" role="php" />
+   <file name="Sabre/DAV/TemporaryFileFilterPlugin.php" role="php" />
+   <file name="Sabre/DAV/Tree.php" role="php" />
+   <file name="Sabre/DAV/URLUtil.php" role="php" />
+   <file name="Sabre/DAV/UUIDUtil.php" role="php" />
+   <file name="Sabre/DAV/Version.php" role="php" />
+   <file name="Sabre/DAV/XMLUtil.php" role="php" />
+   <file name="Sabre/DAV/PropertyInterface.php" role="doc" />
+   <file name="Sabre/DAV/PartialUpdate/Plugin.php" role="doc" />
+   <file name="Sabre/DAV/PartialUpdate/IFile.php" role="doc" />
+   <file name="Sabre/DAV/Locks/Backend/BackendInterface.php" role="doc" />
+   <file name="Sabre/DAV/Locks/Backend/AbstractBackend.php" role="doc" />
+   <file name="Sabre/DAV/Exception/ServiceUnavailable.php" role="doc" />
+   <file name="Sabre/DAV/Exception/ReportNotSupported.php" role="doc" />
+   <file name="Sabre/DAV/Auth/Backend/BackendInterface.php" role="doc" />
+   <file name="examples/sql/mysql.locks.sql" role="doc" />
+   <file name="examples/sql/mysql.users.sql" role="doc" />
+   <file name="examples/sql/pgsql.locks.sql" role="doc" />
+   <file name="examples/sql/pgsql.users.sql" role="doc" />
+   <file name="examples/sql/sqlite.locks.sql" role="doc" />
+   <file name="examples/sql/sqlite.users.sql" role="doc" />
+   <file name="examples/webserver/apache2_htaccess.conf" role="doc" />
+   <file name="examples/webserver/apache2_vhost.conf" role="doc" />
+   <file name="examples/webserver/apache2_vhost_cgi.conf" role="doc" />
+   <file name="examples/fileserver.php" role="doc" />
+   <file name="examples/simplefsserver.php" role="doc" />
+   <file name="ChangeLog" role="doc" />
+   <file name="LICENSE" role="doc" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.3.1</min>
+   </php>
+   <pearinstaller>
+    <min>1.9</min>
+   </pearinstaller>
+   <package>
+    <name>Sabre</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.0.0</min>
+   </package>
+   <package>
+    <name>Sabre_HTTP</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.6.0</min>
+   </package>
+  </required>
+ </dependencies>
+ <phprelease />
+</package>
