@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Lock
-Version:        2.0.2
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Resource Locking System
 
@@ -38,8 +38,7 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
 # Optionals
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
+# Option and implicitly required: Horde_Log, Horde_Mongo
 
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -106,6 +105,9 @@ fi
 
 
 %changelog
+* Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 - run test when build with --with tests options
