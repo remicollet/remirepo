@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0">
+ <name>Sabre_VObject</name>
+ <channel>pear.sabredav.org</channel>
+ <summary>Sabre_VObject is a natural-interface iCalendar and vCard reader</summary>
+ <description>Sabre_VObject is an intuitive reader for iCalendar and vCard objects.
+
+It provides a natural array/object accessor interface to the parsed tree, much like
+simplexml for XML files.</description>
+ <lead>
+  <name>Evert Pot</name>
+  <user>Evert Pot</user>
+  <email>evert@rooftopsolutions.nl</email>
+  <active>true</active>
+ </lead>
+ <date>2012-10-04</date>
+ <time>12:02:40</time>
+ <version>
+  <release>2.0.7</release>
+  <api>2.0.7</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://code.google.com/p/sabredav/wiki/License">Modified BSD</license>
+ <notes>
+New release. Read the ChangeLog and announcement for more details
+ </notes>
+ <contents>
+  <dir name="/">
+   <file name="Sabre/VObject/Component/VAlarm.php" role="php" />
+   <file name="Sabre/VObject/Component/VCalendar.php" role="php" />
+   <file name="Sabre/VObject/Component/VEvent.php" role="php" />
+   <file name="Sabre/VObject/Component/VJournal.php" role="php" />
+   <file name="Sabre/VObject/Component/VTodo.php" role="php" />
+   <file name="Sabre/VObject/Property/DateTime.php" role="php" />
+   <file name="Sabre/VObject/Property/MultiDateTime.php" role="php" />
+   <file name="Sabre/VObject/Component.php" role="php" />
+   <file name="Sabre/VObject/DateTimeParser.php" role="php" />
+   <file name="Sabre/VObject/ElementList.php" role="php" />
+   <file name="Sabre/VObject/FreeBusyGenerator.php" role="php" />
+   <file name="Sabre/VObject/Node.php" role="php" />
+   <file name="Sabre/VObject/Parameter.php" role="php" />
+   <file name="Sabre/VObject/ParseException.php" role="php" />
+   <file name="Sabre/VObject/Property.php" role="php" />
+   <file name="Sabre/VObject/Reader.php" role="php" />
+   <file name="Sabre/VObject/RecurrenceIterator.php" role="php" />
+   <file name="Sabre/VObject/Version.php" role="php" />
+   <file name="Sabre/VObject/includes.php" role="php" />
+   <file name="Sabre/VObject/TimeZoneUtil.php" role="php" />
+   <file name="Sabre/VObject/StringUtil.php" role="php" />
+   <file name="Sabre/VObject/Splitter/VCard.php" role="php" />
+   <file name="Sabre/VObject/Splitter/SplitterInterface.php" role="php" />
+   <file name="Sabre/VObject/Splitter/ICalendar.php" role="php" />
+   <file name="Sabre/VObject/Property/Compound.php" role="php" />
+   <file name="Sabre/VObject/Component/VFreeBusy.php" role="php" />
+   <file name="Sabre/VObject/Component/VCard.php" role="php" />
+   <file name="ChangeLog" role="doc" />
+   <file name="LICENSE" role="doc" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.3.1</min>
+   </php>
+   <pearinstaller>
+    <min>1.9</min>
+   </pearinstaller>
+   <package>
+    <name>Sabre</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.0.0</min>
+   </package>
+  </required>
+ </dependencies>
+ <phprelease />
+</package>
