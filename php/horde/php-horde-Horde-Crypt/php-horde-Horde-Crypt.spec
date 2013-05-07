@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt
-Version:        2.1.3
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Cryptography API
 
@@ -124,6 +124,9 @@ fi
 
 
 %changelog
+* Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 

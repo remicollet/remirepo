@@ -66,7 +66,7 @@ Build order
 	Horde_Token               2.0.4      BR: Horde_Test, Horde_Db, Horde_Url  R: Horde_Exception, Horde_Translation, Horde_Url, Horde_Util, Horde_Db
 	Horde_View                2.0.2      BR: Horde_Test, Horde_Controller  R: Horde_Exception, Horde_Support, Horde_Util, Horde_Controller, Horde_Routes
 	Horde_Auth                2.0.4      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Util, Horde_Db
-	Horde_Crypt               2.1.3      BR: Horde_Test  R: Horde_Exception, Horde_Mime, Horde_Stream_Filter, Horde_Translation, Horde_Util
+	Horde_Crypt               2.2.0      BR: Horde_Test  R: Horde_Exception, Horde_Mime, Horde_Stream_Filter, Horde_Translation, Horde_Util
 	Horde_Form                2.0.3       I: Horde_Core R: Horde_Core, Horde_Date, Horde_Exception, Horde_Mail, Horde_Mime, Horde_Nls, Horde_Token, Horde_Translation, Horde_Util
 	Horde_Icalendar           2.0.4      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Exception, Horde_Mail, Horde_Mime, Horde_Support, Horde_Translation, Horde_Util
 	Horde_Imap_Client         2.9.0      BR: Horde_Test, Horde_Stream, Horde_Mime, Horde_Cache  R: Horde_Exception, Horde_Mail, Horde_Mime, Horde_Stream, Horde_Util, Horde_Cache, Horde_Db, Horde_Secret
