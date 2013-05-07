@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Timezone
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Timezone library
 
@@ -15,7 +15,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
@@ -24,7 +24,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-pcre
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
@@ -95,6 +95,9 @@ fi
 
 
 %changelog
+* Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+
 * Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2 for remi repo
 - license now provided http://bugs.horde.org/ticket/11967

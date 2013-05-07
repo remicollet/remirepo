@@ -19,7 +19,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
@@ -31,7 +31,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-pcre
 Requires:       php-posix
