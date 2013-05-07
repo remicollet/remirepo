@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0">
+ <name>Sabre_DAVACL</name>
+ <channel>pear.sabredav.org</channel>
+ <summary>Sabre_DAVACL provides rfc3744 support.</summary>
+ <description>Sabre_DAVACL is the RFC3744 implementation for SabreDAV. It provides principals
+(users and groups) and access control.</description>
+ <lead>
+  <name>Evert Pot</name>
+  <user>Evert Pot</user>
+  <email>evert@rooftopsolutions.nl</email>
+  <active>true</active>
+ </lead>
+ <date>2012-02-22</date>
+ <time>20:56:05</time>
+ <version>
+  <release>1.8.4</release>
+  <api>1.8.4</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://code.google.com/p/sabredav/wiki/License">Modified BSD</license>
+ <notes>
+New release. Read the ChangeLog and announcement for more details
+ </notes>
+ <contents>
+  <dir name="/">
+   <file name="Sabre/DAVACL/Exception/AceConflict.php" role="php" />
+   <file name="Sabre/DAVACL/Exception/NeedPrivileges.php" role="php" />
+   <file name="Sabre/DAVACL/Exception/NoAbstract.php" role="php" />
+   <file name="Sabre/DAVACL/Exception/NotRecognizedPrincipal.php" role="php" />
+   <file name="Sabre/DAVACL/Exception/NotSupportedPrivilege.php" role="php" />
+   <file name="Sabre/DAVACL/PrincipalBackend/PDO.php" role="php" />
+   <file name="Sabre/DAVACL/Property/Acl.php" role="php" />
+   <file name="Sabre/DAVACL/Property/AclRestrictions.php" role="php" />
+   <file name="Sabre/DAVACL/Property/CurrentUserPrivilegeSet.php" role="php" />
+   <file name="Sabre/DAVACL/Property/Principal.php" role="php" />
+   <file name="Sabre/DAVACL/Property/SupportedPrivilegeSet.php" role="php" />
+   <file name="Sabre/DAVACL/AbstractPrincipalCollection.php" role="php" />
+   <file name="Sabre/DAVACL/IACL.php" role="php" />
+   <file name="Sabre/DAVACL/IPrincipal.php" role="php" />
+   <file name="Sabre/DAVACL/Plugin.php" role="php" />
+   <file name="Sabre/DAVACL/Principal.php" role="php" />
+   <file name="Sabre/DAVACL/PrincipalCollection.php" role="php" />
+   <file name="Sabre/DAVACL/Version.php" role="php" />
+   <file name="Sabre/DAVACL/PrincipalBackend/BackendInterface.php" role="php" />
+   <file name="Sabre/DAVACL/PrincipalBackend/AbstractBackend.php" role="php" />
+   <file name="Sabre/DAVACL/IPrincipalCollection.php" role="php" />
+   <file name="examples/sql/mysql.principals.sql" role="doc" />
+   <file name="examples/sql/pgsql.principals.sql" role="doc" />
+   <file name="examples/sql/sqlite.principals.sql" role="doc" />
+   <file name="ChangeLog" role="doc" />
+   <file name="LICENSE" role="doc" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.3.1</min>
+   </php>
+   <pearinstaller>
+    <min>1.9</min>
+   </pearinstaller>
+   <package>
+    <name>Sabre</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.0.0</min>
+   </package>
+   <package>
+    <name>Sabre_DAV</name>
+    <channel>pear.sabredav.org</channel>
+    <min>1.6.0</min>
+   </package>
+  </required>
+ </dependencies>
+ <phprelease />
+</package>
