@@ -1,5 +1,5 @@
-%global VER        6.8.4
-%global Patchlevel 6
+%global VER        6.8.5
+%global Patchlevel 4
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -34,6 +34,7 @@ BuildRequires:  djvulibre-devel
 BuildRequires:  libwmf-devel, jasper-devel, libtool-ltdl-devel
 BuildRequires:  libX11-devel, libXext-devel, libXt-devel
 BuildRequires:  lcms-devel, libxml2-devel, librsvg2-devel
+BuildRequires:  fftw-devel
 
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
@@ -331,6 +332,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May  6 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.5.4-1
+- update to 6.8.5-4
+- enable fftw to do Fourier transforms
+
 * Sat Apr  6 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.4.6-1
 - update to 6.8.4-6
 
