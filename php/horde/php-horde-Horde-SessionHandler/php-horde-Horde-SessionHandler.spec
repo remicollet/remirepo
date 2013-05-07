@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-SessionHandler
-Version:        2.0.2
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Session Handler API
 
@@ -33,11 +33,9 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 # Optionnal
-Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.3
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
-# also: Horde_Memcache
+# Optional and implicitly required: Horde_Log, Horde_Memcache
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -108,6 +106,10 @@ fi
 
 
 %changelog
+* Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+- raise dependency on Horde_Db >= 2.0.3
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 

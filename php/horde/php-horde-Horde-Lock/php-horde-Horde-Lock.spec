@@ -38,7 +38,7 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
 # Optionals
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
-# Option and implicitly required: Horde_Log, Horde_Mongo
+# Optional and implicitly required: Horde_Log, Horde_Mongo
 
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
