@@ -7,13 +7,16 @@
 
 Name:           php-horde-Horde-Date
 Version:        2.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Date package
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+# preg_replace() /e is deprecated
+Patch0:         %{name}.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -57,9 +60,7 @@ Package for creating and manipulating dates.
 
 cd %{pear_name}-%{version}
 
-# Silent warning for preg_replace(): The /e modifier is deprecated
-sed -e 's/preg_replace/@preg_replace/' \
-    -i lib/Horde/Date.php
+%patch0 -p3 -b .callback
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
@@ -134,6 +135,9 @@ fi
 
 
 %changelog
+* Wed May 08 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
+- upstream patch for preg_replace
+
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 

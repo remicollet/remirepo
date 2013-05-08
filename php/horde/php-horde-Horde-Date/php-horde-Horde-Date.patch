@@ -1,0 +1,122 @@
+From 4b952e67b5720a1aaa6b605c997547238b00c642 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Tue, 7 May 2013 19:13:51 +0200
+Subject: [PATCH] use preg_replace_callback() instead of preg_replace() with
+ deprecated /e modifier
+
+---
+ framework/Date/lib/Horde/Date.php | 92 ++++++++++++++++++++-------------------
+ 1 file changed, 48 insertions(+), 44 deletions(-)
+
+diff --git a/framework/Date/lib/Horde/Date.php b/framework/Date/lib/Horde/Date.php
+index f412252..bdc6562 100644
+--- a/framework/Date/lib/Horde/Date.php
++++ b/framework/Date/lib/Horde/Date.php
+@@ -893,56 +893,60 @@ public function strftime($format)
+     }
+ 
+     /**
++     * Callback used to remplace a strtime pattern
++     *
++     * @param array $matches  preg_replace_callback() matches.
++     *
++     * @return string Replacement string.
++     */
++    protected function _regexCallback($reg)
++    {
++        switch ($reg[0]) {
++            case '%b':  return $this->strftime(Horde_Nls::getLangInfo(constant('ABMON_' . (int)$this->_month)));
++            case '%B':  return $this->strftime(Horde_Nls::getLangInfo(constant('MON_' . (int)$this->_month)));
++            case '%C':  return (int)($this->_year / 100);
++            case '%-d':
++            case '%#d': return sprintf('%d',   $this->_mday);
++            case '%d':  return sprintf('%02d', $this->_mday);
++            case '%D':  return $this->strftime('%m/%d/%y');
++            case '%e':  return sprintf('%2d', $this->_mday);
++            case '%-H':
++            case '%#H': return sprintf('%d',   $this->_hour);
++            case '%H':  return sprintf('%02d', $this->_hour);
++            case '%-I':
++            case '%#I': return sprintf('%d',   $this->_hour == 0 ? 12 : ($this->_hour > 12 ? $this->_hour - 12 : $this->_hour));
++            case '%I':  return sprintf('%02d', $this->_hour == 0 ? 12 : ($this->_hour > 12 ? $this->_hour - 12 : $this->_hour));
++            case '%-m':
++            case '%#m': return sprintf('%d', $this->_month);
++            case '%m':  return sprintf('%02d', $this->_month);
++            case '%-M':
++            case '%#M': return sprintf('%d', $this->_min);
++            case '%M':  return sprintf('%02d', $this->_min);
++            case '%n':  return "\n";
++            case '%p':  return $this->strftime(Horde_Nls::getLangInfo($this->_hour < 12 ? AM_STR : PM_STR));
++            case '%R':  return $this->strftime('%H:%M');
++            case '%-S':
++            case '%#S': return sprintf('%d', $this->_sec);
++            case '%S':  return sprintf('%02d', $this->_sec);
++            case '%t':  return "\t";
++            case '%T':  return $this->strftime('%H:%M:%S');
++            case '%x':  return $this->strftime(Horde_Nls::getLangInfo(D_FMT));
++            case '%X':  return $this->strftime(Horde_Nls::getLangInfo(T_FMT));
++            case '%y':  return substr(sprintf('%04d', $this->_year), -2);
++            case '%Y':  return (int)$this->_year;
++            case '%%':  return '%';
++        }
++        return $reg[0];
++    }
++
++    /**
+      * Formats date and time using a limited set of the strftime() format.
+      *
+      * @return string  strftime() formatted date and time.
+      */
+     protected function _strftime($format)
+     {
+-        return preg_replace(
+-            array('/%b/e',
+-                  '/%B/e',
+-                  '/%C/e',
+-                  '/%([-#]?)d/e',
+-                  '/%D/e',
+-                  '/%e/e',
+-                  '/%([-#]?)H/e',
+-                  '/%([-#]?)I/e',
+-                  '/%([-#]?)m/e',
+-                  '/%([-#]?)M/e',
+-                  '/%n/',
+-                  '/%p/e',
+-                  '/%R/e',
+-                  '/%([-#]?)S/e',
+-                  '/%t/',
+-                  '/%T/e',
+-                  '/%x/e',
+-                  '/%X/e',
+-                  '/%y/e',
+-                  '/%Y/',
+-                  '/%%/'),
+-            array('$this->strftime(Horde_Nls::getLangInfo(constant(\'ABMON_\' . (int)$this->_month)))',
+-                  '$this->strftime(Horde_Nls::getLangInfo(constant(\'MON_\' . (int)$this->_month)))',
+-                  '(int)($this->_year / 100)',
+-                  'sprintf(\'%\' . (\'$1\' ? \'\' : \'02\') . \'d\', $this->_mday)',
+-                  '$this->strftime(\'%m/%d/%y\')',
+-                  'sprintf(\'%2d\', $this->_mday)',
+-                  'sprintf(\'%\' . (\'$1\' ? \'\' : \'02\') . \'d\', $this->_hour)',
+-                  'sprintf(\'%\' . (\'$1\' ? \'\' : \'02\') . \'d\', $this->_hour == 0 ? 12 : ($this->_hour > 12 ? $this->_hour - 12 : $this->_hour))',
+-                  'sprintf(\'%\' . (\'$1\' ? \'\' : \'02\') . \'d\', $this->_month)',
+-                  'sprintf(\'%\' . (\'$1\' ? \'\' : \'02\') . \'d\', $this->_min)',
+-                  "\n",
+-                  '$this->strftime(Horde_Nls::getLangInfo($this->_hour < 12 ? AM_STR : PM_STR))',
+-                  '$this->strftime(\'%H:%M\')',
+-                  'sprintf(\'%\' . (\'$1\' ? \'\' : \'02\') . \'d\', $this->_sec)',
+-                  "\t",
+-                  '$this->strftime(\'%H:%M:%S\')',
+-                  '$this->strftime(Horde_Nls::getLangInfo(D_FMT))',
+-                  '$this->strftime(Horde_Nls::getLangInfo(T_FMT))',
+-                  'substr(sprintf(\'%04d\', $this->_year), -2)',
+-                  (int)$this->_year,
+-                  '%'),
+-            $format);
++        return preg_replace_callback('/(%([-#]?)[%bBCdDeHImMnpRStTxXyY])/', array($this, '_regexCallback'), $format);
+     }
+ 
+     /**
+-- 
+1.8.1.6
+
