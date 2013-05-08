@@ -79,14 +79,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201305060630
-#global rcver         beta4
+#global snapdate      201305060630
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.30.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.31.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -176,7 +176,6 @@ BuildRequires: systemtap-sdt-devel
 BuildRequires: bison
 %endif
 
-Obsoletes: php-dbg, php3, phpfi, stronghold-php
 Obsoletes: php53, php53u, php54, php55
 %if %{with_zts}
 Obsoletes: php-zts < 5.3.7
@@ -301,10 +300,11 @@ Obsoletes: php-pecl-json < 1.3.0
 %endif
 %if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
-Obsoletes: php-pecl-zip
+Obsoletes: php-pecl-zip < 1.11
 %endif
 Provides: php-zlib, php-zlib%{?_isa}
-Obsoletes: php-openssl, php-pecl-phar, php-pecl-Fileinfo
+Obsoletes: php-pecl-phar < 1.2.4
+Obsoletes: php-pecl-Fileinfo < 1.0.5
 Obsoletes: php-mhash < 5.3.0
 Obsoletes: php53-mhash, php53u-mhash
 Obsoletes: php53-common, php53u-common, php54-common, php55-common
@@ -1473,7 +1473,7 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     simplexml bz2 calendar ctype exif ftp gettext gmp iconv \
     sockets tokenizer opcache \
-    pdo pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
+    pdo pdo_pgsql pdo_odbc pdo_sqlite %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
     sqlite3 \
@@ -1481,6 +1481,9 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
     enchant phar fileinfo intl \
     mcrypt tidy pdo_dblib mssql pspell curl wddx \
     posix shmop sysvshm sysvsem sysvmsg recode xml \
+%if %{with_json}
+    json \
+%endif
 %if %{with_libmysql}
     mysql mysqli pdo_mysql \
 %endif
@@ -1810,6 +1813,9 @@ fi
 
 
 %changelog
+* Wed May  8 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.31.RC1
+- update to 5.5.0RC1
+
 * Sat Apr 27 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.30.201305041230
 - test build for libgd
 
