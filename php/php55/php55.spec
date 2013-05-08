@@ -375,7 +375,6 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: mod_php3-ldap, stronghold-php-ldap
 BuildRequires: cyrus-sasl-devel, openldap-devel, openssl-devel
 Obsoletes: php53-ldap, php53u-ldap, php54-ldap, php55-ldap
 
@@ -391,7 +390,6 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo
 # ABI/API check - Arch specific
 Provides: php-pdo-abi = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
@@ -415,7 +413,6 @@ Provides: php_database
 Provides: php-mysqli = %{version}-%{release}
 Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
-Obsoletes: mod_php3-mysql, stronghold-php-mysql
 BuildRequires: mysql-devel >= 4.1.0
 Conflicts: php-mysqlnd
 Obsoletes: php53-mysql, php53u-mysql, php54-mysql, php55-mysql
@@ -462,7 +459,6 @@ License: PHP
 Requires: php-pdo%{?_isa} = %{version}-%{release}
 Provides: php_database
 Provides: php-pdo_pgsql, php-pdo_pgsql%{?_isa}
-Obsoletes: mod_php3-pgsql, stronghold-php-pgsql
 BuildRequires: krb5-devel, openssl-devel, postgresql-devel
 Obsoletes: php53-pgsql, php53u-pgsql, php54-pgsql, php55-pgsql
 
@@ -501,7 +497,6 @@ License: PHP
 Requires: php-pdo%{?_isa} = %{version}-%{release}
 Provides: php_database
 Provides: php-pdo_odbc, php-pdo_odbc%{?_isa}
-Obsoletes: stronghold-php-odbc
 BuildRequires: unixODBC-devel
 Obsoletes: php53-odbc, php53u-odbc, php54-odbc, php55-odbc
 
