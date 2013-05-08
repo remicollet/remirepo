@@ -21,6 +21,7 @@ BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -127,19 +128,19 @@ fi
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
-* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3 for remi repo
 
-* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+* Wed Jan  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - use local script instead of find_lang
 - new test layout (requires Horde_Test 2.1.0)
 - add option for test (need investigation)
 
-* Wed Nov  7 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
+* Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
-* Sat Nov  3 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
+* Sat Nov  3 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0 for remi repo
 
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.1.1-1
