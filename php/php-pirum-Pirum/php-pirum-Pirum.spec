@@ -1,12 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 
 %global pear_channel pear.pirum-project.org
 %global pear_name    %(echo %{name} | sed -e 's/^php-pirum-//' -e 's/-/_/g')
 
 Name:             php-pirum-Pirum
-Version:          1.1.4
-Release:          2%{?dist}
+Version:          1.1.5
+Release:          1%{?dist}
 Summary:          A simple PEAR channel server manager
 
 Group:            Development/Libraries
@@ -19,7 +18,7 @@ BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
-Requires:         php-common >= 5.2.1
+Requires:         php(language) >= 5.2.1
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
@@ -91,6 +90,12 @@ fi
 
 
 %changelog
+* Wed May 08 2013 Remi Collet <rpms@famillecollet.com> - 1.1.5-1
+- backport 1.1.5 for remi repo
+
+* Wed May 08 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.5-1
+- Updated to version 1.1.5
+
 * Fri Nov  9 2012 Remi Collet <rpms@famillecollet.com> - 1.1.4-2
 - backport for remi repo
 
