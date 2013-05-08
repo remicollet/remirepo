@@ -16,8 +16,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             php-drush-%{pear_name}
-Version:          5.8.0
-Release:          4%{?dist}
+Version:          5.9.0
+Release:          1%{?dist}
 Summary:          Command line shell and Unix scripting interface for Drupal
 
 Group:            Development/Libraries
@@ -186,6 +186,12 @@ fi
 
 
 %changelog
+* Wed May  8 2013 Remi Collet <remi@fedoraproject.org> 5.9.0-1
+- backport 5.9.0 for remi repo.
+
+* Wed May 08 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 5.9.0-1
+- Updated to version 5.9.0
+
 * Thu Apr  4 2013 Remi Collet <remi@fedoraproject.org> 5.8.0-4
 - backport rawhide changes for remi repo.
 
