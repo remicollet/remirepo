@@ -39,10 +39,10 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
-# optional
+# Optional
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Text_Flowed) >= 3.0.0
-# Option and implicitly required: Horde_Translation
+# Optional and implicitly required: Horde_Translation
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
