@@ -296,7 +296,7 @@ Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
 Provides: php-tokenizer, php-tokenizer%{?_isa}
 %if %{with_json}
 Provides: php-json, php-json%{?_isa}
-Obsoletes: php-pecl-json < 1.3.0
+Obsoletes: php-pecl-json < 1.2.2
 %endif
 %if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
@@ -589,7 +589,6 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php-domxml, php-dom
 Provides: php-dom, php-dom%{?_isa}
 Provides: php-domxml, php-domxml%{?_isa}
 Provides: php-simplexml, php-simplexml%{?_isa}

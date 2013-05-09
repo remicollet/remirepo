@@ -65,7 +65,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.14
+Version: 5.4.15
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -111,7 +111,7 @@ Patch42: php-5.3.1-systzdata-v10.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
-Patch44: php-5.4.5-system-libzip.patch
+Patch44: php-5.4.15-system-libzip.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-5.4.8-ldap_r.patch
 # Make php_config.h constant across builds
@@ -146,7 +146,6 @@ BuildRequires: libtool-ltdl-devel
 BuildRequires: libzip-devel >= 0.10
 %endif
 
-Obsoletes: php-dbg, php3, phpfi, stronghold-php, php-zts < 5.3.7
 Obsoletes: php53, php53u, php54
 Provides: php-zts = %{version}-%{release}
 Provides: php-zts%{?_isa} = %{version}-%{release}
@@ -276,10 +275,12 @@ Provides: php-tokenizer, php-tokenizer%{?_isa}
 Provides: php-zip, php-zip%{?_isa}
 Provides: php-pecl-zip = %{zipver}, php-pecl-zip%{?_isa} = %{zipver}
 Provides: php-pecl(zip) = %{zipver}, php-pecl(zip)%{?_isa} = %{zipver}
-Obsoletes: php-pecl-zip
+Obsoletes: php-pecl-zip < 1.11
 %endif
 Provides: php-zlib, php-zlib%{?_isa}
-Obsoletes: php-openssl, php-pecl-json, php-json, php-pecl-phar, php-pecl-Fileinfo
+Obsoletes: php-pecl-json < 1.2.2
+Obsoletes: php-pecl-phar < 1.2.4
+Obsoletes: php-pecl-Fileinfo < 1.0.5
 Obsoletes: php-mhash < 5.3.0
 Obsoletes: php53-mhash, php53u-mhash
 Obsoletes: php53-common, php53u-common, php54-common
@@ -295,7 +296,6 @@ Requires: php-cli%{?_isa} = %{version}-%{release}, autoconf, automake
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
 Requires: pcre-devel%{?_isa}
 %endif
-Obsoletes: php-pecl-pdo-devel
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
 Obsoletes: php53-devel, php53u-devel, php54-devel
@@ -311,7 +311,6 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: mod_php3-imap, stronghold-php-imap
 BuildRequires: krb5-devel, openssl-devel, libc-client-devel
 Obsoletes: php53-imap, php53u-imap, php54-imap
 
@@ -330,7 +329,6 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: mod_php3-ldap, stronghold-php-ldap
 BuildRequires: cyrus-sasl-devel, openldap-devel, openssl-devel
 Obsoletes: php53-ldap, php53u-ldap, php54-ldap
 
@@ -348,7 +346,6 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo
 # ABI/API check - Arch specific
 Provides: php-pdo-abi = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
@@ -371,7 +368,6 @@ Provides: php_database
 Provides: php-mysqli = %{version}-%{release}
 Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
-Obsoletes: mod_php3-mysql, stronghold-php-mysql
 BuildRequires: mysql-devel >= 4.1.0
 Conflicts: php-mysqlnd
 Obsoletes: php53-mysql, php53u-mysql, php54-mysql
@@ -414,7 +410,6 @@ License: PHP
 Requires: php-pdo%{?_isa} = %{version}-%{release}
 Provides: php_database
 Provides: php-pdo_pgsql, php-pdo_pgsql%{?_isa}
-Obsoletes: mod_php3-pgsql, stronghold-php-pgsql
 BuildRequires: krb5-devel, openssl-devel, postgresql-devel
 Obsoletes: php53-pgsql, php53u-pgsql, php54-pgsql
 
@@ -453,7 +448,6 @@ License: PHP
 Requires: php-pdo%{?_isa} = %{version}-%{release}
 Provides: php_database
 Provides: php-pdo_odbc, php-pdo_odbc%{?_isa}
-Obsoletes: stronghold-php-odbc
 BuildRequires: unixODBC-devel
 Obsoletes: php53-odbc, php53u-odbc, php54-odbc
 
@@ -546,7 +540,6 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php-domxml, php-dom
 Provides: php-dom, php-dom%{?_isa}
 Provides: php-xsl, php-xsl%{?_isa}
 Provides: php-domxml, php-domxml%{?_isa}
@@ -761,7 +754,7 @@ rm -f ext/json/utf8_to_utf16.*
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
-%if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 17 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .headers
@@ -955,7 +948,7 @@ ln -sf ../configure
 	--enable-calendar \
         --with-libxml-dir=%{_prefix} \
 	--enable-xml \
-%if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 17 || 0%{?rhel} >= 5
         --with-system-tzdata \
 %endif
 	--with-mhash \
@@ -1610,6 +1603,10 @@ fi
 
 
 %changelog
+* Thu May  9 2013 Remi Collet <rcollet@redhat.com> 5.4.15-1
+- update to 5.4.15
+- clean very old obsoletes
+
 * Thu Apr 11 2013 Remi Collet <rcollet@redhat.com> 5.4.14-1
 - update to 5.4.14
 - clean old deprecated options

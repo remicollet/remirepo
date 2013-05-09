@@ -1,22 +1,14 @@
-diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
---- php-5.4.5RC1/ext/zip/config.m4.systzip	2012-07-04 07:43:14.000000000 +0200
-+++ php-5.4.5RC1/ext/zip/config.m4	2012-07-07 15:56:41.418171233 +0200
-@@ -13,65 +13,116 @@
+diff -up php-5.4.15/ext/zip/config.m4.systzip php-5.4.15/ext/zip/config.m4
+--- php-5.4.15/ext/zip/config.m4.systzip	2013-05-08 07:41:20.000000000 +0200
++++ php-5.4.15/ext/zip/config.m4	2013-05-09 06:46:26.084673644 +0200
+@@ -13,65 +13,116 @@ fi
  PHP_ARG_WITH(pcre-dir, pcre install prefix,
  [  --with-pcre-dir           ZIP: pcre install prefix], no, no)
  
--if test "$PHP_ZIP" != "no"; then
 +PHP_ARG_WITH(libzip, libzip,
 +[ --with-libzip[=DIR]        ZIP: use libzip], no, no)
- 
--  if test "$PHP_ZLIB_DIR" != "no" && test "$PHP_ZLIB_DIR" != "yes"; then
--    if test -f "$PHP_ZLIB_DIR/include/zlib/zlib.h"; then
--      PHP_ZLIB_DIR="$PHP_ZLIB_DIR"
--      PHP_ZLIB_INCDIR="$PHP_ZLIB_DIR/include/zlib"
--    elif test -f "$PHP_ZLIB_DIR/include/zlib.h"; then
--      PHP_ZLIB_DIR="$PHP_ZLIB_DIR"
--      PHP_ZLIB_INCDIR="$PHP_ZLIB_DIR/include"
-+if test "$PHP_ZIP" != "no"; then
++
+ if test "$PHP_ZIP" != "no"; then
 +  if test "$PHP_LIBZIP" != "no"; then
 +
 +    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
@@ -32,7 +24,14 @@ diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
 +      LIBZIP_CFLAGS=`$PKG_CONFIG libzip --cflags`
 +      LIBZIP_LIBDIR=`$PKG_CONFIG libzip --variable=libdir`
 +      AC_MSG_RESULT(from pkgconfig: found in $LIBZIP_LIBDIR)
-+
+ 
+-  if test "$PHP_ZLIB_DIR" != "no" && test "$PHP_ZLIB_DIR" != "yes"; then
+-    if test -f "$PHP_ZLIB_DIR/include/zlib/zlib.h"; then
+-      PHP_ZLIB_DIR="$PHP_ZLIB_DIR"
+-      PHP_ZLIB_INCDIR="$PHP_ZLIB_DIR/include/zlib"
+-    elif test -f "$PHP_ZLIB_DIR/include/zlib.h"; then
+-      PHP_ZLIB_DIR="$PHP_ZLIB_DIR"
+-      PHP_ZLIB_INCDIR="$PHP_ZLIB_DIR/include"
      else
 -      AC_MSG_ERROR([Can not find zlib headers under "$PHP_ZLIB_DIR"])
 +      for i in /usr/local /usr; do
@@ -43,12 +42,12 @@ diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
 +          break
 +        fi
 +      done
-+    fi
+     fi
 +
 +    if test -z "$LIBZIP_LIBDIR"; then
 +      AC_MSG_RESULT(not found)
 +      AC_MSG_ERROR(Please reinstall the libzip distribution)
-     fi
++    fi
 +
 +    dnl Could not think of a simple way to check libzip for overwrite support
 +    PHP_CHECK_LIBRARY(zip, zip_open,
@@ -160,7 +159,7 @@ diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
                           lib/zip_fread.c lib/zip_open.c lib/zip_source_filep.c  \
                           lib/zip_strerror.c lib/zip_close.c lib/zip_error_get.c \
                           lib/zip_file_error_get.c lib/zip_free.c lib/zip_rename.c \
-@@ -98,10 +149,11 @@
+@@ -98,10 +149,11 @@ yes
  						 lib/zip_source_open.c lib/zip_source_pkware.c lib/zip_source_pop.c \
  						 lib/zip_source_read.c lib/zip_source_stat.c"
  
@@ -176,12 +175,12 @@ diff -up php-5.4.5RC1/ext/zip/config.m4.systzip php-5.4.5RC1/ext/zip/config.m4
  
    dnl so we always include the known-good working hack.
    PHP_ADD_MAKEFILE_FRAGMENT
-diff -up php-5.4.5RC1/ext/zip/php_zip.c.systzip php-5.4.5RC1/ext/zip/php_zip.c
---- php-5.4.5RC1/ext/zip/php_zip.c.systzip	2012-07-04 07:43:14.000000000 +0200
-+++ php-5.4.5RC1/ext/zip/php_zip.c	2012-07-07 15:59:12.728676026 +0200
-@@ -29,8 +29,232 @@
- #include "ext/standard/php_string.h"
+diff -up php-5.4.15/ext/zip/php_zip.c.systzip php-5.4.15/ext/zip/php_zip.c
+--- php-5.4.15/ext/zip/php_zip.c.systzip	2013-05-08 07:41:20.000000000 +0200
++++ php-5.4.15/ext/zip/php_zip.c	2013-05-09 06:50:33.286058049 +0200
+@@ -30,8 +30,232 @@
  #include "ext/pcre/php_pcre.h"
+ #include "ext/standard/php_filestat.h"
  #include "php_zip.h"
 +#if defined(HAVE_LIBZIP)
 +#include <zip.h>
@@ -412,7 +411,7 @@ diff -up php-5.4.5RC1/ext/zip/php_zip.c.systzip php-5.4.5RC1/ext/zip/php_zip.c
  
  /* zip_open is a macro for renaming libzip zipopen, so we need to use PHP_NAMED_FUNCTION */
  static PHP_NAMED_FUNCTION(zif_zip_open);
-@@ -1624,6 +1848,10 @@ static ZIPARCHIVE_METHOD(addEmptyDir)
+@@ -1631,6 +1855,10 @@ static ZIPARCHIVE_METHOD(addEmptyDir)
  	}
  
  	idx = zip_stat(intern, s, 0, &sb);
@@ -423,7 +422,7 @@ diff -up php-5.4.5RC1/ext/zip/php_zip.c.systzip php-5.4.5RC1/ext/zip/php_zip.c
  	if (idx >= 0) {
  		RETVAL_FALSE;
  	} else {
-@@ -1846,6 +2074,10 @@ static ZIPARCHIVE_METHOD(addFromString)
+@@ -1853,6 +2081,10 @@ static ZIPARCHIVE_METHOD(addFromString)
  	}
  
  	cur_idx = zip_name_locate(intern, (const char *)name, 0);
@@ -434,7 +433,7 @@ diff -up php-5.4.5RC1/ext/zip/php_zip.c.systzip php-5.4.5RC1/ext/zip/php_zip.c
  	/* TODO: fix  _zip_replace */
  	if (cur_idx >= 0) {
  		if (zip_delete(intern, cur_idx) == -1) {
-@@ -2870,5 +3098,9 @@ static PHP_MINFO_FUNCTION(zip)
+@@ -2877,5 +3109,9 @@ static PHP_MINFO_FUNCTION(zip)
  	php_info_print_table_row(2, "Zip version", PHP_ZIP_VERSION_STRING);
 -	php_info_print_table_row(2, "Libzip version", LIBZIP_VERSION);
 +#if defined(HAVE_LIBZIP)
@@ -445,9 +444,9 @@ diff -up php-5.4.5RC1/ext/zip/php_zip.c.systzip php-5.4.5RC1/ext/zip/php_zip.c
  
  	php_info_print_table_end();
  }
-diff -up php-5.4.5RC1/ext/zip/php_zip.h.systzip php-5.4.5RC1/ext/zip/php_zip.h
---- php-5.4.5RC1/ext/zip/php_zip.h.systzip	2012-07-04 07:43:14.000000000 +0200
-+++ php-5.4.5RC1/ext/zip/php_zip.h	2012-07-07 15:57:34.845319432 +0200
+diff -up php-5.4.15/ext/zip/php_zip.h.systzip php-5.4.15/ext/zip/php_zip.h
+--- php-5.4.15/ext/zip/php_zip.h.systzip	2013-05-08 07:41:20.000000000 +0200
++++ php-5.4.15/ext/zip/php_zip.h	2013-05-09 06:46:26.086673656 +0200
 @@ -28,7 +28,11 @@ extern zend_module_entry zip_module_entr
  #include "TSRM.h"
  #endif
@@ -460,9 +459,9 @@ diff -up php-5.4.5RC1/ext/zip/php_zip.h.systzip php-5.4.5RC1/ext/zip/php_zip.h
  
  #define PHP_ZIP_VERSION_STRING "1.11.0"
  
-diff -up php-5.4.5RC1/ext/zip/tests/bug38943.phpt.systzip php-5.4.5RC1/ext/zip/tests/bug38943.phpt
---- php-5.4.5RC1/ext/zip/tests/bug38943.phpt.systzip	2012-07-04 07:43:14.000000000 +0200
-+++ php-5.4.5RC1/ext/zip/tests/bug38943.phpt	2012-07-07 15:56:41.422171242 +0200
+diff -up php-5.4.15/ext/zip/tests/bug38943.phpt.systzip php-5.4.15/ext/zip/tests/bug38943.phpt
+--- php-5.4.15/ext/zip/tests/bug38943.phpt.systzip	2013-05-08 07:41:20.000000000 +0200
++++ php-5.4.15/ext/zip/tests/bug38943.phpt	2013-05-09 06:46:26.088673667 +0200
 @@ -27,7 +27,7 @@ array(1) {
    [0]=>
    int(1)
@@ -472,9 +471,9 @@ diff -up php-5.4.5RC1/ext/zip/tests/bug38943.phpt.systzip php-5.4.5RC1/ext/zip/t
    ["test":"myZip":private]=>
    int(0)
    ["testp"]=>
-diff -up php-5.4.5RC1/ext/zip/tests/pecl12414.phpt.systzip php-5.4.5RC1/ext/zip/tests/pecl12414.phpt
---- php-5.4.5RC1/ext/zip/tests/pecl12414.phpt.systzip	2012-07-04 07:43:14.000000000 +0200
-+++ php-5.4.5RC1/ext/zip/tests/pecl12414.phpt	2012-07-07 15:56:41.422171242 +0200
+diff -up php-5.4.15/ext/zip/tests/pecl12414.phpt.systzip php-5.4.15/ext/zip/tests/pecl12414.phpt
+--- php-5.4.15/ext/zip/tests/pecl12414.phpt.systzip	2013-05-08 07:41:20.000000000 +0200
++++ php-5.4.15/ext/zip/tests/pecl12414.phpt	2013-05-09 06:46:26.088673667 +0200
 @@ -5,6 +5,8 @@ Bug #12414 ( extracting files from damag
  /*$ */
  if(!extension_loaded('zip')) die('skip');
@@ -484,9 +483,9 @@ diff -up php-5.4.5RC1/ext/zip/tests/pecl12414.phpt.systzip php-5.4.5RC1/ext/zip/
  --FILE--
  <?php
  $filename = 'MYLOGOV2.GFX';
-diff -up php-5.4.5RC1/ext/zip/zip_stream.c.systzip php-5.4.5RC1/ext/zip/zip_stream.c
---- php-5.4.5RC1/ext/zip/zip_stream.c.systzip	2012-07-04 07:43:14.000000000 +0200
-+++ php-5.4.5RC1/ext/zip/zip_stream.c	2012-07-07 15:56:41.423171244 +0200
+diff -up php-5.4.15/ext/zip/zip_stream.c.systzip php-5.4.15/ext/zip/zip_stream.c
+--- php-5.4.15/ext/zip/zip_stream.c.systzip	2013-05-08 07:41:20.000000000 +0200
++++ php-5.4.15/ext/zip/zip_stream.c	2013-05-09 06:46:26.088673667 +0200
 @@ -6,7 +6,11 @@
  #if HAVE_ZIP
  #ifdef ZEND_ENGINE_2
