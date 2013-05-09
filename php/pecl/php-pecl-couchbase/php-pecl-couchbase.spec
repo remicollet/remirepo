@@ -4,11 +4,11 @@
 
 %global pecl_name couchbase
 %global with_zts  0%{?__ztsphp:1}
-%global versuf    dp1
+#global versuf    dp1
 
 Summary:       Couchbase Server PHP extension
 Name:          php-pecl-couchbase
-Version:       1.1.4
+Version:       1.1.5
 Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
@@ -16,6 +16,7 @@ URL:           pecl.php.net/package/couchbase
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tgz
 
 BuildRequires: php-devel >= 5.3.0
+BuildRequires: php-pecl-igbinary-devel
 BuildRequires: php-pear
 BuildRequires: zlib-devel
 BuildRequires: libcouchbase-devel
@@ -26,6 +27,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
+Requires:      php-pecl(igbinary)%{?_isa}
 
 Provides:      php-%{pecl_name} = %{version}
 Provides:      php-%{pecl_name}%{?_isa} = %{version}
@@ -43,15 +45,22 @@ in a Couchbase Server.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 mv %{pecl_name}-%{version} NTS
 
+# Fix version
+sed -e '/PHP_COUCHBASE_VERSION/s/1.1.4dp1/%{version}/' -i NTS/internal.h
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_COUCHBASE_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_couchbase.h)
-if test "x${extver}" != "x%{version}%{?versuf}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?versuf}..
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}..
+   exit 1
+fi
+extver=$(sed -n '/#define PHP_COUCHBASE_VERSION/{s/.* "//;s/".*$//;p}' NTS/internal.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}..
    exit 1
 fi
 
@@ -79,7 +88,7 @@ make %{?_smp_mflags}
 
 %install
 # for short-circuit
-rm -f */modules/json.so
+rm -f */modules/{json,igbinary}.so
 
 # Install the NTS stuff
 make install -C NTS INSTALL_ROOT=%{buildroot}
@@ -97,18 +106,20 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %check
 : minimal NTS load test
-ln -sf %{php_extdir}/json.so NTS/modules/
+ln -sf %{php_extdir}/{json,igbinary}.so NTS/modules/
 %{__php} -n \
    -d extension_dir=NTS/modules \
+   -d extension=igbinary.so \
    -d extension=json.so \
    -d extension=%{pecl_name}.so \
    -m | grep %{pecl_name}
 
 %if %{with_zts}
 : minimal ZTS load test
-ln -sf %{php_ztsextdir}/json.so ZTS/modules/
+ln -sf %{php_ztsextdir}/{json,igbinary}.so ZTS/modules/
 %{__ztsphp}    -n \
    -d extension_dir=ZTS/modules \
+   -d extension=igbinary.so \
    -d extension=json.so \
    -d extension=%{pecl_name}.so \
    -m | grep %{pecl_name}
@@ -140,5 +151,8 @@ fi
 
 
 %changelog
+* Thu May  9 2013 Remi Collet <remi@fedoraproject.org> - 1.1.15-1
+- update to 1.1.15 (no change)
+
 * Fri Mar 22 2013 Remi Collet <remi@fedoraproject.org> - 1.1.14-1
 - initial package
