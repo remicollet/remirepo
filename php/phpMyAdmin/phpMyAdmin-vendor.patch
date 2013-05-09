@@ -1,0 +1,41 @@
+--- libraries/vendor_config.php~	2013-05-03 14:16:36.000000000 +0200
++++ libraries/vendor_config.php	2013-05-09 17:29:11.847767792 +0200
+@@ -68,4 +68,9 @@
+  * eg. /usr/share/php/gettext/gettext.inc.
+  */
+ define('GETTEXT_INC', './libraries/php-gettext/gettext.inc');
++/**
++ * Path to tcpdf.php file. Useful when you want to use system tcpdf,
++ * eg. /usr/share/php/tcpdf/tcpdf.php.
++ */
++define('TCPDF_INC', './libraries/tcpdf/tcpdf.php');
+ ?>
+--- libraries/PDF.class.php~	2013-05-03 14:16:36.000000000 +0200
++++ libraries/PDF.class.php	2013-05-09 17:29:10.904764535 +0200
+@@ -9,7 +9,7 @@
+     exit;
+ }
+ 
+-require_once './libraries/tcpdf/tcpdf.php';
++require_once TCPDF_INC;
+ 
+ /**
+  * PDF font to use.
+@@ -45,13 +45,16 @@
+     ) {
+         parent::__construct();
+         $this->SetAuthor('phpMyAdmin ' . PMA_VERSION);
+-        $this->AliasNbPages();
+         $this->AddFont('DejaVuSans', '', 'dejavusans.php');
+         $this->AddFont('DejaVuSans', 'B', 'dejavusansb.php');
+         $this->SetFont(PMA_PDF_FONT, '', 14);
+         $this->setFooterFont(array(PMA_PDF_FONT, '', 14));
+     }
+ 
++    public function empty_string($str) {
++            return (is_null($str) OR (is_string($str) AND (strlen($str) == 0)));
++    }
++
+     /**
+      * This function must be named "Footer" to work with the TCPDF library
+      *

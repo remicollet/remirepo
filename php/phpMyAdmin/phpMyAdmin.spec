@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 4.0.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -8,6 +8,9 @@ License: GPLv2+
 URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.bz2
 Source2: phpMyAdmin.htaccess
+
+# https://github.com/phpmyadmin/phpmyadmin/pull/357
+Patch0: %{name}-vendor.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -22,28 +25,25 @@ Requires:  php-curl
 Requires:  php-date
 Requires:  php-filter
 Requires:  php-gd
-Requires:  php-gettext
 Requires:  php-gmp
 Requires:  php-hash
 Requires:  php-iconv
-Requires:  php-pecl(imagick)
 Requires:  php-json
 Requires:  php-libxml
 Requires:  php-mbstring
 Requires:  php-mcrypt
 Requires:  php-mysqli
-Requires:  php-openssl
 Requires:  php-pcre
 Requires:  php-recode
 Requires:  php-session
 Requires:  php-simplexml
 Requires:  php-spl
-Requires:  php-tidy
-Requires:  php-xml
 Requires:  php-xmlwriter
 Requires:  php-zip
 Requires:  php-zlib
 Requires:  php-php-gettext
+Requires:  php-tcpdf
+
 Provides:  phpmyadmin = %{version}-%{release}
 Obsoletes: phpMyAdmin3
 
@@ -59,6 +59,8 @@ is available in 50 languages
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
 
+%patch0 -p0
+
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
     -e "/'blowfish_secret'/s@''@'MUSTBECHANGEDONINSTALL'@"  \
@@ -72,6 +74,7 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/Chang
     -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
     -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
+    -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
     -i libraries/vendor_config.php
 
 # For debug
@@ -84,6 +87,10 @@ find . -name \*.php -exec chmod -x {} \;
 #do
 #    %{__unzip} -q $archive -d themes
 #done
+
+# Remove bundled libraries
+rm -rf libraries/php-gettext
+rm -rf libraries/tcpdf
 
 
 %build
@@ -107,8 +114,8 @@ rm -f %{buildroot}/%{_datadir}/%{name}/setup/frames/.htaccess
 rm -rf %{buildroot}/%{_datadir}/%{name}/contrib
 
 mkdir -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
-
 rm -rf %{buildroot}%{_datadir}/%{pkgname}/libraries/php-gettext
+rm -rf %{buildroot}%{_datadir}/%{pkgname}/libraries/tcpdf
 
 
 %clean
@@ -140,6 +147,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Thu May  9 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-2
+- use system tcpdf library
+
 * Fri May  3 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-1
 - update to 4.0.0 finale
 
