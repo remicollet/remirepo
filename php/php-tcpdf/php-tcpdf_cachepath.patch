@@ -1,0 +1,24 @@
+diff -up tcpdf/config/tcpdf_config_alt.php.patch tcpdf/config/tcpdf_config_alt.php
+--- tcpdf/config/tcpdf_config_alt.php.patch	2013-05-09 11:34:19.817868752 +0200
++++ tcpdf/config/tcpdf_config_alt.php	2013-05-09 11:35:15.570865072 +0200
+@@ -89,7 +89,7 @@ define ('K_PATH_FONTS', K_PATH_MAIN.'fon
+ /**
+  * cache directory for temporary files (full path)
+  */
+-define ('K_PATH_CACHE', K_PATH_MAIN.'cache/');
++define ('K_PATH_CACHE', '/var/cache/php-tcpdf/');
+ 
+ /**
+  * cache directory for temporary files (url path)
+diff -up tcpdf/config/tcpdf_config.php.patch tcpdf/config/tcpdf_config.php
+--- tcpdf/config/tcpdf_config.php.patch	2013-05-09 11:34:10.705869354 +0200
++++ tcpdf/config/tcpdf_config.php	2013-05-09 11:35:20.611864739 +0200
+@@ -94,7 +94,7 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG'))
+ 	/**
+ 	 * cache directory for temporary files (full path)
+ 	 */
+-	define ('K_PATH_CACHE', K_PATH_MAIN.'cache/');
++	define ('K_PATH_CACHE', '/var/cache/php-tcpdf/');
+ 
+ 	/**
+ 	 * cache directory for temporary files (url path)
