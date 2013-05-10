@@ -87,6 +87,13 @@ solution. You can optionally install php-pecl-imagick; TCPDF will use it.
 find ./ -type d -exec chmod 755 {} \;
 find ./ -type f -exec chmod 644 {} \;
 
+: remove bundled fonts
+rm -rf fonts/dejavu-fonts-ttf* fonts/freefont-*
+for fic in fonts/*.z
+do
+  rm -f $fic ${fic/.z/.php}
+done
+
 : remove composer
 rm -f composer.json
 
@@ -193,6 +200,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Fri May 10 2013 Remi Collet <remi@fedoraproject.org> - 6.0.012-2
 - improve cache ownership, on folder per web server
+- drop bundled fonts
 
 * Thu May 09 2013 Johan Cwiklinski <johan AT x-tnd DOt be> - 6.0.012-1
 - Initial packaging
