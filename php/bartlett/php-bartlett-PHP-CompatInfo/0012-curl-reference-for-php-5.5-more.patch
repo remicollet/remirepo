@@ -11,7 +11,7 @@ diff --git a/PHP/CompatInfo/Reference/curl.php b/PHP/CompatInfo/Reference/curl.p
 index c12dc0f..e59bda4 100644
 --- a/PHP/CompatInfo/Reference/curl.php
 +++ b/PHP/CompatInfo/Reference/curl.php
-@@ -93,12 +93,16 @@ class PHP_CompatInfo_Reference_Curl
+@@ -93,12 +93,16 @@
              'curl_multi_init'                => array('5.0.0', ''),
              'curl_multi_remove_handle'       => array('5.0.0', ''),
              'curl_multi_select'              => array('5.0.0', ''),
@@ -28,7 +28,7 @@ index c12dc0f..e59bda4 100644
              'curl_unescape'                  => array('5.5.0-dev', ''),
              'curl_version'                   => array('4.0.2', ''),
          );
-@@ -142,6 +146,7 @@ class PHP_CompatInfo_Reference_Curl
+@@ -142,6 +146,7 @@
              'CURL_NETRC_IGNORED'             => array('4.0.2', ''),
              'CURL_NETRC_OPTIONAL'            => array('4.0.2', ''),
              'CURL_NETRC_REQUIRED'            => array('4.0.2', ''),
@@ -36,15 +36,16 @@ index c12dc0f..e59bda4 100644
              'CURL_RTSPREQ_ANNOUNCE'          => array('5.5.0-dev', ''),
              'CURL_RTSPREQ_DESCRIBE'          => array('5.5.0-dev', ''),
              'CURL_RTSPREQ_GET_PARAMETER'     => array('5.5.0-dev', ''),
-@@ -166,6 +171,7 @@ class PHP_CompatInfo_Reference_Curl
+@@ -166,7 +171,7 @@
              'CURL_VERSION_KERBEROS4'         => array('4.0.2', ''),
              'CURL_VERSION_LIBZ'              => array('4.0.2', ''),
              'CURL_VERSION_SSL'               => array('4.0.2', ''),
+-            'CURL_WRAPPERS_ENABLED'          => array('5.4.15', ''),
 +            'CURL_WRITEFUNC_PAUSE'           => array('5.5.0-dev', ''),
  
              'CURLAUTH_ANY'                   => array('4.0.2', ''),
              'CURLAUTH_ANYSAFE'               => array('4.0.2', ''),
-@@ -324,6 +330,9 @@ class PHP_CompatInfo_Reference_Curl
+@@ -325,6 +330,9 @@
              'CURLM_OK'                       => array('4.0.2', ''),
              'CURLM_OUT_OF_MEMORY'            => array('4.0.2', ''),
  
@@ -54,7 +55,7 @@ index c12dc0f..e59bda4 100644
              'CURLMSG_DONE'                   => array('4.0.2', ''),
  
              'CURLOPT_ACCEPT_ENCODING'        => array('5.5.0-dev', ''),
-@@ -497,6 +506,13 @@ class PHP_CompatInfo_Reference_Curl
+@@ -498,6 +506,13 @@
              'CURLOPT_WRITEFUNCTION'          => array('4.0.2', ''),
              'CURLOPT_WRITEHEADER'            => array('4.0.2', ''),
  
@@ -68,6 +69,3 @@ index c12dc0f..e59bda4 100644
              'CURLPROTO_ALL'                  => array('4.0.2', ''),
              'CURLPROTO_DICT'                 => array('4.0.2', ''),
              'CURLPROTO_FILE'                 => array('4.0.2', ''),
--- 
-1.7.11.7
-

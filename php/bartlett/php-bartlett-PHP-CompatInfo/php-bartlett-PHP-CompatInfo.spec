@@ -1,5 +1,4 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %global pear_name   PHP_CompatInfo
 %global channel     bartlett.laurent-laville.org
 
@@ -8,8 +7,8 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.15.0
-Release:        2%{?dist}
+Version:        2.16.0
+Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -51,9 +50,8 @@ Patch25:        0025-array_column.patch
 Patch26:        0026-fix-gd-reference-for-php-5.5.0beta2.patch
 Patch27:        0027-fix-curl-ref-for-latest-libcurl.patch
 Patch28:        0028-fix-reference-for-datetimeinterface.patch
-Patch29:        0029-fix-reference-curl-wrappers-enabled.patch
-Patch30:        0030-fix-sphinx-test.patch
 Patch31:        0031-fix-opcache-reference-php550beta3.patch
+Patch32:        0032-new-soap-constants.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -133,9 +131,8 @@ cp phpcompatinfo.xml.dist phpcompatinfo.xml
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
-%patch29 -p1
-%patch30 -p1
 %patch31 -p1
+%patch32 -p1
 
 # remove checksum for patched files
 sed -e 's/md5sum.*name/name/' \
@@ -167,6 +164,7 @@ install -pm 644 phpcompatinfo.xml %{buildroot}%{pear_cfgdir}/%{pear_name}/
 # Install the man page
 mkdir -p %{buildroot}%{_mandir}/man1
 install -pm 644 %{SOURCE1} %{buildroot}%{_mandir}/man1/phpci.1
+
 
 %check
 cd %{pear_name}-%{version}%{?prever}
@@ -221,6 +219,9 @@ fi
 
 
 %changelog
+* Fri May 10 2013 Remi Collet <remi@fedoraproject.org> - 2.16.0-1
+- Update to 2.16.0
+
 * Fri Apr 12 2013 Remi Collet <remi@fedoraproject.org> - 2.15.0-2
 - add upstream man page (from github)
 
