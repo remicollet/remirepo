@@ -4,7 +4,7 @@
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
 Version:        6.0.012
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
 URL:            http://www.tcpdf.org
@@ -17,7 +17,7 @@ Patch1:         php-tcpdf_config.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       php >= 5.2
+Requires:       php(language) >= 5.2
 Requires:       php-openssl
 #imagick is optionnal (and conflicts with gmagick)
 #Requires:       php-pecl(imagick)
@@ -30,6 +30,7 @@ Requires:       php-hash
 Requires:       php-mbstring
 Requires:       php-mcrypt
 Requires:       php-pcre
+Requires:       php-posix
 Requires:       php-tidy
 Requires:       php-xml
 
@@ -123,6 +124,15 @@ iconv -f iso8859-1 -t utf-8 example_030.php > example_030.php.conv \
    && mv -f example_030.php.conv example_030.php
 popd
 
+cat >README.cache <<EOF
+This folder contains a sub-folder per user uid.
+
+If the user running PHP doesn't appear here, you need to create it.
+  mkdir <useruid>
+  chown <useruid> <useruid>
+
+EOF
+
 
 %build
 : empty build section, nothing required
@@ -144,6 +154,27 @@ cp -a config/*.php $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 
 # Cache
 install -d $RPM_BUILD_ROOT%{_localstatedir}/cache/%{name}
+install README.cache $RPM_BUILD_ROOT%{_localstatedir}/cache/%{name}/README
+
+
+%post
+# We don't want to require "httpd" in case PHP is used with some other web
+# server or without any, but we do want the owner of this directory to default
+# to apache for a working "out of the box" experience on the most common setup.
+
+for server in apache lighttpd nginx
+do
+  uid=$(getent passwd $server | cut -d: -f3)
+  if [ -n "$uid" ]
+  then
+    cache=%{_var}/cache/%{name}/$uid
+    if [ ! -d $cache ]
+    then
+      mkdir -p $cache
+      chown $uid $cache
+    fi
+  fi
+done
 
 
 %clean
@@ -156,9 +187,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/php/%{real_name}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/*
-%dir %attr(-,apache,apache) %{_localstatedir}/cache/%{name}
+%{_localstatedir}/cache/%{name}
 
 
 %changelog
+* Fri May 10 2013 Remi Collet <remi@fedoraproject.org> - 6.0.012-2
+- improve cache ownership, on folder per web server
+
 * Thu May 09 2013 Johan Cwiklinski <johan AT x-tnd DOt be> - 6.0.012-1
 - Initial packaging
