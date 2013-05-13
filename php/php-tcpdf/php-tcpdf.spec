@@ -4,7 +4,7 @@
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
 Version:        6.0.012
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
 URL:            http://www.tcpdf.org
@@ -161,7 +161,7 @@ cp -a config/*.php $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 
 # Cache
 install -d $RPM_BUILD_ROOT%{_localstatedir}/cache/%{name}
-install README.cache $RPM_BUILD_ROOT%{_localstatedir}/cache/%{name}/README
+install -m 0644 README.cache $RPM_BUILD_ROOT%{_localstatedir}/cache/%{name}/README
 
 
 %post
@@ -198,9 +198,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun May 10 2013 Johan Cwiklinski <johan AT x-tnd DOT be> - 6.0.012-3
+- Fix README.cache file permissions
+
 * Fri May 10 2013 Remi Collet <remi@fedoraproject.org> - 6.0.012-2
 - improve cache ownership, on folder per web server
 - drop bundled fonts
 
-* Thu May 09 2013 Johan Cwiklinski <johan AT x-tnd DOt be> - 6.0.012-1
+* Thu May 09 2013 Johan Cwiklinski <johan AT x-tnd DOT be> - 6.0.012-1
 - Initial packaging
