@@ -1,7 +1,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 7.27.0
-Release: 7%{?dist}
+Release: 10%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
@@ -37,6 +37,18 @@ Patch9: 0009-curl-7.27.0-f206d6c0.patch
 
 # curl_global_init() now accepts the CURL_GLOBAL_ACK_EINTR flag
 Patch10: 0010-curl-7.27.0-57ccdfa8.patch
+
+# fix cookie tailmatching to prevent cross-domain leakage (CVE-2013-1944)
+Patch11: 0011-curl-7.27.0-2eb8dcf2.patch
+
+# show proper host name on failed resolve (#957173)
+Patch12: 0012-curl-7.27.0-25e577b3.patch
+
+# prevent an artificial timeout event due to stale speed-check data (#906031)
+Patch13: 0013-curl-7.27.0-b37b5233.patch
+
+# switch SSL socket into non-blocking mode after handshake (#960765)
+Patch14: 0014-curl-7.27.0-9d0af301.patch
 
 # patch making libcurl multilib ready
 Patch101: 0101-curl-7.27.0-multilib.patch
@@ -145,6 +157,10 @@ documentation of the library, too.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
 
 # Fedora patches
 %patch101 -p1
@@ -160,6 +176,15 @@ sed -i s/899\\\([0-9]\\\)/649\\1/ tests/data/test*
 %else
 sed -i s/899\\\([0-9]\\\)/329\\1/ tests/data/test*
 %endif
+
+# disable test 1112 (#565305)
+printf "1112\n" >> tests/data/DISABLED
+
+# disable test 1319 on ppc64 (server times out)
+%ifarch ppc64
+echo "1319" >> tests/data/DISABLED
+%endif
+
 
 %build
 [ -x /usr/kerberos/bin/krb5-config ] && KRB5_PREFIX="=/usr/kerberos"
@@ -270,6 +295,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Mon May 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 7.27.0-10
+- sync with 7.27.0-10 from F18
+
+* Thu May 09 2013 Kamil Dudka <kdudka@redhat.com> 7.27.0-10
+- switch SSL socket into non-blocking mode after handshake (#960765)
+
+* Fri Apr 26 2013 Kamil Dudka <kdudka@redhat.com> 7.27.0-9
+- prevent an artificial timeout event due to stale speed-check data (#906031)
+- show proper host name on failed resolve (#957173)
+
+* Fri Apr 12 2013 Kamil Dudka <kdudka@redhat.com> 7.27.0-8
+- fix cookie tailmatching to prevent cross-domain leakage (CVE-2013-1944)
+
 * Mon Oct 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 7.27.0-7
 - sync with 7.27.0-7 from F18
 

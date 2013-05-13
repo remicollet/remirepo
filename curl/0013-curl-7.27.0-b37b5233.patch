@@ -1,0 +1,35 @@
+From a0d7db27c1cf8edbde1d468d655be942bcacb39c Mon Sep 17 00:00:00 2001
+From: Zdenek Pavlas <zpavlas@redhat.com>
+Date: Fri, 26 Apr 2013 14:56:38 +0200
+Subject: [PATCH] url: initialize speed-check data for file:// protocol
+
+... in order to prevent an artificial timeout event based on stale
+speed-check data from a previous network transfer.  This commit fixes
+a regression caused by 9dd85bced56f6951107f69e581c872c1e7e3e58e.
+
+Bug: https://bugzilla.redhat.com/906031
+
+[upstream commit b37b5233cab96b5b1f2ab7f6e0b9c3df77320bba]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/url.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/lib/url.c b/lib/url.c
+index 87b8701..da53086 100644
+--- a/lib/url.c
++++ b/lib/url.c
+@@ -5058,6 +5058,9 @@ static CURLcode create_conn(struct SessionHandle *data,
+                           -1, NULL); /* no upload */
+     }
+ 
++    /* since we skip do_init() */
++    Curl_speedinit(data);
++
+     return result;
+   }
+ #endif
+-- 
+1.7.1
+

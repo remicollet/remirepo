@@ -1,0 +1,95 @@
+From c7bd0361565f70caf621f588e38bfc6cc196c432 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Tue, 5 Mar 2013 17:51:01 +0100
+Subject: [PATCH 1/2] nss: fix misplaced code enabling non-blocking socket mode
+
+The option needs to be set on the SSL socket.  Setting it on the model
+takes no effect.  Note that the non-blocking mode is still not enabled
+for the handshake because the code is not yet ready for that.
+
+[upstream commit 9d0af3018c5db25f5adda216dbcad6056b4a3107]
+---
+ lib/nss.c |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/lib/nss.c b/lib/nss.c
+index efa578c..0ad1863 100644
+--- a/lib/nss.c
++++ b/lib/nss.c
+@@ -1240,12 +1240,6 @@ CURLcode Curl_nss_connect(struct connectdata *conn, int sockindex)
+     goto error;
+   model = SSL_ImportFD(NULL, model);
+ 
+-  /* make the socket nonblocking */
+-  sock_opt.option = PR_SockOpt_Nonblocking;
+-  sock_opt.value.non_blocking = PR_TRUE;
+-  if(PR_SetSocketOption(model, &sock_opt) != PR_SUCCESS)
+-    goto error;
+-
+   if(SSL_OptionSet(model, SSL_SECURITY, PR_TRUE) != SECSuccess)
+     goto error;
+   if(SSL_OptionSet(model, SSL_HANDSHAKE_AS_SERVER, PR_FALSE) != SECSuccess)
+@@ -1420,6 +1414,12 @@ CURLcode Curl_nss_connect(struct connectdata *conn, int sockindex)
+     goto error;
+   }
+ 
++  /* switch the SSL socket into non-blocking mode */
++  sock_opt.option = PR_SockOpt_Nonblocking;
++  sock_opt.value.non_blocking = PR_TRUE;
++  if(PR_SetSocketOption(connssl->handle, &sock_opt) != PR_SUCCESS)
++    goto error;
++
+   connssl->state = ssl_connection_complete;
+   conn->recv[sockindex] = nss_recv;
+   conn->send[sockindex] = nss_send;
+-- 
+1.7.1
+
+
+From f3a5d46280264965ca096c9b3efba481d4883d0e Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Tue, 7 May 2013 23:30:52 +0200
+Subject: [PATCH 2/2] nss: give PR_INTERVAL_NO_WAIT instead of -1 to PR_Recv/PR_Send
+
+Reported by: David Strauss
+Bug: http://curl.haxx.se/mail/lib-2013-05/0088.html
+
+[upstream commit 01a2abedd7e3a2075de70979003302313570c58c]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/nss.c |   11 ++++-------
+ 1 files changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/lib/nss.c b/lib/nss.c
+index 0ad1863..f69a888 100644
+--- a/lib/nss.c
++++ b/lib/nss.c
+@@ -1487,10 +1487,8 @@ static ssize_t nss_send(struct connectdata *conn,  /* connection data */
+                         size_t len,                /* amount to write */
+                         CURLcode *curlcode)
+ {
+-  int rc;
+-
+-  rc = PR_Send(conn->ssl[sockindex].handle, mem, (int)len, 0, -1);
+-
++  ssize_t rc = PR_Send(conn->ssl[sockindex].handle, mem, (int)len, 0,
++                       PR_INTERVAL_NO_WAIT);
+   if(rc < 0) {
+     PRInt32 err = PR_GetError();
+     if(err == PR_WOULD_BLOCK_ERROR)
+@@ -1518,9 +1516,8 @@ static ssize_t nss_recv(struct connectdata * conn, /* connection data */
+                         size_t buffersize,         /* max amount to read */
+                         CURLcode *curlcode)
+ {
+-  ssize_t nread;
+-
+-  nread = PR_Recv(conn->ssl[num].handle, buf, (int)buffersize, 0, -1);
++  ssize_t nread = PR_Recv(conn->ssl[num].handle, buf, (int)buffersize, 0,
++                          PR_INTERVAL_NO_WAIT);
+   if(nread < 0) {
+     /* failed SSL read */
+     PRInt32 err = PR_GetError();
+-- 
+1.7.1
+

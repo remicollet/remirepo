@@ -1,0 +1,86 @@
+From 461a96d26c08fcd27fc0ab2c94574461a85782bf Mon Sep 17 00:00:00 2001
+From: Kim Vandry <vandry@users.sf.net>
+Date: Mon, 18 Feb 2013 21:36:34 +0100
+Subject: [PATCH] Curl_resolver_is_resolved: show proper host name on failed resolve
+
+[upstream commit 25e577b33d00afb6630cf2cac98d6baa319e9aef]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/asyn-thread.c |   35 ++++++++++++++++++++---------------
+ 1 files changed, 20 insertions(+), 15 deletions(-)
+
+diff --git a/lib/asyn-thread.c b/lib/asyn-thread.c
+index b027144..5552810 100644
+--- a/lib/asyn-thread.c
++++ b/lib/asyn-thread.c
+@@ -436,8 +436,19 @@ static const char *gai_strerror(int ecode)
+  * error
+  */
+ 
+-static void resolver_error(struct connectdata *conn, const char *host_or_proxy)
++static CURLcode resolver_error(struct connectdata *conn)
+ {
++  const char *host_or_proxy;
++  CURLcode rc;
++  if(conn->bits.httpproxy) {
++    host_or_proxy = "proxy";
++    rc = CURLE_COULDNT_RESOLVE_PROXY;
++  }
++  else {
++    host_or_proxy = "host";
++    rc = CURLE_COULDNT_RESOLVE_HOST;
++  }
++
+   failf(conn->data, "Could not resolve %s: %s; %s", host_or_proxy,
+         conn->async.hostname,
+ #ifdef HAVE_GAI_STRERROR
+@@ -448,6 +459,7 @@ static void resolver_error(struct connectdata *conn, const char *host_or_proxy)
+         Curl_strerror(conn, conn->async.status)
+ #endif
+     );
++  return rc;
+ }
+ 
+ /*
+@@ -479,17 +491,9 @@ CURLcode Curl_resolver_wait_resolv(struct connectdata *conn,
+   if(entry)
+     *entry = conn->async.dns;
+ 
+-  if(!conn->async.dns) {
+-    /* a name was not resolved */
+-    if(conn->bits.httpproxy) {
+-      resolver_error(conn, "proxy");
+-      rc = CURLE_COULDNT_RESOLVE_PROXY;
+-    }
+-    else {
+-      resolver_error(conn, "host");
+-      rc = CURLE_COULDNT_RESOLVE_HOST;
+-    }
+-  }
++  if(!conn->async.dns)
++    /* a name was not resolved, report error */
++    rc = resolver_error(conn);
+ 
+   destroy_async_data(&conn->async);
+ 
+@@ -524,12 +528,13 @@ CURLcode Curl_resolver_is_resolved(struct connectdata *conn,
+ 
+   if(done) {
+     getaddrinfo_complete(conn);
+-    destroy_async_data(&conn->async);
+ 
+     if(!conn->async.dns) {
+-      resolver_error(conn, "host");
+-      return CURLE_COULDNT_RESOLVE_HOST;
++      CURLcode rc = resolver_error(conn);
++      destroy_async_data(&conn->async);
++      return rc;
+     }
++    destroy_async_data(&conn->async);
+     *entry = conn->async.dns;
+   }
+   else {
+-- 
+1.7.1
+
