@@ -21,6 +21,7 @@ Patch2:         %{name}_sysfonts.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
+BuildRequires:  php-posix
 
 Requires:       php(language) >= 5.2
 Requires:       php-openssl
@@ -215,9 +216,10 @@ install -d %{buildroot}%{_bindir}
 install -m 0755 %{SOURCE1} %{buildroot}%{_bindir}/%{real_name}_addfont.php
 
 # Fonts
-cd %{buildroot}%{_datadir}/php/%{real_name}/fonts
+sed -e 's|/etc/php-tcpdf/tcpdf_config.php|config/tcpdf_config.php|' \
+    -i tcpdf.php
 
-php -d include_path=%{buildroot}%{_datadir}/php:. \
+php -d include_path=..:. \
     %{SOURCE1} \
     /usr/share/fonts/dejavu/*ttf \
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
