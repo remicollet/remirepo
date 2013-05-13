@@ -1,3 +1,4 @@
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Rpc
 %global pear_channel pear.horde.org
@@ -6,7 +7,7 @@
 # so, don't run it during rpmbuild
 
 Name:           php-horde-Horde-Rpc
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Horde RPC API
 
@@ -35,8 +36,8 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Dav) >= 1.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Dav) >= 2.0.0
+#Requires:      php-pear(%{pear_channel}/Horde_Dav) >= 1.0.0
+#Requires:      php-pear(%{pear_channel}/Horde_Dav) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
@@ -130,6 +131,10 @@ fi
 
 
 %changelog
+* Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- don't requires Horde_Dav until stable
+
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
