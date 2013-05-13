@@ -1,4 +1,5 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+
 %global pear_channel pear.twig-project.org
 %global pear_name    Twig
 
