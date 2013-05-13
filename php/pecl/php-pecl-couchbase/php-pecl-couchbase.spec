@@ -9,7 +9,7 @@
 Summary:       Couchbase Server PHP extension
 Name:          php-pecl-couchbase
 Version:       1.1.5
-Release:       1%{?dist}.1
+Release:       2%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -27,7 +27,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
-Requires:      php-pecl(igbinary)%{?_isa}
+Requires:      php-pecl-igbinary%{?_isa}
 
 Provides:      php-%{pecl_name} = %{version}
 Provides:      php-%{pecl_name}%{?_isa} = %{version}
@@ -151,6 +151,9 @@ fi
 
 
 %changelog
+* Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 1.1.15-2
+- fix dependency on php-pecl-igbinary
+
 * Thu May  9 2013 Remi Collet <remi@fedoraproject.org> - 1.1.15-1
 - update to 1.1.15 (no change)
 
