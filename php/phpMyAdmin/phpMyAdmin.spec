@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 4.0.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -43,6 +43,7 @@ Requires:  php-zip
 Requires:  php-zlib
 Requires:  php-php-gettext
 Requires:  php-tcpdf
+Requires:  php-tcpdf-dejavu-fonts
 
 Provides:  phpmyadmin = %{version}-%{release}
 Obsoletes: phpMyAdmin3
@@ -59,7 +60,7 @@ is available in 50 languages
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
 
-%patch0 -p0
+%patch0 -p1
 
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
@@ -147,6 +148,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Mon May 13 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-3
+- upstream fixes for tcpdf 6.0
+
 * Thu May  9 2013 Remi Collet <rpms@famillecollet.com> 4.0.0-2
 - use system tcpdf library
 

@@ -1,5 +1,30 @@
---- libraries/vendor_config.php~	2013-05-03 14:16:36.000000000 +0200
-+++ libraries/vendor_config.php	2013-05-09 17:29:11.847767792 +0200
+From 7ae3edc9a0f09e2f70c4d2a425e4a77fcb642de5 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 9 May 2013 18:24:06 +0200
+Subject: [PATCH] add tcpdf path to vendor_config.php
+
+---
+ libraries/PDF.class.php     | 2 +-
+ libraries/vendor_config.php | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/libraries/PDF.class.php b/libraries/PDF.class.php
+index 66e05a3..d11a9d4 100644
+--- a/libraries/PDF.class.php
++++ b/libraries/PDF.class.php
+@@ -9,7 +9,7 @@
+     exit;
+ }
+ 
+-require_once './libraries/tcpdf/tcpdf.php';
++require_once TCPDF_INC;
+ 
+ /**
+  * PDF font to use.
+diff --git a/libraries/vendor_config.php b/libraries/vendor_config.php
+index 0a09a99..92356f3 100644
+--- a/libraries/vendor_config.php
++++ b/libraries/vendor_config.php
 @@ -68,4 +68,9 @@
   * eg. /usr/share/php/gettext/gettext.inc.
   */
@@ -10,18 +35,23 @@
 + */
 +define('TCPDF_INC', './libraries/tcpdf/tcpdf.php');
  ?>
---- libraries/PDF.class.php~	2013-05-03 14:16:36.000000000 +0200
-+++ libraries/PDF.class.php	2013-05-09 17:29:10.904764535 +0200
-@@ -9,7 +9,7 @@
-     exit;
- }
- 
--require_once './libraries/tcpdf/tcpdf.php';
-+require_once TCPDF_INC;
- 
- /**
-  * PDF font to use.
-@@ -45,13 +45,16 @@
+-- 
+1.8.1.6
+
+From 313d63ad8f8d53d953df22a97f435964841cddf0 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 9 May 2013 18:29:28 +0200
+Subject: [PATCH] fix compat with tcpdf >= 6.0 (tested with 6.0.012)
+
+---
+ libraries/PDF.class.php | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/libraries/PDF.class.php b/libraries/PDF.class.php
+index d11a9d4..fa4b48a 100644
+--- a/libraries/PDF.class.php
++++ b/libraries/PDF.class.php
+@@ -45,7 +45,6 @@ public function __construct($orientation = 'P', $unit = 'mm', $format = 'A4',
      ) {
          parent::__construct();
          $this->SetAuthor('phpMyAdmin ' . PMA_VERSION);
@@ -29,13 +59,102 @@
          $this->AddFont('DejaVuSans', '', 'dejavusans.php');
          $this->AddFont('DejaVuSans', 'B', 'dejavusansb.php');
          $this->SetFont(PMA_PDF_FONT, '', 14);
-         $this->setFooterFont(array(PMA_PDF_FONT, '', 14));
+@@ -73,6 +72,17 @@ function Footer()
      }
  
+     /**
++     * Function to test an empty string (was in tcpdf < 6.0)
++     *
++     * @param string $str to test
++     *
++     * @return boolean
++     */
 +    public function empty_string($str) {
 +            return (is_null($str) OR (is_string($str) AND (strlen($str) == 0)));
 +    }
 +
-     /**
-      * This function must be named "Footer" to work with the TCPDF library
++    /**
+      * Function to set alias which will be expanded on page rendering.
       *
+      * @param string $name  name of the alias
+-- 
+1.8.1.6
+
+From 1675064f16399197e403563d59cf06e6f4fe216e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michal=20=C4=8Ciha=C5=99?= <michal@cihar.com>
+Date: Fri, 10 May 2013 09:25:54 +0200
+Subject: [PATCH] Fixed usage of UTF8ToUTF16BE in new TCPDF
+
+---
+ libraries/PDF.class.php | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/libraries/PDF.class.php b/libraries/PDF.class.php
+index 5147eb7..7074aab 100644
+--- a/libraries/PDF.class.php
++++ b/libraries/PDF.class.php
+@@ -97,7 +97,12 @@ public function empty_string($str) {
+      */
+     function SetAlias($name, $value)
+     {
+-        $this->Alias[$this->UTF8ToUTF16BE($name)] = $this->UTF8ToUTF16BE($value);
++        $name = TCPDF_FONTS::UTF8ToUTF16BE(
++            $name, false, true, $this->CurrentFont
++        );
++        $this->Alias[$name] = TCPDF_FONTS::UTF8ToUTF16BE(
++            $value, false, true, $this->CurrentFont
++        );
+     }
+ 
+     /**
+-- 
+1.8.1.6
+
+From 325d423abcd55856ffb38ecb6cb0f932148a2cab Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michal=20=C4=8Ciha=C5=99?= <michal@cihar.com>
+Date: Fri, 10 May 2013 09:27:48 +0200
+Subject: [PATCH] Drop compatibility with older TCPDF using empty_string
+
+---
+ libraries/PDF.class.php                          | 11 -----------
+ libraries/plugins/export/PMA_ExportPdf.class.php |  2 +-
+ 2 files changed, 1 insertion(+), 12 deletions(-)
+
+diff --git a/libraries/PDF.class.php b/libraries/PDF.class.php
+index 7074aab..431111e 100644
+--- a/libraries/PDF.class.php
++++ b/libraries/PDF.class.php
+@@ -77,17 +77,6 @@ function Footer()
+     }
+ 
+     /**
+-     * Function to test an empty string (was in tcpdf < 6.0)
+-     *
+-     * @param string $str to test
+-     *
+-     * @return boolean
+-     */
+-    public function empty_string($str) {
+-            return (is_null($str) OR (is_string($str) AND (strlen($str) == 0)));
+-    }
+-
+-    /**
+      * Function to set alias which will be expanded on page rendering.
+      *
+      * @param string $name  name of the alias
+diff --git a/libraries/plugins/export/PMA_ExportPdf.class.php b/libraries/plugins/export/PMA_ExportPdf.class.php
+index 1053bf6..a8c88fa 100644
+--- a/libraries/plugins/export/PMA_ExportPdf.class.php
++++ b/libraries/plugins/export/PMA_ExportPdf.class.php
+@@ -36,7 +36,7 @@ class PMA_ExportPdf extends PMA_PDF
+      */
+     function checkPageBreak($h = 0, $y = '', $addpage = true)
+     {
+-        if ($this->empty_string($y)) {
++        if (TCPDF_STATIC::empty_string($y)) {
+             $y = $this->y;
+         }
+         $current_page = $this->page;
+-- 
+1.8.1.6
+
