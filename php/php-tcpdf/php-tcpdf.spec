@@ -1,21 +1,40 @@
-%global dl_version 6_0_012
+%global dl_version 6_0_013
 %global real_name  tcpdf
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
-Version:        6.0.012
-Release:        3%{?dist}
+Version:        6.0.013
+Release:        1%{?dist}
 
-Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
 URL:            http://www.tcpdf.org
 License:        LGPLv3+
 Group:          Development/Libraries
 
-Patch0:         php-tcpdf_badpath.patch
-Patch1:         php-tcpdf_config.patch
+Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
+Source1:        %{real_name}_addfont.php
+
+Patch0:         %{name}_badpath.patch
+Patch1:         %{name}_config.patch
+# https://sourceforge.net/p/tcpdf/patches/63/ - allow to use system fonts
+Patch2:         %{name}_sysfonts.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php-cli
+BuildRequires:  dejavu-lgc-sans-fonts
+BuildRequires:  dejavu-lgc-sans-mono-fonts
+BuildRequires:  dejavu-lgc-serif-fonts
+BuildRequires:  dejavu-sans-fonts
+BuildRequires:  dejavu-sans-mono-fonts
+BuildRequires:  dejavu-serif-fonts
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+BuildRequires:  gnu-free-mono-fonts
+BuildRequires:  gnu-free-sans-fonts
+BuildRequires:  gnu-free-serif-fonts
+%else
+BuildRequires:  freefont
+%endif
+
 
 Requires:       php(language) >= 5.2
 Requires:       php-openssl
@@ -33,6 +52,20 @@ Requires:       php-pcre
 Requires:       php-posix
 Requires:       php-tidy
 Requires:       php-xml
+# System fonts
+Requires:       dejavu-lgc-sans-fonts
+Requires:       dejavu-lgc-sans-mono-fonts
+Requires:       dejavu-lgc-serif-fonts
+Requires:       dejavu-sans-fonts
+Requires:       dejavu-sans-mono-fonts
+Requires:       dejavu-serif-fonts
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+Requires:       gnu-free-mono-fonts
+Requires:       gnu-free-sans-fonts
+Requires:       gnu-free-serif-fonts
+%else
+Requires:       freefont
+%endif
 
 
 %description
@@ -82,6 +115,7 @@ solution. You can optionally install php-pecl-imagick; TCPDF will use it.
 %setup -qn %{real_name}
 %patch0 -p1 -b .badpath
 %patch1 -p1 -b .config
+%patch2 -p1 -b .sysfonts
 
 : globally fix permissions, always broken...
 find ./ -type d -exec chmod 755 {} \;
@@ -163,6 +197,23 @@ cp -a config/*.php $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 install -d $RPM_BUILD_ROOT%{_localstatedir}/cache/%{name}
 install -m 0644 README.cache $RPM_BUILD_ROOT%{_localstatedir}/cache/%{name}/README
 
+# Tools
+install -d $RPM_BUILD_ROOT%{_bindir}
+install -m 0755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/%{real_name}_addfont.php
+sed -e '/include/s|tcpdf.php|tcpdf/tcpdf.php|' \
+    -i $RPM_BUILD_ROOT%{_bindir}/%{real_name}_addfont.php
+
+# Fonts
+php %{SOURCE1} \
+    /usr/share/fonts/dejavu/*ttf \
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+    /usr/share/fonts/gnu-free/*ttf \
+%else
+    /usr/share/fonts/freefont/*ttf \
+%endif
+    --link \
+    --out $RPM_BUILD_ROOT%{_datadir}/php/%{real_name}/fonts
+
 
 %post
 # We don't want to require "httpd" in case PHP is used with some other web
@@ -191,6 +242,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc LICENSE.TXT README.TXT CHANGELOG.TXT doc/* examples
+%{_bindir}/%{real_name}_addfont.php
 %{_datadir}/php/%{real_name}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/*
@@ -198,6 +250,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 6.0.013-1
+- update to 6.0.013
+- use available system TTF fonts
+
 * Sun May 10 2013 Johan Cwiklinski <johan AT x-tnd DOT be> - 6.0.012-3
 - Fix README.cache file permissions
 
