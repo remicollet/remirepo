@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-include "tcpdf.php";
+include "tcpdf/tcpdf.php";
 
 function help() {
 	echo "usage ".$_SERVER['argv'][0]." [ options ] fontfile [ fontfile ... ]\n";

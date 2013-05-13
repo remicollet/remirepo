@@ -4,7 +4,7 @@
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
 Version:        6.0.013
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            http://www.tcpdf.org
 License:        LGPLv3+
@@ -21,20 +21,6 @@ Patch2:         %{name}_sysfonts.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
-BuildRequires:  dejavu-lgc-sans-fonts
-BuildRequires:  dejavu-lgc-sans-mono-fonts
-BuildRequires:  dejavu-lgc-serif-fonts
-BuildRequires:  dejavu-sans-fonts
-BuildRequires:  dejavu-sans-mono-fonts
-BuildRequires:  dejavu-serif-fonts
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-BuildRequires:  gnu-free-mono-fonts
-BuildRequires:  gnu-free-sans-fonts
-BuildRequires:  gnu-free-serif-fonts
-%else
-BuildRequires:  freefont
-%endif
-
 
 Requires:       php(language) >= 5.2
 Requires:       php-openssl
@@ -52,20 +38,6 @@ Requires:       php-pcre
 Requires:       php-posix
 Requires:       php-tidy
 Requires:       php-xml
-# System fonts
-Requires:       dejavu-lgc-sans-fonts
-Requires:       dejavu-lgc-sans-mono-fonts
-Requires:       dejavu-lgc-serif-fonts
-Requires:       dejavu-sans-fonts
-Requires:       dejavu-sans-mono-fonts
-Requires:       dejavu-serif-fonts
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-Requires:       gnu-free-mono-fonts
-Requires:       gnu-free-sans-fonts
-Requires:       gnu-free-serif-fonts
-%else
-Requires:       freefont
-%endif
 
 
 %description
@@ -111,6 +83,46 @@ By default, TCPDF uses the GD library which is know as slower than ImageMagick
 solution. You can optionally install php-pecl-imagick; TCPDF will use it.
 
 
+%package dejavu-fonts
+Summary:        DejaVu fonts for tcpdf
+Group:          Development/Libraries
+BuildRequires:  dejavu-lgc-sans-fonts
+BuildRequires:  dejavu-lgc-sans-mono-fonts
+BuildRequires:  dejavu-lgc-serif-fonts
+BuildRequires:  dejavu-sans-fonts
+BuildRequires:  dejavu-sans-mono-fonts
+BuildRequires:  dejavu-serif-fonts
+Requires:       %{name} = %{version}-%{release}
+Requires:       dejavu-lgc-sans-fonts
+Requires:       dejavu-lgc-sans-mono-fonts
+Requires:       dejavu-lgc-serif-fonts
+Requires:       dejavu-sans-fonts
+Requires:       dejavu-sans-mono-fonts
+Requires:       dejavu-serif-fonts
+
+%description dejavu-fonts
+This package allow to use system DejaVu fonts in TCPDF.
+
+%package gnu-free-fonts
+Summary:        GNU FreeFonts for tcpdf
+Group:          Development/Libraries
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+BuildRequires:  gnu-free-mono-fonts
+BuildRequires:  gnu-free-sans-fonts
+BuildRequires:  gnu-free-serif-fonts
+Requires:       gnu-free-mono-fonts
+Requires:       gnu-free-sans-fonts
+Requires:       gnu-free-serif-fonts
+%else
+BuildRequires:  freefont
+Requires:       freefont
+%endif
+
+%description gnu-free-fonts
+This package allow to use system GNU FreeFonts in TCPDF.
+
+
+
 %prep
 %setup -qn %{real_name}
 %patch0 -p1 -b .badpath
@@ -127,6 +139,7 @@ for fic in fonts/*.z
 do
   rm -f $fic ${fic/.z/.php}
 done
+ls fonts | sed -e 's|^|%{_datadir}/php/%{real_name}/fonts/|' >corefonts.lst
 
 : remove composer
 rm -f composer.json
@@ -180,31 +193,32 @@ EOF
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 # Library
-install -d     $RPM_BUILD_ROOT%{_datadir}/php/%{real_name}
-cp -a *.php    $RPM_BUILD_ROOT%{_datadir}/php/%{real_name}/
-cp -a images   $RPM_BUILD_ROOT%{_datadir}/php/%{real_name}/
-cp -a include  $RPM_BUILD_ROOT%{_datadir}/php/%{real_name}/
-cp -a fonts    $RPM_BUILD_ROOT%{_datadir}/php/%{real_name}/
-cp -a lang     $RPM_BUILD_ROOT%{_datadir}/php/%{real_name}/
+install -d     %{buildroot}%{_datadir}/php/%{real_name}
+cp -a *.php    %{buildroot}%{_datadir}/php/%{real_name}/
+cp -a images   %{buildroot}%{_datadir}/php/%{real_name}/
+cp -a include  %{buildroot}%{_datadir}/php/%{real_name}/
+cp -a fonts    %{buildroot}%{_datadir}/php/%{real_name}/
+cp -a lang     %{buildroot}%{_datadir}/php/%{real_name}/
 
 # Config
-install -d         $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
-cp -a config/*.php $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
+install -d         %{buildroot}%{_sysconfdir}/%{name}
+cp -a config/*.php %{buildroot}%{_sysconfdir}/%{name}
 
 # Cache
-install -d $RPM_BUILD_ROOT%{_localstatedir}/cache/%{name}
-install -m 0644 README.cache $RPM_BUILD_ROOT%{_localstatedir}/cache/%{name}/README
+install -d %{buildroot}%{_localstatedir}/cache/%{name}
+install -m 0644 README.cache %{buildroot}%{_localstatedir}/cache/%{name}/README
 
 # Tools
-install -d $RPM_BUILD_ROOT%{_bindir}
-install -m 0755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/%{real_name}_addfont.php
-sed -e '/include/s|tcpdf.php|tcpdf/tcpdf.php|' \
-    -i $RPM_BUILD_ROOT%{_bindir}/%{real_name}_addfont.php
+install -d %{buildroot}%{_bindir}
+install -m 0755 %{SOURCE1} %{buildroot}%{_bindir}/%{real_name}_addfont.php
 
 # Fonts
-php %{SOURCE1} \
+cd %{buildroot}%{_datadir}/php/%{real_name}/fonts
+
+php -d include_path=%{buildroot}%{_datadir}/php:. \
+    %{SOURCE1} \
     /usr/share/fonts/dejavu/*ttf \
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
     /usr/share/fonts/gnu-free/*ttf \
@@ -212,7 +226,7 @@ php %{SOURCE1} \
     /usr/share/fonts/freefont/*ttf \
 %endif
     --link \
-    --out $RPM_BUILD_ROOT%{_datadir}/php/%{real_name}/fonts
+    --out %{buildroot}%{_datadir}/php/%{real_name}/fonts
 
 
 %post
@@ -236,20 +250,36 @@ done
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
-%files
+%files -f corefonts.lst
 %defattr(-,root,root,-)
 %doc LICENSE.TXT README.TXT CHANGELOG.TXT doc/* examples
 %{_bindir}/%{real_name}_addfont.php
-%{_datadir}/php/%{real_name}
+%dir %{_datadir}/php/%{real_name}
+%dir %{_datadir}/php/%{real_name}/fonts
+%{_datadir}/php/%{real_name}/images
+%{_datadir}/php/%{real_name}/include
+%{_datadir}/php/%{real_name}/lang
+%{_datadir}/php/%{real_name}/*php
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/*
 %{_localstatedir}/cache/%{name}
 
+%files dejavu-fonts
+%defattr(-,root,root,-)
+%{_datadir}/php/%{real_name}/fonts/dejavu*
+
+%files gnu-free-fonts
+%defattr(-,root,root,-)
+%{_datadir}/php/%{real_name}/fonts/free*
+
 
 %changelog
+* Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 6.0.013-2
+- split fonts in sub-packages
+
 * Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 6.0.013-1
 - update to 6.0.013
 - use available system TTF fonts
