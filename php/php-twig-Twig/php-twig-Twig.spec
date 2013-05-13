@@ -1,12 +1,11 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %global pear_channel pear.twig-project.org
-%global pear_name    %(echo %{name} | sed -e 's/^php-twig-//' -e 's/-/_/g')
+%global pear_name    Twig
 
-Name:             php-twig-Twig
-Version:          1.12.3
+Name:             php-twig-%{pear_name}
+Version:          1.13.0
 Release:          1%{?dist}
-Summary:          Twig is a modern template engine for PHP
+Summary:          The flexible, fast, and secure template engine for PHP
 
 Group:            Development/Libraries
 License:          BSD
@@ -39,7 +38,7 @@ Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
-The flexible, fast, and secure template engine for PHP.
+%{summary}.
 
 * Fast: Twig compiles templates down to plain optimized PHP code. The
   overhead compared to regular PHP code was reduced to the very minimum.
@@ -51,6 +50,8 @@ The flexible, fast, and secure template engine for PHP.
 * Flexible: Twig is powered by a flexible lexer and parser. This allows the
   developer to define its own custom tags and filters, and create its own
   DSL.
+
+Optional dependency: Xdebug (php-pecl-xdebug)
 
 
 %prep
@@ -96,6 +97,12 @@ fi
 
 
 %changelog
+* Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 1.13.0-1
+- Backport 1.13.0 for remi repo
+
+* Mon May 13 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.13.0-1
+- Updated to version 1.13.0
+
 * Mon Apr 08 2013 Remi Collet <remi@fedoraproject.org> - 1.12.3-1
 - Update to 1.12.3
 
