@@ -1,10 +1,10 @@
-%global dl_version 6_0_013
+%global dl_version 6_0_014
 %global real_name  tcpdf
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
-Version:        6.0.013
-Release:        2%{?dist}
+Version:        6.0.014
+Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
 License:        LGPLv3+
@@ -15,8 +15,6 @@ Source1:        %{real_name}_addfont.php
 
 Patch0:         %{name}_badpath.patch
 Patch1:         %{name}_config.patch
-# https://sourceforge.net/p/tcpdf/patches/63/ - allow to use system fonts
-Patch2:         %{name}_sysfonts.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -128,7 +126,6 @@ This package allow to use system GNU FreeFonts in TCPDF.
 %setup -qn %{real_name}
 %patch0 -p1 -b .badpath
 %patch1 -p1 -b .config
-%patch2 -p1 -b .sysfonts
 
 : globally fix permissions, always broken...
 find ./ -type d -exec chmod 755 {} \;
@@ -279,6 +276,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 14 2013 Remi Collet <remi@fedoraproject.org> - 6.0.014-1
+- update to 6.0.014
+- drop patch merged upstream
+
 * Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 6.0.013-2
 - split fonts in sub-packages
 
