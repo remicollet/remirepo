@@ -1,9 +1,9 @@
-%global dl_version 6_0_014
+%global dl_version 6_0_015
 %global real_name  tcpdf
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
-Version:        6.0.014
+Version:        6.0.015
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -11,10 +11,6 @@ License:        LGPLv3+
 Group:          Development/Libraries
 
 Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
-Source1:        %{real_name}_addfont.php
-
-Patch0:         %{name}_badpath.patch
-Patch1:         %{name}_config.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -109,6 +105,7 @@ Group:          Development/Libraries
 BuildRequires:  gnu-free-mono-fonts
 BuildRequires:  gnu-free-sans-fonts
 BuildRequires:  gnu-free-serif-fonts
+Requires:       %{name} = %{version}-%{release}
 Requires:       gnu-free-mono-fonts
 Requires:       gnu-free-sans-fonts
 Requires:       gnu-free-serif-fonts
@@ -124,12 +121,6 @@ This package allow to use system GNU FreeFonts in TCPDF.
 
 %prep
 %setup -qn %{real_name}
-%patch0 -p1 -b .badpath
-%patch1 -p1 -b .config
-
-: globally fix permissions, always broken...
-find ./ -type d -exec chmod 755 {} \;
-find ./ -type f -exec chmod 644 {} \;
 
 : remove bundled fonts
 rm -rf fonts/dejavu-fonts-ttf* fonts/freefont-*
@@ -138,52 +129,6 @@ do
   rm -f $fic ${fic/.z/.php}
 done
 ls fonts | sed -e 's|^|%{_datadir}/php/%{real_name}/fonts/|' >corefonts.lst
-
-: remove composer
-rm -f composer.json
-
-: langs are not config...
-mv config/lang .
-
-: move certs in examples
-mv config/cert examples/
-
-: some files are relevant for examples only
-mv cache  examples/cache
-mv config/tcpdf_config_alt.php examples/
-
-
-: change examples include paths
-sed -i examples/*.php examples/barcodes/*.php \
-    -e "s|../config/cert/|./cert/|" \
-    -e "s|../config/lang|%{_datadir}/php/%{real_name}/lang|g" \
-    -e "s|../%{real_name}.php|%{real_name}/%{real_name}.php|" \
-    -e "s|../config/%{real_name}_config_alt.php|%{real_name}_config_alt.php|" \
-    -e "s|../cache/|cache/|" \
-    -e "s|../images/|images/|" \
-    -e "s|dirname(__FILE__).'/../../|'%{real_name}/|"
-
-: wrong end-of-line encoding
-sed -i 's/\r//' \
-    lang/bul.php \
-    images/bug.eps \
-    images/tiger.ai \
-    images/pelican.ai
-
-: non UTF8 files
-pushd examples
-iconv -f iso8859-1 -t utf-8 example_030.php > example_030.php.conv \
-   && mv -f example_030.php.conv example_030.php
-popd
-
-cat >README.cache <<EOF
-This folder contains a sub-folder per user uid.
-
-If the user running PHP doesn't appear here, you need to create it.
-  mkdir <useruid>
-  chown <useruid> <useruid>
-
-EOF
 
 
 %build
@@ -195,57 +140,36 @@ rm -rf %{buildroot}
 # Library
 install -d     %{buildroot}%{_datadir}/php/%{real_name}
 cp -a *.php    %{buildroot}%{_datadir}/php/%{real_name}/
-cp -a images   %{buildroot}%{_datadir}/php/%{real_name}/
 cp -a include  %{buildroot}%{_datadir}/php/%{real_name}/
 cp -a fonts    %{buildroot}%{_datadir}/php/%{real_name}/
-cp -a lang     %{buildroot}%{_datadir}/php/%{real_name}/
 
 # Config
-install -d         %{buildroot}%{_sysconfdir}/%{name}
-cp -a config/*.php %{buildroot}%{_sysconfdir}/%{name}
-
-# Cache
-install -d %{buildroot}%{_localstatedir}/cache/%{name}
-install -m 0644 README.cache %{buildroot}%{_localstatedir}/cache/%{name}/README
+install -d     %{buildroot}%{_sysconfdir}/%{name}
+install -m 0644 config/*.php \
+               %{buildroot}%{_sysconfdir}/%{name}
 
 # Tools
 install -d %{buildroot}%{_bindir}
-install -m 0755 %{SOURCE1} %{buildroot}%{_bindir}/%{real_name}_addfont.php
+install -m 0755 tools/*php \
+           %{buildroot}%{_bindir}/
 
 # Fonts
-sed -e 's|/etc/php-tcpdf/tcpdf_config.php|config/tcpdf_config.php|' \
-    -i tcpdf.php
-
-php -d include_path=..:. \
-    %{SOURCE1} \
+list=""
+for ttf in \
     /usr/share/fonts/dejavu/*ttf \
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
     /usr/share/fonts/gnu-free/*ttf \
 %else
     /usr/share/fonts/freefont/*ttf \
 %endif
-    --link \
-    --out %{buildroot}%{_datadir}/php/%{real_name}/fonts
-
-
-%post
-# We don't want to require "httpd" in case PHP is used with some other web
-# server or without any, but we do want the owner of this directory to default
-# to apache for a working "out of the box" experience on the most common setup.
-
-for server in apache lighttpd nginx
-do
-  uid=$(getent passwd $server | cut -d: -f3)
-  if [ -n "$uid" ]
-  then
-    cache=%{_var}/cache/%{name}/$uid
-    if [ ! -d $cache ]
-    then
-      mkdir -p $cache
-      chown $uid $cache
-    fi
-  fi
+; do
+   list=$ttf${list:+,${list}}
 done
+php -d include_path=. \
+    tools/tcpdf_addfont.php \
+    --fonts $list \
+    --link \
+    --outpath %{buildroot}%{_datadir}/php/%{real_name}/fonts/
 
 
 %clean
@@ -254,17 +178,14 @@ rm -rf %{buildroot}
 
 %files -f corefonts.lst
 %defattr(-,root,root,-)
-%doc LICENSE.TXT README.TXT CHANGELOG.TXT doc/* examples
+%doc LICENSE.TXT README.TXT CHANGELOG.TXT examples
 %{_bindir}/%{real_name}_addfont.php
 %dir %{_datadir}/php/%{real_name}
 %dir %{_datadir}/php/%{real_name}/fonts
-%{_datadir}/php/%{real_name}/images
 %{_datadir}/php/%{real_name}/include
-%{_datadir}/php/%{real_name}/lang
 %{_datadir}/php/%{real_name}/*php
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/*
-%{_localstatedir}/cache/%{name}
 
 %files dejavu-fonts
 %defattr(-,root,root,-)
@@ -276,6 +197,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 15 2013 Remi Collet <remi@fedoraproject.org> - 6.0.015-1
+- update to 6.0.014
+- clean spec (upstream changes for packaging)
+
 * Tue May 14 2013 Remi Collet <remi@fedoraproject.org> - 6.0.014-1
 - update to 6.0.014
 - drop patch merged upstream
