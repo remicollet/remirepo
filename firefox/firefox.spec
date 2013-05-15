@@ -391,8 +391,15 @@ create_default_langpack "sv-SE" "sv"
 create_default_langpack "zh-TW" "zh"
 %endif # build_langpacks
 
-# New preferences dir
+# Keep compatibility with the old preference location
+# on Fedora 18 and earlier
+%if 0%{?fedora} < 19
+%{__mkdir_p} $RPM_BUILD_ROOT/%{mozappdir}/defaults/preferences
+%{__mkdir_p} $RPM_BUILD_ROOT/%{mozappdir}/browser/defaults
+ln -s %{mozappdir}/defaults/preferences $RPM_BUILD_ROOT/%{mozappdir}/browser/defaults/preferences
+%else
 %{__mkdir_p} $RPM_BUILD_ROOT/%{mozappdir}/browser/defaults/preferences
+%endif
 
 # System extensions
 %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/mozilla/extensions/%{firefox_app_id}
@@ -458,7 +465,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %dir %{mozappdir}/browser/components
 %{mozappdir}/browser/components/*.so
 %{mozappdir}/browser/components/components.manifest
+%if 0%{?fedora} < 19
+%dir %{mozappdir}/defaults/preferences
+%{mozappdir}/browser/defaults/preferences
+%else
 %dir %{mozappdir}/browser/defaults/preferences
+%endif
 %attr(644, root, root) %{mozappdir}/browser/blocklist.xml
 %dir %{mozappdir}/browser/extensions
 %{mozappdir}/browser/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
@@ -492,8 +504,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
-* Tue May 14 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-1
+* Wed May 15 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-1
 - Update to 21.0
+
+* Wed May 15 2013 Martin Stransky <stransky@redhat.com> - 21.0-2
+- Keep compatibility with old preference dir
 
 * Tue May 14 2013 Martin Stransky <stransky@redhat.com> - 21.0-1
 - Updated to latest upstream (21.0)
