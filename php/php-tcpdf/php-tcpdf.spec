@@ -150,8 +150,8 @@ install -m 0644 config/*.php \
 
 # Tools
 install -d %{buildroot}%{_bindir}
-install -m 0755 tools/*php \
-           %{buildroot}%{_bindir}/
+install -m 0755 tools/%{real_name}_addfont.php \
+           %{buildroot}%{_bindir}/%{real_name}_addfont
 
 # Fonts
 list=""
@@ -179,7 +179,7 @@ rm -rf %{buildroot}
 %files -f corefonts.lst
 %defattr(-,root,root,-)
 %doc LICENSE.TXT README.TXT CHANGELOG.TXT examples
-%{_bindir}/%{real_name}_addfont.php
+%{_bindir}/%{real_name}_addfont
 %dir %{_datadir}/php/%{real_name}
 %dir %{_datadir}/php/%{real_name}/fonts
 %{_datadir}/php/%{real_name}/include
@@ -198,8 +198,9 @@ rm -rf %{buildroot}
 
 %changelog
 * Wed May 15 2013 Remi Collet <remi@fedoraproject.org> - 6.0.015-1
-- update to 6.0.014
+- update to 6.0.015
 - clean spec (upstream changes for packaging)
+- drop .php suffix from tools
 
 * Tue May 14 2013 Remi Collet <remi@fedoraproject.org> - 6.0.014-1
 - update to 6.0.014
