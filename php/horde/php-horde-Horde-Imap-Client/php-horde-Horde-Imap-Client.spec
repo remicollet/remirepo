@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.9.0
+Version:        2.9.1
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -35,24 +35,24 @@ Requires:       php-spl
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Stream) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optionnal
 Requires:       php-json
 Requires:       php-mbstring
 Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Cache) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Secret) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
 # Optional and implicilyt required :
 #   Horde_Compress_Fast, Horde_Stream_Filter
 # Not yet available Horde_Mongo, mongo
@@ -139,6 +139,10 @@ fi
 
 
 %changelog
+* Wed May 15 2013 Remi Collet <remi@fedoraproject.org> - 2.9.1-1
+- Update to 2.9.1
+- switch from Conflicts >= max to Requires < max
+
 * Sat May 04 2013 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
 - Update to 2.9.0
 - drop optional requires imap
