@@ -56,17 +56,8 @@ Make all warnings fatal
 
 .SS "Firefox options"
 .TP
-\fB\-height\fR \fIvalue\fR
-Set height of startup window to \fIvalue\fR.
-.TP
 .B \-h, \-help
 Show summary of options.
-.TP
-.B \-installer
-Start with 4.x migration window.
-.TP
-\fB\-width\fR \fIvalue\fR
-Set width of startup window to \fIvalue\fR.
 .TP
 .B \-v, \-version
 Print \fB/usr/bin/firefox-bin\fR version.
@@ -77,24 +68,12 @@ Create \fIprofile\fR.
 \fB\-P\fR \fIprofile\fR
 Start with \fIprofile\fR.
 .TP
-.B \-ProfileWizard
-Start with profile wizard.
-.TP
 .B \-ProfileManager
 Start with profile manager.
-.TP
-.B \-SelectProfile
-Start with profile selection dialog.
-.TP
-\fB\-lang\fR \fIlang-region\fR
-Start with \fIlang-region\fR resources.
 .TP
 \fB\-remote\fR \fIcommand\fR
 Execute \fIcommand\fR in an already running Firefox process.  For more info,
 see: \fIhttp://www.mozilla.org/unix/remote.html\fR
-.TP
-.B \-splash
-Enable splash screen.
 .TP
 .B \-jsconsole
 Start with Javascript Console
@@ -102,6 +81,40 @@ Start with Javascript Console
 \fB\-chrome\fR \fIurl\fR
 Load the specified chrome.
 .TP
+\fB\-no\-remote\fR
+Don't connect to any other running instances of \fBfirefox\fR. Use this if you want to run \fBfirefox\fR
+in an entirely new process. By default, \fBfirefox\fR will delegate a command to an already running instance.
+.TP
+\fB\-safe\-mode\fR
+Start \fBfirefox\fR in safe-mode. This disables all third-party extensions, and may be necessary if
+you are having problems with an extension you installed.
+.TP
+\fB\-new\-tab\fR \fIurl\fR
+Open \fIurl\fR in a new tab.
+.TP
+\fB\-new\-window\fR \fIurl\fR
+Open \fIurl\fR in a new window.
+.TP
+\fB\-preferences\fR
+Open the preferences dialog.
+.TP
+\fB\-private\fR
+Start \fBfirefox\fR in private browsing mode.
+.TP
+\fB\-private\-toggle\fR
+Toggle private browsing mode.
+.TP
+\fB\-setDefaultBrowser\fR
+Set \fBfirefox\fR as the default web browser.
+.TP
+\fB\-search\fR \fIterm\fR
+Search for \fIterm\fR with your default search engine.
+.TP
+\fB\-migration\fR
+Start with migration wizard.
+.TP
+\fB\-new-instance\fR
+Open new instance, not a new window in running instance.
 
 .SH FILES
 \fI/usr/bin/firefox\fR - shell script wrapping

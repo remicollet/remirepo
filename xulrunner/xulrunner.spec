@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 17
+%if 0%{?fedora} < 18
 %define system_nss        0
 %else
 %define system_nss        1
@@ -41,7 +41,7 @@
 
 %if %{?system_nss}
 # grep 'min_ns.*=[0-9]' configure
-%global nspr_version 4.9.4
+%global nspr_version 4.9.6
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
 %global nss_version 3.14.3
 %global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
@@ -92,7 +92,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        20.0.1
+Version:        21.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -110,7 +110,6 @@ Patch14:        xulrunner-2.0-chromium-types.patch
 Patch17:        xulrunner-15.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
 Patch18:        xulrunner-16.0-jemalloc-ppc.patch
-Patch19:        rhbz-304121.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -118,8 +117,6 @@ Patch21:        rhbz-911314.patch
 Patch22:        rhbz-928353.patch
 
 # Upstream patches
-Patch101:       mozilla-791626.patch
-Patch102:       mozilla-239254.patch
 Patch104:       mozilla-844883.patch
 
 # ---------------------------------------------------
@@ -268,7 +265,6 @@ cd %{tarballdir}
 %patch14 -p2 -b .chromium-types
 %patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
-%patch19 -p2 -b .rhbz-304121
 
 %patch20  -p2 -b .pk
 %ifarch ppc ppc64
@@ -281,9 +277,6 @@ cd %{tarballdir}
 %patch22  -p2
 %endif
 %endif
-
-%patch101 -p1 -b .791626
-%patch102 -p1 -b .239254
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -587,6 +580,18 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue May 14 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-1
+- Update to 21.0, sync with rawhide
+
+* Mon May 13 2013 Martin Stransky <stransky@redhat.com> - 21.0-3
+- New upstream tarball (build 4)
+
+* Mon May 13 2013 Martin Stransky <stransky@redhat.com> - 21.0-2
+- Updated requested NSS/NSPR versions
+
+* Sun May 12 2013 Martin Stransky <stransky@redhat.com> - 21.0-1
+- Update to latest upstream (21.0)
+
 * Mon Apr 15 2013 Remi Collet <RPMS@FamilleCollet.com> - 20.0.1-1
 - Update to 20.0.1, sync with rawhide
 

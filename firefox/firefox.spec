@@ -1,5 +1,5 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 17
+%if 0%{?fedora} < 18
 %define system_nss        0
 %else
 %define system_nss        1
@@ -33,13 +33,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      20.0.1
-%global xulrunner_version_max  20.1
+%global xulrunner_version      21.0
+%global xulrunner_version_max  21.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130415
+%global datelang               20130514
 
 %global mozappdir     %{_libdir}/firefox
 %global langpackdir   %{mozappdir}/langpacks
@@ -74,7 +74,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        20.0.1
+Version:        21.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -93,6 +93,7 @@ Source23:       firefox.1
 
 #Build patches
 Patch0:         firefox-install-dir.patch
+Patch1:         firefox-packager-build.patch
 
 # Fedora patches
 Patch14:        firefox-5.0-asciidel.patch
@@ -100,7 +101,6 @@ Patch15:        firefox-15.0-enable-addons.patch
 Patch16:        firefox-duckduckgo.patch
 
 # Upstream patches
-Patch100:       mozilla-239254.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -145,6 +145,7 @@ cd %{tarballdir}
 # there is a compare of config and js/config directories and .orig suffix is 
 # ignored during this compare.
 %patch0 -p1
+%patch1 -p2 -b .build
 
 # For branding specific patches.
 
@@ -154,7 +155,6 @@ cd %{tarballdir}
 %patch16 -p1 -b .duckduckgo
 
 # Upstream patches
-%patch100 -p1 -b .239254
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -188,8 +188,14 @@ echo "ac_add_options --disable-system-cairo" >> .mozconfig
 %endif
 
 # Set up SDK path
-echo "ac_add_options --with-libxul-sdk=\
-`pkg-config --variable=sdkdir libxul`" >> .mozconfig
+MOZILLA_SDK_PATH=`pkg-config --variable=sdkdir libxul`
+if [ -z $MOZILLA_SDK_PATH ]; then
+    echo "XulRunner SDK is not available!"
+    exit 1
+else
+    echo "XulRunner SDK path: $MOZILLA_SDK_PATH"
+    echo "ac_add_options --with-libxul-sdk=$MOZILLA_SDK_PATH" >> .mozconfig
+fi
 
 %if !%{?separated_plugins}
 echo "ac_add_options --disable-ipc" >> .mozconfig
@@ -277,7 +283,7 @@ cd %{tarballdir}
 
 # set up our prefs and add it to the package manifest file, so it gets pulled in
 # to omni.jar which gets created during make install
-%{__cp} %{SOURCE12} dist/bin/defaults/preferences/all-redhat.js
+%{__cp} %{SOURCE12} dist/bin/browser/defaults/preferences/all-redhat.js
 # This sed call "replaces" firefox.js with all-redhat.js, newline, and itself (&)
 # having the net effect of prepending all-redhat.js above firefox.js
 %{__sed} -i -e\
@@ -285,15 +291,15 @@ cd %{tarballdir}
     browser/installer/package-manifest.in
 
 # set up our default bookmarks
-%{__cp} -p %{default_bookmarks_file} dist/bin/defaults/profile/bookmarks.html
+%{__cp} -p %{default_bookmarks_file} dist/bin/browser/defaults/profile/bookmarks.html
 
 # Make sure locale works for langpacks
-%{__cat} > dist/bin/defaults/preferences/firefox-l10n.js << EOF
+%{__cat} > dist/bin/browser/defaults/preferences/firefox-l10n.js << EOF
 pref("general.useragent.locale", "chrome://global/locale/intl.properties");
 EOF
 
 # resolves bug #461880
-%{__cat} > dist/bin/chrome/en-US/locale/branding/browserconfig.properties << EOF
+%{__cat} > dist/bin/browser/chrome/en-US/locale/branding/browserconfig.properties << EOF
 browser.startup.homepage=%{homepage}
 EOF
 
@@ -342,14 +348,14 @@ for langpack in `ls firefox-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
   extensionID=langpack-$language@firefox.mozilla.org
   %{__mkdir_p} $extensionID
-  unzip $langpack -d $extensionID
+  unzip -qq $langpack -d $extensionID
   find $extensionID -type f | xargs chmod 644
 
   sed -i -e "s|browser.startup.homepage.*$|browser.startup.homepage=%{homepage}|g;" \
-     $extensionID/chrome/$language/locale/branding/browserconfig.properties
+     $extensionID/browser/chrome/$language/locale/branding/browserconfig.properties
 
   cd $extensionID
-  zip -r9mX ../${extensionID}.xpi *
+  zip -qq -r9mX ../${extensionID}.xpi *
   cd -
 
   %{__install} -m 644 ${extensionID}.xpi $RPM_BUILD_ROOT%{langpackdir}
@@ -385,15 +391,15 @@ create_default_langpack "sv-SE" "sv"
 create_default_langpack "zh-TW" "zh"
 %endif # build_langpacks
 
+# New preferences dir
+%{__mkdir_p} $RPM_BUILD_ROOT/%{mozappdir}/browser/defaults/preferences
+
 # System extensions
 %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/mozilla/extensions/%{firefox_app_id}
 %{__mkdir_p} $RPM_BUILD_ROOT%{_libdir}/mozilla/extensions/%{firefox_app_id}
 
 # Copy over the LICENSE
 %{__install} -p -c -m 644 LICENSE $RPM_BUILD_ROOT/%{mozappdir}
-
-# Remove tmp files
-find $RPM_BUILD_ROOT/%{mozappdir}/modules -name '.mkdir.done' -exec rm -rf {} \;
 
 # Enable crash reporter for Firefox application
 %if %{include_debuginfo}
@@ -447,21 +453,21 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/applications/*.desktop
 %dir %{mozappdir}
 %doc %{mozappdir}/LICENSE
-%{mozappdir}/chrome
-%{mozappdir}/chrome.manifest
-%dir %{mozappdir}/components
-%{mozappdir}/components/*.so
-%{mozappdir}/components/binary.manifest
-%{mozappdir}/defaults/preferences/channel-prefs.js
-%attr(644, root, root) %{mozappdir}/blocklist.xml
-%dir %{mozappdir}/extensions
-%{mozappdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
+%{mozappdir}/browser/chrome
+%{mozappdir}/browser/chrome.manifest
+%dir %{mozappdir}/browser/components
+%{mozappdir}/browser/components/*.so
+%{mozappdir}/browser/components/components.manifest
+%dir %{mozappdir}/browser/defaults/preferences
+%attr(644, root, root) %{mozappdir}/browser/blocklist.xml
+%dir %{mozappdir}/browser/extensions
+%{mozappdir}/browser/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
 %if %{build_langpacks}
 %dir %{langpackdir}
 %endif
-%{mozappdir}/omni.ja
-%{mozappdir}/icons
-%{mozappdir}/searchplugins
+%{mozappdir}/browser/omni.ja
+%{mozappdir}/browser/icons
+%{mozappdir}/browser/searchplugins
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/application.ini
 %exclude %{mozappdir}/removed-files
@@ -473,7 +479,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/48x48/apps/firefox.png
 %{mozappdir}/xulrunner
 %{mozappdir}/webapprt-stub
-%{mozappdir}/modules/*
 %dir %{mozappdir}/webapprt
 %{mozappdir}/webapprt/omni.ja
 %{mozappdir}/webapprt/webapprt.ini
@@ -487,6 +492,26 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Tue May 14 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-1
+- Update to 21.0
+
+* Tue May 14 2013 Martin Stransky <stransky@redhat.com> - 21.0-1
+- Updated to latest upstream (21.0)
+
+* Thu May 9 2013 Martin Stransky <stransky@redhat.com> - 20.0-5
+- Removed firstrun page (rhbz#864793)
+- Made zip/unzip quiet in langpacks processing
+
+* Thu Apr 18 2013 Martin Stransky <stransky@redhat.com> - 20.0-4
+- Updated xulrunner check
+
+* Thu Apr 18 2013 Martin Stransky <stransky@redhat.com> - 20.0-3
+- Added a workaround for rhbz#907424 - textarea redrawn wrongly 
+  during edit
+
+* Thu Apr 18 2013 Jan Horak <jhorak@redhat.com> - 20.0-2
+- Updated manual page
+
 * Mon Apr 15 2013 Remi Collet <RPMS@FamilleCollet.com> - 20.0.1-1
 - Update to 20.0.1
 

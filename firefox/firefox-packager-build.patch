@@ -1,0 +1,12 @@
+diff -up firefox-21.0/mozilla-release/toolkit/mozapps/installer/packager.py.old firefox-21.0/mozilla-release/toolkit/mozapps/installer/packager.py
+--- firefox-21.0/mozilla-release/toolkit/mozapps/installer/packager.py.old	2013-05-15 08:27:23.000000000 +0200
++++ firefox-21.0/mozilla-release/toolkit/mozapps/installer/packager.py	2013-05-15 08:27:54.828483740 +0200
+@@ -344,7 +344,7 @@ def main():
+     # Fill startup cache
+     if isinstance(formatter, OmniJarFormatter) and launcher.can_launch():
+         if buildconfig.substs['LIBXUL_SDK']:
+-            gre_path = buildconfig.substs['LIBXUL_DIST']
++            gre_path = buildconfig.substs['LIBXUL_DIST'] + '/bin'
+         else:
+             gre_path = None
+         for base in sorted([[p for p in [mozpack.path.join('bin', b), b]
