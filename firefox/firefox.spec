@@ -79,7 +79,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        21.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        3%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -519,6 +519,13 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Thu May 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-3
+- pull changes from rawhide:
+  Fixed extension compatibility dialog (rhbz#963422)
+
+* Thu May 16 2013 Martin Stransky <stransky@redhat.com> - 21.0-3
+- Fixed extension compatibility dialog (rhbz#963422)
+
 * Wed May 15 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-1
 - Update to 21.0
 - use python27 SCL for EL-6 build

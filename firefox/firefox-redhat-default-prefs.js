@@ -9,7 +9,6 @@ pref("browser.shell.checkDefaultBrowser",   false);
 pref("network.manage-offline-status",       true);
 pref("dom.ipc.plugins.enabled.nswrapper*",  false);
 pref("extensions.shownSelectionUI",         true);
-pref("extensions.autoDisableScope",         0);
 pref("gfx.color_management.enablev4",       true);
 pref("ui.SpellCheckerUnderlineStyle",       1);
 pref("startup.homepage_override_url",       "");
