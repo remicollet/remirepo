@@ -1,9 +1,9 @@
-%global dl_version 6_0_015
+%global dl_version 6_0_016
 %global real_name  tcpdf
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
-Version:        6.0.015
+Version:        6.0.016
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -11,6 +11,9 @@ License:        LGPLv3+
 Group:          Development/Libraries
 
 Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
+
+# Fix path for packaging (not upstreamable)
+Patch0:         tcpdf-vendor.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -122,6 +125,12 @@ This package allow to use system GNU FreeFonts in TCPDF.
 %prep
 %setup -qn %{real_name}
 
+%patch0 -p1
+
+: fix barcode examples
+sed -e "s:dirname(__FILE__).'/../../:'tcpdf/:" \
+    -i examples/barcodes/*php
+
 : remove bundled fonts
 rm -rf fonts/dejavu-fonts-ttf* fonts/freefont-*
 for fic in fonts/*.z
@@ -142,6 +151,9 @@ install -d     %{buildroot}%{_datadir}/php/%{real_name}
 cp -a *.php    %{buildroot}%{_datadir}/php/%{real_name}/
 cp -a include  %{buildroot}%{_datadir}/php/%{real_name}/
 cp -a fonts    %{buildroot}%{_datadir}/php/%{real_name}/
+install -d     %{buildroot}%{_datadir}/php/%{real_name}/images
+install -m 0644 examples/images/_blank.png \
+               %{buildroot}%{_datadir}/php/%{real_name}/images/
 
 # Config
 install -d     %{buildroot}%{_sysconfdir}/%{name}
@@ -165,8 +177,7 @@ for ttf in \
 ; do
    list=$ttf${list:+,${list}}
 done
-php -d include_path=. \
-    tools/tcpdf_addfont.php \
+php tools/tcpdf_addfont.php \
     --fonts $list \
     --link \
     --outpath %{buildroot}%{_datadir}/php/%{real_name}/fonts/
@@ -183,6 +194,7 @@ rm -rf %{buildroot}
 %dir %{_datadir}/php/%{real_name}
 %dir %{_datadir}/php/%{real_name}/fonts
 %{_datadir}/php/%{real_name}/include
+%{_datadir}/php/%{real_name}/images
 %{_datadir}/php/%{real_name}/*php
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/*
@@ -197,6 +209,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 16 2013 Remi Collet <remi@fedoraproject.org> - 6.0.016-1
+- update to 6.0.016
+- add /usr/share/php/tcpdf/images dir
+
 * Wed May 15 2013 Remi Collet <remi@fedoraproject.org> - 6.0.015-1
 - update to 6.0.015
 - clean spec (upstream changes for packaging)
