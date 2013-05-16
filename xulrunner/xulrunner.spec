@@ -26,7 +26,11 @@
 %endif
 
 # Use system cairo?
+%if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %define system_cairo      0
+%else
+%define system_cairo      1
+%endif
 
 %global shortname         xulrunner
 
@@ -154,7 +158,9 @@ BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
 #BuildRequires:  autoconf213
 BuildRequires:  yasm
-
+%if 0%{?rhel} == 6
+BuildRequires:   python27
+%endif
 Requires:       mozilla-filesystem
 Requires:       liberation-sans-fonts
 %if %{?system_nss}
@@ -229,6 +235,10 @@ Requires: mesa-libGL-devel
 Requires: libvpx-devel >= %{libvpx_version}
 %endif
 Requires: yasm
+%if 0%{?rhel} == 6
+Requires: python27
+%endif
+
 
 %description devel
 This package contains the libraries amd header files that are needed
@@ -368,6 +378,10 @@ case "%{sqlite_build_version}" in
 esac
 %endif
 
+%if 0%{?rhel} == 6
+. /opt/rh/python27/enable
+%endif
+
 cd %{tarballdir}
 
 # -fpermissive is needed to build with gcc 4.6+ which has become stricter
@@ -418,6 +432,10 @@ make -C objdir buildsymbols
 #---------------------------------------------------------------------
 
 %install
+%if 0%{?rhel} == 6
+. /opt/rh/python27/enable
+%endif
+
 cd %{tarballdir}
 
 # set up our prefs before install, so it gets pulled in to omni.jar
@@ -582,6 +600,7 @@ fi
 %changelog
 * Tue May 14 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-1
 - Update to 21.0, sync with rawhide
+- use python27 SCL for EL-6 build
 
 * Mon May 13 2013 Martin Stransky <stransky@redhat.com> - 21.0-3
 - New upstream tarball (build 4)

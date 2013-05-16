@@ -10,7 +10,11 @@
 %define system_vpx        1
 %endif
 
+%if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %define system_cairo      0
+%else
+%define system_cairo      1
+%endif
 
 # Use system libpeg (and libjpeg-turbo) ?
 %if 0%{?fedora} < 14 && 0%{?rhel} < 6
@@ -119,6 +123,9 @@ BuildRequires:  system-bookmarks
 BuildRequires:  xulrunner-last-devel >= %{xulrunner_verrel}
 # For WebM support
 BuildRequires:	yasm
+%if 0%{?rhel} == 6
+BuildRequires:   python27
+%endif
 
 Requires:       xulrunner-last%{?_isa} >= %{xulrunner_verrel}
 Requires:       system-bookmarks
@@ -233,6 +240,10 @@ echo "ac_add_options --disable-jemalloc" >> .mozconfig
 #---------------------------------------------------------------------
 
 %build
+%if 0%{?rhel} == 6
+. /opt/rh/python27/enable
+%endif
+
 cd %{tarballdir}
 
 # Mozilla builds with -Wall with exception of a few warnings which show up
@@ -279,6 +290,10 @@ make buildsymbols
 #---------------------------------------------------------------------
 
 %install
+%if 0%{?rhel} == 6
+. /opt/rh/python27/enable
+%endif
+
 cd %{tarballdir}
 
 # set up our prefs and add it to the package manifest file, so it gets pulled in
@@ -506,6 +521,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %changelog
 * Wed May 15 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-1
 - Update to 21.0
+- use python27 SCL for EL-6 build
 
 * Wed May 15 2013 Martin Stransky <stransky@redhat.com> - 21.0-2
 - Keep compatibility with old preference dir
