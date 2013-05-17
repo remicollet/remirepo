@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Prefs
-Version:        2.4.0
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        Horde Preferences API
 
@@ -32,28 +32,28 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optionnal
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Autoloader) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.3
-Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Image) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Image) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Ldap) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Ldap) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Ldap) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Imsp) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Imsp) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imsp) <  3.0.0
 # Optional and implicitly required: Horde_Mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -141,6 +141,10 @@ fi
 
 
 %changelog
+* Fri May 17 2013 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- Update to 2.4.1
+- switch from Conflicts >= max to Requires < max
+
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - Update to 2.4.0
 - raise dependency on Horde_Db >= 2.0.3
