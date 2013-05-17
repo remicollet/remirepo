@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Filter
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
@@ -36,12 +36,12 @@ Requires:       php-tidy
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Text_Flowed) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) <  3.0.0
 # Optional and implicitly required: Horde_Translation
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -143,6 +143,10 @@ fi
 
 
 %changelog
+* Fri May 17 2013 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+- switch from Conflicts >= max to Requires < max
+
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
