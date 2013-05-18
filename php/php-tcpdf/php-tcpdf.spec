@@ -319,7 +319,7 @@ php tools/tcpdf_addfont.php \
 - update to 6.0.013
 - use available system TTF fonts
 
-* Sun May 10 2013 Johan Cwiklinski <johan AT x-tnd DOT be> - 6.0.012-3
+* Sun May 12 2013 Johan Cwiklinski <johan AT x-tnd DOT be> - 6.0.012-3
 - Fix README.cache file permissions
 
 * Fri May 10 2013 Remi Collet <remi@fedoraproject.org> - 6.0.012-2
