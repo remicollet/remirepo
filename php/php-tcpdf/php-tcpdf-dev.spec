@@ -18,10 +18,6 @@ BuildRequires:  php-cli
 BuildRequires:  php-posix
 
 Requires:       php(language) >= 5.3
-Requires:       php-openssl
-#imagick is optionnal (and conflicts with gmagick)
-#Requires:       php-pecl(imagick)
-Requires:       php-spl
 Requires:       php-bcmath
 Requires:       php-curl
 Requires:       php-date
@@ -29,10 +25,14 @@ Requires:       php-gd
 Requires:       php-hash
 Requires:       php-mbstring
 Requires:       php-mcrypt
+Requires:       php-openssl
 Requires:       php-pcre
-Requires:       php-posix
+Requires:       php-spl
 Requires:       php-tidy
 Requires:       php-xml
+Requires:       php-zlib
+#imagick is optionnal (and conflicts with gmagick)
+#Requires:       php-pecl(imagick)
 
 
 %description
@@ -79,7 +79,7 @@ solution. You can optionally install php-pecl-imagick; TCPDF will use it.
 
 
 %package dejavu-lgc-sans-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu LGC sans-serif fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-lgc-sans-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -90,7 +90,7 @@ This package allow to use system DejaVu LGC sans-serif variable-width
 font faces in TCPDF.
 
 %package dejavu-lgc-sans-mono-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu LGC mono-spaced fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-lgc-sans-mono-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -101,7 +101,7 @@ This package allow to use system DejaVu LGC sans-serif mono-spaced
 font faces in TCPDF.
 
 %package dejavu-lgc-serif-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu LGC serif fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-lgc-serif-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -112,7 +112,7 @@ This package allow to use system DejaVu LGC serif variable-width
 font faces in TCPDF.
 
 %package dejavu-sans-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu sans-serif fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-sans-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -123,7 +123,7 @@ This package allow to use system DejaVu sans-serif variable-width
 font faces in TCPDF.
 
 %package dejavu-sans-mono-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu mono-spaced fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-sans-mono-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -134,7 +134,7 @@ This package allow to use system DejaVu sans-serif mono-spaced
 font faces in TCPDF.
 
 %package dejavu-serif-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu serif fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-serif-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -145,7 +145,7 @@ This package allow to use system DejaVu serif variable-width
 font faces in TCPDF.
 
 %package gnu-free-mono-fonts
-Summary:        GNU FreeFonts for tcpdf
+Summary:        GNU FreeFonts mono-spaced for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-mono-fonts
@@ -160,7 +160,7 @@ Requires:       freefont
 This package allow to use system GNU FreeFonts mono-spaced font faces in TCPDF.
 
 %package gnu-free-sans-fonts
-Summary:        GNU FreeFonts for tcpdf
+Summary:        GNU FreeFonts sans-serif for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-sans-fonts
@@ -175,7 +175,7 @@ Requires:       freefont
 This package allow to use system GNU FreeFont sans-serif font faces in TCPDF.
 
 %package gnu-free-serif-fonts
-Summary:        GNU FreeFonts for tcpdf
+Summary:        GNU FreeFonts serif for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-serif-fonts
@@ -189,6 +189,30 @@ Requires:       freefont
 %description gnu-free-serif-fonts
 This package allow to use system GNU FreeFont serif font faces in TCPDF.
 
+
+# Meta packages to allow upgrade from version before fonts split
+%package dejavu-fonts
+Summary:        DejaVu fonts for tcpdf
+Group:          Development/Libraries
+Requires:       %{name}-dejavu-lgc-sans-fonts
+Requires:       %{name}-dejavu-lgc-sans-mono-fonts
+Requires:       %{name}-dejavu-lgc-serif-fonts
+Requires:       %{name}-dejavu-sans-fonts
+Requires:       %{name}-dejavu-sans-mono-fonts
+Requires:       %{name}-dejavu-serif-fonts
+
+%description dejavu-fonts
+This package allow to use system DejaVu fonts in TCPDF.
+
+%package gnu-free-fonts
+Summary:        GNU FreeFonts for tcpdf
+Group:          Development/Libraries
+Requires:       %{name}-gnu-free-mono-fonts
+Requires:       %{name}-gnu-free-sans-fonts
+Requires:       %{name}-gnu-free-serif-fonts
+
+%description gnu-free-fonts
+This package allow to use system GNU FreeFonts in TCPDF.
 
 
 %prep
@@ -305,6 +329,12 @@ rm -rf %{buildroot}
 %files gnu-free-serif-fonts
 %defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/freeserif*
+
+%files gnu-free-fonts
+# empty
+
+%files dejavu-fonts
+# empty
 
 
 %changelog
