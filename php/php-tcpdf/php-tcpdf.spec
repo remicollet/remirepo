@@ -12,16 +12,11 @@ Group:          Development/Libraries
 
 Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
 BuildRequires:  php-posix
 
 Requires:       php(language) >= 5.3
-Requires:       php-openssl
-#imagick is optionnal (and conflicts with gmagick)
-#Requires:       php-pecl(imagick)
-Requires:       php-spl
 Requires:       php-bcmath
 Requires:       php-curl
 Requires:       php-date
@@ -29,10 +24,14 @@ Requires:       php-gd
 Requires:       php-hash
 Requires:       php-mbstring
 Requires:       php-mcrypt
+Requires:       php-openssl
 Requires:       php-pcre
-Requires:       php-posix
+Requires:       php-spl
 Requires:       php-tidy
 Requires:       php-xml
+Requires:       php-zlib
+#imagick is optionnal (and conflicts with gmagick)
+#Requires:       php-pecl(imagick)
 
 
 %description
@@ -79,7 +78,7 @@ solution. You can optionally install php-pecl-imagick; TCPDF will use it.
 
 
 %package dejavu-lgc-sans-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu LGC sans-serif fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-lgc-sans-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -90,7 +89,7 @@ This package allow to use system DejaVu LGC sans-serif variable-width
 font faces in TCPDF.
 
 %package dejavu-lgc-sans-mono-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu LGC mono-spaced fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-lgc-sans-mono-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -101,7 +100,7 @@ This package allow to use system DejaVu LGC sans-serif mono-spaced
 font faces in TCPDF.
 
 %package dejavu-lgc-serif-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu LGC serif fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-lgc-serif-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -112,7 +111,7 @@ This package allow to use system DejaVu LGC serif variable-width
 font faces in TCPDF.
 
 %package dejavu-sans-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu sans-serif fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-sans-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -123,7 +122,7 @@ This package allow to use system DejaVu sans-serif variable-width
 font faces in TCPDF.
 
 %package dejavu-sans-mono-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu mono-spaced fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-sans-mono-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -134,7 +133,7 @@ This package allow to use system DejaVu sans-serif mono-spaced
 font faces in TCPDF.
 
 %package dejavu-serif-fonts
-Summary:        DejaVu fonts for tcpdf
+Summary:        DejaVu serif fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-serif-fonts
 Requires:       %{name} = %{version}-%{release}
@@ -145,7 +144,7 @@ This package allow to use system DejaVu serif variable-width
 font faces in TCPDF.
 
 %package gnu-free-mono-fonts
-Summary:        GNU FreeFonts for tcpdf
+Summary:        GNU FreeFonts mono-spaced for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-mono-fonts
@@ -160,7 +159,7 @@ Requires:       freefont
 This package allow to use system GNU FreeFonts mono-spaced font faces in TCPDF.
 
 %package gnu-free-sans-fonts
-Summary:        GNU FreeFonts for tcpdf
+Summary:        GNU FreeFonts sans-serif for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-sans-fonts
@@ -175,7 +174,7 @@ Requires:       freefont
 This package allow to use system GNU FreeFont sans-serif font faces in TCPDF.
 
 %package gnu-free-serif-fonts
-Summary:        GNU FreeFonts for tcpdf
+Summary:        GNU FreeFonts serif for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-serif-fonts
@@ -214,7 +213,6 @@ ls fonts | sed -e 's|^|%{_datadir}/php/%{real_name}/fonts/|' >corefonts.lst
 
 
 %install
-rm -rf %{buildroot}
 # Library
 install -d     %{buildroot}%{_datadir}/php/%{real_name}
 cp -a *.php    %{buildroot}%{_datadir}/php/%{real_name}/
@@ -252,12 +250,7 @@ php tools/tcpdf_addfont.php \
     --outpath %{buildroot}%{_datadir}/php/%{real_name}/fonts/
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files -f corefonts.lst
-%defattr(-,root,root,-)
 %doc LICENSE.TXT README.TXT CHANGELOG.TXT examples
 %{_bindir}/%{real_name}_addfont
 %dir %{_datadir}/php/%{real_name}
@@ -269,47 +262,39 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}/*
 
 %files dejavu-lgc-sans-fonts
-%defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/dejavulgcsans*
 %exclude %{_datadir}/php/%{real_name}/fonts/dejavulgcsansmono*
 
 %files dejavu-lgc-sans-mono-fonts
-%defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/dejavulgcsansmono*
 
 %files dejavu-lgc-serif-fonts
-%defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/dejavulgcserif*
 
 %files dejavu-sans-fonts
-%defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/dejavusans*
 %exclude %{_datadir}/php/%{real_name}/fonts/dejavusansmono*
 
 %files dejavu-sans-mono-fonts
-%defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/dejavusansmono*
 
 %files dejavu-serif-fonts
-%defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/dejavuserif*
 
 %files gnu-free-mono-fonts
-%defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/freemono*
 
 %files gnu-free-sans-fonts
-%defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/freesans*
 
 %files gnu-free-serif-fonts
-%defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/freeserif*
 
 
 %changelog
 * Sat May 18 2013 Remi Collet <remi@fedoraproject.org> - 6.0.017-2
 - split fonts, 1 subpackage per font package
+- spec cleanups
 
 * Sat May 18 2013 Remi Collet <remi@fedoraproject.org> - 6.0.017-1
 - update to 6.0.017
