@@ -1,9 +1,9 @@
-%global dl_version 6_0_016
+%global dl_version 6_0_017
 %global real_name  tcpdf
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
-Version:        6.0.016
+Version:        6.0.017
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -12,15 +12,12 @@ Group:          Development/Libraries
 
 Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
 
-# Fix path for packaging (not upstreamable)
-Patch0:         tcpdf-vendor.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
 BuildRequires:  php-posix
 
-Requires:       php(language) >= 5.2
+Requires:       php(language) >= 5.3
 Requires:       php-openssl
 #imagick is optionnal (and conflicts with gmagick)
 #Requires:       php-pecl(imagick)
@@ -125,7 +122,7 @@ This package allow to use system GNU FreeFonts in TCPDF.
 %prep
 %setup -qn %{real_name}
 
-%patch0 -p1
+#patch0 -p1
 
 : fix barcode examples
 sed -e "s:dirname(__FILE__).'/../../:'tcpdf/:" \
@@ -209,6 +206,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 18 2013 Remi Collet <remi@fedoraproject.org> - 6.0.017-1
+- update to 6.0.017
+
 * Thu May 16 2013 Remi Collet <remi@fedoraproject.org> - 6.0.016-1
 - update to 6.0.016
 - add /usr/share/php/tcpdf/images dir
