@@ -4,7 +4,7 @@
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
 Version:        6.0.017
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            http://www.tcpdf.org
 License:        LGPLv3+
@@ -78,44 +78,116 @@ By default, TCPDF uses the GD library which is know as slower than ImageMagick
 solution. You can optionally install php-pecl-imagick; TCPDF will use it.
 
 
-%package dejavu-fonts
+%package dejavu-lgc-sans-fonts
 Summary:        DejaVu fonts for tcpdf
 Group:          Development/Libraries
 BuildRequires:  dejavu-lgc-sans-fonts
-BuildRequires:  dejavu-lgc-sans-mono-fonts
-BuildRequires:  dejavu-lgc-serif-fonts
-BuildRequires:  dejavu-sans-fonts
-BuildRequires:  dejavu-sans-mono-fonts
-BuildRequires:  dejavu-serif-fonts
 Requires:       %{name} = %{version}-%{release}
 Requires:       dejavu-lgc-sans-fonts
+
+%description dejavu-lgc-sans-fonts
+This package allow to use system DejaVu LGC sans-serif variable-width
+font faces in TCPDF.
+
+%package dejavu-lgc-sans-mono-fonts
+Summary:        DejaVu fonts for tcpdf
+Group:          Development/Libraries
+BuildRequires:  dejavu-lgc-sans-mono-fonts
+Requires:       %{name} = %{version}-%{release}
 Requires:       dejavu-lgc-sans-mono-fonts
+
+%description dejavu-lgc-sans-mono-fonts
+This package allow to use system DejaVu LGC sans-serif mono-spaced
+font faces in TCPDF.
+
+%package dejavu-lgc-serif-fonts
+Summary:        DejaVu fonts for tcpdf
+Group:          Development/Libraries
+BuildRequires:  dejavu-lgc-serif-fonts
+Requires:       %{name} = %{version}-%{release}
 Requires:       dejavu-lgc-serif-fonts
+
+%description dejavu-lgc-serif-fonts
+This package allow to use system DejaVu LGC serif variable-width
+font faces in TCPDF.
+
+%package dejavu-sans-fonts
+Summary:        DejaVu fonts for tcpdf
+Group:          Development/Libraries
+BuildRequires:  dejavu-sans-fonts
+Requires:       %{name} = %{version}-%{release}
 Requires:       dejavu-sans-fonts
+
+%description dejavu-sans-fonts
+This package allow to use system DejaVu sans-serif variable-width
+font faces in TCPDF.
+
+%package dejavu-sans-mono-fonts
+Summary:        DejaVu fonts for tcpdf
+Group:          Development/Libraries
+BuildRequires:  dejavu-sans-mono-fonts
+Requires:       %{name} = %{version}-%{release}
 Requires:       dejavu-sans-mono-fonts
+
+%description dejavu-sans-mono-fonts
+This package allow to use system DejaVu sans-serif mono-spaced
+font faces in TCPDF.
+
+%package dejavu-serif-fonts
+Summary:        DejaVu fonts for tcpdf
+Group:          Development/Libraries
+BuildRequires:  dejavu-serif-fonts
+Requires:       %{name} = %{version}-%{release}
 Requires:       dejavu-serif-fonts
 
-%description dejavu-fonts
-This package allow to use system DejaVu fonts in TCPDF.
+%description dejavu-serif-fonts
+This package allow to use system DejaVu serif variable-width
+font faces in TCPDF.
 
-%package gnu-free-fonts
+%package gnu-free-mono-fonts
 Summary:        GNU FreeFonts for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-mono-fonts
-BuildRequires:  gnu-free-sans-fonts
-BuildRequires:  gnu-free-serif-fonts
 Requires:       %{name} = %{version}-%{release}
 Requires:       gnu-free-mono-fonts
+%else
+BuildRequires:  freefont
+Requires:       freefont
+%endif
+
+%description gnu-free-mono-fonts
+This package allow to use system GNU FreeFonts mono-spaced font faces in TCPDF.
+
+%package gnu-free-sans-fonts
+Summary:        GNU FreeFonts for tcpdf
+Group:          Development/Libraries
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+BuildRequires:  gnu-free-sans-fonts
+Requires:       %{name} = %{version}-%{release}
 Requires:       gnu-free-sans-fonts
+%else
+BuildRequires:  freefont
+Requires:       freefont
+%endif
+
+%description gnu-free-sans-fonts
+This package allow to use system GNU FreeFont sans-serif font faces in TCPDF.
+
+%package gnu-free-serif-fonts
+Summary:        GNU FreeFonts for tcpdf
+Group:          Development/Libraries
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+BuildRequires:  gnu-free-serif-fonts
+Requires:       %{name} = %{version}-%{release}
 Requires:       gnu-free-serif-fonts
 %else
 BuildRequires:  freefont
 Requires:       freefont
 %endif
 
-%description gnu-free-fonts
-This package allow to use system GNU FreeFonts in TCPDF.
+%description gnu-free-serif-fonts
+This package allow to use system GNU FreeFont serif font faces in TCPDF.
 
 
 
@@ -196,16 +268,49 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/*
 
-%files dejavu-fonts
+%files dejavu-lgc-sans-fonts
 %defattr(-,root,root,-)
-%{_datadir}/php/%{real_name}/fonts/dejavu*
+%{_datadir}/php/%{real_name}/fonts/dejavulgcsans*
+%exclude %{_datadir}/php/%{real_name}/fonts/dejavulgcsansmono*
 
-%files gnu-free-fonts
+%files dejavu-lgc-sans-mono-fonts
 %defattr(-,root,root,-)
-%{_datadir}/php/%{real_name}/fonts/free*
+%{_datadir}/php/%{real_name}/fonts/dejavulgcsansmono*
+
+%files dejavu-lgc-serif-fonts
+%defattr(-,root,root,-)
+%{_datadir}/php/%{real_name}/fonts/dejavulgcserif*
+
+%files dejavu-sans-fonts
+%defattr(-,root,root,-)
+%{_datadir}/php/%{real_name}/fonts/dejavusans*
+%exclude %{_datadir}/php/%{real_name}/fonts/dejavusansmono*
+
+%files dejavu-sans-mono-fonts
+%defattr(-,root,root,-)
+%{_datadir}/php/%{real_name}/fonts/dejavusansmono*
+
+%files dejavu-serif-fonts
+%defattr(-,root,root,-)
+%{_datadir}/php/%{real_name}/fonts/dejavuserif*
+
+%files gnu-free-mono-fonts
+%defattr(-,root,root,-)
+%{_datadir}/php/%{real_name}/fonts/freemono*
+
+%files gnu-free-sans-fonts
+%defattr(-,root,root,-)
+%{_datadir}/php/%{real_name}/fonts/freesans*
+
+%files gnu-free-serif-fonts
+%defattr(-,root,root,-)
+%{_datadir}/php/%{real_name}/fonts/freeserif*
 
 
 %changelog
+* Sat May 18 2013 Remi Collet <remi@fedoraproject.org> - 6.0.017-2
+- split fonts, 1 subpackage per font package
+
 * Sat May 18 2013 Remi Collet <remi@fedoraproject.org> - 6.0.017-1
 - update to 6.0.017
 
