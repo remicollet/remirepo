@@ -79,14 +79,14 @@
 %global db_devel  libdb-devel
 %endif
 
-#global snapdate      201305060630
-%global rcver         RC1
+%global snapdate      201305181030
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.31.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.32.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -140,6 +140,8 @@ Patch45: php-5.4.8-ldap_r.patch
 Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
+# systemd integration
+Patch48: php-5.5.0-systemd.patch
 
 # Fixes for tests
 
@@ -837,6 +839,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+%patch48 -p1 -b .systemd
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1159,6 +1162,7 @@ popd
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
+      --with-fpm-systemd \
       --libdir=%{_libdir}/php \
       --without-mysql \
       --disable-pdo \
@@ -1807,6 +1811,9 @@ fi
 
 
 %changelog
+* Sat May 18 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.32.201305181030
+- test build with systemd integration (type=notify)
+
 * Wed May  8 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.31.RC1
 - update to 5.5.0RC1
 
