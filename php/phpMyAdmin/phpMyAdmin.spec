@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 4.0.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -43,7 +43,7 @@ Requires:  php-zip
 Requires:  php-zlib
 Requires:  php-php-gettext
 Requires:  php-tcpdf
-Requires:  php-tcpdf-dejavu-fonts
+Requires:  php-tcpdf-dejavu-sans-fonts
 
 Provides:  phpmyadmin = %{version}-%{release}
 Obsoletes: phpMyAdmin3
@@ -148,6 +148,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sat May 18 2013 Remi Collet <rpms@famillecollet.com> 4.0.1-2
+- only requires php-tcpdf-dejavu-sans-fonts
+
 * Wed May 15 2013 Remi Collet <rpms@famillecollet.com> 4.0.1-1
 - update to 4.0.1
 
@@ -211,7 +214,7 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 - Upstream released 3.5.2.1 (security)
   fix PMASA-2012-3
 
-* Sat Jul 08 2012 Remi Collet <rpms@famillecollet.com> 3.5.2-1
+* Sun Jul 08 2012 Remi Collet <rpms@famillecollet.com> 3.5.2-1
 - Upstream released 3.5.2 (bugfix release)
 
 * Sun Jul 01 2012 Remi Collet <rpms@famillecollet.com> 3.5.2-0.1.rc1
@@ -373,11 +376,11 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 - Upstream released 3.2.2 (bug fixes)
 - build for EOL fedora and EL
 
-* Wed Jun 30 2009 Remi Collet <rpms@famillecollet.com> 3.2.1-1.###.remi
+* Tue Jun 30 2009 Remi Collet <rpms@famillecollet.com> 3.2.1-1.###.remi
 - Upstream released 3.2.1 (bug fixes and a new language: Uzbek)
 - build for EOL fedora and EL
 
-* Wed Jun 30 2009 Remi Collet <rpms@famillecollet.com> 3.2.0.1-1.###.remi
+* Tue Jun 30 2009 Remi Collet <rpms@famillecollet.com> 3.2.0.1-1.###.remi
 - Upstream released 3.2.0.1 (security release)
 - build for EOL fedora and EL
 
