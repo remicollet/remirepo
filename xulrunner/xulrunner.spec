@@ -1,5 +1,4 @@
-# Use system nspr/nss?
-%if 0%{?fedora} < 18
+%if 0%{?fedora} < 17
 %define system_nss        0
 %else
 %define system_nss        1
@@ -19,18 +18,10 @@
 %endif
 
 # Use system libpeg (and libjpeg-turbo) ?
-%if 0%{?fedora} < 14 && 0%{?rhel} < 6
-%define system_jpeg       0
-%else
 %define system_jpeg       1
-%endif
 
 # Use system cairo?
-%if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %define system_cairo      0
-%else
-%define system_cairo      1
-%endif
 
 %global shortname         xulrunner
 
@@ -97,7 +88,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
 Version:        21.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -135,7 +126,7 @@ BuildRequires:  cairo-devel >= %{cairo_version}
 %endif
 BuildRequires:  libpng-devel
 %if %{system_jpeg}
-BuildRequires:  libjpeg-turbo-devel
+BuildRequires:  libjpeg-devel
 %endif
 BuildRequires:  zip
 BuildRequires:  bzip2-devel
@@ -152,12 +143,11 @@ BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  libnotify-devel
 BuildRequires:  mesa-libGL-devel
-BuildRequires:  curl-devel
+BuildRequires:  libcurl-devel
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
-#BuildRequires:  autoconf213
-BuildRequires:  yasm
+BuildRequires:  autoconf213
 %if 0%{?rhel} == 6
 BuildRequires:   python27
 %endif
@@ -169,8 +159,6 @@ Requires:       nss >= %{nss_build_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
-Obsoletes:      xulrunner13
-Obsoletes:      xulrunner14
 Obsoletes:      xulrunner15
 Obsoletes:      xulrunner16
 
@@ -192,8 +180,6 @@ Group: Development/Libraries
 Obsoletes: mozilla-devel < 1.9
 Obsoletes: firefox-devel < 2.1
 Obsoletes: xulrunner-devel-unstable
-Obsoletes: xulrunner13-devel
-Obsoletes: xulrunner14-devel
 Obsoletes: xulrunner15-devel
 Obsoletes: xulrunner16-devel
 Provides: gecko-devel = %{gecko_verrel}
@@ -211,7 +197,7 @@ Requires: nss-devel >= %{nss_build_version}
 Requires: cairo-devel >= %{cairo_version}
 %endif
 %if %{system_jpeg}
-Requires: libjpeg-turbo-devel
+Requires: libjpeg-devel
 %endif
 Requires: zip
 Requires: bzip2-devel
@@ -234,7 +220,6 @@ Requires: mesa-libGL-devel
 %if %{system_vpx}
 Requires: libvpx-devel >= %{libvpx_version}
 %endif
-Requires: yasm
 %if 0%{?rhel} == 6
 Requires: python27
 %endif
@@ -598,6 +583,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun May 19 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-2
+- rebuild
+
 * Tue May 14 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-1
 - Update to 21.0, sync with rawhide
 - use python27 SCL for EL-6 build

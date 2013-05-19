@@ -1,27 +1,19 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 18
+%if 0%{?fedora} < 17
 %define system_nss        0
 %else
 %define system_nss        1
 %endif
+
 %if 0%{?fedora} < 15
 %define system_vpx        0
 %else
 %define system_vpx        1
 %endif
 
-%if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %define system_cairo      0
-%else
-%define system_cairo      1
-%endif
 
-# Use system libpeg (and libjpeg-turbo) ?
-%if 0%{?fedora} < 14 && 0%{?rhel} < 6
-%define system_jpeg       0
-%else
 %define system_jpeg       1
-%endif
 
 # Separated plugins are supported on x86(64) only
 %ifarch %{ix86} x86_64
@@ -70,7 +62,7 @@
 %global tarballdir  mozilla-release
 %endif
 %if %{defined pre_version}
-%global xulrunner_verrel %{xulrunner_version}-%{xulrunner_release}%{pre_name}
+%global xulrunner_verrel %{xulrunner_version}-%{xulrunner_release}
 %global pre_tag .%{pre_version}
 %else
 %global xulrunner_verrel %{xulrunner_version}-%{xulrunner_release}
@@ -79,7 +71,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        21.0
-Release:        3%{?pre_tag}%{?dist}
+Release:        4%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -121,8 +113,6 @@ Patch16:        firefox-duckduckgo.patch
 BuildRequires:  desktop-file-utils
 BuildRequires:  system-bookmarks
 BuildRequires:  xulrunner-last-devel >= %{xulrunner_verrel}
-# For WebM support
-BuildRequires:	yasm
 %if 0%{?rhel} == 6
 BuildRequires:   python27
 %endif
@@ -186,6 +176,14 @@ cd %{tarballdir}
 %endif
 %if %{include_debuginfo}
 %{__cat} %{SOURCE13} >> .mozconfig
+%endif
+
+%if %{?system_nss}
+echo "ac_add_options --with-system-nspr" >> .mozconfig
+echo "ac_add_options --with-system-nss" >> .mozconfig
+%else
+echo "ac_add_options --without-system-nspr" >> .mozconfig
+echo "ac_add_options --without-system-nss" >> .mozconfig
 %endif
 
 %if %{?system_cairo}
@@ -263,7 +261,7 @@ MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
 %endif
 export CFLAGS=$MOZ_OPT_FLAGS
-export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
+export CXXFLAGS=$MOZ_OPT_FLAGS
 
 export PREFIX='%{_prefix}'
 export LIBDIR='%{_libdir}'
@@ -519,6 +517,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sun May 19 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-4
+- rebuild
+
 * Thu May 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-3
 - pull changes from rawhide:
   Fixed extension compatibility dialog (rhbz#963422)
