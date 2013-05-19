@@ -54,6 +54,8 @@ do
 			;;
 		xulrunner-last-debuginfo*)	echo " " $i ignored
 			;;
+		mozilla-crashreporter*)		echo " " $i ignored
+			;;
 		firefox-debuginfo*)		echo " " $i ignored
 			;;
 		thunderbird-debuginfo*)	echo " " $i ignored

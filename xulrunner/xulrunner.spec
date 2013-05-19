@@ -150,6 +150,8 @@ BuildRequires:  mesa-libGL-devel
 BuildRequires:  libcurl-devel
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
+%else
+BuildRequires:  yasm
 %endif
 BuildRequires:  autoconf213
 %if 0%{?rhel} == 6
@@ -223,6 +225,8 @@ Requires: libnotify-devel
 Requires: mesa-libGL-devel
 %if %{system_vpx}
 Requires: libvpx-devel >= %{libvpx_version}
+%else
+Requires:  yasm
 %endif
 %if 0%{?rhel} == 6
 Requires: python27
