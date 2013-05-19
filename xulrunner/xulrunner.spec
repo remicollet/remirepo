@@ -62,8 +62,12 @@
 %global mozappdir     %{_libdir}/%{name}
 %global tarballdir    mozilla-release
 
-# no crash reporter for remi repo
+# crash reporter work only on x86/x86_64
+%ifarch %{ix86} x86_64
+%global enable_mozilla_crashreporter 1
+%else
 %global enable_mozilla_crashreporter 0
+%endif
 
 %if %{alpha_version} > 0
 %global pre_version a%{alpha_version}
