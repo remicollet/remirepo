@@ -37,7 +37,7 @@
 %global rc_version             0
 %global datelang               20130514
 
-%global mozappdir     %{_libdir}/firefox
+%global mozappdir     %{_libdir}/%{name}
 %global langpackdir   %{mozappdir}/langpacks
 %global tarballdir    mozilla-release
 
@@ -321,7 +321,6 @@ DESTDIR=$RPM_BUILD_ROOT make install
 %{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
 
 sed -e 's/^Name=.*/Name=Firefox %{version} %{?mycomment}/' \
-    -e "s/firefox/%{name}/" \
     %{SOURCE20} | tee %{name}.desktop
 
 desktop-file-install \
