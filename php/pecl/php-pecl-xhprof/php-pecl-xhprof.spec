@@ -1,25 +1,16 @@
 %{!?__pecl:         %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name xhprof
-%global gitver    b8c76ac5ab
 
 Name:           php-pecl-xhprof
-Version:        0.9.2
-Release:        8%{?gitver:.git%{gitver}}%{?dist}.1
+Version:        0.9.3
+Release:        1%{?gitver:.git%{gitver}}%{?dist}.1
 
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
 License:        ASL 2.0
 URL:            http://pecl.php.net/package/%{pecl_name}
-%if 0%{?gitver:1}
-# https://github.com/facebook/xhprof/archive/master.tar.gz
-Source0:        %{pecl_name}-%{gitver}.tgz
-%else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-%endif
-
-# https://github.com/facebook/xhprof/pull/15
-Patch1:         %{pecl_name}-php55.patch
 
 # https://bugs.php.net/61262
 ExclusiveArch:  %{ix86} x86_64
@@ -92,10 +83,6 @@ Documentation : %{_datadir}/doc/%{name}-%{version}/docs/index.html
 
 %prep
 %setup -c -q
-%if 0%{?gitver:1}
-mv %{pecl_name}-master/package.xml .
-mv %{pecl_name}-master %{pecl_name}-%{version}
-%endif
 
 # Extension configuration file
 cat >%{pecl_name}.ini <<EOF
@@ -114,10 +101,7 @@ Alias /xhprof /usr/share/xhprof/xhprof_html
 <Directory /usr/share/xhprof/xhprof_html>
    <IfModule mod_authz_core.c>
       # Apache 2.4
-      <RequireAny>
-         Require ip 127.0.0.1
-         Require ip ::1
-      </RequireAny>
+      Require local
    </IfModule>
    <IfModule !mod_authz_core.c>
       # Apache 2.2
@@ -130,7 +114,6 @@ Alias /xhprof /usr/share/xhprof/xhprof_html
 EOF
 
 cd %{pecl_name}-%{version}
-%patch1 -p1 -b .php55
 
 # duplicate for ZTS build
 cp -r extension ext-zts
@@ -218,6 +201,9 @@ fi
 
 
 %changelog
+* Mon May 20 2013 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
+- update to 0.9.3
+
 * Fri Jan  4 2013 Remi Collet <remi@fedoraproject.org> - 0.9.2-8.gitb8c76ac5ab
 - git snapshot + php 5.5 fix
   https://github.com/facebook/xhprof/pull/15
