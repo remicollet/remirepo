@@ -1,6 +1,6 @@
 diff -up ../sapi/fpm/config.m4.systemd ../sapi/fpm/config.m4
 --- ../sapi/fpm/config.m4.systemd	2012-12-05 11:40:54.000000000 +0100
-+++ ../sapi/fpm/config.m4	2013-05-18 16:24:20.016490912 +0200
++++ ../sapi/fpm/config.m4	2013-05-20 09:44:23.436365510 +0200
 @@ -563,6 +563,26 @@ if test "$PHP_FPM" != "no"; then
    [  --with-fpm-group[=GRP]  Set the group for php-fpm to run as. For a system user, this 
                    should usually be set to match the fpm username (default: nobody)], nobody, no)
@@ -38,8 +38,8 @@ diff -up ../sapi/fpm/config.m4.systemd ../sapi/fpm/config.m4
    case $host_alias in
        *aix*)
 diff -up ../sapi/fpm/fpm/fpm_conf.c.systemd ../sapi/fpm/fpm/fpm_conf.c
---- ../sapi/fpm/fpm/fpm_conf.c.systemd	2013-05-18 16:59:35.036005958 +0200
-+++ ../sapi/fpm/fpm/fpm_conf.c	2013-05-18 17:21:16.990441007 +0200
+--- ../sapi/fpm/fpm/fpm_conf.c.systemd	2013-05-02 14:36:45.000000000 +0200
++++ ../sapi/fpm/fpm/fpm_conf.c	2013-05-20 09:59:29.632807378 +0200
 @@ -45,6 +45,10 @@
  #include "fpm_log.h"
  #include "fpm_events.h"
@@ -85,9 +85,19 @@ diff -up ../sapi/fpm/fpm/fpm_conf.c.systemd ../sapi/fpm/fpm/fpm_conf.c
  #ifdef HAVE_SYSLOG_H
  	if (!fpm_global_config.syslog_ident) {
  		fpm_global_config.syslog_ident = strdup("php-fpm");
+@@ -1540,6 +1557,9 @@ static void fpm_conf_dump() /* {{{ */
+ 	zlog(ZLOG_NOTICE, "\trlimit_files = %d",                fpm_global_config.rlimit_files);
+ 	zlog(ZLOG_NOTICE, "\trlimit_core = %d",                 fpm_global_config.rlimit_core);
+ 	zlog(ZLOG_NOTICE, "\tevents.mechanism = %s",            fpm_event_machanism_name());
++#ifdef HAVE_SYSTEMD
++	zlog(ZLOG_NOTICE, "\tsystemd_interval = %ds",           fpm_global_config.systemd_interval/1000);
++#endif
+ 	zlog(ZLOG_NOTICE, " ");
+ 
+ 	for (wp = fpm_worker_all_pools; wp; wp = wp->next) {
 diff -up ../sapi/fpm/fpm/fpm_conf.h.systemd ../sapi/fpm/fpm/fpm_conf.h
---- ../sapi/fpm/fpm/fpm_conf.h.systemd	2013-05-18 16:59:30.622990279 +0200
-+++ ../sapi/fpm/fpm/fpm_conf.h	2013-05-18 17:00:48.777267967 +0200
+--- ../sapi/fpm/fpm/fpm_conf.h.systemd	2012-12-05 11:40:39.000000000 +0100
++++ ../sapi/fpm/fpm/fpm_conf.h	2013-05-20 09:44:23.438365518 +0200
 @@ -40,6 +40,10 @@ struct fpm_global_config_s {
  	int rlimit_files;
  	int rlimit_core;
@@ -101,7 +111,7 @@ diff -up ../sapi/fpm/fpm/fpm_conf.h.systemd ../sapi/fpm/fpm/fpm_conf.h
  extern struct fpm_global_config_s fpm_global_config;
 diff -up ../sapi/fpm/fpm/fpm_events.c.systemd ../sapi/fpm/fpm/fpm_events.c
 --- ../sapi/fpm/fpm/fpm_events.c.systemd	2012-12-05 11:40:39.000000000 +0100
-+++ ../sapi/fpm/fpm/fpm_events.c	2013-05-18 16:24:20.016490912 +0200
++++ ../sapi/fpm/fpm/fpm_events.c	2013-05-20 09:44:23.439365522 +0200
 @@ -29,6 +29,10 @@
  #include "events/port.h"
  #include "events/kqueue.h"
@@ -125,8 +135,8 @@ diff -up ../sapi/fpm/fpm/fpm_events.c.systemd ../sapi/fpm/fpm/fpm_events.c
  
  	while (1) {
 diff -up ../sapi/fpm/fpm/fpm_systemd.c.systemd ../sapi/fpm/fpm/fpm_systemd.c
---- ../sapi/fpm/fpm/fpm_systemd.c.systemd	2013-05-18 16:24:20.017490915 +0200
-+++ ../sapi/fpm/fpm/fpm_systemd.c	2013-05-18 17:53:48.109578519 +0200
+--- ../sapi/fpm/fpm/fpm_systemd.c.systemd	2013-05-20 09:44:23.439365522 +0200
++++ ../sapi/fpm/fpm/fpm_systemd.c	2013-05-20 09:44:23.439365522 +0200
 @@ -0,0 +1,113 @@
 +#include "fpm_config.h"
 +
@@ -242,8 +252,8 @@ diff -up ../sapi/fpm/fpm/fpm_systemd.c.systemd ../sapi/fpm/fpm/fpm_systemd.c
 +/* }}} */
 +
 diff -up ../sapi/fpm/fpm/fpm_systemd.h.systemd ../sapi/fpm/fpm/fpm_systemd.h
---- ../sapi/fpm/fpm/fpm_systemd.h.systemd	2013-05-18 16:24:20.017490915 +0200
-+++ ../sapi/fpm/fpm/fpm_systemd.h	2013-05-18 17:13:54.278830609 +0200
+--- ../sapi/fpm/fpm/fpm_systemd.h.systemd	2013-05-20 09:44:23.440365526 +0200
++++ ../sapi/fpm/fpm/fpm_systemd.h	2013-05-20 09:44:23.440365526 +0200
 @@ -0,0 +1,13 @@
 +#ifndef FPM_SYSTEMD_H
 +#define FPM_SYSTEMD_H 1
@@ -258,9 +268,29 @@ diff -up ../sapi/fpm/fpm/fpm_systemd.h.systemd ../sapi/fpm/fpm/fpm_systemd.h
 +
 +#endif
 +
+diff -up ../sapi/fpm/php-fpm.conf.in.systemd ../sapi/fpm/php-fpm.conf.in
+--- ../sapi/fpm/php-fpm.conf.in.systemd	2013-05-20 09:53:48.718512646 +0200
++++ ../sapi/fpm/php-fpm.conf.in	2013-05-20 09:58:26.831568875 +0200
+@@ -105,7 +105,15 @@
+ ; - /dev/poll  (Solaris >= 7)
+ ; - port       (Solaris >= 10)
+ ; Default Value: not set (auto detection)
+-; events.mechanism = epoll
++;events.mechanism = epoll
++
++; When FPM is build with systemd integration, specify the interval,
++; in second, between health report notification to systemd.
++; Set to 0 to disable.
++; Available Units: s(econds), m(inutes), h(ours)
++; Default Unit: seconds
++; Default value: 10
++;systemd_interval = 10
+ 
+ ;;;;;;;;;;;;;;;;;;;;
+ ; Pool Definitions ; 
 diff -up ../sapi/fpm/php-fpm.service.in.systemd ../sapi/fpm/php-fpm.service.in
 --- ../sapi/fpm/php-fpm.service.in.systemd	2012-12-05 11:40:39.000000000 +0100
-+++ ../sapi/fpm/php-fpm.service.in	2013-05-18 16:24:20.017490915 +0200
++++ ../sapi/fpm/php-fpm.service.in	2013-05-20 09:44:23.440365526 +0200
 @@ -3,6 +3,7 @@ Description=The PHP FastCGI Process Mana
  After=syslog.target network.target
  
