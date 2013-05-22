@@ -79,7 +79,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201305181030
+%global snapdate      201305220430
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -140,8 +140,6 @@ Patch45: php-5.4.8-ldap_r.patch
 Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
-# systemd integration
-Patch48: php-5.5.0-systemd.patch
 
 # Fixes for tests
 
@@ -149,7 +147,7 @@ Patch48: php-5.5.0-systemd.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-#Patch99: php-5.5.0-wip.patch
+Patch99: php-wip.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -839,12 +837,11 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
-%patch48 -p1 -b .systemd
 
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
-#patch99 -p1 -b .wip
+%patch99 -p0 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1811,6 +1808,9 @@ fi
 
 
 %changelog
+* Sat May 22 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.32.201305220430
+- test build for https://bugs.php.net/64895
+
 * Sat May 18 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.32.201305181030
 - test build with systemd integration (type=notify)
 

@@ -1,0 +1,35 @@
+diff -up ext/calendar/jewish.c.old ext/calendar/jewish.c
+--- ext/calendar/jewish.c.old	2013-05-22 08:11:57.663604019 +0200
++++ ext/calendar/jewish.c	2013-05-22 08:13:16.560934578 +0200
+@@ -272,7 +272,7 @@
+ #define HALAKIM_PER_METONIC_CYCLE (HALAKIM_PER_LUNAR_CYCLE * (12 * 19 + 7))
+ 
+ #define JEWISH_SDN_OFFSET 347997
+-#define JEWISH_SDN_MAX 38245310 /* year 103759, 100000 A.D. */
++#define JEWISH_SDN_MAX 324542846 /* 12/13/887605, greater value raises interger overflow */
+ #define NEW_MOON_OF_CREATION 31524
+ 
+ #define SUNDAY    0
+diff -up ext/calendar/tests/jdtojewish64.phpt.old ext/calendar/tests/jdtojewish64.phpt
+--- ext/calendar/tests/jdtojewish64.phpt.old	2013-05-21 18:37:45.000000000 +0200
++++ ext/calendar/tests/jdtojewish64.phpt	2013-05-22 08:15:08.113424723 +0200
+@@ -1,5 +1,5 @@
+ --TEST--
+-Integer overflow in SndToJewish leads to php hang 
++Bug #64895: Integer overflow in SndToJewish
+ --SKIPIF--
+ <?php 
+ include 'skipif.inc';
+@@ -9,10 +9,11 @@ if (PHP_INT_SIZE == 4) {
+ ?>
+ --FILE--
+ <?php
+-$a = array(38245310, 38245311, 9223372036854743639);
++$a = array(38245310, 324542846, 324542847, 9223372036854743639);
+ 
+ foreach ($a as $x) var_dump(jdtojewish($x));
+ --EXPECTF--
+ string(11) "2/22/103759"
++string(12) "12/13/887605"
+ string(5) "0/0/0"
+ string(5) "0/0/0"
