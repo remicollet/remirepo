@@ -7,8 +7,8 @@
 
 Name:           php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
-Version:        2.2.2
-Release:        1%{?gitver:.git%{gitver}}%{?dist}.1
+Version:        2.2.3
+Release:        1%{?dist}.1
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
@@ -188,6 +188,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- Update to 2.2.3
+
 * Sun Mar 24 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - update to 2.2.2 (stable)
 
@@ -222,7 +225,7 @@ rm -rf %{buildroot}
 * Wed May 09 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
-* Fri Apr 28 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.7.RC2
+* Sat Apr 28 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.7.RC2
 - Update to 2.2.0RC2
 
 * Wed Mar 14 2012 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.6.RC1
@@ -328,7 +331,7 @@ rm -rf %{buildroot}
 
 * Mon Jan 29 2007 Christopher Stone <chris.stone@gmail.com> 2.0.0-0.4.RC2
 - Compile with $RPM_OPT_FLAGS
-- Use $RPM_BUILD_ROOT instead of %%{buildroot}
+- Use %{buildroot} instead of %%{buildroot}
 - Fix license tag
 
 * Mon Jan 15 2007 Christopher Stone <chris.stone@gmail.com> 2.0.0-0.3.RC2
