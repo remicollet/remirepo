@@ -91,7 +91,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.33.%{?snapdate}%{?rcver}%{?dist}.1
+Release: 0.33.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -241,6 +241,7 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 Requires(pre): /usr/sbin/useradd
 %if %{with_systemd}
 BuildRequires: systemd-units
+BuildRequires: systemd-devel
 Requires: systemd-units
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -1821,7 +1822,7 @@ fi
 - improved systemd configuration, documentation about
   /etc/sysconfig/php-fpm being deprecated
 
-* Sat May 22 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.32.201305220430
+* Wed May 22 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.32.201305220430
 - test build for https://bugs.php.net/64895
 
 * Sat May 18 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.32.201305181030
