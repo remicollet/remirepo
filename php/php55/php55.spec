@@ -1450,6 +1450,10 @@ install -m 755 -d $RPM_BUILD_ROOT/run/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
 install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/php-fpm.conf
 # install systemd unit files and scripts for handling server startup
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+# this folder requires systemd >= 204
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system/php-fpm.service.d
+%endif
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
 %if 0%{?fedora} < 16 && 0%{?rhel} < 7
@@ -1739,6 +1743,9 @@ fi
 %if %{with_systemd}
 %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%dir %{_sysconfdir}/systemd/system/php-fpm.service.d
+%endif
 %dir /run/php-fpm
 %else
 %{_initrddir}/php-fpm
