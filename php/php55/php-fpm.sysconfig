@@ -1,2 +1,17 @@
 # Additional environment file for php-fpm
 
+# This file is deprecated when systemd is used and
+# will be removed in the future
+
+# To alter FPM environment, copy the unit file
+# from /usr/lib/systemd/system/php-fpm.service
+# to   /etc/systemd/system/php-fpm.service
+# and add an Environment line
+
+# With systemd >= 204 you can simply drop a file
+# in /etc/systemd/system/php-fpm.service.d, with
+#     [Service]
+#     Environment=FOO=bar
+
+# See systemd documentation.
+

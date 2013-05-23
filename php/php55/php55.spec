@@ -55,6 +55,11 @@
 %{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
 %{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%global with_systemd 1
+%else
+%global with_systemd 0
+%endif
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %global with_dtrace 1
 %else
@@ -79,14 +84,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201305220430
-#global rcver         RC1
+#global snapdate      201305220430
+%global rcver         RC2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.32.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.33.%{?snapdate}%{?rcver}%{?dist}.1
 %else
 Release: 2%{?dist}
 %endif
@@ -147,7 +152,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-Patch99: php-wip.patch
+#Patch99: php-wip.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -234,7 +239,7 @@ Summary: PHP FastCGI Process Manager
 License: PHP and Zend and BSD
 Requires: php-common%{?_isa} = %{version}-%{release}
 Requires(pre): /usr/sbin/useradd
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%if %{with_systemd}
 BuildRequires: systemd-units
 Requires: systemd-units
 Requires(post): systemd-units
@@ -841,7 +846,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
-%patch99 -p0 -b .wip
+#patch99 -p0 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1159,7 +1164,9 @@ popd
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
+%if %{with_systemd}
       --with-fpm-systemd \
+%endif
       --libdir=%{_libdir}/php \
       --without-mysql \
       --disable-pdo \
@@ -1433,7 +1440,10 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+# Environment file
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
+install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
+%if %{with_systemd}
 install -m 755 -d $RPM_BUILD_ROOT/run/php-fpm
 # tmpfiles.d
 install -m 755 -d $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
@@ -1446,6 +1456,7 @@ install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
 sed -i -e '/PrivateTmp/s/true/false/' ${RPM_BUILD_ROOT}%{_unitdir}/php-fpm.service
 %endif
 %else
+sed  -ne '1,2p' -i $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
 sed -i -e 's:/run:/var/run:' $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
 sed -i -e 's:/run:/var/run:' $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
@@ -1453,10 +1464,6 @@ sed -i -e 's:/run:/var/run:' $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_initrddir}
 install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
 %endif
-# Environment file
-install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
-install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
-# php-fpm should not fork on recent version
 %endif
 
 # Fix the link
@@ -1728,7 +1735,7 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
 %config(noreplace) %{_sysconfdir}/sysconfig/php-fpm
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
 %dir /run/php-fpm
@@ -1808,6 +1815,12 @@ fi
 
 
 %changelog
+* Thu May 23 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.33.RC2
+- update to 5.5.0RC2
+- add missing options in php-fpm.conf
+- improved systemd configuration, documentation about
+  /etc/sysconfig/php-fpm being deprecated
+
 * Sat May 22 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.32.201305220430
 - test build for https://bugs.php.net/64895
 
