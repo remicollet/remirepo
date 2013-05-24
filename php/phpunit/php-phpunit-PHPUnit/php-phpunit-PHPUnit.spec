@@ -3,7 +3,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        3.7.20
+Version:        3.7.21
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -32,7 +32,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(%{pear_channel}/File_Iterator) >= 1.3.0
 Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.1.1
-Requires:       php-pear(%{pear_channel}/PHP_CodeCoverage) >= 1.2.10
+Requires:       php-pear(%{pear_channel}/PHP_CodeCoverage) >= 1.2.1
 Requires:       php-pear(%{pear_channel}/PHP_CodeCoverage) <  1.3
 Requires:       php-pear(%{pear_channel}/PHP_Timer) >= 1.0.2
 Requires:       php-pear(%{pear_channel}/PHP_Timer) <  1.1
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Fri May 24 2013 Remi Collet <remi@fedoraproject.org> - 3.7.21-1
+- Update to 3.7.21
+
 * Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 3.7.20-1
 - Update to 3.7.20
 
