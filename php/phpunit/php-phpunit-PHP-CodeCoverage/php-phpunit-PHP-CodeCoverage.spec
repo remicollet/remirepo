@@ -14,6 +14,7 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{pear_channel})
 
