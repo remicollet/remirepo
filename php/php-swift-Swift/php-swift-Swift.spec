@@ -3,12 +3,12 @@
 %global pear_name Swift
 
 Name:           php-swift-Swift
-Version:        4.3.1
+Version:        5.0.0
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
 Group:          Development/Libraries
-License:        LGPLv3
+License:        MIT
 URL:            http://www.swiftmailer.org/
 Source0:        http://pear.swiftmailer.org/get/Swift-%{version}.tgz
 
@@ -84,6 +84,9 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Sat May 25 2013 Remi Collet <remi@fedoraproject.org> - 5.0.0-1
+- Update to 5.0.0 (relicense under MIT)
+
 * Thu Apr 11 2013 Remi Collet <remi@fedoraproject.org> - 4.3.1-1
 - Update to 4.3.1
 
