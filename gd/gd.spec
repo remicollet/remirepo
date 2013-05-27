@@ -1,11 +1,11 @@
 #global prever    -preview
-%global commit    ba8f21afb5fb3a35aa32f9700bfc2527b2c888a3
+%global commit    255af40ea9ed28787d3a7925c0ce33387c71f17e
 %global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       0.7.%{short}%{?dist}
+Release:       0.8.%{short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -95,7 +95,9 @@ CFLAGS="$RPM_OPT_FLAGS -DDEFAULT_FONTPATH='\"\
 /usr/share/X11/fonts/Type1:\
 /usr/share/fonts/liberation\"'"
 
-%configure --disable-rpath
+%configure \
+    --with-tiff=%{_prefix} \
+    --disable-rpath
 make %{?_smp_mflags}
 
 %install
@@ -129,6 +131,9 @@ make check
 
 
 %changelog
+* Mon May 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.8.255af40
+- pull latest upstream changes (post RC1)
+
 * Sat May  3 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.7.ba8f21a
 - pull latest upstream changes
 
