@@ -1,25 +1,24 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name FinderFacade
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-FinderFacade
-Version:        1.0.6
-Release:        2%{?dist}
+Version:        1.0.7
+Release:        1%{?dist}
 Summary:        Wrapper for Symfony Finder component
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/sebastianbergmann/finder-facade
 Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
-Patch0:         %{pear_name}.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{channel})
 
-Requires:       php-pear(PEAR) >= 1.9.2
+Requires:       php-pear(PEAR) >= 1.9.4
 Requires:       php-channel(%{channel})
 Requires:       php(language) >= 5.3.3
 Requires:       php-ctype
@@ -39,9 +38,7 @@ Convenience wrapper for Symfony's Finder component.
 %prep
 %setup -q -c
 
-%patch0 -p0
-sed -e 's/md5sum=.*name/name/' \
-    package.xml >%{pear_name}-%{version}/%{name}.xml
+mv package.xml %{pear_name}-%{version}/%{name}.xml
 
 
 %build
@@ -88,6 +85,9 @@ fi
 
 
 %changelog
+* Mon May 27 2013 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
+- Update to 1.0.7 (no change)
+
 * Wed Mar  6 2013 Remi Collet <remi@fedoraproject.org> - 1.0.6-2
 - upstream patch for Finder 2.2.0 compatibility
 
