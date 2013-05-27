@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Service-Weather
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Horde Weather Provider
 
@@ -37,16 +37,16 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Http) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Url) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 # Not documented, detected by phpci
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Serialize) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Serialize) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -138,5 +138,9 @@ fi
 %{pear_hordedir}/themes
 
 %changelog
+* Mon May 27 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- switch from Conflicts >= max to Requires < max
+
 * Sat Apr  6 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - initial package
