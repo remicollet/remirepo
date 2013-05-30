@@ -2,11 +2,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Mongo
 %global pear_channel pear.horde.org
-%global prever       beta1
+%global prever       RC1
 
 Name:           php-horde-Horde-Mongo
 Version:        1.0.0
-Release:        0.1.%{prever}%{?dist}
+Release:        0.2.%{prever}%{?dist}
 Summary:        Horde Mongo Configuration
 
 Group:          Development/Libraries
@@ -83,5 +83,8 @@ fi
 
 
 %changelog
+* Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC1
+- update to 1.0.0RC1
+
 * Mon May  6 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.beta1
 - initial package
