@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-FinderFacade
-Version:        1.0.7
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Wrapper for Symfony Finder component
 
@@ -85,6 +85,9 @@ fi
 
 
 %changelog
+* Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+
 * Mon May 27 2013 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - Update to 1.0.7 (no change)
 
