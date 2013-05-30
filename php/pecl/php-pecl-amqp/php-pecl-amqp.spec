@@ -3,7 +3,7 @@
 
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
-Version:       1.0.10
+Version:       1.2.0
 Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
@@ -162,6 +162,9 @@ fi
 
 
 %changelog
+* Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+
 * Fri Apr 19 2013 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
 - Update to 1.0.10
 
