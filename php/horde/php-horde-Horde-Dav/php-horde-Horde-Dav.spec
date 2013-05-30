@@ -2,11 +2,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Dav
 %global pear_channel pear.horde.org
-%global prever       beta1
+%global prever       RC1
 
 Name:           php-horde-Horde-Dav
 Version:        1.0.0
-Release:        0.2.%{prever}%{?dist}
+Release:        0.3.%{prever}%{?dist}
 Summary:        Horde library for WebDAV, CalDAV, CardDAV
 
 Group:          Development/Libraries
@@ -97,6 +97,9 @@ fi
 
 
 %changelog
+* Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.RC1
+- update to 1.0.0RC1
+
 * Tue May  7 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.beta1
 - fix versions required in sabredav channel
 
