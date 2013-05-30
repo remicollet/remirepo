@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Version
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-Version
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Managing the version number of Git-hosted PHP projects
 
@@ -83,5 +82,8 @@ fi
 
 
 %changelog
-* Thu Apr  4 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
+* Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
+* Thu Apr  4 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
