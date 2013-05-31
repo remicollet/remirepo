@@ -42,8 +42,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) <  2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optionnal
