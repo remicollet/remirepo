@@ -6,12 +6,11 @@
 
 Name:           php-horde-Horde-Css-Parser
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde CSS Parser
 
 Group:          Development/Libraries
-# Sabberworm is MIT, Horde is LGPL v2.1
-License:        MIT and LGPLv2
+License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -24,13 +23,11 @@ BuildRequires:  php-channel(%{pear_channel})
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
-Requires:       php-iconv
-Requires:       php-mbstring
-Requires:       php-pcre
-Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
-Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Requires:       php-channel(%{pear_channel})
+Requires:       php-PHP-CSS-Parser
+
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -44,6 +41,10 @@ Horde framework.
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
 
+sed -e '/Sabberworm\/CSS/d' \
+    -e '/EXPAT_LICENSE/d' \
+    -i %{name}.xml
+
 
 %build
 cd %{pear_name}-%{version}
@@ -51,8 +52,8 @@ cd %{pear_name}-%{version}
 
 
 %install
-cd %{pear_name}-%{version}
 rm -rf %{buildroot}
+cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
@@ -84,9 +85,11 @@ fi
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Horde
 %{pear_phpdir}/Horde/Css
-%{pear_phpdir}/Sabberworm
 
 
 %changelog
+* Fri May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- use system php-PHP-CSS-Parser
+
 * Fri May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, with bundled lib (need to be cleaned)
