@@ -12,7 +12,7 @@ sed -e "/^Version:/s/$1/$2/" \
     -e '/^Release:/s/[0-9].*$/1%{?dist}/' \
     -e "s/%changelog/%changelog\n* $rpmdate $vendor - $2-1\n- Update to $2\n/" \
     -e 's/\$RPM_BUILD_ROOT/%{buildroot}/' \
-    -e '/Conflicts/s/>=/< /' \
+    -e '/Conflicts:/s/>=/< /' \
     -e 's/Conflicts:/Requires: /' \
     -i *spec
 
