@@ -6,17 +6,14 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Date
-Version:        2.0.5
-Release:        2%{?dist}
+Version:        2.0.6
+Release:        1%{?dist}
 Summary:        Horde Date package
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# preg_replace() /e is deprecated
-Patch0:         %{name}.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -38,13 +35,13 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Nls) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional and omited to avoid circular dependency: Horde_Icalendar
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -58,13 +55,10 @@ Package for creating and manipulating dates.
 
 cd %{pear_name}-%{version}
 
-%patch0 -p3 -b .callback
-
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
-    -e '/Date.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
 
@@ -133,6 +127,10 @@ fi
 
 
 %changelog
+* Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+- switch from Conflicts >= max to Requires < max
+
 * Wed May 08 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
 - upstream patch for preg_replace
 
