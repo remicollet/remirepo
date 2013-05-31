@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Nls
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Nls
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Native Language Support (NLS)
 
@@ -27,9 +26,9 @@ Requires:       php-pcre
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # Optional
 Requires:       php-pecl(geoip)
 Requires:       php-pear(Net_DNS2)
@@ -41,8 +40,7 @@ Common methods for handling language data, timezones, and hostname->country
 lookups.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 
@@ -103,6 +101,10 @@ fi
 
 
 %changelog
+* Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+- switch from Conflicts >= max to Requires < max
+
 * Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - use local script instead of find_lang
