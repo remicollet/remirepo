@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.10.1
+Version:        2.11.2
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -42,6 +42,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optionnal
@@ -139,6 +141,10 @@ fi
 
 
 %changelog
+* Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 2.11.2-1
+- Update to 2.11.2
+- add mising requires on Horde_Translation
+
 * Tue May 21 2013 Remi Collet <remi@fedoraproject.org> - 2.10.1-1
 - Update to 2.10.1
 
