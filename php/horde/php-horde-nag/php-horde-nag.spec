@@ -9,7 +9,7 @@
 # "horde-nag" sub package with apache stuff
 
 Name:           php-horde-nag
-Version:        4.0.2
+Version:        4.0.3
 Release:        1%{?dist}
 Summary:        A web based task list manager
 
@@ -39,53 +39,50 @@ Requires:       php-spl
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
-Conflicts:      php-pear(%{pear_channel}/horde) >= 6.0.0
+Requires:       php-pear(%{pear_channel}/horde) <  6.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Auth) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Data) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Data) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date_Parser) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Date_Parser) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Date_Parser) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Form) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Form) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Group) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_History) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_History) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Icalendar) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Perms) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Prefs) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Prefs) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Routes) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Routes) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Routes) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Share) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Share) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Share) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Url) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_View) >= 3.0.0
-# optional
-# TODO Horde_ActiveSync
-Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
+# Optional and implicitly required: Horde_Db
 # not documented, required for Content_Tagger
 # http://bugs.horde.org/ticket/11726
 Requires:       php-pear(%{pear_channel}/content) >= 2.0.0
@@ -199,6 +196,10 @@ fi
 
 
 %changelog
+* Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 4.0.3-1
+- Update to 4.0.3
+- switch from Conflicts to Requires
+
 * Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.2-1
 - Update to 4.0.2 for remi repo
 
