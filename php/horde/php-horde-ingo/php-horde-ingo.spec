@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-ingo
-Version:        3.0.3
+Version:        3.0.4
 Release:        1%{?dist}
 Summary:        An email filter rules manager
 
@@ -35,34 +35,33 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
-Conflicts:      php-pear(%{pear_channel}/horde) >= 6.0.0
+Requires:       php-pear(%{pear_channel}/horde) <  6.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Auth) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Autoloader) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Group) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Form) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Form) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Imap_Client) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Perms) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Share) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Share) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Share) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
 Requires:       php-pear(Net_Sieve) >= 1.3.1
 Requires:       php-pear(Net_Socket)
-Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
+# Optional and implicitly requires: Horde_Vfs
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Obsoletes:      ingo < 3
@@ -173,6 +172,10 @@ fi
 
 
 %changelog
+* Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- Update to 3.0.4
+- switch from Conflicts to Provides
+
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
 - Update to 3.0.3
 
