@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.1.1
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -39,24 +39,24 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mail) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Filter) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.1.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Text_Flowed) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optionnal
 Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Nls) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Nls) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Text_Filter) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) <  3.0.0
 Requires:       php-intl
 Requires:       php-pear(Net_DNS2)
 
@@ -146,6 +146,10 @@ fi
 
 
 %changelog
+* Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+- switch from Conflicts >= max to Requires < max
+
 * Fri Apr 19 2013 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
