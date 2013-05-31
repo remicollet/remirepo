@@ -1,6 +1,8 @@
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Horde_Css_Parser
+%global pear_name    Horde_Css_Parser
+%global pear_channel pear.horde.org
+
 
 Name:           php-horde-Horde-Css-Parser
 Version:        1.0.0
@@ -8,31 +10,39 @@ Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
 Group:          Development/Libraries
-License:        LGPL-2.1
-URL:            http://pear.horde.org/package/Horde_Css_Parser
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+# Sabberworm is MIT, Horde is LGPL v2.1
+License:        MIT and LGPLv2
+URL:            http://%{pear_channel}
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR)
+BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(PEAR)
-Provides:       php-pear(pear.horde.org/Horde_Css_Parser) = %{version}
-BuildRequires:  php-channel(pear.horde.org)
-Requires:       php-channel(pear.horde.org)
+Requires:       php(language) >= 5.3.0
+Requires:       php-iconv
+Requires:       php-mbstring
+Requires:       php-pcre
+Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Requires:       php-channel(%{pear_channel})
+
 
 %description
 This package provides access to the Sabberworm CSS Parser from within the
 Horde framework.
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
 
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -42,19 +52,19 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+rm -rf %{buildroot}
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -64,48 +74,19 @@ rm -rf $RPM_BUILD_ROOT
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.horde.org/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
-
-
 %{pear_xmldir}/%{name}.xml
-# Expand this as needed to avoid owning dirs owned by our dependencies
-# and to avoid unowned dirs
-%{pear_phpdir}/Horde/Css/Parser.php
-%{pear_phpdir}/Sabberworm/CSS/CSSList/AtRuleBlockList.php
-%{pear_phpdir}/Sabberworm/CSS/CSSList/CSSBlockList.php
-%{pear_phpdir}/Sabberworm/CSS/CSSList/CSSList.php
-%{pear_phpdir}/Sabberworm/CSS/CSSList/Document.php
-%{pear_phpdir}/Sabberworm/CSS/CSSList/KeyFrame.php
-%{pear_phpdir}/Sabberworm/CSS/CSSList/MediaQuery.php
-%{pear_phpdir}/Sabberworm/CSS/Parsing/UnexpectedTokenException.php
-%{pear_phpdir}/Sabberworm/CSS/Property/AtRule.php
-%{pear_phpdir}/Sabberworm/CSS/Property/Charset.php
-%{pear_phpdir}/Sabberworm/CSS/Property/CSSNamespace.php
-%{pear_phpdir}/Sabberworm/CSS/Property/Import.php
-%{pear_phpdir}/Sabberworm/CSS/Property/Selector.php
-%{pear_phpdir}/Sabberworm/CSS/Rule/Rule.php
-%{pear_phpdir}/Sabberworm/CSS/RuleSet/AtRuleSet.php
-%{pear_phpdir}/Sabberworm/CSS/RuleSet/DeclarationBlock.php
-%{pear_phpdir}/Sabberworm/CSS/RuleSet/RuleSet.php
-%{pear_phpdir}/Sabberworm/CSS/Value/Color.php
-%{pear_phpdir}/Sabberworm/CSS/Value/CSSFunction.php
-%{pear_phpdir}/Sabberworm/CSS/Value/PrimitiveValue.php
-%{pear_phpdir}/Sabberworm/CSS/Value/RuleValueList.php
-%{pear_phpdir}/Sabberworm/CSS/Value/Size.php
-%{pear_phpdir}/Sabberworm/CSS/Value/String.php
-%{pear_phpdir}/Sabberworm/CSS/Value/URL.php
-%{pear_phpdir}/Sabberworm/CSS/Value/Value.php
-%{pear_phpdir}/Sabberworm/CSS/Value/ValueList.php
-%{pear_phpdir}/Sabberworm/CSS/Parser.php
-%{pear_phpdir}/Sabberworm/CSS/Settings.php
-
-
+%dir %{pear_phpdir}/Horde
+%{pear_phpdir}/Horde/Css
+%{pear_phpdir}/Sabberworm
 
 
 %changelog
+* Fri May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- initial package, with bundled lib (need to be cleaned)
