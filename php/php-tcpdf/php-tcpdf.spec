@@ -1,10 +1,10 @@
-%global dl_version 6_0_017
+%global dl_version %(c=%{version}; echo ${c//./_})
 %global real_name  tcpdf
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
-Version:        6.0.017
-Release:        2%{?dist}
+Version:        6.0.018
+Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
 License:        LGPLv3+
@@ -15,7 +15,6 @@ Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
-BuildRequires:  php-posix
 
 Requires:       php(language) >= 5.3
 Requires:       php-bcmath
@@ -31,8 +30,7 @@ Requires:       php-spl
 Requires:       php-tidy
 Requires:       php-xml
 Requires:       php-zlib
-#imagick is optionnal (and conflicts with gmagick)
-#Requires:       php-pecl(imagick)
+# imagick is optionnal (and conflicts with gmagick)
 
 
 %description
@@ -218,12 +216,6 @@ This package allow to use system GNU FreeFonts in TCPDF.
 %prep
 %setup -qn %{real_name}
 
-#patch0 -p1
-
-: fix barcode examples
-sed -e "s:dirname(__FILE__).'/../../:'tcpdf/:" \
-    -i examples/barcodes/*php
-
 : remove bundled fonts
 rm -rf fonts/dejavu-fonts-ttf* fonts/freefont-*
 for fic in fonts/*.z
@@ -338,6 +330,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun  1 2013 Remi Collet <remi@fedoraproject.org> - 6.0.018-1
+- update to 6.0.018
+- barcode examples now works out of the box
+
 * Sat May 18 2013 Remi Collet <remi@fedoraproject.org> - 6.0.017-2
 - split fonts, 1 subpackage per font package
 
