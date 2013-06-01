@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name PHPUnit_SkeletonGenerator
 %global channel   pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
@@ -15,16 +14,22 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-channel(%{channel})
+BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-pear(PEAR) >= 1.9.4
+BuildRequires:  php-channel(%{channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php(language) >= 5.3.3
+Requires:       php-date
+Requires:       php-pcre
+Requires:       php-reflection
+Requires:       php-spl
+Requires:       php-tokenizer
 Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-common >= 5.3.3
-Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
-Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
 Requires:       php-channel(%{channel})
+Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
+Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -82,6 +87,10 @@ fi
 
 
 %changelog
+* Sat Jun 01 2013 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1
+- add explicit requires
+
 * Thu Oct 11 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Version 1.2.0 (stable) - API 1.2.0 (stable)
 - raise dependency: php >= 5.3.3
