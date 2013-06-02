@@ -1,12 +1,24 @@
 %global VER        6.8.5
-%global Patchlevel 4
+%global Patchlevel 9
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
 %if 0%{?rhel} >= 6 || 0%{?fedora} >= 5
-%define withdjvu 1
+%global withdjvu 1
 %else
-%define withdjvu 0
+%global withdjvu 0
+%endif
+
+%if 0%{?rhel} >= 6 || 0%{?fedora} >= 14
+%global withlcms2 1
+%else
+%global withlcms2 0
+%endif
+
+%if 0%{?fedora} >= 16
+%global withwebp 1
+%else
+%global withwebp 0
 %endif
 
 
@@ -33,8 +45,17 @@ BuildRequires:  djvulibre-devel
 %endif
 BuildRequires:  libwmf-devel, jasper-devel, libtool-ltdl-devel
 BuildRequires:  libX11-devel, libXext-devel, libXt-devel
-BuildRequires:  lcms-devel, libxml2-devel, librsvg2-devel
+BuildRequires:  libxml2-devel, librsvg2-devel
 BuildRequires:  fftw-devel
+BuildRequires:  OpenEXR-devel
+%if %{withlcms2}
+BuildRequires:  lcms2-devel
+%else
+BuildRequires:  lcms-devel
+%endif
+%if %{withwebp}
+BuildRequires:  libwebp-devel
+%endif
 
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
@@ -71,7 +92,15 @@ Requires: bzip2-devel%{?_isa}
 Requires: freetype-devel%{?_isa}
 Requires: libtiff-devel%{?_isa}
 Requires: libjpeg-devel%{?_isa}
+Requires: OpenEXR-devel%{?_isa}
+%if %{withlcms2}
+Requires: lcms2-devel%{?_isa}
+%else
 Requires: lcms-devel%{?_isa}
+%endif
+%if %{withwebp}
+Requires: libwebp-devel%{?_isa}
+%endif
 Requires: jasper-devel%{?_isa}
 Requires: pkgconfig
 
@@ -191,9 +220,17 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --with-magick_plus_plus \
            --with-gslib \
            --with-wmf \
+%if %{withlcms2}
+           --with-lcms2 \
+%else
            --with-lcms \
+%endif
+           --with-openexr \
            --with-rsvg \
            --with-xml \
+%if %{withwebp}
+           --with-webp \
+%endif
            --with-perl-options="INSTALLDIRS=vendor %{?perl_prefix} CC='%__cc -L$PWD/magick/.libs' LDDLFLAGS='-shared -L$PWD/magick/.libs'" \
            --without-dps \
            --without-included-ltdl --with-ltdl-include=%{_includedir} \
@@ -332,6 +369,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun  2 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.5.9-1
+- update to 6.8.5-9
+- enable --with-webp when available
+- enable --with-openexr
+- enable --with-lcms2 when available, instead of --with-lcms
+
 * Mon May  6 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.5.4-1
 - update to 6.8.5-4
 - enable fftw to do Fourier transforms

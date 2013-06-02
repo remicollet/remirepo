@@ -8,7 +8,7 @@
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       2%{?dist}.1
+Release:       3%{?dist}.1
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -22,10 +22,10 @@ BuildRequires: php-devel
 BuildRequires: autoconf, automake, libtool
 %if 0%{?fedora} >= 20
 BuildRequires: ImageMagick-devel >= 6.8.2
-Requires:      ImageMagick-libs  >= %{imbuildver}
+Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
 BuildRequires: ImageMagick-last-devel >= 6.8.2
-Requires:      ImageMagick-last-libs  >= %{imbuildver}
+Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
 %endif
 
 Requires:      php(zend-abi) = %{php_zend_api}
@@ -124,6 +124,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun  2 2013 Remi Collet <rpms@famillecollet.com> - 1.0.9.2-3
+- rebuild against new ImageMagick-last version 6.8.5-9
+
 * Sat Apr  6 2013 Remi Collet <rpms@famillecollet.com> 1.0.9.2-2
 - rebuild against new ImageMagick-last version 6.8.4-6
 - improve dependency on ImageMagick library
