@@ -8,13 +8,14 @@ Release:        1%{?dist}
 Summary:        Native Language Support (NLS)
 
 Group:          Development/Libraries
-License:        LGPLv2+
-URL:            http://pear.horde.org
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+License:        LGPLv2
+URL:            http://%{pear_channel}
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  gettext
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
@@ -23,7 +24,7 @@ Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-pcre
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
@@ -33,15 +34,16 @@ Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pecl(geoip)
 Requires:       php-pear(Net_DNS2)
 
-Provides:       php-pear(%{pear_channel}/Horde_Nls) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 Common methods for handling language data, timezones, and hostname->country
 lookups.
 
+
 %prep
 %setup -q -c
-
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
@@ -72,6 +74,7 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+# Locales
 for loc in locale/{??,??_??}
 do
     lang=$(basename $loc)
@@ -96,8 +99,8 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Nls
 %{pear_phpdir}/Horde/Nls.php
-%dir %{pear_datadir}/Horde_Nls
-%dir %{pear_datadir}/Horde_Nls/locale
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}/locale
 
 
 %changelog
