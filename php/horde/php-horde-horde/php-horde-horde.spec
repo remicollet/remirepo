@@ -1,3 +1,11 @@
+# spec file for php-horde-horde
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the %changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    horde
@@ -122,7 +130,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) <  3.0.0
 # Optional but implicitly required
 #               Horde_Db, Horde_Feed, Horde_Oauth, Horde_SyncMl
 # Optionnal but TODO
-#               Horde_ActiveSync, Horde_Service_Facebook,
+#               Horde_Service_Facebook
 #               Horde_Service_Twitter
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
