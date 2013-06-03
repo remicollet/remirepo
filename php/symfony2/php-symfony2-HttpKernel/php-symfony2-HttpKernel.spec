@@ -124,6 +124,7 @@ Optional dependencies: memcache, memcached, mongo, xdebug
 # Symfony2 %{pear_name} PEAR package.
 
 set_include_path(
+    '%{_datadir}/php'.PATH_SEPARATOR.
     '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
     get_include_path()
 );
@@ -218,6 +219,9 @@ fi
 
 
 %changelog
+* Mon Apr 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.1-1
+- Updated to 2.2.1
+
 * Sat Apr 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1
 
