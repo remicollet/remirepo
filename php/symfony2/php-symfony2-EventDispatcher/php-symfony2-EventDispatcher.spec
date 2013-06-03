@@ -75,7 +75,6 @@ Optional dependency: HttpKernel (php-symfony2-HttpKernel)
 # Symfony2 %{pear_name} PEAR package.
 
 set_include_path(
-    '%{pear_phpdir}'.PATH_SEPARATOR.
     '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
     get_include_path()
 );
@@ -136,9 +135,11 @@ install -pm 0644 ../phpunit.autoloader.php \
 %check
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 
-sed 's#./phpunit.autoloader.php#./autoloader.php#' -i phpunit.xml.dist
+cp ../../../../phpunit.autoloader.php .
 
-%{_bindir}/phpunit -d date.timezone="UTC"
+%{_bindir}/phpunit \
+    -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
+    -d date.timezone="UTC"
 
 
 %post
@@ -164,6 +165,9 @@ fi
 
 
 %changelog
+* Mon Apr 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.1-1
+- Updated to 2.2.1
+
 * Sat Apr 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1 (no change)
 
