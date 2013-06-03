@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.1
+Version:          2.2.2
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -76,7 +76,6 @@ Stub implementation only supports the en locale.
 # Symfony2 %{pear_name} PEAR package.
 
 set_include_path(
-    '%{pear_phpdir}'.PATH_SEPARATOR.
     '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
     get_include_path()
 );
@@ -148,9 +147,11 @@ install -pm 0644 ../phpunit.autoloader.php \
 %check
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 
-sed 's#./phpunit.autoloader.php#./autoloader.php#' -i phpunit.xml.dist
+cp ../../../../phpunit.autoloader.php .
 
-%{_bindir}/phpunit -d date.timezone="UTC" \
+%{_bindir}/phpunit \
+    -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
+    -d date.timezone="UTC" \
     || : Temporarily ignore failed tests
 
 
@@ -192,6 +193,12 @@ fi
 
 
 %changelog
+* Mon Jun 03 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- Update to 2.2.2
+
+* Sun Apr 14 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.1-1
+- Updated to 2.2.1
+
 * Sat Apr 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1 (no change)
 
