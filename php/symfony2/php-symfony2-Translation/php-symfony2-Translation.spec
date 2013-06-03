@@ -71,6 +71,11 @@ translated strings from these including support for pluralization.
 # This file was created by RPM packaging and is not part of the original
 # Symfony2 %{pear_name} PEAR package.
 
+set_include_path(
+    '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
+    get_include_path()
+);
+
 spl_autoload_register(function ($class) {
     if ('\\' == $class[0]) {
         $class = substr($class, 1);
@@ -130,8 +135,8 @@ cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 cp ../../../../phpunit.autoloader.php .
 
 %{_bindir}/phpunit \
-   -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
-   -d date.timezone="UTC" \
+    -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
+    -d date.timezone="UTC" \
 %if 0%{?rhel} == 5
    || : ignore test on EL5
 %endif
@@ -158,6 +163,9 @@ fi
 
 
 %changelog
+* Mon Apr 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.1-1
+- Updated to 2.2.1
+
 * Sat Apr 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1
 
