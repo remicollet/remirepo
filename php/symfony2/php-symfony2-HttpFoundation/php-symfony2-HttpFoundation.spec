@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.1
+Version:          2.2.2
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -154,14 +154,8 @@ cp ../../../../phpunit.autoloader.php .
 sed 's#%{pear_docdir}#%{buildroot}%{pear_docdir}#g' \
     -i Tests/BinaryFileResponseTest.php
 
-# Skip tests requiring write access to /var/lib/php/session (root user)
-sed -e 's/testBag/SKIP_testBag/' \
-    -e 's/testGetId/SKIP_testGetId/' \
-    -e 's/testRegenerate/SKIP_testRegenerate/' \
-    -e 's/testRegenerateDestroy/SKIP_testRegenerateDestroy/' \
-    -i Tests/Session/Storage/NativeSessionStorageTest.php
-
 %{_bindir}/phpunit \
+    -d session_path=/tmp \
     -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
     -d date.timezone="UTC"
 
@@ -189,6 +183,9 @@ fi
 
 
 %changelog
+* Mon Jun 03 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- Update to 2.2.2
+
 * Sun Apr 14 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.1-1
 - Updated to 2.2.1
 
