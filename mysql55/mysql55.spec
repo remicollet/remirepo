@@ -10,7 +10,7 @@
 %endif
 
 Name: mysql
-Version: 5.5.31
+Version: 5.5.32
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -509,6 +509,7 @@ rm -f ${RPM_BUILD_ROOT}/usr/INSTALL-BINARY
 rm -f ${RPM_BUILD_ROOT}/usr/docs/ChangeLog
 rm -f ${RPM_BUILD_ROOT}/usr/data/mysql/.empty
 rm -f ${RPM_BUILD_ROOT}/usr/data/test/.empty
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/solaris/*
 # should move this to /etc/ ?
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/mysqlaccess.conf
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/mysql_embedded
@@ -833,6 +834,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Tue Jun  4 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.32-1
+- update to MySQL 5.5.32 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-32.html
+
 * Thu Feb 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.31-1
 - update to MySQL 5.5.31 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-31.html
