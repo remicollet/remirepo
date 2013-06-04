@@ -1,0 +1,25 @@
+From f287cb4383bcc43a63ec6b6b03db86ced1b41b1d Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Tue, 4 Jun 2013 09:23:22 +0200
+Subject: [PATCH] XFAIL as interger always return as integer (32bits only)
+
+---
+ tests/pass001.1.phpt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/pass001.1.phpt b/tests/pass001.1.phpt
+index a51f885..f59d424 100644
+--- a/tests/pass001.1.phpt
++++ b/tests/pass001.1.phpt
+@@ -7,6 +7,8 @@ precision=14
+   if (!extension_loaded('json')) die('skip: json extension not available');
+   if (PHP_INT_SIZE != 4) die("skip this test is for 32bit platform only");
+ ?>
++--XFAIL--
++Large number always treat as integer.
+ --FILE--
+ <?php
+ /* Modified to test unescaped UNICODE as keys and values.
+-- 
+1.8.1.6
+
