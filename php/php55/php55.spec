@@ -66,7 +66,7 @@
 %global with_dtrace 0
 %endif
 %if 0%{?fedora} < 20
-%global with_libgd   1
+%global with_libgd   0
 %else
 %global with_libgd   1
 %endif
@@ -84,7 +84,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201305271230
+%global snapdate      201306031030
 #global rcver         RC2
 
 Summary: PHP scripting language for creating dynamic web sites
