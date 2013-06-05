@@ -4,7 +4,7 @@
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #
-# Please, preserve the %changelog entries
+# Please, preserve the changelog entries
 #
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-horde
-Version:        5.0.5
+Version:        5.1.0
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -66,7 +66,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
@@ -100,8 +100,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Template) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Template) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Diff) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Diff) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Token) >= 2.0.0
@@ -240,6 +238,7 @@ fi
 %{_bindir}/horde-memcache-stats
 %{_bindir}/horde-run-task
 %{_bindir}/horde-set-perms
+%{_bindir}/horde-sessions-gc
 %{_bindir}/horde-themes
 %{_bindir}/horde-translation
 %{pear_hordedir}/*php
@@ -260,6 +259,11 @@ fi
 
 
 %changelog
+* Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 5.1.0-1
+- Update to 5.1.0
+- raise dependency on Horde_Core 2.5.0
+- drop dependency on Horde_Template
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 5.0.5-1
 - Update to 5.0.5
 - switch from Conflicts to Requires
