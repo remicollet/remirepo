@@ -1,18 +1,25 @@
+# spec file for php-horde-Horde-Rpc
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Dav
 %global pear_channel pear.horde.org
-%global prever       RC1
 
 Name:           php-horde-Horde-Dav
 Version:        1.0.0
-Release:        0.3.%{prever}%{?dist}
+Release:        1%{?dist}
 Summary:        Horde library for WebDAV, CalDAV, CardDAV
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://%{pear_channel}
-Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}%{?prever}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -27,11 +34,11 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Auth) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.2.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Stream) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(pear.sabredav.org/Sabre_CalDAV)  >= 1.8.3
 Requires:       php-pear(pear.sabredav.org/Sabre_CardDAV) >= 1.8.3
 Requires:       php-pear(pear.sabredav.org/Sabre_DAV)     >= 1.8.5
@@ -48,20 +55,20 @@ library.
 
 %prep
 %setup -q -c
-cd %{pear_name}-%{version}%{?prever}
+cd %{pear_name}-%{version}
 
 sed -e '/sabre/d' \
     ../package.xml >%{name}.xml
 
 
 %build
-cd %{pear_name}-%{version}%{?prever}
+cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
 %install
 rm -rf %{buildroot}
-cd %{pear_name}-%{version}%{?prever}
+cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
@@ -97,6 +104,10 @@ fi
 
 
 %changelog
+* Wed Jun  5 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0
+- switch from Conflicts to Requires
+
 * Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.RC1
 - update to 1.0.0RC1
 
