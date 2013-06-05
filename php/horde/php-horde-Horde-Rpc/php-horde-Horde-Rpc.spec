@@ -1,3 +1,11 @@
+# spec file for php-horde-Horde-Rpc
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Rpc
@@ -7,7 +15,7 @@
 # so, don't run it during rpmbuild
 
 Name:           php-horde-Horde-Rpc
-Version:        2.0.5
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde RPC API
 
@@ -34,29 +42,29 @@ Requires:       php-session
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
-#Requires:      php-pear(%{pear_channel}/Horde_Dav) >= 1.0.0
-#Requires:      php-pear(%{pear_channel}/Horde_Dav) <  2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Dav) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Dav) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Perms) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Serialize) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Serialize) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Xml_Element) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Xml_Element) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Xml_Element) <  3.0.0
 # Optional
 Requires:       php-soap
 Requires:       php-xmlrpc
 Requires:       php-pear(%{pear_channel}/Horde_SyncMl) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_SyncMl) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_SyncMl) <  3.0.0
 # Optional and implicitly requires: Horde_Http, Horde_Lock
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -131,6 +139,10 @@ fi
 
 
 %changelog
+* Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+- switch from Conflicts to Requires
+
 * Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - don't requires Horde_Dav until stable
