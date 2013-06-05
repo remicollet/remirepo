@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-HashTable
+# spec file for php-pecl-zendopcache
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
