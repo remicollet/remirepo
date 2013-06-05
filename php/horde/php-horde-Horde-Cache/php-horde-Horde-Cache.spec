@@ -3,8 +3,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cache
-Version:        2.1.0
-Release:        2%{?dist}
+Version:        2.2.0
+Release:        1%{?dist}
 Summary:        Horde Caching API
 
 Group:          Development/Libraries
@@ -27,20 +27,20 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Compress_Fast) >= 1.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Compress_Fast) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Compress_Fast) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional dependencies
+Requires:       php-pear(%{pear_channel}/Horde_HashTable) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_HashTable) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Log) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mongo) >= 1.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mongo) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Memcache) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Memcache) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mongo) <  2.0.0
 # Optional and omitted to avoid circular dep : Horde_Db
-# Optional and not yet available: Horde_Mongo, mongo
+# Optional and implicitly requires Horde_Memcache
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -97,6 +97,11 @@ fi
 
 
 %changelog
+* Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+- switch from Conflicts to Requires
+- add (optional) requires for Horde_HashTable
+
 * Sat May 04 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - drop optional dependency on Horde_Db (avoid circular)
 
