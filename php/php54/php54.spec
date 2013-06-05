@@ -1315,7 +1315,7 @@ install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
 # PrivateTmp and Type=notify only work on fedora >= 16
 sed -e '/^PrivateTmp/s/true/false/' \
     -e '/^Type/s/notify/simple/' \
-    -i${RPM_BUILD_ROOT}%{_unitdir}/php-fpm.service
+    -i ${RPM_BUILD_ROOT}%{_unitdir}/php-fpm.service
 %endif
 %else
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
