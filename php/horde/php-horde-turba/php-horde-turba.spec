@@ -1,3 +1,11 @@
+# spec file for php-horde-turba
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    turba
@@ -9,7 +17,7 @@
 # "horde-turba" sub package with apache stuff
 
 Name:           php-horde-turba
-Version:        4.0.4
+Version:        4.1.0
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -42,7 +50,7 @@ Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
 Requires:       php-pear(%{pear_channel}/horde) <  6.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) <  3.0.0
@@ -80,6 +88,9 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
+# Optional an implicitly required
+#    Horde_Db, Horde_Imsp, Horde_Ldap
+# Not yet available Horde_Service_Facebook
 
 Provides:       php-pear(%{pear_channel}/turba) = %{version}
 Obsoletes:      turba < 4
@@ -205,6 +216,9 @@ fi
 
 
 %changelog
+* Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
+- Update to 4.1.0
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 4.0.4-1
 - Update to 4.0.4
 - switch from Conflicts to Requires
