@@ -46,6 +46,16 @@
 %{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
 %{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%global with_systemd 1
+%else
+%global with_systemd 0
+%endif
+%if 0%{?fedora} >= 16 || 0%{?rhel} >= 7
+%global with_systemdfull 1
+%else
+%global with_systemdfull 0
+%endif
 %if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %global with_libzip  0
 %else
@@ -65,7 +75,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.15
+Version: 5.4.16
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -103,6 +113,12 @@ Patch8: php-5.4.7-libdb.patch
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
 Patch21: php-5.4.7-odbctimer.patch
+# Fixed Bug #64949 (Buffer overflow in _pdo_pgsql_error)
+Patch22: php-5.4.16-pdopgsql.patch
+# Fixed bug #64960 (Segfault in gc_zval_possible_root)
+Patch23: php-5.4.16-gc.patch
+# Fixed Bug #64915 (error_log ignored when daemonize=0)
+Patch24: php-5.4.16-fpm.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -120,6 +136,7 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Fixes for tests
+Patch60: php-5.4.16-pdotests.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
@@ -201,7 +218,10 @@ Summary: PHP FastCGI Process Manager
 License: PHP and Zend and BSD
 Requires: php-common%{?_isa} = %{version}-%{release}
 Requires(pre): /usr/sbin/useradd
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%if %{with_systemdfull}
+BuildRequires: systemd-devel
+%endif
+%if %{with_systemd}
 BuildRequires: systemd-units
 Requires: systemd-units
 Requires(post): systemd-units
@@ -751,6 +771,9 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 rm -f ext/json/utf8_to_utf16.*
 
 %patch21 -p1 -b .odbctimer
+%patch22 -p1 -b .pdopgsql
+%patch23 -p1 -b .gc
+%patch24 -p1 -b .fpm
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -766,6 +789,8 @@ rm -f ext/json/utf8_to_utf16.*
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+
+%patch60 -p1 -b .pdotests
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1056,6 +1081,9 @@ popd
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
+%if %{with_systemdfull}
+      --with-fpm-systemd \
+%endif
       --libdir=%{_libdir}/php \
       --without-mysql --disable-pdo \
       ${without_shared}
@@ -1275,7 +1303,7 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+%if %{with_systemd}
 install -m 755 -d $RPM_BUILD_ROOT/run/php-fpm
 # tmpfiles.d
 install -m 755 -d $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
@@ -1283,9 +1311,11 @@ install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/php-fpm
 # install systemd unit files and scripts for handling server startup
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
-%if 0%{?fedora} < 16 && 0%{?rhel} < 7
-# PrivateTmp only work on fedora >= 16
-sed -i -e '/PrivateTmp/s/true/false/' ${RPM_BUILD_ROOT}%{_unitdir}/php-fpm.service
+%if ! %{with_systemdfull}
+# PrivateTmp and Type=notify only work on fedora >= 16
+sed -e '/^PrivateTmp/s/true/false/' \
+    -e '/^Type/s/notify/simple/' \
+    -i${RPM_BUILD_ROOT}%{_unitdir}/php-fpm.service
 %endif
 %else
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
@@ -1418,7 +1448,7 @@ exit 0
 %else
 if [ $1 = 1 ]; then
     # Initial installation
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 %else
     /sbin/chkconfig --add php-fpm
@@ -1432,7 +1462,7 @@ fi
 %else
 if [ $1 = 0 ]; then
     # Package removal, not upgrade
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
     /bin/systemctl --no-reload disable php-fpm.service >/dev/null 2>&1 || :
     /bin/systemctl stop php-fpm.service >/dev/null 2>&1 || :
 %else
@@ -1446,7 +1476,7 @@ fi
 %if 0%{?systemd_postun_with_restart:1}
 %systemd_postun_with_restart php-fpm.service
 %else
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ]; then
     # Package upgrade, not uninstall
@@ -1463,7 +1493,7 @@ fi
 # We can tell if a SysV version of php-fpm was previously installed by
 # checking to see if the initscript is present.
 %triggerun fpm -- php-fpm
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 if [ -f /etc/rc.d/init.d/php-fpm ]; then
     # Save the current service runlevel info
     # User must manually run systemd-sysv-convert --apply php-fpm
@@ -1529,7 +1559,7 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
 %config(noreplace) %{_sysconfdir}/sysconfig/php-fpm
-%if 0%{?fedora} >= 15
+%if %{with_systemd}
 %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
 %dir /run/php-fpm
@@ -1603,6 +1633,13 @@ fi
 
 
 %changelog
+* Wed Jun  5 2013 Remi Collet <rcollet@redhat.com> 5.4.16-1
+- update to 5.4.16
+- switch systemd unit to Type=notify
+- patch for upstream Bug #64915 error_log ignored when daemonize=0
+- patch for upstream Bug #64949 Buffer overflow in _pdo_pgsql_error
+- patch for upstream bug #64960 Segfault in gc_zval_possible_root
+
 * Thu May  9 2013 Remi Collet <rcollet@redhat.com> 5.4.15-1
 - update to 5.4.15
 - clean very old obsoletes

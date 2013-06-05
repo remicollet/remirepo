@@ -1,0 +1,33 @@
+From 1c623e3b07128e78362911ff5754e7eee57fa8bb Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Fri, 31 May 2013 08:39:32 +0200
+Subject: [PATCH] Fixed Bug #64949 (Buffer overflow in _pdo_pgsql_error)
+
+There is a lot of call such as:
+	pdo_pgsql_error(dbh, PGRES_FATAL_ERROR, "Copy command failed");
+Where the 3rd paramater is a error message string where a sqlstate (5 chars)
+is expected. This cause a segfault in copy_from.phpt and copy_to.phpt.
+
+This is only a sanity check to avoid buffer overflow, but obviously this
+calls need to be fixed (using NULL or a correct sqlstate).
+---
+ NEWS                         | 3 +++
+ ext/pdo_pgsql/pgsql_driver.c | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/ext/pdo_pgsql/pgsql_driver.c b/ext/pdo_pgsql/pgsql_driver.c
+index 645fd36..55f4418 100644
+--- a/ext/pdo_pgsql/pgsql_driver.c
++++ b/ext/pdo_pgsql/pgsql_driver.c
+@@ -76,7 +76,7 @@ int _pdo_pgsql_error(pdo_dbh_t *dbh, pdo_stmt_t *stmt, int errcode, const char *
+ 		einfo->errmsg = NULL;
+ 	}
+ 
+-	if (sqlstate == NULL) {
++	if (sqlstate == NULL || strlen(sqlstate) >= sizeof(pdo_error_type)) {
+ 		strcpy(*pdo_err, "HY000");
+ 	}
+ 	else {
+-- 
+1.7.11.5
+
