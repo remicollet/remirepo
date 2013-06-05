@@ -1,18 +1,25 @@
+# spec file for php-horde-Horde-Mongo
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the %changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Mongo
 %global pear_channel pear.horde.org
-%global prever       RC1
 
 Name:           php-horde-Horde-Mongo
 Version:        1.0.0
-Release:        0.2.%{prever}%{?dist}
+Release:        1%{?dist}
 Summary:        Horde Mongo Configuration
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}
-Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}%{?prever}.tgz
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -37,18 +44,18 @@ consistently across various Horde packages.
 %prep
 %setup -q -c
 
-cd %{pear_name}-%{version}%{?prever}
+cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
 
 
 %build
-cd %{pear_name}-%{version}%{?prever}
+cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
 %install
 rm -rf %{buildroot}
-cd %{pear_name}-%{version}%{?prever}
+cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
@@ -83,6 +90,9 @@ fi
 
 
 %changelog
+* Wed Jun  5 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0
+
 * Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC1
 - update to 1.0.0RC1
 
