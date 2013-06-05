@@ -1,10 +1,18 @@
+# spec file for php-horde-ingo
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    ingo
 %global pear_channel pear.horde.org
 
 Name:           php-horde-ingo
-Version:        3.0.4
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        An email filter rules manager
 
@@ -58,6 +66,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Share) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Share) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # Optional
 Requires:       php-pear(Net_Sieve) >= 1.3.1
 Requires:       php-pear(Net_Socket)
@@ -172,6 +182,10 @@ fi
 
 
 %changelog
+* Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- Update to 3.1.0
+- new dependency: Horde_View
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
 - Update to 3.0.4
 - switch from Conflicts to Provides
