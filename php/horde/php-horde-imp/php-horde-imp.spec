@@ -1,10 +1,18 @@
+# spec file for php-horde-imp
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    imp
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.0.5
+Version:        6.1.0
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -51,13 +59,15 @@ Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Compress) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Compress) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.3.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Css_Parser) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Css_Parser) <  2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Crypt) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
@@ -65,8 +75,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Editor) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Editor) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Form) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
@@ -91,15 +99,19 @@ Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.5
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) <  3.0.0
@@ -109,11 +121,14 @@ Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Tree) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
-# Optionnal and implicitly required: Horde_Vfs
+# Optional
+Requires:       php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) >= 2.0.0
+# Optionnal and implicitly required:
+#     Horde_Vfs, Horde_History, Horde_Http, Horde_Stream_Filter
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Obsoletes:      imp < 5
@@ -220,6 +235,7 @@ fi
 %attr(0660,apache,apache) %config(noreplace) %{_sysconfdir}/horde/%{pear_name}/*.php
 %attr(0660,apache,apache) %config %{_sysconfdir}/horde/%{pear_name}/*.xml
 %{pear_testdir}/imp
+%{_bindir}/imp-admin-upgrade
 %{_bindir}/imp-bounce-spam
 %{_bindir}/imp-mailbox-decode
 %{_bindir}/imp-query-imap-cache
@@ -235,6 +251,12 @@ fi
 
 
 %changelog
+* Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 6.1.0-1
+- Update to 6.1.0
+- new dependencies : Horde_Cache, Horde_Stream, Horde_Secret
+- raise various dependency
+- drop dependency  on Horde_Form
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 6.0.5-1
 - Update to 6.0.5
 - switch from Conflicts to Requires
