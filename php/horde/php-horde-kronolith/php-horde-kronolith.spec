@@ -1,3 +1,11 @@
+# spec file for php-horde-ingo
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    kronolith
@@ -7,7 +15,7 @@
 # Fatal error: Call to a member function setShareCallback() on a non-object...
 
 Name:           php-horde-kronolith
-Version:        4.0.5
+Version:        4.1.0
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -51,12 +59,14 @@ Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Dav) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Dav) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date_Parser) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date_Parser) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
@@ -230,6 +240,10 @@ fi
 
 
 %changelog
+* Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
+- Update to 4.1.0
+- new dependency on Horde_Dav
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 4.0.5-1
 - Update to 4.0.5
 - switch from Conflicts to Requires
