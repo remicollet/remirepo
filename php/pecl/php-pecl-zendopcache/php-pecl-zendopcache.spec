@@ -1,33 +1,29 @@
+# spec file for php-horde-Horde-HashTable
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-#global owner      zend-dev
-#global commit     cef6093956bee5446207d5919fc9d30be58aa245
-#global short      %(c=%{commit}; echo ${c:0:7})
-#global prever     dev
 %global proj_name  ZendOpcache
 %global pecl_name  zendopcache
 %global plug_name  opcache
 
 Name:          php-pecl-%{pecl_name}
-Version:       7.0.1
-Release:       2%{?dist}
+Version:       7.0.2
+Release:       1%{?dist}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
 License:       PHP
 URL:           http://pecl.php.net/package/%{proj_name}
-%if 0%{?commit:1}
-Source0:       https://github.com/%{owner}/%{proj_name}/archive/%{commit}/%{proj_name}-%{version}-%{short}.tar.gz
-%else
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-%endif
 # this extension must be loaded before XDebug
 # So "opcache" if before "xdebug"
 Source1:       %{plug_name}.ini
 Source2:       %{plug_name}-default.blacklist
-
-# Allow comments in blacklist content
-# Allow wildcard in blacklist filename
-Patch0:        %{plug_name}-blacklist.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.2.0
@@ -66,16 +62,9 @@ bytecode optimization patterns that make code execution faster.
 
 %prep
 %setup -q -c
-%if 0%{?commit:1}
-mv %{proj_name}-%{commit} NTS
-sed -e '/release/s/7.0.0/%{version}%{prever}/' \
-    NTS/package.xml >package.xml
-%else
 mv %{pecl_name}-%{version} NTS
-%endif
 
 cd NTS
-%patch0 -p1
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define ACCELERATOR_VERSION/{s/.* "//;s/".*$//;p}' ZendAccelerator.h)
@@ -179,6 +168,10 @@ fi
 
 
 %changelog
+* Wed Jun  5 2013 Remi Collet <rcollet@redhat.com> - 7.0.2-1
+- update to 7.0.2
+- add spec License = CC-BY-SA
+
 * Thu Apr 11 2013 Remi Collet <rcollet@redhat.com> - 7.0.1-2
 - allow wildcard in opcache.blacklist_filename and provide
   default /etc/php.d/opcache-default.blacklist
