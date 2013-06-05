@@ -1,10 +1,18 @@
+# spec file for php-horde-Horde-Mongo
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_SessionHandler
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-SessionHandler
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Session Handler API
 
@@ -29,13 +37,13 @@ Requires:       php-date
 Requires:       php-session
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 # Optionnal
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.3
-Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
-# Optional and implicitly required: Horde_Log, Horde_Memcache
+Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
+# Optional and implicitly required: Horde_HashTable, Horde_Log, Horde_Mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -75,10 +83,10 @@ rm -rf %{buildroot}
 
 
 %check
-# Some tests fails when memcache extension available, need investigation
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+phpunit \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
 
@@ -105,6 +113,12 @@ fi
 
 
 %changelog
+* Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+- switch from Conflicts to Requires
+- drop Requires Horde_Util
+- add Requires Horde_Support
+
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 - raise dependency on Horde_Db >= 2.0.3
