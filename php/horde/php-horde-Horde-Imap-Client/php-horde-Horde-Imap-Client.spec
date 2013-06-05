@@ -1,9 +1,17 @@
+# spec file for php-horde-Horde-Imap-Client
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Imap_Client
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.11.2
+Version:        2.11.4
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -56,8 +64,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
 # Optional and implicilyt required :
-#   Horde_Compress_Fast, Horde_Stream_Filter
-# Not yet available Horde_Mongo, mongo
+#   Horde_Compress_Fast, Horde_Mongo, Horde_Stream_Filter
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -141,6 +148,9 @@ fi
 
 
 %changelog
+* Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 2.11.4-1
+- Update to 2.11.4
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 2.11.2-1
 - Update to 2.11.2
 - add mising requires on Horde_Translation
