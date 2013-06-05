@@ -1,6 +1,15 @@
+# spec file for php-horde-Horde-HashTable
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Horde_HashTable
+%global pear_name    Horde_HashTable
+%global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-HashTable
 Version:        1.0.0
@@ -8,33 +17,44 @@ Release:        1%{?dist}
 Summary:        Horde Hash Table Interface
 
 Group:          Development/Libraries
-License:        LGPL-2.1
-URL:            http://pear.horde.org/package/Horde_HashTable
-Source0:        http://pear.horde.org/get/%{pear_name}-%{version}.tgz
+License:        LGPLv2
+URL:            http://%{pear_channel}
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR)
+BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
+BuildRequires:  php-channel(%{pear_channel})
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(PEAR)
-Requires:       php-pear(pear.horde.org/Horde_Exception) >= 2.0.0
-Requires:       php-pear(pear.horde.org/Horde_Exception) < 3.0.0alpha1
+Requires:       php(language) >= 5.3.0
+Requires:       php-date
+Requires:       php-hash
+Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
-Provides:       php-pear(pear.horde.org/Horde_HashTable) = %{version}
-BuildRequires:  php-channel(pear.horde.org)
-Requires:       php-channel(pear.horde.org)
+Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+# Optional
+Requires:       php-pear(%{pear_channel}/Horde_Memcache) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Memcache) <  3.0.0
+Requires:       php-pear(pear.nrk.io/Predis) >= 0.8.3
+
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 Provides an abstract API to access various hash table implementations.
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
-
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -43,20 +63,29 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+
+%check
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -66,27 +95,18 @@ rm -rf $RPM_BUILD_ROOT
 %postun
 if [ $1 -eq 0 ] ; then
     %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.horde.org/%{pear_name} >/dev/null || :
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
-
-
 %{pear_xmldir}/%{name}.xml
-# Expand this as needed to avoid owning dirs owned by our dependencies
-# and to avoid unowned dirs
-%{pear_phpdir}/Horde/HashTable/Base.php
-%{pear_phpdir}/Horde/HashTable/Exception.php
-%{pear_phpdir}/Horde/HashTable/Lock.php
-%{pear_phpdir}/Horde/HashTable/Memcache.php
-%{pear_phpdir}/Horde/HashTable/Memory.php
-%{pear_phpdir}/Horde/HashTable/Null.php
-%{pear_phpdir}/Horde/HashTable/Predis.php
-
-%{pear_testdir}/Horde_HashTable
+%{pear_phpdir}/Horde/HashTable
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Wed Jun  5 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- initial package
