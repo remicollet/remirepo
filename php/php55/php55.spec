@@ -84,14 +84,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201306031030
-#global rcver         RC2
+#global snapdate      201306031030
+%global rcver         RC3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.34.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.35.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1823,6 +1823,9 @@ fi
 
 
 %changelog
+* Thu Jun  6 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.35.RC3
+- update to 5.5.0RC3
+
 * Mon May 27 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.34.201305271230.
 -test build with systemd gd
 
