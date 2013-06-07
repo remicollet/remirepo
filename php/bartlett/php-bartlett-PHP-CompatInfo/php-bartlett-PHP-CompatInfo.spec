@@ -16,7 +16,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.17.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -88,6 +88,7 @@ Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
 # Optional and not yet availalble php-pear(Net_Growl) >= 2.2.2
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
+Provides:       phpci = %{version}%{?prever}
 Provides:       phpcompatinfo = %{version}%{?prever}
 
 
@@ -170,6 +171,10 @@ install -pm 644 phpcompatinfo.xml %{buildroot}%{pear_cfgdir}/%{pear_name}/
 mkdir -p %{buildroot}%{_mandir}/man1
 install -pm 644 %{SOURCE1} %{buildroot}%{_mandir}/man1/phpcompatinfo.1
 
+# Keep old phpci command for compatibility (will be remove later)
+cd %{buildroot}%{_bindir}
+ln -s phpcompatinfo phpci
+
 
 %check
 cd %{pear_name}-%{version}%{?prever}
@@ -219,11 +224,15 @@ fi
 %{pear_phpdir}/Bartlett/PHP/Compat*
 %{pear_testdir}/%{pear_name}
 %{pear_datadir}/%{pear_name}
+%{_bindir}/phpci
 %{_bindir}/phpcompatinfo
 %{_mandir}/man1/phpcompatinfo.*
 
 
 %changelog
+* Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> - 2.17.0-2
+- keep phpci command for now
+
 * Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> - 2.17.0-1
 - Update to 2.17.0
 - phpci command renamed to phpcompatinfo
