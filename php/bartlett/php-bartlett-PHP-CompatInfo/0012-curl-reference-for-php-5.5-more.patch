@@ -36,11 +36,10 @@ index c12dc0f..e59bda4 100644
              'CURL_RTSPREQ_ANNOUNCE'          => array('5.5.0-dev', ''),
              'CURL_RTSPREQ_DESCRIBE'          => array('5.5.0-dev', ''),
              'CURL_RTSPREQ_GET_PARAMETER'     => array('5.5.0-dev', ''),
-@@ -166,7 +171,7 @@
+@@ -166,6 +171,7 @@
              'CURL_VERSION_KERBEROS4'         => array('4.0.2', ''),
              'CURL_VERSION_LIBZ'              => array('4.0.2', ''),
              'CURL_VERSION_SSL'               => array('4.0.2', ''),
--            'CURL_WRAPPERS_ENABLED'          => array('5.4.15', ''),
 +            'CURL_WRITEFUNC_PAUSE'           => array('5.5.0-dev', ''),
  
              'CURLAUTH_ANY'                   => array('4.0.2', ''),

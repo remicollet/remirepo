@@ -7,7 +7,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.16.0
+Version:        2.17.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -16,7 +16,7 @@ Group:          Development/Libraries
 License:        BSD and MIT
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
-Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpci.1
+Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpcompatinfo.1
 
 # Update configuration for best experience
 # Reference = ALL known extension (instead of installed ones)
@@ -80,7 +80,7 @@ Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
 # Optional and not yet availalble php-pear(Net_Growl) >= 2.2.2
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
-Provides:       phpci = %{version}%{?prever}
+Provides:       phpcompatinfo = %{version}%{?prever}
 
 
 %description
@@ -155,15 +155,12 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-# Fix wrong-script-end-of-line-encoding
-sed -i -e 's/\r//' %{buildroot}%{_bindir}/phpci
-
 # Create default package configuration
 install -pm 644 phpcompatinfo.xml %{buildroot}%{pear_cfgdir}/%{pear_name}/
 
 # Install the man page
 mkdir -p %{buildroot}%{_mandir}/man1
-install -pm 644 %{SOURCE1} %{buildroot}%{_mandir}/man1/phpci.1
+install -pm 644 %{SOURCE1} %{buildroot}%{_mandir}/man1/phpcompatinfo.1
 
 
 %check
@@ -214,11 +211,15 @@ fi
 %{pear_phpdir}/Bartlett/PHP/Compat*
 %{pear_testdir}/%{pear_name}
 %{pear_datadir}/%{pear_name}
-%{_bindir}/phpci
-%{_mandir}/man1/phpci.*
+%{_bindir}/phpcompatinfo
+%{_mandir}/man1/phpcompatinfo.*
 
 
 %changelog
+* Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> - 2.17.0-1
+- Update to 2.17.0
+- phpci command renamed to phpcompatinfo
+
 * Fri May 10 2013 Remi Collet <remi@fedoraproject.org> - 2.16.0-1
 - Update to 2.16.0
 
