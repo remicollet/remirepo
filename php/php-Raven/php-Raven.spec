@@ -1,7 +1,7 @@
 %global github_owner   getsentry
 %global github_name    raven-php
-%global github_version 0.5.1
-%global github_commit  cf3505369911d8f4ce3eb59dc9e1baba29cf72cf
+%global github_version 0.6.0
+%global github_commit  f3bad0185d50eca57dcb477488df14edd172d22e
 
 %global lib_name       Raven
 %global php_min_ver    5.2.4
@@ -51,15 +51,6 @@ Requires:      php-zlib
 %{summary} (http://getsentry.com).
 
 
-%package tests
-Summary:  Test suite for %{name}
-Group:    Development/Libraries
-Requires: %{name} = %{version}-%{release}
-
-%description tests
-%{summary}.
-
-
 %prep
 %setup -q -n %{github_name}-%{github_commit}
 
@@ -86,9 +77,6 @@ cp -rp lib/%{lib_name} %{buildroot}%{_datadir}/php/
 mkdir -p -m 755 %{buildroot}%{_bindir}
 install -pm 755 bin/raven %{buildroot}%{_bindir}/
 
-mkdir -p -m 755 %{buildroot}%{_datadir}/tests/%{name}
-cp -rp test/* %{buildroot}%{_datadir}/tests/%{name}/
-
 
 %check
 %{_bindir}/phpunit \
@@ -102,13 +90,15 @@ cp -rp test/* %{buildroot}%{_datadir}/tests/%{name}/
 %{_datadir}/php/%{lib_name}
 %{_bindir}/raven
 
-%files tests
-%defattr(-,root,root,-)
-%dir %{_datadir}/tests
-     %{_datadir}/tests/%{name}
-
 
 %changelog
+* Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> 0.6.0-1
+- backport 0.6.0 for remi repo.
+
+* Fri Jun 07 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.6.0-1
+- Updated to 0.6.0
+- Removed tests sub-package
+
 * Tue Feb 26 2013 Remi Collet <remi@fedoraproject.org> 0.5.1-1
 - backport 0.5.1 for remi repo.
 
