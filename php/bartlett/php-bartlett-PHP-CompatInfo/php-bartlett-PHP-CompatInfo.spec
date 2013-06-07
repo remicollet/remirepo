@@ -1,3 +1,11 @@
+# spec file for php-bartlett-PHP-CompatInfo
+#
+# Copyright (c) 2011-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   PHP_CompatInfo
 %global channel     bartlett.laurent-laville.org
