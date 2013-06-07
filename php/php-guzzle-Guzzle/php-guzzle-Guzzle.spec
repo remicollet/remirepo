@@ -5,7 +5,7 @@
 %global pear_name    Guzzle
 
 Name:             php-guzzle-%{pear_name}
-Version:          3.4.3
+Version:          3.6.0
 Release:          1%{?dist}
 Summary:          PHP HTTP client library and framework for building RESTful web service clients
 
@@ -123,6 +123,9 @@ fi
 
 
 %changelog
+* Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> - 3.6.0-1
+- Update to 3.6.0
+
 * Wed May 08 2013 Remi Collet <remi@fedoraproject.org> - 3.4.3-1
 - backport 3.3.0 for remi repo.
 
