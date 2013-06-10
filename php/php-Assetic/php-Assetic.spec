@@ -1,21 +1,11 @@
-%global github_owner        kriswallsmith
-%global github_name         assetic
-%global github_version      1.1.0
-%global github_commit       df03baa337ae1c87803a7b1a76a393f8a59813f3
-%global github_date         20130224
-
-%global github_release      alpha4
-
-%global php_min_ver         5.3.1
-
-%global symfony_min_ver     2.1.0
-%global symfony_max_ver     2.3
-%global twig_min_ver        1.6.0
-%global twig_max_ver        2.0
+%global github_owner   kriswallsmith
+%global github_name    assetic
+%global github_version 1.1.1
+%global github_commit  a826e4b96f5c607ff47ef61caf3826b2b1e840ec
 
 Name:          php-Assetic
 Version:       %{github_version}
-Release:       0.2.%{github_release}%{?dist}
+Release:       1%{?dist}
 Summary:       Asset Management for PHP
 
 Group:         Development/Libraries
@@ -26,9 +16,9 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 
-Requires:      php(language) >= %{php_min_ver}
-Requires:      php-pear(pear.symfony.com/Process) >= %{symfony_min_ver}
-Requires:      php-pear(pear.symfony.com/Process) <  %{symfony_max_ver}
+Requires:      php(language) >= 5.3.1
+Requires:      php-pear(pear.symfony.com/Process) >= 2.1
+Requires:      php-pear(pear.symfony.com/Process) <  3.0
 # phpci
 Requires:      php-ctype
 Requires:      php-curl
@@ -40,12 +30,10 @@ Requires:      php-spl
 Requires:      php-standard
 Requires:      php-tokenizer
 # Optional
-Requires:      php-pear(pear.twig-project.org/Twig) >= %{twig_min_ver}
-Requires:      php-pear(pear.twig-project.org/Twig) <  %{twig_max_ver}
+Requires:      php-pear(pear.twig-project.org/Twig) >= 1.6
+Requires:      php-pear(pear.twig-project.org/Twig) <  2.0
 Requires:      php-lessphp
-# TODO:        leafo/scssphp
-#                  In progress, but waiting for upstream.
-#                  https://bugzilla.redhat.com/show_bug.cgi?id=880880
+Requires:      php-scssphp
 
 %description
 Assetic is an asset management framework for PHP.
@@ -53,7 +41,6 @@ Assetic is an asset management framework for PHP.
 Optional dependency: APC (php-pecl-apc)
 
 Optional packages:
-* https://github.com/leafo/scssphp
 * https://github.com/leafo/scssphp-compass
 * https://github.com/krichprollsch/phpCssEmbed
 
@@ -90,6 +77,12 @@ cp -rp src/Assetic %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Mon Jun 10 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- backport 1.1.1 for remi repo.
+
+* Fri Jun 07 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.1-1
+- Updated to 1.1.1
+
 * Mon Mar 11 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.2.alpha4
 - backport for remi repo.
 
