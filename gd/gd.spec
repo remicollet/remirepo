@@ -1,20 +1,20 @@
-#global prever    -preview
-%global commit    255af40ea9ed28787d3a7925c0ce33387c71f17e
+#global prever    rc2
+%global commit    5a2971127f13c8644b7b9f4e0a7e8e9fe7e1d49b
 %global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       0.8.%{short}%{?dist}
+Release:       0.9.%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
 %if 0%{?commit:1}
 # git clone git@bitbucket.org:libgd/gd-libgd.git; cd gd-libgd
-# git archive  --format=tgz --output=gd-2.1.0-$(git rev-parse master).tgz --prefix=gd-2.1.0/  master
-Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}-%{commit}.tgz
+# git archive  --format=tgz --output=libgd-2.1.0-$(git rev-parse master).tgz --prefix=libgd-2.1.0/  master
+Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}-%{commit}.tgz
 %else
-Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/gd-%{version}%{?prever}.tar.xz
+Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}%{?prever:-%{prever}}.tar.xz
 %endif
 Patch1:        gd-2.1.0-multilib.patch
 
@@ -76,7 +76,7 @@ The gd-devel package contains the development libraries and header
 files for gd, a graphics library for creating PNG and JPEG graphics.
 
 %prep
-%setup -q -n gd-%{version}
+%setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
 
 # (re)generate autotool stuff
@@ -131,6 +131,9 @@ make check
 
 
 %changelog
+* Mon Jun 10 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.9.5a29711
+- pull latest upstream changes (post RC2)
+
 * Mon May 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.8.255af40
 - pull latest upstream changes (post RC1)
 
