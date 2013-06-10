@@ -12,7 +12,7 @@ URL:           http://libgd.bitbucket.org/
 %if 0%{?commit:1}
 # git clone git@bitbucket.org:libgd/gd-libgd.git; cd gd-libgd
 # git archive  --format=tgz --output=libgd-2.1.0-$(git rev-parse master).tgz --prefix=libgd-2.1.0/  master
-Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}-%{commit}.tgz
+Source0:       libgd-%{version}-%{commit}.tgz
 %else
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}%{?prever:-%{prever}}.tar.xz
 %endif
@@ -100,6 +100,7 @@ CFLAGS="$RPM_OPT_FLAGS -DDEFAULT_FONTPATH='\"\
     --disable-rpath
 make %{?_smp_mflags}
 
+
 %install
 make install INSTALL='install -p' DESTDIR=$RPM_BUILD_ROOT 
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.la
@@ -113,6 +114,7 @@ make check
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
+
 
 %files
 %doc COPYING
