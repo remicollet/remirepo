@@ -6,19 +6,22 @@
 %global proj_name  jsonc
 %global with_zts   0%{?__ztsphp:1}
 
-%if 0%{?fedora} < 19
-%global with_libjson 0
+%if 0%{?fedora} < 20
 %global ext_name     jsonc
 %else
-%global with_libjson 1
 %global ext_name     json
+%endif
+%if 0%{?fedora} < 19
+%global with_libjson 0
+%else
+%global with_libjson 1
 %endif
 
 
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{pecl_name}
 Version:       1.3.1
-Release:       1%{?dist}.1
+Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
@@ -175,7 +178,7 @@ REPORT_EXIT_STATUS=1 \
 
 %postun
 if [ $1 -eq 0 ] ; then
-    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+    %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
 
 

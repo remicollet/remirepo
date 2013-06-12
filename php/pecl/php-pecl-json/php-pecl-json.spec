@@ -1,36 +1,21 @@
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name  json
 %global proj_name  jsonc
-%global with_zts   0%{?__ztsphp:1}
-
-%if 0%{?fedora} < 19
-%global with_libjson 0
-%global ext_name     jsonc
-%else
-%global with_libjson 1
-%global ext_name     json
-%endif
-
 
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{pecl_name}
 Version:       1.3.1
-Release:       1%{?dist}.1
+Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
 Source0:       http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.4
 BuildRequires: php-pear
 BuildRequires: pcre-devel
-%if %{with_libjson}
 BuildRequires: json-c-devel >= 0.11
-%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -77,63 +62,41 @@ if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
 fi
 cd ..
 
-cat << 'EOF' | tee %{ext_name}.ini
-; Enable %{ext_name} extension module
-%if "%{ext_name}" == "json"
+cat << 'EOF' | tee %{pecl_name}.ini
+; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
-%else
-; You must disable standard %{pecl_name}.so before you enable %{proj_name}.so
-;extension = %{proj_name}.so
-%endif
 EOF
 
-%if %{with_zts}
 # duplicate for ZTS build
 cp -pr %{proj_name}-%{version} %{proj_name}-zts
-%endif
 
 
 %build
 cd %{proj_name}-%{version}
 %{_bindir}/phpize
 %configure \
-%if %{with_libjson}
   --with-libjson \
-%endif
-%if "%{ext_name}" == "jsonc"
-  --with-jsonc \
-%endif
   --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if %{with_zts}
 cd ../%{proj_name}-zts
 %{_bindir}/zts-phpize
 %configure \
-%if %{with_libjson}
   --with-libjson \
-%endif
-%if "%{ext_name}" == "jsonc"
-  --with-jsonc \
-%endif
   --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
-rm -rf %{buildroot}
 # Install the NTS stuff
 make -C %{proj_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
 # Install the ZTS stuff
-%if %{with_zts}
 make -C %{proj_name}-zts \
      install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
-%endif
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -143,20 +106,18 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 cd %{proj_name}-%{version}
 
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
-%if %{with_zts}
 cd ../%{proj_name}-zts
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
-%endif
 
 
 %post
@@ -165,35 +126,22 @@ REPORT_EXIT_STATUS=1 \
 
 %postun
 if [ $1 -eq 0 ] ; then
-    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+    %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %doc %{proj_name}-%{version}%{?prever}/{LICENSE,CREDITS,README.md}
-
-%config(noreplace) %{php_inidir}/%{ext_name}.ini
-%{php_extdir}/%{ext_name}.so
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
-
-%if %{with_zts}
-%{php_ztsextdir}/%{ext_name}.so
-%config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
-%endif
+%{php_ztsextdir}/%{pecl_name}.so
 
 
 %files devel
-%defattr(-,root,root,-)
 %{php_incldir}/ext/json
-
-%if %{with_zts}
 %{php_ztsincldir}/ext/json
-%endif
 
 
 %changelog
