@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.1.0
+Version:        6.1.1
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -251,6 +251,9 @@ fi
 
 
 %changelog
+* Wed Jun 12 2013 Remi Collet <remi@fedoraproject.org> - 6.1.1-1
+- Update to 6.1.1
+
 * Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 6.1.0-1
 - Update to 6.1.0
 - new dependencies : Horde_Cache, Horde_Stream, Horde_Secret
