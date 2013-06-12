@@ -5,27 +5,27 @@
 %global pecl_name  json
 %global proj_name  jsonc
 %global with_zts   0%{?__ztsphp:1}
-%if 0%{?fedora} >= 20
-%global with_libjson 1
-%else
+
+%if 0%{?fedora} < 19
 %global with_libjson 0
+%global ext_name     jsonc
+%else
+%global with_libjson 1
+%global ext_name     json
 %endif
 
 
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{pecl_name}
-Version:       1.3.0
+Version:       1.3.1
 Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
 Source0:       http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
-# Upstream patches
-Patch0:        %{name}.patch
-
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel >= 5.3.0
+BuildRequires: php-devel >= 5.4
 BuildRequires: php-pear
 BuildRequires: pcre-devel
 %if %{with_libjson}
@@ -41,17 +41,6 @@ Provides:      php-%{pecl_name} = %{version}
 Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
-
-# Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-%{pecl_name}
-%endif
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-%{pecl_name}
-%endif
-
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -80,8 +69,6 @@ These are the files needed to compile programs using JSON serializer.
 %setup -q -c 
 cd %{proj_name}-%{version}
 
-%patch0 -p1
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_JSON_VERSION/{s/.* "//;s/".*$//;p}' php_json.h )
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -90,10 +77,14 @@ if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
 fi
 cd ..
 
-cat > %{proj_name}.ini << 'EOF'
-; Enable %{proj_name} extension module
+cat << 'EOF' | tee %{ext_name}.ini
+; Enable %{ext_name} extension module
+%if "%{ext_name}" == "json"
+extension = %{pecl_name}.so
+%else
 ; You must disable standard %{pecl_name}.so before you enable %{proj_name}.so
 ;extension = %{proj_name}.so
+%endif
 EOF
 
 %if %{with_zts}
@@ -109,6 +100,9 @@ cd %{proj_name}-%{version}
 %if %{with_libjson}
   --with-libjson \
 %endif
+%if "%{ext_name}" == "jsonc"
+  --with-jsonc \
+%endif
   --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -118,6 +112,9 @@ cd ../%{proj_name}-zts
 %configure \
 %if %{with_libjson}
   --with-libjson \
+%endif
+%if "%{ext_name}" == "jsonc"
+  --with-jsonc \
 %endif
   --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
@@ -129,13 +126,13 @@ rm -rf %{buildroot}
 # Install the NTS stuff
 make -C %{proj_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{proj_name}.ini %{buildroot}%{php_inidir}/%{proj_name}.ini
+install -D -m 644 %{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
 
 # Install the ZTS stuff
 %if %{with_zts}
 make -C %{proj_name}-zts \
      install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{proj_name}.ini %{buildroot}%{php_ztsinidir}/%{proj_name}.ini
+install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
 %endif
 
 # Install the package XML file
@@ -146,7 +143,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 cd %{proj_name}-%{version}
 
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{proj_name}.so" \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
@@ -155,7 +152,7 @@ REPORT_EXIT_STATUS=1 \
 cd ../%{proj_name}-zts
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{proj_name}.so" \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
@@ -180,13 +177,13 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc %{proj_name}-%{version}%{?prever}/{LICENSE,CREDITS,README.md}
 
-%config(noreplace) %{php_inidir}/%{proj_name}.ini
-%{php_extdir}/%{proj_name}.so
+%config(noreplace) %{php_inidir}/%{ext_name}.ini
+%{php_extdir}/%{ext_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%{php_ztsextdir}/%{proj_name}.so
-%config(noreplace) %{php_ztsinidir}/%{proj_name}.ini
+%{php_ztsextdir}/%{ext_name}.so
+%config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
 %endif
 
 
@@ -200,6 +197,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 12 2013 Remi Collet <rcollet@redhat.com> - 1.3.1-1
+- release 1.3.1 (beta)
+
 * Tue Jun  4 2013 Remi Collet <rcollet@redhat.com> - 1.3.0-1
 - release 1.3.0 (beta)
 - use system json-c when available (fedora >= 20)
