@@ -35,7 +35,7 @@ Provides:      php-pecl(%{proj_name})%{?_isa} = %{version}
 
 
 %description
-The php-Json module will add support for JSON (JavaScript Object Notation)
+The %{name} module will add support for JSON (JavaScript Object Notation)
 serialization to PHP.
 
 This is a dropin alternative to standard PHP JSON extension which
