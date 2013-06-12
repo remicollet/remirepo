@@ -4,7 +4,7 @@
 %global proj_name  jsonc
 
 Summary:       Support for JSON serialization
-Name:          php-pecl-%{pecl_name}
+Name:          php-pecl-%{proj_name}
 Version:       1.3.1
 Release:       1%{?dist}
 License:       PHP
@@ -26,6 +26,8 @@ Provides:      php-%{pecl_name} = %{version}
 Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      php-pecl(%{proj_name}) = %{version}
+Provides:      php-pecl(%{proj_name})%{?_isa} = %{version}
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -147,6 +149,7 @@ fi
 %changelog
 * Wed Jun 12 2013 Remi Collet <rcollet@redhat.com> - 1.3.1-1
 - release 1.3.1 (beta)
+- rename to php-pecl-jsonc
 
 * Tue Jun  4 2013 Remi Collet <rcollet@redhat.com> - 1.3.0-1
 - release 1.3.0 (beta)
