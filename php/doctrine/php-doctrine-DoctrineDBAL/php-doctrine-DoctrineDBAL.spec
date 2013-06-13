@@ -16,11 +16,12 @@ License:          MIT
 URL:              http://www.doctrine-project.org/projects/dbal.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
-Requires:         php-common >= 5.3.2
+Requires:         php(language) >= 5.3.2
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires:         php-pear(%{pear_channel}/DoctrineCommon) >= 2.3.0
@@ -113,6 +114,7 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Doctrine/DBAL
@@ -120,6 +122,9 @@ fi
 
 
 %changelog
+* Thu Jun 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.3.4-2
+- backport for remi repo.
+
 * Wed Jun 12 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.3.4-2
 - Remove empty README
 
