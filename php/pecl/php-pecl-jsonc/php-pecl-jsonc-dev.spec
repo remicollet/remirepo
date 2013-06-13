@@ -1,15 +1,20 @@
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
+# spec file for php-pecl-jsonc
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name  json
 %global proj_name  jsonc
-%global with_zts   0%{?__ztsphp:1}
 
-%if 0%{?fedora} < 20
-%global ext_name     jsonc
-%else
+%if "%{php_version}" > "5.5"
 %global ext_name     json
+%else
+%global ext_name     jsonc
 %endif
 %if 0%{?fedora} < 19
 %global with_libjson 0
@@ -21,7 +26,7 @@
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
 Version:       1.3.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
@@ -46,6 +51,7 @@ Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 Provides:      php-pecl(%{proj_name}) = %{version}
 Provides:      php-pecl(%{proj_name})%{?_isa} = %{version}
+Obsoletes:     php-pecl-json < 1.3.1-2
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -102,10 +108,8 @@ extension = %{pecl_name}.so
 %endif
 EOF
 
-%if %{with_zts}
 # duplicate for ZTS build
 cp -pr %{proj_name}-%{version} %{proj_name}-zts
-%endif
 
 
 %build
@@ -121,7 +125,6 @@ cd %{proj_name}-%{version}
   --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if %{with_zts}
 cd ../%{proj_name}-zts
 %{_bindir}/zts-phpize
 %configure \
@@ -133,7 +136,6 @@ cd ../%{proj_name}-zts
 %endif
   --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
@@ -144,11 +146,9 @@ make -C %{proj_name}-%{version} \
 install -D -m 644 %{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
 
 # Install the ZTS stuff
-%if %{with_zts}
 make -C %{proj_name}-zts \
      install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
-%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -163,7 +163,6 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
-%if %{with_zts}
 cd ../%{proj_name}-zts
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
@@ -171,7 +170,6 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
-%endif
 
 
 %post
@@ -191,30 +189,25 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{proj_name}-%{version}%{?prever}/{LICENSE,CREDITS,README.md}
-
 %config(noreplace) %{php_inidir}/%{ext_name}.ini
-%{php_extdir}/%{ext_name}.so
-%{pecl_xmldir}/%{name}.xml
-
-%if %{with_zts}
-%{php_ztsextdir}/%{ext_name}.so
 %config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
-%endif
+%{php_extdir}/%{ext_name}.so
+%{php_ztsextdir}/%{ext_name}.so
+%{pecl_xmldir}/%{name}.xml
 
 
 %files devel
 %defattr(-,root,root,-)
 %{php_incldir}/ext/json
-
-%if %{with_zts}
 %{php_ztsincldir}/ext/json
-%endif
 
 
 %changelog
+* Wed Jun 12 2013 Remi Collet <rcollet@redhat.com> - 1.3.1-2
+- rename to php-pecl-jsonc
+
 * Wed Jun 12 2013 Remi Collet <rcollet@redhat.com> - 1.3.1-1
 - release 1.3.1 (beta)
-- rename to php-pecl-jsonc
 
 * Tue Jun  4 2013 Remi Collet <rcollet@redhat.com> - 1.3.0-1
 - release 1.3.0 (beta)

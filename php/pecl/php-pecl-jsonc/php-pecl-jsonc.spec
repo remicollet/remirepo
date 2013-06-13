@@ -1,3 +1,11 @@
+# spec file for php-pecl-jsonc
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name  json
@@ -137,8 +145,8 @@ fi
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
 %{php_ztsextdir}/%{pecl_name}.so
+%{pecl_xmldir}/%{name}.xml
 
 
 %files devel
