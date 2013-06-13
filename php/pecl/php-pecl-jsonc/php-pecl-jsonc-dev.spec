@@ -26,7 +26,7 @@
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
 Version:       1.3.1
-Release:       2%{?dist}
+Release:       2%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}

@@ -32,7 +32,7 @@
 
 %global with_fpm      1
 
-%global with_json     1
+%global with_json     0
 
 # Build mysql/mysqli/pdo extensions using libmysqlclient or only mysqlnd
 %global with_libmysql 0
@@ -91,7 +91,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.35.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.36.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -303,6 +303,9 @@ Provides: php-tokenizer, php-tokenizer%{?_isa}
 %if %{with_json}
 Provides: php-json, php-json%{?_isa}
 Obsoletes: php-pecl-json < 1.2.2
+%else
+# Temporary circular dep (to remove for bootstrap)
+Requires: php-pecl-jsonc%{?_isa}
 %endif
 %if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
@@ -332,6 +335,10 @@ Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
 %endif
 Obsoletes: php53-devel, php53u-devel, php54-devel, php55-devel
+%if ! %{with_json}
+# Temporary circular dep (to remove for bootstrap)
+Requires: php-pecl-jsonc-devel%{?_isa}
+%endif
 
 %description devel
 The php-devel package contains the files needed for building PHP
@@ -1106,7 +1113,7 @@ build --libdir=%{_libdir}/php \
 %if %{with_json}
       --enable-json=shared \
 %else
-      --disable-json
+      --disable-json \
 %endif
 %if %{with_zip}
       --enable-zip=shared \
@@ -1255,7 +1262,7 @@ build --includedir=%{_includedir}/php-zts \
 %if %{with_json}
       --enable-json=shared \
 %else
-      --disable-json
+      --disable-json \
 %endif
 %if %{with_zip}
       --enable-zip=shared \
@@ -1823,6 +1830,9 @@ fi
 
 
 %changelog
+* Thu Jun 13 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.36.RC3
+- drop JSON extension
+
 * Thu Jun  6 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.35.RC3
 - update to 5.5.0RC3
 
