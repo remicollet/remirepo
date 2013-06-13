@@ -2,7 +2,7 @@
 %global pear_name Net_DNS2
 
 Name:           php-pear-Net-DNS2
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        PHP Resolver library used to communicate with a DNS server
 
@@ -56,8 +56,10 @@ The main features for this package include:
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-# Package.xml is V2
-mv ../package.xml %{name}.xml
+# https://pear.php.net/bugs/19977
+sed -e '/composer.json/d' \
+    -e '/TODO/s/role="data"/role="doc"/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -84,10 +86,6 @@ rm -rf %{buildroot}
 
 
 %check
-# https://pear.php.net/bugs/19886
-sed -e 's/<?$/<?php/' \
-    -i %{buildroot}%{pear_testdir}/%{pear_name}/tests/Net_DNS2_DNSSECTest.php
-
 if ping -c 1 google.com &>/dev/null
 then
   suite=AllTests.php
@@ -123,8 +121,13 @@ fi
 
 
 %changelog
+* Thu Jun 13 2013 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- Update to 1.3.1
+- hack for https://pear.php.net/bugs/19977 (bad role)
+
 * Mon Apr 08 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - Update to 1.3.0
+- hack for https://pear.php.net/bugs/19886 (shortag)
 
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 1.2.5-1
 - Update to 1.2.5
