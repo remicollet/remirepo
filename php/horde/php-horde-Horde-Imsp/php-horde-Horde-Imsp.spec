@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imsp
-Version:        2.0.3
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        IMSP API
 
@@ -29,7 +29,7 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -106,5 +106,8 @@ fi
 
 
 %changelog
+* Thu Jun 13 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+
 * Fri Mar 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
 - Initial package

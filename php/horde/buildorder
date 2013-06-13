@@ -9,7 +9,7 @@ Build order
 	Horde_Translation         2.0.1       I: Horde_Test 
 	Horde_Util                2.2.2       I: Horde_Test, Horde_Imap_Client 
 	Horde_Exception           2.0.3       I: Horde_Test R: Horde_Translation
-	Horde_Imsp                2.0.3        R: Horde_Translation
+	Horde_Imsp                2.0.5        R: Horde_Translation
 	Horde_Memcache            2.0.2        R: Horde_Exception
 	Horde_Nls                 2.0.3        R: Horde_Util, Horde_Translation
 	Horde_Scribe              2.0.1        R: Horde_Thrift
