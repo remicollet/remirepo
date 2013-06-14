@@ -1,9 +1,16 @@
+# spec file for php-xcache
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global ext_name     xcache
-%global with_zts     0%{?__ztsphp:1}
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
-Version:       3.0.1
+Version:       3.0.2
 Release:       1%{?dist}
 License:       BSD
 Group:         Development/Languages
@@ -15,14 +22,20 @@ Source1:       xcache-httpd.conf
 # Relocation of configuration files to /etc/xcache
 Patch0:        xcache-config.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
 # Only one opcode cache can be installed
-Conflicts:     php-pecl-apc
+Conflicts:     php-pecl-apc < 3.1.15
 Conflicts:     php-eaccelerator
+
+# Other third party repo stuff
+Obsoletes: php53-xcache
+Obsoletes: php53u-xcache
+Obsoletes: php54-xcache
 
 # Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -74,10 +87,8 @@ if test "x${extver}" != "x%{version}"; then
 fi
 cd ..
 
-%if %{with_zts}
 # duplicate for ZTS build
 cp -pr nts zts
-%endif
 
 
 %build
@@ -94,7 +105,6 @@ cd nts
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if %{with_zts}
 cd ../zts
 %{_bindir}/zts-phpize
 %configure \
@@ -104,19 +114,16 @@ cd ../zts
     --enable-xcache-coverager \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-%endif
 
 
 %install
 # Install the NTS stuff
 make -C nts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{ext_name}.ini
+install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
 
-%if %{with_zts}
 # Install the ZTS stuff
 make -C zts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 zts/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
-%endif
 
 # Install the admin stuff
 install -d -m 755 %{buildroot}%{_datadir}
@@ -138,7 +145,7 @@ install -D -m 644 -p %{SOURCE1} \
 cd nts
 
 # simple module load test
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension_dir=%{buildroot}%{php_extdir}/\
     --define extension=%{ext_name}.so \
     --modules | grep XCache
@@ -149,7 +156,6 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 php run-tests.php -n -c xcache-test.ini tests
 
-%if %{with_zts}
 cd ../zts
 %{__ztsphp} --no-php-ini \
     --define extension_dir=%{buildroot}%{php_ztsextdir}/\
@@ -160,20 +166,18 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} run-tests.php -n -c xcache-test.ini tests
-%endif
 
 
 %files
+%defattr(-,root,root,-)
 %doc nts/{AUTHORS,ChangeLog,COPYING,README,THANKS}
-%config(noreplace) %{_sysconfdir}/php.d/%{ext_name}.ini
-%{php_extdir}/%{ext_name}.so
-
-%if %{with_zts}
+%config(noreplace) %{php_inidir}/%{ext_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
+%{php_extdir}/%{ext_name}.so
 %{php_ztsextdir}/%{ext_name}.so
-%endif
 
 %files -n xcache-admin
+%defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/xcache.conf
 %{_datadir}/xcache
 # No real configuration files, only sample files
@@ -181,6 +185,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Fri Jun 14 2013 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
+- bugfixes version
+
 * Thu Jan 17 2013 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - bugfixes version
 

@@ -1,3 +1,11 @@
+# spec file for php-xcache
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global ext_name     xcache
 %global svnrev       1264
 
@@ -37,9 +45,7 @@ Conflicts:     php-eaccelerator
 # Other third party repo stuff
 Obsoletes: php53-xcache
 Obsoletes: php53u-xcache
-%if "%{php_version}" > "5.4"
 Obsoletes: php54-xcache
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes: php55-xcache
 %endif
