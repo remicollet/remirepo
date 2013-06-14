@@ -58,7 +58,9 @@ Summary:       XCache Administration
 Group:         Development/Languages
 Requires:      mod_php, httpd
 Requires:      %{name} = %{version}-%{release}
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch:     noarch
+%endif
 
 %description -n xcache-admin
 This package provides the XCache Administration web application,
