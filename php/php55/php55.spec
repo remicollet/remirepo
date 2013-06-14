@@ -65,7 +65,7 @@
 %else
 %global with_dtrace 0
 %endif
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 17 && 0%{?rhel} < 6
 %global with_libgd   0
 %else
 %global with_libgd   1
@@ -648,13 +648,17 @@ support for multi-byte string handling to PHP.
 %package gd
 Summary: A module for PHP applications for using the gd graphics library
 Group: Development/Languages
-# All files licensed under PHP version 3.01, except
-# libgd is licensed under BSD
+# All files licensed under PHP version 3.01
+%if %{with_libgd}
+License: PHP
+%else
+# bundled libgd is licensed under BSD
 License: PHP and BSD
+%endif
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: t1lib-devel
 %if %{with_libgd}
-BuildRequires: gd-devel
+BuildRequires: gd-devel >= 2.1.0
 %else
 # Required to build the bundled GD library
 BuildRequires: libjpeg-devel
@@ -860,8 +864,10 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 cp Zend/LICENSE Zend/ZEND_LICENSE
 cp TSRM/LICENSE TSRM_LICENSE
 cp ext/ereg/regex/COPYRIGHT regex_COPYRIGHT
+%if ! %{with_libgd}
 cp ext/gd/libgd/README libgd_README
 cp ext/gd/libgd/COPYING libgd_COPYING
+%endif
 cp sapi/fpm/LICENSE fpm_LICENSE
 cp ext/mbstring/libmbfl/LICENSE libmbfl_LICENSE
 cp ext/mbstring/oniguruma/COPYING oniguruma_COPYING
@@ -1804,8 +1810,10 @@ fi
 %doc ucgendat_LICENSE
 %files gd -f files.gd
 %defattr(-,root,root,-)
+%if ! %{with_libgd}
 %doc libgd_README
 %doc libgd_COPYING
+%endif
 %files soap -f files.soap
 %files bcmath -f files.bcmath
 %doc libbcmath_COPYING
@@ -1832,6 +1840,7 @@ fi
 %changelog
 * Thu Jun 13 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.36.RC3
 - drop JSON extension
+- build with system GD when 2.1.0 is available
 
 * Thu Jun  6 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.35.RC3
 - update to 5.5.0RC3
