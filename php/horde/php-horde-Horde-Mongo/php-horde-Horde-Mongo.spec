@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mongo
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Horde Mongo Configuration
 
@@ -90,6 +90,9 @@ fi
 
 
 %changelog
+* Fri Jun 14 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Wed Jun  5 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0
 
