@@ -41,6 +41,7 @@ Requires:      php(api) = %{php_core_api}
 # Only one opcode cache can be installed
 Conflicts:     php-pecl-apc < 3.1.15
 Conflicts:     php-eaccelerator
+Conflicts:     php-opcache
 
 # Other third party repo stuff
 Obsoletes: php53-xcache
