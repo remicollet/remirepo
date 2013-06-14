@@ -13,11 +13,14 @@ URL:           http://libgd.bitbucket.org/
 # git clone git@bitbucket.org:libgd/gd-libgd.git; cd gd-libgd
 # git archive  --format=tgz --output=libgd-2.1.0-$(git rev-parse master).tgz --prefix=libgd-2.1.0/  master
 Source0:       libgd-%{version}-%{commit}.tgz
+# Stable archive (only used in EL-5 for autostuff)
+Source1:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}-rc2.tar.xz
 %else
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}%{?prever:-%{prever}}.tar.xz
 %endif
 Patch1:        gd-2.1.0-multilib.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
 BuildRequires: gettext-devel
@@ -79,12 +82,18 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
 
-# (re)generate autotool stuff
+%if 0%{?rhel} == 5
+xzcat %{SOURCE1} | \
+tar --extract --file - --keep-newer-files --strip-components 1
+%else
+: regenerate autotool stuff
 if [ -f configure ]; then
    autoreconf -fi
 else
    ./bootstrap.sh
 fi
+%endif
+
 
 %build
 # Provide a correct default font search path
@@ -96,6 +105,7 @@ CFLAGS="$RPM_OPT_FLAGS -DDEFAULT_FONTPATH='\"\
 /usr/share/fonts/liberation\"'"
 
 %configure \
+    --with-vpx=%{_prefix} \
     --with-tiff=%{_prefix} \
     --disable-rpath
 make %{?_smp_mflags}
@@ -108,6 +118,10 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
 
 %check
+%if 0%{?rhel} == 5
+export XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox"
+%endif
+
 make check
 
 
@@ -117,14 +131,17 @@ make check
 
 
 %files
+%defattr(-,root,root,-)
 %doc COPYING
 %{_libdir}/*.so.*
 
 %files progs
+%defattr(-,root,root,-)
 %{_bindir}/*
 %exclude %{_bindir}/gdlib-config
 
 %files devel
+%defattr(-,root,root,-)
 %doc ChangeLog
 %{_bindir}/gdlib-config
 %{_includedir}/*
