@@ -65,7 +65,7 @@
 %else
 %global with_dtrace 0
 %endif
-%if 0%{?fedora} < 17 && 0%{?rhel} < 6
+%if 0%{?fedora} < 17 && 0%{?rhel} < 5
 %global with_libgd   0
 %else
 %global with_libgd   1
@@ -91,7 +91,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.36.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.36.%{?snapdate}%{?rcver}%{?dist}.1
 %else
 Release: 2%{?dist}
 %endif
@@ -1838,6 +1838,9 @@ fi
 
 
 %changelog
+* Fri Jun 14 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.36.RC3.1
+- EL-5 rebuild with gd-last
+
 * Thu Jun 13 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.36.RC3
 - drop JSON extension
 - build with system GD when 2.1.0 is available
