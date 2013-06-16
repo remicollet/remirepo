@@ -1,4 +1,4 @@
-# spec file for php-pecl-raphf
+# spec file for php-pecl-propro
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
@@ -11,9 +11,9 @@
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global with_zts  0%{?__ztsphp:1}
-%global pecl_name raphf
+%global pecl_name propro
 
-Summary:        Resource and persistent handles factory
+Summary:        Property proxy
 Name:           php-pecl-%{pecl_name}
 Version:        0.1.0
 Release:        1%{?dist}
@@ -41,9 +41,7 @@ Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 %{?filter_setup}
 
 %description
-A reusable split-off of pecl_http's persistent handle and resource
-factory API.
-
+A reusable split-off of pecl_http's property proxy API.
 
 %package devel
 Summary:       %{name} developer files (header)
@@ -61,7 +59,7 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_RAPHF_VERSION/{s/.* "//;s/".*$//;p}' php_raphf.h)
+extver=$(sed -n '/#define PHP_PROPRO_VERSION/{s/.* "//;s/".*$//;p}' php_propro.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
@@ -128,17 +126,33 @@ fi
 
 %check
 # Minimal load test for NTS extension
+cd NTS
 php --no-php-ini \
-    --define extension_dir=NTS/modules \
+    --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+# Upstream test suite
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php
+
 %if %{with_zts}
 # Minimal load test for ZTS extension
+cd ../ZTS
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=ZTS/modules \
+    --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+# Upstream test suite
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php
 %endif
 
 
