@@ -32,7 +32,7 @@ Patch0:       %{name}-build.patch
 
 BuildRoot:     %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:     noarch
-BuildRequires: java-1.7.0-openjdk
+BuildRequires: jre
 BuildRequires: php-pear-phing
 
 
