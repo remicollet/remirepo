@@ -1,0 +1,53 @@
+diff -up build/ext/PackerTask.php.old build/ext/PackerTask.php
+--- build/ext/PackerTask.php.old	2013-06-16 09:38:34.494148729 +0200
++++ build/ext/PackerTask.php	2013-06-16 09:39:00.054242777 +0200
+@@ -42,13 +42,13 @@ class PackerTask extends CopyTask
+ 		$jar = realpath("$home/compiler.jar");
+ 			
+ 		$java = "java";
+-		exec("$java -version", &$output, &$result);
++		exec("$java -version", $output, $result);
+ 		if ($result != 0)
+ 			throw new BuildException("Java not found.");
+ 			
+ 		// first we pack the file using DOJO shrinksafe
+ 		$cmd = "$java -jar \"$jar\" --js=\"$file\" --js_output_file=\"$file.tmp\"";
+-		exec($cmd, &$output, &$result);
++		exec($cmd, $output, $result);
+ 
+ 		if ($result != 0)
+ 			throw new BuildException("Java error.");
+diff -up build/ext/RevisionTask.php.old build/ext/RevisionTask.php
+--- build/ext/RevisionTask.php.old	2013-06-16 09:37:58.030014959 +0200
++++ build/ext/RevisionTask.php	2013-06-16 09:38:20.484097272 +0200
+@@ -31,27 +31,8 @@ class RevisionTask extends Task
+ 		if ($this->getProject()->getUserProperty($this->propertyname))
+ 			return;
+ 		
+-		$rev = '???';
++		$rev = '@REVISION@';
+ 		
+-		try
+-		{
+-			$output = array();
+-			$this->workingcopy = str_replace(" ", "\ ", $this->workingcopy);
+-			$this->workingcopy = realpath($this->workingcopy);
+-
+-			exec("\"$this->hgpath\" tip", $output);
+-
+-			foreach ($output as $index => $line)
+-				if (preg_match("/^changeset:\s*(\\d+):/", $line, &$matches))
+-				{
+-					$rev = $matches[1];
+-					break;
+-				}
+-		}
+-		catch (Exception $e)
+-		{
+-		}
+-
+ 		$this->getProject()->setUserProperty($this->propertyname, $rev);
+ 	}
+-}
+\ Pas de fin de ligne à la fin du fichier
++}
