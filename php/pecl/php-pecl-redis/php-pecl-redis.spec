@@ -1,8 +1,16 @@
+# spec file for php-pecl-redis
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name  redis
 
-%if 0%{?fedora} >= 18
+%if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
 %ifarch ppc64
 # redis have ExcludeArch: ppc64
 %global with_test  0
@@ -42,6 +50,14 @@ Provides:      php-redis = %{version}-%{release}
 Provides:      php-redis%{?_isa} = %{version}-%{release}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-pecl-%{pecl_name}
+%endif
 
 # Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
