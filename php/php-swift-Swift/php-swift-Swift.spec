@@ -3,7 +3,7 @@
 %global pear_name Swift
 
 Name:           php-swift-Swift
-Version:        5.0.0
+Version:        5.0.1
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -84,6 +84,9 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 5.0.1-1
+- Update to 5.0.1
+
 * Sat May 25 2013 Remi Collet <remi@fedoraproject.org> - 5.0.0-1
 - Update to 5.0.0 (relicense under MIT)
 
