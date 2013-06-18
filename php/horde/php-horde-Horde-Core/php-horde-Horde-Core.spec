@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.5.0
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -154,7 +154,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 # Optional and omited to avoid circular dep:
 #    Horde_Dav
 # Optional and explicitly required:
-#    Horde_Http, Horde_Icalendar, Horde_Image, Horde_Imap_Client,
+#    Horde_HashTable, Horde_Http, Horde_Icalendar, Horde_Image, Horde_Imap_Client
 #    Horde_Ldap, Horde_Mail, Horde_Mongo, Horde_Nls, Horde_Routes, Horde_Tree
 # Horde_ActiveSync (non free)
 # Horde_Service_Twitter
@@ -260,6 +260,9 @@ fi
 
 
 %changelog
+* Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- Update to 2.6.0
+
 * Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - Update to 2.5.0
 - switch from Conflicts to Requires
