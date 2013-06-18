@@ -15,7 +15,7 @@
 # Fatal error: Call to a member function setShareCallback() on a non-object...
 
 Name:           php-horde-kronolith
-Version:        4.1.0
+Version:        4.1.1
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -77,7 +77,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_History) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
@@ -240,6 +240,9 @@ fi
 
 
 %changelog
+* Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 4.1.1-1
+- Update to 4.1.1
+
 * Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
 - Update to 4.1.0
 - new dependency on Horde_Dav
