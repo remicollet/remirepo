@@ -1,12 +1,23 @@
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  0.9.0
+Version:  0.9.2
 Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System         
-License: GPLv2
+# Since 0.8 beta, the main code has been GPLv3+ with exceptions and
+# skins CC-BY-SA.
+# Plugins are a mix of GPLv3+ and GPLv2. The Enigma plugin contains a
+# copy of php-Pear-Crypt-GPG (not yet packaged for Fedora), which is
+# LGPLv2+. The jqueryui plugin contains the entire jQuery UI framework
+# for the use of roundcube plugins: it is licensed as MIT or GPLv2.
+# The program/js/tiny_mce directory contains an entire copy of TinyMCE
+# which is LGPLv2+.
+# https://github.com/pear/Crypt_GPG
+# http://jqueryui.com/
+# http://www.tinymce.com/
+License: GPLv3+ with exceptions and GPLv3+ and GPLv2 and LGPLv2+ and CC-BY-SA and (MIT or GPLv2)
 URL: http://www.roundcube.net
 Source0: http://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}-dep.tar.gz
 Source1: roundcubemail.conf
@@ -151,6 +162,13 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
 %changelog
+* Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
+- backport 0.9.2 for remi repo in sync with rawhide
+
+* Mon Jun 17 2013 Adam Williamson <awilliam@redhat.com> - 0.9.2-1
+- latest upstream
+- correct License field, add comment on complex licensing case
+
 * Sat May  4 2013 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
 - backport 0.9.0 for remi repo in sync with rawhide
 
