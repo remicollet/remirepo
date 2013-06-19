@@ -11,11 +11,11 @@
   <email>evert@rooftopsolutions.nl</email>
   <active>true</active>
  </lead>
- <date>2012-02-22</date>
+ <date>@RELDATE@</date>
  <time>20:56:05</time>
  <version>
-  <release>1.8.4</release>
-  <api>1.8.4</api>
+  <release>@VERSION@</release>
+  <api>@VERSION@</api>
  </version>
  <stability>
   <release>stable</release>
