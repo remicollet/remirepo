@@ -1,10 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   Sabre_CalDAV
 %global channelname pear.sabredav.org
-%global mainver     1.8.5
+%global mainver     1.8.6
+%global reldate     2013-06-18
 
 Name:           php-sabredav-Sabre_CalDAV
-Version:        1.8.3
+Version:        1.8.6
 Release:        1%{?dist}
 Summary:        Provides RFC4791 (CalDAV) support to Sabre_DAV
 
@@ -42,7 +43,9 @@ CalDAV plugin for Sabre, Adds support for CalDAV in Sabre_DAV.
 %prep
 %setup -q -n SabreDAV
 
-cp %{SOURCE1} .
+sed -e 's/@VERSION@/%{version}/' \
+    -e 's/@RELDATE@/%{reldate}/' \
+    %{SOURCE1} >%{name}.xml
 mv lib/Sabre Sabre
 
 # Check version
@@ -100,6 +103,9 @@ fi
 
 
 %changelog
+* Wed Jun 19 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.6-1
+- update to 1.8.6
+
 * Tue May  7 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.3-1
 - update to 1.8.3
   use our own package.xml as upstream doesn't use pear anymore
