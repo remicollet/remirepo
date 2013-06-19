@@ -63,6 +63,9 @@ fi
 
 
 %changelog
+* Wed Jun 19 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.3.1-1
+- backport 1.3.1 from remi repo
+
 * Wed Jun 19 2013 F. Kooman <fkooman@tuxed.net> - 1.3.1-1
 - update to 1.3.1 addressing all packaging issues
 
