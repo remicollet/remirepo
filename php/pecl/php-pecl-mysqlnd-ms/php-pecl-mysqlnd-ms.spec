@@ -1,10 +1,18 @@
+# spec file for php-pecl-mysqlnd-ms
+#
+# Copyright (c) 2011-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:   %{expand: %%global __pecl     %{_bindir}/pecl}}
 %global pecl_name mysqlnd_ms
 
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
-Version:      1.4.2
-Release:      2%{?dist}.4
+Version:      1.5.1
+Release:      1%{?dist}.1
 
 License:      PHP
 Group:        Development/Languages
@@ -37,9 +45,7 @@ Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-mysqlnd-ms
 Obsoletes:     php53u-pecl-mysqlnd-ms
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-mysqlnd-ms
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-mysqlnd-ms
 %endif
@@ -76,6 +82,14 @@ These are the files needed to compile programs using mysqlnd_ms extension.
 
 cp %{SOURCE1} %{pecl_name}.ini
 
+# fix version
+sed -e '/MYSQLND_MS_VERSION/s/1.5.0-alpha/%{version}/' \
+    -i %{pecl_name}-%{version}/mysqlnd_ms.h
+sed -e '/MYSQLND_MS_VERSION_ID/s/10500/10501/' \
+    -i %{pecl_name}-%{version}/mysqlnd_ms.h
+grep MYSQLND_MS_VERSION %{pecl_name}-%{version}/mysqlnd_ms.h
+
+# check version, so often broken
 extver=$(sed -n '/#define MYSQLND_MS_VERSION /{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/mysqlnd_ms.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
@@ -187,6 +201,9 @@ ln -sf %{php_ztsextdir}/json.so modules/
 
 
 %changelog
+* Wed Jun 19 2013 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
+- Update to 1.5.1
+
 * Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.2-2.1
 - also provides php-mysqlnd_ms
 
