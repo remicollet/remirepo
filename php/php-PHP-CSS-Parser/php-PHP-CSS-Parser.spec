@@ -1,11 +1,11 @@
-%global gh_commit  ee5073f6a04b77ad3f06061af8990221303d6e07
+%global gh_commit  ceb263cab27c5ddc9a54f8700148e53e84d06ed3
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   sabberworm
 %global gh_project PHP-CSS-Parser
 
 Name:           php-%{gh_project}
 Summary:        A Parser for CSS Files
-Version:        5.0.5
+Version:        5.0.6
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -45,12 +45,7 @@ cp -pr lib/Sabberworm %{buildroot}%{_datadir}/php/Sabberworm
 
 %check
 cd tests
-# https://github.com/sabberworm/PHP-CSS-Parser/issues/64
-sed -e 's/testEndToken/SKIP_testEndToken/'  \
-    -i Sabberworm/CSS/RuleSet/LenientParsingTest.php
-
 phpunit --bootstrap bootstrap.php .
-
 
 
 %files
@@ -61,5 +56,8 @@ phpunit --bootstrap bootstrap.php .
 
 
 %changelog
+* Wed Jun 19 2013 Remi Collet <remi@fedoraproject.org> - 5.0.6-1
+- update to 5.0.6
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 5.0.5-1
 - Initial packaging
