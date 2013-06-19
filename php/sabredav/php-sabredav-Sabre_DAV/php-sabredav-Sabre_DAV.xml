@@ -18,11 +18,11 @@ Feature List:
   <email>evert@rooftopsolutions.nl</email>
   <active>true</active>
  </lead>
- <date>2012-10-04</date>
+ <date>@RELDATE@</date>
  <time>12:02:37</time>
  <version>
-  <release>1.8.5</release>
-  <api>1.8.5</api>
+  <release>@VERSION@</release>
+  <api>@VERSION@</api>
  </version>
  <stability>
   <release>stable</release>
