@@ -1,4 +1,11 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+# spec file for php-horde-Horde-Imsp
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Imsp
 %global pear_channel pear.horde.org
@@ -109,5 +116,5 @@ fi
 * Thu Jun 13 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 
-* Fri Mar 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+* Fri Mar 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Initial package
