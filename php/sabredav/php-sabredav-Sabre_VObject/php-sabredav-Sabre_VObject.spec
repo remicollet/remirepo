@@ -1,10 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   Sabre_VObject
 %global channelname pear.sabredav.org
-%global mainver     1.8.5
+%global mainver     1.8.6
+%global reldate     2013-06-18
 
 Name:           php-sabredav-Sabre_VObject
-Version:        2.0.7
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        An intuitive reader for iCalendar and vCard objects
 
@@ -38,7 +39,9 @@ SabreDAV VObject plugin.
 %prep
 %setup -q -n SabreDAV
 
-cp %{SOURCE1} .
+sed -e 's/@VERSION@/%{version}/' \
+    -e 's/@RELDATE@/%{reldate}/' \
+    %{SOURCE1} >%{name}.xml
 mv vendor/sabre/vobject/lib/Sabre Sabre
 mv vendor/sabre/vobject/LICENSE .
 mv vendor/sabre/vobject/ChangeLog .
@@ -98,6 +101,9 @@ fi
 
 
 %changelog
+* Wed Jun 19 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.0-1
+- update to 2.1.0
+
 * Tue May  7 2013 Remi Collet <RPMS@FamilleCollet.com> 2.0.7-1
 - update to 2.0.7
   use our own package.xml as upstream doesn't use pear anymore
