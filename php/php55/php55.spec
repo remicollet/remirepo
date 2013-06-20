@@ -81,7 +81,7 @@
 %endif
 
 #global snapdate      201306031030
-%global rcver         RC3
+#global rcver         RC3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -89,7 +89,7 @@ Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.36.%{?snapdate}%{?rcver}%{?dist}.1
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -104,6 +104,7 @@ Source0: http://snaps.php.net/php5.5-%{snapdate}.tar.xz
 # Need to download official tarball and strip non-free stuff
 # wget http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
 # ./strip.sh %{version}
+Source0: php-%{version}%{?rcver}-strip.tar.xz
 %endif
 Source1: php.conf
 Source2: php.ini
@@ -1800,6 +1801,9 @@ fi
 
 
 %changelog
+* Thu Jun 20 2013 Remi Collet <rcollet@redhat.com> 5.5.0-1
+- update to 5.5.0 final
+
 * Fri Jun 14 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.11.RC3
 - also drop JSON from sources
 - clean conditional for JSON (as removed from the sources)
