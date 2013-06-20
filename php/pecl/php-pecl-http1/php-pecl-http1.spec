@@ -1,3 +1,11 @@
+# spec file for php-pecl-http1
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 # The project is pecl_http but the extension is only http
@@ -5,7 +13,7 @@
 %global pecl_name http
 
 Name:           php-pecl-http1
-Version:        1.7.5
+Version:        1.7.6
 Release:        1%{?dist}.1
 Summary:        Extended HTTP support
 
@@ -16,9 +24,6 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 # Change for package
 Patch0:         %{pecl_name}-ini.patch
-# http://svn.php.net/viewvc?view=revision&revision=329705
-# http://svn.php.net/viewvc?view=revision&revision=330133
-Patch1:         %{pecl_name}-php55.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
@@ -54,9 +59,7 @@ Provides:       php-%{pecl_name}%{?_isa}       = %{version}
 # Other third party repo stuff
 Obsoletes:      php53-pecl-http1
 Obsoletes:      php53u-pecl-http1
-%if "%{php_version}" > "5.4"
 Obsoletes:      php54-pecl-http1
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:      php55-pecl-http1
 %endif
@@ -100,7 +103,6 @@ These are the files needed to compile programs using HTTP extension.
 
 cd %{proj_name}-%{version}
 %patch0 -p1 -b .rpmconf
-%patch1 -p3 -b .php55
 
 extver=$(sed -n '/#define PHP_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}"; then
@@ -200,5 +202,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 20 2013 Remi Collet <remi@fedoraproject.org> - 1.7.6-1
+- Update to 1.7.6
+
 * Thu Mar 21 2013 Remi Collet <remi@fedoraproject.org> - 1.7.5-1
 - initial package
