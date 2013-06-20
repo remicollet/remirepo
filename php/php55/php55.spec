@@ -101,7 +101,9 @@ URL: http://www.php.net/
 %if 0%{?snapdate}
 Source0: http://snaps.php.net/php5.5-%{snapdate}.tar.xz
 %else
-Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
+# Need to download official tarball and strip non-free stuff
+# wget http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
+# ./strip.sh %{version}
 %endif
 Source1: php.conf
 Source2: php.ini
@@ -113,6 +115,7 @@ Source7: php-fpm.logrotate
 Source8: php-fpm.sysconfig
 Source9: php.modconf
 Source10: php.ztsmodconf
+Source11: strip.sh
 # Configuration files for some extensions
 Source50: opcache.ini
 Source51: opcache-default.blacklist
@@ -294,13 +297,8 @@ Provides: php-sockets, php-sockets%{?_isa}
 Provides: php-spl, php-spl%{?_isa}
 Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
 Provides: php-tokenizer, php-tokenizer%{?_isa}
-%if %{with_json}
-Provides: php-json, php-json%{?_isa}
-Obsoletes: php-pecl-json < 1.2.2
-%else
 # Temporary circular dep (to remove for bootstrap)
 Requires: php-pecl-jsonc%{?_isa}
-%endif
 %if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
 Obsoletes: php-pecl-zip < 1.11
@@ -329,10 +327,8 @@ Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
 %endif
 Obsoletes: php53-devel, php53u-devel, php54-devel, php55-devel
-%if ! %{with_json}
 # Temporary circular dep (to remove for bootstrap)
 Requires: php-pecl-jsonc-devel%{?_isa}
-%endif
 
 %description devel
 The php-devel package contains the files needed for building PHP
@@ -1108,11 +1104,6 @@ build --libdir=%{_libdir}/php \
 %else
       --without-sqlite3 \
 %endif
-%if %{with_json}
-      --enable-json=shared \
-%else
-      --disable-json \
-%endif
 %if %{with_zip}
       --enable-zip=shared \
 %endif
@@ -1142,7 +1133,7 @@ without_shared="--without-gd \
       --disable-opcache \
       --disable-xmlreader --disable-xmlwriter \
       --without-sqlite3 --disable-phar --disable-fileinfo \
-      --disable-json --without-pspell --disable-wddx \
+      --without-pspell --disable-wddx \
       --without-curl --disable-posix --disable-xml \
       --disable-simplexml --disable-exif --without-gettext \
       --without-iconv --disable-ftp --without-bz2 --disable-ctype \
@@ -1254,11 +1245,6 @@ build --includedir=%{_includedir}/php-zts \
       --with-sqlite3=shared,%{_prefix} \
 %else
       --without-sqlite3 \
-%endif
-%if %{with_json}
-      --enable-json=shared \
-%else
-      --disable-json \
 %endif
 %if %{with_zip}
       --enable-zip=shared \
@@ -1487,9 +1473,6 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
     enchant phar fileinfo intl \
     mcrypt tidy pdo_dblib mssql pspell curl wddx \
     posix shmop sysvshm sysvsem sysvmsg recode xml \
-%if %{with_json}
-    json \
-%endif
 %if %{with_libmysql}
     mysql mysqli pdo_mysql \
 %endif
@@ -1563,9 +1546,6 @@ cat files.curl files.phar files.fileinfo \
     files.exif files.gettext files.iconv files.calendar \
     files.ftp files.bz2 files.ctype files.sockets \
     files.tokenizer > files.common
-%if %{with_json}
-cat files.json >> files.common
-%endif
 %if %{with_zip}
 cat files.zip >> files.common
 %endif
@@ -1820,6 +1800,11 @@ fi
 
 
 %changelog
+* Fri Jun 14 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.11.RC3
+- also drop JSON from sources
+- clean conditional for JSON (as removed from the sources)
+- clean conditional for FPM (always build)
+
 * Fri Jun 14 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.36.RC3.1
 - EL-5 rebuild with gd-last
 
