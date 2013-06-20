@@ -3,17 +3,14 @@
 %global pecl_name radius
 
 Name:           php-pecl-radius
-Version:        1.2.5
-Release:        14%{?dist}.4
+Version:        1.2.6
+Release:        1%{?dist}.1
 Summary:        Radius client library
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/radius
 Source0:        http://pecl.php.net/get/radius-%{version}.tgz
-
-# http://svn.php.net/viewvc/pecl/radius/trunk/radius.c?r1=256497&r2=297236&sortby=date
-Patch0:         radius-php54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
@@ -32,9 +29,7 @@ Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-%{pecl_name}
 %endif
@@ -56,7 +51,11 @@ OS (for example against Windows Active-Directory via IAS).
 %setup -qc
 
 cd %{pecl_name}-%{version}
-%patch0 -p3 -b .php54
+extver=$(sed -n '/#define PHP_RADIUS_VERSION/{s/.* "//;s/".*$//;p}' php_radius.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
 cd ..
 
 cat > %{pecl_name}.ini << 'EOF'
@@ -133,6 +132,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 20 2013 Remi Collet <remi@fedoraproject.org> - 1.2.6-1
+- Update to 1.2.6
+
 * Fri Nov 18 2011 Remi Collet <rpms@famillecollet.com> 1.2.5-14
 - also provides php-radius
 
