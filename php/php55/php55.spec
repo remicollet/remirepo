@@ -30,10 +30,6 @@
 # Optional components; pass "--with mssql" etc to rpmbuild.
 %global with_oci8     %{?_with_oci8:1}%{!?_with_oci8:0}
 
-%global with_fpm      1
-
-%global with_json     0
-
 # Build mysql/mysqli/pdo extensions using libmysqlclient or only mysqlnd
 %global with_libmysql 0
 
@@ -229,7 +225,6 @@ The php-cli package contains the command-line interface
 executing PHP scripts, /usr/bin/php, and the CGI interface.
 
 
-%if %{with_fpm}
 %package fpm
 Group: Development/Languages
 Summary: PHP FastCGI Process Manager
@@ -261,7 +256,6 @@ Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php55-fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
 implementation with some additional features useful for sites of
 any size, especially busier sites.
-%endif
 
 %package common
 Group: Development/Languages
@@ -823,7 +817,7 @@ support for using the enchant library to PHP.
 
 
 %prep
-echo CIBLE = %{name}-%{version}-%{release} oci8=%{with_oci8} fpm=%{with_fpm} libzip=%{with_libzip}
+echo CIBLE = %{name}-%{version}-%{release} oci8=%{with_oci8} libzip=%{with_libzip}
 
 # ensure than current httpd use prefork MPM.
 httpd -V  | grep -q 'threaded:.*yes' && exit 1
@@ -881,9 +875,7 @@ mkdir build-cgi build-apache build-embedded \
 %if %{with_zts}
     build-zts build-ztscli \
 %endif
-%if %{with_fpm}
     build-fpm
-%endif
 
 # ----- Manage known as failed test -------
 # affected by systzdata patch
@@ -1174,7 +1166,6 @@ build --with-apxs2=%{_httpd_apxs} \
       ${without_shared}
 popd
 
-%if %{with_fpm}
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
@@ -1186,7 +1177,6 @@ build --enable-fpm \
       --disable-pdo \
       ${without_shared}
 popd
-%endif
 
 # Build for inclusion as embedded script language into applications,
 # /usr/lib[64]/libphp5.so
@@ -1376,11 +1366,9 @@ mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/zts-php-config
 make -C build-embedded install-sapi install-headers \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 
-%if %{with_fpm}
 # Install the php-fpm binary
 make -C build-fpm install-fpm \
      INSTALL_ROOT=$RPM_BUILD_ROOT
-%endif
 
 # Install everything from the CGI SAPI build
 make -C build-cgi install \
@@ -1442,7 +1430,6 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 
-%if %{with_fpm}
 # PHP-FPM stuff
 # Log
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/log/php-fpm
@@ -1481,7 +1468,6 @@ sed -i -e 's:/run:/var/run:' $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
 # Service
 install -m 755 -d $RPM_BUILD_ROOT%{_initrddir}
 install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
-%endif
 %endif
 
 # Fix the link
@@ -1622,7 +1608,6 @@ echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 
-%if %{with_fpm}
 %pre fpm
 # Add the "apache" user as we don't require httpd
 getent group  apache >/dev/null || \
@@ -1695,7 +1680,6 @@ if [ -f /etc/rc.d/init.d/php-fpm ]; then
     /bin/systemctl try-restart php-fpm.service >/dev/null 2>&1 || :
 fi
 %endif
-%endif
 
 %post embedded -p /sbin/ldconfig
 %postun embedded -p /sbin/ldconfig
@@ -1744,7 +1728,6 @@ fi
 %{_mandir}/man1/phpize.1*
 %doc sapi/cgi/README* sapi/cli/README
 
-%if %{with_fpm}
 %files fpm
 %defattr(-,root,root)
 %doc php-fpm.conf.default
@@ -1771,7 +1754,6 @@ fi
 %{_mandir}/man8/php-fpm.8*
 %dir %{_datadir}/fpm
 %{_datadir}/fpm/status.html
-%endif
 
 %files devel
 %defattr(-,root,root)
