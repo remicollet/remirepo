@@ -6,12 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:   %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
+%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
+%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 %global pecl_name mysqlnd_ms
 
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         php-pecl-mysqlnd-ms
-Version:      1.5.1
+Version:      1.5.2
 Release:      1%{?dist}.1
 
 License:      PHP
@@ -82,14 +84,8 @@ These are the files needed to compile programs using mysqlnd_ms extension.
 
 cp %{SOURCE1} %{pecl_name}.ini
 
-# fix version
-sed -e '/MYSQLND_MS_VERSION/s/1.5.0-alpha/%{version}/' \
-    -i %{pecl_name}-%{version}/mysqlnd_ms.h
-sed -e '/MYSQLND_MS_VERSION_ID/s/10500/10501/' \
-    -i %{pecl_name}-%{version}/mysqlnd_ms.h
-grep MYSQLND_MS_VERSION %{pecl_name}-%{version}/mysqlnd_ms.h
-
 # check version, so often broken
+grep MYSQLND_MS_VERSION %{pecl_name}-%{version}/mysqlnd_ms.h
 extver=$(sed -n '/#define MYSQLND_MS_VERSION /{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/mysqlnd_ms.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
@@ -135,8 +131,8 @@ make install -C %{pecl_name}-zts \
      INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -187,7 +183,7 @@ ln -sf %{php_ztsextdir}/json.so modules/
 %doc %{pecl_name}-%{version}/{CHANGES,CREDITS,LICENSE,README}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
@@ -196,11 +192,14 @@ ln -sf %{php_ztsextdir}/json.so modules/
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/php/ext/%{pecl_name}
+%{php_incldir}/ext/%{pecl_name}
 %{php_ztsincldir}/ext/%{pecl_name}
 
 
 %changelog
+* Fri Jun 21 2013 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
+- Update to 1.5.2
+
 * Wed Jun 19 2013 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
 - Update to 1.5.1
 
