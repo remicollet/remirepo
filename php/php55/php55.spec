@@ -1301,7 +1301,7 @@ popd
 cd build-apache
 
 # Double stack size (required by bug54268.phpt)
-ulimit -s 16384
+ulimit -s 32712
 
 # Run tests, using the CLI SAPI
 export NO_INTERACTION=1 REPORT_EXIT_STATUS=1 MALLOC_CHECK_=2
