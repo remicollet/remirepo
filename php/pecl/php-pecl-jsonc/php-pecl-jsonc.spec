@@ -26,7 +26,7 @@
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
 Version:       1.3.1
-Release:       2%{?dist}.1
+Release:       2%{?dist}.2
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
@@ -52,6 +52,8 @@ Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 Provides:      php-pecl(%{proj_name}) = %{version}
 Provides:      php-pecl(%{proj_name})%{?_isa} = %{version}
 Obsoletes:     php-pecl-json < 1.3.1-2
+Provides:      php-pecl-json = %{version}-%{release}
+Provides:      php-pecl-json%{?_isa} = %{version}-%{release}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -84,6 +86,17 @@ Requires:      php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using JSON serializer.
+
+%if 0%{?rhel} == 5
+%package -n php-json
+Summary:       Meta package fo json extension
+Group:         Development/Libraries
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+%description  -n php-json
+Meta package fo json extension.
+Only used to be the best provider for php-json.
+%endif
 
 
 %prep
@@ -201,8 +214,16 @@ rm -rf %{buildroot}
 %{php_incldir}/ext/json
 %{php_ztsincldir}/ext/json
 
+%if 0%{?rhel} == 5
+%files -n php-json
+%defattr(-,root,root,-)
+%endif
 
 %changelog
+* Mon Jun 24 2013 Remi Collet <rcollet@redhat.com> - 1.3.1-2.el5.2
+- add metapackage "php-json" to fix upgrade issue (EL-5)
+
+- rename to php-pecl-jsonc
 * Wed Jun 12 2013 Remi Collet <rcollet@redhat.com> - 1.3.1-2
 - rename to php-pecl-jsonc
 
