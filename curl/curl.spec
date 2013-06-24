@@ -1,7 +1,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 7.27.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
@@ -49,6 +49,9 @@ Patch13: 0013-curl-7.27.0-b37b5233.patch
 
 # switch SSL socket into non-blocking mode after handshake (#960765)
 Patch14: 0014-curl-7.27.0-9d0af301.patch
+
+# fix heap-based buffer overflow in curl_easy_unescape() (CVE-2013-2174)
+Patch15: 0015-curl-7.27.0-192c4f78.patch
 
 # patch making libcurl multilib ready
 Patch101: 0101-curl-7.27.0-multilib.patch
@@ -161,6 +164,7 @@ documentation of the library, too.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
 
 # Fedora patches
 %patch101 -p1
@@ -295,6 +299,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Mon Jun 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 7.27.0-11
+- sync with 7.27.0-11 from F18:
+  fix heap-based buffer overflow in curl_easy_unescape() (CVE-2013-2174)
+
+* Sat Jun 22 2013 Kamil Dudka <kdudka@redhat.com> 7.27.0-11
+- fix heap-based buffer overflow in curl_easy_unescape() (CVE-2013-2174)
+
 * Mon May 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 7.27.0-10
 - sync with 7.27.0-10 from F18
 
