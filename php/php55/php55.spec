@@ -61,7 +61,7 @@
 %else
 %global with_dtrace 0
 %endif
-%if 0%{?fedora} < 17 && 0%{?rhel} < 5
+%if 0%{?fedora} < 20 && 0%{?rhel} < 5
 %global with_libgd   0
 %else
 %global with_libgd   1
@@ -80,14 +80,14 @@
 %global db_devel  libdb-devel
 %endif
 
-#global snapdate      201306031030
+%global snapdate      201306240630
 #global rcver         RC3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.0
+Version: 5.5.1
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.36.%{?snapdate}%{?rcver}%{?dist}.1
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1801,6 +1801,9 @@ fi
 
 
 %changelog
+* Mon Jun 24 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.1.201306240630
+- test build (bundled libgd)
+
 * Thu Jun 20 2013 Remi Collet <rcollet@redhat.com> 5.5.0-1
 - update to 5.5.0 final
 
