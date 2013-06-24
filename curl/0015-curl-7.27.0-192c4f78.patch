@@ -1,0 +1,43 @@
+From 25089c2c69028f0549facf93f7bdbf7344277f09 Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Sun, 19 May 2013 23:24:29 +0200
+Subject: [PATCH] Curl_urldecode: no peeking beyond end of input buffer
+
+Security problem: CVE-2013-2174
+
+If a program would give a string like "%FF" to curl_easy_unescape() but
+ask for it to decode only the first byte, it would still parse and
+decode the full hex sequence. The function then not only read beyond the
+allowed buffer but it would also deduct the *unsigned* counter variable
+for how many more bytes there's left to read in the buffer by two,
+making the counter wrap. Continuing this, the function would go on
+reading beyond the buffer and soon writing beyond the allocated target
+buffer...
+
+Bug: http://curl.haxx.se/docs/adv_20130622.html
+Reported-by: Timo Sirainen
+
+[upstream commit 192c4f788d48f82c03e9cef40013f34370e90737]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/escape.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/lib/escape.c b/lib/escape.c
+index 6a26cf8..a567edb 100644
+--- a/lib/escape.c
++++ b/lib/escape.c
+@@ -159,7 +159,8 @@ CURLcode Curl_urldecode(struct SessionHandle *data,
+ 
+   while(--alloc > 0) {
+     in = *string;
+-    if(('%' == in) && ISXDIGIT(string[1]) && ISXDIGIT(string[2])) {
++    if(('%' == in) && (alloc > 2) &&
++       ISXDIGIT(string[1]) && ISXDIGIT(string[2])) {
+       /* this is two hexadecimal digits following a '%' */
+       char hexstr[3];
+       char *ptr;
+-- 
+1.7.1
+
