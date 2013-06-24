@@ -23,19 +23,19 @@
 %endif
 
 # Build as a debug package?
-%define debug_build       0
+%define debug_build       1
 
 %define homepage http://start.fedoraproject.org/
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      21.0
-%global xulrunner_version_max  21.1
+%global xulrunner_version      22.0
+%global xulrunner_version_max  22.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130514
+%global datelang               20130621
 
 %global mozappdir     %{_libdir}/%{name}
 %global langpackdir   %{mozappdir}/langpacks
@@ -43,7 +43,7 @@
 
 %define official_branding       1
 %define build_langpacks         1
-%define include_debuginfo       0
+%define include_debuginfo       1
 
 %if %{alpha_version} > 0
 %global pre_version a%{alpha_version}
@@ -70,8 +70,8 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        21.0
-Release:        4%{?pre_tag}%{?dist}
+Version:        22.0
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -82,14 +82,12 @@ Source1:        firefox-langpacks-%{version}%{?pre_version}-%{datelang}.tar.xz
 Source10:       firefox-mozconfig
 Source11:       firefox-mozconfig-branded
 Source12:       firefox-redhat-default-prefs.js
-Source13:       firefox-mozconfig-debuginfo
 Source20:       firefox.desktop
 Source21:       firefox.sh.in
 Source23:       firefox.1
 
 #Build patches
 Patch0:         firefox-install-dir.patch
-Patch1:         firefox-packager-build.patch
 
 # Fedora patches
 Patch14:        firefox-5.0-asciidel.patch
@@ -142,7 +140,6 @@ cd %{tarballdir}
 # there is a compare of config and js/config directories and .orig suffix is 
 # ignored during this compare.
 %patch0 -p1
-%patch1 -p2 -b .build
 
 # For branding specific patches.
 
@@ -173,9 +170,6 @@ cd %{tarballdir}
 
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
-%endif
-%if %{include_debuginfo}
-%{__cat} %{SOURCE13} >> .mozconfig
 %endif
 
 %if %{?system_nss}
@@ -278,12 +272,6 @@ MOZ_SMP_FLAGS=-j1
 
 export LDFLAGS="-Wl,-rpath,%{mozappdir}"
 make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
-
-# create debuginfo for crash-stats.mozilla.com
-%if %{include_debuginfo}
-#cd %{moz_objdir}
-make buildsymbols
-%endif
 
 #---------------------------------------------------------------------
 
@@ -507,15 +495,24 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{mozappdir}/webapprt/omni.ja
 %{mozappdir}/webapprt/webapprt.ini
 %if %{include_debuginfo}
-#%{mozappdir}/crashreporter
-%{mozappdir}/crashreporter-override.ini
-#%{mozappdir}/Throbber-small.gif
-#%{mozappdir}/plugin-container
+%{mozappdir}/browser/crashreporter-override.ini
 %endif
 
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Jun 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 22.0-1
+- Update to 22.0, sync with rawhide
+
+* Fri Jun 21 2013 Martin Stransky <stransky@redhat.com> - 22.0-1
+- Updated to latest upstream (22.0)
+
+* Thu Jun 13 2013 Jan Horak <jhorak@redhat.com> - 21.0-5
+- Enable Mozilla crash report tool
+
+* Thu May 23 2013 Jan Horak <jhorak@redhat.com> - 21.0-4
+- Do not override user defined TMPDIR variable
+
 * Sun May 19 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-4
 - rebuild
 

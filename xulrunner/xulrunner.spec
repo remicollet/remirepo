@@ -91,14 +91,13 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        21.0
-Release:        2%{?pre_tag}%{?dist}
+Version:        22.0
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/%{tarballname}/releases/%{version}%{?pre_version}/source/%{tarballname}-%{version}%{?pre_version}.source.tar.bz2
 Source10:       %{shortname}-mozconfig
-Source11:       %{shortname}-mozconfig-debuginfo
 Source12:       %{shortname}-redhat-default-prefs.js
 Source21:       %{shortname}.sh.in
 
@@ -109,11 +108,15 @@ Patch14:        xulrunner-2.0-chromium-types.patch
 Patch17:        xulrunner-15.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
 Patch18:        xulrunner-16.0-jemalloc-ppc.patch
+# workaround linking issue on s390 (JSContext::updateMallocCounter(size_t) not found)
+Patch19:        xulrunner-21.0-s390-inlines.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
 Patch21:        rhbz-911314.patch
-Patch22:        rhbz-928353.patch
+Patch23:        mozilla-851850.patch
+# Unable to install addons from https pages
+Patch24:        rhbz-966424.patch
 
 # Upstream patches
 Patch104:       mozilla-844883.patch
@@ -268,18 +271,16 @@ cd %{tarballdir}
 %patch14 -p2 -b .chromium-types
 %patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
+%patch19 -p1 -b .s390-inlines
 
 %patch20  -p2 -b .pk
 %ifarch ppc ppc64
-%patch21  -p1 -b .ppc
+%patch21  -p2 -b .ppc
+%patch23  -p1 -b .851850
 %patch104 -p1 -b .844883
 %endif
 
-%if 0%{?fedora} >= 19
-%ifarch %{ix86}
-%patch22  -p2
-%endif
-%endif
+%patch24  -p1 -b .966424
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -290,10 +291,6 @@ cd %{tarballdir}
   | grep -v with-system-jpeg     \
 %endif
   | tee .mozconfig
-
-%if %{enable_mozilla_crashreporter}
-%{__cat} %{SOURCE11} >> .mozconfig
-%endif
 
 %if %{?system_nss}
 echo "ac_add_options --with-system-nspr" >> .mozconfig
@@ -502,9 +499,6 @@ EOF
 # Install xpcshell
 %{__cp} objdir/dist/bin/xpcshell $RPM_BUILD_ROOT/%{mozappdir}
 
-# Fix libxpcom.so rights
-chmod 755 $RPM_BUILD_ROOT/%{mozappdir}/libxpcom.so
-
 # Install run-mozilla.sh
 %{__cp} objdir/dist/bin/run-mozilla.sh $RPM_BUILD_ROOT/%{mozappdir}
 
@@ -591,6 +585,27 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Jun 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 22.0-1
+- Update to 22.0, sync with rawhide
+
+* Fri Jun 21 2013 Martin Stransky <stransky@redhat.com> - 22.0-1
+- Update to latest upstream (22.0)
+
+* Wed Jun 12 2013 Jan Horak <jhorak@redhat.com> - 21.0-8
+- Fixed rhbz#966424 - unable to install addons
+
+* Mon Jun  3 2013 Jan Horak <jhorak@redhat.com> - 21.0-7
+- Using upstream build flags for crashreporter
+
+* Wed May 29 2013 Martin Stransky <stransky@redhat.com> - 21.0-6
+- Removed the i686/f19 gcc hack (rhbz#928353)
+
+* Tue May 21 2013 Martin Stransky <stransky@redhat.com> - 21.0-5
+- Added ppc(64) patches (rhbz#963907)
+
+* Tue May 21 2013 Martin Stransky <stransky@redhat.com> - 21.0-4
+- Added s390(x) patch
+
 * Sun May 19 2013 Remi Collet <RPMS@FamilleCollet.com> - 21.0-2
 - rebuild
 

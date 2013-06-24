@@ -1,14 +1,35 @@
-Use the runtime page size to control arena decommit (RHBZ#911314)
-Return success when decommit is disabled
-
-Author: Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>
-Based on Terrence Cole's patch v0 on MOZ#840242
-
-Index: mozilla-release/js/src/gc/Heap.h
-===================================================================
---- mozilla-release.orig/js/src/gc/Heap.h
-+++ mozilla-release/js/src/gc/Heap.h
-@@ -800,7 +800,7 @@ struct Chunk
+diff -up xulrunner-21.0/mozilla-release/js/public/HeapAPI.h.ppc xulrunner-21.0/mozilla-release/js/public/HeapAPI.h
+--- xulrunner-21.0/mozilla-release/js/public/HeapAPI.h.ppc	2013-05-12 23:56:19.000000000 +0200
++++ xulrunner-21.0/mozilla-release/js/public/HeapAPI.h	2013-05-21 23:14:04.698238150 +0200
+@@ -11,24 +11,7 @@
+ namespace js {
+ namespace gc {
+ 
+-/*
+- * Page size must be static to support our arena pointer optimizations, so we
+- * are forced to support each platform with non-4096 pages as a special case.
+- * Note: The freelist supports a maximum arena shift of 15.
+- * Note: Do not use JS_CPU_SPARC here, this header is used outside JS.
+- */
+-#if (defined(SOLARIS) || defined(__FreeBSD__)) && \
+-    (defined(__sparc) || defined(__sparcv9) || defined(__ia64))
+-const size_t PageShift = 13;
+-const size_t ArenaShift = PageShift;
+-#elif defined(__powerpc64__)
+-const size_t PageShift = 16;
+ const size_t ArenaShift = 12;
+-#else
+-const size_t PageShift = 12;
+-const size_t ArenaShift = PageShift;
+-#endif
+-const size_t PageSize = size_t(1) << PageShift;
+ const size_t ArenaSize = size_t(1) << ArenaShift;
+ const size_t ArenaMask = ArenaSize - 1;
+ 
+diff -up xulrunner-21.0/mozilla-release/js/src/gc/Heap.h.ppc xulrunner-21.0/mozilla-release/js/src/gc/Heap.h
+--- xulrunner-21.0/mozilla-release/js/src/gc/Heap.h.ppc	2013-05-12 23:56:19.000000000 +0200
++++ xulrunner-21.0/mozilla-release/js/src/gc/Heap.h	2013-05-21 23:14:04.693238124 +0200
+@@ -812,7 +812,7 @@ struct Chunk
  
      /* Search for a decommitted arena to allocate. */
      unsigned findDecommittedArenaOffset();
@@ -17,10 +38,9 @@ Index: mozilla-release/js/src/gc/Heap.h
  
    public:
      /* Unlink and return the freeArenasHead. */
-Index: mozilla-release/js/src/gc/Memory.cpp
-===================================================================
---- mozilla-release.orig/js/src/gc/Memory.cpp
-+++ mozilla-release/js/src/gc/Memory.cpp
+diff -up xulrunner-21.0/mozilla-release/js/src/gc/Memory.cpp.ppc xulrunner-21.0/mozilla-release/js/src/gc/Memory.cpp
+--- xulrunner-21.0/mozilla-release/js/src/gc/Memory.cpp.ppc	2013-05-12 23:56:19.000000000 +0200
++++ xulrunner-21.0/mozilla-release/js/src/gc/Memory.cpp	2013-05-21 23:14:04.693238124 +0200
 @@ -8,6 +8,7 @@
  #include "mozilla/Assertions.h"
  
@@ -329,10 +349,9 @@ Index: mozilla-release/js/src/gc/Memory.cpp
      return true;
  }
  
-Index: mozilla-release/js/src/gc/Memory.h
-===================================================================
---- mozilla-release.orig/js/src/gc/Memory.h
-+++ mozilla-release/js/src/gc/Memory.h
+diff -up xulrunner-21.0/mozilla-release/js/src/gc/Memory.h.ppc xulrunner-21.0/mozilla-release/js/src/gc/Memory.h
+--- xulrunner-21.0/mozilla-release/js/src/gc/Memory.h.ppc	2013-05-12 23:56:19.000000000 +0200
++++ xulrunner-21.0/mozilla-release/js/src/gc/Memory.h	2013-05-21 23:14:04.693238124 +0200
 @@ -16,20 +16,20 @@ namespace gc {
  
  // Sanity check that our compiled configuration matches the currently running
@@ -359,11 +378,10 @@ Index: mozilla-release/js/src/gc/Memory.h
  
  // Returns #(hard faults) + #(soft faults)
  size_t GetPageFaultCount();
-Index: mozilla-release/js/src/jsapi.cpp
-===================================================================
---- mozilla-release.orig/js/src/jsapi.cpp
-+++ mozilla-release/js/src/jsapi.cpp
-@@ -1113,8 +1113,6 @@ JS_NewRuntime(uint32_t maxbytes, JSUseHe
+diff -up xulrunner-21.0/mozilla-release/js/src/jsapi.cpp.ppc xulrunner-21.0/mozilla-release/js/src/jsapi.cpp
+--- xulrunner-21.0/mozilla-release/js/src/jsapi.cpp.ppc	2013-05-12 23:56:21.000000000 +0200
++++ xulrunner-21.0/mozilla-release/js/src/jsapi.cpp	2013-05-21 23:14:04.695238134 +0200
+@@ -1110,8 +1110,6 @@ JS_NewRuntime(uint32_t maxbytes, JSUseHe
  #undef MSG_DEF
  #endif /* DEBUG */
  
@@ -372,11 +390,10 @@ Index: mozilla-release/js/src/jsapi.cpp
          if (!js::TlsPerThreadData.init())
              return NULL;
  
-Index: mozilla-release/js/src/jscntxt.h
-===================================================================
---- mozilla-release.orig/js/src/jscntxt.h
-+++ mozilla-release/js/src/jscntxt.h
-@@ -873,6 +873,15 @@ struct JSRuntime : js::RuntimeFriendFiel
+diff -up xulrunner-21.0/mozilla-release/js/src/jscntxt.h.ppc xulrunner-21.0/mozilla-release/js/src/jscntxt.h
+--- xulrunner-21.0/mozilla-release/js/src/jscntxt.h.ppc	2013-05-12 23:56:21.000000000 +0200
++++ xulrunner-21.0/mozilla-release/js/src/jscntxt.h	2013-05-21 23:14:04.696238140 +0200
+@@ -1026,6 +1026,15 @@ struct JSRuntime : js::RuntimeFriendFiel
      /* Stack of thread-stack-allocated GC roots. */
      js::AutoGCRooter   *autoGCRooters;
  
@@ -392,11 +409,10 @@ Index: mozilla-release/js/src/jscntxt.h
      /* Strong references on scripts held for PCCount profiling API. */
      js::ScriptAndCountsVector *scriptAndCountsVector;
  
-Index: mozilla-release/js/src/jsgc.cpp
-===================================================================
---- mozilla-release.orig/js/src/jsgc.cpp
-+++ mozilla-release/js/src/jsgc.cpp
-@@ -477,13 +477,13 @@ FinalizeArenas(FreeOp *fop,
+diff -up xulrunner-21.0/mozilla-release/js/src/jsgc.cpp.ppc xulrunner-21.0/mozilla-release/js/src/jsgc.cpp
+--- xulrunner-21.0/mozilla-release/js/src/jsgc.cpp.ppc	2013-05-12 23:56:21.000000000 +0200
++++ xulrunner-21.0/mozilla-release/js/src/jsgc.cpp	2013-05-21 23:15:40.198740765 +0200
+@@ -465,13 +465,13 @@ FinalizeArenas(FreeOp *fop,
  }
  
  static inline Chunk *
@@ -414,7 +430,7 @@ Index: mozilla-release/js/src/jsgc.cpp
  }
  
  inline bool
-@@ -573,25 +573,25 @@ ChunkPool::expire(JSRuntime *rt, bool re
+@@ -561,25 +561,25 @@ ChunkPool::expire(JSRuntime *rt, bool re
  }
  
  static void
@@ -444,7 +460,7 @@ Index: mozilla-release/js/src/jsgc.cpp
  
  #ifdef JSGC_ROOT_ANALYSIS
      // Our poison pointers are not guaranteed to be invalid on 64-bit
-@@ -604,7 +604,7 @@ Chunk::allocate(JSRuntime *rt)
+@@ -592,7 +592,7 @@ Chunk::allocate(JSRuntime *rt)
      // were marked as uncommitted, but it's a little complicated to avoid
      // clobbering pre-existing unrelated mappings.
      while (IsPoisonedPtr(chunk))
@@ -453,7 +469,7 @@ Index: mozilla-release/js/src/jsgc.cpp
  #endif
  
      if (!chunk)
-@@ -620,7 +620,7 @@ Chunk::release(JSRuntime *rt, Chunk *chu
+@@ -608,7 +608,7 @@ Chunk::release(JSRuntime *rt, Chunk *chu
  {
      JS_ASSERT(chunk);
      chunk->prepareToBeFreed(rt);
@@ -462,7 +478,7 @@ Index: mozilla-release/js/src/jsgc.cpp
  }
  
  inline void
-@@ -736,7 +736,7 @@ Chunk::findDecommittedArenaOffset()
+@@ -725,7 +725,7 @@ Chunk::findDecommittedArenaOffset()
  }
  
  ArenaHeader *
@@ -471,7 +487,7 @@ Index: mozilla-release/js/src/jsgc.cpp
  {
      JS_ASSERT(info.numArenasFreeCommitted == 0);
      JS_ASSERT(info.numArenasFree > 0);
-@@ -747,7 +747,7 @@ Chunk::fetchNextDecommittedArena()
+@@ -736,7 +736,7 @@ Chunk::fetchNextDecommittedArena()
      decommittedArenas.unset(offset);
  
      Arena *arena = &arenas[offset];
@@ -480,16 +496,16 @@ Index: mozilla-release/js/src/jsgc.cpp
      arena->aheader.setAsNotAllocated();
  
      return &arena->aheader;
-@@ -781,7 +781,7 @@ Chunk::allocateArena(JSCompartment *comp
+@@ -770,7 +770,7 @@ Chunk::allocateArena(Zone *zone, AllocKi
  
      ArenaHeader *aheader = JS_LIKELY(info.numArenasFreeCommitted > 0)
                             ? fetchNextFreeArena(rt)
 -                           : fetchNextDecommittedArena();
 +                           : fetchNextDecommittedArena(rt);
-     aheader->init(comp, thingKind);
+     aheader->init(zone, thingKind);
      if (JS_UNLIKELY(!hasAvailableArenas()))
          removeFromAvailableList();
-@@ -881,6 +881,8 @@ static const int64_t JIT_SCRIPT_RELEASE_
+@@ -937,6 +937,8 @@ static const int64_t JIT_SCRIPT_RELEASE_
  JSBool
  js_InitGC(JSRuntime *rt, uint32_t maxbytes)
  {
@@ -498,7 +514,7 @@ Index: mozilla-release/js/src/jsgc.cpp
      if (!rt->gcChunkSet.init(INITIAL_CHUNK_CAPACITY))
          return false;
  
-@@ -1969,7 +1971,7 @@ DecommitArenasFromAvailableList(JSRuntim
+@@ -2102,7 +2104,7 @@ DecommitArenasFromAvailableList(JSRuntim
                  Maybe<AutoUnlockGC> maybeUnlock;
                  if (!rt->isHeapBusy())
                      maybeUnlock.construct(rt);
@@ -507,7 +523,7 @@ Index: mozilla-release/js/src/jsgc.cpp
              }
  
              if (ok) {
-@@ -2037,7 +2039,7 @@ ExpireChunksAndArenas(JSRuntime *rt, boo
+@@ -2170,7 +2172,7 @@ ExpireChunksAndArenas(JSRuntime *rt, boo
  {
      if (Chunk *toFree = rt->gcChunkPool.expire(rt, shouldShrink)) {
          AutoUnlockGC unlock(rt);
@@ -516,32 +532,3 @@ Index: mozilla-release/js/src/jsgc.cpp
      }
  
      if (shouldShrink)
-Index: mozilla-release/js/public/HeapAPI.h
-===================================================================
---- mozilla-release.orig/js/public/HeapAPI.h
-+++ mozilla-release/js/public/HeapAPI.h
-@@ -13,24 +13,7 @@
- namespace js {
- namespace gc {
- 
--/*
-- * Page size must be static to support our arena pointer optimizations, so we
-- * are forced to support each platform with non-4096 pages as a special case.
-- * Note: The freelist supports a maximum arena shift of 15.
-- * Note: Do not use JS_CPU_SPARC here, this header is used outside JS.
-- */
--#if (defined(SOLARIS) || defined(__FreeBSD__)) && \
--    (defined(__sparc) || defined(__sparcv9) || defined(__ia64))
--const size_t PageShift = 13;
--const size_t ArenaShift = PageShift;
--#elif defined(__powerpc64__)
--const size_t PageShift = 16;
- const size_t ArenaShift = 12;
--#else
--const size_t PageShift = 12;
--const size_t ArenaShift = PageShift;
--#endif
--const size_t PageSize = size_t(1) << PageShift;
- const size_t ArenaSize = size_t(1) << ArenaShift;
- const size_t ArenaMask = ArenaSize - 1;
- 

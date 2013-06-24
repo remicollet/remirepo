@@ -1,0 +1,12 @@
+diff -up mozilla-release/js/src/vm/SPSProfiler.cpp.jscntxt mozilla-release/js/src/vm/SPSProfiler.cpp
+--- mozilla-release/js/src/vm/SPSProfiler.cpp.jscntxt	2013-05-20 11:46:14.736790245 -0400
++++ mozilla-release/js/src/vm/SPSProfiler.cpp	2013-05-20 11:38:20.696788904 -0400
+@@ -10,6 +10,8 @@
+ #include "jsnum.h"
+ #include "jsscript.h"
+ 
++#include "jscntxtinlines.h"
++
+ #include "methodjit/MethodJIT.h"
+ #include "methodjit/Compiler.h"
+ 
