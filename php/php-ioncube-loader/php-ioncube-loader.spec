@@ -3,14 +3,14 @@
 
 Name:          php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
-Version:       4.2.2
-Release:       1%{?dist}.1
+Version:       4.4.1
+Release:       1%{?dist}
 License:       Distribuable
 Group:         Development/Languages
 
 URL:           http://www.ioncube.com
-Source0:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86.tar.gz
-Source1:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86-64.tar.gz 
+Source0:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86.tar.bz2
+Source1:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86-64.tar.bz2
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
@@ -22,8 +22,9 @@ Requires:      php(api) = %{php_core_api}
 # Other third party repo stuff
 Obsoletes:     php53-ioncube-loader
 Obsoletes:     php53u-ioncube-loader
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-ioncube-loader
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55-ioncube-loader
 %endif
 
 # Filter private shared object
@@ -36,12 +37,12 @@ Loader for ionCube Encoded Files.
 
 
 %prep
-%setup -q -T -c 
+%setup -q -T -c
 
 %ifarch x86_64
-tar xzf %{SOURCE1}
+tar xvf %{SOURCE1}
 %else
-tar xzf %{SOURCE0}
+tar xvf %{SOURCE0}
 %endif
 
 # Drop in the bit of configuration
@@ -63,6 +64,11 @@ EOF
 %install
 rm -rf %{buildroot}
 ver=$(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
+
+if [ ! -f ioncube/%{extname}_lin_${ver}.so ]; then
+  : Module for %{php_version} not provied
+  exit 1
+fi
 
 install -D -pm 755 ioncube/%{extname}_lin_${ver}.so    %{buildroot}%{php_extdir}/%{extname}.so
 install -D -m 644  %{extname}.nts                      %{buildroot}%{php_inidir}/%{extname}.ini
@@ -88,6 +94,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%doc ioncube/*txt
 
 %config(noreplace) %{php_inidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
@@ -97,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 24 2013 Remi Collet <RPMS@famillecollet.com> - 4.4.1-1
+- update to 4.4.1
+
 * Mon Sep  3 2012 Remi Collet <RPMS@famillecollet.com> - 4.2.2-1
 - initial package
 
