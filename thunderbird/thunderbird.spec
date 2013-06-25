@@ -69,19 +69,18 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        17.0.6
+Version:        17.0.7
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}/source/thunderbird-%{version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20130514.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20130625.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
 Source12:       thunderbird-redhat-default-prefs.js
-Source13:       thunderbird-mozconfig-debuginfo
 Source20:       thunderbird.desktop
 Source21:       thunderbird.sh.in
 Source100:      find-external-requires
@@ -101,6 +100,9 @@ Patch200:       thunderbird-8.0-enable-addons.patch
 Patch300:       xulrunner-16.0-jemalloc-ppc.patch
 Patch301:       rhbz-855923.patch
 Patch302:       mozilla-746112.patch
+
+# Fedora specific patches
+Patch400:       rhbz-966424.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -212,6 +214,7 @@ cd mozilla
 %patch9 -p1 -b .791626
 %patch104 -p1 -b .gcc47
 %patch302 -p2 -b .746112
+%patch400 -p1 -b .966424
 cd ..
 
 %patch200 -p1 -b .addons
@@ -246,9 +249,6 @@ echo "ac_add_options --disable-libjpeg-turbo"  >> .mozconfig
 
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
-%endif
-%if %{enable_mozilla_crashreporter}
-%{__cat} %{SOURCE13} >> .mozconfig
 %endif
 
 %if %{?system_nss}
@@ -502,11 +502,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/256x256/apps/thunderbird.png
 %{_datadir}/icons/hicolor/32x32/apps/thunderbird.png
 %{_datadir}/icons/hicolor/48x48/apps/thunderbird.png
-%if %{enable_mozilla_crashreporter}
+#if %{enable_mozilla_crashreporter}
 %{mozappdir}/crashreporter
 %{mozappdir}/crashreporter.ini
 %{mozappdir}/Throbber-small.gif
-%endif
+#endif
 %if !%{?system_nss}
 %{mozappdir}/*.chk
 %endif
@@ -520,6 +520,18 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Tue Jun 25 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.7-1
+- Update to 17.0.7, sync with rawhide
+
+* Tue Jun 25 2013 Jan Horak <jhorak@redhat.com> - 17.0.7-1
+- Update to 17.0.7
+
+* Tue Jun 25 2013 Jan Horak <jhorak@redhat.com> - 17.0.7-1
+- Update to 17.0.7
+
+* Wed Jun 12 2013 Jan Horak <jhorak@redhat.com> - 17.0.6-2
+- Fixed rhbz#973371 - unable to install addons
+
 * Wed May 15 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.6-1
 - Update to 17.0.6, sync with rawhide
 
