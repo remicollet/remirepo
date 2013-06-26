@@ -1,10 +1,18 @@
+# spec file for php-bartlett-PHP-Reflect
+#
+# Copyright (c) 2011-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global channel   bartlett.laurent-laville.org
 %global pear_name PHP_Reflect
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.6.2
+Version:        1.7.0
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -68,7 +76,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}%{?prever}
 
-# Version 1.6.2 : OK (Tests: 49, Assertions: 110, Skipped: 1)
+# Version 1.7.0 : OK (Tests: 51, Assertions: 113, Skipped: 1)
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --bootstrap %{buildroot}%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
@@ -99,6 +107,9 @@ fi
 
 
 %changelog
+* Wed Jun 26 2013 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
+- Update to 1.7.0
+
 * Sat Apr 06 2013 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
 - Update to 1.6.2
 
