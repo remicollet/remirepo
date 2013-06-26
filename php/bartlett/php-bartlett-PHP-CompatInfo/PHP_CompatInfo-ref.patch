@@ -1,0 +1,54 @@
+From acec87ba0681ddeda4fe32acb42e1b4e5ff84caa Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 26 Jun 2013 11:07:34 +0200
+Subject: [PATCH] windows only constants (from
+ ext/sockets/win32_socket_constants.h)
+
+---
+ tests/Reference/SocketsTest.php | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/tests/Reference/SocketsTest.php b/tests/Reference/SocketsTest.php
+index 8e27c70..f652153 100644
+--- a/tests/Reference/SocketsTest.php
++++ b/tests/Reference/SocketsTest.php
+@@ -73,6 +73,7 @@ protected function setUp()
+             'SOCKET_EBUSY',
+             'SOCKET_ECHRNG',
+             'SOCKET_ECOMM',
++            'SOCKET_EDISCON',
+             'SOCKET_EEXIST',
+             'SOCKET_EIDRM',
+             'SOCKET_EIO',
+@@ -109,6 +110,7 @@ protected function setUp()
+             'SOCKET_ENXIO',
+             'SOCKET_EPERM',
+             'SOCKET_EPIPE',
++            'SOCKET_EPROCLIM',
+             'SOCKET_EPROTO',
+             'SOCKET_EREMCHG',
+             'SOCKET_EREMOTEIO',
+@@ -116,11 +118,20 @@ protected function setUp()
+             'SOCKET_EROFS',
+             'SOCKET_ESPIPE',
+             'SOCKET_ESRMNT',
++            'SOCKET_ESTALE',
+             'SOCKET_ESTRPIPE',
+             'SOCKET_ETIME',
+             'SOCKET_EUNATCH',
+             'SOCKET_EXDEV',
+             'SOCKET_EXFULL',
++            'SOCKET_HOST_NOT_FOUND',
++            'SOCKET_NO_ADDRESS',
++            'SOCKET_NO_DATA',
++            'SOCKET_NO_RECOVERY',
++            'SOCKET_NOTINITIALISED',
++            'SOCKET_SYSNOTREADY',
++            'SOCKET_TRY_AGAIN',
++            'SOCKET_VERNOTSUPPORTED',
+             'MSG_DONTWAIT',
+             'MSG_EOR',
+             'MSG_EOF',            
+-- 
+1.8.1.6
+

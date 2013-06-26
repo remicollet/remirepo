@@ -15,8 +15,8 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.17.0
-Release:        2%{?dist}
+Version:        2.18.0
+Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -31,35 +31,8 @@ Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpc
 # Make cache / save_path user specific
 Patch0:         %{pear_name}-conf.patch
 
-# Update reference for PHP 5.5
-# https://github.com/llaville/php-compat-info/commits/php-5.5
-Patch1:         0001-cuirl-reference-for-php-5.5.patch
-Patch2:         0002-hash-reference-for-php-5.5.patch
-Patch3:         0003-tokoniser-reference-for-php-5.5.patch
-Patch4:         0004-standard-reference-for-php-5.5.patch
-Patch6:         0006-openssl-reference-for-php-5.5.patch
-Patch7:         0007-mysqli-reference-for-php-5.5.patch
-Patch8:         0008-Fix-json-reference-for-PHP-5.5.patch
-Patch9:         0009-Fix-intl-reference-for-PHP-5.5.patch
-Patch10:        0010-fix-Core-reference-for-PHP-5.5.patch
-Patch11:        0011-fix-order-in-intl.patch
-Patch12:        0012-curl-reference-for-php-5.5-more.patch
-Patch13:        0013-use-LATEST_PHP_5_4-macro.patch
-Patch14:        0014-curl-reference-for-php-5.5-more.patch
-Patch17:        0017-data-reference-for-php-5.5-date-immutable.patch
-Patch18:        0018-new-curl-change-in-php-5.5.patch
-Patch19:        0019-new-filter-changes-in-php-5.5.patch
-Patch20:        0020-new-curl-changes-in-php-5.5.patch
-Patch21:        0021-new-intl-changes-in-php-5.5.patch
-Patch22:        0022-fix-covers-annotation.patch
-Patch23:        0023-fix-mysqli-reference-for-php-5.5-trans.patch
-Patch24:        0024-fix-gd-reference-for-php-5.5.0alpha6.patch
-Patch25:        0025-array_column.patch
-Patch26:        0026-fix-gd-reference-for-php-5.5.0beta2.patch
-Patch27:        0027-fix-curl-ref-for-latest-libcurl.patch
-Patch28:        0028-fix-reference-for-datetimeinterface.patch
-Patch31:        0031-fix-opcache-reference-php550beta3.patch
-Patch32:        0032-new-soap-constants.patch
+# https://github.com/llaville/php-compat-info/pull/94
+Patch1:         %{pear_name}-ref.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -68,7 +41,7 @@ BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.6.2
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.7.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -80,7 +53,7 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.6.2
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.7.0
 Requires:       php-pear(Console_CommandLine) >= 1.2.0
 # Optional
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
@@ -100,13 +73,10 @@ show content of dictionary references.
 
 HTML Documentation:  %{pear_docdir}/%{pear_name}/html/index.html
 
-This package provides experimental references for PHP 5.5.
-
 
 %prep
 %setup -q -c
 
-# Package is V2
 cd %{pear_name}-%{version}%{?prever}
 
 # Copy upstream default configuration
@@ -114,37 +84,10 @@ cp phpcompatinfo.xml.dist phpcompatinfo.xml
 # Apply our changes
 %patch0  -p1 -b .rpm
 
-# PHP 5.5 updated references
-%patch1  -p1
-%patch2  -p1
-%patch3  -p1
-%patch4  -p1
-%patch6  -p1
-%patch7  -p1
-%patch8  -p1
-%patch9  -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
-%patch23 -p1
-%patch24 -p1
-%patch25 -p1
-%patch26 -p1
-%patch27 -p1
-%patch28 -p1
-%patch31 -p1
-%patch32 -p1
+%patch1 -p1 -b .ref
 
 # remove checksum for patched files
-sed -e 's/md5sum.*name/name/' \
+sed -e '/SocketsTest/s/md5sum.*name/name/' \
     ../package.xml >%{name}.xml
 
 
@@ -186,10 +129,10 @@ cd %{pear_name}-%{version}%{?prever}
 rm -f tests/Reference/XslTest.php
 %endif
 
-# Tests: 654, Assertions: 9682, Skipped: 28, when most extensions installed
 # OK, but incomplete or skipped tests!
-# Tests: 462, Assertions: 5936, Skipped: 254, in mock
-# Reference tests need some fixes for EL-4, so ignore result for now
+# Tests: 816, Assertions: 11365, Skipped: 72, when most extensions installed
+# Tests: 550, Assertions: 6834, Skipped: 378, in mock
+# Reference tests need some fixes for EL-5, so ignore result for now
 %{_bindir}/phpunit \
     -d date.timezone=UTC \
     -d memory_limit=-1 \
@@ -230,6 +173,12 @@ fi
 
 
 %changelog
+* Wed Jun 26 2013 Remi Collet <remi@fedoraproject.org> - 2.18.0-1
+- Update to 2.18.0
+- raise dependencies, PHP_Reflect 1.7.0
+- drop PHP 5.5 patches, applied upstream
+- add patch for windows only constants
+
 * Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> - 2.17.0-2
 - keep phpci command for now
 
