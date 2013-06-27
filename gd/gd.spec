@@ -1,11 +1,11 @@
 #global prever    rc2
-%global commit    725ba9de4005144d137d2a7a70f760068fc3d306
-%global short     %(c=%{commit}; echo ${c:0:7})
+#global commit    725ba9de4005144d137d2a7a70f760068fc3d306
+#global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       0.10.%{?prever}%{?short}%{?dist}
+Release:       1%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -82,9 +82,21 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
 
+# https://bitbucket.org/libgd/gd-libgd/issue/77
+sed -e '/GD_VERSION_STRING/s/-alpha//' \
+    -e '/GD_EXTRA_VERSION/s/alpha//' \
+    -i src/gd.h
+grep VERSION src/gd.h
+
+# Workaround for https://bugzilla.redhat.com/978415
+touch src/vpx_config.h
+
+# RHEL-5 auto* are too old
 %if 0%{?rhel} == 5
+%if 0%{?commit:1}
 xzcat %{SOURCE1} | \
 tar --extract --file - --keep-newer-files --strip-components 1
+%endif
 %else
 : regenerate autotool stuff
 if [ -f configure ]; then
@@ -150,6 +162,9 @@ make check
 
 
 %changelog
+* Tue Jun 25 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0 final
+
 * Mon Jun 10 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.10.725ba9d
 - pull latest upstream changes (post RC2)
 
