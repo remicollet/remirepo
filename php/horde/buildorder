@@ -7,7 +7,7 @@ Build order
 	Horde_Stream_Wrapper      2.0.1        
 	Horde_Thrift              2.0.1        
 	Horde_Translation         2.0.1       I: Horde_Test 
-	Horde_Util                2.2.2       I: Horde_Test, Horde_Imap_Client 
+	Horde_Util                2.3.0       I: Horde_Test, Horde_Imap_Client 
 	Horde_Exception           2.0.3       I: Horde_Test R: Horde_Translation
 	Horde_Imsp                2.0.5        R: Horde_Translation
 	Horde_Memcache            2.0.2        R: Horde_Exception

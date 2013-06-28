@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Util
-Version:        2.2.2
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -32,6 +32,7 @@ Requires:       php-ctype
 Requires:       php-dom
 Requires:       php-filter
 Requires:       php-iconv
+Requires:       php-json
 Requires:       php-libxml
 Requires:       php-mbstring
 Requires:       php-pcre
@@ -109,6 +110,10 @@ fi
 
 
 %changelog
+* Fri Jun 28 2013 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
+- requires php-json
+
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2
 
