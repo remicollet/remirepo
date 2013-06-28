@@ -3,7 +3,7 @@
 %global pecl_name radius
 
 Name:           php-pecl-radius
-Version:        1.2.6
+Version:        1.2.7
 Release:        1%{?dist}.1
 Summary:        Radius client library
 
@@ -132,6 +132,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 28 2013 Remi Collet <remi@fedoraproject.org> - 1.2.7-1
+- Update to 1.2.7
+
 * Thu Jun 20 2013 Remi Collet <remi@fedoraproject.org> - 1.2.6-1
 - Update to 1.2.6
 
