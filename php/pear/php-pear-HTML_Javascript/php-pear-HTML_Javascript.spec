@@ -40,7 +40,7 @@ rm -rf $RPM_BUILD_ROOT
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
 
-rm -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
