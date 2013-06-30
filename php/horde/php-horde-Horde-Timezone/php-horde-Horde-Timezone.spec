@@ -1,3 +1,11 @@
+# spec file for php-horde-Horde-Timezone
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Timezone
@@ -5,7 +13,7 @@
 
 Name:           php-horde-Horde-Timezone
 Version:        1.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Timezone library
 
 Group:          Development/Libraries
@@ -22,6 +30,7 @@ BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -30,11 +39,11 @@ Requires:       php-pcre
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Icalendar) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Vfs) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) < 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -98,6 +107,9 @@ fi
 
 
 %changelog
+* Sun Jun 07 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
+- BR Horde_Icalendar for test
+
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3
 
