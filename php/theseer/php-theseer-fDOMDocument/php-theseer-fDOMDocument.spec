@@ -3,7 +3,7 @@
 %global channel   pear.netpirates.net
 
 Name:           php-theseer-fDOMDocument
-Version:        1.4.1
+Version:        1.4.2
 Release:        1%{?dist}
 Summary:        An Extension to PHP standard DOM
 
@@ -11,8 +11,8 @@ Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/theseer/fDOMDocument
 Source0:        http://%{channel}/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-pear(PEAR) >= 1.9.1
@@ -99,6 +99,9 @@ fi
 
 
 %changelog
+* Sun Jun 30 2013 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- Update to 1.4.2
+
 * Sun Apr 28 2013 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1
 
