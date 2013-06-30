@@ -1,0 +1,65 @@
+--- cnijfilter/src/bjfimage.c~	2012-03-22 02:50:19.000000000 +0100
++++ cnijfilter/src/bjfimage.c	2013-06-30 09:52:58.983829234 +0200
+@@ -1574,7 +1574,7 @@
+ 		goto onErr;
+ 	}
+ 
+-	if (setjmp (png_p->jmpbuf))
++	if (setjmp (png_jmpbuf(png_p)))
+ 	{
+ 		png_destroy_read_struct(&png_p, &info_p, (png_infopp)NULL);
+ 		goto onErr;
+diff -up cngpijmon/src/bjcupsmon_cups.c.old cngpijmon/src/bjcupsmon_cups.c
+--- cngpijmon/src/bjcupsmon_cups.c.old	2013-06-30 10:02:28.794835687 +0200
++++ cngpijmon/src/bjcupsmon_cups.c	2013-06-30 10:05:04.473382677 +0200
+@@ -17,8 +17,11 @@
+  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+  */
+ 
++#define _IPP_PRIVATE_STRUCTURES
++
+ /*** Includes ***/
+ #include <cups/cups.h>
++#include <cups/ipp.h>
+ #include <cups/ppd.h>
+ #include <cups/language.h>
+ #include <sys/types.h>
+diff -up cngpij/cngpij/bjcups.c.old cngpij/cngpij/bjcups.c
+--- cngpij/cngpij/bjcups.c.old	2013-06-30 10:10:42.377568925 +0200
++++ cngpij/cngpij/bjcups.c	2013-06-30 10:11:08.554660902 +0200
+@@ -21,7 +21,10 @@
+ #include	<config.h>
+ #endif	// HAVE_CONFIG_H
+ 
++#define _IPP_PRIVATE_STRUCTURES
++
+ #include <cups/cups.h>
++#include <cups/ipp.h>
+ #include <cups/language.h>
+ #include <cups/ppd.h>
+ #include <unistd.h>
+diff -up cngpijmnt/src/main.c.old cngpijmnt/src/main.c
+--- cngpijmnt/src/main.c.old	2013-06-30 10:14:15.491317557 +0200
++++ cngpijmnt/src/main.c	2013-06-30 10:14:31.777374754 +0200
+@@ -21,7 +21,10 @@
+ #include	<config.h>
+ #endif	// HAVE_CONFIG_H
+ 
++#define _IPP_PRIVATE_STRUCTURES
++
+ #include <cups/cups.h>
++#include <cups/ipp.h>
+ #include <cups/language.h>
+ #include <cups/ppd.h>
+ #include <unistd.h>
+diff -up backend/src/cnij_backend_common.c.old backend/src/cnij_backend_common.c
+--- backend/src/cnij_backend_common.c.old	2013-06-30 10:17:53.103081606 +0200
++++ backend/src/cnij_backend_common.c	2013-06-30 10:18:01.226110208 +0200
+@@ -37,6 +37,7 @@
+ 
+ // CUPS Header
+ #include <cups/cups.h>
++#include <cups/ppd.h>
+ #include <cups/ipp.h>
+ 
+ // Header file for CANON
