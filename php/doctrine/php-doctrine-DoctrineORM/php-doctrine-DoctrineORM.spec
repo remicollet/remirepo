@@ -19,6 +19,7 @@ License:          MIT
 URL:              http://www.doctrine-project.org/projects/orm.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
@@ -124,6 +125,7 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_datadir}/%{pear_name}
@@ -132,6 +134,9 @@ fi
 
 
 %changelog
+* Sun Jun 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.3.3-1
+- backport for remi repo.
+
 * Fri Jun 07 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.3.3-1
 - Updated to 2.3.3
 - Fixed license
