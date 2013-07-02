@@ -79,7 +79,7 @@ Version: 5.4.16
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -119,6 +119,9 @@ Patch22: php-5.4.16-pdopgsql.patch
 Patch23: php-5.4.16-gc.patch
 # Fixed Bug #64915 (error_log ignored when daemonize=0)
 Patch24: php-5.4.16-fpm.patch
+# https://bugs.php.net/65143 php-cgi man page
+# https://bugs.php.net/65142 phar man page
+Patch25: php-5.4.16-man.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -774,6 +777,7 @@ rm -f ext/json/utf8_to_utf16.*
 %patch22 -p1 -b .pdopgsql
 %patch23 -p1 -b .gc
 %patch24 -p1 -b .fpm
+%patch25 -p1 -b .manpages
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -1547,6 +1551,9 @@ fi
 # provides phpize here (not in -devel) for pecl command
 %{_bindir}/phpize
 %{_mandir}/man1/php.1*
+%{_mandir}/man1/php-cgi.1*
+%{_mandir}/man1/phar.1*
+%{_mandir}/man1/phar.phar.1*
 %{_mandir}/man1/phpize.1*
 %doc sapi/cgi/README* sapi/cli/README
 
@@ -1633,6 +1640,9 @@ fi
 
 
 %changelog
+* Tue Jul  2 2013 Remi Collet <rcollet@redhat.com> 5.4.16-2
+- add missing man pages (phar, php-cgi)
+
 * Wed Jun  5 2013 Remi Collet <rcollet@redhat.com> 5.4.16-1
 - update to 5.4.16
 - switch systemd unit to Type=notify
