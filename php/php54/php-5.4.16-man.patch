@@ -1,16 +1,88 @@
-diff -up php-5.4.16/ext/phar/config.m4.manpages php-5.4.16/ext/phar/config.m4
---- php-5.4.16/ext/phar/config.m4.manpages	2013-07-02 10:22:50.697345015 +0200
-+++ php-5.4.16/ext/phar/config.m4	2013-07-02 10:23:49.644538198 +0200
-@@ -27,4 +27,6 @@ if test "$PHP_PHAR" != "no"; then
-   PHP_ADD_EXTENSION_DEP(phar, hash, true)
-   PHP_ADD_EXTENSION_DEP(phar, spl, true)
-   PHP_ADD_MAKEFILE_FRAGMENT
+>From c940aab7895fa4cb109e7790ae14080090b04959 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Tue, 2 Jul 2013 10:42:47 +0200
+Subject: [PATCH] Fixed Bug #65143 Missing php-cgi man page
+
+Currently php-cgi man page is a simple redirect to
+php (CLI) man page.
+
+Could be splited / improved in the future.
+---
+ sapi/cgi/Makefile.frag | 3 +++
+ sapi/cgi/config9.m4    | 2 ++
+ sapi/cgi/php-cgi.1.in  | 1 +
+ sapi/cli/php.1.in      | 2 ++
+ 4 files changed, 8 insertions(+)
+ create mode 100644 sapi/cgi/php-cgi.1.in
+
+diff --git a/sapi/cgi/Makefile.frag b/sapi/cgi/Makefile.frag
+index 505119e..d54dd40 100644
+--- a/sapi/cgi/Makefile.frag
++++ b/sapi/cgi/Makefile.frag
+@@ -6,4 +6,7 @@ $(SAPI_CGI_PATH): $(PHP_GLOBAL_OBJS) $(PHP_BINARY_OBJS) $(PHP_CGI_OBJS)
+ install-cgi: $(SAPI_CGI_PATH)
+ 	@echo "Installing PHP CGI binary:        $(INSTALL_ROOT)$(bindir)/"
+ 	@$(INSTALL) -m 0755 $(SAPI_CGI_PATH) $(INSTALL_ROOT)$(bindir)/$(program_prefix)php-cgi$(program_suffix)$(EXEEXT)
++	@echo "Installing PHP CGI man page:      $(INSTALL_ROOT)$(mandir)/man1/"
++	@$(mkinstalldirs) $(INSTALL_ROOT)$(mandir)/man1
++	@$(INSTALL_DATA) sapi/cgi/php-cgi.1 $(INSTALL_ROOT)$(mandir)/man1/$(program_prefix)php-cgi$(program_suffix).1
+ 
+diff --git a/sapi/cgi/config9.m4 b/sapi/cgi/config9.m4
+index 67251ae..49e61c8 100644
+--- a/sapi/cgi/config9.m4
++++ b/sapi/cgi/config9.m4
+@@ -71,6 +71,8 @@ if test "$PHP_CGI" != "no"; then
+     dnl Expose to Makefile
+     PHP_SUBST(SAPI_CGI_PATH)
+     PHP_SUBST(BUILD_CGI)
 +
-+  PHP_OUTPUT(ext/phar/phar.1 ext/phar/phar.phar.1)
++    PHP_OUTPUT(sapi/cgi/php-cgi.1)
+ else
+   AC_MSG_RESULT(yes)
  fi
-diff -up php-5.4.16/ext/phar/Makefile.frag.manpages php-5.4.16/ext/phar/Makefile.frag
---- php-5.4.16/ext/phar/Makefile.frag.manpages	2013-06-05 07:03:57.000000000 +0200
-+++ php-5.4.16/ext/phar/Makefile.frag	2013-07-02 10:06:17.406033634 +0200
+diff --git a/sapi/cgi/php-cgi.1.in b/sapi/cgi/php-cgi.1.in
+new file mode 100644
+index 0000000..340e6c5
+--- /dev/null
++++ b/sapi/cgi/php-cgi.1.in
+@@ -0,0 +1 @@
++.so man1/php.1
+diff --git a/sapi/cli/php.1.in b/sapi/cli/php.1.in
+index 0e9d07a..6f0266d 100644
+--- a/sapi/cli/php.1.in
++++ b/sapi/cli/php.1.in
+@@ -1,6 +1,8 @@
+ .TH PHP 1 "2013" "The PHP Group" "Scripting Language"
+ .SH NAME
+ php \- PHP Command Line Interface 'CLI'
++.P
++php-cgi \- PHP Command Gateway Interface 'CGI'
+ .SH SYNOPSIS
+ .B php
+ [options] [
+-- 
+1.7.11.5
+
+>From f4ce5e7fb65ce215ea5fd182a90aaa4d634f6023 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Tue, 2 Jul 2013 10:46:50 +0200
+Subject: [PATCH] Fixed Bug #65142 Missing phar man page
+
+Simple man page from phar help output.
+---
+ NEWS                    |   3 +
+ ext/phar/Makefile.frag  |   4 +
+ ext/phar/config.m4      |   2 +
+ ext/phar/phar.1.in      | 523 ++++++++++++++++++++++++++++++++++++++++++++++++
+ ext/phar/phar.phar.1.in |   1 +
+ 5 files changed, 533 insertions(+)
+ create mode 100644 ext/phar/phar.1.in
+ create mode 100644 ext/phar/phar.phar.1.in
+
+diff --git a/ext/phar/Makefile.frag b/ext/phar/Makefile.frag
+index b1c820f..ed6de9f 100644
+--- a/ext/phar/Makefile.frag
++++ b/ext/phar/Makefile.frag
 @@ -40,3 +40,7 @@ install-pharcmd: pharcmd
  	$(INSTALL) $(builddir)/phar.phar $(INSTALL_ROOT)$(bindir)
  	-@rm -f $(INSTALL_ROOT)$(bindir)/phar
@@ -19,9 +91,22 @@ diff -up php-5.4.16/ext/phar/Makefile.frag.manpages php-5.4.16/ext/phar/Makefile
 +	@$(INSTALL_DATA) $(builddir)/phar.1 $(INSTALL_ROOT)$(mandir)/man1/phar.1
 +	@$(INSTALL_DATA) $(builddir)/phar.phar.1 $(INSTALL_ROOT)$(mandir)/man1/phar.phar.1
 +
-diff -up php-5.4.16/ext/phar/phar.1.in.manpages php-5.4.16/ext/phar/phar.1.in
---- php-5.4.16/ext/phar/phar.1.in.manpages	2013-07-02 10:06:17.407033638 +0200
-+++ php-5.4.16/ext/phar/phar.1.in	2013-07-02 10:06:17.407033638 +0200
+diff --git a/ext/phar/config.m4 b/ext/phar/config.m4
+index 2ac7f3d..d424060 100644
+--- a/ext/phar/config.m4
++++ b/ext/phar/config.m4
+@@ -27,4 +27,6 @@ if test "$PHP_PHAR" != "no"; then
+   PHP_ADD_EXTENSION_DEP(phar, hash, true)
+   PHP_ADD_EXTENSION_DEP(phar, spl, true)
+   PHP_ADD_MAKEFILE_FRAGMENT
++
++  PHP_OUTPUT(ext/phar/phar.1 ext/phar/phar.phar.1)
+ fi
+diff --git a/ext/phar/phar.1.in b/ext/phar/phar.1.in
+new file mode 100644
+index 0000000..259a2ba
+--- /dev/null
++++ b/ext/phar/phar.1.in
 @@ -0,0 +1,523 @@
 +.TH PHAR 1 "2013" "The PHP Group" "User Commands"
 +.SH NAME
@@ -546,48 +631,38 @@ diff -up php-5.4.16/ext/phar/phar.1.in.manpages php-5.4.16/ext/phar/phar.1.in
 +obtain it through the world-wide-web, please send a note to
 +.B license@php.net
 +so we can mail you a copy immediately.
-diff -up php-5.4.16/ext/phar/phar.phar.1.manpages php-5.4.16/ext/phar/phar.phar.1
---- php-5.4.16/ext/phar/phar.phar.1.in.manpages	2013-07-02 10:06:17.407033638 +0200
-+++ php-5.4.16/ext/phar/phar.phar.1.in	2013-07-02 10:06:17.407033638 +0200
+diff --git a/ext/phar/phar.phar.1.in b/ext/phar/phar.phar.1.in
+new file mode 100644
+index 0000000..b5eecbf
+--- /dev/null
++++ b/ext/phar/phar.phar.1.in
 @@ -0,0 +1 @@
 +.so man1/phar.1
-diff -up php-5.4.16/sapi/cgi/config9.m4.manpages php-5.4.16/sapi/cgi/config9.m4
---- php-5.4.16/sapi/cgi/config9.m4.manpages	2013-07-02 10:21:29.757079951 +0200
-+++ php-5.4.16/sapi/cgi/config9.m4	2013-07-02 10:22:25.970264027 +0200
-@@ -71,6 +71,8 @@ if test "$PHP_CGI" != "no"; then
-     dnl Expose to Makefile
-     PHP_SUBST(SAPI_CGI_PATH)
-     PHP_SUBST(BUILD_CGI)
-+
-+    PHP_OUTPUT(sapi/cgi/php-cgi.1)
- else
-   AC_MSG_RESULT(yes)
- fi
-diff -up php-5.4.16/sapi/cgi/Makefile.frag.manpages php-5.4.16/sapi/cgi/Makefile.frag
---- php-5.4.16/sapi/cgi/Makefile.frag.manpages	2013-06-05 07:03:57.000000000 +0200
-+++ php-5.4.16/sapi/cgi/Makefile.frag	2013-07-02 10:06:17.408033641 +0200
-@@ -6,4 +6,7 @@ $(SAPI_CGI_PATH): $(PHP_GLOBAL_OBJS) $(P
- install-cgi: $(SAPI_CGI_PATH)
- 	@echo "Installing PHP CGI binary:        $(INSTALL_ROOT)$(bindir)/"
- 	@$(INSTALL) -m 0755 $(SAPI_CGI_PATH) $(INSTALL_ROOT)$(bindir)/$(program_prefix)php-cgi$(program_suffix)$(EXEEXT)
-+	@echo "Installing PHP CGI man page:      $(INSTALL_ROOT)$(mandir)/man1/"
-+	@$(mkinstalldirs) $(INSTALL_ROOT)$(mandir)/man1
-+	@$(INSTALL_DATA) sapi/cgi/php-cgi.1 $(INSTALL_ROOT)$(mandir)/man1/$(program_prefix)php-cgi$(program_suffix).1
- 
-diff -up php-5.4.16/sapi/cgi/php-cgi.1.in.manpages php-5.4.16/sapi/cgi/php-cgi.1.in
---- php-5.4.16/sapi/cgi/php-cgi.1.in.manpages	2013-07-02 10:06:17.408033641 +0200
-+++ php-5.4.16/sapi/cgi/php-cgi.1.in	2013-07-02 10:06:17.408033641 +0200
-@@ -0,0 +1 @@
-+.so man1/php.1
-diff -up php-5.4.16/sapi/cli/php.1.in.manpages php-5.4.16/sapi/cli/php.1.in
---- php-5.4.16/sapi/cli/php.1.in.manpages	2013-06-05 07:03:57.000000000 +0200
-+++ php-5.4.16/sapi/cli/php.1.in	2013-07-02 10:06:17.408033641 +0200
-@@ -1,6 +1,8 @@
- .TH PHP 1 "2013" "The PHP Group" "Scripting Language"
+-- 
+1.7.11.5
+
+>From 67817a199ca4c8bcff163cb005287c0087db6bf3 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Tue, 2 Jul 2013 12:19:09 +0200
+Subject: [PATCH] fix typo in php man page
+
+---
+ sapi/cli/php.1.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sapi/cli/php.1.in b/sapi/cli/php.1.in
+index 6f0266d..749baa8 100644
+--- a/sapi/cli/php.1.in
++++ b/sapi/cli/php.1.in
+@@ -2,7 +2,7 @@
  .SH NAME
  php \- PHP Command Line Interface 'CLI'
-+.P
-+php-cgi \- PHP Command Gateway Interface 'CGI'
+ .P
+-php-cgi \- PHP Command Gateway Interface 'CGI'
++php-cgi \- PHP Common Gateway Interface 'CGI' command
  .SH SYNOPSIS
  .B php
  [options] [
+-- 
+1.7.11.5
+
