@@ -62,12 +62,8 @@
 %global mozappdir     %{_libdir}/%{name}
 %global tarballdir    mozilla-release
 
-# crash reporter work only on x86/x86_64
-%ifarch %{ix86} x86_64
-%global enable_mozilla_crashreporter 1
-%else
+# don't enable crash reporter for remi repo
 %global enable_mozilla_crashreporter 0
-%endif
 
 %if %{alpha_version} > 0
 %global pre_version a%{alpha_version}
@@ -92,7 +88,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
 Version:        22.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -120,6 +116,8 @@ Patch24:        rhbz-966424.patch
 
 # Upstream patches
 Patch104:       mozilla-844883.patch
+Patch105:       mozilla-817533.patch
+Patch106:       mozilla-831688.patch
 
 # ---------------------------------------------------
 
@@ -281,6 +279,8 @@ cd %{tarballdir}
 %endif
 
 %patch24  -p1 -b .966424
+%patch105 -p1 -b .817533
+%patch106 -p1 -b .831688
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -291,6 +291,10 @@ cd %{tarballdir}
   | grep -v with-system-jpeg     \
 %endif
   | tee .mozconfig
+
+%if ! %{enable_mozilla_crashreporter}
+echo "ac_add_options --disable-crashreporter" >> .mozconfig
+%endif
 
 %if %{?system_nss}
 echo "ac_add_options --with-system-nspr" >> .mozconfig
@@ -585,6 +589,14 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jul  2 2013 Remi Collet <RPMS@FamilleCollet.com> - 22.0-2
+- sync with rawhide
+- always disable crashreporter
+
+* Mon Jul  1 2013 Jan Horak <jhorak@redhat.com> - 22.0-4
+- Added fix from mozbz#817533 - fix issues with proxy settings
+- Fixed missing about:healthreport
+
 * Mon Jun 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 22.0-1
 - Update to 22.0, sync with rawhide
 
@@ -625,13 +637,13 @@ fi
 * Mon Apr 15 2013 Remi Collet <RPMS@FamilleCollet.com> - 20.0.1-1
 - Update to 20.0.1, sync with rawhide
 
-* Fri Apr 5 2013 Martin Stransky <stransky@redhat.com> - 20.0-4
+* Fri Apr  5 2013 Martin Stransky <stransky@redhat.com> - 20.0-4
 - Updated rhbz-911314.patch for xulrunner 20
 
 * Wed Apr  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 20.0-1
 - Update to 20.0, sync with rawhide
 
-* Wed Apr 3 2013 Martin Stransky <stransky@redhat.com> - 20.0-3
+* Wed Apr  3 2013 Martin Stransky <stransky@redhat.com> - 20.0-3
 - A workaround for Bug 928353 - firefox i686 crashes
   for a number of web pages
 
@@ -674,24 +686,24 @@ fi
 * Thu Jan 10 2013 Martin Stransky <stransky@redhat.com> - 18.0-7
 - Fixed Makefile generator (rhbz#304121)
 
-* Wed Jan 9 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
+* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 18.0-1
 - Sync with rawhide, Update to 18.0
 - use bunled libjpeg-turbo on EL-6
 
-* Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-6
+* Wed Jan  9 2013 Martin Stransky <stransky@redhat.com> - 18.0-6
 - Fixed missing libxpcom.so provides
 
-* Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-5
+* Wed Jan  9 2013 Martin Stransky <stransky@redhat.com> - 18.0-5
 - Added fix for langpacks
 
-* Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-4
+* Wed Jan  9 2013 Martin Stransky <stransky@redhat.com> - 18.0-4
 - Fixed source files
 - Disabled WebRTC due to rhbz#304121
 
-* Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-2
+* Wed Jan  9 2013 Martin Stransky <stransky@redhat.com> - 18.0-2
 - Disabled system sqlite on Fedora 18
 
-* Mon Jan 7 2013 Martin Stransky <stransky@redhat.com> - 18.0-1
+* Mon Jan  7 2013 Martin Stransky <stransky@redhat.com> - 18.0-1
 - Update to 18.0
 
 * Thu Dec 13 2012 Peter Robinson <pbrobinson@fedoraproject.org> 17.0.1-3
@@ -728,7 +740,7 @@ fi
 * Tue Nov 13 2012 Martin Stransky <stransky@redhat.com> - 17.0-0.1b5
 - Update to 17.0 Beta 5
 
-* Tue Nov 6 2012 Martin Stransky <stransky@redhat.com> - 16.0.2-2
+* Tue Nov  6 2012 Martin Stransky <stransky@redhat.com> - 16.0.2-2
 - Added fix for rhbz#872752
 
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0.2-1
@@ -754,10 +766,10 @@ fi
 * Thu Oct 11 2012 Martin Stransky <stransky@redhat.com> - 16.0.1-1
 - Update to 16.0.1
 
-* Mon Oct 8 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0-1
+* Mon Oct  8 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0-1
 - Sync with rawhide, update to 16.0
 
-* Mon Oct 8 2012 Martin Stransky <stransky@redhat.com> - 16.0-1
+* Mon Oct  8 2012 Martin Stransky <stransky@redhat.com> - 16.0-1
 - Update to 16.0
 
 * Thu Sep 27 2012 Jan Horak <jhorak@redhat.com> - 15.0.1-4
@@ -793,7 +805,7 @@ fi
 * Mon Jul 16 2012 Martin Stransky <stransky@redhat.com> - 14.0.1-3
 - Update to 14.0.1
 
-* Sun Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0.1-1
+* Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0.1-1
 - Sync with rawhide, update to 13.0.1
 
 * Sat Jun 16 2012 Jan Horak <jhorak@redhat.com> - 13.0.1-1
@@ -802,10 +814,10 @@ fi
 * Wed Jun 06 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0-1
 - Sync with rawhide, update to 13.0
 
-* Wed Jun 5 2012 Martin Stransky <stransky@redhat.com> - 13.0-2
+* Tue Jun  5 2012 Martin Stransky <stransky@redhat.com> - 13.0-2
 - src.rpm should include all patches
 
-* Mon Jun 4 2012 Martin Stransky <stransky@redhat.com> - 13.0-1
+* Mon Jun  4 2012 Martin Stransky <stransky@redhat.com> - 13.0-1
 - Update to 13.0
 
 * Mon May 28 2012 Martin Stransky <stransky@redhat.com> - 12.0-7
@@ -814,15 +826,15 @@ fi
 * Mon May 28 2012 Martin Stransky <stransky@redhat.com> - 12.0-6
 - Added workaround for ppc(64) - mozbz#746112
 
-* Mon May 7 2012 Dan Horák <dan[at]danny.cz> - 12.0-5
+* Mon May  7 2012 Dan Horák <dan[at]danny.cz> - 12.0-5
 - Used backported upstream patch from mozb#734335 for fixing the sps profiler build
 - Fixed build of jemalloc on ppc (patch by Gustavo Luiz Duarte/IBM)
 
-* Fri May 4 2012 Dan Horák <dan[at]danny.cz> - 12.0-4
+* Fri May  4 2012 Dan Horák <dan[at]danny.cz> - 12.0-4
 - Added new patch for 691898 - backport from trunk
 - Added build fix for secondary arches
 
-* Fri May 4 2012 Martin Stransky <stransky@redhat.com> - 12.0-3
+* Fri May  4 2012 Martin Stransky <stransky@redhat.com> - 12.0-3
 - Added requires for nss-static (rhbz#717247)
 
 * Mon Apr 30 2012 Martin Stransky <stransky@redhat.com> - 12.0-2
@@ -841,7 +853,7 @@ fi
 - Update to 11.0
 - Fixed libvpx-devel dependency
 
-* Fri Mar 9 2012 Martin Stransky <stransky@redhat.com> - 11.0-1
+* Fri Mar  9 2012 Martin Stransky <stransky@redhat.com> - 11.0-1
 - Update to 11.0 Beta 7
 
 * Fri Mar 09 2012 Dan Horák <dan[at]danny.cz> - 10.0.1-5
@@ -853,7 +865,7 @@ fi
 * Sat Feb 18 2012 Remi Collet <RPMS@FamilleCollet.com> - 10.0.2-1
 - update to 10.0.2
 
-* Tue Feb 16 2012 Martin Stransky <stransky@redhat.com> - 10.0.1-3
+* Thu Feb 16 2012 Martin Stransky <stransky@redhat.com> - 10.0.1-3
 - Added fix for mozbz#727401
 
 * Tue Feb 14 2012 Martin Stransky <stransky@redhat.com> - 10.0.1-2
@@ -898,7 +910,7 @@ fi
 * Tue Dec 20 2011 Jan Horak <jhorak@redhat.com> - 9.0-2
 - Update to 9.0
 
-* Fri Dec 9 2011 Martin Stransky <stransky@redhat.com> 9.0-1.beta5
+* Fri Dec  9 2011 Martin Stransky <stransky@redhat.com> 9.0-1.beta5
 - Updated to 9.0 Beta 5
 
 * Wed Dec  7 2011 Jan Horak <jhorak@redhat.com> - 8.0-5
@@ -913,7 +925,7 @@ fi
 * Sat Nov 12 2011 Remi Collet <RPMS@FamilleCollet.com> - 8.0-1
 - update to 8.0, sync with rawhide
 
-* Mon Nov 7 2011 Martin Stransky <stransky@redhat.com> 8.0-1
+* Mon Nov  7 2011 Martin Stransky <stransky@redhat.com> 8.0-1
 - Updated to 8.0
 
 * Tue Oct 18 2011 Ville Skyttä <ville.skytta@iki.fi> - 7.0.1-5
@@ -969,7 +981,7 @@ fi
 - sync with f15/rawhide
 - update to 5.0 finale
 
-* Tue Jun 24 2011 Martin Stransky <stransky@redhat.com> 5.0-3
+* Fri Jun 24 2011 Martin Stransky <stransky@redhat.com> 5.0-3
 - libCurl build fix
 
 * Wed Jun 22 2011 Martin Stransky <stransky@redhat.com> 5.0-2
@@ -1097,7 +1109,7 @@ fi
 * Fri Jan 14 2011 Christopher Aillon <caillon@redhat.com> 2.0-0.15.b9
 - Update to 2.0 Beta 9
 
-* Thu Jan 11 2011 Tom Callaway <spot@fedoraproject.org> 2.0-0.14.b8
+* Tue Jan 11 2011 Tom Callaway <spot@fedoraproject.org> 2.0-0.14.b8
 - enable system sqlite (see https://fedorahosted.org/fpc/ticket/34)
 
 * Thu Dec 23 2010 Martin Stransky <stransky@redhat.com> 2.0-0.13.b8
@@ -1128,10 +1140,10 @@ fi
 * Thu Nov 11 2010 Jan Horak <jhorak@redhat.com> - 2.0-0.5.b7
 - Update to 2.0b7
 
-* Thu Nov 4 2010 Christopher Aillon <caillon@redhat.com> 2.0-0.4.b6
+* Thu Nov  4 2010 Christopher Aillon <caillon@redhat.com> 2.0-0.4.b6
 - Ensure that WM_CLASS matches the desktop file
 
-* Wed Nov 3 2010 Martin Stransky <stransky@redhat.com> 2.0-0.3.b6
+* Wed Nov  3 2010 Martin Stransky <stransky@redhat.com> 2.0-0.3.b6
 - Libnotify rebuild (rhbz#649071)
 
 * Wed Sep 29 2010 jkeating - 2.0-0.2b6

@@ -43,7 +43,8 @@
 
 %define official_branding       1
 %define build_langpacks         1
-%define include_debuginfo       1
+# don't enable crash reporter for remi repo
+%global enable_mozilla_crashreporter 0
 
 %if %{alpha_version} > 0
 %global pre_version a%{alpha_version}
@@ -71,7 +72,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        22.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -409,7 +410,7 @@ ln -s %{mozappdir}/defaults/preferences $RPM_BUILD_ROOT/%{mozappdir}/browser/def
 %{__install} -p -c -m 644 LICENSE $RPM_BUILD_ROOT/%{mozappdir}
 
 # Enable crash reporter for Firefox application
-%if %{include_debuginfo}
+%if %{enable_mozilla_crashreporter}
 sed -i -e "s/\[Crash Reporter\]/[Crash Reporter]\nEnabled=1/" $RPM_BUILD_ROOT/%{mozappdir}/application.ini
 %endif
 
@@ -494,13 +495,20 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %dir %{mozappdir}/webapprt
 %{mozappdir}/webapprt/omni.ja
 %{mozappdir}/webapprt/webapprt.ini
-%if %{include_debuginfo}
+%if %{enable_mozilla_crashreporter}
 %{mozappdir}/browser/crashreporter-override.ini
 %endif
 
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Jul  2 2013 Remi Collet <RPMS@FamilleCollet.com> - 22.0-1
+- sync with rawhide
+- always disable crashreporter
+
+* Fri Jun 28 2013 Jan Horak <jhorak@redhat.com> - 22.0-2
+- Fixed crashreporter for third arch
+
 * Mon Jun 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 22.0-1
 - Update to 22.0, sync with rawhide
 
@@ -533,7 +541,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Tue May 14 2013 Martin Stransky <stransky@redhat.com> - 21.0-1
 - Updated to latest upstream (21.0)
 
-* Thu May 9 2013 Martin Stransky <stransky@redhat.com> - 20.0-5
+* Thu May  9 2013 Martin Stransky <stransky@redhat.com> - 20.0-5
 - Removed firstrun page (rhbz#864793)
 - Made zip/unzip quiet in langpacks processing
 
@@ -553,7 +561,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Wed Apr  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 20.0-1
 - Update to 20.0, sync with rawhide
 
-* Mon Apr 1 2013 Martin Stransky <stransky@redhat.com> - 20.0-1
+* Mon Apr  1 2013 Martin Stransky <stransky@redhat.com> - 20.0-1
 - Updated to 20.0
 
 * Mon Mar 18 2013 Martin Stransky <stransky@redhat.com> - 19.0.2-2
@@ -627,7 +635,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Thu Oct 11 2012 Martin Stransky <stransky@redhat.com> - 16.0.1-1
 - Update to 16.0.1
 
-* Mon Oct 8 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0-1
+* Mon Oct  8 2012 Remi Collet <RPMS@FamilleCollet.com> - 16.0-1
 - Sync with rawhide, update to 16.0
 
 * Mon Oct  8 2012 Jan Horak <jhorak@redhat.com> - 16.0-1
@@ -646,7 +654,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Wed Aug 22 2012 Dan Horák <dan[at]danny.cz> - 14.0.1-3
 - add fix for secondary arches from xulrunner
 
-* Wed Aug 1 2012 Martin Stransky <stransky@redhat.com> - 14.0.1-2
+* Wed Aug  1 2012 Martin Stransky <stransky@redhat.com> - 14.0.1-2
 - removed StartupWMClass (rhbz#844860)
 
 * Tue Jul 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 14.0.1-1
@@ -667,7 +675,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Wed Jun 06 2012 Remi Collet <RPMS@FamilleCollet.com> - 13.0-1
 - Sync with rawhide, update to 13.0
 
-* Tue Jun 5 2012 Martin Stransky <stransky@redhat.com> - 13.0-1
+* Tue Jun  5 2012 Martin Stransky <stransky@redhat.com> - 13.0-1
 - Update to 13.0
 
 * Sun Apr 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 12.0-1
@@ -849,7 +857,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Thu Mar 17 2011 Jan Horak <jhorak@redhat.com> - 4.0-0.20
 - Rebuild against xulrunner with disabled gnomevfs and enabled gio
 
-* Sat Mar 10 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.28.rc1
+* Sat Mar 12 2011 Remi Collet <RPMS@FamilleCollet.com> - 4.0-0.28.rc1
 - Firefox 4.0 Release Candidate 1
 
 * Wed Mar  9 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.19
@@ -896,16 +904,16 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Fri Jan 14 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.12b9
 - Firefox 4.0 Beta 9
 
-* Thu Jan 6 2011 Dan Horák <dan[at]danny.cz> - 4.0-0.11b8
+* Thu Jan  6 2011 Dan Horák <dan[at]danny.cz> - 4.0-0.11b8
 - disable ipc on non-x86 arches to match xulrunner
 
-* Thu Jan 6 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.10b8
+* Thu Jan  6 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.10b8
 - application.ini permission check fix
 
-* Thu Jan 6 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.9b8
+* Thu Jan  6 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.9b8
 - Fixed rhbz#667477 - broken launch script
 
-* Tue Jan 4 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.8b8
+* Tue Jan  4 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.8b8
 - Fixed rhbz#664877 - Cannot read application.ini
 
 * Tue Dec 21 2010 Martin Stransky <stransky@redhat.com> - 4.0-0.7b8
