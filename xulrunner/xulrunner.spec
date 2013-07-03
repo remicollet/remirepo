@@ -37,9 +37,9 @@
 %if %{?system_nss}
 # grep 'min_ns.*=[0-9]' configure
 %global nspr_version 4.9.6
-%global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
+%global nspr_build_version %((pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536) | sed s/\.0\$//)
 %global nss_version 3.14.3
-%global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
+%global nss_build_version %((pkg-config --silence-errors --modversion nss 2>/dev/null   || echo 65536) | sed s/\.0\$//)
 %endif
 
 %if %{?system_sqlite}
@@ -260,7 +260,15 @@ debug %{name}, you want to install %{name}-debuginfo instead.
 #---------------------------------------------------------------------
 
 %prep
-echo TARGET = %{name}-%{version}-%{release}  GECKO = %{gecko_verrel}
+: "TARGET =" %{name}-%{version}-%{release}
+: "GECKO  =" %{gecko_verrel}
+%if %{?system_nss}
+: "NSS    =" %{nss_build_version}
+: "NSPR   =" %{nspr_build_version}
+%endif
+%if %{?system_sqlite}
+: "SQLITE =" %{sqlite_build_version}
+%endif
 %setup -q -c
 cd %{tarballdir}
 
