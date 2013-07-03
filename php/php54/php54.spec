@@ -75,11 +75,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.16
+Version: 5.4.17
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -113,15 +113,9 @@ Patch8: php-5.4.7-libdb.patch
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
 Patch21: php-5.4.7-odbctimer.patch
-# Fixed Bug #64949 (Buffer overflow in _pdo_pgsql_error)
-Patch22: php-5.4.16-pdopgsql.patch
-# Fixed bug #64960 (Segfault in gc_zval_possible_root)
-Patch23: php-5.4.16-gc.patch
-# Fixed Bug #64915 (error_log ignored when daemonize=0)
-Patch24: php-5.4.16-fpm.patch
 # https://bugs.php.net/65143 php-cgi man page
 # https://bugs.php.net/65142 phar man page
-Patch25: php-5.4.16-man.patch
+Patch22: php-5.4.17-man.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -139,7 +133,6 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Fixes for tests
-Patch60: php-5.4.16-pdotests.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
@@ -774,10 +767,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 rm -f ext/json/utf8_to_utf16.*
 
 %patch21 -p1 -b .odbctimer
-%patch22 -p1 -b .pdopgsql
-%patch23 -p1 -b .gc
-%patch24 -p1 -b .fpm
-%patch25 -p1 -b .manpages
+%patch22 -p1 -b .manpages
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -793,8 +783,6 @@ rm -f ext/json/utf8_to_utf16.*
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
-
-%patch60 -p1 -b .pdotests
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1640,6 +1628,9 @@ fi
 
 
 %changelog
+* Wed Jul  3 2013 Remi Collet <rcollet@redhat.com> 5.4.17-1
+- update to 5.4.17
+
 * Tue Jul  2 2013 Remi Collet <rcollet@redhat.com> 5.4.16-2
 - add missing man pages (phar, php-cgi)
 
