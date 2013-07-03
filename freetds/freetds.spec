@@ -127,6 +127,9 @@ rm -rf $RPM_BUILD_ROOT
  
 
 %changelog
+* Wed Jul  3 2013 Remi Collet <RPMS@FDamilleCollet.com> - 0.91-2
+- rebuild for old fedora
+
 * Mon Feb 27 2012 Dmitry Butskoy <Dmitry@Butskoy.name> - 0.91-2
 - Enable Kerberos support (#797276)
 
