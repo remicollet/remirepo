@@ -582,7 +582,7 @@ support for using the tidy library to PHP.
 Summary: MSSQL database module for PHP
 Group: Development/Languages
 Requires: %{phpname}-pdo%{?_isa} = %{version}-%{release}
-BuildRequires: freetds-devel
+BuildRequires: freetds-devel >= 0.91
 Provides: %{phpname}-pdo_dblib, %{phpname}-pdo_dblib%{?_isa}
 
 %description mssql

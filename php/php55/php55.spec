@@ -737,7 +737,7 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-pdo%{?_isa} = %{version}-%{release}
-BuildRequires: freetds-devel
+BuildRequires: freetds-devel >= 0.91
 Provides: php-pdo_dblib, php-pdo_dblib%{?_isa}
 Obsoletes: php53-mssql, php53u-mssql, php54-mssql, php55-mssql
 
