@@ -19,7 +19,7 @@
 
 Name:           php-nrk-Predis
 Version:        0.8.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP client library for Redis
 
 Group:          Development/Libraries
@@ -64,9 +64,7 @@ Flexible and feature-complete PHP client library for Redis.
 
 
 %prep
-# https://github.com/nrk/predis/issues/125
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 %patch0 -p1
@@ -150,5 +148,8 @@ fi
 
 
 %changelog
+* Wed Jul  3 2013 Remi Collet <remi@fedoraproject.org> - 0.8.3-2
+- fixed sources, https://github.com/nrk/predis/issues/125
+
 * Wed Jun  5 2013 Remi Collet <remi@fedoraproject.org> - 0.8.3-1
 - initial package
