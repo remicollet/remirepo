@@ -37,7 +37,7 @@
 %global sqlite_version 3.7.13
 %endif
 %global libnotify_version 0.4
-%if %{?system_cairo}
+%if %{?system_vpx}
 %global libvpx_version 1.0.0
 %endif
 %global _default_patch_fuzz 2
@@ -45,7 +45,7 @@
 %global thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 %global enimail_app_id     \{847b3a00-7ab1-11d4-8f02-006008948af5\}
 
-%global thunver  17.0.2
+%global thunver  17.0.7
 %global thunmax  18.0
 
 # The tarball is pretty inconsistent with directory structure.
@@ -53,8 +53,7 @@
 #
 # IMPORTANT: If there is no top level directory, this should be 
 # set to the cwd, ie: '.'
-#global tarballdir .
-%global tarballdir comm-release
+%global tarballdir comm-esr17
 
 %global official_branding 1
 
@@ -64,7 +63,7 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.5.1
+Version:        1.5.2
 Release:        1%{?dist}
 URL:            http://enigmail.mozdev.org/
 # All files licensed under MPL 1.1/GPL 2.0/LGPL 2.1
@@ -96,6 +95,9 @@ Patch300:       xulrunner-16.0-jemalloc-ppc.patch
 Patch301:       rhbz-855923.patch
 Patch302:       mozilla-746112.patch
 
+# Fedora specific patches
+Patch400:       rhbz-966424.patch
+
 # Enigmail patch
 
 
@@ -124,9 +126,11 @@ BuildRequires:  bzip2-devel
 BuildRequires:  zlib-devel, gzip, zip, unzip
 BuildRequires:  libIDL-devel
 BuildRequires:  gtk2-devel
+%if 0%{?rhel}
 BuildRequires:  gnome-vfs2-devel
 BuildRequires:  libgnome-devel
 BuildRequires:  libgnomeui-devel
+%endif
 BuildRequires:  krb5-devel
 BuildRequires:  pango-devel
 BuildRequires:  freetype-devel >= %{freetype_version}
@@ -140,11 +144,12 @@ BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  libcurl-devel
-BuildRequires:  yasm
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  GConf2-devel
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
+%else
+BuildRequires:  yasm
 %endif
 
 ## For fixing lang
@@ -182,6 +187,7 @@ cd mozilla
 %patch9 -p1 -b .791626
 %patch104 -p1 -b .gcc47
 %patch302 -p2 -b .746112
+%patch400 -p1 -b .966424
 cd ..
 
 %patch200 -p1 -b .addons
@@ -206,10 +212,6 @@ cat %{SOURCE10} 		\
   | grep -v with-system-libvpx     \
 %endif
   | tee .mozconfig
-
-%if 0%{?fedora} < 14 && 0%{?rhel} <= 6
-echo "ac_add_options --disable-libjpeg-turbo"  >> .mozconfig
-%endif
 
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
@@ -348,6 +350,9 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Thu Jul  4 2013 Remi Collet <remi@fedoraproject.org> 1.5.2-1
+- Enigmail 1.5.2 for Thunderbird 17.0.7
+
 * Sun Feb 10 2013 Remi Collet <remi@fedoraproject.org> 1.5.1-1
 - Enigmail 1.5.1 for Thunderbird 17.0.2
 
