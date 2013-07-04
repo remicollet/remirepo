@@ -1,15 +1,25 @@
+# spec file for php-pecl-igbinary
+#
+# Copyright (c) 2010-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global extname   igbinary
+%global commit    c35d48f3d14794373b2ef89a6d79020bb7418d7f
+%global short     %(c=%{commit}; echo ${c:0:7})
 %global gitver    3b8ab7e
 %global prever    -dev
 
 Summary:        Replacement for the standard PHP serializer
 Name:           php-pecl-igbinary
 Version:        1.1.2
-%if 0%{?gitver:1}
-Release:	    0.5.git%{gitver}%{?dist}.1
-Source0:	    igbinary-igbinary-1.1.1-15-g3b8ab7e.tar.gz
+%if 0%{?short:1}
+Release:	    0.6.git%{short}%{?dist}
+Source0:        https://github.com/%{extname}/%{extname}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
 %else
 Release:        2%{?dist}
 Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
@@ -25,6 +35,8 @@ URL:            http://pecl.php.net/package/igbinary
 # https://bugs.php.net/60298
 Patch0:         igbinary-php54.patch
 
+# https://github.com/krakjoe/apcu/issues/21
+Patch1:         igbinary-apcu.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  php-pecl-apc-devel >= 3.1.7
@@ -45,9 +57,7 @@ Provides:       php-pecl(%{extname})%{?_isa} = %{version}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{extname}
 Obsoletes:     php53u-pecl-%{extname}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{extname}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-%{extname}
 %endif
@@ -82,17 +92,20 @@ These are the files needed to compile programs using Igbinary
 %prep
 %setup -q -c
 
-%if 0%{?gitver:1}
-mv igbinary-igbinary-%{gitver}/package.xml .
-mv igbinary-igbinary-%{gitver} %{extname}-%{version}
+%if 0%{?short:1}
+mv igbinary-%{commit}/package.xml .
+mv igbinary-%{commit} %{extname}-%{version}
 sed -e '/release/s/-dev/dev/' -i package.xml
+
 cd %{extname}-%{version}
 %patch0 -p0 -b .php54
+%if "%{php_version}" > "5.5"
+%patch1 -p1 -b .apcu
+%endif
 
 %else
 cd %{extname}-%{version}
 tar xzf %{SOURCE1}
-
 %endif
 
 extver=$(sed -n '/#define IGBINARY_VERSION/{s/.* "//;s/".*$//;p}' igbinary.h)
@@ -134,6 +147,8 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+# for short circuit
+rm -f  %{extname}*/modules/apc*so
 
 make install -C %{extname}-%{version} \
      INSTALL_ROOT=%{buildroot}
@@ -158,7 +173,11 @@ cd %{extname}-%{version}
     --modules | grep %{extname}
 
 # APC required for test 045
+%if "%{php_version}" > "5.5"
+ln -s %{php_extdir}/apcu.so modules/
+%else
 ln -s %{php_extdir}/apc.so modules/
+%endif
 
 NO_INTERACTION=1 REPORT_EXIT_STATUS=0 \
 make test
