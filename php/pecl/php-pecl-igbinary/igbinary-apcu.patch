@@ -1,0 +1,72 @@
+--- igbinary-c35d48f3d14794373b2ef89a6d79020bb7418d7f/config.m4	2012-07-23 21:20:49.000000000 +0200
++++ igbinary-1.1.2/config.m4	2013-07-04 16:23:00.030580798 +0200
+@@ -20,10 +20,15 @@
+   AC_CHECK_HEADERS([stddef.h],, AC_MSG_ERROR([stddef.h not exists]))
+   AC_CHECK_HEADERS([stdint.h],, AC_MSG_ERROR([stdint.h not exists]))
+ 
+-  AC_MSG_CHECKING([for apc includes])
+-  if test -f "$phpincludedir/ext/apc/apc_serializer.h"; then
+-    apc_inc_path="$phpincludedir"
+-	AC_MSG_RESULT([$apc_inc_path])
++  AC_MSG_CHECKING([for APC/APCU includes])
++  if test -f "$phpincludedir/ext/apcu/apc_api.h"; then
++	apc_inc_path="$phpincludedir"
++	AC_MSG_RESULT([APCU in $apc_inc_path])
++	AC_DEFINE(HAVE_APC_SUPPORT,1,[Whether to enable apc support])
++	AC_DEFINE(HAVE_APCU_SUPPORT,1,[Whether to enable apc support via apcu])
++  elif test -f "$phpincludedir/ext/apc/apc_serializer.h"; then
++	apc_inc_path="$phpincludedir"
++	AC_MSG_RESULT([APC in $apc_inc_path])
+ 	AC_DEFINE(HAVE_APC_SUPPORT,1,[Whether to enable apc support])
+   elif test -f "${srcdir}/apc_serializer.h"; then
+   	AC_MSG_RESULT([apc_serializer.h bundled])
+--- igbinary-c35d48f3d14794373b2ef89a6d79020bb7418d7f/igbinary.c	2012-07-23 21:20:49.000000000 +0200
++++ igbinary-1.1.2/igbinary.c	2013-07-04 16:24:11.774806737 +0200
+@@ -28,6 +28,9 @@
+ 
+ #include "ext/standard/php_incomplete_class.h"
+ 
++#ifdef HAVE_APCU_SUPPORT
++# include "ext/apcu/apc_api.h"
++#else
+ #ifdef HAVE_APC_SUPPORT
+ # if USE_BUNDLED_APC
+ #  include "apc_serializer.h"
+@@ -35,6 +38,7 @@
+ #  include "ext/apc/apc_serializer.h"
+ # endif
+ #endif /* HAVE_APC_SUPPORT */
++#endif /* HAVE_APCU_SUPPORT */
+ #include "php_igbinary.h"
+ 
+ #include "igbinary.h"
+@@ -242,9 +246,13 @@
+ #ifdef HAVE_PHP_SESSION
+ 	ZEND_MOD_REQUIRED("session")
+ #endif
++#ifdef HAVE_APCU_SUPPORT
++	ZEND_MOD_REQUIRED("apcu")
++#else
+ #ifdef HAVE_APC_SUPPORT
+ 	ZEND_MOD_OPTIONAL("apc")
+ #endif
++#endif
+ 	{NULL, NULL, NULL}
+ };
+ #endif
+@@ -339,11 +347,15 @@
+ 	php_info_print_table_start();
+ 	php_info_print_table_row(2, "igbinary support", "enabled");
+ 	php_info_print_table_row(2, "igbinary version", IGBINARY_VERSION);
++#ifdef HAVE_APCU_SUPPORT
++	php_info_print_table_row(2, "igbinary APCU serializer ABI", "yes");
++#else
+ #ifdef HAVE_APC_SUPPORT
+ 	php_info_print_table_row(2, "igbinary APC serializer ABI", APC_SERIALIZER_ABI);
+ #else
+ 	php_info_print_table_row(2, "igbinary APC serializer ABI", "no");
+ #endif
++#endif
+ #if HAVE_PHP_SESSION
+ 	php_info_print_table_row(2, "igbinary session support", "yes");
+ #else

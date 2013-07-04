@@ -18,7 +18,7 @@ Summary:        Replacement for the standard PHP serializer
 Name:           php-pecl-igbinary
 Version:        1.1.2
 %if 0%{?short:1}
-Release:	    0.6.git%{short}%{?dist}
+Release:        0.6.git%{short}%{?dist}
 Source0:        https://github.com/%{extname}/%{extname}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
 %else
 Release:        2%{?dist}
@@ -32,21 +32,23 @@ Group:          System Environment/Libraries
 
 URL:            http://pecl.php.net/package/igbinary
 
-# https://bugs.php.net/60298
-Patch0:         igbinary-php54.patch
-
 # https://github.com/krakjoe/apcu/issues/21
-Patch1:         igbinary-apcu.patch
+Patch0:         igbinary-apcu.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
-BuildRequires:  php-pecl-apc-devel >= 3.1.7
 BuildRequires:  php-pear
 BuildRequires:  php-devel >= 5.2.0
+# we cannot make this conditional
+# but php-pecl-apcu-devel provides php-pecl-apc-devel
+BuildRequires:  php-pecl-apc-devel >= 3.1.7
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+%if "%{php_version}" > "5.5"
+Requires:       php-pecl-apcu%{?_isa}
+%endif
 
 Obsoletes:      php-%{extname} <= 1.1.1
 Provides:       php-%{extname} = %{version}
@@ -98,9 +100,9 @@ mv igbinary-%{commit} %{extname}-%{version}
 sed -e '/release/s/-dev/dev/' -i package.xml
 
 cd %{extname}-%{version}
-%patch0 -p0 -b .php54
+
 %if "%{php_version}" > "5.5"
-%patch1 -p1 -b .apcu
+%patch0 -p1 -b .apcu
 %endif
 
 %else
@@ -148,7 +150,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 # for short circuit
-rm -f  %{extname}*/modules/apc*so
+rm -f  %{extname}*/modules/apc.so
 
 make install -C %{extname}-%{version} \
      INSTALL_ROOT=%{buildroot}
@@ -165,22 +167,34 @@ install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
 %check
 cd %{extname}-%{version}
 
+# APC required for test 045
+%if "%{php_version}" > "5.5"
+ln -s %{php_extdir}/apcu.so modules/apc.so
+%else
+ln -s %{php_extdir}/apc.so  modules/apc.so
+%endif
+
 # simple module load test
-# (without APC to ensure than can run without)
 %{__php} --no-php-ini \
     --define extension_dir=modules \
+    --define extension=apc.so \
     --define extension=%{extname}.so \
     --modules | grep %{extname}
 
-# APC required for test 045
-%if "%{php_version}" > "5.5"
-ln -s %{php_extdir}/apcu.so modules/
-%else
-ln -s %{php_extdir}/apc.so modules/
-%endif
-
 NO_INTERACTION=1 REPORT_EXIT_STATUS=0 \
 make test
+
+cd ../%{extname}-%{version}-zts
+%if "%{php_version}" > "5.5"
+ln -s %{php_ztsextdir}/apcu.so modules/apc.so
+%else
+ln -s %{php_ztsextdir}/apc.so  modules/apc.so
+%endif
+%{__ztsphp} --no-php-ini \
+    --define extension_dir=modules \
+    --define extension=apc.so \
+    --define extension=%{extname}.so \
+    --modules | grep %{extname}
 
 
 %clean
@@ -219,6 +233,10 @@ fi
 
 
 %changelog
+* Thu Jul  4 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.6.git3b8ab7e
+- latest snapshot
+- rebuild with APCu
+
 * Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.3.git3b8ab7e
 - cleanups
 
