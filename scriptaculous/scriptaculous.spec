@@ -1,3 +1,12 @@
+# spec file for scriptaculous
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+
 Name:         scriptaculous
 Version:      1.9.0
 Release:      1%{?dist}

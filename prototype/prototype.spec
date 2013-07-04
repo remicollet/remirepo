@@ -1,3 +1,12 @@
+# spec file for prototype
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+
 Name:         prototype
 Version:      1.7.1.0
 Release:      1%{?dist}
