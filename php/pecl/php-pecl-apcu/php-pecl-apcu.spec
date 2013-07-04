@@ -1,3 +1,11 @@
+# spec file for php-pecl-apcu
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name apcu
@@ -5,7 +13,7 @@
 Name:           php-pecl-apcu
 Summary:        APC User Cache
 Version:        4.0.1
-Release:        1%{?dist}.1
+Release:        2%{?dist}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
@@ -29,8 +37,12 @@ Provides:       php-apcu = %{version}
 Provides:       php-apcu%{?_isa} = %{version}
 Provides:       php-pecl(apcu) = %{version}
 Provides:       php-pecl(apcu)%{?_isa} = %{version}
+%if "%{php_version}" < "5.5"
+Conflicts:      php-pecl-apc
+%else
+Obsoletes:      php-pecl-apc < 4
+%endif
 # Same provides than APC, this is a drop in replacement
-Conflicts:      php-pecl-apc < 4
 Provides:       php-apc = %{version}
 Provides:       php-apc%{?_isa} = %{version}
 Provides:       php-pecl-apc = %{version}
@@ -69,7 +81,13 @@ Summary:       APCu developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      php-devel%{?_isa}
-#Obsoletes:     php-pecl-apc-devel
+%if "%{php_version}" < "5.5"
+Conflicts:      php-pecl-apc-devel
+%else
+Obsoletes:      php-pecl-apc-devel < 4
+Provides:       php-pecl-apc-devel = %{version}-%{release}
+Provides:       php-pecl-apc-devel%{?_isa} = %{version}-%{release}
+%endif
 
 %description devel
 These are the files needed to compile programs using APCu.
@@ -83,7 +101,12 @@ BuildArch:     noarch
 %endif
 Requires:      %{name} = %{version}-%{release}
 Requires:      mod_php, httpd, php-gd
-#Obsoletes:     apc-panel
+%if "%{php_version}" < "5.5"
+Conflicts:      apc-panel
+%else
+Obsoletes:      apc-panel < 4
+Provides:       apc-devel = %{version}-%{release}
+%endif
 
 %description  -n apcu-panel
 This package provides the APCu control panel, with Apache
@@ -212,6 +235,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul  4 2013 Remi Collet <remi@fedoraproject.org> - 4.0.1-2
+- obsoletes APC with php 5.5
+
 * Tue Apr 30 2013 Remi Collet <remi@fedoraproject.org> - 4.0.1-1
 - Update to 4.0.1
 - add missing scriptlet
