@@ -2,19 +2,19 @@
 
 Name:		php-channel-swift
 Version:	1.3
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Adds swift mailer project channel to PEAR
 
 Group:		Development/Languages
 License:	LGPLv3
 URL:		http://www.swiftmailer.org/
 Source0:	http://pear.swiftmailer.org/channel.xml
+
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildArch:	noarch
-BuildRequires:	php-pear >= 1:1.4.9-1.2
-Requires:	php-pear(PEAR)
+BuildRequires:	php-pear
 
+Requires:	php-pear(PEAR)
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
@@ -34,13 +34,14 @@ PEAR packages from this channel to be installed.
 
 
 %install
-%{__rm} -rf $RPM_BUILD_ROOT
-%{__mkdir_p} $RPM_BUILD_ROOT%{pear_xmldir}
-%{__install} -pm 644 %{SOURCE0} $RPM_BUILD_ROOT%{pear_xmldir}/%{name}.xml
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
+install -pm 644 %{SOURCE0} $RPM_BUILD_ROOT%{pear_xmldir}/%{name}.xml
 
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
+
 
 %post
 if [ $1 -eq  1 ] ; then
@@ -62,6 +63,9 @@ fi
 
 
 %changelog
+* Fri Jul  5 2013 Remi Collet <remi@fedoraproject.org> - 1.3-7
+- refresh channel.xml
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
