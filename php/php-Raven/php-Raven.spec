@@ -1,7 +1,7 @@
 %global github_owner   getsentry
 %global github_name    raven-php
-%global github_version 0.6.0
-%global github_commit  f3bad0185d50eca57dcb477488df14edd172d22e
+%global github_version 0.6.1
+%global github_commit  e4aeba24578795bdc0ff41fddcd81b9ecb54c5c4
 
 %global lib_name       Raven
 %global php_min_ver    5.2.4
@@ -92,6 +92,12 @@ install -pm 755 bin/raven %{buildroot}%{_bindir}/
 
 
 %changelog
+* Mon Jul  8 2013 Remi Collet <remi@fedoraproject.org> 0.6.1-1
+- backport 0.6.1 for remi repo.
+
+* Fri Jul 05 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.6.1-1
+- Updated to 0.6.1 (BZ #981406)
+
 * Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> 0.6.0-1
 - backport 0.6.0 for remi repo.
 
