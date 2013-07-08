@@ -3,7 +3,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        1.2.11
+Version:        1.2.12
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Mon Jul 08 2013 Remi Collet <remi@fedoraproject.org> - 1.2.12-1
+- Update to 1.2.12
+
 * Fri May 24 2013 Remi Collet <remi@fedoraproject.org> - 1.2.11-1
 - Update to 1.2.11
 
