@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Share
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde Shared Permissions System
 
@@ -32,24 +32,24 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Group) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Perms) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Url) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optionnal
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -132,6 +132,9 @@ fi
 
 
 %changelog
+* Mon Jul 08 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 
