@@ -267,7 +267,8 @@ Summary: Common files for PHP
 # All files licensed under PHP version 3.01, except
 # fileinfo is licensed under PHP version 3.0
 # regex, libmagic are licensed under BSD
-License: PHP and BSD
+# main/snprintf.c, main/spprintf.c and main/rfc1867.c are ASL 1.0
+License: PHP and BSD and ASL 1.0
 # ABI/API check - Arch specific
 Provides: php(api) = %{apiver}%{isasuffix}
 Provides: php(zend-abi) = %{zendver}%{isasuffix}
