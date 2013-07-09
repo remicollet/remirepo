@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Memcache
-Version:        2.0.2
-Release:        2%{?dist}
+Version:        2.0.3
+Release:        1%{?dist}
 Summary:        Horde Memcache API
 
 Group:          Development/Libraries
@@ -27,7 +27,7 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pecl(memcache)
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -80,6 +80,9 @@ fi
 
 
 %changelog
+* Tue Jul 09 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Thu Mar 07 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
 - fix License (LGPLv2) from review #873736
 
