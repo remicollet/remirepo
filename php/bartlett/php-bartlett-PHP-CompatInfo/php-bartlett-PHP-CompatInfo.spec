@@ -15,7 +15,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.18.0
+Version:        2.19.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -29,10 +29,10 @@ Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpc
 # Update configuration for best experience
 # Reference = ALL known extension (instead of installed ones)
 # Make cache / save_path user specific
+# Add .install .module to fileExtensions (for drupal)
 Patch0:         %{pear_name}-conf.patch
 
-# https://github.com/llaville/php-compat-info/pull/94
-Patch1:         %{pear_name}-ref.patch
+Patch1:         %{pear_name}-intl.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -87,7 +87,8 @@ cp phpcompatinfo.xml.dist phpcompatinfo.xml
 %patch1 -p1 -b .ref
 
 # remove checksum for patched files
-sed -e '/SocketsTest/s/md5sum.*name/name/' \
+sed -e '/intl.php/s/md5sum.*name/name/' \
+    -e '/IntlTest.php/s/md5sum.*name/name/' \
     ../package.xml >%{name}.xml
 
 
@@ -173,6 +174,11 @@ fi
 
 
 %changelog
+* Fri Jul 12 2013 Remi Collet <remi@fedoraproject.org> - 2.19.0-1
+- Update to 2.19.0
+- add module and install to fileExtensions in default configuration
+  for drupal packages, #979830
+
 * Wed Jun 26 2013 Remi Collet <remi@fedoraproject.org> - 2.18.0-1
 - Update to 2.18.0
 - raise dependencies, PHP_Reflect 1.7.0
