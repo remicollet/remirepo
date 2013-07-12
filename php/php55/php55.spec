@@ -61,7 +61,7 @@
 %else
 %global with_dtrace 0
 %endif
-%if 0%{?fedora} < 20 && 0%{?rhel} < 5
+%if 0%{?fedora} < 17 && 0%{?rhel} < 5
 %global with_libgd   0
 %else
 %global with_libgd   1
@@ -80,16 +80,16 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201306240630
+#global snapdate      201306240630
 #global rcver         RC3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.1
+Version: 5.5.0
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -145,6 +145,9 @@ Patch45: php-5.4.8-ldap_r.patch
 Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
+
+# Security fixes
+Patch60: php-5.5.0-CVE-2013-4013.patch
 
 # Fixes for tests
 
@@ -847,6 +850,8 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
 
+%patch60 -p1 -b .cve4113
+
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
@@ -1301,7 +1306,7 @@ popd
 %if %runselftest
 cd build-apache
 
-# Double stack size (required by bug54268.phpt)
+# Increase stack size (required by bug54268.phpt)
 ulimit -s 32712
 
 # Run tests, using the CLI SAPI
@@ -1802,7 +1807,12 @@ fi
 
 
 %changelog
-* Mon Jun 24 2013 Remi Collet <rcollet@redhat.com> 5.5.0-0.1.201306240630
+* Fri Jul 12 2013 Remi Collet <rcollet@redhat.com> - 5.5.0-2
+- add security fix for CVE-2013-4113
+- add missing ASL 1.0 license
+- 32k stack size seems ok for tests on both 32/64bits build
+
+* Mon Jun 24 2013 Remi Collet <rcollet@redhat.com> 5.5.1-0.1.201306240630
 - test build (bundled libgd)
 
 * Thu Jun 20 2013 Remi Collet <rcollet@redhat.com> 5.5.0-1
