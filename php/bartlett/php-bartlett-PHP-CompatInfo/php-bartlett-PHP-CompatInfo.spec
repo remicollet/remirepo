@@ -32,6 +32,7 @@ Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpc
 # Add .install .module to fileExtensions (for drupal)
 Patch0:         %{pear_name}-conf.patch
 
+# https://github.com/llaville/php-compat-info/pull/95
 Patch1:         %{pear_name}-intl.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
