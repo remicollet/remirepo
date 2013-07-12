@@ -79,7 +79,7 @@ Version: 5.4.17
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -131,6 +131,9 @@ Patch45: php-5.4.8-ldap_r.patch
 Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
+
+# Security fixes
+Patch60: php-5.4.17-CVE-2013-4013.patch
 
 # Fixes for tests
 
@@ -784,6 +787,8 @@ rm -f ext/json/utf8_to_utf16.*
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+
+%patch60 -p1 -b .cve4113
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1629,6 +1634,10 @@ fi
 
 
 %changelog
+* Fri Jul 12 2013 Remi Collet <rcollet@redhat.com> - 5.4.17-2
+- add security fix for CVE-2013-4113
+- add missing ASL 1.0 license
+
 * Wed Jul  3 2013 Remi Collet <rcollet@redhat.com> 5.4.17-1
 - update to 5.4.17
 

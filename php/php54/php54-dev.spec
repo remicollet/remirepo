@@ -75,7 +75,7 @@ Version: 5.4.5
 %if 0%{?snapdate}
 Release: 0.7.%{snapdate}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 License: PHP
 Group: Development/Languages
