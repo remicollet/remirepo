@@ -13,7 +13,7 @@
 
 Name:          php-pecl-%{pecl_name}
 Version:       7.0.2
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
@@ -97,20 +97,26 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{plug_name}.ini
-sed -e 's:@EXTPATH@:%{php_extdir}:' \
-    -i %{buildroot}%{php_inidir}/%{plug_name}.ini
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
-install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{plug_name}.ini
-sed -e 's:@EXTPATH@:%{php_ztsextdir}:' \
-    -i %{buildroot}%{php_ztsinidir}/%{plug_name}.ini
+# Configuration file
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{plug_name}.ini
+sed -e 's:@EXTPATH@:%{php_extdir}:' \
+    -e 's:@INIPATH@:%{php_inidir}:' \
+    -i %{buildroot}%{php_inidir}/%{plug_name}.ini
 
-make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 # The default Zend OPcache blacklist file
 install -D -p -m 644 %{SOURCE2} %{buildroot}%{php_inidir}/%{plug_name}-default.blacklist
+
+make -C ZTS install INSTALL_ROOT=%{buildroot}
+
+install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{plug_name}.ini
+sed -e 's:@EXTPATH@:%{php_ztsextdir}:' \
+    -e 's:@INIPATH@:%{php_ztsinidir}:' \
+    -i %{buildroot}%{php_ztsinidir}/%{plug_name}.ini
+
+install -D -p -m 644 %{SOURCE2} %{buildroot}%{php_ztsinidir}/%{plug_name}-default.blacklist
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -161,6 +167,7 @@ fi
 %config(noreplace) %{php_inidir}/%{plug_name}.ini
 %{php_extdir}/%{plug_name}.so
 
+%config(noreplace) %{php_ztsinidir}/%{plug_name}-default.blacklist
 %config(noreplace) %{php_ztsinidir}/%{plug_name}.ini
 %{php_ztsextdir}/%{plug_name}.so
 
@@ -168,6 +175,9 @@ fi
 
 
 %changelog
+* Mon Jul 15 2013 Remi Collet <rcollet@redhat.com> - 7.0.2-1
+- fix ZTS configuration
+
 * Wed Jun  5 2013 Remi Collet <rcollet@redhat.com> - 7.0.2-1
 - update to 7.0.2
 - add spec License = CC-BY-SA
