@@ -1,12 +1,11 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global channel   pear.phpunit.de
 %global pear_name PHP_Invoker
 
 Name:           php-phpunit-PHP-Invoker
-Version:        1.1.2
-Release:        2%{?dist}
+Version:        1.1.3
+Release:        1%{?dist}
 Summary:        Utility class for invoking callables with a timeout
 
 Group:          Development/Libraries
@@ -16,16 +15,18 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.2.7
 BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-pear(%{channel}/PHP_Timer) >= 1.0.1
-Requires:       php-common >= 5.2.7
+Requires:       php(language) >= 5.2.7
 Requires:       php-pcntl
 Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.9.4
+Requires:       php-pear(%{channel}/PHP_Timer) >= 1.0.1
+Requires:       php-pear(%{channel}/PHP_Timer) <= 1.0.99
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -81,6 +82,9 @@ fi
 
 
 %changelog
+* Tue Jul 16 2013 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3 (stable) - API 1.1.0
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
