@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.1.2
+Version:        6.1.3
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -123,6 +123,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # Optional
@@ -251,6 +253,9 @@ fi
 
 
 %changelog
+* Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 6.1.3-1
+- Update to 6.1.3
+
 * Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 6.1.2-1
 - Update to 6.1.2
 
