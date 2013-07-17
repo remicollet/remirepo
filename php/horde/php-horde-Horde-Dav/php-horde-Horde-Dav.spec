@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Dav
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Horde library for WebDAV, CalDAV, CardDAV
 
@@ -104,6 +104,9 @@ fi
 
 
 %changelog
+* Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 - raise dependencies for SabreDAV 1.8.6
