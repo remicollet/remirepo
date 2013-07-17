@@ -17,7 +17,7 @@
 # "horde-turba" sub package with apache stuff
 
 Name:           php-horde-turba
-Version:        4.1.0
+Version:        4.1.1
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -62,7 +62,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Form) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_History) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
@@ -216,6 +216,9 @@ fi
 
 
 %changelog
+* Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 4.1.1-1
+- Update to 4.1.1
+
 * Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
 - Update to 4.1.0
 
