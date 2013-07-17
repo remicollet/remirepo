@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Compress
-Version:        2.0.3
-Release:        3%{?dist}
+Version:        2.0.4
+Release:        1%{?dist}
 Summary:        Horde Compression API
 
 Group:          Development/Libraries
@@ -30,15 +30,15 @@ Requires:       php-pcre
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
 Requires:       php-zlib
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Stream_Filter) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -116,6 +116,9 @@ fi
 
 
 %changelog
+* Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Fri Feb  8 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-3
 - fix test script include_path for locale
 

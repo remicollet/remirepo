@@ -50,7 +50,7 @@ Build order
 	Horde_Text_Filter_Csstidy 2.0.1      BR: Horde_Test  R: Horde_Text_Filter
 	Horde_Tree                2.0.2        R: Horde_Exception, Horde_Url, Horde_Util
 	Horde_Cache               2.2.1       I: Horde_Db R: Horde_Compress_Fast, Horde_Exception, Horde_Util, Horde_HashTable, Horde_Log, Horde_Mongo
-	Horde_Compress            2.0.3      BR: Horde_Test, Horde_Stream_Filter  R: Horde_Exception, Horde_Translation, Horde_Util, Horde_Stream_Filter
+	Horde_Compress            2.0.4      BR: Horde_Test, Horde_Stream_Filter  R: Horde_Exception, Horde_Translation, Horde_Util, Horde_Stream_Filter
 	Horde_Controller          2.0.1      BR: Horde_Test  R: Horde_Exception, Horde_Injector, Horde_Log, Horde_Support, Horde_Util
 	Horde_Db                  2.0.3      BR: Horde_Test, Horde_Cache  R: Horde_Date, Horde_Exception, Horde_Support, Horde_Autoloader, Horde_Cache
 	Horde_Editor              2.0.3      BR: Horde_Role  R: Horde_Role, Horde_Browser, Horde_Exception, Horde_Serialize
