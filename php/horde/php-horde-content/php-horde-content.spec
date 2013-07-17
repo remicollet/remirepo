@@ -9,8 +9,8 @@
 # "horde-content" sub package with apache stuff
 
 Name:           php-horde-content
-Version:        2.0.2
-Release:        2%{?dist}
+Version:        2.0.3
+Release:        1%{?dist}
 Summary:        Tagging application
 
 Group:          Development/Libraries
@@ -37,26 +37,23 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Core) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Injector) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Injector) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Rdo) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Rdo) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Rdo) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optionnal
 Requires:       php-pear(%{pear_channel}/Horde_Argv) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Argv) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Controller) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Controller) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_ElasticSearch) >= 1.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_ElasticSearch) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Argv) <  3.0.0
+# optional and implicitly required Horde_Controller, Horde_ElasticSearch
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -139,6 +136,9 @@ fi
 
 
 %changelog
+* Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
 - add dependency on Horde_ElasticSearch
 
