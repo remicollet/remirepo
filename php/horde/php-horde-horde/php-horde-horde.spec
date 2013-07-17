@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-horde
-Version:        5.1.1
+Version:        5.1.2
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -201,6 +201,10 @@ do
          && echo "%%lang(${lang%_*}) %{pear_hordedir}/$loc"
 done | tee ../%{pear_name}.lang
 
+# fix install path
+mv %{buildroot}/usr/bin/bin/horde-queue-run-tasks \
+   %{buildroot}/usr/bin/horde-queue-run-tasks
+
 
 %clean
 rm -rf %{buildroot}
@@ -236,6 +240,7 @@ fi
 %{_bindir}/horde-db-migrate
 %{_bindir}/horde-import-squirrelmail-prefs
 %{_bindir}/horde-memcache-stats
+%{_bindir}/horde-queue-run-tasks
 %{_bindir}/horde-run-task
 %{_bindir}/horde-set-perms
 %{_bindir}/horde-sessions-gc
@@ -259,6 +264,9 @@ fi
 
 
 %changelog
+* Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 5.1.2-1
+- Update to 5.1.2
+
 * Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 5.1.1-1
 - Update to 5.1.1
 
