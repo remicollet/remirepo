@@ -11,22 +11,17 @@
 
 Summary:      Wrapper around the gpgme library
 Name:         php-pecl-gnupg
-Version:      1.3.2
-Release:      4%{?dist}
+Version:      1.3.3
+Release:      1%{?dist}.1
 
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/gnupg
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# http://svn.php.net/viewvc/pecl/gnupg/trunk/tests/vars.inc?view=co
-Source1:      vars.inc
-# https://bugs.php.net/60915 PHP 5.4 build
-Patch0:       gnupg-php54.patch
-# https://bugs.php.net/60913 Fix test suite
-Patch1:       gnupg-tests.patch
-# https://bugs.php.net/60916 Force use of /usr/bin/gpg
-Patch2:       gnupg-gpg1.patch
+# http://svn.php.net/viewvc?view=revision&revision=330950 Fix version
+# http://svn.php.net/viewvc?view=revision&revision=330954 Fix double-free
+Patch0:       %{pecl_name}-svn.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel
@@ -69,32 +64,27 @@ Documentation : http://www.php.net/gnupg
 %prep 
 %setup -c -q
 
-cp %{SOURCE1} %{pecl_name}-%{version}/tests
-%patch0 -p0 -b .php54
-%patch1 -p0 -b .tests
-%patch2 -p0 -b .gpg1
-
 # Create configuration file
 cat >%{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
 
+cd %{pecl_name}-%{version}/
+%patch0 -p3 -b .svn
+
 %if 0%{?rhel} == 5
 # GnuPG seems to old
-rm -f %{pecl_name}-%{version}/tests/gnupg_{oo,res}_listsignatures.phpt
+rm -f tests/gnupg_{oo,res}_listsignatures.phpt
 %endif
 
-# Fix version for phpinfo()
-# https://bugs.php.net/60914
-sed -i -e /PHP_GNUPG_VERSION/s/1.3.2-dev/1.3.2/ %{pecl_name}-%{version}/php_gnupg.h
-
 # Check extension version
-extver=$(sed -n '/#define PHP_GNUPG_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_gnupg.h)
+extver=$(sed -n '/#define PHP_GNUPG_VERSION/{s/.* "//;s/".*$//;p}' php_gnupg.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}.
    exit 1
 fi
+cd ..
 
 # Build ZTS extension if ZTS devel available (fedora >= 17)
 cp -r %{pecl_name}-%{version} %{pecl_name}-zts
@@ -121,8 +111,6 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-# for short-circuit
-rm -rf %{pecl_name}-*/modules/{json,mysqlnd}.so
 
 make install -C %{pecl_name}-%{version} \
      INSTALL_ROOT=%{buildroot}
@@ -157,9 +145,16 @@ cd %{pecl_name}-%{version}
 
 unset GPG_AGENT_INFO
 
+# ignore test result on EL-6 which only have gnupg2
+%if 0%{?rhel} == 6
+status=0
+%else
+status=1
+%endif
+
 # run full test suite
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=$status \
 NO_INTERACTION=1 \
 php run-tests.php \
     -n -q \
@@ -170,7 +165,7 @@ cd ../%{pecl_name}-zts
 
 # run full test suite
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=$status \
 NO_INTERACTION=1 \
 %{__ztsphp} run-tests.php \
     -n -q \
@@ -191,6 +186,9 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- update to 1.3.3
+
 * Sun Jun 30 2013 Remi Collet <remi@fedoraproject.org> - 1.3.2-4
 - ignore test result
 
