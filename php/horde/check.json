@@ -17,6 +17,7 @@
 		"Horde_Notification":["Horde_Alarm"],
 		"Horde_Form":["Horde_Core"],
 		"Horde_Vfs":["Horde_Core"],
-		"Horde_Core":["Horde_Dav"]
+		"Horde_Core":["Horde_Dav"],
+		"Horde_Auth":["Horde_Kolab_Session"]
 	}
 }

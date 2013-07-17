@@ -41,6 +41,19 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optionnal
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_History) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imsp) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imsp) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Ldap) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Ldap) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Lock) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Lock) <  3.0.0
+# optional and not required for circular dep: Horde_Kolab_Session
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
