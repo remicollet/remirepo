@@ -13,7 +13,7 @@
 Summary:       Provides interface to libevent library
 Name:          php-pecl-event
 Version:       1.6.2
-Release:       2%{?dist}
+Release:       2%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
