@@ -12,8 +12,8 @@
 
 Summary:       Provides interface to libevent library
 Name:          php-pecl-event
-Version:       1.6.2
-Release:       2%{?dist}.1
+Version:       1.7.0
+Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
@@ -175,6 +175,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
+- Update to 1.7.0
+
 * Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 1.6.2-2
 - missing requires php-sockets
 - enable thread safety for ZTS extension
