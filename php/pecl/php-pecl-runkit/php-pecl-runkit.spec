@@ -1,23 +1,24 @@
 %{!?__pecl:  %{expand:    %%global __pecl    %{_bindir}/pecl}}
 
-%global GIT          d069e23
-%global pecl_name    runkit
+%global gh_owner    zenovich
+%global gh_commit   5e179e978af79444d3c877d5681ea91d15134a01
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global pecl_name   runkit
 
 Summary:          Mangle with user defined functions and classes
 Summary(ru):      Манипулирование пользовательскими функциями и классами
 Summary(pl):      Obróbka zdefiniowanych przez użytkownika funkcji i klas
 Name:             php-pecl-%{pecl_name}
 Version:          1.0.4
-Release:          0.3%{?GIT:.git%{GIT}}%{?dist}.2
+Release:          0.4%{?gh_short:.git%{gh_short}}%{?dist}
 License:          PHP
 Group:            Development/Libraries
-#URL:             http://pecl.php.net/package/runkit/
+# URL:            http://pecl.php.net/package/runkit/
 # New upstream URL - https://bugs.php.net/bug.php?id=61189
 URL:              https://github.com/zenovich/runkit
 
-%if 0%{?GIT:1}
-# https://github.com/zenovich/runkit/tarball/d069e230
-Source0:          zenovich-%{pecl_name}-%{GIT}.tar.gz
+%if 0%{?gh_short:1}
+Source0:          https://github.com/%{gh_owner}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Source0:          http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
@@ -39,9 +40,7 @@ Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Other third party repo stuff
 Obsoletes:        php53-pecl-%{pecl_name}
 Obsoletes:        php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:        php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.4"
 Obsoletes:        php55-pecl-%{pecl_name}
 %endif
@@ -71,7 +70,7 @@ ogólnego użytku. Wykonywanie danego kodu w ograniczonym środowisku
 %prep
 %setup -q -c
 
-mv zenovich-runkit-%{GIT} nts
+mv runkit-%{gh_commit} nts
 
 %if 0%{?rhel} == 5
 sed -e 's/-Werror//' -i nts/config.m4
@@ -171,7 +170,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Dec  4 2012 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.3.d069e23
+* Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.4.git5e179e9
+- update to latest master snapshot
+- fix Source0 URL
+
+* Fri Dec  7 2012 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.3.gitd069e23
 - update to latest master snapshot
 - also provides php-runkit
 - run tests during build
@@ -183,7 +186,7 @@ rm -rf %{buildroot}
 - add %%check section: minimal load test
 - update to latest master snapshot
 
-* Mon Sep 3 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1.0.4-0.1.GIT8c73eaf
+* Mon Sep  3 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1.0.4-0.1.GIT8c73eaf
 - New upstream url - https://bugs.php.net/bug.php?id=61189, continue developing, new version, switch to git SCM.
 - Fix compilation error: https://github.com/zenovich/runkit/issues/26#issuecomment-8268795
 
@@ -193,7 +196,7 @@ rm -rf %{buildroot}
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-15.CVS20090215
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
-* Tue Aug 2 2011 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9-14.CVS20090215
+* Tue Aug  2 2011 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9-14.CVS20090215
 - Fix FBFS on Fedora 16(17 rawhide) and rpm 4.9 - bz#715709
 
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-13.CVS20090215
@@ -202,7 +205,7 @@ rm -rf %{buildroot}
 * Thu Jul 30 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9-12.CVS20090215
 - Apply patches only on PHP>=5.3.0. (Bug: https://bugzilla.redhat.com/show_bug.cgi?id=513096 )
 
-* Sun Apr 5 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9-11.CVS20090215
+* Sun Apr  5 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9-11.CVS20090215
 - By suggestion in the bug https://fedorahosted.org/fedora-infrastructure/ticket/1298 try remove version specifications in requires:
     Turn BuildRequires: php-pear >= 1.4.7, php-devel >= 5.0.0 to just BuildRequires: php-pear, php-devel
 - Add more magick in Release tag: 11%%{?CVS:.CVS%%{CVS}}%%{?dist}
@@ -213,7 +216,7 @@ rm -rf %{buildroot}
 - Set %%defattr(-,root,root,-) (was %%defattr(644,root,root,755))
 - Make the %%post/%%postun scriptlets silent
 
-* Mon Mar 9 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9-9.CVS20090215
+* Mon Mar  9 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9-9.CVS20090215
 - In rename %%{name}.xml to %%{peclName}.xml
 - Add BR php-pear >= 1.4.7
 
@@ -267,7 +270,7 @@ rm -rf %{buildroot}
 - Add patch1. Fix wrong call ZVAL_ADDREF.patch
     Hu.2
 
-* Sun Mar 9 2008 Pavel Alexeev <Pahan [ at ] Hubbitus [ DOT ] info> - 0.9-0.Hu.3
+* Sun Mar  9 2008 Pavel Alexeev <Pahan [ at ] Hubbitus [ DOT ] info> - 0.9-0.Hu.3
 - Add patch (self written) zval_ref.patch. It is allow build.
 - Agjust built dir:
     BuildRoot:    %%{tmpdir}/%%{name}-%%{version}-root-%%(id -u -n)
