@@ -190,8 +190,8 @@ non-commercial database management systems, so writing a
 database-enabled webpage with PHP is fairly simple. The most common
 use of PHP coding is probably as a replacement for CGI scripts. 
 
-The php package contains the module which adds support for the PHP
-language to Apache HTTP Server.
+The php package contains the module (often referred to as mod_php)
+which adds support for the PHP language to Apache HTTP Server.
 
 %package cli
 Group: Development/Languages
