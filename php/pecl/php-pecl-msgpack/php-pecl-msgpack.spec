@@ -1,3 +1,11 @@
+# spec file for php-pecl-yar
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name   msgpack
@@ -5,7 +13,7 @@
 Summary:       API for communicating with MessagePack serialization
 Name:          php-pecl-msgpack
 Version:       0.5.5
-Release:       3%{?dist}
+Release:       4%{?dist}.1
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
@@ -20,6 +28,8 @@ BuildRequires: php-pear
 %if 0%{?fedora} > 15 || 0%{?rhel} > 6
 BuildRequires: msgpack-devel
 %endif
+# msgpack not available
+ExcludeArch: ppc64
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -188,10 +198,16 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 0.5.5-4
+- bump release
+
+* Thu Apr 18 2013 Remi Collet <remi@fedoraproject.org> - 0.5.5-4
+- ExcludeArch: ppc64 (as msgpack)
+
 * Tue Apr  2 2013 Remi Collet <remi@fedoraproject.org> - 0.5.5-3
 - use system msgpack library headers
 
-* Wed Mar 26 2013 Remi Collet <remi@fedoraproject.org> - 0.5.5-2
+* Tue Mar 26 2013 Remi Collet <remi@fedoraproject.org> - 0.5.5-2
 - cleanups
 
 * Wed Feb 20 2013 Remi Collet <remi@fedoraproject.org> - 0.5.5-1
