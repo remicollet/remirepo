@@ -1,7 +1,7 @@
 %global github_owner      schmittjoh
 %global github_name       php-collection
-%global github_version    0.2.0
-%global github_commit     acb02a921bb364f360ce786b13455345063c4a07
+%global github_version    0.3.0
+%global github_commit     4925a0d7a39e137447a8f9d6339e6921fa09dca8
 
 %global lib_name          PhpCollection
 
@@ -11,7 +11,7 @@
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       General purpose collection library for PHP
 
 Group:         Development/Libraries
@@ -106,6 +106,12 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> 0.3.0-1
+- backport 0.3.0 for remi repo.
+
+* Wed Jul 17 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.3.0-1
+- Updated to 0.3.0
+
 * Tue Mar 19 2013 Remi Collet <remi@fedoraproject.org> 0.2.0-2
 - backport 0.2.0 for remi repo.
 
