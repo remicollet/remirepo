@@ -16,13 +16,14 @@
 Summary:        Light, concurrent RPC framework
 Name:           php-pecl-%{pecl_name}
 Version:        1.2.0
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  curl-devel
 BuildRequires:  php-devel
 BuildRequires:  php-pear
 BuildRequires:  php-pecl-msgpack-devel
@@ -133,7 +134,7 @@ fi
 
 
 %check
-# Upstream unit test requires a web server
+# Upstream test suite requires a web server
 : Minimal load test for NTS extension
 php --no-php-ini \
     --define extension=json.so \
