@@ -1,24 +1,29 @@
+# spec file for php-pecl-yar
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name   event
 
 Summary:       Provides interface to libevent library
 Name:          php-pecl-event
-Version:       1.6.1
+Version:       1.6.2
 Release:       1%{?dist}
-# https://bugs.php.net/64678
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://bugs.php.net/64679
-Patch0:        %{pecl_name}.patch
-
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel > 5.4
 BuildRequires: php-pear
-BuildRequires: libevent-devel
+BuildRequires: libevent-devel > 2
+BuildRequires: openssl-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -33,9 +38,7 @@ Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-%{pecl_name}
 %endif
@@ -60,8 +63,6 @@ Version 1.0.0 introduces:
 %setup -q -c 
 
 cd %{pecl_name}-%{version}
-
-%patch0 -p1 -b .orig
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
@@ -105,43 +106,40 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-rm -f  %{pecl_name}-*/modules/sockets.so 
-# Install the NTS stuff
+
+: Install the NTS stuff
 make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
 
-# Install the ZTS stuff
+: Install the ZTS stuff
 make -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
 
-# Install the package XML file
+: Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 
 %check
 cd %{pecl_name}-%{version}
 if [ -f %{php_extdir}/sockets.so ]; then
-  ln -sf %{php_extdir}/sockets.so modules/
   OPTS="-d extension=sockets.so"
 fi
 
-# https://bugs.php.net/64680
 SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules $OPTS -d extension=%{pecl_name}.so" \
+TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
 cd ../%{pecl_name}-zts
 if [ -f %{php_ztsextdir}/sockets.so ]; then
-  ln -sf %{php_ztsextdir}/sockets.so modules/
   OPTS="-d extension=sockets.so"
 fi
 
 SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules $OPTS -d extension=%{pecl_name}.so" \
+TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
@@ -163,7 +161,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc %{pecl_name}-%{version}/{CREDITS,README.md}
+%doc %{pecl_name}-%{version}/{CREDITS,LICENSE,README.md}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
@@ -174,5 +172,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
+- Update to 1.6.2
+
 * Sat Apr 20 2013 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
 - initial package, version 1.6.1
+- upstream bugs:
+  https://bugs.php.net/64678 missing License
+  https://bugs.php.net/64679 buffer overflow
+  https://bugs.php.net/64680 skip online test
