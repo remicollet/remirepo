@@ -13,7 +13,7 @@
 Summary:       Provides interface to libevent library
 Name:          php-pecl-event
 Version:       1.6.2
-Release:       1%{?dist}.1
+Release:       2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
@@ -29,6 +29,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
+Requires:      php-sockets%{?_isa}
 
 Provides:      php-%{pecl_name} = %{version}
 Provides:      php-%{pecl_name}%{?_isa} = %{version}
@@ -100,6 +101,7 @@ cd ../%{pecl_name}-zts
     --with-event-core \
     --with-event-extra \
     --with-event-openssl \
+    --with-event-pthreads \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
@@ -107,6 +109,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
+# use z-event.ini to ensure event.so load "after" sockets.so
 : Install the NTS stuff
 make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
@@ -172,6 +175,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 1.6.2-2
+- missing requires php-sockets
+- enable thread safety for ZTS extension
+
 * Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
 - Update to 1.6.2
 
