@@ -4,7 +4,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.4.1
+Version:      1.4.2
 Release:      1%{?dist}.1
 License:      ASL 2.0
 Group:        Development/Languages
@@ -12,7 +12,6 @@ URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:      %{pecl_name}.ini
-Source2:      https://raw.github.com/mongodb/mongo-php-driver/master/LICENSE.md
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.2.6
@@ -31,9 +30,7 @@ Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-%{pecl_name}
 %endif
@@ -60,7 +57,7 @@ if test "x${extver}" != "x%{version}%{?pre}"; then
 fi
 cd ..
 
-cp %{SOURCE1} %{SOURCE2} .
+cp %{SOURCE1} .
 
 cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
 
@@ -124,8 +121,7 @@ fi
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_name}-%{version}/README.md
-%doc LICENSE.md
+%doc %{pecl_name}-%{version}/{LICENSE,README}.md
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -134,6 +130,9 @@ fi
 
 
 %changelog
+* Wed Jul 24 2013 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- Update to 1.4.2
+
 * Mon Jun 03 2013 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1
 
