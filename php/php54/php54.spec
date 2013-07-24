@@ -368,6 +368,7 @@ License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 # ABI/API check - Arch specific
 Provides: php-pdo-abi = %{pdover}%{isasuffix}
+Provides: php(pdo-abi) = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
 Obsoletes: php53-pdo, php53u-pdo, php54-pdo
@@ -739,7 +740,7 @@ The php-intl package contains a dynamic shared object that will add
 support for using the ICU library to PHP.
 
 %package enchant
-Summary: Human Language and Character Encoding Support
+Summary: Enchant spelling extension for PHP applications
 Group: System Environment/Libraries
 # All files licensed under PHP version 3.0
 License: PHP
@@ -748,7 +749,7 @@ BuildRequires: enchant-devel >= 1.2.4
 Obsoletes: php53-enchant, php53u-enchant, php54-enchant
 
 %description enchant
-The php-intl package contains a dynamic shared object that will add
+The php-enchant package contains a dynamic shared object that will add
 support for using the enchant library to PHP.
 
 

@@ -4,7 +4,7 @@
 %global pdover      20080721
 # Extension version
 %global opcachever  7.0.2-dev
-%global oci8ver     1.4.9
+%global oci8ver     1.4.10
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -85,11 +85,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.0
+Version: 5.5.1
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -147,7 +147,6 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Security fixes
-Patch60: php-5.5.0-CVE-2013-4013.patch
 
 # Fixes for tests
 
@@ -400,6 +399,7 @@ License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 # ABI/API check - Arch specific
 Provides: php-pdo-abi = %{pdover}%{isasuffix}
+Provides: php(pdo-abi) = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
 Obsoletes: php53-pdo, php53u-pdo, php54-pdo, php55-pdo
@@ -804,7 +804,7 @@ The php-intl package contains a dynamic shared object that will add
 support for using the ICU library to PHP.
 
 %package enchant
-Summary: Human Language and Character Encoding Support
+Summary: Enchant spelling extension for PHP applications
 Group: System Environment/Libraries
 # All files licensed under PHP version 3.0
 License: PHP
@@ -813,7 +813,7 @@ BuildRequires: enchant-devel >= 1.2.4
 Obsoletes: php53-enchant, php53u-enchant, php54-enchant, php55-enchant
 
 %description enchant
-The php-intl package contains a dynamic shared object that will add
+The php-enchant package contains a dynamic shared object that will add
 support for using the enchant library to PHP.
 
 
@@ -849,8 +849,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
-
-%patch60 -p1 -b .cve4113
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1559,6 +1557,9 @@ cat files.zip >> files.common
 
 # The default Zend OPcache blacklist file
 install -m 644 %{SOURCE51} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/opcache-default.blacklist
+install -m 644 %{SOURCE51} $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/opcache-default.blacklist
+sed -e '/blacklist_filename/s/php.d/php-zts.d/' \
+    -i $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/opcache.ini
 
 # Install the macros file:
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
@@ -1712,6 +1713,9 @@ fi
 # provides phpize here (not in -devel) for pecl command
 %{_bindir}/phpize
 %{_mandir}/man1/php.1*
+%{_mandir}/man1/php-cgi.1*
+%{_mandir}/man1/phar.1*
+%{_mandir}/man1/phar.phar.1*
 %{_mandir}/man1/phpize.1*
 %doc sapi/cgi/README* sapi/cli/README
 
@@ -1801,12 +1805,22 @@ fi
 %files mysqlnd -f files.mysqlnd
 %files opcache -f files.opcache
 %config(noreplace) %{_sysconfdir}/php.d/opcache-default.blacklist
+%config(noreplace) %{_sysconfdir}/php-zts.d/opcache-default.blacklist
 %if %{with_oci8}
 %files oci8 -f files.oci8
 %endif
 
 
 %changelog
+* Mon Jul 22 2013 Remi Collet <rcollet@redhat.com> - 5.5.1-1
+- update to 5.5.1
+- add Provides: php(pdo-abi), for consistency with php(api)
+  and php(zend-abi)
+- improved description for mod_php
+- fix opcache ZTS configuration (blacklists in /etc/php-zts.d)
+- add missing man pages (phar, php-cgi)
+- fix php-enchant summary and description
+
 * Fri Jul 12 2013 Remi Collet <rcollet@redhat.com> - 5.5.0-2
 - add security fix for CVE-2013-4113
 - add missing ASL 1.0 license
