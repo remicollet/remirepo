@@ -1,4 +1,4 @@
-# spec file for php-pecl-yar
+# spec file for php-pecl-event
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
@@ -12,7 +12,7 @@
 
 Summary:       Provides interface to libevent library
 Name:          php-pecl-event
-Version:       1.7.0
+Version:       1.7.1
 Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
@@ -175,6 +175,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 24 2013 Remi Collet <remi@fedoraproject.org> - 1.7.1-1
+- Update to 1.7.1
+
 * Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
 - Update to 1.7.0
 
