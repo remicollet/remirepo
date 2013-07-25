@@ -176,11 +176,13 @@ fi
 %changelog
 * Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 2.20.0-1
 - Update to 2.20.0
+- patch from https://github.com/llaville/php-compat-info/pull/98
 
 * Fri Jul 12 2013 Remi Collet <remi@fedoraproject.org> - 2.19.0-1
 - Update to 2.19.0
 - add module and install to fileExtensions in default configuration
   for drupal packages, #979830
+- patch from https://github.com/llaville/php-compat-info/pull/95
 
 * Wed Jun 26 2013 Remi Collet <remi@fedoraproject.org> - 2.18.0-1
 - Update to 2.18.0
