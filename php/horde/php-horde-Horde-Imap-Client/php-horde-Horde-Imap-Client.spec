@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.11.6
+Version:        2.12.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -37,6 +37,7 @@ Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-hash
+Requires:       php-json
 Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-spl
@@ -48,23 +49,24 @@ Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optionnal
-Requires:       php-json
 Requires:       php-mbstring
 Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
 # Optional and implicilyt required :
-#   Horde_Compress_Fast, Horde_Mongo, Horde_Stream_Filter
+#   Horde_Compress_Fast, Horde_Mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -148,6 +150,10 @@ fi
 
 
 %changelog
+* Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 2.12.0-1
+- Update to 2.12.0
+- Horde_Secret, Horde_Stream_Filter and json are now mandatory
+
 * Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 2.11.6-1
 - Update to 2.11.6
 
