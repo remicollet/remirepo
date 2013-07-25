@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name phpcpd
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phpcpd
-Version:        1.4.1
+Version:        1.4.2
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -41,9 +40,8 @@ need to get a quick overview of duplicated code in a project.
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -89,6 +87,9 @@ fi
 
 
 %changelog
+* Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- Update to 1.4.2
+
 * Thu Apr 04 2013 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1
 - new dependency on pear.phpunit.de/Version
@@ -101,7 +102,7 @@ fi
 * Sat Nov 26 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.5-1
 - Update to 1.3.5
 
-* Mon Nov 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.4-1
+* Tue Nov 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.3.4-1
 - upstream 1.3.4, rebuild for remi repository
 
 * Sun Nov 20 2011 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.3.4-1
@@ -150,7 +151,7 @@ fi
 * Sat Dec 12 2009 Christof Damian <christof@damian.net> - 1.2.2-1
 - upstream 1.2.2
 
-* Thu Nov 18 2009 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-1
+* Wed Nov 18 2009 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-1
 - rebuild for remi repository
 
 * Thu Oct 15 2009 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.2.0-1

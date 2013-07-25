@@ -1,3 +1,11 @@
+# spec file for php-pecl-pdflib
+#
+# Copyright (c) 2006-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 %{!?php_inidir: %{expand: %%global php_inidir %{_sysconfdir}/php.d}}
 
@@ -7,8 +15,8 @@
 Summary:        Package for generating PDF files
 Summary(fr):    Extension pour générer des fichiers PDF
 Name:           php-pecl-pdflib
-Version:        2.1.10
-Release:        1%{?dist}.1
+Version:        3.0.1
+Release:        1%{?dist}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
 Group:          Development/Languages
@@ -39,9 +47,7 @@ Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-%{pecl_name}
 %endif
@@ -67,7 +73,7 @@ http://www.pdflib.com/developer-center/technical-documentation/php-howto
 %setup -c -q
 %{_bindir}/php %{SOURCE2} package.xml >CHANGELOG
 
-sed -e /PHP_PDFLIB_VERSION/s/2.1.9/%{version}/ \
+sed -e /PHP_PDFLIB_VERSION/s/3.0.0/%{version}/ \
     -i %{pecl_name}-%{version}/php_pdflib.h
 
 # Check version
@@ -121,13 +127,13 @@ install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
 %{_bindir}/php -n \
     -d extension_dir=%{pecl_name}-%{version}/modules \
     -d extension=%{extname}.so \
-    -m | grep %{extname}
+    -m | grep -i %{extname}
 
 %if 0%{?__ztsphp:1}
 %{__ztsphp} -n \
     -d extension_dir=%{pecl_name}-zts/modules \
     -d extension=%{extname}.so \
-    -m | grep %{extname}
+    -m | grep -i %{extname}
 %endif
 
 
@@ -159,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- Update to 3.0.1
+
 * Tue Apr 09 2013 Remi Collet <remi@fedoraproject.org> - 2.1.10-1
 - Update to 2.1.10
 
