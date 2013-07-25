@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-HashTable
-Version:        1.0.1
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Horde Hash Table Interface
 
@@ -108,6 +108,9 @@ fi
 
 
 %changelog
+* Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 
