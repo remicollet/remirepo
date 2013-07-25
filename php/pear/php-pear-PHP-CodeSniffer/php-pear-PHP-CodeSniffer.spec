@@ -1,9 +1,8 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.4.5
+Version:        1.4.6
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -19,7 +18,6 @@ BuildRequires:  php-pear
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
 
 Requires:       php-pear(PEAR)
-Requires:       php(language) >= 5.1.2
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
@@ -59,7 +57,7 @@ install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/tests
 
-# Version 1.4.5 : Tests: 232, Assertions: 150, Skipped: 3.
+# Version 1.4.5 : Tests: 237, Assertions: 151, Skipped: 3.
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --verbose \
@@ -91,6 +89,9 @@ fi
 
 
 %changelog
+* Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 1.4.6-1
+- Update to 1.4.6
+
 * Thu Apr 04 2013 Remi Collet <remi@fedoraproject.org> - 1.4.5-1
 - Update to 1.4.5
 
