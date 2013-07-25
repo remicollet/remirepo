@@ -1,0 +1,131 @@
+From 129dc0cf6c7173bd94a962437f265d37f6174ec1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 25 Jul 2013 07:42:36 +0200
+Subject: [PATCH 1/3] fix mongo ref for new constant
+
+---
+ PHP/CompatInfo/Reference/mongo.php | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/PHP/CompatInfo/Reference/mongo.php b/PHP/CompatInfo/Reference/mongo.php
+index de7706a..aee9ec4 100644
+--- a/PHP/CompatInfo/Reference/mongo.php
++++ b/PHP/CompatInfo/Reference/mongo.php
+@@ -195,4 +195,29 @@ class PHP_CompatInfo_Reference_Mongo
+         return $functions;
+     }
+ 
++    /**
++     * Gets informations about constants
++     *
++     * @param string $extension (optional) NULL for PHP version,
++     *                          TRUE if extension version
++     * @param string $version   (optional) php or extension version
++     * @param string $condition (optional) particular relationship with $version
++     *                          Same operator values as used by version_compare
++     *
++     * @return array
++     */
++    public function getConstants($extension = null, $version = null, $condition = null)
++    {
++        $this->setFilter(func_get_args());
++
++        $constants = array();
++
++        $release = '1.4.2';      // 2013-07-23
++        $items = array(
++            'MONGO_STREAMS'                  => array('5.2.6', ''),
++        );
++        $this->applyFilter($release, $items, $constants);
++
++        return $constants;
++    }
+ }
+-- 
+1.8.3.1
+
+From 5ba5dcb04f63956c53bca33d080135a5d4a7364e Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 25 Jul 2013 07:43:24 +0200
+Subject: [PATCH 2/3] fix sockets reference
+
+---
+ PHP/CompatInfo/Reference/sockets.php | 1 +
+ tests/Reference/SocketsTest.php      | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/PHP/CompatInfo/Reference/sockets.php b/PHP/CompatInfo/Reference/sockets.php
+index a5ecb12..563bde6 100644
+--- a/PHP/CompatInfo/Reference/sockets.php
++++ b/PHP/CompatInfo/Reference/sockets.php
+@@ -302,6 +302,7 @@ class PHP_CompatInfo_Reference_Sockets
+             'SOL_TCP'                        => array('4.1.0', ''),
+             'SOL_UDP'                        => array('4.1.0', ''),
+             'SOMAXCONN'                      => array('4.1.0', ''),
++            'SO_BINDTODEVICE'                => array('5.5.1', ''),
+             'SO_BROADCAST'                   => array('4.1.0', ''),
+             'SO_DEBUG'                       => array('4.1.0', ''),
+             'SO_DONTROUTE'                   => array('4.1.0', ''),
+diff --git a/tests/Reference/SocketsTest.php b/tests/Reference/SocketsTest.php
+index 4175416..e607741 100644
+--- a/tests/Reference/SocketsTest.php
++++ b/tests/Reference/SocketsTest.php
+@@ -188,6 +188,7 @@ class PHP_CompatInfo_Reference_SocketsTest
+             'MSG_MORE',
+             'MSG_WAITFORONE',
+             'MSG_CMSG_CLOEXEC',
++            'SO_BINDTODEVICE',
+             'SO_REUSEPORT',
+             'SO_FAMILY',
+             'TCP_NODELAY',
+-- 
+1.8.3.1
+
+From 8fee07282ac7b9e15bea71207235a68120b5d15d Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 25 Jul 2013 07:44:01 +0200
+Subject: [PATCH 3/3] fix standard: chroot is optionnal
+
+---
+ PHP/CompatInfo/Reference/standard.php | 2 +-
+ tests/Reference/StandardTest.php      | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/PHP/CompatInfo/Reference/standard.php b/PHP/CompatInfo/Reference/standard.php
+index 15dd325..152ddb9 100644
+--- a/PHP/CompatInfo/Reference/standard.php
++++ b/PHP/CompatInfo/Reference/standard.php
+@@ -492,7 +492,7 @@ class PHP_CompatInfo_Reference_Standard
+             'array_reduce'                   => array('4.0.5', ''),
+             'array_search'                   => array('4.0.5', ''),
+             'call_user_method_array'         => array('4.0.5', ''),
+-            'chroot'                         => array('4.0.5', self::LATEST_PHP_5_3),
++            'chroot'                         => array('4.0.5', ''),
+             'is_scalar'                      => array('4.0.5', ''),
+             'strcoll'                        => array('4.0.5', ''),
+         );
+diff --git a/tests/Reference/StandardTest.php b/tests/Reference/StandardTest.php
+index fa8201f..44749fd 100644
+--- a/tests/Reference/StandardTest.php
++++ b/tests/Reference/StandardTest.php
+@@ -55,6 +55,8 @@ class PHP_CompatInfo_Reference_StandardTest
+ 
+         if (DIRECTORY_SEPARATOR == '/') {
+             $this->optionalfunctions = array(
++                // requires HAVE_CHROOT
++                'chroot',
+                 // remove in some Linux distribution (Redhat, ...)
+                 'php_egg_logo_guid',
+             );
+@@ -68,7 +70,7 @@ class PHP_CompatInfo_Reference_StandardTest
+                 'money_format',
+                 // requires HAVE_GETRUSAGE (linux only)
+                 'getrusage',
+-                // requires HAVE_CHROOT (linux only)
++                // requires HAVE_CHROOT
+                 'chroot',
+                 // requires HAVE_FTOK (linux only)
+                 'ftok',
+-- 
+1.8.3.1
+
