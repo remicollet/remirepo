@@ -15,7 +15,8 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 # To run unit tests
@@ -33,12 +34,13 @@ Requires:       php-ldap
 Requires:       php-pcre
 Requires:       php-pdo
 Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
-# Optionnal
+# Optional
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0

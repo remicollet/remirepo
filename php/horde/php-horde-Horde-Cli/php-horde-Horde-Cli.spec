@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Cli
 %global pear_channel pear.horde.org
@@ -10,12 +9,12 @@ Summary:        Horde Command Line Interface API
 
 Group:          Development/Libraries
 License:        LGPLv2+
-URL:            http://pear.horde.org
+URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires:  gettext
 BuildArch:      noarch
+BuildRequires:  gettext
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
@@ -71,6 +70,7 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+# Locales
 for loc in locale/{??,??_??}
 do
     lang=$(basename $loc)
@@ -95,8 +95,8 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Cli
 %{pear_phpdir}/Horde/Cli.php
-%dir %{pear_datadir}/Horde_Cli
-%dir %{pear_datadir}/Horde_Cli/locale
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}/locale
 
 
 %changelog
