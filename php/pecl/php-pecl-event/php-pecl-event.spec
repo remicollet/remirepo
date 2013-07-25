@@ -24,6 +24,7 @@ BuildRequires: php-devel > 5.4
 BuildRequires: php-pear
 BuildRequires: libevent-devel > 2
 BuildRequires: openssl-devel
+BuildRequires: pkgconfig
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
