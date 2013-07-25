@@ -57,7 +57,7 @@ Build order
 	Horde_ElasticSearch       1.0.2        R: Horde_Exception, Horde_Http
 	Horde_Feed                2.0.1      BR: Horde_Test, Horde_Xml_Element, Horde_Http  R: Horde_Exception, Horde_Http, Horde_Xml_Element
 	Horde_Group               2.0.2      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Util, Horde_Db
-	Horde_History             2.1.0      BR: Horde_Test, Horde_Db  R: Horde_Db, Horde_Exception
+	Horde_History             2.1.5      BR: Horde_Test, Horde_Db  R: Horde_Db, Horde_Exception
 	Horde_Lock                2.1.0      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Support, Horde_Db
 	Horde_Mail                2.0.6      BR: Horde_Test I: Horde_Mime R: Horde_Exception, Horde_Mime, Horde_Stream_Filter
 	Horde_Mime                2.2.3      BR: Horde_Test, Horde_Support  R: Horde_Exception, Horde_Mail, Horde_Stream_Filter, Horde_Support, Horde_Text_Flowed, Horde_Translation, Horde_Util, Horde_Nls, Horde_Text_Filter
