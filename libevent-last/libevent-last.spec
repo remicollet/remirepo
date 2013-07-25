@@ -1,16 +1,20 @@
-Name:           libevent
+%global libname libevent
+
+Name:           libevent-last
 Version:        2.0.18
-Release:        3%{?dist}
+Release:        1%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 Group:          System Environment/Libraries
 License:        BSD
-URL:            http://sourceforge.net/projects/levent/        
-Source0:        http://downloads.sourceforge.net/levent/%{name}-%{version}-stable.tar.gz
+URL:            http://sourceforge.net/projects/levent/
+Source0:        http://downloads.sourceforge.net/levent/%{libname}-%{version}-stable.tar.gz
 
-BuildRequires: doxygen openssl-devel
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  openssl-devel
 
 Patch00: libevent-2.0.10-stable-configure.patch
+
 
 %description
 The libevent API provides a mechanism to execute a callback function
@@ -20,26 +24,19 @@ loop found in event driven network servers. An application just needs
 to call event_dispatch() and can then add or remove events dynamically
 without having to change the event loop.
 
+
 %package devel
 Summary: Header files, libraries and development documentation for %{name}
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Conflicts: %{libname}-devel < %{version}
+Provides:  %{libname}-devel = %{version}
 
 %description devel
 This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
-%package doc
-Summary: Development documentation for %{name}
-Group: Development/Libraries
-Requires: %{name}-devel = %{version}-%{release}
-BuildArch: noarch
-
-%description doc
-This package contains the development documentation for %{name}.
-If you like to develop programs using %{name}-devel, you will
-need to install %{name}-doc.
 
 %prep
 %setup -q -n libevent-%{version}-stable
@@ -47,30 +44,23 @@ need to install %{name}-doc.
 # 477685 -  libevent-devel multilib conflict
 %patch00 -p1
 
+
 %build
 %configure \
     --disable-dependency-tracking --disable-static
 make %{?_smp_mflags} all
 
-# Create the docs
-make doxygen
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
-mkdir -p $RPM_BUILD_ROOT/%{_docdir}/%{name}-devel-%{version}/html
-(cd doxygen/html; \
-	install -p -m 644 *.* $RPM_BUILD_ROOT/%{_docdir}/%{name}-devel-%{version}/html)
-
-mkdir -p $RPM_BUILD_ROOT/%{_docdir}/%{name}-devel-%{version}/sample
-(cd sample; \
-	install -p -m 644 *.c Makefile* $RPM_BUILD_ROOT/%{_docdir}/%{name}-devel-%{version}/sample)
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
+
 
 %files
 %defattr(-,root,root,0755)
@@ -100,12 +90,12 @@ mkdir -p $RPM_BUILD_ROOT/%{_docdir}/%{name}-devel-%{version}/sample
 
 %{_bindir}/event_rpcgen.*
 
-%files doc
-%defattr(-,root,root,0644)
-%{_docdir}/%{name}-devel-%{version}/html/*
-%{_docdir}/%{name}-devel-%{version}/sample/*
 
 %changelog
+* Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 2.0.18-3
+- rename to libevent-last
+- drop -doc sub-package
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.18-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
