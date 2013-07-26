@@ -9,17 +9,17 @@
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global pecl_name   event
+%global with_zts    0%{?__ztsphp:1}
 
 Summary:       Provides interface to libevent library
 Name:          php-pecl-event
 Version:       1.7.1
-Release:       1%{?dist}.1
+Release:       2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel > 5.4
 BuildRequires: php-pear
 BuildRequires: libevent-devel > 2
@@ -37,15 +37,6 @@ Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-%{pecl_name}
-%endif
-
-
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
@@ -53,8 +44,8 @@ Obsoletes:     php55-pecl-%{pecl_name}
 
 %description
 This is an extension to efficiently schedule I/O, time and signal based
-events using the best I/O notification mechanism available for specific platform.
-This is a port of libevent to the PHP infrastructure.
+events using the best I/O notification mechanism available for specific
+platform. This is a port of libevent to the PHP infrastructure.
 
 Version 1.0.0 introduces:
 * new OO API breaking backwards compatibility
@@ -75,7 +66,9 @@ fi
 cd ..
 
 # duplicate for ZTS build
+%if %{with_zts}
 cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
+%endif
 
 # Drop in the bit of configuration
 cat > %{pecl_name}.ini << 'EOF'
@@ -85,8 +78,6 @@ EOF
 
 
 %build
-# --with-event-pthreads cause test failure
-
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 %configure \
@@ -96,6 +87,7 @@ cd %{pecl_name}-%{version}
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure \
@@ -105,19 +97,20 @@ cd ../%{pecl_name}-zts
     --with-event-pthreads \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
-rm -rf %{buildroot}
-
 # use z-event.ini to ensure event.so load "after" sockets.so
 : Install the NTS stuff
 make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
 
+%if %{with_zts}
 : Install the ZTS stuff
 make -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+%endif
 
 : Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -136,6 +129,7 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
+%if %{with_zts}
 cd ../%{pecl_name}-zts
 if [ -f %{php_ztsextdir}/sockets.so ]; then
   OPTS="-d extension=sockets.so"
@@ -147,6 +141,7 @@ TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
+%endif
 
 
 %post
@@ -159,23 +154,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-, root, root, 0755)
 %doc %{pecl_name}-%{version}/{CREDITS,LICENSE,README.md}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Fri Jul 26 2013 Remi Collet <remi@fedoraproject.org> - 1.7.1-2
+- cleanups before review
+
 * Wed Jul 24 2013 Remi Collet <remi@fedoraproject.org> - 1.7.1-1
 - Update to 1.7.1
 

@@ -53,8 +53,8 @@ Obsoletes:     php55-pecl-%{pecl_name}
 
 %description
 This is an extension to efficiently schedule I/O, time and signal based
-events using the best I/O notification mechanism available for specific platform.
-This is a port of libevent to the PHP infrastructure.
+events using the best I/O notification mechanism available for specific
+platform. This is a port of libevent to the PHP infrastructure.
 
 Version 1.0.0 introduces:
 * new OO API breaking backwards compatibility
@@ -85,8 +85,6 @@ EOF
 
 
 %build
-# --with-event-pthreads cause test failure
-
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 %configure \
