@@ -3,7 +3,7 @@
 %global pear_channel pear.phpmd.org
 
 Name:           php-phpmd-PHP-PMD
-Version:        1.4.1
+Version:        1.5.0
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -23,10 +23,10 @@ Requires:       php-dom
 Requires:       php-pcre
 Requires:       php-simplexml
 Requires:       php-spl
-# phpci detected
+# phpcompatinfo detected
 Requires:       php-date
 Requires:       php-libxml
-Requires:       php-pear(pear.pdepend.org/PHP_Depend) >= 1.1.0
+Requires:       php-pear(pear.pdepend.org/PHP_Depend) >= 1.1.1
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
@@ -90,6 +90,9 @@ fi
 %{_bindir}/phpmd
 
 %changelog
+* Fri Jul 26 2013 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- Update to 1.5.0
+
 * Fri Dec 14 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.4.1-1
 - upstream 1.4.1 for remi repo
 - spec cleanups
