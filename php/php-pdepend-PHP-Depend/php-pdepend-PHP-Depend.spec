@@ -3,7 +3,7 @@
 %global channel pear.pdepend.org
 
 Name:           php-pdepend-PHP-Depend
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -17,11 +17,23 @@ BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.6.0
 BuildRequires:  php-channel(%{channel})
 
-Requires:       php-channel(%{channel})
-Requires:       php-xml >= 5.2.3
-Requires:       php-pecl(imagick) >= 2.2.0b2
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php-channel(%{channel})
+# From upstream
+Requires:       php(language) >= 5.2.3
+Requires:       php-dom
+Requires:       php-pcre
+Requires:       php-spl
+Requires:       php-tokenizer
+Requires:       php-simplexml
+# From upstream, optional
+Requires:       php-pecl(imagick) >= 2.2.0b2
+# From phpcompatinfo
+Requires:       php-bcmath
+Requires:       php-date
+Requires:       php-libxml
+Requires:       php-reflection
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -31,10 +43,10 @@ PHP_Depend is an adaption of the Java design quality metrics software JDepend
 and the NDepend metric tool.
 
 %prep
-%setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-%{__mv} package2.xml %{pear_name}-%{version}/%{name}.xml
+%setup -q -c -T
+tar xif %{SOURCE0}
 cd %{pear_name}-%{version}
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -44,19 +56,19 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+rm -rf %{buildroot}
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-%{__rm} -rf $RPM_BUILD_ROOT%{pear_phpdir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-%{__mkdir} -p $RPM_BUILD_ROOT%{pear_xmldir}
-%{__install} -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-%{__rm} -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -78,7 +90,13 @@ fi
 %{_bindir}/pdepend
 %doc %{pear_docdir}/%{pear_name}
 
+
 %changelog
+* Fri Jul 26 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+- explicit dependencies
+- cleanups
+
 * Wed Sep 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.0-1
 - upstream 1.0.7, backport for remi repo
 
