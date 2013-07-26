@@ -8,11 +8,12 @@
 
 %define __arch_install_post /bin/true
 
-%global mainver 11.2
+%global major   12
+%global mainver 12.1
 
 Summary: 	Instant Client for Oracle Database 11g
 Name: 		oracle-instantclient-i386
-Version: 	11.2.0.3.0
+Version: 	12.1.0.1.0
 Release:	1%{?dist}
 License:	Oracle
 Group:		Applications/File
@@ -36,7 +37,7 @@ NoSource:       6
 Buildroot: 	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 #BuildArch:      i386
 
-%global topdir	instantclient_11_2
+%global topdir	instantclient_12_1
 %global oradir	%{_libdir}/oracle/%{mainver}/client
 %global incdir	%{_includedir}/oracle/%{mainver}/client
 
@@ -55,7 +56,7 @@ and JDBC-OCI applications.
 %package -n oracle-instantclient-devel
 Summary:	Development headers for Instant Client
 Group:		Applications/File
-Requires: 	oracle-instantclient-basic = %version
+Requires: 	oracle-instantclient-basic%{?_isa} = %version
 
 %description -n oracle-instantclient-devel
 Additional header files and an example Makefile for developing Oracle
@@ -64,7 +65,7 @@ applications with Instant Client.
 %package -n oracle-instantclient-jdbc
 Summary: 	Supplemental JDBC features under Instant Client
 Group:		Applications/File
-Requires: 	oracle-instantclient-basic = %version
+Requires: 	oracle-instantclient-basic%{?_isa} = %version
 
 %description -n oracle-instantclient-jdbc
 Additional support for XA, Internationalization,
@@ -73,7 +74,7 @@ and RowSet operations under JDBC.
 %package -n oracle-instantclient-odbc
 Summary: 	Oracle  ODBC Instant Client for Linux
 Group:		Applications/File
-Requires: 	oracle-instantclient-basic = %version
+Requires: 	oracle-instantclient-basic%{?_isa} = %version
 
 %description -n oracle-instantclient-odbc
 Oracle  ODBC Instant Client for Linux complies with 
@@ -84,7 +85,7 @@ the need for a traditional ORACLE_HOME installation.
 %package -n oracle-instantclient-sqlplus
 Summary:	SQL*Plus for Instant Client
 Group:		Applications/File
-Requires: 	oracle-instantclient-basic = %version
+Requires: 	oracle-instantclient-basic%{?_isa} = %version
 
 %description -n oracle-instantclient-sqlplus
 Additional libraries and executable for running 
@@ -93,7 +94,7 @@ SQL*Plus with Instant Client.
 %package -n oracle-instantclient-tools
 Summary:	Tools for Oracle Database 11g
 Group:		Applications/File
-Requires: 	oracle-instantclient-basic = %version
+Requires: 	oracle-instantclient-basic%{?_isa} = %version
 
 %description -n oracle-instantclient-tools
 This package provides tools to be used with the Oracle Database.
@@ -103,7 +104,7 @@ It currently includes
 %package -n oracle-instantclient-precomp
 Summary:	Oracle Precompilers for Pro*C and Pro*COBOL
 Group:		Applications/File
-Requires: 	oracle-instantclient-devel = %version
+Requires: 	oracle-instantclient-devel%{?_isa} = %version
 
 %description -n oracle-instantclient-precomp
 PRECOMP Instant Client (IC) Package contains following
@@ -113,6 +114,7 @@ components:
 iii) sample configuration files, demo programs and demo
      make files for building proc and procob demos and
      in general any Pro*C/Pro*COBOL application.
+
 
 %prep
 rm -rf %{topdir}
@@ -139,13 +141,16 @@ mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
 install -p adrci		%{buildroot}%{oradir}/bin
 install -p genezi		%{buildroot}%{oradir}/bin
 install -p uidrvci		%{buildroot}%{oradir}/bin
-install -p libclntsh.so.11.1	%{buildroot}%{oradir}/lib
-install -p libnnz11.so		%{buildroot}%{oradir}/lib
-install -p libocci.so.11.1	%{buildroot}%{oradir}/lib
-install -p libociei.so		%{buildroot}%{oradir}/lib
-install -p libocijdbc11.so	%{buildroot}%{oradir}/lib
-install -p ojdbc5.jar		%{buildroot}%{oradir}/lib
+install -p libclntshcore.so.%{mainver}	%{buildroot}%{oradir}/lib
+install -p libclntsh.so.%{mainver}	%{buildroot}%{oradir}/lib
+install -p libnnz%{major}.so		%{buildroot}%{oradir}/lib
+install -p libocci.so.%{mainver}	%{buildroot}%{oradir}/lib
+install -p libociei.so				%{buildroot}%{oradir}/lib
+install -p libocijdbc%{major}.so	%{buildroot}%{oradir}/lib
+install -p libons.so				%{buildroot}%{oradir}/lib
+install -p liboramysql%{major}.so	%{buildroot}%{oradir}/lib
 install -p ojdbc6.jar		%{buildroot}%{oradir}/lib
+install -p ojdbc7.jar		%{buildroot}%{oradir}/lib
 install -p xstreams.jar		%{buildroot}%{oradir}/lib
 
 echo %{oradir}/lib >%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}.conf
@@ -155,9 +160,12 @@ install -p -m 644 sdk/include/*.h 	%{buildroot}%{incdir}
 install -p sdk/ottclasses.zip		%{buildroot}%{oradir}/lib
 install -p -m 755 sdk/ott		%{buildroot}%{oradir}/bin
 
-ln -s %{oradir}/bin/ott %{buildroot}%{_bindir}/ott
-ln -s libocci.so.11.1   %{buildroot}%{oradir}/lib/libocci.so
-ln -s libclntsh.so.11.1 %{buildroot}%{oradir}/lib/libclntsh.so
+ln -s %{oradir}/bin/ott           %{buildroot}%{_bindir}/ott
+ln -s libocci.so.%{mainver}       %{buildroot}%{oradir}/lib/libocci.so
+ln -s libclntsh.so.%{mainver}     %{buildroot}%{oradir}/lib/libclntsh.so
+ln -s libclntshcore.so.%{mainver} %{buildroot}%{oradir}/lib/libclntshcore.so
+
+# sdk/admin/oraaccess.xsd not provided in upstream RPM.
 
 # SQL*Plus
 install -p sqlplus 		%{buildroot}%{oradir}/bin
@@ -168,12 +176,12 @@ install -p libsqlplusic.so 	%{buildroot}%{oradir}/lib
 ln -sf %{oradir}/bin/sqlplus %{buildroot}%{_bindir}/sqlplus
 
 # JDBC
-install -p libheteroxa11.so	%{buildroot}%{oradir}/lib
+install -p libheteroxa%{major}.so	%{buildroot}%{oradir}/lib
 install -p orai18n-mapping.jar	%{buildroot}%{oradir}/lib
 install -p orai18n.jar		%{buildroot}%{oradir}/lib
 
 # ODBC
-install -p libsqora.so.11.1	%{buildroot}%{oradir}/lib
+install -p libsqora.so.%{mainver}	%{buildroot}%{oradir}/lib
 
 # Tools
 install -p wrc 		%{buildroot}%{oradir}/bin
@@ -207,13 +215,16 @@ rm -rf %{buildroot}
 %dir %{oradir}
 %dir %{oradir}/lib
 %dir %{oradir}/bin
-%{oradir}/lib/libclntsh.so.11.1
-%{oradir}/lib/libnnz11.so
-%{oradir}/lib/libocci.so.11.1
+%{oradir}/lib/libclntshcore.so.%{mainver}
+%{oradir}/lib/libclntsh.so.%{mainver}
+%{oradir}/lib/libnnz%{major}.so
+%{oradir}/lib/libocci.so.%{mainver}
 %{oradir}/lib/libociei.so
-%{oradir}/lib/libocijdbc11.so
-%{oradir}/lib/ojdbc5.jar
+%{oradir}/lib/libocijdbc%{major}.so
+%{oradir}/lib/libons.so
+%{oradir}/lib/liboramysql%{major}.so
 %{oradir}/lib/ojdbc6.jar
+%{oradir}/lib/ojdbc7.jar
 %{oradir}/lib/xstreams.jar
 %{_sysconfdir}/ld.so.conf.d/%{name}.conf
 %{oradir}/bin/genezi
@@ -223,6 +234,7 @@ rm -rf %{buildroot}
 %files -n oracle-instantclient-devel
 %defattr(-,root,root)
 %doc %{topdir}/sdk/demo %{topdir}/sdk/SDK_README %{topdir}/sdk/ott 
+%{oradir}/lib/libclntshcore.so
 %{oradir}/lib/libclntsh.so
 %{oradir}/lib/libocci.so
 %{oradir}/lib/ottclasses.zip
@@ -248,7 +260,7 @@ rm -rf %{buildroot}
 %files -n oracle-instantclient-jdbc
 %defattr(-,root,root)
 %doc %{topdir}/JDBC_README
-%{oradir}/lib/libheteroxa11.so
+%{oradir}/lib/libheteroxa%{major}.so
 %{oradir}/lib/orai18n-mapping.jar
 %{oradir}/lib/orai18n.jar
 
@@ -256,7 +268,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc %{topdir}/ODBC_IC_Readme_Unix.html %{topdir}/ODBCRelnotesJA.htm %{topdir}/ODBCRelnotesUS.htm
 %doc %{topdir}/odbc_update_ini.sh
-%{oradir}/lib/libsqora.so.11.1
+%doc %{topdir}/help
+%{oradir}/lib/libsqora.so.%{mainver}
 
 %files -n oracle-instantclient-tools
 %defattr(-,root,root)
@@ -281,6 +294,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 26 2013 Remi Collet <RPMS@famillecollet.com> 12.1.0.1.0-1
+- update to 12.1.0.1.0
+
 * Wed Feb 29 2012 Remi Collet <RPMS@famillecollet.com> 11.2.0.3.0-1
 - update to 11.2.0.3.0
 - add precomp subpackage

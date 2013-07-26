@@ -1,5 +1,5 @@
 SRCDIR := $(shell pwd)
-NAME := oracle-instantclient-11.2
+NAME := oracle-instantclient-12.1
 
 RPMDEFINES := --define "_sourcedir $(SRCDIR)" \
               --define "_specdir $(SRCDIR)" \

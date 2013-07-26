@@ -17,7 +17,7 @@
 %ifarch ppc ppc64
 %global oraclever 10.2.0.2
 %else
-%global oraclever 11.2
+%global oraclever 12.1
 %endif
 
 # Regression tests take a long time, you can skip 'em with this
@@ -89,7 +89,7 @@ Version: 5.5.1
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1812,6 +1812,9 @@ fi
 
 
 %changelog
+* Fri Jul 26 2013 Remi Collet <remi@fedoraproject.org> - 5.5.1-2
+- test build with oracle instantclient 12.1
+
 * Mon Jul 22 2013 Remi Collet <rcollet@redhat.com> - 5.5.1-1
 - update to 5.5.1
 - add Provides: php(pdo-abi), for consistency with php(api)
