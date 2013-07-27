@@ -13,7 +13,7 @@
 Name:           php-pecl-apcu
 Summary:        APC User Cache
 Version:        4.0.1
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
@@ -123,6 +123,7 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 %patch0 -p1 -b .serializers
+rm -f apc_serializer.h.serializers
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
