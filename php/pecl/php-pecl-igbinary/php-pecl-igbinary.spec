@@ -11,7 +11,6 @@
 %global extname   igbinary
 %global commit    c35d48f3d14794373b2ef89a6d79020bb7418d7f
 %global short     %(c=%{commit}; echo ${c:0:7})
-%global gitver    3b8ab7e
 %global prever    -dev
 
 Summary:        Replacement for the standard PHP serializer
@@ -26,7 +25,7 @@ Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
 # http://pecl.php.net/bugs/22598
 Source1:        %{extname}-tests.tgz
 %endif
-# http://pecl.php.net/bugs/22599
+# https://bugs.php.net/59669
 License:        BSD
 Group:          System Environment/Libraries
 
@@ -79,6 +78,7 @@ Summary:       Igbinary developer files (header)
 Group:         Development/Libraries
 Requires:      php-pecl-%{extname}%{?_isa} = %{version}-%{release}
 Requires:      php-devel%{?_isa}
+
 Obsoletes:     php-%{extname}-devel <= 1.1.1
 Provides:      php-%{extname}-devel = %{version}-%{release}
 Provides:      php-%{extname}-devel%{?_isa} = %{version}-%{release}
@@ -104,6 +104,7 @@ cd %{extname}-%{version}
 tar xzf %{SOURCE1}
 %endif
 
+# Check version
 extver=$(sed -n '/#define IGBINARY_VERSION/{s/.* "//;s/".*$//;p}' igbinary.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
@@ -113,7 +114,7 @@ cd ..
 
 cp -r %{extname}-%{version} %{extname}-%{version}-zts
 
-cat >%{extname}.ini <<EOF
+cat <<EOF | tee %{extname}.ini
 ; Enable %{extname} extension module
 extension=%{extname}.so
 
@@ -148,13 +149,13 @@ rm -f  %{extname}*/modules/apc.so
 
 make install -C %{extname}-%{version} \
      INSTALL_ROOT=%{buildroot}
-     
-make install -C %{extname}-%{version}-zts \
-     INSTALL_ROOT=%{buildroot}
 
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 install -D -m 644 %{extname}.ini %{buildroot}%{php_inidir}/%{extname}.ini
+
+make install -C %{extname}-%{version}-zts \
+     INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
 
 
@@ -164,12 +165,12 @@ cd %{extname}-%{version}
 # APC required for test 045
 if [ -f %{php_extdir}/apcu.so ]; then
   ln -s %{php_extdir}/apcu.so modules/apc.so
-else
-  ln -s %{php_extdir}/apc.so  modules/apc.so
+elif [ -f %{php_extdir}/apc.so ]; then
+  ln   -s %{php_extdir}/apc.so modules/apc.so
 fi
 
 : simple NTS module load test, without APC, as optional
-%{__php} --no-php-ini \
+%{_bindir}/php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{extname}.so \
     --modules | grep %{extname}
@@ -181,12 +182,11 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
-
 cd ../%{extname}-%{version}-zts
 if [ -f %{php_ztsextdir}/apcu.so ]; then
   ln -s %{php_ztsextdir}/apcu.so modules/apc.so
-else
-  ln -s %{php_ztsextdir}/apc.so  modules/apc.so
+elif [ -f %{php_ztsextdir}/apc.so ]; then
+  ln   -s %{php_ztsextdir}/apc.so modules/apc.so
 fi
 : simple ZTS module load test, without APC, as optional
 %{__ztsphp} --no-php-ini \
@@ -216,7 +216,6 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-
 %files
 %defattr(-,root,root,-)
 %doc %{extname}-%{version}/COPYING
@@ -225,15 +224,17 @@ fi
 %doc %{extname}-%{version}/NEWS
 %doc %{extname}-%{version}/README
 %config(noreplace) %{php_inidir}/%{extname}.ini
-%config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
-%{php_ztsextdir}/%{extname}.so
 %{pecl_xmldir}/%{name}.xml
+
+%config(noreplace) %{php_ztsinidir}/%{extname}.ini
+%{php_ztsextdir}/%{extname}.so
 
 
 %files devel
 %defattr(-,root,root,-)
 %{php_incldir}/ext/%{extname}
+
 %{php_ztsincldir}/ext/%{extname}
 
 

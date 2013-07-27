@@ -214,7 +214,7 @@ index 9027638..f1941d2 100644
  igbinary support => enabled
  igbinary version => %s
 -igbinary APC serializer ABI => %s
-+igbinary APC%s serializer ABI => %s
++igbinary AP%s serializer ABI => %s
  igbinary session support => %s
  igbinary.compact_strings => %s => %s
 -- 
