@@ -32,23 +32,19 @@ Group:          System Environment/Libraries
 
 URL:            http://pecl.php.net/package/igbinary
 
-# https://github.com/krakjoe/apcu/issues/21
+# https://github.com/igbinary/igbinary/pull/24
 Patch0:         igbinary-apcu.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  php-pear
 BuildRequires:  php-devel >= 5.2.0
-# we cannot make this conditional
-# but php-pecl-apcu-devel provides php-pecl-apc-devel
+# php-pecl-apcu-devel provides php-pecl-apc-devel
 BuildRequires:  php-pecl-apc-devel >= 3.1.7
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-%if "%{php_version}" > "5.5"
-Requires:       php-pecl-apcu%{?_isa}
-%endif
 
 Obsoletes:      php-%{extname} <= 1.1.1
 Provides:       php-%{extname} = %{version}
@@ -101,9 +97,7 @@ sed -e '/release/s/-dev/dev/' -i package.xml
 
 cd %{extname}-%{version}
 
-%if "%{php_version}" > "5.5"
 %patch0 -p1 -b .apcu
-%endif
 
 %else
 cd %{extname}-%{version}
@@ -168,33 +162,44 @@ install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
 cd %{extname}-%{version}
 
 # APC required for test 045
-%if "%{php_version}" > "5.5"
-ln -s %{php_extdir}/apcu.so modules/apc.so
-%else
-ln -s %{php_extdir}/apc.so  modules/apc.so
-%endif
+if [ -f %{php_extdir}/apcu.so ]; then
+  ln -s %{php_extdir}/apcu.so modules/apc.so
+else
+  ln -s %{php_extdir}/apc.so  modules/apc.so
+fi
 
-# simple module load test
+: simple NTS module load test, without APC, as optional
 %{__php} --no-php-ini \
     --define extension_dir=modules \
-    --define extension=apc.so \
     --define extension=%{extname}.so \
     --modules | grep %{extname}
 
-NO_INTERACTION=1 REPORT_EXIT_STATUS=0 \
-make test
+: upstream test suite
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=apc.so -d extension=%{extname}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php
+
 
 cd ../%{extname}-%{version}-zts
-%if "%{php_version}" > "5.5"
-ln -s %{php_ztsextdir}/apcu.so modules/apc.so
-%else
-ln -s %{php_ztsextdir}/apc.so  modules/apc.so
-%endif
+if [ -f %{php_ztsextdir}/apcu.so ]; then
+  ln -s %{php_ztsextdir}/apcu.so modules/apc.so
+else
+  ln -s %{php_ztsextdir}/apc.so  modules/apc.so
+fi
+: simple ZTS module load test, without APC, as optional
 %{__ztsphp} --no-php-ini \
     --define extension_dir=modules \
-    --define extension=apc.so \
     --define extension=%{extname}.so \
     --modules | grep %{extname}
+
+: upstream test suite
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=apc.so -d extension=%{extname}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php
 
 
 %clean
@@ -233,9 +238,9 @@ fi
 
 
 %changelog
-* Thu Jul  4 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.6.git3b8ab7e
+* Sat Jul 27 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.6.git3b8ab7e
 - latest snapshot
-- rebuild with APCu
+- fix build with APCu
 
 * Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.3.git3b8ab7e
 - cleanups

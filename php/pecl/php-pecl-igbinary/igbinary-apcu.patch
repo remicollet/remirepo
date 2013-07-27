@@ -1,6 +1,18 @@
---- igbinary-c35d48f3d14794373b2ef89a6d79020bb7418d7f/config.m4	2012-07-23 21:20:49.000000000 +0200
-+++ igbinary-1.1.2/config.m4	2013-07-04 16:23:00.030580798 +0200
-@@ -20,10 +20,15 @@
+From 3dfeb1ce45bb87da31cc11613c9dd088a67300df Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 4 Jul 2013 16:56:16 +0200
+Subject: [PATCH 1/2] allow to build with APC or APCU
+
+---
+ config.m4  | 13 +++++++++----
+ igbinary.c | 12 ++++++++++++
+ 2 files changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/config.m4 b/config.m4
+index d1e739f..158a222 100644
+--- a/config.m4
++++ b/config.m4
+@@ -20,10 +20,15 @@ if test "$PHP_IGBINARY" != "no"; then
    AC_CHECK_HEADERS([stddef.h],, AC_MSG_ERROR([stddef.h not exists]))
    AC_CHECK_HEADERS([stdint.h],, AC_MSG_ERROR([stdint.h not exists]))
  
@@ -20,8 +32,10 @@
  	AC_DEFINE(HAVE_APC_SUPPORT,1,[Whether to enable apc support])
    elif test -f "${srcdir}/apc_serializer.h"; then
    	AC_MSG_RESULT([apc_serializer.h bundled])
---- igbinary-c35d48f3d14794373b2ef89a6d79020bb7418d7f/igbinary.c	2012-07-23 21:20:49.000000000 +0200
-+++ igbinary-1.1.2/igbinary.c	2013-07-04 16:24:11.774806737 +0200
+diff --git a/igbinary.c b/igbinary.c
+index 0c2eab1..157531b 100644
+--- a/igbinary.c
++++ b/igbinary.c
 @@ -28,6 +28,9 @@
  
  #include "ext/standard/php_incomplete_class.h"
@@ -40,7 +54,7 @@
  #include "php_igbinary.h"
  
  #include "igbinary.h"
-@@ -242,9 +246,13 @@
+@@ -242,9 +246,13 @@ struct igbinary_unserialize_data {
  #ifdef HAVE_PHP_SESSION
  	ZEND_MOD_REQUIRED("session")
  #endif
@@ -54,7 +68,7 @@
  	{NULL, NULL, NULL}
  };
  #endif
-@@ -339,11 +347,15 @@
+@@ -339,11 +347,15 @@ static void php_igbinary_init_globals(zend_igbinary_globals *igbinary_globals) {
  	php_info_print_table_start();
  	php_info_print_table_row(2, "igbinary support", "enabled");
  	php_info_print_table_row(2, "igbinary version", IGBINARY_VERSION);
@@ -70,3 +84,139 @@
  #if HAVE_PHP_SESSION
  	php_info_print_table_row(2, "igbinary session support", "yes");
  #else
+-- 
+1.8.1.6
+
+
+From 2d95bc51e8b9f84f823d17d32a26e244afd4cda8 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 27 Jul 2013 14:45:56 +0200
+Subject: [PATCH 2/2] improve APCU build (now that APCU have restored APC
+ serializers ABI)
+
+---
+ config.m4  |  5 ++---
+ igbinary.c | 20 ++++++++++----------
+ 2 files changed, 12 insertions(+), 13 deletions(-)
+
+diff --git a/config.m4 b/config.m4
+index 158a222..4a551f2 100644
+--- a/config.m4
++++ b/config.m4
+@@ -21,11 +21,10 @@ if test "$PHP_IGBINARY" != "no"; then
+   AC_CHECK_HEADERS([stdint.h],, AC_MSG_ERROR([stdint.h not exists]))
+ 
+   AC_MSG_CHECKING([for APC/APCU includes])
+-  if test -f "$phpincludedir/ext/apcu/apc_api.h"; then
++  if test -f "$phpincludedir/ext/apcu/apc_serializer.h"; then
+ 	apc_inc_path="$phpincludedir"
+ 	AC_MSG_RESULT([APCU in $apc_inc_path])
+-	AC_DEFINE(HAVE_APC_SUPPORT,1,[Whether to enable apc support])
+-	AC_DEFINE(HAVE_APCU_SUPPORT,1,[Whether to enable apc support via apcu])
++	AC_DEFINE(HAVE_APCU_SUPPORT,1,[Whether to enable apcu support])
+   elif test -f "$phpincludedir/ext/apc/apc_serializer.h"; then
+ 	apc_inc_path="$phpincludedir"
+ 	AC_MSG_RESULT([APC in $apc_inc_path])
+diff --git a/igbinary.c b/igbinary.c
+index 157531b..bc7aa6d 100644
+--- a/igbinary.c
++++ b/igbinary.c
+@@ -29,8 +29,9 @@
+ #include "ext/standard/php_incomplete_class.h"
+ 
+ #ifdef HAVE_APCU_SUPPORT
+-# include "ext/apcu/apc_api.h"
+-#else
++# include "ext/apcu/apc_serializer.h"
++#endif /* HAVE_APCU_SUPPORT */
++
+ #ifdef HAVE_APC_SUPPORT
+ # if USE_BUNDLED_APC
+ #  include "apc_serializer.h"
+@@ -38,7 +39,7 @@
+ #  include "ext/apc/apc_serializer.h"
+ # endif
+ #endif /* HAVE_APC_SUPPORT */
+-#endif /* HAVE_APCU_SUPPORT */
++
+ #include "php_igbinary.h"
+ 
+ #include "igbinary.h"
+@@ -60,7 +61,7 @@
+ PS_SERIALIZER_FUNCS(igbinary);
+ #endif /* HAVE_PHP_SESSION */
+ 
+-#ifdef HAVE_APC_SUPPORT
++#if defined(HAVE_APC_SUPPORT) || defined(HAVE_APCU_SUPPORT)
+ /** Apc serializer function prototypes */
+ static int APC_SERIALIZER_NAME(igbinary) (APC_SERIALIZER_ARGS);
+ static int APC_UNSERIALIZER_NAME(igbinary) (APC_UNSERIALIZER_ARGS);
+@@ -247,12 +248,11 @@ struct igbinary_unserialize_data {
+ 	ZEND_MOD_REQUIRED("session")
+ #endif
+ #ifdef HAVE_APCU_SUPPORT
+-	ZEND_MOD_REQUIRED("apcu")
+-#else
++	ZEND_MOD_OPTIONAL("apcu")
++#endif
+ #ifdef HAVE_APC_SUPPORT
+ 	ZEND_MOD_OPTIONAL("apc")
+ #endif
+-#endif
+ 	{NULL, NULL, NULL}
+ };
+ #endif
+@@ -312,7 +312,7 @@ static void php_igbinary_init_globals(zend_igbinary_globals *igbinary_globals) {
+ 		PS_SERIALIZER_DECODE_NAME(igbinary));
+ #endif
+ 
+-#ifdef HAVE_APC_SUPPORT
++#if defined(HAVE_APC_SUPPORT) || defined(HAVE_APCU_SUPPORT)
+ 	apc_register_serializer("igbinary",
+ 		APC_SERIALIZER_NAME(igbinary),
+ 		APC_UNSERIALIZER_NAME(igbinary),
+@@ -348,7 +348,7 @@ static void php_igbinary_init_globals(zend_igbinary_globals *igbinary_globals) {
+ 	php_info_print_table_row(2, "igbinary support", "enabled");
+ 	php_info_print_table_row(2, "igbinary version", IGBINARY_VERSION);
+ #ifdef HAVE_APCU_SUPPORT
+-	php_info_print_table_row(2, "igbinary APCU serializer ABI", "yes");
++	php_info_print_table_row(2, "igbinary APCU serializer ABI", APC_SERIALIZER_ABI);
+ #else
+ #ifdef HAVE_APC_SUPPORT
+ 	php_info_print_table_row(2, "igbinary APC serializer ABI", APC_SERIALIZER_ABI);
+@@ -604,7 +604,7 @@ IGBINARY_API int igbinary_unserialize(const uint8_t *buf, size_t buf_len, zval *
+ /* }}} */
+ #endif /* HAVE_PHP_SESSION */
+ 
+-#ifdef HAVE_APC_SUPPORT
++#if defined(HAVE_APC_SUPPORT) || defined(HAVE_APCU_SUPPORT)
+ /* {{{ apc_serialize function */
+ static int APC_SERIALIZER_NAME(igbinary) ( APC_SERIALIZER_ARGS ) {
+ 	(void)config;
+-- 
+1.8.1.6
+
+From 272e78821b96815fc40d364f9971add10a0bf66e Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 27 Jul 2013 15:03:06 +0200
+Subject: [PATCH] fix test when APCU used
+
+---
+ tests/igbinary_029.phpt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/igbinary_029.phpt b/tests/igbinary_029.phpt
+index 9027638..f1941d2 100644
+--- a/tests/igbinary_029.phpt
++++ b/tests/igbinary_029.phpt
+@@ -19,6 +19,6 @@ echo implode("\n", $array);
+ igbinary
+ igbinary support => enabled
+ igbinary version => %s
+-igbinary APC serializer ABI => %s
++igbinary APC%s serializer ABI => %s
+ igbinary session support => %s
+ igbinary.compact_strings => %s => %s
+-- 
+1.8.3.1
+
