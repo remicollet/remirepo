@@ -18,21 +18,17 @@
 %endif
 
 Name:           php-nrk-Predis
-Version:        0.8.3
-Release:        2%{?dist}
+Version:        0.8.4
+Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
 Group:          Development/Libraries
 License:        MIT
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-# https://github.com/nrk/predis/issues/124
-Source1:        https://raw.github.com/nrk/predis/master/LICENSE
+
 # https://github.com/nrk/predis/issues/126
 Source2:        https://raw.github.com/nrk/predis/master/autoload.php
-Source3:        https://raw.github.com/nrk/predis/master/phpunit.xml.dist
-# https://github.com/nrk/predis/issues/127
-Patch0:         %{name}-tests.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -67,9 +63,7 @@ Flexible and feature-complete PHP client library for Redis.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-%patch0 -p1
-sed -e '/role="test"/s/md5sum.*name=/name=/' \
-    ../package.xml >%{name}.xml
+cp ../package.xml %{name}.xml
 
 
 %build
@@ -89,14 +83,11 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
-# Missing in package.xml
-install -pm 644 %{SOURCE1} %{buildroot}%{pear_docdir}/%{pear_name}
-
 
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}
-cp %{SOURCE2} %{SOURCE3} .
+cp %{SOURCE2} .
 
 # Launch redis server
 mkdir -p {run,log,lib}/redis
@@ -148,6 +139,9 @@ fi
 
 
 %changelog
+* Sun Jul 28 2013 Remi Collet <remi@fedoraproject.org> - 0.8.4-1
+- Update to 0.8.4
+
 * Wed Jul  3 2013 Remi Collet <remi@fedoraproject.org> - 0.8.3-2
 - fixed sources, https://github.com/nrk/predis/issues/125
 
