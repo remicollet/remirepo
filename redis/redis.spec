@@ -1,9 +1,17 @@
 # Check for status of man pages
 # http://code.google.com/p/redis/issues/detail?id=202
 
-%ifarch %{ix86} x86_64 ppc
+%global _hardened_build 1
+
+%if 0%{?rhel} == 5
+%ifarch i386
+%global with_perftools 1
+%endif
+%else
+%ifarch %{ix86} x86_64 ppc %{arm}
 # available only on selected architectures
 %global with_perftools 1
+%endif
 %endif
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
@@ -12,8 +20,11 @@
 %global with_systemd 0
 %endif
 
+# Tests fail in mock, not in local build.
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+
 Name:             redis
-Version:          2.6.13
+Version:          2.6.14
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
@@ -26,14 +37,21 @@ Source2:          %{name}.init
 Source3:          %{name}.service
 # Update configuration for Fedora
 Patch0:           %{name}-2.6.10-conf.patch
+Patch1:           %{name}-deps-PIC.patch
+Patch2:           %{name}-deps-unbundle-jemalloc.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if !0%{?el5}
 BuildRequires:    tcl >= 8.5
+%endif
 %if 0%{?with_perftools}
+%if 0%{?fedora} >= 15 || 0%{?rhel} >=6
+BuildRequires:    gperftools-devel
+%else
 BuildRequires:    google-perftools-devel
 %endif
 %endif
+BuildRequires:    jemalloc-devel
 
 Requires:         logrotate
 Requires(pre):    shadow-utils
@@ -60,23 +78,29 @@ different kind of sorting abilities.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prever:-%{prever}}
-%patch0 -p1 -b .orig
-
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
-make %{?_smp_mflags} \
+rm -rvf deps/jemalloc
+
+export CFLAGS="$RPM_OPT_FLAGS"
+make %{?_smp_mflags} V=1 \
   DEBUG="" \
-  CFLAGS='%{optflags}' \
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 13
+  LDFLAGS="%{?__global_ldflags}" \
+  CFLAGS="$RPM_OPT_FLAGS -fPIC" \
+  LUA_CFLAGS="-fPIC" \
 %if 0%{?with_perftools}
   USE_TCMALLOC=yes \
-%endif
 %endif
   all
 
 %check
-%if !0%{?el5}
-# make test
+%if %{with_tests}
+make test
+%else
+: Test disabled, missing '--with tests' option.
 %endif
 
 %install
@@ -176,6 +200,26 @@ fi
 
 
 %changelog
+* Sun Jul 28 2013 Remi Collet <remi@fedoraproject.org> - 2.6.14-1
+- Redis 2.6.14
+  upgrade urgency: HIGH because of the following two issues:
+    Lua scripting + Replication + AOF in slaves problem
+    AOF + expires possible race condition
+- add option to run tests during build (not in mock)
+
+* Tue Jul 23 2013 Peter Robinson <pbrobinson@fedoraproject.org> 2.6.13-4
+- ARM has gperftools
+
+* Wed Jun 19 2013 Fabian Deutsch <fabiand@fedoraproject.org> - 2.6.13-3
+- Modify jemalloc patch for s390 compatibility (Thanks sharkcz)
+
+* Fri Jun 07 2013 Fabian Deutsch <fabiand@fedoraproject.org> - 2.6.13-2
+- Unbundle jemalloc
+
+* Fri Jun 07 2013 Fabian Deutsch <fabiand@fedoraproject.org> - 2.6.13-1
+- Add compile PIE flag (rhbz#955459)
+- Update to redis 2.6.13 (rhbz#820919)
+
 * Tue Apr 30 2013 Remi Collet <remi@fedoraproject.org> - 2.6.13-1
 - Redis 2.6.13
   upgrade urgency: MODERATE, nothing very critical

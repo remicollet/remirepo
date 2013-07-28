@@ -1,0 +1,23 @@
+--- a/deps/Makefile	
++++ a/deps/Makefile	
+@@ -58,7 +58,7 @@ ifeq ($(uname_S),SunOS)
+   LUA_CFLAGS= -D__C99FEATURES__=1
+ endif
+ 
+-LUA_CFLAGS+= -O2 -Wall -DLUA_ANSI $(CFLAGS)
++LUA_CFLAGS+= -O2 -Wall -fPIC -DLUA_ANSI $(CFLAGS)
+ LUA_LDFLAGS+= $(LDFLAGS)
+ 
+ lua: .make-prerequisites
+--- a/deps/linenoise/Makefile	
++++ a/deps/linenoise/Makefile	
+@@ -2,7 +2,7 @@ STD=
+ WARN= -Wall
+ OPT= -Os
+ 
+-R_CFLAGS= $(STD) $(WARN) $(OPT) $(DEBUG) $(CFLAGS)
++R_CFLAGS= $(STD) $(WARN) $(OPT) $(DEBUG) $(CFLAGS) -fPIC
+ R_LDFLAGS= $(LDFLAGS)
+ DEBUG= -g
+ 
+
