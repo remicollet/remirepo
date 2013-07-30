@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phpcpd
-Version:        1.4.2
+Version:        1.4.3
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -14,9 +14,14 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.4
+BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php-pear
 BuildRequires:  php-channel(%{channel})
-Requires:       php-common >= 5.3.3
+
+Requires:       php(language) >= 5.3.3
+Requires:       php-dom
+Requires:       php-mbstring
+Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-xml
 Requires:       php-channel(%{channel})
@@ -87,6 +92,9 @@ fi
 
 
 %changelog
+* Tue Jul 30 2013 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
+- Update to 1.4.3
+
 * Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - Update to 1.4.2
 
