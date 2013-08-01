@@ -6,15 +6,25 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%if 0%{?scl:1}
+%scl_package php-pecl-http1
+%else
+%global pkg_name %{name}
+%endif
+%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
+%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
+%{!?__php:       %{expand: %%global __php       %{_bindir}/php}}
+%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
+%global with_zts  0%{?__ztsphp:1}
 
-Name:           php-pecl-http1
+# php-pecl-http exists and is version 2
+Name:           %{?scl_prefix}php-pecl-http1
 Version:        1.7.6
-Release:        1%{?dist}.1
+Release:        2%{?dist}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -26,43 +36,35 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 Patch0:         %{pecl_name}-ini.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
-BuildRequires:  php-hash
-BuildRequires:  php-iconv
-BuildRequires:  php-session
-BuildRequires:  php-spl
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-hash
+BuildRequires:  %{?scl_prefix}php-iconv
+BuildRequires:  %{?scl_prefix}php-session
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libevent-devel
 BuildRequires:  curl-devel
-# No yet available on fedora: BuildRequires:  libserf-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
-Requires:       php-hash
-Requires:       php-iconv
-Requires:       php-json
-Requires:       php-spl
-Conflicts:      php-pecl-event
-Conflicts:      php-pecl-http
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php-hash%{?_isa}
+Requires:       %{?scl_prefix}php-iconv%{?_isa}
+Requires:       %{?scl_prefix}php-session%{?_isa}
+# From upstream documentation
+Conflicts:      %{?scl_prefix}php-pecl-event
+# Can install both version of the same extension
+Conflicts:      %{?scl_prefix}php-pecl-http
 
-Provides:       php-pecl(%{proj_name})         = %{version}
-Provides:       php-pecl(%{proj_name})%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name})         = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
-Provides:       php-%{pecl_name}               = %{version}
-Provides:       php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 
-# Other third party repo stuff
-Obsoletes:      php53-pecl-http1
-Obsoletes:      php53u-pecl-http1
-Obsoletes:      php54-pecl-http1
-%if "%{php_version}" > "5.5"
-Obsoletes:      php55-pecl-http1
-%endif
 
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -83,16 +85,17 @@ It provides powerful request functionality, if built with CURL
 support. Parallel requests are available for PHP 5 and greater.
 
 Note:
-. php-pecl-http1 provides API version 1
-. php-pecl-http  provides API version 2
+. %{?scl_prefix}php-pecl-http1 provides API version 1
+. %{?scl_prefix}php-pecl-http  provides API version 2
 
 
 %package devel
 Summary:       Extended HTTP support developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
-Conflicts:     php-pecl-http-devel
+Requires:      %{?scl_prefix}php-devel%{?_isa}
+# Can install both version of the same extension
+Conflicts:     %{?scl_prefix}php-pecl-http-devel
 
 %description devel
 These are the files needed to compile programs using HTTP extension.
@@ -112,7 +115,9 @@ if test "x${extver}" != "x%{version}"; then
 fi
 cd ..
 
+%if %{with_zts}
 cp -pr %{proj_name}-%{version} %{proj_name}-zts
+%endif
 
 
 %build
@@ -121,10 +126,12 @@ cd %{proj_name}-%{version}
 %configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../%{proj_name}-zts
 %{_bindir}/zts-phpize
 %configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -133,42 +140,44 @@ rm -rf %{buildroot}
 make -C %{proj_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
 
-make -C %{proj_name}-zts \
-     install INSTALL_ROOT=%{buildroot}
-
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-cd %{proj_name}-%{version}
-# install config file (z-http.ini to be loaded after json)
-install -Dpm644 docs/%{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
-install -Dpm644 docs/%{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+# install config file (z-http.ini to be loaded after hash/iconv/session)
+install -Dpm644 %{proj_name}-%{version}/docs/%{pecl_name}.ini \
+        %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
+
+%if %{with_zts}
+make -C %{proj_name}-zts \
+     install INSTALL_ROOT=%{buildroot}
+
+install -Dpm644 %{proj_name}-zts/docs/%{pecl_name}.ini \
+        %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+%endif
 
 
 %check
-# Install needed extensions
+# Add needed extensions
 modules=""
-for mod in json hash iconv; do
+for mod in hash iconv session; do
   if [ -f %{php_extdir}/${mod}.so ]; then
-    ln -sf %{php_extdir}/${mod}.so    %{proj_name}-%{version}/modules
-    ln -sf %{php_ztsextdir}/${mod}.so %{proj_name}-zts/modules
     modules="$modules --define extension=${mod}.so"
   fi
 done
 
 # Minimal load test for NTS extension
 %{__php} --no-php-ini \
-    --define extension_dir=%{proj_name}-%{version}/modules \
     $modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=$PWD/%{proj_name}-%{version}/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_zts}
 # Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{proj_name}-zts/modules \
     $modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=$PWD/%{proj_name}-zts/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
 
 %post
@@ -190,18 +199,25 @@ rm -rf %{buildroot}
 %doc %{proj_name}-%{version}/{CREDITS,LICENSE,ThanksTo.txt}
 %doc %{proj_name}-%{version}/docs
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 %files devel
 %defattr(-,root,root,-)
 %{php_incldir}/ext/%{pecl_name}
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
+%endif
 
 
 %changelog
+* Thu Aug  1 2013 Remi Collet <remi@fedoraproject.org> - 1.7.6-2
+- cleanups, adapt for SCL, make ZTS optional
+
 * Thu Jun 20 2013 Remi Collet <remi@fedoraproject.org> - 1.7.6-1
 - Update to 1.7.6
 

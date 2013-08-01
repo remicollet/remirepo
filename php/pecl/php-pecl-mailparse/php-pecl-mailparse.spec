@@ -239,7 +239,7 @@ fi
 - Update mbfl tarball to 4.4.0 PHP sources.
 - Rename .ini file to "z-<name>" to have it load after mbstring.so.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Thu Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Wed Feb 16 2005 Matthias Saou <http://freshrpms.net/> 2.1-1
