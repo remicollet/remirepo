@@ -18,7 +18,9 @@ Group: Applications/Databases
 URL: http://www.mysql.com
 # exceptions allow client libraries to be linked with most open source SW,
 # not only GPL code.  See README.mysql-license
-License: GPLv2 with exceptions
+# Some innobase code from Percona and Google is under BSD license
+# Some code related to test-suite is under LGPLv2
+License: GPLv2 with exceptions and LGPLv2 and BSD
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest:%global runselftest 1}
@@ -70,8 +72,9 @@ Patch18: mysql-cipherspec.patch
 Patch19: mysql-file-contents.patch
 Patch20: mysql-string-overflow.patch
 Patch21: mysql-dh1024.patch
+Patch22: mysql-innodbwarn.patch
 # http://bugs.mysql.com/68999
-Patch22: mysql-openssl.patch
+Patch23: mysql-openssl.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf
@@ -274,6 +277,7 @@ rm -f Docs/mysql.info
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
+%patch23 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
@@ -370,7 +374,7 @@ cd ../..
 %if %runselftest
   # hack to let 32- and 64-bit tests run concurrently on same build machine
   case `uname -m` in
-    ppc64 | s390x | x86_64 | sparc64 )
+    ppc64 | ppc64p7 | s390x | x86_64 | sparc64 )
       MTR_BUILD_THREAD=7
       ;;
     *)
@@ -383,7 +387,7 @@ cd ../..
   LD_LIBRARY_PATH=$PWD/libservices
   export LD_LIBRARY_PATH
 
-  make test
+  make test VERBOSE=1
 
   # The cmake build scripts don't provide any simple way to control the
   # options for mysql-test-run, so ignore the make target and just call it
@@ -416,7 +420,7 @@ find $RPM_BUILD_ROOT -print | sed "s|^$RPM_BUILD_ROOT||" | sort > ROOTFILES
 # multilib header hacks
 # we only apply this to known Red Hat multilib arches, per bug #181335
 case `uname -i` in
-  i386 | x86_64 | ppc | ppc64 | s390 | s390x | sparc | sparc64 )
+  i386 | x86_64 | ppc | ppc64 | ppc64p7 | s390 | s390x | sparc | sparc64 )
     mv $RPM_BUILD_ROOT/usr/include/mysql/my_config.h $RPM_BUILD_ROOT/usr/include/mysql/my_config_`uname -i`.h
     install -m 644 %{SOURCE5} $RPM_BUILD_ROOT/usr/include/mysql/
     ;;
@@ -509,7 +513,6 @@ rm -f ${RPM_BUILD_ROOT}/usr/INSTALL-BINARY
 rm -f ${RPM_BUILD_ROOT}/usr/docs/ChangeLog
 rm -f ${RPM_BUILD_ROOT}/usr/data/mysql/.empty
 rm -f ${RPM_BUILD_ROOT}/usr/data/test/.empty
-rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/solaris/*
 # should move this to /etc/ ?
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/mysqlaccess.conf
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/mysql_embedded
@@ -537,6 +540,9 @@ cp %{SOURCE7} README.mysql-license
 
 # install the list of skipped tests to be available for user runs
 install -m 0644 mysql-test/rh-skipped-tests.list ${RPM_BUILD_ROOT}%{_datadir}/mysql-test
+
+# we don't care about scripts for solaris
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/solaris/postinstall-solaris
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -834,9 +840,19 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Jun 14 2013 Honza Horak <hhorak@redhat.com> 5.5.32-1
+- Use man pages from 5.5.30, because their license do not
+  allow us to ship them since 5.5.31
+- Update to MySQL 5.5.32, for various fixes described at
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-32.html
+
 * Tue Jun  4 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.32-1
 - update to MySQL 5.5.32 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-32.html
+
+* Fri Apr 19 2013 Honza Horak <hhorak@redhat.com> 5.5.31-1
+- Update to MySQL 5.5.31, for various fixes described at
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-31.html
 
 * Thu Feb 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.31-1
 - update to MySQL 5.5.31 Community Server GA
