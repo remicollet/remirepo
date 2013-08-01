@@ -10,7 +10,7 @@
 %endif
 
 Name: mysql
-Version: 5.5.32
+Version: 5.5.33
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -840,6 +840,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Thu Aug  1 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.33-1
+- update to MySQL 5.5.33 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-33.html
+
 * Fri Jun 14 2013 Honza Horak <hhorak@redhat.com> 5.5.32-1
 - Use man pages from 5.5.30, because their license do not
   allow us to ship them since 5.5.31
@@ -854,7 +858,7 @@ fi
 - Update to MySQL 5.5.31, for various fixes described at
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-31.html
 
-* Thu Feb 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.31-1
+* Thu Feb 28 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.31-1
 - update to MySQL 5.5.31 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-31.html
 
@@ -1006,7 +1010,7 @@ Resolves: #789530
 - update to MySQL 5.5.21 Community Server GA
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-21.html
 
-* Tue Feb 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.20-2
+* Sun Feb 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.5.20-2
 - sync with rawhide
 - circular dep for mysql / mysql-libs to fix EL5 update
 - provides mysql-client (per user request)
@@ -1407,7 +1411,7 @@ Related: #477624
 * Wed Mar 04 2009 Remi Collet <RPMS@FamilleCollet.com> - 5.1.32-1.###.remi
 - Update to MySQL 5.1.32 Community Server GA
 
-* Fri Feb 29 2009 Remi Collet <RPMS@FamilleCollet.com> - 5.1.31-1.###.remi
+* Fri Feb 27 2009 Remi Collet <RPMS@FamilleCollet.com> - 5.1.31-1.###.remi
 - Update to MySQL 5.1.31 Community Server GA
 
 * Thu Jan 22 2009 Tom Lane <tgl@redhat.com> 5.1.30-2
@@ -1432,7 +1436,7 @@ Related: #477624
 * Sun Sep 14 2008 Remi Collet <RPMS@FamilleCollet.com> - 5.1.28-0.1.rc.###.remi
 - Update to MySQL 5.1.28 Community Server
 
-* Sun Jun 13 2008 Remi Collet <RPMS@FamilleCollet.com> - 5.1.26-0.1.rc.###.remi
+* Sun Jun 15 2008 Remi Collet <RPMS@FamilleCollet.com> - 5.1.26-0.1.rc.###.remi
 - Update to MySQL 5.1.26 Community Server
 
 * Mon Jun 09 2008 Remi Collet <RPMS@FamilleCollet.com> - 5.1.25-0.1.rc.###.remi
@@ -1506,7 +1510,7 @@ Resolves: #205630
 * Sat Jan 20 2007 Remi Collet <RPMS@FamilleCollet.com> - 5.0.33-0.fc{3-6}.remi
 - update to MySQL 5.0.33 Community Server
 
-* Sun Nov 11 2006 Remi Collet <RPMS@FamilleCollet.com> - 5.0.27-1.fc6.remi
+* Sat Nov 11 2006 Remi Collet <RPMS@FamilleCollet.com> - 5.0.27-1.fc6.remi
 - x86_64 rebuild from rawhide spec.
 
 * Thu Nov  9 2006 Tom Lane <tgl@redhat.com> 5.0.27-1
