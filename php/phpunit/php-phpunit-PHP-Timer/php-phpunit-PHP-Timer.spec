@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name PHP_Timer
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-Timer
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        PHP Utility class for timing
 
@@ -15,10 +14,13 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.9.2
+BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php-pear
 BuildRequires:  php-channel(%{channel})
+
+Requires:       php(language) >= 5.3.3
+Requires:       php-spl
 Requires:       php-channel(%{channel})
-Requires:       php-common >= 5.2.7
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
@@ -40,20 +42,20 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-%{__rm} -rf $RPM_BUILD_ROOT docdir
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -74,7 +76,11 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/PHP
 
+
 %changelog
+* Fri Aug 02 2013 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- Update to 1.0.5
+
 * Sat Oct  6 2012 Remi Collet <rpms@famillecollet.com> 1.0.4-1
 - update to 1.0.4
 
