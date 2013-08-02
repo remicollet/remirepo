@@ -3,7 +3,7 @@
 %global zendver     20121212
 %global pdover      20080721
 # Extension version
-%global opcachever  7.0.2-dev
+%global opcachever  7.0.3-dev
 %global oci8ver     1.4.10
 
 # Adds -z now to the linker flags
@@ -81,11 +81,11 @@
 %endif
 
 #global snapdate      201306240630
-#global rcver         RC3
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.1
+Version: 5.5.2
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -398,7 +398,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 # ABI/API check - Arch specific
-Provides: php-pdo-abi = %{pdover}%{isasuffix}
+Provides: php-pdo-abi  = %{pdover}%{isasuffix}
 Provides: php(pdo-abi) = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
@@ -1590,7 +1590,7 @@ echo -e "\nWARNING : These %{name}-* RPM are not official Fedora / Red Hat build
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 16
+%if %{?fedora}%{!?fedora:99} <= 17
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -1812,6 +1812,9 @@ fi
 
 
 %changelog
+* Thu Aug  1 2013 Remi Collet <remi@fedoraproject.org> - 5.5.2-0.1.RC1
+- 5.5.2RC1
+
 * Fri Jul 26 2013 Remi Collet <remi@fedoraproject.org> - 5.5.1-2
 - test build with oracle instantclient 12.1
 
