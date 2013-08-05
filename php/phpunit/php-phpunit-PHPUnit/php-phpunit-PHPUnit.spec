@@ -3,7 +3,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        3.7.22
+Version:        3.7.23
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -34,8 +34,7 @@ Requires:       php-pear(%{pear_channel}/File_Iterator) >= 1.3.0
 Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.1.1
 Requires:       php-pear(%{pear_channel}/PHP_CodeCoverage) >= 1.2.1
 Requires:       php-pear(%{pear_channel}/PHP_CodeCoverage) <  1.3
-Requires:       php-pear(%{pear_channel}/PHP_Timer) >= 1.0.2
-Requires:       php-pear(%{pear_channel}/PHP_Timer) <  1.1
+Requires:       php-pear(%{pear_channel}/PHP_Timer) >= 1.0.4
 Requires:       php-pear(pear.symfony.com/Yaml) >= 2.0.0
 Requires:       php-pear(pear.symfony.com/Yaml) <  3
 # PHPUnit Extensions (yes, with circular dependency on PHPUnit)
@@ -120,6 +119,10 @@ fi
 
 
 %changelog
+* Mon Aug 05 2013 Remi Collet <remi@fedoraproject.org> - 3.7.23-1
+- Update to 3.7.23
+- raise dependency on phpunit/PHP_Timer 1.0.4
+
 * Mon Jul 08 2013 Remi Collet <remi@fedoraproject.org> - 3.7.22-1
 - Update to 3.7.22
 
