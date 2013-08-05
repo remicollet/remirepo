@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Stream
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Stream
-Version:        1.2.0
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        Horde stream handler
 
@@ -28,7 +27,7 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -91,6 +90,9 @@ fi
 
 
 %changelog
+* Mon Aug 05 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Update to 1.2.0 for remi repo
 
