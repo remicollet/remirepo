@@ -4,7 +4,7 @@
 %global pear_name    Twig
 
 Name:             php-twig-%{pear_name}
-Version:          1.13.1
+Version:          1.13.2
 Release:          1%{?dist}
 Summary:          The flexible, fast, and secure template engine for PHP
 
@@ -98,6 +98,9 @@ fi
 
 
 %changelog
+* Mon Aug 05 2013 Remi Collet <remi@fedoraproject.org> - 1.13.2-1
+- Update to 1.13.2
+
 * Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> - 1.13.1-1
 - Update to 1.13.1
 
