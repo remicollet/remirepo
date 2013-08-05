@@ -3,7 +3,7 @@
 %global channel       pear.phpunit.de
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.1.7
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
@@ -81,6 +81,9 @@ fi
 %{pear_phpdir}/PHP
 
 %changelog
+* Mon Aug 05 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+
 * Mon Jul 29 2013 Remi Collet <remi@fedoraproject.org> - 1.1.7-1
 - Update to 1.1.7
 
