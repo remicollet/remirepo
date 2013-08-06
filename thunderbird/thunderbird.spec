@@ -69,14 +69,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        17.0.7
+Version:        17.0.8
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}/source/thunderbird-%{version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20130625.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20130805.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -438,7 +438,7 @@ echo -e "\nWARNING : This %{name} RPM is not an official Fedora / Red Hat build 
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Red Hat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 16
+%if %{?fedora}%{!?fedora:99} <= 17
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -520,6 +520,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Tue Aug  6 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.8-1
+- Update to 17.0.8, sync with rawhide
+
+* Mon Aug  5 2013 Jan Horak <jhorak@redhat.com> - 17.0.8-1
+- Update to 17.0.8
+
 * Tue Jun 25 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.7-1
 - Update to 17.0.7, sync with rawhide
 
@@ -613,7 +619,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Mon Aug 27 2012 Jan Horak <jhorak@redhat.com> - 15.0-1
 - Update to 15.0
 
-* Wed Aug 1 2012 Martin Stransky <stransky@redhat.com> - 14.0-4
+* Wed Aug  1 2012 Martin Stransky <stransky@redhat.com> - 14.0-4
 - Removed StartupWMClass (rhbz#844863)
 - Fixed -g parameter
 - Removed thunderbird-devel before packing to avoid debugsymbols duplicities (rhbz#823940)
@@ -639,7 +645,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Tue Jun  5 2012 Jan Horak <jhorak@redhat.com> - 13.0-1
 - Update to 13.0
 
-* Mon May 7 2012 Martin Stransky <stransky@redhat.com> - 12.0.1-2
+* Mon May  7 2012 Martin Stransky <stransky@redhat.com> - 12.0.1-2
 - Fixed #717245 - adhere Static Library Packaging Guidelines
 
 * Mon Apr 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 12.0.1-1
@@ -699,7 +705,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Thu Feb  9 2012 Jan Horak <jhorak@redhat.com> - 10.0.1-1
 - Update to 10.0.1
 
-* Mon Feb 6 2012 Martin Stransky <stransky@redhat.com> - 10.0-2
+* Mon Feb  6 2012 Martin Stransky <stransky@redhat.com> - 10.0-2
 - gcc 4.7 build fixes
 
 * Tue Jan 31 2012 Remi Collet <rpms@famillecollet.com> 10.0-1
@@ -717,7 +723,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Tue Dec 20 2011 Jan Horak <jhorak@redhat.com> - 9.0-1
 - Update to 9.0
 
-* Fri Dec 9 2011 Martin Stransky <stransky@redhat.com> - 8.0-4
+* Fri Dec  9 2011 Martin Stransky <stransky@redhat.com> - 8.0-4
 - enabled gio support (#760644)
 
 * Tue Nov 29 2011 Jan Horak <jhorak@redhat.com> - 8.0-3
@@ -767,7 +773,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Tue Aug 16 2011 Jan Horak <jhorak@redhat.com> - 6.0-1
 - Update to 6.0
 
-* Sun Aug 16 2011 Remi Collet <remi@fedoraproject.org> 5.0-4
+* Tue Aug 16 2011 Remi Collet <remi@fedoraproject.org> 5.0-4
 - Don't unzip the langpacks
 
 * Mon Aug 15 2011 Jan Horak <jhorak@redhat.com> - 5.0-3
@@ -1049,7 +1055,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Sun Nov 04 2007 Remi Collet <rpms@famillecollet.com> 2.0.0.9-0.1.rc1.fc8.remi
 - 2.0.0.9 RC1
 
-* Thu Nov 02 2007 Remi Collet <rpms@famillecollet.com> 2.0.0.6-6.fc8.remi
+* Fri Nov 02 2007 Remi Collet <rpms@famillecollet.com> 2.0.0.6-6.fc8.remi
 - F8 rebuild
 
 * Wed Sep 26 2007 Martin Stransky <stransky@redhat.com> 2.0.0.6-6
@@ -1179,7 +1185,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 - Update to 1.5.0.5
 - Use dist tag
 
-* Fri Jun 27 2006 Remi Collet <RPMS@FamilleCollet.com> - 1.5.0.5-1.fc{4,5}.remi
+* Tue Jun 27 2006 Remi Collet <RPMS@FamilleCollet.com> - 1.5.0.5-1.fc{4,5}.remi
 - Update to 1.5.0.5 (32 langpacks, new : ga-IE)
 
 * Mon Jun 12 2006 Kai Engert <kengert@redhat.com> - 1.5.0.4-1.1.fc5
