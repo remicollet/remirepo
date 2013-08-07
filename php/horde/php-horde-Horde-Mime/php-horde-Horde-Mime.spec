@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.2.3
+Version:        2.2.4
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -42,6 +42,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.3.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.1.0
@@ -146,6 +148,10 @@ fi
 
 
 %changelog
+* Wed Aug 07 2013 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
+- Update to 2.2.4
+- add Requires Horde_Stream >= 1.3.0
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - Update to 2.2.3
 
