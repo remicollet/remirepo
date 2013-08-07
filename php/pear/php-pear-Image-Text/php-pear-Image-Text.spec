@@ -41,7 +41,7 @@ Provides:       php-pear(%{pear_name}) = %{version}
 images. Beside common Freetype2 functionality it offers to handle texts
 in a graphic- or office-tool like way. For example it allows alignment of
 texts inside a text box, rotation (around the top left corner of a text
-box or it's center point) and the automatic measurizement of the optimal
+box or it's center point) and the automatic measurement of the optimal
 font size for a given text box.
 
 
