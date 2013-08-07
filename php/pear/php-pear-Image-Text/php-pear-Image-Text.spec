@@ -1,9 +1,16 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+# spec file for php-pecl-zendopcache
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name Image_Text
 
 Name:           php-pear-Image-Text
-Version:        0.6.1
+Version:        0.7.0
 Release:        1%{?dist}
 Summary:        Advanced text manipulations in images
 
@@ -15,8 +22,6 @@ URL:            http://pear.php.net/package/Image_Text
 # ./strip.sh %{version}
 Source0:        %{pear_name}-%{version}-strip.tgz
 Source1:        strip.sh
-# https://pear.php.net/bugs/19789
-Source2:        LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -28,11 +33,11 @@ Requires:       php-gd
 Requires:       php-pcre
 Requires:       php-pear(PEAR)
 
-Provides:       php-pear(Image_Text) = %{version}
+Provides:       php-pear(%{pear_name}) = %{version}
 
 
 %description
-Image_Text provides a comfortable interface to text manipulations in GD
+%{pear_name} provides a comfortable interface to text manipulations in GD
 images. Beside common Freetype2 functionality it offers to handle texts
 in a graphic- or office-tool like way. For example it allows alignment of
 texts inside a text box, rotation (around the top left corner of a text
@@ -43,14 +48,8 @@ font size for a given text box.
 %prep
 %setup -q -c
 
-cp %{SOURCE2} LICENSE
-
 cd %{pear_name}-%{version}
-# remove README (how to install and run test)
-# remove make_doc*.sh (packaging stuff)
-sed -e '/README/d' \
-    -e '/make_doc/d' \
-    ../package.xml >%{name}.xml
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -88,13 +87,16 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Image
 %{pear_phpdir}/Image/Text.php
+%{pear_phpdir}/Image/Text
 
 
 %changelog
+* Wed Aug 07 2013 Remi Collet <remi@fedoraproject.org> - 0.7.0-1
+- Update to 0.7.0
+
 * Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 0.6.1-1
 - Initial package
