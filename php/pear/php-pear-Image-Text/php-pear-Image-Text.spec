@@ -97,6 +97,7 @@ fi
 %changelog
 * Wed Aug 07 2013 Remi Collet <remi@fedoraproject.org> - 0.7.0-1
 - Update to 0.7.0
+- LICENSE now provided by upstream
 
 * Wed Jan 16 2013 Remi Collet <remi@fedoraproject.org> - 0.6.1-1
 - Initial package
