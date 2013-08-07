@@ -1,4 +1,4 @@
-# spec file for php-pecl-zendopcache
+# spec file for php-pear-Image-Text
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
