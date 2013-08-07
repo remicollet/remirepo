@@ -1,5 +1,5 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 17
+%if 0%{?fedora} < 18
 %define system_nss        0
 %else
 %define system_nss        1
@@ -29,13 +29,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      22.0
-%global xulrunner_version_max  22.1
+%global xulrunner_version      23.0
+%global xulrunner_version_max  23.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130621
+%global datelang               20130805
 
 %global mozappdir     %{_libdir}/%{name}
 %global langpackdir   %{mozappdir}/langpacks
@@ -71,8 +71,8 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        22.0
-Release:        2%{?pre_tag}%{?dist}
+Version:        23.0
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -289,7 +289,7 @@ cd %{tarballdir}
 # This sed call "replaces" firefox.js with all-redhat.js, newline, and itself (&)
 # having the net effect of prepending all-redhat.js above firefox.js
 %{__sed} -i -e\
-    's|@BINPATH@/@PREF_DIR@/firefox.js|@BINPATH@/@PREF_DIR@/all-redhat.js\n&|' \
+    's|@BINPATH@/browser/@PREF_DIR@/firefox.js|@BINPATH@/browser/@PREF_DIR@/all-redhat.js\n&|' \
     browser/installer/package-manifest.in
 
 # set up our default bookmarks
@@ -422,7 +422,7 @@ echo -e "Fedora / Red Hat build and it overrides the official one."
 echo -e "Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 16
+%if %{?fedora}%{!?fedora:99} <= 17
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -502,6 +502,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Aug  7 2013 Remi Collet <RPMS@FamilleCollet.com> - 23.0-1
+- sync with rawhide, update to 23.0
+
+* Mon Aug 5 2013 Martin Stransky <stransky@redhat.com> - 23.0-1
+- Updated to latest upstream (23.0 Build 2)
+
+* Thu Jul 25 2013 Martin Stransky <stransky@redhat.com> - 22.0-3
+- Fixed rhbz#988363 - firefox-redhat-default-prefs.js is not used
+
 * Tue Jul  2 2013 Remi Collet <RPMS@FamilleCollet.com> - 22.0-1
 - sync with rawhide
 - always disable crashreporter

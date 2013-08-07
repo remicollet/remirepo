@@ -1,4 +1,4 @@
-%if 0%{?fedora} < 17
+%if 0%{?fedora} < 18
 %define system_nss        0
 %else
 %define system_nss        1
@@ -13,8 +13,10 @@
 # Use system sqlite?
 %if 0%{?fedora} < 19
 %define system_sqlite     0
+%define system_ffi        0
 %else
 %define system_sqlite     1
+%define system_ffi        1
 %endif
 
 # Use system libpeg (and libjpeg-turbo) ?
@@ -38,13 +40,13 @@
 # grep 'min_ns.*=[0-9]' configure
 %global nspr_version 4.9.6
 %global nspr_build_version %((pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536) | sed s/\.0\$//)
-%global nss_version 3.14.3
+%global nss_version 3.15
 %global nss_build_version %((pkg-config --silence-errors --modversion nss 2>/dev/null   || echo 65536) | sed s/\.0\$//)
 %endif
 
 %if %{?system_sqlite}
 # grep '^SQLITE_VERSION' configure
-%global sqlite_version 3.7.15.2
+%global sqlite_version 3.7.16.1
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
 %endif
@@ -87,8 +89,8 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        22.0
-Release:        2%{?pre_tag}%{?dist}
+Version:        23.0
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -110,13 +112,10 @@ Patch19:        xulrunner-21.0-s390-inlines.patch
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
 Patch21:        rhbz-911314.patch
-Patch23:        mozilla-851850.patch
 # Unable to install addons from https pages
 Patch24:        rhbz-966424.patch
 
 # Upstream patches
-Patch104:       mozilla-844883.patch
-Patch105:       mozilla-817533.patch
 Patch106:       mozilla-831688.patch
 
 # ---------------------------------------------------
@@ -166,12 +165,14 @@ Requires:       nss >= %{nss_build_version}
 %endif
 Provides:       gecko-libs = %{gecko_verrel}
 Provides:       gecko-libs%{?_isa} = %{gecko_verrel}
-Obsoletes:      xulrunner15
-Obsoletes:      xulrunner16
 
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 Requires:       sqlite >= %{sqlite_build_version}
+%endif
+
+%if %{?system_ffi}
+BuildRequires:  libffi-devel
 %endif
 
 %description
@@ -187,8 +188,6 @@ Group: Development/Libraries
 Obsoletes: mozilla-devel < 1.9
 Obsoletes: firefox-devel < 2.1
 Obsoletes: xulrunner-devel-unstable
-Obsoletes: xulrunner15-devel
-Obsoletes: xulrunner16-devel
 Provides: gecko-devel = %{gecko_verrel}
 Provides: gecko-devel%{?_isa} = %{gecko_verrel}
 Provides: gecko-devel-unstable = %{gecko_verrel}
@@ -282,12 +281,9 @@ cd %{tarballdir}
 %patch20  -p2 -b .pk
 %ifarch ppc ppc64
 %patch21  -p2 -b .ppc
-%patch23  -p1 -b .851850
-%patch104 -p1 -b .844883
 %endif
 
 %patch24  -p1 -b .966424
-%patch105 -p1 -b .817533
 %patch106 -p1 -b .831688
 
 %{__rm} -f .mozconfig
@@ -322,6 +318,10 @@ echo "ac_add_options --disable-system-sqlite" >> .mozconfig
 echo "ac_add_options --enable-system-cairo" >> .mozconfig
 %else
 echo "ac_add_options --disable-system-cairo" >> .mozconfig
+%endif
+
+%if %{?system_ffi}
+echo "ac_add_options --enable-system-ffi" >> .mozconfig
 %endif
 
 %if %{?debug_build}
@@ -362,7 +362,7 @@ echo "ac_add_options --disable-polyic" >> .mozconfig
 echo "ac_add_options --disable-tracejit" >> .mozconfig
 %endif
 
-%ifnarch %{ix86} x86_64
+%ifnarch %{ix86} x86_64 armv7hl armv7hnl
 echo "ac_add_options --disable-webrtc" >> .mozconfig
 %endif
 
@@ -597,6 +597,25 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Aug  7 2013 Remi Collet <RPMS@FamilleCollet.com> - 23.0-1
+- sync with rawhide, update to 23.0
+
+* Mon Aug  5 2013 Martin Stransky <stransky@redhat.com> - 23.0-2
+- Update to latest upstream (23.0 Build 2)
+
+* Mon Aug  5 2013 Martin Stransky <stransky@redhat.com> - 23.0-1
+- Update to latest upstream (23.0)
+
+* Mon Jul 29 2013 Jan Horak <jhorak@redhat.com> - 22.0-7
+- Use system libffi for Fedora 19+
+- Added fix for mozbz#860213
+
+* Thu Jul 25 2013 Martin Stransky <stransky@redhat.com> - 22.0-6
+- Removed already applied patches (rhbz#978123)
+
+* Wed Jul 24 2013 Peter Robinson <pbrobinson@fedoraproject.org> 22.0-5
+- Enable web-rtc on ARM now it's fixed upstream (RHBZ 886976)
+
 * Tue Jul  2 2013 Remi Collet <RPMS@FamilleCollet.com> - 22.0-2
 - sync with rawhide
 - always disable crashreporter
