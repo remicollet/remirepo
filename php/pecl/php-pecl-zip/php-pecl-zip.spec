@@ -21,8 +21,11 @@ URL:          http://pecl.php.net/package/zip
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# https://github.com/pierrejoye/php_zip/pull/3 (merged)
+# Cleanups and fix build warnings
+Patch0:       zip-git.patch
 # use system libzip 0.11 instead of bundled copy
-Patch0:       zip-systemlibzip.patch
+Patch1:       zip-systemlibzip.patch
 
 BuildRequires: php-devel
 %if %{with_libzip}
@@ -60,8 +63,10 @@ Zip est une extension pour créer et lire les archives au format ZIP.
 cd %{pecl_name}-%{version}
 
 %if %{with_libzip}
-%patch0 -p1 -b .systemlibzip
-rm -rf lib
+%patch0 -p1 -b .git
+%patch1 -p1 -b .systemlibzip
+# delete bundled libzip to ensure it is not used (except zipint.h)
+rm lib/*.c
 %endif
 
 cd ..
