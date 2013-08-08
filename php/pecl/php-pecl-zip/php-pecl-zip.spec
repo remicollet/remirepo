@@ -166,7 +166,7 @@ fi
 
 
 %files
-%doc %{pecl_name}-%{version}/CREDITS
+%doc %{pecl_name}-%{version}/{CREDITS,LICENSE}
 %doc %{pecl_name}-%{version}/examples
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
