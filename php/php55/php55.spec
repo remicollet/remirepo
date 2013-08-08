@@ -175,7 +175,6 @@ BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
 %if %{with_libzip}
 BuildRequires: libzip-devel >= 0.10
-BuildRequires: libzip-devel <  0.11
 %endif
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel

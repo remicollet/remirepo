@@ -411,8 +411,8 @@ diff -up php-5.5.2RC1/ext/zip/php_zip.c.systzip php-5.5.2RC1/ext/zip/php_zip.c
 +
 +#if LIBZIP_VERSION_MAJOR == 0 && LIBZIP_VERSION_MINOR == 10
 +#include "libzip-missing-0.10.h"
-+#else
-+#error "Only libzip 0.10 supported for now"
++#elif LIBZIP_VERSION_MAJOR == 0 && LIBZIP_VERSION_MINOR == 11
++#include "libzip-missing-0.11.h"
 +#endif
 +
 +#else
@@ -509,3 +509,79 @@ diff -up php-5.5.2RC1/ext/zip/zip_stream.c.systzip php-5.5.2RC1/ext/zip/zip_stre
  
  #include "php_streams.h"
  #include "ext/standard/file.h"
+--- php-5.5.2RC1/ext/zip/libzip-missing-0.11.h.systzip	2013-08-08 11:24:29.214626577 +0200
++++ php-5.5.2RC1/ext/zip/libzip-missing-0.11.h	2013-08-08 11:39:16.058225056 +0200
+@@ -0,0 +1,73 @@
++/* Copied from libzip 0.11.1 */
++
++/* error information */
++
++struct zip_error {
++    int zip_err;        /* libzip error code (ZIP_ER_*) */
++    int sys_err;        /* copy of errno (E*) or zlib error code */
++    char *str;          /* string representation or NULL */
++};
++
++/* zip archive, part of API */
++
++struct zip {
++    char *zn;                           /* file name */
++    FILE *zp;                           /* file */
++    unsigned int open_flags;            /* flags passed to zip_open */
++    struct zip_error error;             /* error information */
++
++    unsigned int flags;                 /* archive global flags */
++    unsigned int ch_flags;              /* changed archive global flags */
++
++    char *default_password;             /* password used when no other supplied */
++
++    struct zip_string *comment_orig;    /* archive comment */
++    struct zip_string *comment_changes; /* changed archive comment */
++    int comment_changed;                /* whether archive comment was changed */
++
++    zip_uint64_t nentry;                /* number of entries */
++    zip_uint64_t nentry_alloc;          /* number of entries allocated */
++    struct zip_entry *entry;            /* entries */
++
++    unsigned int nfile;                 /* number of opened files within archive */
++    unsigned int nfile_alloc;           /* number of files allocated */
++    struct zip_file **file;             /* opened files within archive */
++    
++    char *tempdir;                      /* custom temp dir (needed e.g. for OS X sandboxing) */
++};
++
++/* file in zip archive, part of API */
++
++struct zip_file {
++    struct zip *za;		/* zip archive containing this file */
++    struct zip_error error;	/* error information */
++    int eof;
++    struct zip_source *src;	/* data source */
++};
++
++void
++_zip_error_fini(struct zip_error *err)
++{
++    free(err->str);
++    err->str = NULL;
++}
++
++void
++_zip_error_init(struct zip_error *err)
++{
++    err->zip_err = ZIP_ER_OK;
++    err->sys_err = 0;
++    err->str = NULL;
++}
++
++void
++_zip_error_set(struct zip_error *err, int ze, int se)
++{
++    if (err) {
++	err->zip_err = ze;
++	err->sys_err = se;
++    }
++}
++
++#define _zip_free(za) zip_discard(za)
++
