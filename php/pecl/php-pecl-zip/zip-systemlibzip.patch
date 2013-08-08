@@ -1,64 +1,181 @@
-diff -up zip-1.10.2/config.m4.orig zip-1.10.2/config.m4
---- zip-1.10.2/config.m4.orig	2011-03-20 13:05:28.661443158 +0100
-+++ zip-1.10.2/config.m4	2011-03-20 13:16:37.676577789 +0100
-@@ -8,6 +8,8 @@ PHP_ARG_ENABLE(zip, for zip archive read
- if test -z "$PHP_ZLIB_DIR"; then
-   PHP_ARG_WITH(zlib-dir, for the location of libz,
-   [  --with-zlib-dir[=DIR]     ZIP: Set the path to libz install prefix], no, no)
-+  PHP_ARG_WITH(libzip-dir, for the location of libzip,
-+  [  --with-libzip-dir[=DIR]   ZIP: Set the path to libzip install prefix], no, no)
- fi
- 
+diff -up zip-1.12.1/config.m4.old zip-1.12.1/config.m4
+--- zip-1.12.1/config.m4.old	2013-04-29 11:18:17.000000000 +0200
++++ zip-1.12.1/config.m4	2013-08-08 13:09:18.000000000 +0200
+@@ -13,8 +13,60 @@ fi
  PHP_ARG_WITH(pcre-dir, pcre install prefix,
-@@ -71,7 +73,20 @@ yes
-     ])
- 	CPPFLAGS=$old_CPPFLAGS
+ [  --with-pcre-dir           ZIP: pcre install prefix], no, no)
  
--	PHP_ZIP_SOURCES="$PHP_ZIP_SOURCES lib/zip_add.c lib/zip_error.c lib/zip_fclose.c \
-+	if test "$PHP_LIBZIP_DIR" != "no" && test "$PHP_LIBZIP_DIR" != "yes"; then
-+		if test -f "$PHP_LIBZIP_DIR/include/zip.h"; then
-+			PHP_LIBZIP_DIR="$PHP_LIBZIP_DIR"
-+			PHP_LIBZIP_INCDIR="$PHP_LIBZIP_DIR/include"
-+		else
-+      AC_MSG_ERROR([Can not find libzip headers under "$PHP_ZLIB_DIR"])
-+		fi
-+	fi
++PHP_ARG_WITH(libzip, libzip,
++[ --with-libzip[=DIR]        ZIP: use libzip], no, no)
 +
-+	dnl # libzip
-+	AC_MSG_CHECKING([for the location of libzip])
-+	if test "$PHP_LIBZIP_DIR" = "no"; then
-+		AC_MSG_RESULT([bundled])
-+		PHP_ZIP_SOURCES="$PHP_ZIP_SOURCES lib/zip_add.c lib/zip_error.c lib/zip_fclose.c \
-                          lib/zip_fread.c lib/zip_open.c lib/zip_source_filep.c  \
-                          lib/zip_strerror.c lib/zip_close.c lib/zip_error_get.c \
-                          lib/zip_file_error_get.c lib/zip_free.c lib/zip_rename.c \
-@@ -90,6 +105,13 @@ yes
-                          lib/zip_set_archive_comment.c lib/zip_set_file_comment.c \
-                          lib/zip_unchange_archive.c lib/zip_memdup.c lib/zip_stat_init.c lib/zip_add_dir.c \
-                          lib/zip_error_clear.c lib/zip_file_error_clear.c"
-+		AC_DEFINE(HAVE_LIBZIP,0,[ ])
-+	else
-+		AC_MSG_RESULT([$PHP_LIBZIP_DIR])
-+		PHP_ADD_LIBRARY_WITH_PATH(zip, $PHP_LIBZIP_DIR/$PHP_LIBDIR, ZIP_SHARED_LIBADD)
-+		PHP_ADD_INCLUDE($PHP_LIBZIP_INCDIR)
-+		AC_DEFINE(HAVE_LIBZIP,1,[ ])
-+	fi
+ if test "$PHP_ZIP" != "no"; then
  
- 	AC_DEFINE(HAVE_ZIP,1,[ ])
- 	PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c $PHP_ZIP_SOURCES, $ext_shared)
-diff -up zip-1.10.2/php_zip.c.orig zip-1.10.2/php_zip.c
---- zip-1.10.2/php_zip.c.orig	2011-03-20 13:17:48.724908789 +0100
-+++ zip-1.10.2/php_zip.c	2011-03-20 13:18:29.019963522 +0100
-@@ -2672,7 +2672,11 @@ static PHP_MINFO_FUNCTION(zip)
- 	php_info_print_table_row(2, "Zip", "enabled");
- 	php_info_print_table_row(2, "Extension Version","$Id: php_zip.c 284448 2009-07-20 15:26:54Z pajoye $");
- 	php_info_print_table_row(2, "Zip version", PHP_ZIP_VERSION_STRING);
--	php_info_print_table_row(2, "Libzip version", "0.9.0");
-+#if HAVE_LIBZIP
-+	php_info_print_table_row(2, "Libzip version", "system");
++  if test "$PHP_LIBZIP" != "no"; then
++
++    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
++
++    dnl system libzip, depends on libzip
++    AC_MSG_CHECKING(for libzip)
++    if test -r $PHP_LIBZIP/include/zip.h; then
++      LIBZIP_CFLAGS="-I$PHP_LIBZIP/include"
++      LIBZIP_LIBDIR="$PHP_LIBZIP/$PHP_LIBDIR"
++      AC_MSG_RESULT(from option: found in $PHP_LIBZIP)
++
++    elif test -x "$PKG_CONFIG" && $PKG_CONFIG --exists libzip; then
++      LIBZIP_CFLAGS=`$PKG_CONFIG libzip --cflags`
++      LIBZIP_LIBDIR=`$PKG_CONFIG libzip --variable=libdir`
++      AC_MSG_RESULT(from pkgconfig: found in $LIBZIP_LIBDIR)
++
++    else
++      for i in /usr/local /usr; do
++        if test -r $i/include/zip.h; then
++          LIBZIP_CFLAGS="-I$i/include"
++          LIBZIP_LIBDIR="$i/$PHP_LIBDIR"
++          AC_MSG_RESULT(in default path: found in $i)
++          break
++        fi
++      done
++    fi
++
++    if test -z "$LIBZIP_LIBDIR"; then
++      AC_MSG_RESULT(not found)
++      AC_MSG_ERROR(Please reinstall the libzip distribution)
++    fi
++
++    dnl Could not think of a simple way to check libzip for overwrite support
++    PHP_CHECK_LIBRARY(zip, zip_open,
++    [
++      PHP_ADD_LIBRARY_WITH_PATH(zip, $LIBZIP_LIBDIR, ZIP_SHARED_LIBADD)
++      AC_DEFINE(HAVE_LIBZIP,1,[ ])
++    ], [
++      AC_MSG_ERROR(could not find usable libzip)
++    ], [
++      -L$LIBZIP_LIBDIR
++    ])
++
++    AC_DEFINE(HAVE_ZIP,1,[ ]) 
++    PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c, $ext_shared,, $LIBZIP_CFLAGS)
++    PHP_SUBST(ZIP_SHARED_LIBADD)
++  else
++
++  dnl bundled libzip, depends on zlib
+   if test "$PHP_ZLIB_DIR" != "no" && test "$PHP_ZLIB_DIR" != "yes"; then
+     if test -f "$PHP_ZLIB_DIR/include/zlib/zlib.h"; then
+       PHP_ZLIB_DIR="$PHP_ZLIB_DIR"
+@@ -94,6 +146,7 @@ yes
+   PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c $PHP_ZIP_SOURCES, $ext_shared)
+   PHP_ADD_BUILD_DIR($ext_builddir/lib, 1)
+   PHP_SUBST(ZIP_SHARED_LIBADD)
++fi
+ 
+ 
+ AC_CHECK_TYPES([int8_t])
+diff -up zip-1.12.1/libzip-missing.h.old zip-1.12.1/libzip-missing.h
+--- zip-1.12.1/libzip-missing.h.old	2013-08-08 13:31:19.000000000 +0200
++++ zip-1.12.1/libzip-missing.h	2013-08-08 13:29:24.000000000 +0200
+@@ -0,0 +1,60 @@
++/*** Private API copied from lib/zipint.h ***/
++
++/* error information */
++
++struct zip_error {
++    int zip_err;	/* libzip error code (ZIP_ER_*) */
++    int sys_err;	/* copy of errno (E*) or zlib error code */
++    char *str;		/* string representation or NULL */
++};
++
++
++/* zip archive, part of API */
++
++struct zip {
++    char *zn;				/* file name */
++    FILE *zp;				/* file */
++    unsigned int open_flags;		/* flags passed to zip_open */
++    struct zip_error error;		/* error information */
++
++    unsigned int flags;			/* archive global flags */
++    unsigned int ch_flags;		/* changed archive global flags */
++
++    char *default_password;		/* password used when no other supplied */
++
++    struct zip_string *comment_orig;	/* archive comment */
++    struct zip_string *comment_changes; /* changed archive comment */
++    int comment_changed;		/* whether archive comment was changed */
++
++    zip_uint64_t nentry;		/* number of entries */
++    zip_uint64_t nentry_alloc;		/* number of entries allocated */
++    struct zip_entry *entry;		/* entries */
++
++    unsigned int nfile;			/* number of opened files within archive */
++    unsigned int nfile_alloc;		/* number of files allocated */
++    struct zip_file **file;		/* opened files within archive */
++    
++    char *tempdir;                      /* custom temp dir (needed e.g. for OS X sandboxing) */
++};
++
++/* file in zip archive, part of API */
++
++struct zip_file {
++    struct zip *za;		/* zip archive containing this file */
++    struct zip_error error;	/* error information */
++    int eof;
++    struct zip_source *src;	/* data source */
++};
++
++/*** Private API copied from lib/zip_error.c ***/
++
++void
++_zip_error_clear(struct zip_error *err)
++{
++    if (err == NULL)
++	return;
++
++    err->zip_err = ZIP_ER_OK;
++    err->sys_err = 0;
++}
++
+diff -up zip-1.12.1/php_zip.c.old zip-1.12.1/php_zip.c
+--- zip-1.12.1/php_zip.c.old	2013-08-08 13:24:00.000000000 +0200
++++ zip-1.12.1/php_zip.c	2013-08-08 13:26:43.000000000 +0200
+@@ -29,8 +29,14 @@
+ #include "ext/standard/php_string.h"
+ #include "ext/pcre/php_pcre.h"
+ #include "php_zip.h"
++
++#if defined(HAVE_LIBZIP)
++#include <zip.h>
++#include "libzip-missing.h"
 +#else
-+	php_info_print_table_row(2, "Libzip version", "0.9.0 bundled");
+ #include "lib/zip.h"
+ #include "lib/zipint.h"
 +#endif
  
- 	php_info_print_table_end();
- }
+ /* zip_open is a macro for renaming libzip zipopen, so we need to use PHP_NAMED_FUNCTION */
+ static PHP_NAMED_FUNCTION(zif_zip_open);
+diff -up zip-1.12.1/php_zip.h.old zip-1.12.1/php_zip.h
+--- zip-1.12.1/php_zip.h.old	2013-08-08 13:33:03.000000000 +0200
++++ zip-1.12.1/php_zip.h	2013-08-08 13:33:34.000000000 +0200
+@@ -28,7 +28,11 @@ extern zend_module_entry zip_module_entr
+ #include "TSRM.h"
+ #endif
+ 
++#if defined(HAVE_LIBZIP)
++#include <zip.h>
++#else
+ #include "lib/zip.h"
++#endif
+ 
+ #define PHP_ZIP_VERSION_STRING "1.12.1"
+ 
+diff -up zip-1.12.1/zip_stream.c.old zip-1.12.1/zip_stream.c
+--- zip-1.12.1/zip_stream.c.old	2013-08-08 13:35:24.000000000 +0200
++++ zip-1.12.1/zip_stream.c	2013-08-08 13:35:39.000000000 +0200
+@@ -6,8 +6,6 @@
+ #if HAVE_ZIP
+ #ifdef ZEND_ENGINE_2
+ 
+-#include "lib/zip.h"
+-
+ #include "php_streams.h"
+ #include "ext/standard/file.h"
+ #include "ext/standard/php_string.h"
