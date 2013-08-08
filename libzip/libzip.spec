@@ -1,21 +1,23 @@
-Name:           libzip2
-Version:        0.10
-Release:        2%{?dist}
-Summary:        C library for reading, creating, and modifying zip archives
 
-Group:          Applications/File
-License:        BSD
-URL:            http://www.nih.at/libzip/index.html
-Source0:        http://www.nih.at/libzip/libzip-%{version}.tar.bz2
-# to handle multiarch heder, ex from mysql-devel package
-Source1:        zipconf.h
+%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 
-Patch0:         libzip-0.10-php.patch
+Name:    libzip
+Version: 0.10.1
+Release: 7%{?dist}
+Summary: C library for reading, creating, and modifying zip archives
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  automake libtool
+License: BSD
+URL:     http://www.nih.at/libzip/index.html
+Source0: http://www.nih.at/libzip/libzip-%{version}.tar.bz2
+
+#BuildRequires:  automake libtool
 BuildRequires:  zlib-devel
-Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+
+# to handle multiarch headers, ex from mysql-devel package
+Source1: zipconf.h
+
+# fonctionnal changes from php bundled library
+Patch0: libzip-0.10-php.patch
 
 
 %description
@@ -25,86 +27,105 @@ other zip archives. Changes made without closing the archive can be reverted.
 The API is documented by man pages.
 
 %package devel
-Summary:   Development files for %{name}
-Group:     Development/Libraries
-Requires:  %{name}-libs%{?_isa} = %{version}-%{release}
-
+Summary: Development files for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 
-%package libs
-Summary: Tools files for %{name}
-Group:   System Environment/Libraries
-
-%description libs
-The %{name}-tools package contains tools that use %{name}.
-
-
 %prep
-%setup -q -n libzip-%{version}
+%setup -q
 
 %patch0 -p1 -b .forphp
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
-#if "%{_libdir}" != "/usr/lib"
-#sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
-autoreconf -f -i
-#endif
+%if "%{_libdir}" != "/usr/lib"
+sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
+#autoreconf -f -i
+%endif
 
 
 %build
-%configure --disable-static
+%configure \
+  --disable-static
+
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
-# Handle multiarch headers
-mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h \
-   $RPM_BUILD_ROOT%{_includedir}/zipconf_$(uname -i).h
-install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_includedir}/zipconf.h
+make install DESTDIR=%{buildroot} INSTALL='install -p'
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+## unpackaged files
+rm -fv %{buildroot}%{_libdir}/lib*.la
+
+## FIXME: someday fix consumers of libzip to properly handle
+## header @ %%{_libdir}/libzip/include/zipconf.h -- rex
+%ifarch %{multilib_archs}
+ln -s ../%{_lib}/libzip/include/zipconf.h \
+      %{buildroot}%{_includedir}/zipconf-%{__isa_bits}.h
+install -D -m644 -p %{SOURCE1} %{buildroot}%{_includedir}/zipconf.h
+%else
+ln -s ../%{_lib}/libzip/include/zipconf.h \
+      %{buildroot}%{_includedir}/zipconf.h
+%endif
 
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
-
 %files
-%defattr(-,root,root,-)
+%doc AUTHORS NEWS README THANKS TODO
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
 %{_bindir}/ziptorrent
+%{_libdir}/libzip.so.2*
 %{_mandir}/man1/*zip*
 
-%files libs
-%defattr(-,root,root,-)
-%doc AUTHORS NEWS README THANKS TODO
-%{_libdir}/libzip.so.2*
-
 %files devel
-%defattr(-,root,root,-)
-%{_includedir}/zip*.h
+%{_includedir}/zip.h
+%{_includedir}/zipconf*.h
+%dir %{_libdir}/libzip
+%{_libdir}/libzip/include
 %{_libdir}/libzip.so
 %{_libdir}/pkgconfig/libzip.pc
 %{_mandir}/man3/*zip*
 
 
 %changelog
-* Sat Feb 04 2012 Remi Collet <Fedora@FamilleCollet.com> 0.10-2
-- improves multiarch headers (ex from MySQL)
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Sun Mar 20 2011 Remi Collet <Fedora@FamilleCollet.com> 0.10-1
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Oct 15 2012 Remi Collet <remi@fedoraproject.org> - 0.10.1-5
+- fix typo in multiarch (#866171)
+
+* Wed Sep 05 2012 Rex Dieter <rdieter@fedoraproject.org> 0.10.1-4
+- Warning about conflicting contexts for /usr/lib64/libzip/include/zipconf.h versus /usr/include/zipconf-64.h (#853954)
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Rex Dieter <rdieter@fedoraproject.org> 0.10.1-2
+- spec cleanup, better multilib fix
+
+* Wed Mar 21 2012 Remi Collet <remi@fedoraproject.org> - 0.10.1-1
+- update to 0.10.1 (security fix only)
+- fixes for CVE-2012-1162 and CVE-2012-1163
+
+* Sun Mar 04 2012 Remi Collet <remi@fedoraproject.org> - 0.10-2
+- try to fix ARM issue (#799684)
+
+* Sat Feb 04 2012 Remi Collet <remi@fedoraproject.org> - 0.10-1
 - update to 0.10
-- rename to libzip2 and split libs in sub package
+- apply patch with changes from php bundled lib (thanks spot)
+- handle multiarch headers (ex from MySQL)
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
