@@ -1,9 +1,9 @@
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.13
+Version:        3.1.14
 Release:        1%{?dist}
 
-Source0:         http://www.smarty.net/files/Smarty-%{version}.tar.gz
+Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 08 2013 Remi Collet <RPMS@FamilleCollet.com> - 3.1.14-1
+- backport 3.1.14 for remi repo
+
+* Thu Aug 08 2013 Johan Cwiklinski <johan AT x-tnd DOT ber> - 3.1.14-1
+- Last upstream release
+
 * Tue Feb 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 3.1.12-1
 - backport 3.1.13 for remi repo
 
