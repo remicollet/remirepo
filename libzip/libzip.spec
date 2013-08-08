@@ -2,13 +2,13 @@
 %define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 
 Name:    libzip
-Version: 0.10.1
-Release: 7%{?dist}
+Version: 0.11.1
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     http://www.nih.at/libzip/index.html
-Source0: http://www.nih.at/libzip/libzip-%{version}.tar.bz2
+Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
 
 #BuildRequires:  automake libtool
 BuildRequires:  zlib-devel
@@ -17,7 +17,7 @@ BuildRequires:  zlib-devel
 Source1: zipconf.h
 
 # fonctionnal changes from php bundled library
-Patch0: libzip-0.10-php.patch
+Patch0: libzip-0.11-php.patch
 
 
 %description
@@ -94,6 +94,9 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 
 
 %changelog
+* Thu Aug 08 2013 Remi Collet <remi@fedoraproject.org> - 0.11.1-1
+- update to 0.11.1
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -154,7 +157,7 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 * Fri Jan 11 2008 Rex Dieter <rdieter[AT]fedoraproject.org> 0.8-4
 - use better workaround for removing rpaths
 
-* Wed Nov 20 2007 Sebastian Vahl <fedora@deadbabylon.de> 0.8-3
+* Tue Nov 20 2007 Sebastian Vahl <fedora@deadbabylon.de> 0.8-3
 - require pkgconfig in devel subpkg
 - move api description to devel subpkg
 - keep timestamps in %%install

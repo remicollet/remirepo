@@ -1,0 +1,67 @@
+diff -ru libzip-0.11.1.orig/lib/zip_close.c libzip-0.11.1/lib/zip_close.c
+--- libzip-0.11.1.orig/lib/zip_close.c	2013-08-08 11:01:26.000000000 +0200
++++ libzip-0.11.1/lib/zip_close.c	2013-08-08 11:03:07.000000000 +0200
+@@ -596,18 +596,22 @@
+     FILE *tfp;
+     
+     if (za->tempdir) {
+-        if ((temp=(char *)malloc(strlen(za->tempdir)+13)) == NULL) {
++        int len = strlen(za->tempdir)+13;
++
++        if ((temp=(char *)malloc(len)) == NULL) {
+             _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+             return NULL;
+         }
+-        sprintf(temp, "%s/.zip.XXXXXX", za->tempdir);
++        snprintf(temp, len, "%s/.zip.XXXXXX", za->tempdir);
+     }
+     else {
+-        if ((temp=(char *)malloc(strlen(za->zn)+8)) == NULL) {
++        int len = strlen(za->zn)+8;
++
++        if ((temp=(char *)malloc(len)) == NULL) {
+             _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+             return NULL;
+         }
+-        sprintf(temp, "%s.XXXXXX", za->zn);
++        snprintf(temp, len, "%s.XXXXXX", za->zn);
+     }
+ 
+     if ((tfd=mkstemp(temp)) == -1) {
+diff -ru libzip-0.11.1.orig/lib/zip_fclose.c libzip-0.11.1/lib/zip_fclose.c
+--- libzip-0.11.1.orig/lib/zip_fclose.c	2013-08-08 11:01:26.000000000 +0200
++++ libzip-0.11.1/lib/zip_fclose.c	2013-08-08 11:06:46.000000000 +0200
+@@ -48,14 +48,15 @@
+     if (zf->src)
+ 	zip_source_free(zf->src);
+ 
+-    for (i=0; i<zf->za->nfile; i++) {
+-	if (zf->za->file[i] == zf) {
+-	    zf->za->file[i] = zf->za->file[zf->za->nfile-1];
+-	    zf->za->nfile--;
+-	    break;
++	if (zf->za) {
++		for (i=0; i<zf->za->nfile; i++) {
++			if (zf->za->file[i] == zf) {
++				zf->za->file[i] = zf->za->file[zf->za->nfile-1];
++				zf->za->nfile--;
++				break;
++			}
++		}
+ 	}
+-    }
+-
+     ret = 0;
+     if (zf->error.zip_err)
+ 	ret = zf->error.zip_err;
+--- libzip-0.11.1.orig/lib/zip.h	2013-08-08 11:01:26.000000000 +0200
++++ libzip-0.11.1/lib/zip.h	2013-08-08 11:19:57.000000000 +0200
+@@ -62,6 +62,8 @@
+ #define ZIP_EXCL             2
+ #define ZIP_CHECKCONS        4
+ #define ZIP_TRUNCATE         8
++/* PHP use this name, same behavior */
++#define ZIP_OVERWRITE        8
+ 
+ 
+ /* flags for zip_name_locate, zip_fopen, zip_stat, ... */
