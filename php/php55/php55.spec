@@ -87,7 +87,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.2
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -138,7 +138,7 @@ Patch42: php-5.3.1-systzdata-v10.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
-Patch44: php-5.5.0-system-libzip.patch
+Patch44: php-5.5.2-system-libzip.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-5.4.8-ldap_r.patch
 # Make php_config.h constant across builds
@@ -175,6 +175,7 @@ BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
 %if %{with_libzip}
 BuildRequires: libzip-devel >= 0.10
+BuildRequires: libzip-devel <  0.11
 %endif
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel
@@ -1812,6 +1813,9 @@ fi
 
 
 %changelog
+* Thu Aug  8 2013 Remi Collet <remi@fedoraproject.org> - 5.5.2-0.2.RC1
+- improve system libzip patch
+
 * Thu Aug  1 2013 Remi Collet <remi@fedoraproject.org> - 5.5.2-0.1.RC1
 - 5.5.2RC1
 
