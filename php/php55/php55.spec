@@ -81,7 +81,7 @@
 %endif
 
 #global snapdate      201306240630
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -89,7 +89,7 @@ Version: 5.5.2
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1812,6 +1812,9 @@ fi
 
 
 %changelog
+* Mon Aug 19 2013 Remi Collet <rcollet@redhat.com> - 5.5.2-1
+- update to 5.5.2
+
 * Thu Aug  8 2013 Remi Collet <remi@fedoraproject.org> - 5.5.2-0.2.RC1
 - improve system libzip patch
 

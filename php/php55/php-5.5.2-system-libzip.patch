@@ -3,7 +3,7 @@ diff -up php-5.5.2RC1/ext/zip/config.m4.systzip php-5.5.2RC1/ext/zip/config.m4
 +++ php-5.5.2RC1/ext/zip/config.m4	2013-08-08 09:24:07.577567241 +0200
 @@ -13,65 +13,116 @@ fi
  PHP_ARG_WITH(pcre-dir, pcre install prefix,
- [  --with-pcre-dir           ZIP: pcre install prefix], no, no)
+ [  --with-pcre-dir         ZIP: pcre install prefix], no, no)
  
 +PHP_ARG_WITH(libzip, libzip,
 +[ --with-libzip[=DIR]        ZIP: use libzip], no, no)
