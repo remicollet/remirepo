@@ -2,10 +2,23 @@
 
 %global pecl_name gearman
 
+%if 0%{?fedora} >= 12 && 0%{?fedora} <= 15
+%global extver 0.8.3
+%global libver 0.10
+%endif
+%if 0%{?fedora} >= 16 && 0%{?fedora} <= 18
+%global extver 1.0.3
+%global libver 0.21
+%endif
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 5
+%global extver 1.1.1
+%global libver 1.1.0
+%endif
+
 
 Name:		php-pecl-gearman
-Version:	0.8.3
-Release:	1%{?dist}.1
+Version:	%{extver}
+Release:	2%{?dist}.1
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -15,7 +28,7 @@ Source0:	http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	libgearman-devel > 0.10
+BuildRequires:	libgearman-devel > %{libver}
 BuildRequires:	php-devel
 BuildRequires:	php-pear
 # Required by phpize
@@ -34,9 +47,7 @@ Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Other third party repo stuff
 Obsoletes:    php53-pecl-%{pecl_name}
 Obsoletes:    php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:    php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:    php55-pecl-%{pecl_name}
 %endif
@@ -128,7 +139,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/{ChangeLog,README,CREDITS,EXPERIMENTAL,LICENSE}
+%doc %{pecl_name}-%{version}/{ChangeLog,README,CREDITS,LICENSE}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -137,15 +148,50 @@ fi
 
 
 %changelog
+* Mon Aug 19 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- single spec for 0.8.x / 1.0.x / 1.1.x
+- update to 1.1.1, requires libgearman >= 1.1.0
+
+* Fri Nov 30 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1.1
+- also provides php-gearman
+
+* Sun Aug 05 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- update to 1.0.3
+- add missing provides php-pecl(gearman)
+
 * Sun Aug 05 2012 Remi Collet <remi@fedoraproject.org> - 0.8.3-1
 - update to 0.8.3
 - add missing provides php-pecl(gearman)
+
+* Sat May 05 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-3
+- add BR libgearman-1.0 + libgearman-1.0-devel
+  Workaround for https://bugzilla.redhat.com/819209
+
+* Tue Mar 06 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- update to 1.0.2 for PHP 5.4
+
+* Tue Mar 06 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- update to 1.0.2 for PHP 5.3
+- spec clean up
+
+* Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- update to 1.0.1, build against php 5.4
+
+* Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1
 
 * Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 0.8.1-2
 - update to 0.8.1, build against php 5.4
 
 * Fri Dec 09 2011 Remi Collet <remi@fedoraproject.org> - 0.8.1-1
 - update to 0.8.1
+
+* Mon Dec 05 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- build against php 5.4
+
+* Mon Dec 05 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0
+- raise dependency to libgearman 0.21 (si f16 only)
 
 * Mon Nov 14 2011 Remi Collet <remi@fedoraproject.org> - 0.8.0-2
 - build against php 5.4
