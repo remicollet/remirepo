@@ -17,7 +17,7 @@
 %ifarch ppc ppc64
 %global oraclever 10.2.0.2
 %else
-%global oraclever 11.2
+%global oraclever 12.1
 %endif
 
 # Regression tests take a long time, you can skip 'em with this
@@ -75,11 +75,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.17
+Version: 5.4.18
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -109,13 +109,12 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
+# Patch for https://bugs.php.net/65460
+Patch9: php-5.4.18-bison.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
 Patch21: php-5.4.7-odbctimer.patch
-# https://bugs.php.net/65143 php-cgi man page
-# https://bugs.php.net/65142 phar man page
-Patch22: php-5.4.17-man.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -133,7 +132,6 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Security fixes
-Patch60: php-5.4.17-CVE-2013-4013.patch
 
 # Fixes for tests
 
@@ -161,6 +159,8 @@ BuildRequires: libtool-ltdl-devel
 %if %{with_libzip}
 BuildRequires: libzip-devel >= 0.10
 %endif
+# Temporary for need for https://bugs.php.net/65460
+BuildRequires: bison
 
 Obsoletes: php53, php53u, php54
 Provides: php-zts = %{version}-%{release}
@@ -770,9 +770,12 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
 rm -f ext/json/utf8_to_utf16.*
+%if 0%{?fedora} > 10 || 0%{?rhel} > 5
+# bison >= 2.4
+%patch9 -p1 -b .bison
+%endif
 
 %patch21 -p1 -b .odbctimer
-%patch22 -p1 -b .manpages
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -789,9 +792,12 @@ rm -f ext/json/utf8_to_utf16.*
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
 
-%patch60 -p1 -b .cve4113
-
 %patch91 -p1 -b .remi-oci8
+
+# Temporary workaround for https://bugs.php.net/65460
+# Regenerated bison files
+rm Zend/zend_{language,ini}_parser.[ch]
+./genfiles
 
 
 # Prevent %%doc confusion over LICENSE files
@@ -1635,6 +1641,10 @@ fi
 
 
 %changelog
+* Mon Aug 19 2013 Remi Collet <remi@fedoraproject.org> 5.4.18-1
+- update to 5.4.18, fix for CVE-2013-4248
+- php-oci8 build with oracle instantclient 12.1
+
 * Fri Jul 12 2013 Remi Collet <rcollet@redhat.com> - 5.4.17-2
 - add security fix for CVE-2013-4113
 - add missing ASL 1.0 license
