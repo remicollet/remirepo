@@ -1,7 +1,7 @@
 %global github_owner   kriswallsmith
 %global github_name    assetic
-%global github_version 1.1.1
-%global github_commit  a826e4b96f5c607ff47ef61caf3826b2b1e840ec
+%global github_version 1.1.2
+%global github_commit  735cffd3982c6e8cdebe292d5db39d077f65890f
 
 Name:          php-Assetic
 Version:       %{github_version}
@@ -19,7 +19,7 @@ BuildArch:     noarch
 Requires:      php(language) >= 5.3.1
 Requires:      php-pear(pear.symfony.com/Process) >= 2.1
 Requires:      php-pear(pear.symfony.com/Process) <  3.0
-# phpci
+# phpcompatinfo
 Requires:      php-ctype
 Requires:      php-curl
 Requires:      php-date
@@ -67,7 +67,7 @@ cp -rp src/Assetic %{buildroot}%{_datadir}/php/
 %check
 # TODO: Work with upstream to figure out why tests are ignored for export
 #       (and therefore not included in a GitHub archive)
-#       https://github.com/kriswallsmith/assetic/blob/v1.1.0-alpha4/.gitattributes
+#       https://github.com/kriswallsmith/assetic/blob/v1.1.2/.gitattributes
 
 
 %files
@@ -77,6 +77,12 @@ cp -rp src/Assetic %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- backport 1.1.2 for remi repo.
+
+* Sun Aug 18 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.2-1
+- Updated to 1.1.2
+
 * Mon Jun 10 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - backport 1.1.1 for remi repo.
 
