@@ -15,8 +15,8 @@
 
 Summary:        Resource and persistent handles factory
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.1
-Release:        1%{?dist}
+Version:        1.0.2
+Release:        1%{?dist}.1
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -168,8 +168,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+
 * Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
+
+* Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0
 
 * Sun Jun 16 2013 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
 - initial package
