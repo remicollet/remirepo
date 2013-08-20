@@ -1,13 +1,15 @@
 %global github_owner   Seldaek
 %global github_name    monolog
-%global github_version 1.4.1
-%global github_commit  3295de82be06b3bbcd336983ddf8c50724430180
+%global github_version 1.6.0
+%global github_commit  f72392d0e6eb855118f5a84e89ac2d257c704abd
 
 %global lib_name       Monolog
 
 %global php_min_ver    5.3.0
 %global psrlog_min_ver 1.0
 %global psrlog_max_ver 2.0
+%global raven_min_ver  0.5.0
+#%%global raven_max_ver  0.6.0
 
 Name:      php-%{lib_name}
 Version:   %{github_version}
@@ -21,24 +23,37 @@ Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_co
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-BuildRequires: php-common >= %{php_min_ver}
+# For tests
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires: php-PsrLog >= %{psrlog_min_ver}
 BuildRequires: php-PsrLog <  %{psrlog_max_ver}
+# For tests: phpcompatinfo
+BuildRequires: php-curl
+BuildRequires: php-date
+BuildRequires: php-filter
+BuildRequires: php-hash
+BuildRequires: php-json
+BuildRequires: php-pcre
+BuildRequires: php-reflection
+BuildRequires: php-sockets
+BuildRequires: php-spl
+BuildRequires: php-xml
 
-Requires:      php-common >= %{php_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 Requires:      php-PsrLog >= %{psrlog_min_ver}
 Requires:      php-PsrLog <  %{psrlog_max_ver}
 Requires:      php-pear(pear.swiftmailer.org/Swift)
-# phpci
+# phpcompatinfo
 Requires:      php-curl
 Requires:      php-date
+Requires:      php-filter
+Requires:      php-hash
 Requires:      php-json
-Requires:      php-libxml
 Requires:      php-pcre
 Requires:      php-sockets
 Requires:      php-spl
-Requires:      php-filter
+Requires:      php-xml
 
 %description
 Monolog sends your logs to files, sockets, inboxes, databases and various web
@@ -88,8 +103,8 @@ Allow sending log messages to a MongoDB server.
 Summary:  Monolog Sentry handler
 Group:    Development/Libraries
 Requires: php-%{lib_name} = %{version}-%{release}
-Requires: php-Raven >= 0.3.0
-#Requires: php-Raven <  0.4.0
+Requires: php-Raven >= %{raven_min_ver}
+%{?raven_max_ver:Requires: php-Raven < %{raven_max_ver}}
 Provides: %{name}-Raven = %{version}-%{release}
 
 %description raven
@@ -122,6 +137,9 @@ cp -pr ./src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %check
+# Remove MongoDBHandlerTest because it requires a running MongoDB server
+rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
+
 %{_bindir}/phpunit \
     -d include_path="./src:./tests:.:%{_datadir}/php:%{pear_phpdir}" \
     -d date.timezone="UTC" \
@@ -150,6 +168,18 @@ cp -pr ./src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Tue Aug 20 2013 Remi Collet <RPMS@famillecollet.com> 1.6.0-1
+- backport 1.6.0 for remi repo
+
+* Sat Aug 17 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.6.0-1
+- Updated to version 1.6.0
+- Added phpcompatinfo build requires
+- php-common -> php(language)
+- No conditional php-filter require
+- Added php-hash require
+- Global raven min and max versions
+- Removed MongoDBHandlerTest because it requires a running MongoDB server
+
 * Tue Apr  2 2013 Remi Collet <RPMS@famillecollet.com> 1.4.1-1
 - backport 1.4.1 for remi repo
 
