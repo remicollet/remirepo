@@ -1,13 +1,21 @@
+# spec file for php-pecl-http
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global prever    beta4
+%global prever    beta5
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.15.%{prever}%{?dist}
+Release:        0.18.%{prever}%{?dist}.1
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -17,10 +25,6 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
-
-# fix memset arg order
-Patch1:         %{name}-build.patch
-Patch2:         %{name}-php55.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.3.0
@@ -33,16 +37,20 @@ BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
 BuildRequires:  libevent-devel >= 1.4
 BuildRequires:  curl-devel >= 7.18.2
+BuildRequires:  php-pecl-propro-devel
+BuildRequires:  php-pecl-raphf-devel
 # No yet available on fedora: BuildRequires:  libserf-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-Requires:       php-hash
-Requires:       php-iconv
-Requires:       php-json
-Requires:       php-spl
+Requires:       php-hash%{?_isa}
+Requires:       php-iconv%{?_isa}
+Requires:       php-json%{?_isa}
+Requires:       php-spl%{?_isa}
+Requires:       php-pecl(propro)%{?_isa}
+Requires:       php-pecl(raphf)%{?_isa}
 Conflicts:      php-event
 
 Provides:       php-pecl(%{proj_name})         = %{version}%{?prever}
@@ -55,9 +63,7 @@ Provides:       php-%{pecl_name}%{?_isa}       = %{version}%{?prever}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-http
 Obsoletes:     php53u-pecl-http
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-http
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-http
 %endif
@@ -98,8 +104,6 @@ These are the files needed to compile programs using HTTP extension.
 %setup -c -q 
 
 cd %{proj_name}-%{version}%{?prever}
-%patch1 -p0 -b .build
-%patch2 -p1 -b .php55
 
 extver=$(sed -n '/#define PHP_HTTP_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -146,26 +150,22 @@ install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
 %check
 # Install needed extensions
 modules=""
-for mod in json hash iconv; do
+for mod in json hash iconv propro raphf; do
   if [ -f %{php_extdir}/${mod}.so ]; then
-    ln -sf %{php_extdir}/${mod}.so    %{proj_name}-%{version}%{?prever}/modules
-    ln -sf %{php_ztsextdir}/${mod}.so %{proj_name}-zts/modules
     modules="$modules --define extension=${mod}.so"
   fi
 done
 
 # Minimal load test for NTS extension
 %{__php} --no-php-ini \
-    --define extension_dir=%{proj_name}-%{version}%{?prever}/modules \
     $modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=$PWD/%{proj_name}-%{version}%{?prever}/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 # Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{proj_name}-zts/modules \
     $modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=$PWD/%{proj_name}-zts/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 
@@ -199,10 +199,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.18.beta5
+- update to 2.0.0 beta5
+- requires propro and raphf extensions
+
 * Thu Mar 21 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.15.beta4
 - fix build with php 5.5.0beta1
 
-* Sun Dec 31 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.14.beta4
+* Sun Dec 30 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.14.beta4
 - update to 2.0.0beta4
 
 * Thu Dec 13 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.13.beta3
