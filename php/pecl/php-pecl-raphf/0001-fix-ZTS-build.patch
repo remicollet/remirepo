@@ -1,0 +1,25 @@
+From 028a4eda5ebd97cbadbc427423976deac247af63 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Tue, 20 Aug 2013 10:24:56 +0200
+Subject: [PATCH] fix ZTS build
+
+---
+ php_raphf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/php_raphf.h b/php_raphf.h
+index a1b0823..220bcf1 100644
+--- a/php_raphf.h
++++ b/php_raphf.h
+@@ -128,7 +128,7 @@ ZEND_BEGIN_MODULE_GLOBALS(raphf)
+ ZEND_END_MODULE_GLOBALS(raphf)
+ 
+ #ifdef ZTS
+-#	define PHP_RAPHF_G ((zend_raphf_globals *)
++#	define PHP_RAPHF_G ((zend_raphf_globals *) \
+ 		(*((void ***) tsrm_ls))[TSRM_UNSHUFFLE_RSRC_ID(raphf_globals_id)])
+ #else
+ #	define PHP_RAPHF_G (&raphf_globals)
+-- 
+1.8.3.1
+
