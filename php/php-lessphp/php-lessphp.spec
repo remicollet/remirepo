@@ -2,7 +2,7 @@
 %global php_min_ver 5.3.0
 
 Name:          php-%{libname}
-Version:       0.3.9
+Version:       0.4.0
 Release:       1%{?dist}
 Summary:       A compiler for LESS written in PHP
 
@@ -14,16 +14,16 @@ Source0:       %{url}/src/%{libname}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 BuildRequires: help2man
-# Test requires
+# For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# Test requires: phpci
+# For tests: phpcompatinfo
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-pcre
 
 Requires:      php(language) >= %{php_min_ver}
-# phpci requires
+# phpcompatinfo
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-pcre
@@ -90,6 +90,12 @@ sed 's#%{_datadir}#%{buildroot}%{_datadir}#' -i tests/*.php
 
 
 %changelog
+* Mon Aug 20 2013 Remi Collet <RPMS@famillecollet.com> 0.4.0-1
+- backport 0.4.0 for remi repo
+
+* Sun Aug 11 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.4.0-1
+- Updated to 0.4.0
+
 * Thu Mar 07 2013 Remi Collet <RPMS@famillecollet.com> 0.3.9-1
 - backport 0.3.9 for remi repo
 
