@@ -1,6 +1,19 @@
-diff -up zip-1.12.1/config.m4.systemlibzip zip-1.12.1/config.m4
---- zip-1.12.1/config.m4.systemlibzip	2013-08-08 14:55:44.864556155 +0200
-+++ zip-1.12.1/config.m4	2013-08-08 14:55:44.868556168 +0200
+From 4265dac56d5c869163a66ceb85a07ebac4b46217 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Tue, 20 Aug 2013 15:17:57 +0200
+Subject: [PATCH] allow to build using system libzip 0.11 (using --with-libzip
+ option)
+
+---
+ config.m4 | 53 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ php_zip.c |  1 +
+ php_zip.h |  4 ++++
+ 3 files changed, 58 insertions(+)
+
+diff --git a/config.m4 b/config.m4
+index aade73d..85b94cc 100755
+--- a/config.m4
++++ b/config.m4
 @@ -13,8 +13,60 @@ fi
  PHP_ARG_WITH(pcre-dir, pcre install prefix,
  [  --with-pcre-dir           ZIP: pcre install prefix], no, no)
@@ -53,7 +66,7 @@ diff -up zip-1.12.1/config.m4.systemlibzip zip-1.12.1/config.m4
 +      -L$LIBZIP_LIBDIR
 +    ])
 +
-+    AC_DEFINE(HAVE_ZIP,1,[ ]) 
++    AC_DEFINE(HAVE_ZIP,1,[ ])
 +    PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c, $ext_shared,, $LIBZIP_CFLAGS)
 +    PHP_SUBST(ZIP_SHARED_LIBADD)
 +  else
@@ -70,11 +83,23 @@ diff -up zip-1.12.1/config.m4.systemlibzip zip-1.12.1/config.m4
  
  
  AC_CHECK_TYPES([int8_t])
-diff -up zip-1.12.1/php_zip.c.systemlibzip zip-1.12.1/php_zip.c
-diff -up zip-1.12.1/php_zip.h.systemlibzip zip-1.12.1/php_zip.h
---- zip-1.12.1/php_zip.h.systemlibzip	2013-04-29 11:18:17.000000000 +0200
-+++ zip-1.12.1/php_zip.h	2013-08-08 14:55:44.871556178 +0200
-@@ -28,7 +28,11 @@ extern zend_module_entry zip_module_entr
+diff --git a/php_zip.c b/php_zip.c
+index 2e97e84..d8cf7f2 100755
+--- a/php_zip.c
++++ b/php_zip.c
+@@ -30,6 +30,7 @@
+ #include "ext/pcre/php_pcre.h"
+ #include "ext/standard/php_filestat.h"
+ #include "php_zip.h"
++/* Private struct definition, always use bundled copy */
+ #include "lib/zipint.h"
+ 
+ /* zip_open is a macro for renaming libzip zipopen, so we need to use PHP_NAMED_FUNCTION */
+diff --git a/php_zip.h b/php_zip.h
+index d734284..deeb1b4 100755
+--- a/php_zip.h
++++ b/php_zip.h
+@@ -28,7 +28,11 @@
  #include "TSRM.h"
  #endif
  
@@ -86,3 +111,6 @@ diff -up zip-1.12.1/php_zip.h.systemlibzip zip-1.12.1/php_zip.h
  
  #define PHP_ZIP_VERSION_STRING "1.12.1"
  
+-- 
+1.8.1.6
+
