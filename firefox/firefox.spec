@@ -29,13 +29,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      23.0
+%global xulrunner_version      23.0.1
 %global xulrunner_version_max  23.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130805
+%global datelang               20130819
 
 %global mozappdir     %{_libdir}/%{name}
 %global langpackdir   %{mozappdir}/langpacks
@@ -71,7 +71,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        23.0
+Version:        23.0.1
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -189,7 +189,7 @@ echo "ac_add_options --disable-system-cairo" >> .mozconfig
 
 # Set up SDK path
 MOZILLA_SDK_PATH=`pkg-config --variable=sdkdir libxul`
-if [ -z $MOZILLA_SDK_PATH ]; then
+if [ -z "$MOZILLA_SDK_PATH" ]; then
     echo "XulRunner SDK is not available!"
     exit 1
 else
@@ -502,6 +502,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Aug 20 2013 Remi Collet <RPMS@FamilleCollet.com> - 23.0.1-1
+- sync with rawhide, update to 23.0.1
+
+* Mon Aug 19 2013 Jan Horak <jhorak@redhat.com> - 23.0.1-1
+- Update to 23.0.1
+
 * Wed Aug  7 2013 Remi Collet <RPMS@FamilleCollet.com> - 23.0-1
 - sync with rawhide, update to 23.0
 
