@@ -143,13 +143,13 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
 
 %if %{with_zts}
 cd ../%{pecl_name}-zts
-: minimal load test of NTS extension
+: minimal load test of ZTS extension
 %{_bindir}/zts-php --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-: upstream test suite for NTS extension
+: upstream test suite for ZTS extension
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
