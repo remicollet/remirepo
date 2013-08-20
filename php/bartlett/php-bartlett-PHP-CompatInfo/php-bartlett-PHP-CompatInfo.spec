@@ -15,7 +15,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.20.0
+Version:        2.21.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -31,9 +31,6 @@ Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpc
 # Make cache / save_path user specific
 # Add .install .module to fileExtensions (for drupal)
 Patch0:         %{pear_name}-conf.patch
-
-# https://github.com/llaville/php-compat-info/pull/98
-Patch1:         %{pear_name}-git.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -85,7 +82,9 @@ cp phpcompatinfo.xml.dist phpcompatinfo.xml
 # Apply our changes
 %patch0  -p1 -b .rpm
 
-%patch1 -p1 -b .ref
+# https://github.com/llaville/php-compat-info/issues/99
+sed -e '/SO_BINDTODEVICE/s/5.5.1/5.4.18/' \
+    -i PHP/CompatInfo/Reference/sockets.php
 
 # remove checksum for patched files
 sed -e 's/md5sum.*name/name/' \
@@ -131,8 +130,8 @@ rm -f tests/Reference/XslTest.php
 %endif
 
 # OK, but incomplete or skipped tests!
-# Tests: 809, Assertions: 10993, Skipped: 80, when most extensions installed
-# Tests: 550, Assertions: 6830, Skipped: 378, in mock
+# Tests: 810, Assertions: 10996, Skipped: 80, when most extensions installed
+# Tests: 551, Assertions: 6833, Skipped: 378, in mock
 # Reference tests need some fixes for EL-5, so ignore result for now
 %{_bindir}/phpunit \
     -d date.timezone=UTC \
@@ -174,6 +173,9 @@ fi
 
 
 %changelog
+* Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 2.21.0-1
+- Update to 2.21.0
+
 * Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 2.20.0-1
 - Update to 2.20.0
 - patch from https://github.com/llaville/php-compat-info/pull/98
