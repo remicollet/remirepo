@@ -1,7 +1,7 @@
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.3.2
-%global github_commit  3ec2db504e7a79d6504ad8172a706adec5eec681
+%global github_version 1.3.3
+%global github_commit  56fe099669ff3ec3be859ec02e3da965a720184d
 
 %global php_min_ver    5.3.0
 
@@ -26,22 +26,22 @@ BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit_Selenium)
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit_Story)
 
-# For tests: phpci
+# For tests: phpcompatinfo
 BuildRequires: php-curl
+BuildRequires: php-filter
 BuildRequires: php-json
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-spl
-BuildRequires: php-filter
 
 Requires:      php(language) >= %{php_min_ver}
-# phpci
+# phpcompatinfo
 Requires:      php-curl
+Requires:      php-filter
 Requires:      php-json
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-spl
-Requires:      php-filter
 
 %description
 A PHP implementation for validating JSON structures against a given schema.
@@ -94,6 +94,12 @@ rm -f tests/JsonSchema/Tests/Drafts/Draft3Test.php \
 
 
 %changelog
+* Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- backport 1.3.3 for remi repo.
+
+* Sun Aug 11 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3.3-1
+- Updated to 1.3.3
+
 * Mon Jul  8 2013 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - backport 1.3.2 for remi repo.
 
