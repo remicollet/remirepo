@@ -39,7 +39,6 @@ BuildRequires:  libevent-devel >= 1.4
 BuildRequires:  curl-devel >= 7.18.2
 BuildRequires:  php-pecl-propro-devel
 BuildRequires:  php-pecl-raphf-devel
-# No yet available on fedora: BuildRequires:  libserf-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
