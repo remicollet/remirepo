@@ -71,8 +71,7 @@
 %else
 %global with_libzip  1
 %endif
-%global with_zip     1
-%global zipmod       zip
+%global with_zip     0
 
 %if 0%{?fedora} < 18 && 0%{?rhel} < 7
 %global db_devel  db4-devel
@@ -85,11 +84,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.2
+Version: 5.5.3
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 0%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -306,6 +305,8 @@ Requires: php-pecl-jsonc%{?_isa}
 %if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
 Obsoletes: php-pecl-zip < 1.11
+%else
+Requires: php-pecl-zip%{?_isa}
 %endif
 Provides: php-zlib, php-zlib%{?_isa}
 Obsoletes: php-pecl-phar < 1.2.4
@@ -1111,9 +1112,9 @@ build --libdir=%{_libdir}/php \
 %endif
 %if %{with_zip}
       --enable-zip=shared \
-%endif
 %if %{with_libzip}
       --with-libzip \
+%endif
 %endif
       --without-readline \
       --with-libedit \
@@ -1253,9 +1254,9 @@ build --includedir=%{_includedir}/php-zts \
 %endif
 %if %{with_zip}
       --enable-zip=shared \
-%endif
 %if %{with_libzip}
       --with-libzip \
+%endif
 %endif
       --without-readline \
       --with-libedit \
@@ -1470,7 +1471,10 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     simplexml bz2 calendar ctype exif ftp gettext gmp iconv \
     sockets tokenizer opcache \
-    pdo pdo_pgsql pdo_odbc pdo_sqlite %{zipmod} \
+    pdo pdo_pgsql pdo_odbc pdo_sqlite \
+%if %{with_zip}
+    zip \
+%endif
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
     sqlite3 \
@@ -1812,6 +1816,11 @@ fi
 
 
 %changelog
+* Tue Aug 20 2013 Remi Collet <rcollet@redhat.com> - 5.5.3-0
+- update to 5.5.2
+- test build without zip extension
+- fix typo and add missing entries in php.ini
+
 * Mon Aug 19 2013 Remi Collet <rcollet@redhat.com> - 5.5.2-1
 - update to 5.5.2
 
