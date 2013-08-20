@@ -7,7 +7,11 @@
 # Please, preserve the changelog entries
 #
 %global pecl_name      zip
+%if 0%{?fedora} >= 20
 %global with_libzip    1
+%else
+%global with_libzip    0
+%endif
 %global with_zts       0%{?__ztsphp:1}
 
 Summary:      A ZIP archive management extension
@@ -62,8 +66,8 @@ Zip est une extension pour créer et lire les archives au format ZIP.
 
 cd %{pecl_name}-%{version}
 
-%if %{with_libzip}
 %patch0 -p1 -b .git
+%if %{with_libzip}
 %patch1 -p1 -b .systemlibzip
 # delete bundled libzip to ensure it is not used (except zipint.h)
 rm lib/*.c
@@ -88,10 +92,10 @@ export PHP_RPATH=no
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 %configure \
-  --with-php-config=%{_bindir}/php-config \
 %if %{with_libzip}
-  --with-libzip
+  --with-libzip \
 %endif
+  --with-php-config=%{_bindir}/php-config
 
 make %{?_smp_mflags}
 
@@ -99,10 +103,10 @@ make %{?_smp_mflags}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure \
-  --with-php-config=%{_bindir}/zts-php-config \
 %if %{with_libzip}
-  --with-libzip
+  --with-libzip \
 %endif
+  --with-php-config=%{_bindir}/zts-php-config
 
 make %{?_smp_mflags}
 %endif
