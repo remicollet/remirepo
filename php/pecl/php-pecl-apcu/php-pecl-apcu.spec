@@ -13,7 +13,7 @@
 Name:           php-pecl-apcu
 Summary:        APC User Cache
 Version:        4.0.1
-Release:        2%{?dist}.1
+Release:        3%{?dist}.1
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
@@ -241,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 30 2013 Remi Collet <remi@fedoraproject.org> - 4.0.1-3
+- rebuild to have NEVR > EPEL (or Fedora)
+
 * Thu Jul  4 2013 Remi Collet <remi@fedoraproject.org> - 4.0.1-2
 - obsoletes APC with php 5.5
 - restore APC serializers ABI (patch merged upstream)
