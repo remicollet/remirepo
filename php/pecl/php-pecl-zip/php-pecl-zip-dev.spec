@@ -68,6 +68,8 @@ Zip est une extension pour créer et lire les archives au format ZIP.
 cd %{pecl_name}-%{version}
 
 %patch0 -p1 -b .git
+rm -f LICENSE.git
+
 %if %{with_libzip}
 %patch1 -p1 -b .systemlibzip
 # delete bundled libzip to ensure it is not used (except zipint.h)
