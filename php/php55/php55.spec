@@ -88,7 +88,7 @@ Version: 5.5.3
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 0%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1816,8 +1816,13 @@ fi
 
 
 %changelog
+* Wed Aug 21 2013 Remi Collet <rcollet@redhat.com> - 5.5.3-1
+- update to 5.5.3
+- build without zip extension, requires php-pecl-zip
+- fix typo and add missing entries in php.ini
+
 * Tue Aug 20 2013 Remi Collet <rcollet@redhat.com> - 5.5.3-0
-- update to 5.5.2
+- update to 5.5.3
 - test build without zip extension
 - fix typo and add missing entries in php.ini
 
