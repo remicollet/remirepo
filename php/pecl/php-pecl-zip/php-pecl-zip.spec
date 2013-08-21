@@ -33,7 +33,7 @@ Patch1:       zip-systemlibzip.patch
 
 BuildRequires: php-devel
 %if %{with_libzip}
-BuildRequires: libzip-devel >= 0.11.1
+BuildRequires: pkgconfig(libzip) >= 0.11.1
 %else
 BuildRequires: zlib-devel
 %endif
