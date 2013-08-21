@@ -18,7 +18,7 @@ Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         php-pecl-zip
 Version:      1.12.1
-Release:      2%{?dist}
+Release:      2%{?dist}.1
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/zip
@@ -31,6 +31,7 @@ Patch0:       zip-git.patch
 # use system libzip 0.11 instead of bundled copy
 Patch1:       zip-systemlibzip.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel
 %if %{with_libzip}
 BuildRequires: pkgconfig(libzip) >= 0.11.1
@@ -113,6 +114,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
+
 make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
@@ -159,6 +162,10 @@ TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 
@@ -170,6 +177,7 @@ fi
 
 
 %files
+%defattr(-, root, root, -)
 %doc %{pecl_name}-%{version}/{CREDITS,LICENSE}
 %doc %{pecl_name}-%{version}/examples
 %{pecl_xmldir}/%{name}.xml
@@ -183,8 +191,11 @@ fi
 
 
 %changelog
-* Tue Aug 20 2013 Remi Collet <remi@redhat.com> 1.12.1-2
+* Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> 1.12.1-2.1
+- backport stuff
+
+* Tue Aug 20 2013 Remi Collet <rcollet@redhat.com> 1.12.1-2
 - refresh our merged patches from upstream git
 
-* Thu Aug 08 2013 Remi Collet <remi@redhat.com> 1.12.1-1
+* Thu Aug 08 2013 Remi Collet <rcollet@redhat.com> 1.12.1-1
 - New spec for version 1.12.1

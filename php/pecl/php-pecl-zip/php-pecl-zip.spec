@@ -183,8 +183,8 @@ fi
 
 
 %changelog
-* Tue Aug 20 2013 Remi Collet <remi@redhat.com> 1.12.1-2
+* Tue Aug 20 2013 Remi Collet <rcollet@redhat.com> 1.12.1-2
 - refresh our merged patches from upstream git
 
-* Thu Aug 08 2013 Remi Collet <remi@redhat.com> 1.12.1-1
+* Thu Aug 08 2013 Remi Collet <rcollet@redhat.com> 1.12.1-1
 - New spec for version 1.12.1
