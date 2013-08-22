@@ -20,10 +20,10 @@ Name:         php-pecl-zip
 Version:      1.12.1
 Release:      3%{?dist}
 %if %{with_libzip}
+License:      PHP
+%else
 # Zip extension is PHP, Libzip library is BSD
 License:      PHP and BSD
-%else
-License:      PHP
 %endif
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/zip
