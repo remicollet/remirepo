@@ -75,7 +75,7 @@ sign:
 	sed -e "s/%{phpname}/php/g;s/%{phpconfdir}/%{_sysconfdir}/g;s/%{phpbindir}/%{_bindir}/g;s/%{phpincldir}/%{_includedir}/g;s/%{_origsysconfdir}/%{_sysconfdir}/g;s/%{_origincludedir}/%{_includedir}/g" $(NAME).spec >/tmp/$(NAME)-filtered.spec
 
 diff: /tmp/$(NAME)-filtered.spec
-	colordiff -u  /tmp/$(NAME)-filtered.spec /home/extras/GIT/$(NAME)/$(NAME).spec
+	colordiff -u  /tmp/$(NAME)-filtered.spec /home/extras/GIT/$(NAME)/$(NAME).spec 2>/dev/null
 
 devdiff: /tmp/$(NAME)-filtered.spec
 	colordiff -u  /tmp/$(NAME)-filtered.spec $(NAME)-dev.spec

@@ -1,25 +1,25 @@
 Build order
-	Config                    2.2.2        
-	Console                   2.2.2        
-	CssSelector               2.2.2        
-	DomCrawler                2.2.2      BR: CssSelector  R: CssSelector
-	Filesystem                2.2.2        
-	Finder                    2.2.2        
-	HttpFoundation            2.2.2        
-	Locale                    2.2.2        
-	OptionsResolver           2.2.2        
-	Process                   2.2.2        
-	PropertyAccess            2.2.2        
-	Serializer                2.2.2        
-	Templating                2.2.2        
-	Yaml                      2.2.2        
-	BrowserKit                2.2.2      BR: CssSelector, DomCrawler, Process  R: DomCrawler, Process
-	ClassLoader               2.2.2      BR: Finder  
-	DependencyInjection       2.2.2      BR: Config, Yaml  R: Config, Yaml
-	EventDispatcher           2.2.2      BR: DependencyInjection  R: DependencyInjection
-	HttpKernel                2.2.2      BR: BrowserKit, ClassLoader, Config, Console, DependencyInjection, EventDispatcher, Finder, HttpFoundation, Process I: Routing R: EventDispatcher, HttpFoundation, BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder
-	Routing                   2.2.2      BR: Config, Yaml  R: Config, Yaml
-	Translation               2.2.2      BR: Config, Yaml  R: Config, Yaml
-	Validator                 2.2.2      BR: Config, HttpFoundation, Locale, Translation, Yaml  R: Config, HttpFoundation, Locale, Yaml
-	Form                      2.2.2      BR: EventDispatcher, HttpFoundation, Locale, OptionsResolver, PropertyAccess, Validator  R: EventDispatcher, Locale, OptionsResolver, PropertyAccess, HttpFoundation, Validator
-	Security                  2.2.2      BR: EventDispatcher, Form, HttpFoundation, HttpKernel, Routing, Validator  R: EventDispatcher, HttpFoundation, HttpKernel, ClassLoader, Finder, Form, Routing, Validator
+	Config                    2.2.5        
+	Console                   2.2.5        
+	CssSelector               2.2.5        
+	DomCrawler                2.2.5      BR: CssSelector  R: CssSelector
+	Filesystem                2.2.5        
+	Finder                    2.2.5        
+	HttpFoundation            2.2.5        
+	Locale                    2.2.5        
+	OptionsResolver           2.2.5        
+	Process                   2.2.5        
+	PropertyAccess            2.2.5        
+	Serializer                2.2.5        
+	Templating                2.2.5        
+	Yaml                      2.2.5        
+	BrowserKit                2.2.5      BR: CssSelector, DomCrawler, Process  R: DomCrawler, Process
+	ClassLoader               2.2.5      BR: Finder  
+	DependencyInjection       2.2.5      BR: Config, Yaml  R: Config, Yaml
+	EventDispatcher           2.2.5      BR: DependencyInjection  R: DependencyInjection
+	HttpKernel                2.2.5      BR: BrowserKit, ClassLoader, Config, Console, DependencyInjection, EventDispatcher, Finder, HttpFoundation, Process, Templating I: Routing R: EventDispatcher, HttpFoundation, BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder
+	Routing                   2.2.5      BR: Config, Yaml  R: Config, Yaml
+	Translation               2.2.5      BR: Config, Yaml  R: Config, Yaml
+	Validator                 2.2.5      BR: Config, HttpFoundation, Locale, Translation, Yaml  R: Config, HttpFoundation, Locale, Yaml
+	Form                      2.2.5      BR: EventDispatcher, HttpFoundation, Locale, OptionsResolver, PropertyAccess, Validator  R: EventDispatcher, Locale, OptionsResolver, PropertyAccess, HttpFoundation, Validator
+	Security                  2.2.5      BR: EventDispatcher, Form, HttpFoundation, HttpKernel, Routing, Validator  R: EventDispatcher, HttpFoundation, HttpKernel, ClassLoader, Finder, Form, Routing, Validator

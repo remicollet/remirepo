@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.2
+Version:          2.2.5
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -106,16 +106,10 @@ sed '/README.md.*Content-Disposition/s#".*README.md#"README.md#g' \
     -i %{pear_name}-%{version}/Symfony/Component/HttpFoundation/Tests/BinaryFileResponseTest.php
 
 # Modify PEAR package.xml file:
-# - Remove .gitattributes file
-# - Remove .gitignore file
-# - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
 # - Remove md5sum from phpunit.xml.dist file since it was updated
 # - Remove md5sum from BinaryFileResponseTest.php file since it was updated
-sed -e '/\.gitattributes/d' \
-    -e '/\.gitignore/d' \
-    -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
-    -e '/Tests/s/role="php"/role="test"/' \
+sed -e '/Tests/s/role="php"/role="test"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/phpunit.xml.dist/s/md5sum="[^"]*"\s*//' \
     -e '/BinaryFileResponseTest.php/s/md5sum="[^"]*"\s*//' \
@@ -183,6 +177,24 @@ fi
 
 
 %changelog
+* Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- Sync with rawhide, update to 2.2.5
+
+* Fri Aug 09 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.5-1
+- Updated to 2.2.5
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 02 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.3-2
+- Merge master, f19, f18, and el6 (temp disable tests for el6)
+
+* Tue Jul 02 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.3-1
+- Updated to 2.2.3
+
+* Thu Jun 13 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.2-1
+- Updated to 2.2.2
+
 * Mon Jun 03 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2
 

@@ -6,7 +6,7 @@
 
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.2
+Version:          2.2.5
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -43,7 +43,9 @@ BuildRequires:    php-pear(%{pear_channel}/Process) >= 2.2.0
 BuildRequires:    php-pear(%{pear_channel}/Process) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Routing) >= 2.2.0
 BuildRequires:    php-pear(%{pear_channel}/Routing) <  2.3.0
-# Awaiting https://github.com/symfony/symfony/issues/7318
+BuildRequires:    php-pear(%{pear_channel}/Templating) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Templating) <  2.3.0
+# Awaiting https://bugzilla.redhat.com/show_bug.cgi?id=979794
 #BuildRequires:    php-pear(%{pear_channel}/Stopwatch) >= 2.2.0
 #BuildRequires:    php-pear(%{pear_channel}/Stopwatch) <  2.3.0
 BuildRequires:    php-PsrLog >= 1.0
@@ -124,6 +126,7 @@ Optional dependencies: memcache, memcached, mongo, xdebug
 # Symfony2 %{pear_name} PEAR package.
 
 set_include_path(
+    '%{_datadir}/php'.PATH_SEPARATOR.
     '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
     get_include_path()
 );
@@ -144,15 +147,9 @@ sed -e 's#vendor/autoload.php#./phpunit.autoloader.php#' \
     -i %{pear_name}-%{version}/Symfony/Component/%{pear_name}/phpunit.xml.dist
 
 # Modify PEAR package.xml file:
-# - Remove .gitattributes file
-# - Remove .gitignore file
-# - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
 # - Remove md5sum from phpunit.xml.dist file since it was updated
-sed -e '/\.gitattributes/d' \
-    -e '/\.gitignore/d' \
-    -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
-    -e '/Tests/s/role="php"/role="test"/' \
+sed -e '/Tests/s/role="php"/role="test"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/phpunit.xml.dist/s/md5sum="[^"]*"\s*//' \
     -i package.xml
@@ -218,6 +215,25 @@ fi
 
 
 %changelog
+* Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- Sync with rawhide, update to 2.2.5
+
+* Fri Aug 09 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.5-2
+- Added missing build requires php-pear(%%{pear_channel}/Templating)
+
+* Fri Aug 09 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.5-1
+- Updated to 2.2.5
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 02 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.3-1
+- Updated to 2.2.3
+
+* Thu Jun 13 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.2-1
+- Updated to 2.2.2
+- Removed package.xml modifications fixed usptream
+
 * Mon Jun 03 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2
 

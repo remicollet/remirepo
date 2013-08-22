@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.2
+Version:          2.2.5
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -36,9 +36,10 @@ BuildRequires:    php-pear(%{pear_channel}/Validator) >= 2.2.0
 BuildRequires:    php-pear(%{pear_channel}/Validator) <  2.3.0
 BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
 BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) <  3.0.0
+BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineDBAL) >= 2.2.0
+BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineDBAL) <  3.0.0
 BuildRequires:    php-PsrLog >= 1.0
 BuildRequires:    php-PsrLog <  2.0
-# TODO: Add DoctrineDBAL (>=2.2,<3) when available
 # For tests: phpci
 BuildRequires:    php-date
 BuildRequires:    php-hash
@@ -80,7 +81,8 @@ Requires:         php-pear(%{pear_channel}/Routing) >= 2.2.0
 Requires:         php-pear(%{pear_channel}/Routing) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Validator) >= 2.2.0
 Requires:         php-pear(%{pear_channel}/Validator) <  2.3.0
-# TODO: Add DoctrineDBAL (>=2.2,<3) when available
+Requires:         php-pear(pear.doctrine-project.org/DoctrineDBAL) >= 2.2.0
+Requires:         php-pear(pear.doctrine-project.org/DoctrineDBAL) <  3.0.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -89,8 +91,6 @@ Security provides an infrastructure for sophisticated authorization systems,
 which makes it possible to easily separate the actual authorization logic from
 so called user providers that hold the users credentials. It is inspired by
 the Java Spring framework.
-
-Optional dependencies: DoctrineDBAL
 
 
 %prep
@@ -104,6 +104,7 @@ Optional dependencies: DoctrineDBAL
 # Symfony2 %{pear_name} PEAR package.
 
 set_include_path(
+    '%{_datadir}/php'.PATH_SEPARATOR.
     '%{pear_testdir}/%{pear_name}'.PATH_SEPARATOR.
     get_include_path()
 );
@@ -124,15 +125,9 @@ sed -e 's#vendor/autoload.php#./phpunit.autoloader.php#' \
     -i %{pear_name}-%{version}/Symfony/Component/%{pear_name}/phpunit.xml.dist
 
 # Modify PEAR package.xml file:
-# - Remove .gitattributes file
-# - Remove .gitignore file
-# - Change role from "php" to "doc" for CHANGELOG.md file
 # - Change role from "php" to "test" for all test files
 # - Remove md5sum from phpunit.xml.dist file since it was updated
-sed -e '/\.gitattributes/d' \
-    -e '/\.gitignore/d' \
-    -e '/CHANGELOG.md/s/role="php"/role="doc"/' \
-    -e '/Tests/s/role="php"/role="test"/' \
+sed -e '/Tests/s/role="php"/role="test"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/phpunit.xml.dist/s/md5sum="[^"]*"\s*//' \
     -i package.xml
@@ -192,6 +187,23 @@ fi
 
 
 %changelog
+* Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- Updated to 2.2.5
+
+* Fri Aug 09 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.5-1
+- Updated to 2.2.5
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 02 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.3-1
+- Updated to 2.2.3
+
+* Thu Jun 13 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.2-1
+- Updated to 2.2.2
+- Added php-pear(pear.doctrine-project.org/DoctrineDBAL) requires
+- Removed package.xml modifications fixed usptream
+
 * Mon Jun 03 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2
 
