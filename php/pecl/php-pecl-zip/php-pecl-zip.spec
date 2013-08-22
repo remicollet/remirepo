@@ -18,7 +18,7 @@ Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         php-pecl-zip
 Version:      1.12.1
-Release:      4%{?dist}
+Release:      5%{?dist}
 %if %{with_libzip}
 License:      PHP
 %else
@@ -79,7 +79,7 @@ rm lib/*.c
 %endif
 
 # make rpmlint happy (fixed in upstream git)
-chmod -x *.c *.h lib/*.h lib/*.c examples/* CREDITS
+find . -type f -exec chmod -x {} \;
 
 cd ..
 : Create the configuration file
@@ -191,6 +191,9 @@ fi
 
 
 %changelog
+* Thu Aug 22 2013 Remi Collet <rcollet@redhat.com> 1.12.1-5
+- really really fix all spurious-executable-perm
+
 * Thu Aug 22 2013 Remi Collet <rcollet@redhat.com> 1.12.1-4
 - really fix all spurious-executable-perm
 
