@@ -18,8 +18,13 @@ Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         php-pecl-zip
 Version:      1.12.1
-Release:      2%{?dist}
+Release:      3%{?dist}
+%if %{with_libzip}
+# Zip extension is PHP, Libzip library is BSD
+License:      PHP and BSD
+%else
 License:      PHP
+%endif
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/zip
 
@@ -34,9 +39,8 @@ Patch1:       zip-systemlibzip.patch
 BuildRequires: php-devel
 %if %{with_libzip}
 BuildRequires: pkgconfig(libzip) >= 0.11.1
-%else
-BuildRequires: zlib-devel
 %endif
+BuildRequires: zlib-devel
 BuildRequires: php-pear
 
 Requires(post): %{_bindir}/pecl
@@ -67,11 +71,15 @@ Zip est une extension pour créer et lire les archives au format ZIP.
 cd %{pecl_name}-%{version}
 
 %patch0 -p1 -b .git
+
 %if %{with_libzip}
 %patch1 -p1 -b .systemlibzip
 # delete bundled libzip to ensure it is not used (except zipint.h)
 rm lib/*.c
 %endif
+
+# make rpmlint happy (fixed in upstream git)
+chmod -x *.c *.h lib/*.h examples/* CREDITS
 
 cd ..
 : Create the configuration file
@@ -183,6 +191,11 @@ fi
 
 
 %changelog
+* Thu Aug 22 2013 Remi Collet <rcollet@redhat.com> 1.12.1-3
+- fixes from review comments #999313: clarify License
+- drop execution right from sources
+- BR libzip-devel always needed
+
 * Tue Aug 20 2013 Remi Collet <rcollet@redhat.com> 1.12.1-2
 - refresh our merged patches from upstream git
 
