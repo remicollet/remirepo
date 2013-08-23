@@ -1,6 +1,6 @@
 Build order
 	Horde_Constraint          2.0.1       I: Horde_Test 
-	Horde_Css_Parser          1.0.0        
+	Horde_Css_Parser          1.0.1        
 	Horde_Mongo               1.0.1        
 	Horde_Queue               1.0.0        
 	Horde_Role                1.0.1        

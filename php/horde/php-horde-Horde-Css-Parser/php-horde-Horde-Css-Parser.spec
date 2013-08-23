@@ -5,8 +5,8 @@
 
 
 Name:           php-horde-Horde-Css-Parser
-Version:        1.0.0
-Release:        2%{?dist}
+Version:        1.0.1
+Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
 Group:          Development/Libraries
@@ -25,7 +25,7 @@ Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-Requires:       php-PHP-CSS-Parser
+Requires:       php-PHP-CSS-Parser >= 5.0.8
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -88,8 +88,11 @@ fi
 
 
 %changelog
-* Fri May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+* Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 for PHP-CSS-Parser 5.0.8
+
+* Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - use system php-PHP-CSS-Parser
 
-* Fri May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+* Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, with bundled lib (need to be cleaned)
