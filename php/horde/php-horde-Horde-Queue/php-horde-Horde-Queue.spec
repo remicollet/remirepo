@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Queue
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Horde Queue
 
@@ -77,8 +77,12 @@ fi
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Horde
 %{pear_phpdir}/Horde/Queue
+%{pear_datadir}/%{pear_name}
 
 
 %changelog
+* Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - New Package
