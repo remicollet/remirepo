@@ -15,7 +15,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.21.0
+Version:        2.22.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -82,13 +82,8 @@ cp phpcompatinfo.xml.dist phpcompatinfo.xml
 # Apply our changes
 %patch0  -p1 -b .rpm
 
-# https://github.com/llaville/php-compat-info/issues/99
-sed -e '/SO_BINDTODEVICE/s/5.5.1/5.4.18/' \
-    -i PHP/CompatInfo/Reference/sockets.php
-
 # remove checksum for patched files
-sed -e 's/md5sum.*name/name/' \
-    ../package.xml >%{name}.xml
+cp ../package.xml %{name}.xml
 
 
 %build
@@ -173,8 +168,12 @@ fi
 
 
 %changelog
+* Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 2.22.0-1
+- Update to 2.22.0
+
 * Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 2.21.0-1
 - Update to 2.21.0
+- patch for https://github.com/llaville/php-compat-info/issues/99
 
 * Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 2.20.0-1
 - Update to 2.20.0
