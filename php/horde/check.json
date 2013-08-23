@@ -11,7 +11,7 @@
 		"Horde_Translation":["Horde_Test"],
 		"Horde_Util":["Horde_Test","Horde_Imap_Client"],
 		"Horde_Log":["Horde_Test"],
-		"Horde_Mail":["Horde_Mime"],
+		"Horde_Mail":["Horde_Mime", "Horde_Smtp"],
 		"Horde_Date":["Horde_Icalendar"],
 		"Horde_Cache":["Horde_Db"],
 		"Horde_Notification":["Horde_Alarm"],
