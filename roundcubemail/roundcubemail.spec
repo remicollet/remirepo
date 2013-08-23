@@ -1,7 +1,7 @@
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  0.9.2
+Version:  0.9.3
 Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
@@ -88,6 +88,9 @@ sed -i 's/\r//' SQL/mssql.initial.sql
 
 %build
 
+#Drop precompiled flash
+find . -type f -name '*.swf' | xargs rm -f
+
 %install
 
 rm -rf %{buildroot}
@@ -162,6 +165,16 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
 %changelog
+* Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
+- backport 0.9.3 for remi repo in sync with rawhide
+
+* Fri Aug 23 2013 Jon Ciesla <limburgher@gmail.com> - 0.9.3-1
+- Fix two XSS vulnerabilities:
+- http://trac.roundcube.net/ticket/1489251
+
+* Fri Aug 16 2013 Jon Ciesla <limburgher@gmail.com> - 0.9.2-3
+- Drop precompiled flash.
+
 * Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
 - backport 0.9.2 for remi repo in sync with rawhide
 
