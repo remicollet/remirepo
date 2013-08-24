@@ -1,0 +1,548 @@
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/Association.php php-openid-2.2.2.new/Auth/OpenID/Association.php
+--- php-openid-2.2.2.orig/Auth/OpenID/Association.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/Association.php	2011-03-22 21:10:52.000000000 -0600
+@@ -17,17 +17,17 @@
+ /**
+  * @access private
+  */
+-require_once 'Auth/OpenID/CryptUtil.php';
++require_once 'Auth_OpenID/OpenID/CryptUtil.php';
+ 
+ /**
+  * @access private
+  */
+-require_once 'Auth/OpenID/KVForm.php';
++require_once 'Auth_OpenID/OpenID/KVForm.php';
+ 
+ /**
+  * @access private
+  */
+-require_once 'Auth/OpenID/HMAC.php';
++require_once 'Auth_OpenID/OpenID/HMAC.php';
+ 
+ /**
+  * This class represents an association between a server and a
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/AX.php php-openid-2.2.2.new/Auth/OpenID/AX.php
+--- php-openid-2.2.2.orig/Auth/OpenID/AX.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/AX.php	2011-03-22 21:10:52.000000000 -0600
+@@ -10,9 +10,9 @@
+ /**
+  * Require utility classes and functions for the consumer.
+  */
+-require_once "Auth/OpenID/Extension.php";
+-require_once "Auth/OpenID/Message.php";
+-require_once "Auth/OpenID/TrustRoot.php";
++require_once "Auth_OpenID/OpenID/Extension.php";
++require_once "Auth_OpenID/OpenID/Message.php";
++require_once "Auth_OpenID/OpenID/TrustRoot.php";
+ 
+ define('Auth_OpenID_AX_NS_URI',
+        'http://openid.net/srv/ax/1.0');
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/BigMath.php php-openid-2.2.2.new/Auth/OpenID/BigMath.php
+--- php-openid-2.2.2.orig/Auth/OpenID/BigMath.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/BigMath.php	2011-03-22 21:10:52.000000000 -0600
+@@ -18,12 +18,12 @@
+ /**
+  * Needed for random number generation
+  */
+-require_once 'Auth/OpenID/CryptUtil.php';
++require_once 'Auth_OpenID/OpenID/CryptUtil.php';
+ 
+ /**
+  * Need Auth_OpenID::bytes().
+  */
+-require_once 'Auth/OpenID.php';
++require_once 'Auth_OpenID/OpenID.php';
+ 
+ /**
+  * The superclass of all big-integer math implementations
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/Consumer.php php-openid-2.2.2.new/Auth/OpenID/Consumer.php
+--- php-openid-2.2.2.orig/Auth/OpenID/Consumer.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/Consumer.php	2011-03-22 21:10:52.000000000 -0600
+@@ -160,18 +160,18 @@
+ /**
+  * Require utility classes and functions for the consumer.
+  */
+-require_once "Auth/OpenID.php";
+-require_once "Auth/OpenID/Message.php";
+-require_once "Auth/OpenID/HMAC.php";
+-require_once "Auth/OpenID/Association.php";
+-require_once "Auth/OpenID/CryptUtil.php";
+-require_once "Auth/OpenID/DiffieHellman.php";
+-require_once "Auth/OpenID/KVForm.php";
+-require_once "Auth/OpenID/Nonce.php";
+-require_once "Auth/OpenID/Discover.php";
+-require_once "Auth/OpenID/URINorm.php";
+-require_once "Auth/Yadis/Manager.php";
+-require_once "Auth/Yadis/XRI.php";
++require_once "Auth_OpenID/OpenID.php";
++require_once "Auth_OpenID/OpenID/Message.php";
++require_once "Auth_OpenID/OpenID/HMAC.php";
++require_once "Auth_OpenID/OpenID/Association.php";
++require_once "Auth_OpenID/OpenID/CryptUtil.php";
++require_once "Auth_OpenID/OpenID/DiffieHellman.php";
++require_once "Auth_OpenID/OpenID/KVForm.php";
++require_once "Auth_OpenID/OpenID/Nonce.php";
++require_once "Auth_OpenID/OpenID/Discover.php";
++require_once "Auth_OpenID/OpenID/URINorm.php";
++require_once "Auth_OpenID/Yadis/Manager.php";
++require_once "Auth_OpenID/Yadis/XRI.php";
+ 
+ /**
+  * This is the status code returned when the complete method returns
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/DiffieHellman.php php-openid-2.2.2.new/Auth/OpenID/DiffieHellman.php
+--- php-openid-2.2.2.orig/Auth/OpenID/DiffieHellman.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/DiffieHellman.php	2011-03-22 21:10:52.000000000 -0600
+@@ -14,8 +14,8 @@
+  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache
+  */
+ 
+-require_once 'Auth/OpenID.php';
+-require_once 'Auth/OpenID/BigMath.php';
++require_once 'Auth_OpenID/OpenID.php';
++require_once 'Auth_OpenID/OpenID/BigMath.php';
+ 
+ function Auth_OpenID_getDefaultMod()
+ {
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/Discover.php php-openid-2.2.2.new/Auth/OpenID/Discover.php
+--- php-openid-2.2.2.orig/Auth/OpenID/Discover.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/Discover.php	2011-03-22 21:10:52.000000000 -0600
+@@ -4,11 +4,11 @@
+  * The OpenID and Yadis discovery implementation for OpenID 1.2.
+  */
+ 
+-require_once "Auth/OpenID.php";
+-require_once "Auth/OpenID/Parse.php";
+-require_once "Auth/OpenID/Message.php";
+-require_once "Auth/Yadis/XRIRes.php";
+-require_once "Auth/Yadis/Yadis.php";
++require_once "Auth_OpenID/OpenID.php";
++require_once "Auth_OpenID/OpenID/Parse.php";
++require_once "Auth_OpenID/OpenID/Message.php";
++require_once "Auth_OpenID/Yadis/XRIRes.php";
++require_once "Auth_OpenID/Yadis/Yadis.php";
+ 
+ // XML namespace value
+ define('Auth_OpenID_XMLNS_1_0', 'http://openid.net/xmlns/1.0');
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/DumbStore.php php-openid-2.2.2.new/Auth/OpenID/DumbStore.php
+--- php-openid-2.2.2.orig/Auth/OpenID/DumbStore.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/DumbStore.php	2011-03-22 21:10:52.000000000 -0600
+@@ -17,8 +17,8 @@
+ /**
+  * Import the interface for creating a new store class.
+  */
+-require_once 'Auth/OpenID/Interface.php';
+-require_once 'Auth/OpenID/HMAC.php';
++require_once 'Auth_OpenID/OpenID/Interface.php';
++require_once 'Auth_OpenID/OpenID/HMAC.php';
+ 
+ /**
+  * This is a store for use in the worst case, when you have no way of
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/Extension.php php-openid-2.2.2.new/Auth/OpenID/Extension.php
+--- php-openid-2.2.2.orig/Auth/OpenID/Extension.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/Extension.php	2011-03-22 21:10:52.000000000 -0600
+@@ -9,7 +9,7 @@
+ /**
+  * Require the Message implementation.
+  */
+-require_once 'Auth/OpenID/Message.php';
++require_once 'Auth_OpenID/OpenID/Message.php';
+ 
+ /**
+  * A base class for accessing extension request and response data for
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/FileStore.php php-openid-2.2.2.new/Auth/OpenID/FileStore.php
+--- php-openid-2.2.2.orig/Auth/OpenID/FileStore.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/FileStore.php	2011-03-22 21:10:52.000000000 -0600
+@@ -17,10 +17,10 @@
+ /**
+  * Require base class for creating a new interface.
+  */
+-require_once 'Auth/OpenID.php';
+-require_once 'Auth/OpenID/Interface.php';
+-require_once 'Auth/OpenID/HMAC.php';
+-require_once 'Auth/OpenID/Nonce.php';
++require_once 'Auth_OpenID/OpenID.php';
++require_once 'Auth_OpenID/OpenID/Interface.php';
++require_once 'Auth_OpenID/OpenID/HMAC.php';
++require_once 'Auth_OpenID/OpenID/Nonce.php';
+ 
+ /**
+  * This is a filesystem-based store for OpenID associations and
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/HMAC.php php-openid-2.2.2.new/Auth/OpenID/HMAC.php
+--- php-openid-2.2.2.orig/Auth/OpenID/HMAC.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/HMAC.php	2011-03-22 21:10:52.000000000 -0600
+@@ -14,7 +14,7 @@
+  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache
+  */
+ 
+-require_once 'Auth/OpenID.php';
++require_once 'Auth_OpenID/OpenID.php';
+ 
+ /**
+  * SHA1_BLOCKSIZE is this module's SHA1 blocksize used by the fallback
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/MDB2Store.php php-openid-2.2.2.new/Auth/OpenID/MDB2Store.php
+--- php-openid-2.2.2.orig/Auth/OpenID/MDB2Store.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/MDB2Store.php	2011-03-22 21:10:52.000000000 -0600
+@@ -18,17 +18,17 @@
+ /**
+  * @access private
+  */
+-require_once 'Auth/OpenID/Interface.php';
++require_once 'Auth_OpenID/OpenID/Interface.php';
+ 
+ /**
+  * @access private
+  */
+-require_once 'Auth/OpenID.php';
++require_once 'Auth_OpenID/OpenID.php';
+ 
+ /**
+  * @access private
+  */
+-require_once 'Auth/OpenID/Nonce.php';
++require_once 'Auth_OpenID/OpenID/Nonce.php';
+ 
+ /**
+  * This store uses a PEAR::MDB2 connection to store persistence
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/MemcachedStore.php php-openid-2.2.2.new/Auth/OpenID/MemcachedStore.php
+--- php-openid-2.2.2.orig/Auth/OpenID/MemcachedStore.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/MemcachedStore.php	2011-03-22 21:10:52.000000000 -0600
+@@ -18,7 +18,7 @@
+ /**
+  * Import the interface for creating a new store class.
+  */
+-require_once 'Auth/OpenID/Interface.php';
++require_once 'Auth_OpenID/OpenID/Interface.php';
+ 
+ /**
+  * This is a memcached-based store for OpenID associations and
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/Message.php php-openid-2.2.2.new/Auth/OpenID/Message.php
+--- php-openid-2.2.2.orig/Auth/OpenID/Message.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/Message.php	2011-03-22 21:10:52.000000000 -0600
+@@ -9,10 +9,10 @@
+ /**
+  * Import tools needed to deal with messages.
+  */
+-require_once 'Auth/OpenID.php';
+-require_once 'Auth/OpenID/KVForm.php';
+-require_once 'Auth/Yadis/XML.php';
+-require_once 'Auth/OpenID/Consumer.php'; // For Auth_OpenID_FailureResponse
++require_once 'Auth_OpenID/OpenID.php';
++require_once 'Auth_OpenID/OpenID/KVForm.php';
++require_once 'Auth_OpenID/Yadis/XML.php';
++require_once 'Auth_OpenID/OpenID/Consumer.php'; // For Auth_OpenID_FailureResponse
+ 
+ // This doesn't REALLY belong here, but where is better?
+ define('Auth_OpenID_IDENTIFIER_SELECT',
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/MySQLStore.php php-openid-2.2.2.new/Auth/OpenID/MySQLStore.php
+--- php-openid-2.2.2.orig/Auth/OpenID/MySQLStore.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/MySQLStore.php	2011-03-22 21:10:52.000000000 -0600
+@@ -9,7 +9,7 @@
+ /**
+  * Require the base class file.
+  */
+-require_once "Auth/OpenID/SQLStore.php";
++require_once "Auth_OpenID/OpenID/SQLStore.php";
+ 
+ /**
+  * An SQL store that uses MySQL as its backend.
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/Nonce.php php-openid-2.2.2.new/Auth/OpenID/Nonce.php
+--- php-openid-2.2.2.orig/Auth/OpenID/Nonce.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/Nonce.php	2011-03-22 21:10:52.000000000 -0600
+@@ -9,7 +9,7 @@
+ /**
+  * Need CryptUtil to generate random strings.
+  */
+-require_once 'Auth/OpenID/CryptUtil.php';
++require_once 'Auth_OpenID/OpenID/CryptUtil.php';
+ 
+ /**
+  * This is the characters that the nonces are made from.
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/PAPE.php php-openid-2.2.2.new/Auth/OpenID/PAPE.php
+--- php-openid-2.2.2.orig/Auth/OpenID/PAPE.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/PAPE.php	2011-03-22 21:10:52.000000000 -0600
+@@ -8,7 +8,7 @@
+  * http://openid.net/developers/specs/
+  */
+ 
+-require_once "Auth/OpenID/Extension.php";
++require_once "Auth_OpenID/OpenID/Extension.php";
+ 
+ define('Auth_OpenID_PAPE_NS_URI',
+        "http://specs.openid.net/extensions/pape/1.0");
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/Parse.php php-openid-2.2.2.new/Auth/OpenID/Parse.php
+--- php-openid-2.2.2.orig/Auth/OpenID/Parse.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/Parse.php	2011-03-22 21:10:52.000000000 -0600
+@@ -82,7 +82,7 @@
+ /**
+  * Require Auth_OpenID::arrayGet().
+  */
+-require_once "Auth/OpenID.php";
++require_once "Auth_OpenID/OpenID.php";
+ 
+ class Auth_OpenID_Parse {
+ 
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/PostgreSQLStore.php php-openid-2.2.2.new/Auth/OpenID/PostgreSQLStore.php
+--- php-openid-2.2.2.orig/Auth/OpenID/PostgreSQLStore.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/PostgreSQLStore.php	2011-03-22 21:10:52.000000000 -0600
+@@ -9,7 +9,7 @@
+ /**
+  * Require the base class file.
+  */
+-require_once "Auth/OpenID/SQLStore.php";
++require_once "Auth_OpenID/OpenID/SQLStore.php";
+ 
+ /**
+  * An SQL store that uses PostgreSQL as its backend.
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/Server.php php-openid-2.2.2.new/Auth/OpenID/Server.php
+--- php-openid-2.2.2.orig/Auth/OpenID/Server.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/Server.php	2011-03-22 21:10:52.000000000 -0600
+@@ -92,16 +92,16 @@
+ /**
+  * Required imports
+  */
+-require_once "Auth/OpenID.php";
+-require_once "Auth/OpenID/Association.php";
+-require_once "Auth/OpenID/CryptUtil.php";
+-require_once "Auth/OpenID/BigMath.php";
+-require_once "Auth/OpenID/DiffieHellman.php";
+-require_once "Auth/OpenID/KVForm.php";
+-require_once "Auth/OpenID/TrustRoot.php";
+-require_once "Auth/OpenID/ServerRequest.php";
+-require_once "Auth/OpenID/Message.php";
+-require_once "Auth/OpenID/Nonce.php";
++require_once "Auth_OpenID/OpenID.php";
++require_once "Auth_OpenID/OpenID/Association.php";
++require_once "Auth_OpenID/OpenID/CryptUtil.php";
++require_once "Auth_OpenID/OpenID/BigMath.php";
++require_once "Auth_OpenID/OpenID/DiffieHellman.php";
++require_once "Auth_OpenID/OpenID/KVForm.php";
++require_once "Auth_OpenID/OpenID/TrustRoot.php";
++require_once "Auth_OpenID/OpenID/ServerRequest.php";
++require_once "Auth_OpenID/OpenID/Message.php";
++require_once "Auth_OpenID/OpenID/Nonce.php";
+ 
+ define('AUTH_OPENID_HTTP_OK', 200);
+ define('AUTH_OPENID_HTTP_REDIRECT', 302);
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/ServerRequest.php php-openid-2.2.2.new/Auth/OpenID/ServerRequest.php
+--- php-openid-2.2.2.orig/Auth/OpenID/ServerRequest.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/ServerRequest.php	2011-03-22 21:10:52.000000000 -0600
+@@ -17,7 +17,7 @@
+ /**
+  * Imports
+  */
+-require_once "Auth/OpenID.php";
++require_once "Auth_OpenID/OpenID.php";
+ 
+ /**
+  * Object that holds the state of a request to the OpenID server
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/SQLiteStore.php php-openid-2.2.2.new/Auth/OpenID/SQLiteStore.php
+--- php-openid-2.2.2.orig/Auth/OpenID/SQLiteStore.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/SQLiteStore.php	2011-03-22 21:10:52.000000000 -0600
+@@ -9,7 +9,7 @@
+ /**
+  * Require the base class file.
+  */
+-require_once "Auth/OpenID/SQLStore.php";
++require_once "Auth_OpenID/OpenID/SQLStore.php";
+ 
+ /**
+  * An SQL store that uses SQLite as its backend.
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/SQLStore.php php-openid-2.2.2.new/Auth/OpenID/SQLStore.php
+--- php-openid-2.2.2.orig/Auth/OpenID/SQLStore.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/SQLStore.php	2011-03-22 21:10:52.000000000 -0600
+@@ -16,18 +16,18 @@
+ /**
+  * @access private
+  */
+-require_once 'Auth/OpenID/Interface.php';
+-require_once 'Auth/OpenID/Nonce.php';
++require_once 'Auth_OpenID/OpenID/Interface.php';
++require_once 'Auth_OpenID/OpenID/Nonce.php';
+ 
+ /**
+  * @access private
+  */
+-require_once 'Auth/OpenID.php';
++require_once 'Auth_OpenID/OpenID.php';
+ 
+ /**
+  * @access private
+  */
+-require_once 'Auth/OpenID/Nonce.php';
++require_once 'Auth_OpenID/OpenID/Nonce.php';
+ 
+ /**
+  * This is the parent class for the SQL stores, which contains the
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/SReg.php php-openid-2.2.2.new/Auth/OpenID/SReg.php
+--- php-openid-2.2.2.orig/Auth/OpenID/SReg.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/SReg.php	2011-03-22 21:10:52.000000000 -0600
+@@ -42,8 +42,8 @@
+ /**
+  * Import message and extension internals.
+  */
+-require_once 'Auth/OpenID/Message.php';
+-require_once 'Auth/OpenID/Extension.php';
++require_once 'Auth_OpenID/OpenID/Message.php';
++require_once 'Auth_OpenID/OpenID/Extension.php';
+ 
+ // The data fields that are listed in the sreg spec
+ global $Auth_OpenID_sreg_data_fields;
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/TrustRoot.php php-openid-2.2.2.new/Auth/OpenID/TrustRoot.php
+--- php-openid-2.2.2.orig/Auth/OpenID/TrustRoot.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/TrustRoot.php	2011-03-22 21:10:52.000000000 -0600
+@@ -12,7 +12,7 @@
+  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache
+  */
+ 
+-require_once 'Auth/OpenID/Discover.php';
++require_once 'Auth_OpenID/OpenID/Discover.php';
+ 
+ /**
+  * A regular expression that matches a domain ending in a top-level domains.
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID/URINorm.php php-openid-2.2.2.new/Auth/OpenID/URINorm.php
+--- php-openid-2.2.2.orig/Auth/OpenID/URINorm.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID/URINorm.php	2011-03-22 21:10:52.000000000 -0600
+@@ -9,7 +9,7 @@
+  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache
+  */
+ 
+-require_once 'Auth/Yadis/Misc.php';
++require_once 'Auth_OpenID/Yadis/Misc.php';
+ 
+ // from appendix B of rfc 3986 (http://www.ietf.org/rfc/rfc3986.txt)
+ function Auth_OpenID_getURIPattern()
+diff -Naur php-openid-2.2.2.orig/Auth/OpenID.php php-openid-2.2.2.new/Auth/OpenID.php
+--- php-openid-2.2.2.orig/Auth/OpenID.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/OpenID.php	2011-03-22 21:10:49.000000000 -0600
+@@ -25,10 +25,10 @@
+ /**
+  * Require the fetcher code.
+  */
+-require_once "Auth/Yadis/PlainHTTPFetcher.php";
+-require_once "Auth/Yadis/ParanoidHTTPFetcher.php";
+-require_once "Auth/OpenID/BigMath.php";
+-require_once "Auth/OpenID/URINorm.php";
++require_once "Auth_OpenID/Yadis/PlainHTTPFetcher.php";
++require_once "Auth_OpenID/Yadis/ParanoidHTTPFetcher.php";
++require_once "Auth_OpenID/OpenID/BigMath.php";
++require_once "Auth_OpenID/OpenID/URINorm.php";
+ 
+ /**
+  * Status code returned by the server when the only option is to show
+diff -Naur php-openid-2.2.2.orig/Auth/Yadis/HTTPFetcher.php php-openid-2.2.2.new/Auth/Yadis/HTTPFetcher.php
+--- php-openid-2.2.2.orig/Auth/Yadis/HTTPFetcher.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/Yadis/HTTPFetcher.php	2011-03-22 21:10:55.000000000 -0600
+@@ -16,7 +16,7 @@
+ /**
+  * Require logging functionality
+  */
+-require_once "Auth/OpenID.php";
++require_once "Auth_OpenID/OpenID.php";
+ 
+ define('Auth_OpenID_FETCHER_MAX_RESPONSE_KB', 1024);
+ define('Auth_OpenID_USER_AGENT', 
+diff -Naur php-openid-2.2.2.orig/Auth/Yadis/ParanoidHTTPFetcher.php php-openid-2.2.2.new/Auth/Yadis/ParanoidHTTPFetcher.php
+--- php-openid-2.2.2.orig/Auth/Yadis/ParanoidHTTPFetcher.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/Yadis/ParanoidHTTPFetcher.php	2011-03-22 21:10:55.000000000 -0600
+@@ -16,9 +16,9 @@
+ /**
+  * Interface import
+  */
+-require_once "Auth/Yadis/HTTPFetcher.php";
++require_once "Auth_OpenID/Yadis/HTTPFetcher.php";
+ 
+-require_once "Auth/OpenID.php";
++require_once "Auth_OpenID/OpenID.php";
+ 
+ /**
+  * A paranoid {@link Auth_Yadis_HTTPFetcher} class which uses CURL
+diff -Naur php-openid-2.2.2.orig/Auth/Yadis/PlainHTTPFetcher.php php-openid-2.2.2.new/Auth/Yadis/PlainHTTPFetcher.php
+--- php-openid-2.2.2.orig/Auth/Yadis/PlainHTTPFetcher.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/Yadis/PlainHTTPFetcher.php	2011-03-22 21:10:55.000000000 -0600
+@@ -17,7 +17,7 @@
+ /**
+  * Interface import
+  */
+-require_once "Auth/Yadis/HTTPFetcher.php";
++require_once "Auth_OpenID/Yadis/HTTPFetcher.php";
+ 
+ /**
+  * This class implements a plain, hand-built socket-based fetcher
+diff -Naur php-openid-2.2.2.orig/Auth/Yadis/XRDS.php php-openid-2.2.2.new/Auth/Yadis/XRDS.php
+--- php-openid-2.2.2.orig/Auth/Yadis/XRDS.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/Yadis/XRDS.php	2011-03-22 21:10:55.000000000 -0600
+@@ -16,7 +16,7 @@
+ /**
+  * Require the XPath implementation.
+  */
+-require_once 'Auth/Yadis/XML.php';
++require_once 'Auth_OpenID/Yadis/XML.php';
+ 
+ /**
+  * This match mode means a given service must match ALL filters passed
+diff -Naur php-openid-2.2.2.orig/Auth/Yadis/XRI.php php-openid-2.2.2.new/Auth/Yadis/XRI.php
+--- php-openid-2.2.2.orig/Auth/Yadis/XRI.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/Yadis/XRI.php	2011-03-22 21:10:55.000000000 -0600
+@@ -9,9 +9,9 @@
+  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache
+  */
+ 
+-require_once 'Auth/Yadis/Misc.php';
+-require_once 'Auth/Yadis/Yadis.php';
+-require_once 'Auth/OpenID.php';
++require_once 'Auth_OpenID/Yadis/Misc.php';
++require_once 'Auth_OpenID/Yadis/Yadis.php';
++require_once 'Auth_OpenID/OpenID.php';
+ 
+ function Auth_Yadis_getDefaultProxy()
+ {
+diff -Naur php-openid-2.2.2.orig/Auth/Yadis/XRIRes.php php-openid-2.2.2.new/Auth/Yadis/XRIRes.php
+--- php-openid-2.2.2.orig/Auth/Yadis/XRIRes.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/Yadis/XRIRes.php	2011-03-22 21:10:55.000000000 -0600
+@@ -4,8 +4,8 @@
+  * Code for using a proxy XRI resolver.
+  */
+ 
+-require_once 'Auth/Yadis/XRDS.php';
+-require_once 'Auth/Yadis/XRI.php';
++require_once 'Auth_OpenID/Yadis/XRDS.php';
++require_once 'Auth_OpenID/Yadis/XRI.php';
+ 
+ class Auth_Yadis_ProxyResolver {
+     function Auth_Yadis_ProxyResolver($fetcher, $proxy_url = null)
+diff -Naur php-openid-2.2.2.orig/Auth/Yadis/Yadis.php php-openid-2.2.2.new/Auth/Yadis/Yadis.php
+--- php-openid-2.2.2.orig/Auth/Yadis/Yadis.php	2011-03-22 21:09:55.000000000 -0600
++++ php-openid-2.2.2.new/Auth/Yadis/Yadis.php	2011-03-22 21:10:55.000000000 -0600
+@@ -17,18 +17,18 @@
+  * Need both fetcher types so we can use the right one based on the
+  * presence or absence of CURL.
+  */
+-require_once "Auth/Yadis/PlainHTTPFetcher.php";
+-require_once "Auth/Yadis/ParanoidHTTPFetcher.php";
++require_once "Auth_OpenID/Yadis/PlainHTTPFetcher.php";
++require_once "Auth_OpenID/Yadis/ParanoidHTTPFetcher.php";
+ 
+ /**
+  * Need this for parsing HTML (looking for META tags).
+  */
+-require_once "Auth/Yadis/ParseHTML.php";
++require_once "Auth_OpenID/Yadis/ParseHTML.php";
+ 
+ /**
+  * Need this to parse the XRDS document during Yadis discovery.
+  */
+-require_once "Auth/Yadis/XRDS.php";
++require_once "Auth_OpenID/Yadis/XRDS.php";
+ 
+ /**
+  * XRDS (yadis) content type
+@@ -165,7 +165,7 @@
+  *
+  * First, require this library into your program source:
+  *
+- * <pre>  require_once "Auth/Yadis/Yadis.php";</pre>
++ * <pre>  require_once "Auth_OpenID/Yadis/Yadis.php";</pre>
+  *
+  * To perform Yadis discovery, first call the "discover" method
+  * statically with a URI parameter:
