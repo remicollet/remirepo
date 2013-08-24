@@ -24,14 +24,14 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.6.14
+Version:          2.6.15
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
 License:          BSD
 URL:              http://redis.io
-Source0:          http://redis.googlecode.com/files/%{name}-%{version}%{?prever:-%{prever}}.tar.gz
+Source0:          http://download.redis.io/releases/%{name}-%{version}%{?prever:-%{prever}}.tar.gz
 Source1:          %{name}.logrotate
 Source2:          %{name}.init
 Source3:          %{name}.service
@@ -200,6 +200,12 @@ fi
 
 
 %changelog
+* Sat Aug 24 2013 Remi Collet <remi@fedoraproject.org> - 2.6.15-1
+- Redis 2.6.15
+  upgrade urgency: MODERATE, upgrade ASAP only if you experience
+  issues related to the expired keys collection algorithm,
+  or if you use the ZUNIONSTORE command.
+
 * Sun Jul 28 2013 Remi Collet <remi@fedoraproject.org> - 2.6.14-1
 - Redis 2.6.14
   upgrade urgency: HIGH because of the following two issues:
