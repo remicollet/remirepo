@@ -96,6 +96,9 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Sat Aug 24 2013 Remi Collet <remi@fedoraproject.org> 2.2.2-7
+- backport rawhide changes for remi repo
+
 * Fri Aug 23 2013 Kevin Fenzi <kevin@scrye.com> 2.2.2-7
 - Patch for CVE-2013-4701
 
