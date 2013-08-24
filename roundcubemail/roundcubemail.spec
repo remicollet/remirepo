@@ -2,7 +2,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  0.9.3
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System         
@@ -23,6 +23,9 @@ Source0: http://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}
 Source1: roundcubemail.conf
 Source2: roundcubemail.logrotate
 Source4: roundcubemail-README.fedora
+# Elegantly handle removal of moxieplayer Flash binary in tinymce
+# media plugin (see "Drop precompiled flash" in %pre)
+Patch0: roundcubemail-0.9.3-no_swf.patch
 
 # Non-upstreamable: Adjusts config path to Fedora policy
 Patch6: roundcubemail-0.9.0-confpath.patch
@@ -72,6 +75,7 @@ CSS 2.
 
 %prep
 %setup -q -n roundcubemail-%{version}-dep
+%patch0 -p1
 %patch6 -p1
 
 # fix permissions and remove any .htaccess files
@@ -86,10 +90,10 @@ sed -i 's|logs/|%{_logdir}/roundcubemail/|' config/main.inc.php.dist
 # ??? - Jon, this could do with a comment; fixing carriage returns? (adamw)
 sed -i 's/\r//' SQL/mssql.initial.sql
 
-%build
-
 #Drop precompiled flash
 find . -type f -name '*.swf' | xargs rm -f
+
+%build
 
 %install
 
@@ -165,6 +169,12 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
 %changelog
+* Sat Aug 24 2013 Remi Collet <remi@fedoraproject.org> - 0.9.3-2
+- sync with rawhide for remi repo
+
+* Fri Aug 23 2013 Adam Williamson <awilliam@redhat.com> - 0.9.3-2
+- patch tinymce to cope elegantly with Flash binary being removed
+
 * Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
 - backport 0.9.3 for remi repo in sync with rawhide
 
