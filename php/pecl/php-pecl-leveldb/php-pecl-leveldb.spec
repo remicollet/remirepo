@@ -25,8 +25,11 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        https://raw.github.com/reeze/php-leveldb/master/LICENSE
 
 # https://bugs.php.net/65539 Library detection
+# https://github.com/reeze/php-leveldb/pull/8
 Patch0:         %{pecl_name}-config.patch
 
+# See : leveldb bug (assert enabeld in prod)
+# https://bugzilla.redhat.com/show_bug.cgi?id=1000777
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
