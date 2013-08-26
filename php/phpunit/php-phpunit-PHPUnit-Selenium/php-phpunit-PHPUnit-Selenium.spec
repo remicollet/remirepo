@@ -3,7 +3,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -23,7 +23,7 @@ Requires:       php-pear(%{pear_channel}/PHPUnit) >= 3.7.0
 Requires:       php(language) >= 5.3.3
 Requires:       php-curl
 Requires:       php-dom
-# phpci detected extensions
+# phpcompatinfo detected extensions in 1.3.2
 Requires:       php-date
 Requires:       php-pcre
 Requires:       php-json
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Mon Aug 26 2013 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
+- Update to 1.3.2
+
 * Mon Jun 03 2013 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - Update to 1.3.1
 
