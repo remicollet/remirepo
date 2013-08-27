@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.6.6
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -260,6 +260,9 @@ fi
 
 
 %changelog
+* Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- Update to 2.7.0
+
 * Thu Aug 08 2013 Remi Collet <remi@fedoraproject.org> - 2.6.6-1
 - Update to 2.6.6
 
