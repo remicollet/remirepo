@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-History
-Version:        2.1.6
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        API for tracking the history of an object
 
@@ -99,6 +99,9 @@ fi
 
 
 %changelog
+* Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Mon Aug 05 2013 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
 - Update to 2.1.6
 
