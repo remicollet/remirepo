@@ -17,7 +17,7 @@
 # "horde-turba" sub package with apache stuff
 
 Name:           php-horde-turba
-Version:        4.1.1
+Version:        4.1.2
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -216,6 +216,9 @@ fi
 
 
 %changelog
+* Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 4.1.2-1
+- Update to 4.1.2
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 4.1.1-1
 - Update to 4.1.1
 
@@ -229,7 +232,7 @@ fi
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 4.0.3-1
 - Update to 4.0.3
 
-* Sat Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.2-2
+* Sun Jan 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.2-2
 - obsoletes/provides turba
 
 * Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.2-1
