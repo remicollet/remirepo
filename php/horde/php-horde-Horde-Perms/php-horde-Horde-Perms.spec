@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Perms
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Horde Permissions System
 
@@ -30,18 +30,18 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Group) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # Optionnal
 Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Tree) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Tree) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -124,6 +124,9 @@ fi
 
 
 %changelog
+* Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
