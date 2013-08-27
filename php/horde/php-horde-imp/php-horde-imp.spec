@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.1.3
+Version:        6.1.4
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -63,7 +63,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Compress) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Compress) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.7.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Css_Parser) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Css_Parser) <  2.0.0
@@ -79,7 +79,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Image) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.14.0
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Itip) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Itip) <  3.0.0
@@ -99,8 +99,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
@@ -209,8 +207,8 @@ cd %{pear_name}-%{version}/test/Imp
 phpunit\
     -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
-    . || exit 0
-# Fails for now, need investigation.
+    .
+
 
 %clean
 rm -rf %{buildroot}
@@ -253,6 +251,12 @@ fi
 
 
 %changelog
+* Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 6.1.4-1
+- Update to 6.1.4
+- drop dependency on Horde_Secret
+- raise dependencies on Horde_Core >= 2.7.0 and Horde_Imap_Client >= 2.14.0
+- don't ignore test results during build
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 6.1.3-1
 - Update to 6.1.3
 
