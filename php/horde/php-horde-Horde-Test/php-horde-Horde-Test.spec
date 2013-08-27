@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Test
-Version:        2.2.2
+Version:        2.2.3
 Release:        1%{?dist}
 Summary:        Horde testing base classes
 
@@ -29,13 +29,13 @@ Requires:       php-spl
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cli) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Cli) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cli) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Log) <  3.0.0
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -86,6 +86,9 @@ fi
 
 
 %changelog
+* Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- Update to 2.2.3
+
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2
 
