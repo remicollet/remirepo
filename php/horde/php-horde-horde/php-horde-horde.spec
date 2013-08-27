@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-horde
-Version:        5.1.2
+Version:        5.1.3
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -66,7 +66,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.7.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
@@ -134,10 +134,10 @@ Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) <  3.0.0
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 %if 0%{?fedora} > 19
 Obsoletes:      horde < 5
-Provides:       horde = %{version}
 %else
 Conflicts:      horde < 5
 %endif
+Provides:       horde = %{version}
 
 
 %description
@@ -201,10 +201,6 @@ do
          && echo "%%lang(${lang%_*}) %{pear_hordedir}/$loc"
 done | tee ../%{pear_name}.lang
 
-# fix install path
-mv %{buildroot}/usr/bin/bin/horde-queue-run-tasks \
-   %{buildroot}/usr/bin/horde-queue-run-tasks
-
 
 %clean
 rm -rf %{buildroot}
@@ -264,6 +260,10 @@ fi
 
 
 %changelog
+* Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 5.1.3-1
+- Update to 5.1.3
+- raise dependency Horde_Core >= 2.7.0
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 5.1.2-1
 - Update to 5.1.2
 
