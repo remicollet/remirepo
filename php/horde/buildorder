@@ -30,7 +30,7 @@ Build order
 	Horde_Date                2.0.6      BR: Horde_Test I: Horde_Icalendar R: Horde_Nls, Horde_Translation, Horde_Exception, Horde_Util
 	Horde_Date_Parser         2.0.2      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Support
 	Horde_HashTable           1.1.0      BR: Horde_Test  R: Horde_Exception, Horde_Memcache
-	Horde_Http                2.0.3      BR: Horde_Test  R: Horde_Exception, Horde_Support
+	Horde_Http                2.0.4      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	Horde_Image               2.0.5      BR: Horde_Test  R: Horde_Exception, Horde_Support, Horde_Translation, Horde_Util
 	Horde_Injector            2.0.2      BR: Horde_Test  R: Horde_Exception
 	Horde_Kolab_Format        2.0.3      BR: Horde_Test  R: Horde_Exception, Horde_Support
