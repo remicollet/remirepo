@@ -17,7 +17,7 @@
 # "horde-nag" sub package with apache stuff
 
 Name:           php-horde-nag
-Version:        4.1.1
+Version:        4.1.2
 Release:        1%{?dist}
 Summary:        A web based task list manager
 
@@ -203,6 +203,9 @@ fi
 
 
 %changelog
+* Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 4.1.2-1
+- Update to 4.1.2
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 4.1.1-1
 - Update to 4.1.1
 
