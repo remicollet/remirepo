@@ -4,8 +4,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Kolab-Storage
-Version:        2.0.4
-Release:        2%{?dist}
+Version:        2.0.5
+Release:        1%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
 Group:          Development/Libraries
@@ -36,25 +36,25 @@ Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Cache) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Format) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Kolab_Format) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Kolab_Format) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Mime) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-channel(%{pear_channel})
 # Optional
-Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Imap_Client) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.14.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_History) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_History) <  3.0.0
 Requires:       php-pear(HTTP_Request)
 Requires:       php-pear(Net_IMAP) >= 1.1.0
 
@@ -160,6 +160,10 @@ fi
 
 
 %changelog
+* Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- raise dependency on Horde_Imap_Client >= 2.14.0
+
 * Fri Mar 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-2
 - add requires on Net_IMAP
 
