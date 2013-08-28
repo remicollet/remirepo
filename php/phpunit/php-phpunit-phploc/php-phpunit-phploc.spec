@@ -4,7 +4,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-phploc
-Version:        1.7.4
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -18,16 +18,18 @@ BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{pear_channel})
 
+Requires(post): %{__pear}
+Requires(postun): %{__pear}
 Requires:       php-pear(PEAR) >= 1.9.4
 Requires:       php(language) >= 5.3.3
 Requires:       php-dom
 Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-channel(%{pear_channel})
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-Requires:       php-pear(%{pear_channel}/FinderFacade) >= 1.0.4
-Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
+Requires:       php-pear(%{pear_channel}/FinderFacade) >= 1.1.0
+Requires:       php-pear(%{pear_channel}/Git) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Version) >= 1.0.0
+Requires:       php-pear(pear.symfony.com/Console) >= 2.2.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -89,6 +91,11 @@ fi
 
 
 %changelog
+* Wed Aug 28 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
+- add requires symfony2/Console, phpunit/Git and phpunit/Version
+- drop requires ezc/Console
+
 * Mon Nov 12 2012 Remi Collet <remi@fedoraproject.org> - 1.7.4-1
 - Version 1.7.4 (stable) - API 1.7.0 (stable)
 
