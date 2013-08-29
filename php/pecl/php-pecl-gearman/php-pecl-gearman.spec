@@ -11,14 +11,14 @@
 %global libver 0.21
 %endif
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 5
-%global extver 1.1.1
+%global extver 1.1.2
 %global libver 1.1.0
 %endif
 
 
 Name:		php-pecl-gearman
 Version:	%{extver}
-Release:	2%{?dist}.1
+Release:	1%{?dist}.1
 Summary:	PHP wrapper to libgearman
 
 Group:		Development/Tools
@@ -148,6 +148,9 @@ fi
 
 
 %changelog
+* Thu Aug 29 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- update to 1.1.2
+
 * Mon Aug 19 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - single spec for 0.8.x / 1.0.x / 1.1.x
 - update to 1.1.1, requires libgearman >= 1.1.0
