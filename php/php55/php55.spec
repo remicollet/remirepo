@@ -79,14 +79,14 @@
 %global db_devel  libdb-devel
 %endif
 
-#global snapdate      201306240630
+%global snapdate      201308300430
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.3
+Version: 5.5.4
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -126,6 +126,7 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
+Patch9: php-5.5.4-date.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -826,6 +827,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 
 %if 0%{?snapdate}
 %setup -q -n php5.5-%{snapdate}
+rm -rf ext/json
 %else
 %setup -q -n php-%{version}%{?rcver}
 %endif
@@ -834,11 +836,12 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
+%patch9 -p1 -b .date
 
 %patch21 -p1 -b .odbctimer
 
 %patch40 -p1 -b .dlopen
-%if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .headers
@@ -976,7 +979,10 @@ cat `aclocal --print-ac-dir`/libtool.m4 > build/libtool.m4
 touch configure.in
 ./buildconf --force
 CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-pointer-sign"
+#CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-pointer-sign -fsanitize=address -ggdb"
 export CFLAGS
+#LDFLAGS="-fsanitize=address"
+#export LDFLAGS
 
 # Install extension modules in %{_libdir}/php/modules.
 EXTENSION_DIR=%{_libdir}/php/modules; export EXTENSION_DIR
@@ -1816,6 +1822,10 @@ fi
 
 
 %changelog
+* Fri Aug 30 2013 Remi Collet <rcollet@redhat.com> - 5.5.4.0.1-201308300430
+- test build with -fsanitize=address
+- test build for https://bugs.php.net/65564
+
 * Wed Aug 21 2013 Remi Collet <rcollet@redhat.com> - 5.5.3-1
 - update to 5.5.3
 - build without zip extension, requires php-pecl-zip
