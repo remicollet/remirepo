@@ -1,9 +1,8 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name Swift
 
 Name:           php-swift-Swift
-Version:        5.0.1
+Version:        5.0.2
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -17,12 +16,21 @@ BuildArch:      noarch
 BuildRequires:  php-channel(pear.swiftmailer.org)
 BuildRequires:  php-pear(PEAR)
 
+Requires(post): %{__pear}
+Requires(postun): %{__pear}
 Requires:       php(language) >= 5.2.4
 Requires:       php-pear(PEAR)
 Requires:       php-channel(pear.swiftmailer.org)
-Requires:       php-pdo
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
+# from phpcompatinfo report on version 5.0.2
+Requires:       php-ctype
+Requires:       php-date
+Requires:       php-hash
+Requires:       php-iconv
+Requires:       php-mbstring
+Requires:       php-openssl
+Requires:       php-pcre
+Requires:       php-reflection
+Requires:       php-spl
 Provides:       php-pear(pear.swiftmailer.org/%{pear_name}) = %{version}
 
 %description
@@ -84,6 +92,9 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Fri Aug 30 2013 Remi Collet <remi@fedoraproject.org> - 5.0.2-1
+- Update to 5.0.2
+
 * Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 5.0.1-1
 - Update to 5.0.1
 
