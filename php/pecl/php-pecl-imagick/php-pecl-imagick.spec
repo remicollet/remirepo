@@ -1,7 +1,7 @@
 %{!?__pecl:  %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name   imagick
-%global prever      RC2
+#global prever      RC2
 
 # We don't really rely on upstream ABI
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
@@ -9,14 +9,11 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
 Version:       3.1.0
-Release:       0.10.%{prever}%{?dist}.1
+Release:       1%{?dist}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# http://svn.php.net/viewvc?view=revision&revision=329769
-Patch0:        %{pecl_name}-incl.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.3, php-pear
@@ -67,12 +64,14 @@ cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
 
-; Options not documented
+; Documentation: http://php.net/imagick
+
+; Fixes a drawing bug with locales that use ',' as float separators.
 ;imagick.locale_fix=0
+
+; Used to enable the image progress monitor.
 ;imagick.progress_monitor=0
 EOF
-
-%patch0 -p0 -b .inclpath
 
 cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-%{version}-zts
 
@@ -146,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep  8 2013 Remi Collet <rpms@famillecollet.com> - 3.1.0-1
+- update to 3.1.0 (beta)
+
 * Sun Jun  2 2013 Remi Collet <rpms@famillecollet.com> - 3.1.0-0.10.RC2
 - rebuild against new ImageMagick-last version 6.8.5-9
 
@@ -174,10 +176,10 @@ rm -rf %{buildroot}
 * Mon Oct 03 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.0.1-3.1
 - spec cleanup
 
-* Tue Aug 24 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.0.1-3
+* Wed Aug 24 2011 Remi Collet <Fedora@FamilleCollet.com> - 3.0.1-3
 - build zts extension
 
-* Sun Dec 27 2010 Remi Collet <rpms@famillecollet.com> 3.0.1-2
+* Mon Dec 27 2010 Remi Collet <rpms@famillecollet.com> 3.0.1-2
 - relocate using phpname macro
 
 * Fri Nov 26 2010 Remi Collet <rpms@famillecollet.com> 3.0.1-1.1
@@ -195,10 +197,10 @@ rm -rf %{buildroot}
 * Mon Aug 24 2009 Remi Collet <rpms@famillecollet.com> 2.3.0-1
 - update to 2.3.0
 
-* Wed Jun 30 2009 Remi Collet <rpms@famillecollet.com> 2.2.2-3.###.remi
+* Tue Jun 30 2009 Remi Collet <rpms@famillecollet.com> 2.2.2-3.###.remi
 - rebuild for PHP 5.3.0 (API = 20090626)
 
-* Thu Apr 25 2009 Remi Collet <rpms@famillecollet.com> 2.2.2-2.fc11.remi
+* Sat Apr 25 2009 Remi Collet <rpms@famillecollet.com> 2.2.2-2.fc11.remi
 - F11 rebuild for PHP 5.3.0RC1
 
 * Wed Feb 25 2009 Remi Collet <rpms@famillecollet.com> 2.2.2-1.fc10.remi
