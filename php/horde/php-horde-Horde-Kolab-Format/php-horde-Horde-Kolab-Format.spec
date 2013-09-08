@@ -1,10 +1,17 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+# spec file for php-horde-Horde-Kolab-Format
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Kolab_Format
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Kolab-Format
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        A package for reading/writing Kolab data formats
 
@@ -33,10 +40,10 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -110,5 +117,8 @@ fi
 
 
 %changelog
-* Thu Mar 28 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
+* Sun Sep 08 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
+* Thu Mar 28 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - initial package
