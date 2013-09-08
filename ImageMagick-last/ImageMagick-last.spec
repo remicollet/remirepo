@@ -1,4 +1,4 @@
-%global VER        6.8.5
+%global VER        6.8.6
 %global Patchlevel 9
 %global incsuffixe -6
 %global libsuffixe -6.Q16
@@ -64,6 +64,10 @@ Obsoletes:      ImageMagick2-tools
 # https://bugzilla.redhat.com/849065
 Conflicts:      ImageMagick
 
+# Filter private shared
+%{?filter_provides_in: %filter_provides_in %{_libdir}/ImageMagick-%{VER}/modules-Q16/.*\.so$}
+%{?filter_setup}
+
 
 %description
 ImageMagick is an image display and manipulation tool for the X
@@ -103,7 +107,7 @@ Requires: libwebp-devel%{?_isa}
 %endif
 Requires: jasper-devel%{?_isa}
 Requires: pkgconfig
-
+Provides: ImageMagick-devel = %{version}-%{release}
 
 %description devel
 ImageMagick-last-devel contains the library links and header files you'll
@@ -185,6 +189,7 @@ Summary: C++ bindings for the ImageMagick library
 Group: Development/Libraries
 Requires: %{name}-c++%{?_isa} = %{version}-%{release}
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+Provides: ImageMagick-c++-devel = %{version}-%{release}
 
 %description c++-devel
 ImageMagick-devel contains the static libraries and header files you'll
@@ -347,7 +352,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc Magick++/AUTHORS Magick++/ChangeLog Magick++/NEWS Magick++/README
 %doc www/Magick++/COPYING
-%{_libdir}/libMagick++%{?libsuffixe}.so.1*
+%{_libdir}/libMagick++%{?libsuffixe}.so.2*
 
 %files c++-devel
 %defattr(-,root,root,-)
@@ -369,6 +374,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.6.9-1
+- update to 6.8.6-9
+- filter privates modules from provides
+
 * Sun Jun  2 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.5.9-1
 - update to 6.8.5-9
 - enable --with-webp when available
@@ -398,7 +407,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Aug 26 2009 Remi Collet <RPMS@FamilleCollet.com> - 6.5.5.2-1
 - rename to ImageMagick2 for EL and Fedora <= 10
 
-* Mon Aug 3 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 6.5.4.7-3
+* Mon Aug  3 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 6.5.4.7-3
 - Update to version 6.5.4-7
 - Use lzma-compressed source tarball as sugested by Ville Skyttä (BZ#515319)
 
@@ -595,7 +604,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Sep 12 2004 Karsten Hopp <karsten@redhat.de> 6.0.7.1-1 
 - update to 6.0.7 Patchlevel 1, fixes #132106
 
-* Sat Sep 4 2004 Bill Nottingham <notting@redhat.com> 6.0.6.2-2
+* Sat Sep  4 2004 Bill Nottingham <notting@redhat.com> 6.0.6.2-2
 - move libWand out of -devel, fix requirements (#131767)
 
 * Wed Sep 01 2004 Karsten Hopp <karsten@redhat.de> 6.0.6.2-1 
@@ -758,10 +767,10 @@ rm -rf $RPM_BUILD_ROOT
 - Remove Magick++ includes from -devel, they're already in -c++-devel
   (#51590)
 
-* Sun Jul 28 2001 Bernhard Rosenkraenzer <bero@redhat.com> 5.3.8-1
+* Sat Jul 28 2001 Bernhard Rosenkraenzer <bero@redhat.com> 5.3.8-1
 - 5.3.8 (bugfix release)
 
-* Sat Jul 27 2001 Than Ngo <than@redhat.com> 5.3.7-3
+* Fri Jul 27 2001 Than Ngo <than@redhat.com> 5.3.7-3
 - fix to build Perlmagic on s390 s390x
 
 * Thu Jul 26 2001 Bernhard Rosenkraenzer <bero@redhat.com> 5.3.7-2
