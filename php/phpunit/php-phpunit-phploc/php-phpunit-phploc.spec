@@ -4,7 +4,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-phploc
-Version:        2.0.0
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Sun Sep 08 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
 * Wed Aug 28 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0
 - add requires symfony2/Console, phpunit/Git and phpunit/Version
