@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-horde
-Version:        5.1.3
+Version:        5.1.4
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -260,6 +260,9 @@ fi
 
 
 %changelog
+* Sun Sep 08 2013 Remi Collet <remi@fedoraproject.org> - 5.1.4-1
+- Update to 5.1.4
+
 * Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 5.1.3-1
 - Update to 5.1.3
 - raise dependency Horde_Core >= 2.7.0
