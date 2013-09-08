@@ -24,7 +24,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.6.15
+Version:          2.6.16
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
@@ -200,6 +200,10 @@ fi
 
 
 %changelog
+* Sun Sep  8 2013 Remi Collet <remi@fedoraproject.org> - 2.6.16-1
+- Redis 2.6.16
+  upgrade urgency: MODERATE
+
 * Sat Aug 24 2013 Remi Collet <remi@fedoraproject.org> - 2.6.15-1
 - Redis 2.6.15
   upgrade urgency: MODERATE, upgrade ASAP only if you experience
