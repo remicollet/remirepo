@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.7.0
+Version:        2.8.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -108,6 +108,8 @@ Requires:       php-pear(%{pear_channel}/Horde_SessionHandler) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SessionHandler) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Share) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Share) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Smtp) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Smtp) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Template) >= 2.0.0
@@ -260,6 +262,10 @@ fi
 
 
 %changelog
+* Sun Sep 08 2013 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
+- Update to 2.8.0
+- add Requires Horde_Smtp
+
 * Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - Update to 2.7.0
 
