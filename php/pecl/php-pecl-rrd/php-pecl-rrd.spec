@@ -1,3 +1,11 @@
+# spec file for php-pecl-rrd
+#
+# Copyright (c) 2011-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name rrd
@@ -5,8 +13,8 @@
 
 Summary:      PHP Bindings for rrdtool
 Name:         php-pecl-rrd
-Version:      1.1.0
-Release:      1%{?dist}.2
+Version:      1.1.1
+Release:      1%{?dist}.1
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
@@ -140,6 +148,9 @@ fi
 
 
 %changelog
+* Mon Sep 09 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+
 * Thu Jan 24 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1.1
 - also provides php-rrd
 
