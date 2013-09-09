@@ -216,6 +216,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %endif
 
+#
+# Note to remi : remember to always build in remi-test first
+#
 %changelog
 * Mon Sep  9 2013 Remi Collet <rcollet@redhat.com> - 1.3.2-1
 - release 1.3.2 (stable)
