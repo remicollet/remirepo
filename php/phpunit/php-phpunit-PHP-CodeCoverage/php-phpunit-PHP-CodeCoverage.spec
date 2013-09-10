@@ -1,3 +1,11 @@
+# spec file for php-phpunit-PHP-CodeCoverage
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
