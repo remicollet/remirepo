@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 20-1.fc20.remi
+- Fedora release 20 (Heisenbug)
+
 * Wed Apr 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 19-1.fc19.remi
 - Fedora release 19 (Schrödinger's Cat)
 

@@ -69,6 +69,9 @@ alias mockfc18xd="             mock --configdir=$mocketc -r fc18xd             r
 alias mockfc19i="setarch i686  mock --configdir=$mocketc -r fc19i  --arch i686 rebuild "
 alias mockfc19x="              mock --configdir=$mocketc -r fc19x              rebuild "
 
+alias mockfc20i="setarch i686  mock --configdir=$mocketc -r fc20i  --arch i686 rebuild "
+alias mockfc20x="              mock --configdir=$mocketc -r fc20x              rebuild "
+
 #alias mockel4i="setarch i686  mock --configdir=$mocketc -r el4i  --arch i386 rebuild "
 #alias mockel4it="setarch i686 mock --configdir=$mocketc -r el4it --arch i386 rebuild "
 #alias mockel4x="              mock --configdir=$mocketc -r el4x              rebuild "
