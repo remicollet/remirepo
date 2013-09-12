@@ -75,7 +75,7 @@ Build order
 	Horde_ListHeaders         1.0.1      BR: Horde_Test, Horde_Mail  R: Horde_Mail
 	Horde_Prefs               2.5.0      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Mail, Horde_Mime, Horde_Translation, Horde_Util, Horde_Autoloader, Horde_Db, Horde_Image, Horde_Ldap, Horde_Kolab_Storage, Horde_Imsp
 	Horde_Share               2.0.4      BR: Horde_Test, Horde_Group, Horde_Perms, Horde_Injector  R: Horde_Db, Horde_Exception, Horde_Group, Horde_Perms, Horde_Support, Horde_Translation, Horde_Url, Horde_Util, Horde_Kolab_Storage
-	Horde_Smtp                1.2.2      BR: Horde_Test  R: Horde_Exception, Horde_Mail, Horde_Support, Horde_Imap_Client
+	Horde_Smtp                1.2.3      BR: Horde_Test  R: Horde_Exception, Horde_Mail, Horde_Support, Horde_Imap_Client
 	Horde_Alarm               2.0.4      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Exception, Horde_Translation, Horde_Db, Horde_Log, Horde_Mail, Horde_Mime, Horde_Notification, Horde_Perms, Horde_Prefs
 	Horde_Auth                2.1.0      BR: Horde_Test, Horde_Db I: Horde_Kolab_Session R: Horde_Exception, Horde_Util, Horde_Db, Horde_History, Horde_Http, Horde_Imap_Client, Horde_Imsp, Horde_Ldap, Horde_Lock
 	Horde_Data                2.0.4      BR: Horde_Test  R: Horde_Browser, Horde_Exception, Horde_Icalendar, Horde_Mail, Horde_Mime, Horde_Translation, Horde_Util
