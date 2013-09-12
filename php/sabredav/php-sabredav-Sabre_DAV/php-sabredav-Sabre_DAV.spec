@@ -6,7 +6,7 @@
 
 Name:           php-sabredav-Sabre_DAV
 Version:        1.8.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Sabre_DAV is a WebDAV framework for PHP
 
 Group:          Development/Libraries
@@ -105,6 +105,9 @@ fi
 
 
 %changelog
+* Thu Sep 12 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.6-2
+- fix roles
+
 * Wed Jun 19 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.6-1
 - update to 1.8.6
 

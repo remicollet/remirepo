@@ -46,9 +46,9 @@ New release. Read the ChangeLog and announcement for more details
    <file name="Sabre/CardDAV/Version.php" role="php" />
    <file name="examples/sql/sqlite.addressbooks.sql" role="doc" />
    <file name="examples/addressbookserver.php" role="doc" />
-   <file name="Sabre/CardDAV/VCFExportPlugin.php" role="doc" />
-   <file name="Sabre/CardDAV/Backend/BackendInterface.php" role="doc" />
-   <file name="Sabre/CardDAV/Backend/AbstractBackend.php" role="doc" />
+   <file name="Sabre/CardDAV/VCFExportPlugin.php" role="php" />
+   <file name="Sabre/CardDAV/Backend/BackendInterface.php" role="php" />
+   <file name="Sabre/CardDAV/Backend/AbstractBackend.php" role="php" />
    <file name="ChangeLog" role="doc" />
    <file name="LICENSE" role="doc" />
   </dir>

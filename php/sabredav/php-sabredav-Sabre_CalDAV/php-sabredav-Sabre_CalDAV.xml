@@ -58,29 +58,29 @@ New release. Read the ChangeLog and announcement for more details
    <file name="examples/calendarserver.php" role="doc" />
    <file name="ChangeLog" role="doc" />
    <file name="LICENSE" role="doc" />
-   <file name="Sabre/CalDAV/SharingPlugin.php" role="doc" />
-   <file name="Sabre/CalDAV/SharedCalendar.php" role="doc" />
-   <file name="Sabre/CalDAV/ShareableCalendar.php" role="doc" />
-   <file name="Sabre/CalDAV/Property/ScheduleCalendarTransp.php" role="doc" />
-   <file name="Sabre/CalDAV/Property/Invite.php" role="doc" />
-   <file name="Sabre/CalDAV/Property/AllowedSharingModes.php" role="doc" />
-   <file name="Sabre/CalDAV/Principal/IProxyWrite.php" role="doc" />
-   <file name="Sabre/CalDAV/Principal/IProxyRead.php" role="doc" />
-   <file name="Sabre/CalDAV/Notifications/Notification/SystemStatus.php" role="doc" />
-   <file name="Sabre/CalDAV/Notifications/Notification/InviteReply.php" role="doc" />
-   <file name="Sabre/CalDAV/Notifications/Notification/Invite.php" role="doc" />
-   <file name="Sabre/CalDAV/Notifications/Node.php" role="doc" />
-   <file name="Sabre/CalDAV/Notifications/INotificationType.php" role="doc" />
-   <file name="Sabre/CalDAV/Notifications/INode.php" role="doc" />
-   <file name="Sabre/CalDAV/Notifications/ICollection.php" role="doc" />
-   <file name="Sabre/CalDAV/Notifications/Collection.php" role="doc" />
-   <file name="Sabre/CalDAV/ISharedCalendar.php" role="doc" />
-   <file name="Sabre/CalDAV/IShareableCalendar.php" role="doc" />
-   <file name="Sabre/CalDAV/Exception/InvalidComponentType.php" role="doc" />
-   <file name="Sabre/CalDAV/Backend/SharingSupport.php" role="doc" />
-   <file name="Sabre/CalDAV/Backend/NotificationSupport.php" role="doc" />
-   <file name="Sabre/CalDAV/Backend/BackendInterface.php" role="doc" />
-   <file name="Sabre/CalDAV/Backend/AbstractBackend.php" role="doc" />
+   <file name="Sabre/CalDAV/SharingPlugin.php" role="php" />
+   <file name="Sabre/CalDAV/SharedCalendar.php" role="php" />
+   <file name="Sabre/CalDAV/ShareableCalendar.php" role="php" />
+   <file name="Sabre/CalDAV/Property/ScheduleCalendarTransp.php" role="php" />
+   <file name="Sabre/CalDAV/Property/Invite.php" role="php" />
+   <file name="Sabre/CalDAV/Property/AllowedSharingModes.php" role="php" />
+   <file name="Sabre/CalDAV/Principal/IProxyWrite.php" role="php" />
+   <file name="Sabre/CalDAV/Principal/IProxyRead.php" role="php" />
+   <file name="Sabre/CalDAV/Notifications/Notification/SystemStatus.php" role="php" />
+   <file name="Sabre/CalDAV/Notifications/Notification/InviteReply.php" role="php" />
+   <file name="Sabre/CalDAV/Notifications/Notification/Invite.php" role="php" />
+   <file name="Sabre/CalDAV/Notifications/Node.php" role="php" />
+   <file name="Sabre/CalDAV/Notifications/INotificationType.php" role="php" />
+   <file name="Sabre/CalDAV/Notifications/INode.php" role="php" />
+   <file name="Sabre/CalDAV/Notifications/ICollection.php" role="php" />
+   <file name="Sabre/CalDAV/Notifications/Collection.php" role="php" />
+   <file name="Sabre/CalDAV/ISharedCalendar.php" role="php" />
+   <file name="Sabre/CalDAV/IShareableCalendar.php" role="php" />
+   <file name="Sabre/CalDAV/Exception/InvalidComponentType.php" role="php" />
+   <file name="Sabre/CalDAV/Backend/SharingSupport.php" role="php" />
+   <file name="Sabre/CalDAV/Backend/NotificationSupport.php" role="php" />
+   <file name="Sabre/CalDAV/Backend/BackendInterface.php" role="php" />
+   <file name="Sabre/CalDAV/Backend/AbstractBackend.php" role="php" />
   </dir>
  </contents>
  <dependencies>

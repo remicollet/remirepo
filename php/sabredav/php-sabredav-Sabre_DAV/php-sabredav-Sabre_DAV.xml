@@ -115,14 +115,14 @@ New release. Read the ChangeLog and announcement for more details
    <file name="Sabre/DAV/UUIDUtil.php" role="php" />
    <file name="Sabre/DAV/Version.php" role="php" />
    <file name="Sabre/DAV/XMLUtil.php" role="php" />
-   <file name="Sabre/DAV/PropertyInterface.php" role="doc" />
-   <file name="Sabre/DAV/PartialUpdate/Plugin.php" role="doc" />
-   <file name="Sabre/DAV/PartialUpdate/IFile.php" role="doc" />
-   <file name="Sabre/DAV/Locks/Backend/BackendInterface.php" role="doc" />
-   <file name="Sabre/DAV/Locks/Backend/AbstractBackend.php" role="doc" />
-   <file name="Sabre/DAV/Exception/ServiceUnavailable.php" role="doc" />
-   <file name="Sabre/DAV/Exception/ReportNotSupported.php" role="doc" />
-   <file name="Sabre/DAV/Auth/Backend/BackendInterface.php" role="doc" />
+   <file name="Sabre/DAV/PropertyInterface.php" role="php" />
+   <file name="Sabre/DAV/PartialUpdate/Plugin.php" role="php" />
+   <file name="Sabre/DAV/PartialUpdate/IFile.php" role="php" />
+   <file name="Sabre/DAV/Locks/Backend/BackendInterface.php" role="php" />
+   <file name="Sabre/DAV/Locks/Backend/AbstractBackend.php" role="php" />
+   <file name="Sabre/DAV/Exception/ServiceUnavailable.php" role="php" />
+   <file name="Sabre/DAV/Exception/ReportNotSupported.php" role="php" />
+   <file name="Sabre/DAV/Auth/Backend/BackendInterface.php" role="php" />
    <file name="examples/sql/mysql.locks.sql" role="doc" />
    <file name="examples/sql/mysql.users.sql" role="doc" />
    <file name="examples/sql/pgsql.locks.sql" role="doc" />
