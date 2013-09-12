@@ -1,4 +1,4 @@
-# spec file for php-phpunit-Diff
+# spec file for php-phpunit-Exporter
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
