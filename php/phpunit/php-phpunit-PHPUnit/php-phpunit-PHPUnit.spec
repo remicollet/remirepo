@@ -119,6 +119,9 @@ fi
 
 
 %changelog
+* Fri Sep 13 2013 Remi Collet <remi@fedoraproject.org> - 3.7.25-1
+- Update to 3.7.25
+
 * Tue Sep 10 2013 Remi Collet <remi@fedoraproject.org> - 3.7.25-1
 - Update to 3.7.25
 
