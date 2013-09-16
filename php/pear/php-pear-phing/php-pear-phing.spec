@@ -4,8 +4,8 @@
 
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
-Version:	2.5.0
-Release:	3%{?dist}
+Version:	2.6.1
+Release:	1%{?dist}
 
 License:	LGPLv2
 Group:		Development/Tools
@@ -110,6 +110,9 @@ fi
 
 
 %changelog
+* Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- Update to 2.6.1
+
 * Wed May  1 2013 Remi Collet <remi@fedoraproject.org> - 2.5.0-3
 - clean more non-free stuff
 
@@ -138,7 +141,7 @@ fi
 - upstream 2.4.13, for remi repo
 - add more requires (optional deps)
 
-* Thu Apr 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.12-1
+* Thu Apr 12 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.12-1
 - upstream 2.4.13, backport for remi repo
 
 * Wed Apr 11 2012 Christof Damian <christof@damian.net> - 2.4.12-1
@@ -154,7 +157,7 @@ fi
 * Thu Nov  3 2011 Christof Damian <christof@damian.net> - 2.4.8-1
 - upstream 2.4.8
 
-* Sat Jul 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.4.6-1
+* Sun Jul 17 2011 Remi Collet <RPMS@FamilleCollet.com> - 2.4.6-1
 - rebuild for remi repository
 
 * Fri Jul 15 2011 Christof Damian <christof@damian.net> - 2.4.6-1
@@ -178,7 +181,7 @@ fi
 * Tue Nov 23 2010 Christof Damian <christof@damian.net> - 2.4.3-1
 - upstream 2.4.3
 
-* Fri Aug 05 2010 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-1
+* Fri Aug 06 2010 Remi Collet <RPMS@FamilleCollet.com> - 2.4.2-1
 - rebuild for remi repository
 
 * Sat Jul 31 2010 Christof Damian <christof@damian.net> - 2.4.2-1
