@@ -12,16 +12,12 @@
 
 Name:           php-pecl-apcu
 Summary:        APC User Cache
-Version:        4.0.1
-Release:        3%{?dist}.1
+Version:        4.0.2
+Release:        1%{?dist}.1
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
-
-# Restore APC serializers ABI (merged upstream)
-# https://github.com/krakjoe/apcu/pull/25
-Patch0:         %{pecl_name}-git.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -86,11 +82,11 @@ Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      php-devel%{?_isa}
 %if "%{php_version}" < "5.5"
-Conflicts:      php-pecl-apc-devel < 4
+Conflicts:     php-pecl-apc-devel < 4
 %else
-Obsoletes:      php-pecl-apc-devel < 4
-Provides:       php-pecl-apc-devel = %{version}-%{release}
-Provides:       php-pecl-apc-devel%{?_isa} = %{version}-%{release}
+Obsoletes:     php-pecl-apc-devel < 4
+Provides:      php-pecl-apc-devel = %{version}-%{release}
+Provides:      php-pecl-apc-devel%{?_isa} = %{version}-%{release}
 %endif
 
 %description devel
@@ -106,10 +102,10 @@ BuildArch:     noarch
 Requires:      %{name} = %{version}-%{release}
 Requires:      mod_php, httpd, php-gd
 %if "%{php_version}" < "5.5"
-Conflicts:      apc-panel < 4
+Conflicts:     apc-panel < 4
 %else
-Obsoletes:      apc-panel < 4
-Provides:       apc-devel = %{version}-%{release}
+Obsoletes:     apc-panel < 4
+Provides:      apc-devel = %{version}-%{release}
 %endif
 
 %description  -n apcu-panel
@@ -122,8 +118,6 @@ configuration, available on http://localhost/apcu-panel/
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1 -b .serializers
-rm -f apc_serializer.h.serializers
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
@@ -241,6 +235,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 4.0.2-1
+- Update to 4.0.2
+
 * Tue Aug 30 2013 Remi Collet <remi@fedoraproject.org> - 4.0.1-3
 - rebuild to have NEVR > EPEL (or Fedora)
 
