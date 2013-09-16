@@ -13,7 +13,7 @@
 Name:           php-pecl-apcu
 Summary:        APC User Cache
 Version:        4.0.2
-Release:        1%{?dist}.1
+Release:        2%{?dist}.1
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
@@ -85,9 +85,9 @@ Requires:      php-devel%{?_isa}
 Conflicts:     php-pecl-apc-devel < 4
 %else
 Obsoletes:     php-pecl-apc-devel < 4
+%endif
 Provides:      php-pecl-apc-devel = %{version}-%{release}
 Provides:      php-pecl-apc-devel%{?_isa} = %{version}-%{release}
-%endif
 
 %description devel
 These are the files needed to compile programs using APCu.
@@ -100,13 +100,15 @@ Group:         Applications/Internet
 BuildArch:     noarch
 %endif
 Requires:      %{name} = %{version}-%{release}
-Requires:      mod_php, httpd, php-gd
+Requires:      mod_php
+Requires:      php-gd
+Requires:      httpd
 %if "%{php_version}" < "5.5"
 Conflicts:     apc-panel < 4
 %else
 Obsoletes:     apc-panel < 4
-Provides:      apc-devel = %{version}-%{release}
 %endif
+Provides:      apc-panel = %{version}-%{release}
 
 %description  -n apcu-panel
 This package provides the APCu control panel, with Apache
@@ -228,17 +230,21 @@ rm -rf %{buildroot}
 %files -n apcu-panel
 %defattr(-,root,root,-)
 # Need to restrict access, as it contains a clear password
-%attr(750,apache,root) %dir %{_sysconfdir}/apcu-panel
+%attr(550,apache,root) %dir %{_sysconfdir}/apcu-panel
 %config(noreplace) %{_sysconfdir}/apcu-panel/conf.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/apcu-panel.conf
 %{_datadir}/apcu-panel
 
 
 %changelog
+* Mon Sep 16 2013 Remi Collet <rcollet@redhat.com> - 4.0.2-2
+- fix perm on config dir
+- always provides php-pecl-apc-devel and apc-panel
+
 * Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 4.0.2-1
 - Update to 4.0.2
 
-* Tue Aug 30 2013 Remi Collet <remi@fedoraproject.org> - 4.0.1-3
+* Fri Aug 30 2013 Remi Collet <remi@fedoraproject.org> - 4.0.1-3
 - rebuild to have NEVR > EPEL (or Fedora)
 
 * Thu Jul  4 2013 Remi Collet <remi@fedoraproject.org> - 4.0.1-2
