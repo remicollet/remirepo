@@ -40,7 +40,7 @@ Requires:       php-session
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-# Optionnal: Horde_Imap_Client not required to reduce build tree
+# Optional: Horde_Imap_Client not required to reduce build tree
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -140,7 +140,7 @@ fi
 - Update to 2.0.1 for remi repo
 
 * Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-4
-- make test optionnal
+- make test optional
 
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-3
 - Update to 2.0.0 for remi repo

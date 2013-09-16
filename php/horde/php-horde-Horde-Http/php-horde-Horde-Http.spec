@@ -36,7 +36,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
-# Optionnal
+# Optional
 Requires:       php-curl
 # php-pecl-http v1 optional but not available (only v2)
 
@@ -122,7 +122,7 @@ fi
 - Update to 2.0.1 for remi repo
 
 * Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
-- make test optionnal
+- make test optional
 
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo

@@ -38,7 +38,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Constraint) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Constraint) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
-# Optionnal
+# Optional
 Requires:       php-dom
 Requires:       php-pear(%{pear_channel}/Horde_Scribe) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Scribe) >= 3.0.0

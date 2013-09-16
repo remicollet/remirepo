@@ -27,7 +27,7 @@ Requires:       php-date
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-# Optionnal: APC
+# Optional: APC
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

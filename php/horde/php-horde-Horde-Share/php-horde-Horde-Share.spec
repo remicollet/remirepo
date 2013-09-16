@@ -47,7 +47,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
-# Optionnal
+# Optional
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) <  3.0.0
 

@@ -116,7 +116,7 @@ Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
-# Optionnal
+# Optional
 Requires:       php-pear(File_Find)
 Requires:       php-pear(File_Fstab)
 Requires:       php-pear(Console_Getopt)
@@ -127,7 +127,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) <  3.0.0
 # Optional but implicitly required
 #               Horde_Db, Horde_Feed, Horde_Oauth, Horde_SyncMl
-# Optionnal but TODO
+# Optional but TODO
 #               Horde_Service_Facebook
 #               Horde_Service_Twitter
 

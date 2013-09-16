@@ -42,7 +42,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
-# Optionnal
+# Optional
 Requires:       php-ftp
 Requires:       php-pecl(ssh2)
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0

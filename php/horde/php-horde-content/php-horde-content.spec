@@ -50,7 +50,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Rdo) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Rdo) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
-# Optionnal
+# Optional
 Requires:       php-pear(%{pear_channel}/Horde_Argv) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Argv) <  3.0.0
 # optional and implicitly required Horde_Controller, Horde_ElasticSearch

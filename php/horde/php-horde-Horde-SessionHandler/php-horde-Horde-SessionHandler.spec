@@ -40,7 +40,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
-# Optionnal
+# Optional
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.3
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 # Optional and implicitly required: Horde_HashTable, Horde_Log, Horde_Mongo

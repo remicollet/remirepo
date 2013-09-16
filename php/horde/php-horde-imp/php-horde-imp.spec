@@ -127,7 +127,7 @@ Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) >= 2.0.0
-# Optionnal and implicitly required:
+# Optional and implicitly required:
 #     Horde_Vfs, Horde_History, Horde_Http, Horde_Stream_Filter
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}

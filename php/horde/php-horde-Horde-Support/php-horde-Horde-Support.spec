@@ -128,7 +128,7 @@ fi
 
 * Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
 - conflicts with uuid-php
-- add optionnal %%check
+- add optional %%check
 
 * Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
 - Update to 2.0.0 for remi repo
