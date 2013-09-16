@@ -46,7 +46,7 @@
 
 %if %{?system_sqlite}
 # grep '^SQLITE_VERSION' configure
-%global sqlite_version 3.7.16.1
+%global sqlite_version 3.7.17
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
 %endif
@@ -89,7 +89,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        23.0.1
+Version:        24.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -102,12 +102,13 @@ Source21:       %{shortname}.sh.in
 # build patches
 Patch1:         xulrunner-install-dir.patch
 Patch2:         mozilla-build.patch
+Patch3:         mozilla-build-arm.patch
 Patch14:        xulrunner-2.0-chromium-types.patch
-Patch17:        xulrunner-15.0-gcc47.patch
+Patch17:        xulrunner-24.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
-Patch18:        xulrunner-16.0-jemalloc-ppc.patch
+Patch18:        xulrunner-24.0-jemalloc-ppc.patch
 # workaround linking issue on s390 (JSContext::updateMallocCounter(size_t) not found)
-Patch19:        xulrunner-21.0-s390-inlines.patch
+Patch19:        xulrunner-24.0-s390-inlines.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
@@ -116,7 +117,6 @@ Patch21:        rhbz-911314.patch
 Patch24:        rhbz-966424.patch
 
 # Upstream patches
-Patch106:       mozilla-831688.patch
 
 # ---------------------------------------------------
 
@@ -273,18 +273,18 @@ cd %{tarballdir}
 
 %patch1  -p1
 %patch2  -p1 -b .build
+%patch3  -p2 -b .arm
 %patch14 -p2 -b .chromium-types
 %patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
-%patch19 -p1 -b .s390-inlines
+%patch19 -p2 -b .s390-inlines
 
-%patch20  -p2 -b .pk
+%patch20 -p2 -b .pk
 %ifarch ppc ppc64
 %patch21  -p2 -b .ppc
 %endif
 
 %patch24  -p1 -b .966424
-%patch106 -p1 -b .831688
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -324,9 +324,11 @@ echo "ac_add_options --disable-system-cairo" >> .mozconfig
 echo "ac_add_options --enable-system-ffi" >> .mozconfig
 %endif
 
+
 %if %{?debug_build}
 echo "ac_add_options --enable-debug" >> .mozconfig
 echo "ac_add_options --disable-optimize" >> .mozconfig
+echo "ac_add_options --enable-dtrace" >> .mozconfig
 %else
 echo "ac_add_options --disable-debug" >> .mozconfig
 echo "ac_add_options --enable-optimize" >> .mozconfig
@@ -597,6 +599,24 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Sep 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 24.0-1
+- sync with rawhide, update to 24.0
+
+* Mon Sep 16 2013 Martin Stransky <stransky@redhat.com> - 24.0.1-2
+- Arm build fix
+
+* Fri Sep 13 2013 Martin Stransky <stransky@redhat.com> - 24.0.1-1
+- Update to 24.0
+
+* Mon Sep 2 2013 Dan Horák <dan[at]danny.cz> - 23.0.1-4
+- Fix build on 64-bit big endian platforms (mozbz#618485)
+
+* Sat Aug 31 2013 Karsten Hopp <karsten@redhat.com> 23.0.1-3
+- update rhbz-911314.patch (PPC* only)
+
+* Thu Aug 29 2013 Martin Stransky <stransky@redhat.com> - 23.0.1-2
+- Enabled dtrace for debug builds
+
 * Tue Aug 20 2013 Remi Collet <RPMS@FamilleCollet.com> - 23.0.1-1
 - sync with rawhide, update to 23.0.1
 

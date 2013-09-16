@@ -29,13 +29,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      23.0.1
-%global xulrunner_version_max  23.1
+%global xulrunner_version      24.0
+%global xulrunner_version_max  24.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130819
+%global datelang               20130913
 
 %global mozappdir     %{_libdir}/%{name}
 %global langpackdir   %{mozappdir}/langpacks
@@ -71,7 +71,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        23.0.1
+Version:        24.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -300,11 +300,6 @@ cd %{tarballdir}
 pref("general.useragent.locale", "chrome://global/locale/intl.properties");
 EOF
 
-# resolves bug #461880
-%{__cat} > dist/bin/browser/chrome/en-US/locale/branding/browserconfig.properties << EOF
-browser.startup.homepage=%{homepage}
-EOF
-
 DESTDIR=$RPM_BUILD_ROOT make install
 
 %{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
@@ -321,7 +316,7 @@ desktop-file-install \
 
 # set up the firefox start script
 %{__rm} -rf $RPM_BUILD_ROOT%{_bindir}/firefox
-XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir},,g"`
+XULRUNNER_DIR=`pkg-config --variable=libdir libxul | %{__sed} -e "s,%{_libdir}/\?,,g"`
 %{__cat} %{SOURCE21} | %{__sed} -e "s,XULRUNNER_DIRECTORY,$XULRUNNER_DIR,g" > \
   $RPM_BUILD_ROOT%{_bindir}/firefox
 %{__chmod} 755 $RPM_BUILD_ROOT%{_bindir}/firefox
@@ -351,9 +346,6 @@ for langpack in `ls firefox-langpacks/*.xpi`; do
   %{__mkdir_p} $extensionID
   unzip -qq $langpack -d $extensionID
   find $extensionID -type f | xargs chmod 644
-
-  sed -i -e "s|browser.startup.homepage.*$|browser.startup.homepage=%{homepage}|g;" \
-     $extensionID/browser/chrome/$language/locale/branding/browserconfig.properties
 
   cd $extensionID
   zip -qq -r9mX ../${extensionID}.xpi *
@@ -425,6 +417,27 @@ echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 %if %{?fedora}%{!?fedora:99} <= 17
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
+%endif
+
+# Moves defaults/preferences to browser/defaults/preferences in Fedora 19+
+%if 0%{?fedora} >= 19
+%pretrans -p <lua>
+require 'posix'
+require 'os'
+if (posix.stat("%{mozappdir}/browser/defaults/preferences", "type") == "link") then
+  posix.unlink("%{mozappdir}/browser/defaults/preferences")
+  posix.mkdir("%{mozappdir}/browser/defaults/preferences")
+  if (posix.stat("%{mozappdir}/defaults/preferences", "type") == "directory") then
+    for i,filename in pairs(posix.dir("%{mozappdir}/defaults/preferences")) do 
+      os.rename("%{mozappdir}/defaults/preferences/"..filename, "%{mozappdir}/browser/defaults/preferences/"..filename)
+    end
+    f = io.open("%{mozappdir}/defaults/preferences/README","w")
+    if f then
+      f:write("Content of this directory has been moved to %{mozappdir}/browser/defaults/preferences.")
+      f:close()
+    end
+  end
+end
 %endif
 
 %preun
@@ -502,6 +515,22 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Mon Sep 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 24.0-1
+- sync with rawhide, update to 24.0
+
+* Fri Sep 13 2013 Martin Stransky <stransky@redhat.com> - 24.0-1
+- Update to 24.0
+
+* Tue Sep  3 2013 Jan Horak <jhorak@redhat.com> - 23.0.1-5
+- Fixing rhbz#1003691
+
+* Fri Aug 30 2013 Martin Stransky <stransky@redhat.com> - 23.0.1-3
+- Spec tweak (rhbz#991493)
+
+* Fri Aug 30 2013 Jan Horak <jhorak@redhat.com> - 23.0.1-2
+- Homepage moved to pref file
+- Fixed migration from F18 -> F19 (rhbz#976420)
+
 * Tue Aug 20 2013 Remi Collet <RPMS@FamilleCollet.com> - 23.0.1-1
 - sync with rawhide, update to 23.0.1
 

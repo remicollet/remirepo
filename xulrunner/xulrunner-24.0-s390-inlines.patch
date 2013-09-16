@@ -1,0 +1,12 @@
+diff -up xulrunner-24.0/mozilla-release/js/src/vm/SPSProfiler.cpp.s390-inlines xulrunner-24.0/mozilla-release/js/src/vm/SPSProfiler.cpp
+--- xulrunner-24.0/mozilla-release/js/src/vm/SPSProfiler.cpp.s390-inlines	2013-09-11 01:15:09.000000000 +0200
++++ xulrunner-24.0/mozilla-release/js/src/vm/SPSProfiler.cpp	2013-09-13 13:39:16.908478613 +0200
+@@ -9,6 +9,8 @@
+ #include "jsnum.h"
+ #include "jsscript.h"
+ 
++#include "jscntxtinlines.h"
++
+ #include "vm/SPSProfiler.h"
+ #include "vm/StringBuffer.h"
+ 

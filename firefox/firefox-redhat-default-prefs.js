@@ -12,3 +12,4 @@ pref("extensions.shownSelectionUI",         true);
 pref("gfx.color_management.enablev4",       true);
 pref("ui.SpellCheckerUnderlineStyle",       1);
 pref("startup.homepage_override_url",       "");
+pref("browser.startup.homepage",            "data:text/plain,browser.startup.homepage=http://start.fedoraproject.org/");
