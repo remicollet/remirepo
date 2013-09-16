@@ -1,9 +1,17 @@
+# spec file for php-ioncube-loader
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global extname ioncube_loader
 %global debug_package %{nil}
 
 Name:          php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
-Version:       4.4.1
+Version:       4.4.3
 Release:       1%{?dist}
 License:       Distribuable
 Group:         Development/Languages
@@ -66,7 +74,7 @@ rm -rf %{buildroot}
 ver=$(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
 
 if [ ! -f ioncube/%{extname}_lin_${ver}.so ]; then
-  : Module for %{php_version} not provied
+  : Module for PHP $ver not provided
   exit 1
 fi
 
@@ -104,6 +112,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 16 2013 Remi Collet <RPMS@famillecollet.com> - 4.4.3-1
+- update to 4.4.3 (php 5.4 only)
+
 * Mon Jun 24 2013 Remi Collet <RPMS@famillecollet.com> - 4.4.1-1
 - update to 4.4.1
 
