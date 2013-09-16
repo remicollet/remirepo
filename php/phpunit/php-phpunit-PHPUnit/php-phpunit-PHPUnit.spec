@@ -3,7 +3,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        3.7.26
+Version:        3.7.27
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -119,6 +119,9 @@ fi
 
 
 %changelog
+* Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 3.7.27-1
+- Update to 3.7.27 (no change)
+
 * Fri Sep 13 2013 Remi Collet <remi@fedoraproject.org> - 3.7.26-1
 - Update to 3.7.26 (no change)
 
