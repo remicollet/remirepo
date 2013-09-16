@@ -1,11 +1,10 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 
 %global pear_channel guzzlephp.org/pear
 %global pear_name    Guzzle
 
 Name:             php-guzzle-%{pear_name}
-Version:          3.7.2
+Version:          3.7.3
 Release:          1%{?dist}
 Summary:          PHP HTTP client library and framework for building RESTful web service clients
 
@@ -26,10 +25,11 @@ Requires:         php-pear(pear.symfony.com/EventDispatcher) >= 2.1.0
 Requires:         ca-certificates
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
-# phpci requires
+# phpcompatinfo
 Requires:         php-ctype
 Requires:         php-curl
 Requires:         php-date
+Requires:         php-filter
 Requires:         php-hash
 Requires:         php-intl
 Requires:         php-json
@@ -37,7 +37,7 @@ Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
-Requires:         php-filter
+Requires:         php-xmlwriter
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -123,6 +123,13 @@ fi
 
 
 %changelog
+* Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 3.7.3-1
+- backport 3.7.3 for remi repo
+
+* Sat Sep 14 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 3.7.3-1
+- Updated to 3.7.3
+- Added php-xmlwriter require
+
 * Mon Aug 05 2013 Remi Collet <remi@fedoraproject.org> - 3.7.2-1
 - Update to 3.7.2
 
