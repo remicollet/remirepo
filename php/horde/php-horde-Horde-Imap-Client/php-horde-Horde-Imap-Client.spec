@@ -34,8 +34,8 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.0
 # From package.xml
+Requires:       php(language) >= 5.3.0
 Requires:       php-hash
 Requires:       php-json
 Requires:       php-pear(PEAR) >= 1.7.0
@@ -68,7 +68,7 @@ Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-spl
 # Optional and implicilyt required :
-#   Horde_Compress_Fast, Horde_Mongo
+#   Horde_Compress_Fast, Horde_Mongo, mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
