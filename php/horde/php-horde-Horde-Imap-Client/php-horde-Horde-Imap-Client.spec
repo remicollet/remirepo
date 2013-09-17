@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.15.2
+Version:        2.15.3
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -35,13 +35,10 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
-Requires:       php-date
+# From package.xml
 Requires:       php-hash
 Requires:       php-json
-Requires:       php-openssl
-Requires:       php-pcre
-Requires:       php-spl
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
@@ -65,6 +62,11 @@ Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
+# From phpcompatinfo report for version 2.15.3
+Requires:       php-date
+Requires:       php-openssl
+Requires:       php-pcre
+Requires:       php-spl
 # Optional and implicilyt required :
 #   Horde_Compress_Fast, Horde_Mongo
 
@@ -150,6 +152,9 @@ fi
 
 
 %changelog
+* Tue Sep 17 2013 Remi Collet <remi@fedoraproject.org> - 2.15.3-1
+- Update to 2.15.3
+
 * Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 2.15.2-1
 - Update to 2.15.2
 
