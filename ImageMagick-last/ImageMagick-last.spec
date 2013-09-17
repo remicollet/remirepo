@@ -1,5 +1,5 @@
 %global VER        6.8.6
-%global Patchlevel 9
+%global Patchlevel 10
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -374,6 +374,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 17 2013 Stefan Pommerening <pom@dmsp.de> - 6.8.6.10-1
+- update to 6.8.6-10
+
 * Sun Sep  8 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.6.9-1
 - update to 6.8.6-9
 - filter privates modules from provides
