@@ -75,11 +75,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.19
+Version: 5.4.20
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -109,7 +109,6 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
-Patch9: php-5.4.19-date.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -766,7 +765,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
-%patch9 -p1 -b .date
 
 rm -f ext/json/utf8_to_utf16.*
 
@@ -971,7 +969,7 @@ ln -sf ../configure
 	--enable-calendar \
         --with-libxml-dir=%{_prefix} \
 	--enable-xml \
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 5
         --with-system-tzdata \
 %endif
 	--with-mhash \
@@ -1424,7 +1422,7 @@ echo -e "\nWARNING : These %{name}-* RPM are not official Fedora / Red Hat build
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 16
+%if %{?fedora}%{!?fedora:99} < 18
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -1634,6 +1632,9 @@ fi
 
 
 %changelog
+* Wed Sep 18 2013 Remi Collet <rcollet@redhat.com> - 5.4.20-1
+- update to 5.4.20
+
 * Fri Aug 30 2013 Remi Collet <rcollet@redhat.com> - 5.4.19-2
 - test build for https://bugs.php.net/65564
 
