@@ -1,3 +1,4 @@
+# Use system nspr/nss?
 %if 0%{?fedora} < 18
 %define system_nss        0
 %else

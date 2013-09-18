@@ -1,6 +1,6 @@
-diff --git a/toolkit/mozapps/shared/CertUtils.jsm b/toolkit/toolkit/mozapps/shared/CertUtils.jsm
---- a/toolkit/mozapps/shared/CertUtils.jsm
-+++ b/toolkit/mozapps/shared/CertUtils.jsm
+diff --git a/toolkit/module/CertUtils.jsm b/toolkit/toolkit/modules/CertUtils.jsm
+--- a/toolkit/modules/CertUtils.jsm
++++ b/toolkit/modules/CertUtils.jsm
 @@ -170,17 +170,19 @@ this.checkCert =
    issuerCert = issuerCert.QueryInterface(Ci.nsIX509Cert3);
    var tokenNames = issuerCert.getAllTokenNames({});

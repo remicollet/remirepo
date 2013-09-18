@@ -1,49 +1,48 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 16 && 0%{?rhel} < 7
+%if 0%{?fedora} < 18
 %define system_nss        0
 %else
 %define system_nss        1
 %endif
 
-# Build as a debug package?
-%define debug_build       0
-
-# Use system Librairies ?
-%if 0%{?fedora} <= 17
-%define system_sqlite 0
-%else
-%define system_sqlite 1
-%endif
-
 %if 0%{?fedora} < 15
-%define system_cairo      0
 %define system_vpx        0
 %else
-%define system_cairo      1
 %define system_vpx        1
 %endif
 
-# Use system libpeg (and libjpeg-turbo) ?
-%if 0%{?fedora} < 14 && 0%{?rhel} < 6
-%define system_jpeg       0
+# Use system Librairies ?
+%if 0%{?fedora} < 19
+%define system_sqlite     0
+%define system_ffi        0
 %else
-%define system_jpeg       1
+%define system_sqlite     1
+%define system_ffi        1
 %endif
+
+# Use system libpeg (and libjpeg-turbo) ?
+%define system_jpeg       1
+
+# Use system cairo?
+%define system_cairo      0
+
+# Build as a debug package?
+%define debug_build       0
 
 %define build_langpacks 1
 
 %if %{?system_nss}
 # grep 'min_ns.*=[0-9]' configure
-%global nspr_version 4.9.2
+%global nspr_version 4.9.6
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
-%global nss_version 3.13.6
+%global nss_version 3.15
 %global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
 %endif
 %define cairo_version 1.10.0
 %define freetype_version 2.1.9
 %if %{?system_sqlite}
 # grep '^SQLITE_VERSION' configure
-%define sqlite_version 3.7.13
+%define sqlite_version 3.7.17
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
 %endif
@@ -59,7 +58,7 @@
 #
 # IMPORTANT: If there is no top level directory, this should be 
 # set to the cwd, ie: '.'
-%define tarballdir comm-esr17
+%define tarballdir comm-esr24
 
 %define official_branding 1
 # don't enable crash reporter for remi repo
@@ -69,14 +68,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        17.0.8
+Version:        24.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}/source/thunderbird-%{version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20130805.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20130916.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -88,7 +87,7 @@ Source100:      find-external-requires
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
-Patch9:         mozilla-791626.patch
+Patch9:         mozilla-build-arm.patch
 
 # Build patches
 Patch104:       xulrunner-10.0-gcc47.patch
@@ -97,9 +96,7 @@ Patch104:       xulrunner-10.0-gcc47.patch
 Patch200:       thunderbird-8.0-enable-addons.patch
 
 # PPC fixes
-Patch300:       xulrunner-16.0-jemalloc-ppc.patch
-Patch301:       rhbz-855923.patch
-Patch302:       mozilla-746112.patch
+Patch300:       xulrunner-24.0-jemalloc-ppc.patch
 
 # Fedora specific patches
 Patch400:       rhbz-966424.patch
@@ -142,6 +139,9 @@ BuildRequires:  libXrender-devel
 BuildRequires:  hunspell-devel
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
+%endif
+%if %{?system_ffi}
+BuildRequires:  libffi-devel
 %endif
 BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
@@ -211,15 +211,13 @@ cd %{tarballdir}
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch8 -p3 -b .secondary-ipc
-%patch9 -p1 -b .791626
+%patch9 -p2 -b .arm
 %patch104 -p1 -b .gcc47
-%patch302 -p2 -b .746112
+%patch300 -p2 -b .852698
 %patch400 -p1 -b .966424
 cd ..
 
 %patch200 -p1 -b .addons
-%patch300 -p1 -b .852698
-%patch301 -p1 -b .855923
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -232,9 +230,6 @@ cd ..
 %{__rm} -f .mozconfig
 #{__cp} %{SOURCE10} .mozconfig
 cat %{SOURCE10} 		\
-%if ! %{system_cairo}
-  | grep -v enable-system-cairo    \
-%endif
 %if ! %{system_vpx}
   | grep -v with-system-libvpx     \
 %endif
@@ -268,6 +263,16 @@ echo "ac_add_options --disable-jemalloc" >> .mozconfig
 echo "ac_add_options --enable-system-sqlite"  >> .mozconfig
 %else
 echo "ac_add_options --disable-system-sqlite" >> .mozconfig
+%endif
+
+%if %{?system_cairo}
+echo "ac_add_options --enable-system-cairo" >> .mozconfig
+%else
+echo "ac_add_options --disable-system-cairo" >> .mozconfig
+%endif
+
+%if %{?system_ffi}
+echo "ac_add_options --enable-system-ffi" >> .mozconfig
 %endif
 
 %if %{?debug_build}
@@ -473,7 +478,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %dir %{mozappdir}/components
 %ghost %{mozappdir}/components/compreg.dat
 %ghost %{mozappdir}/components/xpti.dat
-%{mozappdir}/components/binary.manifest
+%{mozappdir}/components/components.manifest
 %{mozappdir}/components/libdbusservice.so
 %{mozappdir}/components/libmozgnome.so
 %{mozappdir}/omni.ja
@@ -514,12 +519,20 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %exclude %{_includedir}/%{name}-%{version}
 %{mozappdir}/chrome.manifest
 %{mozappdir}/searchplugins
-%{mozappdir}/distribution/extensions
 %{mozappdir}/dependentlibs.list
 
 #===============================================================================
 
 %changelog
+* Wed Sep 18 2013 Remi Collet <RPMS@FamilleCollet.com> - 24.0-1
+- Update to 24.0, sync with rawhide
+
+* Wed Sep 18 2013 Martin Stransky <stransky@redhat.com> - 24.0-2
+- Added arm build fix
+
+* Mon Sep 16 2013 Jan Horak <jhorak@redhat.com> - 24.0-1
+- Update to 24.0
+
 * Tue Aug  6 2013 Remi Collet <RPMS@FamilleCollet.com> - 17.0.8-1
 - Update to 17.0.8, sync with rawhide
 

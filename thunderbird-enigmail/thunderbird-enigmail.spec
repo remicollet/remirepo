@@ -1,40 +1,46 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 16 && 0%{?rhel} < 7
-%global system_nss        0
+%if 0%{?fedora} < 18
+%define system_nss        0
 %else
-%global system_nss        1
+%define system_nss        1
 %endif
+
+%if 0%{?fedora} < 15
+%define system_vpx        0
+%else
+%define system_vpx        1
+%endif
+
+# Use system Librairies ?
+%if 0%{?fedora} < 19
+%define system_sqlite     0
+%define system_ffi        0
+%else
+%define system_sqlite     1
+%define system_ffi        1
+%endif
+
+# Use system libpeg (and libjpeg-turbo) ?
+%define system_jpeg       1
+
+# Use system cairo?
+%define system_cairo      0
 
 # Build as a debug package?
 %global debug_build       0
 
-# Use system Librairies ?
-%if 0%{?fedora} < 18 && 0%{?rhel} < 7
-%global system_sqlite 0
-%else
-%global system_sqlite 1
-%endif
-
-%if 0%{?fedora} < 15 && 0%{?rhel} < 7
-%global system_cairo      0
-%global system_vpx        0
-%else
-%global system_cairo      1
-%global system_vpx        1
-%endif
-
 %global build_langpacks 1
 
 %if %{?system_nss}
-%global nspr_version 4.9.2
-%global nss_version 3.13.6
+%global nspr_version 4.9.6
+%global nss_version 3.15
 %endif
 %if %{?system_cairo}
 %global cairo_version 1.10.0
 %endif
 %global freetype_version 2.1.9
 %if %{?system_sqlite}
-%global sqlite_version 3.7.13
+%global sqlite_version 3.7.17
 %endif
 %global libnotify_version 0.4
 %if %{?system_vpx}
@@ -45,15 +51,14 @@
 %global thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 %global enimail_app_id     \{847b3a00-7ab1-11d4-8f02-006008948af5\}
 
-%global thunver  17.0.7
-%global thunmax  18.0
+%global thunver  24.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
 #
 # IMPORTANT: If there is no top level directory, this should be 
 # set to the cwd, ie: '.'
-%global tarballdir comm-esr17
+%global tarballdir comm-esr24
 
 %global official_branding 1
 
@@ -64,7 +69,7 @@
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
 Version:        1.5.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 URL:            http://enigmail.mozdev.org/
 # All files licensed under MPL 1.1/GPL 2.0/LGPL 2.1
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -82,7 +87,7 @@ Source100:      http://www.mozilla-enigmail.org/download/source/enigmail-%{versi
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
 Patch8:         xulrunner-10.0-secondary-ipc.patch
-Patch9:         mozilla-791626.patch
+Patch9:         mozilla-build-arm.patch
 
 # Build patches
 Patch104:       xulrunner-10.0-gcc47.patch
@@ -91,9 +96,7 @@ Patch104:       xulrunner-10.0-gcc47.patch
 Patch200:       thunderbird-8.0-enable-addons.patch
 
 # PPC fixes
-Patch300:       xulrunner-16.0-jemalloc-ppc.patch
-Patch301:       rhbz-855923.patch
-Patch302:       mozilla-746112.patch
+Patch300:       xulrunner-24.0-jemalloc-ppc.patch
 
 # Fedora specific patches
 Patch400:       rhbz-966424.patch
@@ -140,6 +143,9 @@ BuildRequires:  hunspell-devel
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
 %endif
+%if %{?system_ffi}
+BuildRequires:  libffi-devel
+%endif
 BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  desktop-file-utils
@@ -163,7 +169,6 @@ AutoReq:  0
 # All others deps already required by thunderbird
 Requires:  gnupg
 Requires:  thunderbird >= %{thunver}
-Conflicts: thunderbird >=  %{thunmax}
 
 # Nothing usefull provided
 AutoProv: 0
@@ -184,15 +189,13 @@ cd %{tarballdir}
 # Mozilla (XULRunner) patches
 cd mozilla
 %patch8 -p3 -b .secondary-ipc
-%patch9 -p1 -b .791626
+%patch9 -p2 -b .arm
 %patch104 -p1 -b .gcc47
-%patch302 -p2 -b .746112
+%patch300 -p2 -b .852698
 %patch400 -p1 -b .966424
 cd ..
 
 %patch200 -p1 -b .addons
-%patch300 -p1 -b .852698
-%patch301 -p1 -b .855923
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -205,11 +208,11 @@ cd ..
 
 %{__rm} -f .mozconfig
 cat %{SOURCE10} 		\
-%if ! %{system_cairo}
-  | grep -v enable-system-cairo    \
-%endif
 %if ! %{system_vpx}
   | grep -v with-system-libvpx     \
+%endif
+%if ! %{system_jpeg}
+  | grep -v with-system-jpeg     \
 %endif
   | tee .mozconfig
 
@@ -234,6 +237,16 @@ echo "ac_add_options --disable-jemalloc" >> .mozconfig
 echo "ac_add_options --enable-system-sqlite"  >> .mozconfig
 %else
 echo "ac_add_options --disable-system-sqlite" >> .mozconfig
+%endif
+
+%if %{?system_cairo}
+echo "ac_add_options --enable-system-cairo" >> .mozconfig
+%else
+echo "ac_add_options --disable-system-cairo" >> .mozconfig
+%endif
+
+%if %{?system_ffi}
+echo "ac_add_options --enable-system-ffi" >> .mozconfig
 %endif
 
 %if %{?debug_build}
@@ -350,6 +363,9 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Wed Sep 18 2013 Remi Collet <remi@fedoraproject.org> 1.5.2-2
+- Enigmail 1.5.2 for Thunderbird 24.0
+
 * Thu Jul  4 2013 Remi Collet <remi@fedoraproject.org> 1.5.2-1
 - Enigmail 1.5.2 for Thunderbird 17.0.7
 

@@ -19,8 +19,6 @@ ac_add_options --disable-xprint
 ac_add_options --disable-strip
 ac_add_options --disable-install-strip
 ac_add_options --enable-pango
-# temporary disable system cairo, because compilation fails
-#ac_add_options --enable-system-cairo
 ac_add_options --enable-svg
 ac_add_options --enable-canvas
 ac_add_options --enable-system-hunspell
@@ -29,6 +27,7 @@ ac_add_options --disable-updater
 ac_add_options --enable-startup-notification
 ac_add_options --enable-gio
 ac_add_options --disable-gnomevfs
+ac_add_options --disable-gstreamer
 
 export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1

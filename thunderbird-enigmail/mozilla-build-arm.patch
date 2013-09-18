@@ -1,0 +1,12 @@
+diff -up xulrunner-24.0/mozilla-release/gfx/ycbcr/moz.build.neon xulrunner-24.0/mozilla-release/gfx/ycbcr/moz.build
+--- xulrunner-24.0/mozilla-release/gfx/ycbcr/moz.build.neon	2013-09-11 01:15:02.000000000 +0200
++++ xulrunner-24.0/mozilla-release/gfx/ycbcr/moz.build	2013-09-16 11:23:40.487028288 +0200
+@@ -61,7 +61,7 @@ else:
+         'yuv_row_other.cpp',
+     ]
+ 
+-if CONFIG['OS_TEST'] == 'arm' and CONFIG['HAVE_ARM_NEON']:
++if CONFIG['HAVE_ARM_NEON']:
+     CPP_SOURCES += [
+         'yuv_convert_arm.cpp',
+     ]
