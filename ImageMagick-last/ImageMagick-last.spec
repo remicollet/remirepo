@@ -352,7 +352,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc Magick++/AUTHORS Magick++/ChangeLog Magick++/NEWS Magick++/README
 %doc www/Magick++/COPYING
-%{_libdir}/libMagick++%{?libsuffixe}.so.2*
+%{_libdir}/libMagick++%{?libsuffixe}.so.3*
 
 %files c++-devel
 %defattr(-,root,root,-)
@@ -374,6 +374,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 19 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.6.10-1
+- update to 6.8.6-10
+- soname change: libMagick++-6.Q16.so.3
+
 * Tue Sep 17 2013 Stefan Pommerening <pom@dmsp.de> - 6.8.6.10-1
 - update to 6.8.6-10
 
