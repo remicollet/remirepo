@@ -79,7 +79,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201308300430
+#global snapdate      201308300430
 #global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -126,7 +126,6 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
-Patch9: php-5.5.4-date.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -836,7 +835,6 @@ rm -rf ext/json
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
-%patch9 -p1 -b .date
 
 %patch21 -p1 -b .odbctimer
 
@@ -1036,7 +1034,7 @@ ln -sf ../configure
     --with-layout=GNU \
     --with-kerberos \
     --with-libxml-dir=%{_prefix} \
-%if 0%{?fedora} >= 16 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 5
     --with-system-tzdata \
 %endif
     --with-mhash \
@@ -1427,6 +1425,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 %endif
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
+install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
 
 # PHP-FPM stuff
 # Log
@@ -1600,7 +1599,7 @@ echo -e "\nWARNING : These %{name}-* RPM are not official Fedora / Red Hat build
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 17
+%if %{?fedora}%{!?fedora:99} < 18
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -1689,6 +1688,7 @@ fi
 %{_httpd_moddir}/libphp5-zts.so
 %endif
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
 %config(noreplace) %{_httpd_confdir}/php.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %config(noreplace) %{_httpd_modconfdir}/10-php.conf
@@ -1822,6 +1822,12 @@ fi
 
 
 %changelog
+* Thu Sep 19 2013 Remi Collet <rcollet@redhat.com> - 5.5.4-1
+- update to 5.5.4
+- improve security, use specific soap.wsdl_cache_dir
+  use /var/lib/php/wsdlcache for mod_php and php-fpm
+- sync short_tag comments in php.ini with upstream
+
 * Fri Aug 30 2013 Remi Collet <rcollet@redhat.com> - 5.5.4.0.1-201308300430
 - test build with -fsanitize=address
 - test build for https://bugs.php.net/65564
