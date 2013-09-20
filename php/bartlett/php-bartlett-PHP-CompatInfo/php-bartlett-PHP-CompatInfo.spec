@@ -15,7 +15,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.22.0
+Version:        2.23.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -32,18 +32,21 @@ Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpc
 # Add .install .module to fileExtensions (for drupal)
 Patch0:         %{pear_name}-conf.patch
 
+# https://github.com/llaville/php-compat-info/pull/101
+Patch1:         %{pear_name}-jsonc.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.2.1
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.7.0
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.8.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.2.1
+Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-libxml
@@ -51,7 +54,8 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.7.0
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.8.0
+Requires:       php-pear(%{channel}/PHP_Reflect) <  2
 Requires:       php-pear(Console_CommandLine) >= 1.2.0
 # Optional
 Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
@@ -82,8 +86,12 @@ cp phpcompatinfo.xml.dist phpcompatinfo.xml
 # Apply our changes
 %patch0  -p1 -b .rpm
 
+# Fix for jsonc extension
+%patch1 -p1 -b .jsonc
+
 # remove checksum for patched files
-cp ../package.xml %{name}.xml
+sed -e '/JsonTest/s/md5sum=.*name/name/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -168,6 +176,11 @@ fi
 
 
 %changelog
+* Fri Sep 20 2013 Remi Collet <remi@fedoraproject.org> - 2.23.0-1
+- Update to 2.23.0
+- raise dependencies: PHP 5.3.0, PHP_Reflect 1.8.0 (and < 2)
+- add patch for new constants in jsonc 1.3.2
+
 * Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 2.22.0-1
 - Update to 2.22.0
 
