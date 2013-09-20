@@ -12,7 +12,7 @@
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.7.0
+Version:        1.8.0
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -28,9 +28,10 @@ BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 
-Requires:       php-pear(PEAR) >= 1.9.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml
+Requires:       php-pear(PEAR) >= 1.9.0
 Requires:       php-channel(%{channel})
 Requires:       php-pcre
 Requires:       php-spl
@@ -107,6 +108,9 @@ fi
 
 
 %changelog
+* Fri Sep 20 2013 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
+- Update to 1.8.0
+
 * Wed Jun 26 2013 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
 - Update to 1.7.0
 
@@ -161,17 +165,17 @@ fi
 * Mon Jul 18 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-1
 - Version 1.0.2 (stable) - API 1.0.0 (stable)
 
-* Sat Jun 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.1-1
+* Thu Jun 16 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.1-1
 - Version 1.0.1 (stable) - API 1.0.0 (stable)
 
-* Sat Jun 02 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-1
+* Thu Jun 02 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-1
 - Version 1.0.0 (stable) - API 1.0.0 (stable)
 - add HTML documentation
 
 * Tue Apr 26 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-0.1.RC1
 - Version 1.0.0RC1 (beta) - API 1.0.0 (beta)
 
-* Sat Apr 17 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.7.0-1
+* Sun Apr 17 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.7.0-1
 - Version 0.7.0 (beta) - API 0.7.0 (beta)
 
 * Mon Apr 11 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.6.0-1
@@ -183,7 +187,7 @@ fi
 * Fri Mar 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.5.0-1
 - Version 0.5.0 (beta) - API 0.5.0 (beta)
 
-* Wed Feb 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.4.0-1
+* Fri Feb 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.4.0-1
 - Version 0.4.0 (beta)
 - Initial RPM package
 
