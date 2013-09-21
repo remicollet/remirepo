@@ -154,6 +154,9 @@ BuildRequires:  GConf2-devel
 %if %{system_vpx}
 BuildRequires:  libvpx-devel >= %{libvpx_version}
 %endif
+%if 0%{?rhel} == 6
+BuildRequires:   python27
+%endif
 
 Requires:       mozilla-filesystem
 %if %{?system_nss}
@@ -294,6 +297,10 @@ echo "ac_add_options --disable-webrtc" >> .mozconfig
 #===============================================================================
 
 %build
+%if 0%{?rhel} == 6
+. /opt/rh/python27/enable
+%endif
+
 cd %{tarballdir}
 
 # -fpermissive is needed to build with gcc 4.6+ which has become stricter
@@ -342,6 +349,10 @@ make -C objdir buildsymbols
 #===============================================================================
 
 %install
+%if 0%{?rhel} == 6
+. /opt/rh/python27/enable
+%endif
+
 cd %{tarballdir}/objdir
 
 DESTDIR=$RPM_BUILD_ROOT make install
