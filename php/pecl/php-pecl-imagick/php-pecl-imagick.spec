@@ -8,12 +8,18 @@
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
-Version:       3.1.0
+Version:       3.1.1
 Release:       1%{?dist}.1
+# https://bugs.php.net/65734 - Please Provides LICENSE file
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+
+# https://bugs.php.net/65736 - Link to sources
+
+# https://bugs.php.net/65736 - Broken ZTS build
+Patch0:        %{pecl_name}-zts.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.3, php-pear
@@ -39,9 +45,7 @@ Conflicts:     php-pecl-gmagick
 # Other third party repo stuff
 Obsoletes:     php53-pecl-imagick
 Obsoletes:     php53u-pecl-imagick
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-imagick
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-imagick
 %endif
@@ -60,6 +64,16 @@ using the ImageMagick API.
 echo TARGET is %{name}-%{version}-%{release}
 %setup -q -c 
 
+cd %{pecl_name}-%{version}
+%patch0 -p 1 -b .zts
+
+extver=$(sed -n '/#define PHP_IMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_imagick.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
+cd ..
+
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
@@ -73,11 +87,11 @@ extension = %{pecl_name}.so
 ;imagick.progress_monitor=0
 EOF
 
-cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-%{version}-zts
+cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-zts
 
 
 %build
-cd %{pecl_name}-%{version}-zts
+cd %{pecl_name}-zts
 # ZTS build
 %{_bindir}/zts-phpize
 %configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/zts-php-config
@@ -93,8 +107,8 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}-zts
-make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}%{?prever}
+make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-zts
+make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
@@ -123,7 +137,7 @@ fi
     --modules | grep %{pecl_name}
 
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}-zts/modules \
+    --define extension_dir=%{pecl_name}-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -145,6 +159,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 22 2013 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
+- Update to 3.1.1
+- open some upstream bugs
+  https://bugs.php.net/65734 - Please Provides LICENSE file
+  https://bugs.php.net/65736 - Link to sources
+  https://bugs.php.net/65736 - Broken ZTS build
+
 * Sun Sep  8 2013 Remi Collet <rpms@famillecollet.com> - 3.1.0-1
 - update to 3.1.0 (beta)
 
