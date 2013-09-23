@@ -88,7 +88,7 @@ Version: 5.5.4
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -153,7 +153,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-#Patch99: php-wip.patch
+Patch99: php-wip.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -855,7 +855,7 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
-#patch99 -p0 -b .wip
+%patch99 -p1 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1822,6 +1822,9 @@ fi
 
 
 %changelog
+* Mon Sep 23 2013 Remi Collet <rcollet@redhat.com> - 5.5.4-2
+- test build
+
 * Thu Sep 19 2013 Remi Collet <rcollet@redhat.com> - 5.5.4-1
 - update to 5.5.4
 - improve security, use specific soap.wsdl_cache_dir
