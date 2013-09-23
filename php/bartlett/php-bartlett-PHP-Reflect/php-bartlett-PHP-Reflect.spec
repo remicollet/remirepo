@@ -23,6 +23,7 @@ Source0:        http://%{channel}/get/%{pear_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.2.0
 BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
@@ -31,6 +32,7 @@ BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 # From package.xml
+Requires:       php(language) >= 5.2.0
 Requires:       php-pear(PEAR) >= 1.9.0
 Requires:       php-channel(%{channel})
 Requires:       php-pcre
@@ -71,7 +73,6 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
-
 
 
 %check
