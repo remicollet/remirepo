@@ -12,7 +12,7 @@
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.8.0
+Version:        1.8.1
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -108,6 +108,9 @@ fi
 
 
 %changelog
+* Mon Sep 23 2013 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
+- Update to 1.8.1
+
 * Fri Sep 20 2013 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
 - Update to 1.8.0
 
