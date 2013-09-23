@@ -15,7 +15,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.23.0
+Version:        2.23.1
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -31,9 +31,6 @@ Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpc
 # Make cache / save_path user specific
 # Add .install .module to fileExtensions (for drupal)
 Patch0:         %{pear_name}-conf.patch
-
-# https://github.com/llaville/php-compat-info/pull/101
-Patch1:         %{pear_name}-jsonc.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -86,12 +83,7 @@ cp phpcompatinfo.xml.dist phpcompatinfo.xml
 # Apply our changes
 %patch0  -p1 -b .rpm
 
-# Fix for jsonc extension
-%patch1 -p1 -b .jsonc
-
-# remove checksum for patched files
-sed -e '/JsonTest/s/md5sum=.*name/name/' \
-    ../package.xml >%{name}.xml
+cp ../package.xml %{name}.xml
 
 
 %build
@@ -176,6 +168,9 @@ fi
 
 
 %changelog
+* Mon Sep 23 2013 Remi Collet <remi@fedoraproject.org> - 2.23.1-1
+- Update to 2.23.1
+
 * Fri Sep 20 2013 Remi Collet <remi@fedoraproject.org> - 2.23.0-1
 - Update to 2.23.0
 - raise dependencies: PHP 5.3.0, PHP_Reflect 1.8.0 (and < 2)
