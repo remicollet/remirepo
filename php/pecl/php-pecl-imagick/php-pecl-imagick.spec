@@ -8,18 +8,12 @@
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
-Version:       3.1.1
+Version:       3.1.2
 Release:       1%{?dist}.1
-# https://bugs.php.net/65734 - Please Provides LICENSE file
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# https://bugs.php.net/65736 - Link to sources
-
-# https://bugs.php.net/65736 - Broken ZTS build
-Patch0:        %{pecl_name}-zts.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.3, php-pear
@@ -65,7 +59,6 @@ echo TARGET is %{name}-%{version}-%{release}
 %setup -q -c 
 
 cd %{pecl_name}-%{version}
-%patch0 -p 1 -b .zts
 
 extver=$(sed -n '/#define PHP_IMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_imagick.h)
 if test "x${extver}" != "x%{version}"; then
@@ -148,7 +141,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc %{pecl_name}-%{version}%{?prever}/{CREDITS,ChangeLog,examples}
+%doc %{pecl_name}-%{version}%{?prever}/{LICENSE,CREDITS,ChangeLog,examples}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -159,6 +152,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 25 2013 Remi Collet <remi@fedoraproject.org> - 3.1.2-1
+- Update to 3.1.2
+- add LICENSE to doc
+
 * Sun Sep 22 2013 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
 - Update to 3.1.1
 - open some upstream bugs
