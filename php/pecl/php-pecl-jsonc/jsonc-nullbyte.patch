@@ -1,0 +1,60 @@
+From c9200c8e207125ecec0fe377a5b06686a16d2c17 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 26 Sep 2013 07:08:23 +0200
+Subject: [PATCH] properly decode string with null-byte, see #7
+
+---
+ json.c      | 2 +-
+ package.xml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/json.c b/json.c
+index 0a98321..9568c2e 100644
+--- a/json.c
++++ b/json.c
+@@ -801,7 +801,7 @@ static void json_object_to_zval(json_object  *new_obj, zval *return_value, int o
+ 				break;
+ 
+ 			case json_type_string:
+-				RETVAL_STRING(json_object_get_string(new_obj), 1);
++				RETVAL_STRINGL(json_object_get_string(new_obj), json_object_get_string_len(new_obj), 1);
+ 				break;
+ 
+ 			case json_type_int:
+-- 
+1.8.4
+
+From d5a4d81f309d97aceb10d9ada0dff2bb72027c8d Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 26 Sep 2013 08:11:02 +0200
+Subject: [PATCH] add test for null-byte in value
+
+---
+ tests/012-null-byte.phpt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 tests/012-null-byte.phpt
+
+diff --git a/tests/012-null-byte.phpt b/tests/012-null-byte.phpt
+new file mode 100644
+index 0000000..c022710
+--- /dev/null
++++ b/tests/012-null-byte.phpt
+@@ -0,0 +1,15 @@
++--TEST--
++Decode value with null-byte (key not yet properly decode)
++--SKIPIF--
++<?php
++  if (!extension_loaded("json"))
++    die('skip: json extension not available');
++?>
++--FILE--
++<?php
++echo bin2hex(json_decode('"foo\u0000bar"'));
++echo "\nDone\n";
++?>
++--EXPECT--
++666f6f00626172
++Done
+-- 
+1.8.4
+
