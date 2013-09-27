@@ -1,0 +1,72 @@
+From e970176ca84cbb07ee37e677c37bcd33266e2f05 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 27 Sep 2013 16:27:37 +0200
+Subject: [PATCH] Fix zend_parse_parameters call() in php_fann_create_array()
+
+d must be a double
+l must be a long
+
+This cause segfaults on 32bits build.
+Using temp storage to avoid to review all call to php_fann_create_array()
+---
+ fann.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/fann.c b/fann.c
+index 17dbb2f..7ba52a8 100644
+--- a/fann.c
++++ b/fann.c
+@@ -1340,16 +1340,21 @@ static int php_fann_create_array(int num_args, float *conn_rate,
+ 	zval *array, **ppdata;
+ 	HashPosition pos;
+ 	int i = 0;
++	unsigned long tmpnum;
++	double tmprate;
+ 
+ 	if (conn_rate) {
+-		if (zend_parse_parameters(num_args TSRMLS_CC, "dla", conn_rate, num_layers, &array) == FAILURE) {
++		if (zend_parse_parameters(num_args TSRMLS_CC, "dla", &tmprate, &tmpnum, &array) == FAILURE) {
+ 			return FAILURE;
+ 		}
++		*conn_rate = (float)tmprate;
++		*num_layers = (uint)tmpnum;
+ 	}
+ 	else {
+-		if (zend_parse_parameters(num_args TSRMLS_CC, "la", num_layers, &array) == FAILURE) {
++		if (zend_parse_parameters(num_args TSRMLS_CC, "la", &tmpnum, &array) == FAILURE) {
+ 			return FAILURE;
+ 		}
++		*num_layers = (uint)tmpnum;
+ 	}
+ 
+ 	if (php_fann_check_num_layers(
+-- 
+1.8.4
+
+From afd86efef734d598493a2e3806164f54df021402 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 27 Sep 2013 16:30:22 +0200
+Subject: [PATCH] Fix fann.c:1199:3: warning: passing argument 2 of
+ 'php_stream_locate_url_wrapper' from incompatible pointer type [enabled by
+ default]
+
+---
+ fann.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fann.c b/fann.c
+index 7ba52a8..833f556 100644
+--- a/fann.c
++++ b/fann.c
+@@ -1196,7 +1196,7 @@ static char *php_fann_get_path_for_open(char *path, int path_len, int read TSRML
+ 		path_for_open = NULL;
+ 	}
+ 	else
+-		php_stream_locate_url_wrapper((const char *) path, (const char **) &path_for_open, 0 TSRMLS_CC);
++		php_stream_locate_url_wrapper(path, &path_for_open, 0 TSRMLS_CC);
+ 	return path_for_open;
+ }
+ /* }}} */
+-- 
+1.8.4
+

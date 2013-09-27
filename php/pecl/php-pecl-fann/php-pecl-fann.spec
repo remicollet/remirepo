@@ -16,7 +16,7 @@
 Summary:        Wrapper for FANN Library
 Name:           php-pecl-%{pecl_name}
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -24,6 +24,9 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # Github archive for test suite
 # https://github.com/bukka/php-fann/issues/4
 Source1:        https://github.com/bukka/php-fann/archive/%{version}.tar.gz
+
+# https://github.com/bukka/php-fann/pull/5
+Patch0:         fann-types.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  fann-devel > 2.1
@@ -53,6 +56,10 @@ This package provides a PHP binding for FANN
 %setup -q -c -a 1
 mv php-fann-%{version}/tests %{pecl_name}-%{version}/tests
 mv %{pecl_name}-%{version} NTS
+
+cd NTS
+%patch0 -p 1
+cd ..
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -162,3 +169,4 @@ rm -rf %{buildroot}
 %changelog
 * Fri Sep 27 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - initial package
+- open https://github.com/bukka/php-fann/pull/5
