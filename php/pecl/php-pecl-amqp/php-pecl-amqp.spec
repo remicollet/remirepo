@@ -1,10 +1,19 @@
+# spec file for php-pecl-amqp
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+
 %{!?__pecl:   %{expand: %%global __pecl   %{_bindir}/pecl}}
 %global pecl_name   amqp
 
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
 Version:       1.2.0
-Release:       1%{?dist}.1
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -162,6 +171,9 @@ fi
 
 
 %changelog
+* Sat Sep 28 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- rebuild with librabbitmq 0.4.1
+
 * Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Update to 1.2.0
 
