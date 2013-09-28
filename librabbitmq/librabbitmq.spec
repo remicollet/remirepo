@@ -1,21 +1,26 @@
-%global   client_tag  fb6fca832fd2
-%global   codegen_tag 6fb87d6eb01b
+# spec file for librabbitmq
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 
 Name:      librabbitmq
-Summary:   Client library and command line tools for AMPQ
-Version:   0.1
-Release:   0.2.hg%{client_tag}%{?dist}
-License:   MPLv1.1 or GPLv2+
+Summary:   Client library for AMQP
+Version:   0.4.1
+Release:   1%{?dist}
+License:   MIT
 Group:     System Environment/Libraries
-URL:       http://www.rabbitmq.com/
+URL:       https://github.com/alanxz/rabbitmq-c
 
-Source0:   http://hg.rabbitmq.com/rabbitmq-c/archive/%{client_tag}.tar.bz2
-Source1:   http://hg.rabbitmq.com/rabbitmq-codegen/archive/%{codegen_tag}.tar.bz2
-
+Source0:   https://github.com/alanxz/rabbitmq-c/archive/rabbitmq-c-%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
 BuildRequires: python-simplejson
+BuildRequires: openssl-devel
 # For tools
 %if 0%{?rhel} == 5
 BuildRequires: popt
@@ -30,13 +35,6 @@ BuildRequires: xmlto
 This is a C-language AMQP client library for use with AMQP servers
 speaking protocol versions 0-9-1.
 
-It also provides several command line tools:
-amqp-consume        Consume messages from a queue on an AMQP server
-amqp-declare-queue  Declare a queue on an AMQP server
-amqp-delete-queue   Delete a queue from an AMQP server
-amqp-get            Get a message from a queue on an AMQP server
-amqp-publish        Publish a message on an AMQP server
-
 
 %package devel
 Summary:    Header files and development libraries for %{name}
@@ -45,38 +43,59 @@ Requires:   %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the header files and development libraries
-for %{name}. 
+for %{name}.
+
+
+%package tools
+Summary:    Example tools built using the librabbitmq package
+Group:      Development/Libraries
+Requires:   %{name}%{?_isa} = %{version}
+
+%description tools
+This package contains example tools built using %{name}.
+
+It provides:
+amqp-consume        Consume messages from a queue on an AMQP server
+amqp-declare-queue  Declare a queue on an AMQP server
+amqp-delete-queue   Delete a queue from an AMQP server
+amqp-get            Get a message from a queue on an AMQP server
+amqp-publish        Publish a message on an AMQP server
 
 
 %prep
-%setup -qc -a 1
-
-mv rabbitmq-c-%{client_tag}        rabbitmq-c
-
-mv rabbitmq-codegen-%{codegen_tag} rabbitmq-codegen
-ln rabbitmq-codegen/amqp-rabbitmq-0.9.1.json rabbitmq-codegen/amqp-0.9.1.json
+%setup -q -n rabbitmq-c-%{version}
 
 # Copy sources to be included in -devel docs.
-cp -pr rabbitmq-c/examples examples
+cp -pr examples Examples
 
 
 %build
-cd rabbitmq-c
+%if 0%{?rhel} == 5
+: keep upstream configure
+%else
 autoreconf -i
-%configure
+%endif
+
+%configure \
+   --enable-tools \
+   --enable-docs  \
+   --with-ssl=openssl
+
+# rpath removal
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
 make %{_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-cd rabbitmq-c
 make install  DESTDIR="%{buildroot}"
 
-rm %{buildroot}%{_libdir}/%{name}.{a,la}
+rm %{buildroot}%{_libdir}/%{name}.la
 
 
 %check
-cd rabbitmq-c
+export LD_LIBRARY_PATH=%{buildroot}%{_libdir}
 make check
 
 
@@ -86,27 +105,55 @@ rm -rf %{buildroot}
 
 %post -p /sbin/ldconfig
 
-
 %postun -p /sbin/ldconfig
  
 
 %files
-%defattr (-,root,root,-) 
-%doc rabbitmq-c/{AUTHORS,COPYING,README,THANKS,TODO,LICENSE*}
-%{_libdir}/%{name}.so.*
-%{_bindir}/amqp*
-%{_mandir}/man1/amqp*
-%{_mandir}/man7/%{name}*
+%defattr (-,root,root,-)
+%doc AUTHORS README.md THANKS TODO LICENSE-MIT
+%{_libdir}/%{name}.so.1*
 
 
 %files devel
-%defattr (-,root,root,-) 
-%doc examples
+%defattr (-,root,root,-)
+%doc Examples
 %{_libdir}/%{name}.so
 %{_includedir}/amqp*
+%{_libdir}/pkgconfig/librabbitmq.pc
+
+
+%files tools
+%defattr (-,root,root,-)
+%{_bindir}/amqp-*
+%doc %{_mandir}/man1/amqp-*.1*
+%doc %{_mandir}/man7/librabbitmq-tools.7.gz
 
 
 %changelog
+* Sat Sep 28 2013 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
+- update to 0.4.1
+- add ssl support
+
+* Thu Aug  1 2013 Remi Collet <remi@fedoraproject.org> - 0.3.0-3
+- cleanups
+
+* Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
+- remove tools from main package
+
+* Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
+- update to 0.3.0
+- create sub-package for tools
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2-0.2.git2059570
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Aug 01 2012 Remi Collet <remi@fedoraproject.org> - 0.2-0.1.git2059570
+- update to latest snapshot (version 0.2, moved to github)
+- License is now MIT
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1-0.3.hgfb6fca832fd2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sun Mar 11 2012 Remi Collet <remi@fedoraproject.org> - 0.1-0.2.hgfb6fca832fd2
 - add %%check (per review comment)
 
