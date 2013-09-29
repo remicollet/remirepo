@@ -1,0 +1,34 @@
+diff -up config/based_config.php.orig config/based_config.php
+--- config/based_config.php.orig	2013-09-29 17:26:58.940921006 +0200
++++ config/based_config.php	2013-09-29 17:27:03.507928854 +0200
+@@ -176,4 +176,12 @@ if (!defined('GLPI_HTMLAWED')) {
+    # if htmLawed available in system, use (in config_path.php)
+    # define('GLPI_HTMLAWED', '/usr/share/htmlawed/htmLawed.php');
+ }
++
++// Default patch to Zend Framework 2
++if (!defined('GLPI_ZEND')) {
++   define('GLPI_ZEND', GLPI_ROOT.'/lib/Zend');
++
++   # if Zend Framework 2 available in system, use (in config_path.php)
++   # define('GLPI_ZEND', '/usr/share/php/Zend');
++}
+ ?>
+diff -up inc/autoload.function.php.orig inc/autoload.function.php
+--- inc/autoload.function.php.orig	2013-09-12 21:17:15.000000000 +0200
++++ inc/autoload.function.php	2013-09-29 17:22:33.420537657 +0200
+@@ -323,11 +323,9 @@ function glpi_autoload($classname) {
+    }
+ }
+ 
+-require_once (GLPI_ROOT . '/lib/Zend/Loader/ClassMapAutoloader.php');
+-$loader = new Zend\Loader\ClassMapAutoloader();
+-// Register the class map:
+-$loader->registerAutoloadMap(GLPI_ROOT . '/lib/Zend/autoload_classmap.php');
+-// Register with spl_autoload:
++require_once (GLPI_ZEND . '/Loader/StandardAutoloader.php');
++$option = array(Zend\Loader\StandardAutoloader::LOAD_NS => array('Zend' => GLPI_ZEND));
++$loader = new Zend\Loader\StandardAutoloader($option);
+ $loader->register();
+ 
+ // SimplePie autoloader

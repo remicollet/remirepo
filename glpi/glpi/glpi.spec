@@ -1,39 +1,64 @@
+# spec file for glpi
+#
+# Copyright (c) 2007-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global useselinux 1
 
 Name:           glpi
-Version:        0.83.9.1
-Release:        4%{?dist}
+Version:        0.84.2
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/1501/glpi-0.83.91.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1593/glpi-0.84.2.tar.gz
 
 Source1:        glpi-httpd.conf
 Source2:        glpi-config_path.php
 Source3:        glpi-logrotate
 
 # Switch all internal cron tasks to system
-Patch0:         glpi-0.83-cron.patch
+Patch0:         glpi-0.84-cron.patch
 
+# For system Zend, waiting for upstream approval
+Patch1:         glpi-0.84-zend.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  gettext
 
 Requires:       httpd, mod_php
-Requires:       php-mysql
+Requires:       php(language) >= 5.3
+Requires:       php-date
 Requires:       php-gd
-Requires:       php-ldap
+Requires:       php-fileinfo
 Requires:       php-imap
-Requires:       php-mbstring
-Requires:       php-xml
 Requires:       php-json
+Requires:       php-ldap
+Requires:       php-mbstring
+Requires:       php-mysqli
+Requires:       php-pcre
+Requires:       php-session
+Requires:       php-xml
 Requires:       php-pear(Cache_Lite) >= 1.7.4
 Requires:       php-PHPMailer
 Requires:       php-pear-CAS >= 1.2.0
 Requires:       php-htmLawed
+Requires:       php-simplepie
+Requires:       php-ZendFramework2-Cache
+Requires:       php-ZendFramework2-Cache-apc
+Requires:       php-ZendFramework2-I18n
+Requires:       php-ZendFramework2-Loader
+Requires:       php-ZendFramework2-ServiceManager
+Requires:       php-ZendFramework2-Stdlib
+Requires:       php-ZendFramework2-Version
+
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       php-pear(components.ez.no/Graph) >= 1.5
 Requires:       gnu-free-sans-fonts
@@ -74,6 +99,8 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0 -p0
+%patch1 -p0
+
 find . -name \*.orig -exec rm {} \; -print
 
 # Drop bundled Flash files
@@ -84,14 +111,13 @@ rm -rf lib/cache_lite
 rm -rf lib/phpmailer
 rm -rf lib/phpcas
 rm -rf lib/htmlawed
-
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+rm -rf lib/Zend
+rm -rf lib/simplepie
 rm -rf lib/ezcomponents
-cp %{SOURCE2} config/config_path.php 
-%else
+
+%if 0%{?fedora} < 9 && 0%{?rhel} < 6
 # fix font path on old version
 sed -e '/GLPI_FONT_FREESANS/s/gnu-free/freefont/' \
-    -e '/GLPI_EZC_BASE/d' \
     %{SOURCE2} >config/config_path.php
 %endif
 
@@ -114,7 +140,11 @@ EOF
 
 
 %build
-# empty build
+# Regenerate the locales
+for po in locales/*.po
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
@@ -244,6 +274,9 @@ fi
 
 
 %changelog
+* Sun Sep 29 2013 Remi Collet <remi@fedoraproject.org> - 0.84.2-4
+- update to 0.84.2
+
 * Thu Sep 12 2013 Remi Collet <remi@fedoraproject.org> - 0.83.9.1-4
 - restrict access for install to local for security
 
