@@ -22,6 +22,7 @@ define('GLPI_CACHE_LITE_DIR', 'Cache');
 define('GLPI_PHPMAILER_DIR',  'PHPMailer');
 define('GLPI_EZC_BASE',       'ezc/Base/base.php');
 define('GLPI_PHPCAS',         'CAS.php');
+define('GLPI_HTMLAWED',       'htmLawed/htmLawed.php');
 
 // Fonts
 define('GLPI_FONT_FREESANS',  '/usr/share/fonts/gnu-free/FreeSans.ttf');

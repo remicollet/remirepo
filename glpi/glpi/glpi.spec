@@ -1,25 +1,15 @@
 %global useselinux 1
 
 Name:           glpi
-Version:        0.83.1
-%if 0%{?svnrelease}
-Release:        0.2.svn%{svnrelease}%{?dist}
-%else
-Release:        2%{?dist}
-%endif
+Version:        0.83.9.1
+Release:        4%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-%if 0%{?svnrelease}
-# launch mktar %{svnrelease} to create
-Source0:        glpi-0.83-%{svnrelease}.tar.gz
-Source99:       mktar.sh
-%else
-Source0:        https://forge.indepnet.net/attachments/download/1151/glpi-0.83.1.tar.gz
-%endif
+Source0:        https://forge.indepnet.net/attachments/download/1501/glpi-0.83.91.tar.gz
 
 Source1:        glpi-httpd.conf
 Source2:        glpi-config_path.php
@@ -32,12 +22,20 @@ Patch0:         glpi-0.83-cron.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       php >= 5.2.0, php-mysql, httpd, php-gd, php-ldap, php-imap, php-mbstring, php-xml, php-json
+Requires:       httpd, mod_php
+Requires:       php-mysql
+Requires:       php-gd
+Requires:       php-ldap
+Requires:       php-imap
+Requires:       php-mbstring
+Requires:       php-xml
+Requires:       php-json
 Requires:       php-pear(Cache_Lite) >= 1.7.4
 Requires:       php-PHPMailer
 Requires:       php-pear-CAS >= 1.2.0
-Requires:       php-pear(components.ez.no/Graph) >= 1.5
+Requires:       php-htmLawed
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+Requires:       php-pear(components.ez.no/Graph) >= 1.5
 Requires:       gnu-free-sans-fonts
 %else
 Requires:       freefont
@@ -50,7 +48,7 @@ Requires(post):   /sbin/restorecon
 Requires(post):   /usr/sbin/semanage
 Requires(postun): /usr/sbin/semanage
 %endif
-Requires:         %{_sysconfdir}/cron.d
+Requires:         crontabs
 
 
 %description
@@ -78,17 +76,23 @@ techniciens grâce à une maintenance plus cohérente.
 %patch0 -p0
 find . -name \*.orig -exec rm {} \; -print
 
+# Drop bundled Flash files
+find lib -name \*.swf -exec rm {} \; -print
+
 # Use system lib
 rm -rf lib/cache_lite
 rm -rf lib/phpmailer
 rm -rf lib/phpcas
-rm -rf lib/ezcomponents
+rm -rf lib/htmlawed
 
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+rm -rf lib/ezcomponents
 cp %{SOURCE2} config/config_path.php 
 %else
 # fix font path on old version
-sed -e /GLPI_FONT_FREESANS/s/gnu-free/freefont/ %{SOURCE2} >config/config_path.php
+sed -e '/GLPI_FONT_FREESANS/s/gnu-free/freefont/' \
+    -e '/GLPI_EZC_BASE/d' \
+    %{SOURCE2} >config/config_path.php
 %endif
 
 mv lib/tiny_mce/license.txt LICENSE.tiny_mce
@@ -240,133 +244,101 @@ fi
 
 
 %changelog
+* Thu Sep 12 2013 Remi Collet <remi@fedoraproject.org> - 0.83.9.1-4
+- restrict access for install to local for security
+
+* Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 0.83.9.1-3
+- drop bundled Flash files files, #1000251
+
+* Sat Jul 27 2013 Jóhann B. Guðmundsson <johannbg@fedoraproject.org> - 0.83.9.1-2
+- Add a missing requirement on crontabs to spec file
+
+* Tue Jun 25 2013 Remi Collet <remi@fedoraproject.org> - 0.83.9.1-1
+- version 0.83.91 released (security)
+  https://forge.indepnet.net/versions/show/928
+
+* Thu Jun 20 2013 Remi Collet <remi@fedoraproject.org> - 0.83.9-1
+- version 0.83.9 released (security and bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/915
+
+* Tue Apr  2 2013 Remi Collet <remi@fedoraproject.org> - 0.83.8-1
+- version 0.83.8 released (bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/866
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.83.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Dec  4 2012 Remi Collet <remi@fedoraproject.org> - 0.83.7-1
+- version 0.83.7 released (bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/843
+
+* Tue Oct 16 2012 Remi Collet <remi@fedoraproject.org> - 0.83.6-1
+- version 0.83.6 released (bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/841
+
+* Tue Oct  9 2012 Remi Collet <remi@fedoraproject.org> - 0.83.5-1
+- version 0.83.5 released (bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/800
+
+* Fri Jul 27 2012 Remi Collet <remi@fedoraproject.org> - 0.83.4-1
+- version 0.83.4 released (bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/777
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.83.3.1-1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jul 12 2012 Remi Collet <remi@fedoraproject.org> - 0.83.3.1-1
+- version 0.83.3 released (bugfix + security)
+  https://forge.indepnet.net/projects/glpi/versions/771
+- new dependency on htmLawed
+
+* Thu May 31 2012 Remi Collet <remi@fedoraproject.org> - 0.83.2-1
+- version 0.83.2 released
+  https://forge.indepnet.net/projects/glpi/versions/750
+
 * Thu Apr 19 2012 Remi Collet <remi@fedoraproject.org> - 0.83.1-2
 - fix cron patch
 
 * Wed Apr 18 2012 Remi Collet <remi@fedoraproject.org> - 0.83.1-1
 - version 0.83.1 released
-  https://forge.indepnet.net/projects/glpi/versions/696
+  0.83.1 https://forge.indepnet.net/projects/glpi/versions/696
+  0.83   https://forge.indepnet.net/projects/glpi/versions/538
+- adapt config for httpd 2.4
 
-* Fri Apr 06 2012 Remi Collet <remi@fedoraproject.org> - 0.83-2
-- patch from upstream: selinux tests blocks upgrade
+* Thu Feb 09 2012 Remi Collet <remi@fedoraproject.org> - 0.80.7-1
+- version 0.80.7 released (security)
+  https://forge.indepnet.net/projects/glpi/versions/685
 
-* Thu Apr 05 2012 Remi Collet <remi@fedoraproject.org> - 0.83-1
-- version 0.83 released
-  https://forge.indepnet.net/projects/glpi/versions/538
+* Thu Jan 05 2012 Remi Collet <remi@fedoraproject.org> - 0.80.6.1-1
+- version 0.80.61 released (bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/677
 
-* Wed Mar 14 2012 Remi Collet <remi@fedoraproject.org> - 0.83-0.2.svn17842
-- new SVN snapshot
+* Thu Jan 05 2012 Remi Collet <remi@fedoraproject.org> - 0.80.6-1
+- version 0.80.6 released (bugfix)
+  https://forge.indepnet.net/projects/glpi/versions/657
+- add patch for https://forge.indepnet.net/issues/3299
 
-* Sun Feb 26 2012 Remi Collet <remi@fedoraproject.org> - 0.83-0.1.svn17620
-- version 0.83 post RC3
-
-* Tue Oct 25 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.5-1
+* Wed Nov 30 2011 Remi Collet <remi@fedoraproject.org> - 0.80.5-1
 - version 0.80.5 released (bugfix)
-  https://forge.indepnet.net/projects/glpi/versions/643
-
-* Tue Sep 27 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.4-1
-- version 0.80.4 released (bugfix)
-  https://forge.indepnet.net/projects/glpi/versions/632
-- patch for https://forge.indepnet.net/issues/3157
-
-* Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.3-1
-- version 0.80.3 released (bugfix)
-  https://forge.indepnet.net/projects/glpi/versions/621
-
-* Mon Aug 22 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.2-2
-- fix SElinux dependencies (semanage + restorecon)
+  0.80.5 https://forge.indepnet.net/projects/glpi/versions/643
+  0.80.4 https://forge.indepnet.net/projects/glpi/versions/632
+  0.80.3 https://forge.indepnet.net/projects/glpi/versions/621
+  0.80.2 https://forge.indepnet.net/projects/glpi/versions/605
+  0.80.1 https://forge.indepnet.net/projects/glpi/versions/575
+  0.80   https://forge.indepnet.net/projects/glpi/versions/466
 - increase cron run frequency (3 tasks each 3 minutes)
 
-* Fri Jul 22 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.2-1
-- version 0.80.2 released (bug + security fix)
-  https://forge.indepnet.net/projects/glpi/versions/605
+* Sun Jul 24 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.5-3.svn14966
+- use system EZC only if available (not in EL-5)
 
-* Tue Jun 28 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.1-1
-- version 0.80.1 released (bugfix)
-  https://forge.indepnet.net/projects/glpi/versions/575
+* Fri Jul 22 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.5-2.svn14966
+- bug and security fix from SVN.
 
-* Mon Jun 13 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80-1
-- version 0.80 released
-  https://forge.indepnet.net/projects/glpi/versions/466
+* Sat Jun 11 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.5-1
+- version 0.78.5 released
 
-* Tue May  3 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.5-1
-- version 0.78.4 released
-  https://forge.indepnet.net/projects/glpi/versions/563
-
-* Tue Apr  5 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.4-1
-- version 0.78.4 released
-  https://forge.indepnet.net/projects/glpi/versions/557
-
-* Tue Mar  8 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.3-1
-- version 0.78.3 released
-  https://forge.indepnet.net/projects/glpi/versions/537
-
-* Tue Jan 18 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.78.2-1
-- version 0.78.2 released
-  https://forge.indepnet.net/projects/glpi/versions/529
-
-* Mon Nov 15 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78.1-1
-- version 0.78.1 released
-  https://forge.indepnet.net/projects/glpi/versions/522
-
-* Sun Oct 31 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-2.svn12930
-- Patches from SVN (12691-12930) for know 0.78 issues
-  https://forge.indepnet.net/issues/2374
-  https://forge.indepnet.net/issues/2378
-  https://forge.indepnet.net/issues/2380
-  https://forge.indepnet.net/issues/2382
-
-* Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-2.svn12852
-- Patches from SVN (12691-12852) for know 0.78 issues
-  https://forge.indepnet.net/issues/2313
-  https://forge.indepnet.net/issues/2314
-  https://forge.indepnet.net/issues/2315
-  https://forge.indepnet.net/issues/2317
-  https://forge.indepnet.net/issues/2326
-  https://forge.indepnet.net/issues/2329
-  https://forge.indepnet.net/issues/2330
-  https://forge.indepnet.net/issues/2332
-  https://forge.indepnet.net/issues/2333
-  https://forge.indepnet.net/issues/2334
-  https://forge.indepnet.net/issues/2335
-  https://forge.indepnet.net/issues/2337
-
-* Tue Oct 12 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-1
-- version 0.78 released
-  https://forge.indepnet.net/projects/glpi/versions/32
-
-* Sat Sep 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn12452
-- new svn snapshot (which is > RC3)
-
-* Sat Sep 04 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn12271
-- new svn snapshot
-
-* Wed Aug 25 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn12190
-- new svn snapshot
-
-* Tue Aug 10 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn12085
-- new svn snapshot
-
-* Sun Jul 25 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11932
-- new svn snapshot
-
-* Wed Jul 07 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11874
-- new svn snapshot (which is RC2)
-
-* Fri Jul 02 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11854
-- new svn snapshot
-
-* Sat Jun 19 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11771
-- new svn snapshot
-- switch from gnu-free-sans-fonts to freefont on fedora <= 10 and EL <= 5
-
-* Sat Jun 19 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11763
-- new svn snapshot
-
-* Tue Jun 15 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.78-0.1.svn11723
-- update to 0.78 RC (svn snapshot)
-- use system ezComponents
-- use system font
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.72.4-4.svn11497
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Thu May 20 2010 Remi Collet <Fedora@FamilleCollet.com> - 0.72.4-3.svn11497
 - use system phpCAS instead of bundled copy
@@ -392,7 +364,7 @@ fi
 * Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.71.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
-* Mon Jun 02 2009 Remi Collet <Fedora@FamilleCollet.com> - 0.71.6-1
+* Tue Jun 02 2009 Remi Collet <Fedora@FamilleCollet.com> - 0.71.6-1
 - update to 0.71.6 (Bugfix Release)
 
 * Fri May 22 2009 Remi Collet <Fedora@FamilleCollet.com> - 0.71.5-4
@@ -441,7 +413,7 @@ fi
 * Sun Jan 27 2008 Remi Collet <Fedora@FamilleCollet.com> - 0.70.2-1
 - bugfixes update 
 
-* Mon Jan 15 2008 Remi Collet <Fedora@FamilleCollet.com> - 0.70.1a-1
+* Tue Jan 15 2008 Remi Collet <Fedora@FamilleCollet.com> - 0.70.1a-1
 - update 
 
 * Sun Jan 13 2008 Remi Collet <Fedora@FamilleCollet.com> - 0.70.1-2
