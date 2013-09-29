@@ -31,6 +31,7 @@ BuildRequires:  php-pear
 BuildRequires:  php-dom
 BuildRequires:  php-libxml
 BuildRequires:  diffmark-devel
+BuildRequires:  libxml2-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -60,6 +61,7 @@ Summary:       %{name} developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      php-devel%{?_isa}
+Requires:      libxml2-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using %{name}.
