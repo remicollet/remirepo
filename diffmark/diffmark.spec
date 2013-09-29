@@ -1,6 +1,6 @@
 Name:       diffmark
 Version:    0.10
-Release:    6%{?dist}
+Release:    1%{?dist}
 Summary:    XML diff and merge
 Group:      Applications/Text
 # The library code has it's own license
@@ -11,6 +11,7 @@ URL:        http://www.mangrove.cz/%{name}/
 Source0:    %{url}%{name}-%{version}.tar.gz
 # Superfluous RPATH in programs
 Patch0:     %{name}-0.09-remove_rpath.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libxml2-devel
 # Because of diffmark-0.08-remove_rpath.patch:
 # And to update config.sub to support aarch64, bug #925255:
@@ -47,29 +48,22 @@ find "$RPM_BUILD_ROOT" -name '*.la' -exec rm -f {} +
 %postun -p /sbin/ldconfig
 
 %files
+%defattr(-,root,root,-)
 %doc COPYING doc/*.html README 
 %{_bindir}/*
 %{_libdir}/*.so.*
 
 %files devel
+%defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/*.so
 
 %changelog
-* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-6
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+* Sun Sep 29 2013 Remi Collet <remi@fedoraproject.org> - 0.10-1
+- rebuild for remi repo
 
 * Wed Mar 27 2013 Petr Pisar <ppisar@redhat.com> - 0.10-5
 - Update config.sub to support aarch64 (bug #925255)
-
-* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
-
-* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
-
-* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Nov 21 2011 Petr Pisar <ppisar@redhat.com> - 0.10-1
 - 0.10 bump
