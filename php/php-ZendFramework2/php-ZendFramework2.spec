@@ -10,6 +10,7 @@ Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/
 #Source1:   https://packages.zendframework.com/releases/ZendFramework-%%{version}/ZendFramework-%%{version}-manual-en.tgz
 #Source2:   https://packages.zendframework.com/releases/ZendFramework-%%{version}/ZendFramework-%%{version}-apidoc.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  %{name}-Authentication   = %{version}-%{release}
@@ -86,6 +87,7 @@ Cache-memcached packages.
 %package   common
 
 Summary:   Zend Framework 2: Common files
+Group:     Development/Libraries
 
 Requires:  php(language) >= 5.3.3
 
@@ -100,6 +102,7 @@ Conflicts: php-ZendFramework < 2
 %package  Authentication
 
 Summary:  Zend Framework 2: Authentication Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.authentication.intro.html
 
 Requires: %{name}-common  = %{version}-%{release}
@@ -134,6 +137,7 @@ Zend\Permissions\Acl or Zend\Permissions\Rbac component.
 %package  Barcode
 
 Summary:  Zend Framework 2: Barcode Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.barcode.intro.html
 
 Requires: %{name}-common    = %{version}-%{release}
@@ -159,6 +163,7 @@ renderer. Renderer allow you to draw barcodes based on the support required.
 %package  Cache
 
 Summary:  Zend Framework 2: Cache Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-cache
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -187,6 +192,7 @@ Optional:
 %package  Cache-apc
 
 Summary:  Zend Framework 2: Cache Component: APC
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-cache
 
 Requires: %{name}-Cache = %{version}-%{release}
@@ -200,6 +206,7 @@ Requires: php-pecl(APC)
 %package  Cache-memcached
 
 Summary:  Zend Framework 2: Cache Component: Memcached
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-cache
 
 Requires: %{name}-Cache = %{version}-%{release}
@@ -213,6 +220,7 @@ Requires: php-pecl(memcached)
 %package  Captcha
 
 Summary:  Zend Framework 2: CAPTCHA Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.captcha.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -243,6 +251,7 @@ component.
 %package  Code
 
 Summary:  Zend Framework 2: Code Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html
 
 Requires: %{name}-common       = %{version}-%{release}
@@ -264,6 +273,7 @@ interface.
 %package  Config
 
 Summary:  Zend Framework 2: Config Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.config.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -290,6 +300,7 @@ configuration data stored in .ini, JSON, YAML and XML files.
 %package  Console
 
 Summary:  Zend Framework 2: Console Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.console.introduction.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -326,6 +337,7 @@ least one console route and one action controller to handle the request.
 %package  Crypt
 
 Summary:  Zend Framework 2: Crypt Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.crypt.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -363,6 +375,7 @@ background on this topic.
 %package  Db
 
 Summary:  Zend Framework 2: DB Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-db
 
 Requires: %{name}-common = %{version}-%{release}
@@ -383,6 +396,7 @@ Requires: php-spl
 %package  Debug
 
 Summary:  Zend Framework 2: Debug Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html
 
 Requires: %{name}-common  = %{version}-%{release}
@@ -400,6 +414,7 @@ Optional: XDebug (php-pecl-xdebug)
 %package  Di
 
 Summary:  Zend Framework 2: DI Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.di.introduction.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -425,6 +440,7 @@ injected into MovieLister.
 %package  Dom
 
 Summary:  Zend Framework 2: DOM Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.dom.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -445,6 +461,7 @@ interface for querying DOM documents utilizing both XPath and CSS selectors.
 %package  Escaper
 
 Summary:  Zend Framework 2: Escaper Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.escaper.introduction.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -468,6 +485,7 @@ peer-reviewed rules.
 %package  EventManager
 
 Summary:  Zend Framework 2: EventManager Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.event-manager.event-manager.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -491,6 +509,7 @@ trigger events; and interrupt execution of listeners.
 %package  Feed
 
 Summary:  Zend Framework 2: Feed Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.feed.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -530,6 +549,7 @@ and Atom feeds.
 %package  File
 
 Summary:  Zend Framework 2: File Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-file
 
 Requires: %{name}-common = %{version}-%{release}
@@ -549,6 +569,7 @@ Requires: php-tokenizer
 %package  Filter
 
 Summary:  Zend Framework 2: Filter Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.filter.html
 
 Requires: %{name}-common    = %{version}-%{release}
@@ -580,6 +601,7 @@ may be applied to a single datum in a user-defined order.
 %package  Form
 
 Summary:  Zend Framework 2: Form Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.form.intro.html
 
 Requires: %{name}-common      = %{version}-%{release}
@@ -614,6 +636,7 @@ The Zend\Form component consists of the following objects:
 %package  Http
 
 Summary:  Zend Framework 2: HTTP Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.http.html
 
 Requires: %{name}-common    = %{version}-%{release}
@@ -651,6 +674,7 @@ In nutshell, there are several parts of Zend\Http:
 %package  I18n
 
 Summary:  Zend Framework 2: i18n Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
 
 Requires: %{name}-common       = %{version}-%{release}
@@ -682,6 +706,7 @@ will actually do nothing but just return the given message IDs.
 %package  InputFilter
 
 Summary:  Zend Framework 2: InputFilter Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.input-filter.intro.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -703,6 +728,7 @@ CLI arguments, etc.
 %package  Json
 
 Summary:  Zend Framework 2: JSON Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.json.introduction.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -740,6 +766,7 @@ data processing techniques.
 %package  Ldap
 
 Summary:  Zend Framework 2: LDAP Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.ldap.introduction.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -762,6 +789,7 @@ limited to binding, searching and modifying entries in an LDAP directory.
 %package  Loader
 
 Summary:  Zend Framework 2: Loader Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-loader
 
 Requires: %{name}-common = %{version}-%{release}
@@ -779,6 +807,7 @@ Requires: php-spl
 %package  Log
 
 Summary:  Zend Framework 2: Log Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.log.overview.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -820,6 +849,7 @@ being logged. These functions are divided into the following objects:
 %package  Mail
 
 Summary:  Zend Framework 2: Mail Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.mail.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -848,6 +878,7 @@ the Mail\Transport\TransportInterface.
 %package  Math
 
 Summary:  Zend Framework 2: Math Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.math.introduction.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -871,6 +902,7 @@ supported functionalities are:
 %package  Memory
 
 Summary:  Zend Framework 2: Memory Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -885,6 +917,7 @@ Requires: php-spl
 %package  Mime
 
 Summary:  Zend Framework 2: MIME Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.mime.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -904,6 +937,7 @@ requiring MIME support.
 %package  ModuleManager
 
 Summary:  Zend Framework 2: ModuleManager Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.module-manager.intro.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -928,6 +962,7 @@ CSS, and JavaScript.
 %package  Mvc
 
 Summary:  Zend Framework 2: MVC Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.mvc.intro.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -976,6 +1011,7 @@ The MVC layer is built on top of the following components:
 %package  Navigation
 
 Summary:  Zend Framework 2: Navigation Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.navigation.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -998,6 +1034,7 @@ or serve as a model for other navigation related purposes.
 %package  Paginator
 
 Summary:  Zend Framework 2: Paginator Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.paginator.introduction.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -1024,6 +1061,7 @@ The primary design goals of Zend\Paginator are as follows:
 %package  Permissions-Acl
 
 Summary:  Zend Framework 2: Permissions ACL Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.permissions.acl.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -1054,6 +1092,7 @@ roles are granted access to resources.
 %package  Permissions-Rbac
 
 Summary:  Zend Framework 2: Permissions RBAC Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.permissions.rbac.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -1072,6 +1111,7 @@ putting the emphasis on roles and their permissions rather than objects
 %package  ProgressBar
 
 Summary:  Zend Framework 2: ProgressBar Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.progress-bar.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -1095,6 +1135,7 @@ precalculated values like percentage and estimated time left.
 %package  Serializer
 
 Summary:  Zend Framework 2: Serializer Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.serializer.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -1122,6 +1163,7 @@ recover.
 %package  Server
 
 Summary:  Zend Framework 2: Server Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.server.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -1148,6 +1190,7 @@ and loadFunctions() methods.
 %package  ServiceManager
 
 Summary:  Zend Framework 2: ServiceManager Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.service-manager.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -1167,6 +1210,7 @@ retrieving other objects.
 %package  Session
 
 Summary:  Zend Framework 2: Session Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-session
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -1192,6 +1236,7 @@ multiple page requests by the same client.
 %package  Soap
 
 Summary:  Zend Framework 2: SOAP Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-soap
 
 Requires: %{name}-common = %{version}-%{release}
@@ -1215,6 +1260,7 @@ Requires: php-soap
 %package  Stdlib
 
 Summary:  Zend Framework 2: Stdlib Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-stdlib
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -1238,6 +1284,7 @@ Requires: php-spl
 %package  Tag
 
 Summary:  Zend Framework 2: Tag Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.tag.introduction.html
 
 Requires: %{name}-common  = %{version}-%{release}
@@ -1269,6 +1316,7 @@ on the given relative weights of each item in it.
 %package  Test
 
 Summary:  Zend Framework 2: Test Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.test.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -1300,6 +1348,7 @@ PHPUnit is the only library supported currently.
 %package  Text
 
 Summary:  Zend Framework 2: Text Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-text
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -1318,6 +1367,7 @@ Requires: php-spl
 %package  Uri
 
 Summary:  Zend Framework 2: URI Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.uri.html
 
 Requires: %{name}-common    = %{version}-%{release}
@@ -1345,6 +1395,7 @@ registered with the Factory.
 %package  Validator
 
 Summary:  Zend Framework 2: Validator Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.validator.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -1372,6 +1423,7 @@ validators may be applied to a single datum in a user-defined order.
 %package  Version
 
 Summary:  Zend Framework 2: Version Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.version.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -1395,6 +1447,7 @@ Framework installation.
 %package  View
 
 Summary:  Zend Framework 2: View Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.view.quick-start.html
 
 Requires: %{name}-common         = %{version}-%{release}
@@ -1421,6 +1474,7 @@ substitution, and more.
 %package  XmlRpc
 
 Summary:  Zend Framework 2: XML-RPC Component
+Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.2/en/modules/zend.xmlrpc.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
@@ -1481,6 +1535,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ##############################################################################
 
 %files common
+%defattr(-,root,root,-)
 
 %doc *.md composer.json
 %doc %{_docdir}/%{name}-%{version}
@@ -1490,6 +1545,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Authentication
+%defattr(-,root,root,-)
 
 %doc library/Zend/Authentication/*.md
 %doc library/Zend/Authentication/composer.json
@@ -1501,6 +1557,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Barcode
+%defattr(-,root,root,-)
 
 %doc library/Zend/Barcode/*.md
 %doc library/Zend/Barcode/composer.json
@@ -1512,6 +1569,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Cache
+%defattr(-,root,root,-)
 
 %doc library/Zend/Cache/*.md
 %doc library/Zend/Cache/composer.json
@@ -1525,18 +1583,21 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Cache-apc
+%defattr(-,root,root,-)
 
 %{_datadir}/php/Zend/Cache/Storage/Adapter/Apc*
 
 # ------------------------------------------------------------------------------
 
 %files Cache-memcached
+%defattr(-,root,root,-)
 
 %{_datadir}/php/Zend/Cache/Storage/Adapter/Memcached*
 
 # ------------------------------------------------------------------------------
 
 %files Captcha
+%defattr(-,root,root,-)
 
 %doc library/Zend/Captcha/*.md
 %doc library/Zend/Captcha/composer.json
@@ -1548,6 +1609,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Code
+%defattr(-,root,root,-)
 
 %doc library/Zend/Code/*.md
 %doc library/Zend/Code/composer.json
@@ -1559,6 +1621,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Config
+%defattr(-,root,root,-)
 
 %doc library/Zend/Config/*.md
 %doc library/Zend/Config/composer.json
@@ -1570,6 +1633,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Console
+%defattr(-,root,root,-)
 
 %doc library/Zend/Console/*.md
 %doc library/Zend/Console/composer.json
@@ -1581,6 +1645,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Crypt
+%defattr(-,root,root,-)
 
 %doc library/Zend/Crypt/*.md
 %doc library/Zend/Crypt/composer.json
@@ -1592,6 +1657,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Db
+%defattr(-,root,root,-)
 
 %doc library/Zend/Db/*.md
 %doc library/Zend/Db/composer.json
@@ -1603,6 +1669,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Debug
+%defattr(-,root,root,-)
 
 %doc library/Zend/Debug/*.md
 %doc library/Zend/Debug/composer.json
@@ -1614,6 +1681,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Di
+%defattr(-,root,root,-)
 
 %doc library/Zend/Di/*.md
 %doc library/Zend/Di/composer.json
@@ -1625,6 +1693,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Dom
+%defattr(-,root,root,-)
 
 %doc library/Zend/Dom/*.md
 %doc library/Zend/Dom/composer.json
@@ -1636,6 +1705,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Escaper
+%defattr(-,root,root,-)
 
 %doc library/Zend/Escaper/*.md
 %doc library/Zend/Escaper/composer.json
@@ -1647,6 +1717,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files EventManager
+%defattr(-,root,root,-)
 
 %doc library/Zend/EventManager/*.md
 %doc library/Zend/EventManager/composer.json
@@ -1658,6 +1729,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Feed
+%defattr(-,root,root,-)
 
 %doc library/Zend/Feed/*.md
 %doc library/Zend/Feed/composer.json
@@ -1669,6 +1741,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files File
+%defattr(-,root,root,-)
 
 %doc library/Zend/File/*.md
 %doc library/Zend/File/composer.json
@@ -1680,6 +1753,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Filter
+%defattr(-,root,root,-)
 
 %doc library/Zend/Filter/*.md
 %doc library/Zend/Filter/composer.json
@@ -1691,6 +1765,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Form
+%defattr(-,root,root,-)
 
 %doc library/Zend/Form/*.md
 %doc library/Zend/Form/composer.json
@@ -1702,6 +1777,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Http
+%defattr(-,root,root,-)
 
 %doc library/Zend/Http/*.md
 %doc library/Zend/Http/composer.json
@@ -1713,6 +1789,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files I18n
+%defattr(-,root,root,-)
 
 %doc library/Zend/I18n/*.md
 %doc library/Zend/I18n/composer.json
@@ -1724,6 +1801,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files InputFilter
+%defattr(-,root,root,-)
 
 %doc library/Zend/InputFilter/*.md
 %doc library/Zend/InputFilter/composer.json
@@ -1735,6 +1813,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Json
+%defattr(-,root,root,-)
 
 %doc library/Zend/Json/*.md
 %doc library/Zend/Json/composer.json
@@ -1746,6 +1825,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Ldap
+%defattr(-,root,root,-)
 
 %doc library/Zend/Ldap/*.md
 %doc library/Zend/Ldap/composer.json
@@ -1757,6 +1837,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Loader
+%defattr(-,root,root,-)
 
 %doc library/Zend/Loader/*.md
 %doc library/Zend/Loader/composer.json
@@ -1768,6 +1849,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Log
+%defattr(-,root,root,-)
 
 %doc library/Zend/Log/*.md
 %doc library/Zend/Log/composer.json
@@ -1779,6 +1861,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Mail
+%defattr(-,root,root,-)
 
 %doc library/Zend/Mail/*.md
 %doc library/Zend/Mail/composer.json
@@ -1790,6 +1873,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Math
+%defattr(-,root,root,-)
 
 %doc library/Zend/Math/*.md
 %doc library/Zend/Math/composer.json
@@ -1801,6 +1885,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Memory
+%defattr(-,root,root,-)
 
 %doc library/Zend/Memory/*.md
 %doc library/Zend/Memory/composer.json
@@ -1812,6 +1897,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Mime
+%defattr(-,root,root,-)
 
 %doc library/Zend/Mime/*.md
 %doc library/Zend/Mime/composer.json
@@ -1823,6 +1909,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files ModuleManager
+%defattr(-,root,root,-)
 
 %doc library/Zend/ModuleManager/*.md
 %doc library/Zend/ModuleManager/composer.json
@@ -1834,6 +1921,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Mvc
+%defattr(-,root,root,-)
 
 %doc library/Zend/Mvc/*.md
 %doc library/Zend/Mvc/composer.json
@@ -1845,6 +1933,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Navigation
+%defattr(-,root,root,-)
 
 %doc library/Zend/Navigation/*.md
 %doc library/Zend/Navigation/composer.json
@@ -1856,6 +1945,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Paginator
+%defattr(-,root,root,-)
 
 %doc library/Zend/Paginator/*.md
 %doc library/Zend/Paginator/composer.json
@@ -1867,6 +1957,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Permissions-Acl
+%defattr(-,root,root,-)
 
 %doc library/Zend/Permissions/Acl/*.md
 %doc library/Zend/Permissions/Acl/composer.json
@@ -1879,6 +1970,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Permissions-Rbac
+%defattr(-,root,root,-)
 
 %doc library/Zend/Permissions/Rbac/*.md
 %doc library/Zend/Permissions/Rbac/composer.json
@@ -1891,6 +1983,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files ProgressBar
+%defattr(-,root,root,-)
 
 %doc library/Zend/ProgressBar/*.md
 %doc library/Zend/ProgressBar/composer.json
@@ -1902,6 +1995,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Serializer
+%defattr(-,root,root,-)
 
 %doc library/Zend/Serializer/*.md
 %doc library/Zend/Serializer/composer.json
@@ -1913,6 +2007,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Server
+%defattr(-,root,root,-)
 
 %doc library/Zend/Server/*.md
 %doc library/Zend/Server/composer.json
@@ -1924,6 +2019,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files ServiceManager
+%defattr(-,root,root,-)
 
 %doc library/Zend/ServiceManager/*.md
 %doc library/Zend/ServiceManager/composer.json
@@ -1935,6 +2031,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Session
+%defattr(-,root,root,-)
 
 %doc library/Zend/Session/*.md
 %doc library/Zend/Session/composer.json
@@ -1946,6 +2043,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Soap
+%defattr(-,root,root,-)
 
 %doc library/Zend/Soap/*.md
 %doc library/Zend/Soap/composer.json
@@ -1957,6 +2055,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Stdlib
+%defattr(-,root,root,-)
 
 %doc library/Zend/Stdlib/*.md
 %doc library/Zend/Stdlib/composer.json
@@ -1968,6 +2067,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Tag
+%defattr(-,root,root,-)
 
 %doc library/Zend/Tag/*.md
 %doc library/Zend/Tag/composer.json
@@ -1979,6 +2079,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Test
+%defattr(-,root,root,-)
 
 %doc library/Zend/Test/*.md
 %doc library/Zend/Test/composer.json
@@ -1990,6 +2091,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Text
+%defattr(-,root,root,-)
 
 %doc library/Zend/Text/*.md
 %doc library/Zend/Text/composer.json
@@ -2001,6 +2103,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Uri
+%defattr(-,root,root,-)
 
 %doc library/Zend/Uri/*.md
 %doc library/Zend/Uri/composer.json
@@ -2012,6 +2115,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Validator
+%defattr(-,root,root,-)
 
 %doc library/Zend/Validator/*.md
 %doc library/Zend/Validator/composer.json
@@ -2023,6 +2127,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files Version
+%defattr(-,root,root,-)
 
 %doc library/Zend/Version/*.md
 %doc library/Zend/Version/composer.json
@@ -2034,6 +2139,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files View
+%defattr(-,root,root,-)
 
 %doc library/Zend/View/*.md
 %doc library/Zend/View/composer.json
@@ -2045,6 +2151,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ------------------------------------------------------------------------------
 
 %files XmlRpc
+%defattr(-,root,root,-)
 
 %doc library/Zend/XmlRpc/*.md
 %doc library/Zend/XmlRpc/composer.json
@@ -2056,6 +2163,9 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ##############################################################################
 
 %changelog
+* Sun Sep 29 2013 Remi Collet <remi@fedoraproject.org> 2.2.4-1
+- backport 2.2.4 for remi repo
+
 * Thu Sep 12 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.4-1
 - Updated to 2.2.4
 - Versioned conflict
