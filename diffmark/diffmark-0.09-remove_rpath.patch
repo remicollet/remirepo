@@ -1,0 +1,15 @@
+Remove RPATH
+
+Then libtoolize -f && autoreconf to get rid of RPATH in libtool.
+
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 951a1c5..6f53a59 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -9,5 +9,5 @@ diffmarkinc_HEADERS = compare.hh compareimpl.hh diff.hh lcs.hh lcsimpl.hh link.h
+ 
+ libdiffmark_la_SOURCES = compare.cc diff.cc link.cc merge.cc namespacecollector.cc nspace.cc target.cc xbuffer.cc xdoc.cc xutil.cc
+ 
+-libdiffmark_la_LDFLAGS = -rpath $(libdir) -version-info 2:3:1 @DEPS_LIBS@ -lstdc++
++libdiffmark_la_LDFLAGS = -version-info 2:3:1 @DEPS_LIBS@ -lstdc++
+ 
