@@ -14,6 +14,7 @@ Source0:        https://forge.indepnet.net/attachments/download/1567/appliances-
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  gettext
 
 Requires:       glpi >= 0.84
 Requires:       glpi <  0.85
@@ -36,6 +37,11 @@ Cette extension permet la gestion des applicatifs dans GLPI
 %prep
 %setup -q -c 
 
+# Create link to LICENSE for standard doc folder
+ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
+
+rm -rf %{pluginname}/tools
+
 cat >httpd <<EOF
 <Directory /usr/share/glpi/plugins/%{pluginname}/sql>
 	<IfModule mod_authz_core.c>
@@ -50,7 +56,12 @@ EOF
 
 
 %build
-# empty build
+# Regenerate the locales
+for po in %{pluginname}/locales/*.po
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
+
 
 %install
 rm -rf %{buildroot} 
@@ -63,15 +74,29 @@ rm -f %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/sql/.htaccess
 mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
 install --mode 644 httpd %{buildroot}/%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
+for i in %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/locales/*
+do
+  lang=$(basename $i)
+  echo "%lang(${lang:0:2}) %{_datadir}/glpi/plugins/%{pluginname}/locales/${lang}"
+done | tee %{name}.lang
+
 
 %clean
 rm -rf %{buildroot} 
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc %{pluginname}/LICENSE
+%doc LICENSE
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
-%{_datadir}/glpi/plugins/%{pluginname}
+%dir %{_datadir}/glpi/plugins/%{pluginname}
+%dir %{_datadir}/glpi/plugins/%{pluginname}/locales
+%{_datadir}/glpi/plugins/%{pluginname}/*.php
+%{_datadir}/glpi/plugins/%{pluginname}/ajax
+%{_datadir}/glpi/plugins/%{pluginname}/front
+%{_datadir}/glpi/plugins/%{pluginname}/inc
+%{_datadir}/glpi/plugins/%{pluginname}/sql
+# Keep here as required from interface
+%{_datadir}/glpi/plugins/%{pluginname}/LICENSE
 
 
 %changelog
