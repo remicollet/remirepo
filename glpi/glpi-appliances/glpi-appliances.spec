@@ -1,13 +1,8 @@
 %global pluginname   appliances
-#global svnrelease   136
 
 Name:           glpi-appliances
-Version:        1.7.0
-%if 0%{?svnrelease}
-Release:        0.1.svn%{svnrelease}%{?dist}
-%else
+Version:        1.9.0
 Release:        1%{?dist}
-%endif
 Summary:        GLPI Plugin to manage appliances
 Summary(fr):    Extension GLPI de gestion des applicatifs
 
@@ -15,21 +10,14 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/appliances
 
-%if 0%{?svnrelease}
-# svn export -r 136 https://forge.indepnet.net/svn/appliances/trunk appliances
-# tar czf glpi-appliances-1.7.0-136.tar.gz appliances
-Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
-%else
-Source0:        https://forge.indepnet.net/attachments/download/924/glpi-appliances-1.7.0.tar.gz
-%endif
-
+Source0:        https://forge.indepnet.net/attachments/download/1567/appliances-1.9.0.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.80
-Requires:       glpi <  0.81
-Requires:       php-xmlrpc php-soap
+Requires:       glpi >= 0.84
+Requires:       glpi <  0.85
+
 
 %description
 This plugin add appliances management to GLPI
@@ -50,8 +38,13 @@ Cette extension permet la gestion des applicatifs dans GLPI
 
 cat >httpd <<EOF
 <Directory /usr/share/glpi/plugins/%{pluginname}/sql>
-    Order Allow,Deny
-    Deny from all
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order Allow,Deny
+		Deny from all
+	</IfModule>
 </Directory>
 EOF
 
@@ -76,11 +69,28 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%doc %{pluginname}/LICENSE
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/glpi/plugins/%{pluginname}
 
 
 %changelog
+* Mon Sep 30 2013 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
+- version 1.9.0 for GLPI 0.84.2
+
+* Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.8.1-1
+- version 1.8.1 for GLPI 0.83.3
+  https://forge.indepnet.net/projects/appliances/versions/747
+
+* Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.8.0-1
+- version 1.8.0
+  https://forge.indepnet.net/projects/appliances/versions/614
+- fix config for httpd 2.4
+- add 2 patches from SVN (php 5.4.0 + missing tab)
+
+* Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.8.0-0.1.svn184
+- version 1.8.0 for glpi 0.83RC (svn snapshot)
+
 * Thu Jun 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.7.0-1
 - version 1.7.0 released
 
