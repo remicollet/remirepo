@@ -1,13 +1,8 @@
 %global pluginname   behaviors
-#global svnrelease   315
 
 Name:           glpi-behaviors
-Version:        0.83.4
-%if 0%{?svnrelease}
-Release:        0.1.svn%{svnrelease}%{?dist}
-%else
+Version:        0.84.1
 Release:        1%{?dist}
-%endif
 Summary:        Plugin to add optional behaviors to GLPI
 Summary(fr):    Extension ajoutant des comportements optionnels à GLPI
 
@@ -15,19 +10,14 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            https://forge.indepnet.net/projects/behaviors
 
-%if 0%{?svnrelease}
-# svn export -r 315 https://forge.indepnet.net/svn/behaviors/trunk behaviors
-# tar czf glpi-behaviors-0.83-315.tar.gz behaviors
-Source0:        glpi-behaviors-0.83-%{svnrelease}.tar.gz
-%else
-Source0:        https://forge.indepnet.net/attachments/download/1408/glpi-behaviors-0.83.4.tar.gz
-%endif
+Source0:        https://forge.indepnet.net/attachments/download/1570/glpi-behaviors-0.84.1.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  gettext
 
-Requires:       glpi >= 0.83.4
-Requires:       glpi <  0.84
+Requires:       glpi >= 0.84
+Requires:       glpi <  0.85
 
 
 %description
@@ -43,11 +33,15 @@ Cette extension permet d’ajouter des comportements optionnels à GLPI.
 # Create link to LICENSE for standard doc folder
 ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
 
-chmod -x %{pluginname}/setup.php
+rm -rf %{pluginname}/tools
 
 
 %build
-# empty build
+# Regenerate the locales
+for po in %{pluginname}/locales/*.po
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
@@ -80,6 +74,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 30 2013 Remi Collet <remi@fedoraproject.org> - 0.84.1-1
+- version 0.84.1 for GLPI 0.84
+
 * Fri Jan 11 2013 Remi Collet <Fedora@FamilleCollet.com> - 0.83.4-1
 - version 0.83.4 for GLPI >= 0.83.4
   https://forge.indepnet.net/projects/behaviors/versions/787
