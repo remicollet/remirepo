@@ -1,5 +1,5 @@
-%global  glpi_version  0.83.3
-%global  plug_version  1.0
+%global  glpi_version  0.84.0
+%global  plug_version  1.2
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -13,14 +13,15 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/699/fusioninventory-for-glpi-metapackage_0.83+1.0.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/1084/fusioninventory-for-glpi_0.84+1.2.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  gettext
 
 Requires:       glpi >= %{glpi_version}
-Requires:       glpi <  0.84
+Requires:       glpi <  0.85
 Requires:       glpi-reports
 Requires:       glpi-webservices
 
