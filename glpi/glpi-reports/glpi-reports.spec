@@ -1,13 +1,8 @@
 %global pluginname   reports
-#global svnrelease   158
 
 Name:           glpi-reports
-Version:        1.5.0
-%if 0%{?svnrelease}
-Release:        0.1.svn%{svnrelease}%{?dist}
-%else
+Version:        1.7.0
 Release:        1%{?dist}
-%endif
 Summary:        GLPI Plugin providing additional reports
 Summary(fr):    Extension GLPI fournissant des rapports supplémentaires
 
@@ -15,20 +10,14 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/reports
 
-%if 0%{?svnrelease}
-# svn export -r 158 https://forge.indepnet.net/svn/reports/trunk reports
-# tar czf glpi-reports-1.5.0-158.tar.gz reports
-Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
-%else
-Source0:        https://forge.indepnet.net/attachments/download/926/glpi-reports-1.5.0.tar.gz
-%endif
-
+Source0:        https://forge.indepnet.net/attachments/download/1563/glpi_reports-1.7.0.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  gettext
 
-Requires:       glpi >= 0.80
-Requires:       glpi <  0.81
+Requires:       glpi >= 0.84
+Requires:       glpi <  0.85
 
 
 %description
@@ -56,6 +45,13 @@ Fonctionnalités principales :
 
 mv %{pluginname}/docs docs
 
+# Create link to LICENSE for standard doc folder
+ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
+
+rm -r %{pluginname}/tools
+rm    docs/HEADER
+mv %{pluginname}/AUTHORS.txt docs/
+
 # dos2unix to avoid rpmlint warnings
 for doc in docs/* ; do
     sed -i -e 's/\r//' $doc
@@ -63,7 +59,12 @@ done
 
 
 %build
-# empty build
+# Regenerate the locales
+for po in %{pluginname}/locales/*.po
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
+
 
 %install
 rm -rf %{buildroot} 
@@ -71,18 +72,45 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
 cp -ar %{pluginname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}
 
+for i in %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/locales/*
+do
+  lang=$(basename $i)
+  echo "%lang(${lang:0:2}) %{_datadir}/glpi/plugins/%{pluginname}/locales/${lang}"
+done | tee %{name}.lang
+
 
 %clean
 rm -rf %{buildroot} 
 
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc docs/*
-%{_datadir}/glpi/plugins/%{pluginname}
+%doc docs/* LICENSE
+%dir %{_datadir}/glpi/plugins/%{pluginname}
+%dir %{_datadir}/glpi/plugins/%{pluginname}/locales
+%{_datadir}/glpi/plugins/%{pluginname}/*.php
+%{_datadir}/glpi/plugins/%{pluginname}/front
+%{_datadir}/glpi/plugins/%{pluginname}/inc
+%{_datadir}/glpi/plugins/%{pluginname}/report
+# Keep here as required from interface
+%{_datadir}/glpi/plugins/%{pluginname}/LICENSE
 
 
 %changelog
+* Mon Sep 30 2013 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
+- version 1.7.0 for GLPI 0.84
+
+* Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.6.1-1
+- version 1.6.1 for GLPI 0.83.3
+  https://forge.indepnet.net/projects/reports/versions/701
+
+* Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-1
+- version 1.6.0
+  https://forge.indepnet.net/projects/reports/versions/636
+
+* Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-0.1.svn215
+- version 1.6.0 for glpi 0.83RC (svn snapshot)
+
 * Thu Jun 30 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.0-1
 - version 1.5.0 released
 
