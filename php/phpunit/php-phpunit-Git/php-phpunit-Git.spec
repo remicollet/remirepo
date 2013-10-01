@@ -13,7 +13,7 @@
 
 Name:           php-phpunit-Git
 Version:        1.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple wrapper for Git
 
 Group:          Development/Libraries
@@ -86,10 +86,12 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/SebastianBergmann
-%{pear_phpdir}/SebastianBergmann/%{pear_name}/autoload.php
-%{pear_phpdir}/SebastianBergmann/%{pear_name}/Git.php
+%{pear_phpdir}/SebastianBergmann/%{pear_name}
 
 
 %changelog
+* Tue Oct  1 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- own /usr/share/pear/SebastianBergmann/Git
+
 * Wed Aug 28 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - initial package
