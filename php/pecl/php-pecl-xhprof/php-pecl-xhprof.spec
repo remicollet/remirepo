@@ -84,7 +84,11 @@ for each function.
 Additionally, it supports ability to compare two runs (hierarchical DIFF
 reports), or aggregate results from multiple runs.
 
-Documentation : %{_datadir}/doc/%{name}-%{version}/docs/index.html
+%if "%{?_pkgdocdir}" == "%{_docdir}/%{name}"
+Documentation : %{_docdir}/xhprof/index.html
+%else
+Documentation : %{_docdir}/xhprof-%{version}/index.html
+%endif
 
 
 %prep
@@ -207,7 +211,7 @@ fi
 
 %files -n xhprof
 %defattr(-,root,root,-)
-%doc docs
+%doc docs/*
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/xhprof.conf
 %{_datadir}/xhprof
 
@@ -215,6 +219,9 @@ fi
 %changelog
 * Tue Oct  1 2013 Remi Collet <remi@fedoraproject.org> - 0.9.4-1
 - update to 0.9.4
+
+* Tue Aug 6 2013 Remi Collet <remi@fedoraproject.org> - 0.9.3-3
+- fix doc path in package description #994038
 
 * Mon May 20 2013 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
 - update to 0.9.3
