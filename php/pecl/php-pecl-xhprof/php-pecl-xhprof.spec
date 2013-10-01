@@ -1,10 +1,18 @@
+# spec file for php-pecl-xhprof
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pecl:         %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name xhprof
 
 Name:           php-pecl-xhprof
-Version:        0.9.3
-Release:        1%{?gitver:.git%{gitver}}%{?dist}.1
+Version:        0.9.4
+Release:        1%{?gitver:.git%{gitver}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
@@ -32,9 +40,7 @@ Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-%{pecl_name}
 %endif
@@ -84,6 +90,9 @@ Documentation : %{_datadir}/doc/%{name}-%{version}/docs/index.html
 %prep
 %setup -c -q
 
+# All files as src to avoid registration in pear file list
+sed -e 's/role="[a-z]*"/role="src"/' -i package.xml
+
 # Extension configuration file
 cat >%{pecl_name}.ini <<EOF
 ; Enable %{pecl_name} extension module
@@ -99,6 +108,8 @@ cat >httpd.conf <<EOF
 Alias /xhprof /usr/share/xhprof/xhprof_html
 
 <Directory /usr/share/xhprof/xhprof_html>
+   # For security reason, the web interface
+   # is only allowed from the server
    <IfModule mod_authz_core.c>
       # Apache 2.4
       Require local
@@ -156,12 +167,13 @@ cp -pr %{pecl_name}-%{version}/xhprof_lib  %{buildroot}%{_datadir}/xhprof/xhprof
 
 
 %check
-# simple module load test
+: simple module load TEST for NTS extension
 php --no-php-ini \
     --define extension_dir=%{pecl_name}-%{version}/extension/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+: simple module load TEST for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension_dir=%{pecl_name}-%{version}/ext-zts/modules \
     --define extension=%{pecl_name}.so \
@@ -201,6 +213,9 @@ fi
 
 
 %changelog
+* Tue Oct  1 2013 Remi Collet <remi@fedoraproject.org> - 0.9.4-1
+- update to 0.9.4
+
 * Mon May 20 2013 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
 - update to 0.9.3
 
