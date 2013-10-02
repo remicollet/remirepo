@@ -26,7 +26,7 @@ Source3:        glpi-logrotate
 # Switch all internal cron tasks to system
 Patch0:         glpi-0.84-cron.patch
 
-# For system Zend, waiting for upstream approval
+# https://forge.indepnet.net/repositories/revision/glpi/21915
 Patch1:         glpi-0.84-zend.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -99,7 +99,7 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0 -p0
-%patch1 -p0
+%patch1 -p2
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -119,6 +119,8 @@ rm -rf lib/ezcomponents
 # fix font path on old version
 sed -e '/GLPI_FONT_FREESANS/s/gnu-free/freefont/' \
     %{SOURCE2} >config/config_path.php
+%else
+cp  %{SOURCE2}  config/config_path.php
 %endif
 
 mv lib/tiny_mce/license.txt LICENSE.tiny_mce
@@ -274,8 +276,10 @@ fi
 
 
 %changelog
-* Sun Sep 29 2013 Remi Collet <remi@fedoraproject.org> - 0.84.2-4
+* Wed Oct  2 2013 Remi Collet <remi@fedoraproject.org> - 0.84.2-1
 - update to 0.84.2
+- add upstream patch for Zend autoload
+- use system ZendFramework2 and SimplePie
 
 * Thu Sep 12 2013 Remi Collet <remi@fedoraproject.org> - 0.83.9.1-4
 - restrict access for install to local for security

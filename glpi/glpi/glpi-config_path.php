@@ -28,7 +28,7 @@ define('GLPI_PHPMAILER_DIR',  'PHPMailer');
 define('GLPI_EZC_BASE',       'ezc/Base/base.php');
 define('GLPI_PHPCAS',         'CAS.php');
 define('GLPI_HTMLAWED',       'htmLawed/htmLawed.php');
-define('GLPI_ZEND',           '/usr/share/php/Zend');
+define('GLPI_ZEND_PATH',      '/usr/share/php/Zend');
 define("GLPI_SIMPLEPIE_PATH", '/usr/share/php/php-simplepie');
 
 // Fonts
