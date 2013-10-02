@@ -9,33 +9,34 @@
 %{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
-%global with_zts  0%{?__ztsphp:1}
-%global pecl_name varnish
+%global with_zts   0%{?__ztsphp:1}
+%global pecl_name  varnish
+%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:        Varnish Cache bindings
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# will be in next version
-# http://svn.php.net/viewvc/pecl/varnish/trunk/LICENSE?view=co
-Source1:        LICENSE
-# http://svn.php.net/viewvc/pecl/varnish/trunk/config.m4?view=co
-Source2:        config.m4
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel > 5.3
 BuildRequires:  php-pear
+BuildRequires:  php-hash
 BuildRequires:  varnish-libs-devel > 3
+# For tests
+%if %{with_tests}
+BuildRequires:  varnish
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+Requires:       php-hash%{?_isa}
 
 Provides:       php-%{pecl_name} = %{version}
 Provides:       php-%{pecl_name}%{?_isa} = %{version}
@@ -58,7 +59,6 @@ through TCP socket or shared memory.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-cp %{SOURCE1} %{SOURCE2} .
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_VARNISH_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_varnish.h)
@@ -129,6 +129,8 @@ fi
 
 
 %check
+ret=0
+
 : Minimal load test for NTS extension
 php --no-php-ini \
     --define extension=NTS/modules/%{pecl_name}.so \
@@ -141,8 +143,70 @@ php --no-php-ini \
     --modules | grep %{pecl_name}
 %endif
 
-# Don't run upstream test suite which requires some varnish
-# server and configuration
+%if %{with_tests}
+cd NTS
+
+: Run a varnish server for test suite
+sed -n '/secret/{s/.* "//;s/".*$//;p}' \
+    tests/config.php-dist | tail -n 1 | tee /tmp/secret
+
+if [ 0%{?__isa_bits} -eq 64 ]; then
+    PORTUSR=6085
+    PORTADM=6086
+else
+    PORTUSR=6081
+    PORTADM=6082
+fi
+%{_sbindir}/varnishd \
+  -b 127.0.0.1:80 \
+  -P /tmp/varnish.pid \
+  -S /tmp/secret \
+  -s file,/tmp,1G \
+  -n /tmp/vtest \
+  -a :$PORTUSR \
+  -T :$PORTADM
+
+export VARNISH_TEST_IPV4=1
+export VARNISH_TEST_IPV6=1
+export VARNISH_TEST_SECRET=1
+export VARNISH_TEST_SHM=0
+
+: Upstream test suite for NTS extension
+sed -e 's:/var/lib/varnish/silent:/tmp/vtest:' \
+    -e "s/6081/$PORTUSR/" \
+    -e "s/6082/$PORTADM/" \
+    tests/config.php-dist | tee tests/config.php
+
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php || ret=1
+
+%if %{with_zts}
+cd ../ZTS
+
+: Upstream test suite for ZTS extension
+sed -e 's:/var/lib/varnish/silent:/tmp/vtest:' \
+    -e "s/6081/$PORTUSR/" \
+    -e "s/6082/$PORTADM/" \
+    tests/config.php-dist | tee tests/config.php
+
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php || ret=1
+%endif
+
+: Stop the test server
+[ -s /tmp/varnish.pid ] && kill $(cat /tmp/varnish.pid)
+rm -rf /tmp/{secret,varnish.pid,vtest}
+
+exit $ret
+%else
+: Upstream test suite disabled, missing '--with tests' option.
+%endif
 
 
 %clean
@@ -163,5 +227,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 02 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+- License now provided in upstream sources
+- Drop merged patch for configure
+- Use sha256 from hash extension instead of bundled copy
+- Add option --with tests to run upstream test suite
+
 * Mon Sep 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
