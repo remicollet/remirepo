@@ -1,0 +1,33 @@
+Index: trunk/scripts/ocsng_fullsync.sh
+===================================================================
+--- ocsinventoryng/scripts/ocsng_fullsync.sh	(revision 331)
++++ ocsinventoryng/scripts/ocsng_fullsync.sh	(revision 332)
+@@ -31,7 +31,7 @@
+ 
+ exit_if_soft_lock()
+ {
+-   if [ -f $GLPI_LOCK_DIR/ocsinventory.lock ]
++   if [ -f $GLPI_LOCK_DIR/ocsinventoryng.lock ]
+    then
+       echo "Software lock : script can't run !"
+       exit 1
+Index: trunk/scripts/run.php
+===================================================================
+--- ocsinventoryng/scripts/run.php	(revision 331)
++++ ocsinventoryng/scripts/run.php	(revision 332)
+@@ -70,7 +70,7 @@
+ 
+ function exit_if_soft_lock() {
+ 
+-   if (file_exists(GLPI_LOCK_DIR."/massocsimport.lock")) {
++   if (file_exists(GLPI_LOCK_DIR."/ocsinventoryng.lock")) {
+       echo "Software lock : script can't run !\n";
+       exit (1);
+    }
+@@ -204,4 +204,4 @@
+ cleanup($pidfile);
+ fwrite ($log, date("r") . " " . $_SERVER["argv"][0] . " ended\n\n");
+ 
+-?>
+\ No newline at end of file
++?>

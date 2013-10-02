@@ -41,6 +41,7 @@ Cette extension permet d’ajouter des comportements optionnels à GLPI.
 # Create link to LICENSE for standard doc folder
 ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
 
+# For developer only
 rm -rf %{pluginname}/tools
 
 
