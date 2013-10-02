@@ -15,15 +15,12 @@
 
 Summary:        XML diff and merge
 Name:           php-pecl-%{pecl_name}
-Version:        0.8.0
+Version:        0.9.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# use syste diffmark library instead of bundled copy
-Patch0:         xmldiff-system-diffmark.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel > 5.3
@@ -72,7 +69,6 @@ These are the files needed to compile programs using %{name}.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p0
 
 # drop bundled library to ensure it is not used
 rm -rf diffmark
@@ -183,7 +179,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/CREDITS
+%doc NTS/{CREDITS,LICENSE}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -203,5 +199,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 02 2013 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
+- Update to 0.9.0
+- License now provided in upstream sources
+- Drop merged patch for system libdiffmark
+
 * Sun Sep 29 2013 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
 - initial package
