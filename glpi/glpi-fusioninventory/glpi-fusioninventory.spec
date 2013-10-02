@@ -1,5 +1,6 @@
-%global  glpi_version  0.84.0
-%global  plug_version  1.2
+%global pluginname    fusioninventory
+%global glpi_version  0.84.0
+%global plug_version  1.2
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -16,14 +17,35 @@ URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-gl
 Source0:        http://forge.fusioninventory.org/attachments/download/1084/fusioninventory-for-glpi_0.84+1.2.tar.gz
 Source1:        %{name}-httpd.conf
 
+# http://forge.fusioninventory.org/issues/2259
+Patch0:         %{pluginname}-install.patch
+
+# To be followed
+# http://forge.fusioninventory.org/issues/2271 mysql_real_escape_string
+
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
+# phpcompatinfo
+Requires:       php-curl
+Requires:       php-date
+Requires:       php-fileinfo
+Requires:       php-hash
+Requires:       php-json
+Requires:       php-libxml
+Requires:       php-mcrypt
+Requires:       php-mysqli
+Requires:       php-pcre
+Requires:       php-session
+Requires:       php-simplexml
+Requires:       php-spl
+Requires:       php-zip
+Requires:       php-zlib
 Requires:       glpi >= %{glpi_version}
 Requires:       glpi <  0.85
 Requires:       glpi-reports
-Requires:       glpi-webservices
 
 
 %description
@@ -37,54 +59,46 @@ Serveur FusionInventory embarqué dans une extension GLPI.
 %prep
 %setup -q -c
 
+%patch0 -p0
+
+mv %{pluginname}/docs docs
+
 # dos2unix to avoid rpmlint warnings
-for doc in */docs/* ; do
+for doc in docs/* ; do
     sed -i -e 's/\r//' $doc
 done
 
-mkdir docs
-
-for plug in fus*
-do
-  if [ -d $plug/docs ]
-  then
-    # move doc, not to be installed
-    mv $plug/docs docs/$plug
-  else
-    mkdir -p docs/$plug
-  fi
-  # LICENSE are installed, just create link in standard docdir.
-  ln -s %{_datadir}/glpi/plugins/$plug/LICENSE docs/$plug/LICENSE
-done
+# Create link to LICENSE for standard doc folder
+ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE docs/LICENSE
+mv %{pluginname}/README.asciidoc docs/
 
 # .htaccess replaced by a httpd config file
-rm -f fusioninventory/install/mysql/.htaccess \
-      fusinvsnmp/install/mysql/.htaccess \
-      fusinvsnmp/scripts/.htaccess \
-      fusioninventory/tools/.htaccess
+rm %{pluginname}/install/mysql/.htaccess \
+   %{pluginname}/scripts/.htaccess \
+   %{pluginname}/tools/.htaccess
 
 
 %build
-# empty build
+# Regenerate the locales
+for po in %{pluginname}/locales/*.po
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
 rm -rf %{buildroot} 
 
 mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
-for plug in fus*
-do
-  cp -ar $plug %{buildroot}/%{_datadir}/glpi/plugins/$plug
-done
+cp -ar %{pluginname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}
 
 install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
-# Lang
-for i in %{buildroot}%{_datadir}/glpi/plugins/fus*/locales/*
+# Locales
+for i in %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/locales/*
 do
   lang=$(basename $i)
-  plug=$(basename $(dirname $(dirname $i)))
-  echo "%lang(${lang:0:2}) %{_datadir}/glpi/plugins/$plug/locales/${lang}"
+  echo "%lang(${lang:0:2}) %{_datadir}/glpi/plugins/%{pluginname}/locales/${lang}"
 done | tee %{name}.lang
 
 
@@ -97,62 +111,31 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 # fusioninventory
 %doc docs/*
-%dir %{_datadir}/glpi/plugins/fusioninventory
-%dir %{_datadir}/glpi/plugins/fusioninventory/locales
+%dir %{_datadir}/glpi/plugins/%{pluginname}
+%dir %{_datadir}/glpi/plugins/%{pluginname}/locales
 # LICENSE file required by installation process
-%{_datadir}/glpi/plugins/fusioninventory/LICENSE
-%{_datadir}/glpi/plugins/fusioninventory/*.php
-%{_datadir}/glpi/plugins/fusioninventory/*.js
-%{_datadir}/glpi/plugins/fusioninventory/ajax
-%{_datadir}/glpi/plugins/fusioninventory/front
-%{_datadir}/glpi/plugins/fusioninventory/inc
-%{_datadir}/glpi/plugins/fusioninventory/install
-%{_datadir}/glpi/plugins/fusioninventory/pics
-%{_datadir}/glpi/plugins/fusioninventory/tools
-# fusinvinventory
-%dir %{_datadir}/glpi/plugins/fusinvinventory
-%dir %{_datadir}/glpi/plugins/fusinvinventory/locales
-%{_datadir}/glpi/plugins/fusinvinventory/LICENSE
-%{_datadir}/glpi/plugins/fusinvinventory/*.php
-%{_datadir}/glpi/plugins/fusinvinventory/ajax
-%{_datadir}/glpi/plugins/fusinvinventory/b
-%{_datadir}/glpi/plugins/fusinvinventory/front
-%{_datadir}/glpi/plugins/fusinvinventory/inc
-%{_datadir}/glpi/plugins/fusinvinventory/install
-%{_datadir}/glpi/plugins/fusinvinventory/pics
-# fusinvsnmp
-%dir %{_datadir}/glpi/plugins/fusinvsnmp
-%dir %{_datadir}/glpi/plugins/fusinvsnmp/locales
-%{_datadir}/glpi/plugins/fusinvsnmp/LICENSE
-%{_datadir}/glpi/plugins/fusinvsnmp/*.php
-%{_datadir}/glpi/plugins/fusinvsnmp/*.js
-%{_datadir}/glpi/plugins/fusinvsnmp/ajax
-%{_datadir}/glpi/plugins/fusinvsnmp/front
-%{_datadir}/glpi/plugins/fusinvsnmp/inc
-%{_datadir}/glpi/plugins/fusinvsnmp/install
-%{_datadir}/glpi/plugins/fusinvsnmp/models
-%{_datadir}/glpi/plugins/fusinvsnmp/pics
-%{_datadir}/glpi/plugins/fusinvsnmp/report
-%{_datadir}/glpi/plugins/fusinvsnmp/tool
-%{_datadir}/glpi/plugins/fusinvsnmp/scripts
-# fusinvdeploy
-%dir %{_datadir}/glpi/plugins/fusinvdeploy
-%dir %{_datadir}/glpi/plugins/fusinvdeploy/locales
-%{_datadir}/glpi/plugins/fusinvdeploy/LICENSE
-%{_datadir}/glpi/plugins/fusinvdeploy/*.php
-%{_datadir}/glpi/plugins/fusinvdeploy/ajax
-%{_datadir}/glpi/plugins/fusinvdeploy/b
-%{_datadir}/glpi/plugins/fusinvdeploy/css
-%{_datadir}/glpi/plugins/fusinvdeploy/front
-%{_datadir}/glpi/plugins/fusinvdeploy/inc
-%{_datadir}/glpi/plugins/fusinvdeploy/install
-%{_datadir}/glpi/plugins/fusinvdeploy/js
-%{_datadir}/glpi/plugins/fusinvdeploy/lib
-%{_datadir}/glpi/plugins/fusinvdeploy/pics
-%{_datadir}/glpi/plugins/fusinvdeploy/scripts
+%{_datadir}/glpi/plugins/%{pluginname}/LICENSE
+%{_datadir}/glpi/plugins/%{pluginname}/*.php
+%{_datadir}/glpi/plugins/%{pluginname}/*.js
+%{_datadir}/glpi/plugins/%{pluginname}/ajax
+%{_datadir}/glpi/plugins/%{pluginname}/b
+%{_datadir}/glpi/plugins/%{pluginname}/css
+%{_datadir}/glpi/plugins/%{pluginname}/front
+%{_datadir}/glpi/plugins/%{pluginname}/inc
+%{_datadir}/glpi/plugins/%{pluginname}/lib
+%{_datadir}/glpi/plugins/%{pluginname}/install
+%{_datadir}/glpi/plugins/%{pluginname}/pics
+%{_datadir}/glpi/plugins/%{pluginname}/report
+%{_datadir}/glpi/plugins/%{pluginname}/scripts
+%{_datadir}/glpi/plugins/%{pluginname}/tools
+%{_datadir}/glpi/plugins/%{pluginname}/snmpmodels
 
 
 %changelog
+* Fri Aug 03 2012 Remi Collet <remi@fedoraproject.org> - 1:0.84.0.1.2-1
+- update to 0.84+1.2 for GLPI 0.84
+- add explicit dependency on required extensions
+
 * Fri Aug 03 2012 Remi Collet <RPMS@FamilleCollet.com> - 1:0.83.3.1.0-1
 - update to 0.83+1.0 (finale)
   http://forge.fusioninventory.org/versions/67
