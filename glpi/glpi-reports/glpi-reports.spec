@@ -1,3 +1,11 @@
+# spec file for glpi-reports
+#
+# Copyright (c) 2010-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global pluginname   reports
 
 Name:           glpi-reports

@@ -1,3 +1,11 @@
+# spec file for glpi-appliances
+#
+# Copyright (c) 2010-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global pluginname   appliances
 
 Name:           glpi-appliances

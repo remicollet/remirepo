@@ -1,3 +1,11 @@
+# spec file for glpi-behaviors
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global pluginname   behaviors
 
 Name:           glpi-behaviors
