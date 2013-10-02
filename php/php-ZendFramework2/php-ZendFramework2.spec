@@ -1,6 +1,6 @@
 Name:      php-ZendFramework2
 Version:   2.2.4
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Zend Framework 2
 
 Group:     Development/Libraries
@@ -9,6 +9,9 @@ URL:       http://framework.zend.com
 Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/ZendFramework-%{version}.tgz
 #Source1:   https://packages.zendframework.com/releases/ZendFramework-%%{version}/ZendFramework-%%{version}-manual-en.tgz
 #Source2:   https://packages.zendframework.com/releases/ZendFramework-%%{version}/ZendFramework-%%{version}-apidoc.tgz
+
+# https://bugzilla.redhat.com/1014478  patch needed for GLPI
+Patch0:    %{name}-glpi.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -1510,6 +1513,8 @@ and building new XML-RPC servers.
 %prep
 %setup -q -n ZendFramework-%{version}
 
+%patch0 -p0
+
 
 %build
 # Empty build section, nothing required
@@ -2163,6 +2168,9 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ##############################################################################
 
 %changelog
+* Wed Oct  2 2013 Remi Collet <remi@fedoraproject.org> 2.2.4-2
+- add patch needed for GLPI #1014478
+
 * Sun Sep 29 2013 Remi Collet <remi@fedoraproject.org> 2.2.4-1
 - backport 2.2.4 for remi repo
 

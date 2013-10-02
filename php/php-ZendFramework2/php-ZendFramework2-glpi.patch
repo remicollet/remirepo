@@ -1,0 +1,33 @@
+diff -up Zend/I18n/Translator/Loader/Gettext.php.glpi Zend/I18n/Translator/Loader/Gettext.php
+--- library/Zend/I18n/Translator/Loader/Gettext.php.glpi	2013-10-02 09:41:18.572098028 +0200
++++ library/Zend/I18n/Translator/Loader/Gettext.php	2013-10-02 09:41:56.658244928 +0200
+@@ -126,9 +126,11 @@ class Gettext implements FileLoaderInter
+ 
+                     array_shift($originalString);
+ 
+-                    foreach ($originalString as $string) {
+-                        $textDomain[$string] = '';
+-                    }
++/// PROBLEM WITH GLPI WHEN singular = plural                    
++/// opened bug http://framework.zend.com/issues/browse/ZF-11974
++//                    foreach ($originalString as $string) {
++//                        $textDomain[$string] = '';
++//                    }
+                 } else {
+                     $textDomain[$originalString[0]] = $translationString[0];
+                 }
+diff -up Zend/I18n/Translator/Translator.php.glpi Zend/I18n/Translator/Translator.php
+--- library/Zend/I18n/Translator/Translator.php.glpi	2013-10-02 09:32:05.331918805 +0200
++++ library/Zend/I18n/Translator/Translator.php	2013-10-02 09:32:42.679067978 +0200
+@@ -403,6 +403,11 @@ class Translator
+             return ($number == 1 ? $singular : $plural);
+         }
+ 
++        /// GLPI Hack for languages with 1 plural form (chinese)
++        if (!is_array($translation)) {
++            return $translation;
++        }
++
+         $index = $this->messages[$textDomain][$locale]
+                       ->getPluralRule()
+                       ->evaluate($number);
