@@ -1,3 +1,11 @@
+# spec file for glpi-fusioninventory
+#
+# Copyright (c) 2010-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global pluginname    fusioninventory
 %global glpi_version  0.84.0
 %global plug_version  1.2
@@ -89,9 +97,11 @@ done
 %install
 rm -rf %{buildroot} 
 
+# Plugin
 mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
 cp -ar %{pluginname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}
 
+# Apache
 install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
 # Locales
