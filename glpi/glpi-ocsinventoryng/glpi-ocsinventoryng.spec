@@ -57,13 +57,13 @@ plugin features to provide better compatibility and extensibility with OCS.
 
 mv %{pluginname}/docs docs
 
-# Create link to LICENSE for standard doc folder
-ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE docs/LICENSE
-
 # dos2unix to avoid rpmlint warnings
 for doc in docs/* ; do
     sed -i -e 's/\r//' $doc
 done
+
+# Create link to LICENSE for standard doc folder
+ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE docs/LICENSE
 
 # For developer only
 rm -rf %{pluginname}/tools
