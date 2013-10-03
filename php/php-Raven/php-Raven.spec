@@ -1,7 +1,7 @@
 %global github_owner   getsentry
 %global github_name    raven-php
-%global github_version 0.6.1
-%global github_commit  e4aeba24578795bdc0ff41fddcd81b9ecb54c5c4
+%global github_version 0.7.1
+%global github_commit  5e5cb95beeb95b4065e7bffe719a588015dff50f
 
 %global lib_name       Raven
 %global php_min_ver    5.2.4
@@ -22,7 +22,7 @@ BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 # composer.json lists PHPUnit version 3.7, but tests pass with 3.6+
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpci
+# For tests: phpcompatinfo
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-hash
@@ -35,7 +35,7 @@ BuildRequires: php-spl
 BuildRequires: php-zlib
 
 Requires:      php(language) >= %{php_min_ver}
-# phpci
+# phpcompatinfo
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-hash
@@ -92,6 +92,12 @@ install -pm 755 bin/raven %{buildroot}%{_bindir}/
 
 
 %changelog
+* Thu Oct  3 2013 Remi Collet <remi@fedoraproject.org> 0.7.1-1
+- backport 0.7.1 for remi repo.
+
+* Wed Oct 02 2013 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.7.1-1
+- Updated to 0.7.1
+
 * Mon Jul  8 2013 Remi Collet <remi@fedoraproject.org> 0.6.1-1
 - backport 0.6.1 for remi repo.
 
