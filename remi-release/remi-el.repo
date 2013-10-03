@@ -6,10 +6,20 @@ enabled=0
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
 
+[remi-php55]
+name=Les RPM de remi de PHP 5.5 pour Enterprise Linux VERSION - $basearch
+#baseurl=http://rpms.famillecollet.com/enterprise/VERSION/php55/$basearch/
+mirrorlist=http://rpms.famillecollet.com/enterprise/VERSION/php55/mirror
+# WARNING: If you enable this repository, you must also enable "remi"
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
+
 [remi-test]
 name=Les RPM de remi en test pour Enterprise Linux VERSION - $basearch
 #baseurl=http://rpms.famillecollet.com/enterprise/VERSION/test/$basearch/
 mirrorlist=http://rpms.famillecollet.com/enterprise/VERSION/test/mirror
+# WARNING: If you enable this repository, you must also enable "remi"
 enabled=0
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
@@ -17,6 +27,13 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
 [remi-debuginfo]
 name=Les RPM de remi pour Enterprise Linux VERSION - $basearch - debuginfo
 baseurl=http://rpms.famillecollet.com/enterprise/VERSION/debug-remi/$basearch/
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
+
+[remi-php55-debuginfo]
+name=Les RPM de remi de PHP 5.5 pour Enterprise Linux VERSION - $basearch - debuginfo
+baseurl=http://rpms.famillecollet.com/enterprise/VERSION/debug-php55/$basearch/
 enabled=0
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi

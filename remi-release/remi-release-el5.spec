@@ -1,9 +1,10 @@
 Name:           remi-release
-Version:        %{rhel}
 %if %{rhel} >= 6
-Release:        2%{?dist}
+Version:        6.4
+Release:        1%{?dist}
 %else
-Release:        9%{?dist}
+Version:        5.9
+Release:        1%{?dist}
 %endif
 Summary:        YUM configuration for remi repository
 Summary(fr):    Configuration de YUM pour le dépôt remi
@@ -63,6 +64,9 @@ rm -rf %{buildroot}
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
 
 %changelog
+* Thu Oct  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.9-1 and 6.4-1
+- add php55 repository
+
 * Tue Feb 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 5-9 and 6-2
 - add debuginfo repo
 - drop failovermethod option (switch to roundrobin)
