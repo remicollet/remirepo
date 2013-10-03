@@ -21,8 +21,8 @@
 
 Summary:        Riak database PHP extension
 Name:           php-pecl-%{pecl_name}
-Version:        0.5.2
-Release:        1%{?dist}.1
+Version:        0.5.4
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -130,7 +130,7 @@ fi
 
 
 %check
-# Minimal load test for NTS extension
+: Minimal load test for NTS extension
 cd NTS
 php --no-php-ini \
     --define extension=json.so \
@@ -146,7 +146,7 @@ php --no-php-ini \
 
 %if %{with_zts}
 cd ../ZTS
-# Minimal load test for ZTS extension
+: Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=json.so \
     --define extension=modules/%{pecl_name}.so \
@@ -172,5 +172,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 03 2013 Remi Collet <remi@fedoraproject.org> - 0.5.4-1
+- Update to 0.5.4
+
 * Wed Sep 25 2013 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
 - initial package, version 0.5.2 (beta)
