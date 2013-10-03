@@ -4,7 +4,7 @@
 %global pear_name    Guzzle
 
 Name:             php-guzzle-%{pear_name}
-Version:          3.7.3
+Version:          3.7.4
 Release:          1%{?dist}
 Summary:          PHP HTTP client library and framework for building RESTful web service clients
 
@@ -18,7 +18,7 @@ BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 
-Requires:         php(language) >= 5.3.2
+Requires:         php(language) >= 5.3.3
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires:         php-pear(pear.symfony.com/EventDispatcher) >= 2.1.0
@@ -123,6 +123,9 @@ fi
 
 
 %changelog
+* Thu Oct 03 2013 Remi Collet <remi@fedoraproject.org> - 3.7.4-1
+- Update to 3.7.4
+
 * Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 3.7.3-1
 - backport 3.7.3 for remi repo
 
