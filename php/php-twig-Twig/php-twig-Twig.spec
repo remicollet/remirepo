@@ -4,7 +4,7 @@
 %global pear_name    Twig
 
 Name:             php-twig-%{pear_name}
-Version:          1.13.2
+Version:          1.14.0
 Release:          1%{?dist}
 Summary:          The flexible, fast, and secure template engine for PHP
 
@@ -34,6 +34,8 @@ Requires:         php-mbstring
 Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-spl
+# Optional, for speed optimization
+Requires:         php-pecl(%{pear_channel}/CTwig)
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -98,6 +100,10 @@ fi
 
 
 %changelog
+* Thu Oct 03 2013 Remi Collet <remi@fedoraproject.org> - 1.14.0-1
+- Update to 1.14.0
+- add require for optimization: php-twig-CTwig
+
 * Mon Aug 05 2013 Remi Collet <remi@fedoraproject.org> - 1.13.2-1
 - Update to 1.13.2
 
