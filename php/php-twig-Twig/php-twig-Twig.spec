@@ -137,7 +137,7 @@ fi
 * Sat Oct 20 2012 Remi Collet <RPMS@FamilleCollet.com> 1.10.3-1
 - Update to 1.10.3
 
-* Tue Oct 18 2012 Remi Collet <RPMS@FamilleCollet.com> 1.10.2-1
+* Thu Oct 18 2012 Remi Collet <RPMS@FamilleCollet.com> 1.10.2-1
 - Update to 1.10.2
 
 * Tue Oct  2 2012 Remi Collet <RPMS@FamilleCollet.com> 1.10.0-1
@@ -160,7 +160,7 @@ fi
 - Added php-hash require
 - Minor syntax updates
 
-* Sun Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 1.8.2-1
+* Sat Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 1.8.2-1
 - rebuild for remi repository
 
 * Thu May 31 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.8.2-1
