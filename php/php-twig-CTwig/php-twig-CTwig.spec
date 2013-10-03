@@ -15,7 +15,7 @@
 %global ext_name     twig
 %global pecl_channel pear.twig-project.org
 
-Summary:        Twig is a PHP template engine
+Summary:        Extension to improve  performance of Twig
 Name:           php-twig-%{pecl_name}
 Version:        1.14.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
@@ -43,7 +43,10 @@ Provides:       php-pecl(%{pecl_channel}/%{pecl_name})%{?_isa} = %{version}
 %{?filter_setup}
 
 %description
-Twig C extension to improve performance of the Twig template language.
+Twig is a PHP template engine.
+
+This package provides the Twig C extension (CTwig) to improve performance
+of the Twig template language, used by Twig PHP extension (php-twig-Twig).
 
 
 %prep
