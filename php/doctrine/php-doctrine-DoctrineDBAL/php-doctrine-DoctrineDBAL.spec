@@ -6,7 +6,7 @@
 
 Name:             php-doctrine-%{pear_name}
 Version:          2.3.4
-Release:          2%{?dist}
+Release:          4%{?dist}
 Summary:          Doctrine Database Abstraction Layer
 
 Group:            Development/Libraries
@@ -33,7 +33,6 @@ Requires(postun): %{__pear}
 # phpci requires
 Requires:         php-date
 Requires:         php-json
-Requires:         php-mysqli
 Requires:         php-pcre
 Requires:         php-pdo
 Requires:         php-spl
@@ -122,6 +121,12 @@ fi
 
 
 %changelog
+* Thu Oct  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.3.4-4
+- backport for remi repo (drop php-mysqli dep)
+
+* Wed Oct 02 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.3.4-4
+- Removed php-mysqli require (BZ #1011996)
+
 * Thu Jun 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.3.4-2
 - backport for remi repo.
 
