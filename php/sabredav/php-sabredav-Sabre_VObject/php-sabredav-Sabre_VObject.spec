@@ -1,11 +1,11 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   Sabre_VObject
 %global channelname pear.sabredav.org
-%global mainver     1.8.6
-%global reldate     2013-06-18
+%global mainver     1.8.7
+%global reldate     2013-10-02
 
 Name:           php-sabredav-Sabre_VObject
-Version:        2.1.0
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        An intuitive reader for iCalendar and vCard objects
 
@@ -101,6 +101,9 @@ fi
 
 
 %changelog
+* Sat Oct  5 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.3-1
+- update to 2.1.3
+
 * Wed Jun 19 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.0-1
 - update to 2.1.0
 

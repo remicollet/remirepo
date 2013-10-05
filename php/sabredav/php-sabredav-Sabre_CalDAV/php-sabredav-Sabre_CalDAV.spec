@@ -1,12 +1,12 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   Sabre_CalDAV
 %global channelname pear.sabredav.org
-%global mainver     1.8.6
-%global reldate     2013-06-18
+%global mainver     1.8.7
+%global reldate     2013-10-02
 
 Name:           php-sabredav-Sabre_CalDAV
-Version:        1.8.6
-Release:        2%{?dist}
+Version:        1.8.7
+Release:        1%{?dist}
 Summary:        Provides RFC4791 (CalDAV) support to Sabre_DAV
 
 Group:          Development/Libraries
@@ -30,9 +30,9 @@ Requires:       php-xml
 Requires:       php-pear(PEAR)
 Requires:       php-channel(%{channelname})
 Requires:       php-pear(%{channelname}/Sabre)         >= 1.0.1
-Requires:       php-pear(%{channelname}/Sabre_DAV)     >= 1.8.5
-Requires:       php-pear(%{channelname}/Sabre_DAVACL)  >= 1.8.4
-Requires:       php-pear(%{channelname}/Sabre_VObject) >= 2.0.7
+Requires:       php-pear(%{channelname}/Sabre_DAV)     >= 1.8.7
+Requires:       php-pear(%{channelname}/Sabre_DAVACL)  >= 1.8.7
+Requires:       php-pear(%{channelname}/Sabre_VObject) >= 2.1.3
 
 Provides:       php-pear(%{pear_name}) = %{version}
 Provides:       php-pear(%{channelname}/%{pear_name}) = %{version}
@@ -103,6 +103,9 @@ fi
 
 
 %changelog
+* Sat Oct  5 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.7-1
+- update to 1.8.7
+
 * Thu Sep 12 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.6-2
 - fix roles
 

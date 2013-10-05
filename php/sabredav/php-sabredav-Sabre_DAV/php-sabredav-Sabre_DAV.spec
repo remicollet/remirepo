@@ -1,12 +1,12 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   Sabre_DAV
 %global channelname pear.sabredav.org
-%global mainver     1.8.6
-%global reldate     2013-06-18
+%global mainver     1.8.7
+%global reldate     2013-10-02
 
 Name:           php-sabredav-Sabre_DAV
-Version:        1.8.6
-Release:        2%{?dist}
+Version:        1.8.7
+Release:        1%{?dist}
 Summary:        Sabre_DAV is a WebDAV framework for PHP
 
 Group:          Development/Libraries
@@ -105,6 +105,9 @@ fi
 
 
 %changelog
+* Sat Oct  5 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.7-1
+- update to 1.8.7
+
 * Thu Sep 12 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.6-2
 - fix roles
 
