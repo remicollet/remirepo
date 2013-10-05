@@ -1,5 +1,5 @@
 %global gh_owner    couchbase
-%global gh_commit   b2ad9312dfe25c792b03231166c80cf5761cafdd
+%global gh_commit   55e4a2d9cb810eac5d58bfbf5c1b1d7397bfce76
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 
 # Tests require some need which are downloaded during make
@@ -12,24 +12,25 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.0.5
+Version:       2.1.3
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
 License:       ASL 2.0
-URL:           http://www.couchbase.com/develop/c/current
+URL:           http://www.couchbase.com/communities/c/getting-started
+#Source0:      http://packages.couchbase.com/clients/c/%{name}-%{version}.tar.gz
 Source0:       https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
 %if %{with_tests}
-Source10:      http://googletest.googlecode.com/files/gtest-1.6.0.zip
-Source11:      http://files.couchbase.com/maven2/org/couchbase/mock/CouchbaseMock/0.5-SNAPSHOT/CouchbaseMock-0.5-20120726.220757-19.jar
+Source10:      http://googletest.googlecode.com/files/gtest-1.7.0-rc1.zip
+Source11:      http://files.couchbase.com/maven2/org/couchbase/mock/CouchbaseMock/0.6-SNAPSHOT/CouchbaseMock-0.6-20130903.160518-3.jar
 %endif
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
 BuildRequires: cyrus-sasl-devel
 BuildRequires: libevent-devel >= 1.4
-BuildRequires: libev-devel >= 1.4
+BuildRequires: libev-devel
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel >= 1.8
 %endif
@@ -75,7 +76,7 @@ m4_define([GIT_CHANGESET],[%{gh_commit}])
 EOF
 
 %if %{with_tests}
-cp %{SOURCE10} gtest-1.6.0.zip
+cp %{SOURCE10} gtest-1.7.0.zip
 cp %{SOURCE11} tests/CouchbaseMock.jar
 %endif
 
@@ -115,7 +116,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/%{name}
-%{_mandir}/man3/couch*
+%{_mandir}/man3/libcouch*
 %{_mandir}/man3/lcb*
 %{_mandir}/man5/lcb*
 %{_libdir}/%{name}.so
@@ -135,5 +136,8 @@ make check
 
 
 %changelog
+* Sat Oct  5 2013 Remi Collet <remi@feoraproject.org> - 2.1.3-1
+- update to 2.1.3
+
 * Sun Apr 14 2013 Remi Collet <remi@feoraproject.org> - 2.0.5-1
 - Initial package
