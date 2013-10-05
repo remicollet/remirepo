@@ -1,19 +1,30 @@
+# spec file for php-pecl-couchbase
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+
 %{!?php_inidir: %{expand: %%global php_inidir %{_sysconfdir}/php.d}}
 %{!?__php:      %{expand: %%global __php      %{_bindir}/php}}
 %{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
 
 %global pecl_name couchbase
 %global with_zts  0%{?__ztsphp:1}
-#global versuf    dp1
 
 Summary:       Couchbase Server PHP extension
 Name:          php-pecl-couchbase
-Version:       1.1.5
-Release:       2%{?dist}.1
+Version:       1.2.1
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tgz
+
+# https://github.com/couchbase/php-ext-couchbase/pull/9
+Patch0:        %{pecl_name}-zts.patch
 
 BuildRequires: php-devel >= 5.3.0
 BuildRequires: php-pecl-igbinary-devel
@@ -49,20 +60,19 @@ in a Couchbase Server.
 
 mv %{pecl_name}-%{version} NTS
 
+cd NTS
+%patch0 -p1 -b .ztsfix
+
 # Fix version
-sed -e '/PHP_COUCHBASE_VERSION/s/1.1.4dp1/%{version}/' -i NTS/internal.h
+sed -e '/PHP_COUCHBASE_VERSION/s/1.2.0/%{version}/' -i php_couchbase.h
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_COUCHBASE_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_couchbase.h)
+extver=$(sed -n '/#define PHP_COUCHBASE_VERSION/{s/.* "//;s/".*$//;p}' php_couchbase.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}..
    exit 1
 fi
-extver=$(sed -n '/#define PHP_COUCHBASE_VERSION/{s/.* "//;s/".*$//;p}' NTS/internal.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}..
-   exit 1
-fi
+cd ..
 
 %if 0%{?__ztsphp:1}
 # duplicate for ZTS build
@@ -151,6 +161,11 @@ fi
 
 
 %changelog
+* Sat Oct 05 2013 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1
+- add patch to fix ZTS build
+  https://github.com/couchbase/php-ext-couchbase/pull/9
+
 * Mon May 13 2013 Remi Collet <remi@fedoraproject.org> - 1.1.15-2
 - fix dependency on php-pecl-igbinary
 

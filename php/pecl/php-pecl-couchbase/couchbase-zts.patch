@@ -1,0 +1,50 @@
+From f4b319fe77e307d3d4e2a88a0c85a9c1c97fe458 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 5 Oct 2013 08:09:29 +0200
+Subject: [PATCH] Change too generic function name
+
+This breaks ZTS build on Linux
+
+/dev/shm/BUILD/php-pecl-couchbase-1.2.1/ZTS/replica.c:32:22: error: conflicting types for 'clone'
+ static struct entry *clone(lcb_error_t error, const lcb_get_resp_t *r) {
+                      ^
+In file included from /usr/include/sched.h:42:0,
+                 from /usr/include/pthread.h:23,
+                 from /usr/include/php-zts/php/Zend/../TSRM/TSRM.h:55,
+                 from /usr/include/php-zts/php/Zend/zend_alloc.h:27,
+                 from /usr/include/php-zts/php/Zend/zend.h:252,
+                 from /usr/include/php-zts/php/main/php.h:34,
+                 from /dev/shm/BUILD/php-pecl-couchbase-1.2.1/ZTS/internal.h:49,
+                 from /dev/shm/BUILD/php-pecl-couchbase-1.2.1/ZTS/replica.c:18:
+/usr/include/bits/sched.h:82:12: note: previous declaration of 'clone' was here
+ extern int clone (int (*__fn) (void *__arg), void *__child_stack,
+            ^
+---
+ replica.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/replica.c b/replica.c
+index b13bcd6..f5a25f0 100644
+--- a/replica.c
++++ b/replica.c
+@@ -29,7 +29,7 @@ struct response {
+ 	struct entry *data;
+ };
+ 
+-static struct entry *clone(lcb_error_t error, const lcb_get_resp_t *r) {
++static struct entry *lcb_clone(lcb_error_t error, const lcb_get_resp_t *r) {
+ 	struct entry *ret = calloc(1, sizeof(struct entry));
+ 	if (ret != NULL) {
+ 		ret->error = error;
+@@ -55,7 +55,7 @@ static void get_replica_callback(lcb_t instance,
+ 								 const lcb_get_resp_t *resp)
+ {
+ 	struct response *r = (void *)cookie;
+-	struct entry *c = clone(error, resp);
++	struct entry *c = lcb_clone(error, resp);
+ 	if (c) {
+ 		r->entries++;
+ 		c->next = r->data;
+-- 
+1.8.4
+
