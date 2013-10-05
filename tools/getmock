@@ -124,8 +124,8 @@ if [ $1 = test ]; then
 	opt=test
 	shift
 fi
-if [ $1 = php53 ]; then
-	opt=php53
+if [ $1 = php55 ]; then
+	opt=php55
 	shift
 fi
 if [ $1 = devs -o $1 = dev ]; then
