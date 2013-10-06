@@ -5,7 +5,7 @@
 *	pecl/amqp                     1.2.0    Communicate with any AMQP compliant server
 *	pecl/apcu                     4.0.2    APCu - APC User Cache
 	pecl/augeas        0.6.1               PHP bindings to the Augeas API
-	pecl/axis2                             Web Services for PHP
+N/A	pecl/axis2                             Web Services for PHP
 R	pecl/bbcode                   1.0.3b1  BBCode parsing Extension
 	pecl/big_int       1.0.7               big_int library provides a set of functions for calculations with arbitrary length integers and bitsets
 	pecl/bloomy        0.1.0               Extension implementing a Bloom filter
@@ -21,7 +21,7 @@ R	pecl/couchbase                1.2.1    Couchbase Server PHP extension
 	pecl/cybermut      1.1                 CyberMut Paiement System
 	pecl/date_time     0.1                 Date and Time Library
 	pecl/dazuko        0.42                Dazuko file-access-control
-	pecl/domxml                            DOM XML Functions
+N/A	pecl/domxml                            DOM XML Functions
 	pecl/DTrace        1.0.3               A Solaris Dtrace provider
 	pecl/ecasound      0.2                 Ecasound provides audio recording and processing functions
 	pecl/eio           1.2.3               Provides interface to the libeio library
@@ -53,7 +53,7 @@ R	pecl/haru                     1.0.4    Haru PDF functions
 	pecl/lapack        0.1.0               Wrapper for the LAPACK linear algebra library.
 R	pecl/leveldb                  0.1.4    LevelDB PHP bindings
 	pecl/libevent      0.1.0               Libevent - event notification
-	pecl/libvirt                           PHP bindings for libvirt
+*	pecl/libvirt                           PHP bindings for libvirt
 	pecl/lua           1.0.0               Embedded lua interpreter
 *	pecl/LZF                      1.6.2    LZF compression.
 *	pecl/mailparse     2.1.6      2.1.6    Email message manipulation
@@ -62,7 +62,7 @@ R	pecl/leveldb                  0.1.4    LevelDB PHP bindings
 *	pecl/memcache                 3.0.8    memcached extension
 *	pecl/memcached                2.1.0    PHP extension for interfacing with memcached via libmemcached library
 	pecl/memprof       1.0.0               memory usage profiler
-	pecl/ming                              Binding for the ming library, swf generation (flash)
+N/A	pecl/ming                              Binding for the ming library, swf generation (flash)
 	pecl/mnogosearch   1.0.0               mnoGoSearch extension module for PHP
 	pecl/mogilefs      0.9.2               PHP client library to communicate with the MogileFS storage
 *	pecl/mongo                    1.4.4    MongoDB database driver
@@ -80,7 +80,7 @@ R	pecl/pdflib                   3.0.1    Creating PDF on the fly with the PDFlib
 	pecl/PECL_Gen      0.9.9               Tool to generate PECL extensions from an XML description
 	pecl/pecl_http     2.0.0beta5          Extended HTTP Support
 	pecl/perl          1.0.1               Embedded Perl.
-	pecl/php_xcb                           A Wrapper to XCB, the X11 C Bindings
+N/A	pecl/php_xcb                           A Wrapper to XCB, the X11 C Bindings
 	pecl/POP3          1.0.2               POP3 Client Library
 *	pecl/propro                   1.0.0    Property proxy
 	pecl/python        0.8.0               Embedded Python
@@ -119,8 +119,8 @@ R	pecl/SQLite                   2.0.0    SQLite 2 database bindings
 	pecl/tvision       0.1                 Turbo Vision wrapper
 	pecl/txforward     1.0.7               Reverse Proxy (web accelerator) PHP compatibility layer
 	pecl/udis86        0.1.0               PHP bindings for udis86 library
-	pecl/unicode                           Unicode extension
-	pecl/unicodestring                     A native Unicode string object for PHP
+N/A	pecl/unicode                           Unicode extension
+N/A	pecl/unicodestring                     A native Unicode string object for PHP
 	pecl/uri_template  0.99.2              uri_template extension
 *	pecl/uuid                     1.0.3    UUID extension
 	pecl/v8js          0.1.5               V8 Javascript Engine for PHP
@@ -130,10 +130,10 @@ R	pecl/vld                      0.12.0   Provides functionality to dump the inte
 	pecl/vpopmail      0.2                 Provides functions to interact with vpopmail, a Qmail addon
 	pecl/WBXML         1.0.3               WBXML to XML conversion
 	pecl/Weakref       0.2.2               Implementation of weak references
-	pecl/win32std      1.0                 Set of standard Windows API functions.
-	pecl/WinBinder     0.46.0              A Native Windows Binding for PHP
-	pecl/wxwidgets                         Cross-platform widget toolkit.
-R	pecl/xattr         1.2.0               Extended attributes.
+N/A	pecl/win32std      1.0                 Set of standard Windows API functions.
+N/A	pecl/WinBinder     0.46.0              A Native Windows Binding for PHP
+N/A	pecl/wxwidgets                         Cross-platform widget toolkit.
+R	pecl/xattr         1.2.0      1.2.0    Extended attributes.
 	pecl/xcommerce     1.0.5               X.commerce bindings and helper methods
 *	pecl/xdebug                   2.2.3    Provides functions for function traces and profiling
 *	pecl/xhprof        0.9.4      0.9.4    XHProf: A Hierarchical Profiler for PHP
@@ -153,4 +153,4 @@ R	pecl/yar           1.2.0      1.2.0    Light, concurrent RPC framework
 R	Available in Remi
 RR	Available in Remi, and Fedora review submitted
 1	Don't build against 5.5
-
+N/A	Not applicable (no release or not for linux)
