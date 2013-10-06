@@ -26,7 +26,7 @@ N/A	pecl/domxml                            DOM XML Functions
 	pecl/ecasound      0.2                 Ecasound provides audio recording and processing functions
 	pecl/eio           1.2.3               Provides interface to the libeio library
 	pecl/ev            0.2.10              Provides interface to libev library
-RR	pecl/event                    1.7.8    Provides interface to libevent library
+RR	pecl/event         1.8.0      1.8.0    Provides interface to libevent library
 R	pecl/fann          1.0.2      1.0.2    PHP wrapper for FANN (Fast Artificial Neural Network) Library
 	pecl/FliteTTS                          Text to speech voice synthesis for PHP
 	pecl/fribidi       1.2                 Implementation of the Unicode Bidirectional Algorithm (bidi)
@@ -111,8 +111,7 @@ R	pecl/SQLite                   2.0.0    SQLite 2 database bindings
 	pecl/swish         0.5.0               Swish-e bindings
 	pecl/taint         1.2.2               XSS code sniffer
 	pecl/TCLink        3.4.0               Enables credit card processing via the TrustCommerce payment gateway
-	pecl/tidy          1.2                 Tidy HTML Repairing and Parsing
-	pecl/timezonedb    2013.6              Timezone Database to be used with PHP's date and time functions
+N/A	pecl/timezonedb    2013.6              Timezone Database to be used with PHP's date and time functions
 	pecl/tk            0.1.1               Extension for Tk (X-windows interface toolkit)
 	pecl/trader        0.3.0               Technical Analysis for traders.
 	pecl/translit      0.6.1               Transliterates non-latin character sets to latin

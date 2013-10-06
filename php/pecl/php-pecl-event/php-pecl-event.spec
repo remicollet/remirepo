@@ -13,7 +13,7 @@
 
 Summary:       Provides interface to libevent library
 Name:          php-pecl-event
-Version:       1.7.8
+Version:       1.8.0
 Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
@@ -81,6 +81,7 @@ EOF
 cd %{pecl_name}-%{version}
 %{_bindir}/phpize
 %configure \
+    --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
     --with-event-openssl \
@@ -91,6 +92,7 @@ make %{?_smp_mflags}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure \
+    --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
     --with-event-openssl \
@@ -168,6 +170,9 @@ fi
 
 
 %changelog
+* Sun Oct 06 2013 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
+- Update to 1.8.0
+
 * Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 1.7.8-1
 - Update to 1.7.8
 
