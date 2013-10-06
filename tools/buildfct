@@ -94,7 +94,7 @@ alias mockel6x55="             mock --configdir=$mocketc -r el6x55             r
 alias mockdevi="setarch i686 mock -r fedora-devel-i386   rebuild "
 alias mockdevx="             mock -r fedora-devel-x86_64 rebuild "
 
-mockall() 
+mockalli()
 {
 quiet=""
 if [ "$1" = "-q" ]; then
@@ -103,7 +103,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 18 -1 14)
+  for i in $(seq 20 -1 14)
   do
     echo -n $(date +%X) fc$i
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}i --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
@@ -118,7 +118,7 @@ else
 fi
 }
 
-mockallt() 
+mockallit()
 {
 quiet=""
 if [ "$1" = "-q" ]; then
@@ -142,7 +142,7 @@ else
 fi
 }
 
-mockallx() 
+mockallx()
 {
 quiet=""
 if [ "$1" = "-q" ]; then
@@ -151,7 +151,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 18 -1 14)
+  for i in $(seq 20 -1 14)
   do
     echo -n $(date +%X) fc$i
     mock $quiet --configdir=$mocketc -r fc${i}x rebuild $1 && echo " Ok." || echo " Error !"
@@ -167,7 +167,7 @@ else
 fi
 }
 
-mockallxt() 
+mockallxt()
 {
 quiet=""
 if [ "$1" = "-q" ]; then
