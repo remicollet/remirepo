@@ -22,7 +22,8 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRequires: php-devel > 5.4
 BuildRequires: php-pear
-BuildRequires: libevent-devel > 2
+# https://bugs.php.net/65847 evhttp_connection_get_bufferevent
+BuildRequires: libevent-devel >= 2.0.17
 BuildRequires: openssl-devel
 BuildRequires: pkgconfig
 
