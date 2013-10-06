@@ -1,0 +1,35 @@
+--- pecl/xrange/trunk/xrange.c	2013/10/06 10:21:25	331706
++++ pecl/xrange/trunk/xrange.c	2013/10/06 11:48:38	331707
+@@ -175,21 +175,21 @@
+ 	zend_class_implements(php_xrange_xri_entry TSRMLS_CC, 1, spl_ce_Countable);
+ 
+ 	/* Register Class: OddFilterIterator */
+-	memset(&ce, sizeof(ce), '\0');
++	memset(&ce, 0, sizeof(ce));
+ 	INIT_CLASS_ENTRY(ce, PHP_XRANGE_ODDFILTERITERATOR_NAME, php_xrange_OddFilterIterator_functions);
+     ce.name_length = strlen(PHP_XRANGE_ODDFILTERITERATOR_NAME); 
+ 	php_xrange_OddFilterIterator_entry =
+ 		zend_register_internal_class_ex(&ce, spl_ce_FilterIterator, NULL TSRMLS_CC);
+ 
+ 	/* Register Class: EvenFilterIterator */
+-	memset(&ce, sizeof(ce), '\0');
++	memset(&ce, 0, sizeof(ce));
+ 	INIT_CLASS_ENTRY(ce, PHP_XRANGE_EVENFILTERITERATOR_NAME, php_xrange_EvenFilterIterator_functions);
+     ce.name_length = strlen(PHP_XRANGE_EVENFILTERITERATOR_NAME); 
+ 	php_xrange_EvenFilterIterator_entry =
+ 		zend_register_internal_class_ex(&ce, spl_ce_FilterIterator, NULL TSRMLS_CC);
+ 
+ 	/* Register Class: NumericFilterIterator */
+-	memset(&ce, sizeof(ce), '\0');
++	memset(&ce, 0, sizeof(ce));
+ 	INIT_CLASS_ENTRY(ce, PHP_XRANGE_NUMERICFILTERITERATOR_NAME, php_xrange_NumericFilterIterator_functions);
+     ce.name_length = strlen(PHP_XRANGE_NUMERICFILTERITERATOR_NAME); 
+ 	php_xrange_NumericFilterIterator_entry =
+--- pecl/xrange/trunk/tests/004.002.phpt	2013/10/06 11:48:38	331707
++++ pecl/xrange/trunk/tests/004.002.phpt	2013/10/06 11:51:24	331708
+@@ -11,4 +11,4 @@
+ echo $j == 21 ? 'Success' : 'Failure';
+ ?>
+ --EXPECTF--
+-Fatal error: Cannot create references to elements of a temporary array expression %a
++Fatal error: %a reference%a

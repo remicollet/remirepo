@@ -140,7 +140,7 @@ R	pecl/xattr         1.2.0      1.2.0    Extended attributes.
 R	pecl/xmldiff       0.9.0      0.9.0    XML diff and merge
 	pecl/XMLRPCi       1.0                 Improved XML-RPC
 	pecl/xmms          0.2                 Provides functions to interact with xmms
-	pecl/xrange        1.3.2               Numeric iterator primitives
+R	pecl/xrange        1.3.2      1.3.2    Numeric iterator primitives
 	pecl/xslcache      0.7.2               A modification of PHP's standard XSL extension that caches the parsed XSL stylesheet representation
 R	pecl/yaf                      2.2.9    PHP Framework in PHP extension
 *	pecl/yaml                     1.1.0    YAML-1.1 parser and emitter
