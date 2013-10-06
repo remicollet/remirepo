@@ -1,0 +1,25 @@
+From 2966fb5d0a79dd2df5fdd2a5d60344ae2b711c92 Mon Sep 17 00:00:00 2001
+From: Anatol Belski <ab@php.net>
+Date: Sat, 21 Sep 2013 20:05:25 +0200
+Subject: [PATCH] fixed the ini for the test
+
+---
+ tests/vectors.phpt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/vectors.phpt b/tests/vectors.phpt
+index 7298700..a2660b8 100644
+--- a/tests/vectors.phpt
++++ b/tests/vectors.phpt
+@@ -2,6 +2,8 @@
+ Test scrypt KDF using test vectors.
+ --SKIPIF--
+ <?php if (!extension_loaded("scrypt")) print "skip"; ?>
++--INI--
++memory_limit=2G
+ --FILE--
+ <?php 
+ echo scrypt("", "", 16, 1, 1, 64) . "\n";
+-- 
+1.8.4
+

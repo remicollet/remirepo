@@ -92,7 +92,7 @@ R	pecl/riak                     0.5.4    Riak database PHP extension
 *	pecl/rrd           1.1.1      1.1.1    PHP bindings to rrd tool system
 	pecl/rsync         0.1.0               Wrapper for librsync library
 	pecl/SCA_SDO       1.2.4               Service Component Architecture (SCA) and Service Data Objects (SDO) for PHP
-	pecl/scrypt        1.2                 A PHP wrapper fo the scrypt hashing algorithm
+R	pecl/scrypt        1.2        1.2      A PHP wrapper fo the scrypt hashing algorithm
 	pecl/sdl                               Simple DirectMedia Layer for PHP
 *	pecl/selinux       0.3.1      0.3.1    SELinux binding for PHP script language
 	pecl/shape         0.9.2               libshape wrapper
