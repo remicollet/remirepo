@@ -142,6 +142,17 @@ if [ $1 = all ]; then
 	do
 		getOneMock el${i}i $opt
 	done
+elif [ $1 = all55 ]; then
+	for n in $(seq 17 18)
+	do
+		getOneMock fc${n}i test
+		getOneMock fc${n}x test
+	done
+	for n in $(seq 5 6)
+	do
+		getOneMock el${n}i php55
+		getOneMock el${n}x php55
+	done
 elif [ $1 = allx ]; then
 	for i in $(seq 13 20)
 	do
