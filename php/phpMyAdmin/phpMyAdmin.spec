@@ -1,7 +1,7 @@
 #global prever rc1
 
 Name: phpMyAdmin
-Version: 4.0.7
+Version: 4.0.8
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -95,6 +95,9 @@ find . -name \*.php -exec chmod -x {} \;
 rm -rf libraries/php-gettext
 rm -rf libraries/tcpdf
 
+# Remove sources of JavaScript librairies
+rm -rf js/jquery/src
+
 
 %build
 # Nothing to do
@@ -150,6 +153,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sun Oct  6 2013 Remi Collet <rpms@famillecollet.com> 4.0.8-1
+- update to 4.0.8 (bugfix)
+
 * Mon Sep 23 2013 Remi Collet <rpms@famillecollet.com> 4.0.7-1
 - update to 4.0.7 (bugfix)
 
