@@ -1,6 +1,6 @@
 	All packages [Channel pecl]:
 	============================
-	Package            Latest     Local
+	Package            Latest     Remi
 	pecl/amfext        0.9.2               ActionScript Message Format extension
 *	pecl/amqp                     1.2.0    Communicate with any AMQP compliant server
 *	pecl/apcu                     4.0.2    APCu - APC User Cache
@@ -27,7 +27,7 @@ N/A	pecl/domxml                            DOM XML Functions
 	pecl/eio           1.2.3               Provides interface to the libeio library
 	pecl/ev            0.2.10              Provides interface to libev library
 RR	pecl/event         1.8.0      1.8.0    Provides interface to libevent library
-R	pecl/fann          1.0.2      1.0.2    PHP wrapper for FANN (Fast Artificial Neural Network) Library
+R	pecl/fann          1.0.3      1.0.3    PHP wrapper for FANN (Fast Artificial Neural Network) Library
 	pecl/FliteTTS                          Text to speech voice synthesis for PHP
 	pecl/fribidi       1.2                 Implementation of the Unicode Bidirectional Algorithm (bidi)
 	pecl/functional    0.6.0               Functional primitives for PHP

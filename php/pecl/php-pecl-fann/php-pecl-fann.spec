@@ -7,7 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 %global with_zts  0%{?__ztsphp:1}
@@ -15,18 +14,12 @@
 
 Summary:        Wrapper for FANN Library
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.2
-Release:        1%{?dist}.1
+Version:        1.0.3
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# Github archive for test suite
-# https://github.com/bukka/php-fann/issues/4
-Source1:        https://github.com/bukka/php-fann/archive/%{version}.tar.gz
-
-# https://github.com/bukka/php-fann/pull/5
-Patch0:         fann-types.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  fann-devel > 2.1
@@ -47,19 +40,15 @@ Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 
+
 %description
 This package provides a PHP binding for FANN
 (Fast Artificial Neural Network) Library.
 
 
 %prep
-%setup -q -c -a 1
-mv php-fann-%{version}/tests %{pecl_name}-%{version}/tests
+%setup -q -c
 mv %{pecl_name}-%{version} NTS
-
-cd NTS
-%patch0 -p 1
-cd ..
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -167,6 +156,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 07 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 (stable)
+- drop merged pacth
+
 * Fri Sep 27 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - initial package
 - open https://github.com/bukka/php-fann/pull/5
+- open https://github.com/bukka/php-fann/issues/4
