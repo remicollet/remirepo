@@ -38,7 +38,7 @@ R	pecl/fann          1.0.3      1.0.3    PHP wrapper for FANN (Fast Artificial N
 R	pecl/gnupg         1.3.3      1.3.3    wrapper around the gpgme library
 	pecl/graphdat      1.0.2               Troubleshoot application and server performance
 R	pecl/haru                     1.0.4    Haru PDF functions
-	pecl/hash          1.5                 HASH Message Digest Framework
+N/A	pecl/hash          1.5                 HASH Message Digest Framework
 	pecl/html_parse    1.0.0               HTML parser extenion
 	pecl/huffman       0.2.0               Huffman compression is a lossless compression algorithm that is ideal for compressing textual data.
 	pecl/idn           0.2.0               GNU Libidn
@@ -46,7 +46,7 @@ R	pecl/haru                     1.0.4    Haru PDF functions
 *	pecl/imagick                  3.1.2    Provides a wrapper to the ImageMagick library.
 1	pecl/inclued       0.1.3               Clued-in about your inclueds
 	pecl/inotify       0.1.6               Inotify
-	pecl/intl          3.0.0               Internationalization extension
+N/A	pecl/intl          3.0.0               Internationalization extension
 *	pecl/jsonc         1.3.2      1.3.2    JavaScript Object Notation
 	pecl/Judy          1.0.0               PHP Judy implements sparse dynamic arrays (aka Judy Arrays)
 	pecl/KTaglib       0.2.0               Library to edit audio properties and tags on MPEG and OGG files
@@ -99,8 +99,8 @@ R	pecl/scrypt        1.2        1.2      A PHP wrapper fo the scrypt hashing alg
 *	pecl/solr          1.0.2      1.0.2    The Apache Solr PHP extension is an extremely fast, light-weight, feature-rich library that allows PHP applications to communicate easily and efficiently with Apache Solr server instances using an object-oriented API.
 *	pecl/sphinx        1.3.0      1.3.0    Client extension for Sphinx - opensource SQL full-text search engine
 	pecl/spidermonkey  1.0.0               JavaScript engine for PHP
-	pecl/SPL                               Standard PHP Library
-	pecl/SPL_Types     0.4.0               Standard PHP Library, Types Addon
+N/A	pecl/SPL                               Standard PHP Library
+R	pecl/SPL_Types     0.4.0      0.4.0    Standard PHP Library, Types Addon
 	pecl/spplus        1.0                 SPPLUS Paiement System
 R	pecl/SQLite                   2.0.0    SQLite 2 database bindings
 *	pecl/ssh2                     0.12     Bindings for the libssh2 library
@@ -152,4 +152,4 @@ R	pecl/yar           1.2.0      1.2.0    Light, concurrent RPC framework
 R	Available in Remi
 RR	Available in Remi, and Fedora review submitted
 1	Don't build against 5.5
-N/A	Not applicable (no release or not for linux)
+N/A	Not applicable (no release, merged in php or not for linux)
