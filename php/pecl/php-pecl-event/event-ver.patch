@@ -1,48 +1,26 @@
-diff --git a/classes/http_request.c b/classes/http_request.c
-index 4cf536e..bf5ffe4 100644
---- a/classes/http_request.c
-+++ b/classes/http_request.c
-@@ -355,6 +355,7 @@ PHP_METHOD(EventHttpRequest, getOutputBuffer)
+From 1c991263923d22dba109af22ba3b51dd46d90ccb Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 7 Oct 2013 09:21:43 +0200
+Subject: [PATCH] report LIBEVENT_VERSION in phpinfo()
+
+---
+ php_event.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/php_event.c b/php_event.c
+index f440734..8885781 100644
+--- a/php_event.c
++++ b/php_event.c
+@@ -1352,7 +1352,8 @@ PHP_MINFO_FUNCTION(event)
+ 	php_info_print_table_row(2, "Thread safety support", "disabled");
+ #endif
+ 
+-	php_info_print_table_row(2, "Version", PHP_EVENT_VERSION);
++	php_info_print_table_row(2, "Extension version", PHP_EVENT_VERSION);
++	php_info_print_table_row(2, "libevent2 headers version", LIBEVENT_VERSION);
+ 	php_info_print_table_end();
  }
  /* }}} */
- 
-+#if LIBEVENT_VERSION_NUMBER >= 0x02001100
- /* {{{ proto EventBufferEvent EventHttpRequest::getBufferEvent(void);
-  * Returns EventBufferEvent object on success, otherwise &null. */
- PHP_METHOD(EventHttpRequest, getBufferEvent)
-@@ -387,6 +388,7 @@ PHP_METHOD(EventHttpRequest, getBufferEvent)
- 	bev->_internal = 1;
- }
- /* }}} */
-+#endif
- 
- /* {{{ proto EventHttpConnection EventHttpRequest::getConnection(void);
-  * Returns EventHttpConnection object. 
-diff --git a/src/fe.c b/src/fe.c
-index ccfef57..2a4d1e6 100644
---- a/src/fe.c
-+++ b/src/fe.c
-@@ -697,7 +697,9 @@ const zend_function_entry php_event_http_req_ce_functions[] = {
- 	PHP_ME(EventHttpRequest, clearHeaders,     arginfo_event__void,                     ZEND_ACC_PUBLIC)
- 	PHP_ME(EventHttpRequest, removeHeader,     arginfo_event_http_req_remove_header,    ZEND_ACC_PUBLIC)
- 	PHP_ME(EventHttpRequest, findHeader,       arginfo_event_http_req_remove_header,    ZEND_ACC_PUBLIC)
-+#if LIBEVENT_VERSION_NUMBER >= 0x02001100
- 	PHP_ME(EventHttpRequest, getBufferEvent,   arginfo_event__void,                     ZEND_ACC_PUBLIC)
-+#endif
- 	PHP_ME(EventHttpRequest, getConnection,    arginfo_event__void,                     ZEND_ACC_PUBLIC)
- 	PHP_ME(EventHttpRequest, closeConnection,  arginfo_event__void,                     ZEND_ACC_PUBLIC)
- 
-diff --git a/src/fe.h b/src/fe.h
-index f57b947..e1d3997 100644
---- a/src/fe.h
-+++ b/src/fe.h
-@@ -192,7 +192,9 @@ PHP_METHOD(EventHttpRequest, addHeader);
- PHP_METHOD(EventHttpRequest, clearHeaders);
- PHP_METHOD(EventHttpRequest, removeHeader);
- PHP_METHOD(EventHttpRequest, findHeader);
-+#if LIBEVENT_VERSION_NUMBER >= 0x02001100
- PHP_METHOD(EventHttpRequest, getBufferEvent);
-+#endif
- PHP_METHOD(EventHttpRequest, getConnection);
- PHP_METHOD(EventHttpRequest, closeConnection);
- 
+-- 
+1.8.2.3
+

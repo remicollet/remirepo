@@ -12,15 +12,14 @@
 
 Summary:       Provides interface to libevent library
 Name:          php-pecl-event
-Version:       1.8.0
+Version:       1.8.1
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://bugs.php.net/65847 evhttp_connection_get_bufferevent
-# https://bitbucket.org/osmanov/pecl-event/pull-request/3
+# https://bitbucket.org/osmanov/pecl-event/pull-request/4
 Patch0:        %{pecl_name}-ver.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -181,8 +180,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 07 2013 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
+- Update to 1.8.1 (stable)
+- drop patch merged upstream
+- patch for https://bitbucket.org/osmanov/pecl-event/pull-request/4
+
 * Sun Oct 06 2013 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
 - Update to 1.8.0
+- patch for https://bitbucket.org/osmanov/pecl-event/pull-request/3
 
 * Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 1.7.8-1
 - Update to 1.7.8
