@@ -19,11 +19,14 @@ Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# https://bugs.php.net/65847 evhttp_connection_get_bufferevent
+# https://bitbucket.org/osmanov/pecl-event/pull-request/3
+Patch0:        %{pecl_name}-ver.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel > 5.4
 BuildRequires: php-pear
-# https://bugs.php.net/65847 evhttp_connection_get_bufferevent
-BuildRequires: libevent-devel >= 2.0.17
+BuildRequires: libevent-devel >= 2.0.2
 BuildRequires: openssl-devel
 BuildRequires: pkgconfig
 
@@ -66,6 +69,7 @@ Version 1.0.0 introduces:
 %setup -q -c 
 
 cd %{pecl_name}-%{version}
+%patch0 -p1
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
