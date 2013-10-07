@@ -13,7 +13,7 @@
 
 Summary:       Provides interface to libevent library
 Name:          php-pecl-event
-Version:       1.8.0
+Version:       1.8.1
 Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
