@@ -19,6 +19,8 @@ Source0:        sqlite-svn%{svnver}.tgz
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 
+# https://bugs.php.net/65866 ask license file
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel >= 5.4.0
 BuildRequires:  php-pear >= 1:1.4.0
