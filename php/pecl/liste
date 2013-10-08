@@ -24,7 +24,7 @@ N/A	pecl/date_time     0.1                 Date and Time Library
 N/A	pecl/domxml                            DOM XML Functions
 	pecl/DTrace        1.0.3               A Solaris Dtrace provider
 	pecl/ecasound      0.2                 Ecasound provides audio recording and processing functions
-	pecl/eio           1.2.3               Provides interface to the libeio library
+R	pecl/eio           1.2.3      1.2.3    Provides interface to the libeio library
 	pecl/ev            0.2.10              Provides interface to libev library
 RR	pecl/event         1.8.1      1.8.1    Provides interface to libevent library
 R	pecl/fann          1.0.3      1.0.3    PHP wrapper for FANN (Fast Artificial Neural Network) Library
