@@ -43,7 +43,7 @@ R	pecl/gnupg         1.3.3      1.3.3    wrapper around the gpgme library
 	pecl/graphdat      1.0.2               Troubleshoot application and server performance
 R	pecl/haru                     1.0.4    Haru PDF functions
 N/A	pecl/hash          1.5                 HASH Message Digest Framework
-	pecl/hidef         0.1.13              Constants for real
+R	pecl/hidef         0.1.13     0.1.13   Constants for real
 	pecl/html_parse    1.0.0               HTML parser extenion
 	pecl/huffman       0.2.0               Huffman compression is a lossless compression algorithm that is ideal for compressing textual data.
 	pecl/idn           0.2.0               GNU Libidn
