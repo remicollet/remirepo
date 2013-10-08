@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.8.0
+Version:        2.9.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -62,7 +62,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.3.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cli) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cli) <  3.0.0
@@ -256,12 +256,17 @@ fi
 # Web files
 %dir %{pear_hordedir}/js
 %{pear_hordedir}/js/date
+%{pear_hordedir}/js/excanvas
+%{pear_hordedir}/js/flotr2
 %{pear_hordedir}/js/jquery.mobile
 %{pear_hordedir}/js/map
 %{pear_hordedir}/js/*js
 
 
 %changelog
+* Tue Oct 08 2013 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
+- Update to 2.9.0
+
 * Sun Sep 08 2013 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
 - Update to 2.8.0
 - add Requires Horde_Smtp
