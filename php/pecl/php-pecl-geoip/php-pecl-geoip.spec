@@ -11,8 +11,10 @@ License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://bugs.php.net/bug.php?id=59804
+# https://bugs.php.net/59804
 Patch1:         geoip-tests.patch
+
+# https://bugs.php.net/65859 - Please Provides LICENSE file
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  GeoIP-devel

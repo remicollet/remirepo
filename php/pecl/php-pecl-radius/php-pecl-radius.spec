@@ -12,6 +12,8 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/radius
 Source0:        http://pecl.php.net/get/radius-%{version}.tgz
 
+# https://bugs.php.net/65156 ask license file
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear

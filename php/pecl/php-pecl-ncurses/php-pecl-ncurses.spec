@@ -13,6 +13,8 @@ URL:          http://pecl.php.net/package/ncurses
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source2:      xml2changelog
 
+# https://bugs.php.net/65862 - Please Provides LICENSE file
+
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel
 BuildRequires: php-simplexml

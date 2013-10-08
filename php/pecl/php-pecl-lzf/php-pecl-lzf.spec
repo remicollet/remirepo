@@ -14,6 +14,8 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # remove bundled lzf libs
 Patch0:         php-lzf-rm-bundled-libs.patch
 
+# https://bugs.php.net/65860 - Please Provides LICENSE file
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear

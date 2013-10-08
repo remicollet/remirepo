@@ -11,6 +11,8 @@ Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
 Source0:   http://pecl.php.net/get/mailparse-%{version}.tgz
 
+# https://bugs.php.net/65861 - Please Provides LICENSE file
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel, php-pear
