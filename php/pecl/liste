@@ -3,6 +3,7 @@
 	Package            Latest     Remi
 	pecl/amfext        0.9.2               ActionScript Message Format extension
 *	pecl/amqp                     1.2.0    Communicate with any AMQP compliant server
+*	pecl/apc           3.1.13     3.1.15d  Alternative PHP Cache
 *	pecl/apcu                     4.0.2    APCu - APC User Cache
 	pecl/augeas        0.6.1               PHP bindings to the Augeas API
 N/A	pecl/axis2                             Web Services for PHP
@@ -10,11 +11,14 @@ R	pecl/bbcode                   1.0.3b1  BBCode parsing Extension
 	pecl/big_int       1.0.7               big_int library provides a set of functions for calculations with arbitrary length integers and bitsets
 	pecl/bloomy        0.1.0               Extension implementing a Bloom filter
 	pecl/bz2_filter    1.1.0               bz2 filter implementation backport for PHP 5.0
+	pecl/chdb          1.0.3               A fast database for constant data with memory sharing across processes
 	pecl/cld           0.5.0               PHP Bindings for Chromium Compact Language Detector
 	pecl/clips         0.5.0               Integrated CLIPS environment for deployment of expert systems
 	pecl/clucene       0.0.9               Extension for CLucene
+N/A	pecl/coherence                         Extension for Oracle Coherence
 	pecl/coin_acceptor 0.3                 Interface for serial coin acceptors
 R	pecl/couchbase                1.2.1    Couchbase Server PHP extension
+old	courierauth        0.1.0               courierauth binding
 	pecl/crack         0.4                 "Good Password" Checking Utility: Keep your users' passwords reasonably safe from dictionary based attacks
 N/A	pecl/crack_dll     0.4                 "Good Password" Checking Utility: Keep your users' passwords reasonably safe from dictionary based attacks
 	pecl/cybercash     1.18p1              providesa access to cybercash online payment API
@@ -39,6 +43,7 @@ R	pecl/gnupg         1.3.3      1.3.3    wrapper around the gpgme library
 	pecl/graphdat      1.0.2               Troubleshoot application and server performance
 R	pecl/haru                     1.0.4    Haru PDF functions
 N/A	pecl/hash          1.5                 HASH Message Digest Framework
+	pecl/hidef         0.1.13              Constants for real
 	pecl/html_parse    1.0.0               HTML parser extenion
 	pecl/huffman       0.2.0               Huffman compression is a lossless compression algorithm that is ideal for compressing textual data.
 	pecl/idn           0.2.0               GNU Libidn
@@ -49,6 +54,7 @@ N/A	pecl/hash          1.5                 HASH Message Digest Framework
 N/A	pecl/intl          3.0.0               Internationalization extension
 *	pecl/jsonc         1.3.2      1.3.2    JavaScript Object Notation
 	pecl/Judy          1.0.0               PHP Judy implements sparse dynamic arrays (aka Judy Arrays)
+N/A	pecl/krb5                              Kerberos authentication and management
 	pecl/KTaglib       0.2.0               Library to edit audio properties and tags on MPEG and OGG files
 	pecl/lapack        0.1.0               Wrapper for the LAPACK linear algebra library.
 R	pecl/leveldb                  0.1.4    LevelDB PHP bindings
@@ -61,6 +67,7 @@ R	pecl/leveldb                  0.1.4    LevelDB PHP bindings
 	pecl/mcve          7.0.3               libmonetra/libmcve interface
 *	pecl/memcache                 3.0.8    memcached extension
 *	pecl/memcached                2.1.0    PHP extension for interfacing with memcached via libmemcached library
+	memoize            0.2.0               Transparently cache PHP functions
 	pecl/memprof       1.0.0               memory usage profiler
 N/A	pecl/ming                              Binding for the ming library, swf generation (flash)
 	pecl/mnogosearch   1.0.0               mnoGoSearch extension module for PHP
@@ -74,6 +81,7 @@ N/A	pecl/ming                              Binding for the ming library, swf gen
 *	pecl/oauth         1.2.3      1.2.3    OAuth 1.0 consumer and provider extension
 	pecl/oggvorbis     0.2                 OGG wrapper for OGG/Vorbis files
 	pecl/openal        0.1                 OpenAL Bindings
+	pecl/pam           1.0.3               PAM integration
 *	pecl/parsekit                 1.3.0    PHP Opcode Analyser
 	pecl/pcsc          0.2                 An extension for PHP using the winscard PC/SC API
 R	pecl/pdflib                   3.0.1    Creating PDF on the fly with the PDFlib library
@@ -92,6 +100,7 @@ N/A	pecl/php_xcb                           A Wrapper to XCB, the X11 C Bindings
 R	pecl/riak                     0.5.4    Riak database PHP extension
 *	pecl/rrd           1.1.1      1.1.1    PHP bindings to rrd tool system
 	pecl/rsync         0.1.0               Wrapper for librsync library
+old	pecl/sasl          0.1.0               Cyrus SASL Extension
 	pecl/SCA_SDO       1.2.4               Service Component Architecture (SCA) and Service Data Objects (SDO) for PHP
 R	pecl/scrypt        1.2        1.2      A PHP wrapper fo the scrypt hashing algorithm
 	pecl/sdl                               Simple DirectMedia Layer for PHP
@@ -132,6 +141,7 @@ R	pecl/vld                      0.12.0   Provides functionality to dump the inte
 	pecl/Weakref       0.2.2               Implementation of weak references
 N/A	pecl/win32std      1.0                 Set of standard Windows API functions.
 N/A	pecl/WinBinder     0.46.0              A Native Windows Binding for PHP
+N/A pecl/WinCache      1.3.5.0             Windows Cache Extension for PHP
 N/A	pecl/wxwidgets                         Cross-platform widget toolkit.
 R	pecl/xattr         1.2.0      1.2.0    Extended attributes.
 	pecl/xcommerce     1.0.5               X.commerce bindings and helper methods
@@ -142,6 +152,7 @@ R	pecl/xmldiff       0.9.0      0.9.0    XML diff and merge
 	pecl/xmms          0.2                 Provides functions to interact with xmms
 R	pecl/xrange        1.3.2      1.3.2    Numeric iterator primitives
 R	pecl/xslcache      0.7.2               A modification of PHP's standard XSL extension that caches the parsed XSL stylesheet representation
+N/A	pecl/yac                               Lockless user data Cache
 R	pecl/yaf                      2.2.9    PHP Framework in PHP extension
 *	pecl/yaml                     1.1.0    YAML-1.1 parser and emitter
 R	pecl/yar           1.2.0      1.2.0    Light, concurrent RPC framework
