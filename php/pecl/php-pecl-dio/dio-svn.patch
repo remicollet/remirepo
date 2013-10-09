@@ -1,0 +1,71 @@
+--- pecl/dio/trunk/dio.c	2013/10/09 12:04:16	331748
++++ pecl/dio/trunk/dio.c	2013/10/09 12:15:51	331749
+@@ -775,7 +775,7 @@
+ 	ZEND_ARG_INFO(0, options)
+ ZEND_END_ARG_INFO()
+ 
+-static zend_object_handlers dio_raw_object_handlers;
++// not used static zend_object_handlers dio_raw_object_handlers;
+ 
+ static zend_function_entry dio_functions[] = {
+ 	/* Class functions. */
+--- pecl/dio/trunk/dio_posix.c	2013/10/09 12:04:16	331748
++++ pecl/dio/trunk/dio_posix.c	2013/10/09 12:15:51	331749
+@@ -266,7 +266,6 @@
+  * earlier than early time.
+  */
+ static int dio_timeval_subtract(struct timeval *late, struct timeval *early, struct timeval *diff) {
+-	struct timeval *tmp;
+ 
+ 	/* Handle negatives */
+ 	if (late->tv_sec < early->tv_sec) {
+--- pecl/dio/trunk/dio_stream_wrappers.c	2013/10/09 12:15:51	331749
++++ pecl/dio/trunk/dio_stream_wrappers.c	2013/10/09 12:18:34	331750
+@@ -228,9 +228,8 @@
+ 			efree(data);
+ 			RETURN_FALSE;
+ 		}
++		php_stream_to_zval(stream, return_value);
+ 	}
+-
+-	php_stream_to_zval(stream, return_value);
+ }
+ /* }}} */
+ 
+@@ -390,9 +389,8 @@
+ 			efree(data);
+ 			RETURN_FALSE;
+ 		}
++		php_stream_to_zval(stream, return_value);
+ 	}
+-
+-	php_stream_to_zval(stream, return_value);
+ }
+ /* }}} */
+ 
+--- pecl/dio/trunk/dio_posix.c	2013/10/09 12:18:34	331750
++++ pecl/dio/trunk/dio_posix.c	2013/10/09 12:24:28	331751
+@@ -28,7 +28,10 @@
+  * Convert an fopen() mode string to open() flags
+  */
+ static int dio_stream_mode_to_flags(const char *mode) {
+-	int  flags = 0, ch = 0, bin = 1;
++	int  flags = 0, ch = 0;
++#if defined(_O_TEXT) && defined(O_BINARY)
++	int  bin = 1;
++#endif
+ 
+ 	switch(mode[ch++]) {
+ 		case 'r':
+@@ -45,9 +48,11 @@
+ 			break;
+ 	}
+ 
++#if defined(_O_TEXT) && defined(O_BINARY)
+ 	if (mode[ch] != '+') {
+ 		bin = (mode[ch++] == 'b');
+ 	}
++#endif
+ 
+ 	if (mode[ch] == '+') {
+ 		flags |= O_RDWR;
