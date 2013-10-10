@@ -16,7 +16,7 @@
 Summary:        PHP Judy implements sparse dynamic arrays
 Name:           php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -104,7 +104,7 @@ cp -pr NTS ZTS
 # Create configuration file
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
-extension=%{pecl_name}.so
+extension=%{ext_name}.so
 EOF
 
 
@@ -213,5 +213,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 10 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- fix extension name in configuration file
+
 * Wed Oct  9 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (stable)
