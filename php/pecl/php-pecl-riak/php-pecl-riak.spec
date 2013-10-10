@@ -21,7 +21,7 @@
 
 Summary:        Riak database PHP extension
 Name:           php-pecl-%{pecl_name}
-Version:        0.5.4
+Version:        0.6.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -78,8 +78,20 @@ cat > %{pecl_name}.ini << 'EOF'
 extension=%{pecl_name}.so
 
 ; Configuration
+
 ;riak.persistent.connections=20
+
 ;riak.persistent.timeout=5
+
+; Keep sockets alive (recommended)
+riak.socket.keep_alive=1
+
+; Socket receive timeout [ms]
+riak.socket.recv_timeout=10000
+
+; Socket send timeout [ms]
+riak.socket.send_timeout=10000
+
 EOF
 
 
@@ -172,8 +184,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 10 2013 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
+- Update to 0.6.0 (beta)
+
 * Thu Oct 03 2013 Remi Collet <remi@fedoraproject.org> - 0.5.4-1
-- Update to 0.5.4
+- Update to 0.5.4 (beta)
 
 * Wed Sep 25 2013 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
 - initial package, version 0.5.2 (beta)
