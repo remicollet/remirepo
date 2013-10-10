@@ -9,12 +9,15 @@ then
 	tar tf $name-$1.tgz >$list.old
 
 	rm $name-$1/lib/Horde/Text/Filter/JavascriptMinify/JsMin.php
-	sed -e '/JsMin.php/d' -i package.xml
+	rm $name-$1/test/Horde/Text/Filter/JsminTest.php
+	sed -e '/JsMin.php/d' \
+	    -e '/JsminTest.php/d' \
+	    -i package.xml
 
 	tar czf $name-$1-strip.tgz package.xml $name-$1
 	tar tf $name-$1-strip.tgz | grep -v '/$' >$list.new
 
-	diff $list.old $list.new
+	colordiff -u $list.old $list.new
 	rm -rf $name-$1 package.xml
 else
 	echo "usage $0 <version>"
