@@ -78,12 +78,6 @@ These are the files needed to compile programs using %{name}.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%ifarch x86_64
-# https://bugzilla.redhat.com/show_bug.cgi?id=1017338
-# Segfault in large bitset array
-rm -f tests/bitset_003.phpt \
-      tests/bitset_004.phpt
-%endif
 %patch0 -p3
 
 cp %{SOURCE1} %{SOURCE2} %{SOURCE3} .
