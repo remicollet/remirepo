@@ -6,19 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:%scl_package php-pecl-memprof}
 %{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
 %{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
 
 # ZTS build is broken
 # https://github.com/arnaud-lb/php-memory-profiler/pull/7
-
 %global with_zts  0
 %global pecl_name memprof
 
 Summary:        Memory usage profiler
-Name:           php-pecl-%{pecl_name}
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -29,19 +29,19 @@ Source1:        https://raw.github.com/arnaud-lb/php-memory-profiler/master/LICE
 Source2:        https://raw.github.com/arnaud-lb/php-memory-profiler/master/README.md
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel > 5.3
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel > 5.3
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  Judy-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -162,5 +162,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 11 2013 Remi Collet <rcollet@redhat.com> - 1.0.0-2
+- allow SCL build
+
 * Sun Oct  6 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (stable)
+- open https://github.com/arnaud-lb/php-memory-profiler/pull/6
+- open https://github.com/arnaud-lb/php-memory-profiler/pull/7
