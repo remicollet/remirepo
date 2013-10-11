@@ -1,10 +1,9 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name File_Iterator
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-File-Iterator
-Version:        1.3.3
+Version:        1.3.4
 Release:        1%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
@@ -12,17 +11,21 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://github.com/sebastianbergmann/php-file-iterator/
 Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.9.2
+BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{channel})
 
-Requires:       php-pear(PEAR) >= 1.9.2
-Requires:       php-channel(%{channel})
-Requires:       php-common >= 5.2.7
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:       php(language) >= 5.3.3
+Requires:       php-pear(PEAR) >= 1.9.4
+Requires:       php-channel(%{channel})
+# From phpcompatinfo report for 1.3.4
+Requires:       php-pcre
+Requires:       php-spl
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -79,6 +82,10 @@ fi
 
 
 %changelog
+* Fri Oct 11 2013 Remi Collet <remi@fedoraproject.org> - 1.3.4-1
+- Update to 1.3.4
+- raise dependencies: php 5.3.3, pear 1.9.4
+
 * Sat Oct  6 2012 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - upstream 1.3.3
 
@@ -129,7 +136,7 @@ fi
 * Fri Sep 17 2010 Christof Damian <christof@damian.net> - 1.2.3-1
 - upstream 1.2.3
 
-* Mon Jul 22 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.2.2-2
+* Thu Jul 22 2010 Remi Collet <RPMS@FamilleCollet.com> - 1.2.2-2
 - rebuild for remi repository
 
 * Thu Jul 22 2010 Christof Damian <christof@damian.net> - 1.2.2-2
