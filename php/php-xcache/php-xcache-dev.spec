@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global ext_name     xcache
-%global svnrev       1264
+#global svnrev       1264
 
 # TODO : consider splitting pages in another subpackage
 #        to avoid httpd dependency
@@ -15,7 +15,7 @@
 Summary:       Fast, stable PHP opcode cacher
 Name:          php-xcache
 Version:       3.1.0
-Release:       0.3.svn%{svnrev}%{?dist}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -210,6 +210,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 12 2013 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- version 3.1.0
+
 * Fri Jun 14 2013 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.3.svn1268
 - latest changes from upstream
 
