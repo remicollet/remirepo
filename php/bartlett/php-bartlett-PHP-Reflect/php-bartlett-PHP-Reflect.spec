@@ -12,7 +12,7 @@
 
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.8.1
+Version:        1.9.0
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -23,7 +23,7 @@ Source0:        http://%{channel}/get/%{pear_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.2.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
@@ -32,7 +32,7 @@ BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 # From package.xml
-Requires:       php(language) >= 5.2.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.9.0
 Requires:       php-channel(%{channel})
 Requires:       php-pcre
@@ -78,7 +78,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}%{?prever}
 
-# Version 1.7.0 : OK (Tests: 51, Assertions: 113, Skipped: 1)
+# Version 1.9.0 : OK (Tests: 51, Assertions: 113, Skipped: 1)
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --bootstrap %{buildroot}%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
@@ -109,6 +109,10 @@ fi
 
 
 %changelog
+* Sat Oct 12 2013 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
+- Update to 1.9.0
+- raise dependency on PHP >= 5.3
+
 * Mon Sep 23 2013 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
 - Update to 1.8.1
 
