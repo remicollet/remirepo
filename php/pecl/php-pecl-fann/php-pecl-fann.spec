@@ -14,7 +14,7 @@
 
 Summary:        Wrapper for FANN Library
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -156,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 12 2013 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4 (stable)
+
 * Mon Oct 07 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3 (stable)
 - drop merged pacth
