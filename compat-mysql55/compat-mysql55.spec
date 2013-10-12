@@ -128,6 +128,7 @@ cmake . -DBUILD_CONFIG=mysql_release \
 	-DFEATURE_SET="community" \
 	-DINSTALL_LAYOUT=RPM \
 	-DWITHOUT_SERVER=ON \
+	-DWITH_UNIT_TESTS=OFF \
 	-DCMAKE_INSTALL_PREFIX="%{_prefix}" \
 	-DINSTALL_INCLUDEDIR=include/mysql \
 	-DINSTALL_INFODIR=share/info \
@@ -195,6 +196,7 @@ rm -f ${RPM_BUILD_ROOT}%{_bindir}/perror
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/replace
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/resolveip
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/resolve_stack_dump
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/solaris/postinstall-solaris
 
 
 %clean
