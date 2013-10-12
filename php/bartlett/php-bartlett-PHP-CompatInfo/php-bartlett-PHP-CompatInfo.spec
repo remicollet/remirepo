@@ -15,8 +15,8 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.23.1
-Release:        1%{?dist}
+Version:        2.24.0
+Release:        0.1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -168,6 +168,9 @@ fi
 
 
 %changelog
+* Sat Oct 12 2013 Remi Collet <remi@fedoraproject.org> - 2.24.0-0.1
+- 2.24.0 test (not released)
+
 * Mon Sep 23 2013 Remi Collet <remi@fedoraproject.org> - 2.23.1-1
 - Update to 2.23.1
 
