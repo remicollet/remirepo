@@ -1,0 +1,20 @@
+Test case rpl.rpl_daedlock_innodb fails when dropping tables because some
+warnings are generated in the slave server. The test is working fine when
+running alone, but fails when all tests are running, so it seems not to be
+so bad thing to ignore that warnings.
+
+http://bugs.mysql.com/bug.php?id=69458
+
+diff -up mysql-5.5.32/mysql-test/include/mtr_warnings.sql.innodbwarn mysql-5.5.32/mysql-test/include/mtr_warnings.sql
+--- mysql-5.5.32/mysql-test/include/mtr_warnings.sql.innodbwarn	2013-06-13 16:45:27.723525133 +0200
++++ mysql-5.5.32/mysql-test/include/mtr_warnings.sql	2013-06-13 16:46:24.879524133 +0200
+@@ -162,6 +162,9 @@ INSERT INTO global_suppressions VALUES
+  ("InnoDB: Error: in RENAME TABLE table `test`.`t1`"),
+  ("InnoDB: Error: table `test`.`t[123]` does not exist in the InnoDB internal"),
+ 
++ /* rpl.rpl_deadlock_innodb fails when trying DROP tables */
++ ("InnoDB: Error: table `mysqld.2`.`#sql.*` does not exist in the InnoDB internal"),
++
+  /*
+    BUG#32080 - Excessive warnings on Solaris: setrlimit could not
+    change the size of core files

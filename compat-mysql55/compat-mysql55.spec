@@ -5,7 +5,7 @@
 %endif
 
 Name: compat-mysql55
-Version: 5.5.30
+Version: 5.5.34
 Release: 1%{?dist}
 Summary: MySQL shared libraries
 Group: Applications/Databases
@@ -44,6 +44,9 @@ Patch18: mysql-cipherspec.patch
 Patch19: mysql-file-contents.patch
 Patch20: mysql-string-overflow.patch
 Patch21: mysql-dh1024.patch
+Patch22: mysql-innodbwarn.patch
+# http://bugs.mysql.com/68999
+Patch23: mysql-openssl.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
@@ -95,6 +98,8 @@ rm -f Docs/mysql.info
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
+%patch22 -p1
+%patch23 -p1
 
 # upstream has fallen down badly on symbol versioning, do it ourselves
 cp %{SOURCE8} libmysql/libmysql.version
@@ -129,14 +134,18 @@ cmake . -DBUILD_CONFIG=mysql_release \
 	-DINSTALL_LIBDIR="%{_lib}/mysql" \
 	-DINSTALL_MANDIR=share/man \
 	-DINSTALL_MYSQLSHAREDIR=share/mysql \
+	-DINSTALL_MYSQLTESTDIR=share/mysql-test \
+	-DINSTALL_PLUGINDIR="%{_lib}/mysql/plugin" \
 	-DINSTALL_SBINDIR=libexec \
+	-DINSTALL_SCRIPTDIR=bin \
+	-DINSTALL_SQLBENCHDIR=share \
 	-DINSTALL_SUPPORTFILESDIR=share/mysql \
+	-DMYSQL_DATADIR="/var/lib/mysql" \
 	-DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
 	-DENABLED_LOCAL_INFILE=ON \
 %if %{with_dtrace}
 	-DENABLE_DTRACE=ON \
 %endif
-	-DWITH_EMBEDDED_SERVER=ON \
 	-DWITH_READLINE=ON \
 	-DWITH_SSL=system \
 	-DWITH_ZLIB=system
@@ -213,6 +222,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.34-1
+- update to 5.5.34
+
 * Mon Feb 11 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.5.30-1
 - update to 5.5.30
 
