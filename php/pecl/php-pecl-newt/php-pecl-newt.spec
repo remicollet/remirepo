@@ -58,6 +58,7 @@ Newt API of C programming language.
 tar xif %{SOURCE0}
 
 mv %{pecl_name}-%{version} NTS
+mv package.xml NTS/%{name}.xml
 
 cd NTS
 
@@ -109,14 +110,21 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 # install config file
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
-# Install XML package description
-install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
+
+cd NTS
+# Install XML package description
+install -D -m 644 %{name}.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+# don't work in mock, need investigation
+#{__pecl} install --force --nodeps --nobuild --installroot %{buildroot} %{name}.xml
+#rm -rf %{buildroot}%{pear_metadir}/.??*
+#rm -rf %{buildroot}%{_localstatedir}/tmp
 
 
 %post
@@ -152,6 +160,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc NTS/{LICENSE,CREDITS}
+#doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
