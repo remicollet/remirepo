@@ -52,6 +52,10 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 
+%if 0%{?rhel} == 5
+sed -e 's/-Wno-logical-op-parentheses//' -i config.m4
+%endif
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RAR_VERSION/{s/.* "//;s/".*$//;p}' php_rar.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
