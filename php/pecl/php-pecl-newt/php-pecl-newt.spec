@@ -14,21 +14,12 @@
 
 Summary:        Extension for Red Hat Newt window library
 Name:           php-pecl-%{pecl_name}
-Version:        1.2.6
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.2.7
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bugs.php.net/65889 Please Provides LICENSE file
-# Link from the headers
-Source1:        http://www.php.net/license/3_0.txt
-
-# http://svn.php.net/viewvc?view=revision&revision=331792 to 331797
-# http://svn.php.net/viewvc?view=revision&revision=331801
-# http://svn.php.net/viewvc?view=revision&revision=331808
-Patch0:         %{pecl_name}-svn.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
@@ -63,15 +54,12 @@ Newt API of C programming language.
 
 
 %prep
-%setup -q -c
+%setup -q -c -T
+tar xif %{SOURCE0}
+
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-cp %{SOURCE1} LICENSE
-%patch0 -p3
-
-# Fix version
-sed -e '/PHP_NEWT_VERSION/s/1.2.3-dev/%{version}/' -i php_newt.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_NEWT_VERSION/{s/.* "//;s/".*$//;p}' php_newt.h)
@@ -175,6 +163,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 14 2013 Remi Collet <remi@fedoraproject.org> - 1.2.7-1
+- Update to 1.2.7
+- drop patches merged upstream
+
 * Sun Oct 13 2013 Remi Collet <remi@fedoraproject.org> - 1.2.6-2
 - rebuild with more upstream patch (fix segfault in ZTS shutdown)
 
