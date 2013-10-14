@@ -14,7 +14,7 @@
 
 Summary:        Extension for Red Hat Newt window library
 Name:           php-pecl-%{pecl_name}
-Version:        1.2.7
+Version:        1.2.8
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -54,8 +54,7 @@ Newt API of C programming language.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 mv %{pecl_name}-%{version} NTS
 mv package.xml NTS/%{name}.xml
@@ -172,8 +171,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Oct 14 2013 Remi Collet <remi@fedoraproject.org> - 1.2.7-1
-- Update to 1.2.7
+* Mon Oct 14 2013 Remi Collet <remi@fedoraproject.org> - 1.2.8-1
+- Update to 1.2.8
 - drop patches merged upstream
 
 * Sun Oct 13 2013 Remi Collet <remi@fedoraproject.org> - 1.2.6-2
