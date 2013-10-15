@@ -14,15 +14,12 @@
 
 Summary:        URI Template PHP Extension
 Name:           php-pecl-uri-template
-Version:        0.99.2
+Version:        1.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/ioseb/uri-template/issues/5 Please Provides LICENSE file
-Source1:        https://raw.github.com/ioseb/uri-template/master/LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
@@ -52,13 +49,8 @@ Implementation of URI Template (RFC6570) specification for PHP.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-cp %{SOURCE1} LICENSE
-
-# https://github.com/ioseb/uri-template/issues/6 - Fix version
-sed -e '/PHP_URI_TEMPLATE_EXTVER/s/0.1/%{version}/' -i php_uri_template.h
-
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_URI_TEMPLATE_EXTVER/{s/.* "//;s/".*$//;p}' php_uri_template.h)
+extver=$(sed -n '/#define PHP_URI_TEMPLATE_VERSION/{s/.* "//;s/".*$//;p}' php_uri_template.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
@@ -114,6 +106,16 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do
+  install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do
+  install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -162,7 +164,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{LICENSE,examples}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -174,5 +177,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 1.0-1
+- Update to 1.0
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+
 * Mon Oct 14 2013 Remi Collet <remi@fedoraproject.org> - 0.99.2-1
 - initial package, version 0.99.2 (beta)
+- open https://github.com/ioseb/uri-template/issues/5 - License
+- open https://github.com/ioseb/uri-template/issues/6 - Version

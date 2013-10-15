@@ -114,10 +114,9 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
 # Documentation
-install -d %{buildroot}%{pecl_docdir}/%{pecl_name}/unrar
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do
-  install -pm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+  install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 

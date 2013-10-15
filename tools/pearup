@@ -8,8 +8,11 @@ if [ $# -lt 2 ]; then
     exit 1
 fi
 
+if ! grep -q pecl_name *spec; then
+sed -e '/^Release:/s/[0-9].*$/1%{?dist}/' \
+    -i *spec
+fi
 sed -e "/^Version:/s/$1/$2/" \
-    -e '/^Release:/s/[0-9].*$/1%{?dist}/' \
     -e "s/%changelog/%changelog\n* $rpmdate $vendor - $2-1\n- Update to $2\n/" \
     -e 's/\$RPM_BUILD_ROOT/%{buildroot}/' \
     -e '/Conflicts:/s/>=/< /' \
