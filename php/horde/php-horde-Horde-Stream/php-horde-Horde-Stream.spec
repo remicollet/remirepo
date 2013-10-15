@@ -1,3 +1,11 @@
+# spec file for php-horde-Horde-Stream
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Stream
 %global pear_channel pear.horde.org
