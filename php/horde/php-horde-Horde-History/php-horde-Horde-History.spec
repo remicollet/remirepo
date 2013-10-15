@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-History
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        API for tracking the history of an object
 
@@ -15,7 +15,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
@@ -24,7 +24,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
@@ -99,6 +99,9 @@ fi
 
 
 %changelog
+* Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1
+
 * Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
