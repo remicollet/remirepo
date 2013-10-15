@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Log
-Version:        2.0.1
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Logging library
 
@@ -32,16 +32,18 @@ Requires:       php-date
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Constraint) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Constraint) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Constraint) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 # Optional
 Requires:       php-dom
+Requires:       php-pear(%{pear_channel}/Horde_Cli) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cli) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Scribe) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Scribe) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Scribe) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -107,6 +109,9 @@ fi
 
 
 %changelog
+* Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
