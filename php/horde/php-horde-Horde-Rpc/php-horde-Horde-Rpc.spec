@@ -15,7 +15,7 @@
 # so, don't run it during rpmbuild
 
 Name:           php-horde-Horde-Rpc
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Horde RPC API
 
@@ -139,6 +139,9 @@ fi
 
 
 %changelog
+* Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+
 * Wed Jun 05 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 - switch from Conflicts to Requires
