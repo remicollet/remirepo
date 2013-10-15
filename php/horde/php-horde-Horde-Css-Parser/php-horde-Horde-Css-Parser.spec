@@ -1,3 +1,11 @@
+# spec file for php-horde-Horde-Css-Parser
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Css_Parser
@@ -5,7 +13,7 @@
 
 
 Name:           php-horde-Horde-Css-Parser
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
@@ -22,10 +30,15 @@ BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml
 Requires:       php(language) >= 5.3.0
+Requires:       php-mbstring
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-PHP-CSS-Parser >= 5.0.8
+# From phpcompatinfo report for 1.0.2
+Requires:       php-iconv
+Requires:       php-pcre
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -88,6 +101,9 @@ fi
 
 
 %changelog
+* Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+
 * Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 for PHP-CSS-Parser 5.0.8
 
