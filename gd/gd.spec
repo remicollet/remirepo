@@ -130,7 +130,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
 
 %check
-%if 0%{?rhel} == 5
+%if 0%{?fedora} <= 14 && 0%{?rhel} <= 5
 export XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox"
 %endif
 
