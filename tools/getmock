@@ -153,6 +153,12 @@ elif [ $1 = all55 ]; then
 		getOneMock el${n}i php55
 		getOneMock el${n}x php55
 	done
+elif [ $1 = all54 ]; then
+	for n in $(seq 5 6)
+	do
+		getOneMock el${n}i remi
+		getOneMock el${n}x remi
+	done
 elif [ $1 = allx ]; then
 	for i in $(seq 14 20)
 	do
