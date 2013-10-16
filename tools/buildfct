@@ -217,7 +217,7 @@ fi
 }
 
 # Temporary / 64bits for remi
-mockallx()
+mockoldx()
 {
 quiet=""
 if [ "$1" = "-q" ]; then
