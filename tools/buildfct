@@ -106,12 +106,12 @@ fi
 if [ -f "$1" ]; then
   for i in $(seq 20 -1 14)
   do
-    echo -n $(date +%X) fc$i
+    echo -n "$(date +%X) fc$i "
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}i --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   done
-  echo -n $(date +%X) el6
+  echo -n "$(date +%X) el6  "
   setarch i686    mock $quiet --configdir=$mocketc -r el6i    --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
-  echo -n $(date +%X) el5
+  echo -n "$(date +%X) el5  "
   setarch i686    mock $quiet --configdir=$mocketc -r el5i    --arch i386 rebuild $1 && echo " Ok." || echo " Error !"
   date +%X
 else
@@ -119,8 +119,8 @@ else
 fi
 }
 
-# Temporary / 32bits for remi
-mockoldi()
+# Build All enterprise / version / 32bits for remi (php 5.4)
+mock54i()
 {
 quiet=""
 if [ "$1" = "-q" ]; then
@@ -129,11 +129,10 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 16 -1 14)
-  do
-    echo -n "$(date +%X) fc$i "
-    setarch i686  mock $quiet --configdir=$mocketc -r fc${i}i --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
-  done
+  echo -n "$(date +%X) el6  "
+  setarch i686    mock $quiet --configdir=$mocketc -r el6i  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  echo -n "$(date +%X) el5  "
+  setarch i686    mock $quiet --configdir=$mocketc -r el5i  --arch i386 rebuild $1 && echo " Ok." || echo " Error !"
   date +%X
 else
   echo "file not found p$1'"
@@ -177,12 +176,12 @@ fi
 if [ -f "$1" ]; then
   for i in $(seq 20 -1 18)
   do
-    echo -n $(date +%X) test-fc$i
+    echo -n "$(date +%X) test-fc$i "
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}it  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   done
-  echo -n $(date +%X) test-el6
+  echo -n "$(date +%X) test-el6  "
   setarch   i686  mock $quiet --configdir=$mocketc -r el6it     --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
-  echo -n $(date +%X) test-el5
+  echo -n "$(date +%X) test-el5  "
   setarch   i686  mock $quiet --configdir=$mocketc -r el5it     --arch i386 rebuild $1 && echo " Ok." || echo " Error !"
   date +%X
 else
@@ -202,12 +201,12 @@ fi
 if [ -f "$1" ]; then
   for i in $(seq 20 -1 14)
   do
-    echo -n $(date +%X) fc$i
+    echo -n "$(date +%X) fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}x rebuild $1 && echo " Ok." || echo " Error !"
   done
   for i in $(seq 6 -1 5)
   do
-    echo -n $(date +%X) el$i
+    echo -n "$(date +%X) el$i  "
     mock $quiet --configdir=$mocketc -r el${i}x rebuild $1 && echo " Ok." || echo " Error !"
   done
   date +%X
@@ -216,8 +215,8 @@ else
 fi
 }
 
-# Temporary / 64bits for remi
-mockoldx()
+# Build enterprise / version / 64bits for remi (php 5.4)
+mock54x()
 {
 quiet=""
 if [ "$1" = "-q" ]; then
@@ -226,10 +225,10 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 16 -1 14)
+  for i in $(seq 6 -1 5)
   do
-    echo -n $(date +%X) fc$i
-    mock $quiet --configdir=$mocketc -r fc${i}x rebuild $1 && echo " Ok." || echo " Error !"
+    echo -n "$(date +%X) el$i  "
+    mock $quiet --configdir=$mocketc -r el${i}x rebuild $1 && echo " Ok." || echo " Error !"
   done
   date +%X
 else
@@ -275,12 +274,12 @@ fi
 if [ -f "$1" ]; then
   for i in $(seq 20 -1 18)
   do
-    echo -n $(date +%X) test-fc$i
+    echo -n "$(date +%X) test-fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xt rebuild $1 && echo " Ok." || echo " Error !"
   done
   for i in $(seq 6 -1 5)
   do
-    echo -n $(date +%X) test-el$i
+    echo -n "$(date +%X) test-el$i  "
     mock $quiet --configdir=$mocketc -r el${i}xt rebuild $1 && echo " Ok." || echo " Error !"
   done
   date +%X
