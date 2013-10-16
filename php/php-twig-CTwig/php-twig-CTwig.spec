@@ -18,7 +18,7 @@
 
 Summary:        Extension to improve performance of Twig
 Name:           %{?scl_prefix}php-twig-%{pecl_name}
-Version:        1.14.0
+Version:        1.14.1
 Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
@@ -151,6 +151,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 16 2013 Remi Collet <remi@fedoraproject.org> - 1.14.1-1
+- Update to 1.14.1 (no change, only version bump)
+
 * Sat Oct  5 2013 Remi Collet <rcollet@redhat.com> - 1.14.0-1
 - adapt for SCL
 
