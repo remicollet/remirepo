@@ -75,7 +75,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.20
+Version: 5.4.21
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -1632,6 +1632,9 @@ fi
 
 
 %changelog
+* Wed Oct 16 2013 Remi Collet <rcollet@redhat.com> - 5.4.21-1
+- update to 5.4.21
+
 * Wed Sep 18 2013 Remi Collet <rcollet@redhat.com> - 5.4.20-1
 - update to 5.4.20
 
