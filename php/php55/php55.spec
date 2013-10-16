@@ -51,11 +51,25 @@
 %{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
 %{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
+# systemd to manage the service
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %global with_systemd 1
 %else
 %global with_systemd 0
 %endif
+# systemd with notify mode
+%if 0%{?fedora} >= 16 || 0%{?rhel} >= 7
+%global with_systemdfull 1
+%else
+%global with_systemdfull 0
+%endif
+# systemd with additional service config
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%global with_systemdmax 1
+%else
+%global with_systemdmax 0
+%endif
+
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %global with_dtrace 1
 %else
@@ -239,9 +253,11 @@ Summary: PHP FastCGI Process Manager
 License: PHP and Zend and BSD
 Requires: php-common%{?_isa} = %{version}-%{release}
 Requires(pre): /usr/sbin/useradd
+%if %{with_systemdfull}
+BuildRequires: systemd-devel
+%endif
 %if %{with_systemd}
 BuildRequires: systemd-units
-BuildRequires: systemd-devel
 Requires: systemd-units
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -1170,7 +1186,7 @@ popd
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
-%if %{with_systemd}
+%if %{with_systemdfull}
       --with-fpm-systemd \
 %endif
       --libdir=%{_libdir}/php \
@@ -1447,15 +1463,17 @@ install -m 755 -d $RPM_BUILD_ROOT/run/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
 install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/php-fpm.conf
 # install systemd unit files and scripts for handling server startup
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%if %{with_systemdmax}
 # this folder requires systemd >= 204
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system/php-fpm.service.d
 %endif
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
-%if 0%{?fedora} < 16 && 0%{?rhel} < 7
-# PrivateTmp only work on fedora >= 16
-sed -i -e '/PrivateTmp/s/true/false/' ${RPM_BUILD_ROOT}%{_unitdir}/php-fpm.service
+%if ! %{with_systemdfull}
+# PrivateTmp and Notif mode only work on fedora >= 16
+sed -e '/^PrivateTmp/s/true/false/' \
+    -e '/^Type/s/notify/simple/' \
+    -i ${RPM_BUILD_ROOT}%{_unitdir}/php-fpm.service
 %endif
 %else
 sed  -ne '1,2p' -i $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
@@ -1740,7 +1758,7 @@ fi
 %if %{with_systemd}
 %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%if %{with_systemdmax}
 %dir %{_sysconfdir}/systemd/system/php-fpm.service.d
 %endif
 %dir /run/php-fpm
