@@ -1,9 +1,19 @@
+# spec file for php-phpunit-PHPUnit
+#
+# Copyright (c) 2010-2013 Remi Collet
+# Copyright (c) 2006-2009 Christopher Stone
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        3.7.27
+Version:        3.7.28
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -119,6 +129,11 @@ fi
 
 
 %changelog
+* Thu Oct 17 2013 Remi Collet <remi@fedoraproject.org> - 3.7.28-1
+- Update to 3.7.28
+- add Spec license header
+- open https://github.com/sebastianbergmann/phpunit/issues/1029
+
 * Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 3.7.27-1
 - Update to 3.7.27 (no change)
 
