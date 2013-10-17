@@ -106,6 +106,16 @@ make -C ZTS \
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do
+  install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do
+  install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -153,7 +163,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{CREDITS,LICENSE,README.md,examples}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -167,6 +178,8 @@ rm -rf %{buildroot}
 %changelog
 * Thu Oct 17 2013 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - Update to 1.0.5
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
 
 * Sat Oct 12 2013 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4 (stable)
