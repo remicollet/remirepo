@@ -14,7 +14,7 @@
 
 Summary:        Wrapper for FANN Library
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -49,6 +49,15 @@ This package provides a PHP binding for FANN
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+
+cd NTS
+# Sanity check, really often broken
+extver=$(sed -n '/#define PHP_FANN_VERSION/{s/.* "//;s/".*$//;p}' php_fann.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}.
+   exit 1
+fi
+cd ..
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -156,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 17 2013 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- Update to 1.0.5
+
 * Sat Oct 12 2013 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4 (stable)
 
