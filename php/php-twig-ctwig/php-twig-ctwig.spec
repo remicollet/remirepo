@@ -1,4 +1,4 @@
-# spec file for php-twig-CTwig
+# spec file for php-twig-ctwig
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
@@ -6,8 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:         %scl_package pear.twig-project.org}
-%{!?scl:        %global pkg_name    %{name}}
+%{?scl:         %scl_package        php-twig-ctwig}
 %{!?php_inidir: %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:     %global __pecl      %{_bindir}/pecl}
 
@@ -17,9 +16,9 @@
 %global pecl_channel pear.twig-project.org
 
 Summary:        Extension to improve performance of Twig
-Name:           %{?scl_prefix}php-twig-%{pecl_name}
+Name:           %{?scl_prefix}php-twig-ctwig
 Version:        1.14.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://twig.sensiolabs.org
@@ -28,20 +27,28 @@ Source0:        http://%{pecl_channel}/get/%{pecl_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.2.4
 BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-channel(%{pecl_channel})
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php-channel(%{pecl_channel})
 
 Provides:       %{?scl_prefix}php-%{ext_name} = %{version}
 Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_channel}/%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_channel}/%{pecl_name})%{?_isa} = %{version}
+# Package have been renamed
+Obsoletes:      %{?scl_prefix}php-twig-CTwig < 1.14.1-2
+Provides:       %{?scl_prefix}php-twig-CTwig = %{version}-%{release}
 
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
+
 
 %description
 Twig is a PHP template engine.
@@ -120,13 +127,13 @@ fi
 
 
 %check
-# Minimal load test for NTS extension
+: Minimal load test for NTS extension
 %{_bindir}/php --no-php-ini \
     --define extension=NTS/modules/%{ext_name}.so \
     --modules | grep %{ext_name}
 
 %if %{with_zts}
-# Minimal load test for ZTS extension
+: Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=ZTS/modules/%{ext_name}.so \
     --modules | grep %{ext_name}
