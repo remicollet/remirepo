@@ -11,18 +11,31 @@ fi
 if ! grep -q pecl_name *spec; then
 sed -e '/^Release:/s/[0-9].*$/1%{?dist}/' \
     -i *spec
+else echo "Release inchangée"
 fi
+if ! grep -q "^Version:.*$2"  *spec; then
 sed -e "/^Version:/s/$1/$2/" \
     -e "s/%changelog/%changelog\n* $rpmdate $vendor - $2-1\n- Update to $2\n/" \
     -e 's/\$RPM_BUILD_ROOT/%{buildroot}/' \
     -e '/Conflicts:/s/>=/< /' \
     -e 's/Conflicts:/Requires: /' \
     -i *spec
+else echo "Version déjà modifiée"
+fi
 
 spectool -g -S *spec
 
 tar xf *-$1.tgz package.xml && mv package.xml package-$1.xml
+comp=$(tar xvf *-$1.tgz '*/composer.json')
+if [ -n "$comp" ]; then
+  mv $comp composer-$1.json
+fi
 tar xf *-$2.tgz package.xml && mv package.xml package-$2.xml
+comp=$(tar xvf *-$2.tgz '*/composer.json')
+if [ -n "$comp" ]; then
+  mv $comp composer-$2.json
+fi
 
-colordiff -u package-$1.xml package-$2.xml
+colordiff -u  package-$1.xml   package-$2.xml
+colordiff -u composer-$1.json composer-$2.json
 
