@@ -22,6 +22,7 @@ BuildRequires:  php-channel(%{pear_channel})
 # For tests
 BuildRequires:  php(language) >= %{php_min_ver}
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:  php-pear(%{pear_channel}/Filesystem) > 2.1
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -34,6 +35,7 @@ Requires:       php-pcre
 Requires:       php-simplexml
 Requires:       php-spl
 Requires:       php-reflection
+Requires:       php-pear(%{pear_channel}/Filesystem) > 2.1
 
 Provides:       php-pear(pear.symfony.com/Intl) = %{version}
 

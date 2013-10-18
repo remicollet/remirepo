@@ -4,7 +4,7 @@ Build order
 	Filesystem                2.3.6        
 	Finder                    2.3.6        
 	HttpFoundation            2.3.6        
-	Intl                      2.3.6        
+	Intl                      2.3.6      BR: Filesystem  R: Filesystem
 	Locale                    2.3.6      BR: Intl  R: Intl
 	OptionsResolver           2.3.6        
 	Process                   2.3.6        
