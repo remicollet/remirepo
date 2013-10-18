@@ -14,6 +14,8 @@ License:          MIT
 URL:              http://symfony.com/components
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+Patch0:           %{pear_name}-password.patch
+
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 
@@ -22,17 +24,16 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) > 2.1
 BuildRequires:    php-pear(%{pear_channel}/Form) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/HttpKernel) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Routing) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Validator) >= 2.2.0
-BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
-BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineDBAL) >= 2.2.0
-BuildRequires:    php-PsrLog >= 1.0
-# Need to be hacked to be loadable.
-BuildRequires:    php-password-compat
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) > 2.1
+BuildRequires:    php-pear(%{pear_channel}/HttpKernel) > 2.1
+BuildRequires:    php-pear(%{pear_channel}/Routing) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/Validator) > 2.2
+BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) > 2.2
+BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineDBAL) > 2.2
+BuildRequires:    php-PsrLog > 1.0
+BuildRequires:    php-password-compat > 1.0
 # For tests: phpci
 BuildRequires:    php-date
 BuildRequires:    php-hash
@@ -46,9 +47,9 @@ BuildRequires:    php-spl
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
-Requires:         php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/HttpKernel) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/EventDispatcher) > 2.1
+Requires:         php-pear(%{pear_channel}/HttpFoundation) > 2.1
+Requires:         php-pear(%{pear_channel}/HttpKernel) > 2.1
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 # phpci
@@ -60,14 +61,16 @@ Requires:         php-openssl
 Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-spl
-Requires:         php-password-compat
 # Optional
-Requires:         php-pear(%{pear_channel}/ClassLoader) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Finder) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Form) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Routing) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Validator) >= 2.2.0
-Requires:         php-pear(pear.doctrine-project.org/DoctrineDBAL) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/ClassLoader)
+Requires:         php-pear(%{pear_channel}/Finder)
+Requires:         php-pear(%{pear_channel}/Form)
+Requires:         php-pear(%{pear_channel}/Routing) > 2.2
+Requires:         php-pear(%{pear_channel}/Validator) > 2.2
+Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) > 2.2
+Requires:         php-pear(pear.doctrine-project.org/DoctrineDBAL) > 2.2
+Requires:         php-PsrLog > 1.0
+Requires:         php-password-compat > 1.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -112,13 +115,18 @@ sed -e 's#vendor/autoload.php#./phpunit.autoloader.php#' \
 # Modify PEAR package.xml file:
 # - Change role from "php" to "test" for all test files
 # - Remove md5sum from phpunit.xml.dist file since it was updated
+# - Remove md5sum from patched files
 sed -e '/Tests/s/role="php"/role="test"/' \
     -e '/phpunit.xml.dist/s/role="php"/role="test"/' \
     -e '/phpunit.xml.dist/s/md5sum="[^"]*"\s*//' \
+    -e '/BCryptPasswordEncoder.php/s/md5sum="[^"]*"\s*//' \
     -i package.xml
 
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
+
+cd %{pear_name}-%{version}
+%patch0 -p1 -b .passwordcompat
 
 
 %build
