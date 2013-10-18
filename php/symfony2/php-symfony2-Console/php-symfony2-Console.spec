@@ -50,6 +50,8 @@ Requires:         php-posix
 Requires:         php-cli
 Requires:         php-reflection
 Requires:         php-spl
+# Optional
+Requires:         php-pear(%{pear_channel}/EventDispatcher) > 2.1
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
