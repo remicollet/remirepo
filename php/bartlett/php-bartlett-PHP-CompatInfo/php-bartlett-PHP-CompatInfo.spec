@@ -16,7 +16,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        2.24.0
-Release:        0.1%{?dist}
+Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ BuildRequires:  php-pear(PEAR) >= 1.9.0
 BuildRequires:  php-channel(%{channel})
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.8.0
+BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.9.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -51,7 +51,7 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.8.0
+Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.9.0
 Requires:       php-pear(%{channel}/PHP_Reflect) <  2
 Requires:       php-pear(Console_CommandLine) >= 1.2.0
 # Optional
@@ -168,6 +168,10 @@ fi
 
 
 %changelog
+* Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.24.0-1
+- update to 2.24.0
+- raise dependency, PHP_Reflect 1.9.0
+
 * Sat Oct 12 2013 Remi Collet <remi@fedoraproject.org> - 2.24.0-0.1
 - 2.24.0 test (not released)
 
