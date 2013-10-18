@@ -1,13 +1,12 @@
 %global github_owner    symfony-cmf
 %global github_name     Routing
-%global github_version  1.0.1
-%global github_commit   a98a795555d4b9d456eecceb2654bb2590320303
-%global github_date     20130430
+%global github_version  1.1.0
+%global github_commit   9f8607950cbf888ec678713a35f3d0088857c85f
 
-%global php_min_ver     5.3.2
+%global php_min_ver     5.3.3
 
-%global symfony_min_ver 2.1.0
-%global symfony_max_ver 2.3.0
+%global symfony_min_ver 2.2.0
+%global symfony_max_ver 3.0
 
 # Tests are only run with rpmbuild --with tests
 # Need to investigate errors
@@ -30,11 +29,8 @@ BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires: php-pear(pear.symfony.com/Routing) >= %{symfony_min_ver}
-BuildRequires: php-pear(pear.symfony.com/Routing) <  %{symfony_max_ver}
-BuildRequires: php-pear(pear.symfony.com/HttpFoundation) >= %{symfony_min_ver}
-BuildRequires: php-pear(pear.symfony.com/HttpFoundation) <  %{symfony_max_ver}
 BuildRequires: php-pear(pear.symfony.com/HttpKernel) >= %{symfony_min_ver}
-BuildRequires: php-pear(pear.symfony.com/HttpKernel) <  %{symfony_max_ver}
+BuildRequires: php-PsrLog > 1.0
 # For tests: phpci
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -44,10 +40,9 @@ BuildRequires: php-spl
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-pear(pear.symfony.com/Routing) >= %{symfony_min_ver}
 Requires:      php-pear(pear.symfony.com/Routing) <  %{symfony_max_ver}
-Requires:      php-pear(pear.symfony.com/HttpFoundation) >= %{symfony_min_ver}
-Requires:      php-pear(pear.symfony.com/HttpFoundation) <  %{symfony_max_ver}
 Requires:      php-pear(pear.symfony.com/HttpKernel) >= %{symfony_min_ver}
 Requires:      php-pear(pear.symfony.com/HttpKernel) <  %{symfony_max_ver}
+Requires:      php-PsrLog > 1.0
 # phpci
 Requires:      php-pcre
 Requires:      php-reflection

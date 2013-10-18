@@ -3,10 +3,11 @@
 %global pear_channel pear.symfony.com
 %global pear_name    HttpKernel
 %global php_min_ver  5.3.3
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.5
+Version:          2.3.6
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -20,34 +21,35 @@ BuildArch:        noarch
 
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+%if %{with_tests}
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/BrowserKit) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/BrowserKit) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/ClassLoader) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/ClassLoader) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/Config) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Config) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/Console) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Console) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/Finder) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Finder) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/Process) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Process) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/Routing) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Routing) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/Templating) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Templating) <  2.3.0
+BuildRequires:    php-pear(%{pear_channel}/BrowserKit) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/BrowserKit) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/ClassLoader) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/ClassLoader) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/Config) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Config) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/Console) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Console) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/Finder) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Finder) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/Process) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Process) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/Routing) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Routing) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/Templating) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Templating) < 2.4
 # Awaiting https://bugzilla.redhat.com/show_bug.cgi?id=979794
-#BuildRequires:    php-pear(%{pear_channel}/Stopwatch) >= 2.2.0
-#BuildRequires:    php-pear(%{pear_channel}/Stopwatch) <  2.3.0
+#BuildRequires:    php-pear(%{pear_channel}/Stopwatch) > 2.3
+#BuildRequires:    php-pear(%{pear_channel}/Stopwatch) < 2.4
 BuildRequires:    php-PsrLog >= 1.0
 BuildRequires:    php-PsrLog <  2.0
 # For tests: phpci
@@ -63,14 +65,15 @@ BuildRequires:    php-reflection
 BuildRequires:    php-session
 BuildRequires:    php-spl
 BuildRequires:    php-tokenizer
+%endif
 
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
-Requires:         php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/EventDispatcher) <  2.3.0
-Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/HttpFoundation) <  2.3.0
+Requires:         php-pear(%{pear_channel}/EventDispatcher) > 2.3
+Requires:         php-pear(%{pear_channel}/EventDispatcher) < 2.4
+Requires:         php-pear(%{pear_channel}/HttpFoundation) > 2.3
+Requires:         php-pear(%{pear_channel}/HttpFoundation) < 2.4
 Requires:         php-PsrLog >= 1.0
 Requires:         php-PsrLog <  2.0
 Requires(post):   %{__pear}
@@ -89,18 +92,18 @@ Requires:         php-session
 Requires:         php-spl
 Requires:         php-tokenizer
 # Optional
-Requires:         php-pear(%{pear_channel}/BrowserKit) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/BrowserKit) <  2.3.0
-Requires:         php-pear(%{pear_channel}/ClassLoader) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/ClassLoader) <  2.3.0
-Requires:         php-pear(%{pear_channel}/Config) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Config) <  2.3.0
-Requires:         php-pear(%{pear_channel}/Console) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Console) <  2.3.0
-Requires:         php-pear(%{pear_channel}/DependencyInjection) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/DependencyInjection) <  2.3.0
-Requires:         php-pear(%{pear_channel}/Finder) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Finder) <  2.3.0
+Requires:         php-pear(%{pear_channel}/BrowserKit) > 2.3
+Requires:         php-pear(%{pear_channel}/BrowserKit) < 2.4
+Requires:         php-pear(%{pear_channel}/ClassLoader) > 2.3
+Requires:         php-pear(%{pear_channel}/ClassLoader) < 2.4
+Requires:         php-pear(%{pear_channel}/Config) > 2.3
+Requires:         php-pear(%{pear_channel}/Config) < 2.4
+Requires:         php-pear(%{pear_channel}/Console) > 2.3
+Requires:         php-pear(%{pear_channel}/Console) < 2.4
+Requires:         php-pear(%{pear_channel}/DependencyInjection) > 2.3
+Requires:         php-pear(%{pear_channel}/DependencyInjection) < 2.4
+Requires:         php-pear(%{pear_channel}/Finder) > 2.3
+Requires:         php-pear(%{pear_channel}/Finder) < 2.4
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -189,9 +192,13 @@ rm -f Tests/Debug/TraceableEventDispatcherTest.php
 # Remove this test with use vendor/autoload.php
 rm Tests/ClientTest.php
 
+%if %{with_tests}
 %{_bindir}/phpunit \
    -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
    -d date.timezone="UTC"
+%else
+: Test disabled, missing '--with tests' option.
+%endif
 
 
 %post
@@ -215,6 +222,9 @@ fi
 
 
 %changelog
+* Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- Update to 2.3.6
+
 * Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Sync with rawhide, update to 2.2.5
 
@@ -345,7 +355,7 @@ fi
 - %%global instead of %%define
 - Removed unnecessary cd from %%build section
 
-* Wed May 2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
+* Wed May  2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
 - Updated to upstream version 2.0.13
 
 * Sat Apr 21 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.12-1

@@ -1,8 +1,12 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 
-%global pear_channel pear.symfony.com
-%global pear_name    OptionsResolver
-%global php_min_ver  5.3.3
+%global pear_channel    pear.symfony.com
+%global pear_name       Debug
+%global php_min_ver     5.3.3
+
+%global symfony_min_ver 2.1
+%global symfony_max_ver 3.0
 
 Name:             php-symfony2-%{pear_name}
 Version:          2.3.6
@@ -11,7 +15,7 @@ Summary:          Symfony2 %{pear_name} Component
 
 Group:            Development/Libraries
 License:          MIT
-URL:              http://symfony.com/components
+URL:              http://symfony.com/doc/current/components/debug.html
 Source0:          http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -20,13 +24,17 @@ BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
 # For tests
-BuildRequires:    php(language) >= %{php_min_ver}
+BuildRequires:    php-common >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= %{symfony_min_ver}
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) <  %{symfony_max_ver}
+BuildRequires:    php-pear(%{pear_channel}/HttpKernel) >= %{symfony_min_ver}
+BuildRequires:    php-pear(%{pear_channel}/HttpKernel) <  %{symfony_max_ver}
 # For tests: phpci
-Requires:         php-reflection
-Requires:         php-spl
+BuildRequires:    php-reflection
+BuildRequires:    php-spl
 
-Requires:         php(language) >= %{php_min_ver}
+Requires:         php-common >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
@@ -34,15 +42,20 @@ Requires(postun): %{__pear}
 # phpci
 Requires:         php-reflection
 Requires:         php-spl
+# Optional
+Requires:         php-pear(%{pear_channel}/ClassLoader) >= %{symfony_min_ver}
+Requires:         php-pear(%{pear_channel}/ClassLoader) <  %{symfony_max_ver}
+Requires:         php-pear(%{pear_channel}/HttpFoundation) >= %{symfony_min_ver}
+Requires:         php-pear(%{pear_channel}/HttpFoundation) <  %{symfony_max_ver}
+Requires:         php-pear(%{pear_channel}/HttpKernel) >= %{symfony_min_ver}
+Requires:         php-pear(%{pear_channel}/HttpKernel) <  %{symfony_max_ver}
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
-OptionsResolver helps at configuring objects with option arrays.
+The Debug Component provides tools to ease debugging PHP code.
 
-It supports default values on different levels of your class hierarchy, option
-constraints (required vs. optional, allowed values) and lazy options whose
-default value depends on the value of another option.
+Optional: Xdebug
 
 
 %prep
@@ -133,9 +146,7 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
-%dir %{pear_phpdir}/Symfony
-%dir %{pear_phpdir}/Symfony/Component
-     %{pear_phpdir}/Symfony/Component/%{pear_name}
+%{pear_phpdir}/Symfony/Component/%{pear_name}
 %{pear_testdir}/%{pear_name}
 
 
@@ -143,75 +154,5 @@ fi
 * Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
 - Update to 2.3.6
 
-* Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
-- Updated to 2.2.5
-
-* Fri Aug 09 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.5-1
-- Updated to 2.2.5
-
-* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.3-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
-
-* Tue Jul 02 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.3-1
-- Updated to 2.2.3
-
-* Thu Jun 13 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.2-1
-- Updated to 2.2.2
-- Removed package.xml modifications fixed usptream
-
-* Mon Jun 03 2013 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
-- Update to 2.2.2
-
-* Sun Apr 14 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.1-1
-- Updated to 2.2.1
-
-* Sat Apr 06 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
-- Update to 2.2.1 (no change)
-
-* Wed Mar 13 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.0-1
-- Updated to 2.2.0
-- Removed tests' bootstrap patch
-
-* Tue Mar 05 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
-- Update to 2.2.0
-
-* Wed Feb 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
-- Update to 2.1.8
-
-* Mon Jan 21 2013 Remi Collet <RPMS@FamilleCollet.com> 2.1.7-1
-- update to 2.1.7 (no code change)
-
-* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.6-1
-- update to 2.1.6 (no change)
-
-* Fri Dec 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.5-1
-- update to 2.1.5 (no change)
-
-* Thu Nov 29 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.4-1
-- update to 2.1.4 (no change)
-
-* Tue Nov 13 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.3-2
-- Removed .gitattributes and .gitignore files from package.xml
-
-* Sun Nov 11 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.3-1
-- Updated to upstream version 2.1.3
-
-* Tue Oct 30 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.3-1
-- sync with rawhide, update to 2.1.3
-
-* Mon Oct 29 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.2-3
-- Added "%%global pear_metadir" and usage in %%install
-- Changed RPM_BUILD_ROOT to %%{buildroot}
-- Changed name of patch from "php-symfony2-OptionsResolver.tests.bootstrap.patch"
-  to "%{name}-tests-bootstrap.patch"
-
-* Mon Oct  8 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.2-2
-- Added PEAR package.xml modifications
-- Added patch for tests' bootstrap.php
-- Added tests (%%check)
-
-* Sat Oct  6 2012 Remi Collet <RPMS@FamilleCollet.com> 2.1.2-1
-- rebuild
-
-* Thu Sep 20 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.1.2-1
+* Fri Jun 14 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.3.1-1
 - Initial package

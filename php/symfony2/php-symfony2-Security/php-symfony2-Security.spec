@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.5
+Version:          2.3.6
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -23,23 +23,16 @@ BuildRequires:    php-channel(%{pear_channel})
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Form) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Form) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/HttpKernel) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/HttpKernel) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Routing) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Routing) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Validator) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Validator) <  2.3.0
 BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
-BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) <  3.0.0
 BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineDBAL) >= 2.2.0
-BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineDBAL) <  3.0.0
 BuildRequires:    php-PsrLog >= 1.0
-BuildRequires:    php-PsrLog <  2.0
+# Need to be hacked to be loadable.
+BuildRequires:    php-password-compat
 # For tests: phpci
 BuildRequires:    php-date
 BuildRequires:    php-hash
@@ -54,11 +47,8 @@ Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires:         php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/EventDispatcher) <  2.3.0
 Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/HttpFoundation) <  2.3.0
 Requires:         php-pear(%{pear_channel}/HttpKernel) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/HttpKernel) <  2.3.0
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 # phpci
@@ -70,19 +60,14 @@ Requires:         php-openssl
 Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-spl
+Requires:         php-password-compat
 # Optional
 Requires:         php-pear(%{pear_channel}/ClassLoader) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/ClassLoader) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Finder) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Finder) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Form) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Form) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Routing) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Routing) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Validator) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Validator) <  2.3.0
 Requires:         php-pear(pear.doctrine-project.org/DoctrineDBAL) >= 2.2.0
-Requires:         php-pear(pear.doctrine-project.org/DoctrineDBAL) <  3.0.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -187,6 +172,9 @@ fi
 
 
 %changelog
+* Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- Update to 2.3.6
+
 * Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Updated to 2.2.5
 
@@ -275,7 +263,7 @@ fi
 - Removed changed PEAR role of *.sql files from doc to php (fixed upstream)
 - Minor syntax updates
 
-* Mon Jul 03 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
+* Tue Jul 03 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
 - backport for remi repository
 
 * Sat Jun 30 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-3
@@ -315,7 +303,7 @@ fi
 - %%global instead of %%define
 - Removed unnecessary cd from %%build section
 
-* Wed May 2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
+* Wed May  2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
 - Updated to upstream version 2.0.13
 
 * Sat Apr 21 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.12-1

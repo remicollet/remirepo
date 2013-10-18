@@ -1,7 +1,5 @@
 {
 	"channel":"pear.symfony.com",
 	"blacklist":[],
-	"ignore":{
-		"HttpKernel":["Routing"]
-	}
+	"ignore":{}
 }

@@ -6,7 +6,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.5
+Version:          2.3.6
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -145,6 +145,9 @@ fi
 
 
 %changelog
+* Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- Update to 2.3.6
+
 * Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Sync with rawhide, update to 2.2.5
 - disable tests as results are ignored...
@@ -258,7 +261,7 @@ fi
 - %%global instead of %%define
 - Removed unnecessary cd from %%build section
 
-* Wed May 2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
+* Wed May  2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
 - Updated to upstream version 2.0.13
 
 * Sat Apr 21 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.12-1

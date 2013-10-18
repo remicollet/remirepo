@@ -3,9 +3,10 @@
 %global pear_channel pear.symfony.com
 %global pear_name    Translation
 %global php_min_ver  5.3.3
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.5
+Version:          2.3.6
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -19,13 +20,12 @@ BuildArch:        noarch
 
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+%if %{with_tests}
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires:    php-pear(%{pear_channel}/Config) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Config) <  2.3.0
 BuildRequires:    php-pear(%{pear_channel}/Yaml) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Yaml) <  2.3.0
 # For tests: phpci
 BuildRequires:    php-dom
 BuildRequires:    php-intl
@@ -34,6 +34,7 @@ BuildRequires:    php-mbstring
 BuildRequires:    php-pcre
 BuildRequires:    php-simplexml
 BuildRequires:    php-spl
+%endif
 
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
@@ -50,9 +51,7 @@ Requires:         php-simplexml
 Requires:         php-spl
 # Optional
 Requires:         php-pear(%{pear_channel}/Config) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Config) <  2.3.0
 Requires:         php-pear(%{pear_channel}/Yaml) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Yaml) <  2.3.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -128,11 +127,15 @@ cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 
 cp ../../../../phpunit.autoloader.php .
 
+%if %{with_tests}
 %{_bindir}/phpunit \
     -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
     -d date.timezone="UTC" \
 %if 0%{?rhel} == 5
    || : ignore test on EL5
+%endif
+%else
+: Test disabled, missing '--with tests' option.
 %endif
 
 
@@ -157,6 +160,9 @@ fi
 
 
 %changelog
+* Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- Update to 2.3.6
+
 * Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Sync with rawhide, update to 2.2.5
 

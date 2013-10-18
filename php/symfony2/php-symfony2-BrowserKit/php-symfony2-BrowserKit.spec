@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.5
+Version:          2.3.6
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -22,12 +22,12 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/CssSelector) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/CssSelector) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/DomCrawler) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/DomCrawler) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/Process) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Process) <  2.3.0
+BuildRequires:    php-pear(%{pear_channel}/CssSelector) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/CssSelector) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/DomCrawler)  > 2.3
+BuildRequires:    php-pear(%{pear_channel}/DomCrawler)  < 2.4
+BuildRequires:    php-pear(%{pear_channel}/Process)     > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Process)     < 2.4
 # For tests: phpci
 BuildRequires:    php-date
 BuildRequires:    php-pcre
@@ -37,8 +37,8 @@ BuildRequires:    php-spl
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
-Requires:         php-pear(%{pear_channel}/DomCrawler) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/DomCrawler) <  2.3.0
+Requires:         php-pear(%{pear_channel}/DomCrawler) > 2.3
+Requires:         php-pear(%{pear_channel}/DomCrawler) < 2.4
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 # phpci
@@ -47,8 +47,8 @@ Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-spl
 # Optional
-Requires:         php-pear(%{pear_channel}/Process) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Process) <  2.3.0
+Requires:         php-pear(%{pear_channel}/Process) > 2.3
+Requires:         php-pear(%{pear_channel}/Process) < 2.4
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -152,6 +152,9 @@ fi
 
 
 %changelog
+* Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- Update to 2.3.6
+
 * Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Sync with rawhide, update to 2.2.5
 
@@ -271,7 +274,7 @@ fi
 - %%global instead of %%define
 - Removed unnecessary cd from %%build section
 
-* Wed May 2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
+* Wed May  2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
 - Updated to upstream version 2.0.13
 
 * Sat Apr 21 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.12-1

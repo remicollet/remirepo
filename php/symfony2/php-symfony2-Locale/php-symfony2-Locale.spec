@@ -1,12 +1,12 @@
-	%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 %global pear_channel pear.symfony.com
 %global pear_name    Locale
 %global php_min_ver  5.3.3
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   1
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.5
+Version:          2.3.6
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -24,6 +24,7 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:    php-pear(%{pear_channel}/Intl) > 2.3
 # For tests: phpci
 BuildRequires:    php-ctype
 BuildRequires:    php-date
@@ -47,6 +48,8 @@ Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
+Requires:         php-pear(%{pear_channel}/Intl) > 2.3
+Requires:         php-pear(%{pear_channel}/Intl) < 2.4
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -123,15 +126,6 @@ cd %{pear_name}-%{version}
 # Clean up unnecessary files
 rm -rf %{buildroot}%{pear_metadir}/.??*
 
-# Lang files
-for res_file in \
-    %{buildroot}%{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/*/*.res
-do
-    res_file_lang=$(basename $res_file | sed 's#\(_.*\)*\.res##')
-    echo "%lang($res_file_lang) $res_file"
-done > ../%{name}.lang
-sed -i "s#) %{buildroot}#) #" ../%{name}.lang
-
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
@@ -168,7 +162,7 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files -f %{name}.lang
+%files
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
@@ -178,22 +172,14 @@ fi
      %{pear_phpdir}/Symfony/Component/%{pear_name}/Exception
      %{pear_phpdir}/Symfony/Component/%{pear_name}/Locale.php
      %{pear_phpdir}/Symfony/Component/%{pear_name}/autoloader.php
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/lang
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/locales
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/names
-%dir %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/region
-     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/stub
-     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/49/*.*
-     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/data/*.*
-     %{pear_phpdir}/Symfony/Component/%{pear_name}/Resources/stubs
      %{pear_phpdir}/Symfony/Component/%{pear_name}/Stub
 %{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- Update to 2.3.6
+
 * Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Updated to 2.2.5
 - disable tests as results are ignored...
@@ -283,7 +269,7 @@ fi
 * Thu Jun 28 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
 - rebuild for remi repository
 
-* Sun Jun 23 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-3
+* Sat Jun 23 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-3
 - Added %%lang directive flags for *.res files
 - Modified %%files because of separate *.res file listings
 
@@ -317,7 +303,7 @@ fi
 - %%global instead of %%define
 - Removed unnecessary cd from %%build section
 
-* Wed May 2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
+* Wed May  2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
 - Updated to upstream version 2.0.13
 
 * Sat Apr 21 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.12-1

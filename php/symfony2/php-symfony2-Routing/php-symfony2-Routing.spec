@@ -5,7 +5,7 @@
 %global php_min_ver  5.3.3
 
 Name:             php-symfony2-%{pear_name}
-Version:          2.2.5
+Version:          2.3.6
 Release:          1%{?dist}
 Summary:          Symfony2 %{pear_name} Component
 
@@ -19,13 +19,14 @@ BuildArch:        noarch
 
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
+%if %{with_tests}
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/Config) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Config) <  2.3.0
-BuildRequires:    php-pear(%{pear_channel}/Yaml) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Yaml) <  2.3.0
+BuildRequires:    php-pear(%{pear_channel}/Config) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Config) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/Yaml) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Yaml) < 2.4
 BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
 BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) <  3.0.0
 BuildRequires:    php-PsrLog >= 1.0
@@ -49,10 +50,10 @@ Requires:         php-reflection
 Requires:         php-spl
 Requires:         php-tokenizer
 # Optional
-Requires:         php-pear(%{pear_channel}/Config) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Config) <  2.3.0
-Requires:         php-pear(%{pear_channel}/Yaml) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Yaml) <  2.3.0
+Requires:         php-pear(%{pear_channel}/Config) > 2.3
+Requires:         php-pear(%{pear_channel}/Config) < 2.4
+Requires:         php-pear(%{pear_channel}/Yaml) > 2.3
+Requires:         php-pear(%{pear_channel}/Yaml) < 2.4
 Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
 Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) <  3.0.0
 
@@ -157,6 +158,9 @@ fi
 
 
 %changelog
+* Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- Update to 2.3.6
+
 * Thu Aug 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Sync with rawhide, update to 2.2.5
 
@@ -244,7 +248,7 @@ fi
 - Removed fix package.xml for *.xsd file issue (fixed upstream)
 - Minor syntax updates
 
-* Mon Jun 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
+* Thu Jun 21 2012 Remi Collet <RPMS@FamilleCollet.com> 2.0.15-3
 - backport for remi repository
 
 * Tue Jun 12 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.15-3
@@ -279,7 +283,7 @@ fi
 - %%global instead of %%define
 - Removed unnecessary cd from %%build section
 
-* Wed May 2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
+* Wed May  2 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.13-1
 - Updated to upstream version 2.0.13
 
 * Sat Apr 21 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 2.0.12-1
