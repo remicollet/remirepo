@@ -49,7 +49,6 @@ Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
 Requires:         php-pear(%{pear_channel}/Intl) > 2.3
-Requires:         php-pear(%{pear_channel}/Intl) < 2.4
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
