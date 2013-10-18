@@ -22,7 +22,7 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/CssSelector) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/CssSelector) > 2.0
 # For tests: phpci
 BuildRequires:    php-dom
 BuildRequires:    php-libxml
@@ -42,8 +42,7 @@ Requires:         php-mbstring
 Requires:         php-pcre
 Requires:         php-spl
 # Optional
-Requires:         php-pear(%{pear_channel}/CssSelector) > 2.3
-Requires:         php-pear(%{pear_channel}/CssSelector) < 2.4
+Requires:         php-pear(%{pear_channel}/CssSelector) > 2.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
