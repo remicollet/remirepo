@@ -10,7 +10,7 @@
 %{!?php_inidir: %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:     %global __pecl      %{_bindir}/pecl}
 
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts     0%{?__ztsphp:1}
 %global pecl_name    CTwig
 %global ext_name     twig
 %global pecl_channel pear.twig-project.org
@@ -158,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 1.14.1-2
+- rename from php-twig-CTwig to php-twig-ctwig
+
 * Wed Oct 16 2013 Remi Collet <remi@fedoraproject.org> - 1.14.1-1
 - Update to 1.14.1 (no change, only version bump)
 
