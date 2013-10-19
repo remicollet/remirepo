@@ -25,7 +25,7 @@ BuildRequires:    php-channel(%{pear_channel})
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) > 2.1
-BuildRequires:    php-pear(%{pear_channel}/Form) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Form) > 2.0
 BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) > 2.1
 BuildRequires:    php-pear(%{pear_channel}/HttpKernel) > 2.1
 BuildRequires:    php-pear(%{pear_channel}/Routing) > 2.2
@@ -64,10 +64,9 @@ Requires:         php-spl
 # Optional
 Requires:         php-pear(%{pear_channel}/ClassLoader)
 Requires:         php-pear(%{pear_channel}/Finder)
-Requires:         php-pear(%{pear_channel}/Form)
+Requires:         php-pear(%{pear_channel}/Form) > 2.0
 Requires:         php-pear(%{pear_channel}/Routing) > 2.2
 Requires:         php-pear(%{pear_channel}/Validator) > 2.2
-Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) > 2.2
 Requires:         php-pear(pear.doctrine-project.org/DoctrineDBAL) > 2.2
 Requires:         php-PsrLog > 1.0
 Requires:         php-password-compat > 1.0

@@ -22,8 +22,7 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) > 2.0
 # For tests: phpci
 BuildRequires:    php-spl
 
@@ -35,8 +34,8 @@ Requires(postun): %{__pear}
 # phpci
 Requires:         php-spl
 # Optional
-Requires:         php-pear(%{pear_channel}/DependencyInjection) > 2.3
-Requires:         php-pear(%{pear_channel}/DependencyInjection) < 2.4
+Requires:         php-pear(%{pear_channel}/DependencyInjection) > 2.0
+# Optional and not set to avoid circular dependency: HttpKernel
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

@@ -5,9 +5,6 @@
 %global pear_name       Debug
 %global php_min_ver     5.3.3
 
-%global symfony_min_ver 2.1
-%global symfony_max_ver 3.0
-
 Name:             php-symfony2-%{pear_name}
 Version:          2.3.6
 Release:          1%{?dist}
@@ -26,10 +23,8 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php-common >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= %{symfony_min_ver}
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) <  %{symfony_max_ver}
-BuildRequires:    php-pear(%{pear_channel}/HttpKernel) >= %{symfony_min_ver}
-BuildRequires:    php-pear(%{pear_channel}/HttpKernel) <  %{symfony_max_ver}
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) > 2.1
+BuildRequires:    php-pear(%{pear_channel}/HttpKernel) > 2.1
 # For tests: phpci
 BuildRequires:    php-reflection
 BuildRequires:    php-spl
@@ -43,12 +38,9 @@ Requires(postun): %{__pear}
 Requires:         php-reflection
 Requires:         php-spl
 # Optional
-Requires:         php-pear(%{pear_channel}/ClassLoader) >= %{symfony_min_ver}
-Requires:         php-pear(%{pear_channel}/ClassLoader) <  %{symfony_max_ver}
-Requires:         php-pear(%{pear_channel}/HttpFoundation) >= %{symfony_min_ver}
-Requires:         php-pear(%{pear_channel}/HttpFoundation) <  %{symfony_max_ver}
-Requires:         php-pear(%{pear_channel}/HttpKernel) >= %{symfony_min_ver}
-Requires:         php-pear(%{pear_channel}/HttpKernel) <  %{symfony_max_ver}
+Requires:         php-pear(%{pear_channel}/ClassLoader)
+Requires:         php-pear(%{pear_channel}/HttpFoundation) > 2.1
+Requires:         php-pear(%{pear_channel}/HttpKernel) > 2.1
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

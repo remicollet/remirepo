@@ -48,7 +48,6 @@ Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-spl
 Requires:         php-pear(%{pear_channel}/Filesystem) > 2.3
-Requires:         php-pear(%{pear_channel}/Filesystem) < 2.4
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

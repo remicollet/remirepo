@@ -23,12 +23,12 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Locale) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/OptionsResolver) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/PropertyAccess) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Validator) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) > 2.1
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/Intl) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/OptionsResolver) > 2.1
+BuildRequires:    php-pear(%{pear_channel}/PropertyAccess) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/Validator) > 2.2
 # For tests: phpci
 BuildRequires:    php-ctype
 BuildRequires:    php-date
@@ -44,10 +44,10 @@ BuildRequires:    php-spl
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
-Requires:         php-pear(%{pear_channel}/EventDispatcher) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Locale) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/OptionsResolver) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/PropertyAccess) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/EventDispatcher) > 2.1
+Requires:         php-pear(%{pear_channel}/Intl) > 2.3
+Requires:         php-pear(%{pear_channel}/OptionsResolver) > 2.1
+Requires:         php-pear(%{pear_channel}/PropertyAccess) > 2.2
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 # phpci
@@ -61,8 +61,8 @@ Requires:         php-reflection
 Requires:         php-session
 Requires:         php-spl
 # Optional
-Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Validator) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/HttpFoundation) > 2.2
+Requires:         php-pear(%{pear_channel}/Validator) > 2.2
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

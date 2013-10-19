@@ -19,18 +19,13 @@ BuildArch:        noarch
 
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
-%if %{with_tests}
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/Config) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Config) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/Yaml) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Yaml) < 2.4
-BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
-BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) <  3.0.0
-BuildRequires:    php-PsrLog >= 1.0
-BuildRequires:    php-PsrLog <  2.0
+BuildRequires:    php-pear(%{pear_channel}/Config) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/Yaml) > 2.0
+BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) > 2.2
+BuildRequires:    php-PsrLog > 1.0
 # For tests: phpci
 BuildRequires:    php-dom
 BuildRequires:    php-pcre
@@ -50,12 +45,10 @@ Requires:         php-reflection
 Requires:         php-spl
 Requires:         php-tokenizer
 # Optional
-Requires:         php-pear(%{pear_channel}/Config) > 2.3
-Requires:         php-pear(%{pear_channel}/Config) < 2.4
-Requires:         php-pear(%{pear_channel}/Yaml) > 2.3
-Requires:         php-pear(%{pear_channel}/Yaml) < 2.4
-Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
-Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) <  3.0.0
+Requires:         php-pear(%{pear_channel}/Config) > 2.2
+Requires:         php-pear(%{pear_channel}/Yaml) > 2.0
+Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) > 2.2
+Requires:         php-PsrLog > 1.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

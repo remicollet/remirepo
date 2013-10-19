@@ -14,15 +14,15 @@ Build order
 	Templating                2.3.6        
 	Yaml                      2.3.6        
 	BrowserKit                2.3.6      BR: CssSelector, DomCrawler, Process  R: DomCrawler, Process
-	ClassLoader               2.3.6      BR: Finder  
+	ClassLoader               2.3.6      BR: Finder  R: Finder
 	Config                    2.3.6      BR: Filesystem  R: Filesystem
 	DependencyInjection       2.3.6      BR: Config, Yaml  R: Config, Yaml
 	EventDispatcher           2.3.6      BR: DependencyInjection  R: DependencyInjection
 	Routing                   2.3.6      BR: Config, Yaml  R: Config, Yaml
 	Translation               2.3.6      BR: Config, Yaml  R: Config, Yaml
-	Validator                 2.3.6      BR: Config, HttpFoundation, Locale, Translation, Yaml  R: Config, HttpFoundation, Locale, Yaml
+	Validator                 2.3.6      BR: Config, HttpFoundation, Intl, Translation, Yaml  R: Translation, Config, HttpFoundation, Intl, Yaml
 	Console                   2.3.6        R: EventDispatcher
-	Form                      2.3.6      BR: EventDispatcher, HttpFoundation, Locale, OptionsResolver, PropertyAccess, Validator  R: EventDispatcher, Locale, OptionsResolver, PropertyAccess, HttpFoundation, Validator
-	HttpKernel                2.3.6      BR: BrowserKit, ClassLoader, Config, Console, DependencyInjection, EventDispatcher, Finder, HttpFoundation, Process, Routing, Templating  R: EventDispatcher, HttpFoundation, BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder
+	Form                      2.3.6      BR: EventDispatcher, HttpFoundation, Intl, OptionsResolver, PropertyAccess, Validator  R: EventDispatcher, Intl, OptionsResolver, PropertyAccess, HttpFoundation, Validator
+	HttpKernel                2.3.6      BR: BrowserKit, ClassLoader, Config, Console, DependencyInjection, EventDispatcher, Finder, HttpFoundation, Process, Routing, Templating, Stopwatch I: Debug R: EventDispatcher, HttpFoundation, BrowserKit, ClassLoader, Config, Console, DependencyInjection, Finder
 	Security                  2.3.6      BR: EventDispatcher, Form, HttpFoundation, HttpKernel, Routing, Validator  R: EventDispatcher, HttpFoundation, HttpKernel, ClassLoader, Finder, Form, Routing, Validator
 	Debug                     2.3.6      BR: HttpFoundation, HttpKernel  R: ClassLoader, HttpFoundation, HttpKernel

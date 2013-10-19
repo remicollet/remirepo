@@ -24,12 +24,12 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/Config) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Locale) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Translation) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Yaml) >= 2.2.0
-BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Config) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) > 2.1
+BuildRequires:    php-pear(%{pear_channel}/Intl) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/Translation) > 2.0
+BuildRequires:    php-pear(%{pear_channel}/Yaml) > 2.0
+BuildRequires:    php-pear(pear.doctrine-project.org/DoctrineCommon)
 # For tests: phpci
 BuildRequires:    php-ctype
 BuildRequires:    php-date
@@ -61,12 +61,13 @@ Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
 Requires:         php-filter
+Requires:         php-pear(%{pear_channel}/Translation) > 2.0
 # Optional
-Requires:         php-pear(%{pear_channel}/Config) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/HttpFoundation) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Locale) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Yaml) >= 2.2.0
-Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Config) > 2.2
+Requires:         php-pear(%{pear_channel}/HttpFoundation) > 2.1
+Requires:         php-pear(%{pear_channel}/Intl) > 2.3
+Requires:         php-pear(%{pear_channel}/Yaml) > 2.0
+Requires:         php-pear(pear.doctrine-project.org/DoctrineCommon)
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -143,7 +144,7 @@ install -pm 0644 ../phpunit.autoloader.php \
 %check
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 
-sed 's#./phpunit.autoloader.php#./autoloader.php#' -i phpunit.xml.dist
+cp ../../../../phpunit.autoloader.php .
 
 %if %{with_tests}
 %{_bindir}/phpunit \

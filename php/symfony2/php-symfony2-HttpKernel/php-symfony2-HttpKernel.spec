@@ -3,6 +3,7 @@
 %global pear_channel pear.symfony.com
 %global pear_name    HttpKernel
 %global php_min_ver  5.3.3
+# Circular dependency with Debug
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 
@@ -25,33 +26,21 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/BrowserKit) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/BrowserKit) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/ClassLoader) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/ClassLoader) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/Config) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Config) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/Console) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Console) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/Finder) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Finder) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/Process) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Process) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/Routing) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Routing) < 2.4
+BuildRequires:    php-pear(%{pear_channel}/BrowserKit) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/ClassLoader) > 2.1
+BuildRequires:    php-pear(%{pear_channel}/Config) > 2.0
+BuildRequires:    php-pear(%{pear_channel}/Console) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/Debug) > 2.3
+BuildRequires:    php-pear(%{pear_channel}/DependencyInjection) > 2.0
+BuildRequires:    php-pear(%{pear_channel}/EventDispatcher) > 2.1
+BuildRequires:    php-pear(%{pear_channel}/Finder) > 2.0
+BuildRequires:    php-pear(%{pear_channel}/HttpFoundation) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/Process) > 2.0
+BuildRequires:    php-pear(%{pear_channel}/Routing) > 2.2
 BuildRequires:    php-pear(%{pear_channel}/Templating) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Templating) < 2.4
-# Awaiting https://bugzilla.redhat.com/show_bug.cgi?id=979794
-#BuildRequires:    php-pear(%{pear_channel}/Stopwatch) > 2.3
-#BuildRequires:    php-pear(%{pear_channel}/Stopwatch) < 2.4
-BuildRequires:    php-PsrLog >= 1.0
-BuildRequires:    php-PsrLog <  2.0
+BuildRequires:    php-pear(%{pear_channel}/Stopwatch) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/Templating) > 2.0
+BuildRequires:    php-PsrLog > 1.0
 # For tests: phpci
 BuildRequires:    php-date
 BuildRequires:    php-hash
@@ -70,10 +59,8 @@ BuildRequires:    php-tokenizer
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
-Requires:         php-pear(%{pear_channel}/EventDispatcher) > 2.3
-Requires:         php-pear(%{pear_channel}/EventDispatcher) < 2.4
-Requires:         php-pear(%{pear_channel}/HttpFoundation) > 2.3
-Requires:         php-pear(%{pear_channel}/HttpFoundation) < 2.4
+Requires:         php-pear(%{pear_channel}/EventDispatcher) > 2.1
+Requires:         php-pear(%{pear_channel}/HttpFoundation) > 2.2
 Requires:         php-PsrLog >= 1.0
 Requires:         php-PsrLog <  2.0
 Requires(post):   %{__pear}
@@ -92,18 +79,12 @@ Requires:         php-session
 Requires:         php-spl
 Requires:         php-tokenizer
 # Optional
-Requires:         php-pear(%{pear_channel}/BrowserKit) > 2.3
-Requires:         php-pear(%{pear_channel}/BrowserKit) < 2.4
-Requires:         php-pear(%{pear_channel}/ClassLoader) > 2.3
-Requires:         php-pear(%{pear_channel}/ClassLoader) < 2.4
-Requires:         php-pear(%{pear_channel}/Config) > 2.3
-Requires:         php-pear(%{pear_channel}/Config) < 2.4
-Requires:         php-pear(%{pear_channel}/Console) > 2.3
-Requires:         php-pear(%{pear_channel}/Console) < 2.4
-Requires:         php-pear(%{pear_channel}/DependencyInjection) > 2.3
-Requires:         php-pear(%{pear_channel}/DependencyInjection) < 2.4
-Requires:         php-pear(%{pear_channel}/Finder) > 2.3
-Requires:         php-pear(%{pear_channel}/Finder) < 2.4
+Requires:         php-pear(%{pear_channel}/BrowserKit) > 2.2
+Requires:         php-pear(%{pear_channel}/ClassLoader) > 2.1
+Requires:         php-pear(%{pear_channel}/Config) > 2.0
+Requires:         php-pear(%{pear_channel}/Console) > 2.2
+Requires:         php-pear(%{pear_channel}/DependencyInjection) > 2.0
+Requires:         php-pear(%{pear_channel}/Finder) > 2.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -185,9 +166,6 @@ install -pm 0644 ../phpunit.autoloader.php \
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 
 cp ../../../../phpunit.autoloader.php .
-
-# Remove tests requiring unavailable Stopwatch package
-rm -f Tests/Debug/TraceableEventDispatcherTest.php
 
 # Remove this test with use vendor/autoload.php
 rm Tests/ClientTest.php

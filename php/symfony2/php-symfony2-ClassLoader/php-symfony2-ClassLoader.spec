@@ -41,6 +41,8 @@ Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-spl
 Requires:         php-tokenizer
+# Optional
+Requires:         php-pear(%{pear_channel}/Finder) > 2.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

@@ -22,10 +22,8 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/Config) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Config) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/Yaml)   > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Yaml)   < 2.4
+BuildRequires:    php-pear(%{pear_channel}/Config) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/Yaml)   > 2.0
 # For tests: phpci
 BuildRequires:    php-dom
 BuildRequires:    php-pcre
@@ -47,10 +45,8 @@ Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
 # Optional
-Requires:         php-pear(%{pear_channel}/Config) > 2.3
-Requires:         php-pear(%{pear_channel}/Config) < 2.4
-Requires:         php-pear(%{pear_channel}/Yaml)   > 2.3
-Requires:         php-pear(%{pear_channel}/Yaml)   < 2.4
+Requires:         php-pear(%{pear_channel}/Config) > 2.2
+Requires:         php-pear(%{pear_channel}/Yaml)   > 2.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 

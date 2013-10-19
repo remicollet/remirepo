@@ -3,7 +3,7 @@
 %global pear_channel pear.symfony.com
 %global pear_name    Translation
 %global php_min_ver  5.3.3
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   1
 
 Name:             php-symfony2-%{pear_name}
 Version:          2.3.6
@@ -24,8 +24,8 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/Config) >= 2.2.0
-BuildRequires:    php-pear(%{pear_channel}/Yaml) >= 2.2.0
+BuildRequires:    php-pear(%{pear_channel}/Config) > 2.2
+BuildRequires:    php-pear(%{pear_channel}/Yaml) > 2.0
 # For tests: phpci
 BuildRequires:    php-dom
 BuildRequires:    php-intl
@@ -50,8 +50,8 @@ Requires:         php-pcre
 Requires:         php-simplexml
 Requires:         php-spl
 # Optional
-Requires:         php-pear(%{pear_channel}/Config) >= 2.2.0
-Requires:         php-pear(%{pear_channel}/Yaml) >= 2.2.0
+Requires:         php-pear(%{pear_channel}/Config) > 2.2
+Requires:         php-pear(%{pear_channel}/Yaml) > 2.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -128,6 +128,9 @@ cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 cp ../../../../phpunit.autoloader.php .
 
 %if %{with_tests}
+# use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+rm -rf Tests/Catalogue
+
 %{_bindir}/phpunit \
     -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
     -d date.timezone="UTC" \

@@ -22,12 +22,9 @@ BuildRequires:    php-channel(%{pear_channel})
 # For tests
 BuildRequires:    php(language) >= %{php_min_ver}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:    php-pear(%{pear_channel}/CssSelector) > 2.3
-BuildRequires:    php-pear(%{pear_channel}/CssSelector) < 2.4
-BuildRequires:    php-pear(%{pear_channel}/DomCrawler)  > 2.3
-BuildRequires:    php-pear(%{pear_channel}/DomCrawler)  < 2.4
-BuildRequires:    php-pear(%{pear_channel}/Process)     > 2.3
-BuildRequires:    php-pear(%{pear_channel}/Process)     < 2.4
+BuildRequires:    php-pear(%{pear_channel}/CssSelector) > 2.0
+BuildRequires:    php-pear(%{pear_channel}/DomCrawler)  > 2.0
+BuildRequires:    php-pear(%{pear_channel}/Process)     > 2.0
 # For tests: phpci
 BuildRequires:    php-date
 BuildRequires:    php-pcre
@@ -37,8 +34,7 @@ BuildRequires:    php-spl
 Requires:         php(language) >= %{php_min_ver}
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
-Requires:         php-pear(%{pear_channel}/DomCrawler) > 2.3
-Requires:         php-pear(%{pear_channel}/DomCrawler) < 2.4
+Requires:         php-pear(%{pear_channel}/DomCrawler) > 2.0
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 # phpci
@@ -47,8 +43,7 @@ Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-spl
 # Optional
-Requires:         php-pear(%{pear_channel}/Process) > 2.3
-Requires:         php-pear(%{pear_channel}/Process) < 2.4
+Requires:         php-pear(%{pear_channel}/Process) > 2.0
 
 Provides:         php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
