@@ -11,7 +11,7 @@
 
 Name:          php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
-Version:       4.4.3
+Version:       4.4.4
 Release:       1%{?dist}
 License:       Distribuable
 Group:         Development/Languages
@@ -112,6 +112,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 19 2013 Remi Collet <RPMS@famillecollet.com> - 4.4.4-1
+- update to 4.4.4 (php 5.4 only)
+
 * Mon Sep 16 2013 Remi Collet <RPMS@famillecollet.com> - 4.4.3-1
 - update to 4.4.3 (php 5.4 only)
 
