@@ -1,4 +1,4 @@
-# spec file for php-phpunit-Diff
+# spec file for php-phpunit-diff
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
@@ -11,9 +11,9 @@
 %global pear_name Diff
 %global pear_channel pear.phpunit.de
 
-Name:           php-phpunit-Diff
+Name:           php-phpunit-diff
 Version:        1.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Diff implementation
 
 Group:          Development/Libraries
@@ -38,7 +38,9 @@ Requires:       php-pcre
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
-
+# Package have be renamed
+Obsoletes:      php-phpunit-Diff < 1.1.0-2
+Provides:       php-phpunit-Diff = %{name}-%{version}
 
 %description
 Diff implementation.
@@ -94,5 +96,8 @@ fi
 
 
 %changelog
+* Sun Oct 20 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- rename to lowercase
+
 * Thu Sep 12 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package
