@@ -1,4 +1,4 @@
-# spec file for php-phpunit-Git
+# spec file for php-phpunit-git
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
@@ -11,9 +11,9 @@
 %global pear_name    Git
 %global pear_channel pear.phpunit.de
 
-Name:           php-phpunit-Git
+Name:           php-phpunit-git
 Version:        1.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Simple wrapper for Git
 
 Group:          Development/Libraries
@@ -36,6 +36,9 @@ Requires:       php-pear(PEAR) >= 1.9.4
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+# Package have be renamed
+Obsoletes:      php-phpunit-Diff < 1.2.0-3
+Provides:       php-phpunit-Diff = %{name}-%{version}
 
 
 %description
@@ -90,6 +93,9 @@ fi
 
 
 %changelog
+* Sun Oct 20 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-3
+- rename to lowercase
+
 * Tue Oct  1 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
 - own /usr/share/pear/SebastianBergmann/Git
 
