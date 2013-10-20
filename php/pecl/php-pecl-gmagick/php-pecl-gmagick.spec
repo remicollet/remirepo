@@ -256,7 +256,7 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 * Fri Jan 29 2010 Remi Collet <rpms@famillecollet.com> 1.0.3-0.1.b3
 - update to 1.0.3b3
 
-* Tue Nov 3 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 1.0.2b1-3
+* Tue Nov  3 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 1.0.2b1-3
 - Fedora Review started, thanks to Andrew Colin Kissa.
 - Remove macros %%{__make} in favour to plain make.
 - Add %%{?_smp_mflags} to make.
@@ -265,6 +265,6 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 - New version 1.0.2b1 - author include license text by my request. Thank you Vito Chin.
 - Include LICENSE.
 
-* Fri Oct 2 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 1.0.1b1-1
+* Fri Oct  2 2009 Pavel Alexeev <Pahan@Hubbitus.info> - 1.0.1b1-1
 - Initial release.
 - License text absent, but I ask Vito Chin by email to add it into tarball.
