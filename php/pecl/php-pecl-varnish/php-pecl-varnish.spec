@@ -15,7 +15,7 @@
 
 Summary:        Varnish Cache bindings
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -61,7 +61,7 @@ mv %{pecl_name}-%{version} NTS
 cd NTS
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_VARNISH_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_varnish.h)
+extver=$(sed -n '/#define PHP_VARNISH_VERSION/{s/.* "//;s/".*$//;p}' php_varnish.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
@@ -116,6 +116,14 @@ make -C ZTS \
 
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
+
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %post
@@ -215,7 +223,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{CREDITS,LICENSE}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -227,6 +236,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 20 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+
 * Wed Oct 02 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0
 - License now provided in upstream sources
