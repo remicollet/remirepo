@@ -13,7 +13,7 @@
 
 Name:           php-phpunit-git
 Version:        1.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Simple wrapper for Git
 
 Group:          Development/Libraries
@@ -37,8 +37,8 @@ Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 # Package have be renamed
-Obsoletes:      php-phpunit-Diff < 1.2.0-3
-Provides:       php-phpunit-Diff = %{name}-%{version}
+Obsoletes:      php-phpunit-Git < 1.2.0-3
+Provides:       php-phpunit-Git = %{name}-%{version}
 
 
 %description
@@ -93,6 +93,9 @@ fi
 
 
 %changelog
+* Sun Oct 20 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-4
+- properly obsoletes old name
+
 * Sun Oct 20 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-3
 - rename to lowercase
 
