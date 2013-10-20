@@ -1,15 +1,15 @@
 %{!?__pecl:  %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name   imagick
-#global prever      RC2
+%global prever      b2
 
 # We don't really rely on upstream ABI
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
-Version:       3.1.2
-Release:       1%{?dist}.1
+Version:       3.2.0
+Release:       0.1.%{prever}%{?dist}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -58,11 +58,29 @@ using the ImageMagick API.
 echo TARGET is %{name}-%{version}-%{release}
 %setup -q -c 
 
-cd %{pecl_name}-%{version}
+mv %{pecl_name}-%{version}%{?prever} NTS
 
+# don't install any font (and test using it)
+# don't install empty file (d41d8cd98f00b204e9800998ecf8427e)
+# fix tests role
+# https://github.com/mkoppanen/imagick/commit/64ef2a7991c2cdc22b9b2275e732439dc21cede8
+sed -e '/anonymous_pro_minus.ttf/d' \
+    -e '/015-imagickdrawsetresolution.phpt/d' \
+    -e '/OFL.txt/d' \
+    -e '/INSTALL/d' \
+    -e '/d41d8cd98f00b204e9800998ecf8427e/d' \
+    -e '/name="tests/s/role="doc"/role="test"/' \
+    -i package.xml
+
+if grep '\.ttf' package.xml
+then : "Font files detected!"
+     exit 1
+fi
+
+cd NTS
 extver=$(sed -n '/#define PHP_IMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_imagick.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -80,18 +98,18 @@ extension = %{pecl_name}.so
 ;imagick.progress_monitor=0
 EOF
 
-cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-zts
+cp -r NTS ZTS
 
 
 %build
-cd %{pecl_name}-zts
-# ZTS build
+cd ZTS
+: ZTS build
 %{_bindir}/zts-phpize
 %configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
-# Standard build
-cd ../%{pecl_name}-%{version}%{?prever}
+: Standard NTS build
+cd ../NTS
 %{_bindir}/phpize
 %configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
@@ -100,8 +118,8 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-zts
-make install INSTALL_ROOT=%{buildroot} -C %{pecl_name}-%{version}
+make install INSTALL_ROOT=%{buildroot} -C NTS
+make install INSTALL_ROOT=%{buildroot} -C ZTS
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
@@ -110,6 +128,14 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 # Install XML package description
 mkdir -p %{buildroot}%{pecl_xmldir}
 install -pm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %post
@@ -123,16 +149,44 @@ fi
 
 
 %check
-# simple module load test
+: simple module load test for NTS extension
+cd NTS
 %{__php} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}%{?prever}/modules \
+    --define extension_dir=%{buildroot}%{php_extdir} \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+: upstream test suite for NTS extension
+export TEST_PHP_EXECUTABLE=%{__php}
+export REPORT_EXIT_STATUS=1
+export NO_INTERACTION=1
+if ! %{__php} run-tests.php \
+    -n -q \
+    -d extension_dir=%{buildroot}%{php_extdir} \
+    -d extension=%{pecl_name}.so
+then
+  for i in tests/*diff
+  do
+    echo "---- FAILURE in $i"
+    cat $i
+    echo -n "\n----"
+  done
+  exit 1
+fi
+
+: simple module load test for ZTS extension
+cd ../ZTS
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{pecl_name}-zts/modules \
+    --define extension_dir=%{buildroot}%{php_ztsextdir} \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+: upstream test suite for ZTS extension
+export TEST_PHP_EXECUTABLE=%{__ztsphp}
+%{__ztsphp} run-tests.php \
+    -n -q \
+    -d extension_dir=%{buildroot}%{php_ztsextdir} \
+    -d extension=%{pecl_name}.so
 
 
 %clean
@@ -141,17 +195,24 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc %{pecl_name}-%{version}%{?prever}/{LICENSE,CREDITS,ChangeLog,examples}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+# should be in devel
 %{php_incldir}/ext/%{pecl_name}
 %{php_ztsincldir}/ext/%{pecl_name}
 
 
 %changelog
+* Sun Oct 20 2013 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.1.b2
+- Update to 3.2.0b2
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+
 * Wed Sep 25 2013 Remi Collet <remi@fedoraproject.org> - 3.1.2-1
 - Update to 3.1.2
 - add LICENSE to doc
