@@ -5,11 +5,13 @@
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.2
-Release:        0.1.%{prever}%{?dist}.1
+Version:        1.1.3
+Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
+# run "pecl package" after svn export
+# up to rev 331878
 Source0:        http://pecl.php.net/get/gmagick-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
@@ -33,9 +35,7 @@ Conflicts:      php-magickwand
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55-pecl-%{pecl_name}
 %endif
@@ -53,21 +53,12 @@ of images using the GraphicsMagick API.
 %prep
 %setup -qc
 
-cd %{pecl_name}-%{version}%{?prever}
+mv %{pecl_name}-%{version}%{?prever} NTS
 
-%if 0%{?fedora} <= 15   &&   0%{?rhel} <= 6
-# Remove know to fail tests (GM font config issue)
-# https://bugzilla.redhat.com/783906
-rm -f tests/gmagick-006-annotateimage.phpt
-%endif
-
-# Check extension version
-extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_gmagick.h)
-if test "x${extver}" != "x%{version}%{?prever}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
-   exit 1
-fi
-cd ..
+# Don't install any font (and test using it)
+sed -e '/\.ttf"/d' \
+    -e '/gmagickdraw-008-setfont_getfont.phpt/d' \
+    -i package.xml
 
 # Create configuration file
 cat >%{pecl_name}.ini << 'EOF'
@@ -76,16 +67,16 @@ extension=%{pecl_name}.so
 EOF
 
 # Duplicate build tree for nts/zts
-cp -r %{pecl_name}-%{version}%{?prever} %{pecl_name}-zts
+cp -r NTS ZTS
 
 
 %build
-cd %{pecl_name}-%{version}%{?prever}
+cd NTS
 %{_bindir}/phpize
 %{configure} --with-%{pecl_name}  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-zts
+cd ../ZTS
 %{_bindir}/zts-phpize
 %{configure} --with-%{pecl_name}  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
@@ -94,11 +85,9 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make -C %{pecl_name}-%{version}%{?prever} \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
-make -C %{pecl_name}-zts \
-     install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
 install -D -m 664 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -106,6 +95,14 @@ install -D -m 664 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 # Drop in the bit of configuration
 install -D -m 664 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 install -D -m 664 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %clean
@@ -122,47 +119,56 @@ if [ "$1" -eq "0" ]; then
 fi
 
 %check
-cd %{pecl_name}-%{version}%{?prever}
+%if 0%{?fedora} < 15 && 0%{?rhel} < 5
+# Remove know to fail tests (GM font config issue)
+# https://bugzilla.redhat.com/783906
+rm -f ?TS/tests/gmagick-006-annotateimage.phpt
+%endif
 
-# simple module load test
+: simple module load test for NTS extension
+cd NTS
 %{__php} --no-php-ini \
     --define extension_dir=%{buildroot}%{php_extdir} \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-# Still ignore test result as some fail on old version
-# And in fedora > 15 https://bugs.php.net/60830
-TEST_PHP_EXECUTABLE=%{__php} \
-REPORT_EXIT_STATUS=0 \
-NO_INTERACTION=1 \
-%{__php} run-tests.php \
+: upstream test suite for NTS extension
+export TEST_PHP_EXECUTABLE=%{__php}
+export REPORT_EXIT_STATUS=1
+export NO_INTERACTION=1
+if ! %{__php} run-tests.php \
     -n -q \
     -d extension_dir=%{buildroot}%{php_extdir} \
     -d extension=%{pecl_name}.so
+then
+  for i in tests/*diff
+  do
+    echo "---- FAILURE in $i"
+    cat $i
+    echo -n "\n----"
+  done
+  exit 1
+fi
 
-cd ../%{pecl_name}-zts
-
-if [ -f %{__ztsphp} ]; then
-# simple module load test
+: simple module load test for ZTS extension
+cd ../ZTS
 %{__ztsphp} --no-php-ini \
     --define extension_dir=%{buildroot}%{php_ztsextdir} \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-# Still ignore test result as some fail on old version
-TEST_PHP_EXECUTABLE=%{__ztsphp} \
-REPORT_EXIT_STATUS=0 \
-NO_INTERACTION=1 \
+: upstream test suite for ZTS extension
+export TEST_PHP_EXECUTABLE=%{__ztsphp}
 %{__ztsphp} run-tests.php \
     -n -q \
     -d extension_dir=%{buildroot}%{php_ztsextdir} \
     -d extension=%{pecl_name}.so
-fi
 
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}%{?prever}/{README,LICENSE}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -171,6 +177,12 @@ fi
 
 
 %changelog
+* Sun Oct 20 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.3-0.1.RC1
+- Update to 1.1.3RC1
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+- take care of test results
+
 * Fri Dec 28 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.2-0.1.RC1
 - Update to 1.1.2RC1
 - also provides php-gmagick
