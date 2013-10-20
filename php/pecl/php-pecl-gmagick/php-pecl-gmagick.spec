@@ -5,13 +5,11 @@
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.3
+Version:        1.1.4
 Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/gmagick
-# run "pecl package" after svn export
-# up to rev 331878
 Source0:        http://pecl.php.net/get/gmagick-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
@@ -40,9 +38,11 @@ Obsoletes:     php54-pecl-%{pecl_name}
 Obsoletes:     php55-pecl-%{pecl_name}
 %endif
 
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -177,6 +177,10 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 
 
 %changelog
+* Sun Oct 20 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.4-0.1.RC1
+- Update to 1.1.4RC1
+- drop merged patches
+
 * Sun Oct 20 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.3-0.1.RC1
 - Update to 1.1.3RC1
 - install doc in pecl doc_dir
