@@ -1,4 +1,4 @@
-# spec file for php-pecl-xrange
+# spec file for php-pecl-judy
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
@@ -14,28 +14,16 @@
 %global  ext_name judy
 
 Summary:        PHP Judy implements sparse dynamic arrays
-Name:           php-pecl-%{pecl_name}
-Version:        1.0.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Name:           php-pecl-judy
+Version:        1.0.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# Retrieved from http://svn.php.net/viewvc/pecl/judy/trunk/
-Source1:        LICENSE
-Source2:        README
-Source3:        CREDITS
-
-# http://svn.php.net/viewvc?view=revision&revision=331753
-# http://svn.php.net/viewvc?view=revision&revision=331755
-# http://svn.php.net/viewvc?view=revision&revision=331758
-# http://svn.php.net/viewvc?view=revision&revision=331760
-# http://svn.php.net/viewvc?view=revision&revision=331761
-Patch0:         %{pecl_name}-svn.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
+BuildRequires:  php-devel > 5.3
 BuildRequires:  php-pear
 BuildRequires:  Judy-devel
 
@@ -49,10 +37,15 @@ Provides:       php-%{ext_name} = %{version}
 Provides:       php-%{ext_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+# Package have been renamed
+Obsoletes:      php-pecl-Judy < 1.0.1
+Provides:       php-pecl-Judy = %{version}-%{release}
 
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -68,6 +61,9 @@ Summary:       %{name} developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      php-devel%{?_isa}
+# Package have been renamed
+Obsoletes:     php-pecl-Judy-devel < 1.0.1
+Provides:      php-pecl-Judy-devel = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using %{name}.
@@ -78,10 +74,6 @@ These are the files needed to compile programs using %{name}.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p3
-
-cp %{SOURCE1} %{SOURCE2} %{SOURCE3} .
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_JUDY_VERSION/{s/.* "//;s/".*$//;p}' php_judy.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -139,6 +131,14 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
 %endif
 
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -187,7 +187,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{LICENSE,CREDITS}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
@@ -207,6 +208,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 21 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- rename from php-pecl-Judy to php-pecl-judy
+- Update to 1.0.1
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+- drop merged patches
+
 * Thu Oct 10 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - fix extension name in configuration file
 
