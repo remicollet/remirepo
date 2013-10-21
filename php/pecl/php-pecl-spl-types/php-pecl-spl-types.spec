@@ -1,4 +1,4 @@
-# spec file for php-pecl-SPL-Types
+# spec file for php-pecl-spl-types
 #
 # Copyright (c) 2013 Remi Collet
 # License: CC-BY-SA
@@ -14,9 +14,9 @@
 %global  ext_name spl_types
 
 Summary:        Standard PHP Library, Types Addon
-Name:           php-pecl-SPL-Types
+Name:           php-pecl-spl-types
 Version:        0.4.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -30,7 +30,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
 BuildRequires:  php-spl
-BuildRequires:  libattr-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -42,10 +41,15 @@ Provides:       php-%{ext_name} = %{version}
 Provides:       php-%{ext_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+# Package have been renamed
+Obsoletes:      php-pecl-SPL-Types < 0.4.0-2
+Provides:       php-pecl-SPL-Types = %{version}-%{release}
 
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -55,9 +59,9 @@ SPL Types is a collection of special type handling classes.
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+cp -p %{SOURCE1} LICENSE
 
 cd NTS
-cp %{SOURCE1} LICENSE
 
 #http://svn.php.net/viewvc?view=revision&revision=331720
 find . -type f -exec chmod -x {} \;
@@ -119,6 +123,14 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
 %endif
 
+# Test & Documentation
+install -Dpm 644 LICENSE %{buildroot}%{pecl_docdir}/%{pecl_name}/LICENSE
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -167,7 +179,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{LICENSE,CREDITS}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
@@ -179,5 +192,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 21 2013 Remi Collet <remi@fedoraproject.org> - 0.4.0-2
+- rename from php-pecl-SPL-Types to php-pecl-spl-types
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+
 * Mon Oct  7 2013 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
 - initial package
