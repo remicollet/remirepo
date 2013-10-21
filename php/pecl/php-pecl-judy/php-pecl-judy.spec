@@ -16,7 +16,7 @@
 Summary:        PHP Judy implements sparse dynamic arrays
 Name:           php-pecl-judy
 Version:        1.0.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -188,7 +188,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
+%exclude %{pecl_docdir}/%{pecl_name}/examples
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
@@ -200,6 +200,8 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{pecl_name}
+%doc %{pecl_docdir}/%{pecl_name}/examples
 %{php_incldir}/ext/%{ext_name}
 
 %if %{with_zts}
@@ -208,6 +210,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 21 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- move tests and examples in devel subpackage
+
 * Mon Oct 21 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - rename from php-pecl-Judy to php-pecl-judy
 - Update to 1.0.1
