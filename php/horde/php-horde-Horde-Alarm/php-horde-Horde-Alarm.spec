@@ -27,7 +27,7 @@ Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-spl
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
@@ -117,6 +117,7 @@ fi
 
 
 %files -f %{pear_name}.lang
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Alarm
