@@ -7,14 +7,13 @@
 # Please, preserve the changelog entries
 #
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    phpcov
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-phpcov
 Version:        1.1.0
 Release:        1%{?dist}
-Summary:        TextUI frontend for PHP_CodeCoverage
+Summary:        TextUI front-end for PHP_CodeCoverage
 
 Group:          Development/Libraries
 License:        BSD
@@ -46,7 +45,7 @@ Provides:       phpcov = %{version}
 
 
 %description
-TextUI frontend for PHP_CodeCoverage.
+TextUI front-end for PHP_CodeCoverage.
 
 
 %prep
