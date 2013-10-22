@@ -6,6 +6,11 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%scl_package php-pecl-http1
+%else
+%global pkg_name %{name}
+%endif
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -17,9 +22,9 @@
 %global with_zts  0%{?__ztsphp:1}
 
 # php-pecl-http exists and is version 2
-Name:           php-pecl-http1
+Name:           %{?scl_prefix}php-pecl-http1
 Version:        1.7.6
-Release:        3%{?dist}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -31,11 +36,11 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 Patch0:         %{pecl_name}-ini.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
-BuildRequires:  php-hash
-BuildRequires:  php-iconv
-BuildRequires:  php-session
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-hash
+BuildRequires:  %{?scl_prefix}php-iconv
+BuildRequires:  %{?scl_prefix}php-session
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libevent-devel
@@ -43,27 +48,27 @@ BuildRequires:  curl-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
-Requires:       php-hash%{?_isa}
-Requires:       php-iconv%{?_isa}
-Requires:       php-session%{?_isa}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php-hash%{?_isa}
+Requires:       %{?scl_prefix}php-iconv%{?_isa}
+Requires:       %{?scl_prefix}php-session%{?_isa}
 # From phpcompatinfo on the PHP extension (pgsql is optional)
-Requires:       php-date%{?_isa}
-Requires:       php-pcre%{?_isa}
-Requires:       php-xmlrpc%{?_isa}
+Requires:       %{?scl_prefix}php-date%{?_isa}
+Requires:       %{?scl_prefix}php-pcre%{?_isa}
+Requires:       %{?scl_prefix}php-xmlrpc%{?_isa}
 
 # From upstream documentation
-Conflicts:      php-pecl-event
+Conflicts:      %{?scl_prefix}php-pecl-event
 # Can't install both version of the same extension
-Conflicts:      php-pecl-http
+Conflicts:      %{?scl_prefix}php-pecl-http
 
-Provides:       php-pecl(%{proj_name})         = %{version}
-Provides:       php-pecl(%{proj_name})%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name})         = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
-Provides:       php-%{pecl_name}               = %{version}
-Provides:       php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 
 %if 0%{?fedora} < 20
 # Filter shared private
@@ -86,17 +91,17 @@ It provides powerful request functionality, if built with CURL
 support. Parallel requests are available for PHP 5 and greater.
 
 Note:
-. php-pecl-http1 provides API version 1
-. php-pecl-http  provides API version 2
+. %{?scl_prefix}php-pecl-http1 provides API version 1
+. %{?scl_prefix}php-pecl-http  provides API version 2
 
 
 %package devel
 Summary:       Extended HTTP support developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
 # Can't install both version of the same extension
-Conflicts:     php-pecl-http-devel
+Conflicts:     %{?scl_prefix}php-pecl-http-devel
 
 %description devel
 These are the files needed to compile programs using HTTP extension.
@@ -239,7 +244,6 @@ rm -rf %{buildroot}
 
 %changelog
 * Tue Oct 22 2013 Remi Collet <remi@fedoraproject.org> - 1.7.6-3
-- cleanups for review (drop SCL and EPEL-5 stuff)
 - install doc in pecl doc_dir
 - install tests in pecl test_dir
 - install PHP library in /usr/share/pear/pecl/http
