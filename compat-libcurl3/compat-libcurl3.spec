@@ -1,9 +1,9 @@
-%global rhelrel 15-el5
+%global rhelrel 17-el5_9
 
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others).
 Name: compat-libcurl3
 Version: 7.15.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/curl-%{version}.tar.bz2
@@ -25,6 +25,8 @@ Patch14: curl-7.15.5-bz652557.patch
 Patch15: curl-7.15.5-bz657396.patch
 Patch16: curl-7.15.5-bz688871.patch
 Patch17: curl-7.15.5-bz746849.patch
+Patch18: curl-7.15.5-CVE-2013-1944.patch
+Patch19: curl-7.15.5-CVE-2013-2174.patch
 URL: http://curl.haxx.se/
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: openssl-devel, libtool, pkgconfig, libidn-devel
@@ -76,6 +78,8 @@ rm -rf $RPM_BUILD_ROOT
 %patch15 -p1 -b .bz657396
 %patch16 -p1 -b .bz688871
 %patch17 -p1 -b .bz746849
+%patch18 -p1 -b .CVE-2013-1944
+%patch19 -p1 -b .CVE-2013-2174
 
 %build
 aclocal
@@ -132,6 +136,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Oct 22 2013 Remi Collet <RPMS@FamilleCollet.com> - 7.15.5-3
+- sync with curl 7.15.5-17
+
+* Fri Jun 14 2013 Kamil Dudka <kdudka@redhat.com> 7.15.5-17
+- fix heap-based buffer overflow in curl_easy_unescape() (CVE-2013-2174)
+
+* Sat Apr 13 2013 Kamil Dudka <kdudka@redhat.com> 7.15.5-16
+- fix cookie tailmatching to prevent cross-domain leakage (CVE-2013-1944)
+
 * Sun Jun 24 2012 Remi Collet <RPMS@FamilleCollet.com> - 7.15.5-2
 - sync with curl 7.15.5-15
 
