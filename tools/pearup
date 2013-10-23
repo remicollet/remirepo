@@ -37,5 +37,6 @@ if [ -n "$comp" ]; then
 fi
 
 colordiff -u  package-$1.xml   package-$2.xml
-colordiff -u composer-$1.json composer-$2.json
+[ -f composer-$1.json -a -f composer-$2.json ] && \
+  colordiff -u composer-$1.json composer-$2.json
 
