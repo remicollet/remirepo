@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if [ "$1" = "" ]; then
+  echo "usage $0 <extname>"
+  exit 1
+fi
+
+msg="\nOK"
+
+pecl list-files $1 | \
+while read a b c
+do
+  if [ -n "$b" -a -z "$c" -a ! -f "$b" ]
+  then
+    echo -e "\r missing $b"
+    msg=""
+  else 
+    echo -n "."
+  fi
+done
+
+echo -e $msg
