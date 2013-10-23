@@ -8,12 +8,12 @@ fi
 msg="\nOK"
 
 pecl list-files $1 | \
-while read a b c
+while read typ nam eol
 do
-  if [ -n "$b" -a -z "$c" -a ! -f "$b" ]
+  if [ -n "$nam" -a -z "$eol" -a ! -f "$nam" ]
   then
-    echo -e "\r missing $b"
-    msg=""
+    msg=
+    echo -e "\r missing $nam"
   else 
     echo -n "."
   fi
