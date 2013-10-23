@@ -19,7 +19,12 @@ Summary(fr):  Une extension de gestion des ZIP
 Name:         php-pecl-zip
 Version:      1.12.1
 Release:      2%{?dist}.1
+%if %{with_libzip}
 License:      PHP
+%else
+# Zip extension is PHP, Libzip library is BSD
+License:      PHP and BSD
+%endif
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/zip
 
@@ -35,9 +40,8 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel
 %if %{with_libzip}
 BuildRequires: pkgconfig(libzip) >= 0.11.1
-%else
-BuildRequires: zlib-devel
 %endif
+BuildRequires: zlib-devel
 BuildRequires: php-pear
 
 Requires(post): %{_bindir}/pecl
