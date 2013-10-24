@@ -164,3 +164,5 @@ rm -rf %{buildroot}
 %changelog
 * Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - initial package, version 1.0.7 (beta)
+- open https://github.com/mkoppanen/php-zmq/pull/108
+  to fix build warnings and include tests
