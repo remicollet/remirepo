@@ -1,0 +1,205 @@
+From 746f8a1b4501ae6c364fc531f46fbab3bfd51d1d Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 23 Oct 2013 11:12:52 +0200
+Subject: [PATCH] clean 1 use of private lilbzip structure (stay 1)
+
+add a "doubleclose" test to check than nothing wrong occurs
+zip_discard already test is zp is open
+---
+ php_zip.c              | 10 ++--------
+ tests/doubleclose.phpt | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 47 insertions(+), 9 deletions(-)
+ create mode 100644 tests/doubleclose.phpt
+
+diff --git a/php_zip.c b/php_zip.c
+index 8943d32..280ef3e 100644
+--- a/php_zip.c
++++ b/php_zip.c
+@@ -1609,7 +1609,7 @@ static ZIPARCHIVE_METHOD(close)
+ 	ze_zip_object *ze_obj;
+ 
+ 	if (!this) {
+-			RETURN_FALSE;
++		RETURN_FALSE;
+ 	}
+ 
+ 	ZIP_FROM_OBJECT(intern, this);
+@@ -1617,13 +1617,7 @@ static ZIPARCHIVE_METHOD(close)
+ 	ze_obj = (ze_zip_object*) zend_object_store_get_object(this TSRMLS_CC);
+ 
+ 	if (zip_close(intern)) {
+-		/* archive already closed*/
+-		if (intern->zp != NULL) {
+-			zip_discard(intern);
+-			RETVAL_TRUE;
+-		} else {
+-			RETURN_FALSE;
+-		}
++		zip_discard(intern);
+ 	}
+ 
+ 	efree(ze_obj->filename);
+diff --git a/tests/doubleclose.phpt b/tests/doubleclose.phpt
+new file mode 100644
+index 0000000..abc62c8
+--- /dev/null
++++ b/tests/doubleclose.phpt
+@@ -0,0 +1,43 @@
++--TEST--
++close() called twice
++--SKIPIF--
++<?php
++if(!extension_loaded('zip')) die('skip');
++?>
++--FILE--
++<?php
++
++echo "Procedural\n";
++$zip = zip_open(dirname(__FILE__) . '/test.zip');
++if (!is_resource($zip)) {
++	die("Failure");
++	}
++var_dump(zip_close($zip));
++var_dump(zip_close($zip));
++
++echo "Object\n";
++$zip = new ZipArchive();
++if (!$zip->open(dirname(__FILE__) . '/test.zip')) {
++	die('Failure');
++}
++if ($zip->status == ZIPARCHIVE::ER_OK) {
++	var_dump($zip->close());
++	var_dump($zip->close());
++} else {
++	die("Failure");
++}
++
++?>
++Done
++--EXPECTF--
++Procedural
++NULL
++
++Warning: zip_close(): %i is not a valid Zip Directory resource in %s
++bool(false)
++Object
++bool(true)
++
++Warning: ZipArchive::close(): Invalid or uninitialized Zip object in %s
++bool(false)
++Done
+-- 
+1.8.4
+
+From 5175272e369ba7b781682dfb1a32f4e41c5a28a1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 23 Oct 2013 13:54:10 +0200
+Subject: [PATCH] add a test to check double call to zip_entry_close
+
+---
+ tests/zip_entry_close.phpt | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 tests/zip_entry_close.phpt
+
+diff --git a/tests/zip_entry_close.phpt b/tests/zip_entry_close.phpt
+new file mode 100644
+index 0000000..82b7819
+--- /dev/null
++++ b/tests/zip_entry_close.phpt
+@@ -0,0 +1,24 @@
++--TEST--
++zip_entry_close() function: simple and double call
++--SKIPIF--
++<?php
++/* $Id$ */
++if(!extension_loaded('zip')) die('skip');
++?>
++--FILE--
++<?php
++$zip    = zip_open(dirname(__FILE__)."/test_procedural.zip");
++$entry  = zip_read($zip);
++echo "entry_open:  "; var_dump(zip_entry_open($zip, $entry, "r"));
++echo "entry_close: "; var_dump(zip_entry_close($entry));
++echo "entry_close: "; var_dump(zip_entry_close($entry));
++zip_close($zip);
++?>
++Done
++--EXPECTF--
++entry_open:  bool(true)
++entry_close: bool(true)
++entry_close: 
++Warning: zip_entry_close(): %d is not a valid Zip Entry resource in %s
++bool(false)
++Done
+-- 
+1.8.4
+
+From 229d87088b5cdd471bcd63d132c7a6af55013b2f Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 24 Oct 2013 11:46:44 +0200
+Subject: [PATCH] clean all uses of private libzip structure move check from
+ NULL deref from php ext to in libzip
+
+libzip patch is from upstream
+http://hg.nih.at/libzip?cs=a2f3bb7896c0
+---
+ lib/zip_fclose.c | 14 ++++++++------
+ php_zip.c        | 10 +---------
+ 3 files changed, 10 insertions(+), 16 deletions(-)
+
+diff --git a/lib/zip_fclose.c b/lib/zip_fclose.c
+index 611db80..093c30e 100644
+--- a/lib/zip_fclose.c
++++ b/lib/zip_fclose.c
+@@ -48,12 +48,14 @@
+     if (zf->src)
+ 	zip_source_free(zf->src);
+ 
+-    for (i=0; i<zf->za->nfile; i++) {
+-	if (zf->za->file[i] == zf) {
+-	    zf->za->file[i] = zf->za->file[zf->za->nfile-1];
+-	    zf->za->nfile--;
+-	    break;
+-	}
++    if (zf->za) {
++        for (i=0; i<zf->za->nfile; i++) {
++            if (zf->za->file[i] == zf) {
++                zf->za->file[i] = zf->za->file[zf->za->nfile-1];
++                zf->za->nfile--;
++                break;
++            }
++        }
+     }
+ 
+     ret = 0;
+diff --git a/php_zip.c b/php_zip.c
+index 280ef3e..c6591c9 100644
+--- a/php_zip.c
++++ b/php_zip.c
+@@ -30,8 +30,6 @@
+ #include "ext/pcre/php_pcre.h"
+ #include "ext/standard/php_filestat.h"
+ #include "php_zip.h"
+-/* Private struct definition, always use bundled copy */
+-#include "lib/zipint.h"
+ 
+ /* zip_open is a macro for renaming libzip zipopen, so we need to use PHP_NAMED_FUNCTION */
+ static PHP_NAMED_FUNCTION(zif_zip_open);
+@@ -1183,13 +1181,7 @@ static void php_zip_free_entry(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ 
+ 	if (zr_rsrc) {
+ 		if (zr_rsrc->zf) {
+-			if (zr_rsrc->zf->za) {
+-				zip_fclose(zr_rsrc->zf);
+-			} else {
+-				if (zr_rsrc->zf->src)
+-					zip_source_free(zr_rsrc->zf->src);
+-				free(zr_rsrc->zf);
+-			}
++			zip_fclose(zr_rsrc->zf);
+ 			zr_rsrc->zf = NULL;
+ 		}
+ 		efree(zr_rsrc);
+-- 
+1.8.4
+
