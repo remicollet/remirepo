@@ -51,10 +51,10 @@ fi
 cd ..
 
 cat > %{pecl_name}.ini << 'EOF'
-; Enable %{pecl_name} extension module
+; Enable %{summary}
 extension = %{pecl_name}.so
 
-: Runtime configuration
+; Runtime configuration
 ;phurple.custom_plugin_path=
 EOF
 
