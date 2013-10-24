@@ -1,0 +1,60 @@
+diff -ru lua-1.1.0.old/config.m4 lua-1.1.0/config.m4
+--- lua-1.1.0.old/config.m4	2013-10-23 06:21:11.000000000 +0200
++++ lua-1.1.0/config.m4	2013-10-24 07:46:14.000000000 +0200
+@@ -21,7 +21,7 @@
+     AC_MSG_ERROR(Please reinstall the lua distribution - lua.h should be in <lua-dir>/include/)
+   fi
+ 
+-  LUA_LIB_NAME=liblua.a
++  LUA_LIB_NAME=liblua.so
+ 
+   if test -r $PHP_LUA/$PHP_LIBDIR/${LUA_LIB_NAME}; then
+     LUA_LIB_DIR=$PHP_LUA/$PHP_LIBDIR
+diff -ru lua-1.1.0.old/lua.c lua-1.1.0/lua.c
+--- lua-1.1.0.old/lua.c	2013-10-23 06:21:11.000000000 +0200
++++ lua-1.1.0/lua.c	2013-10-24 07:46:40.000000000 +0200
+@@ -892,7 +892,9 @@
+ 	REGISTER_LONG_CONSTANT("LUA_ERRRUN", LUA_ERRRUN, CONST_PERSISTENT | CONST_CS);
+ 	REGISTER_LONG_CONSTANT("LUA_ERRSYNTAX", LUA_ERRSYNTAX, CONST_PERSISTENT | CONST_CS);
+ 	REGISTER_LONG_CONSTANT("LUA_ERRMEM", LUA_ERRMEM, CONST_PERSISTENT | CONST_CS);
++#ifdef LUA_ERRGCMM
+ 	REGISTER_LONG_CONSTANT("LUA_ERRGCMM", LUA_ERRGCMM, CONST_PERSISTENT | CONST_CS);
++#endif
+ 	REGISTER_LONG_CONSTANT("LUA_ERRERR", LUA_ERRERR, CONST_PERSISTENT | CONST_CS);
+ 	REGISTER_LONG_CONSTANT("LUA_ERRFILE", LUA_ERRFILE, CONST_PERSISTENT | CONST_CS);
+ 
+diff -ru lua-1.1.0.old/php_lua.h lua-1.1.0/php_lua.h
+--- lua-1.1.0.old/php_lua.h	2013-10-23 06:21:11.000000000 +0200
++++ lua-1.1.0/php_lua.h	2013-10-24 07:46:58.000000000 +0200
+@@ -24,6 +24,10 @@
+ #include "lauxlib.h"
+ #include "lualib.h"
+ 
++#ifndef LUA_OK
++#define LUA_OK 0
++#endif
++
+ extern zend_module_entry lua_module_entry;
+ #define phpext_lua_ptr &lua_module_entry
+ 
+diff -ru lua-1.1.0.old/tests/001.phpt lua-1.1.0/tests/001.phpt
+--- lua-1.1.0.old/tests/001.phpt	2013-10-23 06:21:11.000000000 +0200
++++ lua-1.1.0/tests/001.phpt	2013-10-24 07:48:03.000000000 +0200
+@@ -18,4 +18,4 @@
+ --EXPECTF--
+ 12
+ -0.53657291800043
+-[string "line"]:1: syntax error near 'code'
++[string "line"]:1: %s near 'code'
+diff -ru lua-1.1.0.old/tests/006.phpt lua-1.1.0/tests/006.phpt
+--- lua-1.1.0.old/tests/006.phpt	2013-10-23 06:21:11.000000000 +0200
++++ lua-1.1.0/tests/006.phpt	2013-10-24 07:48:12.000000000 +0200
+@@ -32,7 +32,7 @@
+ Hello PHP
+ Testing broken
+ 
+-%s:%d: syntax error near 'fdrg'
++%s:%d: %s near 'fdrg'
+ Testing return
+ Array
+ (
