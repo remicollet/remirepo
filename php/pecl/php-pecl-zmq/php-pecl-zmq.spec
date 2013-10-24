@@ -9,12 +9,13 @@
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 
-%global with_zts  0%{?__ztsphp:1}
-%global pecl_name zmq
+%global with_zts   0%{?__ztsphp:1}
+%global pecl_name  zmq
+%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
 Summary:        ZeroMQ messaging
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.7
+Version:        1.0.8
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -112,7 +113,10 @@ make -C ZTS \
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
-# Documentation
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -135,12 +139,28 @@ php --no-php-ini \
     --define extension=%{buildroot}/%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
+: upstream test suite for NTS extension
+export TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so"
+export REPORT_EXIT_STATUS=1
+export NO_INTERACTION=1
+export TEST_PHP_EXECUTABLE=%{_bindir}/php
+%{_bindir}/php -n run-tests.php
+%endif
+
 %if %{with_zts}
 cd ../ZTS
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}/%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+%if %{with_tests}
+: upstream test suite for ZTS extension
+export TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so"
+export TEST_PHP_EXECUTABLE=%{_bindir}/zts-php
+%{_bindir}/zts-php -n run-tests.php
+%endif
 %endif
 
 
@@ -151,6 +171,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -162,6 +183,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
+- Update to 1.0.8
+- run upstream test suite during build
+- install tests in pecl test_dir
+
 * Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - initial package, version 1.0.7 (beta)
 - open https://github.com/mkoppanen/php-zmq/pull/108
