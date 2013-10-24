@@ -13,7 +13,7 @@
 
 
 Name:           php-horde-Horde-Css-Parser
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
@@ -101,6 +101,9 @@ fi
 
 
 %changelog
+* Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 (no change)
+
 * Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 
