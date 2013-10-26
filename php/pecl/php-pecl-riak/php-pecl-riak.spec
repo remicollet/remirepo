@@ -15,15 +15,15 @@
 ##   how to run test       ##
 #############################
 
-
-%global with_zts  0%{?__ztsphp:1}
-%global pecl_name riak
+%global with_zts   0%{?__ztsphp:1}
+%global pecl_name  riak
+%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:        Riak database PHP extension
 Name:           php-pecl-%{pecl_name}
-Version:        0.6.1
+Version:        0.6.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
-License:        ASL 2.0
+License:        ASL 2.0 and BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
@@ -56,8 +56,6 @@ Fast protocol buffers client for Riak database and session module.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-# Fix version
-sed -e /PHP_RIAK_VERSION/s/0.1/%{version}/ -i php_riak.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RIAK_VERSION/{s/.* "//;s/".*$//;p}' php_riak.h)
@@ -130,6 +128,15 @@ make -C ZTS \
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -149,12 +156,14 @@ php --no-php-ini \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
 # Need a running riak server + some configuration
-#TEST_PHP_EXECUTABLE=%{_bindir}/php \
-#TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
-#NO_INTERACTION=1 \
-#REPORT_EXIT_STATUS=1 \
-#%{_bindir}/php -n run-tests.php
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php
+%endif
 
 %if %{with_zts}
 cd ../ZTS
@@ -172,7 +181,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{LICENSE,README.md}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -184,8 +194,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 26 2013 Remi Collet <remi@fedoraproject.org> - 0.6.2-1
+- Update to 0.6.2 (beta)
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+
 * Sun Oct 13 2013 Remi Collet <remi@fedoraproject.org> - 0.6.1-1
-- Update to 0.6.1
+- Update to 0.6.1 (beta)
 
 * Thu Oct 10 2013 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
 - Update to 0.6.0 (beta)
