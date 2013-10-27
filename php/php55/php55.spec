@@ -102,7 +102,7 @@ Version: 5.5.5
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -813,7 +813,8 @@ Group: System Environment/Libraries
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
-BuildRequires: libicu-devel >= 4.0
+# Upstream requires 4.0, we require 50 to ensure use of libicu-last
+BuildRequires: libicu-devel >= 50
 Obsoletes: php53-intl, php53u-intl, php54-intl, php55-intl
 
 %description intl
@@ -1840,6 +1841,9 @@ fi
 
 
 %changelog
+* Sun Oct 27 2013 Remi Collet <remi@fedoraproject.org> 5.5.5-2
+- rebuild using libicu-last 50.1.2
+
 * Tue Oct 15 2013 Remi Collet <rcollet@redhat.com> - 5.5.5-1
 - update to 5.5.5
 
