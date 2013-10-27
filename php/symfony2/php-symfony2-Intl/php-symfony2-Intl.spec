@@ -3,10 +3,11 @@
 %global pear_channel pear.symfony.com
 %global pear_name    Intl
 %global php_min_ver  5.3.3
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-symfony2-Intl
 Version:        2.3.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Symfony2 Intl Component
 
 Group:          Development/Libraries
@@ -19,10 +20,13 @@ BuildArch:      noarch
 
 BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{pear_channel})
+%if %with_tests
 # For tests
 BuildRequires:  php(language) >= %{php_min_ver}
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires:  php-pear(%{pear_channel}/Filesystem) > 2.1
+BuildRequires:  php-pear(%{pear_channel}/Icu) > 1.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -36,6 +40,7 @@ Requires:       php-simplexml
 Requires:       php-spl
 Requires:       php-reflection
 Requires:       php-pear(%{pear_channel}/Filesystem) > 2.1
+Requires:       php-pear(%{pear_channel}/Icu) > 1.0
 
 Provides:       php-pear(pear.symfony.com/Intl) = %{version}
 
@@ -107,14 +112,15 @@ install -pm 0644 ../phpunit.autoloader.php \
 
 
 %check
+%if %with_tests
 cd %{pear_name}-%{version}/Symfony/Component/%{pear_name}
 
 cp ../../../../phpunit.autoloader.php .
 
 %{_bindir}/phpunit \
     -d include_path="%{buildroot}%{pear_phpdir}:%{buildroot}%{pear_testdir}/%{pear_name}:.:%{pear_phpdir}:%{_datadir}/php" \
-    -d date.timezone="UTC" \
-    || : Temporarily ignore failed tests
+    -d date.timezone="UTC"
+%endif
 
 
 %post
@@ -132,12 +138,14 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
-%dir %{pear_phpdir}/Symfony
-%dir %{pear_phpdir}/Symfony/Component
-     %{pear_phpdir}/Symfony/Component/%{pear_name}
+%{pear_phpdir}/Symfony/Component/%{pear_name}
 %{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Sun Oct 27 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-2
+- requires symfony2/Icu
+- don't ignore test results
+
 * Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
 - initial RPM
