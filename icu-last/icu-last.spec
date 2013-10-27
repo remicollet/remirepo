@@ -140,7 +140,15 @@ make %{?_smp_mflags} -C source install-doc docdir=__docs
 chmod +x $RPM_BUILD_ROOT%{_libdir}/*.so.*
 (
  cd $RPM_BUILD_ROOT%{_bindir}
+%if 0%{?__isa_bits}
  mv icu-config icu-config-%{__isa_bits}
+%else
+%ifarch x86_64 s390x ppc64 sparc64 aarch64
+ mv icu-config icu-config-64
+%else
+ mv icu-config icu-config-32
+%endif
+%endif
 )
 install -p -m755 -D %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/icu-config
 
