@@ -1,0 +1,11 @@
+diff -ru orig.icu/source/layout/LayoutEngine.cpp icu/source/layout/LayoutEngine.cpp
+--- orig.icu/source/layout/LayoutEngine.cpp	2013-04-18 23:32:39.000000000 +0200
++++ icu/source/layout/LayoutEngine.cpp	2013-07-17 01:52:18.208537348 +0200
+@@ -512,7 +512,6 @@
+ {
+   if(fGlyphStorage!=NULL) {
+     fGlyphStorage->reset();
+-    fGlyphStorage = NULL;
+   }
+ }
+ 
