@@ -1,4 +1,16 @@
-Name:      icu
+%global srcname       icu
+
+# Have autoconf 2.68
+%if 0%{?fedora} >= 15
+%global with_autoconf 1
+%else
+%global with_autoconf 0
+%endif
+
+# Regression tests take a long time, you can skip 'em with this
+%{!?runselftest: %{expand: %%global runselftest 1}}
+
+Name:      icu-last
 Version:   50.1.2
 Release:   10%{?dist}
 Summary:   International Components for Unicode
@@ -10,8 +22,12 @@ Source0:   http://download.icu-project.org/files/icu4c/50.1.2/icu4c-50_1_2-src.t
 # See also http://site.icu-project.org/download/51#TOC-Known-Issues
 Source1:   http://download.icu-project.org/files/icu4c/51.1/icu-51-layout-fix-10107.tgz
 Source2:   icu-config.sh
+
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: doxygen, autoconf, python
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
+Conflicts: %{srcname} < %{version}
+Provides:  %{srcname} = %{version}-%{release}
 
 Patch1: icu.8198.revert.icu5431.patch
 Patch2: icu.8800.freeserif.crash.patch
@@ -41,11 +57,15 @@ results across all the various platforms you support, without
 sacrificing performance. It offers great flexibility to extend and
 customize the supplied services.
 
+This package is designed to be installable  %{srcname}.
+
 %package  -n lib%{name}-devel
 Summary:  Development files for International Components for Unicode
 Group:    Development/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
+Conflicts: lib%{srcname}-devel < %{version}
+Provides:  lib%{srcname}-devel = %{version}-%{release}
 
 %description -n lib%{name}-devel
 Includes and definitions for developing with icu.
@@ -53,7 +73,11 @@ Includes and definitions for developing with icu.
 %package -n lib%{name}-doc
 Summary: Documentation for International Components for Unicode
 Group:   Documentation
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch: noarch
+%endif
+Conflicts: lib%{srcname}-doc < %{version}
+Provides:  lib%{srcname}-doc = %{version}-%{release}
 
 %description -n lib%{name}-doc
 %{summary}.
@@ -62,20 +86,24 @@ BuildArch: noarch
 # " this line just fixes syntax highlighting for vim that is confused by the above and continues literal
 
 %prep
-%setup -q -n %{name}
-%setup -q -n %{name} -T -D -a 1
+%setup -q -n %{srcname}
+%setup -q -n %{srcname} -T -D -a 1
 %patch1 -p2 -R -b .icu8198.revert.icu5431.patch
 %patch2 -p1 -b .icu8800.freeserif.crash.patch
 %patch3 -p1 -b .icu7601.Indic-ccmp.patch
 %patch4 -p1 -b .icu9948.mlym-crash.patch
+%if %{with_autoconf}
 %patch5 -p1 -b .gennorm2-man.patch
 %patch6 -p1 -b .icuinfo-man.patch
+%endif
 %patch7 -p1 -b .icu10143.memory.leak.crash.patch
 %patch8 -p1 -b .icu10318.CVE-2013-2924_changeset_34076.patch
 
 %build
 cd source
+%if %{with_autoconf}
 autoconf
+%endif
 CFLAGS='%optflags -fno-strict-aliasing'
 CXXFLAGS='%optflags -fno-strict-aliasing'
 # Endian: BE=0 LE=1
@@ -121,7 +149,9 @@ install -p -m755 -D %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/icu-config
 if grep -q @VERSION@ source/tools/*/*.8 source/tools/*/*.1 source/config/*.1; then
     exit 1
 fi
+%if %runselftest
 make %{?_smp_mflags} -C source check
+%endif
 
 %post -n lib%{name} -p /sbin/ldconfig
 
@@ -157,28 +187,33 @@ make %{?_smp_mflags} -C source check
 
 %files -n lib%{name}-devel
 %defattr(-,root,root,-)
-%{_bindir}/%{name}-config*
+%{_bindir}/%{srcname}-config*
 %{_bindir}/icuinfo
-%{_mandir}/man1/%{name}-config.1*
+%{_mandir}/man1/%{srcname}-config.1*
+%if %{with_autoconf}
 %{_mandir}/man1/icuinfo.1*
+%endif
 %{_includedir}/layout
 %{_includedir}/unicode
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
-%{_libdir}/%{name}
-%dir %{_datadir}/%{name}
-%dir %{_datadir}/%{name}/%{version}
-%{_datadir}/%{name}/%{version}/install-sh
-%{_datadir}/%{name}/%{version}/mkinstalldirs
-%{_datadir}/%{name}/%{version}/config
-%doc %{_datadir}/%{name}/%{version}/license.html
+%{_libdir}/%{srcname}
+%dir %{_datadir}/%{srcname}
+%dir %{_datadir}/%{srcname}/%{version}
+%{_datadir}/%{srcname}/%{version}/install-sh
+%{_datadir}/%{srcname}/%{version}/mkinstalldirs
+%{_datadir}/%{srcname}/%{version}/config
+%doc %{_datadir}/%{srcname}/%{version}/license.html
 
 %files -n lib%{name}-doc
 %defattr(-,root,root,-)
 %doc license.html readme.html
-%doc source/__docs/%{name}/html/*
+%doc source/__docs/%{srcname}/html/*
 
 %changelog
+* Sun Oct 27 2013 Remi Collet <rpms@famillecollet.com>- 50.1.2-10
+- rename to icu-last
+
 * Wed Oct 09 2013 Eike Rathke <erack@redhat.com> - 50.1.2-10
 - Resolves: rhbz#1015594 CVE-2013-2924 use-after-free
 
