@@ -1,11 +1,11 @@
-%global gh_commit  8457832af1310d5f58285c475609c5a064f68a9b
+%global gh_commit  8cd4f402a0c7d8933c919c82bcebaaad30f686eb
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   sabberworm
 %global gh_project PHP-CSS-Parser
 
 Name:           php-%{gh_project}
 Summary:        A Parser for CSS Files
-Version:        5.0.8
+Version:        5.1.0
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -56,6 +56,9 @@ phpunit --bootstrap bootstrap.php .
 
 
 %changelog
+* Sun Oct 27 2013 Remi Collet <remi@fedoraproject.org> - 5.1.0-1
+- update to 5.1.0
+
 * Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 5.0.8-1
 - update to 5.0.8
 
