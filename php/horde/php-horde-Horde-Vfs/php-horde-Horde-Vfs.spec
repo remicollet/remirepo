@@ -2,7 +2,7 @@
 %global pear_name    Horde_Vfs
 %global pear_channel pear.horde.org
 
-%global with_tests   %{?_without_tests:1}%{!?_without_tests:0}
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Vfs
 Version:        2.1.2
