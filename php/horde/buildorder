@@ -73,7 +73,7 @@ Build order
 	Horde_Icalendar           2.0.7      BR: Horde_Test, Horde_Date, Horde_Mime  R: Horde_Date, Horde_Exception, Horde_Mail, Horde_Mime, Horde_Support, Horde_Translation, Horde_Util
 	Horde_Imap_Client         2.15.5     BR: Horde_Test, Horde_Stream, Horde_Mime, Horde_Cache  R: Horde_Exception, Horde_Mail, Horde_Mime, Horde_Secret, Horde_Stream, Horde_Stream_Filter, Horde_Translation, Horde_Util, Horde_Cache, Horde_Db
 	Horde_Kolab_Storage       2.0.5      BR: Horde_Test, Horde_Cache, Horde_History, Horde_Imap_Client, Horde_Kolab_Format  R: Horde_Cache, Horde_Exception, Horde_Kolab_Format, Horde_Mime, Horde_Translation, Horde_Support, Horde_Util, Horde_Imap_Client, Horde_History
-	Horde_ListHeaders         1.0.1      BR: Horde_Test, Horde_Mail  R: Horde_Mail
+	Horde_ListHeaders         1.1.0      BR: Horde_Test, Horde_Mail  R: Horde_Mail, Horde_Translation
 	Horde_Prefs               2.5.0      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Mail, Horde_Mime, Horde_Translation, Horde_Util, Horde_Autoloader, Horde_Db, Horde_Image, Horde_Ldap, Horde_Kolab_Storage, Horde_Imsp
 	Horde_Share               2.0.4      BR: Horde_Test, Horde_Group, Horde_Perms, Horde_Injector  R: Horde_Db, Horde_Exception, Horde_Group, Horde_Perms, Horde_Support, Horde_Translation, Horde_Url, Horde_Util, Horde_Kolab_Storage
 	Horde_Smtp                1.2.6      BR: Horde_Test  R: Horde_Exception, Horde_Mail, Horde_Support, Horde_Imap_Client, Horde_Socket_Client
