@@ -27,7 +27,6 @@ BuildArch:      noarch
 %if %{with_tests}
 # For tests
 BuildRequires:  php(language) >= 5.3.2
-BuildRequires:  php-cli
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires:  php-pear(pear.symfony.com/EventDispatcher) > 2.1
 %endif
@@ -91,11 +90,12 @@ cp -pr library/Solarium %{buildroot}%{_datadir}/php/Solarium
 
 %check
 %if %{with_tests}
+: Run upstream test suite against installed library
 phpunit \
-  -d include_path=%{buildroot}%{_datadir}/php:./tests:$(php -r 'echo ini_get("include_path");') \
+  --include-path=%{buildroot}%{_datadir}/php:./tests \
   -d date.timezone=UTC
 %else
-: Skip test suite
+: Skip upstream test suite
 %endif
 
 
