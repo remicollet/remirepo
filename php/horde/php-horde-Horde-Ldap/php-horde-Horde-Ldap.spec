@@ -4,7 +4,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Ldap
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde LDAP libraries
 
@@ -27,9 +27,9 @@ Requires:       php-ldap
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -93,6 +93,9 @@ fi
 
 
 %changelog
+* Mon Oct 28 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 
