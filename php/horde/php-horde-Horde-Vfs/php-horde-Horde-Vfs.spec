@@ -42,6 +42,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
 Requires:       php-ftp
+# https://bugzilla.redhat.com/1023989 update to 0.12 in EPEL-6
 Requires:       php-pecl(ssh2) >= 0.12
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
