@@ -1,3 +1,11 @@
+# spec file for php-PHP-CSS-Parser
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global gh_commit  8cd4f402a0c7d8933c919c82bcebaaad30f686eb
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   sabberworm
