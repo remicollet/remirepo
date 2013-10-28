@@ -12,8 +12,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Timezone
-Version:        1.0.3
-Release:        2%{?dist}
+Version:        1.0.4
+Release:        1%{?dist}
 Summary:        Timezone library
 
 Group:          Development/Libraries
@@ -107,7 +107,10 @@ fi
 
 
 %changelog
-* Sun Jun 07 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
+* Mon Oct 28 2013 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4
+
+* Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - BR Horde_Icalendar for test
 
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
