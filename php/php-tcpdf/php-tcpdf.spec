@@ -1,3 +1,11 @@
+# spec file for php-tcpdf
+#
+# Copyright (c) 2013 Remi Collet, Johan Cwiklinski
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global dl_version %(c=%{version}; echo ${c//./_})
 %global real_name  tcpdf
 
