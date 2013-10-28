@@ -1,4 +1,11 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+# spec file for php-horde-Horde-Ldap
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Ldap
 %global pear_channel pear.horde.org
@@ -15,6 +22,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
@@ -26,11 +34,12 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-ldap
 Requires:       php-pcre
 Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
-Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -97,10 +106,10 @@ fi
 - Update to 2.0.3
 
 * Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+- Update to 2.0.2
 
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+- Update to 2.0.1
 
 * Thu Nov  8 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - initial package
