@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.10.1
+Version:        2.10.2
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -178,8 +178,8 @@ cd %{pear_name}-%{version}
 # Don't install prototype, scriptaculous, use system one
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
-    -e '/prototype.js/d' \
-    -e '/scriptaculous/d' \
+    -e '/js\/prototype.js/d' \
+    -e '/js\/scriptaculous/d' \
     -e '/LICENSE/s/role="horde"/role="doc"/' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
@@ -264,6 +264,9 @@ fi
 
 
 %changelog
+* Mon Oct 28 2013 Remi Collet <remi@fedoraproject.org> - 2.10.2-1
+- Update to 2.10.2
+
 * Mon Oct 21 2013 Remi Collet <remi@fedoraproject.org> - 2.10.1-1
 - Update to 2.10.1
 
