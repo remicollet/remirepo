@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-horde
-Version:        5.1.4
+Version:        5.1.5
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -66,7 +66,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.7.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.10.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
@@ -132,11 +132,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) <  3.0.0
 #               Horde_Service_Twitter
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
-%if 0%{?fedora} > 19
 Obsoletes:      horde < 5
-%else
-Conflicts:      horde < 5
-%endif
 Provides:       horde = %{version}
 
 
@@ -228,20 +224,7 @@ fi
 %attr(0660,apache,apache) %config %{_sysconfdir}/horde/*.xml
 %attr(0640,apache,apache) %{_sysconfdir}/horde/registry.d/README
 %{pear_xmldir}/%{name}.xml
-%{_bindir}/horde-active-sessions
-%{_bindir}/horde-alarms
-%{_bindir}/horde-check-logger
-%{_bindir}/horde-clear-cache
-%{_bindir}/horde-crond
-%{_bindir}/horde-db-migrate
-%{_bindir}/horde-import-squirrelmail-prefs
-%{_bindir}/horde-memcache-stats
-%{_bindir}/horde-queue-run-tasks
-%{_bindir}/horde-run-task
-%{_bindir}/horde-set-perms
-%{_bindir}/horde-sessions-gc
-%{_bindir}/horde-themes
-%{_bindir}/horde-translation
+%{_bindir}/horde-*
 %{pear_hordedir}/*php
 %{pear_hordedir}/admin
 %{pear_hordedir}/config
@@ -260,6 +243,10 @@ fi
 
 
 %changelog
+* Tue Oct 29 2013 Remi Collet <remi@fedoraproject.org> - 5.1.5-1
+- Update to 5.1.5
+- raide dependency: Horde_Core 2.10.0
+
 * Sun Sep 08 2013 Remi Collet <remi@fedoraproject.org> - 5.1.4-1
 - Update to 5.1.4
 
