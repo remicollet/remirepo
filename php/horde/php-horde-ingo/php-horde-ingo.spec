@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-ingo
-Version:        3.1.2
+Version:        3.1.3
 Release:        1%{?dist}
 Summary:        An email filter rules manager
 
@@ -182,6 +182,9 @@ fi
 
 
 %changelog
+* Tue Oct 29 2013 Remi Collet <remi@fedoraproject.org> - 3.1.3-1
+- Update to 3.1.3
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 3.1.2-1
 - Update to 3.1.2
 
