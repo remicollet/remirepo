@@ -187,7 +187,7 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
     CURRENT_LOCALE=$LC_ALL
     CURRENT_LOCALE=${CURRENT_LOCALE:-$LC_MESSAGES}
     CURRENT_LOCALE=${CURRENT_LOCALE:-$LANG}
-    
+
     # Try with a local variant first, then without a local variant
     SHORTMOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*||g"`
     MOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*|-\1|g"`
@@ -212,6 +212,10 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
 
     create_langpack_link $MOZLOCALE || create_langpack_link $SHORTMOZLOCALE || true
 fi
+
+# BEAST fix (rhbz#1005611)
+NSS_SSL_CBC_RANDOM_IV=${NSS_SSL_CBC_RANDOM_IV-1}
+export NSS_SSL_CBC_RANDOM_IV
 
 # Prepare command line arguments
 script_args=""

@@ -90,7 +90,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        24.0
+Version:        25.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -113,7 +113,6 @@ Patch19:        xulrunner-24.0-s390-inlines.patch
 
 # Fedora specific patches
 Patch20:        mozilla-193-pkgconfig.patch
-Patch21:        rhbz-911314.patch
 # Unable to install addons from https pages
 Patch24:        rhbz-966424.patch
 
@@ -281,10 +280,6 @@ cd %{tarballdir}
 %patch19 -p2 -b .s390-inlines
 
 %patch20 -p2 -b .pk
-%ifarch ppc ppc64
-%patch21  -p2 -b .ppc
-%endif
-
 %patch24  -p1 -b .966424
 
 %{__rm} -f .mozconfig
@@ -600,6 +595,15 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Oct 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0-1
+- sync with rawhide, update to 25.0
+
+* Wed Oct 23 2013 Martin Stransky <stransky@redhat.com> - 25.0-1
+- Update to 25.0 Build 2
+
+* Tue Oct 15 2013 Karsten Hopp <karsten@redhat.com> 24.0-3
+- drop PPC-only rhbz-911314.patch, fixed upstream
+
 * Mon Sep 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 24.0-1
 - sync with rawhide, update to 24.0
 
@@ -609,7 +613,7 @@ fi
 * Fri Sep 13 2013 Martin Stransky <stransky@redhat.com> - 24.0.1-1
 - Update to 24.0
 
-* Mon Sep 2 2013 Dan Horák <dan[at]danny.cz> - 23.0.1-4
+* Mon Sep  2 2013 Dan Horák <dan[at]danny.cz> - 23.0.1-4
 - Fix build on 64-bit big endian platforms (mozbz#618485)
 
 * Sat Aug 31 2013 Karsten Hopp <karsten@redhat.com> 23.0.1-3

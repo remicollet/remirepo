@@ -29,13 +29,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      24.0
-%global xulrunner_version_max  24.1
+%global xulrunner_version      25.0
+%global xulrunner_version_max  25.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20130913
+%global datelang               20131024
 
 %global mozappdir     %{_libdir}/%{name}
 %global langpackdir   %{mozappdir}/langpacks
@@ -71,7 +71,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        24.0
+Version:        25.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -515,6 +515,18 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Oct 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0-1
+- sync with rawhide, update to 25.0
+
+* Thu Oct 24 2013 Martin Stransky <stransky@redhat.com> - 25.0-2
+- Fixed xulrunner dependency
+
+* Thu Oct 24 2013 Martin Stransky <stransky@redhat.com> - 25.0-1
+- Update to 25.0 Build 2
+
+* Thu Oct 17 2013 Martin Stransky <stransky@redhat.com> - 24.0-2
+- Fixed rhbz#1005611 - BEAST workaround not enabled in Firefox
+
 * Mon Sep 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 24.0-1
 - sync with rawhide, update to 24.0
 
@@ -540,7 +552,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Wed Aug  7 2013 Remi Collet <RPMS@FamilleCollet.com> - 23.0-1
 - sync with rawhide, update to 23.0
 
-* Mon Aug 5 2013 Martin Stransky <stransky@redhat.com> - 23.0-1
+* Mon Aug  5 2013 Martin Stransky <stransky@redhat.com> - 23.0-1
 - Updated to latest upstream (23.0 Build 2)
 
 * Thu Jul 25 2013 Martin Stransky <stransky@redhat.com> - 22.0-3
@@ -959,29 +971,3 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 * Tue Jan  4 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.8b8
 - Fixed rhbz#664877 - Cannot read application.ini
-
-* Tue Dec 21 2010 Martin Stransky <stransky@redhat.com> - 4.0-0.7b8
-- Update to Beta 8
-- Fixed rhbz#437608 - When prelink is installed, 
-  rpm builds are garbage
-
-* Wed Dec  8 2010 Christopher Aillon <caillon@redhat.com> - 4.0-0.6b7
-- Use official branding since this is an official beta
-- Fix Tab Candy/Panorama (#658573)
-
-* Thu Nov 11 2010 Jan Horak <jhorak@redhat.com> - 4.0b7-1
-- Update to 4.0b7
-- Added x-scheme-handler to firefox.desktop
-
-* Wed Sep 29 2010 jkeating - 4.0-0.4b6
-- Rebuilt for gcc bug 634757
-
-* Tue Sep 21 2010 Martin Stransky <stransky@redhat.com> - 4.0-0.3.b6
-- Update to 4.0 Beta 6
-
-* Tue Sep  7 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 4.0-0.2.b4
-- get package building and mostly functional
-
-* Mon Aug 30 2010 Martin Stransky <stransky@redhat.com> - 4.0-0.1.b4
-- Update to 4.0 Beta 4
-
