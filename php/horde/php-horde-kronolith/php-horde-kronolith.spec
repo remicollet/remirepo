@@ -15,7 +15,7 @@
 # Fatal error: Call to a member function setShareCallback() on a non-object...
 
 Name:           php-horde-kronolith
-Version:        4.1.3
+Version:        4.1.4
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -240,6 +240,9 @@ fi
 
 
 %changelog
+* Tue Oct 29 2013 Remi Collet <remi@fedoraproject.org> - 4.1.4-1
+- Update to 4.1.4
+
 * Wed Aug 28 2013 Remi Collet <remi@fedoraproject.org> - 4.1.3-1
 - Update to 4.1.3
 
