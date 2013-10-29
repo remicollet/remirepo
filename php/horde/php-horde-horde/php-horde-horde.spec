@@ -245,7 +245,7 @@ fi
 %changelog
 * Tue Oct 29 2013 Remi Collet <remi@fedoraproject.org> - 5.1.5-1
 - Update to 5.1.5
-- raide dependency: Horde_Core 2.10.0
+- raide dependency: Horde_Core >= 2.10.0
 
 * Sun Sep 08 2013 Remi Collet <remi@fedoraproject.org> - 5.1.4-1
 - Update to 5.1.4

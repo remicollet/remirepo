@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.1.4
+Version:        6.1.5
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -87,7 +87,7 @@ Requires:       php-pear(%{pear_channel}/Horde_ListHeaders) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_ListHeaders) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
@@ -251,6 +251,10 @@ fi
 
 
 %changelog
+* Tue Oct 29 2013 Remi Collet <remi@fedoraproject.org> - 6.1.5-1
+- Update to 6.1.5
+- raide dependency: Horde_Mail >= 2.1.0
+
 * Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 6.1.4-1
 - Update to 6.1.4
 - drop dependency on Horde_Secret
