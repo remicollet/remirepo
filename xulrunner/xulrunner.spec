@@ -91,7 +91,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
 Version:        25.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -156,6 +156,7 @@ BuildRequires:  yasm
 BuildRequires:  autoconf213
 %if 0%{?rhel} == 6
 BuildRequires:   python27
+BuildRequires:   devtoolset-2-toolchain
 %endif
 Requires:       mozilla-filesystem
 Requires:       liberation-sans-fonts
@@ -230,6 +231,7 @@ Requires:  yasm
 %endif
 %if 0%{?rhel} == 6
 Requires: python27
+Requires: devtoolset-2-toolchain
 %endif
 
 
@@ -380,6 +382,7 @@ esac
 
 %if 0%{?rhel} == 6
 . /opt/rh/python27/enable
+. /opt/rh/devtoolset-2/enable
 %endif
 
 cd %{tarballdir}
@@ -434,6 +437,7 @@ make -C objdir buildsymbols
 %install
 %if 0%{?rhel} == 6
 . /opt/rh/python27/enable
+. /opt/rh/devtoolset-2/enable
 %endif
 
 cd %{tarballdir}
@@ -595,6 +599,13 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Oct 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0-2
+- sync with rawhide, update to 25.0 Build 3
+- enable devtoolset-2 (gcc 4.8) for EL-6
+
+* Wed Oct 30 2013 Martin Stransky <stransky@redhat.com> - 25.0-2
+- Update to 25.0 Build 3
+
 * Tue Oct 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0-1
 - sync with rawhide, update to 25.0
 

@@ -31,11 +31,11 @@
 
 %global xulrunner_version      25.0
 %global xulrunner_version_max  25.1
-%global xulrunner_release      1
+%global xulrunner_release      2
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20131024
+%global datelang               20131030
 
 %global mozappdir     %{_libdir}/%{name}
 %global langpackdir   %{mozappdir}/langpacks
@@ -72,7 +72,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        25.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -114,6 +114,7 @@ BuildRequires:  system-bookmarks
 BuildRequires:  xulrunner-last-devel >= %{xulrunner_verrel}
 %if 0%{?rhel} == 6
 BuildRequires:   python27
+BuildRequires:   devtoolset-2-toolchain
 %endif
 
 Requires:       xulrunner-last%{?_isa} >= %{xulrunner_verrel}
@@ -235,6 +236,7 @@ echo "ac_add_options --disable-jemalloc" >> .mozconfig
 %build
 %if 0%{?rhel} == 6
 . /opt/rh/python27/enable
+. /opt/rh/devtoolset-2/enable
 %endif
 
 cd %{tarballdir}
@@ -279,6 +281,7 @@ make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 %install
 %if 0%{?rhel} == 6
 . /opt/rh/python27/enable
+. /opt/rh/devtoolset-2/enable
 %endif
 
 cd %{tarballdir}
@@ -515,6 +518,13 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Oct 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0-2
+- sync with rawhide, update to 25.0 Build 3
+- enable devtoolset-2 (gcc 4.8) for EL-6
+
+* Wed Oct 30 2013 Martin Stransky <stransky@redhat.com> - 25.0-3
+- Update to 25.0 Build 3
+
 * Tue Oct 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0-1
 - sync with rawhide, update to 25.0
 
