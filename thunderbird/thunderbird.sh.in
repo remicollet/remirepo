@@ -118,6 +118,10 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
     create_langpack_link $SHORTMOZLOCALE || create_langpack_link $MOZLOCALE || true
 fi
 
+# BEAST fix (rhbz#1005611)
+NSS_SSL_CBC_RANDOM_IV=${NSS_SSL_CBC_RANDOM_IV-1}
+export NSS_SSL_CBC_RANDOM_IV
+
 # Prepare command line arguments
 script_args=""
 pass_arg_count=0

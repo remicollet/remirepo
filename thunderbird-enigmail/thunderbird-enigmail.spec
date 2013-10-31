@@ -51,7 +51,7 @@
 %global thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\}
 %global enimail_app_id     \{847b3a00-7ab1-11d4-8f02-006008948af5\}
 
-%global thunver  24.0
+%global thunver  24.1.0
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
@@ -68,7 +68,7 @@
 
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
-Version:        1.5.2
+Version:        1.6
 Release:        2%{?dist}
 URL:            http://enigmail.mozdev.org/
 # All files licensed under MPL 1.1/GPL 2.0/LGPL 2.1
@@ -156,6 +156,10 @@ BuildRequires:  GConf2-devel
 BuildRequires:  libvpx-devel >= %{libvpx_version}
 %else
 BuildRequires:  yasm
+%endif
+%if 0%{?rhel} == 6
+BuildRequires:   python27
+BuildRequires:   devtoolset-2-toolchain
 %endif
 
 ## For fixing lang
@@ -277,7 +281,7 @@ pushd mailnews/extensions/enigmail
 # All tarballs (as well as CVS) will *always* report as 1.4a1pre (or whatever
 # the next major version would be). This is because I create builds from trunk
 # and simply label the result as 1.3.x.
-sed -i -e '/em:version/s/1.6a1pre/%{version}/' package/install.rdf
+#sed -i -e '/em:version/s/1.6a1pre/%{version}/' package/install.rdf
 grep '<em:version>%{version}</em:version>' package/install.rdf || exit 1
 # Apply Enigmail patch here
 popd
@@ -294,6 +298,11 @@ popd
 #===============================================================================
 
 %build
+%if 0%{?rhel} == 6
+. /opt/rh/python27/enable
+. /opt/rh/devtoolset-2/enable
+%endif
+
 cd %{tarballdir}
 
 # -fpermissive is needed to build with gcc 4.6+ which has become stricter
@@ -337,6 +346,15 @@ MOZ_SMP_FLAGS=-j1
 # http://enigmail.mozdev.org/download/source.php.html
 make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 
+#make -f client.mk configure STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
+#pushd objdir
+#make -C mozilla tier_base \
+#%if ! %{?system_nss}
+#   tier_nspr \
+#%endif
+#   tier_js STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
+#popd
+
 # ===== Enigmail work =====
 pushd mailnews/extensions/enigmail
 ./makemake -r
@@ -363,6 +381,13 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Wed Oct 30 2013 Remi Collet <remi@fedoraproject.org> 1.6-2
+- Enigmail 1.6 for Thunderbird 24.1.0
+- enable python27 and devtoolset-2 (gcc 4.8) for EL-6
+
+* Tue Oct  8 2013 Remi Collet <remi@fedoraproject.org> 1.6-1
+- Enigmail 1.6
+
 * Wed Sep 18 2013 Remi Collet <remi@fedoraproject.org> 1.5.2-2
 - Enigmail 1.5.2 for Thunderbird 24.0
 
