@@ -21,14 +21,18 @@ BuildRequires:  php-channel(%{channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml
 Requires:       php(language) >= 5.3.3
-Requires:       php-libxml
 Requires:       php-pdo
-Requires:       php-reflection
 Requires:       php-simplexml
-Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.9.4
+Requires:       php-channel(%{channel})
 Requires:       php-pear(%{channel}/PHPUnit) >= 3.7.0
 Requires:       php-pear(pear.symfony.com/Yaml) >= 2.1.0
+# From phpcompatinfo report for version 1.3.0
+Requires:       php-libxml
+Requires:       php-reflection
+Requires:       php-spl
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
