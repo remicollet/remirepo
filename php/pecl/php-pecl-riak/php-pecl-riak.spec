@@ -41,6 +41,7 @@ Requires:       php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
 # php 5.3.3 in EL-6 don't use arched virtual provides
 # so only requires real packages instead
+Requires:       php-common%{?_isa}
 %else
 Requires:       php-json%{?_isa}
 %endif

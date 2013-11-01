@@ -6,8 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir %{_includedir}/php}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name Judy
@@ -31,7 +33,13 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so only requires real packages instead
+Requires:       php-common%{?_isa}
+%else
 Requires:       php-spl%{?_isa}
+%endif
 
 Provides:       php-%{ext_name} = %{version}
 Provides:       php-%{ext_name}%{?_isa} = %{version}
@@ -153,7 +161,7 @@ fi
 %check
 : Minimal load test for NTS extension
 cd NTS
-%{_bindir}/php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=modules/%{ext_name}.so \
     --modules | grep %{ext_name}
 
