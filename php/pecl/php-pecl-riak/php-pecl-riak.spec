@@ -21,8 +21,8 @@
 
 Summary:        Riak database PHP extension
 Name:           php-pecl-%{pecl_name}
-Version:        0.6.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.7.0
+Release:        1%{?dist}%{!?nophptag:%(%{_bindir}/php -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        ASL 2.0 and BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -43,9 +43,12 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
+
 
 %description
 Fast protocol buffers client for Riak database and session module.
@@ -151,7 +154,7 @@ fi
 %check
 : Minimal load test for NTS extension
 cd NTS
-php --no-php-ini \
+%{_bindir}/php --no-php-ini \
     --define extension=json.so \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -194,6 +197,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 01 2013 Remi Collet <remi@fedoraproject.org> - 0.7.0-1
+- Update to 0.7.0 (beta)
+
 * Sat Oct 26 2013 Remi Collet <remi@fedoraproject.org> - 0.6.2-1
 - Update to 0.6.2 (beta)
 - install doc in pecl doc_dir
