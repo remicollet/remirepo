@@ -1,0 +1,40 @@
+diff -up xmldiff-0.9.0/php_xmldiff.h.old xmldiff-0.9.0/php_xmldiff.h
+--- xmldiff-0.9.0/php_xmldiff.h.old	2013-11-01 07:13:21.917000281 +0100
++++ xmldiff-0.9.0/php_xmldiff.h	2013-11-01 06:58:51.805999994 +0100
+@@ -162,7 +162,14 @@ PHP_XMLDIFF_API xmlChar *
+ php_xmldiff_do_merge_memory(const char *src, int src_len, const char *diff, int diff_len, struct ze_xmldiff_obj *zxo TSRMLS_DC);
+ 
+ #if PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 3
+-# define DOM_RET_OBJ_EX DOM_RET_OBJ
++#  define XMLDIFF_DOM_RET_OBJ DOM_RET_OBJ
++#elif PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION == 3 && PHP_RELEASE_VERSION > 6
++#  define XMLDIFF_DOM_RET_OBJ DOM_RET_OBJ_EX
++#else
++#  define XMLDIFF_DOM_RET_OBJ(obj, ret, domobject); do { \
++       zval *rv = NULL; \
++       DOM_RET_OBJ(rv, obj, ret, domobject); \
++     } while(0);
+ #endif
+ 
+ #endif	/* PHP_XMLDIFF_H */
+diff -up xmldiff-0.9.0/xmldiff.cpp.old xmldiff-0.9.0/xmldiff.cpp
+--- xmldiff-0.9.0/xmldiff.cpp.old	2013-11-01 07:13:36.941006721 +0100
++++ xmldiff-0.9.0/xmldiff.cpp	2013-11-01 06:56:56.729005006 +0100
+@@ -577,7 +577,7 @@ PHP_METHOD(XMLDiffDOM, diff)
+ 	retNode = (xmlNodePtr)retDoc;
+ 
+ 	/* return the resulting dom object */
+-	DOM_RET_OBJ_EX(retNode, &domRetStatus, NULL);
++	XMLDIFF_DOM_RET_OBJ(retNode, &domRetStatus, NULL);
+ 
+ 	/* set return object properties */
+ 	php_xmldiff_set_out_dom_props(return_value TSRMLS_CC);
+@@ -626,7 +626,7 @@ PHP_METHOD(XMLDiffDOM, merge)
+ 	retNode = (xmlNodePtr)retDoc;
+ 
+ 	/* return the resulting dom object */
+-	DOM_RET_OBJ_EX(retNode, &domRetStatus, NULL);
++	XMLDIFF_DOM_RET_OBJ(retNode, &domRetStatus, NULL);
+ 
+ 	/* set return object properties */
+ 	php_xmldiff_set_out_dom_props(return_value TSRMLS_CC);

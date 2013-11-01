@@ -6,9 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir %{_includedir}/php}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name xmldiff
@@ -16,11 +17,15 @@
 Summary:        XML diff and merge
 Name:           php-pecl-%{pecl_name}
 Version:        0.9.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# Fix build with PHP <= 5.3.6
+# http://svn.php.net/viewvc?view=revision&revision=332040
+Patch0:         %{pecl_name}-php533.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel > 5.3
@@ -34,8 +39,14 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so requires the real package instead
+Requires:       php-xml%{?_isa}
+%else
 Requires:       php-dom%{?_isa}
 Requires:       php-libxml%{?_isa}
+%endif
 
 Provides:       php-%{pecl_name} = %{version}
 Provides:       php-%{pecl_name}%{?_isa} = %{version}
@@ -69,6 +80,7 @@ These are the files needed to compile programs using %{name}.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+%patch0 -p1
 
 # drop bundled library to ensure it is not used
 rm -rf diffmark
@@ -199,6 +211,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 01 2013 Remi Collet <remi@fedoraproject.org> - 0.9.0-2
+- fix build with php 5.3.3 in RHEL-6
+
 * Wed Oct 02 2013 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
 - Update to 0.9.0
 - License now provided in upstream sources
