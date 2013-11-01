@@ -1,4 +1,11 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+# spec file for php-phpunit-DbUnit
+#
+# Copyright (c) 2010-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name DbUnit
 %global channel pear.phpunit.de
@@ -39,6 +46,7 @@ Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
 %description
 DbUnit port for PHP/PHPUnit
+
 
 %prep
 %setup -q -c
