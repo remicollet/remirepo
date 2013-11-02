@@ -1,4 +1,6 @@
+%global with_java 1
 %global _hardened_build 1
+
 Name:		libwebp
 Version:	0.3.1
 Release:	2%{?dist}
@@ -9,11 +11,11 @@ Summary:	Library and tools for the WebP graphics format
 License:	BSD
 Source0:	http://webp.googlecode.com/files/%{name}-%{version}.tar.gz
 Source1:	libwebp_jni_example.java	
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	libjpeg-devel libpng-devel libtool swig 
 BuildRequires:  giflib-devel
 BuildRequires:  libtiff-devel
-BuildRequires:	java-devel
-BuildRequires:	jpackage-utils
 
 %description
 WebP is an image format that does lossy compression of digital
@@ -25,6 +27,7 @@ images more efficiently.
 %package tools
 Group:		Development/Tools
 Summary:	The WebP command line tools
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 WebP is an image format that does lossy compression of digital
@@ -45,15 +48,19 @@ container based on RIFF. Webmasters, web developers and browser
 developers can use WebP to compress, archive and distribute digital
 images more efficiently.
 
+%if %{with_java}
 %package java
 Group:		Development/Libraries
 Summary:	Java bindings for libwebp, a library for the WebP format
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	java
 Requires:	jpackage-utils
+BuildRequires:	java-devel
+BuildRequires:	jpackage-utils
 
 %description java
 Java bindings for libwebp.
+%endif
 
 %prep
 %setup -q
@@ -63,6 +70,7 @@ Java bindings for libwebp.
 %configure --disable-static --enable-libwebpmux --enable-libwebpdemux
 make %{?_smp_mflags}
 
+%if %{with_java}
 # swig generated Java bindings
 cp %{SOURCE1} .
 cd swig
@@ -73,7 +81,7 @@ swig -ignoremissing -I../src -java \
 	-outdir java/com/google/webp \
 	-o libwebp_java_wrap.c libwebp.i
 
-gcc %{optflags} -shared \
+gcc %{optflags} -shared -fPIC \
 	-I/usr/lib/jvm/java/include \
 	-I/usr/lib/jvm/java/include/linux \
 	-I../src \
@@ -83,40 +91,52 @@ gcc %{optflags} -shared \
 cd java
 javac com/google/webp/libwebp.java
 jar cvf ../libwebp.jar com/google/webp/*.class
+%endif
 
 %install
 %make_install
 find "%{buildroot}/%{_libdir}" -type f -name "*.la" -delete
 
+%if %{with_java}
 # swig generated Java bindings
 mkdir -p %{buildroot}/%{_libdir}/%{name}-java
 cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
+%endif
 
 %post -n %{name} -p /sbin/ldconfig
 
 %postun -n %{name} -p /sbin/ldconfig
 
 %files tools
+%defattr(-,root,root,-)
 %{_bindir}/cwebp
 %{_bindir}/dwebp
 %{_bindir}/gif2webp
 %{_bindir}/webpmux
 %{_mandir}/man*/*
 
-%files -n %{name}
+%files
+%defattr(-,root,root,-)
 %doc README PATENTS COPYING NEWS AUTHORS
 %{_libdir}/%{name}*.so.*
 
 %files devel
+%defattr(-,root,root,-)
 %{_libdir}/%{name}*.so
 %{_includedir}/*
 %{_libdir}/pkgconfig/*
 
+%if %{with_java}
 %files java
+%defattr(-,root,root,-)
 %doc libwebp_jni_example.java
 %{_libdir}/%{name}-java/
+%endif
 
 %changelog
+* Sat Nov  2 2013 Remi Collet <rpms@famillecollet.com> - 0.3.1-2
+- backport for EL in remi repo
+
 * Wed Oct 02 2013 Sandro Mani <manisandro@gmail.com> - 0.3.1-2
 - enable webpdemux
 
