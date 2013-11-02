@@ -16,16 +16,12 @@
 
 Summary:        XML diff and merge
 Name:           php-pecl-%{pecl_name}
-Version:        0.9.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.9.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# Fix build with PHP <= 5.3.6
-# http://svn.php.net/viewvc?view=revision&revision=332040
-Patch0:         %{pecl_name}-php533.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel > 5.3
@@ -53,9 +49,11 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 %description
 The extension is able to produce diffs of two XML documents and then to apply
@@ -80,8 +78,6 @@ These are the files needed to compile programs using %{name}.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1
-
 # drop bundled library to ensure it is not used
 rm -rf diffmark
 
@@ -211,11 +207,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 02 2013 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
+- Update to 0.9.1 (stable)
+- drop our patch merged upstream
+
 * Fri Nov 01 2013 Remi Collet <remi@fedoraproject.org> - 0.9.0-2
 - fix build with php 5.3.3 in RHEL-6
 
 * Wed Oct 02 2013 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
-- Update to 0.9.0
+- Update to 0.9.0 (stable)
 - License now provided in upstream sources
 - Drop merged patch for system libdiffmark
 
