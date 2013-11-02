@@ -15,7 +15,7 @@
 %global withlcms2 0
 %endif
 
-%if 0%{?fedora} >= 16
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 %global withwebp 1
 %else
 %global withwebp 0
@@ -24,7 +24,7 @@
 
 Name:           ImageMagick-last
 Version:        %{VER}.%{Patchlevel}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -374,6 +374,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 02 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.6.10-2
+- enable webp support in EL
+
 * Thu Sep 19 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.6.10-1
 - update to 6.8.6-10
 - soname change: libMagick++-6.Q16.so.3
