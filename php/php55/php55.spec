@@ -100,7 +100,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.6
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1140,7 +1140,7 @@ build --libdir=%{_libdir}/php \
       --without-readline \
       --with-libedit \
       --with-pspell=shared \
-      --enable-phar=shared \
+      --enable-phar \
       --with-mcrypt=shared,%{_prefix} \
       --with-tidy=shared,%{_prefix} \
       --with-mssql=shared,%{_prefix} \
@@ -1159,7 +1159,7 @@ without_shared="--without-gd \
       --disable-dom --disable-dba --without-unixODBC \
       --disable-opcache \
       --disable-xmlreader --disable-xmlwriter \
-      --without-sqlite3 --disable-phar --disable-fileinfo \
+      --without-sqlite3 --enable-phar --disable-fileinfo \
       --without-pspell --disable-wddx \
       --without-curl --disable-posix --disable-xml \
       --disable-simplexml --disable-exif --without-gettext \
@@ -1282,7 +1282,7 @@ build --includedir=%{_includedir}/php-zts \
       --without-readline \
       --with-libedit \
       --with-pspell=shared \
-      --enable-phar=shared \
+      --enable-phar \
       --with-mcrypt=shared,%{_prefix} \
       --with-tidy=shared,%{_prefix} \
       --with-mssql=shared,%{_prefix} \
@@ -1503,7 +1503,7 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
     sqlite3 \
 %endif
-    enchant phar fileinfo intl \
+    enchant fileinfo intl \
     mcrypt tidy pdo_dblib mssql pspell curl wddx \
     posix shmop sysvshm sysvsem sysvmsg recode xml \
 %if %{with_libmysql}
@@ -1575,7 +1575,7 @@ cat files.sqlite3 >> files.pdo
 %endif
 
 # Package zip, curl, phar and fileinfo in -common.
-cat files.curl files.phar files.fileinfo \
+cat files.curl files.fileinfo \
     files.exif files.gettext files.iconv files.calendar \
     files.ftp files.bz2 files.ctype files.sockets \
     files.tokenizer > files.common
@@ -1841,6 +1841,9 @@ fi
 
 
 %changelog
+* Sat Nov  2 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.2.RC1
+- build phar static for opcache dep.
+
 * Sat Nov  2 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.1.RC1
 - test build of 5.5.6RC1
 
