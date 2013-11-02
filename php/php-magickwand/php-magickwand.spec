@@ -8,7 +8,7 @@
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       4%{?dist}.1
+Release:       5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -39,9 +39,11 @@ Obsoletes:      php54-magickwand
 Obsoletes:      php55-magickwand
 %endif
 
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -122,6 +124,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov  2 2013 Remi Collet <rpms@famillecollet.com> - 1.0.9.2-5
+- rebuild against new ImageMagick-last version 6.8.7-4
+
 * Sun Sep  8 2013 Remi Collet <rpms@famillecollet.com> - 1.0.9.2-4
 - rebuild against new ImageMagick-last version 6.8.6-9
 

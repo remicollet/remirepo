@@ -1,5 +1,5 @@
-%global VER        6.8.6
-%global Patchlevel 10
+%global VER        6.8.7
+%global Patchlevel 4
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -24,7 +24,7 @@
 
 Name:           ImageMagick-last
 Version:        %{VER}.%{Patchlevel}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -374,7 +374,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Nov 02 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.6.10-2
+* Sat Nov 02 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.7.4-2
+- update to 6.8.7-4
 - enable webp support in EL
 
 * Thu Sep 19 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.6.10-1

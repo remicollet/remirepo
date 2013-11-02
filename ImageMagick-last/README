@@ -18,9 +18,14 @@ ImageMagick: (in F16)
 	libMagickCore.so.4
 	libMagickWand.so.4
 
-ImageMagick-last-libs:
+ImageMagick: (in F17-F19)
 	libMagickCore.so.5
 	libMagickWand.so.5
+
+ImageMagick: (in F20)
+ImageMagick-last-libs:
+	libMagickCore-6.Q16.so.1
+	libMagickWand-6.Q16.so.1
 
 ImageMagick-last could NOT be installed with ImageMagick
 

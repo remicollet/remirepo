@@ -1,15 +1,15 @@
 %{!?__pecl:  %{expand: %%global __pecl %{_bindir}/pecl}}
 
 %global pecl_name   imagick
-%global prever      b2
+#global prever      b2
 
 # We don't really rely on upstream ABI
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
-Version:       3.2.0
-Release:       0.1.%{prever}%{?dist}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       3.1.2
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -130,9 +130,9 @@ mkdir -p %{buildroot}%{pecl_xmldir}
 install -pm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+#for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+#do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+#done
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -196,7 +196,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root, 0755)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
+#doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -208,6 +208,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov  2 2013 Remi Collet <rpms@famillecollet.com> - 3.1.2-2
+- rebuild against new ImageMagick-last version 6.8.7-4
+- install doc in pecl doc_dir
+
 * Sun Oct 20 2013 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.1.b2
 - Update to 3.2.0b2
 - install doc in pecl doc_dir
