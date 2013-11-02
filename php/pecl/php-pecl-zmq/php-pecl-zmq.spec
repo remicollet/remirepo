@@ -8,6 +8,7 @@
 #
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  zmq
@@ -15,7 +16,7 @@
 
 Summary:        ZeroMQ messaging
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.9
+Version:        1.1.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -145,8 +146,8 @@ php --no-php-ini \
 export TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so"
 export REPORT_EXIT_STATUS=1
 export NO_INTERACTION=1
-export TEST_PHP_EXECUTABLE=%{_bindir}/php
-%{_bindir}/php -n run-tests.php
+export TEST_PHP_EXECUTABLE=%{__php}
+%{__php} -n run-tests.php
 %endif
 
 %if %{with_zts}
@@ -159,8 +160,8 @@ cd ../ZTS
 %if %{with_tests}
 : upstream test suite for ZTS extension
 export TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so"
-export TEST_PHP_EXECUTABLE=%{_bindir}/zts-php
-%{_bindir}/zts-php -n run-tests.php
+export TEST_PHP_EXECUTABLE=%{__ztsphp}
+%{__ztsphp} -n run-tests.php
 %endif
 %endif
 
@@ -184,11 +185,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 02 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1 (beta)
+
 * Fri Oct 25 2013 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
-- Update to 1.0.9
+- Update to 1.0.9 (beta)
 
 * Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
-- Update to 1.0.8
+- Update to 1.0.8 (beta)
 - run upstream test suite during build
 - install tests in pecl test_dir
 
