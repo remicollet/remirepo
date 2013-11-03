@@ -94,16 +94,6 @@ Notice: this extension is deprecated, you should consider
 Documentation: http://php.net/sqlite
 
 
-%package devel
-Summary:       PHP SQLite V2 developer files (header)
-Group:         Development/Libraries
-Requires:      php-pecl-sqlite%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
-
-%description devel
-These are the files needed to compile programs using PHP SQLite V2.
-
-
 %prep
 %setup -c -q
 
@@ -255,15 +245,6 @@ fi
 %endif
 
 
-%files devel
-%defattr(-,root,root,-)
-%{php_incldir}/libsqlite
-
-%if %{with_zts}
-%{php_ztsincldir}/libsqlite
-%endif
-
-
 %changelog
 * Sun Nov  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-0.4.svn332053
 - cleanup for Copr
@@ -271,6 +252,7 @@ fi
 - enable sqlite2 PDO driver
 - install doc in pecl doc_dir
 - install tests in pecl test_dir
+- drop empty devel sub-package
 
 * Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-0.3.svn313074
 - rebuild with system Sqlite2
