@@ -9,7 +9,7 @@
 %global useselinux 1
 
 Name:           glpi
-Version:        0.84.2
+Version:        0.84.3
 Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
@@ -17,7 +17,7 @@ Summary(fr):    Gestion Libre de Parc Informatique
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/1593/glpi-0.84.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1615/glpi-0.84.3.tar.gz
 
 Source1:        glpi-httpd.conf
 Source2:        glpi-config_path.php
@@ -25,9 +25,6 @@ Source3:        glpi-logrotate
 
 # Switch all internal cron tasks to system
 Patch0:         glpi-0.84-cron.patch
-
-# https://forge.indepnet.net/repositories/revision/glpi/21915
-Patch1:         glpi-0.84-zend.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -99,7 +96,6 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0 -p0
-%patch1 -p2
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -276,6 +272,10 @@ fi
 
 
 %changelog
+* Sun Nov  3 2013 Remi Collet <remi@fedoraproject.org> - 0.84.3-1
+- update to 0.84.3
+  https://forge.indepnet.net/projects/glpi/versions/973
+
 * Wed Oct  2 2013 Remi Collet <remi@fedoraproject.org> - 0.84.2-1
 - update to 0.84.2
 - add upstream patch for Zend autoload
