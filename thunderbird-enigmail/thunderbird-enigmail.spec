@@ -1,9 +1,5 @@
-# Use system nspr/nss?
-%if 0%{?fedora} < 18
+# Always use bunled nspr for "make export"
 %define system_nss        0
-%else
-%define system_nss        1
-%endif
 
 %if 0%{?fedora} < 15
 %define system_vpx        0
@@ -69,7 +65,7 @@
 Summary:        Authentication and encryption extension for Mozilla Thunderbird
 Name:           thunderbird-enigmail
 Version:        1.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 URL:            http://enigmail.mozdev.org/
 # All files licensed under MPL 1.1/GPL 2.0/LGPL 2.1
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -343,17 +339,22 @@ MOZ_SMP_FLAGS=-j1
 
 
 # ===== Thunderbird build =====
-# http://enigmail.mozdev.org/download/source.php.html
-make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
+export STRIP="/bin/true"
+export MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
+#make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 
-#make -f client.mk configure STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
-#pushd objdir
-#make -C mozilla tier_base \
-#%if ! %{?system_nss}
-#   tier_nspr \
-#%endif
-#   tier_js STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
-#popd
+# Minimal build as described in upstream documentation
+# http://enigmail.mozdev.org/download/source.php.html
+make -f client.mk configure
+
+pushd objdir
+make -C mozilla tier_base \
+%if ! %{?system_nss}
+   tier_nspr \
+%endif
+   tier_js
+make export
+popd
 
 # ===== Enigmail work =====
 pushd mailnews/extensions/enigmail
@@ -381,6 +382,9 @@ unzip -q objdir/mozilla/dist/bin/enigmail-*-linux-*.xpi -d $RPM_BUILD_ROOT%{enig
 #===============================================================================
 
 %changelog
+* Sun Nov  3 2013 Remi Collet <remi@fedoraproject.org> 1.6-3
+- minimal build, only required Thunderbird components
+
 * Wed Oct 30 2013 Remi Collet <remi@fedoraproject.org> 1.6-2
 - Enigmail 1.6 for Thunderbird 24.1.0
 - enable python27 and devtoolset-2 (gcc 4.8) for EL-6
