@@ -17,8 +17,8 @@
 
 Summary:        PHP Judy implements sparse dynamic arrays
 Name:           php-pecl-judy
-Version:        1.0.1
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.0.2
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -207,6 +207,7 @@ rm -rf %{buildroot}
 %{php_ztsextdir}/%{ext_name}.so
 %endif
 
+
 %files devel
 %defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
@@ -219,6 +220,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 03 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2 (stable)
+
 * Fri Nov 01 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-3
 - missing BR pcre-devel
 
@@ -227,7 +231,7 @@ rm -rf %{buildroot}
 
 * Mon Oct 21 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - rename from php-pecl-Judy to php-pecl-judy
-- Update to 1.0.1
+- Update to 1.0.1 (stable)
 - install doc in pecl doc_dir
 - install tests in pecl test_dir
 - drop merged patches
