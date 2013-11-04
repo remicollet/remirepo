@@ -6,6 +6,9 @@
 %global opcachever  7.0.3-dev
 %global oci8ver     1.4.10
 
+# Use for first build of PHP (before pecl/zip and pecl/jsonc)
+%global php_bootstrap   0
+
 # Adds -z now to the linker flags
 %global _hardened_build 1
 
@@ -316,13 +319,16 @@ Provides: php-sockets, php-sockets%{?_isa}
 Provides: php-spl, php-spl%{?_isa}
 Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
 Provides: php-tokenizer, php-tokenizer%{?_isa}
-# Temporary circular dep (to remove for bootstrap)
+%if ! %{php_bootstrap}
 Requires: php-pecl-jsonc%{?_isa}
+%endif
 %if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
 Obsoletes: php-pecl-zip < 1.11
 %else
+%if ! %{php_bootstrap}
 Requires: php-pecl-zip%{?_isa}
+%endif
 %endif
 Provides: php-zlib, php-zlib%{?_isa}
 Obsoletes: php-pecl-phar < 1.2.4
@@ -348,8 +354,9 @@ Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
 %endif
 Obsoletes: php53-devel, php53u-devel, php54-devel, php55-devel
-# Temporary circular dep (to remove for bootstrap)
+%if ! %{php_bootstrap}
 Requires: php-pecl-jsonc-devel%{?_isa}
+%endif
 
 %description devel
 The php-devel package contains the files needed for building PHP
