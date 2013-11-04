@@ -100,7 +100,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.6
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -167,7 +167,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-#Patch99: php-wip.patch
+Patch99: php-wip.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -872,7 +872,7 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
-#patch99 -p1 -b .wip
+%patch99 -p1 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1841,6 +1841,10 @@ fi
 
 
 %changelog
+* Mon Nov  4 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.4.RC1
+- test build opcache with phar build shared
+  https://github.com/zendtech/ZendOptimizerPlus/issues/147
+
 * Mon Nov  4 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.3.RC1
 - build phar shared, opcache loaded with RTLD_LAZY
 
