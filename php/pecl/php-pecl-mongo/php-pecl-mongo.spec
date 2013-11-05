@@ -1,11 +1,14 @@
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
-%global pecl_name mongo
+%global pecl_name   mongo
+%global with_zts    0%{?__ztsphp:1}
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.4.4
-Release:      1%{?dist}.1
+Version:      1.4.5
+Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -28,16 +31,20 @@ Provides:     php-pecl(%{pecl_name}) = %{version}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 
+%if 0%{?fedora} < 20
 # Filter private shared provides
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -48,7 +55,8 @@ MongoDB database in PHP.
 %prep 
 %setup -c -q
 
-cd %{pecl_name}-%{version}
+mv %{pecl_name}-%{version} NTS
+cd NTS
 
 extver=$(sed -n '/#define PHP_MONGO_VERSION/{s/.* "//;s/".*$//;p}' php_mongo.h)
 if test "x${extver}" != "x%{version}%{?pre}"; then
@@ -59,36 +67,44 @@ cd ..
 
 cp %{SOURCE1} .
 
-cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+%if %{with_zts}
+cp -pr NTS ZTS
+%endif
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure  --with-php-config=%{_bindir}/php-config
-%{__make} %{?_smp_mflags}
+make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure  --with-php-config=%{_bindir}/zts-php-config
-%{__make} %{?_smp_mflags}
-
+make %{?_smp_mflags}
+%endif
 
 %install
 rm -rf %{buildroot}
 
-make -C %{pecl_name}-%{version} \
-     install INSTALL_ROOT=%{buildroot}
-     
-make -C %{pecl_name}-%{version}-zts \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Documentation
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %clean
@@ -106,30 +122,38 @@ fi
 
 
 %check
-# only check if build extension can be loaded
-
+: Minimal load test for NTS extension
 %{__php} -n \
-    -d extension_dir=%{pecl_name}-%{version}/modules \
-    -d extension=%{pecl_name}.so \
+    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     -i | grep "MongoDB Support => enabled"
 
+%if %{with_zts}
+: Minimal load test for ZTS extension
 %{__ztsphp} -n \
-    -d extension_dir=%{pecl_name}-%{version}-zts/modules \
-    -d extension=%{pecl_name}.so \
+    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     -i | grep "MongoDB Support => enabled"
+%endif
 
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_name}-%{version}/{LICENSE,README}.md
+%doc %{pecl_docdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Tue Nov 05 2013 Remi Collet <remi@fedoraproject.org> - 1.4.5-1
+- Update to 1.4.5
+- install doc in pecl doc_dir
+- cleanups for Copr
+
 * Wed Sep 25 2013 Remi Collet <remi@fedoraproject.org> - 1.4.4-1
 - Update to 1.4.4
 
