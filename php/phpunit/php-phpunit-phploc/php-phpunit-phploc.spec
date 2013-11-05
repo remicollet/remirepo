@@ -4,7 +4,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-phploc
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -20,16 +20,18 @@ BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(PEAR) >= 1.9.4
+# From package.xml
 Requires:       php(language) >= 5.3.3
-Requires:       php-dom
-Requires:       php-spl
 Requires:       php-tokenizer
+Requires:       php-pear(PEAR) >= 1.9.4
 Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(pear.symfony.com/Console) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/FinderFacade) >= 1.1.0
 Requires:       php-pear(%{pear_channel}/Git) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Version) >= 1.0.0
-Requires:       php-pear(pear.symfony.com/Console) >= 2.2.0
+# From phpcompatinfo report for version 2.0.3
+Requires:       php-dom
+Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -91,6 +93,9 @@ fi
 
 
 %changelog
+* Tue Nov 05 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Sun Sep 08 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 
@@ -113,7 +118,7 @@ fi
 - use FinderFacade instead of File_Iterator
 - raise dependecies: php >= 5.3.3
 
-* Mon Nov 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.6.4-1
+* Tue Nov 22 2011 Remi Collet <RPMS@FamilleCollet.com> - 1.6.4-1
 - upstream 1.6.4, rebuild for remi repository
 
 * Sun Nov 20 2011 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.6.4-1
@@ -161,7 +166,7 @@ fi
 * Wed Nov 11 2009 Remi Collet <Fedora@FamilleCollet.com> - 1.2.0-2
 - rebuild for remi repository
 
-* Sat Nov 7 2009 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.2.0-2
+* Sat Nov  7 2009 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.2.0-2
 - F-(10|11) compatibility
 
 * Tue Oct 13 2009 Guillaume Kulakowski <guillaume DOT kulakowski AT fedoraproject DOT org> - 1.2.0-1
