@@ -1,11 +1,14 @@
-%{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  gmagick
 %global prever     RC1
+%global with_zts   0%{?__ztsphp:1}
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.4
+Version:        1.1.5
 Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
@@ -31,11 +34,13 @@ Conflicts:      php-pecl-imagick
 Conflicts:      php-magickwand
 
 # Other third party repo stuff
+%if "%{php_version}" > "5.5"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 
 %if 0%{?fedora} < 20
@@ -66,8 +71,10 @@ cat >%{pecl_name}.ini << 'EOF'
 extension=%{pecl_name}.so
 EOF
 
+%if %{with_zts}
 # Duplicate build tree for nts/zts
 cp -r NTS ZTS
+%endif
 
 
 %build
@@ -76,10 +83,12 @@ cd NTS
 %{configure} --with-%{pecl_name}  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %{configure} --with-%{pecl_name}  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -87,14 +96,16 @@ rm -rf %{buildroot}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
-make -C ZTS install INSTALL_ROOT=%{buildroot}
-
 # Install XML package description
 install -D -m 664 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Drop in the bit of configuration
 install -D -m 664 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 664 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 # Test & Documentation
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
@@ -128,8 +139,7 @@ rm -f ?TS/tests/gmagick-006-annotateimage.phpt
 : simple module load test for NTS extension
 cd NTS
 %{__php} --no-php-ini \
-    --define extension_dir=%{buildroot}%{php_extdir} \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : upstream test suite for NTS extension
@@ -138,8 +148,7 @@ export REPORT_EXIT_STATUS=1
 export NO_INTERACTION=1
 if ! %{__php} run-tests.php \
     -n -q \
-    -d extension_dir=%{buildroot}%{php_extdir} \
-    -d extension=%{pecl_name}.so
+    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so
 then
   for i in tests/*diff
   do
@@ -150,19 +159,19 @@ then
   exit 1
 fi
 
+%if %{with_zts}
 : simple module load test for ZTS extension
 cd ../ZTS
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{buildroot}%{php_ztsextdir} \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : upstream test suite for ZTS extension
 export TEST_PHP_EXECUTABLE=%{__ztsphp}
 %{__ztsphp} run-tests.php \
     -n -q \
-    -d extension_dir=%{buildroot}%{php_ztsextdir} \
-    -d extension=%{pecl_name}.so
+    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %files
@@ -170,13 +179,20 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Tue Nov  5 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.5-0.1.RC1
+- Update to 1.1.5RC1
+- cleanups for Copr
+
 * Sun Oct 20 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.4-0.1.RC1
 - Update to 1.1.4RC1
 - drop merged patches
