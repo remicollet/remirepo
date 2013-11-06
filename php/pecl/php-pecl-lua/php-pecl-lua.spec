@@ -6,8 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name lua
@@ -15,7 +16,7 @@
 Summary:        Embedded lua interpreter
 Name:           php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -24,6 +25,7 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # https://bugs.php.net/62621 config.m4
 # https://bugs.php.net/65953 LUA 5.1
 # https://github.com/laruence/php-lua/pull/6
+# https://github.com/laruence/php-lua/pull/7
 Patch0:         %{pecl_name}-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -153,11 +155,11 @@ php --no-php-ini \
     --modules | grep %{pecl_name}
 
 # Upstream test suite  for NTS extension
-TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{__php} -n run-tests.php
 
 %if %{with_zts}
 cd ../ZTS
@@ -167,11 +169,11 @@ cd ../ZTS
     --modules | grep %{pecl_name}
 
 # Upstream test suite  for ZTS extension
-TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/zts-php -n run-tests.php
+%{__ztsphp} -n run-tests.php
 %endif
 
 
@@ -194,6 +196,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov  6 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- fix build against PHP 5.3.3 for Copr
+- open https://github.com/laruence/php-lua/pull/7
+
 * Wed Oct 23 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package, version 1.1.0 (beta)
-
+- open https://github.com/laruence/php-lua/pull/6

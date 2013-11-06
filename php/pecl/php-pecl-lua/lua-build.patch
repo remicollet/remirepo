@@ -58,3 +58,43 @@ diff -ru lua-1.1.0.old/tests/006.phpt lua-1.1.0/tests/006.phpt
  Testing return
  Array
  (
+From d893cd58c24ef96c931f68c7060818ed7c7d6124 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 6 Nov 2013 14:11:45 +0100
+Subject: [PATCH] zval_copy_property_ctor have been added in 5.3.4 (so not in
+ 5.3.3)
+
+---
+ lua.c         | 2 +-
+ lua_closure.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lua.c b/lua.c
+index 9a0c18a..3c9b5ba 100644
+--- a/lua.c
++++ b/lua.c
+@@ -212,7 +212,7 @@ static zend_object_value php_lua_create_object(zend_class_entry *ce TSRMLS_DC) {
+ 
+ #if (PHP_MAJOR_VERSION == 5) && (PHP_MINOR_VERSION < 4)
+ 	zend_hash_copy(lua_obj->obj.properties, &ce->default_properties,
+-#if (PHP_MINOR_VERSION < 3)
++#if (PHP_MINOR_VERSION < 4)
+ 			(copy_ctor_func_t) zval_add_ref,
+ #else
+ 			zval_copy_property_ctor(ce),
+diff --git a/lua_closure.c b/lua_closure.c
+index ac17206..24346dd 100644
+--- a/lua_closure.c
++++ b/lua_closure.c
+@@ -203,7 +203,7 @@ static zend_object_value php_lua_closure_create_object(zend_class_entry *ce TSRM
+ 	zend_object_std_init(lua_closure_obj, ce TSRMLS_CC);
+ #if (PHP_MAJOR_VERSION == 5) && (PHP_MINOR_VERSION < 4)
+ 	zend_hash_copy(lua_closure_obj->properties, &ce->default_properties, 
+-#if (PHP_MINOR_VERSION < 3) 
++#if (PHP_MINOR_VERSION < 4)
+ 			(copy_ctor_func_t) zval_add_ref,
+ #else
+ 			zval_copy_property_ctor(ce), 
+-- 
+1.8.4
+
