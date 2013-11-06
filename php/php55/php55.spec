@@ -1848,7 +1848,7 @@ fi
 
 
 %changelog
-* Wed Nov  5 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.5.RC1
+* Wed Nov  6 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.5.RC1
 - test buid with opcache changes reverted
 
 * Mon Nov  4 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.4.RC1
