@@ -103,7 +103,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.6
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1848,6 +1848,9 @@ fi
 
 
 %changelog
+* Wed Nov  5 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.5.RC1
+- test buid with opcache changes reverted
+
 * Mon Nov  4 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.4.RC1
 - test build opcache with phar build shared
   https://github.com/zendtech/ZendOptimizerPlus/issues/147

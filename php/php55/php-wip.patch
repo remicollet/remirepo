@@ -1,47 +1,104 @@
-diff -up php-5.5.6RC1/ext/opcache/ZendAccelerator.c.wip php-5.5.6RC1/ext/opcache/ZendAccelerator.c
---- php-5.5.6RC1/ext/opcache/ZendAccelerator.c.wip	2013-10-29 12:09:06.000000000 +0100
-+++ php-5.5.6RC1/ext/opcache/ZendAccelerator.c	2013-11-04 14:23:59.395722970 +0100
-@@ -145,9 +145,33 @@ static inline int is_cacheable_stream_pa
+From 9d75b9fb27cd93c19cd168a486ab2efe2ce2aa78 Mon Sep 17 00:00:00 2001
+From: Xinchen Hui <laruence@php.net>
+Date: Wed, 6 Nov 2013 16:53:45 +0800
+Subject: [PATCH] Revert "Fixed issue #115 (path issue when using phar)."
+
+We need another better way to fix this
+
+This reverts commit 098855433dc5d609e3970f0bc9d6766c007273f3.
+
+Conflicts:
+	ext/opcache/ZendAccelerator.c
+---
+ NEWS                          |  1 -
+ ext/opcache/ZendAccelerator.c | 44 +++++--------------------------------------
+ 2 files changed, 5 insertions(+), 40 deletions(-)
+
+diff --git a/NEWS b/NEWS
+index 26990de..3a690bb 100644
+--- a/NEWS
++++ b/NEWS
+@@ -75,7 +75,6 @@ PHP                                                                        NEWS
+     imap). (ryotakatsuki at gmail dot com)
+ 
+ - OPcache:
+-  . Fixed issue #115 (path issue when using phar). (Laruence)
+   . Added support for GNU Hurd. (Svante Signell)
+   . Added function opcache_compile_file() to load PHP scripts into cache
+     without execution. (Julien)
+diff --git a/ext/opcache/ZendAccelerator.c b/ext/opcache/ZendAccelerator.c
+index 8cee80f..72b5a1b 100644
+--- a/ext/opcache/ZendAccelerator.c
++++ b/ext/opcache/ZendAccelerator.c
+@@ -37,7 +37,6 @@
+ #include "zend_API.h"
+ #include "zend_ini.h"
+ #include "TSRM/tsrm_virtual_cwd.h"
+-#include "ext/phar/php_phar.h"
+ #include "zend_accelerator_util_funcs.h"
+ #include "zend_accelerator_hash.h"
+ 
+@@ -145,21 +144,6 @@ static inline int is_cacheable_stream_path(const char *filename)
  	       memcmp(filename, "phar://", sizeof("phar://") - 1) == 0;
  }
  
-+#ifdef COMPILE_DL_PHAR
-+static typeof(phar_resolve_alias) *opcache_phar_resolve_alias;
-+#else
-+# define opcache_phar_resolve_alias phar_resolve_alias
-+#endif
-+
- static inline int is_phar_relative_alias_path(const char *filename, char **alias, int *alias_len)
- {
+-static inline int is_phar_relative_alias_path(const char *filename, char **alias, int *alias_len)
+-{
 -	if (memcmp(filename, "phar://", sizeof("phar://") - 1) == 0
-+#ifdef COMPILE_DL_PHAR
-+	static int pharloaded = -1;
-+
-+	/* Only once, retrieve phar_resolve_alias from phar module if loaded */
-+	if (pharloaded < 0) {
-+		zend_module_entry *phar;
-+
-+		if (zend_hash_find(&module_registry, "phar", 5, (void**)&phar) == SUCCESS) {
-+			opcache_phar_resolve_alias = DL_FETCH_SYMBOL(phar->handle, "phar_resolve_alias");
-+			pharloaded = (opcache_phar_resolve_alias ? 1 : 0);
-+		} else {
-+			pharloaded = 0;
-+		}
-+	}
-+	if (pharloaded &&
-+#else
-+	if (
-+#endif
-+			memcmp(filename, "phar://", sizeof("phar://") - 1) == 0
- 			&& filename[sizeof("phar://") - 1] != '\0' && filename[sizeof("phar://") - 1] != '/') {
- 		char *slash;
- 		*alias = (char*)filename + sizeof("phar://") - 1;
-@@ -1056,7 +1080,7 @@ char *accel_make_persistent_key_ex(zend_
- 			if (is_phar_relative_alias_path(file_handle->filename, &alias, &alias_len)) {
- 				char *phar_path;
- 				int phar_path_len;
+-			&& filename[sizeof("phar://") - 1] != '\0' && filename[sizeof("phar://") - 1] != '/') {
+-		char *slash;
+-		*alias = (char*)filename + sizeof("phar://") - 1;
+-		slash = strstr(*alias, "/");
+-		if (slash) {
+-			*alias_len = slash - *alias;
+-			return 1;
+-		}
+-	}
+-	return 0;
+-}
+-
+ /* O+ overrides PHP chdir() function and remembers the current working directory
+  * in ZCG(cwd) and ZCG(cwd_len). Later accel_getcwd() can use stored value and
+  * avoid getcwd() call.
+@@ -1044,33 +1028,15 @@ char *accel_make_persistent_key_ex(zend_file_handle *file_handle, int path_lengt
+         }
+ 		memcpy(ZCG(key) + cur_len, include_path, include_path_len);
+ 		ZCG(key)[key_length] = '\0';
+-	} else {
+-		/* not use_cwd */
+-		key_length = path_length;
++    } else {
++        /* not use_cwd */
++        key_length = path_length;
+ 		if ((size_t)key_length >= sizeof(ZCG(key))) {
+ 			ZCG(key_len) = 0;
+ 			return NULL;
+-		} else {
+-			char *alias;
+-			int alias_len;
+-			if (is_phar_relative_alias_path(file_handle->filename, &alias, &alias_len)) {
+-				char *phar_path;
+-				int phar_path_len;
 -				if (phar_resolve_alias(alias, alias_len, &phar_path, &phar_path_len TSRMLS_CC) == SUCCESS) {
-+				if (opcache_phar_resolve_alias(alias, alias_len, &phar_path, &phar_path_len TSRMLS_CC) == SUCCESS) {
- 					int filename_len = strlen(file_handle->filename);
- 					memcpy(ZCG(key), "phar://", sizeof("phar://") -1);
- 					memcpy(ZCG(key) + sizeof("phar://") - 1, phar_path, phar_path_len);
+-					int filename_len = strlen(file_handle->filename);
+-					memcpy(ZCG(key), "phar://", sizeof("phar://") -1);
+-					memcpy(ZCG(key) + sizeof("phar://") - 1, phar_path, phar_path_len);
+-					memcpy(ZCG(key) + sizeof("phar://") - 1 + phar_path_len,
+-							alias + alias_len, filename_len - alias_len - sizeof("phar://") + 2);
+-					key_length = filename_len + (phar_path_len - alias_len);
+-				} else {
+-					memcpy(ZCG(key), file_handle->filename, key_length + 1);
+-				}
+-			} else {
+-				memcpy(ZCG(key), file_handle->filename, key_length + 1);
+-			}
+ 		}
+-	}
++		memcpy(ZCG(key), file_handle->filename, key_length + 1);
++    }
+ 
+ 	*key_len = ZCG(key_len) = key_length;
+ 	return ZCG(key);
+-- 
+1.8.4.rc3
+
