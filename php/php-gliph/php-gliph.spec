@@ -16,6 +16,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commit}.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 
 Requires:      php(language) >= %{php_min_ver}
@@ -38,6 +39,7 @@ Neo4J (http://neo4j.org/).
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p -m 755 %{buildroot}%{_datadir}/php
 cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
@@ -48,12 +50,20 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 # contacted to revert the git export-ignore so tests may be run here.
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
 %{_datadir}/php/%{lib_name}
 
 
 %changelog
+* Thu Nov  7 2013 Remi Collet <rpms@famillecollet.com> 0.1.5-1
+- backport 0.1.5 for remi repo
+
 * Wed Nov 06 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.1.5-1
 - Updated to 0.1.5
 - Removed tests (git export-ignored upstream)
