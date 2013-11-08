@@ -6,11 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%if 0%{?scl:1}
-%scl_package php-pecl-http1
-%else
-%global pkg_name %{name}
-%endif
+%{?scl:%scl_package php-pecl-http1}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -24,7 +20,7 @@
 # php-pecl-http exists and is version 2
 Name:           %{?scl_prefix}php-pecl-http1
 Version:        1.7.6
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -50,12 +46,18 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so only requires real packages instead
+Requires:       %{?scl_prefix}php-common%{?_isa}
+%else
 Requires:       %{?scl_prefix}php-hash%{?_isa}
 Requires:       %{?scl_prefix}php-iconv%{?_isa}
 Requires:       %{?scl_prefix}php-session%{?_isa}
 # From phpcompatinfo on the PHP extension (pgsql is optional)
 Requires:       %{?scl_prefix}php-date%{?_isa}
 Requires:       %{?scl_prefix}php-pcre%{?_isa}
+%endif
 Requires:       %{?scl_prefix}php-xmlrpc%{?_isa}
 
 # From upstream documentation
@@ -243,6 +245,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov  7 2013 Remi Collet <remi@fedoraproject.org> - 1.7.6-4
+- fix dependencies for EPEL-6
+
 * Tue Oct 22 2013 Remi Collet <remi@fedoraproject.org> - 1.7.6-3
 - install doc in pecl doc_dir
 - install tests in pecl test_dir

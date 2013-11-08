@@ -19,7 +19,7 @@
 # php-pecl-http exists and is version 2
 Name:           php-pecl-http1
 Version:        1.7.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -45,12 +45,18 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so only requires real packages instead
+Requires:       php-common%{?_isa}
+%else
 Requires:       php-hash%{?_isa}
 Requires:       php-iconv%{?_isa}
 Requires:       php-session%{?_isa}
 # From phpcompatinfo on the PHP extension (pgsql is optional)
 Requires:       php-date%{?_isa}
 Requires:       php-pcre%{?_isa}
+%endif
 Requires:       php-xmlrpc%{?_isa}
 
 # From upstream documentation
@@ -238,6 +244,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov  7 2013 Remi Collet <remi@fedoraproject.org> - 1.7.6-4
+- fix dependencies for EPEL-6
+
 * Tue Oct 22 2013 Remi Collet <remi@fedoraproject.org> - 1.7.6-3
 - cleanups for review (drop SCL and EPEL-5 stuff)
 - install doc in pecl doc_dir
