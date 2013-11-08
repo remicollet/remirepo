@@ -8,3 +8,7 @@ include ../../common/Makefile
 
 tembed: tembed.c
 	gcc -Wall $(INCL1) $(INCL2) tembed.c $(LIBS) -o tembed
+
+debug:
+	time rpmbuild $(RPMDEFINES) --with debug -bb $(NAME).spec
+

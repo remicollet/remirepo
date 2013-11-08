@@ -39,6 +39,9 @@
 # Build ZTS extension or only NTS
 %global with_zts      1
 
+# Debuild build
+%global with_debug    %{?_with_debug:1}%{!?_with_debug:0}
+
 %if 0%{?__isa_bits:1}
 %global isasuffix -%{__isa_bits}
 %else
@@ -103,7 +106,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.6
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.6.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -1000,11 +1003,14 @@ cat `aclocal --print-ac-dir`/libtool.m4 > build/libtool.m4
 # Regenerate configure scripts (patches change config.m4's)
 touch configure.in
 ./buildconf --force
+%if %{with_debug}
+LDFLAGS="-fsanitize=address"
+export LDFLAGS
+CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-pointer-sign -fsanitize=address -ggdb"
+%else
 CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-pointer-sign"
-#CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Wno-pointer-sign -fsanitize=address -ggdb"
+%endif
 export CFLAGS
-#LDFLAGS="-fsanitize=address"
-#export LDFLAGS
 
 # Install extension modules in %{_libdir}/php/modules.
 EXTENSION_DIR=%{_libdir}/php/modules; export EXTENSION_DIR
@@ -1064,6 +1070,9 @@ ln -sf ../configure
     --with-mhash \
 %if %{with_dtrace}
     --enable-dtrace \
+%endif
+%if %{with_debug}
+    --enable-debug \
 %endif
     $*
 if test $? != 0; then 
@@ -1848,6 +1857,9 @@ fi
 
 
 %changelog
+* Fri Nov  8 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.6.RC1
+- add --with debug option for debug build
+
 * Wed Nov  6 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.5.RC1
 - test buid with opcache changes reverted
 
