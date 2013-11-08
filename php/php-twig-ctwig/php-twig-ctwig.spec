@@ -9,6 +9,7 @@
 %{?scl:         %scl_package        php-twig-ctwig}
 %{!?php_inidir: %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:     %global __pecl      %{_bindir}/pecl}
+%{!?__php:      %global __php       %{_bindir}/php}
 
 %global with_zts     0%{?__ztsphp:1}
 %global pecl_name    CTwig
@@ -115,6 +116,11 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
 %endif
 
+# Documentation
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -128,7 +134,7 @@ fi
 
 %check
 : Minimal load test for NTS extension
-%{_bindir}/php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=NTS/modules/%{ext_name}.so \
     --modules | grep %{ext_name}
 
@@ -146,7 +152,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/LICENSE
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
@@ -160,6 +166,7 @@ rm -rf %{buildroot}
 %changelog
 * Wed Oct 30 2013 Remi Collet <remi@fedoraproject.org> - 1.14.2-1
 - Update to 1.14.2 (no change)
+- install doc in pecl doc_dir
 
 * Fri Oct 18 2013 Remi Collet <remi@fedoraproject.org> - 1.14.1-2
 - rename from php-twig-CTwig to php-twig-ctwig
