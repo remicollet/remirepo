@@ -3,7 +3,7 @@
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-phpcpd
-Version:        1.4.3
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -14,23 +14,26 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear
+BuildRequires:  php(language)  >= 5.3.3
+BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{channel})
 
+Requires(post): %{__pear}
+Requires(postun): %{__pear}
+# From package.xml
 Requires:       php(language) >= 5.3.3
+Requires:       php-tokenizer
+Requires:       php-pear(PEAR) >= 1.9.4
+Requires:       php-channel(%{channel})
+Requires:       php-pear(pear.phpunit.de/FinderFacade) >= 1.1.0
+Requires:       php-pear(pear.phpunit.de/PHP_Timer)    >= 1.0.4
+Requires:       php-pear(pear.phpunit.de/Version)      >= 1.0.0
+Requires:       php-pear(pear.symfony.com/Console)     >= 2.2.0
+# From phpcompatinfo report for version 2.0.0
 Requires:       php-dom
 Requires:       php-mbstring
 Requires:       php-spl
-Requires:       php-tokenizer
 Requires:       php-xml
-Requires:       php-channel(%{channel})
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-Requires:       php-pear(pear.phpunit.de/FinderFacade) >= 1.0.4
-Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.4
-Requires:       php-pear(pear.phpunit.de/Version) >= 1.0.0
-Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6 
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 
@@ -92,6 +95,12 @@ fi
 
 
 %changelog
+* Fri Nov 08 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
+- drop dependency on components.ez.no/ConsoleTools
+- add dependency on pear.symfony.com/Console >= 2.2.0
+- raise dependency on pear.phpunit.de/FinderFacade >= 1.1.0
+
 * Tue Jul 30 2013 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
 - Update to 1.4.3
 
