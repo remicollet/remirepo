@@ -6,8 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name xrange
@@ -15,7 +16,7 @@
 Summary:        Numeric iterator primitives
 Name:           php-pecl-%{pecl_name}
 Version:        1.3.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -27,27 +28,36 @@ Source1:        http://www.php.net/license/3_01.txt
 
 # http://svn.php.net/viewvc?view=revision&revision=331707
 # http://svn.php.net/viewvc?view=revision&revision=331708
+# http://svn.php.net/viewvc?view=revision&revision=332090
 Patch0:         %{pecl_name}-svn.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
-BuildRequires:  libattr-devel
+BuildRequires:  pcre-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so only requires real packages instead
+Requires:       php-common%{?_isa}
+%else
 Requires:       php-spl%{?_isa}
+%endif
 
 Provides:       php-%{pecl_name} = %{version}
 Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -122,6 +132,15 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -136,16 +155,16 @@ fi
 %check
 : Minimal load test for NTS extension
 cd NTS
-%{_bindir}/php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
-TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{__php} -n run-tests.php
 
 
 %if %{with_zts}
@@ -170,7 +189,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{LICENSE,CREDITS}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -182,5 +202,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov  9 2013 Remi Collet <remi@fedoraproject.org> - 1.3.2-2
+- cleanups for Copr
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+
 * Sun Oct  6 2013 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - initial package

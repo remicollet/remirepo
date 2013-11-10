@@ -33,3 +33,25 @@
  --EXPECTF--
 -Fatal error: Cannot create references to elements of a temporary array expression %a
 +Fatal error: %a reference%a
+--- pecl/xrange/trunk/tests/010.010.phpt	2013/11/09 11:52:44	332089
++++ pecl/xrange/trunk/tests/010.010.phpt	2013/11/09 16:08:07	332090
+@@ -2,6 +2,8 @@
+ Test xrange() against range() - 010
+ --SKIPIF--
+ <?php if (!extension_loaded("xrange")) print "skip"; ?>
++--INI--
++precision=8
+ --FILE--
+ <?php 
+ // don't necessarily match up with the equality operator (in this test)
+--- pecl/xrange/trunk/tests/010.011.phpt	2013/11/09 11:52:44	332089
++++ pecl/xrange/trunk/tests/010.011.phpt	2013/11/09 16:08:07	332090
+@@ -2,6 +2,8 @@
+ Test xrange() against range() - 011
+ --SKIPIF--
+ <?php if (!extension_loaded("xrange")) print "skip"; ?>
++--INI--
++precision=8
+ --FILE--
+ <?php 
+ // don't necessarily match up with the equality operator (in this test)
