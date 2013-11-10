@@ -6,8 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  varnish
@@ -140,7 +141,7 @@ fi
 ret=0
 
 : Minimal load test for NTS extension
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=NTS/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -185,11 +186,11 @@ sed -e 's:/var/lib/varnish/silent:/tmp/vtest:' \
     -e "s/6082/$PORTADM/" \
     tests/config.php-dist | tee tests/config.php
 
-TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php || ret=1
+%{__php} -n run-tests.php || ret=1
 
 %if %{with_zts}
 cd ../ZTS
