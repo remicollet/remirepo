@@ -1,6 +1,6 @@
 Name:      php-ZendFramework2
-Version:   2.2.4
-Release:   2%{?dist}
+Version:   2.2.5
+Release:   1%{?dist}
 Summary:   Zend Framework 2
 
 Group:     Development/Libraries
@@ -10,7 +10,12 @@ Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/
 #Source1:   https://packages.zendframework.com/releases/ZendFramework-%%{version}/ZendFramework-%%{version}-manual-en.tgz
 #Source2:   https://packages.zendframework.com/releases/ZendFramework-%%{version}/ZendFramework-%%{version}-apidoc.tgz
 
-# https://bugzilla.redhat.com/1014478  patch needed for GLPI
+# Patch needed for GLPI
+# https://bugzilla.redhat.com/1014478
+#
+# ZF-11974: Zend_Translate, Plural - unable to get translation of terms when
+# singular = plural (ex: software)
+# http://framework.zend.com/issues/browse/ZF-11974
 Patch0:    %{name}-glpi.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -2168,8 +2173,15 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 # ##############################################################################
 
 %changelog
-* Wed Oct  2 2013 Remi Collet <remi@fedoraproject.org> 2.2.4-2
-- add patch needed for GLPI #1014478
+* Mon Nov 11 2013 Remi Collet <remi@fedoraproject.org> 2.2.5-1
+- backport 2.2.5 for remi repo
+
+* Sun Nov 10 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.5-1
+- Updated to 2.2.5
+- Fixed Serializer sub-pkg broken dependency (php-pecl(msgpack) on ppc64)
+
+* Wed Oct 02 2013 Remi Collet <remi@fedoraproject.org> 2.2.4-2
+- Add patch needed for GLPI #1014478 (ZF-11974)
 
 * Sun Sep 29 2013 Remi Collet <remi@fedoraproject.org> 2.2.4-1
 - backport 2.2.4 for remi repo
