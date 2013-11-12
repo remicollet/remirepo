@@ -100,7 +100,7 @@
 %endif
 
 #global snapdate      201308300430
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -108,7 +108,7 @@ Version: 5.5.6
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.6.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 0.7%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1857,6 +1857,9 @@ fi
 
 
 %changelog
+* Tue Nov 12 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.7
+- update to 5.5.6, test build
+
 * Fri Nov  8 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.6.RC1
 - add --with debug option for debug build
 
