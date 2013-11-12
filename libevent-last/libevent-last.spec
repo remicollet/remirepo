@@ -1,7 +1,10 @@
 %global libname libevent
 
+# Regression tests take a long time, you can skip 'em with this
+%{!?runselftest: %{expand: %%global runselftest 1}}
+
 Name:           libevent-last
-Version:        2.0.18
+Version:        2.0.21
 Release:        1%{?dist}
 Summary:        Abstract asynchronous event notification library
 
@@ -14,6 +17,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  openssl-devel
 
 Patch00: libevent-2.0.10-stable-configure.patch
+# Disable network tests
+Patch01: libevent-nonettests.patch
 
 
 %description
@@ -43,6 +48,7 @@ you will need to install %{name}-devel.
 
 # 477685 -  libevent-devel multilib conflict
 %patch00 -p1
+%patch01 -p1 -b .nonettests
 
 
 %build
@@ -57,14 +63,24 @@ make DESTDIR=$RPM_BUILD_ROOT install
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%check
+%if %runselftest
+make check
+%endif
+
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 
 %files
-%defattr(-,root,root,0755)
-%doc README
+%defattr(-,root,root,-)
+%doc ChangeLog LICENSE README
 %{_libdir}/libevent-*.so.*
 %{_libdir}/libevent_core-*.so.*
 %{_libdir}/libevent_extra-*.so.*
@@ -72,7 +88,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/libevent_pthreads-*.so.*
 
 %files devel
-%defattr(-,root,root,0755)
+%defattr(-,root,root,-)
 %{_includedir}/event.h
 %{_includedir}/evdns.h
 %{_includedir}/evhttp.h
@@ -87,14 +103,20 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/libevent.pc
 %{_libdir}/pkgconfig/libevent_openssl.pc
 %{_libdir}/pkgconfig/libevent_pthreads.pc
-
 %{_bindir}/event_rpcgen.*
 
 
 %changelog
+* Tue Nov 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.21-1
+- backport 2.0.21 for remi repo
+
 * Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 2.0.18-3
 - rename to libevent-last
 - drop -doc sub-package
+
+* Thu May  2 2013 Orion Poplawski <orion@cora.nwra.com> - 2.0.21-1
+- Update to 2.0.21
+- Add %%check
 
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.18-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
