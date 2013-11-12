@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Stream
-Version:        1.4.0
+Version:        1.5.0
 Release:        1%{?dist}
 Summary:        Horde stream handler
 
@@ -99,6 +99,9 @@ fi
 
 
 %changelog
+* Tue Nov 12 2013 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- Update to 1.5.0
+
 * Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Update to 1.4.0
 
