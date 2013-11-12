@@ -1,10 +1,18 @@
-%define pluginname   datainjection
-#global svnrelease   596
+# spec file for glpi-data-injection
+#
+# Copyright (c) 2007-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%global pluginname   datainjection
+#global svnrelease   703
 
 Name:           glpi-data-injection
-Version:        2.1.7
+Version:        2.2.1
 %if 0%{?svnrelease}
-Release:        0.2.svn%{svnrelease}%{?dist}
+Release:        0.1.svn%{svnrelease}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -16,23 +24,23 @@ License:        GPLv2+
 
 URL:            https://forge.indepnet.net/projects/datainjection
 %if 0%{?svnrelease}
-# svn export -r 596 https://forge.indepnet.net/svn/datainjection/trunk datainjection
-# tar czf glpi-datainjection-2.1.0-596.tar.gz datainjection
-Source0:        glpi-datainjection-2.1.0-%{svnrelease}.tar.gz
+# svn export -r 703 https://forge.indepnet.net/svn/datainjection/trunk datainjection
+# tar czf glpi-datainjection-2.2.0-703.tar.gz datainjection
+Source0:        glpi-datainjection-2.2.0-%{svnrelease}.tar.gz
 %else
 # This change for each new version
-Source0:        https://forge.indepnet.net/attachments/download/1188/glpi-datainjection-2.1.7.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1189/glpi-datainjection-2.2.1.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.80
-Requires:       glpi <  0.81
+Requires:       glpi >= 0.83
+Requires:       glpi <  0.84
 Requires:       glpi-pdf
 
-# This plugin is renamed (for 0.72)
-Provides:       glpi-datainjection = %{version}-%{release}
+# This plugin have been renamed
+Provides:       glpi-%{pluginname} = %{version}-%{release}
 
 
 %description
@@ -70,9 +78,6 @@ done
 # don't need this
 rm -f testwebservice.php
 
-# fix in SVN...
-chmod -x datainjection/ajax/model.tabs.php
-
 
 %build
 # empty build
@@ -106,16 +111,24 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/inc
 %{_datadir}/glpi/plugins/%{pluginname}/javascript
 %{_datadir}/glpi/plugins/%{pluginname}/pics
+# Need here, required from the Interface
+%{_datadir}/glpi/plugins/%{pluginname}/LICENSE
 
 
 %changelog
-* Wed Jun 13 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.1.7-1
-- update to 2.1.7
-  https://forge.indepnet.net/projects/datainjection/versions/772
+* Wed Jun 13 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.2.1-1
+- version 2.2.1
+  https://forge.indepnet.net/projects/datainjection/versions/748
 
-* Tue Jan 10 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.1.6-1
-- update to 2.1.6
-  https://forge.indepnet.net/projects/datainjection/versions/718
+* Thu Apr 19 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.2.0-1
+- version 2.2.0 finale
+  https://forge.indepnet.net/projects/datainjection/versions/645
+
+* Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.2.0-0.1.svn703
+- new snapshot
+
+* Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.2.0-0.1.svn674
+- update to 2.2.0 for glpi 0.83 RC (svn snapshot)
 
 * Tue Jan 10 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.1.4-1
 - update to 2.1.4
@@ -151,7 +164,7 @@ rm -rf %{buildroot}
 * Wed Jan 19 2011 Remi Collet <Fedora@FamilleCollet.com> - 2.0.0-0.1.beta
 - update to 2.0.0-beta
 
-* Sun Dec 10 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.7.2-1
+* Fri Dec 10 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.7.2-1
 - update to 1.7.2
 - fix URL + Source (link to new forge)
 
