@@ -108,7 +108,7 @@ Version: 5.5.6
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.6.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 0.7%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1857,6 +1857,9 @@ fi
 
 
 %changelog
+* Wed Nov 13 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-1
+- update to 5.5.6
+
 * Tue Nov 12 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-0.7
 - update to 5.5.6, test build
 
