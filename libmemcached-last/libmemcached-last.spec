@@ -1,11 +1,12 @@
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 %global with_sasl        1
+%global libname          libmemcached
 
-Name:      libmemcached
+Name:      libmemcached-last
 Summary:   Client library and command line tools for memcached server
 Version:   1.0.16
-Release:   1%{?dist}
+Release:   1%{?dist}.1
 License:   BSD
 Group:     System Environment/Libraries
 URL:       http://libmemcached.org/
@@ -15,7 +16,7 @@ URL:       http://libmemcached.org/
 # code, since the license is non-free.  When upgrading, download the new
 # source tarball, and run "./strip-hsieh.sh <version>" to produce the
 # "-exhsieh" tarball.
-Source0:   libmemcached-%{version}-exhsieh.tar.gz
+Source0:   %{libname}-%{version}-exhsieh.tar.gz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if %{with_sasl}
@@ -29,7 +30,10 @@ BuildRequires: memcached
 BuildRequires: systemtap-sdt-devel
 %endif
 BuildRequires: libevent-devel
-
+Conflicts:     %{libname} < %{version}
+Provides:      %{libname}         = %{version}-%{release}
+Provides:      %{libname}%{?_isa} = %{version}-%{release}
+Requires:      %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description
 libmemcached is a C/C++ client library and tools for the memcached server
@@ -55,13 +59,16 @@ memtouch    Touches a key
 
 
 %package devel
-Summary: Header files and development libraries for %{name}
-Group: Development/Libraries
-Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: pkgconfig
+Summary:    Header files and development libraries for %{name}
+Group:      Development/Libraries
+Requires:   %{name}%{?_isa} = %{version}-%{release}
+Requires:   pkgconfig
 %if %{with_sasl}
-Requires: cyrus-sasl-devel%{?_isa}
+Requires:   cyrus-sasl-devel%{?_isa}
 %endif
+Conflicts:  %{libname}-devel < %{version}
+Provides:   %{libname}-devel         = %{version}-%{release}
+Provides:   %{libname}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the header files and development libraries
@@ -69,8 +76,17 @@ for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
 
+%package libs
+Summary:    %{libname} libraries
+Group:      Development/Libraries
+
+%description libs
+This package contains the %{libname} libraries version %{version}.
+This package is designed to be installed beside %{libname}.
+
+
 %prep
-%setup -q
+%setup -q -n %{libname}-%{version}
 
 mkdir examples
 cp -p tests/*.{cc,h} examples/
@@ -141,19 +157,21 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr (-,root,root,-) 
-%doc AUTHORS COPYING README THANKS TODO ChangeLog
+%defattr (-,root,root,-)
 %{_bindir}/mem*
 %exclude %{_libdir}/lib*.la
+%{_mandir}/man1/mem*
+
+%files libs
+%defattr (-,root,root,-)
+%doc AUTHORS COPYING README THANKS TODO ChangeLog
 %{_libdir}/libhashkit.so.2*
 %{_libdir}/libmemcached.so.11*
 %{_libdir}/libmemcachedprotocol.so.0*
 %{_libdir}/libmemcachedutil.so.2*
-%{_mandir}/man1/mem*
-
 
 %files devel
-%defattr (-,root,root,-) 
+%defattr (-,root,root,-)
 %doc examples
 %{_includedir}/libmemcached
 %{_includedir}/libmemcached-1.0
@@ -174,6 +192,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 15 2013 Remi Collet <remi@fedoraproject.org> - 1.0.17-1
+- rename to libmemcached-last
+- add -libs subpackage to be installed beside standard libmemcached
+
 * Mon Aug  5 2013 Remi Collet <remi@fedoraproject.org> - 1.0.16-1
 - revert to 1.0.16 for fedora 20
 
