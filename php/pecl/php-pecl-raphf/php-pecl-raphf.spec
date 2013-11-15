@@ -6,17 +6,20 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir %{_includedir}/php}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts  0%{?__ztsphp:1}
-%global pecl_name raphf
+%global with_zts   0%{?__ztsphp:1}
+%global pecl_name  raphf
+# test disable by default, circular dependency on pecl/http
+%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:        Resource and persistent handles factory
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.2
-Release:        1%{?dist}.1
+Version:        1.0.3
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -25,6 +28,9 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel > 5.3
 BuildRequires:  php-pear
+%if %{with_tests}
+BuildRequires:  php-pecl-http
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -36,9 +42,11 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 %description
 A reusable split-off of pecl_http's persistent handle and resource
@@ -115,6 +123,14 @@ make -C ZTS \
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -127,18 +143,42 @@ fi
 
 
 %check
+cd NTS
 # Minimal load test for NTS extension
 php --no-php-ini \
-    --define extension_dir=NTS/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
+for mod in json hash iconv propro; do
+  if [ -f %{php_extdir}/${mod}.so ]; then
+    modules="$modules -d extension=${mod}.so"
+  fi
+done
+
+: Upstream test suite for NTS extension
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n $modules -d extension=$PWD/modules/%{pecl_name}.so -d extension=http.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php
+%endif
+
 %if %{with_zts}
+cd ../ZTS
 # Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=ZTS/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+%if %{with_tests}
+: Upstream test suite for ZTS extension
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n $modules -d extension=$PWD/modules/%{pecl_name}.so -d extension=http.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php
+%endif
 %endif
 
 
@@ -148,7 +188,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{CREDITS,LICENSE}
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -160,6 +200,7 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 
 %if %{with_zts}
@@ -168,14 +209,20 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 15 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 (stable)
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+- add --with tests option (not enabled, need pecl/http)
+
 * Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
-- Update to 1.0.2
+- Update to 1.0.2 (stable)
 
 * Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
-- Update to 1.0.1
+- Update to 1.0.1 (stable)
 
 * Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
-- Update to 1.0.0
+- Update to 1.0.0 (stable)
 
 * Sun Jun 16 2013 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
-- initial package
+- initial package, version 0.1.0 (beta)

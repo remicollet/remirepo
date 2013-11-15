@@ -8,7 +8,7 @@ pushd $tdir
 tar -xzf ../libmemcached-$ver.tar.gz
 
 pushd libmemcached-$ver
- rm libhashkit/hsieh.c
+ rm libhashkit/hsieh.cc
  grep -r 'azillionmonkeys' . && exit 1
 popd
 
