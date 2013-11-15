@@ -1,4 +1,5 @@
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name memcached
 %global libmemcached_build_version %(pkg-config --silence-errors --modversion libmemcached 2>/dev/null || echo 65536)
@@ -6,7 +7,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcached
 Version:      2.1.0
-Release:      6%{?dist}.5
+Release:      7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -32,7 +33,6 @@ BuildRequires: cyrus-sasl-devel
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:     libmemcached%{?_isa} >= %{libmemcached_build_version}
 Requires:     php-pecl-igbinary%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
@@ -45,16 +45,16 @@ Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -185,6 +185,10 @@ ln -s %{php_ztsextdir}/igbinary.so modules/
 
 
 %changelog
+* Fri Nov 15 2013  Remi Collet <remi@fedoraproject.org> - 2.1.0-7
+- drop requires libmemcached >= build version
+  as this can also be libmemcached-last
+
 * Mon Nov 19 2012  Remi Collet <remi@fedoraproject.org> - 2.1.0-6
 - requires libmemcached >= build version
 
