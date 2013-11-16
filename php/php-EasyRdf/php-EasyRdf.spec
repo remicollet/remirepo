@@ -1,5 +1,5 @@
-# phpci false positive for 5.3.3 because usage of JSON_ERROR_* constants in
-# lib/EasyRdf/Parser/Json.php are conditional
+# phpcompatinfo false positive for 5.3.3 because usage of JSON_ERROR_*
+# constants in lib/EasyRdf/Parser/Json.php are conditional
 %global php_min_ver 5.2.8
 
 %if 0%{?fedora} > 9 || 0%{?rhel} > 5
@@ -13,7 +13,7 @@
 
 Name:          php-EasyRdf
 Version:       0.7.2
-Release:       3%{?dist}
+Release:       5%{?dist}
 Summary:       A PHP library designed to make it easy to consume and produce RDF
 
 Group:         Development/Libraries
@@ -23,12 +23,13 @@ Source0:       %{url}/downloads/easyrdf-%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# For tests
 BuildRequires: php(language) >= %{php_min_ver}
 %if %{with_test}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires: graphviz
 BuildRequires: raptor >= 1.4.17
-# phpci
+# For tests: phpcompatinfo
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-dom
@@ -40,7 +41,7 @@ BuildRequires: php-xml
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpci requires
+# phpcompatinfo requires
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-dom
@@ -49,6 +50,8 @@ Requires:      php-pcre
 #Requires:      php-redland
 Requires:      php-spl
 Requires:      php-xml
+
+Obsoletes:     %{name}-test
 
 %description
 EasyRdf is a PHP library designed to make it easy to consume and produce RDF
@@ -80,31 +83,11 @@ Group:   Documentation
 %{summary}.
 
 
-%package test
-Summary:  Test suite for %{name}
-Group:    Development/Libraries
-Requires: %{name} = %{version}-%{release}
-# Yes, test requires doc (for examples)
-Requires: %{name}-doc = %{version}-%{release}
-Requires: php-pear(pear.phpunit.de/PHPUnit)
-Requires: graphviz-gd
-Requires: raptor
-
-%description test
-%{summary}.
-
-
 %prep
 %setup -q -n easyrdf-%{version}
 
-# Update test file
-chmod +x test/cli_example_wrapper.php
-sed -e 's:/usr/bin/env php:%{_bindir}/php:' \
-    -e '/EXAMPLES_DIR = /s|\.\.|../../doc/%{name}-doc-%{version}|' \
-    -i test/cli_example_wrapper.php
-
 #
-# The following fixes will not be required as of pre-release 0.8.8-beta1.
+# The following fixes will not be required as of pre-release 0.8.0-beta1.
 #
 
 # Remove Mac files
@@ -129,14 +112,11 @@ REQUIRE
 mkdir -p -m 755 %{buildroot}%{_datadir}/php
 cp -rp lib/* %{buildroot}%{_datadir}/php/
 
-mkdir -p -m 755 %{buildroot}%{_datadir}/tests/%{name}
-cp -rp test/* %{buildroot}%{_datadir}/tests/%{name}/
-
 
 %check
 %if 0%{?fedora} > 18
 : Temporarily skipping "EasyRdf_Serialiser_GraphVizTest::testSerialiseSvg" test
-: because of unknown failure in Fedora 19
+: because of unknown failure in Fedora > 18
 sed 's/testSerialiseSvg/SKIP_TEST_testSerialiseSvg/' \
     -i test/EasyRdf/Serialiser/GraphVizTest.php
 %endif
@@ -162,13 +142,12 @@ make test-lib
 %defattr(-,root,root,-)
 %doc LICENSE.md docs examples
 
-%files test
-%defattr(-,root,root,-)
-%dir %{_datadir}/tests
-     %{_datadir}/tests/%{name}
-
 
 %changelog
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.7.2-5
+- Removed test sub-package
+- php-common => php(language)
+
 * Thu Feb  7 2013 Remi Collet <remi@fedoraproject.org> - 0.7.2-3
 - backport 0.7.2 for remi repo.
 - disable tests on RHEL-5 (requires raptor 1.4.17)
