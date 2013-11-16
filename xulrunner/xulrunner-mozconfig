@@ -33,6 +33,7 @@ ac_add_options --disable-gnomevfs
 ac_add_options --disable-updater
 ac_add_options --enable-chrome-format=omni
 ac_add_options --disable-gstreamer
+ac_add_options --enable-pulseaudio
 
 export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1

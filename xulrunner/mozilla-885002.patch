@@ -1,0 +1,30 @@
+# HG changeset patch
+# Parent d8fd5706493e19bcb85443316a4c180849f5d247
+# User Steve Singer <steve@ssinger.info>
+Bug 885002 - Fix casting on 64 bit Big Endian platforms.
+
+
+diff --git a/content/media/FileBlockCache.h b/content/media/FileBlockCache.h
+--- a/content/media/FileBlockCache.h
++++ b/content/media/FileBlockCache.h
+@@ -138,19 +138,17 @@ public:
+ 
+     bool IsEmpty() {
+       return nsDeque::GetSize() == 0;
+     }
+ 
+   private:
+     int32_t ObjectAt(int32_t aIndex) {
+       void* v = nsDeque::ObjectAt(aIndex);
+-      // Ugly hack to work around "casting 64bit void* to 32bit int loses precision"
+-      // error on 64bit Linux.
+-      return *(reinterpret_cast<int32_t*>(&v));
++      return reinterpret_cast<uintptr_t>(v);
+     }
+   };
+ 
+ private:
+   int64_t BlockIndexToOffset(int32_t aBlockIndex) {
+     return static_cast<int64_t>(aBlockIndex) * BLOCK_SIZE;
+   }
+ 

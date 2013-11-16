@@ -110,13 +110,15 @@ Patch17:        xulrunner-24.0-gcc47.patch
 Patch18:        xulrunner-24.0-jemalloc-ppc.patch
 # workaround linking issue on s390 (JSContext::updateMallocCounter(size_t) not found)
 Patch19:        xulrunner-24.0-s390-inlines.patch
+Patch20:        mozilla-885002.patch
 
 # Fedora specific patches
-Patch20:        mozilla-193-pkgconfig.patch
+Patch200:       mozilla-193-pkgconfig.patch
 # Unable to install addons from https pages
-Patch24:        rhbz-966424.patch
+Patch204:       rhbz-966424.patch
 
 # Upstream patches
+Patch300:       mozilla-837563.patch
 
 # ---------------------------------------------------
 
@@ -154,6 +156,7 @@ BuildRequires:  libvpx-devel >= %{libvpx_version}
 BuildRequires:  yasm
 %endif
 BuildRequires:  autoconf213
+BuildRequires:  pulseaudio-libs-devel
 %if 0%{?rhel} == 6
 BuildRequires:   python27
 BuildRequires:   devtoolset-2-toolchain
@@ -280,9 +283,12 @@ cd %{tarballdir}
 %patch17 -p2 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
 %patch19 -p2 -b .s390-inlines
+%patch20 -p1 -b .885002
 
-%patch20 -p2 -b .pk
-%patch24  -p1 -b .966424
+%patch200 -p2 -b .pk
+%patch204 -p1 -b .966424
+
+%patch300 -p1 -b .837563
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -599,6 +605,13 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Nov 12 2013 Martin Stransky <stransky@redhat.com> - 25.0-4
+- rhbz#1010916 - enabled pluseaudio backend
+
+* Fri Nov 8 2013 Martin Stransky <stransky@redhat.com> - 25.0-3
+- Fixed rhbz#974718 - Segfault in FileBlockCache::Run
+  when playing a movie on ppc
+
 * Wed Oct 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0-2
 - sync with rawhide, update to 25.0 Build 3
 - enable devtoolset-2 (gcc 4.8) for EL-6
