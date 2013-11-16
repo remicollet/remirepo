@@ -157,7 +157,7 @@ fi
 
 %check
 cd NTS
-# Minimal load test for NTS extension
+: Minimal load test for NTS extension
 php --no-php-ini \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -179,7 +179,7 @@ REPORT_EXIT_STATUS=1 \
 
 %if %{with_zts}
 cd ../ZTS
-# Minimal load test for ZTS extension
+: Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
