@@ -13,7 +13,8 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  raphf
-# test disable by default, circular dependency on pecl/http
+# tests disabled because of circular dependency on pecl/http
+# tests requires not yet release pecl/http 2.0.0beta6
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:        Resource and persistent handles factory
@@ -42,11 +43,20 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+# Other third party repo stuff
+Obsoletes:     php53-pecl-raphf
+Obsoletes:     php53u-pecl-raphf
+Obsoletes:     php54-pecl-raphf
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-raphf
+%endif
+
 %if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 %endif
+
 
 %description
 A reusable split-off of pecl_http's persistent handle and resource
@@ -82,9 +92,12 @@ cp -pr NTS ZTS
 %endif
 
 # Create configuration file
-cat > %{pecl_name}.ini << 'EOF'
+cat << 'EOF' | tee %{pecl_name}.ini
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
+
+; Configuration
+;raphf.persistent_handle.limit = -1
 EOF
 
 
