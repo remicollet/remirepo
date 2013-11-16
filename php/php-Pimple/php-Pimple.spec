@@ -1,13 +1,14 @@
 %global github_owner   fabpot
 %global github_name    Pimple
-%global github_version 1.0.2
-%global github_commit  ae11e57e8c2bb414b2ff93396dbbfc0eb92feb94
+%global github_version 1.1.0
+%global github_commit  471c7d7c52ad6594e17b8ec33efdd1be592b5d83
+
 %global php_min_ver    5.3.0
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       1%{?dist}
-Summary:       A simple Dependency Injection Container for PHP
+Release:       3%{?dist}
+Summary:       A simple dependency injection container for PHP
 
 Group:         Development/Libraries
 License:       MIT
@@ -26,8 +27,13 @@ Requires:      php(language) >= %{php_min_ver}
 Requires:      php-spl
 
 %description
-Pimple is a small Dependency Injection Container for PHP that consists of
+Pimple is a small dependency injection container for PHP that consists of
 just one file and one class.
+
+NOTE: %{_datadir}/php/%{github_name}/%{github_name}.php is provided for legacy
+      (pre PSR-0 packaging guidelines update) compatibility
+      and will be removed in version 2.  Please use PSR-0
+      compliant %{_datadir}/php/%{github_name}.php instead.
 
 
 %prep
@@ -39,8 +45,12 @@ just one file and one class.
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{github_name}
-cp -pr lib/* %{buildroot}%{_datadir}/php/%{github_name}/
+mkdir -pm 755 %{buildroot}%{_datadir}/php
+cp -p lib/Pimple.php %{buildroot}%{_datadir}/php/
+
+# Legacy (pre PSR-0 packaging guidelines update)
+mkdir -pm 755 %{buildroot}%{_datadir}/php/%{github_name}
+ln -s ../Pimple.php %{buildroot}%{_datadir}/php/%{github_name}/Pimple.php
 
 
 %check
@@ -51,9 +61,23 @@ cp -pr lib/* %{buildroot}%{_datadir}/php/%{github_name}/
 %defattr(-,root,root,-)
 %doc LICENSE README.rst composer.json
 %{_datadir}/php/%{github_name}
+%{_datadir}/php/Pimple.php
 
 
 %changelog
+* Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
+- backport 1.1.0 for remi repo.
+
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.0-3
+- Updated description with note about PSR-0 and legacy compatibility
+
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.0-2
+- Updated file location for PSR-0 compliance
+
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.0-1
+- Updated to 1.1.0
+- php-common => php(language)
+
 * Sat Mar 09 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - backport 1.0.2 for remi repo.
 
