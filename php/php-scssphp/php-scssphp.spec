@@ -1,7 +1,7 @@
 %global github_owner   leafo
 %global github_name    scssphp
-%global github_version 0.0.7
-%global github_commit  e5a79218c349cbc03dc99004fbad938c7b82391f
+%global github_version 0.0.8
+%global github_commit  96329a5f259f9d28e6596de84211a0f613c3edae
 
 %global php_min_ver    5.3.0
 
@@ -21,13 +21,13 @@ BuildRequires: help2man
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpci
+# For tests: phpcompatinfo
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-pcre
 
 Requires:      php(language) >= %{php_min_ver}
-# phpci
+# phpcompatinfo
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-pcre
@@ -86,6 +86,12 @@ install -p -m 644 pscss.1 %{buildroot}%{_mandir}/man1/
 
 
 %changelog
+* Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> 0.0.8-1
+- backport 0.0.8 for remi repo.
+
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.0.8-1
+- Updated to 0.0.8
+
 * Fri Jun 07 2013 Remi Collet <remi@fedoraproject.org> 0.0.7-1
 - backport 0.0.7 for remi repo.
 
