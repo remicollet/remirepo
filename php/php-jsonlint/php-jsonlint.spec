@@ -1,7 +1,7 @@
 %global github_owner   Seldaek
 %global github_name    jsonlint
-%global github_version 1.1.1
-%global github_commit  2b5b57008ec93148fa46110d42c7a201a6677fe0
+%global github_version 1.1.2
+%global github_commit  7cd4c4965e17e6e4c07f26d566619a4c76f8c672
 
 %global php_min_ver    5.3.0
 
@@ -20,11 +20,11 @@ BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpci
+# For tests: phpcompatinfo
 BuildRequires: php-pcre
 
 Requires:      php(language) >= %{php_min_ver}
-# phpci
+# phpcompatinfo
 Requires:      php-pcre
 
 %description
@@ -64,12 +64,19 @@ cp -rp src/Seld/JsonLint %{buildroot}%{_datadir}/php/Seld/
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.mdown composer.json
+%doc LICENSE *.mdown composer.json
 %dir %{_datadir}/php/Seld
      %{_datadir}/php/Seld/JsonLint
 
 
 %changelog
+* Sat Nov 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.2-1
+- backport 1.1.2 for remi repo
+
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.2-1
+- Updated to upstream version 1.1.2
+- php-common => php(language)
+
 * Wed Feb 13 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.1-1
 - backport 1.1.1 for remi repo
 
