@@ -117,7 +117,7 @@ cp -rp * %{buildroot}%{_datadir}/php/Symfony/Cmf/Component/Routing/
 
 
 %changelog
-* Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+* Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1.1
 - backport 1.1.0 for remi repo.
 
 * Wed Oct 30 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.0-1
