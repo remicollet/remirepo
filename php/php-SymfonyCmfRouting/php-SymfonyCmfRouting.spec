@@ -5,8 +5,11 @@
 
 %global php_min_ver     5.3.3
 
-%global symfony_min_ver 2.2.0
+%global symfony_min_ver 2.2
 %global symfony_max_ver 3.0
+
+%global psr_log_min_ver 1.0
+%global psr_log_max_ver 2.0
 
 # Tests are only run with rpmbuild --with tests
 # Need to investigate errors
@@ -14,12 +17,12 @@
 
 Name:          php-SymfonyCmfRouting
 Version:       %{github_version}
-Release:       1%{?dist}
-Summary:       Extends the Symfony2 routing component
+Release:       1%{?dist}.1
+Summary:       Extends the Symfony2 routing component for dynamic routes and chaining
 
 Group:         Development/Libraries
 License:       MIT
-URL:           http://symfony.com/doc/master/cmf/components/routing.html
+URL:           http://symfony.com/doc/master/cmf/components/routing/index.html
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -28,50 +31,41 @@ BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires: php-pear(pear.symfony.com/Routing) >= %{symfony_min_ver}
+BuildRequires: php-pear(pear.symfony.com/Config) >= %{symfony_min_ver}
+BuildRequires: php-pear(pear.symfony.com/Config) <  %{symfony_max_ver}
+BuildRequires: php-pear(pear.symfony.com/DependencyInjection) >= %{symfony_min_ver}
+BuildRequires: php-pear(pear.symfony.com/DependencyInjection) <  %{symfony_max_ver}
+BuildRequires: php-pear(pear.symfony.com/EventDispatcher) >= %{symfony_min_ver}
+BuildRequires: php-pear(pear.symfony.com/EventDispatcher) <  %{symfony_max_ver}
 BuildRequires: php-pear(pear.symfony.com/HttpKernel) >= %{symfony_min_ver}
-BuildRequires: php-PsrLog > 1.0
-# For tests: phpci
+BuildRequires: php-pear(pear.symfony.com/HttpKernel) <  %{symfony_max_ver}
+BuildRequires: php-pear(pear.symfony.com/Routing) >= %{symfony_min_ver}
+BuildRequires: php-pear(pear.symfony.com/Routing) <  %{symfony_max_ver}
+BuildRequires: php-PsrLog >= %{psr_log_min_ver}
+BuildRequires: php-PsrLog <  %{psr_log_max_ver}
+# For tests: phpcompatinfo
 BuildRequires: php-pcre
-BuildRequires: php-reflection
 BuildRequires: php-spl
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-Requires:      php-pear(pear.symfony.com/Routing) >= %{symfony_min_ver}
-Requires:      php-pear(pear.symfony.com/Routing) <  %{symfony_max_ver}
 Requires:      php-pear(pear.symfony.com/HttpKernel) >= %{symfony_min_ver}
 Requires:      php-pear(pear.symfony.com/HttpKernel) <  %{symfony_max_ver}
-Requires:      php-PsrLog > 1.0
-# phpci
+Requires:      php-pear(pear.symfony.com/Routing) >= %{symfony_min_ver}
+Requires:      php-pear(pear.symfony.com/Routing) <  %{symfony_max_ver}
+Requires:      php-PsrLog >= %{psr_log_min_ver}
+Requires:      php-PsrLog <  %{psr_log_max_ver}
+# Optional
+Requires:      php-pear(pear.symfony.com/EventDispatcher) >= %{symfony_min_ver}
+Requires:      php-pear(pear.symfony.com/EventDispatcher) <  %{symfony_max_ver}
+# phpcompatinfo
 Requires:      php-pcre
-Requires:      php-reflection
 Requires:      php-spl
 
 %description
-The Symfony CMF Routing component library extends the Symfony2 core routing
-component. Even though it has Symfony in its name, it does not need the full
-Symfony2 framework and can be used in standalone projects. For integration
-with Symfony we provide RoutingExtraBundle.
-
-At the core of the Symfony CMF Routing component is the ChainRouter, that is
-used instead of the Symfony2's default routing system. The ChainRouter can
-chain several RouterInterface implementations, one after the other, to determine
-what should handle each request. The default Symfony2 router can be added to
-this chain, so the standard routing mechanism can still be used.
-
-Additionally, this component is meant to provide useful implementations of the
-routing interfaces. Currently, it provides the DynamicRouter, which uses a
-RequestMatcherInterface to dynamically load Routes, and can apply
-RouteEnhancerInterface strategies in order to manipulate them. The provided
-NestedMatcher can dynamically retrieve Symfony2 Route objects from a
-RouteProviderInterface. This interfaces abstracts a collection of Routes,
-that can be stored in a database, like Doctrine PHPCR-ODM or Doctrine ORM.
-The DynamicRouter also uses a UrlGenerator instance to generate Routes and
-an implementation is provided under ProviderBasedGenerator that can generate
-routes loaded from a RouteProviderInterface instance, and the
-ContentAwareGenerator on top of it to determine the route object from a
-content object.
+The Symfony CMF Routing component extends the Symfony2 core routing component
+to allow more flexibility. The most important difference is that the CMF
+Routing component can load routing information from a database.
 
 
 %prep
@@ -123,6 +117,14 @@ cp -rp * %{buildroot}%{_datadir}/php/Symfony/Cmf/Component/Routing/
 
 
 %changelog
+* Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- backport 1.1.0 for remi repo.
+
+* Wed Oct 30 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.0-1
+- Updated to 1.1.0
+- Updated required pkg versions, required pkgs, summary, URL, and description
+- php-common -> php(language)
+
 * Thu May 16 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - backport 1.0.1 for remi repo.
 
