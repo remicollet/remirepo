@@ -1,7 +1,7 @@
 %global github_owner    schmittjoh
 %global github_name     metadata
-%global github_version  1.3.0
-%global github_commit   f2ab7883f6f915d40bfc38a70e0ead5f130610dc
+%global github_version  1.5.0
+%global github_commit   88ffa28bc987e4c26229fc84a2e541b6ed4e1459
 
 %global lib_name        Metadata
 %global php_min_ver     5.3.0
@@ -9,7 +9,7 @@
 Name:          php-%{lib_name}
 Version:       %{github_version}
 Release:       1%{?dist}
-Summary:       Class/method/property metadata management in PHP
+Summary:       A library for class/method/property metadata management in PHP
 
 Group:         Development/Libraries
 License:       ASL 2.0
@@ -18,19 +18,19 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# Test build requires
+# For tests
 BuildRequires: php-common >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires: php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.0
 BuildRequires: php-pear(pear.doctrine-project.org/DoctrineCommon) <  2.4
-# Test build requires: phpci
+# For tests: phpcompatinfo
 BuildRequires: php-date
 BuildRequires: php-reflection
 BuildRequires: php-spl
 
 Requires:      php-common >= %{php_min_ver}
 Requires:      php-pear(pear.symfony.com/DependencyInjection)
-# phpci requires
+# phpcompatinfo requires
 Requires:      php-date
 Requires:      php-reflection
 Requires:      php-spl
@@ -79,6 +79,12 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Sat Nov 16 2013 Remi Collet <RPMS@famillecollet.com> 1.5.0-1
+- backport 1.5.0 for remi repo
+
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.5.0-1
+- Updated to 1.5.0
+
 * Tue Apr  2 2013 Remi Collet <RPMS@famillecollet.com> 1.3.0-1
 - backport 1.3.0 for remi repo
 
