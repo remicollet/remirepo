@@ -32,6 +32,7 @@ Requires:         php-date
 Requires:         php-filter
 Requires:         php-hash
 Requires:         php-intl
+Requires:         php-libxml
 Requires:         php-json
 Requires:         php-pcre
 Requires:         php-reflection
@@ -123,6 +124,10 @@ fi
 
 
 %changelog
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 3.7.4-1
+- Updated to 3.7.4
+- Added php-libxml require
+
 * Thu Oct 03 2013 Remi Collet <remi@fedoraproject.org> - 3.7.4-1
 - Update to 3.7.4
 
