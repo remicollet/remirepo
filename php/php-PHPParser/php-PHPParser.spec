@@ -1,73 +1,54 @@
-%global lib_name    PHPParser
-%global github_name PHP-Parser
+%global github_owner    nikic
+%global github_name     PHP-Parser
+%global github_version  0.9.4
+%global github_commit   1e5e280ae88a27effa2ae4aa2bd088494ed8594f
 
-%global php_min_ver 5.3.0
+%global lib_name        PHPParser
+
+%global php_min_ver     5.2.0
 
 Name:          php-%{lib_name}
-Version:       0.9.3
-Release:       2%{?dist}
+Version:       %{github_version}
+Release:       1%{?dist}
 Summary:       A PHP parser written in PHP
 
 Group:         Development/Libraries
 License:       BSD
-URL:           https://github.com/nikic/%{github_name}
-Source0:       %{url}/archive/v%{version}.tar.gz
+URL:           https://github.com/%{github_owner}/%{github_name}
+Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# Test build requires
+# For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# Test build requires: phpci
+# For tests: phpcompatinfo
 BuildRequires: php-ctype
+BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
-BuildRequires: php-filter
 BuildRequires: php-xmlreader
 BuildRequires: php-xmlwriter
 
 Requires:      php(language) >= %{php_min_ver}
-# phpci requires
+# phpcompatinfo requires
 Requires:      php-ctype
+Requires:      php-filter
 Requires:      php-pcre
 Requires:      php-spl
 Requires:      php-tokenizer
-Requires:      php-filter
 Requires:      php-xmlreader
 Requires:      php-xmlwriter
+
+Obsoletes:     %{name}-test
 
 %description
 A PHP parser written in PHP to simplify static analysis and code manipulation.
 
 
-%package test
-Summary:  Test suite for %{name}
-Group:    Development/Libraries
-Requires: %{name} = %{version}-%{release}
-
-%description test
-%{summary}.
-
-
 %prep
-%setup -q -n %{github_name}-%{version}
-
-# Update and move bootstrap
-sed "/require/s:/PHPParser::" \
-    -i lib/bootstrap.php
-mv lib/bootstrap.php lib/%{lib_name}/
-
-# Update and move PHPUnit config
-sed -e 's:./lib/bootstrap.php:%{_datadir}/php/%{lib_name}/bootstrap.php:' \
-    -e 's:./lib/%{lib_name}/:%{_datadir}/php/%{lib_name}/:' \
-    -e 's:./test/:./:' \
-    -i phpunit.xml.dist
-mv phpunit.xml.dist test/
-
-# Remove executable bit from composer.json
-# https://github.com/nikic/PHP-Parser/pull/46
-chmod a-x composer.json
+%setup -q -n %{github_name}-%{github_commit}
 
 
 %build
@@ -78,15 +59,9 @@ chmod a-x composer.json
 mkdir -p -m 755 %{buildroot}%{_datadir}/php
 cp -rp lib/%{lib_name} %{buildroot}%{_datadir}/php/
 
-mkdir -p -m 755 %{buildroot}%{_datadir}/tests/%{name}
-cp -rp test/* %{buildroot}%{_datadir}/tests/%{name}/
-
 
 %check
-%{_bindir}/phpunit \
-    --bootstrap=lib/%{lib_name}/bootstrap.php \
-    -c test/phpunit.xml.dist \
-    -d include_path="./lib:./test:.:/usr/share/pear"
+%{_bindir}/phpunit
 
 
 %files
@@ -94,13 +69,15 @@ cp -rp test/* %{buildroot}%{_datadir}/tests/%{name}/
 %doc LICENSE *.md doc grammar composer.json
 %{_datadir}/php/%{lib_name}
 
-%files test
-%defattr(-,root,root,-)
-%dir %{_datadir}/tests
-     %{_datadir}/tests/%{name}
-
 
 %changelog
+* Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> 0.9.4-1
+- backport 0.9.4 for remi repo.
+
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.9.4-1
+- Updated to 0.9.4
+- Spec cleanup
+
 * Tue Jan  8 2013 Remi Collet <remi@fedoraproject.org> 0.9.3-2
 - backport 0.9.3 for remi repo.
 
