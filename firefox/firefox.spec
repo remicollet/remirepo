@@ -1,5 +1,5 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 18
+%if 0%{?fedora} < 99
 %define system_nss        0
 %else
 %define system_nss        1
@@ -29,13 +29,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      25.0
+%global xulrunner_version      25.0.1
 %global xulrunner_version_max  25.1
-%global xulrunner_release      2
+%global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20131030
+%global datelang               20131116
 
 %global mozappdir     %{_libdir}/%{name}
 %global langpackdir   %{mozappdir}/langpacks
@@ -71,8 +71,8 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        25.0
-Release:        2%{?pre_tag}%{?dist}
+Version:        25.0.1
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -518,6 +518,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Nov 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0.1-1
+- update to 25.0.1
+
 * Wed Oct 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0-2
 - sync with rawhide, update to 25.0 Build 3
 - enable devtoolset-2 (gcc 4.8) for EL-6

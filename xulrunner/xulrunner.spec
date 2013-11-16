@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 18
+%if 0%{?fedora} < 99
 %define system_nss        0
 %else
 %define system_nss        1
@@ -39,7 +39,7 @@
 
 %if %{?system_nss}
 # grep 'min_ns.*=[0-9]' configure
-%global nspr_version 4.9.6
+%global nspr_version 4.10.2
 %global nspr_build_version %((pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536) | sed s/\.0\$//)
 %global nss_version 3.15
 %global nss_build_version %((pkg-config --silence-errors --modversion nss 2>/dev/null   || echo 65536) | sed s/\.0\$//)
@@ -90,8 +90,8 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        25.0
-Release:        2%{?pre_tag}%{?dist}
+Version:        25.0.1
+Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -605,6 +605,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sat Nov 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0.1-1
+- sync with rawhide, update to 25.0.1
+
 * Tue Nov 12 2013 Martin Stransky <stransky@redhat.com> - 25.0-4
 - rhbz#1010916 - enabled pluseaudio backend
 
