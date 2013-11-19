@@ -22,7 +22,7 @@
 
 Summary:        Riak database PHP extension
 Name:           php-pecl-%{pecl_name}
-Version:        0.9.1
+Version:        1.0.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        ASL 2.0 and BSD
 Group:          Development/Languages
@@ -205,6 +205,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 19 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0 (stable)
+
 * Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
 - Update to 0.9.1 (beta)
 
