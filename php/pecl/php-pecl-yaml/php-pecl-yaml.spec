@@ -57,7 +57,8 @@ Documentation: http://php.net/yaml
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-# honour --with-libdir option, patch sent to upstream
+# honour --with-libdir option
+# http://git.php.net/?p=pecl/file_formats/yaml.git;a=commitdiff;h=e1b40c36a8f0ba42a90c655ab3fc21bf4fb7d163
 sed -e 's:/lib:/$PHP_LIBDIR:' -i config.m4
 
 # Check upstream version (often broken)
