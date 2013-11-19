@@ -1,11 +1,14 @@
-%{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
-%global pecl_name yaml
+%global with_zts   0%{?__ztsphp:1}
+%global pecl_name  yaml
 
 Summary:       PHP Bindings for yaml
 Name:          php-pecl-yaml
-Version:       1.1.0
-Release:       2%{?dist}.4
+Version:       1.1.1
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -22,46 +25,51 @@ Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      php-%{pecl_name} = %{version}
+Provides:      php-%{pecl_name}%{?_isa} = %{version}
+Provides:      php-pecl(%{pecl_name}) = %{version}
+Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
 Support for YAML 1.1 (YAML Ain't Markup Language) serialization using the
 LibYAML library.
 
+Documentation: http://php.net/yaml
+
 
 %prep
 %setup -c -q
+mv %{pecl_name}-%{version} NTS
 
-# https://bugs.php.net/bug.php?id=61789
-sed -i -e '/PHP_YAML_MODULE_VERSION/s/1.1.0-dev/%{version}/' %{pecl_name}-%{version}/php_yaml.h
+cd NTS
+# honour --with-libdir option, patch sent to upstream
+sed -e 's:/lib:/$PHP_LIBDIR:' -i config.m4
 
 # Check upstream version (often broken)
-extver=$(sed -n '/#define PHP_YAML_MODULE_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_yaml.h)
+extver=$(sed -n '/#define PHP_YAML_VERSION/{s/.* "//;s/".*$//;p}' php_yaml.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
 fi
+cd ..
 
-cat > %{pecl_name}.ini << 'EOF'
-; Enable %{pecl_name} extension module
+cat << 'EOF' | tee %{pecl_name}.ini
+; Enable %{summary} extension module
 extension=%{pecl_name}.so
 
 ; %{pecl_name} extension configuration
@@ -84,58 +92,81 @@ yaml.output_indent = 2
 yaml.output_width = 80
 EOF
 
-cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+cp -pr NTS ZTS
 
 
 %build
-cd %{pecl_name}-%{version}
-phpize
-%configure  --with-php-config=%{_bindir}/php-config
+cd NTS
+
+%{_bindir}/phpize
+%configure \
+    --with-libdir=%{_lib} \
+    --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}-zts
-zts-phpize
-%configure  --with-php-config=%{_bindir}/zts-php-config
+%if %{with_zts}
+cd ../ZTS
+%{_bindir}/zts-phpize
+%configure \
+    --with-libdir=%{_lib} \
+    --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
-make -C %{pecl_name}-%{version} \
-     install INSTALL_ROOT=%{buildroot}
-
-make -C %{pecl_name}-%{version}-zts \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
 install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %check
-cd %{pecl_name}-%{version}
-php --no-php-ini \
-    --define extension_dir=modules \
-    --define extension=%{pecl_name}.so \
+cd NTS
+: Minimal load test for NTS extension
+%{__php} --no-php-ini \
+    --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-make test NO_INTERACTION=1 | tee rpmtests.log
+: Upstream test suite for NTS extension
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__php} -n run-tests.php
 
-if grep -q "FAILED TEST" rpmtests.log; then
-  for t in tests/*diff; do
-     echo "*** FAILED: $(basename $t .diff)"
-     diff -u tests/$(basename $t .diff).exp tests/$(basename $t .diff).out || :
-  done
-  exit 1
-fi
-
-cd ../%{pecl_name}-%{version}-zts
-zts-php --no-php-ini \
-    --define extension_dir=modules \
-    --define extension=%{pecl_name}.so \
+%if %{with_zts}
+cd ../ZTS
+: Minimal load test for ZTS extension
+%{__ztsphp} --no-php-ini \
+    --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+: Upstream test suite for ZTS extension
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php
+
+%endif
 
 
 %clean
@@ -154,15 +185,24 @@ fi
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_name}-%{version}/{CREDITS,LICENSE}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
-%{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%{php_extdir}/%{pecl_name}.so
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Tue Nov 19 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1 (stable)
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+
 * Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.1.0-2.1
 - also provides php-yaml
 
@@ -187,6 +227,6 @@ fi
 - clean spec
 - fix requirment, license, tests...
 
-* Wed May 05 2011 Thomas Morse <tmorse@empowercampaigns.com> 1.0.1-1
+* Thu May 05 2011 Thomas Morse <tmorse@empowercampaigns.com> 1.0.1-1
 - Version 1.0.1
 - initial RPM
