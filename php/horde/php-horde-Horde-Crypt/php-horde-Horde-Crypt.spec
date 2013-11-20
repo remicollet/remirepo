@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt
-Version:        2.3.0
+Version:        2.4.0
 Release:        1%{?dist}
 Summary:        Horde Cryptography API
 
@@ -38,6 +38,8 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.5.0
@@ -46,6 +48,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
@@ -127,6 +131,10 @@ fi
 
 
 %changelog
+* Wed Nov 20 2013 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- Update to 2.4.0
+- add dependencies: Horde_Http, Horde_Url
+
 * Tue Nov 12 2013 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - Update to 2.3.0
 - add dependency: Horde_Stream >= 1.5.0
