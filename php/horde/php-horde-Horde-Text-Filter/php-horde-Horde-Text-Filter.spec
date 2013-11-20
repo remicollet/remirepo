@@ -3,19 +3,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Filter
-Version:        2.1.5
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
 Group:          Development/Libraries
 License:        LGPLv2
-URL:            http://pear.horde.org
-# remove non-free stuff
-# http://bugs.horde.org/ticket/11870
-# pear download horde/Horde_Text_Filter
-# ./strip.sh %{version}
-Source0:        %{pear_name}-%{version}-strip.tgz
-Source1:        strip.sh
+URL:            http://%{pear_channel}/
+Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -29,10 +24,8 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml
 Requires:       php(language) >= 5.3.0
-Requires:       php-pcre
-Requires:       php-spl
-Requires:       php-tidy
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
@@ -40,9 +33,14 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
+Requires:       php-tidy
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) <  3.0.0
+# From phpcompatinfo report for 2.2.0
+Requires:       php-dom
+Requires:       php-pcre
 # Optional and implicitly required: Horde_Translation
+# Optional but non-free: Horde_Text_Filter_Jsmin
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -140,6 +138,12 @@ fi
 
 
 %changelog
+* Wed Nov 20 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+- upstream have move JSMin non-free code to a separate package
+- add dependency on php-dom
+
+
 * Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - Update to 2.1.5
 
