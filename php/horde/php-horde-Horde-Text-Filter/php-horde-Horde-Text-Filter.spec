@@ -36,7 +36,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-tidy
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) <  3.0.0
-# From phpcompatinfo report for 2.2.0
+# From phpcompatinfo report for version 2.2.0
 Requires:       php-dom
 Requires:       php-pcre
 # Optional and implicitly required: Horde_Translation
