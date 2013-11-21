@@ -6,11 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+
+# See https://bugzilla.redhat.com/1033025
+# selinux-policy : Please include policy for GLPI
 %global useselinux 1
 
 Name:           glpi
 Version:        0.84.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -211,10 +214,11 @@ rm -rf %{buildroot}
 %if %{useselinux}
 (
 # New File context
-semanage fcontext -a -s system_u -t httpd_sys_script_rw_t -r s0 "%{_sysconfdir}/glpi(/.*)?" 
-semanage fcontext -a -s system_u -t httpd_log_t           -r s0 "%{_localstatedir}/log/glpi(/.*)?"
+semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_sysconfdir}/%{name}(/.*)?"
+semanage fcontext -a -s system_u -t httpd_sys_content_t    -r s0 "%{_datadir}/%{name}(/.*)?"
+semanage fcontext -a -s system_u -t httpd_log_t            -r s0 "%{_localstatedir}/log/%{name}(/.*)?"
 # keep httpd_sys_script_rw_t (httpd_var_lib_t prevent dir creation)
-semanage fcontext -a -s system_u -t httpd_sys_script_rw_t -r s0 "%{_localstatedir}/lib/glpi(/.*)?"
+semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
 # files created by app
 restorecon -R %{_sysconfdir}/%{name}
 restorecon -R %{_localstatedir}/lib/%{name}
@@ -229,9 +233,10 @@ restorecon -R %{_localstatedir}/log/%{name}
 if [ "$1" -eq "0" ]; then
     # Remove the File Context
     (
-    semanage fcontext -d "%{_sysconfdir}/glpi(/.*)?"
-    semanage fcontext -d "%{_localstatedir}/log/glpi(/.*)?"
-    semanage fcontext -d "%{_localstatedir}/lib/glpi(/.*)?"
+    semanage fcontext -d "%{_sysconfdir}/%{name}(/.*)?"
+    semanage fcontext -d "%{_datadir}/%{name}(/.*)?"
+    semanage fcontext -d "%{_localstatedir}/log/%{name}(/.*)?"
+    semanage fcontext -d "%{_localstatedir}/lib/%{name}(/.*)?"
     ) &>/dev/null
 fi
 %endif
@@ -272,6 +277,10 @@ fi
 
 
 %changelog
+* Thu Nov 21 2013 Remi Collet <remi@fedoraproject.org> - 0.84.3-2
+- fix SELinux context #1032995
+  use httpd_sys_rw_content_t instead of httpd_sys_script_rw_t
+
 * Sun Nov  3 2013 Remi Collet <remi@fedoraproject.org> - 0.84.3-1
 - update to 0.84.3
   https://forge.indepnet.net/projects/glpi/versions/973
