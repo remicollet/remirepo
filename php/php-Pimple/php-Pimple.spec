@@ -7,7 +7,7 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       A simple dependency injection container for PHP
 
 Group:         Development/Libraries
@@ -30,11 +30,6 @@ Requires:      php-spl
 Pimple is a small dependency injection container for PHP that consists of
 just one file and one class.
 
-NOTE: %{_datadir}/php/%{github_name}/%{github_name}.php is provided for legacy
-      (pre PSR-0 packaging guidelines update) compatibility
-      and will be removed in version 2.  Please use PSR-0
-      compliant %{_datadir}/php/%{github_name}.php instead.
-
 
 %prep
 %setup -q -n %{github_name}-%{github_commit}
@@ -45,26 +40,29 @@ NOTE: %{_datadir}/php/%{github_name}/%{github_name}.php is provided for legacy
 
 
 %install
-mkdir -pm 755 %{buildroot}%{_datadir}/php
-cp -p lib/Pimple.php %{buildroot}%{_datadir}/php/
+mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{github_name}
+cp -pr lib/* %{buildroot}%{_datadir}/php/%{github_name}/
 
-# Legacy (pre PSR-0 packaging guidelines update)
-mkdir -pm 755 %{buildroot}%{_datadir}/php/%{github_name}
-ln -s ../Pimple.php %{buildroot}%{_datadir}/php/%{github_name}/Pimple.php
 
 
 %check
-%{_bindir}/phpunit -d include_path="./lib:./tests:%{pear_phpdir}"
+%{_bindir}/phpunit --include-path="./lib:./tests"
 
 
 %files
 %defattr(-,root,root,-)
 %doc LICENSE README.rst composer.json
 %{_datadir}/php/%{github_name}
-%{_datadir}/php/Pimple.php
 
 
 %changelog
+* Thu Nov 21 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
+- sync remi repo with rawhide
+
+* Thu Nov 21 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.0-4
+- Reverted invalid PSR-0
+- Updated %%check to use PHPUnit's "--include-path" option
+
 * Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
 - backport 1.1.0 for remi repo.
 
