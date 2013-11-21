@@ -221,6 +221,7 @@ semanage fcontext -a -s system_u -t httpd_log_t            -r s0 "%{_localstated
 semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
 # files created by app
 restorecon -R %{_sysconfdir}/%{name}
+restorecon -R %{_datadir}/%{name}
 restorecon -R %{_localstatedir}/lib/%{name}
 restorecon -R %{_localstatedir}/log/%{name}
 ) &>/dev/null
