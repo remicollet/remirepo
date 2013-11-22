@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Smtp
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        Horde SMTP Client
 
@@ -124,6 +124,9 @@ fi
 
 
 %changelog
+* Fri Nov 22 2013 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- Update to 1.3.1
+
 * Thu Oct 31 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - Update to 1.3.0
 - raise dependency: Horde_Socket_Client >= 1.1.0

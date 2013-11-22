@@ -1,6 +1,8 @@
 #!/usr/bin/php
 <?php
 
+chdir(__DIR__);
+
 $packs = array();
 $conf = array();
 
