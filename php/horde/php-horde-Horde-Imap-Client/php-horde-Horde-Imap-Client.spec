@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.16.0
+Version:        2.16.1
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -64,7 +64,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
-# From phpcompatinfo report for version 2.15.3
+# From phpcompatinfo report for version 2.16.1
 Requires:       php-date
 Requires:       php-openssl
 Requires:       php-pcre
@@ -154,6 +154,9 @@ fi
 
 
 %changelog
+* Fri Nov 22 2013 Remi Collet <remi@fedoraproject.org> - 2.16.1-1
+- Update to 2.16.1
+
 * Thu Oct 31 2013 Remi Collet <remi@fedoraproject.org> - 2.16.0-1
 - Update to 2.16.0
 - add dependency: Horde_Socket_Client >= 1.1.0
