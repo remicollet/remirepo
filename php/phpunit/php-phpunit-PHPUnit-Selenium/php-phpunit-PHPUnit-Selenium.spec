@@ -11,7 +11,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        1.3.2
+Version:        1.3.3
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -27,22 +27,31 @@ BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(%{pear_channel}/PHPUnit) >= 3.7.0
+# From package.xml
 Requires:       php(language) >= 5.3.3
+Requires:       php-pear(PEAR) >= 1.9.4
+Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/PHPUnit) >= 3.7.0
 Requires:       php-curl
 Requires:       php-dom
-# phpcompatinfo detected extensions in 1.3.2
+# From phpcompatinfo report for version 1.3.3
 Requires:       php-date
-Requires:       php-pcre
 Requires:       php-json
+Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
+Requires:       php-zip
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
-Selenium RC integration for PHPUnit
+Selenium RC integration for PHPUnit.
+
+This package contains a base Testcase Class that can be used to run end-to-end
+tests against Selenium 2 (using its Selenium 1 backward compatible Api).
+
+Optional dependency: XDebug (php-pecl-xdebug)
 
 
 %prep
@@ -99,6 +108,10 @@ fi
 
 
 %changelog
+* Fri Nov 22 2013 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- Update to 1.3.3 (stable)
+- improve description
+
 * Mon Aug 26 2013 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - Update to 1.3.2
 
