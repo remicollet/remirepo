@@ -6,16 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir %{_includedir}/php}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global prever    beta5
+%global with_zts  0%{?__ztsphp:1}
 
 Name:           php-pecl-http
 Version:        2.0.0
-Release:        0.18.%{prever}%{?dist}.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -44,10 +47,16 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so only requires real packages instead
+Requires:       php-common%{?_isa}
+%else
 Requires:       php-hash%{?_isa}
 Requires:       php-iconv%{?_isa}
 Requires:       php-json%{?_isa}
 Requires:       php-spl%{?_isa}
+%endif
 Requires:       php-pecl(propro)%{?_isa}
 Requires:       php-pecl(raphf)%{?_isa}
 Conflicts:      php-event
@@ -64,12 +73,14 @@ Obsoletes:     php53-pecl-http
 Obsoletes:     php53u-pecl-http
 Obsoletes:     php54-pecl-http
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-http
+Obsoletes:     php55u-pecl-http
 %endif
 
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -85,6 +96,10 @@ capabilities.
 Also provided is a powerful request and parallel interface.
 
 Version 2 is completely incompatible to previous version.
+
+Note:
+. php-pecl-http1 provides API version 1
+. php-pecl-http  provides API version 2
 
 Documentation : http://php.net/http
 
@@ -102,9 +117,10 @@ These are the files needed to compile programs using HTTP extension.
 %prep
 %setup -c -q 
 
-cd %{proj_name}-%{version}%{?prever}
+mv %{proj_name}-%{version}%{?prever} NTS
+cd NTS
 
-extver=$(sed -n '/#define PHP_HTTP_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
+extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
    : Update the pdover macro and rebuild.
@@ -114,40 +130,54 @@ cd ..
 
 cp %{SOURCE1} %{pecl_name}.ini
 
-cp -pr %{proj_name}-%{version}%{?prever} %{proj_name}-zts
+%if %{with_zts}
+# Duplicate source tree for NTS / ZTS build
+cp -pr NTS ZTS
+%endif
 
 
 %build
-cd %{proj_name}-%{version}%{?prever}
+cd NTS
 %{_bindir}/phpize
 %configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{proj_name}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 
-make -C %{proj_name}-%{version}%{?prever} \
-     install INSTALL_ROOT=%{buildroot}
-
-make -C %{proj_name}-zts \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file (z-http.ini to be loaded after json)
 install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
+
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{proj_name}/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{proj_name}/$i
+done
 
 
 %check
-# Install needed extensions
+# Shared needed extensions
 modules=""
 for mod in json hash iconv propro raphf; do
   if [ -f %{php_extdir}/${mod}.so ]; then
@@ -155,17 +185,19 @@ for mod in json hash iconv propro raphf; do
   fi
 done
 
-# Minimal load test for NTS extension
+: Minimal load test for NTS extension
 %{__php} --no-php-ini \
     $modules \
-    --define extension=$PWD/%{proj_name}-%{version}%{?prever}/modules/%{pecl_name}.so \
+    --define extension=$PWD/NTS/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-# Minimal load test for ZTS extension
+%if %{with_zts}
+: Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     $modules \
-    --define extension=$PWD/%{proj_name}-zts/modules/%{pecl_name}.so \
+    --define extension=$PWD/ZTS/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
 
 %post
@@ -184,20 +216,32 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc %{proj_name}-%{version}%{?prever}/{CREDITS,LICENSE,ThanksTo.txt}
+%doc %{pecl_docdir}/%{proj_name}
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 %files devel
 %defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{proj_name}
 %{php_incldir}/ext/%{pecl_name}
+
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
+%endif
 
 
 %changelog
+* Fri Nov 22 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0 (stable)
+- install doc in pecl doc_dir
+- install tests in pecl test_dir (in devel)
+
 * Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.18.beta5
 - update to 2.0.0 beta5
 - requires propro and raphf extensions
