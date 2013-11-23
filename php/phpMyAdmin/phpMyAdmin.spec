@@ -1,8 +1,8 @@
-#global prever rc1
+%global prever rc1
 
 Name: phpMyAdmin
-Version: 4.0.9
-Release: 1%{?dist}
+Version: 4.1.0
+Release: 0.1.rc1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -12,14 +12,14 @@ Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{versi
 Source2: phpMyAdmin.htaccess
 
 # https://github.com/phpmyadmin/phpmyadmin/pull/357
-Patch0: %{name}-vendor.patch
+#Patch0: %{name}-vendor.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: unzip
 
 Requires:  webserver
-Requires:  php(language) >= 5.2.0
+Requires:  php(language) >= 5.3.0
 Requires:  php-bcmath
 Requires:  php-bz2
 Requires:  php-ctype
@@ -35,11 +35,14 @@ Requires:  php-libxml
 Requires:  php-mbstring
 Requires:  php-mcrypt
 Requires:  php-mysqli
+Requires:  php-openssl
 Requires:  php-pcre
 Requires:  php-recode
 Requires:  php-session
 Requires:  php-simplexml
 Requires:  php-spl
+Requires:  php-tidy
+Requires:  php-xml
 Requires:  php-xmlwriter
 Requires:  php-zip
 Requires:  php-zlib
@@ -62,7 +65,7 @@ is available in 50 languages
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
 
-%patch0 -p1
+#patch0 -p1
 
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
@@ -128,7 +131,7 @@ rm -rf %{buildroot}%{_datadir}/%{pkgname}/libraries/tcpdf
 rm -rf %{buildroot}
 
 
-%if %{?fedora}%{!?fedora:99} <= 16
+%if %{?fedora}%{!?fedora:99} <= 18
 %pre
 echo -e "\nWARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
@@ -142,7 +145,7 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README LICENSE
+%doc ChangeLog README LICENSE CONTRIBUTING.md
 %{_datadir}/%{name}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
