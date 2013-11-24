@@ -56,7 +56,7 @@ Obsoletes:     php53-pecl-%{extname}
 Obsoletes:     php53u-pecl-%{extname}
 Obsoletes:     php54-pecl-%{extname}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-%{extname}
+Obsoletes:     php55u-pecl-%{extname}
 %endif
 
 # Filter private shared

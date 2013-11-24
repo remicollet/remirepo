@@ -40,7 +40,7 @@ Obsoletes:      php53u-pecl-lzf
 Obsoletes:      php54-pecl-lzf
 %endif
 %if "%{php_version}" > "5.5"
-Obsoletes:      php55-pecl-lzf
+Obsoletes:      php55u-pecl-lzf
 %endif
 
 # Filter private shared

@@ -41,7 +41,7 @@ Obsoletes:     php53-pecl-imagick
 Obsoletes:     php53u-pecl-imagick
 Obsoletes:     php54-pecl-imagick
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-imagick
+Obsoletes:     php55u-pecl-imagick
 %endif
 
 # Filter private shared

@@ -49,7 +49,7 @@ Obsoletes:     php53-pecl-mysqlnd-ms
 Obsoletes:     php53u-pecl-mysqlnd-ms
 Obsoletes:     php54-pecl-mysqlnd-ms
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-mysqlnd-ms
+Obsoletes:     php55u-pecl-mysqlnd-ms
 %endif
 
 # Filter private shared

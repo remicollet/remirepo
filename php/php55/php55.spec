@@ -202,7 +202,7 @@ BuildRequires: systemtap-sdt-devel
 BuildRequires: bison
 %endif
 
-Obsoletes: php53, php53u, php54, php55
+Obsoletes: php53, php53u, php54, php55u
 %if %{with_zts}
 Obsoletes: php-zts < 5.3.7
 Provides: php-zts = %{version}-%{release}
@@ -243,7 +243,7 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 Provides: php-cgi = %{version}-%{release}, php-cgi%{?_isa} = %{version}-%{release}
 Provides: php-pcntl, php-pcntl%{?_isa}
 Provides: php-readline, php-readline%{?_isa}
-Obsoletes: php53-cli, php53u-cli, php54-cli, php55-cli
+Obsoletes: php53-cli, php53u-cli, php54-cli, php55u-cli
 
 %description cli
 The php-cli package contains the command-line interface 
@@ -277,7 +277,7 @@ Requires(post): systemd-sysv
 Requires(preun): initscripts
 Requires(postun): initscripts
 %endif
-Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php55-fpm
+Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php55u-fpm
 
 %description fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
@@ -338,7 +338,7 @@ Obsoletes: php-pecl-phar < 1.2.4
 Obsoletes: php-pecl-Fileinfo < 1.0.5
 Obsoletes: php-mhash < 5.3.0
 Obsoletes: php53-mhash, php53u-mhash
-Obsoletes: php53-common, php53u-common, php54-common, php55-common
+Obsoletes: php53-common, php53u-common, php54-common, php55u-common
 
 %description common
 The php-common package contains files used by both the php
@@ -356,7 +356,7 @@ Obsoletes: php-pecl-pdo-devel
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
 %endif
-Obsoletes: php53-devel, php53u-devel, php54-devel, php55-devel
+Obsoletes: php53-devel, php53u-devel, php54-devel, php55u-devel
 %if ! %{php_bootstrap}
 Requires: php-pecl-jsonc-devel%{?_isa}
 %endif
@@ -396,7 +396,7 @@ License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: mod_php3-imap, stronghold-php-imap
 BuildRequires: krb5-devel, openssl-devel, libc-client-devel
-Obsoletes: php53-imap, php53u-imap, php54-imap, php55-imap
+Obsoletes: php53-imap, php53u-imap, php54-imap, php55u-imap
 
 %description imap
 The php-imap module will add IMAP (Internet Message Access Protocol)
@@ -410,7 +410,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: cyrus-sasl-devel, openldap-devel, openssl-devel
-Obsoletes: php53-ldap, php53u-ldap, php54-ldap, php55-ldap
+Obsoletes: php53-ldap, php53u-ldap, php54-ldap, php55u-ldap
 
 %description ldap
 The php-ldap adds Lightweight Directory Access Protocol (LDAP)
@@ -429,7 +429,7 @@ Provides: php-pdo-abi  = %{pdover}%{isasuffix}
 Provides: php(pdo-abi) = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
-Obsoletes: php53-pdo, php53u-pdo, php54-pdo, php55-pdo
+Obsoletes: php53-pdo, php53u-pdo, php54-pdo, php55u-pdo
 
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
@@ -450,7 +450,7 @@ Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
 BuildRequires: mysql-devel >= 4.1.0
 Conflicts: php-mysqlnd
-Obsoletes: php53-mysql, php53u-mysql, php54-mysql, php55-mysql
+Obsoletes: php53-mysql, php53u-mysql, php54-mysql, php55u-mysql
 
 %description mysql
 The php-mysql package contains a dynamic shared object that will add
@@ -475,7 +475,7 @@ Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
 %if ! %{with_libmysql}
 Obsoletes: php-mysql < %{version}-%{release}
 %endif
-Obsoletes: php53-mysqlnd, php53u-mysqlnd, php54-mysqlnd, php55-mysqlnd
+Obsoletes: php53-mysqlnd, php53u-mysqlnd, php54-mysqlnd, php55u-mysqlnd
 
 %description mysqlnd
 The php-mysqlnd package contains a dynamic shared object that will add
@@ -495,7 +495,7 @@ Requires: php-pdo%{?_isa} = %{version}-%{release}
 Provides: php_database
 Provides: php-pdo_pgsql, php-pdo_pgsql%{?_isa}
 BuildRequires: krb5-devel, openssl-devel, postgresql-devel
-Obsoletes: php53-pgsql, php53u-pgsql, php54-pgsql, php55-pgsql
+Obsoletes: php53-pgsql, php53u-pgsql, php54-pgsql, php55u-pgsql
 
 %description pgsql
 The php-pgsql package add PostgreSQL database support to PHP.
@@ -516,7 +516,7 @@ Provides: php-shmop, php-shmop%{?_isa}
 Provides: php-sysvsem, php-sysvsem%{?_isa}
 Provides: php-sysvshm, php-sysvshm%{?_isa}
 Provides: php-sysvmsg, php-sysvmsg%{?_isa}
-Obsoletes: php53-process, php53u-process, php54-process, php55-process
+Obsoletes: php53-process, php53u-process, php54-process, php55u-process
 
 %description process
 The php-process package contains dynamic shared objects which add
@@ -533,7 +533,7 @@ Requires: php-pdo%{?_isa} = %{version}-%{release}
 Provides: php_database
 Provides: php-pdo_odbc, php-pdo_odbc%{?_isa}
 BuildRequires: unixODBC-devel
-Obsoletes: php53-odbc, php53u-odbc, php54-odbc, php55-odbc
+Obsoletes: php53-odbc, php53u-odbc, php54-odbc, php55u-odbc
 
 %description odbc
 The php-odbc package contains a dynamic shared object that will add
@@ -551,7 +551,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libxml2-devel
-Obsoletes: php53-soap, php53u-soap, php54-soap, php55-soap
+Obsoletes: php53-soap, php53u-soap, php54-soap, php55u-soap
 
 %description soap
 The php-soap package contains a dynamic shared object that will add
@@ -567,7 +567,7 @@ Requires: 	php-pdo%{?_isa} = %{version}-%{release}
 Provides: 	php_database
 Provides: 	php-firebird, php-firebird%{?_isa}
 Provides: 	php-pdo_firebird, php-pdo_firebird%{?_isa}
-Obsoletes:  php53-interbase, php53u-interbase, php54-interbase, php55-interbase
+Obsoletes:  php53-interbase, php53u-interbase, php54-interbase, php55u-interbase
 
 %description interbase
 The php-interbase package contains a dynamic shared object that will add
@@ -596,7 +596,7 @@ Provides:       php-pecl-oci8 = %{oci8ver}, php-pecl-oci8%{?_isa} = %{oci8ver}
 Provides:       php-pecl(oci8) = %{oci8ver}, php-pecl(oci8)%{?_isa} = %{oci8ver}
 # Should requires libclntsh.so.11.1, but it's not provided by Oracle RPM.
 AutoReq:        0
-Obsoletes:      php53-oci8, php53u-oci8, php54-oci8, php55-oci8
+Obsoletes:      php53-oci8, php53u-oci8, php54-oci8, php55u-oci8
 
 %description oci8
 The php-oci8 package contains a dynamic shared object that will add
@@ -610,7 +610,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}, net-snmp
 BuildRequires: net-snmp-devel
-Obsoletes: php53-snmp, php53u-snmp, php54-snmp, php55-snmp
+Obsoletes: php53-snmp, php53u-snmp, php54-snmp, php55u-snmp
 
 %description snmp
 The php-snmp package contains a dynamic shared object that will add
@@ -632,7 +632,7 @@ Provides: php-xmlreader, php-xmlreader%{?_isa}
 Provides: php-xmlwriter, php-xmlwriter%{?_isa}
 Provides: php-xsl, php-xsl%{?_isa}
 BuildRequires: libxslt-devel >= 1.0.18-1, libxml2-devel >= 2.4.14-1
-Obsoletes: php53-xml, php53u-xml, php54-xml, php55-xml
+Obsoletes: php53-xml, php53u-xml, php54-xml, php55u-xml
 
 %description xml
 The php-xml package contains dynamic shared objects which add support
@@ -646,7 +646,7 @@ Group: Development/Languages
 # libXMLRPC is licensed under BSD
 License: PHP and BSD
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-xmlrpc, php53u-xmlrpc, php54-xmlrpc, php55-xmlrpc
+Obsoletes: php53-xmlrpc, php53u-xmlrpc, php54-xmlrpc, php55u-xmlrpc
 
 %description xmlrpc
 The php-xmlrpc package contains a dynamic shared object that will add
@@ -661,7 +661,7 @@ Group: Development/Languages
 # ucgendat is licensed under OpenLDAP
 License: PHP and LGPLv2 and BSD and OpenLDAP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-mbstring, php53u-mbstring, php54-mbstring, php55-mbstring
+Obsoletes: php53-mbstring, php53u-mbstring, php54-mbstring, php55u-mbstring
 
 %description mbstring
 The php-mbstring package contains a dynamic shared object that will add
@@ -691,7 +691,7 @@ BuildRequires: libXpm-devel
 BuildRequires: libvpx-devel
 %endif
 
-Obsoletes: php53-gd, php53u-gd, php54-gd, php55-gd
+Obsoletes: php53-gd, php53u-gd, php54-gd, php55u-gd
 
 %description gd
 The php-gd package contains a dynamic shared object that will add
@@ -704,7 +704,7 @@ Group: Development/Languages
 # libbcmath is licensed under LGPLv2+
 License: PHP and LGPLv2+
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-bcmath, php53u-bcmath, php54-bcmath, php55-bcmath
+Obsoletes: php53-bcmath, php53u-bcmath, php54-bcmath, php55u-bcmath
 
 %description bcmath
 The php-bcmath package contains a dynamic shared object that will add
@@ -717,7 +717,7 @@ Group: Development/Languages
 License: PHP
 BuildRequires: gmp-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-gmp, php53u-gmp, php54-gmp, php55-gmp
+Obsoletes: php53-gmp, php53u-gmp, php54-gmp, php55u-gmp
 
 %description gmp
 These functions allow you to work with arbitrary-length integers
@@ -730,7 +730,7 @@ Group: Development/Languages
 License: PHP
 BuildRequires: %{db_devel}, gdbm-devel, tokyocabinet-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-dba, php53u-dba, php54-dba, php55-dba
+Obsoletes: php53-dba, php53u-dba, php54-dba, php55u-dba
 
 %description dba
 The php-dba package contains a dynamic shared object that will add
@@ -743,7 +743,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libmcrypt-devel
-Obsoletes: php53-mcrypt, php53u-mcrypt, php54-mcrypt, php55-mcrypt
+Obsoletes: php53-mcrypt, php53u-mcrypt, php54-mcrypt, php55u-mcrypt
 
 %description mcrypt
 The php-mcrypt package contains a dynamic shared object that will add
@@ -756,7 +756,7 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libtidy-devel
-Obsoletes: php53-tidy, php53u-tidy, php54-tidy, php55-tidy
+Obsoletes: php53-tidy, php53u-tidy, php54-tidy, php55u-tidy
 
 %description tidy
 The php-tidy package contains a dynamic shared object that will add
@@ -770,7 +770,7 @@ License: PHP
 Requires: php-pdo%{?_isa} = %{version}-%{release}
 BuildRequires: freetds-devel >= 0.91
 Provides: php-pdo_dblib, php-pdo_dblib%{?_isa}
-Obsoletes: php53-mssql, php53u-mssql, php54-mssql, php55-mssql
+Obsoletes: php53-mssql, php53u-mssql, php54-mssql, php55u-mssql
 
 %description mssql
 The php-mssql package contains a dynamic shared object that will
@@ -785,7 +785,7 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 # doing a real -devel package for just the .so symlink is a bit overkill
 Provides: php-embedded-devel = %{version}-%{release}
 Provides: php-embedded-devel%{?_isa} = %{version}-%{release}
-Obsoletes: php53-embedded, php53u-embedded, php54-embedded, php55-embedded
+Obsoletes: php53-embedded, php53u-embedded, php54-embedded, php55u-embedded
 
 %description embedded
 The php-embedded package contains a library which can be embedded
@@ -798,7 +798,7 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: aspell-devel >= 0.50.0
-Obsoletes: php53-pspell, php53u-pspell, php54-pspell, php55-pspell
+Obsoletes: php53-pspell, php53u-pspell, php54-pspell, php55u-pspell
 
 %description pspell
 The php-pspell package contains a dynamic shared object that will add
@@ -811,7 +811,7 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: recode-devel
-Obsoletes: php53-recode, php53u-recode, php54-recode, php55-recode
+Obsoletes: php53-recode, php53u-recode, php54-recode, php55u-recode
 
 %description recode
 The php-recode package contains a dynamic shared object that will add
@@ -825,7 +825,7 @@ License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 # Upstream requires 4.0, we require 50 to ensure use of libicu-last
 BuildRequires: libicu-devel >= 50
-Obsoletes: php53-intl, php53u-intl, php54-intl, php55-intl
+Obsoletes: php53-intl, php53u-intl, php54-intl, php55u-intl
 
 %description intl
 The php-intl package contains a dynamic shared object that will add
@@ -838,7 +838,7 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: enchant-devel >= 1.2.4
-Obsoletes: php53-enchant, php53u-enchant, php54-enchant, php55-enchant
+Obsoletes: php53-enchant, php53u-enchant, php54-enchant, php55u-enchant
 
 %description enchant
 The php-enchant package contains a dynamic shared object that will add

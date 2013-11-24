@@ -42,7 +42,7 @@ Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 
 # Filter private provides

@@ -63,7 +63,7 @@ Provides:      php-pecl-json%{?_isa} = %{version}-%{release}
 # Other third party repo stuff
 Obsoletes:     php54-pecl-%{proj_name}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-%{proj_name}
+Obsoletes:     php55u-pecl-%{proj_name}
 %endif
 
 # Filter private shared

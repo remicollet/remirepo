@@ -41,7 +41,7 @@ Obsoletes:     php53u-pecl-apc
 Obsoletes:     php54-pecl-apc
 %endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-apc
+Obsoletes:     php55u-pecl-apc
 %endif
 
 # Filter private shared
