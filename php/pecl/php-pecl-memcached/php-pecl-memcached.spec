@@ -170,6 +170,10 @@ do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 
