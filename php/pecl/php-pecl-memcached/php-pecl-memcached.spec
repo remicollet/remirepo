@@ -1,39 +1,52 @@
+# spec file for php-pecl-memcached
+#
+# Copyright (c) 2009-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global pecl_name memcached
-%global libmemcached_build_version %(pkg-config --silence-errors --modversion libmemcached 2>/dev/null || echo 65536)
+%global with_zts    0%{?__ztsphp:1}
+%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%global pecl_name   memcached
+%global prever      b1
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcached
-Version:      2.1.0
-Release:      7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      2.2.0
+Release:      0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
-Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/php-memcached-dev/php-memcached/issues/25
-# https://github.com/php-memcached-dev/php-memcached/commit/74542111f175fe2ec41c8bf722fc2cd3dac93eea.patch
-Patch0:        %{pecl_name}-build.patch
-# https://github.com/php-memcached-dev/php-memcached/pull/43
-Patch1:        %{pecl_name}-info.patch
+Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
 BuildRequires: php-devel >= 5.2.10
 BuildRequires: php-pear
+BuildRequires: php-json
 BuildRequires: php-pecl-igbinary-devel
+BuildRequires: php-pecl-msgpack-devel
 BuildRequires: libmemcached-devel >= 1.0.0
+BuildRequires: libevent-devel > 2
 BuildRequires: zlib-devel
 BuildRequires: cyrus-sasl-devel
+%if %{with_zts}
+BuildRequires: memcached
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
 Requires:     php-pecl-igbinary%{?_isa}
+Requires:     php-pecl-msgpack%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
 
@@ -43,9 +56,11 @@ Provides:     php-pecl(%{pecl_name}) = %{version}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
@@ -71,15 +86,15 @@ It also provides a session handler (memcached).
 %prep 
 %setup -c -q
 
+mv %{pecl_name}-%{version}%{?prever} NTS
+
 # Chech version as upstream often forget to update this
-extver=$(sed -n '/#define PHP_MEMCACHED_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_memcached.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream HTTP version is now ${extver}, expecting %{version}.
+extver=$(sed -n '/#define PHP_MEMCACHED_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_memcached.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
-
-cp %{pecl_name}-%{version}/fastlz/LICENSE LICENSE-FastLZ
 
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -97,45 +112,62 @@ extension=%{pecl_name}.so
 ;session.save_path="localhost:11211"
 EOF
 
-cd %{pecl_name}-%{version}
-%patch0 -p1 -b .build
-%patch1 -p1 -b .info
-cd ..
-
-cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+%if %{with_zts}
+cp -r NTS ZTS
+%endif
 
 
 %build
-cd %{pecl_name}-%{version}
-%{_bindir}/phpize
+peclconf() {
 %configure --enable-memcached-igbinary \
            --enable-memcached-json \
            --enable-memcached-sasl \
-           --with-php-config=%{_bindir}/php-config
+           --enable-memcached-msgpack \
+%if 0%{?rhel} == 5
+           --disable-memcached-protocol \
+%else
+           --enable-memcached-protocol \
+%endif
+           --with-php-config=$1
+}
+cd NTS
+%{_bindir}/phpize
+peclconf %{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
-%configure --enable-memcached-igbinary \
-           --enable-memcached-json \
-           --enable-memcached-sasl \
-           --with-php-config=%{_bindir}/zts-php-config
+peclconf %{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 # Install the NTS extension
-make install -C %{pecl_name}-%{version} INSTALL_ROOT=%{buildroot}
+make install -C NTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+# rename to z-memcached to be load after msgpack
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Install the ZTS extension
-make install -C %{pecl_name}-%{version}-zts INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%if %{with_zts}
+make install -C ZTS INSTALL_ROOT=%{buildroot}
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %post
@@ -149,42 +181,84 @@ fi
 
 
 %check
-cd %{pecl_name}-%{version}
-# only check if build extension can be loaded
-ln -s %{php_extdir}/json.so modules/
-ln -s %{php_extdir}/igbinary.so modules/
+: Minimal load test for NTS extension
 %{__php} -n -q \
-    -d extension_dir=modules \
-    -d extension=json.so \
     -d extension=igbinary.so \
-    -d extension=%{pecl_name}.so \
+    -d extension=json.so \
+    -d extension=msgpack.so \
+    -d extension=NTS/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-cd ../%{pecl_name}-%{version}-zts
-# only check if build extension can be loaded
-ln -s %{php_ztsextdir}/json.so modules/
-ln -s %{php_ztsextdir}/igbinary.so modules/
+%if %{with_zts}
+: Minimal load test for ZTS extension
 %{__ztsphp} -n -q \
-    -d extension_dir=modules \
-    -d extension=json.so \
     -d extension=igbinary.so \
-    -d extension=%{pecl_name}.so \
+    -d extension=json.so \
+    -d extension=msgpack.so \
+    -d extension=ZTS/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
+
+%if %{with_tests}
+ret=0
+
+: Launch the Memcached service
+memcached -p 11211 -U 11211      -d -P $PWD/memcached.pid
+
+: Run the upstream test Suite for NTS extension
+pushd NTS
+rm tests/flush_buffers.phpt tests/touch_binary.phpt
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=igbinary.so -d extension=json.so -d extension=msgpack.so -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__php} -n run-tests.php || ret=1
+popd
+
+%if %{with_zts}
+: Run the upstream test Suite for ZTS extension
+pushd ZTS
+rm tests/flush_buffers.phpt tests/touch_binary.phpt
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d extension=igbinary.so -d extension=json.so -d extension=msgpack.so -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php || ret=1
+popd
+%endif
+
+# Cleanup
+if [ -f memcached.pid ]; then
+   kill $(cat memcached.pid)
+fi
+
+exit $ret
+%endif
 
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/{CREDITS,LICENSE,README.markdown,ChangeLog}
-%doc LICENSE-FastLZ
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
+%config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Mon Nov 25 2013  Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.b1
+- update to 2.2.0b1 (beta)
+- cleanups for Copr
+- install doc in pecl doc_dir
+- install tests in pecl test_dir (in devel)
+- add dependency on pecl/msgpack
+- add --with tests option to run upstream test suite during build
+
 * Fri Nov 15 2013  Remi Collet <remi@fedoraproject.org> - 2.1.0-7
 - drop requires libmemcached >= build version
   as this can also be libmemcached-last
@@ -291,6 +365,6 @@ ln -s %{php_ztsextdir}/igbinary.so modules/
 * Sat Jun 27 2009 Remi Collet <fedora@famillecollet.com> - 0.2.0-1
 - Update to 0.2.0 + Patch for HAVE_JSON constant
 
-* Sun Apr 29 2009 Remi Collet <fedora@famillecollet.com> - 0.1.5-1
+* Wed Apr 29 2009 Remi Collet <fedora@famillecollet.com> - 0.1.5-1
 - Initial RPM
 
