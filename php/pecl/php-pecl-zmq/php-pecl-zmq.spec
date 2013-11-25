@@ -16,7 +16,7 @@
 
 Summary:        ZeroMQ messaging
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -185,6 +185,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 25 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- Update to 1.1.2 (beta)
+
 * Sat Nov 02 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1 (beta)
 
