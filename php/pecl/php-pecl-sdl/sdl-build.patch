@@ -68,3 +68,17 @@ diff -up sdl-0.9.0/php_sdl.c.old sdl-0.9.0/php_sdl.c
  /*
   * Local variables:
   * tab-width: 4
+--- sdl-0.9.0/php_sdl.h.old	2013-11-25 18:18:08.000000000 +0100
++++ sdl-0.9.0/php_sdl.h	2013-11-25 18:18:34.000000000 +0100
+@@ -156,6 +156,11 @@
+ #define SDL_G(v) (sdl_globals.v)
+ #endif
+ 
++/* ZEND_FE_END exist only in PHP >= 5.3.7 */
++#ifndef ZEND_FE_END
++#define ZEND_FE_END { NULL, NULL, NULL, 0, 0 }
++#endif
++
+ #endif	/* PHP_SDL_H */
+ 
+ /*
