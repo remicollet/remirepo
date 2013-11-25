@@ -7,13 +7,18 @@
 # Please, preserve the changelog entries
 #
 
-%{!?__pecl:   %{expand: %%global __pecl   %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
+
+%global with_zts    0%{?__ztsphp:1}
+%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   amqp
 
 Summary:       Communicate with any AMQP compliant server
 Name:          php-pecl-amqp
-Version:       1.2.0
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       1.3.0
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -22,7 +27,11 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel > 5.2.0
 BuildRequires: php-pear
-BuildRequires: librabbitmq-devel
+BuildRequires: librabbitmq-devel >= 0.4.1
+%if %{with_tests}
+BuildRequires: php-json
+BuildRequires: rabbitmq-server
+%endif
 
 Requires:         php(zend-abi) = %{php_zend_api}
 Requires:         php(api) = %{php_core_api}
@@ -35,19 +44,20 @@ Provides:         php-pecl(%{pecl_name}) = %{version}
 Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 
-
+%if 0%{?fedora} < 20
 # filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -59,9 +69,9 @@ from any queue.
 
 %prep
 %setup -q -c
+mv %{pecl_name}-%{version} NTS
 
-cd %{pecl_name}-%{version}
-
+cd NTS
 # Upstream often forget to change this
 extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
 if test "x${extver}" != "x%{version}"; then
@@ -103,47 +113,103 @@ extension = %{pecl_name}.so
 ;amqp.vhost = /
 EOF
 
-cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
+%if %{with_zts}
+cp -pr NTS ZTS
+%endif
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 phpize
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-zts
+%if %{with_zts}
+cd ../ZTS
 zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
-make -C %{pecl_name}-%{version} \
-     install INSTALL_ROOT=%{buildroot}
-make -C %{pecl_name}-zts \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
-# No test provided, just minimal load test
+: Minimal load test for NTS extension
 %{__php} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}/modules \
+    --define extension_dir=NTS/modules \
     --define extension=%{pecl_name}.so \
     -m | grep %{pecl_name}
 
+%if %{with_zts}
+: Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{pecl_name}-zts/modules \
+    --define extension_dir=ZTS/modules \
     --define extension=%{pecl_name}.so \
     -m | grep %{pecl_name}
+%endif
+
+%if %{with_tests}
+mkdir log run base
+: Launch the RabbitMQ service
+export RABBITMQ_PID_FILE=$PWD/run/pid
+export RABBITMQ_LOG_BASE=$PWD/log
+export RABBITMQ_MNESIA_BASE=$PWD/base
+/usr/lib/rabbitmq/bin/rabbitmq-server &>log/output &
+/usr/lib/rabbitmq/bin/rabbitmqctl wait $RABBITMQ_PID_FILE
+
+ret=0
+pushd NTS
+: Run the upstream test Suite for NTS extension
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__php} -n run-tests.php || ret=1
+popd
+
+%if %{with_zts}
+pushd ZTS
+: Run the upstream test Suite for ZTS extension
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php || ret=1
+popd
+%endif
+
+: Cleanup
+if [ -f $RABBITMQ_PID_FILE ]; then
+   kill $(cat $RABBITMQ_PID_FILE)
+fi
+rm -rf log run base
+
+exit $ret
+%endif
 
 
 %clean
@@ -162,37 +228,48 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/{CREDITS,LICENSE}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Mon Nov 25 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0 (beta)
+- cleanups for Copr
+- install doc in pecl doc_dir
+- install tests in pecl test_dir (in devel)
+- add --with tests option to run upstream tests during build
+
 * Sat Sep 28 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
 - rebuild with librabbitmq 0.4.1
 
 * Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
-- Update to 1.2.0
+- Update to 1.2.0 (stable)
 
 * Fri Apr 19 2013 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
-- Update to 1.0.10
+- Update to 1.0.10 (stable)
 
 * Wed Mar 13 2013 Remi Collet <remi@fedoraproject.org> - 1.0.9-3
 - rebuild for new librabbitmq
 
 * Tue Nov 13 2012 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
-- update to 1.0.9
+- update to 1.0.9 (stable)
 
 * Mon Nov 12 2012 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
-- update to 1.0.8
+- update to 1.0.8 (stable)
 - build ZTS extension
 - also provides php-amqp
 
 * Wed Sep 12 2012 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
-- update to 1.0.7
+- update to 1.0.7 (stable)
 - cleanups
 
 * Mon Aug 27 2012 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
