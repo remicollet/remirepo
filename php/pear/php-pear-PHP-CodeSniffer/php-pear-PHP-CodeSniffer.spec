@@ -2,7 +2,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.4.7
+Version:        1.4.8
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -17,10 +17,28 @@ BuildRequires:  php-pear
 # to run test suite
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
 
-Requires:       php-pear(PEAR)
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml
+Requires:       php-pear(PEAR)
+# From package.xml - optional
 Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
+# From phpcompatinfo report for version 1.4.8
+Requires:       php-ctype
+Requires:       php-date
+Requires:       php-dom
+Requires:       php-gettext
+Requires:       php-iconv
+Requires:       php-json
+Requires:       php-pcre
+Requires:       php-pdo
+Requires:       php-soap
+Requires:       php-reflection
+Requires:       php-spl
+Requires:       php-tokenizer
+Requires:       php-xmlwriter
+Requires:       php-zip
+
 Provides:       php-pear(%{pear_name}) = %{version}
 Provides:       phpcs = %{version}
 Obsoletes:      phpcs < %{version}
@@ -57,7 +75,7 @@ install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/tests
 
-# Version 1.4.5 : Tests: 237, Assertions: 151, Skipped: 3.
+# Version 1.4.8 : Tests: 241, Assertions: 154, Skipped: 3.
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --verbose \
@@ -89,6 +107,10 @@ fi
 
 
 %changelog
+* Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 1.4.8-1
+- Update to 1.4.8 (stable)
+- add explicity dependencies from phpcompatinfo report
+
 * Thu Sep 26 2013 Remi Collet <remi@fedoraproject.org> - 1.4.7-1
 - Update to 1.4.7
 
@@ -183,7 +205,7 @@ fi
 - move phpcs into main package ( bug: 517775 )
 - add php-common version requirement
 
-* Thu Nov 18 2009 Remi Collet <RPMS@FamilleCollet.com> - 1.2.1-1
+* Wed Nov 18 2009 Remi Collet <RPMS@FamilleCollet.com> - 1.2.1-1
 - rebuild for remi repository
 
 * Tue Nov 17 2009 Christof Damian <christof@damian.net> - 1.2.1-1
