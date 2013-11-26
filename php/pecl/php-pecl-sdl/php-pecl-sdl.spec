@@ -17,7 +17,7 @@
 
 Summary:       Simple DirectMedia Layer for PHP
 Name:          php-pecl-sdl
-Version:       0.9.0
+Version:       0.9.1
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
@@ -27,9 +27,6 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # From code-examples.tgz
 # From http://sourceforge.net/projects/phpsdl/files/ 
 Source1:       example.php
-
-# Build patch for shared mode (emailed to upstream)
-Patch0:        %{pecl_name}-build.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel > 5.2.0
@@ -66,7 +63,6 @@ Use the "phpsdl" command to launch a SDL application.
 
 %prep
 %setup -q -c
-%patch0
 mv %{pecl_name}-%{version} NTS
 
 
@@ -172,5 +168,9 @@ fi
 
 
 %changelog
+* Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
+- Update to 0.9.1 (beta)
+- drop build patch merged upstream
+
 * Mon Nov 25 2013  Remi Collet <remi@fedoraproject.org> - 0.9.0-1
 - initial package, 0.9.0 (beta)
