@@ -17,7 +17,7 @@
 %global with_zts  0%{?__ztsphp:1}
 
 Name:           php-pecl-http
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -59,6 +59,7 @@ Requires:       php-spl%{?_isa}
 %endif
 Requires:       php-pecl(propro)%{?_isa}
 Requires:       php-pecl(raphf)%{?_isa}
+# From code ZEND_MOD_CONFLICTS("event")
 Conflicts:      php-event
 
 Provides:       php-pecl(%{proj_name})         = %{version}%{?prever}
@@ -69,9 +70,11 @@ Provides:       php-%{pecl_name}               = %{version}%{?prever}
 Provides:       php-%{pecl_name}%{?_isa}       = %{version}%{?prever}
 
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-http
 Obsoletes:     php53u-pecl-http
 Obsoletes:     php54-pecl-http
+%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-http
 %endif
@@ -237,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1 (stable)
+
 * Fri Nov 22 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0 (stable)
 - install doc in pecl doc_dir
