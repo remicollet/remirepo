@@ -19,7 +19,7 @@
 
 Summary:        Resource and persistent handles factory
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -44,9 +44,11 @@ Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-raphf
 Obsoletes:     php53u-pecl-raphf
 Obsoletes:     php54-pecl-raphf
+%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-raphf
 %endif
@@ -222,6 +224,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4 (stable)
+
 * Fri Nov 15 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3 (stable)
 - install doc in pecl doc_dir
