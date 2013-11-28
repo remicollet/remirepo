@@ -100,13 +100,13 @@
 %endif
 
 #global snapdate      201308300430
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.6
+Version: 5.5.7
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.6.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1857,6 +1857,9 @@ fi
 
 
 %changelog
+* Thu Nov 28 2013 Remi Collet <rcollet@redhat.com> 5.5.7-0.1.RC1
+- test build of 5.5.7RC1
+
 * Wed Nov 13 2013 Remi Collet <remi@fedoraproject.org> 5.5.6-1
 - update to 5.5.6
 
