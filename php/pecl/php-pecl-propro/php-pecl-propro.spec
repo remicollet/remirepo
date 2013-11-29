@@ -6,39 +6,56 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{?scl:          %scl_package        php-pecl-raphf}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir %{_includedir}/php}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name propro
 
 Summary:        Property proxy
-Name:           php-pecl-%{pecl_name}
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        1%{?dist}.1
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel > 5.3
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel > 5.3
+BuildRequires:  %{?scl_prefix}php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{!?scl:1}
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
+
 
 %description
 A reusable split-off of pecl_http's property proxy API.
@@ -47,7 +64,7 @@ A reusable split-off of pecl_http's property proxy API.
 Summary:       %{name} developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using %{name}.
@@ -97,8 +114,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make -C NTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
@@ -107,11 +123,17 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-make -C ZTS \
-     install INSTALL_ROOT=%{buildroot}
-
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
+
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %post
@@ -127,17 +149,17 @@ fi
 %check
 # Minimal load test for NTS extension
 cd NTS
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension_dir=modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 # Upstream test suite
-TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{__php} -n run-tests.php
 
 %if %{with_zts}
 # Minimal load test for ZTS extension
@@ -162,7 +184,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{CREDITS,LICENSE}
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -174,6 +196,7 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 
 %if %{with_zts}
@@ -182,6 +205,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 1.0.0-2
+- adapt for SCL
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+
 * Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0
 
