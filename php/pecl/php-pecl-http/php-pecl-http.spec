@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-http}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -16,7 +17,7 @@
 %global pecl_name http
 %global with_zts  0%{?__ztsphp:1}
 
-Name:           php-pecl-http
+Name:           %{?scl_prefix}php-pecl-http
 Version:        2.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
@@ -30,45 +31,46 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 Source1:        %{proj_name}.ini
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel >= 5.3.0
-BuildRequires:  php-hash
-BuildRequires:  php-iconv
-BuildRequires:  php-json
-BuildRequires:  php-spl
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel >= 5.3.0
+BuildRequires:  %{?scl_prefix}php-hash
+BuildRequires:  %{?scl_prefix}php-iconv
+BuildRequires:  %{?scl_prefix}php-json
+BuildRequires:  %{?scl_prefix}php-spl
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
 BuildRequires:  libevent-devel >= 1.4
 BuildRequires:  curl-devel >= 7.18.2
-BuildRequires:  php-pecl-propro-devel
-BuildRequires:  php-pecl-raphf-devel
+BuildRequires:  %{?scl_prefix}php-pecl-propro-devel
+BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
 # php 5.3.3 in EL-6 don't use arched virtual provides
 # so only requires real packages instead
-Requires:       php-common%{?_isa}
+Requires:       %{?scl_prefix}php-common%{?_isa}
 %else
-Requires:       php-hash%{?_isa}
-Requires:       php-iconv%{?_isa}
-Requires:       php-json%{?_isa}
-Requires:       php-spl%{?_isa}
+Requires:       %{?scl_prefix}php-hash%{?_isa}
+Requires:       %{?scl_prefix}php-iconv%{?_isa}
+Requires:       %{?scl_prefix}php-json%{?_isa}
+Requires:       %{?scl_prefix}php-spl%{?_isa}
 %endif
-Requires:       php-pecl(propro)%{?_isa}
-Requires:       php-pecl(raphf)%{?_isa}
+Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa}
+Requires:       %{?scl_prefix}php-pecl(raphf)%{?_isa}
 # From code ZEND_MOD_CONFLICTS("event")
-Conflicts:      php-event
+Conflicts:      %{?scl_prefix}php-event
 
-Provides:       php-pecl(%{proj_name})         = %{version}%{?prever}
-Provides:       php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
-Provides:       php-pecl(%{pecl_name})         = %{version}%{?prever}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
-Provides:       php-%{pecl_name}               = %{version}%{?prever}
-Provides:       php-%{pecl_name}%{?_isa}       = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}%{?prever}
 
+%if 0%{!?scl:1}
 # Other third party repo stuff
 %if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-http
@@ -77,6 +79,7 @@ Obsoletes:     php54-pecl-http
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-http
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -110,8 +113,8 @@ Documentation : http://php.net/http
 %package devel
 Summary:       Extended HTTP support developer files (header)
 Group:         Development/Libraries
-Requires:      php-pecl-http%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa} >= 5.3.0
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+Requires:      %{?scl_prefix}php-devel%{?_isa} >= 5.3.0
 
 %description devel
 These are the files needed to compile programs using HTTP extension.
@@ -240,6 +243,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 2.0.1-1
+- adapt for SCL
+
 * Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 (stable)
 
