@@ -6,39 +6,55 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{?scl:          %scl_package        php-pecl-newt}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name newt
 
 Summary:        Extension for Red Hat Newt window library
-Name:           php-pecl-%{pecl_name}
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.2.8
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  newt-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{!?scl:1}
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:      php53-pecl-%{pecl_name}
+Obsoletes:      php53u-pecl-%{pecl_name}
+Obsoletes:      php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:      php55u-pecl-%{pecl_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -57,10 +73,8 @@ Newt API of C programming language.
 %setup -q -c
 
 mv %{pecl_name}-%{version} NTS
-mv package.xml NTS/%{name}.xml
 
 cd NTS
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_NEWT_VERSION/{s/.* "//;s/".*$//;p}' php_newt.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -109,21 +123,21 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 # install config file
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
-
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
-cd NTS
 # Install XML package description
-install -D -m 644 %{name}.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-# don't work in mock, need investigation
-#{__pecl} install --force --nodeps --nobuild --installroot %{buildroot} %{name}.xml
-#rm -rf %{buildroot}%{pear_metadir}/.??*
-#rm -rf %{buildroot}%{_localstatedir}/tmp
+# Documentation
+cd NTS
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 
 %post
@@ -139,7 +153,7 @@ fi
 %check
 : Minimal load test for NTS extension
 cd NTS
-%{_bindir}/php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -158,8 +172,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{LICENSE,CREDITS}
-#doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -171,6 +184,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 1.2.8-2
+- adapt for SCL
+- install doc in pecl doc_dir
+
 * Mon Oct 14 2013 Remi Collet <remi@fedoraproject.org> - 1.2.8-1
 - Update to 1.2.8
 - drop patches merged upstream
