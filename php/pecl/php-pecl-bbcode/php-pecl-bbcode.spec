@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-bbcode}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -15,7 +16,7 @@
 %global pre       b1
 
 Summary:      BBCode parsing Extension
-Name:         php-pecl-bbcode
+Name:         %{?scl_prefix}php-pecl-bbcode
 Version:      1.0.3
 Release:      0.4.%{pre}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # pecl extension is PHP, bbcode2 is BSD, bstrlib (from bstring) is BSD
@@ -26,19 +27,20 @@ URL:          http://pecl.php.net/package/bbcode
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?pre}.tgz
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel >= 5.2.0
-BuildRequires: php-pear
+BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
+BuildRequires: %{?scl_prefix}php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:     php(zend-abi) = %{php_zend_api}
-Requires:     php(api) = %{php_core_api}
+Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:     php-pecl(%{pecl_name}) = %{version}%{?pre}
-Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
-Provides:     php-%{pecl_name} = %{version}%{?pre}
-Provides:     php-%{pecl_name}%{?_isa} = %{version}%{?pre}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?pre}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
+Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}%{?pre}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?pre}
 
+%if 0%{!?scl:1}
 # Other third party repo stuff
 %if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -47,6 +49,7 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -198,6 +201,9 @@ fi
 
 
 %changelog
+* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 1.0.3-0.4.b1
+- adapt for SCL
+
 * Sun Nov  3 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-0.4.b1
 - cleaups for Copr
 - install doc in pecl doc_dir
