@@ -6,15 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%{?scl:          %scl_package         php-pecl-lua}
+%{!?scl:         %global _root_prefix %{_prefix}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name lua
 
 Summary:        Embedded lua interpreter
-Name:           php-pecl-%{pecl_name}
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
@@ -30,18 +32,30 @@ Patch0:         %{pecl_name}-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  lua-devel
-BuildRequires:  php-devel
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+%if 0%{!?scl:1}
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:      php53-pecl-%{pecl_name}
+Obsoletes:      php53u-pecl-%{pecl_name}
+Obsoletes:      php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:      php55u-pecl-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20
 # Filter shared private
@@ -93,7 +107,7 @@ EOF
 cd NTS
 %{_bindir}/phpize
 %configure \
-    --with-lua=%{_prefix} \
+    --with-lua=%{_root_prefix} \
     --with-libdir=%{_lib} \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
@@ -102,7 +116,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
-    --with-lua=%{_prefix} \
+    --with-lua=%{_root_prefix} \
     --with-libdir=%{_lib} \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
@@ -150,7 +164,7 @@ fi
 %check
 cd NTS
 # Minimal load test for NTS extension
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=%{buildroot}/%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -196,6 +210,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 1.1.0-2
+- adapt for SCL
+
 * Wed Nov  6 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
 - fix build against PHP 5.3.3 for Copr
 - open https://github.com/laruence/php-lua/pull/7
