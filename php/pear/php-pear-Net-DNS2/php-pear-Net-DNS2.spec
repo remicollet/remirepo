@@ -1,3 +1,12 @@
+# spec file for php-pear-Net-DNS2
+#
+# Copyright (c) 2012-2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/4.0/
+#
+# Please, preserve the changelog entries
+#
+
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name Net_DNS2
 
