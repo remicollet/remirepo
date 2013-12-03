@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-
+%{?scl:          %scl_package        php-pecl-sdl}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -16,36 +16,46 @@
 %global pecl_name   sdl
 
 Summary:       Simple DirectMedia Layer for PHP
-Name:          php-pecl-sdl
-Version:       0.9.1
+Name:          %{?scl_prefix}php-pecl-sdl
+Version:       0.9.2
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/sdl
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# From code-examples.tgz
-# From http://sourceforge.net/projects/phpsdl/files/ 
-Source1:       example.php
+Patch0:           %{pecl_name}-nts.patch
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel > 5.2.0
-BuildRequires: php-pear
-BuildRequires: SDL-devel
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires:    %{?scl_prefix}php-devel > 5.2.0
+BuildRequires:    %{?scl_prefix}php-pear
+BuildRequires:    SDL-devel
 
 Requires(post):   %{__pecl}
 Requires(postun): %{__pecl}
-Requires:         php(zend-abi) = %{php_zend_api}
-Requires:         php(api) = %{php_core_api}
+Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:         %{?scl_prefix}php(api) = %{php_core_api}
 Requires:         %{__php}
 %if %{with_zts}
 Requires:         %{__ztsphp}
 %endif
 
-Provides:         php-%{pecl_name} = %{version}
-Provides:         php-%{pecl_name}%{?_isa} = %{version}
-Provides:         php-pecl(%{pecl_name}) = %{version}
-Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+%if 0%{!?scl:1}
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20
 # filter private shared
@@ -65,6 +75,9 @@ Use the "phpsdl" command to launch a SDL application.
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
+pushd NTS
+%patch0 -p2 -b .nts
+popd
 
 cat << 'EOF' | tee phpsdl
 #!/bin/sh
@@ -120,7 +133,7 @@ cd NTS
 for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
-for i in %{SOURCE1} $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -168,6 +181,11 @@ fi
 
 
 %changelog
+* Tue Dec 03 2013 Remi Collet <remi@fedoraproject.org> - 0.9.2-1
+- Update to 0.9.2 (beta)
+- adapt for SCL
+- add patch to fix NTS build
+
 * Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
 - Update to 0.9.1 (beta)
 - drop build patch merged upstream
