@@ -1,7 +1,7 @@
 --- a/deps/Makefile	
 +++ a/deps/Makefile	
-@@ -58,7 +58,7 @@ ifeq ($(uname_S),SunOS)
-   LUA_CFLAGS= -D__C99FEATURES__=1
+@@ -58,7 +58,7 @@
+ 	LUA_CFLAGS= -D__C99FEATURES__=1
  endif
  
 -LUA_CFLAGS+= -O2 -Wall -DLUA_ANSI $(CFLAGS)

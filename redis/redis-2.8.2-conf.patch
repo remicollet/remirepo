@@ -1,5 +1,5 @@
---- redis-2.6.10/redis.conf.orig	2013-02-11 13:24:39.000000000 +0100
-+++ redis-2.6.10/redis.conf	2013-02-11 19:05:09.533275700 +0100
+--- redis-2.8.2/redis.conf.orig	2013-12-02 16:07:46.000000000 +0100
++++ redis-2.8.2/redis.conf	2013-12-02 17:42:33.303049978 +0100
 @@ -18,7 +18,7 @@
  
  # When running daemonized, Redis writes a pid file in /var/run/redis.pid by
@@ -9,25 +9,25 @@
  
  # Accept connections on the specified port, default is 6379.
  # If port 0 is specified Redis will not listen on a TCP socket.
-@@ -27,7 +27,7 @@
- # If you want you can bind a single interface, if the bind option is not
- # specified all the interfaces will listen for incoming connections.
+@@ -32,7 +32,7 @@
+ # Examples:
  #
+ # bind 192.168.1.100 10.0.0.1
 -# bind 127.0.0.1
 +bind 127.0.0.1
  
  # Specify the path for the unix socket that will be used to listen for
  # incoming connections. There is no default, so Redis will not listen
-@@ -66,7 +66,7 @@
- # Specify the log file name. Also 'stdout' can be used to force
+@@ -71,7 +71,7 @@
+ # Specify the log file name. Also the emptry string can be used to force
  # Redis to log on the standard output. Note that if you use standard
  # output for logging but daemonize, logs will be sent to /dev/null
--logfile stdout
+-logfile ""
 +logfile /var/log/redis/redis.log
  
  # To enable logging to the system logger, just set 'syslog-enabled' to yes,
  # and optionally update the other syslog parameters to suit your needs.
-@@ -150,7 +150,7 @@
+@@ -155,7 +155,7 @@
  # The Append Only File will also be created inside this directory.
  # 
  # Note that you must specify a directory here, not a file name.

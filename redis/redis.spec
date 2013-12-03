@@ -3,15 +3,9 @@
 
 %global _hardened_build 1
 
-%if 0%{?rhel} == 5
-%ifarch i386
-%global with_perftools 1
-%endif
-%else
 %ifarch %{ix86} x86_64 ppc %{arm}
 # available only on selected architectures
 %global with_perftools 1
-%endif
 %endif
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
@@ -24,7 +18,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.6.16
+Version:          2.8.2
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
@@ -35,8 +29,9 @@ Source0:          http://download.redis.io/releases/%{name}-%{version}%{?prever:
 Source1:          %{name}.logrotate
 Source2:          %{name}.init
 Source3:          %{name}.service
+Source4:          %{name}.tmpfiles
 # Update configuration for Fedora
-Patch0:           %{name}-2.6.10-conf.patch
+Patch0:           %{name}-2.8.2-conf.patch
 Patch1:           %{name}-deps-PIC.patch
 Patch2:           %{name}-deps-unbundle-jemalloc.patch
 
@@ -78,9 +73,16 @@ different kind of sorting abilities.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prever:-%{prever}}
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%patch0 -p1 -b .conf
+%patch1 -p1 -b .pic
+%patch2 -p1 -b .jem
+
+%if 0%{?rhel} == 5
+%ifarch i386
+# Fix undefined reference to __sync_add_and_fetch_4
+sed -e '/HAVE_ATOMIC/d' -i ./src/config.h
+%endif
+%endif
 
 %build
 rm -rvf deps/jemalloc
@@ -92,7 +94,9 @@ make %{?_smp_mflags} V=1 \
   CFLAGS="$RPM_OPT_FLAGS -fPIC" \
   LUA_CFLAGS="-fPIC" \
 %if 0%{?with_perftools}
-  USE_TCMALLOC=yes \
+  MALLOC=tcmalloc \
+%else
+  MALLOC=jemalloc \
 %endif
   all
 
@@ -112,9 +116,11 @@ install -d -m 755 %{buildroot}%{_localstatedir}/lib/%{name}
 install -d -m 755 %{buildroot}%{_localstatedir}/log/%{name}
 install -d -m 755 %{buildroot}%{_localstatedir}/run/%{name}
 
-# Install systemd unit
 %if %{with_systemd}
+# Install systemd unit
 install -p -D -m 644 %{SOURCE3} %{buildroot}%{_unitdir}/%{name}.service
+# Install systemd tmpfiles config, _tmpfilesdir only defined in fedora >= 18
+install -p -D -m 644 %{SOURCE4} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
 %else
 sed -e '/^daemonize/s/no/yes/' \
     -i %{buildroot}%{_sysconfdir}/%{name}.conf
@@ -193,6 +199,7 @@ fi
 %{_bindir}/%{name}-*
 %{_sbindir}/%{name}-*
 %if %{with_systemd}
+%{_prefix}/lib/tmpfiles.d/%{name}.conf
 %{_unitdir}/%{name}.service
 %else
 %{_initrddir}/%{name}
@@ -200,9 +207,19 @@ fi
 
 
 %changelog
+* Mon Dec  2 2013 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
+- Redis 2.8.2, new major version
+- pull rawhide changes (add tmpfiles)
+
 * Sun Sep  8 2013 Remi Collet <remi@fedoraproject.org> - 2.6.16-1
 - Redis 2.6.16
   upgrade urgency: MODERATE
+
+* Fri Sep 06 2013 Fabian Deutsch <fabian.deutsch@gmx.de> - 2.6.16-1
+- Update to 2.6.16
+- Fix rhbz#973151
+- Fix rhbz#656683
+- Fix rhbz#977357 (Jan Vcelak <jvcelak@fedoraproject.org>)
 
 * Sat Aug 24 2013 Remi Collet <remi@fedoraproject.org> - 2.6.15-1
 - Redis 2.6.15

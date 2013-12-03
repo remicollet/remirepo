@@ -1,12 +1,12 @@
 --- a/src/Makefile	2013-04-30 15:15:56.000000000 +0200
 +++ b/src/Makefile	2013-06-19 12:58:12.345612310 +0200
-@@ -71,9 +71,8 @@ ifeq ($(MALLOC),tcmalloc_minimal)
+@@ -79,9 +79,8 @@ ifeq ($(MALLOC),tcmalloc_minimal)
  endif
  
  ifeq ($(MALLOC),jemalloc)
--  DEPENDENCY_TARGETS+= jemalloc
--  FINAL_CFLAGS+= -DUSE_JEMALLOC -I../deps/jemalloc/include
--  FINAL_LIBS+= ../deps/jemalloc/lib/libjemalloc.a -ldl
+-	DEPENDENCY_TARGETS+= jemalloc
+-	FINAL_CFLAGS+= -DUSE_JEMALLOC -I../deps/jemalloc/include
+-	FINAL_LIBS+= ../deps/jemalloc/lib/libjemalloc.a -ldl
 +  FINAL_CFLAGS+= -DUSE_JEMALLOC -DJEMALLOC_NO_DEMANGLE -I/usr/include/jemalloc
 +  FINAL_LIBS+= -ljemalloc -ldl
  endif
