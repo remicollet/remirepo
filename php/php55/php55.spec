@@ -106,7 +106,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.7
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -175,6 +175,7 @@ Patch91: php-5.3.7-oci8conf.patch
 # WIP
 Patch100: php-wip.patch
 Patch101: php-wip2.patch
+Patch102: php-wip3.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -883,8 +884,9 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # wip patches
-%patch100 -p1 -b .wip
+%patch100 -p1 -b .wip1
 %patch101 -p1 -b .bug66218
+%patch102 -p1 -b .wip3
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1859,6 +1861,9 @@ fi
 
 
 %changelog
+* Wed Dec 04 2013 Remi Collet <rcollet@redhat.com> 5.5.7-0.3.RC1
+- test build
+
 * Mon Dec 02 2013 Remi Collet <rcollet@redhat.com> 5.5.7-0.2.RC1
 - test build for https://bugs.php.net/66218
   zend_register_functions breaks reflection

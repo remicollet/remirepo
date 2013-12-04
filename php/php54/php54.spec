@@ -77,7 +77,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.23
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -135,6 +135,10 @@ Patch47: php-5.4.9-phpinfo.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
+
+# WIP
+Patch100: php-wip.patch
+Patch101: php-wip2.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -788,6 +792,8 @@ rm -f ext/json/utf8_to_utf16.*
 
 %patch91 -p1 -b .remi-oci8
 
+%patch100 -p1 -b .wip1
+%patch101 -p1 -b .wip2
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1633,6 +1639,10 @@ fi
 
 
 %changelog
+* Wed Dec  4 2013 Remi Collet <rcollet@redhat.com> 5.4.23-0.2.RC1
+- test build for https://bugs.php.net/66218
+  zend_register_functions breaks reflection
+
 * Thu Nov 28 2013 Remi Collet <rcollet@redhat.com> 5.4.23-0.1.RC1
 - test build of 5.4.23RC1
 
