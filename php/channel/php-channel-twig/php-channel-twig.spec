@@ -1,7 +1,8 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{?scl:         %scl_package        php-channel-twig}
+%{!?__pear:     %global __pear      %{_bindir}/pear}
 %global pear_channel pear.twig-project.org
 
-Name:             php-channel-twig
+Name:             %{?scl_prefix}php-channel-twig
 Version:          1.3
 Release:          1%{?dist}
 Summary:          Adds %{pear_channel} channel to PEAR
@@ -13,13 +14,13 @@ Source0:          http://%{pear_channel}/channel.xml
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
-BuildRequires:    php-pear(PEAR)
+BuildRequires:    %{?scl_prefix}php-pear(PEAR)
 
-Requires:         php-pear(PEAR)
+Requires:         %{?scl_prefix}php-pear(PEAR)
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 
-Provides:         php-channel(%{pear_channel})
+Provides:         %{?scl_prefix}php-channel(%{pear_channel})
 
 %description
 This package adds the %{pear_channel} channel which allows PEAR packages
@@ -59,7 +60,10 @@ fi
 
 
 %changelog
-* Tue Nov 14 2012 Remi Collet <RPMS@FamilleCollet.com> 1.3-1
+* Fri Dec  6 2013 Remi Collet <rcollet@redhat.com> 1.3-1
+- adapt for SCL
+
+* Wed Nov 14 2012 Remi Collet <RPMS@FamilleCollet.com> 1.3-1
 - backport for remi repository
 
 * Tue Nov 13 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3-1
@@ -69,10 +73,10 @@ fi
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Sun Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 1.0-3
+* Sat Jun 09 2012 Remi Collet <RPMS@FamilleCollet.com> 1.0-3
 - rebuild for remi repository
 
-* Sat Jun 9 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0-3
+* Sat Jun  9 2012 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0-3
 - Changed license from BSD to Public Domain
 - Removed "BuildRequires: php-pear >= 1:1.4.9-1.2"
 - Removed cleaning buildroot from %%install section
