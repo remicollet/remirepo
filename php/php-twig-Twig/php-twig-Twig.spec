@@ -4,7 +4,7 @@
 %global pear_name    Twig
 
 Name:             php-twig-%{pear_name}
-Version:          1.14.2
+Version:          1.15.0
 Release:          1%{?dist}
 Summary:          The flexible, fast, and secure template engine for PHP
 
@@ -23,7 +23,7 @@ Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
-# phpci requires
+# From phpcompatinfo report for version 1.15.0
 Requires:         php-ctype
 Requires:         php-date
 Requires:         php-dom
@@ -100,6 +100,9 @@ fi
 
 
 %changelog
+* Fri Dec 06 2013 Remi Collet <remi@fedoraproject.org> - 1.15.0-1
+- Update to 1.15.0 (stable)
+
 * Wed Oct 30 2013 Remi Collet <remi@fedoraproject.org> - 1.14.2-1
 - Update to 1.14.2
 
