@@ -18,7 +18,7 @@
 
 Summary:        Extension to improve performance of Twig
 Name:           %{?scl_prefix}php-twig-ctwig
-Version:        1.14.2
+Version:        1.15.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -118,7 +118,7 @@ install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
 
 # Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+do install -Dpm 644 NTS/$i %{buildroot}%{pear_docdir}/%{pecl_name}/$i
 done
 
 
@@ -152,7 +152,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pear_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
@@ -164,6 +164,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 06 2013 Remi Collet <remi@fedoraproject.org> - 1.15.0-1
+- Update to 1.15.0 (stable)
+- move doc in pear doc_dir (this is not from pecl channel)
+
 * Wed Oct 30 2013 Remi Collet <remi@fedoraproject.org> - 1.14.2-1
 - Update to 1.14.2 (no change)
 - install doc in pecl doc_dir
