@@ -18,7 +18,7 @@ Build order
 	Horde_Browser             2.0.4        R: Horde_Exception, Horde_Util
 	Horde_Cli                 2.0.4       I: Horde_Test R: Horde_Support, Horde_Translation
 	Horde_Log                 2.1.0       I: Horde_Test R: Horde_Constraint, Horde_Exception, Horde_Cli, Horde_Scribe
-	Horde_Test                2.2.5        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
+	Horde_Test                2.2.6        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
 	Horde_Text_Diff           2.0.2      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	Horde_Text_Flowed         2.0.1      BR: Horde_Test  R: Horde_Util
 	Horde_Url                 2.2.1      BR: Horde_Test  R: Horde_Exception

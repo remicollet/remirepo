@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Test
-Version:        2.2.5
+Version:        2.2.6
 Release:        1%{?dist}
 Summary:        Horde testing base classes
 
@@ -86,6 +86,9 @@ fi
 
 
 %changelog
+* Sat Dec 07 2013 Remi Collet <remi@fedoraproject.org> - 2.2.6-1
+- Update to 2.2.6 (stable)
+
 * Tue Nov 12 2013 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Update to 2.2.5
 
