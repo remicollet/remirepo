@@ -11,7 +11,7 @@
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
-Version:        6.0.049
+Version:        6.0.051
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -123,6 +123,9 @@ Group:          Development/Libraries
 BuildRequires:  dejavu-sans-fonts
 Requires:       %{name} = %{version}-%{release}
 Requires:       dejavu-sans-fonts
+# previous metapackage
+Obsoletes:      php-tcpdf-dejavu-fonts < 6.0.051
+Provides:       php-tcpdf-dejavu-fonts = %{version}-%{release}
 
 %description dejavu-sans-fonts
 This package allow to use system DejaVu sans-serif variable-width
@@ -176,6 +179,9 @@ Requires:       gnu-free-sans-fonts
 BuildRequires:  freefont
 Requires:       freefont
 %endif
+# previous metapackage
+Obsoletes:      php-tcpdf-gnu-free-fonts < 6.0.051
+Provides:       php-tcpdf-gnu-free-fonts = %{version}-%{release}
 
 %description gnu-free-sans-fonts
 This package allow to use system GNU FreeFont sans-serif font faces in TCPDF.
@@ -194,31 +200,6 @@ Requires:       freefont
 
 %description gnu-free-serif-fonts
 This package allow to use system GNU FreeFont serif font faces in TCPDF.
-
-
-# Meta packages to allow upgrade from version before fonts split
-%package dejavu-fonts
-Summary:        DejaVu fonts for tcpdf
-Group:          Development/Libraries
-Requires:       %{name}-dejavu-lgc-sans-fonts
-Requires:       %{name}-dejavu-lgc-sans-mono-fonts
-Requires:       %{name}-dejavu-lgc-serif-fonts
-Requires:       %{name}-dejavu-sans-fonts
-Requires:       %{name}-dejavu-sans-mono-fonts
-Requires:       %{name}-dejavu-serif-fonts
-
-%description dejavu-fonts
-This package allow to use system DejaVu fonts in TCPDF.
-
-%package gnu-free-fonts
-Summary:        GNU FreeFonts for tcpdf
-Group:          Development/Libraries
-Requires:       %{name}-gnu-free-mono-fonts
-Requires:       %{name}-gnu-free-sans-fonts
-Requires:       %{name}-gnu-free-serif-fonts
-
-%description gnu-free-fonts
-This package allow to use system GNU FreeFonts in TCPDF.
 
 
 %prep
@@ -330,14 +311,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_datadir}/php/%{real_name}/fonts/freeserif*
 
-%files gnu-free-fonts
-# empty
-
-%files dejavu-fonts
-# empty
-
 
 %changelog
+* Sat Dec  7 2013 Remi Collet <remi@fedoraproject.org> - 6.0.051-1
+- update to 6.0.051
+- drop the dejavu-fonts and gnu-free-fonts metapackage
+
 * Thu Nov 28 2013 Remi Collet <remi@fedoraproject.org> - 6.0.049-1
 - update to 6.0.049
 - fix but with same PNG image included twice, #1035392
