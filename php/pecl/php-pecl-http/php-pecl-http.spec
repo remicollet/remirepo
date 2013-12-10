@@ -18,7 +18,7 @@
 %global with_zts  0%{?__ztsphp:1}
 
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.0.1
+Version:        2.0.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -60,8 +60,6 @@ Requires:       %{?scl_prefix}php-spl%{?_isa}
 %endif
 Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa}
 Requires:       %{?scl_prefix}php-pecl(raphf)%{?_isa}
-# From code ZEND_MOD_CONFLICTS("event")
-Conflicts:      %{?scl_prefix}php-event
 
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
@@ -125,6 +123,9 @@ These are the files needed to compile programs using HTTP extension.
 
 mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
+
+# http://git.php.net/?p=pecl/http/pecl_http.git;a=patch;h=441de41329327d32937f107da371435d14d7be36
+sed -e '/ZEND_MOD_CONFLICTS/d' -i php_http.c
 
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -243,6 +244,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3 (stable)
+- drop Conflicts with pecl/event
+
 * Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 2.0.1-1
 - adapt for SCL
 
