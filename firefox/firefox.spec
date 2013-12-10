@@ -1,5 +1,5 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 99
+%if 0%{?fedora} < 21
 %define system_nss        0
 %else
 %define system_nss        1
@@ -29,13 +29,13 @@
 %define default_bookmarks_file %{_datadir}/bookmarks/default-bookmarks.html
 %define firefox_app_id \{ec8030f7-c20a-464f-9b0e-13a3a9e97384\}
 
-%global xulrunner_version      25.0.1
-%global xulrunner_version_max  25.1
+%global xulrunner_version      26.0
+%global xulrunner_version_max  26.1
 %global xulrunner_release      1
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
-%global datelang               20131116
+%global datelang               20131209
 
 %global mozappdir     %{_libdir}/%{name}
 %global langpackdir   %{mozappdir}/langpacks
@@ -71,7 +71,7 @@
 
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
-Version:        25.0.1
+Version:        26.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -288,7 +288,7 @@ cd %{tarballdir}
 
 # set up our prefs and add it to the package manifest file, so it gets pulled in
 # to omni.jar which gets created during make install
-%{__cp} %{SOURCE12} dist/bin/browser/defaults/preferences/all-redhat.js
+%{__cp} %{SOURCE12} objdir/dist/bin/browser/defaults/preferences/all-redhat.js
 # This sed call "replaces" firefox.js with all-redhat.js, newline, and itself (&)
 # having the net effect of prepending all-redhat.js above firefox.js
 %{__sed} -i -e\
@@ -296,14 +296,14 @@ cd %{tarballdir}
     browser/installer/package-manifest.in
 
 # set up our default bookmarks
-%{__cp} -p %{default_bookmarks_file} dist/bin/browser/defaults/profile/bookmarks.html
+%{__cp} -p %{default_bookmarks_file} objdir/dist/bin/browser/defaults/profile/bookmarks.html
 
 # Make sure locale works for langpacks
-%{__cat} > dist/bin/browser/defaults/preferences/firefox-l10n.js << EOF
+%{__cat} > objdir/dist/bin/browser/defaults/preferences/firefox-l10n.js << EOF
 pref("general.useragent.locale", "chrome://global/locale/intl.properties");
 EOF
 
-DESTDIR=$RPM_BUILD_ROOT make install
+DESTDIR=$RPM_BUILD_ROOT make -C objdir install
 
 %{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
 
@@ -518,6 +518,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Dec 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 26.0-1
+- sync with rawhide, update to 26.0 Build 2
+
+* Mon Dec 9 2013 Martin Stransky <stransky@redhat.com> - 26.0-1
+- Update to 26.0 Build 2
+
 * Sat Nov 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0.1-1
 - update to 25.0.1
 

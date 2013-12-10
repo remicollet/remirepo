@@ -1,6 +1,7 @@
---- mozilla-release/security/build/Makefile.in.build	2013-06-18 13:01:39.000000000 +0200
-+++ mozilla-release/security/build/Makefile.in	2013-06-18 14:01:41.940378194 +0200
-@@ -133,7 +133,6 @@ DEFAULT_GMAKE_FLAGS += NSPR_INCLUDE_DIR=
+diff -up mozilla-release/security/build/Makefile.in.build mozilla-release/security/build/Makefile.in
+--- mozilla-release/security/build/Makefile.in.build	2013-12-05 17:07:53.000000000 +0100
++++ mozilla-release/security/build/Makefile.in	2013-12-09 15:10:17.177970414 +0100
+@@ -128,7 +128,6 @@ DEFAULT_GMAKE_FLAGS += NSPR_INCLUDE_DIR=
  DEFAULT_GMAKE_FLAGS += NSPR_LIB_DIR=$(NSPR_LIB_DIR)
  DEFAULT_GMAKE_FLAGS += MOZILLA_CLIENT=1
  DEFAULT_GMAKE_FLAGS += NO_MDUPDATE=1
@@ -8,11 +9,12 @@
  DEFAULT_GMAKE_FLAGS += NSINSTALL="$(NSINSTALL)"
  ifeq ($(OS_ARCH),WINNT)
  DEFAULT_GMAKE_FLAGS += INSTALL="$(NSINSTALL) -t"
---- mozilla-release/security/manager/ssl/src/Makefile.in.build	2013-06-18 13:01:39.000000000 +0200
-+++ mozilla-release/security/manager/ssl/src/Makefile.in	2013-06-18 14:01:18.659377663 +0200
-@@ -86,7 +86,6 @@ endif
- CSRCS += md4.c
+diff -up mozilla-release/security/manager/ssl/src/Makefile.in.build mozilla-release/security/manager/ssl/src/Makefile.in
+--- mozilla-release/security/manager/ssl/src/Makefile.in.build	2013-12-09 15:10:17.177970414 +0100
++++ mozilla-release/security/manager/ssl/src/Makefile.in	2013-12-09 15:11:02.282047401 +0100
+@@ -6,7 +6,6 @@
  
+ EXPORT_LIBRARY	= 1
  DEFINES += \
 -  -DNSS_ENABLE_ECC \
    -DDLL_PREFIX=\"$(DLL_PREFIX)\" \

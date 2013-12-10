@@ -1,9 +1,9 @@
-diff -up xulrunner-24.0/mozilla-release/toolkit/crashreporter/client/Makefile.in.gcc47 xulrunner-24.0/mozilla-release/toolkit/crashreporter/client/Makefile.in
---- xulrunner-24.0/mozilla-release/toolkit/crashreporter/client/Makefile.in.gcc47	2013-09-11 01:15:24.000000000 +0200
-+++ xulrunner-24.0/mozilla-release/toolkit/crashreporter/client/Makefile.in	2013-09-13 13:33:49.866875578 +0200
-@@ -60,6 +60,9 @@ $(DIST)/bin/crashreporter.crt: $(topsrcd
- 	$(PYTHON) $(srcdir)/certdata2pem.py < $< > $@
- endif
+diff -up mozilla-release/toolkit/crashreporter/client/Makefile.in.gcc47 mozilla-release/toolkit/crashreporter/client/Makefile.in
+--- mozilla-release/toolkit/crashreporter/client/Makefile.in.gcc47	2013-12-09 15:12:50.659231760 +0100
++++ mozilla-release/toolkit/crashreporter/client/Makefile.in	2013-12-09 15:13:45.448324783 +0100
+@@ -42,6 +42,9 @@ endif
+ 
+ ifdef MOZ_WIDGET_GTK
  
 +# Needed for moz_free
 +LIBS += -L$(LIBXUL_DIST)/lib -lmozalloc

@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 99
+%if 0%{?fedora} < 21
 %define system_nss        0
 %else
 %define system_nss        1
@@ -90,7 +90,7 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
-Version:        25.0.1
+Version:        26.0
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
@@ -119,6 +119,7 @@ Patch204:       rhbz-966424.patch
 
 # Upstream patches
 Patch300:       mozilla-837563.patch
+Patch301:       mozilla-938730.patch
 
 # ---------------------------------------------------
 
@@ -277,10 +278,10 @@ debug %{name}, you want to install %{name}-debuginfo instead.
 cd %{tarballdir}
 
 %patch1  -p1
-%patch2  -p1 -b .build
-%patch3  -p2 -b .arm
+%patch2  -p1 -b .bld
+%patch3  -p1 -b .arm
 %patch14 -p2 -b .chromium-types
-%patch17 -p2 -b .gcc47
+%patch17 -p1 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
 %patch19 -p2 -b .s390-inlines
 %patch20 -p1 -b .885002
@@ -289,6 +290,7 @@ cd %{tarballdir}
 %patch204 -p1 -b .966424
 
 %patch300 -p1 -b .837563
+%patch301 -p1 -b .938730
 
 %{__rm} -f .mozconfig
 %{__cat} %{SOURCE10} \
@@ -605,6 +607,16 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Dec 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 26.0-1
+- sync with rawhide, update to 26.0 Build 2
+
+* Mon Dec 9 2013 Martin Stransky <stransky@redhat.com> - 26.0-1
+- Update to 26.0 Build 2
+
+ Thu Nov 21 2013 Martin Stransky <stransky@redhat.com> - 25.0-5
+- Fixed rhbz#1007603 - NSS and cert9 (sql): firefox crash on exit
+  with https-everywhere installed
+
 * Sat Nov 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 25.0.1-1
 - sync with rawhide, update to 25.0.1
 
