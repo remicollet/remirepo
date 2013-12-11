@@ -33,9 +33,9 @@
 
 %if %{?system_nss}
 # grep 'min_ns.*=[0-9]' configure
-%global nspr_version 4.9.6
+%global nspr_version 4.10.2
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
-%global nss_version 3.15
+%global nss_version 3.15.2
 %global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
 %endif
 %define cairo_version 1.10.0
@@ -68,14 +68,14 @@
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        24.1.0
+Version:        24.2.0
 Release:        1%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}/source/thunderbird-%{version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20131030.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20131209.tar.xz
 %endif
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
@@ -100,6 +100,7 @@ Patch300:       xulrunner-24.0-jemalloc-ppc.patch
 
 # Fedora specific patches
 Patch400:       rhbz-966424.patch
+Patch401:       revert-removal-of-native-notifications.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -219,6 +220,11 @@ cd mozilla
 %patch104 -p1 -b .gcc47
 %patch300 -p2 -b .852698
 %patch400 -p1 -b .966424
+
+%if 0%{?fedora} > 14
+# For Gnome Shell
+%patch401 -p2 -b .notifications
+%endif
 cd ..
 
 %patch200 -p1 -b .addons
@@ -538,6 +544,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Wed Dec 11 2013 Remi Collet <RPMS@FamilleCollet.com> - 24.2.0-1
+- sync with rawhide, update to 24.2.0
+
+* Wed Dec 11 2013 Martin Stransky <stransky@redhat.com> - 24.2.0-2
+- rhbz#1001998 - added a workaround for system notifications
+
+* Mon Dec  9 2013 Jan Horak <jhorak@redhat.com> - 24.2.0-1
+- Update to 24.2.0
+
 * Wed Oct 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 24.1.0-1
 - sync with rawhide, update to 24.1.0
 - enable python27 and devtoolset-2 (gcc 4.8) for EL-6
