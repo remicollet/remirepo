@@ -1,0 +1,252 @@
+From 3e963f8eb44863ef3d758eabe791190b0fd7bb9a Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Tue, 10 Dec 2013 16:07:16 +0100
+Subject: [PATCH] Fixed Bug #66218 zend_register_functions breaks reflection
+
+Functions registered using zend_register_functions instead of zend_module_entry.functions are not seen on reflection.
+
+Ex: additional_functions from api_module_entry.
+Ex: in CLI, dl, cli_set_process_title and cli_get_process_title
+
+Note:
+- also affects functions overrided in extension
+  (should be be reported in extension, where overrided, not in original extension)
+- also allow extension to call zend_register_functions for various list
+  (instead of having a single bug list)
+---
+ NEWS                                               |  1 +
+ Zend/tests/bug66218.phpt                           | 21 +++++++
+ Zend/zend_builtin_functions.c                      | 51 ++++++++++-------
+ ext/reflection/php_reflection.c                    | 66 +++++++++-------------
+ .../tests/ReflectionExtension_bug66218.phpt        | 21 +++++++
+ 5 files changed, 101 insertions(+), 59 deletions(-)
+ create mode 100644 Zend/tests/bug66218.phpt
+ create mode 100644 ext/reflection/tests/ReflectionExtension_bug66218.phpt
+
+diff --git a/Zend/tests/bug66218.phpt b/Zend/tests/bug66218.phpt
+new file mode 100644
+index 0000000..af7a5ab
+--- /dev/null
++++ b/Zend/tests/bug66218.phpt
+@@ -0,0 +1,21 @@
++--TEST--
++Bug #66218 zend_register_functions breaks reflection
++--SKIPIF--
++<?php
++if (PHP_SAPI != "cli") die("skip CLI only test");
++if (!function_exists("dl")) die("skip need dl");
++?>
++--FILE--
++<?php
++$tab = get_extension_funcs("standard");
++$fcts = array("dl");
++foreach ($fcts as $fct) {
++	if (in_array($fct, $tab)) {
++		echo "$fct Ok\n";
++	}
++}
++?>
++Done
++--EXPECTF--
++dl Ok
++Done
+diff --git a/Zend/zend_builtin_functions.c b/Zend/zend_builtin_functions.c
+index 04f4ebe..12a8fb2 100644
+--- a/Zend/zend_builtin_functions.c
++++ b/Zend/zend_builtin_functions.c
+@@ -2452,36 +2452,49 @@ ZEND_FUNCTION(extension_loaded)
+    Returns an array with the names of functions belonging to the named extension */
+ ZEND_FUNCTION(get_extension_funcs)
+ {
+-	char *extension_name;
+-	int extension_name_len;
++	char *extension_name, *lcname;
++	int extension_name_len, array;
+ 	zend_module_entry *module;
+-	const zend_function_entry *func;
+-
++	HashPosition iterator;
++	zend_function *zif;
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &extension_name, &extension_name_len) == FAILURE) {
+ 		return;
+ 	}
+-
+ 	if (strncasecmp(extension_name, "zend", sizeof("zend"))) {
+-		char *lcname = zend_str_tolower_dup(extension_name, extension_name_len);
+-		if (zend_hash_find(&module_registry, lcname,
+-			extension_name_len+1, (void**)&module) == FAILURE) {
+-			efree(lcname);
+-			RETURN_FALSE;
+-		}
++		lcname = zend_str_tolower_dup(extension_name, extension_name_len);
++	} else {
++		lcname = estrdup("core");
++	}
++	if (zend_hash_find(&module_registry, lcname,
++		extension_name_len+1, (void**)&module) == FAILURE) {
+ 		efree(lcname);
++		RETURN_FALSE;
++	}
+ 
+-		if (!(func = module->functions)) {
+-			RETURN_FALSE;
+-		}
++	zend_hash_internal_pointer_reset_ex(CG(function_table), &iterator);
++	if (module->functions) {
++		/* avoid BC break, if functions list is empty, will return an empty array */
++		array_init(return_value);
++		array = 1;
+ 	} else {
+-		func = builtin_functions;
++		array = 0;
++	}
++	while (zend_hash_get_current_data_ex(CG(function_table), (void **) &zif, &iterator) == SUCCESS) {
++		if (zif->common.type==ZEND_INTERNAL_FUNCTION
++			&& zif->internal_function.module == module) {
++			if (!array) {
++				array_init(return_value);
++				array = 1;
++			}
++			add_next_index_string(return_value, zif->common.function_name, 1);
++		}
++		zend_hash_move_forward_ex(CG(function_table), &iterator);
+ 	}
+ 
+-	array_init(return_value);
++	efree(lcname);
+ 
+-	while (func->fname) {
+-		add_next_index_string(return_value, func->fname, 1);
+-		func++;
++	if (!array) {
++		RETURN_FALSE;
+ 	}
+ }
+ /* }}} */
+diff --git a/ext/reflection/php_reflection.c b/ext/reflection/php_reflection.c
+index c4a7c55..803b12b 100644
+--- a/ext/reflection/php_reflection.c
++++ b/ext/reflection/php_reflection.c
+@@ -1105,29 +1105,26 @@ static void _extension_string(string *str, zend_module_entry *module, char *inde
+ 		string_free(&str_constants);
+ 	}
+ 
+-	if (module->functions && module->functions->fname) {
++	{
++		HashPosition iterator;
+ 		zend_function *fptr;
+-		const zend_function_entry *func = module->functions;
+-
+-		string_printf(str, "\n  - Functions {\n");
+-
+-		/* Is there a better way of doing this? */
+-		while (func->fname) {
+-			int fname_len = strlen(func->fname);
+-			char *lc_name = zend_str_tolower_dup(func->fname, fname_len);
+-		
+-			if (zend_hash_find(EG(function_table), lc_name, fname_len + 1, (void**) &fptr) == FAILURE) {
+-				php_error_docref(NULL TSRMLS_CC, E_WARNING, "Internal error: Cannot find extension function %s in global function table", func->fname);
+-				func++;
+-				efree(lc_name);
+-				continue;
++		int first = 1;
++
++		zend_hash_internal_pointer_reset_ex(CG(function_table), &iterator);
++		while (zend_hash_get_current_data_ex(CG(function_table), (void **) &fptr, &iterator) == SUCCESS) {
++			if (fptr->common.type==ZEND_INTERNAL_FUNCTION
++				&& fptr->internal_function.module == module) {
++				if (first) {
++					string_printf(str, "\n  - Functions {\n");
++					first = 0;
++				}
++				_function_string(str, fptr, NULL, "    " TSRMLS_CC);
+ 			}
+-
+-			_function_string(str, fptr, NULL, "    " TSRMLS_CC);
+-			efree(lc_name);
+-			func++;
++			zend_hash_move_forward_ex(CG(function_table), &iterator);
++		}
++		if (!first) {
++			string_printf(str, "%s  }\n", indent);
+ 		}
+-		string_printf(str, "%s  }\n", indent);
+ 	}
+ 
+ 	{
+@@ -5242,6 +5239,9 @@ ZEND_METHOD(reflection_extension, getFunctions)
+ {
+ 	reflection_object *intern;
+ 	zend_module_entry *module;
++	HashPosition iterator;
++	zval *function;
++	zend_function *fptr;
+ 
+ 	if (zend_parse_parameters_none() == FAILURE) {
+ 		return;
+@@ -5249,29 +5249,15 @@ ZEND_METHOD(reflection_extension, getFunctions)
+ 	GET_REFLECTION_OBJECT_PTR(module);
+ 
+ 	array_init(return_value);
+-	if (module->functions) {
+-		zval *function;
+-		zend_function *fptr;
+-		const zend_function_entry *func = module->functions;
+-
+-		/* Is there a better way of doing this? */
+-		while (func->fname) {
+-			int fname_len = strlen(func->fname);
+-			char *lc_name = zend_str_tolower_dup(func->fname, fname_len);
+-			
+-			if (zend_hash_find(EG(function_table), lc_name, fname_len + 1, (void**) &fptr) == FAILURE) {
+-				php_error_docref(NULL TSRMLS_CC, E_WARNING, "Internal error: Cannot find extension function %s in global function table", func->fname);
+-				func++;
+-				efree(lc_name);
+-				continue;
+-			}
+-
++	zend_hash_internal_pointer_reset_ex(CG(function_table), &iterator);
++	while (zend_hash_get_current_data_ex(CG(function_table), (void **) &fptr, &iterator) == SUCCESS) {
++		if (fptr->common.type==ZEND_INTERNAL_FUNCTION
++			&& fptr->internal_function.module == module) {
+ 			ALLOC_ZVAL(function);
+ 			reflection_function_factory(fptr, NULL, function TSRMLS_CC);
+-			add_assoc_zval_ex(return_value, func->fname, fname_len+1, function);
+-			func++;
+-			efree(lc_name);
++			add_assoc_zval(return_value, fptr->common.function_name, function);
+ 		}
++		zend_hash_move_forward_ex(CG(function_table), &iterator);
+ 	}
+ }
+ /* }}} */
+diff --git a/ext/reflection/tests/ReflectionExtension_bug66218.phpt b/ext/reflection/tests/ReflectionExtension_bug66218.phpt
+new file mode 100644
+index 0000000..e263624
+--- /dev/null
++++ b/ext/reflection/tests/ReflectionExtension_bug66218.phpt
+@@ -0,0 +1,21 @@
++--TEST--
++ReflectionExtension::getFunctions() ##6218 zend_register_functions breaks reflection
++--SKIPIF--
++<?php
++if (!extension_loaded('reflection')) print 'skip missing reflection extension';
++if (PHP_SAPI != "cli") die("skip CLI only test");
++if (!function_exists("dl")) die("skip need dl");
++?>
++--FILE--
++<?php
++$r = new ReflectionExtension('standard');
++$t = $r->getFunctions();
++var_dump($t['dl']);
++?>
++Done
++--EXPECTF--
++object(ReflectionFunction)#%d (1) {
++  ["name"]=>
++  string(2) "dl"
++}
++Done
+-- 
+1.8.4.3
+

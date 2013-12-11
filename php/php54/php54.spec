@@ -71,7 +71,7 @@
 %endif
 
 #global snapdate      201201041830
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -129,6 +129,9 @@ Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
 
+# Upstream fixes
+Patch100: php-bug66218.patch
+
 # Security fixes
 
 # Fixes for tests
@@ -137,8 +140,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-Patch100: php-wip.patch
-Patch101: php-wip2.patch
+#Patch101: php-wip2.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -792,8 +794,7 @@ rm -f ext/json/utf8_to_utf16.*
 
 %patch91 -p1 -b .remi-oci8
 
-%patch100 -p1 -b .wip1
-%patch101 -p1 -b .wip2
+%patch100 -p1 -b .bug66218
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1639,6 +1640,10 @@ fi
 
 
 %changelog
+* Wed Dec 11 2013 Remi Collet <rcollet@redhat.com> 5.4.23-1
+- update to 5.4.23, fix for CVE-2013-6420
+- fix zend_register_functions breaks reflection, php bug 66218
+
 * Wed Dec  4 2013 Remi Collet <rcollet@redhat.com> 5.4.23-0.2.RC1
 - test build for https://bugs.php.net/66218
   zend_register_functions breaks reflection
