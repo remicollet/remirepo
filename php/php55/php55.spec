@@ -100,7 +100,7 @@
 %endif
 
 #global snapdate      201308300430
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -171,7 +171,7 @@ Patch100: php-bug66060.patch
 # 66218 zend_register_functions breaks reflection
 Patch101: php-bug66218.patch
 # Zend: fix overflow handling bug in non-x86
-Patch103: php-bugarm.patch
+Patch102: php-bugarm.patch
 
 # Security fixes
 
@@ -181,7 +181,7 @@ Patch103: php-bugarm.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-Patch102: php-wip3.patch
+#Patch102: php-wip3.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -892,8 +892,7 @@ rm -rf ext/json
 # wip patches
 %patch100 -p1 -b .bug66060
 %patch101 -p1 -b .bug66218
-%patch102 -p1 -b .wip3
-%patch103 -p1 -b .bugarm
+%patch102 -p1 -b .bugarm
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1868,6 +1867,12 @@ fi
 
 
 %changelog
+* Wed Dec 11 2013 Remi Collet <rcollet@redhat.com> 5.5.7-1
+- update to 5.5.7, fix for CVE-2013-6420
+- fix zend_register_functions breaks reflection, php bug 66218
+- fix Heap buffer over-read in DateInterval, php bug 66060
+- fix fix overflow handling bug in non-x86
+
 * Tue Dec 10 2013 Remi Collet <rcollet@redhat.com> 5.5.7-0.4.RC1
 - test build
 
