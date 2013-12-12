@@ -41,7 +41,7 @@
 # grep 'min_ns.*=[0-9]' configure
 %global nspr_version 4.10.2
 %global nspr_build_version %((pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536) | sed s/\.0\$//)
-%global nss_version 3.15
+%global nss_version 3.15.2
 %global nss_build_version %((pkg-config --silence-errors --modversion nss 2>/dev/null   || echo 65536) | sed s/\.0\$//)
 %endif
 
