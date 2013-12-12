@@ -1,7 +1,7 @@
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.3.3
-%global github_commit  56fe099669ff3ec3be859ec02e3da965a720184d
+%global github_version 1.3.4
+%global github_commit  ad8b959e5962624004738d50a2d8e83c5668e143
 
 %global php_min_ver    5.3.0
 
@@ -21,13 +21,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/DbUnit)
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit_Selenium)
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit_Story)
-
 # For tests: phpcompatinfo
 BuildRequires: php-curl
+BuildRequires: php-date
 BuildRequires: php-filter
 BuildRequires: php-json
 BuildRequires: php-mbstring
@@ -65,35 +62,56 @@ spl_autoload_register(function ($class) {
 AUTOLOAD
 ) > autoload.php
 
+# Update bin file
+sed 's#/usr/bin/env php#%{_bindir}/php#' \
+    -i bin/validate-json
+
 
 %build
 # Empty build section, nothing to build
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
+# Install lib
+mkdir -pm 755 %{buildroot}%{_datadir}/php
 cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
+
+# Install bin
+mkdir -pm 0755 %{buildroot}%{_bindir}
+cp -p bin/validate-json %{buildroot}%{_bindir}/
 
 
 %check
 # Remove empty tests
-rm -f tests/JsonSchema/Tests/Drafts/Draft3Test.php \
-      tests/JsonSchema/Tests/Drafts/Draft4Test.php
+rm -rf tests/JsonSchema/Tests/Drafts
 
 %{_bindir}/phpunit \
-    -d include_path="./src:./tests:.:%{pear_phpdir}" \
-    -d date.timezone="UTC" \
-    --bootstrap=./autoload.php \
-    .
+    --include-path="./src:./tests" \
+    --bootstrap="./autoload.php" \
+    -d date.timezone="UTC"
 
 
 %files
 %defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
 %{_datadir}/php/%{lib_name}
+%{_bindir}/validate-json
 
 
 %changelog
+* Thu Dec 12 2013 Remi Collet <remi@fedoraproject.org> - 1.3.4-1
+- backport 1.3.4 for remi repo.
+
+* Mon Dec 09 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3.4-1
+- Updated to 1.3.4
+- php-common => php(language)
+- Removed the following build requires:
+  -- php-pear(pear.phpunit.de/DbUnit),
+  -- php-pear(pear.phpunit.de/PHPUnit_Selenium)
+  -- php-pear(pear.phpunit.de/PHPUnit_Story)
+- Added bin
+- Updated %%check to use PHPUnit's "--include-path" option
+
 * Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - backport 1.3.3 for remi repo.
 
