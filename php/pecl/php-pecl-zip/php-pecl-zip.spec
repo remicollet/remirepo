@@ -16,8 +16,8 @@
 Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         php-pecl-zip
-Version:      1.12.2
-Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      1.12.3
+Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if %{with_libzip}
 License:      PHP
 %else
@@ -28,8 +28,6 @@ Group:        Development/Languages
 URL:          http://pecl.php.net/package/zip
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:        %{pecl_name}-upstream.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel
@@ -49,6 +47,16 @@ Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 Provides:     php-%{pecl_name} = %{version}-%{release}
 Provides:     php-%{pecl_name}%{?_isa} = %{version}-%{release}
 
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+
 %if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -67,7 +75,6 @@ Zip est une extension pour créer et lire les archives au format ZIP.
 %setup -c -q
 
 cd %{pecl_name}-%{version}
-%patch0 -p1
 
 %if %{with_libzip}
 sed -e '/LICENSE_libzip/d' -i ../package.xml
@@ -190,13 +197,17 @@ fi
 
 
 %changelog
+* Thu Dec 12 2013 Remi Collet <remi@fedoraproject.org> - 1.12.3-1
+- Update to 1.12.3 (stable)
+- drop merged patch
+
 * Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> 1.12.2-2
 - upstream patch, don't use any libzip private struct
 - drop LICENSE_libzip when system version is used
 - always build ZTS extension
 
 * Wed Oct 23 2013 Remi Collet <remi@fedoraproject.org> 1.12.2-1
-- update to 1.12.2
+- update to 1.12.2 (beta)
 - drop merged patches
 - install doc in pecl doc_dir
 - install tests in pecl test_dir
