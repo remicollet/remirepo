@@ -26,8 +26,8 @@
 
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
-Version:       1.3.2
-Release:       2%{?dist}.1
+Version:       1.3.3
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
@@ -40,10 +40,6 @@ BuildRequires: pcre-devel
 %if %{with_libjson}
 BuildRequires: json-c-devel >= 0.11
 %endif
-
-# partial fix to decode string with null-byte (only in value)
-# https://github.com/remicollet/pecl-json-c/issues/7
-Patch0:        jsonc-nullbyte.patch
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -66,9 +62,11 @@ Obsoletes:     php54-pecl-%{proj_name}
 Obsoletes:     php55u-pecl-%{proj_name}
 %endif
 
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -103,8 +101,6 @@ Only used to be the best provider for php-json.
 %prep
 %setup -q -c 
 cd %{proj_name}-%{version}
-
-%patch0 -p1
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_JSON_VERSION/{s/.* "//;s/".*$//;p}' php_json.h )
@@ -226,6 +222,9 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-test first
 #
 %changelog
+* Thu Dec 12 2013 Remi Collet <rcollet@redhat.com> - 1.3.3-1
+- release 1.3.3 (stable)
+
 * Thu Sep 26 2013 Remi Collet <rcollet@redhat.com> - 1.3.2-2
 - fix decode of string value with null-byte
 
