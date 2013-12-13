@@ -15,7 +15,7 @@
 
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.25.0
+Version:        2.26.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -162,6 +162,9 @@ fi
 
 
 %changelog
+* Fri Dec 13 2013 Remi Collet <remi@fedoraproject.org> - 2.26.0-1
+- Update to 2.26.0 (stable)
+
 * Thu Nov 14 2013 Remi Collet <remi@fedoraproject.org> - 2.25.0-1
 - Update to 2.25.0
 - remove phpci temporary compat command
