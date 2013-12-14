@@ -3,9 +3,15 @@
 
 %global _hardened_build 1
 
+%if 0%{?rhel} == 5
+%ifarch i386
+%global with_perftools 1
+%endif
+%else
 %ifarch %{ix86} x86_64 ppc %{arm}
 # available only on selected architectures
 %global with_perftools 1
+%endif
 %endif
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
