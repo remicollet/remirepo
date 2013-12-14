@@ -4,20 +4,17 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  gmagick
-%global prever     RC1
+%global prever     RC2
 %global with_zts   0%{?__ztsphp:1}
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.6
-Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# http://svn.php.net/viewvc?view=revision&revision=332364
-Patch0:         %{pecl_name}-svn.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
@@ -65,10 +62,6 @@ of images using the GraphicsMagick API.
 %setup -qc
 
 mv %{pecl_name}-%{version}%{?prever} NTS
-
-pushd NTS
-%patch0 -p0 -b .svn
-popd
 
 # Don't install any font (and test using it)
 sed -e '/\.ttf"/d' \
@@ -199,6 +192,9 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 
 
 %changelog
+* Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 1.1.6-0.2.RC1
+- Update to 1.1.6RC2 (beta)
+
 * Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 1.1.6-0.1.RC1
 - Update to 1.1.6RC1 (beta)
 - adapt for SCL
