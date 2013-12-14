@@ -18,7 +18,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.2
+Version:          2.8.3
 Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
@@ -31,7 +31,7 @@ Source2:          %{name}.init
 Source3:          %{name}.service
 Source4:          %{name}.tmpfiles
 # Update configuration for Fedora
-Patch0:           %{name}-2.8.2-conf.patch
+Patch0:           %{name}-2.8.3-conf.patch
 Patch1:           %{name}-deps-PIC.patch
 Patch2:           %{name}-deps-unbundle-jemalloc.patch
 
@@ -191,8 +191,9 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc 00-RELEASENOTES BUGS CONTRIBUTING COPYING README
+%doc sentinel.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
-%config(noreplace) %{_sysconfdir}/%{name}.conf
+%attr(0644, redis, root) %config(noreplace) %{_sysconfdir}/%{name}.conf
 %dir %attr(0755, redis, root) %{_localstatedir}/lib/%{name}
 %dir %attr(0755, redis, root) %{_localstatedir}/log/%{name}
 %dir %attr(0755, redis, root) %{_localstatedir}/run/%{name}
@@ -207,6 +208,12 @@ fi
 
 
 %changelog
+* Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 2.8.3-1
+- Redis 2.8.3
+  upgrade urgency: MODERATE for Redis, HIGH for Sentinel.
+- redis own /etc/redis.conf (needed CONFIG WRITE)
+- add sentinel.conf as documentation
+
 * Mon Dec  2 2013 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
 - Redis 2.8.2, new major version
 - pull rawhide changes (add tmpfiles)
