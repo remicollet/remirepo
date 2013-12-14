@@ -34,16 +34,22 @@
 
 %global symfony_dir             %{_datadir}/php/Symfony
 %global pear_channel            pear.symfony.com
+%global with_tests              %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:          php-symfony
 Version:       %{github_version}
-Release:       3%{dist}
+Release:       4%{dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
 License:       MIT
 URL:           http://symfony.com
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# Run this command to download the PEAR package
+# and retrieve missing files github archive
+Source1:       getautoloader.sh
+Source2:       autoloader-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -1212,6 +1218,10 @@ The YAML Component loads and dumps YAML files.
 find src -name '.git*' -delete
 rm -rf src/Symfony/Bridge/{Propel1,ProxyManager}
 
+# Add missing files for PEAR compatibility
+cd src
+tar xf %{SOURCE2}
+
 
 %build
 # Empty build section, nothing required
@@ -1279,6 +1289,7 @@ sed -i \
 rm -f src/Symfony/Component/HttpFoundation/Tests/Session/Storage/Handler/NativeFileSessionHandlerTest.php
 %endif
 
+%if %{with_tests}
 # Run tests
 for PKG in src/Symfony/*/*; do
     echo -e "\n>>>>>>>>>>>>>>>>>>>>>>> ${PKG}\n"
@@ -1288,6 +1299,9 @@ for PKG in src/Symfony/*/*; do
         -d date.timezone="UTC" \
         $PKG
 done
+%else
+: Skip test suite
+%endif
 
 
 %files
@@ -1870,6 +1884,9 @@ done
 # ##############################################################################
 
 %changelog
+* Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> 2.3.7-4
+- fix PEAR compatibility: add missing "autoloader.php"
+
 * Wed Nov 27 2013 Remi Collet <remi@fedoraproject.org> 2.3.7-3
 - sync with rawhide, build for remi repo
 
