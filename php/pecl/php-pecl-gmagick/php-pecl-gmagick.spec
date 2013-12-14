@@ -1,3 +1,4 @@
+%{?scl:          %scl_package        php-pecl-gmagick}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -7,32 +8,36 @@
 %global with_zts   0%{?__ztsphp:1}
 
 Summary:        Provides a wrapper to the GraphicsMagick library
-Name:           php-pecl-%{pecl_name}
-Version:        1.1.5
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Version:        1.1.6
 Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
-URL:            http://pecl.php.net/package/gmagick
-Source0:        http://pecl.php.net/get/gmagick-%{version}%{?prever}.tgz
+URL:            http://pecl.php.net/package/%{pecl_name}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+
+# http://svn.php.net/viewvc?view=revision&revision=332364
+Patch0:         %{pecl_name}-svn.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
-BuildRequires:  php-pear
-BuildRequires:  php-devel
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  GraphicsMagick-devel >= 1.2.6
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-Conflicts:      php-pecl-imagick
-Conflicts:      php-magickwand
+Conflicts:      %{?scl_prefix}php-pecl-imagick
+Conflicts:      %{?scl_prefix}php-magickwand
 
+%if 0%{!?scl:1}
 # Other third party repo stuff
 %if "%{php_version}" > "5.5"
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -41,6 +46,7 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -59,6 +65,10 @@ of images using the GraphicsMagick API.
 %setup -qc
 
 mv %{pecl_name}-%{version}%{?prever} NTS
+
+pushd NTS
+%patch0 -p0 -b .svn
+popd
 
 # Don't install any font (and test using it)
 sed -e '/\.ttf"/d' \
@@ -189,6 +199,11 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 
 
 %changelog
+* Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 1.1.6-0.1.RC1
+- Update to 1.1.6RC1 (beta)
+- adapt for SCL
+- add patch for setStrokeDashArray / getStrokeDashArray
+
 * Tue Nov  5 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.5-0.1.RC1
 - Update to 1.1.5RC1
 - cleanups for Copr
