@@ -1,0 +1,40 @@
+From 9f2d92ada380fce3abf3d68d890c3a9cac6194eb Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sun, 15 Dec 2013 09:28:29 +0100
+Subject: [PATCH] fix segfault in sundown_render_base
+
+---
+ php_sundown.h | 2 +-
+ render_base.c | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/php_sundown.h b/php_sundown.h
+index 45db836..1593f1d 100644
+--- a/php_sundown.h
++++ b/php_sundown.h
+@@ -163,7 +163,7 @@ static int call_user_function_v(HashTable *function_table, zval **object_pp, zva
+ 	TSRMLS_FETCH();
+ 
+ 	if (param_count > 0) {
+-		params = emalloc(sizeof(zval**) * param_count);
++		params = emalloc(sizeof(zval*) * param_count);
+ 		va_start(ap, param_count);
+ 		for (i=0; i<param_count;i++) {
+ 			params[i] = va_arg(ap, zval*);
+diff --git a/render_base.c b/render_base.c
+index d9aee24..3cec492 100644
+--- a/render_base.c
++++ b/render_base.c
+@@ -227,7 +227,8 @@ zend_object_value php_sundown_render_base_new(zend_class_entry *ce TSRMLS_DC)
+ PHP_METHOD(sundown_render_base, header)
+ {
+ 	char *htext;
+-	int htext_len, header_level;
++	int htext_len;
++	long header_level;
+ 	
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+ 		"sl", &htext, &htext_len, &header_level) == FAILURE) {
+-- 
+1.8.5.1
+
