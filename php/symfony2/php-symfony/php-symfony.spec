@@ -1,7 +1,10 @@
 %global github_owner            symfony
 %global github_name             symfony
-%global github_version          2.3.7
-%global github_commit           2829b471871c2564228fe9f0832a0f928a8ffaa1
+%global github_version          2.3.8
+%global github_commit           b0b421908d569e5024372ded65857707c409e0f7
+
+# https://github.com/symfony/symfony/issues/9797
+# Failed test in Component/HttpFoundation/Tests/Session/Storage/Handler/MemcachedSessionHandlerTest.php
 
 %global php_min_ver             5.3.3
 # "doctrine/common": "~2.2" (composer.json)
@@ -38,7 +41,7 @@
 
 Name:          php-symfony
 Version:       %{github_version}
-Release:       4%{dist}
+Release:       1%{dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1884,6 +1887,9 @@ done
 # ##############################################################################
 
 %changelog
+* Tue Dec 17 2013 Remi Collet <remi@fedoraproject.org> 2.3.8-1
+- Updated to 2.3.8
+
 * Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> 2.3.7-4
 - fix PEAR compatibility: add missing "autoloader.php"
 
