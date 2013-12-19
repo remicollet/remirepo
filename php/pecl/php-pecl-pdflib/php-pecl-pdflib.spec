@@ -6,24 +6,29 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%{!?php_inidir: %{expand: %%global php_inidir %{_sysconfdir}/php.d}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
+%global with_zts  0%{?__ztsphp:1}
 %global pecl_name pdflib
 %global extname   pdf
 
 Summary:        Package for generating PDF files
 Summary(fr):    Extension pour générer des fichiers PDF
 Name:           php-pecl-pdflib
-Version:        3.0.1
-Release:        1%{?dist}.1
+Version:        3.0.2
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/pdflib
 
-Source:         http://pecl.php.net/get/pdflib-%{version}.tgz
-Source2:        xml2changelog
+Source0:        http://pecl.php.net/get/pdflib-%{version}.tgz
+
+# fix build with pdflib-lite 7.0.x
+# http://svn.php.net/viewvc?view=revision&revision=332472
+Patch0:         %{pecl_name}.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
@@ -40,9 +45,11 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}%{?prever}
 Provides:       php-pecl(%{pecl_name}) = %{version}%{?prever}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -71,10 +78,8 @@ http://www.pdflib.com/developer-center/technical-documentation/php-howto
 
 %prep 
 %setup -c -q
-%{_bindir}/php %{SOURCE2} package.xml >CHANGELOG
 
-sed -e /PHP_PDFLIB_VERSION/s/3.0.0/%{version}/ \
-    -i %{pecl_name}-%{version}/php_pdflib.h
+%patch0 -p0 -b .fix
 
 # Check version
 extver=$(sed -n '/#define PHP_PDFLIB_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_pdflib.h)
@@ -83,7 +88,9 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
+%if %{with_zts}
 cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
+%endif
 
 # Create the config file
 cat > %{extname}.ini << 'EOF'
@@ -98,7 +105,7 @@ cd %{pecl_name}-%{version}
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-%if 0%{?__ztsphp:1}
+%if %{with_zts}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
@@ -117,19 +124,25 @@ install -D -m 644 %{extname}.ini %{buildroot}%{php_inidir}/%{extname}.ini
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-%if 0%{?__ztsphp:1}
+%if %{with_zts}
 make -C %{pecl_name}-zts        install-modules INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
 %endif
 
+# Test & Documentation
+cd %{pecl_name}-%{version}
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
-%{_bindir}/php -n \
+%{__php} -n \
     -d extension_dir=%{pecl_name}-%{version}/modules \
     -d extension=%{extname}.so \
     -m | grep -i %{extname}
 
-%if 0%{?__ztsphp:1}
+%if %{with_zts}
 %{__ztsphp} -n \
     -d extension_dir=%{pecl_name}-zts/modules \
     -d extension=%{extname}.so \
@@ -153,18 +166,22 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, -)
-%doc CHANGELOG %{pecl_name}-%{version}/CREDITS
+%doc %{pecl_docdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
 %{pecl_xmldir}/%{name}.xml
 
-%if 0%{?__ztsphp:1}
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_ztsextdir}/%{extname}.so
 %endif
 
 
 %changelog
+* Thu Dec 19 2013 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
+- Update to 3.0.2 (stable)
+- move doc to pecl_docdir
+
 * Thu Jul 25 2013 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - Update to 3.0.1
 
