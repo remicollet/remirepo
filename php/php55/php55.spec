@@ -108,7 +108,7 @@ Version: 5.5.7
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -165,6 +165,9 @@ Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
 
+# RC Patch
+Patch91: php-5.3.7-oci8conf.patch
+
 # Upstream fixes
 # 66060 Heap buffer over-read in DateInterval
 Patch100: php-bug66060.patch
@@ -177,11 +180,8 @@ Patch102: php-bugarm.patch
 
 # Fixes for tests
 
-# RC Patch
-Patch91: php-5.3.7-oci8conf.patch
-
 # WIP
-#Patch102: php-wip3.patch
+Patch200: php-wip.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -889,10 +889,15 @@ rm -rf ext/json
 
 %patch91 -p1 -b .remi-oci8
 
-# wip patches
+# upstream patches
 %patch100 -p1 -b .bug66060
 %patch101 -p1 -b .bug66218
 %patch102 -p1 -b .bugarm
+
+# security patches
+
+# WIP patch
+%patch200 -p0 -b .wip
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1867,6 +1872,9 @@ fi
 
 
 %changelog
+* Sat Dec 20 2013 Remi Collet <rcollet@redhat.com> 5.5.7-1.1
+- test build for https://bugs.php.net/66331
+
 * Wed Dec 11 2013 Remi Collet <rcollet@redhat.com> 5.5.7-1
 - update to 5.5.7, fix for CVE-2013-6420
 - fix zend_register_functions breaks reflection, php bug 66218

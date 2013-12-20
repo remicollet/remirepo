@@ -1,0 +1,12 @@
+diff -up Zend/zend_compile.c.old Zend/zend_compile.c
+--- Zend/zend_compile.c.old	2013-12-20 18:54:27.817018413 +0100
++++ Zend/zend_compile.c	2013-12-20 18:54:37.015050252 +0100
+@@ -3209,7 +3209,7 @@ static zend_bool zend_do_perform_impleme
+ 		}
+ 
+ 		/* by-ref constraints on arguments are invariant */
+-		if (fe->common.arg_info[i].pass_by_reference != proto->common.arg_info[i].pass_by_reference) {
++		if ((fe->common.arg_info[i].pass_by_reference>0) != (proto->common.arg_info[i].pass_by_reference>0)) {
+ 			return 0;
+ 		}
+ 	}
