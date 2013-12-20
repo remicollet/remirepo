@@ -1,0 +1,624 @@
+Extension [ <persistent> extension #60 memcached version 2.1.0 ] {
+
+  - Dependencies {
+    Dependency [ session (Required) ]
+    Dependency [ igbinary (Required) ]
+    Dependency [ spl (Required) ]
+  }
+
+  - INI {
+    Entry [ memcached.sess_locking <ALL> ]
+      Current = '1'
+    }
+    Entry [ memcached.sess_binary <ALL> ]
+      Current = '0'
+    }
+    Entry [ memcached.sess_lock_wait <ALL> ]
+      Current = '150000'
+    }
+    Entry [ memcached.sess_prefix <ALL> ]
+      Current = 'memc.sess.key.'
+    }
+    Entry [ memcached.compression_type <ALL> ]
+      Current = 'fastlz'
+    }
+    Entry [ memcached.compression_factor <ALL> ]
+      Current = '1.3'
+    }
+    Entry [ memcached.compression_threshold <ALL> ]
+      Current = '2000'
+    }
+    Entry [ memcached.serializer <ALL> ]
+      Current = 'igbinary'
+    }
+    Entry [ memcached.use_sasl <SYSTEM> ]
+      Current = '0'
+    }
+  }
+
+  - Classes [2] {
+    Class [ <internal:memcached> class Memcached ] {
+
+      - Constants [89] {
+        Constant [ integer OPT_COMPRESSION ] { -1001 }
+        Constant [ integer OPT_COMPRESSION_TYPE ] { -1004 }
+        Constant [ integer OPT_PREFIX_KEY ] { -1002 }
+        Constant [ integer OPT_SERIALIZER ] { -1003 }
+        Constant [ integer HAVE_IGBINARY ] { 1 }
+        Constant [ integer HAVE_JSON ] { 1 }
+        Constant [ integer HAVE_SESSION ] { 1 }
+        Constant [ integer HAVE_SASL ] { 1 }
+        Constant [ integer OPT_HASH ] { 2 }
+        Constant [ integer HASH_DEFAULT ] { 0 }
+        Constant [ integer HASH_MD5 ] { 1 }
+        Constant [ integer HASH_CRC ] { 2 }
+        Constant [ integer HASH_FNV1_64 ] { 3 }
+        Constant [ integer HASH_FNV1A_64 ] { 4 }
+        Constant [ integer HASH_FNV1_32 ] { 5 }
+        Constant [ integer HASH_FNV1A_32 ] { 6 }
+        Constant [ integer HASH_HSIEH ] { 7 }
+        Constant [ integer HASH_MURMUR ] { 8 }
+        Constant [ integer OPT_DISTRIBUTION ] { 9 }
+        Constant [ integer DISTRIBUTION_MODULA ] { 0 }
+        Constant [ integer DISTRIBUTION_CONSISTENT ] { 1 }
+        Constant [ integer DISTRIBUTION_VIRTUAL_BUCKET ] { 6 }
+        Constant [ integer OPT_LIBKETAMA_COMPATIBLE ] { 16 }
+        Constant [ integer OPT_LIBKETAMA_HASH ] { 17 }
+        Constant [ integer OPT_TCP_KEEPALIVE ] { 32 }
+        Constant [ integer OPT_BUFFER_WRITES ] { 10 }
+        Constant [ integer OPT_BINARY_PROTOCOL ] { 18 }
+        Constant [ integer OPT_NO_BLOCK ] { 0 }
+        Constant [ integer OPT_TCP_NODELAY ] { 1 }
+        Constant [ integer OPT_SOCKET_SEND_SIZE ] { 4 }
+        Constant [ integer OPT_SOCKET_RECV_SIZE ] { 5 }
+        Constant [ integer OPT_CONNECT_TIMEOUT ] { 14 }
+        Constant [ integer OPT_RETRY_TIMEOUT ] { 15 }
+        Constant [ integer OPT_SEND_TIMEOUT ] { 19 }
+        Constant [ integer OPT_RECV_TIMEOUT ] { 20 }
+        Constant [ integer OPT_POLL_TIMEOUT ] { 8 }
+        Constant [ integer OPT_CACHE_LOOKUPS ] { 6 }
+        Constant [ integer OPT_SERVER_FAILURE_LIMIT ] { 21 }
+        Constant [ integer OPT_AUTO_EJECT_HOSTS ] { 28 }
+        Constant [ integer OPT_HASH_WITH_PREFIX_KEY ] { 25 }
+        Constant [ integer OPT_NOREPLY ] { 26 }
+        Constant [ integer OPT_SORT_HOSTS ] { 12 }
+        Constant [ integer OPT_VERIFY_KEY ] { 13 }
+        Constant [ integer OPT_USE_UDP ] { 27 }
+        Constant [ integer OPT_NUMBER_OF_REPLICAS ] { 29 }
+        Constant [ integer OPT_RANDOMIZE_REPLICA_READ ] { 30 }
+        Constant [ integer OPT_REMOVE_FAILED_SERVERS ] { 35 }
+        Constant [ integer RES_SUCCESS ] { 0 }
+        Constant [ integer RES_FAILURE ] { 1 }
+        Constant [ integer RES_HOST_LOOKUP_FAILURE ] { 2 }
+        Constant [ integer RES_UNKNOWN_READ_FAILURE ] { 7 }
+        Constant [ integer RES_PROTOCOL_ERROR ] { 8 }
+        Constant [ integer RES_CLIENT_ERROR ] { 9 }
+        Constant [ integer RES_SERVER_ERROR ] { 10 }
+        Constant [ integer RES_WRITE_FAILURE ] { 5 }
+        Constant [ integer RES_DATA_EXISTS ] { 12 }
+        Constant [ integer RES_NOTSTORED ] { 14 }
+        Constant [ integer RES_NOTFOUND ] { 16 }
+        Constant [ integer RES_PARTIAL_READ ] { 18 }
+        Constant [ integer RES_SOME_ERRORS ] { 19 }
+        Constant [ integer RES_NO_SERVERS ] { 20 }
+        Constant [ integer RES_END ] { 21 }
+        Constant [ integer RES_ERRNO ] { 26 }
+        Constant [ integer RES_BUFFERED ] { 32 }
+        Constant [ integer RES_TIMEOUT ] { 31 }
+        Constant [ integer RES_BAD_KEY_PROVIDED ] { 33 }
+        Constant [ integer RES_STORED ] { 15 }
+        Constant [ integer RES_DELETED ] { 22 }
+        Constant [ integer RES_STAT ] { 24 }
+        Constant [ integer RES_ITEM ] { 25 }
+        Constant [ integer RES_NOT_SUPPORTED ] { 28 }
+        Constant [ integer RES_FETCH_NOTFINISHED ] { 30 }
+        Constant [ integer RES_SERVER_MARKED_DEAD ] { 35 }
+        Constant [ integer RES_UNKNOWN_STAT_KEY ] { 36 }
+        Constant [ integer RES_INVALID_HOST_PROTOCOL ] { 34 }
+        Constant [ integer RES_MEMORY_ALLOCATION_FAILURE ] { 17 }
+        Constant [ integer RES_CONNECTION_SOCKET_CREATE_FAILURE ] { 11 }
+        Constant [ integer RES_AUTH_PROBLEM ] { 40 }
+        Constant [ integer RES_AUTH_FAILURE ] { 41 }
+        Constant [ integer RES_AUTH_CONTINUE ] { 42 }
+        Constant [ integer RES_PAYLOAD_FAILURE ] { -1001 }
+        Constant [ integer SERIALIZER_PHP ] { 1 }
+        Constant [ integer SERIALIZER_IGBINARY ] { 2 }
+        Constant [ integer SERIALIZER_JSON ] { 3 }
+        Constant [ integer SERIALIZER_JSON_ARRAY ] { 4 }
+        Constant [ integer COMPRESSION_FASTLZ ] { 2 }
+        Constant [ integer COMPRESSION_ZLIB ] { 1 }
+        Constant [ integer GET_PRESERVE_ORDER ] { 1 }
+        Constant [ boolean GET_ERROR_RETURN_VALUE ] {  }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [51] {
+        Method [ <internal:memcached, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $persistent_id ]
+            Parameter #1 [ <optional> $callback ]
+          }
+        }
+
+        Method [ <internal:memcached> public method getResultCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method getResultMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method get ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <optional> $cache_cb ]
+            Parameter #2 [ <optional> &$cas_token ]
+          }
+        }
+
+        Method [ <internal:memcached> public method getByKey ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <optional> $cache_cb ]
+            Parameter #3 [ <optional> &$cas_token ]
+          }
+        }
+
+        Method [ <internal:memcached> public method getMulti ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> array $keys ]
+            Parameter #1 [ <optional> &$cas_tokens ]
+            Parameter #2 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:memcached> public method getMultiByKey ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> array $keys ]
+            Parameter #2 [ <optional> &$cas_tokens ]
+            Parameter #3 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:memcached> public method getDelayed ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> array $keys ]
+            Parameter #1 [ <optional> $with_cas ]
+            Parameter #2 [ <optional> $value_cb ]
+          }
+        }
+
+        Method [ <internal:memcached> public method getDelayedByKey ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> array $keys ]
+            Parameter #2 [ <optional> $with_cas ]
+            Parameter #3 [ <optional> $value_cb ]
+          }
+        }
+
+        Method [ <internal:memcached> public method fetch ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method fetchAll ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method set ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method setByKey ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $value ]
+            Parameter #3 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method touch ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method touchByKey ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method setMulti ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> array $items ]
+            Parameter #1 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method setMultiByKey ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> array $items ]
+            Parameter #2 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method cas ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $cas_token ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $value ]
+            Parameter #3 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method casByKey ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $cas_token ]
+            Parameter #1 [ <required> $server_key ]
+            Parameter #2 [ <required> $key ]
+            Parameter #3 [ <required> $value ]
+            Parameter #4 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method add ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method addByKey ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $value ]
+            Parameter #3 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method append ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method appendByKey ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $value ]
+            Parameter #3 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method prepend ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method prependByKey ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $value ]
+            Parameter #3 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method replace ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method replaceByKey ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $value ]
+            Parameter #3 [ <optional> $expiration ]
+          }
+        }
+
+        Method [ <internal:memcached> public method delete ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <optional> $time ]
+          }
+        }
+
+        Method [ <internal:memcached> public method deleteMulti ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $keys ]
+            Parameter #1 [ <optional> $time ]
+          }
+        }
+
+        Method [ <internal:memcached> public method deleteByKey ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <optional> $time ]
+          }
+        }
+
+        Method [ <internal:memcached> public method deleteMultiByKey ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $keys ]
+            Parameter #2 [ <optional> $time ]
+          }
+        }
+
+        Method [ <internal:memcached> public method increment ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <optional> $offset ]
+            Parameter #2 [ <optional> $initial_value ]
+            Parameter #3 [ <optional> $expiry ]
+          }
+        }
+
+        Method [ <internal:memcached> public method decrement ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <optional> $offset ]
+            Parameter #2 [ <optional> $initial_value ]
+            Parameter #3 [ <optional> $expiry ]
+          }
+        }
+
+        Method [ <internal:memcached> public method incrementByKey ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <optional> $offset ]
+            Parameter #3 [ <optional> $initial_value ]
+            Parameter #4 [ <optional> $expiry ]
+          }
+        }
+
+        Method [ <internal:memcached> public method decrementByKey ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $server_key ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <optional> $offset ]
+            Parameter #3 [ <optional> $initial_value ]
+            Parameter #4 [ <optional> $expiry ]
+          }
+        }
+
+        Method [ <internal:memcached> public method addServer ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <optional> $weight ]
+          }
+        }
+
+        Method [ <internal:memcached> public method addServers ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $servers ]
+          }
+        }
+
+        Method [ <internal:memcached> public method getServerList ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method getServerByKey ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $server_key ]
+          }
+        }
+
+        Method [ <internal:memcached> public method resetServerList ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method quit ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method getStats ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method getVersion ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method getAllKeys ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method flush ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $delay ]
+          }
+        }
+
+        Method [ <internal:memcached> public method getOption ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $option ]
+          }
+        }
+
+        Method [ <internal:memcached> public method setOption ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $option ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:memcached> public method setOptions ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:memcached> public method setSaslAuthData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $username ]
+            Parameter #1 [ <required> $password ]
+          }
+        }
+
+        Method [ <internal:memcached> public method isPersistent ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:memcached> public method isPristine ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:memcached> class MemcachedException extends RuntimeException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+  }
+}
+
