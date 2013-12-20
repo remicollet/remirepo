@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-riak}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -21,8 +22,8 @@
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:        Riak database PHP extension
-Name:           php-pecl-%{pecl_name}
-Version:        1.1.2
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Version:        1.1.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        ASL 2.0 and BSD
 Group:          Development/Languages
@@ -30,26 +31,38 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel > 5.3
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel > 5.3
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
 # php 5.3.3 in EL-6 don't use arched virtual provides
 # so only requires real packages instead
-Requires:       php-common%{?_isa}
+Requires:       %{?scl_prefix}php-common%{?_isa}
 %else
-Requires:       php-json%{?_isa}
+Requires:       %{?scl_prefix}php-json%{?_isa}
 %endif
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+%if 0%{!?scl:1}
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20
 # Filter shared private
@@ -205,6 +218,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 20 2013 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3 (stable)
+- adapt for SCL
+
 * Wed Dec 18 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2 (beta)
 
