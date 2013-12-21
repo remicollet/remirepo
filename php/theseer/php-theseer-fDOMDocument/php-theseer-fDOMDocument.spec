@@ -1,9 +1,18 @@
+# spec file for php-theseer-fDOMDocument
+#
+# Copyright (c) 2013 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name fDOMDocument
 %global channel   pear.netpirates.net
 
 Name:           php-theseer-fDOMDocument
-Version:        1.4.2
+Version:        1.4.3
 Release:        1%{?dist}
 Summary:        An Extension to PHP standard DOM
 
@@ -99,6 +108,9 @@ fi
 
 
 %changelog
+* Sat Dec 21 2013 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
+- Update to 1.4.3 (stable)
+
 * Sun Jun 30 2013 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - Update to 1.4.2
 
