@@ -1,6 +1,6 @@
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.15
+Version:        3.1.16
 Release:        1%{?dist}
 
 Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 22 2013 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.1.16-1
+- Last uypstream release
+
 * Sun Dec 08 2013 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.1.15-1
 - Last upstream release
 
