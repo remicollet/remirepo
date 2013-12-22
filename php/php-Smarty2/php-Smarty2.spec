@@ -1,6 +1,6 @@
 Name:           php-Smarty2
 Summary:        Template/Presentation Framework for PHP
-Version:        2.6.27
+Version:        2.6.28
 Release:        1%{?dist}
 
 Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 22 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.6.28-1
+- update to 2.6.28
+
 * Sat Sep 29 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.6.27-1
 - rename to php-Smarty2 and update to 2.6.27 for remi repo
 
@@ -74,7 +77,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.20-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
-* Mon Nov 02 2008 Christopher Stone <chris.stone@gmail.com> 2.6.20-2
+* Sun Nov 02 2008 Christopher Stone <chris.stone@gmail.com> 2.6.20-2
 - Add security patch (bz #469648)
 - Add RHL dist tag conditional for Requires
 
