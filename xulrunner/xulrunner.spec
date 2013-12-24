@@ -1,5 +1,5 @@
 # Use system nspr/nss?
-%if 0%{?fedora} < 21
+%if 0%{?fedora} < 18 && 0%{?rhel} < 6
 %define system_nss        0
 %else
 %define system_nss        1
@@ -91,7 +91,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           %{shortname}-last
 Version:        26.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -607,6 +607,10 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Dec 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 26.0-2
+- sync patch with rawhide
+- rebuild against RHEL-6.5
+
 * Tue Dec 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 26.0-1
 - sync with rawhide, update to 26.0 Build 2
 

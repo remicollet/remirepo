@@ -1,5 +1,5 @@
 # Use system nss/nspr?
-%if 0%{?fedora} < 21
+%if 0%{?fedora} < 18 && 0%{?rhel} < 6
 %define system_nss        0
 %else
 %define system_nss        1
@@ -31,7 +31,7 @@
 
 %global xulrunner_version      26.0
 %global xulrunner_version_max  26.1
-%global xulrunner_release      1
+%global xulrunner_release      2
 %global alpha_version          0
 %global beta_version           0
 %global rc_version             0
@@ -72,7 +72,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        26.0
-Release:        1%{?pre_tag}%{?dist}
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -96,6 +96,7 @@ Patch15:        firefox-15.0-enable-addons.patch
 Patch16:        firefox-duckduckgo.patch
 
 # Upstream patches
+Patch20:        mozilla-938730.patch
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -151,6 +152,7 @@ cd %{tarballdir}
 %patch16 -p1 -b .duckduckgo
 
 # Upstream patches
+%patch20 -p1 -b .938730
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -518,6 +520,14 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Tue Dec 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 26.0-2
+- sync patch with rawhide
+- rebuild against RHEL-6.5
+
+* Tue Dec 17 2013 Martin Stransky <stransky@redhat.com> - 26.0-4
+- Added fix for rhbz#1007603 - NSS and cert9 (sql): firefox crash
+  on exit with https-everywhere installed (edit)
+
 * Tue Dec 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 26.0-1
 - sync with rawhide, update to 26.0 Build 2
 

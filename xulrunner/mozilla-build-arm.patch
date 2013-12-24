@@ -1,5 +1,6 @@
---- mozilla-release/gfx/layers/BufferUnrotate.cpp.old	2013-12-05 17:07:31.000000000 +0100
-+++ mozilla-release/gfx/layers/BufferUnrotate.cpp	2013-12-10 14:43:25.948164298 +0100
+diff -up mozilla-release/gfx/layers/BufferUnrotate.cpp.arm mozilla-release/gfx/layers/BufferUnrotate.cpp
+--- mozilla-release/gfx/layers/BufferUnrotate.cpp.arm	2013-12-05 17:07:31.000000000 +0100
++++ mozilla-release/gfx/layers/BufferUnrotate.cpp	2013-12-10 14:47:43.234182482 +0100
 @@ -8,6 +8,7 @@
  #include <stdint.h>
  #include <stdio.h>
@@ -8,8 +9,9 @@
  
  void BufferUnrotate(uint8_t* aBuffer, int aByteWidth, int aHeight,
                      int aByteStride, int aXBoundary, int aYBoundary)
---- mozilla-release/gfx/ycbcr/moz.build.arm	2013-10-23 15:52:17.056493264 +0200
-+++ mozilla-release/gfx/ycbcr/moz.build	2013-10-23 16:03:04.496045050 +0200
+diff -up mozilla-release/gfx/ycbcr/moz.build.arm mozilla-release/gfx/ycbcr/moz.build
+--- mozilla-release/gfx/ycbcr/moz.build.arm	2013-12-05 17:07:32.000000000 +0100
++++ mozilla-release/gfx/ycbcr/moz.build	2013-12-10 14:47:43.235182479 +0100
 @@ -61,7 +61,7 @@ else:
          'yuv_row_other.cpp',
      ]
@@ -19,3 +21,15 @@
      ASFILES += [
          'yuv_row_arm.s',
      ]
+diff -up mozilla-release/media/libtheora/lib/moz.build.arm mozilla-release/media/libtheora/lib/moz.build
+--- mozilla-release/media/libtheora/lib/moz.build.arm	2013-12-05 17:07:48.000000000 +0100
++++ mozilla-release/media/libtheora/lib/moz.build	2013-12-12 11:45:41.882119059 +0100
+@@ -8,7 +8,7 @@ MODULE = 'theora'
+ 
+ LIBRARY_NAME = 'theora'
+ 
+-if CONFIG['OS_TEST'] == 'arm' and CONFIG['GNU_AS']:
++if CONFIG['HAVE_ARM_NEON'] and CONFIG['GNU_AS']:
+     asm_suffix = CONFIG['ASM_SUFFIX']
+     ASFILES += [
+         'armbits-gnu.%s' % asm_suffix,
