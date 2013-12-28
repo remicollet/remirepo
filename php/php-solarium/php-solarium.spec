@@ -15,25 +15,26 @@
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
 Version:        3.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            http://www.solarium-project.org/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 License:        BSD
 Group:          Development/Libraries
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
 BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:  php-pear(pear.symfony.com/EventDispatcher) > 2.1
+BuildRequires:  php-symfony-eventdispatcher > 2.1
+BuildRequires:  php-symfony-eventdispatcher < 3
 %endif
 
 # From composer.json
 Requires:       php(language) >= 5.3.2
-Requires:       php-pear(pear.symfony.com/EventDispatcher) > 2.1
+Requires:       php-symfony-eventdispatcher > 2.1
+Requires:       php-symfony-eventdispatcher < 3
 # From phpcompatinfo report for version 3.1.2
 Requires:       php-curl
 Requires:       php-date
@@ -100,11 +101,13 @@ phpunit \
 
 
 %files
-%defattr(-,root,root,-)
 %doc composer.json COPYING README.md examples
 %{_datadir}/php/Solarium
 
 
 %changelog
+* Sat Dec 28 2013 Remi Collet <remi@fedoraproject.org> - 3.1.2-2
+- cleanups from review #1023879
+
 * Mon Oct 28 2013 Remi Collet <remi@fedoraproject.org> - 3.1.2-1
 - Initial packaging
