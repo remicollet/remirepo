@@ -71,13 +71,13 @@
 %endif
 
 #global snapdate      201201041830
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.23
+Version: 5.4.24
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -130,7 +130,6 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Upstream fixes
-Patch100: php-bug66218.patch
 
 # Security fixes
 
@@ -190,7 +189,7 @@ easy for developers to write dynamically generated web pages. PHP also
 offers built-in database integration for several commercial and
 non-commercial database management systems, so writing a
 database-enabled webpage with PHP is fairly simple. The most common
-use of PHP coding is probably as a replacement for CGI scripts. 
+use of PHP coding is probably as a replacement for CGI scripts.
 
 The php package contains the module (often referred to as mod_php)
 which adds support for the PHP language to Apache HTTP Server.
@@ -205,7 +204,7 @@ Provides: php-readline, php-readline%{?_isa}
 Obsoletes: php53-cli, php53u-cli, php54-cli
 
 %description cli
-The php-cli package contains the command-line interface 
+The php-cli package contains the command-line interface
 executing PHP scripts, /usr/bin/php, and the CGI interface.
 
 
@@ -378,7 +377,7 @@ Obsoletes: php53-pdo, php53u-pdo, php54-pdo
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
 a database access abstraction layer to PHP.  This module provides
-a common interface for accessing MySQL, PostgreSQL or other 
+a common interface for accessing MySQL, PostgreSQL or other
 databases.
 
 %package mysql
@@ -513,11 +512,11 @@ The php-interbase package contains a dynamic shared object that will add
 database support through Interbase/Firebird to PHP.
 
 InterBase is the name of the closed-source variant of this RDBMS that was
-developed by Borland/Inprise. 
+developed by Borland/Inprise.
 
-Firebird is a commercially independent project of C and C++ programmers, 
-technical advisors and supporters developing and enhancing a multi-platform 
-relational database management system based on the source code released by 
+Firebird is a commercially independent project of C and C++ programmers,
+technical advisors and supporters developing and enhancing a multi-platform
+relational database management system based on the source code released by
 Inprise Corp (now known as Borland Software Corp) under the InterBase Public
 License.
 
@@ -794,7 +793,6 @@ rm -f ext/json/utf8_to_utf16.*
 
 %patch91 -p1 -b .remi-oci8
 
-%patch100 -p1 -b .bug66218
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -981,8 +979,8 @@ ln -sf ../configure
         --with-system-tzdata \
 %endif
 	--with-mhash \
-	$* 
-if test $? != 0; then 
+	$*
+if test $? != 0; then
   tail -500 config.log
   : configure failed
   exit 1
@@ -1640,6 +1638,9 @@ fi
 
 
 %changelog
+* Sat Dec 28 2013 Remi Collet <rcollet@redhat.com> 5.4.24-0.1.RC1
+- test build of 5.4.24RC1
+
 * Wed Dec 11 2013 Remi Collet <rcollet@redhat.com> 5.4.23-1
 - update to 5.4.23, fix for CVE-2013-6420
 - fix zend_register_functions breaks reflection, php bug 66218
@@ -2154,7 +2155,7 @@ fi
 - fix provides for obsoleted pecl extension
 
 * Sun Apr 05 2009 Remi Collet <rpms@famillecollet.com> 5.3.0-0.4.RC1.el5.remi
-- EL5 rebuild without new sqlite3 extension 
+- EL5 rebuild without new sqlite3 extension
 
 * Wed Mar 25 2009 Remi Collet <rpms@famillecollet.com> 5.3.0-0.4.RC1.fc10.remi
 - add php-enchant sub-package (new extension)
@@ -2207,11 +2208,11 @@ fi
 - use system GD instead of bundled GD when >= 2.0.35 (Fedora >= 6)
 
 * Sun Aug 17 2008 Remi Collet <rpms@famillecollet.com> 5.3.0-0.1.alpha2-dev.200808170830.fc9.remi
-- new snapshot (5.3.0alpha2-dev) 
+- new snapshot (5.3.0alpha2-dev)
 - php-5.2.4-tests-dashn.patch applied upstream
 
 * Sun Aug 10 2008 Remi Collet <rpms@famillecollet.com> 5.3.0-0.1.alpha2-dev.200808101630.fc9.remi
-- new snapshot (5.3.0alpha2-dev) 
+- new snapshot (5.3.0alpha2-dev)
 - no more dbase extension
 
 * Wed Aug 06 2008 Remi Collet <rpms@famillecollet.com> 5.3.0-0.1.alpha2-dev.200808061630.fc9.remi
@@ -2433,10 +2434,10 @@ fi
 - add disclaimer
 
 * Sat Oct 14 2006 Remi Collet <rpms@famillecollet.com> 5.2.0-0.200610140830.fc5.remi
-- latest snapshot 
+- latest snapshot
 
 * Sun Oct  8 2006 Remi Collet <rpms@famillecollet.com> 5.2.0-0.200610081430.fc5.remi
-- latest snapshot 
+- latest snapshot
 
 * Sun Oct  1 2006 Remi Collet <rpms@famillecollet.com> 5.2.0-0.200610011230.fc5.remi
 - latest snapshot for http://bugs.php.net/bug.php?id=37103
@@ -2461,7 +2462,7 @@ fi
 * Sat Jun 24 2006 Remi Collet <rpms@famillecollet.com> 5.1.4-2.fc{3,4,5}.remi
 - rebuild fromFC3, FC4 & FC5 (from rawhide)
 - build with oracle-instantclient 10.2.0.2
-- requires libclntsh.so.10.1 (not oracle-instantclient-basic) 
+- requires libclntsh.so.10.1 (not oracle-instantclient-basic)
 
 * Fri Jun  9 2006 Joe Orton <jorton@redhat.com> 5.1.4-8
 - Provide php-posix (#194583)
@@ -2530,7 +2531,7 @@ fi
 - update to 5.1.2
 
 * Sat Jan  7 2006 Remi Collet <remi.collet@univ-reims.fr> 5.1.1-2.fc{3,4}.remi
-- rebuild with mhash and mcrypt 
+- rebuild with mhash and mcrypt
 
 * Thu Jan  5 2006 Joe Orton <jorton@redhat.com> 5.1.1-8
 - rebuild again
