@@ -100,13 +100,13 @@
 %endif
 
 #global snapdate      201308300430
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.7
+Version: 5.5.8
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}.1
 %endif
@@ -169,12 +169,6 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes
-# 66060 Heap buffer over-read in DateInterval
-Patch100: php-bug66060.patch
-# 66218 zend_register_functions breaks reflection
-Patch101: php-bug66218.patch
-# Zend: fix overflow handling bug in non-x86
-Patch102: php-bugarm.patch
 
 # Security fixes
 
@@ -239,7 +233,7 @@ easy for developers to write dynamically generated web pages. PHP also
 offers built-in database integration for several commercial and
 non-commercial database management systems, so writing a
 database-enabled webpage with PHP is fairly simple. The most common
-use of PHP coding is probably as a replacement for CGI scripts. 
+use of PHP coding is probably as a replacement for CGI scripts.
 
 The php package contains the module (often referred to as mod_php)
 which adds support for the PHP language to Apache HTTP Server.
@@ -254,7 +248,7 @@ Provides: php-readline, php-readline%{?_isa}
 Obsoletes: php53-cli, php53u-cli, php54-cli, php55u-cli
 
 %description cli
-The php-cli package contains the command-line interface 
+The php-cli package contains the command-line interface
 executing PHP scripts, /usr/bin/php, and the CGI interface.
 
 
@@ -442,7 +436,7 @@ Obsoletes: php53-pdo, php53u-pdo, php54-pdo, php55u-pdo
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
 a database access abstraction layer to PHP.  This module provides
-a common interface for accessing MySQL, PostgreSQL or other 
+a common interface for accessing MySQL, PostgreSQL or other
 databases.
 
 %if %{with_libmysql}
@@ -582,11 +576,11 @@ The php-interbase package contains a dynamic shared object that will add
 database support through Interbase/Firebird to PHP.
 
 InterBase is the name of the closed-source variant of this RDBMS that was
-developed by Borland/Inprise. 
+developed by Borland/Inprise.
 
-Firebird is a commercially independent project of C and C++ programmers, 
-technical advisors and supporters developing and enhancing a multi-platform 
-relational database management system based on the source code released by 
+Firebird is a commercially independent project of C and C++ programmers,
+technical advisors and supporters developing and enhancing a multi-platform
+relational database management system based on the source code released by
 Inprise Corp (now known as Borland Software Corp) under the InterBase Public
 License.
 
@@ -890,9 +884,6 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .bug66060
-%patch101 -p1 -b .bug66218
-%patch102 -p1 -b .bugarm
 
 # security patches
 
@@ -1090,7 +1081,7 @@ ln -sf ../configure
     --enable-debug \
 %endif
     $*
-if test $? != 0; then 
+if test $? != 0; then
   tail -500 config.log
   : configure failed
   exit 1
@@ -1872,7 +1863,10 @@ fi
 
 
 %changelog
-* Sat Dec 20 2013 Remi Collet <rcollet@redhat.com> 5.5.7-1.1
+* Sat Dec 28 2013 Remi Collet <rcollet@redhat.com> 5.5.8-0.1.RC1
+- test build of 5.5.8RC1
+
+* Fri Dec 20 2013 Remi Collet <rcollet@redhat.com> 5.5.7-1.1
 - test build for https://bugs.php.net/66331
 
 * Wed Dec 11 2013 Remi Collet <rcollet@redhat.com> 5.5.7-1
