@@ -2,10 +2,18 @@
 #global commit    725ba9de4005144d137d2a7a70f760068fc3d306
 #global short     %(c=%{commit}; echo ${c:0:7})
 
+# We observe a huge memory consumption on EL-6
+# when libvpx is enabled (~500MB)
+%if 0%{?fedora} < 17 && 0%{?rhel} < 7
+%global  with_vpx  0
+%else
+%global  with_vpx  1
+%endif
+
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       1%{?prever}%{?short}%{?dist}
+Release:       2%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -27,7 +35,9 @@ BuildRequires: gettext-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: libtiff-devel
+%if %{with_vpx}
 BuildRequires: libvpx-devel
+%endif
 BuildRequires: libX11-devel
 BuildRequires: libXpm-devel
 BuildRequires: zlib-devel
@@ -53,7 +63,7 @@ Provides:       gd-progs = %{version}-%{release}
 
 %description progs
 The gd-progs package includes utility programs supplied with gd, a
-graphics library for creating PNG and JPEG images. 
+graphics library for creating PNG and JPEG images.
 
 
 %package devel
@@ -117,14 +127,16 @@ CFLAGS="$RPM_OPT_FLAGS -DDEFAULT_FONTPATH='\"\
 /usr/share/fonts/liberation\"'"
 
 %configure \
+%if %{with_vpx}
     --with-vpx=%{_prefix} \
+%endif
     --with-tiff=%{_prefix} \
     --disable-rpath
 make %{?_smp_mflags}
 
 
 %install
-make install INSTALL='install -p' DESTDIR=$RPM_BUILD_ROOT 
+make install INSTALL='install -p' DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
@@ -162,6 +174,10 @@ make check
 
 
 %changelog
+* Sun Dec 29 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
+- disable libvpx support on Fedora < 17 and EL < 7
+  fix a huge memory consumption (~500MB)
+
 * Tue Jun 25 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0 final
 
@@ -171,7 +187,7 @@ make check
 * Mon May 27 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.8.255af40
 - pull latest upstream changes (post RC1)
 
-* Sat May  3 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.7.ba8f21a
+* Fri May  3 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.7.ba8f21a
 - pull latest upstream changes
 
 * Fri Apr 26 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.6.20015fe
@@ -251,7 +267,7 @@ make check
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
 * Tue Jan  6 2009 Ivana Varekova <varekova@redhat.com> - 2.0.35-7
-- do minor spec file cleanup 
+- do minor spec file cleanup
 
 * Mon Jul 21 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 2.0.35-6
 - fix license tag (nothing in this is GPL)
@@ -306,7 +322,7 @@ make check
 
 * Mon Jul 10 2006 Jitka Kudrnacova <jkudrnac@redhat.com> 2.0.33-9
 - prevent from an infinite loop when decoding bad GIF images (#194520)
- 
+
 * Thu May 25 2006 Ivana Varekova <varekova@redhat.com> - 2.0.33-7
 - fix multilib problem (add pkgconfig)
 
@@ -449,24 +465,24 @@ make check
 * Thu Jul 13 2000 Prospector <bugzilla@redhat.com>
 - automatic rebuild
 
-* Tue Jun 27 2000 Nalin Dahyabhai <nalin@redhat.com> 
+* Tue Jun 27 2000 Nalin Dahyabhai <nalin@redhat.com>
 - update to 1.8.3
 
-* Sun Jun  4 2000 Nalin Dahyabhai <nalin@redhat.com> 
+* Sun Jun  4 2000 Nalin Dahyabhai <nalin@redhat.com>
 - rebuild in new environment
 
-* Mon May 22 2000 Nalin Dahyabhai <nalin@redhat.com> 
+* Mon May 22 2000 Nalin Dahyabhai <nalin@redhat.com>
 - break out a -progs subpackage
 - disable freetype support
 
-* Fri May 19 2000 Nalin Dahyabhai <nalin@redhat.com> 
+* Fri May 19 2000 Nalin Dahyabhai <nalin@redhat.com>
 - update to latest version (1.8.2)
 - disable xpm support
 
-* Thu Feb 03 2000 Nalin Dahyabhai <nalin@redhat.com> 
+* Thu Feb 03 2000 Nalin Dahyabhai <nalin@redhat.com>
 - auto rebuild in the new build environment (release 6)
 
-* Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com> 
+* Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com>
 - auto rebuild in the new build environment (release 5)
 
 * Thu Dec 17 1998 Cristian Gafton <gafton@redhat.com>
