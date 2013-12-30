@@ -1,8 +1,9 @@
 %global github_owner   fzaninotto
 %global github_name    Faker
-%global github_version 1.2.0
-%global github_commit  4ad4bc4b5c8d3c0f3cf55d2fedc2f65b313ec62f
+%global github_version 1.3.0
+%global github_commit  1d143fd8caf4d264602450bc01d7484af788706b
 
+# "php": ">=5.3.3"
 %global php_min_ver    5.3.3
 
 Name:          php-%{github_name}
@@ -17,19 +18,22 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# Test build requires
+# For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# Test build requires: phpci
-Requires:      php-date
-Requires:      php-hash
-Requires:      php-pcre
-Requires:      php-reflection
-Requires:      php-spl
+# For tests: phpcompatinfo (computed from v1.3.0)
+BuildRequires: php-curl
+BuildRequires: php-date
+BuildRequires: php-hash
+BuildRequires: php-mbstring
+BuildRequires: php-pcre
+BuildRequires: php-reflection
+BuildRequires: php-spl
 
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-pear(pear.doctrine-project.org/DoctrineCommon)
-# phpci requires
+# phpcompatinfo (computed from v1.3.0)
+Requires:      php-curl
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-mbstring
@@ -51,7 +55,19 @@ Faker is heavily inspired by Perl's Data::Faker
 %prep
 %setup -q -n %{github_name}-%{github_commit}
 
-# Create tests' bootstrap
+
+%build
+# Empty build section, nothing to build
+
+
+%install
+mkdir -p %{buildroot}%{_datadir}/php
+cp -rp src/%{github_name} %{buildroot}%{_datadir}/php/
+
+
+%check
+# Create tests' autoload
+mkdir vendor
 ( cat <<'AUTOLOAD'
 <?php
 spl_autoload_register(function ($class) {
@@ -59,33 +75,29 @@ spl_autoload_register(function ($class) {
     @include_once $src;
 });
 AUTOLOAD
-) > phpunit.bootstrap.php
+) > vendor/autoload.php
 
+# Skip tests that require downloading content
+sed 's/function testDownloadWithDefaults/function SKIP_testDownloadWithDefaults/' \
+    -i test/Faker/Provider/ImageTest.php
 
-%build
-# Empty build section, nothing to build
-
-
-%install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
-cp -rp src/%{github_name} %{buildroot}%{_datadir}/php/
-
-
-%check
-%{_bindir}/phpunit \
-    -d include_path="./src:./test:.:%{pear_phpdir}" \
-    -d date.timezone="UTC" \
-    --bootstrap ./phpunit.bootstrap.php \
-    .
+%{_bindir}/phpunit --include-path="./src:./test" -d date.timezone="UTC"
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE CHANGELOG readme.md composer.json
+%doc LICENSE CHANGELOG *.md composer.json
 %{_datadir}/php/%{github_name}
 
 
 %changelog
+* Mon Dec 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.3.0-1
+- backport 1.3.0 for remi repo.
+
+* Sun Dec 29 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3.0-1
+- Updated to 1.3.0 (BZ #1044436)
+- Spec cleanup
+
 * Wed Jun 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.2.0-1
 - backport 1.2.0 for remi repo.
 
