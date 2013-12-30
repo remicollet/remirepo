@@ -1,9 +1,13 @@
-%global github_owner   leafo
-%global github_name    scssphp
-%global github_version 0.0.8
-%global github_commit  96329a5f259f9d28e6596de84211a0f613c3edae
+%global github_owner    leafo
+%global github_name     scssphp
+%global github_version  0.0.9
+%global github_commit   a06d702ebf9fabb22542bbb27cc12a905813bb6d
 
-%global php_min_ver    5.3.0
+# "php": ">=5.3.0"
+%global php_min_ver     5.3.0
+# "phpunit/phpunit": "3.7.*"
+%global phpunit_min_ver 3.7.0
+%global phpunit_max_ver 3.8.0
 
 Name:          php-%{github_name}
 Version:       %{github_version}
@@ -20,14 +24,15 @@ BuildArch:     noarch
 BuildRequires: help2man
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo
+BuildRequires: php-pear(pear.phpunit.de/PHPUnit) >= %{phpunit_min_ver}
+BuildRequires: php-pear(pear.phpunit.de/PHPUnit) <  %{phpunit_max_ver}
+# For tests: phpcompatinfo (computed from v0.0.9)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-pcre
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo
+# phpcompatinfo (computed from v0.0.9)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-pcre
@@ -41,7 +46,7 @@ The entire compiler comes in a single class file ready for including in any kind
 of project in addition to a command line tool for running the compiler from the
 terminal.
 
-scssphp implements SCSS (3.2.7). It does not implement the SASS syntax, only
+scssphp implements SCSS (3.2.10). It does not implement the SASS syntax, only
 the SCSS syntax.
 
 
@@ -52,7 +57,7 @@ the SCSS syntax.
 # Required here b/c path to include file is changed in next command
 help2man --no-info ./pscss > pscss.1
 
-# Update bin shebang and require
+# Update bin she-bang and require
 sed -e 's#/usr/bin/env php#%{_bindir}/php#' \
     -e 's#scss.inc.php#%{_datadir}/php/%{github_name}/scss.inc.php#' \
     -i pscss
@@ -63,14 +68,14 @@ sed -e 's#/usr/bin/env php#%{_bindir}/php#' \
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{github_name}
-install -p -m 644 scss.inc.php %{buildroot}%{_datadir}/php/%{github_name}/
+mkdir -p %{buildroot}%{_datadir}/php/%{github_name}
+install -pm 644 scss.inc.php %{buildroot}%{_datadir}/php/%{github_name}/
 
-mkdir -p -m 755 %{buildroot}%{_bindir}
-install -p -m 755 pscss %{buildroot}%{_bindir}/
+mkdir -p %{buildroot}%{_bindir}
+install -pm 755 pscss %{buildroot}%{_bindir}/
 
-mkdir -p -m 755  %{buildroot}%{_mandir}/man1
-install -p -m 644 pscss.1 %{buildroot}%{_mandir}/man1/
+mkdir -p %{buildroot}%{_mandir}/man1
+install -pm 644 pscss.1 %{buildroot}%{_mandir}/man1/
 
 
 %check
@@ -86,6 +91,13 @@ install -p -m 644 pscss.1 %{buildroot}%{_mandir}/man1/
 
 
 %changelog
+* Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> 0.0.9-1
+- backport 0.0.9 for remi repo.
+
+* Sun Dec 29 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.0.9-1
+- Updated to 0.0.9 (BZ #1046671)
+- Spec cleanup
+
 * Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> 0.0.8-1
 - backport 0.0.8 for remi repo.
 
