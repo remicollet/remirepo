@@ -17,7 +17,7 @@
 Summary:        Package for generating PDF files
 Summary(fr):    Extension pour générer des fichiers PDF
 Name:           php-pecl-pdflib
-Version:        3.0.2
+Version:        3.0.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
@@ -25,10 +25,6 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/pdflib
 
 Source0:        http://pecl.php.net/get/pdflib-%{version}.tgz
-
-# fix build with pdflib-lite 7.0.x
-# http://svn.php.net/viewvc?view=revision&revision=332472
-Patch0:         %{pecl_name}.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
@@ -76,10 +72,8 @@ Plus d'informations sur l'utilisation de PDFlib avec PHP sur
 http://www.pdflib.com/developer-center/technical-documentation/php-howto
 
 
-%prep 
+%prep
 %setup -c -q
-
-%patch0 -p0 -b .fix
 
 # Check version
 extver=$(sed -n '/#define PHP_PDFLIB_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_pdflib.h)
@@ -178,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
+- Update to 3.0.3 (stable)
+
 * Thu Dec 19 2013 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
 - Update to 3.0.2 (stable)
 - move doc to pecl_docdir
