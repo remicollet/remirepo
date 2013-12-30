@@ -16,7 +16,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.6.7
+Version:        1.6.8
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -79,7 +79,7 @@ PHP's asynchronous concurrent distributed networking framework.
 mv %{pecl_name}-%{version} NTS
 
 # https://github.com/matyhtf/swoole/issues/14
-sed -e 's/README/README.md/' -e '/Readme.h/d' -i package.xml
+sed -e 's/README/README.md/' -e 's/Readme/ReadMe/' -i package.xml
 
 cd NTS
 # Sanity check, really often broken
@@ -104,17 +104,14 @@ EOF
 
 %build
 peclbuild() {
-# https://github.com/matyhtf/swoole/issues/15
-# PHP 5.5 broken build with --enable-async-mysql 
-
 %configure \
     --with-swoole \
-%if "%{php_version}" > "5.4" && "%{php_version}" < "5.5"
     --enable-async-mysql \
-%endif
     --enable-msgqueue \
     --with-php-config=$1
+# needed as archive contains some .o
 make clean
+
 make %{?_smp_mflags}
 }
 
@@ -202,6 +199,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> - 1.6.8-1
+- Update to 1.6.8 (stable)
+
 * Tue Dec 24 2013 Remi Collet <rcollet@redhat.com> - 1.6.7-1
 - initial package, version 1.6.7 (stable)
 - open https://github.com/matyhtf/swoole/issues/14 - archive
