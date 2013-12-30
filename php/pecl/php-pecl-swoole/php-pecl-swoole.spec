@@ -103,10 +103,14 @@ EOF
 
 
 %build
+# --enable-async-mysql requires mysqlnd, so php >= 5.4
+
 peclbuild() {
 %configure \
     --with-swoole \
+%if "%{php_version}" > "5.4"
     --enable-async-mysql \
+%endif
     --enable-msgqueue \
     --with-php-config=$1
 # needed as archive contains some .o
