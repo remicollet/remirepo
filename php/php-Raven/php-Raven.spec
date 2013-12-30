@@ -1,14 +1,21 @@
-%global github_owner   getsentry
-%global github_name    raven-php
-%global github_version 0.7.1
-%global github_commit  5e5cb95beeb95b4065e7bffe719a588015dff50f
+%global github_owner    getsentry
+%global github_name     raven-php
+%global github_version  0.8.0
+%global github_commit   dac93338d1fe17d665dfdea5f529c89b3a0df7df
+# Additional commits after 0.8.0 tag
+%global github_release  20131209git%(c=%{github_commit}; echo ${c:0:7})
 
-%global lib_name       Raven
-%global php_min_ver    5.2.4
+%global lib_name        Raven
+
+# "php": ">=5.2.4"
+%global php_min_ver     5.2.4
+# "phpunit/phpunit": "3.7.*"
+%global phpunit_min_ver 3.7.0
+%global phpunit_max_ver 3.8.0
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2.%{github_release}%{?dist}
 Summary:       A PHP client for Sentry
 
 Group:         Development/Libraries
@@ -20,12 +27,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
-# composer.json lists PHPUnit version 3.7, but tests pass with 3.6+
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo
+BuildRequires: php-pear(pear.phpunit.de/PHPUnit) >= %{phpunit_min_ver}
+BuildRequires: php-pear(pear.phpunit.de/PHPUnit) <  %{phpunit_max_ver}
+# For tests: phpcompatinfo (computed from 0.8.0)
 BuildRequires: php-curl
 BuildRequires: php-date
-BuildRequires: php-hash
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -35,10 +41,9 @@ BuildRequires: php-spl
 BuildRequires: php-zlib
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo
+# phpcompatinfo (computed from 0.8.0)
 Requires:      php-curl
 Requires:      php-date
-Requires:      php-hash
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-reflection
@@ -59,39 +64,46 @@ sed "/require.*Autoloader/s:.*:require_once 'Raven/Autoloader.php';:" \
     -i bin/raven \
     -i test/bootstrap.php
 
-# Update and move PHPUnit config
-sed -e 's:\(\./\)\?test/:./:' \
-    -e 's:./lib:%{_datadir}/php:' \
-    -i phpunit.xml.dist
-mv phpunit.xml.dist test/
-
 
 %build
 # Empty build section, nothing to build
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
-cp -rp lib/%{lib_name} %{buildroot}%{_datadir}/php/
+mkdir -p %{buildroot}%{_datadir}/php
+cp -rp lib/* %{buildroot}%{_datadir}/php/
 
-mkdir -p -m 755 %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_bindir}
 install -pm 755 bin/raven %{buildroot}%{_bindir}/
 
 
 %check
-%{_bindir}/phpunit \
-    -d include_path="./lib:./test:.:/usr/share/pear" \
-    -c test/phpunit.xml.dist
+# Create PHPUnit config w/ colors turned off
+cat phpunit.xml.dist \
+    | sed 's/colors="true"/colors="false"/' \
+    > phpunit.xml
+
+%{_bindir}/phpunit --include-path ./lib:./test
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE AUTHORS README.rst composer.json
+%doc LICENSE AUTHORS *.rst composer.json
 %{_datadir}/php/%{lib_name}
 %{_bindir}/raven
 
 
 %changelog
+* Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> 0.8.0-2.20131209gitdac9333
+- backport 0.8.0 for remi repo.
+
+* Mon Dec 30 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.8.0-2.20131209gitdac9333
+- Updated to latest snapshot
+
+* Sun Dec 29 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.8.0-1
+- Updated to 0.8.0 (BZ #1037543)
+- Spec cleanup
+
 * Thu Oct  3 2013 Remi Collet <remi@fedoraproject.org> 0.7.1-1
 - backport 0.7.1 for remi repo.
 
