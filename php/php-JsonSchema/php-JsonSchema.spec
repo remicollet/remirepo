@@ -1,7 +1,7 @@
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.3.4
-%global github_commit  ad8b959e5962624004738d50a2d8e83c5668e143
+%global github_version 1.3.5
+%global github_commit  01949f6d2130e9737ffae5d3952909a8de70d114
 
 %global php_min_ver    5.3.0
 
@@ -22,7 +22,7 @@ BuildArch: noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo
+# For tests: phpcompatinfo (computed from v1.3.5)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -32,7 +32,7 @@ BuildRequires: php-pcre
 BuildRequires: php-spl
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo
+# phpcompatinfo (computed from v1.3.5)
 Requires:      php-curl
 Requires:      php-filter
 Requires:      php-json
@@ -99,6 +99,12 @@ rm -rf tests/JsonSchema/Tests/Drafts
 
 
 %changelog
+* Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> - 1.3.5-1
+- backport 1.3.5 for remi repo.
+
+* Sun Dec 29 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3.5-1
+- Updated to 1.3.5
+
 * Thu Dec 12 2013 Remi Collet <remi@fedoraproject.org> - 1.3.4-1
 - backport 1.3.4 for remi repo.
 
