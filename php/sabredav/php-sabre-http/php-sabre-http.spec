@@ -15,7 +15,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Library for dealing with http requests and responses
-Version:        1.0.0
+Version:        2.0.0
 Release:        0.1.%{prever}%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -113,5 +113,5 @@ phpunit \
 
 
 %changelog
-* Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.alpha5
+* Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.alpha5
 - Initial packaging
