@@ -1,7 +1,7 @@
 #global prever rc3
 
 Name: phpMyAdmin
-Version: 4.1.2
+Version: 4.1.3
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -151,6 +151,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Dec 31 2013 Remi Collet <rpms@famillecollet.com> 4.1.3-1
+- update to 4.1.3 (bugfix)
+
 * Mon Dec 23 2013 Remi Collet <rpms@famillecollet.com> 4.1.2-1
 - update to 4.1.2 (bugfix)
 
@@ -500,7 +503,7 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 - Upstream released 3.0.1.1 (#468974)
 
 * Thu Oct 23 2008 Remi Collet <rpms@famillecollet.com> 3.0.1-1.###.remi
-- rebuild for EOL fedora 
+- rebuild for EOL fedora
 
 * Wed Oct 22 2008 Robert Scheck <robert@fedoraproject.org> 3.0.1-1
 - Upstream released 3.0.1
@@ -509,6 +512,6 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 - Upstream released 3.0.0
 
 * Sun Oct 12 2008 Remi Collet <rpms@famillecollet.com> 3.0.0-1.fc#.remi
-- update to 3.0.0 
+- update to 3.0.0
 - update requires for php 5.2.0
 
