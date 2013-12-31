@@ -12,12 +12,12 @@
 %global gh_project   sabre-event
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
-Name:           php-sabre-event
+Name:           php-%{gh_project}
 Summary:        Lightweight library for event-based programming
 Version:        1.0.0
 Release:        1%{?dist}
 
-URL:            https://github.com/fruux/sabre-event
+URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 License:        BSD
 Group:          Development/Libraries
