@@ -15,7 +15,7 @@
 
 Summary:        Light, concurrent RPC framework
 Name:           php-pecl-%{pecl_name}
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -72,8 +72,7 @@ if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
 fi
 cd ..
 
-sed -e '/LICENSE/s/role="src"/role="doc"/' \
-    -e '/CREDITS/s/role="src"/role="doc"/' \
+sed -e '/name="tools/s/role="test"/role="doc"/' \
     -i package2.xml
 
 %if %{with_zts}
@@ -193,6 +192,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Update to 1.2.2 (stable)
+
 * Tue Nov 19 2013 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1 (stable)
 - install doc in pecl doc_dir
