@@ -13,12 +13,12 @@
 %global prever       alpha5
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
-Name:           php-sabre-http
+Name:           php-%{gh_project}
 Summary:        Library for dealing with http requests and responses
 Version:        1.0.0
 Release:        0.1.%{prever}%{?dist}
 
-URL:            https://github.com/fruux/sabre-http
+URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}.tar.gz
 License:        BSD
 Group:          Development/Libraries
@@ -113,5 +113,5 @@ phpunit \
 
 
 %changelog
-* Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+* Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.alpha5
 - Initial packaging
