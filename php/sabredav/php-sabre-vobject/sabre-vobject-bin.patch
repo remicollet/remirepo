@@ -1,6 +1,6 @@
---- bin/vobject.old	2013-12-31 15:54:44.000000000 +0100
-+++ bin/vobject	2013-12-31 15:57:44.000000000 +0100
-@@ -1,24 +1,17 @@
+--- bin/vobject.old	2013-12-31 16:24:36.000000000 +0100
++++ bin/vobject	2013-12-31 16:32:00.000000000 +0100
+@@ -1,24 +1,21 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
@@ -13,14 +13,17 @@
 -    __DIR__ . '/../vendor/autoload.php',  // In case vobject is cloned directly
 -    __DIR__ . '/../../../autoload.php',   // In case vobject is a composer dependency.
 -);
--
++// Simple PSR-0 autoloader
++// dont rely on include path as pear directory
++// may contains old incompatible version
+ 
 -foreach($paths as $path) {
 -    if (file_exists($path)) {
 -        include $path;
 -        break;
 +spl_autoload_register(function ($class) {
 +    if (strpos($class, 'Sabre\\')===0) {
-+        $file = str_replace('\\', '/', $class).'.php';
++        $file = '/usr/share/php/'.str_replace('\\', '/', $class).'.php';
 +        @include $file;
      }
 -}

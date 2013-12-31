@@ -15,7 +15,7 @@
 Name:           php-%{gh_project}
 Summary:        Library to parse and manipulate iCalendar and vCard objects
 Version:        3.1.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -100,5 +100,9 @@ phpunit \
 
 
 %changelog
+* Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 3.1.3-2
+- improved autoloader patch to avoid issue when old
+  version, from pear channel is installed
+
 * Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 3.1.3-1
 - Initial packaging
