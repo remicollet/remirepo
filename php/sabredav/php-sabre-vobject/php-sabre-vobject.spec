@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    961546d71c332ab34ad1c5bba7f372c08b388dcf
+%global gh_commit    e46d6855cfef23318e7c422cd08d36e344624675
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-vobject
@@ -14,8 +14,8 @@
 
 Name:           php-%{gh_project}
 Summary:        Library to parse and manipulate iCalendar and vCard objects
-Version:        3.1.3
-Release:        2%{?dist}
+Version:        2.1.3
+Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -23,7 +23,7 @@ License:        BSD
 Group:          Development/Libraries
 
 # replace composer autloader by PSR-O trivial one
-Patch0:         %{gh_project}-bin.patch
+Patch0:         %{gh_project}-cmd.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -35,9 +35,8 @@ BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
 # From composer.json
 Requires:       php(language) >= 5.3.1
 Requires:       php-mbstring
-# From phpcompatinfo report for version 3.1.3
+# From phpcompatinfo report for version 2.1.3
 Requires:       php-date
-Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-xml
@@ -77,7 +76,9 @@ mkdir -p %{buildroot}%{_datadir}/php
 cp -pr lib/Sabre %{buildroot}%{_datadir}/php/Sabre
 
 # Install the command
-install -Dpm 0755 bin/vobject %{buildroot}/%{_bindir}/vobject
+install -Dpm 0755 bin/vobjectvalidate.php \
+         %{buildroot}/%{_bindir}/vobjectvalidate
+
 
 %check
 %if %{with_tests}
@@ -96,13 +97,9 @@ phpunit \
 %defattr(-,root,root,-)
 %doc ChangeLog composer.json LICENSE README.md
 %{_datadir}/php/Sabre
-%{_bindir}/vobject
+%{_bindir}/vobjectvalidate
 
 
 %changelog
-* Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 3.1.3-2
-- improved autoloader patch to avoid issue when old
-  version, from pear channel is installed
-
-* Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 3.1.3-1
+* Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Initial packaging

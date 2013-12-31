@@ -1,0 +1,33 @@
+--- bin/vobjectvalidate.php.old	2013-12-31 17:24:11.000000000 +0100
++++ bin/vobjectvalidate.php	2013-12-31 17:24:27.000000000 +0100
+@@ -1,21 +1,18 @@
+-#!/usr/bin/env php
++#!/usr/bin/php
+ <?php
+ 
+ namespace Sabre\VObject;
+ 
+-// This sucks.. we have to try to find the composer autoloader. But chances
+-// are, we can't find it this way. So we'll do our bestest
+-$paths = array(
+-    __DIR__ . '/../vendor/autoload.php',  // In case vobject is cloned directly
+-    __DIR__ . '/../../../autoload.php',   // In case vobject is a composer dependency.
+-);
++// Simple PSR-0 autoloader
++// dont rely on include path as pear directory
++// may contains old incompatible version
+ 
+-foreach($paths as $path) {
+-    if (file_exists($path)) {
+-        include $path;
+-        break;
++spl_autoload_register(function ($class) {
++    if (strpos($class, 'Sabre\\')===0) {
++        $file = '/usr/share/php/'.str_replace('\\', '/', $class).'.php';
++        @include $file;
+     }
+-}
++});
+ 
+ if (!class_exists('Sabre\\VObject\\Version')) {
+     fwrite(STDERR, "Composer autoloader could not be properly loaded.\n");
