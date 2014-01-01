@@ -1,6 +1,6 @@
 # spec file for php-pecl-fann
 #
-# Copyright (c) 2013 Remi Collet
+# Copyright (c) 2013-2014 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #
@@ -16,7 +16,7 @@
 
 Summary:        Wrapper for FANN Library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.6
+Version:        1.0.7
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -142,17 +142,13 @@ fi
 
 
 %check
-# temporary skip this one because of memory corruption in libfann
-# see https://bugzilla.redhat.com/1047627
-rm ?TS/tests/fann_create_from_file_basic.phpt
-
 cd NTS
-# Minimal load test for NTS extension
+: Minimal load test for NTS extension
 %{__php} --no-php-ini \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-# Upstream test suite  for NTS extension
+: Upstream test suite  for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
@@ -161,12 +157,12 @@ REPORT_EXIT_STATUS=1 \
 
 %if %{with_zts}
 cd ../ZTS
-# Minimal load test for ZTS extension
+: Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-# Upstream test suite  for ZTS extension
+: Upstream test suite  for ZTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
@@ -194,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 01 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
+- Update to 1.0.7 (stable)
+
 * Wed Jan 01 2014 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - Update to 1.0.6 (stable)
 
