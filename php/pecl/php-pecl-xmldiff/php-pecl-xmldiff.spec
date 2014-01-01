@@ -1,6 +1,6 @@
 # spec file for php-pecl-xmldiff
 #
-# Copyright (c) 2013 Remi Collet
+# Copyright (c) 2013-2014 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #
@@ -16,7 +16,7 @@
 
 Summary:        XML diff and merge
 Name:           php-pecl-%{pecl_name}
-Version:        0.9.1
+Version:        0.9.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -207,6 +207,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 01 2014 Remi Collet <remi@fedoraproject.org> - 0.9.2-1
+- Update to 0.9.2 (stable)
+
 * Sat Nov 02 2013 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
 - Update to 0.9.1 (stable)
 - drop our patch merged upstream
