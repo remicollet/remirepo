@@ -1,6 +1,6 @@
 # spec file for php-tcpdf
 #
-# Copyright (c) 2013 Remi Collet, Johan Cwiklinski
+# Copyright (c) 2013-2014 Remi Collet, Johan Cwiklinski
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #
@@ -52,7 +52,7 @@ PHP class for generating PDF documents.
 * font subsetting;
 * methods to publish some XHTML + CSS code, Javascript and Forms;
 * images, graphic (geometric figures) and transformation methods;
-* supports JPEG, PNG and SVG images natively, all images supported by GD 
+* supports JPEG, PNG and SVG images natively, all images supported by GD
   (GD, GD2, GD2PART, GIF, JPEG, PNG, BMP, XBM, XPM) and all images supported
   via ImagMagick (http: www.imagemagick.org/www/formats.html)
 * 1D and 2D barcodes: CODE 39, ANSI MH10.8M-1983, USD-3, 3 of 9, CODE 93,

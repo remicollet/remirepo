@@ -1,6 +1,6 @@
 # spec file for php-bartlett-PHP-Reflect
 #
-# Copyright (c) 2011-2013 Remi Collet
+# Copyright (c) 2011-2014 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #

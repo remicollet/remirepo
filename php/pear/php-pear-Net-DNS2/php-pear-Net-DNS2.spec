@@ -1,6 +1,6 @@
 # spec file for php-pear-Net-DNS2
 #
-# Copyright (c) 2012-2013 Remi Collet
+# Copyright (c) 2012-2014 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -59,7 +59,7 @@ The main features for this package include:
 * Includes a separate, more intuitive Updater class for handling dynamic update
 * Support zone signing using TSIG and SIG(0) for updates and zone transfers
 * Includes a local cache using shared memory or flat file to improve performance
-* includes many more RR's, including DNSSEC RR's. 
+* includes many more RR's, including DNSSEC RR's.
 
 
 %prep

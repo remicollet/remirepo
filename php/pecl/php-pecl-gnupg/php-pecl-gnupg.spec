@@ -1,6 +1,6 @@
 # spec file for php-pecl-gnupg
 #
-# Copyright (c) 2013 Remi Collet
+# Copyright (c) 2013-2014 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #

@@ -1,6 +1,6 @@
 # spec file for php-pecl-ssh2
 #
-# Copyright (c) 2011-2013 Remi Collet
+# Copyright (c) 2011-2014 Remi Collet
 # Copyright (c) 2008-2011 Itamar Reis Peixoto
 # License: MIT
 #

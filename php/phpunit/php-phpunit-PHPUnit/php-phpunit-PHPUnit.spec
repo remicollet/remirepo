@@ -1,6 +1,6 @@
 # spec file for php-phpunit-PHPUnit
 #
-# Copyright (c) 2010-2013 Remi Collet
+# Copyright (c) 2010-2014 Remi Collet
 # Copyright (c) 2006-2009 Christopher Stone
 #
 # License: MIT
