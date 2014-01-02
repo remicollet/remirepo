@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-yar}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -14,8 +15,8 @@
 %global pecl_name yar
 
 Summary:        Light, concurrent RPC framework
-Name:           php-pecl-%{pecl_name}
-Version:        1.2.2
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Version:        1.2.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -24,28 +25,28 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  curl-devel
-BuildRequires:  php-devel
-BuildRequires:  php-pear
-BuildRequires:  php-pecl-msgpack-devel
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-pecl-msgpack-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
 # php 5.3.3 in EL-6 don't use arched virtual provides
 # so only requires real packages instead
-Requires:       php-common%{?_isa}
+Requires:       %{?scl_prefix}php-common%{?_isa}
 %else
-Requires:       php-curl%{?_isa}
-Requires:       php-json%{?_isa}
+Requires:       %{?scl_prefix}php-curl%{?_isa}
+Requires:       %{?scl_prefix}php-json%{?_isa}
 %endif
-Requires:       php-pecl(msgpack)%{?_isa}
+Requires:       %{?scl_prefix}php-pecl(msgpack)%{?_isa}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if 0%{?fedora} < 20
 # Filter shared private
@@ -64,6 +65,11 @@ supports multi package protocols (json, msgpack).
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+
+# Add shebang
+sed -e 's:<?php:#!%{_bindir}/php\n<?php:' \
+     -i tools/yar_debug.php
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAR_VERSION/{s/.* "//;s/".*$//;p}' php_yar.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -72,7 +78,8 @@ if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
 fi
 cd ..
 
-sed -e '/name="tools/s/role="test"/role="doc"/' \
+sed -e 's:tools/yar_debug.inc:yar_debug.inc:' \
+    -e 's:tools/yar_debug.php:yar_debug:' \
     -i package2.xml
 
 %if %{with_zts}
@@ -87,12 +94,12 @@ extension=%{pecl_name}.so
 
 ; Configuration
 ;yar.allow_persistent=0
-;yar.connect_timeout=1
+;yar.connect_timeout=1000
 ;yar.content_type=application/octet-stream
 ;yar.debug=Off
 ;yar.expose_info=On
-;yar.packager=php
-;yar.timeout=5
+;yar.packager=msgpack
+;yar.timeout=5000
 ;yar.transport=curl
 EOF
 
@@ -133,6 +140,10 @@ make -C ZTS \
 
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
+
+# Tools
+install -Dpm 644 NTS/tools/yar_debug.inc %{buildroot}%{pear_phpdir}/yar_debug.inc
+install -Dpm 755 NTS/tools/yar_debug.php %{buildroot}%{_bindir}/yar_debug
 
 # Test & Documentation
 cd NTS
@@ -184,6 +195,8 @@ rm -rf %{buildroot}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+%{_bindir}/yar_debug
+%{pear_phpdir}/yar_debug.inc
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
@@ -192,6 +205,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 02 2014 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- Update to 1.2.3 (stable)
+- provides yar_debug command
+- fix default options in comments
+- adapt for SCL
+
 * Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - Update to 1.2.2 (stable)
 
