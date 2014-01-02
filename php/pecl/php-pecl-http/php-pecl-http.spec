@@ -60,6 +60,8 @@ Requires:       %{?scl_prefix}php-spl%{?_isa}
 %endif
 Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa}
 Requires:       %{?scl_prefix}php-pecl(raphf)%{?_isa}
+# Can't install both version of the same extension
+Conflicts:      %{?scl_prefix}php-pecl-http1
 
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
