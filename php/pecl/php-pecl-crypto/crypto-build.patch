@@ -1,0 +1,152 @@
+From 4407d0ce8653a5dcd8889ee695c7e8d450175ab7 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 2 Jan 2014 08:44:18 +0100
+Subject: [PATCH 1/5] fix build with PHP 5.3.3
+
+---
+ crypto.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/crypto.c b/crypto.c
+index e5fed4a..2de49c2 100644
+--- a/crypto.c
++++ b/crypto.c
+@@ -31,7 +31,7 @@
+ 
+ /* {{{ crypto_functions[] */
+ const zend_function_entry crypto_functions[] = {
+-	PHP_FE_END
++	PHP_CRYPTO_FE_END
+ };
+ /* }}} */
+ 
+@@ -62,7 +62,7 @@
+ 	PHP_MINIT(crypto_alg)(INIT_FUNC_ARGS_PASSTHRU);
+ 	PHP_MINIT(crypto_base64)(INIT_FUNC_ARGS_PASSTHRU);
+ 	PHP_MINIT(crypto_rand)(INIT_FUNC_ARGS_PASSTHRU);
+-	
++
+ 	return SUCCESS;
+ }
+ /* }}} */
+-- 
+1.8.5.1
+
+
+From cec32fccdcbbbd87bfad058fdb085bed456d0968 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 2 Jan 2014 08:47:54 +0100
+Subject: [PATCH 2/5] Fix: crypto_alg.c:326:7: warning: 'copy_success' may be
+ used uninitialized in this function [-Wmaybe-uninitialized]
+
+---
+ crypto_alg.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/crypto_alg.c b/crypto_alg.c
+index 6aa26c4..200069d 100644
+--- a/crypto_alg.c
++++ b/crypto_alg.c
+@@ -321,6 +321,9 @@ zend_object_value php_crypto_algorithm_object_clone(zval *this_ptr TSRMLS_DC)
+ 		copy_success = CMAC_CTX_copy(PHP_CRYPTO_CMAC_CTX(new_obj), PHP_CRYPTO_CMAC_CTX(old_obj));
+ 	}
+ #endif
++	else {
++		copy_success = 0;
++	}
+ 
+ copy_end:
+    if (!copy_success) {
+-- 
+1.8.5.1
+
+
+From 1392ed66ea17466fd2c7674a55185677ed8316b9 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 2 Jan 2014 09:46:34 +0100
+Subject: [PATCH 3/5] Fix buffer overflow, fix #7
+
+---
+ crypto_base64.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/crypto_base64.c b/crypto_base64.c
+index 296e4d2..5ef3543 100644
+--- a/crypto_base64.c
++++ b/crypto_base64.c
+@@ -270,7 +270,7 @@ static inline void php_crypto_base64_decode_finish(EVP_ENCODE_CTX *ctx, char *ou
+ 
+ 	real_len = PHP_CRYPTO_BASE64_ENCODING_SIZE_REAL(in_len, intern->ctx);
+ 	if (real_len < PHP_CRYPTO_BASE64_ENCODING_SIZE_MIN) {
+-		char buff[PHP_CRYPTO_BASE64_ENCODING_SIZE_MIN];
++		char buff[PHP_CRYPTO_BASE64_ENCODING_SIZE_MIN+1];
+ 		php_crypto_base64_encode_update(intern->ctx, buff, &out_len, in, in_len);
+ 		if (out_len == 0) {
+ 			RETURN_EMPTY_STRING();
+@@ -278,7 +278,7 @@ static inline void php_crypto_base64_decode_finish(EVP_ENCODE_CTX *ctx, char *ou
+ 		buff[out_len] = 0;
+ 		RETURN_STRINGL(buff, out_len, 1);
+ 	} else {
+-		out = (char *) emalloc(real_len);
++		out = (char *) emalloc(real_len+1);
+ 		php_crypto_base64_encode_update(intern->ctx, out, &out_len, in, in_len);
+ 		out[out_len] = 0;
+ 		RETURN_STRINGL(out, out_len, 0);
+-- 
+1.8.5.1
+
+
+From f0a2ffd8e35b687e641c6a63c10a6654692b8179 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 2 Jan 2014 09:52:49 +0100
+Subject: [PATCH 4/5] Fix buffer overflow (2), fix #7
+
+---
+ crypto_base64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/crypto_base64.c b/crypto_base64.c
+index 5ef3543..1139b48 100644
+--- a/crypto_base64.c
++++ b/crypto_base64.c
+@@ -289,7 +289,7 @@ static inline void php_crypto_base64_decode_finish(EVP_ENCODE_CTX *ctx, char *ou
+    Encodes characters that left in the encoding context */
+ PHP_CRYPTO_METHOD(Base64, encodeFinish)
+ {
+-	char out[PHP_CRYPTO_BASE64_ENCODING_SIZE_MIN];
++	char out[PHP_CRYPTO_BASE64_ENCODING_SIZE_MIN+1];
+ 	int out_len;
+ 	php_crypto_base64_object *intern;
+ 
+-- 
+1.8.5.1
+
+
+From 6d342bc2c96f624cd5d8c732eb74bbbb4c992952 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 2 Jan 2014 09:54:53 +0100
+Subject: [PATCH 5/5] Link to shared library, fix from Gasol, fix #5
+
+---
+ config.m4 | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/config.m4 b/config.m4
+index 1d7f8d0..4bfc013 100644
+--- a/config.m4
++++ b/config.m4
+@@ -15,8 +15,10 @@ if test "$PHP_CRYPTO" != "no"; then
+     if test -x "$PKG_CONFIG" && $PKG_CONFIG --exists openssl; then
+       OPENSSL_INCDIR=`$PKG_CONFIG --variable=includedir openssl`
+       PHP_ADD_INCLUDE($OPENSSL_INCDIR)
++      CRYPTO_LIBS=`$PKG_CONFIG --libs openssl`
++      PHP_EVAL_LIBLINE($CRYPTO_LIBS, CRYPTO_SHARED_LIBADD)
+     fi
+-    
++
+     AC_DEFINE(HAVE_CRYPTOLIB,1,[Enable objective OpenSSL Crypto wrapper])
+     PHP_SUBST(CRYPTO_SHARED_LIBADD)
+     PHP_NEW_EXTENSION(crypto, crypto.c crypto_alg.c crypto_base64.c crypto_rand.c, $ext_shared)
+-- 
+1.8.5.1
+
