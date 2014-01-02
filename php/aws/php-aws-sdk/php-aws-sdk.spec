@@ -4,7 +4,7 @@
 
 Name:		php-aws-sdk
 Version:	2.5.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Amazon Web Services framework for PHP
 Group:		Development/Libraries
 
@@ -40,9 +40,10 @@ Requires:	php-pcre
 Requires:	php-session
 Requires:	php-sqlite3
 Requires:	php-Monolog
-Requires:	php-symfony2-Yaml
+Requires:	php-Monolog-dynamo
+Requires:	php-symfony-yaml
 Requires:	php-guzzle-Guzzle >= 3.7.0
-Requires:	php-guzzle-Guzzle < 3.8
+Requires:	php-guzzle-Guzzle < 3.9.0
 Provides:	php-pear(%{pear_name}) = %{version}
 Provides:	php-pear(%{channelname}/%{pear_name}) = %{version}
 
@@ -56,14 +57,8 @@ Amazon Simple Storage Service (Amazon S3), Amazon Elastic Compute Cloud
 %setup -q -c
 
 # fix doc roles
-sed -e '/_samples/s/role="php"/role="doc"/' \
-        -e '/sdk.class.php/s/md5sum="[0-9,a-z]\{32\}"//' \
-        -e '/_docs/s/role="php"/role="doc"/' \
-        -e '/_compatibility_test/s/role="php"/role="doc"/' \
-        -e '/_sql/s/role="php"/role="doc"/' \
-        -e '/LICENSE/s/role="php"/role="doc"/' \
-        -e '/README/s/role="php"/role="doc"/' \
-        package.xml >%{pear_name}-%{version}/%{name}.xml
+sed -e '/aws.phar/d' \
+    package.xml >%{pear_name}-%{version}/%{name}.xml
 
 #remove aws.phar
 rm %{pear_name}-%{version}/aws.phar
@@ -102,6 +97,14 @@ fi
 
 
 %changelog
+* Thu Jan  2 2014 Remi Collet <remi@fedoraproject.org> - 2.5.0-2
+- backport rawhide change for remi rep
+
+* Mon Dec 30 2013 Joseph Marrero <jmarrero@fedoraproject.org> - 2.5.0-2
+- add php-Monolog-dynamo dependency
+- update naming on dependency php-symfony-yaml
+- fix max version require on guzzle dependency
+
 * Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - backport 2.5.0 for remi repo
 
