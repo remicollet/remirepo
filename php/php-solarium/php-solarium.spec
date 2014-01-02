@@ -22,6 +22,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 License:        BSD
 Group:          Development/Libraries
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
@@ -101,6 +102,7 @@ phpunit \
 
 
 %files
+%defattr(-,root,root,-)
 %doc composer.json COPYING README.md examples
 %{_datadir}/php/Solarium
 
