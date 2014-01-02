@@ -18,7 +18,7 @@
 %global with_zts  0%{?__ztsphp:1}
 
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -105,7 +105,7 @@ Note:
 . php-pecl-http1 provides API version 1
 . php-pecl-http  provides API version 2
 
-Documentation : http://php.net/http
+Documentation : http://devel-m6w6.rhcloud.com/mdref/http
 
 
 %package devel
@@ -123,9 +123,6 @@ These are the files needed to compile programs using HTTP extension.
 
 mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
-
-# http://git.php.net/?p=pecl/http/pecl_http.git;a=patch;h=441de41329327d32937f107da371435d14d7be36
-sed -e '/ZEND_MOD_CONFLICTS/d' -i php_http.c
 
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -244,6 +241,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 02 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+- fix link to documentation
+- update provided configuration
+
 * Tue Dec 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3 (stable)
 - drop Conflicts with pecl/event
