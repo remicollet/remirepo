@@ -17,17 +17,13 @@
 
 Summary:        Sundown is a fast, robust Markdown parsing library for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.3.10
+Version:        0.3.11
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
-# See https://github.com/chobie/php-sundown/issues/35
 # Extension is PHP, sundown library is MIT
 License:        PHP and MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/chobie/php-sundown/pull/37
-Patch0:         %{pecl_name}-pr37.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.1
@@ -79,8 +75,6 @@ customizable Renders.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-
-%patch0 -p1 -b .fix
 
 # Fix perms
 chmod -x sundown/html/html.c
@@ -234,6 +228,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 02 2014 Remi Collet <remi@fedoraproject.org> - 0.3.11-1
+- Update to 0.3.11 (beta)
+
 * Sun Dec 15 2013 Remi Collet <remi@fedoraproject.org> - 0.3.10
 - initial package, version 0.3.10 (beta)
 - open https://github.com/chobie/php-sundown/issues/35 - licensing
