@@ -16,7 +16,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.6.8
+Version:        1.6.9
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -78,9 +78,6 @@ PHP's asynchronous concurrent distributed networking framework.
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
-# https://github.com/matyhtf/swoole/issues/14
-sed -e 's/README/README.md/' -e 's/Readme/ReadMe/' -i package.xml
-
 cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
@@ -113,8 +110,6 @@ peclbuild() {
 %endif
     --enable-msgqueue \
     --with-php-config=$1
-# needed as archive contains some .o
-make clean
 
 make %{?_smp_mflags}
 }
@@ -203,6 +198,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 02 2014 Remi Collet <remi@fedoraproject.org> - 1.6.9-1
+- Update to 1.6.9 (stable)
+
 * Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> - 1.6.8-1
 - Update to 1.6.8 (stable)
 
