@@ -1,6 +1,4 @@
-# phpcompatinfo false positive for 5.3.3 because usage of JSON_ERROR_*
-# constants in lib/EasyRdf/Parser/Json.php are conditional
-%global php_min_ver 5.2.8
+%global php_min_ver 5.3.3
 
 %if 0%{?fedora} > 9 || 0%{?rhel} > 5
 %global with_test 1
@@ -12,8 +10,8 @@
 # TODO see for php-redland not yet available in remirepo
 
 Name:          php-EasyRdf
-Version:       0.7.2
-Release:       5%{?dist}
+Version:       0.8.0
+Release:       1%{?dist}
 Summary:       A PHP library designed to make it easy to consume and produce RDF
 
 Group:         Development/Libraries
@@ -28,26 +26,34 @@ BuildRequires: php(language) >= %{php_min_ver}
 %if %{with_test}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires: graphviz
-BuildRequires: raptor >= 1.4.17
-# For tests: phpcompatinfo
+# provided by raptor or raptor2
+BuildRequires: %{_bindir}/rapper
+# For tests: phpcompatinfo (computed from 0.8.0)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-dom
 BuildRequires: php-json
+BuildRequires: php-libxml
+BuildRequires: php-mbstring
 BuildRequires: php-pcre
 #BuildRequires: php-redland
+BuildRequires: php-reflection
+BuildRequires: php-simplexml
 BuildRequires: php-spl
 BuildRequires: php-xml
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo requires
+# phpcompatinfo requires (computed from 0.8.0)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-dom
 Requires:      php-json
+Requires:      php-libxml
+Requires:      php-mbstring
 Requires:      php-pcre
 #Requires:      php-redland
+Requires:      php-simplexml
 Requires:      php-spl
 Requires:      php-xml
 
@@ -86,23 +92,6 @@ Group:   Documentation
 %prep
 %setup -q -n easyrdf-%{version}
 
-#
-# The following fixes will not be required as of pre-release 0.8.0-beta1.
-#
-
-# Remove Mac files
-find . | grep -e '/\._' | xargs rm -f
-
-# Add "EasyRdf/Isomorphic.php" require
-( cat <<'REQUIRE'
-
-/**
- * @see EasyRdf_Isomorphic
- */
-require_once "EasyRdf/Isomorphic.php";
-REQUIRE
-) >> lib/EasyRdf.php
-
 
 %build
 # Empty build section, nothing to build
@@ -114,19 +103,37 @@ cp -rp lib/* %{buildroot}%{_datadir}/php/
 
 
 %check
-%if 0%{?fedora} > 18
-: Temporarily skipping "EasyRdf_Serialiser_GraphVizTest::testSerialiseSvg" test
-: because of unknown failure in Fedora > 18
-sed 's/testSerialiseSvg/SKIP_TEST_testSerialiseSvg/' \
-    -i test/EasyRdf/Serialiser/GraphVizTest.php
-%endif
-
 %if %{with_test}
-: graphviz have optional gif support
-sed 's/testSerialiseGif/SKIP_TEST_testSerialiseGif/' \
+: Temporarily skipping tests that sometimes cause timeout exceptions
+sed -e 's/testSerialiseSvg/SKIP_testSerialiseSvg/' \
+    -e 's/testSerialiseGif/SKIP_testSerialiseGif/' \
+    -e 's/testSerialiseSvg/SKIP_testSerialisePng/' \
     -i test/EasyRdf/Serialiser/GraphVizTest.php
 
-make test-lib
+# Create PHPUnit config
+cat > phpunit.xml <<'PHPUNIT'
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    backupGlobals="false"
+    backupStaticAttributes="false"
+    colors="false"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    strict="true"
+    syntaxCheck="false"
+    verbose="false">
+    <testsuites>
+      <testsuite name="EasyRdf Library">
+        <directory suffix="Test.php">./test/EasyRdf/</directory>
+      </testsuite>
+    </testsuites>
+</phpunit>
+PHPUNIT
+
+phpunit -d date.timezone="UTC"
 %else
 : test suite disabled
 %endif
@@ -144,6 +151,17 @@ make test-lib
 
 
 %changelog
+* Fri Jan  3 2014 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
+- backport 0.8.0 for remi repo.
+
+* Thu Jan 02 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 0.8.0-1
+- Updated to 0.8.0
+- Updated PHP min version from 5.2.8 to 5.3.3
+- Added php-[libxml,mbstring,reflection,simplexml] requires
+- Removed pre-0.8.0 fixes
+- Updated %%check to use PHPUnit directly and skip tests that sometimes cause
+  timeout exceptions
+
 * Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.7.2-5
 - Removed test sub-package
 - php-common => php(language)
