@@ -1,4 +1,4 @@
-%{!?__pear: %global __pear %{_bindir}/pear}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Autoloader
 %global pear_channel pear.horde.org
 
@@ -35,7 +35,7 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
-Provides:       php-pear(%{pear_channel}/Horde_Autoloader) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -43,8 +43,7 @@ Autoload implementation and class loading manager for Horde.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 %patch0 -p1 -b .fedora
@@ -98,7 +97,7 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Autoloader
 %{pear_phpdir}/Horde/Autoloader.php
-%{pear_testdir}/Horde_Autoloader
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
