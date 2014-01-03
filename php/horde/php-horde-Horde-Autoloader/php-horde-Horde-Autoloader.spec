@@ -1,5 +1,4 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name    Horde_Autoloader
 %global pear_channel pear.horde.org
 
@@ -8,13 +7,16 @@
 
 Name:           php-horde-Horde-Autoloader
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Horde Autoloader
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+# Fedora specific - ensure Sabre is taken from /usr/share/php
+Patch0:         %{name}-Sabre.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -30,7 +32,7 @@ Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-pcre
 Requires:       php-spl
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/Horde_Autoloader) = %{version}
@@ -45,7 +47,9 @@ Autoload implementation and class loading manager for Horde.
 tar xif %{SOURCE0}
 
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%patch0 -p1 -b .fedora
+sed -e '/Default.php/s/md5sum=".*" name/name/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -98,19 +102,22 @@ fi
 
 
 %changelog
-* Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Fri Jan  3 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- patch autoloader for Sabre
 
-* Mon Nov  5 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-2
+* Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
+
+* Mon Nov  5 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - make test optional
 
-* Thu Nov  1 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Thu Nov  1 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Tue Aug 14 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-3
 - rebuilt for new pear_testdir
 
-* Sat Jun 16 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0.1-1
+* Sat Jun 16 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - backport for remi repo
 
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.0.1-1
