@@ -17,15 +17,12 @@
 
 Summary:        Wrapper for OpenSSL Crypto Library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/bukka/php-crypto/pull/6
-Patch0:         %{pecl_name}-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -74,8 +71,6 @@ This package provides an objective wrapper for OpenSSL Crypto Library.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1 -b .build
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_CRYPTO_VERSION/{s/.* "//;s/".*$//;p}' php_crypto.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -210,6 +205,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 04 2014 Remi Collet <remi@fedoraproject.org> - 0.1.1-1
+- Update to 0.1.1 (devel)
+- drop patch merged upstream
+
 * Thu Jan  2 2014 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
 - initial package, version 0.1.0 (devel)
 - patch for PHP 5.3.3, https://github.com/bukka/php-crypto/pull/6
