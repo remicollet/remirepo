@@ -11,6 +11,7 @@ License:    Public Domain
 URL:        http://phpseclib.sourceforge.net/
 Source0:    http://phpseclib.sourceforge.net/channel.xml
 
+BuildRoot:           %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:           noarch
 BuildRequires:       php-pear
 Requires:            php-pear(PEAR)
@@ -34,8 +35,13 @@ sed -i 's/\r$//' %{SOURCE0}
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{SOURCE0} $RPM_BUILD_ROOT%{pear_xmldir}/%{name}.xml
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 
 %post
@@ -53,10 +59,14 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
 %{pear_xmldir}/%{name}.xml
 
 
 %changelog
+* Sun Jan  5 2014 Remi Collet <rpms@famillecollet.com> - 1.3-1
+- backport for remi repo
+
 * Sat Jan  4 2014 Adam Williamson <awilliam@redhat.com> - 1.3-1
 - version using the rest version
 - drop use of tabs
