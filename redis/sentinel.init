@@ -1,19 +1,19 @@
 #!/bin/sh
 #
-# redis        init file for starting up the redis daemon
+# redis        init file for starting up the redis-sentinel daemon
 #
-# chkconfig:   - 20 80
-# description: Starts and stops the redis daemon.
+# chkconfig:   - 21 79
+# description: Starts and stops the redis-sentinel daemon.
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-name="redis-server"
+name="redis-sentinel"
 exec="/usr/sbin/$name"
-pidfile="/var/run/redis/redis.pid"
-REDIS_CONFIG="/etc/redis.conf"
+pidfile="/var/run/redis/sentinel.pid"
+REDIS_CONFIG="/etc/redis-sentinel.conf"
 
-[ -e /etc/sysconfig/redis ] && . /etc/sysconfig/redis
+[ -e /etc/sysconfig/redis-sentinel ] && . /etc/sysconfig/redis-sentinel
 
 lockfile=/var/lock/subsys/redis
 

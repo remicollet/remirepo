@@ -36,6 +36,8 @@ Source1:          %{name}.logrotate
 Source2:          %{name}.init
 Source3:          %{name}.service
 Source4:          %{name}.tmpfiles
+Source5:          sentinel.init
+Source6:          sentinel.service
 # Update configuration for Fedora
 Patch0:           %{name}-2.8.3-conf.patch
 Patch1:           %{name}-deps-PIC.patch
@@ -79,7 +81,7 @@ different kind of sorting abilities.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prever:-%{prever}}
-%patch0 -p1 -b .conf
+%patch0 -p1 -b .rpmconf
 %patch1 -p1 -b .pic
 %patch2 -p1 -b .jem
 
@@ -117,7 +119,8 @@ make test
 make install PREFIX=%{buildroot}%{_prefix}
 # Install misc other
 install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-install -p -D -m 644 %{name}.conf %{buildroot}%{_sysconfdir}/%{name}.conf
+install -p -D -m 644 %{name}.conf  %{buildroot}%{_sysconfdir}/%{name}.conf
+install -p -D -m 644 sentinel.conf %{buildroot}%{_sysconfdir}/%{name}-sentinel.conf
 install -d -m 755 %{buildroot}%{_localstatedir}/lib/%{name}
 install -d -m 755 %{buildroot}%{_localstatedir}/log/%{name}
 install -d -m 755 %{buildroot}%{_localstatedir}/run/%{name}
@@ -125,12 +128,14 @@ install -d -m 755 %{buildroot}%{_localstatedir}/run/%{name}
 %if %{with_systemd}
 # Install systemd unit
 install -p -D -m 644 %{SOURCE3} %{buildroot}%{_unitdir}/%{name}.service
+install -p -D -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/%{name}-sentinel.service
 # Install systemd tmpfiles config, _tmpfilesdir only defined in fedora >= 18
 install -p -D -m 644 %{SOURCE4} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
 %else
 sed -e '/^daemonize/s/no/yes/' \
     -i %{buildroot}%{_sysconfdir}/%{name}.conf
 install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
+install -p -D -m 755 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-sentinel
 %endif
 
 # Fix non-standard-executable-perm error
@@ -148,19 +153,19 @@ ln -s %{name}-server %{buildroot}%{_sbindir}/%{name}-sentinel
 %post
 %if 0%{?systemd_post:1}
 %systemd_post redis.service
-%else
-if [ $1 = 1 ]; then
-  # Initial installation
-%if %{with_systemd}
-  /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-%else
-  /sbin/chkconfig --add redis
+%systemd_post redis-sentinel.service
 %endif
-fi
+# Initial installation (always, for new service)
+%if %{with_systemd}
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+%else
+/sbin/chkconfig --add redis
+/sbin/chkconfig --add redis-sentinel
 %endif
 
 %pre
-getent group redis &> /dev/null || groupadd -r redis &> /dev/null
+getent group  redis &> /dev/null || \
+groupadd -r redis &> /dev/null
 getent passwd redis &> /dev/null || \
 useradd -r -g redis -d %{_sharedstatedir}/redis -s /sbin/nologin \
         -c 'Redis Server' redis &> /dev/null
@@ -169,13 +174,20 @@ exit 0
 %preun
 %if 0%{?systemd_preun:1}
 %systemd_preun redis.service
+%systemd_preun redis-sentinel.service
 %else
 if [ $1 = 0 ]; then
   # Package removal, not upgrade
 %if %{with_systemd}
-  /bin/systemctl --no-reload disable redis.service >/dev/null 2>&1 || :
-  /bin/systemctl stop redis.service >/dev/null 2>&1 || :
+  /bin/systemctl --no-reload disable redis-sentinel.service >/dev/null 2>&1 || :
+  /bin/systemctl stop redis-sentinel.service >/dev/null 2>&1 || :
+
+  /bin/systemctl --no-reload disable redis.service          >/dev/null 2>&1 || :
+  /bin/systemctl stop redis.service          >/dev/null 2>&1 || :
 %else
+  /sbin/service redis-sentinel stop &> /dev/null
+  /sbin/chkconfig --del redis-sentinel &> /dev/null
+
   /sbin/service redis stop &> /dev/null
   /sbin/chkconfig --del redis &> /dev/null
 %endif
@@ -184,16 +196,19 @@ fi
 
 %if 0%{?systemd_postun_with_restart:1}
 %systemd_postun_with_restart redis.service
+%systemd_postun_with_restart redis-sentinel.service
 %else
 %if %{with_systemd}
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ]; then
   # Package upgrade, not uninstall
-  /bin/systemctl try-restart redis.service >/dev/null 2>&1 || :
+  /bin/systemctl try-restart redis.service          >/dev/null 2>&1 || :
+  /bin/systemctl try-restart redis-sentinel.service >/dev/null 2>&1 || :
 fi
 %else
 if [ $1 -ge 1 ]; then
-  /sbin/service redis condrestart >/dev/null 2>&1 || :
+  /sbin/service redis          condrestart >/dev/null 2>&1 || :
+  /sbin/service redis-sentinel condrestart >/dev/null 2>&1 || :
 fi
 %endif
 %endif
@@ -202,9 +217,9 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc 00-RELEASENOTES BUGS CONTRIBUTING COPYING README
-%doc sentinel.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %attr(0644, redis, root) %config(noreplace) %{_sysconfdir}/%{name}.conf
+%attr(0644, redis, root) %config(noreplace) %{_sysconfdir}/%{name}-sentinel.conf
 %dir %attr(0755, redis, root) %{_localstatedir}/lib/%{name}
 %dir %attr(0755, redis, root) %{_localstatedir}/log/%{name}
 %dir %attr(0755, redis, root) %{_localstatedir}/run/%{name}
@@ -213,14 +228,18 @@ fi
 %if %{with_systemd}
 %{_prefix}/lib/tmpfiles.d/%{name}.conf
 %{_unitdir}/%{name}.service
+%{_unitdir}/%{name}-sentinel.service
 %else
 %{_initrddir}/%{name}
+%{_initrddir}/%{name}-sentinel
 %endif
 
 
 %changelog
 * Mon Jan  6 2014 Remi Collet <remi@fedoraproject.org> - 2.8.3-2
 - add redis-sentinel command (link to redis-server)
+- don't rely on config for daemonize and pidfile
+- add redis-sentinel service
 
 * Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 2.8.3-1
 - Redis 2.8.3

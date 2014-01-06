@@ -1,15 +1,7 @@
---- redis-2.8.3/redis.conf.conf	2013-12-14 10:09:57.015046918 +0100
-+++ redis-2.8.3/redis.conf	2013-12-14 10:08:57.827879506 +0100
-@@ -18,7 +18,7 @@
- 
- # When running daemonized, Redis writes a pid file in /var/run/redis.pid by
- # default. You can specify a custom pid file location here.
--pidfile /var/run/redis.pid
-+pidfile /var/run/redis/redis.pid
- 
- # Accept connections on the specified port, default is 6379.
- # If port 0 is specified Redis will not listen on a TCP socket.
-@@ -33,6 +33,7 @@
+diff -up redis-2.8.3/redis.conf.rpmconf redis-2.8.3/redis.conf
+--- redis-2.8.3/redis.conf.rpmconf	2013-12-11 15:31:57.000000000 +0100
++++ redis-2.8.3/redis.conf	2014-01-06 14:06:11.630724369 +0100
+@@ -33,6 +33,7 @@ port 6379
  #
  # bind 192.168.1.100 10.0.0.1
  # bind 127.0.0.1
@@ -17,7 +9,7 @@
  
  # Specify the path for the Unix socket that will be used to listen for
  # incoming connections. There is no default, so Redis will not listen
-@@ -71,7 +72,7 @@
+@@ -71,7 +72,7 @@ loglevel notice
  # Specify the log file name. Also the empty string can be used to force
  # Redis to log on the standard output. Note that if you use standard
  # output for logging but daemonize, logs will be sent to /dev/null
@@ -26,7 +18,7 @@
  
  # To enable logging to the system logger, just set 'syslog-enabled' to yes,
  # and optionally update the other syslog parameters to suit your needs.
-@@ -155,7 +156,7 @@
+@@ -155,7 +156,7 @@ dbfilename dump.rdb
  # The Append Only File will also be created inside this directory.
  # 
  # Note that you must specify a directory here, not a file name.
@@ -35,3 +27,18 @@
  
  ################################# REPLICATION #################################
  
+diff -up redis-2.8.3/sentinel.conf.rpmconf redis-2.8.3/sentinel.conf
+--- redis-2.8.3/sentinel.conf.rpmconf	2014-01-06 14:06:20.401749268 +0100
++++ redis-2.8.3/sentinel.conf	2014-01-06 14:06:27.617769753 +0100
+@@ -4,6 +4,11 @@
+ # The port that this sentinel instance will run on
+ port 26379
+ 
++# Specify the log file name. Also the empty string can be used to force
++# Redis to log on the standard output. Note that if you use standard
++# output for logging but daemonize, logs will be sent to /dev/null
++logfile /var/log/redis/sentinel.log
++
+ # sentinel monitor <master-name> <ip> <redis-port> <quorum>
+ #
+ # Tells Sentinel to monitor this slave, and to consider it in O_DOWN
