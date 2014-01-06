@@ -1,3 +1,11 @@
+# spec file for php-horde-Horde-Kolab-Storage
+#
+# Copyright (c) 2013-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Kolab_Storage
@@ -164,8 +172,8 @@ fi
 - Update to 2.0.5
 - raise dependency on Horde_Imap_Client >= 2.14.0
 
-* Fri Mar 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-2
+* Fri Mar 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
 - add requires on Net_IMAP
 
-* Thu Mar 28 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.4-1
+* Thu Mar 28 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - initial package
