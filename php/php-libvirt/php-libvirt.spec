@@ -1,5 +1,6 @@
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__php:       %global __php       %{_bindir}/php}
+%{!?_pkgdocdir:  %global _pkgdocdir  %{_docdir}/%{name}-%{version}}
 
 %global  req_libvirt_version 0.6.2
 %global  extname             libvirt-php
@@ -14,9 +15,6 @@ License:	PHP
 URL:		http://libvirt.org/php
 Source0:	http://libvirt.org/sources/php/libvirt-php-%{version}.tar.gz
 
-# https://www.redhat.com/archives/libvir-list/2011-November/msg01476.html
-Patch0:         libvirt-php54.patch
-
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:	php-devel
 BuildRequires:	libvirt-devel >= %{req_libvirt_version}
@@ -27,6 +25,13 @@ BuildRequires:	xhtml1-dtds
 Requires:	libvirt >= %{req_libvirt_version}
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
+
+
+%if 0%{?fedora} < 20
+# Filter shared private
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+%{?filter_setup}
+%endif
 
 
 %description
@@ -49,35 +54,29 @@ For more details see: http://www.libvirt.org/php/ http://www.php.net/
 This package contain the document for php-libvirt.
 
 
-%if 0%{?fedora} < 20
-# Filter shared private
-%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
-%{?filter_setup}
-%endif
-
-
 %prep
 %setup -q -n libvirt-php-%{version}
 
 
 %build
-%configure --with-html-dir=%{_datadir}/doc \
-           --with-html-subdir=%{name}-%{version}/html \
-           --libdir=%{php_extdir}
+%configure \
+  --with-html-dir=%{_docdir} \
+  --with-html-subdir=$(echo %{_pkgdocdir} | sed -e 's|^%{_docdir}/||')/html \
+  --libdir=%{php_extdir}
 make %{?_smp_mflags}
 
 
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
-
+install -pm 644 COPYING %{buildroot}%{_pkgdocdir}
 chmod +x %{buildroot}%{php_extdir}/%{extname}.so
 
 
 %check
-# simple module load test
+: simple module load test
 %{__php} --no-php-ini \
-    --define extension=src/%{extname}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{extname}.so \
     --modules | grep libvirt
 
 
@@ -87,21 +86,21 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc
+%dir %{_pkgdocdir}
+%{_pkgdocdir}/COPYING
 %{php_extdir}/%{extname}.so
 %config(noreplace) %{php_inidir}/%{extname}.ini
 
 
 %files -n php-libvirt-doc
 %defattr(-,root,root,-)
-%doc README
-%dir %{_datadir}/doc/%{name}-%{version}
-%{_datadir}/doc/%{name}-%{version}/html
+%{_pkgdocdir}/html
 
 
 %changelog
 * Mon Jan  6 2014 Remi Collet <remi@fedoraproject.org> - 0.4.8-1
 - update to 0.4.8
+- spec cleanups
 
 * Tue Jan  8 2013 Remi Collet <remi@fedoraproject.org> - 0.4.5-2
 - rebuild
@@ -145,5 +144,5 @@ rm -rf %{buildroot}
 * Thu Mar 10 2011 Michal Novotny <minovotn@redhat.com> - 0.4.1-2
 - Changes done to comply with Fedora package policy
 
-* Tue Feb 8 2011 Michal Novotny <minovotn@redhat.com> - 0.4.1-1
+* Tue Feb  8 2011 Michal Novotny <minovotn@redhat.com> - 0.4.1-1
 - Initial commit (from github)
