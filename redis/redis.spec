@@ -25,7 +25,7 @@
 
 Name:             redis
 Version:          2.8.3
-Release:          %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:          %{?prever:0.}2%{?prever:.%{prever}}%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -140,6 +140,11 @@ chmod 755 %{buildroot}%{_bindir}/%{name}-*
 mkdir -p %{buildroot}%{_sbindir}
 mv %{buildroot}%{_bindir}/%{name}-server %{buildroot}%{_sbindir}/%{name}-server
 
+# create redis-sentinel command as described on
+# http://redis.io/topics/sentinel
+ln -s %{name}-server %{buildroot}%{_sbindir}/%{name}-sentinel
+
+
 %post
 %if 0%{?systemd_post:1}
 %systemd_post redis.service
@@ -214,6 +219,9 @@ fi
 
 
 %changelog
+* Mon Jan  6 2014 Remi Collet <remi@fedoraproject.org> - 2.8.3-2
+- add redis-sentinel command (link to redis-server)
+
 * Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 2.8.3-1
 - Redis 2.8.3
   upgrade urgency: MODERATE for Redis, HIGH for Sentinel.
