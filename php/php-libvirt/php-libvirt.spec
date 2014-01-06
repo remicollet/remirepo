@@ -1,12 +1,12 @@
-%global		req_libvirt_version 0.6.2
-%global		php_confdir %{_sysconfdir}/php.d
-%global		php_extdir  %{_libdir}/php/modules
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__php:       %global __php       %{_bindir}/php}
 
-%global         extname   libvirt-php
+%global  req_libvirt_version 0.6.2
+%global  extname             libvirt-php
 
 Name:		php-libvirt
-Version:	0.4.5
-Release:	2%{?dist}%{?extra_release}.1
+Version:	0.4.8
+Release:	1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:	PHP language binding for Libvirt
 
 Group:		Development/Libraries
@@ -28,9 +28,11 @@ Requires:	libvirt >= %{req_libvirt_version}
 Requires:	php(zend-abi) = %{php_zend_api}
 Requires:	php(api) = %{php_core_api}
 
+
 %description
 PHP language bindings for Libvirt API. 
 For more details see: http://www.libvirt.org/php/
+
 
 %package -n php-libvirt-doc
 Summary:	Document of php-libvirt
@@ -46,15 +48,16 @@ For more details see: http://www.libvirt.org/php/ http://www.php.net/
 
 This package contain the document for php-libvirt.
 
-# Filter private provides
+
+%if 0%{?fedora} < 20
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %prep
 %setup -q -n libvirt-php-%{version}
-
-%patch0 -p1 -b .php54
 
 
 %build
@@ -70,22 +73,24 @@ make install DESTDIR=%{buildroot}
 
 chmod +x %{buildroot}%{php_extdir}/%{extname}.so
 
+
 %check
 # simple module load test
 %{__php} --no-php-ini \
-    --define extension_dir=src \
-    --define extension=%{extname}.so \
+    --define extension=src/%{extname}.so \
     --modules | grep libvirt
 
 
 %clean
 rm -rf %{buildroot}
 
+
 %files
 %defattr(-,root,root,-)
 %doc
 %{php_extdir}/%{extname}.so
-%config(noreplace) %{php_confdir}/%{extname}.ini
+%config(noreplace) %{php_inidir}/%{extname}.ini
+
 
 %files -n php-libvirt-doc
 %defattr(-,root,root,-)
@@ -95,6 +100,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan  6 2014 Remi Collet <remi@fedoraproject.org> - 0.4.8-1
+- update to 0.4.8
+
 * Tue Jan  8 2013 Remi Collet <remi@fedoraproject.org> - 0.4.5-2
 - rebuild
 
