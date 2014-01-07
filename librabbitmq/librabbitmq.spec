@@ -10,7 +10,7 @@
 Name:      librabbitmq
 Summary:   Client library for AMQP
 Version:   0.4.1
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
 URL:       https://github.com/alanxz/rabbitmq-c
@@ -65,6 +65,7 @@ amqp-publish        Publish a message on an AMQP server
 
 %prep
 %setup -q -n rabbitmq-c-%{version}
+
 %if 0%{?rhel} != 5
 %patch0 -p1
 %endif
@@ -99,6 +100,10 @@ rm %{buildroot}%{_libdir}/%{name}.la
 
 
 %check
+: check .pc is usable
+grep @ %{buildroot}%{_libdir}/pkgconfig/librabbitmq.pc && exit 1
+
+: upstream tests
 export LD_LIBRARY_PATH=%{buildroot}%{_libdir}
 make check
 
@@ -125,7 +130,6 @@ rm -rf %{buildroot}
 %{_includedir}/amqp*
 %{_libdir}/pkgconfig/librabbitmq.pc
 
-
 %files tools
 %defattr (-,root,root,-)
 %{_bindir}/amqp-*
@@ -134,8 +138,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Jan  2 2014 Remi Collet <remi@fedoraproject.org> - 0.4.1-2
+* Tue Jan  7 2014 Remi Collet <remi@fedoraproject.org> - 0.4.1-3
 - fix broken librabbitmq.pc, #1039555
+- add check for usable librabbitmq.pc
+
+* Thu Jan  2 2014 Remi Collet <remi@fedoraproject.org> - 0.4.1-2
 - fix Source0 URL
 
 * Sat Sep 28 2013 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
