@@ -1,7 +1,7 @@
 #global prever rc3
 
 Name: phpMyAdmin
-Version: 4.1.3
+Version: 4.1.4
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -151,6 +151,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Jan  7 2014 Remi Collet <rpms@famillecollet.com> 4.1.4-1
+- update to 4.1.4 (bugfix)
+
 * Tue Dec 31 2013 Remi Collet <rpms@famillecollet.com> 4.1.3-1
 - update to 4.1.3 (bugfix)
 
