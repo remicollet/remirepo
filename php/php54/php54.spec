@@ -71,7 +71,7 @@
 %endif
 
 #global snapdate      201201041830
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -1638,6 +1638,9 @@ fi
 
 
 %changelog
+* Wed Jan  8 2014 Remi Collet <rcollet@redhat.com> 5.4.24-1
+- update to 5.4.24
+
 * Sat Dec 28 2013 Remi Collet <rcollet@redhat.com> 5.4.24-0.1.RC1
 - test build of 5.4.24RC1
 
