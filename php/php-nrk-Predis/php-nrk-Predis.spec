@@ -84,22 +84,25 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 %if %{with_tests}
 
-# Launch redis server
+: Launch redis server
+pidfile=$PWD/run/redis/redis.pid
 mkdir -p {run,log,lib}/redis
 sed -e "s:/var:$PWD:" \
-    -e "/daemonize/s/no/yes/" \
     /etc/redis.conf >redis.conf
-%{_sbindir}/redis-server ./redis.conf
+%{_sbindir}/redis-server \
+    ./redis.conf \
+    --daemonize yes \
+    --pidfile $pidfile
 
-# Run the test Suite
-ret=0
+: Run the installed test Suite against the installed library
 pushd %{buildroot}%{pear_testdir}/%{pear_name}
+ret=0
 phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
 popd
 
-# Cleanup
-if [ -f run/redis/redis.pid ]; then
-   kill $(cat run/redis/redis.pid)
+: Cleanup
+if [ -f $pidfile ]; then
+   kill $(cat $pidfile)
 fi
 
 exit $ret
