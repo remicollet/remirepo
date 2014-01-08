@@ -106,7 +106,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.8
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}.1
 %endif
@@ -176,6 +176,7 @@ Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
 Patch200: php-wip.patch
+Patch201: php-wip2.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -219,12 +220,13 @@ Requires: php-cli%{?_isa} = %{version}-%{release}
 # To ensure correct /var/lib/php/session ownership:
 Requires(pre): httpd
 
-
+%if 0%{?fedora} < 20
 # Don't provides extensions, which are not shared library, as .so
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php-zts/modules/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{_httpd_moddir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -889,6 +891,7 @@ rm -rf ext/json
 
 # WIP patch
 %patch200 -p0 -b .wip
+%patch201 -p1 -b .wip2
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1863,6 +1866,9 @@ fi
 
 
 %changelog
+* Wed Jan  8 2014 Remi Collet <rcollet@redhat.com> 5.5.8-0.2.RC1
+- another test build of 5.5.8RC1
+
 * Sat Dec 28 2013 Remi Collet <rcollet@redhat.com> 5.5.8-0.1.RC1
 - test build of 5.5.8RC1
 
