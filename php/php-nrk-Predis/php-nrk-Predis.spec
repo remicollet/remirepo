@@ -18,17 +18,14 @@
 %endif
 
 Name:           php-nrk-Predis
-Version:        0.8.4
-Release:        1%{?dist}
+Version:        0.8.5
+Release:        0%{?dist}
 Summary:        PHP client library for Redis
 
 Group:          Development/Libraries
 License:        MIT
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# https://github.com/nrk/predis/issues/126
-Source2:        https://raw.github.com/nrk/predis/master/autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -86,8 +83,6 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
-cd %{pear_name}-%{version}
-cp %{SOURCE2} .
 
 # Launch redis server
 mkdir -p {run,log,lib}/redis
@@ -98,7 +93,9 @@ sed -e "s:/var:$PWD:" \
 
 # Run the test Suite
 ret=0
-phpunit . || ret=1
+pushd %{buildroot}%{pear_testdir}/%{pear_name}
+phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
+popd
 
 # Cleanup
 if [ -f run/redis/redis.pid ]; then
@@ -135,10 +132,13 @@ fi
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/%{pear_name}
-%{pear_testdir}/Predis
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Wed Jan  8 2014 Remi Collet <remi@fedoraproject.org> - 0.8.5-0
+- Update to 0.8.5 (test build)
+
 * Sun Jul 28 2013 Remi Collet <remi@fedoraproject.org> - 0.8.4-1
 - Update to 0.8.4
 
