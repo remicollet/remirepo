@@ -6,17 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{?scl:          %scl_package        php-pecl-spl-types}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name SPL_Types
 %global  ext_name spl_types
 
 Summary:        Standard PHP Library, Types Addon
-Name:           php-pecl-spl-types
+Name:           %{?scl_prefix}php-pecl-spl-types
 Version:        0.4.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -27,29 +29,44 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
-BuildRequires:  php-pear
-BuildRequires:  php-spl
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-spl
+BuildRequires:  pcre-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       php-spl%{?_isa}
 
-Provides:       php-%{ext_name} = %{version}
-Provides:       php-%{ext_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{ext_name} = %{version}
+Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+%if 0%{!?scl:1}
 # Package have been renamed
 Obsoletes:      php-pecl-SPL-Types < 0.4.0-2
 Provides:       php-pecl-SPL-Types = %{version}-%{release}
+
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 %endif
+
 
 
 %description
@@ -145,16 +162,16 @@ fi
 %check
 : Minimal load test for NTS extension
 cd NTS
-%{_bindir}/php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=modules/%{ext_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
-TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{ext_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{__php} -n run-tests.php
 
 
 %if %{with_zts}
@@ -192,6 +209,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan  8 2014 Remi Collet <remi@fedoraproject.org> - 0.4.0-4
+- adapt for SCL and Copr
+
 * Mon Oct 21 2013 Remi Collet <remi@fedoraproject.org> - 0.4.0-2
 - rename from php-pecl-SPL-Types to php-pecl-spl-types
 - install doc in pecl doc_dir
