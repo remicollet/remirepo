@@ -1,3 +1,4 @@
+%{?scl:          %scl_package        php-libvirt}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__php:       %global __php       %{_bindir}/php}
 %{!?_pkgdocdir:  %global _pkgdocdir  %{_docdir}/%{name}-%{version}}
@@ -5,7 +6,7 @@
 %global  req_libvirt_version 0.6.2
 %global  extname             libvirt-php
 
-Name:		php-libvirt
+Name:		%{?scl_prefix}php-libvirt
 Version:	0.4.8
 Release:	1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:	PHP language binding for Libvirt
@@ -16,16 +17,15 @@ URL:		http://libvirt.org/php
 Source0:	http://libvirt.org/sources/php/libvirt-php-%{version}.tar.gz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires:	php-devel
+BuildRequires:	%{?scl_prefix}php-devel
 BuildRequires:	libvirt-devel >= %{req_libvirt_version}
 BuildRequires:	libxml2-devel
 BuildRequires:	libxslt
 BuildRequires:	xhtml1-dtds
 
 Requires:	libvirt >= %{req_libvirt_version}
-Requires:	php(zend-abi) = %{php_zend_api}
-Requires:	php(api) = %{php_core_api}
-
+Requires:	%{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:	%{?scl_prefix}php(api) = %{php_core_api}
 
 %if 0%{?fedora} < 20
 # Filter shared private
@@ -39,7 +39,7 @@ PHP language bindings for Libvirt API.
 For more details see: http://www.libvirt.org/php/
 
 
-%package -n php-libvirt-doc
+%package doc
 Summary:	Document of php-libvirt
 Group:		Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
@@ -47,7 +47,7 @@ BuildArch:	noarch
 %endif
 Requires:	php-libvirt = %{version}-%{release}
 
-%description -n php-libvirt-doc
+%description doc
 PHP language bindings for Libvirt API. 
 For more details see: http://www.libvirt.org/php/ http://www.php.net/
 
@@ -59,6 +59,7 @@ This package contain the document for php-libvirt.
 
 
 %build
+%{?scl:. /opt/rh/%scl/enable}
 %configure \
   --with-html-dir=%{_docdir} \
   --with-html-subdir=$(echo %{_pkgdocdir} | sed -e 's|^%{_docdir}/||')/html \
@@ -67,6 +68,7 @@ make %{?_smp_mflags}
 
 
 %install
+%{?scl:. /opt/rh/%scl/enable}
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 install -pm 644 COPYING %{buildroot}%{_pkgdocdir}
@@ -75,7 +77,8 @@ chmod +x %{buildroot}%{php_extdir}/%{extname}.so
 
 %check
 : simple module load test
-%{__php} --no-php-ini \
+%{?scl:. /opt/rh/%scl/enable}
+php --no-php-ini \
     --define extension=%{buildroot}%{php_extdir}/%{extname}.so \
     --modules | grep libvirt
 
@@ -92,7 +95,7 @@ rm -rf %{buildroot}
 %config(noreplace) %{php_inidir}/%{extname}.ini
 
 
-%files -n php-libvirt-doc
+%files doc
 %defattr(-,root,root,-)
 %{_pkgdocdir}/html
 
@@ -101,6 +104,7 @@ rm -rf %{buildroot}
 * Mon Jan  6 2014 Remi Collet <remi@fedoraproject.org> - 0.4.8-1
 - update to 0.4.8
 - spec cleanups
+- adapt for SCL
 
 * Tue Jan  8 2013 Remi Collet <remi@fedoraproject.org> - 0.4.5-2
 - rebuild
