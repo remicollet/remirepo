@@ -16,31 +16,13 @@
 
 Summary:       Yet Another Framework
 Name:          %{?scl_prefix}php-pecl-yaf
-Version:       2.3.0
+Version:       2.3.1
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:       %{pecl_name}.ini
-
-# https://github.com/laruence/php-yaf/issues/82
-Source2:       https://raw.github.com/laruence/php-yaf/yaf-2.3.0/requests/yaf_request_http.h
-Source3:       https://raw.github.com/laruence/php-yaf/yaf-2.3.0/requests/yaf_request_simple.h
-Source4:       https://raw.github.com/laruence/php-yaf/yaf-2.3.0/responses/yaf_response_http.h
-Source5:       https://raw.github.com/laruence/php-yaf/yaf-2.3.0/responses/yaf_response_cli.h
-Source6:       https://raw.github.com/laruence/php-yaf/yaf-2.3.0/views/yaf_view_interface.h
-Source7:       https://raw.github.com/laruence/php-yaf/yaf-2.3.0/views/yaf_view_simple.h
-Source8:       https://raw.github.com/laruence/php-yaf/yaf-2.3.0/configs/yaf_config_ini.h
-Source9:       https://raw.github.com/laruence/php-yaf/yaf-2.3.0/configs/yaf_config_simple.h
-Source10:      https://raw.github.com/laruence/php-yaf/yaf-2.3.0/routes/yaf_route_interface.h
-Source11:      https://raw.github.com/laruence/php-yaf/yaf-2.3.0/routes/yaf_route_simple.h
-Source12:      https://raw.github.com/laruence/php-yaf/yaf-2.3.0/routes/yaf_route_static.h
-Source13:      https://raw.github.com/laruence/php-yaf/yaf-2.3.0/routes/yaf_route_regex.h
-Source14:      https://raw.github.com/laruence/php-yaf/yaf-2.3.0/routes/yaf_route_map.h
-Source15:      https://raw.github.com/laruence/php-yaf/yaf-2.3.0/routes/yaf_route_rewrite.h
-Source16:      https://raw.github.com/laruence/php-yaf/yaf-2.3.0/routes/yaf_route_supervar.h
-Source17:      https://raw.github.com/laruence/php-yaf/yaf-2.3.0/tests/multi-section.ini
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
@@ -85,13 +67,6 @@ to develop web applications.
 %setup -q -c 
 mv %{pecl_name}-%{version} NTS
 
-cp %{SOURCE2} %{SOURCE3} NTS/requests/
-cp %{SOURCE4} %{SOURCE5} NTS/responses/
-cp %{SOURCE6} %{SOURCE7} NTS/views/
-cp %{SOURCE8} %{SOURCE9} NTS/configs/
-cp %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14} %{SOURCE15} %{SOURCE16} NTS/routes/
-cp %{SOURCE17} NTS/tests/
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAF_VERSION/{s/.*\t"//;s/".*$//;p}' NTS/php_yaf.h )
 if test "x${extver}" != "x%{version}"; then
@@ -132,7 +107,7 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
 # Install the package XML file
-install -D -m 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Test & Documentation
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
@@ -203,6 +178,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 08 2014 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
+- Update to 2.3.1 (beta)
+
 * Wed Jan 08 2014 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - Update to 2.3.0 (beta)
 - install doc in pecl doc_dir
