@@ -100,7 +100,7 @@
 %endif
 
 #global snapdate      201308300430
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -108,7 +108,7 @@ Version: 5.5.8
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}.1
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -175,8 +175,6 @@ Patch91: php-5.3.7-oci8conf.patch
 # Fixes for tests
 
 # WIP
-Patch200: php-wip.patch
-Patch201: php-wip2.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -380,10 +378,6 @@ Provides:  php-pecl-zendopcache = %{opcachever}
 Provides:  php-pecl-zendopcache%{?_isa} = %{opcachever}
 Provides:  php-pecl(opcache) = %{opcachever}
 Provides:  php-pecl(opcache)%{?_isa} = %{opcachever}
-# Only one opcode cache could be enabled
-Conflicts: php-xcache
-# APC 3.1.15 offer an option to disable opcache
-Conflicts: php-pecl-apc < 3.1.15
 
 %description opcache
 The Zend OPcache provides faster PHP execution through opcode caching and
@@ -890,8 +884,6 @@ rm -rf ext/json
 # security patches
 
 # WIP patch
-%patch200 -p0 -b .wip
-%patch201 -p1 -b .wip2
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1866,6 +1858,11 @@ fi
 
 
 %changelog
+* Wed Jan  8 2014 Remi Collet <rcollet@redhat.com> 5.5.8-1
+- update to 5.5.8
+- drop conflicts with other opcode caches as both can
+  be used only for user data cache
+
 * Wed Jan  8 2014 Remi Collet <rcollet@redhat.com> 5.5.8-0.2.RC1
 - another test build of 5.5.8RC1
 
