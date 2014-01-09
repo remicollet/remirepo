@@ -16,7 +16,7 @@
 
 Summary:       Yet Another Framework
 Name:          %{?scl_prefix}php-pecl-yaf
-Version:       2.3.1
+Version:       2.3.2
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
@@ -178,6 +178,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 09 2014 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- Update to 2.3.2 (beta)
+
 * Wed Jan 08 2014 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - Update to 2.3.1 (beta)
 
