@@ -1,0 +1,14 @@
+diff -up xcache-3.1.0/xcache.ini.old xcache-3.1.0/xcache.ini
+--- xcache-3.1.0/xcache.ini.old	2014-01-09 10:45:55.139937807 +0100
++++ xcache-3.1.0/xcache.ini	2014-01-09 10:47:44.972289458 +0100
+@@ -66,7 +66,9 @@ xcache.disable_on_crash =    Off
+ xcache.experimental =        Off
+ 
+ ; per request settings. can ini_set, .htaccess etc
+-xcache.cacher =               On
++; WARNING set xcache.cacher=On only when no other cache installed
++; Will create conflicts with php-opcache or php-pecl-zendopcache
++xcache.cacher =              Off
+ xcache.stat   =               On
+ xcache.optimizer =           Off
+ 
