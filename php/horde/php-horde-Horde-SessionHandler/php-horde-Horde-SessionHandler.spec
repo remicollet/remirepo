@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Mongo
+# spec file for php-horde-Horde-SessionHandler
 #
 # Copyright (c) 2013-2014 Remi Collet
 # License: CC-BY-SA
