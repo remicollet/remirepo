@@ -3,8 +3,8 @@
 %global channelname pear.amazonwebservices.com
 
 Name:		php-aws-sdk
-Version:	2.5.0
-Release:	2%{?dist}
+Version:	2.5.1
+Release:	1%{?dist}
 Summary:	Amazon Web Services framework for PHP
 Group:		Development/Libraries
 
@@ -60,8 +60,6 @@ Amazon Simple Storage Service (Amazon S3), Amazon Elastic Compute Cloud
 sed -e '/aws.phar/d' \
     package.xml >%{pear_name}-%{version}/%{name}.xml
 
-#remove aws.phar
-rm %{pear_name}-%{version}/aws.phar
 
 %build
 # Empty build section, most likely nothing required.
@@ -69,14 +67,14 @@ rm %{pear_name}-%{version}/aws.phar
 
 %install
 cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %post
@@ -97,6 +95,9 @@ fi
 
 
 %changelog
+* Fri Jan 10 2014 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
+- Update to 2.5.1
+
 * Thu Jan  2 2014 Remi Collet <remi@fedoraproject.org> - 2.5.0-2
 - backport rawhide change for remi rep
 
