@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-History
 Version:        2.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        API for tracking the history of an object
 
 Group:          Development/Libraries
@@ -57,6 +57,7 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -66,6 +67,10 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %check
@@ -99,6 +104,9 @@ fi
 
 
 %changelog
+* Fri Jan 10 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
+- cleanups from review #909662
+
 * Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1
 
