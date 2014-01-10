@@ -1,0 +1,11 @@
+diff -up libircclient-1.6/include/libircclient.h.orig libircclient-1.6/include/libircclient.h
+--- libircclient-1.6/include/libircclient.h.orig	2012-04-28 17:28:29.352267217 -0300
++++ libircclient-1.6/include/libircclient.h	2012-04-28 17:28:50.662268034 -0300
+@@ -131,6 +131,7 @@ typedef void (*irc_dcc_callback_t) (irc_
+ #include "libirc_errors.h"
+ #include "libirc_events.h"
+ #include "libirc_options.h"
++#include "libirc_rfcnumeric.h"
+ #undef IN_INCLUDE_LIBIRC_H
+ 
+ 
