@@ -2,21 +2,22 @@
 
 Name:		libircclient
 Summary:	C library to create IRC clients
-Version:	1.6
-Release:	6%{?dist}
+Version:	1.7
+Release:	1%{?dist}
 License:	LGPLv3+
 Group:		Development/Libraries
 URL:		http://www.ulduzsoft.com/libircclient/
 Source0:	http://downloads.sourceforge.net/libircclient/%{name}-%{version}.tar.gz
 BuildRequires:	openssl-devel
 # Correct install target to use includedir and libdir
-Patch0:		libircclient-1.6-install.patch
+Patch0:		libircclient-1.7-install.patch
 # Add rfc include to main header to avoid build failures of packages using it
 # example: error: 'LIBIRC_RFC_RPL_ENDOFNAMES' was not declared in this scope
-Patch1:		libircclient-1.6-rfc.patch
-# Create a dynamic library by default. Upstream report about patches:
-# https://sourceforge.net/tracker/?func=detail&aid=3522604&group_id=118640&atid=681658
-Patch2:		libircclient-1.6-shared.patch
+Patch1:		libircclient-1.7-rfc.patch
+# According to http://upstream-tracker.org/versions/libircclient.html
+# no ABI change between 1.6 and 1.7
+# so keep APIVERSION=0 as in our previous build of 1.6
+Patch2:		libircclient-1.7-soname.patch
 
 %description
 libircclient is a small but extremely powerful library which implements
@@ -35,16 +36,27 @@ This package contains development files for libircclient.
 %prep
 %setup -q
 rm -rvf cocoa
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%patch0 -p1 -b .inst
+%patch1 -p1 -b .rfc
+%patch2 -p1 -b .shared
 
 %build
 %configure --enable-shared --enable-openssl --enable-ipv6
 make %{?_smp_mflags}
 
+# TODO make documentation and man page
+
+
 %install
 make install DESTDIR=${RPM_BUILD_ROOT}
+
+# this header is not supposed to be installed
+# but it is used by pecl/ircclient
+install -pm 644 src/params.h ${RPM_BUILD_ROOT}%{_includedir}/libirc_params.h
+
+# Man page
+install -Dpm 644 man/%{name}.1 ${RPM_BUILD_ROOT}%{_mandir}/man1/%{name}.1
+
 
 %post -p /sbin/ldconfig
 
@@ -55,16 +67,18 @@ make install DESTDIR=${RPM_BUILD_ROOT}
 %doc Changelog
 %doc LICENSE
 %doc THANKS
-%{_libdir}/*.so.%{major}
+%{_libdir}/%{name}.so.%{major}
 
 %files		devel
 %defattr(-,root,root,-)
-%doc doc/html/*
-%doc doc/rfc1459.txt
-%{_libdir}/libircclient.so
+%{_libdir}/%{name}.so
 %{_includedir}/libirc*.h
+%{_mandir}/man1/%{name}.*
 
 %changelog
+* Fri Jan 10 2014 Remi Collet <remi.fedoraproject.org> - 1.7-1
+- update to 1.7, no ABI change
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -74,10 +88,10 @@ make install DESTDIR=${RPM_BUILD_ROOT}
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Fri May 5 2012 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.6-3
+* Sat May  5 2012 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.6-3
 - Add Changelog, LICENSE, and THANKS files to main package.
 
-* Fri May 4 2012 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.6-2
+* Fri May  4 2012 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.6-2
 - Add patch to create a shared library.
 - Add documentation to devel package.
 

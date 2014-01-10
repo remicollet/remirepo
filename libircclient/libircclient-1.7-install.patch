@@ -1,0 +1,23 @@
+diff -up libircclient-1.7/src/Makefile.in.inst libircclient-1.7/src/Makefile.in
+--- libircclient-1.7/src/Makefile.in.inst	2014-01-10 14:50:43.343991872 +0100
++++ libircclient-1.7/src/Makefile.in	2014-01-10 14:53:09.735435692 +0100
+@@ -16,13 +16,13 @@ shared: libircclient.so
+ shared_mingw: libircclient.dll
+ 
+ install:
+-	-mkdir -p $(DESTDIR)@prefix@/include
++	-mkdir -p $(DESTDIR)@includedir@
+ 	-mkdir -p $(DESTDIR)@libdir@
+-	cp ../include/libircclient.h $(DESTDIR)@prefix@/include/libircclient.h
+-	cp ../include/libirc_errors.h $(DESTDIR)@prefix@/include/libirc_errors.h
+-	cp ../include/libirc_events.h  $(DESTDIR)@prefix@/include/libirc_events.h 
+-	cp ../include/libirc_options.h  $(DESTDIR)@prefix@/include/libirc_options.h 
+-	cp ../include/libirc_rfcnumeric.h  $(DESTDIR)@prefix@/include/libirc_rfcnumeric.h 
++	cp ../include/libircclient.h $(DESTDIR)@includedir@/libircclient.h
++	cp ../include/libirc_errors.h $(DESTDIR)@includedir@/libirc_errors.h
++	cp ../include/libirc_events.h  $(DESTDIR)@includedir@/libirc_events.h
++	cp ../include/libirc_options.h  $(DESTDIR)@includedir@/libirc_options.h
++	cp ../include/libirc_rfcnumeric.h  $(DESTDIR)@includedir@/libirc_rfcnumeric.h
+ 	cp libircclient.so $(DESTDIR)@libdir@/libircclient.so.$(APIVERSION)
+ 	ln -fs libircclient.so.$(APIVERSION) $(DESTDIR)@libdir@/libircclient.so
+ 

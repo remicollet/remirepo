@@ -1,0 +1,21 @@
+diff -up libircclient-1.7/src/Makefile.in.shared libircclient-1.7/src/Makefile.in
+--- libircclient-1.7/src/Makefile.in.shared	2014-01-10 14:55:27.440854147 +0100
++++ libircclient-1.7/src/Makefile.in	2014-01-10 14:58:53.885481145 +0100
+@@ -5,7 +5,7 @@ AR=@AR@ cr
+ RANLIB=@RANLIB@
+ INCLUDES=-I../include
+ DESTDIR=
+-APIVERSION = 1
++APIVERSION = 0
+ 
+ OBJS = libircclient.o
+ 
+@@ -37,7 +37,7 @@ libircclient.a: libircclient.o
+ 	$(RANLIB) libircclient.a
+ 
+ clean:
+-	rm -f libircclient.a libircclient.o
++	rm -f libircclient.so* libircclient.a libircclient.o
+ 
+ distclean: clean
+ 	-rm -f Makefile
