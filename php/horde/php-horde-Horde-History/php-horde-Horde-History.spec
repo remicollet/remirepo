@@ -105,7 +105,7 @@ fi
 
 %changelog
 * Fri Jan 10 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
-- cleanups from review #909662
+- cleanups from review #909713
 
 * Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1

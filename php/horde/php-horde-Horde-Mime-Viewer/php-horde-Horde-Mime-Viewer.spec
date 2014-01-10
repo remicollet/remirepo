@@ -13,7 +13,7 @@
 
 Name:           php-horde-Horde-Mime-Viewer
 Version:        2.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde MIME Viewer Library
 
 Group:          Development/Libraries
@@ -92,6 +92,7 @@ done
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -108,6 +109,10 @@ do
     test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc \
          && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %post
@@ -133,6 +138,9 @@ fi
 
 
 %changelog
+* Fri Jan 10 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
+- cleanups from review #895622
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - switch from Conflicts >= max to Requires < max
@@ -158,4 +166,3 @@ fi
 
 * Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Initial package
-
