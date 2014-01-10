@@ -1,0 +1,324 @@
+From aa17942a54b43746f854bd3704f6ef6d7b799894 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 10 Jan 2014 14:19:23 +0100
+Subject: [PATCH 1/8] Fix find header when directly in /usr/include + honour
+ --with-libdir option
+
+---
+ config.m4       | 27 ++++++++++++++++-----------
+ php_ircclient.c |  2 +-
+ 2 files changed, 17 insertions(+), 12 deletions(-)
+
+diff --git a/config.m4 b/config.m4
+index c8940da..d238bbe 100644
+--- a/config.m4
++++ b/config.m4
+@@ -5,20 +5,25 @@ if test "$PHP_IRCCLIENT" != "no"; then
+ 	AC_PROG_EGREP
+ 	AC_PROG_SED
+ 	
+-	AC_MSG_CHECKING([for libircclient/libircclient.h])
++	AC_MSG_CHECKING([for libircclient.h])
+ 	for d in $PHP_IRCCLIENT /usr /usr/local /opt; do
+-		if test -f $d/include/libircclient/libircclient.h; then
++		if test -f $d/include/libircclient.h; then
++			IRCCLIENT_INCDIR=$d/include
++			IRCCLIENT_LIBDIR=$d/$PHP_LIBDIR
+ 			AC_MSG_RESULT([found in $d])
+-			IRCCLIENT_DIR=$d
++		elif test -f $d/include/libircclient/libircclient.h; then
++			AC_MSG_RESULT([found in $d])
++			IRCCLIENT_INCDIR=$d/include/libircclient
++			IRCCLIENT_LIBDIR=$d/$PHP_LIBDIR
+ 			break
+ 		fi
+ 	done
+-	if test "x$IRCCLIENT_DIR" = "x"; then
++	if test "x$IRCCLIENT_INCDIR" = "x"; then
+ 		AC_MSG_ERROR([not found])
+ 	fi
+-	if test -f "$IRCCLIENT_DIR/include/libircclient/libirc_params.h"; then
+-		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH=`$EGREP "define LIBIRC_VERSION_HIGH" $IRCCLIENT_DIR/include/libircclient/libirc_params.h | $SED -e 's/[[^0-9\x]]//g'`
+-		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW=`$EGREP "define LIBIRC_VERSION_LOW" $IRCCLIENT_DIR/include/libircclient/libirc_params.h | $SED -e 's/[[^0-9\x]]//g'`
++	if test -f "$IRCCLIENT_INCDIR/libirc_params.h"; then
++		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH=`$EGREP "define LIBIRC_VERSION_HIGH" $IRCCLIENT_INCDIR/libirc_params.h | $SED -e 's/[[^0-9\x]]//g'`
++		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW=`$EGREP "define LIBIRC_VERSION_LOW" $IRCCLIENT_INCDIR/libirc_params.h | $SED -e 's/[[^0-9\x]]//g'`
+ 	else
+ 		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH=0
+ 		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW=0
+@@ -26,20 +31,20 @@ if test "$PHP_IRCCLIENT" != "no"; then
+ 	AC_DEFINE_UNQUOTED([PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH], [$PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH], [ ])
+ 	AC_DEFINE_UNQUOTED([PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW], [$PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW], [ ])
+ 	
+-	PHP_ADD_INCLUDE($IRCCLIENT_DIR/include)
++	PHP_ADD_INCLUDE($IRCCLIENT_INCDIR)
+ 	AC_CHECK_MEMBER([irc_callbacks_t.event_channel_notice], [
+ 		AC_DEFINE(HAVE_LIBIRCCLIENT_EVENT_CHANNEL_NOTICE, 1, [ ])
+ 	], [], [
+-		[#include <libircclient/libircclient.h>]
++		[#include <libircclient.h>]
+ 	])
+ 	PHP_CHECK_LIBRARY(ircclient, irc_create_session,
+ 	[
+-		PHP_ADD_LIBRARY_WITH_PATH(ircclient, $IRCCLIENT_DIR/lib, IRCCLIENT_SHARED_LIBADD)
++		PHP_ADD_LIBRARY_WITH_PATH(ircclient, $IRCCLIENT_LIBDIR, IRCCLIENT_SHARED_LIBADD)
+ 		AC_DEFINE(HAVE_LIBIRCCLIENT,1,[ ])
+ 	],[
+ 		AC_MSG_ERROR([libircclient not found])
+ 	],[
+-		-L$IRCCLIENT_DIR/lib -lm
++		-L$IRCCLIENT_LIBDIR -lm
+ 	])
+ 	PHP_SUBST([IRCCLIENT_SHARED_LIBADD])
+ 	PHP_NEW_EXTENSION([ircclient], [php_ircclient.c], [$ext_shared])
+diff --git a/php_ircclient.c b/php_ircclient.c
+index e7134a1..97e28d6 100644
+--- a/php_ircclient.c
++++ b/php_ircclient.c
+@@ -32,7 +32,7 @@
+ 
+ #include <errno.h>
+ #include <ctype.h>
+-#include <libircclient/libircclient.h>
++#include <libircclient.h>
+ 
+ PHP_FUNCTION(parse_origin)
+ {
+-- 
+1.8.3.1
+
+From 591006e7e6742d3c566707a74ff473351d2c3706 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 10 Jan 2014 14:24:28 +0100
+Subject: [PATCH 2/8] dont display "0.0" for unkown header version
+
+---
+ php_ircclient.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/php_ircclient.c b/php_ircclient.c
+index 97e28d6..3ac38ca 100644
+--- a/php_ircclient.c
++++ b/php_ircclient.c
+@@ -1420,8 +1420,12 @@ PHP_MINFO_FUNCTION(ircclient)
+ 
+ 	irc_get_version(&high, &low);
+ 	spprintf(&version[1], 0, "%u.%u", high, low);
++#if PHP_IPHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH
+ 	spprintf(&version[0], 0, "%u.%u", PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH, PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW);
+-
++#else
++	/* version <= 1.6 doesn't exposed its version */
++	spprintf(&version[0], 0, "-");
++#endif
+ 	php_info_print_table_start();
+ 	php_info_print_table_header(2, "IRC client support", "enabled");
+ 	php_info_print_table_row(2, "Version", PHP_IRCCLIENT_VERSION);
+-- 
+1.8.3.1
+
+From 4972a9a46a1ffa16bc29787ca5ec94e4f69b015f Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 10 Jan 2014 14:25:34 +0100
+Subject: [PATCH 3/8] Fix [-Wunused-variable]
+
+---
+ php_ircclient.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/php_ircclient.c b/php_ircclient.c
+index 3ac38ca..06d3cc1 100644
+--- a/php_ircclient.c
++++ b/php_ircclient.c
+@@ -418,7 +418,7 @@ PHP_METHOD(Session, doConnect)
+ 	if (SUCCESS == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "bs|ls!", &ip6, &server_str, &server_len, &port, &passwd_str, &passwd_len)) {
+ 		php_ircclient_session_object_t *obj = zend_object_store_get_object(getThis() TSRMLS_CC);
+ 		char *nick = NULL, *user = NULL, *real = NULL;
+-		zval *znick, *zuser, *zreal, *tmp;
++		zval *znick, *zuser, *zreal;
+ 
+ 		znick = zend_read_property(php_ircclient_session_class_entry, getThis(), ZEND_STRL("nick"), 0 TSRMLS_CC);
+ 		SEPARATE_ARG_IF_REF(znick);
+-- 
+1.8.3.1
+
+From 3ef394c42caf15727f13ce95e3e7fdfd4b8ffd11 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 10 Jan 2014 14:27:08 +0100
+Subject: [PATCH 4/8] Fix: warning: implicit declaration of function
+ 'php_get_inf'
+
+---
+ php_ircclient.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/php_ircclient.c b/php_ircclient.c
+index 06d3cc1..022d298 100644
+--- a/php_ircclient.c
++++ b/php_ircclient.c
+@@ -19,6 +19,7 @@
+ #include <main/php_network.h>
+ #include <ext/standard/php_string.h>
+ #include <ext/standard/info.h>
++#include <ext/standard/basic_functions.h>
+ 
+ #include <Zend/zend.h>
+ #include <Zend/zend_constants.h>
+-- 
+1.8.3.1
+
+From c3525184f44ef40be9093022dd21c23b29300524 Mon Sep 17 00:00:00 2001
+From: Michael Wallner <mike@php.net>
+Date: Fri, 10 Jan 2014 14:41:32 +0100
+Subject: [PATCH 5/8] prepare-0.3.1
+
+---
+ package.xml     | 5 +++--
+ php_ircclient.c | 9 ++++++---
+ php_ircclient.h | 4 ++--
+ 3 files changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/php_ircclient.c b/php_ircclient.c
+index 022d298..c8a603a 100644
+--- a/php_ircclient.c
++++ b/php_ircclient.c
+@@ -1418,14 +1418,15 @@ PHP_MINFO_FUNCTION(ircclient)
+ {
+ 	unsigned int high, low;
+ 	char *version[2];
++	char lt16 = "<=1.6";
+ 
+ 	irc_get_version(&high, &low);
+ 	spprintf(&version[1], 0, "%u.%u", high, low);
+ #if PHP_IPHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH
+ 	spprintf(&version[0], 0, "%u.%u", PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH, PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW);
+ #else
+-	/* version <= 1.6 doesn't exposed its version */
+-	spprintf(&version[0], 0, "-");
++	/* version <= 1.6 doesn't expose its version */
++	version[0] = lt16;
+ #endif
+ 	php_info_print_table_start();
+ 	php_info_print_table_header(2, "IRC client support", "enabled");
+@@ -1441,7 +1442,9 @@ PHP_MINFO_FUNCTION(ircclient)
+ 	);
+ 	php_info_print_table_end();
+ 
+-	efree(version[0]);
++	if (version[0] != lt16) {
++		efree(version[0]);
++	}
+ 	efree(version[1]);
+ }
+ 
+--
+1.8.3.1
+
+From 3e895879ea461ef0442f260a2880eaed7573904c Mon Sep 17 00:00:00 2001
+From: Michael Wallner <mike@php.net>
+Date: Fri, 10 Jan 2014 14:42:16 +0100
+Subject: [PATCH 6/8] fix typo
+
+---
+ php_ircclient.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/php_ircclient.c b/php_ircclient.c
+index c8a603a..8dfee13 100644
+--- a/php_ircclient.c
++++ b/php_ircclient.c
+@@ -1418,7 +1418,7 @@ PHP_MINFO_FUNCTION(ircclient)
+ {
+ 	unsigned int high, low;
+ 	char *version[2];
+-	char lt16 = "<=1.6";
++	char *lt16 = "<=1.6";
+ 
+ 	irc_get_version(&high, &low);
+ 	spprintf(&version[1], 0, "%u.%u", high, low);
+-- 
+1.8.3.1
+
+From c55fab5599836f9a921cd437d34aa6485e23bb5e Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 10 Jan 2014 15:15:54 +0100
+Subject: [PATCH 7/8] missing in previous
+
+---
+ config.m4       | 5 +++++
+ php_ircclient.c | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/config.m4 b/config.m4
+index d238bbe..8b5953b 100644
+--- a/config.m4
++++ b/config.m4
+@@ -11,22 +11,27 @@ if test "$PHP_IRCCLIENT" != "no"; then
+ 			IRCCLIENT_INCDIR=$d/include
+ 			IRCCLIENT_LIBDIR=$d/$PHP_LIBDIR
+ 			AC_MSG_RESULT([found in $d])
++			break
+ 		elif test -f $d/include/libircclient/libircclient.h; then
+ 			AC_MSG_RESULT([found in $d])
+ 			IRCCLIENT_INCDIR=$d/include/libircclient
+ 			IRCCLIENT_LIBDIR=$d/$PHP_LIBDIR
++			AC_MSG_RESULT([found in $d])
+ 			break
+ 		fi
+ 	done
+ 	if test "x$IRCCLIENT_INCDIR" = "x"; then
+ 		AC_MSG_ERROR([not found])
+ 	fi
++	AC_MSG_CHECKING([libircclient version])
+ 	if test -f "$IRCCLIENT_INCDIR/libirc_params.h"; then
+ 		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH=`$EGREP "define LIBIRC_VERSION_HIGH" $IRCCLIENT_INCDIR/libirc_params.h | $SED -e 's/[[^0-9\x]]//g'`
+ 		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW=`$EGREP "define LIBIRC_VERSION_LOW" $IRCCLIENT_INCDIR/libirc_params.h | $SED -e 's/[[^0-9\x]]//g'`
++		AC_MSG_RESULT([$PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH $PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW])
+ 	else
+ 		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH=0
+ 		PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW=0
++		AC_MSG_RESULT([unkown])
+ 	fi
+ 	AC_DEFINE_UNQUOTED([PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH], [$PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH], [ ])
+ 	AC_DEFINE_UNQUOTED([PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW], [$PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW], [ ])
+diff --git a/php_ircclient.c b/php_ircclient.c
+index 022d298..0145dfd 100644
+--- a/php_ircclient.c
++++ b/php_ircclient.c
+@@ -1421,7 +1421,7 @@ PHP_MINFO_FUNCTION(ircclient)
+ 
+ 	irc_get_version(&high, &low);
+ 	spprintf(&version[1], 0, "%u.%u", high, low);
+-#if PHP_IPHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH
++#if PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH
+ 	spprintf(&version[0], 0, "%u.%u", PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_HIGH, PHP_IRCCLIENT_LIBIRCCLIENT_VERSION_LOW);
+ #else
+ 	/* version <= 1.6 doesn't expose its version */
+-- 
+1.8.3.1
+
+From 337cac32fcbd026c502fe2b27537693135a5d93a Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 10 Jan 2014 15:16:54 +0100
+Subject: [PATCH 8/8] fix ZTS build
+
+---
+ php_ircclient.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/php_ircclient.c b/php_ircclient.c
+index 0145dfd..bf17d5e 100644
+--- a/php_ircclient.c
++++ b/php_ircclient.c
+@@ -1138,7 +1138,7 @@ static void call_closure(INTERNAL_FUNCTION_PARAMETERS, /* stupid non-const API *
+ 		INIT_PZVAL(&za);
+ 		array_init(&za);
+ 
+-		if (SUCCESS == zend_copy_parameters_array(ZEND_NUM_ARGS(), &za)) {
++		if (SUCCESS == zend_copy_parameters_array(ZEND_NUM_ARGS(), &za TSRMLS_CC)) {
+ 			php_printf("ircclient: %s - ", prop_str);
+ 			zend_print_flat_zval_r(&za TSRMLS_CC);
+ 			php_printf("\n");
+-- 
+1.8.3.1
+
