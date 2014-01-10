@@ -7,7 +7,7 @@
 
 Name:           php-horde-Horde-Form
 Version:        2.0.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Form API
 
 Group:          Development/Libraries
@@ -80,6 +80,7 @@ done
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -96,6 +97,10 @@ do
     test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc \
          && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
 done | tee ../%{pear_name}.lang
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %post
@@ -121,6 +126,9 @@ fi
 
 
 %changelog
+* Fri Jan 10 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-2
+- cleanups
+
 * Fri Oct 25 2013 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 
