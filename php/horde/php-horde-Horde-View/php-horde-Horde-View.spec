@@ -5,7 +5,7 @@
 
 Name:           php-horde-Horde-View
 Version:        2.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde View API
 
 Group:          Development/Libraries
@@ -64,6 +64,7 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -73,6 +74,10 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %check
@@ -105,6 +110,9 @@ fi
 
 
 %changelog
+* Fri Jan 10 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
+- cleanups from review #909662
+
 * Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 
