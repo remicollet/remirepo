@@ -140,18 +140,18 @@ fi
 - Update to 2.0.4
 - switch from Conflicts >= max to Requires < max
 
-* Tue Jan 29 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.3-1
-- Update to 2.0.3 for remi repo
+* Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
 
-* Wed Jan  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
-- Update to 2.0.2 for remi repo
+* Wed Jan  9 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
 - use local script instead of find_lang
 
-* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
-- Update to 2.0.1 for remi repo
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
 
-* Sun Nov  4 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-1
-- Update to 2.0.0 for remi repo
+* Sun Nov  4 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
 
 * Thu Jun 21 2012 Nick Bebout <nb@fedoraproject.org> - 1.1.0-1
 - Upgrade to 1.1.0
