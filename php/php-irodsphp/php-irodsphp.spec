@@ -11,6 +11,7 @@ URL:       https://code.renci.org/gf/project/irodsphp/
 Source0:   https://code.renci.org/gf/download/frsrelease/167/1674/php-%{version}-beta1.zip
 Patch0:    php-irodsphp-3.3.0-configpath.patch
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  php(language) >= 5.1.2
@@ -42,6 +43,8 @@ rm -f prods/tutorials/Prods/Prods.pkg
 # no build required
 
 %install
+rm -rf %{buildroot}
+
 # For now, just installing the key bit of prods. If anyone sees value
 # in packaging the tests or the webapp...I'm not stopping you.
 
@@ -51,17 +54,26 @@ cp -pr prods/src %{buildroot}%{_datadir}/php/%{packagename}/prods
 mv %{buildroot}%{_datadir}/php/%{packagename}/prods/src/prods.ini %{buildroot}%{_sysconfdir}/%{name}
 rm -f %{buildroot}%{_datadir}/php/%{packagename}/prods/src/LICENSE.txt %{buildroot}%{_datadir}/php/%{packagename}/prods/src/release_notes.txt
 
+
+%clean
+rm -rf %{buildroot}
+
+
 %check
 # Needs a reference iRODS instance to test sensibly, which we don't
 # have
 
 %files
+%defattr(-,root,root,-)
 %doc prods/src/LICENSE.txt prods/release_notes.txt prods/tutorials prods/utilities
 %{_datadir}/php/%{packagename}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/prods.ini
 
 %changelog
+* Fri Jan 10 2014 Remi Collet <rrpms@fedoraproject.org> - 3.3.0-0.3.beta1
+- backport for remi repo.
+
 * Sat Jan  4 2014 Adam Williamson <awilliam@redhat.com> - 3.3.0-0.3.beta1
 - fix up the requires per review
 - drop the complex naming and just call it php-irodsphp
