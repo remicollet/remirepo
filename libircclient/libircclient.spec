@@ -8,6 +8,8 @@ License:	LGPLv3+
 Group:		Development/Libraries
 URL:		http://www.ulduzsoft.com/libircclient/
 Source0:	http://downloads.sourceforge.net/libircclient/%{name}-%{version}.tar.gz
+
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	openssl-devel
 # Correct install target to use includedir and libdir
 Patch0:		libircclient-1.7-install.patch
@@ -48,6 +50,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf ${RPM_BUILD_ROOT}
+
 make install DESTDIR=${RPM_BUILD_ROOT}
 
 # this header is not supposed to be installed
@@ -56,6 +60,10 @@ install -pm 644 src/params.h ${RPM_BUILD_ROOT}%{_includedir}/libirc_params.h
 
 # Man page
 install -Dpm 644 man/%{name}.1 ${RPM_BUILD_ROOT}%{_mandir}/man1/%{name}.1
+
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
 
 
 %post -p /sbin/ldconfig
