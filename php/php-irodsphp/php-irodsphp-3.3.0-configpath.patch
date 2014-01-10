@@ -1,0 +1,18 @@
+--- irods/prods/src/ProdsConfig.inc.php	2014-01-04 15:06:19.850730474 -0800
++++ irods/prods/src/ProdsConfig.inc.php.new	2014-01-04 15:07:29.058508522 -0800
+@@ -9,11 +9,11 @@
+ 
+ /**#@-*/
+ 
+-if (file_exists(__DIR__ . "/prods.ini")) {
+-  $GLOBALS['PRODS_CONFIG'] = parse_ini_file(__DIR__ . "/prods.ini", true);
++if (file_exists("/etc/php-irodsphp/prods.ini")) {
++  $GLOBALS['PRODS_CONFIG'] = parse_ini_file("/etc/php-irodsphp/prods.ini", true);
+ }
+ else {
+   $GLOBALS['PRODS_CONFIG'] = array();
+ }
+   
+-?>
+\ No newline at end of file
++?>
