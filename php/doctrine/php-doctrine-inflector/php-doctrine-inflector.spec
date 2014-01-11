@@ -18,6 +18,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
@@ -44,6 +45,7 @@ with regard to upper-/lowercase and singular/plural forms of words.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
@@ -57,7 +59,12 @@ cat phpunit.xml.dist \
 %{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md composer.json
 %dir %{_datadir}/php/Doctrine
 %dir %{_datadir}/php/Doctrine/Common
@@ -65,6 +72,9 @@ cat phpunit.xml.dist \
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 1.0-2.20131221gita81c334
+- backport for remi repo
+
 * Mon Jan 06 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0-2.20131221gita81c334
 - Conditional %%{?dist}
 
