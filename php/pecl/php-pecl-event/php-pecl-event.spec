@@ -6,15 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name   event
 %global with_zts    0%{?__ztsphp:1}
 
 Summary:       Provides interface to libevent library
-Name:          php-pecl-event
+Name:          php-pecl-%{pecl_name}
 Version:       1.8.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
@@ -40,9 +42,11 @@ Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -58,7 +62,14 @@ Version 1.0.0 introduces:
 %prep
 %setup -q -c 
 
-cd %{pecl_name}-%{version}
+# fix role for tests
+# https://bitbucket.org/osmanov/pecl-event/pull-request/6
+sed -e '/name="test/s/role="src"/role="test"/' \
+    -e '/EXPERIMENTAL/d' \
+    -i package.xml
+
+mv %{pecl_name}-%{version} NTS
+cd NTS
 %patch0 -p1
 
 # Sanity check, really often broken
@@ -71,7 +82,7 @@ cd ..
 
 # duplicate for ZTS build
 %if %{with_zts}
-cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
+cp -pr NTS ZTS
 %endif
 
 # Drop in the bit of configuration
@@ -82,7 +93,7 @@ EOF
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure \
     --with-libdir=%{_lib} \
@@ -93,7 +104,7 @@ cd %{pecl_name}-%{version}
 make %{?_smp_mflags}
 
 %if %{with_zts}
-cd ../%{pecl_name}-zts
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --with-libdir=%{_lib} \
@@ -109,34 +120,42 @@ make %{?_smp_mflags}
 %install
 # use z-event.ini to ensure event.so load "after" sockets.so
 : Install the NTS stuff
-make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
 
 %if %{with_zts}
 : Install the ZTS stuff
-make -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
 %endif
 
 : Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+: Test and Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
-cd %{pecl_name}-%{version}
+cd NTS
 if [ -f %{php_extdir}/sockets.so ]; then
   OPTS="-d extension=sockets.so"
 fi
 
 SKIP_ONLINE_TESTS=1 \
-TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{__php} -n run-tests.php
 
 %if %{with_zts}
-cd ../%{pecl_name}-zts
+cd ../ZTS
 if [ -f %{php_ztsextdir}/sockets.so ]; then
   OPTS="-d extension=sockets.so"
 fi
@@ -161,7 +180,8 @@ fi
 
 
 %files
-%doc %{pecl_name}-%{version}/{CREDITS,LICENSE,README.md}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
@@ -174,6 +194,11 @@ fi
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <remi@fedoraproject.org> - 1.8.1-2
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+- open https://bitbucket.org/osmanov/pecl-event/pull-request/6
+
 * Mon Oct 07 2013 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
 - Update to 1.8.1 (stable)
 - drop patch merged upstream
