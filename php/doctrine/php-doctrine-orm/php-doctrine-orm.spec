@@ -30,6 +30,7 @@ Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_co
 # 2) Auto-load using Doctrine\Common\ClassLoader
 Patch0:    %{name}-bin.patch
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  php(language)            >= %{php_min_ver}
@@ -90,6 +91,8 @@ chmod a-x lib/Doctrine/ORM/Tools/Pagination/Paginator.php
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/Doctrine %{buildroot}/%{_datadir}/php/
 
@@ -101,13 +104,21 @@ install -pm 0755 bin/doctrine.php %{buildroot}/%{_bindir}/doctrine
 # No upstream tests provided in source
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md *.markdown composer.json
 %{_datadir}/php/Doctrine/ORM
 %{_bindir}/doctrine
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 2.4.1-2
+- backport for remi repo
+
 * Sat Jan 04 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 2.4.1-2
 - Conditional %%{?dist}
 - Bin script patch instead of inline update and use Doctrine Common classloader
