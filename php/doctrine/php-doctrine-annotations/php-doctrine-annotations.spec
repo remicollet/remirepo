@@ -24,6 +24,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language)      >= %{php_min_ver}
@@ -69,6 +70,7 @@ Conflicts:     php-pear(pear.doctrine-project.org/DoctrineCommon) < 2.4
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
@@ -95,12 +97,20 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 %{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md composer.json
 %{_datadir}/php/Doctrine/Common/Annotations
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 1.1.2-3.20131220gita11349d
+- backport for remi repo
+
 * Mon Jan 06 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.2-3.20131220gita11349d
 - Minor syntax changes
 
