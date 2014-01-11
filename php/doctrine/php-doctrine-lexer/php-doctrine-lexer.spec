@@ -18,6 +18,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 
 Requires:      php(language) >= %{php_min_ver}
@@ -41,6 +42,7 @@ This lexer is used in Doctrine Annotations and in Doctrine ORM (DQL).
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
@@ -49,7 +51,12 @@ cp -rp lib/* %{buildroot}/%{_datadir}/php/
 # No upstream tests
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md composer.json
 %dir %{_datadir}/php/Doctrine
 %dir %{_datadir}/php/Doctrine/Common
@@ -57,6 +64,9 @@ cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 1.0-2.20131220gitf12a5f7
+- backport for remi repo
+
 * Mon Jan 06 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0-2.20131220gitf12a5f7
 - Conditional %%{?dist}
 
