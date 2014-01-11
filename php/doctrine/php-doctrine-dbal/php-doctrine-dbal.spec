@@ -27,6 +27,7 @@ Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_co
 # https://github.com/doctrine/dbal/commit/894493b285c71a33e6ed29994ba415bad5e0a457
 Patch0:    php-doctrine-dbal-2.4.2-primary_index.patch
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  php(language)       >= %{php_min_ver}
@@ -82,6 +83,7 @@ chmod a-x \
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/Doctrine %{buildroot}/%{_datadir}/php/
 
@@ -93,13 +95,21 @@ install -pm 0755 bin/doctrine-dbal %{buildroot}/%{_bindir}/
 # No upstream tests provided in source
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md UPGRADE composer.json
 %{_datadir}/php/Doctrine/DBAL
 %{_bindir}/doctrine-dbal
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 2.4.2-2
+- backport for remi repo
+
 * Tue Jan 07 2014 Adam Williamson <awilliam@redhat.com> - 2.4.2-2
 - primary_index: one OwnCloud patch still isn't in upstream
 
