@@ -19,6 +19,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language)       >= %{php_min_ver}
@@ -57,6 +58,8 @@ of data fixtures for the Doctrine ORM or ODM.
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
@@ -85,12 +88,20 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 %{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md UPGRADE composer.json
 %{_datadir}/php/Doctrine/Common/DataFixtures
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 1.0.0-2
+- backport for remi repo
+
 * Sun Jan 05 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0.0-2
 - Use non-PEAR Doctrine pkgs
 - Conditional %%{?dist}
