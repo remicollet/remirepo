@@ -20,6 +20,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
@@ -68,6 +69,7 @@ find . -name '*ZendDataCache*' -delete
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
@@ -98,7 +100,12 @@ rm -f \
 %{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md composer.json
 %dir %{_datadir}/php/Doctrine
 %dir %{_datadir}/php/Doctrine/Common
@@ -106,6 +113,9 @@ rm -f \
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 1.3.0-2
+- backport for remi repo
+
 * Fri Jan 03 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3.0-2
 - Conditional %%{?dist}
 - Removed sub-packages
