@@ -19,6 +19,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language)            >= %{php_min_ver}
@@ -77,6 +78,7 @@ functionality.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
@@ -103,7 +105,12 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 %{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md UPGRADE* composer.json
 %{_datadir}/php/Doctrine/Common/*.php
 %{_datadir}/php/Doctrine/Common/Persistence
@@ -113,6 +120,9 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 2.4.1-2
+- backport for remi repo
+
 * Sat Jan 04 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 2.4.1-2
 - Conditional %%{?dist}
 - Removed php-channel-doctrine obsolete
