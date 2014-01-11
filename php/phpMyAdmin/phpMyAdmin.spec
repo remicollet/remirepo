@@ -1,8 +1,9 @@
 #global prever rc3
+%{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 
 Name: phpMyAdmin
 Version: 4.1.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -70,8 +71,8 @@ sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
     config.sample.inc.php >CONFIG
 
 # Setup vendor config file
-sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/ChangeLog@" \
-    -e "/'LICENSE_FILE'/s@./LICENSE@%{_datadir}/doc/%{name}-%{version}/LICENSE@" \
+sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
+    -e "/'LICENSE_FILE'/s@./LICENSE@%{_pkgdocdir}/LICENSE@" \
     -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
     -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
@@ -151,6 +152,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 4.1.4-2
+- fix for f20 and unversioned docdir
+
 * Tue Jan  7 2014 Remi Collet <rpms@famillecollet.com> 4.1.4-1
 - update to 4.1.4 (bugfix)
 
@@ -165,6 +169,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 * Thu Dec 12 2013 Remi Collet <rpms@famillecollet.com> 4.1.0-1
 - update to 4.1.0 final
+
+* Thu Dec 12 2013 Ville Skyttä <ville.skytta@iki.fi> - 3.5.8.2-2
+- Fix paths to changelog and license when doc dir is unversioned (#994036).
+- Fix source URL, use xz compressed tarball.
 
 * Sat Dec  7 2013 Remi Collet <rpms@famillecollet.com> 4.1.0-0.3.rc3
 - update to 4.1.0-rc3
