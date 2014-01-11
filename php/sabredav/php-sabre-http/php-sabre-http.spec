@@ -6,17 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1edcd387535d10a5a5c0e0fd2f3192d1e3156970
+%global gh_commit    36930a4c035ce1751834adc7f300dca620d27775
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-http
-%global prever       alpha6
+#global prever       alpha6
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
 Summary:        Library for dealing with http requests and responses
-Version:        2.0.0
-Release:        0.2.%{prever}%{?dist}
+Version:        2.0.1
+Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}.tar.gz
@@ -115,6 +115,9 @@ phpunit \
 
 
 %changelog
+* Sat Jan 11 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1
+
 * Tue Jan  7 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.alpha6
 - update to 2.0.0alpha6
 - add explicit conflicts with php-sabre-dav < 1.9
