@@ -6,42 +6,64 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{?scl:          %scl_package        php-pecl-rrd}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
+%global with_zts  0%{?__ztsphp:1}
 %global pecl_name rrd
 
 
 Summary:      PHP Bindings for rrdtool
-Name:         php-pecl-rrd
-Version:      1.1.1
-Release:      1%{?dist}.1
+Name:         %{?scl_prefix}php-pecl-rrd
+Version:      1.1.2
+Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?pre}.tgz
 
+# http://svn.php.net/viewvc?view=revision&revision=332619
+# fix build with rrdtool < 1.4
+Patch0:       %{pecl_name}-svn.patch
+
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel >= 5.3.2
+BuildRequires: %{?scl_prefix}php-devel >= 5.3.2
 BuildRequires: rrdtool
 BuildRequires: rrdtool-devel >= 1.3.0
-BuildRequires: php-pear
+BuildRequires: %{?scl_prefix}php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:     php(zend-abi) = %{php_zend_api}
-Requires:     php(api) = %{php_core_api}
+Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 
-Conflicts:    rrdtool-php
-Provides:     php-pecl(%{pecl_name}) = %{version}%{?pre}
-Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
-Provides:     php-%{pecl_name} = %{version}%{?pre}
-Provides:     php-%{pecl_name}%{?_isa} = %{version}%{?pre}
+Conflicts:    %{?scl_prefix}rrdtool-php
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?pre}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
+Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}%{?pre}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?pre}
 
 
-# Filter private shared object
-%{?filter_provides_in: %filter_provides_in %{_dir}/.*\.so$}
+%if 0%{!?scl:1}
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20
+# Filter shared private
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -52,57 +74,78 @@ system for time series data.
 %prep 
 %setup -c -q
 
-cp -r %{pecl_name}-%{version}%{?pre} %{pecl_name}-%{version}-zts
+mv %{pecl_name}-%{version} NTS
 
-extver=$(sed -n '/#define PHP_RRD_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}%{?pre}/php_rrd.h)
-if test "x${extver}" != "x%{version}%{?pre}"; then
-   : Error: Upstream version is ${extver}, expecting %{version}.
-   exit 1
-fi
+cd NTS
+%patch0 -p0 -b .svn
+cd ..
 
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
 
+%if %{with_zts}
+cp -r  NTS ZTS
+%endif
+
 
 %build
-cd %{pecl_name}-%{version}%{?pre}
+cd NTS
 %{_bindir}/phpize
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
-make install -C %{pecl_name}-%{version}%{?pre} INSTALL_ROOT=%{buildroot}
-make install -C %{pecl_name}-%{version}-zts    INSTALL_ROOT=%{buildroot}
+make install -C NTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+%if %{with_zts}
+make install -C ZTS INSTALL_ROOT=%{buildroot}
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
+%if %{with_zts}
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}-zts/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=ZTS/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
-cd %{pecl_name}-%{version}%{?pre}
+cd NTS
 %{__php} --no-php-ini \
-    --define extension_dir=modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+
+%if 0%{?fedora} < 14 && 0%{?rhel} < 7
+  # skip tests which only succeed with rrdtool > 1.4.0
+  rm tests/rrd_012.phpt \
+     tests/rrd_017.phpt
+%endif
 
 make -C tests/data clean
 make -C tests/data all
@@ -114,12 +157,7 @@ if  grep -q "FAILED TEST" rpmtests.log; then
      diff -u tests/$(basename $t .diff).exp tests/$(basename $t .diff).out || :
   done
 
-  # tests only succeed with some rrdtool version (> 1.4.0 but < 1.4.7)
-  # because of difference between image size / position
-  # http://pecl.php.net/bugs/22642
-
-  # only consider result of rrd_version test
-  [ -f tests/rrd_020.diff ] && exit 1
+  exit 1
 fi
 
 
@@ -139,15 +177,28 @@ fi
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_name}-%{version}%{?pre}/{CREDITS,LICENSE}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Tue Jan 14 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
+- fix upstream patch
+
+* Tue Jan 14 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- Update to 1.1.2 (stable)
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+- adapt for SCL
+
 * Mon Sep 09 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1
 
