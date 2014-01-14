@@ -26,6 +26,7 @@ URL:          http://pecl.php.net/package/rrd
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?pre}.tgz
 
 # http://svn.php.net/viewvc?view=revision&revision=332619
+# http://svn.php.net/viewvc?view=revision&revision=332620
 # fix build with rrdtool < 1.4
 Patch0:       %{pecl_name}-svn.patch
 
