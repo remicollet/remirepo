@@ -1,3 +1,11 @@
+# spec file for php-horde-Horde-Kolab-Server
+#
+# Copyright (c) 2012-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Kolab_Server
@@ -15,7 +23,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR)
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
@@ -24,6 +32,7 @@ BuildRequires:  php-pear(pear.phpunit.de/PHPUnit_Story)
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-pcre
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Auth) >= 3.0.0
@@ -100,5 +109,5 @@ fi
 
 
 %changelog
-* Thu Mar 28 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.2-1
+* Thu Mar 28 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - initial package
