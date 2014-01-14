@@ -17,7 +17,6 @@ Release:        1%{?dist}
 Summary:        Timezone library
 
 Group:          Development/Libraries
-# missing COPYING file
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
@@ -117,7 +116,7 @@ fi
 - Update to 1.0.3
 
 * Tue Jan 29 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
-- Update to 1.0.2 for remi repo
+- Update to 1.0.2
 - license now provided http://bugs.horde.org/ticket/11967
 - new test layout
 
