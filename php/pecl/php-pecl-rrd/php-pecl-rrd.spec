@@ -17,18 +17,13 @@
 
 Summary:      PHP Bindings for rrdtool
 Name:         %{?scl_prefix}php-pecl-rrd
-Version:      1.1.2
-Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      1.1.3
+Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?pre}.tgz
-
-# http://svn.php.net/viewvc?view=revision&revision=332619
-# http://svn.php.net/viewvc?view=revision&revision=332620
-# fix build with rrdtool < 1.4
-Patch0:       %{pecl_name}-svn.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 5.3.2
@@ -76,10 +71,6 @@ system for time series data.
 %setup -c -q
 
 mv %{pecl_name}-%{version} NTS
-
-cd NTS
-%patch0 -p0 -b .svn
-cd ..
 
 cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -191,6 +182,9 @@ fi
 
 
 %changelog
+* Wed Jan 15 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3 (stable)
+
 * Tue Jan 14 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
 - fix upstream patch
 
