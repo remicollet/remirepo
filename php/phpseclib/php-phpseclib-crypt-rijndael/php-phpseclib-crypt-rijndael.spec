@@ -12,6 +12,7 @@ License:        MIT
 URL:            http://phpseclib.sourceforge.net/
 Source0:        http://phpseclib.sourceforge.net/get/%{pear_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
 
@@ -39,6 +40,7 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
@@ -48,6 +50,10 @@ rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 
 %post
@@ -62,11 +68,15 @@ fi
 
 
 %files
+%defattr(-, root, root, -)
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Crypt
 
 
 %changelog
+* Wed Jan 15 2014 Remi Collet <rpms@famillecollet.com> - 0.3.5-2
+- backport for remi repo
+
 * Sat Jan  4 2014 Adam Williamson <awilliam@redhat.com> - 0.3.5-2
 - various review style cleanups
 
