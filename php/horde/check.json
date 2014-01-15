@@ -1,5 +1,6 @@
 {
 	"channel":"pear.horde.org",
+	"fedora":"/work/fedora/horde",
 	"blacklist":[
 		"Horde_ActiveSync"
 	],

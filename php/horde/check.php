@@ -26,6 +26,9 @@ function loadConf($verb) {
     if (!isset($conf['channel'])) {
         $conf['channel'] = "pear.php.net";
     }
+    if (!isset($conf['fedora'])) {
+        $conf['fedora'] = "";
+    }
 
     return $conf;
 }
@@ -42,6 +45,11 @@ function loadFiles($verb) {
         $spec = @fopen("$file/$file.spec", "r") 
             or die("*** Can't read $file/$file.spec\n");
 
+        if ($conf['fedora'] && file_exists($conf['fedora']."/$file/$file.spec")) {
+            $fed = "*";
+        } else {
+            $fed = " ";
+        }
         $breq = $req = array();
         $name = $ver = false;
 
@@ -66,6 +74,7 @@ function loadFiles($verb) {
                 'requires'  => array_unique($req),
                 'mandatory' => array(),
                 'optional'  => array(),
+                'fedora'    => $fed,
             );
             if ($verb) {
                 echo "+ $name version $ver\n";
@@ -150,11 +159,11 @@ function showBuildOrder($verb) {
                         && !(isset($conf['ignore'][$pack['name']]) && in_array($need, $conf['ignore'][$pack['name']]))) {
                         $cant[$pack['name']][] = $need;
                         $ok = false;
-                    }   
-                }   
+                    }
+                }
                 if (count($cant[$pack['name']])>1) {
                     unset($cant[$pack['name']]);
-                }          
+                }
             }
             if ($ok) {
                 $done[$key] = $pack;
@@ -168,7 +177,7 @@ function showBuildOrder($verb) {
                 }
                 $br = (count($tmp) ? "BR: ".implode(', ', $tmp) : '');
                 $rr = (count($pack['requires']) ? "R: ".implode(', ', $pack['requires']) : '');
-                printf("\t%-25s %-10s %s %s %s\n", $pack['name'], $pack['version'], $br, $ir, $rr);
+                printf("\t%s %-25s %-10s %s %s %s\n", $pack['fedora'], $pack['name'], $pack['version'], $br, $ir, $rr);
                 $i++;
             }
         }
