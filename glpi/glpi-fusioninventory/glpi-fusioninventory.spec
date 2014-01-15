@@ -8,7 +8,7 @@
 #
 %global pluginname    fusioninventory
 %global glpi_version  0.84.0
-%global plug_version  1.2
+%global plug_version  2.0
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -22,14 +22,8 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/1084/fusioninventory-for-glpi_0.84+1.2.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/1198/fusioninventory-for-glpi_0.84+2.0.tar.gz
 Source1:        %{name}-httpd.conf
-
-# http://forge.fusioninventory.org/issues/2259
-Patch0:         %{pluginname}-install.patch
-
-# To be followed
-# http://forge.fusioninventory.org/issues/2271 mysql_real_escape_string
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -67,8 +61,6 @@ Serveur FusionInventory embarqué dans une extension GLPI.
 %prep
 %setup -q -c
 
-%patch0 -p0
-
 mv %{pluginname}/docs docs
 
 # dos2unix to avoid rpmlint warnings
@@ -82,8 +74,7 @@ mv %{pluginname}/README.asciidoc docs/
 
 # .htaccess replaced by a httpd config file
 rm %{pluginname}/install/mysql/.htaccess \
-   %{pluginname}/scripts/.htaccess \
-   %{pluginname}/tools/.htaccess
+   %{pluginname}/scripts/.htaccess
 
 
 %build
@@ -137,11 +128,14 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/pics
 %{_datadir}/glpi/plugins/%{pluginname}/report
 %{_datadir}/glpi/plugins/%{pluginname}/scripts
-%{_datadir}/glpi/plugins/%{pluginname}/tools
 %{_datadir}/glpi/plugins/%{pluginname}/snmpmodels
 
 
 %changelog
+* Wed Jan 15 2014 Remi Collet <remi@fedoraproject.org> - 1:0.84.0.2.0-1
+- update to 0.84+2.0 for GLPI 0.84
+- set allow_url_fopen=On in config
+
 * Fri Aug 03 2012 Remi Collet <remi@fedoraproject.org> - 1:0.84.0.1.2-1
 - update to 0.84+1.2 for GLPI 0.84
 - add explicit dependency on required extensions
