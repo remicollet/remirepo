@@ -6,7 +6,6 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Predis
 %global pear_channel pear.nrk.io
@@ -19,7 +18,7 @@
 
 Name:           php-nrk-Predis
 Version:        0.8.5
-Release:        0%{?dist}
+Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
 Group:          Development/Libraries
@@ -139,6 +138,9 @@ fi
 
 
 %changelog
+* Thu Jan 16 2014 Remi Collet <remi@fedoraproject.org> - 0.8.5-1
+- Update to 0.8.5 (stable)
+
 * Wed Jan  8 2014 Remi Collet <remi@fedoraproject.org> - 0.8.5-0
 - Update to 0.8.5 (test build)
 
