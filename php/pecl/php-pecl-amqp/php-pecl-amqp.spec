@@ -7,6 +7,7 @@
 # Please, preserve the changelog entries
 #
 
+%{?scl:          %scl_package        php-pecl-amqp}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -14,35 +15,37 @@
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   amqp
+%global prever      beta1
 
 Summary:       Communicate with any AMQP compliant server
-Name:          php-pecl-amqp
-Version:       1.3.0
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Name:          %{?scl_prefix}php-pecl-amqp
+Version:       1.4.0
+Release:       0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
-Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel > 5.2.0
-BuildRequires: php-pear
+BuildRequires: %{?scl_prefix}php-devel > 5.2.0
+BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: librabbitmq-devel >= 0.4.1
 %if %{with_tests}
-BuildRequires: php-json
+BuildRequires: %{?scl_prefix}php-json
 BuildRequires: rabbitmq-server
 %endif
 
-Requires:         php(zend-abi) = %{php_zend_api}
-Requires:         php(api) = %{php_core_api}
+Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:         %{?scl_prefix}php(api) = %{php_core_api}
 Requires(post):   %{__pecl}
 Requires(postun): %{__pecl}
 
-Provides:         php-%{pecl_name} = %{version}
-Provides:         php-%{pecl_name}%{?_isa} = %{version}
-Provides:         php-pecl(%{pecl_name}) = %{version}
-Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{!?scl:1}
 # Other third party repo stuff
 %if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -51,6 +54,7 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -69,13 +73,13 @@ from any queue.
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
 # Upstream often forget to change this
 extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -241,6 +245,10 @@ fi
 
 
 %changelog
+* Thu Jan 16 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.1.beta1
+- update to 1.4.0beta1
+- adapt for SCL
+
 * Mon Nov 25 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0 (beta)
 - cleanups for Copr
