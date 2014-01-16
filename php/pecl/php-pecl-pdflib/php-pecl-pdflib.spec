@@ -17,7 +17,7 @@
 Summary:        Package for generating PDF files
 Summary(fr):    Extension pour générer des fichiers PDF
 Name:           php-pecl-pdflib
-Version:        3.0.3
+Version:        3.0.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
@@ -172,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 16 2014 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- Update to 3.0.4 (stable)
+
 * Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
 - Update to 3.0.3 (stable)
 
