@@ -1,7 +1,7 @@
-diff -up redis-2.8.3/redis.conf.rpmconf redis-2.8.3/redis.conf
---- redis-2.8.3/redis.conf.rpmconf	2013-12-11 15:31:57.000000000 +0100
-+++ redis-2.8.3/redis.conf	2014-01-06 14:06:11.630724369 +0100
-@@ -33,6 +33,7 @@ port 6379
+diff -up redis-2.8.4/redis.conf.rpmconf redis-2.8.4/redis.conf
+--- redis-2.8.4/redis.conf.rpmconf	2014-01-13 17:09:58.000000000 +0100
++++ redis-2.8.4/redis.conf	2014-01-16 07:58:47.979995707 +0100
+@@ -53,6 +53,7 @@ port 6379
  #
  # bind 192.168.1.100 10.0.0.1
  # bind 127.0.0.1
@@ -9,7 +9,7 @@ diff -up redis-2.8.3/redis.conf.rpmconf redis-2.8.3/redis.conf
  
  # Specify the path for the Unix socket that will be used to listen for
  # incoming connections. There is no default, so Redis will not listen
-@@ -71,7 +72,7 @@ loglevel notice
+@@ -91,7 +92,7 @@ loglevel notice
  # Specify the log file name. Also the empty string can be used to force
  # Redis to log on the standard output. Note that if you use standard
  # output for logging but daemonize, logs will be sent to /dev/null
@@ -18,7 +18,7 @@ diff -up redis-2.8.3/redis.conf.rpmconf redis-2.8.3/redis.conf
  
  # To enable logging to the system logger, just set 'syslog-enabled' to yes,
  # and optionally update the other syslog parameters to suit your needs.
-@@ -155,7 +156,7 @@ dbfilename dump.rdb
+@@ -175,7 +176,7 @@ dbfilename dump.rdb
  # The Append Only File will also be created inside this directory.
  # 
  # Note that you must specify a directory here, not a file name.
@@ -27,9 +27,9 @@ diff -up redis-2.8.3/redis.conf.rpmconf redis-2.8.3/redis.conf
  
  ################################# REPLICATION #################################
  
-diff -up redis-2.8.3/sentinel.conf.rpmconf redis-2.8.3/sentinel.conf
---- redis-2.8.3/sentinel.conf.rpmconf	2014-01-06 14:06:20.401749268 +0100
-+++ redis-2.8.3/sentinel.conf	2014-01-06 14:06:27.617769753 +0100
+diff -up redis-2.8.4/sentinel.conf.rpmconf redis-2.8.4/sentinel.conf
+--- redis-2.8.4/sentinel.conf.rpmconf	2014-01-16 07:58:47.979995707 +0100
++++ redis-2.8.4/sentinel.conf	2014-01-16 07:59:27.792112057 +0100
 @@ -4,6 +4,11 @@
  # The port that this sentinel instance will run on
  port 26379
@@ -41,4 +41,4 @@ diff -up redis-2.8.3/sentinel.conf.rpmconf redis-2.8.3/sentinel.conf
 +
  # sentinel monitor <master-name> <ip> <redis-port> <quorum>
  #
- # Tells Sentinel to monitor this slave, and to consider it in O_DOWN
+ # Tells Sentinel to monitor this master, and to consider it in O_DOWN

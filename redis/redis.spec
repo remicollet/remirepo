@@ -24,8 +24,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.3
-Release:          %{?prever:0.}2%{?prever:.%{prever}}%{?dist}
+Version:          2.8.4
+Release:          1%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -39,7 +39,7 @@ Source4:          %{name}.tmpfiles
 Source5:          sentinel.init
 Source6:          sentinel.service
 # Update configuration for Fedora
-Patch0:           %{name}-2.8.3-conf.patch
+Patch0:           %{name}-2.8.4-conf.patch
 Patch1:           %{name}-deps-PIC.patch
 Patch2:           %{name}-deps-unbundle-jemalloc.patch
 
@@ -236,6 +236,10 @@ fi
 
 
 %changelog
+* Thu Jan 16 2014 Remi Collet <remi@fedoraproject.org> - 2.8.4-1
+- Redis 2.8.4
+  upgrade urgency: MODERATE for Redis and Sentinel.
+
 * Mon Jan  6 2014 Remi Collet <remi@fedoraproject.org> - 2.8.3-2
 - add redis-sentinel command (link to redis-server)
 - don't rely on config for daemonize and pidfile
