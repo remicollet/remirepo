@@ -2,8 +2,8 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 
 Name: phpMyAdmin
-Version: 4.1.4
-Release: 2%{?dist}
+Version: 4.1.5
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -152,6 +152,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Fri Jan 17 2014 Remi Collet <rpms@famillecollet.com> 4.1.5-1
+- update to 4.1.5 (bugfix)
+
 * Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 4.1.4-2
 - fix for f20 and unversioned docdir
 
