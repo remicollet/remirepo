@@ -10,20 +10,18 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
+%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
 %global pecl_name   event
 %global with_zts    0%{?__ztsphp:1}
 
 Summary:       Provides interface to libevent library
 Name:          php-pecl-%{pecl_name}
-Version:       1.8.1
-Release:       2%{?dist}
+Version:       1.9.0
+Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bitbucket.org/osmanov/pecl-event/pull-request/4
-Patch0:        %{pecl_name}-ver.patch
 
 BuildRequires: php-devel > 5.4
 BuildRequires: php-pear
@@ -62,23 +60,7 @@ Version 1.0.0 introduces:
 %prep
 %setup -q -c 
 
-# fix role for tests
-# https://bitbucket.org/osmanov/pecl-event/pull-request/6
-sed -e '/name="test/s/role="src"/role="test"/' \
-    -e '/EXPERIMENTAL/d' \
-    -i package.xml
-
 mv %{pecl_name}-%{version} NTS
-cd NTS
-%patch0 -p1
-
-# Sanity check, really often broken
-extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
-   exit 1
-fi
-cd ..
 
 # duplicate for ZTS build
 %if %{with_zts}
@@ -96,6 +78,7 @@ EOF
 cd NTS
 %{_bindir}/phpize
 %configure \
+    --with-event-libevent-dir=%{_prefix} \
     --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
@@ -107,6 +90,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
+    --with-event-libevent-dir=%{_prefix} \
     --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
@@ -142,11 +126,25 @@ done
 
 
 %check
-cd NTS
 if [ -f %{php_extdir}/sockets.so ]; then
   OPTS="-d extension=sockets.so"
 fi
 
+: Minimal load test for NTS extension
+%{__php} --no-php-ini $OPTS  \
+    --define extension=NTS/modules/%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
+%if %{with_zts}
+: Minimal load test for ZTS extension
+%{__ztsphp} --no-php-ini $OPTS  \
+    --define extension=ZTS/modules/%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+%endif
+
+%if %{with_tests}
+cd NTS
+: Upstream test suite for NTS extension
 SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
@@ -156,16 +154,14 @@ REPORT_EXIT_STATUS=1 \
 
 %if %{with_zts}
 cd ../ZTS
-if [ -f %{php_ztsextdir}/sockets.so ]; then
-  OPTS="-d extension=sockets.so"
-fi
-
+: Upstream test suite for ZTS extension
 SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
+%endif
 %endif
 
 
@@ -194,6 +190,10 @@ fi
 
 
 %changelog
+* Fri Jan 17 2014 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
+- Update to 1.9.0 (stable)
+- add option to disable tests during build
+
 * Sat Jan 11 2014 Remi Collet <remi@fedoraproject.org> - 1.8.1-2
 - install doc in pecl doc_dir
 - install tests in pecl test_dir
