@@ -6,52 +6,64 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{?scl:          %scl_package        php-pecl-event}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
+%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
 %global pecl_name   event
+%global with_zts    0%{?__ztsphp:1}
 
 Summary:       Provides interface to libevent library
-Name:          php-pecl-event
-Version:       1.8.1
+Name:          %{?scl_prefix}php-pecl-%{pecl_name}
+Version:       1.9.0
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://bitbucket.org/osmanov/pecl-event/pull-request/4
-Patch0:        %{pecl_name}-ver.patch
-
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel > 5.4
-BuildRequires: php-pear
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{?scl_prefix}php-devel > 5.4
+BuildRequires: %{?scl_prefix}php-pear
+%if 0%{?fedora} < 15 && 0%{?rhel} < 7
+# libvent from SCL as not available in system
+BuildRequires: %{?scl_prefix}libevent-devel >= 2.0.2
+%else
 BuildRequires: libevent-devel >= 2.0.2
+%endif
 BuildRequires: openssl-devel
 BuildRequires: pkgconfig
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
-Requires:      php-sockets%{?_isa}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php-sockets%{?_isa}
 
-Provides:      php-%{pecl_name} = %{version}
-Provides:      php-%{pecl_name}%{?_isa} = %{version}
-Provides:      php-pecl(%{pecl_name}) = %{version}
-Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{!?scl:1}
+%if "%{php_version}" > "5.4"
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
+%endif
 
-
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -67,19 +79,12 @@ Version 1.0.0 introduces:
 %prep
 %setup -q -c 
 
-cd %{pecl_name}-%{version}
-%patch0 -p1
-
-# Sanity check, really often broken
-extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
-   exit 1
-fi
-cd ..
+mv %{pecl_name}-%{version} NTS
 
 # duplicate for ZTS build
-cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
+%if %{with_zts}
+cp -pr NTS ZTS
+%endif
 
 # Drop in the bit of configuration
 cat > %{pecl_name}.ini << 'EOF'
@@ -89,9 +94,10 @@ EOF
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure \
+    --with-event-libevent-dir=%{_prefix} \
     --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
@@ -99,9 +105,11 @@ cd %{pecl_name}-%{version}
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
+    --with-event-libevent-dir=%{_prefix} \
     --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
@@ -109,6 +117,7 @@ cd ../%{pecl_name}-zts
     --with-event-pthreads \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -116,41 +125,65 @@ rm -rf %{buildroot}
 
 # use z-event.ini to ensure event.so load "after" sockets.so
 : Install the NTS stuff
-make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
 
+%if %{with_zts}
 : Install the ZTS stuff
-make -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+%endif
 
 : Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+: Test and Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
-cd %{pecl_name}-%{version}
 if [ -f %{php_extdir}/sockets.so ]; then
   OPTS="-d extension=sockets.so"
 fi
 
+: Minimal load test for NTS extension
+%{__php} --no-php-ini $OPTS  \
+    --define extension=NTS/modules/%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
+%if %{with_zts}
+: Minimal load test for ZTS extension
+%{__ztsphp} --no-php-ini $OPTS  \
+    --define extension=ZTS/modules/%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+%endif
+
+%if %{with_tests}
+cd NTS
+: Upstream test suite for NTS extension
 SKIP_ONLINE_TESTS=1 \
-TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{__php} -n run-tests.php
 
-cd ../%{pecl_name}-zts
-if [ -f %{php_ztsextdir}/sockets.so ]; then
-  OPTS="-d extension=sockets.so"
-fi
-
+%if %{with_zts}
+cd ../ZTS
+: Upstream test suite for ZTS extension
 SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
+%endif
+%endif
 
 
 %post
@@ -169,17 +202,30 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc %{pecl_name}-%{version}/{CREDITS,LICENSE,README.md}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Fri Jan 17 2014 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
+- Update to 1.9.0 (stable)
+- add option to disable tests during build
+- adapt for SCL
+
+* Sat Jan 11 2014 Remi Collet <remi@fedoraproject.org> - 1.8.1-2
+- install doc in pecl doc_dir
+- install tests in pecl test_dir
+- open https://bitbucket.org/osmanov/pecl-event/pull-request/6
+
 * Mon Oct 07 2013 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
 - Update to 1.8.1 (stable)
 - drop patch merged upstream
