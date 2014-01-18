@@ -3,7 +3,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Compress
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Horde Compression API
 
@@ -23,9 +23,8 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml, Required
 Requires:       php(language) >= 5.3.0
-Requires:       php-date
-Requires:       php-pcre
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
@@ -34,10 +33,15 @@ Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
-# Optional
+# From package.xml, Optional
 Requires:       php-zlib
-Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
+# From phpcompatinfo reporet form version 2.0.5
+Requires:       php-date
+Requires:       php-pcre
+# Optional and not available: Horde_Mapi
+# Optional and implicitly required Horde_Stream_Filter
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -87,8 +91,10 @@ done | tee ../%{pear_name}.lang
 %check
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+rm TnefTest.php # requires Horde_Mapi
+
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -115,6 +121,10 @@ fi
 
 
 %changelog
+* Sat Jan 18 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- add optional requires: Horde_Icalendar
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
