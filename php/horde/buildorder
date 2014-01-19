@@ -37,7 +37,7 @@ Build order
 	* Horde_Kolab_Format        2.0.5      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	* Horde_Ldap                2.0.3      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_LoginTasks          2.0.2      BR: Horde_Test, Horde_Date  R: Horde_Translation, Horde_Date
-	  Horde_Mapi                1.0.0      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Exception
+	  Horde_Mapi                1.0.2      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Exception
 	* Horde_Notification        2.0.1      BR: Horde_Test I: Horde_Alarm R: Horde_Exception, Horde_Util, Horde_Alarm, Horde_Nls
 	* Horde_Oauth               2.0.1        R: Horde_Exception, Horde_Http
 	  Horde_Pack                1.0.0      BR: Horde_Test, Horde_Compress_Fast, Horde_Exception  R: Horde_Compress_Fast, Horde_Exception
@@ -79,7 +79,7 @@ Build order
 	  Horde_Smtp                1.3.1      BR: Horde_Test  R: Horde_Exception, Horde_Mail, Horde_Support, Horde_Imap_Client, Horde_Socket_Client
 	* Horde_Alarm               2.0.5      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Exception, Horde_Translation, Horde_Db, Horde_Mail, Horde_Notification, Horde_Perms, Horde_Prefs
 	* Horde_Auth                2.1.1      BR: Horde_Test, Horde_Db I: Horde_Kolab_Session R: Horde_Exception, Horde_Util, Horde_Db, Horde_History, Horde_Http, Horde_Imap_Client, Horde_Imsp, Horde_Ldap, Horde_Lock
-	* Horde_Compress            2.0.5      BR: Horde_Test, Horde_Stream_Filter  R: Horde_Exception, Horde_Translation, Horde_Util, Horde_Icalendar
+	* Horde_Compress            2.0.6      BR: Horde_Test, Horde_Stream_Filter  R: Horde_Exception, Horde_Translation, Horde_Util, Horde_Icalendar, Horde_Mapi
 	* Horde_Data                2.0.4      BR: Horde_Test  R: Horde_Browser, Horde_Exception, Horde_Icalendar, Horde_Mail, Horde_Mime, Horde_Translation, Horde_Util
 	* Horde_Itip                2.0.5      BR: Horde_Test, Horde_Icalendar  R: Horde_Icalendar, Horde_Mime, Horde_Prefs
 	* Horde_Kolab_Server        2.0.2      BR: Horde_Test  R: Horde_Auth, Horde_Exception, Horde_Date, Horde_Ldap
