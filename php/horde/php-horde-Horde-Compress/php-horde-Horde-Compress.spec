@@ -1,9 +1,18 @@
+# spec file for php-horde-Horde-Compress
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    Horde_Compress
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Compress
-Version:        2.0.5
+Version:        2.0.6
 Release:        1%{?dist}
 Summary:        Horde Compression API
 
@@ -37,6 +46,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-zlib
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mapi) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mapi) <  2.0.0
 # From phpcompatinfo reporet form version 2.0.5
 Requires:       php-date
 Requires:       php-pcre
@@ -91,8 +102,6 @@ done | tee ../%{pear_name}.lang
 %check
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-rm TnefTest.php # requires Horde_Mapi
-
 phpunit \
     --include-path=$src/lib \
     -d date.timezone=UTC \
@@ -121,6 +130,10 @@ fi
 
 
 %changelog
+* Sun Jan 19 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+- add optional requires: Horde_Mapi
+
 * Sat Jan 18 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - add optional requires: Horde_Icalendar
