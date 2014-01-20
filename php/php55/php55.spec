@@ -108,7 +108,7 @@ Version: 5.5.8
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -175,6 +175,7 @@ Patch91: php-5.3.7-oci8conf.patch
 # Fixes for tests
 
 # WIP
+Patch100: php-5.5.8-bug66412.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -884,6 +885,7 @@ rm -rf ext/json
 # security patches
 
 # WIP patch
+%patch100 -p0 -b .bug66412
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1858,6 +1860,9 @@ fi
 
 
 %changelog
+* Mon Jan 20 2014 Remi Collet <rcollet@redhat.com> 5.5.8-2
+- test build for https://bugs.php.net/66412
+
 * Wed Jan  8 2014 Remi Collet <rcollet@redhat.com> 5.5.8-1
 - update to 5.5.8
 - drop conflicts with other opcode caches as both can
