@@ -12,8 +12,8 @@
 %global plug_name  opcache
 
 Name:          php-pecl-%{pecl_name}
-Version:       7.0.2
-Release:       2%{?dist}
+Version:       7.0.3
+Release:       1%{?dist}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
@@ -25,6 +25,11 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:       %{plug_name}.ini
 Source2:       %{plug_name}-default.blacklist
 
+# Missing in archive
+# https://github.com/zendtech/ZendOptimizerPlus/issues/162
+Source3:       https://raw2.github.com/zendtech/ZendOptimizerPlus/e8e28cd95c8aa660c28c2166da679b50deb50faa/tests/blacklist.inc
+Source4:       https://raw2.github.com/zendtech/ZendOptimizerPlus/e8e28cd95c8aa660c28c2166da679b50deb50faa/tests/php_cli_server.inc
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.2.0
 BuildRequires: php-pear
@@ -34,11 +39,6 @@ Requires(postun): %{__pecl}
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 
-# Only one opcode cache could be enabled
-Conflicts:     php-eaccelerator
-Conflicts:     php-xcache
-# APC 3.1.15 offer an option to disable opcache
-Conflicts:     php-pecl-apc < 3.1.15
 Provides:      php-pecl(%{plug_name}) = %{version}%{?prever}
 Provides:      php-pecl(%{plug_name})%{?_isa} = %{version}%{?prever}
 Provides:      php-%{plug_name} = %{version}-%{release}
@@ -64,15 +64,7 @@ bytecode optimization patterns that make code execution faster.
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
-cd NTS
-
-# Sanity check, really often broken
-extver=$(sed -n '/#define ACCELERATOR_VERSION/{s/.* "//;s/".*$//;p}' ZendAccelerator.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
-   exit 1
-fi
-cd ..
+cp %{SOURCE3} %{SOURCE4} NTS/tests/
 
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
@@ -175,6 +167,13 @@ fi
 
 
 %changelog
+* Mon Jan 20 2014 Remi Collet <remi@fedoraproject.org> - 7.0.3-1
+- Update to 7.0.3
+- open https://github.com/zendtech/ZendOptimizerPlus/issues/162
+
+* Tue Jan 14 2014 Remi Collet <rcollet@redhat.com> - 7.0.2-3
+- drop conflicts with other opcode cache
+
 * Mon Jul 15 2013 Remi Collet <rcollet@redhat.com> - 7.0.2-1
 - fix ZTS configuration
 
