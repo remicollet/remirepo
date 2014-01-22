@@ -6,10 +6,11 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-ssdeep}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%{?scl:          %scl_package         php-pecl-ssdeep}
+%{!?scl:         %global _root_prefix %{_prefix}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name ssdeep
@@ -109,7 +110,7 @@ EOF
 cd NTS
 %{_bindir}/phpize
 %configure \
-    --with-ssdeep=%{_prefix} \
+    --with-ssdeep=%{_root_prefix} \
     --with-php-config=%{_bindir}/php-config \
     --with-libdir=%{_lib}
 make %{?_smp_mflags}
@@ -118,7 +119,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
-    --with-ssdeep=%{_prefix} \
+    --with-ssdeep=%{_root_prefix} \
     --with-php-config=%{_bindir}/zts-php-config \
     --with-libdir=%{_lib}
 make %{?_smp_mflags}
