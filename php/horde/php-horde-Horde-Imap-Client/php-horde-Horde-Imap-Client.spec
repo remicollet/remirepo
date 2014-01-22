@@ -6,12 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Imap_Client
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.17.0
+Version:        2.17.1
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -126,7 +126,7 @@ done | tee ../%{pear_name}.lang
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -156,6 +156,9 @@ fi
 
 
 %changelog
+* Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 2.17.1-1
+- Update to 2.17.1
+
 * Sat Jan 18 2014 Remi Collet <remi@fedoraproject.org> - 2.17.0-1
 - Update to 2.17.0
 - add dependency: Horde_Pack >= 1.0.0
