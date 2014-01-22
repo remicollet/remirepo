@@ -12,15 +12,15 @@
 %global useselinux 1
 
 Name:           glpi
-Version:        0.84.3
-Release:        2%{?dist}
+Version:        0.84.4
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/1615/glpi-0.84.3.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1656/glpi-0.84.4.tar.gz
 
 Source1:        glpi-httpd.conf
 Source2:        glpi-config_path.php
@@ -58,7 +58,6 @@ Requires:       php-ZendFramework2-Loader
 Requires:       php-ZendFramework2-ServiceManager
 Requires:       php-ZendFramework2-Stdlib
 Requires:       php-ZendFramework2-Version
-
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       php-pear(components.ez.no/Graph) >= 1.5
 Requires:       gnu-free-sans-fonts
@@ -217,7 +216,7 @@ rm -rf %{buildroot}
 semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_sysconfdir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_sys_content_t    -r s0 "%{_datadir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_log_t            -r s0 "%{_localstatedir}/log/%{name}(/.*)?"
-# keep httpd_sys_script_rw_t (httpd_var_lib_t prevent dir creation)
+# keep httpd_sys_rw_content_t (httpd_var_lib_t prevent dir creation)
 semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
 # files created by app
 restorecon -R %{_sysconfdir}/%{name}
@@ -278,6 +277,10 @@ fi
 
 
 %changelog
+* Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 0.84.4-1
+- update to 0.84.4
+  https://forge.indepnet.net/projects/glpi/versions/993
+
 * Thu Nov 21 2013 Remi Collet <remi@fedoraproject.org> - 0.84.3-2
 - fix SELinux context #1032995
   use httpd_sys_rw_content_t instead of httpd_sys_script_rw_t
