@@ -1,0 +1,40 @@
+diff -up ssdeep-2.10/configure.ac.old ssdeep-2.10/configure.ac
+--- ssdeep-2.10/configure.ac.old	2014-01-22 11:39:10.000000000 +0100
++++ ssdeep-2.10/configure.ac	2014-01-22 11:40:35.000000000 +0100
+@@ -21,16 +21,6 @@ case $host in
+ esac
+ 
+ 
+-# Bring additional directories where things might be found into our
+-# search path. I don't know why autoconf doesn't do this by default
+-for spfx in /usr/local /opt/local /sw ; do
+-    echo checking ${spfx}/include
+-    if test -d ${spfx}/include; then
+-        CPPFLAGS="-I${spfx}/include $CPPFLAGS"
+-        LDFLAGS="-L${spfx}/lib $LDFLAGS"
+-    fi
+-done
+-
+ AC_C_BIGENDIAN
+ AC_SYS_LARGEFILE
+ 
+diff -up ssdeep-2.10/configure.old ssdeep-2.10/configure
+--- ssdeep-2.10/configure.old	2014-01-22 11:39:00.000000000 +0100
++++ ssdeep-2.10/configure	2014-01-22 11:40:21.000000000 +0100
+@@ -15462,16 +15462,6 @@ $as_echo "#define __LINUX__ 1" >>confdef
+ esac
+ 
+ 
+-# Bring additional directories where things might be found into our
+-# search path. I don't know why autoconf doesn't do this by default
+-for spfx in /usr/local /opt/local /sw ; do
+-    echo checking ${spfx}/include
+-    if test -d ${spfx}/include; then
+-        CPPFLAGS="-I${spfx}/include $CPPFLAGS"
+-        LDFLAGS="-L${spfx}/lib $LDFLAGS"
+-    fi
+-done
+-
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether byte ordering is bigendian" >&5
+ $as_echo_n "checking whether byte ordering is bigendian... " >&6; }
+ if ${ac_cv_c_bigendian+:} false; then :
