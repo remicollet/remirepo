@@ -9,13 +9,16 @@
 
 Name:      ssdeep
 Version:   2.10
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Compute context triggered piecewise hashes
 Group:     Development/Tools
 
 License:   GPLv2+
 URL:       http://ssdeep.sourceforge.net/
 Source0:   http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+
+# Drop /usr/local and /opt from build path
+Patch0:    %{name}-2.10-build.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -50,6 +53,10 @@ that use libfuzzy.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .old
+# avoid autotools being re-run
+touch -r aclocal.m4 configure configure.ac
 
 
 %build
@@ -96,5 +103,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 2.10-2
+- cleanup build path (comment from review #1056460)
+
 * Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 2.10-1
 - initial package
