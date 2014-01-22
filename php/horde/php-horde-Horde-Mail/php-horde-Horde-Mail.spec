@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear:       %global __pear %{_bindir}/pear}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Mail
 %global pear_channel pear.horde.org
 
@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mail
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        Horde Mail Library
 
@@ -129,6 +129,9 @@ fi
 
 
 %changelog
+* Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- Update to 2.1.4
+
 * Sat Jan 18 2014 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 
