@@ -7,12 +7,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Compress
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Compress
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        Horde Compression API
 
@@ -130,6 +130,9 @@ fi
 
 
 %changelog
+* Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+
 * Sun Jan 19 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 - add optional requires: Horde_Mapi
