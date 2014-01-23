@@ -3,7 +3,7 @@
 %global zendver     20121212
 %global pdover      20080721
 # Extension version
-%global opcachever  7.0.3-dev
+%global opcachever  7.0.3
 %global oci8ver     1.4.10
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
@@ -100,13 +100,13 @@
 %endif
 
 #global snapdate      201308300430
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.8
+Version: 5.5.9
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 2%{?dist}
 %endif
@@ -175,7 +175,6 @@ Patch91: php-5.3.7-oci8conf.patch
 # Fixes for tests
 
 # WIP
-Patch100: php-5.5.8-bug66412.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -885,7 +884,6 @@ rm -rf ext/json
 # security patches
 
 # WIP patch
-%patch100 -p0 -b .bug66412
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1860,6 +1858,9 @@ fi
 
 
 %changelog
+* Thu Jan 23 2014 Remi Collet <rcollet@redhat.com> 5.5.9-0.1.RC1
+- test build of 5.5.9RC1
+
 * Mon Jan 20 2014 Remi Collet <rcollet@redhat.com> 5.5.8-2
 - test build for https://bugs.php.net/66412
 
