@@ -17,23 +17,17 @@
 
 Summary:        Wrapper for libfuzzy library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# http://git.php.net/?p=pecl/text/ssdeep.git;a=blob_plain;f=LICENSE;hb=HEAD
-Source1:        LICENSE
-
-# http://git.php.net/?p=pecl/text/ssdeep.git;a=patch;h=8c82ad02f89aa46ff772e676fda83d31e58fc8e8
-Patch0:         %{pecl_name}.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  ssdeep-devel > 2.5
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
 BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  ssdeep-devel > 2.5
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -81,18 +75,6 @@ This extensions wraps the ssdeep fuzzy hashing API created by Jesse Kornblum.
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
-
-cd NTS
-cp %{SOURCE1} .
-%patch0 -p1
-
-# Sanity check, really often broken
-extver=$(sed -n '/define PHP_SSDEEP_VERSION/{s/.* "//;s/".*$//;p}' php_ssdeep.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
-   exit 1
-fi
-cd ..
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -147,7 +129,7 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
-for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -211,5 +193,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4 (stable)
+- drop upstream patch
+
 * Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package, version 1.0.3 (stable)
