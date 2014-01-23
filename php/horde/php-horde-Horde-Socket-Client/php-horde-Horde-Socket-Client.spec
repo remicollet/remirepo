@@ -6,13 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear:       %global __pear %{_bindir}/pear}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Socket_Client
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Socket-Client
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Horde Socket Client
 
@@ -91,6 +90,9 @@ fi
 
 
 %changelog
+* Thu Jan 23 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+
 * Thu Oct 31 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0
 

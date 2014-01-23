@@ -13,7 +13,7 @@ Build order
 	* Horde_Memcache            2.0.5        R: Horde_Exception
 	* Horde_Nls                 2.0.3        R: Horde_Util, Horde_Translation
 	* Horde_Scribe              2.0.1        R: Horde_Thrift
-	* Horde_Socket_Client       1.1.0        R: Horde_Exception
+	* Horde_Socket_Client       1.1.1        R: Horde_Exception
 	* Horde_Support             2.1.1       I: Horde_Test R: Horde_Exception, Horde_Stream_Wrapper
 	* Horde_Browser             2.0.4        R: Horde_Exception, Horde_Util
 	* Horde_Cli                 2.0.4       I: Horde_Test R: Horde_Support, Horde_Translation
