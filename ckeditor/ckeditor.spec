@@ -1,5 +1,5 @@
 Name:		ckeditor
-Version:	4.1
+Version:	4.3.2
 Release:	1%{?dist}
 Summary:	WYSIWYG text editor to be used inside web pages
 
@@ -23,17 +23,27 @@ features found on desktop editing applications like Microsoft Word and
 OpenOffice.
 
 
+%package samples
+Summary:        Sample files for %{name}
+Group:          Documentation
+
+%description samples
+%{summary}.
+
+
 %prep
 %setup -q -c
 
 # documentation
-mkdir doc
-mv %{name}/*.md doc/
-mv %{name}/samples doc/
+mv %{name}/*.md .
+mv %{name}/samples .
+
+# Delete bundled flash files
+rm -r samples/plugins/htmlwriter/{assets,outputforflash.html}
 
 # fix library path in provided samples
-sed -e 's:src="../ckeditor.js":src="/ckeditor/ckeditor.js":' \
-    -i doc/samples/*.html
+find samples -name \*.html |
+  xargs sed -i -e 's:src="\(../\)*ckeditor.js":src="/ckeditor/ckeditor.js":'
 
 
 %build
@@ -61,12 +71,26 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc doc/*
+%doc *.md
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/%{name}
 
+%files samples
+%defattr(-,root,root,-)
+%doc LICENSE.md samples/*
+
 
 %changelog
+* Thu Jan 23 2014 Remi Collet <remi@fedoraproject.org> - 4.3.2-1
+- Update to 4.3.2
+
+* Thu Aug 15 2013 Orion Poplawski <orion@cora.nwra.com> 4.2-1
+- Update to 4.2
+
+* Thu Aug 15 2013 Orion Poplawski <orion@cora.nwra.com> 4.1-3
+- Remove bundled flash code
+- Move samples to sub-package
+
 * Sun Apr  7 2013 Remi Collet <remi@fedoraproject.org> - 4.1-1
 - Update to 4.1
 - provided ckeditor_basic.js for compatibility with 3.6
