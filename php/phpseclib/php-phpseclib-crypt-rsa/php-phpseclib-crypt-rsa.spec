@@ -1,4 +1,3 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name Crypt_RSA
 
@@ -15,6 +14,7 @@ Source0:        http://phpseclib.sourceforge.net/get/%{pear_name}-%{version}.tgz
 # https://sourceforge.net/p/phpseclib/bugs/4/
 Patch0:         %{pear_name}-role.patch
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
 
@@ -51,6 +51,7 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
@@ -60,6 +61,10 @@ rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 
 %post
@@ -74,6 +79,7 @@ fi
 
 
 %files
+%defattr(-, root, root, -)
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Crypt/RSA.php
 %dir %{pear_cfgdir}/%{pear_name}
@@ -81,6 +87,9 @@ fi
 
 
 %changelog
+* Sat Jan 24 2014 Remi Collet <rpms@famillecollet.com> - 0.3.5-3
+- backport for remi repo
+
 * Thu Jan 09 2014 Adam Williamson <awilliam@redhat.com> - 0.3.5-3
 - fix up config file install and use (from Remi Collet)
 
