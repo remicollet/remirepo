@@ -1,0 +1,43 @@
+Description: Fix Crypt_Blowfish conflict
+ Rename Crypt/Blowfish.php into Crypt/Blowfish-phpseclib.php so it can
+ be co-installed with Crypt_Blowfish from PEAR (php-crypt-blowfish
+ package).
+Author: David Prévot <taffit@tilapin.org>
+Bug: https://github.com/phpseclib/phpseclib/issues/125
+Last-Update: 2013-06-29
+--- a/Net/SSH2.php
++++ b/Net/SSH2.php
+@@ -1329,14 +1329,14 @@
+                 break;
+             case 'blowfish-cbc':
+                 if (!class_exists('Crypt_Blowfish')) {
+-                    require_once('Crypt/Blowfish.php');
++                    require_once('Crypt/Blowfish-phpseclib.php');
+                 }
+                 $this->encrypt = new Crypt_Blowfish();
+                 $this->encrypt_block_size = 8;
+                 break;
+             case 'blowfish-ctr':
+                 if (!class_exists('Crypt_Blowfish')) {
+-                    require_once('Crypt/Blowfish.php');
++                    require_once('Crypt/Blowfish-phpseclib.php');
+                 }
+                 $this->encrypt = new Crypt_Blowfish(CRYPT_BLOWFISH_MODE_CTR);
+                 $this->encrypt_block_size = 8;
+@@ -1405,14 +1405,14 @@
+                 break;
+             case 'blowfish-cbc':
+                 if (!class_exists('Crypt_Blowfish')) {
+-                    require_once('Crypt/Blowfish.php');
++                    require_once('Crypt/Blowfish-phpseclib.php');
+                 }
+                 $this->decrypt = new Crypt_Blowfish();
+                 $this->decrypt_block_size = 8;
+                 break;
+             case 'blowfish-ctr':
+                 if (!class_exists('Crypt_Blowfish')) {
+-                    require_once('Crypt/Blowfish.php');
++                    require_once('Crypt/Blowfish-phpseclib.php');
+                 }
+                 $this->decrypt = new Crypt_Blowfish(CRYPT_BLOWFISH_MODE_CTR);
+                 $this->decrypt_block_size = 8;
