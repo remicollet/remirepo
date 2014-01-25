@@ -1,5 +1,4 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name Net_SSH2
 
 Name:           php-phpseclib-net-ssh2
@@ -15,6 +14,7 @@ Source0:        http://phpseclib.sourceforge.net/get/%{pear_name}-%{version}.tgz
 # library to avoid conflict with php-pear-Crypt-Blowfish
 Patch0:         php-phpseclib-Net-SSH2-Crypt_Blowfish_conflict.patch
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
 
@@ -56,6 +56,7 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
 
@@ -65,6 +66,10 @@ rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
 install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 
 %post
@@ -79,11 +84,15 @@ fi
 
 
 %files
+%defattr(-, root, root, -)
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Net
 
 
 %changelog
+* Sat Jan 25 2014 Remi Collet <rpms@famillecollet.com> - 0.3.5-3
+- backport for remi repo
+
 * Thu Jan 16 2014 Adam Williamson <awilliam@redhat.com> - 0.3.5-3
 - fix up the patch for crypt_blowfish rename per review
 
