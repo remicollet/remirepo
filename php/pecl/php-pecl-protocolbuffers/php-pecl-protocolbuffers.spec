@@ -16,7 +16,7 @@
 
 Summary:        Protocol buffers in PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.2.0
+Version:        0.2.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -69,11 +69,6 @@ are compiled against the "old" format.
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
-
-# Fix roles
-sed -e '/name="test/s/role="doc"/role="test"/' \
-    -e '/phpunit.xml/d' \
-    -i package.xml
 
 cd NTS
 # Sanity check, really often broken
@@ -197,5 +192,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 26 2014 Remi Collet <remi@fedoraproject.org> - 0.2.1-1
+- Update to 0.2.1 (alpha)
+
 * Sun Jan 26 2014 Remi Collet <remi@fedoraproject.org> - 0.2.0-1
 - initial package, version 0.2.0 (alpha)
