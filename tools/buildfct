@@ -38,10 +38,10 @@ mocketc=/home/rpmbuild/SPECS/remirepo/tools/mock
 #alias mockfc13x="              mock --configdir=$mocketc -r fc13x              rebuild "
 #alias mockfc13xt="             mock --configdir=$mocketc -r fc13xt             rebuild "
 
-alias mockfc14i="setarch i686  mock --configdir=$mocketc -r fc14i  --arch i686 rebuild "
-alias mockfc14it="setarch i686 mock --configdir=$mocketc -r fc14it --arch i686 rebuild "
-alias mockfc14x="              mock --configdir=$mocketc -r fc14x              rebuild "
-alias mockfc14xt="             mock --configdir=$mocketc -r fc14xt             rebuild "
+#alias mockfc14i="setarch i686  mock --configdir=$mocketc -r fc14i  --arch i686 rebuild "
+#alias mockfc14it="setarch i686 mock --configdir=$mocketc -r fc14it --arch i686 rebuild "
+#alias mockfc14x="              mock --configdir=$mocketc -r fc14x              rebuild "
+#alias mockfc14xt="             mock --configdir=$mocketc -r fc14xt             rebuild "
 
 alias mockfc15i="setarch i686  mock --configdir=$mocketc -r fc15i  --arch i686 rebuild "
 alias mockfc15it="setarch i686 mock --configdir=$mocketc -r fc15it --arch i686 rebuild "
@@ -104,7 +104,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 20 -1 14)
+  for i in $(seq 20 -1 15)
   do
     echo -n "$(date +%X) fc$i "
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}i --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
@@ -194,7 +194,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 20 -1 14)
+  for i in $(seq 20 -1 15)
   do
     echo -n "$(date +%X) fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}x rebuild $1 && echo " Ok." || echo " Error !"
