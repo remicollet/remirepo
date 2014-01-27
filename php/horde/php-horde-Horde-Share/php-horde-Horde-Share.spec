@@ -6,8 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Share
 %global pear_channel pear.horde.org
 
@@ -30,7 +29,7 @@ BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Perms) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
 
 Requires(post): %{__pear}
@@ -45,7 +44,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
