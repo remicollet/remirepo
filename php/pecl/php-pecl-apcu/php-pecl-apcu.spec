@@ -6,15 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package php-pecl-apcu}
+%{!?scl:         %global pkg_name %{name}}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
-
 %global pecl_name apcu
 %global with_zts  0%{?__ztsphp:1}
 
-Name:           php-pecl-apcu
+Name:           %{?scl_prefix}php-pecl-apcu
 Summary:        APC User Cache
 Version:        4.0.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
@@ -28,33 +29,34 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/APCu
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Obsoletes:      php-apcu < 4.0.0-1
-Provides:       php-apcu = %{version}
-Provides:       php-apcu%{?_isa} = %{version}
-Provides:       php-pecl(apcu) = %{version}
-Provides:       php-pecl(apcu)%{?_isa} = %{version}
+Obsoletes:      %{?scl_prefix}php-apcu < 4.0.0-1
+Provides:       %{?scl_prefix}php-apcu = %{version}
+Provides:       %{?scl_prefix}php-apcu%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(apcu) = %{version}
+Provides:       %{?scl_prefix}php-pecl(apcu)%{?_isa} = %{version}
 %if "%{php_version}" < "5.5"
-Conflicts:      php-pecl-apc < 4
+Conflicts:      %{?scl_prefix}php-pecl-apc < 4
 %else
-Obsoletes:      php-pecl-apc < 4
+Obsoletes:      %{?scl_prefix}php-pecl-apc < 4
 %endif
 # Same provides than APC, this is a drop in replacement
-Provides:       php-apc = %{version}
-Provides:       php-apc%{?_isa} = %{version}
-Provides:       php-pecl-apc = %{version}
-Provides:       php-pecl-apc%{?_isa} = %{version}
-Provides:       php-pecl(APC) = %{version}
-Provides:       php-pecl(APC)%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-apc = %{version}
+Provides:       %{?scl_prefix}php-apc%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-apc = %{version}
+Provides:       %{?scl_prefix}php-pecl-apc%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(APC) = %{version}
+Provides:       %{?scl_prefix}php-pecl(APC)%{?_isa} = %{version}
 
+%if 0%{!?scl:1}
 # Other third party repo stuff
 %if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -63,6 +65,7 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -97,19 +100,20 @@ superior support for local storage of PHP variables.
 Summary:       APCu developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
 %if "%{php_version}" < "5.5"
-Conflicts:     php-pecl-apc-devel < 4
+Conflicts:     %{?scl_prefix}php-pecl-apc-devel < 4
 %else
-Obsoletes:     php-pecl-apc-devel < 4
+Obsoletes:     %{?scl_prefix}php-pecl-apc-devel < 4
 %endif
-Provides:      php-pecl-apc-devel = %{version}-%{release}
-Provides:      php-pecl-apc-devel%{?_isa} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-apc-devel = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-apc-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using APCu.
 
 
+%if 0%{!?scl:1}
 %package -n apcu-panel
 Summary:       APCu control panel
 Group:         Applications/Internet
@@ -130,6 +134,7 @@ Provides:      apc-panel = %{version}-%{release}
 %description -n apcu-panel
 This package provides the APCu control panel, with Apache
 configuration, available on http://localhost/apcu-panel/
+%endif
 
 
 %prep
@@ -170,6 +175,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{pecl_name}.ini
@@ -183,6 +189,7 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+%if 0%{!?scl:1}
 # Install the Control Panel
 # Pages
 install -D -m 644 -p NTS/apc.php  \
@@ -193,6 +200,8 @@ install -D -m 644 -p %{SOURCE2} \
 # Panel config
 install -D -m 644 -p %{SOURCE3} \
         %{buildroot}%{_sysconfdir}/apcu-panel/conf.php
+%endif
+
 
 # Test & Documentation
 cd NTS
@@ -233,6 +242,10 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 
@@ -243,12 +256,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
@@ -268,6 +277,7 @@ rm -rf %{buildroot}
 %endif
 
 
+%if 0%{!?scl:1}
 %files -n apcu-panel
 %defattr(-,root,root,-)
 # Need to restrict access, as it contains a clear password
@@ -275,6 +285,7 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/apcu-panel/conf.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/apcu-panel.conf
 %{_datadir}/apcu-panel
+%endif
 
 
 %changelog
@@ -282,6 +293,8 @@ rm -rf %{buildroot}
 - Update to 4.0.3 (beta)
 - install doc in pecl doc_dir
 - install tests in pecl test_dir (in devel)
+- drop panel sub-package in SCL
+- add SCL stuff
 
 * Mon Sep 16 2013 Remi Collet <rcollet@redhat.com> - 4.0.2-2
 - fix perm on config dir
