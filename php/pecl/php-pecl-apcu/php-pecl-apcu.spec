@@ -6,14 +6,18 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir %{_includedir}/php}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name apcu
+%global with_zts  0%{?__ztsphp:1}
 
 Name:           php-pecl-apcu
 Summary:        APC User Cache
-Version:        4.0.2
-Release:        2%{?dist}.1
+Version:        4.0.3
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
@@ -26,6 +30,7 @@ URL:            http://pecl.php.net/package/APCu
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
+BuildRequires:  pcre-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -50,9 +55,21 @@ Provides:       php-pecl-apc%{?_isa} = %{version}
 Provides:       php-pecl(APC) = %{version}
 Provides:       php-pecl(APC)%{?_isa} = %{version}
 
-# Filter private shared
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+
+%if 0%{?fedora} < 20
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -119,18 +136,28 @@ configuration, available on http://localhost/apcu-panel/
 %setup -qc
 mv %{pecl_name}-%{version} NTS
 
+# Fix file roles
+sed -e '/LICENSE/s/role="src"/role="doc"/' \
+    -e '/NOTICE/s/role="src"/role="doc"/' \
+    -e '/README.md/s/role="src"/role="doc"/' \
+    -e '/TECHNOTES.txt/s/role="src"/role="doc"/' \
+    -e '/TODO/s/role="src"/role="doc"/' \
+    -i package.xml
+
 cd NTS
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_APC_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
+extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}.
    exit 1
 fi
 cd ..
 
+%if %{with_zts}
 # duplicate for ZTS build
 cp -pr NTS ZTS
+%endif
 
 
 %build
@@ -139,10 +166,12 @@ cd NTS
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -151,9 +180,11 @@ rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
+%if %{with_zts}
 # Install the ZTS stuff
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -170,6 +201,15 @@ install -D -m 644 -p %{SOURCE2} \
 install -D -m 644 -p %{SOURCE3} \
         %{buildroot}%{_sysconfdir}/apcu-panel/conf.php
 
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
 cd NTS
@@ -178,23 +218,26 @@ cd NTS
 %{_bindir}/php -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
 %{_bindir}/php -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apc$'
 
-# Upstream test suite
+# Upstream test suite fr NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
+%if %{with_zts}
 cd ../ZTS
 
 %{__ztsphp}    -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
 %{__ztsphp}    -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apc$'
 
+# Upstream test suite fr ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
+%endif
 
 
 %post
@@ -213,19 +256,23 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc NTS/{NOTICE,LICENSE,README.md}
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
-
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-
+%if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 %files devel
 %defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
+%endif
+
 
 %files -n apcu-panel
 %defattr(-,root,root,-)
@@ -237,6 +284,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 27 2014 Remi Collet <remi@fedoraproject.org> - 4.0.3-1
+- Update to 4.0.3 (beta)
+- install doc in pecl doc_dir
+- install tests in pecl test_dir (in devel)
+
 * Mon Sep 16 2013 Remi Collet <rcollet@redhat.com> - 4.0.2-2
 - fix perm on config dir
 - always provides php-pecl-apc-devel and apc-panel
