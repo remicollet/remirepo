@@ -127,7 +127,7 @@ Obsoletes:     apc-panel < 4
 %endif
 Provides:      apc-panel = %{version}-%{release}
 
-%description  -n apcu-panel
+%description -n apcu-panel
 This package provides the APCu control panel, with Apache
 configuration, available on http://localhost/apcu-panel/
 
@@ -144,20 +144,14 @@ sed -e '/LICENSE/s/role="src"/role="doc"/' \
     -e '/TODO/s/role="src"/role="doc"/' \
     -i package.xml
 
-cd NTS
-
-# Sanity check, really often broken
-extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
-   exit 1
-fi
-cd ..
-
 %if %{with_zts}
 # duplicate for ZTS build
 cp -pr NTS ZTS
 %endif
+
+# Fix path to configuration file
+sed -e s:apc.conf.php:%{_sysconfdir}/apcu-panel/conf.php:g \
+    -i  NTS/apc.php
 
 
 %build
@@ -191,9 +185,8 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Install the Control Panel
 # Pages
-install -d -m 755 %{buildroot}%{_datadir}/apcu-panel
-sed -e s:apc.conf.php:%{_sysconfdir}/apcu-panel/conf.php:g \
-    NTS/apc.php >%{buildroot}%{_datadir}/apcu-panel/index.php
+install -D -m 644 -p NTS/apc.php  \
+        %{buildroot}%{_datadir}/apcu-panel/index.php
 # Apache config
 install -D -m 644 -p %{SOURCE2} \
         %{buildroot}%{_sysconfdir}/httpd/conf.d/apcu-panel.conf
@@ -218,7 +211,7 @@ cd NTS
 %{_bindir}/php -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
 %{_bindir}/php -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apc$'
 
-# Upstream test suite fr NTS extension
+# Upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
@@ -231,7 +224,7 @@ cd ../ZTS
 %{__ztsphp}    -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
 %{__ztsphp}    -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apc$'
 
-# Upstream test suite fr ZTS extension
+# Upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
@@ -264,6 +257,7 @@ rm -rf %{buildroot}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %endif
+
 
 %files devel
 %defattr(-,root,root,-)
