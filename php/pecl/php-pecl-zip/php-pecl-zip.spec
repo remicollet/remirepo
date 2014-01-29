@@ -16,7 +16,7 @@
 Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         php-pecl-zip
-Version:      1.12.3
+Version:      1.12.4
 Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if %{with_libzip}
 License:      PHP
@@ -197,6 +197,9 @@ fi
 
 
 %changelog
+* Wed Jan 29 2014 Remi Collet <remi@fedoraproject.org> - 1.12.4-1
+- Update to 1.12.4 (stable) for libzip 0.11.2
+
 * Thu Dec 12 2013 Remi Collet <remi@fedoraproject.org> - 1.12.3-1
 - Update to 1.12.3 (stable)
 - drop merged patch
