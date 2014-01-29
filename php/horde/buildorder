@@ -36,7 +36,7 @@ Build order
 	* Horde_Injector            2.0.2      BR: Horde_Test  R: Horde_Exception
 	* Horde_Kolab_Format        2.0.5      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	* Horde_Ldap                2.0.3      BR: Horde_Test  R: Horde_Exception, Horde_Util
-	* Horde_LoginTasks          2.0.2      BR: Horde_Test, Horde_Date  R: Horde_Translation, Horde_Date
+	* Horde_LoginTasks          2.0.3      BR: Horde_Test, Horde_Date  R: Horde_Translation, Horde_Date
 	* Horde_Mapi                1.0.2      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Exception
 	* Horde_Notification        2.0.1      BR: Horde_Test I: Horde_Alarm R: Horde_Exception, Horde_Util, Horde_Alarm, Horde_Nls
 	* Horde_Oauth               2.0.1        R: Horde_Exception, Horde_Http
