@@ -4,13 +4,13 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  gmagick
-%global prever     RC2
+%global prever     RC3
 %global with_zts   0%{?__ztsphp:1}
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.6
-Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -192,7 +192,10 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 
 
 %changelog
-* Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 1.1.6-0.2.RC1
+* Thu Jan 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.6-0.3.RC3
+- Update to 1.1.6RC3 (beta)
+
+* Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 1.1.6-0.2.RC2
 - Update to 1.1.6RC2 (beta)
 
 * Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 1.1.6-0.1.RC1
