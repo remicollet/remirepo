@@ -1,11 +1,18 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-phpunit-git
+#
+# Copyright (c) 2010-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name Text_Template
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-Text-Template
-Version:        1.1.4
-Release:        3%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        Simple template engine
 
 Group:          Development/Libraries
@@ -77,6 +84,9 @@ fi
 
 
 %changelog
+* Thu Jan 30 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -115,4 +125,3 @@ fi
 
 * Sun Sep 26 2010 Remi Collet <Fedora@famillecollet.com> - 1.0.0-1
 - initial generated spec + clean
-
