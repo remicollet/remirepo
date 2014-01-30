@@ -6,11 +6,13 @@ Name:           php-opencloud
 Version:        1.6.0
 Release:        4%{?dist}
 Summary:        PHP SDK for OpenStack/Rackspace APIs
+Group:          Development/Libraries
 
-License:        ASL 2.0 
+License:        ASL 2.0
 URL:            http://php-opencloud.com/
 Source0:        https://github.com/rackspace/php-opencloud/archive/%{commit}/%{name}-%{version}-%{shortcommit}.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-phpunit-PHPUnit
 
 Requires:       php-spl php-curl php-date php-fileinfo php-hash php-json
@@ -31,6 +33,7 @@ and the Rackspace subclass).
 
 %package doc
 Summary:       Documentation for OpenStack/Rackspace APIs PHP SDK
+Group:         Development/Libraries
 
 %description doc
 %{summary}
@@ -48,9 +51,14 @@ sed -i 's/\r$//' docs/api/css/jquery.treeview.css
 
 
 %install
+rm -rf %{buildroot}
 INSTALL_DIR=%{buildroot}%{_datadir}/php
 mkdir -p $INSTALL_DIR
 cp -a lib/%{vendor} $INSTALL_DIR
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %check
@@ -58,6 +66,7 @@ phpunit -d date.timezone=UTC .
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.md TODO.md composer.json CONTRIBUTORS.md TODO.md
 %{_datadir}/php/%{vendor}
 
@@ -66,6 +75,9 @@ phpunit -d date.timezone=UTC .
 
 
 %changelog
+* Thu Jan 30 2014 Remi Collet <rpms@famillecollet.com> - 1.6.0-4
+- backport 1.6.0 for remi repo
+
 * Thu Jan 30 2014 Gregor Tätzner <brummbq@fedoraproject.org> - 1.6.0-4
 - obsolete php-cloudfiles
 
