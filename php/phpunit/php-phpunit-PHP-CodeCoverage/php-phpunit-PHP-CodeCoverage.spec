@@ -11,7 +11,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        1.2.13
+Version:        1.2.14
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -41,7 +41,7 @@ Requires:       php-pear(PEAR) >= 1.9.4
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/File_Iterator) >= 1.3.0
 Requires:       php-pear(%{pear_channel}/PHP_TokenStream) >= 1.1.3
-Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.1.1
+Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.2.0
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -99,6 +99,10 @@ fi
 
 
 %changelog
+* Fri Jan 31 2014 Remi Collet <remi@fedoraproject.org> - 1.2.14-1
+- Update to 1.2.14
+- raise dependency on Text_Template 1.2.0
+
 * Tue Sep 10 2013 Remi Collet <remi@fedoraproject.org> - 1.2.13-1
 - Update to 1.2.13
 
