@@ -1,0 +1,30 @@
+Don't test EDH-RSA-DES-CBC-SHA cipher, it seems to be removed from openssl
+which now makes mariadb/mysql FTBFS because openssl_1 test fails
+
+Related: #1044565
+
+
+diff -up mariadb-5.5.34/mysql-test/r/openssl_1.result.p20 mariadb-5.5.34/mysql-test/r/openssl_1.result
+--- mariadb-5.5.34/mysql-test/r/openssl_1.result.p20	2014-01-06 11:51:18.878640731 +0100
++++ mariadb-5.5.34/mysql-test/r/openssl_1.result	2014-01-06 11:51:45.364678942 +0100
+@@ -196,8 +196,6 @@ Ssl_cipher	DHE-RSA-AES256-SHA
+ Variable_name	Value
+ Ssl_cipher	EDH-RSA-DES-CBC3-SHA
+ Variable_name	Value
+-Ssl_cipher	EDH-RSA-DES-CBC-SHA
+-Variable_name	Value
+ Ssl_cipher	RC4-SHA
+ select 'is still running; no cipher request crashed the server' as result from dual;
+ result
+diff -up mariadb-5.5.34/mysql-test/t/openssl_1.test.p20 mariadb-5.5.34/mysql-test/t/openssl_1.test
+--- mariadb-5.5.34/mysql-test/t/openssl_1.test.p20	2014-01-06 11:51:18.830640662 +0100
++++ mariadb-5.5.34/mysql-test/t/openssl_1.test	2014-01-06 11:51:18.879640733 +0100
+@@ -218,7 +218,7 @@ DROP TABLE t1;
+ # Common ciphers to openssl and yassl
+ --exec $MYSQL --host=localhost -e "SHOW STATUS LIKE 'Ssl_cipher';" --ssl-cipher=DHE-RSA-AES256-SHA
+ --exec $MYSQL --host=localhost -e "SHOW STATUS LIKE 'Ssl_cipher';" --ssl-cipher=EDH-RSA-DES-CBC3-SHA
+---exec $MYSQL --host=localhost -e "SHOW STATUS LIKE 'Ssl_cipher';" --ssl-cipher=EDH-RSA-DES-CBC-SHA
++#--exec $MYSQL --host=localhost -e "SHOW STATUS LIKE 'Ssl_cipher';" --ssl-cipher=EDH-RSA-DES-CBC-SHA
+ --exec $MYSQL --host=localhost -e "SHOW STATUS LIKE 'Ssl_cipher';" --ssl-cipher=RC4-SHA
+ --disable_query_log
+ --disable_result_log

@@ -75,6 +75,7 @@ Patch21: mysql-dh1024.patch
 Patch22: mysql-innodbwarn.patch
 # http://bugs.mysql.com/68999
 Patch23: mysql-openssl.patch
+Patch24: mysql-ssltest.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gperf
@@ -278,6 +279,7 @@ rm -f Docs/mysql.info
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
