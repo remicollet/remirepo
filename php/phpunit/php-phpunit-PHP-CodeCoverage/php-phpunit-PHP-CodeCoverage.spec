@@ -11,7 +11,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        1.2.14
+Version:        1.2.15
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -99,6 +99,9 @@ fi
 
 
 %changelog
+* Mon Feb 03 2014 Remi Collet <remi@fedoraproject.org> - 1.2.15-1
+- Update to 1.2.15
+
 * Fri Jan 31 2014 Remi Collet <remi@fedoraproject.org> - 1.2.14-1
 - Update to 1.2.14
 - raise dependency on Text_Template 1.2.0
