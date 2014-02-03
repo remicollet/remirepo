@@ -1,4 +1,4 @@
-# spec file for php-phpunit-git
+# spec file for php-phpunit-Text-Template
 #
 # Copyright (c) 2010-2014 Remi Collet
 # License: CC-BY-SA
@@ -22,13 +22,17 @@ Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-pear(PEAR) >= 1.9.4
 BuildRequires:  php-channel(%{channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml
+Requires:       php(language) >= 5.3.3
+Requires:       php-pear(PEAR) >= 1.9.4
 Requires:       php-channel(%{channel})
-Requires:       php-common >= 5.3.3
+# From phpcompatinfo report for version 1.2.0
 Requires:       php-spl
 
 Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
