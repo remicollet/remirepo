@@ -3,7 +3,7 @@
 %global channel pear.survivethedeepend.com
 
 Name:           php-deepend-Mockery
-Version:        0.8.0
+Version:        0.9.0
 Release:        1%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
@@ -15,12 +15,16 @@ Source1:        http://github.com/padraic/mockery/blob/master/LICENSE
 Source2:        http://github.com/padraic/mockery/blob/master/README.markdown
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildArch:      noarch
 BuildRequires:  php-pear >= 1:1.4.9-1.2
 BuildRequires:  php-channel(%{channel})
+
 Requires:       php-channel(%{channel})
-Requires:       php-common >= 5.3.2
+Requires:       php(language) >= 5.3.2
+# From phpcompatinfo report for version 0.9.0
+Requires:       php-pcre
+Requires:       php-reflection
+Requires:       php-spl
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
@@ -83,6 +87,9 @@ fi
 %doc %{pear_name}-%{version}/docdir/*
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
+- Update to 0.9.0
+
 * Fri Apr 19 2013 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
 - Update to 0.8.0 (backport)
 
