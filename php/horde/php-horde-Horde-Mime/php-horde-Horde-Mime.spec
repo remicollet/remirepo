@@ -1,4 +1,13 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Mime
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Mime
 %global pear_channel pear.horde.org
 
@@ -6,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.2.8
+Version:        2.2.9
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -148,6 +157,9 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.2.9-1
+- Update to 2.2.9
+
 * Fri Nov 22 2013 Remi Collet <remi@fedoraproject.org> - 2.2.8-1
 - Update to 2.2.8
 

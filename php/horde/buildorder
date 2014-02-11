@@ -61,8 +61,8 @@ Build order
 	* Horde_Group               2.0.2      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Util, Horde_Db
 	* Horde_History             2.2.1      BR: Horde_Test, Horde_Db  R: Horde_Db, Horde_Exception
 	* Horde_Lock                2.1.0      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Support, Horde_Db
-	* Horde_Mail                2.1.4      BR: Horde_Test I: Horde_Mime, Horde_Smtp R: Horde_Exception, Horde_Mime, Horde_Stream_Filter
-	* Horde_Mime                2.2.8      BR: Horde_Test, Horde_Support  R: Horde_Exception, Horde_Mail, Horde_Stream, Horde_Stream_Filter, Horde_Support, Horde_Text_Flowed, Horde_Translation, Horde_Util, Horde_Nls, Horde_Text_Filter
+	* Horde_Mail                2.1.5      BR: Horde_Test I: Horde_Mime, Horde_Smtp R: Horde_Exception, Horde_Mime, Horde_Stream_Filter, Horde_Stream_Wrapper
+	* Horde_Mime                2.2.9      BR: Horde_Test, Horde_Support  R: Horde_Exception, Horde_Mail, Horde_Stream, Horde_Stream_Filter, Horde_Support, Horde_Text_Flowed, Horde_Translation, Horde_Util, Horde_Nls, Horde_Text_Filter
 	* Horde_Perms               2.1.2      BR: Horde_Test, Horde_Group  R: Horde_Db, Horde_Exception, Horde_Group, Horde_Util, Horde_Translation, Horde_Tree
 	* Horde_Rdo                 2.0.2      BR: Horde_Test, Horde_Db  R: Horde_Db, Horde_Exception
 	* Horde_SessionHandler      2.2.3      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Support, Horde_Db
