@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mail
-Version:        2.1.4
+Version:        2.1.5
 Release:        1%{?dist}
 Summary:        Horde Mail Library
 
@@ -49,6 +49,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
 # From package.xml, optional
 Requires:       php-pear(Net_SMTP) >= 1.6.0
 Requires:       php-pear(Net_DNS2)
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) <  3.0.0
 # From phpcompatinfo report for version 2.1.3
 Requires:       php-intl
 Requires:       php-pcre
@@ -129,6 +131,10 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- Update to 2.1.5
+- Raise dependency on Horde_Stream_Wrapper >= 2.1.0
+
 * Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
 
