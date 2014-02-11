@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.17.1
+Version:        2.18.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -28,7 +28,7 @@ BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.4.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 
@@ -50,11 +50,11 @@ Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Socket_Client) >= 1.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Socket_Client) <  2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.4.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
@@ -72,7 +72,7 @@ Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-spl
 # Optional and implicilyt required :
-#   Horde_Compress_Fast, Horde_HashTable, Horde_Mongo, mongo
+#   Horde_Compress_Fast, Horde_HashTable, Horde_Mongo, mongo, Horde_Support
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -156,6 +156,10 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.18.0-1
+- Update to 2.18.0
+- Raise dependencies: Horde_Stream >= 1.4.0, Horde_Translation >= 2.1.0
+
 * Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 2.17.1-1
 - Update to 2.17.1
 
