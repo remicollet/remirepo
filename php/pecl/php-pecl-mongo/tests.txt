@@ -1,0 +1,21 @@
+# config
+sed -e '/DBDIR/s:/data:/tmp/data:' \
+    tests/utils/cfg.inc.template  >tests/utils/cfg.inc
+
+# select servers (use SKIP_ prefix to skip) and launch
+# see .travis.scripts/compile.sh
+MONGO_SERVER_STANDALONE=yes \
+MONGO_SERVER_STANDALONE_AUTH=yes \
+MONGO_SERVER_REPLICASET=yes \
+MONGO_SERVER_REPLICASET_AUTH=yes \
+make servers
+
+# test suite
+TEST_PHP_EXECUTABLE=/usr/bin/php \
+TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/mongo.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+/usr/bin/php -n run-tests.php
+
+# cleaups
+make stop-servers
