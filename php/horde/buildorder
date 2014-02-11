@@ -6,7 +6,7 @@ Build order
 	* Horde_Role                1.0.1        
 	* Horde_Stream_Wrapper      2.1.0       I: Horde_Test 
 	* Horde_Thrift              2.0.1        
-	* Horde_Translation         2.0.1       I: Horde_Test 
+	* Horde_Translation         2.1.0       I: Horde_Test 
 	* Horde_Util                2.3.0       I: Horde_Test, Horde_Imap_Client 
 	* Horde_Exception           2.0.4       I: Horde_Test R: Horde_Translation
 	* Horde_Imsp                2.0.5        R: Horde_Translation

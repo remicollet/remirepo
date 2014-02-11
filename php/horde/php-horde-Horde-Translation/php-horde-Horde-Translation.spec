@@ -7,8 +7,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Translation
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.1.0
+Release:        1%{?dist}
 Summary:        Horde translation library
 
 Group:          Development/Libraries
@@ -121,6 +121,9 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Tue Jan 15 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - fix include_path for tests
 
