@@ -24,12 +24,10 @@ License:        LGPLv2+
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
-# See https://github.com/horde/horde/pull/27
-Patch0:         %{pear_name}-except.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 BuildRequires:  gettext
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
@@ -39,7 +37,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-BuildRequires:  php-pear(PEAR) >= 1.7.0
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php(language) >= 5.3.0
 Requires:       php-gettext
@@ -52,14 +50,12 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Translation wrappers.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
-# Remove checksum for patched files
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
