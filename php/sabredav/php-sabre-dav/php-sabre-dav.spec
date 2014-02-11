@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    41c750da3c60a427cdd847df090ef0fc7e8f1076
+%global gh_commit    f8bad179521f434c60d836c8203f791b37a30657
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        1.8.7
+Version:        1.8.8
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -133,5 +133,8 @@ phpunit \
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 1.8.8-1
+- update to 1.8.8
+
 * Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 1.8.7-1
 - Initial packaging
