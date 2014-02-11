@@ -19,7 +19,7 @@ Release:        1%{?dist}
 Summary:        Horde Stream wrappers
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -105,7 +105,8 @@ fi
 %changelog
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
-- add tests, only run when build --with tests
+- Add tests, only run when build --with tests
+- License is now BSD
 
 * Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo (no change)
