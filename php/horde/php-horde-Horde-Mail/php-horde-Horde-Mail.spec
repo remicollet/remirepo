@@ -75,8 +75,7 @@ things like message redirection pursuant to RFC 5322 [3.6.6]).
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 cp ../package.xml %{name}.xml
