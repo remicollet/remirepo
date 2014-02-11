@@ -39,12 +39,14 @@
 
 # /usr/sbin/apsx with httpd < 2.4 and defined as /usr/bin/apxs with httpd >= 2.4
 %{!?_httpd_apxs:       %{expand: %%global _httpd_apxs       %%{_sbindir}/apxs}}
-%{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo missing-httpd-devel)}}
+%{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo 0-0)}}
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 %{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
 %{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
+
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %global with_systemd 1
@@ -75,7 +77,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.24
+Version: 5.4.25
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -1403,14 +1405,13 @@ cat files.zip >> files.common
 %endif
 
 # Install the macros file:
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
     -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
     -e "s/@PHP_VERSION@/%{version}/" \
     < %{SOURCE3} > macros.php
-install -m 644 -c macros.php \
-           $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.php
+install -m 644 -D macros.php \
+           $RPM_BUILD_ROOT%{macrosdir}/macros.php
 
 # Remove unpackaged files
 rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
@@ -1593,7 +1594,7 @@ fi
 %{_libdir}/php/build
 %{_libdir}/php-zts/build
 %{_mandir}/man1/php-config.1*
-%{_sysconfdir}/rpm/macros.php
+%{macrosdir}/macros.php
 
 %files embedded
 %defattr(-,root,root,-)
@@ -1638,6 +1639,13 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> 5.4.25-1
+- Update to 5.4.25
+  http://www.php.net/ChangeLog-5.php#5.4.25
+- Install macros to /usr/lib/rpm/macros.d where available.
+- Add configtest option to php-fpm ini script (EL)
+- Fix _httpd_mmn expansion in absence of httpd-devel
+
 * Wed Jan  8 2014 Remi Collet <rcollet@redhat.com> 5.4.24-1
 - update to 5.4.24
 
