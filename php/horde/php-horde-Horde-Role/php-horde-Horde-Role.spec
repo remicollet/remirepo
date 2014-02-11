@@ -1,11 +1,19 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Role
+#
+# Copyright (c) 2013-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Role
 %global pear_channel pear.horde.org
+%global macrosdir    %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           php-horde-Horde-Role
 Version:        1.0.1
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        PEAR installer role used to install Horde components
 
 Group:          Development/Libraries
@@ -59,8 +67,7 @@ cd %{pear_name}-%{version}
 mkdir -p %{buildroot}%{_datadir}/horde
 
 # Install new RPM macro
-mkdir -p %{buildroot}%{_sysconfdir}/rpm
-install -pm 644 macros.horde %{buildroot}%{_sysconfdir}/rpm
+install -D -pm 644 macros.horde %{buildroot}%{macrosdir}/macros.horde
 
 cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
@@ -91,7 +98,7 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
-%{_sysconfdir}/rpm/macros.horde
+%{macrosdir}/macros.horde
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/PEAR/Installer/Role/Horde
 %{pear_phpdir}/PEAR/Installer/Role/Horde.php
@@ -101,8 +108,11 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-4
+- Install macros to /usr/lib/rpm/macros.d where available
+
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
-- Update to 1.0.1 for remi repo
+- Update to 1.0.1
 - License is LGPLv2
 
 * Wed Nov  7 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
