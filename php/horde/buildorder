@@ -33,7 +33,7 @@ Build order
 	* Horde_HashTable           1.1.1      BR: Horde_Test  R: Horde_Exception, Horde_Memcache
 	* Horde_Http                2.0.4      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	* Horde_Image               2.0.5      BR: Horde_Test  R: Horde_Exception, Horde_Support, Horde_Translation, Horde_Util
-	* Horde_Injector            2.0.2      BR: Horde_Test  R: Horde_Exception
+	* Horde_Injector            2.0.3      BR: Horde_Test  R: Horde_Exception
 	* Horde_Kolab_Format        2.0.5      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	* Horde_Ldap                2.0.3      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_LoginTasks          2.0.3      BR: Horde_Test, Horde_Date  R: Horde_Translation, Horde_Date

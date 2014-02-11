@@ -1,10 +1,18 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Injector
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Injector
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Injector
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde dependency injection container
 
@@ -92,6 +100,9 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Tue Jun 18 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 
