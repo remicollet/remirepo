@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cache
-Version:        2.4.0
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        Horde Caching API
 
@@ -108,6 +108,9 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- Update to 2.4.1
+
 * Sat Jan 25 2014 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - Update to 2.4.0
 
