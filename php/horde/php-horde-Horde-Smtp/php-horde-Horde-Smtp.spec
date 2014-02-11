@@ -6,13 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Smtp
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Smtp
-Version:        1.3.1
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Horde SMTP Client
 
@@ -40,6 +39,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # From phpcompatinfo report
 Requires:       php-date
 Requires:       php-hash
@@ -124,6 +125,10 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- Update to 1.4.0
+- Add dependency on Horde_Translation
+
 * Fri Nov 22 2013 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - Update to 1.3.1
 
