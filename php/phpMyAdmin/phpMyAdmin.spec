@@ -2,7 +2,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 
 Name: phpMyAdmin
-Version: 4.1.6
+Version: 4.1.7
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -152,6 +152,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <rpms@famillecollet.com> 4.1.7-1
+- update to 4.1.7 (bugfix)
+
 * Sun Jan 26 2014 Remi Collet <rpms@famillecollet.com> 4.1.6-1
 - update to 4.1.6 (bugfix)
 
