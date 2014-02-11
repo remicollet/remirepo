@@ -1,10 +1,20 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Stream-Wrapper
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Stream_Wrapper
 %global pear_channel pear.horde.org
+# Disable because of circular dependency with Horde_Test
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Stream-Wrapper
-Version:        2.0.1
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Stream wrappers
 
@@ -15,8 +25,13 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -55,6 +70,19 @@ mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
+%check
+%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
+%else
+: Tests disabled, use --with tests to enable them
+%endif
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -71,9 +99,14 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde
 %doc %{pear_docdir}/%{pear_name}
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+- add tests, only run when build --with tests
+
 * Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo (no change)
 

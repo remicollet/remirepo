@@ -4,7 +4,7 @@ Build order
 	* Horde_Mongo               1.0.2        
 	* Horde_Queue               1.1.1        
 	* Horde_Role                1.0.1        
-	* Horde_Stream_Wrapper      2.0.1        
+	* Horde_Stream_Wrapper      2.1.0       I: Horde_Test 
 	* Horde_Thrift              2.0.1        
 	* Horde_Translation         2.0.1       I: Horde_Test 
 	* Horde_Util                2.3.0       I: Horde_Test, Horde_Imap_Client 

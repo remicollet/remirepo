@@ -19,6 +19,7 @@
 		"Horde_Form":["Horde_Core"],
 		"Horde_Vfs":["Horde_Core"],
 		"Horde_Core":["Horde_Dav"],
-		"Horde_Auth":["Horde_Kolab_Session"]
+		"Horde_Auth":["Horde_Kolab_Session"],
+		"Horde_Stream_Wrapper":["Horde_Test"]
 	}
 }
