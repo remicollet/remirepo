@@ -50,12 +50,14 @@
 
 # /usr/sbin/apsx with httpd < 2.4 and defined as /usr/bin/apxs with httpd >= 2.4
 %{!?_httpd_apxs:       %{expand: %%global _httpd_apxs       %%{_sbindir}/apxs}}
-%{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo missing-httpd-devel)}}
+%{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo 0-0)}}
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 %{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
 %{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
+
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 # systemd to manage the service
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
@@ -100,7 +102,7 @@
 %endif
 
 #global snapdate      201308300430
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -108,7 +110,7 @@ Version: 5.5.9
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1607,7 +1609,6 @@ sed -e '/blacklist_filename/s/php.d/php-zts.d/' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/opcache.ini
 
 # Install the macros file:
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
     -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
@@ -1616,8 +1617,8 @@ sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "/zts/d" \
 %endif
     < %{SOURCE3} > macros.php
-install -m 644 -c macros.php \
-           $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.php
+install -m 644 -D macros.php \
+           $RPM_BUILD_ROOT%{macrosdir}/macros.php
 
 # Remove unpackaged files
 rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
@@ -1635,7 +1636,7 @@ echo -e "\nWARNING : These %{name}-* RPM are not official Fedora / Red Hat build
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} < 18
+%if %{?fedora}%{!?fedora:99} < 19
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -1806,7 +1807,7 @@ fi
 %{_libdir}/php-zts/build
 %endif
 %{_mandir}/man1/php-config.1*
-%{_sysconfdir}/rpm/macros.php
+%{macrosdir}/macros.php
 
 %files embedded
 %defattr(-,root,root,-)
@@ -1858,8 +1859,17 @@ fi
 
 
 %changelog
+* Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> 5.5.9-1
+- Update to 5.5.9
+  http://www.php.net/ChangeLog-5.php#5.5.9
+- Install macros to /usr/lib/rpm/macros.d where available.
+- Add configtest option to php-fpm ini script (EL)
+
 * Thu Jan 23 2014 Remi Collet <rcollet@redhat.com> 5.5.9-0.1.RC1
 - test build of 5.5.9RC1
+
+* Thu Jan 23 2014 Joe Orton <jorton@redhat.com> - 5.5.8-2
+- fix _httpd_mmn expansion in absence of httpd-devel
 
 * Mon Jan 20 2014 Remi Collet <rcollet@redhat.com> 5.5.8-2
 - test build for https://bugs.php.net/66412
