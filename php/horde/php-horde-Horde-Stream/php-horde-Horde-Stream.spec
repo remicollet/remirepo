@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Stream
-Version:        1.6.0
+Version:        1.6.1
 Release:        1%{?dist}
 Summary:        Horde stream handler
 
@@ -37,11 +37,12 @@ Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 # From package.xml, optional
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # From phpcompatinfo report for version 1.6.0
 Requires:       php-json
-# Optional and yet available : Horde_String_Wrapper >= 2.1.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -104,6 +105,10 @@ fi
 
 
 %changelog
+* Wed Feb 12 2014 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
+- Update to 1.6.1
+- add optional dependencies, Horde_Stream_Wrapper, Horde_Util
+
 * Wed Feb 12 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
 - Update to 1.6.0
 
