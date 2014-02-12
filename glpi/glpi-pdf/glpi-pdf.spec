@@ -1,8 +1,8 @@
 %global pluginname   pdf
-#global svnrelease   259
+#global svnrelease   315
 
 Name:           glpi-pdf
-Version:        0.80.3
+Version:        0.84
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -16,18 +16,22 @@ License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/pdf
 
 %if 0%{?svnrelease}
-# svn export -r 259 https://forge.indepnet.net/svn/pdf/trunk pdf
-# tar czf glpi-pdf-0.8.0-259.tar.gz pdf
-Source0:        glpi-pdf-0.8.0-%{svnrelease}.tar.gz
+# svn export -r 315 https://forge.indepnet.net/svn/pdf/trunk pdf
+# tar czf glpi-pdf-0.83-315.tar.gz pdf
+Source0:        glpi-pdf-0.83-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/966/glpi-pdf-0.80.3.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1666/glpi_pdf-0.84.tar.gz
 %endif
+
+# https://forge.indepnet.net/issues/4783
+Patch0:         changeset_r361.diff
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  gettext
 
-Requires:       glpi >= 0.80.3
-Requires:       glpi <  0.81
+Requires:       glpi >= 0.84
+Requires:       glpi <  0.85
 
 
 %description
@@ -50,10 +54,16 @@ for doc in docs/* ; do
 done
 
 cd %{pluginname}
+%patch0 -p1
 
 
 %build
-# empty build
+# Regenerate the locales
+for po in %{pluginname}/locales/*.po
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
+
 
 %install
 rm -rf %{buildroot} 
@@ -74,7 +84,7 @@ rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc docs/*
+%doc docs/* %{pluginname}/LICENSE
 %dir %{_datadir}/glpi/plugins/%{pluginname}
 %dir %{_datadir}/glpi/plugins/%{pluginname}/locales
 %{_datadir}/glpi/plugins/%{pluginname}/*.php
@@ -82,9 +92,25 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/front
 %{_datadir}/glpi/plugins/%{pluginname}/inc
 %{_datadir}/glpi/plugins/%{pluginname}/pics
+# Keep here as required from interface
+%{_datadir}/glpi/plugins/%{pluginname}/LICENSE
 
 
 %changelog
+* Wed Feb 12 2014 Remi Collet <remi@fedoraproject.org> - 0.84-1
+- version 0.84 for GLPI 0.84
+  https://forge.indepnet.net/projects/pdf/versions/941
+
+* Thu Apr 19 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-2
+- add patch for 0.83.1 (Problem tab on various object)
+
+* Fri Apr 06 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-1
+- version 0.83
+  https://forge.indepnet.net/projects/pdf/versions/615
+
+* Sun Feb 26 2012 Remi Collet <Fedora@FamilleCollet.com> - 0.83-0.1.svn315
+- update to 0.83 for glpi 0.83 RC (svn snapshot)
+
 * Tue Sep 20 2011 Remi Collet <Fedora@FamilleCollet.com> - 0.80.3-1
 - version 0.80.3
   https://forge.indepnet.net/projects/pdf/versions/617
@@ -139,7 +165,7 @@ rm -rf %{buildroot}
 * Sun Nov 11 2007 Remi Collet <RPMS@FamilleCollet.com> - 0.4-0.20071111
 - update from SVN
 
-* Sat Sep 23 2007 Remi Collet <RPMS@FamilleCollet.com> - 0.3-0.20070922
+* Sun Sep 23 2007 Remi Collet <RPMS@FamilleCollet.com> - 0.3-0.20070922
 - new SVN snapshot
 
 * Mon Aug 13 2007 Remi Collet <RPMS@FamilleCollet.com> - 0.2-0.20070813

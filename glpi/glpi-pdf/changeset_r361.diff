@@ -1,0 +1,20 @@
+Index: trunk/hook.php
+===================================================================
+--- trunk/hook.php	(revision 360)
++++ trunk/hook.php	(revision 361)
+@@ -122,7 +122,7 @@
+                   `use` tinyint(1) default 0,
+                   PRIMARY KEY (`id`)
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+-      $DB->queryOrDir($query, $DB->error());
++      $DB->queryOrDie($query, $DB->error());
+    } else {
+       if (FieldExists('glpi_plugin_pdf_profiles','ID')) { //< 0.7.0
+          $migration->changeField('glpi_plugin_pdf_profiles', 'ID', 'id', 'autoincrement');
+@@ -199,4 +199,4 @@
+ 
+    return true;
+ }
+-?>
+\ No newline at end of file
++?>
