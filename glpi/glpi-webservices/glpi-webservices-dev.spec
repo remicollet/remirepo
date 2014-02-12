@@ -2,7 +2,7 @@
 #global svnrelease   322
 
 Name:           glpi-webservices
-Version:        1.4.0
+Version:        1.4.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,7 +20,7 @@ URL:            https://forge.indepnet.net/projects/webservices
 # tar czf glpi-webservices-1.3.0-322.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1623/glpi_webservices-1.4.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1664/glpi_webservices-1.4.1.tar.gz
 %endif
 
 
@@ -44,8 +44,7 @@ Cette extension fournit un serveur de services web permettant
 %prep
 %setup -q -c 
 
-rm -rf %{pluginname}/tools \
-       %{pluginname}/.htaccess \
+rm -rf %{pluginname}/.htaccess \
        %{pluginname}/scripts/.htaccess
 mv %{pluginname}/AUTHORS.txt .
 
@@ -97,6 +96,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 12 2014 Remi Collet <Fedora@FamilleCollet.com> - 1.4.1-1
+- version 1.4.1
+  https://forge.indepnet.net/projects/webservices/versions/996
+
 * Wed Nov 13 2013 Remi Collet <Fedora@FamilleCollet.com> - 1.4.0-1
 - version 1.4.0 for GLPI 0.84
   https://forge.indepnet.net/projects/webservices/versions/921
