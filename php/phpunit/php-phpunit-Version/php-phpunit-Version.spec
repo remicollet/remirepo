@@ -1,9 +1,17 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-phpunit-Version
+#
+# Copyright (c) 2013-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Version
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-Version
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Managing the version number of Git-hosted PHP projects
 
@@ -82,6 +90,9 @@ fi
 
 
 %changelog
+* Thu Feb 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+
 * Thu May 30 2013 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 
