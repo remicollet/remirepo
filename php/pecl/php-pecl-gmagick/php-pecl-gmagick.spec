@@ -1,16 +1,25 @@
+# spec file for php-pecl-gmagick
+#
+# Copyright (c) 2010-2014 Remi Collet
+# Copyright (c) 2009-2010 Pavel Alexeev
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
 %{?scl:          %scl_package        php-pecl-gmagick}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  gmagick
-%global prever     RC3
+%global prever     RC1
 %global with_zts   0%{?__ztsphp:1}
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.6
-Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.1.7
+Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -192,6 +201,9 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 
 
 %changelog
+* Fri Feb 14 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-0.1.RC1
+- Update to 1.1.7RC1 (beta)
+
 * Thu Jan 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.6-0.3.RC3
 - Update to 1.1.6RC3 (beta)
 
