@@ -16,7 +16,7 @@
 
 Summary:        Protocol buffers in PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.2.1
+Version:        0.2.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -192,6 +192,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 14 2014 Remi Collet <remi@fedoraproject.org> - 0.2.2-1
+- Update to 0.2.2 (alpha)
+
 * Sun Jan 26 2014 Remi Collet <remi@fedoraproject.org> - 0.2.1-1
 - Update to 0.2.1 (alpha)
 
