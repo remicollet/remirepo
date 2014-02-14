@@ -18,7 +18,7 @@
 
 Summary:        Extension to improve performance of Twig
 Name:           %{?scl_prefix}php-twig-ctwig
-Version:        1.15.0
+Version:        1.15.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 14 2014 Remi Collet <remi@fedoraproject.org> - 1.15.1-1
+- Update to 1.15.1
+
 * Fri Dec 06 2013 Remi Collet <remi@fedoraproject.org> - 1.15.0-1
 - Update to 1.15.0 (stable)
 - move doc in pear doc_dir (this is not from pecl channel)
