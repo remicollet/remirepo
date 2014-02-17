@@ -1,0 +1,27 @@
+From b7c3f97acf25cd0e8644be46f0a9a5f7ece2e33d Mon Sep 17 00:00:00 2001
+From: Alan Antonuk <alan.antonuk@gmail.com>
+Date: Wed, 29 Jan 2014 22:21:31 -0800
+Subject: [PATCH] Bumping version for development
+
+---
+ librabbitmq/amqp.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/librabbitmq/amqp.h b/librabbitmq/amqp.h
+index 7f4226c..fd13087 100644
+--- a/librabbitmq/amqp.h
++++ b/librabbitmq/amqp.h
+@@ -223,8 +223,8 @@
+ 
+ #define AMQP_VERSION_MAJOR 0
+ #define AMQP_VERSION_MINOR 5
+-#define AMQP_VERSION_PATCH 0
+-#define AMQP_VERSION_IS_RELEASE 1
++#define AMQP_VERSION_PATCH 1
++#define AMQP_VERSION_IS_RELEASE 0
+ 
+ 
+ /**
+-- 
+1.8.5.1
+

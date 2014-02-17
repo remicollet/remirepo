@@ -9,18 +9,19 @@
 
 Name:      librabbitmq
 Summary:   Client library for AMQP
-Version:   0.4.1
-Release:   3%{?dist}
+Version:   0.5.0
+Release:   1%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
 URL:       https://github.com/alanxz/rabbitmq-c
 
 Source0:   https://github.com/alanxz/rabbitmq-c/releases/download/v%{version}/rabbitmq-c-%{version}.tar.gz
-Patch0:    %{name}-pc.patch
+
+# for revert, switch from 0.5.0 to 0.5.1-pre
+Patch0:    %{name}-ver.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
-BuildRequires: python-simplejson
 BuildRequires: openssl-devel
 # For tools
 %if 0%{?rhel} == 5
@@ -66,9 +67,7 @@ amqp-publish        Publish a message on an AMQP server
 %prep
 %setup -q -n rabbitmq-c-%{version}
 
-%if 0%{?rhel} != 5
-%patch0 -p1
-%endif
+%patch0 -p1 -R
 
 # Copy sources to be included in -devel docs.
 cp -pr examples Examples
@@ -138,6 +137,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 17 2014 Remi Collet <remi@fedoraproject.org> - 0.5.0-1
+- update to 0.5.0
+
+* Mon Jan 13 2014 Remi Collet <remi@fedoraproject.org> - 0.4.1-4
+- drop BR python-simplejson
+
 * Tue Jan  7 2014 Remi Collet <remi@fedoraproject.org> - 0.4.1-3
 - fix broken librabbitmq.pc, #1039555
 - add check for usable librabbitmq.pc
