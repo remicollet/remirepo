@@ -1,7 +1,7 @@
 %global github_owner   doctrine
 %global github_name    doctrine2
-%global github_version 2.4.1
-%global github_commit  84373d05a4198ec380918d535abf83c454c3867f
+%global github_version 2.4.2
+%global github_commit  0363a5548d9263f979f9ca149decb9cfc66419ab
 
 # "php": ">=5.3.2"
 %global php_min_ver         5.3.2
@@ -18,7 +18,7 @@
 
 Name:      php-%{github_owner}-orm
 Version:   %{github_version}
-Release:   2%{?dist}
+Release:   1%{?dist}
 Summary:   Doctrine Object-Relational-Mapper (ORM)
 
 Group:     Development/Libraries
@@ -42,7 +42,7 @@ Requires:  php-symfony-console      >= %{symfony_min_ver}
 Requires:  php-symfony-console      <  %{symfony_max_ver}
 Requires:  php-symfony-yaml         >= %{symfony_min_ver}
 Requires:  php-symfony-yaml         <  %{symfony_max_ver}
-# phpcompatinfo (computed from v2.4.1)
+# phpcompatinfo (computed from v2.4.2)
 Requires:  php-ctype
 Requires:  php-dom
 Requires:  php-pcre
@@ -116,6 +116,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 17 2014 Remi Collet <rpms@famillecollet.com> 2.4.2-1
+- backport 2.4.2 for remi repo
+
+* Wed Feb 12 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 2.4.2-1
+- Updated to 2.4.2 (BZ #1063021)
+
 * Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 2.4.1-2
 - backport for remi repo
 
