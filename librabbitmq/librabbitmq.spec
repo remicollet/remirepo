@@ -142,7 +142,6 @@ rm -rf %{buildroot}
 - open https://github.com/alanxz/rabbitmq-c/issues/169 (version is 0.5.1-pre)
 - open https://github.com/alanxz/rabbitmq-c/issues/170 (amqp_get_server_properties)
 
-
 * Mon Jan 13 2014 Remi Collet <remi@fedoraproject.org> - 0.4.1-4
 - drop BR python-simplejson
 

@@ -10,7 +10,7 @@
 %global pear_name Text_CAPTCHA
 
 Name:           php-pear-Text-CAPTCHA
-Version:        0.5.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Generation of CAPTCHAs
 
@@ -93,8 +93,11 @@ fi
 
 
 %changelog
+* Mon Feb 17 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (stable) - no change since 0.5.0
+
 * Wed Aug 07 2013 Remi Collet <remi@fedoraproject.org> - 0.5.0-1
-- Update to 0.5.0
+- Update to 0.5.0 (beta)
 - strip sources from non-free stuff (fonts)
 
 * Mon Mar 18 2013 Remi Collet <remi@fedoraproject.org> - 0.4.6-1
