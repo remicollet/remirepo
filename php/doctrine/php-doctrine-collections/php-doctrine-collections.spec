@@ -1,16 +1,14 @@
 %global github_owner   doctrine
 %global github_name    collections
-%global github_version 1.1
-%global github_commit  819871759a4d41dab244d358507bd27d0e8b1e33
-# Additional commits after v1.1 tag
-%global github_release .20131221git%(c=%{github_commit}; echo ${c:0:7})
+%global github_version 1.2
+%global github_commit  b99c5c46c87126201899afe88ec490a25eedd6a2
 
 # "php": ">=5.3.2"
 %global php_min_ver    5.3.2
 
 Name:          php-%{github_owner}-%{github_name}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Collections abstraction library
 
 Group:         Development/Libraries
@@ -23,11 +21,11 @@ BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo (computed from v1.1 git commit 819871759a4d41dab244d358507bd27d0e8b1e33)
+# For tests: phpcompatinfo (computed from v1.2)
 BuildRequires: php-spl
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.1 git commit 819871759a4d41dab244d358507bd27d0e8b1e33)
+# phpcompatinfo (computed from v1.2)
 Requires:      php-spl
 
 # Extracted from Doctrine Common as of version 2.4
@@ -81,6 +79,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 17 2014 Remi Collet <rpms@famillecollet.com> 1.2-1
+- backport 1.2 for remi repo
+
+* Wed Feb 12 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.2-1
+- Updated to 1.2 (BZ #1061117)
+
 * Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 1.1-3.20131221git8198717
 - backport for remi repo
 
