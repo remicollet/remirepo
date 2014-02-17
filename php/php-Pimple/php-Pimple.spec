@@ -1,13 +1,13 @@
 %global github_owner   fabpot
 %global github_name    Pimple
-%global github_version 1.1.0
-%global github_commit  471c7d7c52ad6594e17b8ec33efdd1be592b5d83
+%global github_version 1.1.1
+%global github_commit  2019c145fe393923f3441b23f29bbdfaa5c58c4d
 
 %global php_min_ver    5.3.0
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       4%{?dist}
+Release:       1%{?dist}
 Summary:       A simple dependency injection container for PHP
 
 Group:         Development/Libraries
@@ -19,11 +19,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# phpci
+# phpcompatinfo (computed from v1.1.1)
 BuildRequires: php-spl
 
 Requires:      php(language) >= %{php_min_ver}
-# phpci
+# phpcompatinfo (computed from v1.1.1)
 Requires:      php-spl
 
 %description
@@ -32,7 +32,7 @@ just one file and one class.
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -40,12 +40,14 @@ just one file and one class.
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{github_name}
+mkdir -pm 0755 %{buildroot}%{_datadir}/php/%{github_name}
 cp -pr lib/* %{buildroot}%{_datadir}/php/%{github_name}/
 
 
-
 %check
+# Create PHPUnit config w/ colors turned off
+sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
+
 %{_bindir}/phpunit --include-path="./lib:./tests"
 
 
@@ -56,6 +58,12 @@ cp -pr lib/* %{buildroot}%{_datadir}/php/%{github_name}/
 
 
 %changelog
+* Mon Feb 17 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- backport 1.1.1 for remi repo
+
+* Sat Feb 15 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.1.1-1
+- Updated to 1.1.1 (BZ #1061119)
+
 * Thu Nov 21 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
 - sync remi repo with rawhide
 
