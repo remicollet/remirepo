@@ -1,7 +1,7 @@
 %global github_owner   schmittjoh
 %global github_name    php-option
-%global github_version 1.3.0
-%global github_commit  1c7e8016289d17d83ced49c56d0f266fd0568941
+%global github_version 1.4.0
+%global github_commit  5d099bcf0393908bf4ad69cc47dafb785d51f7f5
 
 %global lib_name       PhpOption
 %global php_min_ver    5.3.0
@@ -21,11 +21,11 @@ BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpci
+# For tests: phpcompatinfo (computed from 1.4.0)
 BuildRequires: php-spl
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo
+# phpcompatinfo (computed from 1.4.0)
 Requires:      php-spl
 
 %description
@@ -51,18 +51,7 @@ how he consumes these methods.
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
-
-# Rewrite tests' bootstrap (which uses Composer autoloader)
-# with simple autoloader that uses include path( cat <<'AUTOLOAD'
-( cat <<'AUTOLOAD'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
-    @include_once $src;
-});
-AUTOLOAD
-) > tests/bootstrap.php
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -70,12 +59,24 @@ AUTOLOAD
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
+mkdir -pm 0755 %{buildroot}%{_datadir}/php
 cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %check
-%{_bindir}/phpunit -d include_path="./src:./tests:.:%{pear_phpdir}"
+# Rewrite tests' bootstrap
+cat > tests/bootstrap.php <<'BOOTSTRAP'
+<?php
+spl_autoload_register(function ($class) {
+    $src = str_replace(array('\\', '_'), '/', $class).'.php';
+    @include_once $src;
+});
+BOOTSTRAP
+
+# Create PHPUnit config w/ colors turned off
+sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
+
+%{_bindir}/phpunit --include-path ./src:./tests -d date.timezone="UTC"
 
 
 %files
@@ -84,7 +85,13 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 %{_datadir}/php/%{lib_name}
 
 %changelog
-* Sun Sep 28 2013 Remi Collet <RPMS@famillecollet.com> 1.3.0-1
+* Mon Feb 17 2014 Remi Collet <RPMS@famillecollet.com> 1.4.0-1
+- backport 1.4.0 for remi repo
+
+* Wed Feb 12 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.4.0-1
+- Updated to 1.4.0 (BZ #1055299)
+
+* Sun Sep 29 2013 Remi Collet <RPMS@famillecollet.com> 1.3.0-1
 - backport 1.3.0 for remi repo
 
 * Sat Sep 28 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 1.3.0-1
