@@ -32,7 +32,7 @@ Obsoletes:     php53-ioncube-loader
 Obsoletes:     php53u-ioncube-loader
 Obsoletes:     php54-ioncube-loader
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-ioncube-loader
+Obsoletes:     php55u-ioncube-loader
 %endif
 
 # Filter private shared object
