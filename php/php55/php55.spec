@@ -110,7 +110,7 @@ Version: 5.5.9
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -177,6 +177,7 @@ Patch91: php-5.3.7-oci8conf.patch
 # Fixes for tests
 
 # WIP
+Patch100: php-bug66731.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -886,6 +887,7 @@ rm -rf ext/json
 # security patches
 
 # WIP patch
+%patch100 -p0 -b .bug66731
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1859,6 +1861,9 @@ fi
 
 
 %changelog
+* Tue Feb 18 2014 Remi Collet <rcollet@redhat.com> 5.5.9-2
+- test build for bug 66731
+
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> 5.5.9-1
 - Update to 5.5.9
   http://www.php.net/ChangeLog-5.php#5.5.9
