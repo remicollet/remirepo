@@ -1,0 +1,168 @@
+From 89f864c547014646e71862df3664e3ff33d7143d Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Tue, 18 Feb 2014 13:54:33 +0100
+Subject: [PATCH] Fixed Bug #66731 file: infinite recursion
+
+Upstream commit (available in file-5.17)
+
+https://github.com/glensc/file/commit/3c081560c23f20b2985c285338b52c7aae9fdb0f
+https://github.com/glensc/file/commit/cc9e74dfeca5265ad725acc926ef0b8d2a18ee70
+---
+ ext/fileinfo/libmagic/ascmagic.c      |  2 +-
+ ext/fileinfo/libmagic/file.h          |  2 +-
+ ext/fileinfo/libmagic/funcs.c         |  2 +-
+ ext/fileinfo/libmagic/softmagic.c     |  8 ++++---
+ ext/fileinfo/tests/cve-2014-1943.phpt | 39 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 47 insertions(+), 6 deletions(-)
+ create mode 100644 ext/fileinfo/tests/cve-2014-1943.phpt
+
+diff --git a/ext/fileinfo/libmagic/ascmagic.c b/ext/fileinfo/libmagic/ascmagic.c
+index 2090097..c0041df 100644
+--- a/ext/fileinfo/libmagic/ascmagic.c
++++ b/ext/fileinfo/libmagic/ascmagic.c
+@@ -147,7 +147,7 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
+ 		    == NULL)
+ 			goto done;
+ 		if ((rv = file_softmagic(ms, utf8_buf,
+-		    (size_t)(utf8_end - utf8_buf), TEXTTEST, text)) == 0)
++		    (size_t)(utf8_end - utf8_buf), 0, TEXTTEST, text)) == 0)
+ 			rv = -1;
+ 	}
+ 
+diff --git a/ext/fileinfo/libmagic/file.h b/ext/fileinfo/libmagic/file.h
+index 19b6872..ab5082d 100644
+--- a/ext/fileinfo/libmagic/file.h
++++ b/ext/fileinfo/libmagic/file.h
+@@ -437,7 +437,7 @@ protected int file_encoding(struct magic_set *, const unsigned char *, size_t,
+     unichar **, size_t *, const char **, const char **, const char **);
+ protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
+ protected int file_softmagic(struct magic_set *, const unsigned char *, size_t,
+-    int, int);
++    size_t, int, int);
+ protected int file_apprentice(struct magic_set *, const char *, int);
+ protected int file_magicfind(struct magic_set *, const char *, struct mlist *);
+ protected uint64_t file_signextend(struct magic_set *, struct magic *,
+diff --git a/ext/fileinfo/libmagic/funcs.c b/ext/fileinfo/libmagic/funcs.c
+index 9c0d2bd..011ca42 100644
+--- a/ext/fileinfo/libmagic/funcs.c
++++ b/ext/fileinfo/libmagic/funcs.c
+@@ -235,7 +235,7 @@ file_buffer(struct magic_set *ms, php_stream *stream, const char *inname, const
+ 
+ 	/* try soft magic tests */
+ 	if ((ms->flags & MAGIC_NO_CHECK_SOFT) == 0)
+-		if ((m = file_softmagic(ms, ubuf, nb, BINTEST,
++		if ((m = file_softmagic(ms, ubuf, nb, 0, BINTEST,
+ 		    looks_text)) != 0) {
+ 			if ((ms->flags & MAGIC_DEBUG) != 0)
+ 				(void)fprintf(stderr, "softmagic %d\n", m);
+diff --git a/ext/fileinfo/libmagic/softmagic.c b/ext/fileinfo/libmagic/softmagic.c
+index 0671fa9..7c5f628 100644
+--- a/ext/fileinfo/libmagic/softmagic.c
++++ b/ext/fileinfo/libmagic/softmagic.c
+@@ -74,13 +74,13 @@ private void cvt_64(union VALUETYPE *, const struct magic *);
+ /*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */
+ protected int
+ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
+-    int mode, int text)
++    size_t level, int mode, int text)
+ {
+ 	struct mlist *ml;
+ 	int rv, printed_something = 0, need_separator = 0;
+ 	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
+ 		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes, 0, mode,
+-		    text, 0, 0, &printed_something, &need_separator,
++		    text, 0, level, &printed_something, &need_separator,
+ 		    NULL)) != 0)
+ 			return rv;
+ 
+@@ -1680,6 +1680,8 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
+ 		break;
+ 
+ 	case FILE_INDIRECT:
++		if (offset == 0)
++			return 0;
+ 		if (nbytes < offset)
+ 			return 0;
+ 		sbuf = ms->o.buf;
+@@ -1687,7 +1689,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
+ 		ms->o.buf = NULL;
+ 		ms->offset = 0;
+ 		rv = file_softmagic(ms, s + offset, nbytes - offset,
+-		    BINTEST, text);
++		    recursion_level, BINTEST, text);
+ 		if ((ms->flags & MAGIC_DEBUG) != 0)
+ 			fprintf(stderr, "indirect @offs=%u[%d]\n", offset, rv);
+ 		rbuf = ms->o.buf;
+diff --git a/ext/fileinfo/tests/cve-2014-1943.phpt b/ext/fileinfo/tests/cve-2014-1943.phpt
+new file mode 100644
+index 0000000..b2e9c17
+--- /dev/null
++++ b/ext/fileinfo/tests/cve-2014-1943.phpt
+@@ -0,0 +1,39 @@
++--TEST--
++Bug #66731: file: infinite recursion
++--SKIPIF--
++<?php
++if (!class_exists('finfo'))
++	die('skip no fileinfo extension');
++--FILE--
++<?php
++$fd = __DIR__.'/cve-2014-1943.data';
++$fm = __DIR__.'/cve-2014-1943.magic';
++
++$a = "\105\122\000\000\000\000\000";
++$b = str_repeat("\001", 250000);
++$m =  "0           byte        x\n".
++      ">(1.b)      indirect    x\n";
++
++file_put_contents($fd, $a);
++$fi = finfo_open(FILEINFO_NONE);
++var_dump(finfo_file($fi, $fd));
++finfo_close($fi);
++
++file_put_contents($fd, $b);
++file_put_contents($fm, $m);
++$fi = finfo_open(FILEINFO_NONE, $fm);
++var_dump(finfo_file($fi, $fd));
++finfo_close($fi);
++?>
++Done
++--CLEAN--
++<?php
++@unlink(__DIR__.'/cve-2014-1943.data');
++@unlink(__DIR__.'/cve-2014-1943.magic');
++?>
++--EXPECTF--
++string(%d) "%s"
++
++Warning: finfo_file(): Failed identify data 0:(null) in %s on line %d
++bool(false)
++Done
+-- 
+1.8.4.3
+
+From bd8cd98d6d70ac50dc1de350970ed9ea479895db Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Tue, 18 Feb 2014 13:57:53 +0100
+Subject: [PATCH] Set fileinfo version to 1.0.5 (as in php 5.4, no diff)
+
+---
+ ext/fileinfo/php_fileinfo.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/fileinfo/php_fileinfo.h b/ext/fileinfo/php_fileinfo.h
+index d8dec12..354ec7b 100644
+--- a/ext/fileinfo/php_fileinfo.h
++++ b/ext/fileinfo/php_fileinfo.h
+@@ -24,7 +24,7 @@
+ extern zend_module_entry fileinfo_module_entry;
+ #define phpext_fileinfo_ptr &fileinfo_module_entry
+ 
+-#define PHP_FILEINFO_VERSION "1.0.5-dev"
++#define PHP_FILEINFO_VERSION "1.0.5"
+ 
+ #ifdef PHP_WIN32
+ #define PHP_FILEINFO_API __declspec(dllexport)
+-- 
+1.8.4.3
+

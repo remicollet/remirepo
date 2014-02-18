@@ -81,7 +81,7 @@ Version: 5.4.25
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -141,7 +141,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-#Patch101: php-wip2.patch
+Patch100: php-bug66731.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -795,6 +795,7 @@ rm -f ext/json/utf8_to_utf16.*
 
 %patch91 -p1 -b .remi-oci8
 
+%patch100 -p1 -b .bug66731
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1639,6 +1640,9 @@ fi
 
 
 %changelog
+* Tue Feb 18 2014 Remi Collet <rcollet@redhat.com> 5.4.25-2
+- upstream patch for https://bugs.php.net/66731
+
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> 5.4.25-1
 - Update to 5.4.25
   http://www.php.net/ChangeLog-5.php#5.4.25

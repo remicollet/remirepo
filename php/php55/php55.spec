@@ -887,7 +887,7 @@ rm -rf ext/json
 # security patches
 
 # WIP patch
-%patch100 -p0 -b .bug66731
+%patch100 -p1 -b .bug66731
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1862,7 +1862,7 @@ fi
 
 %changelog
 * Tue Feb 18 2014 Remi Collet <rcollet@redhat.com> 5.5.9-2
-- test build for bug 66731
+- upstream patch for https://bugs.php.net/66731
 
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> 5.5.9-1
 - Update to 5.5.9
