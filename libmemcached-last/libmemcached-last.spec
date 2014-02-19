@@ -1,8 +1,17 @@
+# spec file for libmemcached
+#
+# Copyright (c) 2009-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 # Lot of tests are broken making test suite unusable
 %global with_tests       %{?_witht_tests:1}%{!?_with_tests:0}
 %global with_sasl        1
 %global libname          libmemcached
 
+# libmemcached >= 1.0.16 have soname 11
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 Name:      libmemcached
 %else
