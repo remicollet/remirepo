@@ -19,7 +19,7 @@ Name:      %{libname}-last
 %endif
 Summary:   Client library and command line tools for memcached server
 Version:   1.0.18
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   BSD
 Group:     Applications/System
 URL:       http://libmemcached.org/
@@ -103,7 +103,9 @@ Group:      System Environment/Libraries
 
 %description libs
 This package contains the %{libname} libraries version %{version}.
+%if "%{libname}" != "%{name}"
 This package is designed to be installed beside %{libname}.
+%endif
 
 
 %prep
@@ -167,10 +169,9 @@ make test
 rm -rf %{buildroot}
 
 
-%post -p /sbin/ldconfig
+%post   libs -p /sbin/ldconfig
 
-
-%postun -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 
 %files
@@ -209,6 +210,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 19 2014 Remi Collet <remi@fedoraproject.org> - 1.0.18-2
+- cleanups
+
 * Wed Feb 19 2014 Remi Collet <remi@fedoraproject.org> - 1.0.18-1
 - update to 1.0.18
 - disable test suite (too much broken tests)
