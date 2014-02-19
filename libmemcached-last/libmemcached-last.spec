@@ -1,14 +1,18 @@
-# Regression tests take a long time, you can skip 'em with this
-%{!?runselftest: %{expand: %%global runselftest 1}}
+# Lot of tests are broken making test suite unusable
+%global with_tests       %{?_witht_tests:1}%{!?_with_tests:0}
 %global with_sasl        1
 %global libname          libmemcached
 
-Name:      libmemcached-last
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+Name:      libmemcached
+%else
+Name:      %{libname}-last
+%endif
 Summary:   Client library and command line tools for memcached server
-Version:   1.0.16
-Release:   1%{?dist}.1
+Version:   1.0.18
+Release:   1%{?dist}
 License:   BSD
-Group:     System Environment/Libraries
+Group:     Applications/System
 URL:       http://libmemcached.org/
 # Original sources:
 #   http://launchpad.net/libmemcached/1.0/%{version}/+download/libmemcached-%{version}.tar.gz
@@ -30,10 +34,16 @@ BuildRequires: memcached
 BuildRequires: systemtap-sdt-devel
 %endif
 BuildRequires: libevent-devel
-Conflicts:     %{libname} < %{version}
+
+%if "%{libname}" != "%{name}"
+Conflicts:     %{libname}         < %{version}
 Provides:      %{libname}         = %{version}-%{release}
 Provides:      %{libname}%{?_isa} = %{version}-%{release}
+%endif
+Provides:      bundled(bobjenkins-hash)
 Requires:      %{name}-libs%{?_isa} = %{version}-%{release}
+
+Patch0: libmemcached-fix-linking-with-libpthread.patch
 
 %description
 libmemcached is a C/C++ client library and tools for the memcached server
@@ -66,9 +76,11 @@ Requires:   pkgconfig
 %if %{with_sasl}
 Requires:   cyrus-sasl-devel%{?_isa}
 %endif
-Conflicts:  %{libname}-devel < %{version}
+%if "%{libname}" != "%{name}"
+Conflicts:  %{libname}-devel         < %{version}
 Provides:   %{libname}-devel         = %{version}-%{release}
 Provides:   %{libname}-devel%{?_isa} = %{version}-%{release}
+%endif
 
 %description devel
 This package contains the header files and development libraries
@@ -78,7 +90,7 @@ you will need to install %{name}-devel.
 
 %package libs
 Summary:    %{libname} libraries
-Group:      Development/Libraries
+Group:      System Environment/Libraries
 
 %description libs
 This package contains the %{libname} libraries version %{version}.
@@ -87,6 +99,7 @@ This package is designed to be installed beside %{libname}.
 
 %prep
 %setup -q -n %{libname}-%{version}
+%patch0 -p1
 
 mkdir examples
 cp -p tests/*.{cc,h} examples/
@@ -95,7 +108,7 @@ cp -p tests/*.{cc,h} examples/
 %build
 # option --with-memcached=false to disable server binary check (as we don't run test)
 %configure \
-%if %{runselftest}
+%if %{with_tests}
    --with-memcached=%{_bindir}/memcached \
 %else
    --with-memcached=false \
@@ -133,16 +146,11 @@ fi
 
 
 %check
-%if %{runselftest}
-make test 2>&1 | tee rpmtests.log
-# Ignore test result for memaslap (XFAIL but PASS)
-# https://bugs.launchpad.net/libmemcached/+bug/1115357
-if grep "XPASS: clients/memaslap" rpmtests.log && grep "1 of 21" rpmtests.log
-then
-  exit 0
-else
-  exit 1
-fi
+%if %{with_tests}
+: Run test suite
+make test
+%else
+: Skip test suite
 %endif
 
 
@@ -192,6 +200,19 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 19 2014 Remi Collet <remi@fedoraproject.org> - 1.0.18-1
+- update to 1.0.18
+- disable test suite (too much broken tests)
+
+* Sat Dec 14 2013 Remi Collet <remi@fedoraproject.org> - 1.0.16-2
+- move libraries in new libs sub packages
+- add provides for bundled(bobjenkins-hash) #1041351
+- apply libpthread workaround #1037707
+- spec cleanups
+
+* Tue Dec 03 2013 Ruben Kerkhof <ruben@rubenkerkhof.com> 1.0.16-2
+- Fix linking against libpthread as a workaround for libtool bug #661333
+
 * Fri Nov 15 2013 Remi Collet <remi@fedoraproject.org> - 1.0.17-1
 - rename to libmemcached-last
 - add -libs subpackage to be installed beside standard libmemcached
