@@ -2,6 +2,7 @@
 
 require "/usr/share/pear/Sabre/autoload.php";
 
+echo "\nInstalled versions in PEAR directory\n";
 echo "Sabre_CalDAV:    " . Sabre_CalDAV_Version::VERSION . "\n";
 echo "Sabre_CardDAV:   " . Sabre_CardDAV_Version::VERSION . "\n";
 echo "Sabre_DAV:       " . Sabre_DAV_Version::VERSION . "\n";
