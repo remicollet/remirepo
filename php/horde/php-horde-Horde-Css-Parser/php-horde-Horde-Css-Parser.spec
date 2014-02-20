@@ -7,13 +7,13 @@
 # Please, preserve the changelog entries
 #
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Css_Parser
 %global pear_channel pear.horde.org
 
 
 Name:           php-horde-Horde-Css-Parser
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
@@ -27,6 +27,8 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -77,6 +79,15 @@ mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
+%check
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit \
+    --include-path=$src/lib \
+    -d date.timezone=UTC \
+    .
+
+
 %clean
 rm -rf %{buildroot}
 
@@ -95,12 +106,16 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
+%doc %{pear_testdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Horde
 %{pear_phpdir}/Horde/Css
 
 
 %changelog
+* Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4
+
 * Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3 (no change)
 
