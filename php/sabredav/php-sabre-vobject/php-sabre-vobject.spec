@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e46d6855cfef23318e7c422cd08d36e344624675
+%global gh_commit    961546d71c332ab34ad1c5bba7f372c08b388dcf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-vobject
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Library to parse and manipulate iCalendar and vCard objects
-Version:        2.1.3
+Version:        3.1.3
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -23,7 +23,7 @@ License:        BSD
 Group:          Development/Libraries
 
 # replace composer autloader by PSR-O trivial one
-Patch0:         %{gh_project}-cmd.patch
+Patch0:         %{gh_project}-bin.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -76,8 +76,8 @@ mkdir -p %{buildroot}%{_datadir}/php
 cp -pr lib/Sabre %{buildroot}%{_datadir}/php/Sabre
 
 # Install the command
-install -Dpm 0755 bin/vobjectvalidate.php \
-         %{buildroot}/%{_bindir}/vobjectvalidate
+install -Dpm 0755 bin/vobject \
+         %{buildroot}/%{_bindir}/vobject
 
 
 %check
@@ -97,9 +97,12 @@ phpunit \
 %defattr(-,root,root,-)
 %doc ChangeLog composer.json LICENSE README.md
 %{_datadir}/php/Sabre
-%{_bindir}/vobjectvalidate
+%{_bindir}/vobject
 
 
 %changelog
+* Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 3.1.3-1
+- update to 3.1.3
+
 * Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Initial packaging
