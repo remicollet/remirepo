@@ -1,0 +1,84 @@
+From 21ac4d9fb408f803aac180503c41f3e4648f575f Mon Sep 17 00:00:00 2001
+From: Paul Annekov <paul.annekov@gmail.com>
+Date: Tue, 29 Oct 2013 23:44:25 +0200
+Subject: [PATCH] Fixed comments parsing and test added
+
+---
+ lib/Sabberworm/CSS/Parser.php       |  9 +++++----
+ tests/Sabberworm/CSS/ParserTest.php |  8 ++++++++
+ tests/files/comments.css            | 16 ++++++++++++++++
+ 3 files changed, 29 insertions(+), 4 deletions(-)
+ create mode 100644 tests/files/comments.css
+
+diff --git a/lib/Sabberworm/CSS/Parser.php b/lib/Sabberworm/CSS/Parser.php
+index 7a64074..4445322 100644
+--- a/lib/Sabberworm/CSS/Parser.php
++++ b/lib/Sabberworm/CSS/Parser.php
+@@ -546,10 +546,10 @@ private function consumeWhiteSpace() {
+ 
+ 	private function consumeComment() {
+ 		if ($this->comes('/*')) {
+-			$this->consume(2);
+-			while ($this->consumeUntil('*', false, true)) {
+-				if ($this->comes('/')) {
+-					$this->consume(1);
++			$this->consume(1);
++			while ($this->consume(1) !== '') {
++				if ($this->comes('*/')) {
++					$this->consume(2);
+ 					return true;
+ 				}
+ 			}
+@@ -567,6 +567,7 @@ private function consumeUntil($aEnd, $bIncludeEnd = false, $consumeEnd = false)
+ 		$start = $this->iCurrentPosition;
+ 
+ 		while (($char = $this->consume(1)) !== '') {
++			$this->consumeComment();
+ 			if (in_array($char, $aEnd)) {
+ 				if ($bIncludeEnd) {
+ 					$out .= $char;
+diff --git a/tests/Sabberworm/CSS/ParserTest.php b/tests/Sabberworm/CSS/ParserTest.php
+index 3b38770..aaf11a6 100644
+--- a/tests/Sabberworm/CSS/ParserTest.php
++++ b/tests/Sabberworm/CSS/ParserTest.php
+@@ -343,6 +343,14 @@ function testListValueRemoval() {
+ }#unrelated {other: yes;}' . "\n", $oDoc->__toString());
+ 	}
+ 
++	function testComments() {
++		$oDoc = $this->parsedStructureForFile('comments');
++		$sExpected = '@import url("some/url.css") screen;.foo, #bar {background-color: #000;}
++@media screen {#foo.bar {position: absolute;}
++}';
++		$this->assertSame($sExpected, $oDoc->__toString());
++	}
++
+ 	function parsedStructureForFile($sFileName) {
+ 		$sFile = dirname(__FILE__) . '/../../files' . DIRECTORY_SEPARATOR . "$sFileName.css";
+ 		$oParser = new Parser(file_get_contents($sFile));
+diff --git a/tests/files/comments.css b/tests/files/comments.css
+new file mode 100644
+index 0000000..d30bc53
+--- /dev/null
++++ b/tests/files/comments.css
+@@ -0,0 +1,16 @@
++/**
++ * Comments Hell.
++ */
++@import /* Number 1 */"some/url.css"/* Number 2 */ screen/* Number 3 */;
++
++.foo, /* Number 4 */          #bar/* Number 5 */ {
++    background-color/* Number 6 */: #000/* Number 7 */;
++}
++
++@media /* Number 8 */screen /* Number 9 */{
++    /** Number 10 **/
++    #foo.bar {
++        position: absolute;/**/
++    }
++}
++/** Number 11 **/
+\ No newline at end of file
+-- 
+1.8.5.1
+
