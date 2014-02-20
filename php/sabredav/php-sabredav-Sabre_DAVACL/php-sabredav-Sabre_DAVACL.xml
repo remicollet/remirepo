@@ -45,9 +45,8 @@ New release. Read the ChangeLog and announcement for more details
    <file name="Sabre/DAVACL/Principal.php" role="php" />
    <file name="Sabre/DAVACL/PrincipalCollection.php" role="php" />
    <file name="Sabre/DAVACL/Version.php" role="php" />
-   <file name="Sabre/DAVACL/PrincipalBackend/BackendInterface.php" role="php" />
-   <file name="Sabre/DAVACL/PrincipalBackend/AbstractBackend.php" role="php" />
-   <file name="Sabre/DAVACL/IPrincipalCollection.php" role="php" />
+   <file name="Sabre/DAVACL/includes.php" role="php" />
+   <file name="Sabre/DAVACL/IPrincipalBackend.php" role="php" />
    <file name="examples/sql/mysql.principals.sql" role="doc" />
    <file name="examples/sql/pgsql.principals.sql" role="doc" />
    <file name="examples/sql/sqlite.principals.sql" role="doc" />
@@ -71,7 +70,7 @@ New release. Read the ChangeLog and announcement for more details
    <package>
     <name>Sabre_DAV</name>
     <channel>pear.sabredav.org</channel>
-    <min>1.6.0</min>
+    <min>1.7.0</min>
    </package>
   </required>
  </dependencies>

@@ -1,11 +1,12 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   Sabre_DAVACL
 %global channelname pear.sabredav.org
-%global mainver     1.8.7
-%global reldate     2013-10-02
+%global mainver     1.7.10
+%global reldate     2014-02-09
 
 Name:           php-sabredav-Sabre_DAVACL
-Version:        1.8.7
+Epoch:          1
+Version:        1.7.9
 Release:        1%{?dist}
 Summary:        RFC3744 implementation for SabreDAV
 
@@ -29,8 +30,8 @@ Requires:       php-pdo
 Requires:       php-xml
 Requires:       php-pear(PEAR)
 Requires:       php-channel(%{channelname})
-Requires:       php-pear(%{channelname}/Sabre)     >= 1.0.1
-Requires:       php-pear(%{channelname}/Sabre_DAV) >= 1.8.7
+Requires:       php-pear(%{channelname}/Sabre)     >= 1.0.2
+Requires:       php-pear(%{channelname}/Sabre_DAV) >= 1.7.10
 
 Provides:       php-pear(%{pear_name}) = %{version}
 Provides:       php-pear(%{channelname}/%{pear_name}) = %{version}
@@ -58,11 +59,16 @@ fi
 touch error.lst
 for fic in $(find Sabre/DAVACL -type f)
 do
-  grep $fic %{name}.xml || echo $fic >> error.lst
+  grep $fic %{name}.xml || echo -$fic >> error.lst
+done
+
+for fic in $(grep '<file' %{name}.xml | sed -e 's/.*name="//' -e 's/".*//')
+do
+  [ -f $fic ] || echo +$fic >> error.lst
 done
 
 if [ -s error.lst ]; then
-  : Missing in %{name}.xml
+  : Error in %{name}.xml
   cat error.lst
   exit 1
 fi
@@ -102,6 +108,9 @@ fi
 
 
 %changelog
+* Thu Feb 20 2014 Remi Collet <RPMS@FamilleCollet.com> 1:1.7.9-1
+- revert to 1.7
+
 * Sat Oct  5 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.7-1
 - update to 1.8.7
 

@@ -1,10 +1,12 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   Sabre_HTTP
 %global channelname pear.sabredav.org
-%global mainver     1.8.5
+%global mainver     1.7.10
+%global reldate     2014-02-09
 
 Name:           php-sabredav-Sabre_HTTP
-Version:        1.8.1
+Epoch:          1
+Version:        1.7.10
 Release:        1%{?dist}
 Summary:        HTTP component for the SabreDAV WebDAV framework for PHP
 
@@ -25,7 +27,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
 Requires:       php-channel(%{channelname})
-Requires:       php-pear(%{channelname}/Sabre) >= 1.0.1
+Requires:       php-pear(%{channelname}/Sabre) >= 1.0.2
 
 Provides:       php-pear(%{pear_name}) = %{version}
 Provides:       php-pear(%{channelname}/%{pear_name}) = %{version}
@@ -36,7 +38,9 @@ Sabre_HTTP allows for a central interface to deal with Sabre.
 %prep
 %setup -q -n SabreDAV
 
-cp %{SOURCE1} .
+sed -e 's/@VERSION@/%{version}/' \
+    -e 's/@RELDATE@/%{reldate}/' \
+    %{SOURCE1} >%{name}.xml
 mv lib/Sabre Sabre
 
 # Check version
@@ -50,11 +54,16 @@ fi
 touch error.lst
 for fic in $(find Sabre/HTTP -type f)
 do
-  grep $fic %{name}.xml || echo $fic >> error.lst
+  grep $fic %{name}.xml || echo -$fic >> error.lst
+done
+
+for fic in $(grep '<file' %{name}.xml | sed -e 's/.*name="//' -e 's/".*//')
+do
+  [ -f $fic ] || echo +$fic >> error.lst
 done
 
 if [ -s error.lst ]; then
-  : Missing in %{name}.xml
+  : Error in %{name}.xml
   cat error.lst
   exit 1
 fi
@@ -93,6 +102,9 @@ fi
 
 
 %changelog
+* Thu Feb 20 2014 Remi Collet <RPMS@FamilleCollet.com> 1:1.7.10-1
+- revert to 1.7
+
 * Tue May  7 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.5-1
 - update to 1.8.1
   use our own package.xml as upstream doesn't use pear anymore
@@ -102,9 +114,9 @@ fi
 
 * Wed Oct 31 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.4-3
 - specified php required version pointed out by phpci
-* Sun Oct 12 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.4-2
+* Fri Oct 12 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.4-2
 - Fixed Description
-* Sun Oct 12 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.4-1
+* Fri Oct 12 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.6.4-1
 - Version Bump to 1.6.4
 - Add necesary deps and Clean up
 - Fix documentation path

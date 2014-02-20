@@ -64,8 +64,6 @@ New release. Read the ChangeLog and announcement for more details
    <file name="Sabre/CalDAV/Property/ScheduleCalendarTransp.php" role="php" />
    <file name="Sabre/CalDAV/Property/Invite.php" role="php" />
    <file name="Sabre/CalDAV/Property/AllowedSharingModes.php" role="php" />
-   <file name="Sabre/CalDAV/Principal/IProxyWrite.php" role="php" />
-   <file name="Sabre/CalDAV/Principal/IProxyRead.php" role="php" />
    <file name="Sabre/CalDAV/Notifications/Notification/SystemStatus.php" role="php" />
    <file name="Sabre/CalDAV/Notifications/Notification/InviteReply.php" role="php" />
    <file name="Sabre/CalDAV/Notifications/Notification/Invite.php" role="php" />
@@ -80,7 +78,8 @@ New release. Read the ChangeLog and announcement for more details
    <file name="Sabre/CalDAV/Backend/SharingSupport.php" role="php" />
    <file name="Sabre/CalDAV/Backend/NotificationSupport.php" role="php" />
    <file name="Sabre/CalDAV/Backend/BackendInterface.php" role="php" />
-   <file name="Sabre/CalDAV/Backend/AbstractBackend.php" role="php" />
+   <file name="Sabre/CalDAV/includes.php" role="php" />
+   <file name="Sabre/CalDAV/Backend/Abstract.php" role="php" />
   </dir>
  </contents>
  <dependencies>
@@ -99,22 +98,22 @@ New release. Read the ChangeLog and announcement for more details
    <package>
     <name>Sabre_HTTP</name>
     <channel>pear.sabredav.org</channel>
-    <min>1.6.0</min>
+    <min>1.7.0</min>
    </package>
    <package>
     <name>Sabre_DAV</name>
     <channel>pear.sabredav.org</channel>
-    <min>1.6.0</min>
+    <min>1.7.0</min>
    </package>
    <package>
     <name>Sabre_DAVACL</name>
     <channel>pear.sabredav.org</channel>
-    <min>1.6.0</min>
+    <min>1.7.0</min>
    </package>
    <package>
     <name>Sabre_VObject</name>
     <channel>pear.sabredav.org</channel>
-    <min>1.3.0</min>
+    <min>2.1.0</min>
    </package>
   </required>
  </dependencies>

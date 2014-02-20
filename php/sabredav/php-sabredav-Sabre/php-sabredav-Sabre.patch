@@ -1,31 +1,18 @@
---- Sabre/autoload.php	2010-04-28 15:05:53.000000000 +0200
-+++ Sabre/autoload.php	2013-05-07 13:32:38.808004076 +0200
-@@ -15,9 +15,9 @@
- 
- function Sabre_autoload($className) {
- 
--    if(strpos($className,'Sabre_')===0) {
-+    if(strpos($className,'Sabre\\')===0) {
- 
--        include dirname(__FILE__) . '/' . str_replace('_','/',substr($className,6)) . '.php';
-+        include dirname(__FILE__) . '/' . str_replace('\\','/',substr($className,6)) . '.php';
- 
-     }
- 
---- php-sabredav-Sabre.xml	2010-04-28 15:05:53.000000000 +0200
-+++ php-sabredav-Sabre.xml	2013-05-07 13:35:58.000000000 +0200
-@@ -15,8 +15,8 @@
+diff -up Sabre-1.0.0/php-sabredav-Sabre.xml.orig Sabre-1.0.0/php-sabredav-Sabre.xml
+--- Sabre-1.0.0/php-sabredav-Sabre.xml.orig	2010-04-28 15:05:53.000000000 +0200
++++ Sabre-1.0.0/php-sabredav-Sabre.xml	2014-02-20 09:10:49.971529139 +0100
+@@ -15,8 +15,8 @@ Currently this is only an autoloader</de
   <date>2010-04-28</date>
   <time>15:05:53</time>
   <version>
 -  <release>1.0.0</release>
 -  <api>1.0.0</api>
-+  <release>1.0.1</release>
-+  <api>1.0.1</api>
++  <release>1.0.2</release>
++  <api>1.0.2</api>
   </version>
   <stability>
    <release>stable</release>
-@@ -28,7 +28,7 @@
+@@ -28,7 +28,7 @@ New release. Read the ChangeLog and anno
   </notes>
   <contents>
    <dir name="/">
@@ -34,3 +21,23 @@
     <file md5sum="fe15d5f0e285d1f105071b8e7ea97ae1" name="LICENSE" role="doc" />
    </dir>
   </contents>
+diff -up Sabre-1.0.0/Sabre/autoload.php.orig Sabre-1.0.0/Sabre/autoload.php
+--- Sabre-1.0.0/Sabre/autoload.php.orig	2010-04-28 15:05:53.000000000 +0200
++++ Sabre-1.0.0/Sabre/autoload.php	2014-02-20 09:12:57.023982422 +0100
+@@ -16,10 +16,15 @@
+ function Sabre_autoload($className) {
+ 
+     if(strpos($className,'Sabre_')===0) {
+-
++        # SabreDAV 1.7 don't use namespace
+         include dirname(__FILE__) . '/' . str_replace('_','/',substr($className,6)) . '.php';
+ 
+     }
++    else if(strpos($className,'Sabre\\')===0) {
++        # VObject 2.1.3 use namespace
++        include dirname(__FILE__) . '/' . str_replace('\\','/',substr($className,6)) . '.php';
++
++    }
+ 
+ }
+ 

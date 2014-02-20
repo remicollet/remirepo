@@ -4,7 +4,7 @@
 %global origver     1.0.0
 
 Name:           php-sabredav-Sabre
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Base for Sabre_DAV packages
 
@@ -44,7 +44,7 @@ cd %{pear_name}-%{origver}
 mv ../package.xml %{name}.xml
 
 # Fix autoload to use namespace and force version
-%patch0 -p0
+%patch0 -p1 -b .orig
 
 
 %build
@@ -82,11 +82,14 @@ fi
 
 
 %changelog
-* Tue May  7 2013 Remi Collet <RPMS@FamilleCollet.com> 1.8.5-1
+* Thu Feb 20 2014 Remi Collet <RPMS@FamilleCollet.com> 1.0.2-1
+- update to manage both version (with/without) namespace
+
+* Tue May  7 2013 Remi Collet <RPMS@FamilleCollet.com> 1.0.1-1
 - update to 1.0.1 (use namespace)
   use our own package.xml as upstream doesn't use pear anymore
 
-* Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.3-3
+* Mon Nov 12 2012 Remi Collet <RPMS@FamilleCollet.com> 1.0.0-6
 - backport for remi repo
 
 * Wed Oct 31 2012 Joseph Marrero <jmarrero@fedoraproject.org> - 1.0.0-6
