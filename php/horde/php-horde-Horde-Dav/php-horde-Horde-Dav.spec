@@ -12,7 +12,7 @@
 
 Name:           php-horde-Horde-Dav
 Version:        1.0.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Horde library for WebDAV, CalDAV, CardDAV
 
 Group:          Development/Libraries
@@ -39,7 +39,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-sabre-dav  >= 1.8.7
-Requires:       php-sabre-vobject >= 2.1.3
+# php-sabredav-Sabre_VObject is 2.1, php-sabre-vobject is  3.1.3
+Requires:       php-pear(Sabre_VObject) >= 2.1.3
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -100,6 +101,9 @@ fi
 
 
 %changelog
+* Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
+- requires php-pear(Sabre_VObject) (as php-sabre-vobject is 3.1)
+
 * Fri Jan  3 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - requires php-sabre-dav and php-sabre-vobject
 
