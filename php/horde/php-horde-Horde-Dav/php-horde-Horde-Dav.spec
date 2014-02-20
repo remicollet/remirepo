@@ -38,8 +38,9 @@ Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
+# php-sabredav-Sabre_DAV is 1.7, php-sabre-dav is 1.8
 Requires:       php-sabre-dav  >= 1.8.7
-# php-sabredav-Sabre_VObject is 2.1, php-sabre-vobject is  3.1.3
+# php-sabredav-Sabre_VObject is 2.1, php-sabre-vobject is  3.1
 Requires:       php-pear(Sabre_VObject) >= 2.1.3
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
