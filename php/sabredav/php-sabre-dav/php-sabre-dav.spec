@@ -15,7 +15,7 @@
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
 Version:        1.8.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -46,7 +46,6 @@ Requires:       php-pcre
 Requires:       php-simplexml
 Requires:       php-spl
 Requires:       php-sabre-vobject > 2.1
-Requires:       php-sabre-vobject < 2.2
 # From phpcompatinfo report for version 1.8.7
 Requires:       php-curl
 Requires:       php-pdo
@@ -133,6 +132,9 @@ phpunit \
 
 
 %changelog
+* Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 1.8.8-2
+- drop max version for VObject
+
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 1.8.8-1
 - update to 1.8.8
 
