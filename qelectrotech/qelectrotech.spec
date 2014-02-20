@@ -1,4 +1,4 @@
-%global svnrel 2788
+%global svnrel 2865
 %global rdate  20140128
 %global upver  0.4
 
@@ -226,6 +226,9 @@ fi
 
 
 %changelog
+* Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.1.svn2865
+- Update to 0.4 snapshot revision 2865
+
 * Wed Jan 29 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.1.svn2788
 - Update to 0.4 snapshot revision 2788
 
