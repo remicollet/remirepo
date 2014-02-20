@@ -7,7 +7,7 @@
 
 Name:           php-horde-Horde-Autoloader
 Version:        2.0.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Horde Autoloader
 
 Group:          Development/Libraries
@@ -16,6 +16,7 @@ URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 # Fedora specific - ensure Sabre is taken from /usr/share/php
+# but Sabre\VObject from /usr/share/pear
 Patch0:         %{name}-Sabre.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -101,6 +102,9 @@ fi
 
 
 %changelog
+* Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-5
+- new autoloader patch for SabreDAV and VObject
+
 * Fri Jan  3 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - patch autoloader for Sabre
 
