@@ -22,6 +22,7 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 # (Note: Backported from source control master branch for OwnCloud)
 Patch0:        https://github.com/%{github_owner}/%{github_name}/commit/c6949531d2399f81a5e15caf256f156dd68e00e9.patch
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
@@ -58,6 +59,7 @@ Examples available in the %{name}-examples package.
 %package examples
 
 Summary:  Client library for Google APIs: Examples
+Group:    Development/Libraries
 Requires: %{name} = %{version}-%{release}
 
 %description examples
@@ -84,6 +86,8 @@ sed -i 's#../src#%{_datadir}/php#' examples/*.php
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{_datadir}/php
 cp -rp src/* %{buildroot}%{_datadir}/php/
 
@@ -112,15 +116,24 @@ grep '%{_sysconfdir}/pki/tls/cert.pem' --quiet \
     %{buildroot}%{_datadir}/php/Google/IO/Stream.php
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE *.md composer.json
 %{_datadir}/php/Google
 
 %files examples
+%defattr(-,root,root,-)
 %doc examples/*
 
 
 %changelog
+* Fri Feb 21 2014 Remi Collet <remi@fedoraproject.org> 1.0.3-0.2.beta
+- backport for remi repo
+
 * Wed Feb 19 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0.3-0.2.beta
 - Backported commit c6949531d2399f81a5e15caf256f156dd68e00e9 for OwnCloud
 - Sub-packaged examples
