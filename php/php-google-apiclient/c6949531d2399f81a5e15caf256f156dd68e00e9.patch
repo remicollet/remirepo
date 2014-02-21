@@ -1,0 +1,25 @@
+From c6949531d2399f81a5e15caf256f156dd68e00e9 Mon Sep 17 00:00:00 2001
+From: Silvano Luciani <silvano.luciani@gmail.com>
+Date: Fri, 31 Jan 2014 13:29:14 -0800
+Subject: [PATCH] Explicitly set '&' as separator value for http_build_query
+
+---
+ src/Google/Auth/OAuth2.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Google/Auth/OAuth2.php b/src/Google/Auth/OAuth2.php
+index e66f34c..6cf7c1a 100644
+--- a/src/Google/Auth/OAuth2.php
++++ b/src/Google/Auth/OAuth2.php
+@@ -161,7 +161,7 @@ public function createAuthUrl($scope)
+       $params['state'] = $this->state;
+     }
+ 
+-    return self::OAUTH2_AUTH_URL . "?" . http_build_query($params);
++    return self::OAUTH2_AUTH_URL . "?" . http_build_query($params, '', '&');
+   }
+ 
+   /**
+-- 
+1.8.5.1
+
