@@ -36,6 +36,12 @@
 # Build mysql/mysqli/pdo extensions using libmysqlclient or only mysqlnd
 %global with_libmysql 0
 
+%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
+%global with_libpcre  1
+%else
+%global with_libpcre  0
+%endif
+
 # Build ZTS extension or only NTS
 %global with_zts      1
 
@@ -108,7 +114,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.10
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -170,11 +176,14 @@ Patch47: php-5.4.9-phpinfo.patch
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
 
-# Upstream fixes
+# Upstream fixes (100+)
+Patch101: php-5.5.10-leak.patch
 
-# Security fixes
+# Security fixes (200+)
 
-# Fixes for tests
+# Fixes for tests (300+)
+# Revert change for pcre 8.34
+Patch301: php-5.5.10-pcre834.patch
 
 # WIP
 
@@ -190,8 +199,8 @@ BuildRequires: sqlite-devel >= 3.6.0
 BuildRequires: sqlite-devel >= 3.0.0
 %endif
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
-%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
-BuildRequires: pcre-devel >= 8.10
+%if %{with_libpcre}
+BuildRequires: pcre-devel >= 8.20
 %endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
@@ -352,7 +361,7 @@ package and the php-cli package.
 Group: Development/Libraries
 Summary: Files needed for building PHP extensions
 Requires: php-cli%{?_isa} = %{version}-%{release}, autoconf, automake
-%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+%if %{with_libpcre}
 Requires: pcre-devel%{?_isa}
 %endif
 Obsoletes: php-pecl-pdo-devel
@@ -866,7 +875,7 @@ rm -rf ext/json
 %patch21 -p1 -b .odbctimer
 
 %patch40 -p1 -b .dlopen
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .headers
@@ -882,8 +891,17 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch101 -p1 -b .memleak
 
 # security patches
+
+# Fixes for tests
+%if %{with_libpcre}
+%if 0%{?fedora} < 21
+# Only apply when system libpcre < 8.34
+%patch301 -p1 -R -b .pcre84
+%endif
+%endif
 
 # WIP patch
 
@@ -1060,14 +1078,14 @@ ln -sf ../configure
     --without-gdbm \
     --with-jpeg-dir=%{_prefix} \
     --with-openssl \
-%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+%if %{with_libpcre}
     --with-pcre-regex=%{_prefix} \
 %endif
     --with-zlib \
     --with-layout=GNU \
     --with-kerberos \
     --with-libxml-dir=%{_prefix} \
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 5
     --with-system-tzdata \
 %endif
     --with-mhash \
@@ -1859,6 +1877,11 @@ fi
 
 
 %changelog
+* Fri Feb 21 2014 Remi Collet <rcollet@redhat.com> 5.5.10-0.2.RC1
+- another test build of 5.5.10RC1
+- fix memleak in fileinfo ext
+- revert test changes for pcre 8.34
+
 * Thu Feb 20 2014 Remi Collet <rcollet@redhat.com> 5.5.10-0.1.RC1
 - test build of 5.5.10RC1
 

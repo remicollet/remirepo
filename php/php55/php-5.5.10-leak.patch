@@ -1,0 +1,25 @@
+From 10eb0070700382f966bf260e44135e1f724a15d2 Mon Sep 17 00:00:00 2001
+From: Anatol Belski <ab@php.net>
+Date: Thu, 20 Feb 2014 18:53:53 +0100
+Subject: [PATCH] fixed leak introduced after CVE/upgrade
+
+---
+ ext/fileinfo/libmagic/softmagic.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/ext/fileinfo/libmagic/softmagic.c b/ext/fileinfo/libmagic/softmagic.c
+index 7c5f628..33970e5 100644
+--- a/ext/fileinfo/libmagic/softmagic.c
++++ b/ext/fileinfo/libmagic/softmagic.c
+@@ -1701,6 +1701,8 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
+ 			return -1;
+ 			if (file_printf(ms, "%s", rbuf) == -1)
+ 				return -1;
++		}
++		if (rbuf) {
+ 			efree(rbuf);
+ 		}
+ 		return rv;
+-- 
+1.8.4.3
+
