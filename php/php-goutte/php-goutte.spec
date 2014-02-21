@@ -22,6 +22,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language)           >= %{php_min_ver}
@@ -73,6 +74,7 @@ from the HTML/XML responses.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}/%{_datadir}/php/%{github_name}
 cp -p %{github_name}/Client.php %{buildroot}/%{_datadir}/php/%{github_name}/
 
@@ -94,12 +96,20 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 %{_bindir}/phpunit -d date.timezone="UTC"
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.rst composer.json
 %{_datadir}/php/%{github_name}
 
 
 %changelog
+* Fri Feb 21 2014 Remi Collet <remi@fedoraproject.org> 1.0.5-1
+- backport for remi repo
+
 * Wed Feb 19 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.0.5-1
 - Updated to 1.0.5
 - Conditional release dist
