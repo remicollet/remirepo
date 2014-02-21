@@ -3,9 +3,16 @@
 %global pear_channel guzzlephp.org/pear
 %global pear_name    Guzzle
 
+%if 0%{?rhel} == 5
+%global with_cacert 0
+%else
+# temporarily disabled (issue with md5 check)
+%global with_cacert 0
+%endif
+
 Name:             php-guzzle-%{pear_name}
 Version:          3.7.4
-Release:          1%{?dist}
+Release:          1%{?dist}.1
 Summary:          PHP HTTP client library and framework for building RESTful web service clients
 
 Group:            Development/Libraries
@@ -22,7 +29,9 @@ Requires:         php(language) >= 5.3.3
 Requires:         php-pear(PEAR)
 Requires:         php-channel(%{pear_channel})
 Requires:         php-pear(pear.symfony.com/EventDispatcher) >= 2.1.0
+%if %{with_cacert}
 Requires:         ca-certificates
+%endif
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
 # phpcompatinfo
@@ -73,12 +82,18 @@ Optional dependencies:
 # https://github.com/guzzle/guzzle/blob/master/phing/tasks/GuzzlePearPharPackageTask.php#L146
 sed '/\.md"/s/role="data"/role="doc"/' -i package.xml
 
+%if %{with_cacert}
 # Remove bundled cert
 sed "s:__DIR__\s*.\s*'/Resources/cacert.pem':'%{_sysconfdir}/pki/tls/cert.pem':" \
     -i %{pear_name}-%{version}/Guzzle/Http/Client.php
 sed -e '/cacert.pem/d' \
     -e '/name="Guzzle\/Http\/Client.php"/s:\s*md5sum="[^"]*"::' \
     -i package.xml
+%else
+# Code is broken, not aware of pear_datadir
+sed -e '/cacert/s/role="data"/role="php"/' \
+    -i package.xml
+%endif
 
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{version}/%{name}.xml
@@ -124,6 +139,9 @@ fi
 
 
 %changelog
+* Fri Feb 21 2014 Remi Collet <remi@fedoraproject.org> - 3.7.4-1.1
+- EL-5 don't have ca-certificates
+
 * Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 3.7.4-1
 - Updated to 3.7.4
 - Added php-libxml require
