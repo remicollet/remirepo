@@ -23,6 +23,7 @@ License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: git
@@ -62,6 +63,7 @@ thing.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/%{lib_name} %{buildroot}/%{_datadir}/php/
 
@@ -83,12 +85,20 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 %{_bindir}/phpunit --include-path="./lib:./tests" -d date.timezone="UTC"
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
 %{_datadir}/php/%{lib_name}
 
 
 %changelog
+* Fri Feb 21 2014 Remi Collet <remi@fedoraproject.org> 0.2.0-2.20131206git786e86a
+- backport for remi repo
+
 * Thu Feb 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 0.2.0-2.20131206git786e86a
 - Conditional release dist
 
