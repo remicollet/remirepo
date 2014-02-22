@@ -231,10 +231,13 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-test first
 #
 %changelog
-* Thu Dec 12 2013 Remi Collet <rcollet@redhat.com> - 1.3.3-1
-- release 1.3.3 (stable)
+* Sat Feb 22 2014 Remi Collet <rcollet@redhat.com> - 1.3.4-1
+- release 1.3.4 (stable)
 - move documentation in pecl_docdir
 - move tests in pecl_testdir (devel)
+
+* Thu Dec 12 2013 Remi Collet <rcollet@redhat.com> - 1.3.3-1
+- release 1.3.3 (stable)
 
 * Thu Sep 26 2013 Remi Collet <rcollet@redhat.com> - 1.3.2-2
 - fix decode of string value with null-byte
