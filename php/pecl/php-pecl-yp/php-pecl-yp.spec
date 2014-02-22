@@ -18,15 +18,11 @@
 Summary:        YP/NIS functions
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# According to yp.c header
-# see https://bugs.php.net/66753
-Source1:        http://www.php.net/license/3_0.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -71,8 +67,6 @@ of important administrative files (e.g. the password file).
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
-cp %{SOURCE1} LICENSE
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YP_VERSION/{s/.* "//;s/".*$//;p}' php_yp.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -129,7 +123,7 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
 # Test & Documentation
-for i in LICENSE $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
@@ -182,6 +176,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 22 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC1
+- Fix License
+
 * Sat Feb 22 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
 - initial package, version 1.0.0RC1 (beta)
 - open https://bugs.php.net/66753 missing License
