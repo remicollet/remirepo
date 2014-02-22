@@ -26,7 +26,7 @@
 
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
-Version:       1.3.3
+Version:       1.3.4
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
@@ -165,6 +165,14 @@ install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 %{proj_name}-%{version}/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 %{proj_name}-%{version}/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
 cd %{proj_name}-%{version}
@@ -200,7 +208,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc %{proj_name}-%{version}%{?prever}/{LICENSE,CREDITS,README.md}
+%doc %{pecl_docdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{ext_name}.ini
 %config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
@@ -212,6 +220,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{php_incldir}/ext/json
 %{php_ztsincldir}/ext/json
+%doc %{pecl_testdir}/%{pecl_name}
 
 %if 0%{?rhel} == 5 && "%{php_version}" > "5.5"
 %files -n php-json
@@ -224,6 +233,8 @@ rm -rf %{buildroot}
 %changelog
 * Thu Dec 12 2013 Remi Collet <rcollet@redhat.com> - 1.3.3-1
 - release 1.3.3 (stable)
+- move documentation in pecl_docdir
+- move tests in pecl_testdir (devel)
 
 * Thu Sep 26 2013 Remi Collet <rcollet@redhat.com> - 1.3.2-2
 - fix decode of string value with null-byte
