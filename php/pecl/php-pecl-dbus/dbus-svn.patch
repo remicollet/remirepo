@@ -1,0 +1,208 @@
+--- pecl/dbus/trunk/dbus.c	2011/08/03 16:10:11	314193
++++ pecl/dbus/trunk/dbus.c	2011/08/03 16:21:30	314194
+@@ -1031,7 +1031,7 @@
+ 	dbusobj->dbus = dbus;
+ 	dbusobj->destination = estrdup(destination);
+ 	dbusobj->path = estrdup(path);
+-	dbusobj->interface = estrdup(interface);
++	dbusobj->interface = interface ? estrdup(interface) : NULL;
+ 
+ 	return 1;
+ }
+@@ -1099,7 +1099,7 @@
+ 	int   destination_len, path_len, interface_len;
+ 
+ 	dbus_set_error_handling(EH_THROW, NULL TSRMLS_CC);
+-	if (SUCCESS == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "Osss",
++	if (SUCCESS == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "Osss!",
+ 		&object, dbus_ce_dbus,
+ 		&destination, &destination_len, &path, &path_len, 
+ 		&interface, &interface_len))
+@@ -1127,7 +1127,7 @@
+ 	int   destination_len, path_len, interface_len;
+ 
+ 	dbus_set_error_handling(EH_THROW, NULL TSRMLS_CC);
+-	if (SUCCESS == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss",
++	if (SUCCESS == zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss!",
+ 		&destination, &destination_len, &path, &path_len, 
+ 		&interface, &interface_len))
+ 	{
+@@ -1221,10 +1221,11 @@
+ 
+ static void php_dbus_accept_incoming_method_call(php_dbus_obj *dbus, DBusMessage *msg, zval **return_value TSRMLS_DC)
+ {
+-	char *key, *class;
++	char *key, *class, *interface;
+ 
+ 	/* See if we can find a class mapping for this object */
+-	spprintf(&key, 0, "%s:%s", dbus_message_get_path(msg), dbus_message_get_interface(msg));
++	interface = dbus_message_get_interface(msg);
++	spprintf(&key, 0, "%s:%s", dbus_message_get_path(msg), interface ? interface : "(null)");
+ 	if (zend_hash_find(&(dbus->objects), key, strlen(key) + 1, (void**) &class) == SUCCESS) {
+ 		zend_class_entry **pce;
+ 
+@@ -1336,14 +1337,17 @@
+ 
+ 	dbus_set_error_handling(EH_THROW, NULL TSRMLS_CC);
+ 	if (FAILURE == zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(),
+-		"Osss", &object, dbus_ce_dbus, &path, &path_len, &interface, &interface_len,
++		"Oss!s", &object, dbus_ce_dbus, &path, &path_len, &interface, &interface_len,
+ 		&class, &class_len)) {
+ 		RETURN_FALSE;
+ 	}
+ 	dbus = (php_dbus_obj *) zend_object_store_get_object(object TSRMLS_CC);
+ 
+ 	/* Create the key out of the path and interface */
+-	spprintf(&key, 0, "%s:%s", path, interface);
++	spprintf(&key, 0, "%s:%s", path, interface ? interface : "(null)");
++	if (interface == NULL) {
++		interface_len = 6;
++	}
+ 
+ 	/* Add class name to hash */
+ 	zend_hash_add(&(dbus->objects), key, path_len + interface_len + 2, (void*) estrdup(class), strlen(class)+1, NULL);
+--- pecl/dbus/trunk/dbus.c	2011/08/30 16:26:43	315793
++++ pecl/dbus/trunk/dbus.c	2011/08/30 16:29:53	315794
+@@ -26,6 +26,7 @@
+ #include "ext/standard/php_versioning.h"
+ #include "php_dbus.h"
+ #include "zend_extensions.h"
++#include "zend_exceptions.h"
+ #include "zend_interfaces.h"
+ #include "zend_hash.h"
+ #include "dbus/dbus.h"
+@@ -157,6 +158,7 @@
+ zend_class_entry *dbus_ce_dbus_array, *dbus_ce_dbus_dict, *dbus_ce_dbus_variant;
+ zend_class_entry *dbus_ce_dbus_variant, *dbus_ce_dbus_set, *dbus_ce_dbus_struct;
+ zend_class_entry *dbus_ce_dbus_object_path;
++zend_class_entry *dbus_ce_dbus_exception, *dbus_ce_dbus_exception_service, *dbus_ce_dbus_exception_method;
+ 
+ static zend_object_handlers dbus_object_handlers_dbus, dbus_object_handlers_dbus_object;
+ static zend_object_handlers dbus_object_handlers_dbus_signal;
+@@ -444,6 +446,7 @@
+ 	zend_class_entry ce_dbus, ce_dbus_object, ce_dbus_array, ce_dbus_dict;
+ 	zend_class_entry ce_dbus_variant, ce_dbus_signal, ce_dbus_set, ce_dbus_struct;
+ 	zend_class_entry ce_dbus_object_path;
++	zend_class_entry ce_dbus_exception, ce_dbus_exception_service, ce_dbus_exception_method;
+ 
+ 	INIT_CLASS_ENTRY(ce_dbus, "Dbus", dbus_funcs_dbus);
+ 	ce_dbus.create_object = dbus_object_new_dbus;
+@@ -470,6 +473,18 @@
+ 	zend_declare_class_constant_long(dbus_ce_dbus, "BUS_SESSION", sizeof("BUS_SESSION")-1, DBUS_BUS_SESSION TSRMLS_CC);
+ 	zend_declare_class_constant_long(dbus_ce_dbus, "BUS_SYSTEM", sizeof("BUS_SYSTEM")-1, DBUS_BUS_SYSTEM TSRMLS_CC);
+ 
++	INIT_CLASS_ENTRY(ce_dbus_exception, "DbusException", NULL);
++	dbus_ce_dbus_exception = zend_register_internal_class_ex(&ce_dbus_exception, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
++	dbus_ce_dbus_exception->ce_flags |= ZEND_ACC_FINAL;
++
++	INIT_CLASS_ENTRY(ce_dbus_exception_service, "DbusExceptionServiceUnknown", NULL);
++	dbus_ce_dbus_exception_service = zend_register_internal_class_ex(&ce_dbus_exception_service, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
++	dbus_ce_dbus_exception_service->ce_flags |= ZEND_ACC_FINAL;
++
++	INIT_CLASS_ENTRY(ce_dbus_exception_method, "DbusExceptionUnknownMethod", NULL);
++	dbus_ce_dbus_exception_method = zend_register_internal_class_ex(&ce_dbus_exception_method, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
++	dbus_ce_dbus_exception_method->ce_flags |= ZEND_ACC_FINAL;
++
+ 	INIT_CLASS_ENTRY(ce_dbus_object, "DbusObject", dbus_funcs_dbus_object);
+ 	ce_dbus_object.create_object = dbus_object_new_dbus_object;
+ 	dbus_ce_dbus_object = zend_register_internal_class_ex(&ce_dbus_object, NULL, NULL TSRMLS_CC);
+@@ -1883,12 +1898,23 @@
+ 
+ static int php_dbus_handle_reply(zval *return_value, DBusMessage *msg, int always_array TSRMLS_DC)
+ {
+-	DBusMessageIter args;
+-	dbus_int64_t    stat;
+-	zval           *val;
++	zend_class_entry *exception_ce = NULL;
++	DBusMessageIter   args;
++	dbus_int64_t      stat;
++	zval             *val;
+ 
+ 	if (dbus_message_get_type(msg) == DBUS_MESSAGE_TYPE_ERROR) {
+-		dbus_set_error_handling(EH_THROW, NULL TSRMLS_CC);
++		const char* error_msg_str = dbus_message_get_error_name(msg);
++
++		if (!strcmp(error_msg_str, DBUS_ERROR_SERVICE_UNKNOWN)) {
++			exception_ce = dbus_ce_dbus_exception_service;
++		} else if (!strcmp(error_msg_str, DBUS_ERROR_UNKNOWN_METHOD)) {
++			exception_ce = dbus_ce_dbus_exception_method;
++		} else {
++			exception_ce = dbus_ce_dbus_exception;
++		}
++
++		dbus_set_error_handling(EH_THROW, exception_ce TSRMLS_CC);
+ 		if (!dbus_message_iter_init(msg, &args)) {
+ 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", dbus_message_get_error_name(msg));
+ 			return 0;
+--- pecl/dbus/trunk/dbus.c	2013/11/03 14:09:33	332054
++++ pecl/dbus/trunk/dbus.c	2013/11/03 15:36:02	332055
+@@ -2,7 +2,7 @@
+    +----------------------------------------------------------------------+
+    | PHP Version 5                                                        |
+    +----------------------------------------------------------------------+
+-   | Copyright (c) 1997-2008 The PHP Group                                |
++   | Copyright (c) 2008-2013 The PHP Group                                |
+    +----------------------------------------------------------------------+
+    | This source file is subject to version 3.01 of the PHP license,      |
+    | that is bundled with this package in the file LICENSE, and is        |
+@@ -39,7 +39,7 @@
+ #endif
+ 
+ #if PHP_MINOR_VERSION > 3
+-# define INIT_OBJ_PROP	object_properties_init(&intern->std, class_type);
++# define INIT_OBJ_PROP	object_properties_init(&intern->std, class_type); if (!intern->std.properties) { rebuild_object_properties(&intern->std); };
+ #else
+ # define INIT_OBJ_PROP	zend_hash_copy(intern->std.properties, &class_type->default_properties, (copy_ctor_func_t) zval_add_ref, (void *) &tmp, sizeof(zval *));
+ #endif
+@@ -348,9 +348,9 @@
+ 
+ static int dbus_object_compare_dbus(zval *d1, zval *d2 TSRMLS_DC);
+ 
+-/* This is need to ensure that session extension request shutdown occurs 1st, because it uses the dbus extension */ 
+ static const zend_module_dep dbus_deps[] = {
+-	{NULL, NULL, NULL}
++	ZEND_MOD_REQUIRED("libxml")
++	ZEND_MOD_END
+ };
+ 
+ #ifdef COMPILE_DL_DBUS
+@@ -2208,8 +2208,8 @@
+ 		zend_hash_update(props, "signature", 10, (void*)&sig, sizeof(zval *), NULL);
+ 	}
+ 
+-	zend_hash_update(props, "array", 6, (void*)&array_obj->elements, sizeof(zval *), NULL);
+ 	Z_ADDREF_P(array_obj->elements);
++	zend_hash_update(props, "array", 6, (void*)&array_obj->elements, sizeof(zval *), NULL);
+ 
+ 	return props;
+ }
+@@ -2274,8 +2274,8 @@
+ 		zend_hash_update(props, "signature", 10, (void*)&sig, sizeof(zval *), NULL);
+ 	}
+ 
+-	zend_hash_update(props, "dict", 5, (void*)&dict_obj->elements, sizeof(zval *), NULL);
+ 	Z_ADDREF_P(dict_obj->elements);
++	zend_hash_update(props, "dict", 5, (void*)&dict_obj->elements, sizeof(zval *), NULL);
+ 
+ 	return props;
+ }
+@@ -2328,8 +2328,8 @@
+ 
+ 	props = variant_obj->std.properties;
+ 
+-	zend_hash_update(props, "variant", 8, (void*)&variant_obj->data, sizeof(zval *), NULL);
+ 	Z_ADDREF_P(variant_obj->data);
++	zend_hash_update(props, "variant", 8, (void*)&variant_obj->data, sizeof(zval *), NULL);
+ 
+ 	return props;
+ }
+@@ -2453,8 +2453,8 @@
+ 
+ 	props = struct_obj->std.properties;
+ 
+-	zend_hash_update(props, "struct", 7, (void*)&struct_obj->elements, sizeof(zval *), NULL);
+ 	Z_ADDREF_P(struct_obj->elements);
++	zend_hash_update(props, "struct", 7, (void*)&struct_obj->elements, sizeof(zval *), NULL);
+ 
+ 	return props;
+ }

@@ -1,0 +1,13 @@
+--- dbus-0.1.1/config.m4.old	2014-02-23 08:04:27.000000000 +0100
++++ dbus-0.1.1/config.m4	2014-02-23 08:13:18.000000000 +0100
+@@ -25,8 +25,8 @@
+ 
+     AC_MSG_CHECKING(for dbus)
+     if $PKG_CONFIG --exists dbus-1; then
+-      AC_MSG_RESULT(found)
+-      LDFLAGS="$LDFLAGS `$PKG_CONFIG --libs dbus-1`"
++      LDFLAGS="$LDFLAGS `$PKG_CONFIG --libs dbus-1 | sed -e s:-L/$PHP_LIBDIR:-L/usr/$PHP_LIBDIR:`"
++      AC_MSG_RESULT(found: $LDFLAGS)
+       CFLAGS="$CFLAGS `$PKG_CONFIG --cflags dbus-1`"
+ 	  PHP_SETUP_LIBXML(DBUS_SHARED_LIBADD, [
+         AC_DEFINE(HAVE_DBUS, 1, [whether dbus exists in the system])
