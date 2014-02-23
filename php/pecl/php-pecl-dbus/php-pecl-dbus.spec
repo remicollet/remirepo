@@ -17,7 +17,7 @@
 Summary:        Extension for interaction with DBUS busses
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.1.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -29,6 +29,7 @@ Source1:        http://www.php.net/license/3_01.txt
 # Fix RPATH added because of "pkg-config --libs dbus-1"
 Patch0:        %{pecl_name}-rpath.patch
 
+# http://svn.php.net/viewvc?view=revision&revision=332876
 # http://svn.php.net/viewvc?view=revision&revision=332055
 # http://svn.php.net/viewvc?view=revision&revision=315794
 # http://svn.php.net/viewvc?view=revision&revision=314194
@@ -194,6 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 23 2014 Remi Collet <remi@fedoraproject.org> - 0.1.1-2
+- fix build with php 5.3 (EL-6)
+
 * Sun Feb 23 2014 Remi Collet <remi@fedoraproject.org> - 0.1.1-1
 - initial package, version 0.1.1 (alpha)
 - upstream patches from SVN

@@ -206,3 +206,16 @@
  
  	return props;
  }
+--- pecl/dbus/trunk/dbus.c	2014/02/21 10:51:45	332875
++++ pecl/dbus/trunk/dbus.c	2014/02/23 07:50:34	332876
+@@ -44,6 +44,10 @@
+ # define INIT_OBJ_PROP	zend_hash_copy(intern->std.properties, &class_type->default_properties, (copy_ctor_func_t) zval_add_ref, (void *) &tmp, sizeof(zval *));
+ #endif
+ 
++#ifndef ZEND_MOD_END
++#define ZEND_MOD_END {NULL, NULL, NULL}
++#endif
++
+ /* {{{ arginfo */
+ ZEND_BEGIN_ARG_INFO_EX(arginfo_dbus_object___call, 0, 0, 2)
+ 	ZEND_ARG_INFO(0, function_name)
