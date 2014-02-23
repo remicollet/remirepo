@@ -20,7 +20,7 @@ Version:        0.1.1
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
-URL:            http://pecl.php.net/package/%{pecl_name}
+URL:            http://pecl.php.net/package/DBus
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # Link from dbus.c header
