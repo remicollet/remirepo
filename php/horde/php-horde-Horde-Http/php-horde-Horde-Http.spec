@@ -1,4 +1,13 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Mail
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Http
 %global pear_channel pear.horde.org
 
@@ -6,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Http
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Horde HTTP libraries
 
@@ -75,9 +84,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+phpunit \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 %else
@@ -106,6 +116,9 @@ fi
 
 
 %changelog
+* Tue Feb 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+
 * Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
