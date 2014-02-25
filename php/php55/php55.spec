@@ -114,7 +114,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.10
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -178,6 +178,7 @@ Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
 Patch101: php-5.5.10-leak.patch
+Patch102: php-5.5.10-bug66762.patch
 
 # Security fixes (200+)
 
@@ -892,6 +893,7 @@ rm -rf ext/json
 
 # upstream patches
 %patch101 -p1 -b .memleak
+%patch102 -p0 -b .66762
 
 # security patches
 
@@ -1877,6 +1879,9 @@ fi
 
 
 %changelog
+* Tue Feb 25 2014 Remi Collet <rcollet@redhat.com> 5.5.10-0.3.RC1
+- test build for https://bugs.php.net/66762
+
 * Fri Feb 21 2014 Remi Collet <rcollet@redhat.com> 5.5.10-0.2.RC1
 - another test build of 5.5.10RC1
 - fix memleak in fileinfo ext
