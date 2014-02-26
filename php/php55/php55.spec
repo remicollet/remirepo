@@ -114,7 +114,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.10
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1790,6 +1790,8 @@ fi
 %defattr(-,root,root)
 %doc php-fpm.conf.default
 %doc fpm_LICENSE
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
@@ -1879,6 +1881,9 @@ fi
 
 
 %changelog
+* Wed Feb 26 2014 Remi Collet <rcollet@redhat.com> 5.5.10-0.4.RC1
+- php-fpm should own /var/lib/php/session and wsdlcache
+
 * Tue Feb 25 2014 Remi Collet <rcollet@redhat.com> 5.5.10-0.3.RC1
 - test build for https://bugs.php.net/66762
 

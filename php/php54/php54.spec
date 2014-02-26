@@ -81,7 +81,7 @@ Version: 5.4.25
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 2%{?dist}.1
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1562,6 +1562,7 @@ fi
 %defattr(-,root,root)
 %doc php-fpm.conf.default
 %doc fpm_LICENSE
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
@@ -1640,6 +1641,9 @@ fi
 
 
 %changelog
+* Wed Feb 26 2014 Remi Collet <rcollet@redhat.com> 5.4.25-2.1
+- php-fpm should own /var/lib/php/session
+
 * Tue Feb 18 2014 Remi Collet <rcollet@redhat.com> 5.4.25-2
 - upstream patch for https://bugs.php.net/66731
 
