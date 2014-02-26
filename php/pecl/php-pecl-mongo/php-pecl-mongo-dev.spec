@@ -4,26 +4,58 @@
 
 %global pecl_name   mongo
 %global with_zts    0%{?__ztsphp:1}
+%global prever      alpha1
+%global gh_commit   f758e60874df3cda3a08dced0f51351535f8c672
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    mongodb
+%global gh_project  mongo-php-driver
+%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%global with_sasl   1
+%else
+%global with_sasl   0
+%endif
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.4.5
-Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      1.5.0
+Release:      0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
-Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+# Pull sources from github to get tests
+Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}.tar.gz
 Source1:      %{pecl_name}.ini
+
+# https://jira.mongodb.org/browse/PHP-995
+Patch0:       %{pecl_name}-json.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.2.6
 BuildRequires: php-pear
+BuildRequires: php-json
+%if %{with_sasl}
+# https://jira.mongodb.org/browse/PHP-996
+BuildRequires: cyrus-sasl-devel >= 2.1.26
+%endif
+%if %{with_tests}
+BuildRequires: mongodb
+BuildRequires: mongodb-server
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so only requires real packages instead
+Requires:     php-common%{?_isa}
+%else
+Requires:     php-json%{?_isa}
+%endif
 
 Provides:     php-%{pecl_name} = %{version}
 Provides:     php-%{pecl_name}%{?_isa} = %{version}
@@ -55,17 +87,13 @@ MongoDB database in PHP.
 %prep 
 %setup -c -q
 
-mv %{pecl_name}-%{version} NTS
-cd NTS
-
-extver=$(sed -n '/#define PHP_MONGO_VERSION/{s/.* "//;s/".*$//;p}' php_mongo.h)
-if test "x${extver}" != "x%{version}%{?pre}"; then
-   : Error: Upstream version is ${extver}, expecting %{version}.
-   exit 1
-fi
-cd ..
-
+mv %{gh_project}-%{gh_commit} NTS
 cp %{SOURCE1} .
+mv NTS/package.xml .
+
+cd NTS
+%patch0 -p0
+cd ..
 
 %if %{with_zts}
 cp -pr NTS ZTS
@@ -75,13 +103,21 @@ cp -pr NTS ZTS
 %build
 cd NTS
 %{_bindir}/phpize
-%configure  --with-php-config=%{_bindir}/php-config
+%configure  \
+%if %{with_sasl}
+  --with-mongo-sasl \
+%endif
+  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
-%configure  --with-php-config=%{_bindir}/zts-php-config
+%configure  \
+%if %{with_sasl}
+  --with-mongo-sasl \
+%endif
+  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
 
@@ -124,12 +160,45 @@ fi
 %check
 : Minimal load test for NTS extension
 %{__php} -n \
+    -d extension=json.so \
     -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     -i | grep "MongoDB Support => enabled"
+
+%if %{with_tests}
+cd NTS
+
+: Create the configuration file
+mkdir data
+sed -e "/DBDIR/s:/data:$PWD/data:" \
+    tests/utils/cfg.inc.template   \
+    >tests/utils/cfg.inc
+
+: Launch the test servers
+MONGO_SERVER_STANDALONE=yes \
+MONGO_SERVER_STANDALONE_AUTH=yes \
+MONGO_SERVER_REPLICASET=yes \
+MONGO_SERVER_REPLICASET_AUTH=yes \
+make servers
+
+: Upstream test suite NTS extension
+ret=0
+TEST_PHP_EXECUTABLE=/usr/bin/php \
+TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/mongo.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+/usr/bin/php -n run-tests.php || ret=1
+
+: Clanups
+make stop-servers
+rm -rf data
+
+[ $ret -eq 0 ] || exit $ret
+%endif
 
 %if %{with_zts}
 : Minimal load test for ZTS extension
 %{__ztsphp} -n \
+    -d extension=json.so \
     -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     -i | grep "MongoDB Support => enabled"
 %endif
@@ -149,6 +218,15 @@ fi
 
 
 %changelog
+* Wed Feb 26 2014 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.1.alpha1
+- Update to 1.5.0alpha1
+- use sources from github for tests
+- cleanup mongo.ini
+- enable SASL support (Fedora >= 19, RHEL-7)
+  https://jira.mongodb.org/browse/PHP-996
+- add patch for JSON detection
+  https://jira.mongodb.org/browse/PHP-995
+
 * Tue Nov 05 2013 Remi Collet <remi@fedoraproject.org> - 1.4.5-1
 - Update to 1.4.5
 - install doc in pecl doc_dir

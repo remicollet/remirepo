@@ -1,0 +1,16 @@
+--- config.m4.old	2014-02-26 14:17:31.000000000 +0100
++++ config.m4	2014-02-26 14:22:36.000000000 +0100
+@@ -148,4 +148,13 @@
+     -L$MONGO_SASL_DIR/$PHP_LIBDIR
+   ])
+   PHP_SUBST(MONGO_SHARED_LIBADD)
++
++fi
++
++AC_MSG_CHECKING(for JSON)
++if test -f "$phpincludedir/ext/json/php_json.h"; then
++  AC_DEFINE(HAVE_JSON, 1, [JSON support])
++  AC_MSG_RESULT(Yes)
++else
++  AC_MSG_RESULT(Missing json or jsonc extension)
+ fi
