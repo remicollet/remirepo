@@ -1,16 +1,17 @@
---- Crypt_RSA-0.3.5/RSA.php		2014-01-07 11:18:22.000000000 +0100
-+++ Crypt_RSA-0.3.5/RSA.php.fix	2014-01-07 11:18:22.000000000 +0100
-@@ -171,7 +171,7 @@ define('CRYPT_RSA_MODE_OPENSSL', 2);
+diff -up ./Crypt_RSA-0.3.6/RSA.php.orig ./Crypt_RSA-0.3.6/RSA.php
+--- ./Crypt_RSA-0.3.6/RSA.php.orig	2014-02-26 17:57:48.055385477 +0100
++++ ./Crypt_RSA-0.3.6/RSA.php	2014-02-26 17:59:38.974772761 +0100
+@@ -170,7 +170,7 @@ define('CRYPT_RSA_MODE_OPENSSL', 2);
  /**
   * Default openSSL configuration file.
   */
 -define('CRYPT_RSA_OPENSSL_CONFIG', dirname(__FILE__) . '/../openssl.cnf');
 +define('CRYPT_RSA_OPENSSL_CONFIG', 'openssl.cnf');
  
- 
  /**#@+
-@@ -465,7 +465,14 @@ class Crypt_RSA {
-             require_once('Math/BigInteger.php');
+  * @access public
+@@ -464,7 +464,14 @@ class Crypt_RSA
+             include_once 'Math/BigInteger.php';
          }
  
 -        $this->configFile = CRYPT_RSA_OPENSSL_CONFIG;
@@ -24,14 +25,15 @@
 +        $this->configFile = $dir . DIRECTORY_SEPARATOR . CRYPT_RSA_OPENSSL_CONFIG;
  
          if ( !defined('CRYPT_RSA_MODE') ) {
-             switch (true) {
---- package.xml		2014-01-07 11:03:40.000000000 +0100
-+++ package.xml.fix	2014-01-07 11:06:12.000000000 +0100
-@@ -23,8 +23,10 @@ 
-  <notes>0.3.5 release</notes>
+             // Math/BigInteger's openssl requirements are a little less stringent than Crypt/RSA's. in particular,
+diff -up ./package.xml.orig ./package.xml
+--- ./package.xml.orig	2014-02-26 17:59:38.974772761 +0100
++++ ./package.xml	2014-02-26 18:00:08.020874166 +0100
+@@ -23,8 +23,10 @@
+  <notes>0.3.6 release</notes>
   <contents>
    <dir name="/">
--    <file baseinstalldir="Crypt" name="RSA.php" role="php" md5sum="bd0402efcbf7cdeb3e68205c77a88bc0"/>
+-    <file baseinstalldir="Crypt" name="RSA.php" role="php" md5sum="158051c445d140e7b4486487307a8f11"/>
 -    <file baseinstalldir="" name="openssl.cnf" role="php" md5sum="0f1015cb8894127a94a05afa7cc23760"/>
 +    <file baseinstalldir="Crypt" name="RSA.php" role="php">
 +       <tasks:replace from="@cfg_dir@" to="cfg_dir" type="pear-config" />

@@ -1,9 +1,9 @@
-%{!?__pear: %global __pear %{_bindir}/pear}
+%{!?__pear:       %global __pear %{_bindir}/pear}
 %global pear_name Net_SSH2
 
 Name:           php-phpseclib-net-ssh2
-Version:        0.3.5
-Release:        3%{?dist}
+Version:        0.3.6
+Release:        1%{?dist}
 Summary:        Pure-PHP implementation of SSHv2
 
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ Pure-PHP implementation of SSHv2.
 pushd %{pear_name}-%{version}
 # Fix line endings of file we're about to patch
 sed -e 's/\r//' -i SSH2.php
-%patch0 -p2
+%patch0 -p1
 # Drop md5sum of patched file from the PEAR manifest (or else it'll complain)
 sed -e '/SSH2.php/s/md5sum="[^"]*"//' \
     ../package.xml >%{name}.xml
@@ -56,20 +56,20 @@ cd %{pear_name}-%{version}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -90,6 +90,9 @@ fi
 
 
 %changelog
+* Wed Feb 26 2014 Remi Collet <remi@fedoraproject.org> - 0.3.6-1
+- Update to 0.3.6
+
 * Sat Jan 25 2014 Remi Collet <rpms@famillecollet.com> - 0.3.5-3
 - backport for remi repo
 

@@ -1,43 +1,46 @@
-Description: Fix Crypt_Blowfish conflict
- Rename Crypt/Blowfish.php into Crypt/Blowfish-phpseclib.php so it can
- be co-installed with Crypt_Blowfish from PEAR (php-crypt-blowfish
- package).
-Author: David Prévot <taffit@tilapin.org>
-Bug: https://github.com/phpseclib/phpseclib/issues/125
-Last-Update: 2013-06-29
---- a/Net/SSH2.php
-+++ b/Net/SSH2.php
-@@ -1329,14 +1329,14 @@
+diff -up Net_SSH2-0.3.6/SSH2.php.orig Net_SSH2-0.3.6/SSH2.php
+--- Net_SSH2-0.3.6/SSH2.php.orig	2014-02-26 18:06:35.698241870 +0100
++++ Net_SSH2-0.3.6/SSH2.php	2014-02-26 18:17:42.433603190 +0100
+@@ -1060,7 +1060,7 @@ class Net_SSH2
+                     array('twofish128-ctr', 'twofish192-ctr', 'twofish256-ctr', 'twofish128-cbc', 'twofish192-cbc', 'twofish256-cbc', 'twofish-cbc')
+                 );
+             }
+-            if (!$this->_is_includable('Crypt/Blowfish.php')) {
++            if (!$this->_is_includable('Crypt/Blowfish-phpseclib.php')) {
+                 $encryption_algorithms = array_diff(
+                     $encryption_algorithms,
+                     array('blowfish-ctr', 'blowfish-cbc')
+@@ -1428,14 +1428,14 @@ class Net_SSH2
                  break;
              case 'blowfish-cbc':
                  if (!class_exists('Crypt_Blowfish')) {
--                    require_once('Crypt/Blowfish.php');
-+                    require_once('Crypt/Blowfish-phpseclib.php');
+-                    include_once 'Crypt/Blowfish.php';
++                    include_once 'Crypt/Blowfish-phpseclib.php';
                  }
                  $this->encrypt = new Crypt_Blowfish();
                  $this->encrypt_block_size = 8;
                  break;
              case 'blowfish-ctr':
                  if (!class_exists('Crypt_Blowfish')) {
--                    require_once('Crypt/Blowfish.php');
-+                    require_once('Crypt/Blowfish-phpseclib.php');
+-                    include_once 'Crypt/Blowfish.php';
++                    include_once 'Crypt/Blowfish-phpseclib.php';
                  }
                  $this->encrypt = new Crypt_Blowfish(CRYPT_BLOWFISH_MODE_CTR);
                  $this->encrypt_block_size = 8;
-@@ -1405,14 +1405,14 @@
+@@ -1504,14 +1504,14 @@ class Net_SSH2
                  break;
              case 'blowfish-cbc':
                  if (!class_exists('Crypt_Blowfish')) {
--                    require_once('Crypt/Blowfish.php');
-+                    require_once('Crypt/Blowfish-phpseclib.php');
+-                    include_once 'Crypt/Blowfish.php';
++                    include_once 'Crypt/Blowfish-phpseclib.php';
                  }
                  $this->decrypt = new Crypt_Blowfish();
                  $this->decrypt_block_size = 8;
                  break;
              case 'blowfish-ctr':
                  if (!class_exists('Crypt_Blowfish')) {
--                    require_once('Crypt/Blowfish.php');
-+                    require_once('Crypt/Blowfish-phpseclib.php');
+-                    include_once 'Crypt/Blowfish.php';
++                    include_once 'Crypt/Blowfish-phpseclib.php';
                  }
                  $this->decrypt = new Crypt_Blowfish(CRYPT_BLOWFISH_MODE_CTR);
                  $this->decrypt_block_size = 8;
