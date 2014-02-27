@@ -16,7 +16,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.6.10
+Version:        1.6.11
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -107,6 +107,8 @@ peclbuild() {
 %configure \
     --with-swoole \
     --enable-msgqueue \
+    --enable-sockets \
+    --enable-async-mysql \
     --with-php-config=$1
 
 make %{?_smp_mflags}
@@ -196,6 +198,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 27 2014 Remi Collet <remi@fedoraproject.org> - 1.6.11-1
+- Update to 1.6.11
+
 * Sun Jan 26 2014 Remi Collet <remi@fedoraproject.org> - 1.6.10-1
 - Update to 1.6.10
 
