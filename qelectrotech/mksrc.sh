@@ -9,6 +9,10 @@ VER=${2-0.4}
 RPM=$(php -r "printf('%.2f', $VER);")
 
 svn export -r $REV svn://svn.tuxfamily.org/svnroot/qet/qet/trunk qelectrotech-${VER}-svn${REV}
+
+sed -e "/displayedVersion/s/${VER}-dev/${VER}-dev (Revision ${REV})/" \
+    -i qelectrotech-${VER}-svn${REV}/sources/qet.h
+
 tar czf qelectrotech-${VER}-svn${REV}.tgz qelectrotech-${VER}-svn${REV}
 rm -rf qelectrotech-${VER}-svn${REV}
 
