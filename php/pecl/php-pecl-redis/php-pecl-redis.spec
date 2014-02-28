@@ -6,26 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  redis
-
-%if 0%{?fedora} >= 19
-%ifarch ppc64
-# redis have ExcludeArch: ppc64
-%global with_test  0
-%else
-%global with_test  1
-%endif
-%else
-# redis version is too old
-%global with_test  0
-%endif
+%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          php-pecl-redis
 Version:       2.2.4
-Release:       1%{?dist}.1
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -37,7 +27,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel
 BuildRequires: php-pecl-igbinary-devel
 # to run Test suite
-%if %{with_test}
+%if %{with_tests}
 BuildRequires: redis >= 2.6
 %endif
 
@@ -58,10 +48,15 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 
+%if 0%{?fedora} < 20
 # Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -139,24 +134,26 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+# Test & Documentation
+cd nts
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
 # simple module load test
-ln -sf %{php_extdir}/igbinary.so nts/modules/igbinary.so
 php --no-php-ini \
-    --define extension_dir=nts/modules \
     --define extension=igbinary.so \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-ln -sf %{php_ztsextdir}/igbinary.so zts/modules/igbinary.so
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=zts/modules \
     --define extension=igbinary.so \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-%if %{with_test}
+%if %{with_tests}
 cd nts/tests
 
 # this test requires redis >= 2.6.9
@@ -187,9 +184,8 @@ sed -e "s/6379/$port/" -i TestRedis.php
 # Run the test Suite
 ret=0
 php --no-php-ini \
-    --define extension_dir=../modules \
     --define extension=igbinary.so \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     TestRedis.php || ret=1
 
 # Cleanup
@@ -220,7 +216,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc nts/{COPYING,CREDITS,README.markdown,arrays.markdown}
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %{php_extdir}/%{pecl_name}.so
@@ -231,6 +227,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> - 2.2.4-2
+- cleaups
+- move doc in pecl_docdir
+
 * Mon Sep 09 2013 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
 - Update to 2.2.4
 
