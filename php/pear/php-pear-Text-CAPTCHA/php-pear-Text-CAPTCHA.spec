@@ -6,11 +6,11 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name Text_CAPTCHA
 
 Name:           php-pear-Text-CAPTCHA
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Generation of CAPTCHAs
 
@@ -93,6 +93,9 @@ fi
 
 
 %changelog
+* Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2 (stable) - no change since 1.0.1
+
 * Mon Feb 17 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 (stable) - no change since 0.5.0
 
