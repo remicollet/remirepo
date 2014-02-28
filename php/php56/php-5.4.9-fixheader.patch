@@ -1,0 +1,23 @@
+
+Make generated php_config.h constant across rebuilds.
+
+--- php-5.4.9/configure.in.fixheader
++++ php-5.4.9/configure.in
+@@ -1258,7 +1258,7 @@ fi
+ EXTRA_LDFLAGS="$EXTRA_LDFLAGS $PHP_LDFLAGS"
+ EXTRA_LDFLAGS_PROGRAM="$EXTRA_LDFLAGS_PROGRAM $PHP_LDFLAGS"
+ 
+-PHP_BUILD_DATE=`date '+%Y-%m-%d'`
++PHP_BUILD_DATE=`date '+%Y-%m-%d' -r $srcdir/NEWS`
+ AC_DEFINE_UNQUOTED(PHP_BUILD_DATE,"$PHP_BUILD_DATE",[PHP build date])
+ 
+ case $host_alias in
+@@ -1269,7 +1269,7 @@ case $host_alias in
+   AC_DEFINE_UNQUOTED(PHP_UNAME,"$PHP_UNAME",[hardcode for each of the cross compiler host])
+   ;;
+ *)
+-  PHP_UNAME=`uname -a | xargs`
++  PHP_UNAME=`uname | xargs`
+   AC_DEFINE_UNQUOTED(PHP_UNAME,"$PHP_UNAME",[uname -a output])
+   PHP_OS=`uname | xargs`
+   AC_DEFINE_UNQUOTED(PHP_OS,"$PHP_OS",[uname output])

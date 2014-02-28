@@ -1,0 +1,587 @@
+diff -up php-5.5.2RC1/ext/zip/config.m4.systzip php-5.5.2RC1/ext/zip/config.m4
+--- php-5.5.2RC1/ext/zip/config.m4.systzip	2013-07-31 10:41:15.000000000 +0200
++++ php-5.5.2RC1/ext/zip/config.m4	2013-08-08 09:24:07.577567241 +0200
+@@ -13,65 +13,116 @@ fi
+ PHP_ARG_WITH(pcre-dir, pcre install prefix,
+ [  --with-pcre-dir         ZIP: pcre install prefix], no, no)
+ 
++PHP_ARG_WITH(libzip, libzip,
++[ --with-libzip[=DIR]        ZIP: use libzip], no, no)
++
+ if test "$PHP_ZIP" != "no"; then
++  if test "$PHP_LIBZIP" != "no"; then
++
++    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
++
++    dnl system libzip, depends on libzip
++    AC_MSG_CHECKING(for libzip)
++    if test -r $PHP_LIBZIP/include/zip.h; then
++      LIBZIP_CFLAGS="-I$PHP_LIBZIP/include"
++      LIBZIP_LIBDIR="$PHP_LIBZIP/$PHP_LIBDIR"
++      AC_MSG_RESULT(from option: found in $PHP_LIBZIP)
++
++    elif test -x "$PKG_CONFIG" && $PKG_CONFIG --exists libzip; then
++      LIBZIP_CFLAGS=`$PKG_CONFIG libzip --cflags`
++      LIBZIP_LIBDIR=`$PKG_CONFIG libzip --variable=libdir`
++      AC_MSG_RESULT(from pkgconfig: found in $LIBZIP_LIBDIR)
+ 
+-  if test "$PHP_ZLIB_DIR" != "no" && test "$PHP_ZLIB_DIR" != "yes"; then
+-    if test -f "$PHP_ZLIB_DIR/include/zlib/zlib.h"; then
+-      PHP_ZLIB_DIR="$PHP_ZLIB_DIR"
+-      PHP_ZLIB_INCDIR="$PHP_ZLIB_DIR/include/zlib"
+-    elif test -f "$PHP_ZLIB_DIR/include/zlib.h"; then
+-      PHP_ZLIB_DIR="$PHP_ZLIB_DIR"
+-      PHP_ZLIB_INCDIR="$PHP_ZLIB_DIR/include"
+     else
+-      AC_MSG_ERROR([Can not find zlib headers under "$PHP_ZLIB_DIR"])
++      for i in /usr/local /usr; do
++        if test -r $i/include/zip.h; then
++          LIBZIP_CFLAGS="-I$i/include"
++          LIBZIP_LIBDIR="$i/$PHP_LIBDIR"
++          AC_MSG_RESULT(in default path: found in $i)
++          break
++        fi
++      done
+     fi
++
++    if test -z "$LIBZIP_LIBDIR"; then
++      AC_MSG_RESULT(not found)
++      AC_MSG_ERROR(Please reinstall the libzip distribution)
++    fi
++
++    dnl Could not think of a simple way to check libzip for overwrite support
++    PHP_CHECK_LIBRARY(zip, zip_open,
++    [
++      PHP_ADD_LIBRARY_WITH_PATH(zip, $LIBZIP_LIBDIR, ZIP_SHARED_LIBADD)
++      AC_DEFINE(HAVE_LIBZIP,1,[ ])
++    ], [
++      AC_MSG_ERROR(could not find usable libzip)
++    ], [
++      -L$LIBZIP_LIBDIR
++    ])
++
++    AC_DEFINE(HAVE_ZIP,1,[ ]) 
++    PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c, $ext_shared,, $LIBZIP_CFLAGS)
++    PHP_SUBST(ZIP_SHARED_LIBADD)
+   else
+-    for i in /usr/local /usr; do
+-      if test -f "$i/include/zlib/zlib.h"; then
+-        PHP_ZLIB_DIR="$i"
+-        PHP_ZLIB_INCDIR="$i/include/zlib"
+-      elif test -f "$i/include/zlib.h"; then
+-        PHP_ZLIB_DIR="$i"
+-        PHP_ZLIB_INCDIR="$i/include"
++
++  dnl bundled libzip, depends on zlib
++    if test "$PHP_ZLIB_DIR" != "no" && test "$PHP_ZLIB_DIR" != "yes"; then
++      if test -f "$PHP_ZLIB_DIR/include/zlib/zlib.h"; then
++        PHP_ZLIB_DIR="$PHP_ZLIB_DIR"
++        PHP_ZLIB_INCDIR="$PHP_ZLIB_DIR/include/zlib"
++      elif test -f "$PHP_ZLIB_DIR/include/zlib.h"; then
++        PHP_ZLIB_DIR="$PHP_ZLIB_DIR"
++        PHP_ZLIB_INCDIR="$PHP_ZLIB_DIR/include"
++      else
++        AC_MSG_ERROR([Can not find zlib headers under "$PHP_ZLIB_DIR"])
+       fi
+-    done
+-  fi
++    else
++      for i in /usr/local /usr; do
++        if test -f "$i/include/zlib/zlib.h"; then
++          PHP_ZLIB_DIR="$i"
++          PHP_ZLIB_INCDIR="$i/include/zlib"
++        elif test -f "$i/include/zlib.h"; then
++          PHP_ZLIB_DIR="$i"
++          PHP_ZLIB_INCDIR="$i/include"
++        fi
++      done
++    fi
+ 
+-  dnl # zlib
+-  AC_MSG_CHECKING([for the location of zlib])
+-  if test "$PHP_ZLIB_DIR" = "no"; then
+-    AC_MSG_ERROR([zip support requires ZLIB. Use --with-zlib-dir=<DIR> to specify prefix where ZLIB include and library are located])
+-  else
+-    AC_MSG_RESULT([$PHP_ZLIB_DIR])
+-    PHP_ADD_LIBRARY_WITH_PATH(z, $PHP_ZLIB_DIR/$PHP_LIBDIR, ZIP_SHARED_LIBADD)
+-    PHP_ADD_INCLUDE($PHP_ZLIB_INCDIR)
+-  fi
++    dnl # zlib
++    AC_MSG_CHECKING([for the location of zlib])
++    if test "$PHP_ZLIB_DIR" = "no"; then
++      AC_MSG_ERROR([zip support requires ZLIB. Use --with-zlib-dir=<DIR> to specify prefix where ZLIB include and library are located])
++    else
++      AC_MSG_RESULT([$PHP_ZLIB_DIR])
++      PHP_ADD_LIBRARY_WITH_PATH(z, $PHP_ZLIB_DIR/$PHP_LIBDIR, ZIP_SHARED_LIBADD)
++      PHP_ADD_INCLUDE($PHP_ZLIB_INCDIR)
++    fi
+ 
+-  dnl This is PECL build, check if bundled PCRE library is used
+-  old_CPPFLAGS=$CPPFLAGS
+-  CPPFLAGS=$INCLUDES
+-  AC_EGREP_CPP(yes,[
++    dnl This is PECL build, check if bundled PCRE library is used
++    old_CPPFLAGS=$CPPFLAGS
++    CPPFLAGS=$INCLUDES
++    AC_EGREP_CPP(yes,[
+ #include <main/php_config.h>
+ #if defined(HAVE_BUNDLED_PCRE) && !defined(COMPILE_DL_PCRE)
+ yes
+ #endif
+-  ],[
+-    PHP_PCRE_REGEX=yes
+-  ],[
+-    AC_EGREP_CPP(yes,[
++    ],[
++      PHP_PCRE_REGEX=yes
++    ],[
++      AC_EGREP_CPP(yes,[
+ #include <main/php_config.h>
+ #if defined(HAVE_PCRE) && !defined(COMPILE_DL_PCRE)
+ yes
+ #endif
+-    ],[
+-      PHP_PCRE_REGEX=pecl
+-    ],[
+-      PHP_PCRE_REGEX=no
++      ],[
++        PHP_PCRE_REGEX=pecl
++      ],[
++        PHP_PCRE_REGEX=no
++      ])
+     ])
+-  ])
+-  CPPFLAGS=$old_CPPFLAGS
++    CPPFLAGS=$old_CPPFLAGS
+ 
+-  PHP_ZIP_SOURCES="$PHP_ZIP_SOURCES lib/zip_add.c lib/zip_error.c lib/zip_fclose.c \
++    PHP_ZIP_SOURCES="$PHP_ZIP_SOURCES lib/zip_add.c lib/zip_error.c lib/zip_fclose.c \
+                          lib/zip_fread.c lib/zip_open.c lib/zip_source_filep.c  \
+                          lib/zip_strerror.c lib/zip_close.c lib/zip_error_get.c \
+                          lib/zip_file_error_get.c lib/zip_free.c lib/zip_rename.c \
+@@ -98,10 +149,11 @@ yes
+ 						 lib/zip_source_open.c lib/zip_source_pkware.c lib/zip_source_pop.c \
+ 						 lib/zip_source_read.c lib/zip_source_stat.c"
+ 
+-  AC_DEFINE(HAVE_ZIP,1,[ ])
+-  PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c $PHP_ZIP_SOURCES, $ext_shared)
+-  PHP_ADD_BUILD_DIR($ext_builddir/lib, 1)
+-  PHP_SUBST(ZIP_SHARED_LIBADD)
++    AC_DEFINE(HAVE_ZIP,1,[ ])
++    PHP_NEW_EXTENSION(zip, php_zip.c zip_stream.c $PHP_ZIP_SOURCES, $ext_shared)
++    PHP_ADD_BUILD_DIR($ext_builddir/lib, 1)
++    PHP_SUBST(ZIP_SHARED_LIBADD)
++  fi
+ 
+   dnl so we always include the known-good working hack.
+   PHP_ADD_MAKEFILE_FRAGMENT
+diff -up php-5.5.2RC1/ext/zip/libzip-missing-0.10.h.systzip php-5.5.2RC1/ext/zip/libzip-missing-0.10.h
+--- php-5.5.2RC1/ext/zip/libzip-missing-0.10.h.systzip	2013-08-08 09:34:53.338910267 +0200
++++ php-5.5.2RC1/ext/zip/libzip-missing-0.10.h	2013-08-08 09:26:21.244072278 +0200
+@@ -0,0 +1,219 @@
++/* Copied from libzip 0.10 */
++
++/* state of change of a file in zip archive */
++
++enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
++                 ZIP_ST_ADDED, ZIP_ST_RENAMED };
++
++/* error source for layered sources */
++
++enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
++
++typedef zip_int64_t (*zip_source_layered_callback)(struct zip_source *, void *,
++                                                   void *, zip_uint64_t,
++                                                   enum zip_source_cmd);
++
++struct zip_error {
++    int zip_err;        /* libzip error code (ZIP_ER_*) */
++    int sys_err;        /* copy of errno (E*) or zlib error code */
++    char *str;          /* string representation or NULL */
++};
++
++/* zip archive, part of API */
++
++struct zip {
++    char *zn;                   /* file name */
++    FILE *zp;                   /* file */
++    struct zip_error error;     /* error information */
++
++    unsigned int flags;         /* archive global flags */
++    unsigned int ch_flags;	/* changed archive global flags */
++
++    char *default_password;     /* password used when no other supplied */
++
++    struct zip_cdir *cdir;	/* central directory */
++    char *ch_comment;           /* changed archive comment */
++    int ch_comment_len;         /* length of changed zip archive
++                                 * comment, -1 if unchanged */
++    zip_uint64_t nentry;        /* number of entries */
++    zip_uint64_t nentry_alloc;  /* number of entries allocated */
++    struct zip_entry *entry;    /* entries */
++    int nfile;                  /* number of opened files within archive */
++    int nfile_alloc;            /* number of files allocated */
++    struct zip_file **file;     /* opened files within archive */
++};
++
++/* file in zip archive, part of API */
++
++struct zip_file {
++    struct zip *za;             /* zip archive containing this file */
++    struct zip_error error;     /* error information */
++    int eof;
++    struct zip_source *src;     /* data source */
++};
++
++/* zip archive directory entry (central or local) */
++
++struct zip_dirent {
++    unsigned short version_madeby;	/* (c)  version of creator */
++    unsigned short version_needed;	/* (cl) version needed to extract */
++    unsigned short bitflags;            /* (cl) general purpose bit flag */
++    unsigned short comp_method;         /* (cl) compression method used */
++    time_t last_mod;                    /* (cl) time of last modification */
++    unsigned int crc;                   /* (cl) CRC-32 of uncompressed data */
++    unsigned int comp_size;             /* (cl) size of commpressed data */
++    unsigned int uncomp_size;           /* (cl) size of uncommpressed data */
++    char *filename;                     /* (cl) file name (NUL-terminated) */
++    unsigned short filename_len;        /* (cl) length of filename (w/o NUL) */
++    char *extrafield;                   /* (cl) extra field */
++    unsigned short extrafield_len;	/* (cl) length of extra field */
++    char *comment;                      /* (c)  file comment */
++    unsigned short comment_len;         /* (c)  length of file comment */
++    unsigned short disk_number;         /* (c)  disk number start */
++    unsigned short int_attrib;          /* (c)  internal file attributes */
++    unsigned int ext_attrib;            /* (c)  external file attributes */
++    unsigned int offset;                /* (c)  offset of local header  */
++};
++
++/* zip archive central directory */
++
++struct zip_cdir {
++    struct zip_dirent *entry;   /* directory entries */
++    int nentry;                 /* number of entries */
++
++    unsigned int size;          /* size of central direcotry */
++    unsigned int offset;        /* offset of central directory in file */
++    char *comment;              /* zip archive comment */
++    unsigned short comment_len; /* length of zip archive comment */
++};
++
++struct zip_source {
++    struct zip_source *src;
++    union {
++        zip_source_callback f;
++        zip_source_layered_callback l;
++    } cb;
++    void *ud;
++    enum zip_les error_source;
++    int is_open;
++};
++
++/* entry in zip archive directory */
++
++struct zip_entry {
++    enum zip_state state;
++    struct zip_source *source;
++    char *ch_filename;
++    char *ch_extra;
++    int ch_extra_len;
++    char *ch_comment;
++    int ch_comment_len;
++};
++
++void _zip_dirent_finalize(struct zip_dirent *zde)
++{
++    free(zde->filename);
++    zde->filename = NULL;
++    free(zde->extrafield);
++    zde->extrafield = NULL;
++    free(zde->comment);
++    zde->comment = NULL;
++}
++
++void _zip_cdir_free(struct zip_cdir *cd)
++{
++    int i;
++
++    if (!cd)
++        return;
++
++    for (i=0; i<cd->nentry; i++)
++        _zip_dirent_finalize(cd->entry+i);
++    free(cd->comment);
++    free(cd->entry);
++    free(cd);
++}
++
++void _zip_error_fini(struct zip_error *err)
++{
++    free(err->str);
++    err->str = NULL;
++}
++
++void _zip_error_init(struct zip_error *err)
++{
++    err->zip_err = ZIP_ER_OK;
++    err->sys_err = 0;
++    err->str = NULL;
++}
++
++void _zip_unchange_data(struct zip_entry *ze)
++{
++    if (ze->source) {
++        zip_source_free(ze->source);
++        ze->source = NULL;
++    }
++
++    ze->state = ze->ch_filename ? ZIP_ST_RENAMED : ZIP_ST_UNCHANGED;
++}
++
++void _zip_entry_free(struct zip_entry *ze)
++{
++    free(ze->ch_filename);
++    ze->ch_filename = NULL;
++    free(ze->ch_extra);
++    ze->ch_extra = NULL;
++    ze->ch_extra_len = -1;
++    free(ze->ch_comment);
++    ze->ch_comment = NULL;
++    ze->ch_comment_len = -1;
++
++    _zip_unchange_data(ze);
++}
++
++void
++_zip_error_set(struct zip_error *err, int ze, int se)
++{
++    if (err) {
++        err->zip_err = ze;
++        err->sys_err = se;
++    }
++}
++
++void _zip_free(struct zip *za)
++{
++    int i;
++
++    if (za == NULL)
++        return;
++
++    if (za->zn)
++        free(za->zn);
++
++    if (za->zp)
++       	fclose(za->zp);
++
++    free(za->default_password);
++    _zip_cdir_free(za->cdir);
++    free(za->ch_comment);
++
++    if (za->entry) {
++        for (i=0; i<za->nentry; i++) {
++            _zip_entry_free(za->entry+i);
++        }
++        free(za->entry);
++    }
++
++    for (i=0; i<za->nfile; i++) {
++        if (za->file[i]->error.zip_err == ZIP_ER_OK) {
++            _zip_error_set(&za->file[i]->error, ZIP_ER_ZIPCLOSED, 0);
++            za->file[i]->za = NULL;
++        }
++    }
++
++    free(za->file);
++    free(za);
++    return;
++} 
++
++
+diff -up php-5.5.2RC1/ext/zip/php_zip.c.systzip php-5.5.2RC1/ext/zip/php_zip.c
+--- php-5.5.2RC1/ext/zip/php_zip.c.systzip	2013-07-31 10:41:15.000000000 +0200
++++ php-5.5.2RC1/ext/zip/php_zip.c	2013-08-08 09:33:59.367735224 +0200
+@@ -30,8 +30,20 @@
+ #include "ext/pcre/php_pcre.h"
+ #include "ext/standard/php_filestat.h"
+ #include "php_zip.h"
++
++#if defined(HAVE_LIBZIP)
++#include <zip.h>
++
++#if LIBZIP_VERSION_MAJOR == 0 && LIBZIP_VERSION_MINOR == 10
++#include "libzip-missing-0.10.h"
++#elif LIBZIP_VERSION_MAJOR == 0 && LIBZIP_VERSION_MINOR == 11
++#include "libzip-missing-0.11.h"
++#endif
++
++#else
+ #include "lib/zip.h"
+ #include "lib/zipint.h"
++#endif
+ 
+ /* zip_open is a macro for renaming libzip zipopen, so we need to use PHP_NAMED_FUNCTION */
+ static PHP_NAMED_FUNCTION(zif_zip_open);
+@@ -1631,6 +1643,10 @@ static ZIPARCHIVE_METHOD(addEmptyDir)
+ 	}
+ 
+ 	idx = zip_stat(intern, s, 0, &sb);
++	/* We don't care about the NOENT status	error here. */
++	if (intern->error.zip_err == ZIP_ER_NOENT) {
++		_zip_error_set(&intern->error, ZIP_ER_OK, 0);
++	}
+ 	if (idx >= 0) {
+ 		RETVAL_FALSE;
+ 	} else {
+@@ -1853,6 +1869,10 @@ static ZIPARCHIVE_METHOD(addFromString)
+ 	}
+ 
+ 	cur_idx = zip_name_locate(intern, (const char *)name, 0);
++	/* We don't care about the NOENT status error here. */
++	if (intern->error.zip_err == ZIP_ER_NOENT) {
++		_zip_error_set(&intern->error, ZIP_ER_OK, 0);
++	}
+ 	/* TODO: fix  _zip_replace */
+ 	if (cur_idx >= 0) {
+ 		if (zip_delete(intern, cur_idx) == -1) {
+@@ -2877,5 +2897,9 @@ static PHP_MINFO_FUNCTION(zip)
+ 	php_info_print_table_row(2, "Zip version", PHP_ZIP_VERSION_STRING);
+-	php_info_print_table_row(2, "Libzip version", LIBZIP_VERSION);
++#if defined(HAVE_LIBZIP)
++	php_info_print_table_row(2, "Compiled against libzip version", LIBZIP_VERSION);
++#else
++	php_info_print_table_row(2, "Bundled libzip version", LIBZIP_VERSION);
++#endif
+ 
+ 	php_info_print_table_end();
+ }
+diff -up php-5.5.2RC1/ext/zip/php_zip.h.systzip php-5.5.2RC1/ext/zip/php_zip.h
+--- php-5.5.2RC1/ext/zip/php_zip.h.systzip	2013-07-31 10:41:15.000000000 +0200
++++ php-5.5.2RC1/ext/zip/php_zip.h	2013-08-08 09:24:07.579567249 +0200
+@@ -28,7 +28,11 @@ extern zend_module_entry zip_module_entr
+ #include "TSRM.h"
+ #endif
+ 
++#if defined(HAVE_LIBZIP)
++#include <zip.h>
++#else
+ #include "lib/zip.h"
++#endif
+ 
+ #define PHP_ZIP_VERSION_STRING "1.11.0"
+ 
+diff -up php-5.5.2RC1/ext/zip/tests/bug38943.phpt.systzip php-5.5.2RC1/ext/zip/tests/bug38943.phpt
+--- php-5.5.2RC1/ext/zip/tests/bug38943.phpt.systzip	2013-07-31 10:41:15.000000000 +0200
++++ php-5.5.2RC1/ext/zip/tests/bug38943.phpt	2013-08-08 09:24:07.579567249 +0200
+@@ -27,7 +27,7 @@ array(1) {
+   [0]=>
+   int(1)
+ }
+-object(myZip)#1 (%d) {
++object(myZip)#%d (%d) {
+   ["test":"myZip":private]=>
+   int(0)
+   ["testp"]=>
+diff -up php-5.5.2RC1/ext/zip/tests/pecl12414.phpt.systzip php-5.5.2RC1/ext/zip/tests/pecl12414.phpt
+--- php-5.5.2RC1/ext/zip/tests/pecl12414.phpt.systzip	2013-07-31 10:41:15.000000000 +0200
++++ php-5.5.2RC1/ext/zip/tests/pecl12414.phpt	2013-08-08 09:24:07.579567249 +0200
+@@ -5,6 +5,8 @@ Bug #12414 ( extracting files from damag
+ /*$ */
+ if(!extension_loaded('zip')) die('skip');
+  ?>
++--XFAIL--
++Doesn't work with system libzip (zip_readfile could not read from ...)
+ --FILE--
+ <?php
+ $filename = 'MYLOGOV2.GFX';
+diff -up php-5.5.2RC1/ext/zip/zip_stream.c.systzip php-5.5.2RC1/ext/zip/zip_stream.c
+--- php-5.5.2RC1/ext/zip/zip_stream.c.systzip	2013-07-31 10:41:15.000000000 +0200
++++ php-5.5.2RC1/ext/zip/zip_stream.c	2013-08-08 09:24:07.580567252 +0200
+@@ -6,7 +6,11 @@
+ #if HAVE_ZIP
+ #ifdef ZEND_ENGINE_2
+ 
++#if defined(HAVE_LIBZIP)
++#include <zip.h>
++#else
+ #include "lib/zip.h"
++#endif
+ 
+ #include "php_streams.h"
+ #include "ext/standard/file.h"
+--- php-5.5.2RC1/ext/zip/libzip-missing-0.11.h.systzip	2013-08-08 11:24:29.214626577 +0200
++++ php-5.5.2RC1/ext/zip/libzip-missing-0.11.h	2013-08-08 11:39:16.058225056 +0200
+@@ -0,0 +1,73 @@
++/* Copied from libzip 0.11.1 */
++
++/* error information */
++
++struct zip_error {
++    int zip_err;        /* libzip error code (ZIP_ER_*) */
++    int sys_err;        /* copy of errno (E*) or zlib error code */
++    char *str;          /* string representation or NULL */
++};
++
++/* zip archive, part of API */
++
++struct zip {
++    char *zn;                           /* file name */
++    FILE *zp;                           /* file */
++    unsigned int open_flags;            /* flags passed to zip_open */
++    struct zip_error error;             /* error information */
++
++    unsigned int flags;                 /* archive global flags */
++    unsigned int ch_flags;              /* changed archive global flags */
++
++    char *default_password;             /* password used when no other supplied */
++
++    struct zip_string *comment_orig;    /* archive comment */
++    struct zip_string *comment_changes; /* changed archive comment */
++    int comment_changed;                /* whether archive comment was changed */
++
++    zip_uint64_t nentry;                /* number of entries */
++    zip_uint64_t nentry_alloc;          /* number of entries allocated */
++    struct zip_entry *entry;            /* entries */
++
++    unsigned int nfile;                 /* number of opened files within archive */
++    unsigned int nfile_alloc;           /* number of files allocated */
++    struct zip_file **file;             /* opened files within archive */
++    
++    char *tempdir;                      /* custom temp dir (needed e.g. for OS X sandboxing) */
++};
++
++/* file in zip archive, part of API */
++
++struct zip_file {
++    struct zip *za;		/* zip archive containing this file */
++    struct zip_error error;	/* error information */
++    int eof;
++    struct zip_source *src;	/* data source */
++};
++
++void
++_zip_error_fini(struct zip_error *err)
++{
++    free(err->str);
++    err->str = NULL;
++}
++
++void
++_zip_error_init(struct zip_error *err)
++{
++    err->zip_err = ZIP_ER_OK;
++    err->sys_err = 0;
++    err->str = NULL;
++}
++
++void
++_zip_error_set(struct zip_error *err, int ze, int se)
++{
++    if (err) {
++	err->zip_err = ze;
++	err->sys_err = se;
++    }
++}
++
++#define _zip_free(za) zip_discard(za)
++

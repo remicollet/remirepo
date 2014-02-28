@@ -1,0 +1,55 @@
+From ab32d36ec65c17b3f890d488d30eb3a8ba012812 Mon Sep 17 00:00:00 2001
+From: Anatol Belski <ab@php.net>
+Date: Tue, 4 Feb 2014 10:34:11 +0100
+Subject: [PATCH] pcre tests go with 8.34 upgrade
+
+---
+ ext/pcre/tests/bug37911.phpt     |  2 +-
+ ext/pcre/tests/grep2.phpt        | 10 ++++++++--
+ ext/pcre/tests/match_flags3.phpt |  2 +-
+ 3 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/ext/pcre/tests/bug37911.phpt b/ext/pcre/tests/bug37911.phpt
+index f788119..2b7481a 100644
+--- a/ext/pcre/tests/bug37911.phpt
++++ b/ext/pcre/tests/bug37911.phpt
+@@ -37,5 +37,5 @@ array(3) {
+   string(4) "blub"
+ }
+ 
+-Warning: preg_replace_callback(): Numeric named subpatterns are not allowed in %sbug37911.php on line 14
++Warning: preg_replace_callback(): Compilation failed: group name must start with a non-digit at offset %d in %sbug37911.php on line %d
+ NULL
+diff --git a/ext/pcre/tests/grep2.phpt b/ext/pcre/tests/grep2.phpt
+index 0cf8d4a..1a8476c 100644
+--- a/ext/pcre/tests/grep2.phpt
++++ b/ext/pcre/tests/grep2.phpt
+@@ -40,6 +40,12 @@ array(1) {
+   string(1) "1"
+ }
+ bool(true)
+-array(0) {
++array(3) {
++  [5]=>
++  string(1) "a"
++  ["xyz"]=>
++  string(2) "q6"
++  [6]=>
++  string(3) "h20"
+ }
+-bool(true)
++bool(false)
+diff --git a/ext/pcre/tests/match_flags3.phpt b/ext/pcre/tests/match_flags3.phpt
+index f22205e..84deb0b 100644
+--- a/ext/pcre/tests/match_flags3.phpt
++++ b/ext/pcre/tests/match_flags3.phpt
+@@ -42,5 +42,5 @@ array(1) {
+   }
+ }
+ 
+-Warning: preg_match(): Numeric named subpatterns are not allowed in %smatch_flags3.php on line 14
++Warning: preg_match(): Compilation failed: group name must start with a non-digit at offset %d in %smatch_flags3.php on line %d
+ bool(false)
+-- 
+1.8.4.3
+
