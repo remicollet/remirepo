@@ -1,7 +1,7 @@
 Name:           remi-release
 Version:        %{fedora}
 %if %{fedora} >= 18
-Release:        1%{?dist}
+Release:        2%{?dist}
 %else
 Release:        7%{?dist}
 %endif
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 28 2014 Remi Collet <RPMS@FamilleCollet.com> - 19-2 and 20-2
+- add php56 repository
+
 * Tue Sep 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 20-1.fc20.remi
 - Fedora release 20 (Heisenbug)
 

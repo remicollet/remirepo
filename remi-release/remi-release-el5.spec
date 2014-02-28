@@ -1,9 +1,9 @@
 Name:           remi-release
 %if %{rhel} >= 6
-Version:        6.4
+Version:        6.5
 Release:        1%{?dist}
 %else
-Version:        5.9
+Version:        5.10
 Release:        1%{?dist}
 %endif
 Summary:        YUM configuration for remi repository
@@ -64,6 +64,9 @@ rm -rf %{buildroot}
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
 
 %changelog
+* Fri Feb 28 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.10-1 and 6.5-1
+- add php56 repository
+
 * Thu Oct  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 5.9-1 and 6.4-1
 - add php55 repository
 
