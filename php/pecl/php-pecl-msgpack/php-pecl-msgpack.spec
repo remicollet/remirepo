@@ -13,7 +13,7 @@
 Summary:       API for communicating with MessagePack serialization
 Name:          php-pecl-msgpack
 Version:       0.5.5
-Release:       4%{?dist}.1
+Release:       5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
@@ -49,6 +49,9 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
 %endif
 
 
@@ -146,6 +149,15 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+# Test & Documentation
+cd %{pecl_name}-%{version}
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
 cd %{pecl_name}-%{version}
@@ -181,7 +193,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc %{pecl_name}-%{version}/{ChangeLog,CREDITS,LICENSE,README.md}
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
@@ -193,11 +205,17 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-, root, root, 0755)
+%doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 %{php_ztsincldir}/ext/%{pecl_name}
 
 
 %changelog
+* Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> - 0.5.5-5
+- cleanups
+- move doc in pecl_docdir
+- move tests in pecl_testdir (devel)
+
 * Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 0.5.5-4
 - bump release
 
