@@ -4,17 +4,20 @@
 
 Name:           php-pecl-lzf
 Version:        1.6.2
-Release:        2%{?dist}.6
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# remove bundled lzf libs
-Patch0:         php-lzf-rm-bundled-libs.patch
 
 # https://bugs.php.net/65860 - Please Provides LICENSE file
+# URL taken from lzf.c header
+Source1:        http://www.php.net/license/2_02.txt
+
+# remove bundled lzf libs
+Patch0:         php-lzf-rm-bundled-libs.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
@@ -42,10 +45,15 @@ Obsoletes:      php54-pecl-lzf
 %if "%{php_version}" > "5.5"
 Obsoletes:      php55u-pecl-lzf
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:      php56u-pecl-lzf
+%endif
 
-# Filter private shared
+%if 0%{?fedora} < 20
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -66,7 +74,9 @@ rm -f lzf_c.c lzf_d.c lzf.h
 cd ..
 %endif
 
-cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+mv %{pecl_name}-%{version} NTS
+cp %{SOURCE1} NTS//LICENSE
+cp -r NTS ZTS
 
 cat >lzf.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -75,13 +85,13 @@ EOF
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}-zts
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --with-php-config=%{_bindir}/zts-php-config
@@ -90,8 +100,8 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-make install -C %{pecl_name}-%{version}     INSTALL_ROOT=%{buildroot}
-make install -C %{pecl_name}-%{version}-zts INSTALL_ROOT=%{buildroot}
+make install -C NTS INSTALL_ROOT=%{buildroot}
+make install -C ZTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 lzf.ini %{buildroot}%{php_inidir}/lzf.ini
@@ -100,19 +110,27 @@ install -D -m 644 lzf.ini %{buildroot}%{php_ztsinidir}/lzf.ini
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
-cd %{pecl_name}-%{version}
+cd NTS
 
 TEST_PHP_EXECUTABLE=%{__php} \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 %{__php} run-tests.php \
     -n -q \
-    -d extension_dir=modules \
-    -d extension=lzf.so \
+    -d extension=%{buildroot}%{php_extdir}/lzf.so
 
-cd ../%{pecl_name}-%{version}-zts
+cd ../ZTS
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 REPORT_EXIT_STATUS=1 \
@@ -120,7 +138,7 @@ NO_INTERACTION=1 \
 %{__ztsphp} run-tests.php \
     -n -q \
     -d extension_dir=modules \
-    -d extension=lzf.so \
+    -d extension=%{buildroot}%{php_ztsextdir}/lzf.so
 
 
 %clean
@@ -139,7 +157,8 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/CREDITS
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/lzf.ini
 %config(noreplace) %{php_ztsinidir}/lzf.ini
 %{php_extdir}/lzf.so
@@ -148,6 +167,12 @@ fi
 
 
 %changelog
+* Fri Feb 28 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-6
+- cleanups
+- move doc in pecl_docdir
+- move tests in pecl_docdir
+- add missing LICENSE file
+
 * Fri Nov 30 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-2.1
 - also provides php-lzf
 
