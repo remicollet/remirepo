@@ -7,7 +7,7 @@
 %global oci8ver     2.0.7
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
-%global php_bootstrap   1
+%global php_bootstrap   0
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -114,7 +114,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
