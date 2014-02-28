@@ -17,7 +17,7 @@ Summary:        Replacement for the standard PHP serializer
 Name:           php-pecl-igbinary
 Version:        1.1.2
 %if 0%{?short:1}
-Release:        0.6.git%{short}%{?dist}
+Release:        0.8.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
 %else
 Release:        2%{?dist}
@@ -58,10 +58,15 @@ Obsoletes:     php54-pecl-%{extname}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{extname}
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{extname}
+%endif
 
-# Filter private shared
+%if 0%{?fedora} < 20
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -144,8 +149,6 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-# for short circuit
-rm -f  %{extname}*/modules/apc.so
 
 make install -C %{extname}-%{version} \
      INSTALL_ROOT=%{buildroot}
@@ -158,45 +161,48 @@ make install -C %{extname}-%{version}-zts \
      INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
 
+# Test & Documentation
+cd %{extname}-%{version}
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do [ -f tests/$i ] && install -Dpm 644 tests/$i %{buildroot}%{pecl_testdir}/%{extname}/tests/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{extname}/$i
+done
+
 
 %check
 cd %{extname}-%{version}
 
 # APC required for test 045
 if [ -f %{php_extdir}/apcu.so ]; then
-  ln -s %{php_extdir}/apcu.so modules/apc.so
+  MOD="-d extension=apcu.so"
 elif [ -f %{php_extdir}/apc.so ]; then
-  ln   -s %{php_extdir}/apc.so modules/apc.so
+  MOD="-d extension=apc.so"
 fi
 
 : simple NTS module load test, without APC, as optional
 %{_bindir}/php --no-php-ini \
-    --define extension_dir=modules \
-    --define extension=%{extname}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{extname}.so \
     --modules | grep %{extname}
 
 : upstream test suite
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=apc.so -d extension=%{extname}.so" \
+TEST_PHP_ARGS="-n $MOD -d extension=$PWD/modules/%{extname}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
 cd ../%{extname}-%{version}-zts
-if [ -f %{php_ztsextdir}/apcu.so ]; then
-  ln -s %{php_ztsextdir}/apcu.so modules/apc.so
-elif [ -f %{php_ztsextdir}/apc.so ]; then
-  ln   -s %{php_ztsextdir}/apc.so modules/apc.so
-fi
+
 : simple ZTS module load test, without APC, as optional
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=modules \
-    --define extension=%{extname}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{extname}.so \
     --modules | grep %{extname}
 
 : upstream test suite
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=apc.so -d extension=%{extname}.so" \
+TEST_PHP_ARGS="-n $MOD -d extension=$PWD/modules/%{extname}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
@@ -218,11 +224,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{extname}-%{version}/COPYING
-%doc %{extname}-%{version}/CREDITS
-%doc %{extname}-%{version}/ChangeLog
-%doc %{extname}-%{version}/NEWS
-%doc %{extname}-%{version}/README
+%doc %{pecl_docdir}/%{extname}
 %config(noreplace) %{php_inidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
 %{pecl_xmldir}/%{name}.xml
@@ -233,12 +235,18 @@ fi
 
 %files devel
 %defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{extname}
 %{php_incldir}/ext/%{extname}
 
 %{php_ztsincldir}/ext/%{extname}
 
 
 %changelog
+* Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.8.git3b8ab7e
+- cleanups
+- move doc in pecl_docdir
+- move tests in pecl_testdir (devel)
+
 * Sat Jul 27 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.6.git3b8ab7e
 - latest snapshot
 - fix build with APCu
