@@ -153,7 +153,7 @@ if test "x${extver}" != "x%{version}"; then
 fi
 cd ..
 
-# Fix file roles
+# Fix file roles https://github.com/krakjoe/apcu/pull/69
 sed -e '/LICENSE/s/role="src"/role="doc"/' \
     -e '/NOTICE/s/role="src"/role="doc"/' \
     -e '/README.md/s/role="src"/role="doc"/' \
