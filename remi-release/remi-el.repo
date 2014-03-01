@@ -47,6 +47,13 @@ enabled=0
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
 
+[remi-php56-debuginfo]
+name=Les RPM de remi de PHP 5.6 pour Enterprise Linux VERSION - $basearch - debuginfo
+baseurl=http://rpms.famillecollet.com/enterprise/VERSION/debug-php56/$basearch/
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
+
 [remi-test-debuginfo]
 name=Les RPM de remi en test pour Enterprise Linux VERSION - $basearch - debuginfo
 baseurl=http://rpms.famillecollet.com/enterprise/VERSION/debug-test/$basearch/

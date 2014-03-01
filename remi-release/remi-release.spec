@@ -129,7 +129,7 @@ rm -rf %{buildroot}
 * Sat Feb  2 2008 Remi Collet <RPMS@FamilleCollet.com> - {3-8}-4.fc{3-8}.remi
 - new mirror http://rpms.famillecollet.com/
 
-* Thu Nov 02 2007 Remi Collet <RPMS@FamilleCollet.com> - 8-3.fc8.remi
+* Fri Nov 02 2007 Remi Collet <RPMS@FamilleCollet.com> - 8-3.fc8.remi
 - F8 build
 
 * Thu Aug 23 2007 Remi Collet <RPMS@FamilleCollet.com> - {3-5}-3.fc{3-5}.remi

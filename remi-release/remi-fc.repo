@@ -25,7 +25,7 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
 
 [remi-dev]
-name=Les RPM experimentaux de remi en test pour Fedora $releasever - $basearch
+name=Les RPM experimentaux de remi pour Fedora $releasever - $basearch
 baseurl=http://rpms.famillecollet.com/fedora/$releasever/devs/$basearch/
 enabled=0
 gpgcheck=1
