@@ -143,15 +143,21 @@ if [ $1 = all ]; then
 		getOneMock el${i}i $opt
 	done
 elif [ $1 = all55 ]; then
-	for n in $(seq 14 20)
-	do
-		getOneMock fc${n}i remi
-		getOneMock fc${n}x remi
-	done
 	for n in $(seq 5 6)
 	do
 		getOneMock el${n}i php55
 		getOneMock el${n}x php55
+	done
+elif [ $1 = all56 ]; then
+	for n in $(seq 19 20)
+	do
+		getOneMock fc${n}i php56
+		getOneMock fc${n}x php56
+	done
+	for n in $(seq 5 6)
+	do
+		getOneMock el${n}i php56
+		getOneMock el${n}x php56
 	done
 elif [ $1 = all54 ]; then
 	for n in $(seq 5 6)

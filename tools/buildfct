@@ -159,10 +159,34 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  echo -n "$(date +%X) el6  "
+  echo -n "$(date +%X) 55 el6  "
   setarch i686    mock $quiet --configdir=$mocketc -r el6i55  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
-  echo -n "$(date +%X) el5  "
+  echo -n "$(date +%X) 55 el5  "
   setarch i686    mock $quiet --configdir=$mocketc -r el5i55  --arch i386 rebuild $1 && echo " Ok." || echo " Error !"
+  date +%X
+else
+  echo "file not found p$1'"
+fi
+}
+
+# Build All distribution / version / 32bits for remi/remi-php56
+mock56i()
+{
+quiet=""
+if [ "$1" = "-q" ]; then
+    quiet="--quiet"
+    shift
+fi
+
+if [ -f "$1" ]; then
+  echo -n "$(date +%X) 56 fc20 "
+  setarch i686    mock $quiet --configdir=$mocketc -r fc20i56 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  echo -n "$(date +%X) 56 fc19 "
+  setarch i686    mock $quiet --configdir=$mocketc -r fc19i56 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  echo -n "$(date +%X) 56 el6  "
+  setarch i686    mock $quiet --configdir=$mocketc -r el6i56  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  echo -n "$(date +%X) 56 el5  "
+  setarch i686    mock $quiet --configdir=$mocketc -r el5i56  --arch i386 rebuild $1 && echo " Ok." || echo " Error !"
   date +%X
 else
   echo "file not found p$1'"
@@ -253,8 +277,34 @@ fi
 if [ -f "$1" ]; then
   for i in $(seq 6 -1 5)
   do
-    echo -n "$(date +%X) el$i  "
+    echo -n "$(date +%X) 55 el$i  "
     mock $quiet --configdir=$mocketc -r el${i}x55 rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  date +%X
+else
+  echo "file not found '$1'"
+fi
+}
+
+# Build All distribution / version / 64bits for remi/remi-php56
+mock56x()
+{
+quiet=""
+if [ "$1" = "-q" ]; then
+    quiet="--quiet"
+    shift
+fi
+
+if [ -f "$1" ]; then
+  for i in $(seq 20 -1 19)
+  do
+    echo -n "$(date +%X) 56 fc$i "
+    mock $quiet --configdir=$mocketc -r fc${i}x56 rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  for i in $(seq 6 -1 5)
+  do
+    echo -n "$(date +%X) 56 el$i  "
+    mock $quiet --configdir=$mocketc -r el${i}x56 rebuild $1 && echo " Ok." || echo " Error !"
   done
   date +%X
 else
