@@ -6,8 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package php-pecl-apcu}
-%{!?scl:         %global pkg_name %{name}}
+%{?scl:          %scl_package        php-pecl-apcu}
+%{!?scl:         %global pkg_name    %{name}}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -17,7 +17,7 @@
 
 Name:           %{?scl_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        4.0.3
+Version:        4.0.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
@@ -65,6 +65,9 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -140,6 +143,15 @@ configuration, available on http://localhost/apcu-panel/
 %prep
 %setup -qc
 mv %{pecl_name}-%{version} NTS
+
+cd NTS
+# Sanity check, really often broken
+extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}.
+   exit 1
+fi
+cd ..
 
 # Fix file roles
 sed -e '/LICENSE/s/role="src"/role="doc"/' \
@@ -289,6 +301,9 @@ fi
 
 
 %changelog
+* Sat Mar 01 2014 Remi Collet <remi@fedoraproject.org> - 4.0.4-1
+- Update to 4.0.4 (beta)
+
 * Mon Jan 27 2014 Remi Collet <remi@fedoraproject.org> - 4.0.3-1
 - Update to 4.0.3 (beta)
 - install doc in pecl doc_dir
