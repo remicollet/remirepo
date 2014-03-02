@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f8bad179521f434c60d836c8203f791b37a30657
+%global gh_commit    25e095469e44d195cd255bdce55ce473224558bc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
@@ -14,8 +14,8 @@
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        1.8.8
-Release:        2%{?dist}
+Version:        1.8.9
+Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -118,7 +118,7 @@ cd tests
 phpunit \
   --bootstrap=../psr0.php \
   --include-path=%{buildroot}%{_datadir}/php \
-  -d date.timezone=UTC
+  -d date.timezone=GMT
 %else
 : Skip upstream test suite
 %endif
@@ -132,6 +132,9 @@ phpunit \
 
 
 %changelog
+* Sun Mar  2 2014 Remi Collet <remi@fedoraproject.org> - 1.8.9-1
+- update to 1.8.9
+
 * Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 1.8.8-2
 - drop max version for VObject
 
