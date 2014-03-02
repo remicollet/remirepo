@@ -12,7 +12,7 @@
 
 Name:           php-pecl-cairo
 Version:        0.3.2
-Release:        5%{?dist}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
