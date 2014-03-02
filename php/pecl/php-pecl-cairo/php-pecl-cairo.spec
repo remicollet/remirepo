@@ -1,11 +1,18 @@
-%{!?__pecl:  %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir  %{_includedir}/php}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
-%global pecl_name cairo
-%global versuffix -beta
+%global proj_name  Cairo
+%global pecl_name  cairo
+%global versuffix  -beta
+%global with_zts   0%{?__ztsphp:1}
+# Result vary too much with cairo version
+%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-pecl-cairo
 Version:        0.3.2
-Release:        4%{?dist}.1
+Release:        5%{?dist}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
@@ -40,12 +47,15 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 
-# RPM 4.8
+%if 0%{?fedora} < 20
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/.*\\.so$
+%endif
 
 
 %description
@@ -67,9 +77,10 @@ These are the files needed to compile programs using cairo extension.
 %setup -c -q
 
 %patch0 -p0 -b .61882
+mv %{proj_name}-%{version} NTS
 
 # Check reported version (phpinfo), as this is often broken
-extver=$(sed -n '/#define PHP_CAIRO_VERSION/{s/.* "//;s/".*$//;p}' Cairo-%{version}/php_cairo.h)
+extver=$(sed -n '/#define PHP_CAIRO_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_cairo.h)
 if test "x${extver}" != "x%{version}%{?versuffix}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
@@ -80,16 +91,18 @@ cat > %{pecl_name}.ini << 'EOF'
 extension=%{pecl_name}.so
 EOF
 
-cp -pr Cairo-%{version} Cairo-%{version}-zts
+%if %{with_zts}
+cp -pr NTS ZTS
+%endif
 
 
 %build
-cd Cairo-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../Cairo-%{version}-zts
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
@@ -98,48 +111,62 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make -C Cairo-%{version} \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
-make -C Cairo-%{version}-zts \
-     install INSTALL_ROOT=%{buildroot}
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
+install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
 install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{proj_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{proj_name}/$i
+done
 
 
 %check
+: Minimal load test for NTS extension
+%{__php} -n \
+    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
+    -m | grep %{pecl_name}
+
+: Minimal load test for ZTS extension
+%{__ztsphp} -n \
+    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
+    -m | grep %{pecl_name}
+
+%if %{with_tests}
 # 32/445 test failing with old cairo 1.8
 
-cd Cairo-%{version}
+cd NTS
 TEST_PHP_EXECUTABLE=%{__php} \
-%if 0%{?fedora} > 13
 REPORT_EXIT_STATUS=1 \
-%else
-REPORT_EXIT_STATUS=0 \
-%endif
 NO_INTERACTION=1 \
 %{__php} run-tests.php \
     -n -q \
     -d extension_dir=modules \
     -d extension=%{pecl_name}.so
 
-cd ../Cairo-%{version}-zts
+%if %{with_zts}
+cd ../ZTS
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-%if 0%{?fedora} > 13
-REPORT_EXIT_STATUS=1 \
-%else
 REPORT_EXIT_STATUS=0 \
-%endif
 NO_INTERACTION=1 \
 %{__ztsphp} run-tests.php \
     -n -q \
     -d extension_dir=modules \
     -d extension=%{pecl_name}.so
+%endif
+%endif
 
 
 %clean
@@ -158,19 +185,30 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc Cairo-%{version}/{CREDITS,IGNORED,SYMBOLS,TODO,LICENSE}
+%doc %{pecl_docdir}/%{proj_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+%if %{with_zts}
+%{php_ztsextdir}/%{pecl_name}.so
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 %files devel
+%defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{proj_name}
 %{_includedir}/php/ext/%{pecl_name}
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
-
+%endif
 
 %changelog
+* Sun Mar  2 2014 Remi Collet <remi@fedoraproject.org> - 0.3.2-5
+- cleanups
+- move doc in pecl_docdir
+- provide tests in pecl_testdir (devel)
+- add build option --with tests for upstream test suite
+
 * Thu Aug  9 2012 Remi Collet <remi@fedoraproject.org> - 0.3.2-4
 - also provides php-cairo
 
