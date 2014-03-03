@@ -1,0 +1,14 @@
+--- pecl/gmagick/trunk/gmagick.c	2014/02/13 16:24:02	332848
++++ pecl/gmagick/trunk/gmagick.c	2014/03/03 13:44:25	332912
+@@ -1232,7 +1232,11 @@
+ 		return FAILURE;
+ 	
+ 	InitializeMagick(cwd);
++#if PHP_VERSION_ID < 50600
+ 	free(cwd);
++#else        
++	efree(cwd);
++#endif
+ 
+ 	/* init constants */
+ 	php_gmagick_initialize_constants();

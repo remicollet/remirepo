@@ -19,11 +19,15 @@
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.7
-Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+
+# http://svn.php.net/viewvc?view=revision&revision=332912
+# fix for PHP 5.6
+Patch0:         %{pecl_name}-php56.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
@@ -71,6 +75,16 @@ of images using the GraphicsMagick API.
 %setup -qc
 
 mv %{pecl_name}-%{version}%{?prever} NTS
+cd NTS
+%patch0 -p3 -b .php56
+
+extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_gmagick.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
+   exit 1
+fi
+cd ..
+
 
 # Don't install any font (and test using it)
 sed -e '/\.ttf"/d' \
@@ -201,7 +215,10 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 
 
 %changelog
-* Fri Feb 14 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-0.1.RC1
+* Mon Mar  3 2014 Remi Collet <remi@fedoraproject.org> - 1.1.7-0.2.RC1
+- add upstream patch for PHP 5.6
+
+* Fri Feb 14 2014 Remi Collet <remi@fedoraproject.org> - 1.1.7-0.1.RC1
 - Update to 1.1.7RC1 (beta)
 
 * Thu Jan 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.6-0.3.RC3
