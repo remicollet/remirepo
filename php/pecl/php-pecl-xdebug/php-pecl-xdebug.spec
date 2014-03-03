@@ -8,12 +8,13 @@
 #
 # Please, preserve the changelog entries
 #
+
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global with_zts  0%{?__ztsphp:1}
 %global pecl_name xdebug
+%global with_zts  0%{?__ztsphp:1}
 #global commit    b1ce1e3ecc95c2e24d2df73cffce7e501df53215
 #global gitver    %(c=%{commit}; echo ${c:0:7})
 #global prever    dev
@@ -107,6 +108,7 @@ if test "$ver" != "%{version}%{?prever}"; then
    : Error: Upstream XDEBUG_VERSION version is ${ver}, expecting %{version}%{?prever}.
    exit 1
 fi
+
 cd ..
 
 %if %{with_zts}
@@ -125,8 +127,8 @@ make %{?_smp_mflags}
 
 # Build debugclient
 pushd debugclient
-# buildconf only required when build from git snapshot
-[ -f configure ] || ./buildconf
+# buildconf required for aarch64 support
+./buildconf
 %configure --with-libedit
 make %{?_smp_mflags}
 popd
@@ -155,8 +157,8 @@ install -Dpm 755 NTS/debugclient/debugclient \
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -d %{buildroot}%{_sysconfdir}/php.d
-cat > %{buildroot}%{php_inidir}/%{pecl_name}.ini << 'EOF'
+install -d %{buildroot}%{php_inidir}
+cat << 'EOF' | tee %{buildroot}%{php_inidir}/%{pecl_name}.ini
 ; Enable xdebug extension module
 zend_extension=%{php_extdir}/%{pecl_name}.so
 
@@ -168,7 +170,7 @@ EOF
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -d %{buildroot}%{php_ztsinidir}
-cat > %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini << 'EOF'
+cat << 'EOF' | tee %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 ; Enable xdebug extension module
 zend_extension=%{php_ztsextdir}/%{pecl_name}.so
 
