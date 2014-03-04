@@ -1,3 +1,12 @@
+# spec file for php-horde-Horde-Autoloader
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Autoloader
 %global pear_channel pear.horde.org
@@ -6,8 +15,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Autoloader
-Version:        2.0.1
-Release:        5%{?dist}
+Version:        2.1.0
+Release:        1%{?dist}
 Summary:        Horde Autoloader
 
 Group:          Development/Libraries
@@ -71,9 +80,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+phpunit \
+    -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
     .
 %else
@@ -102,6 +112,9 @@ fi
 
 
 %changelog
+* Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-5
 - new autoloader patch for SabreDAV and VObject
 

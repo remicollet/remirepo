@@ -24,7 +24,7 @@ Build order
 	* Horde_Xml_Element         2.0.1      BR: Horde_Test  R: Horde_Exception
 	* Horde_Xml_Wbxml           2.0.1      BR: Horde_Test  R: Horde_Util
 	* Horde_Argv                2.0.7      BR: Horde_Test  R: Horde_Exception, Horde_Translation
-	* Horde_Autoloader          2.0.1      BR: Horde_Test  
+	* Horde_Autoloader          2.1.0      BR: Horde_Test  
 	* Horde_Compress_Fast       1.0.2      BR: Horde_Test  R: Horde_Exception
 	* Horde_Crypt_Blowfish      1.0.2      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	* Horde_Css_Parser          1.0.4      BR: Horde_Test  

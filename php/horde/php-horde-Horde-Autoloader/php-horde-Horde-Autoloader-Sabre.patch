@@ -1,17 +1,17 @@
-diff -up Horde_Autoloader-2.0.1/lib/Horde/Autoloader/Default.php.fedora Horde_Autoloader-2.0.1/lib/Horde/Autoloader/Default.php
---- Horde_Autoloader-2.0.1/lib/Horde/Autoloader/Default.php.fedora	2012-11-19 14:12:28.000000000 +0100
-+++ Horde_Autoloader-2.0.1/lib/Horde/Autoloader/Default.php	2014-02-20 11:34:05.139297471 +0100
-@@ -13,6 +13,7 @@
+diff -up Horde_Autoloader-2.1.0/lib/Horde/Autoloader/Default.php.fedora Horde_Autoloader-2.1.0/lib/Horde/Autoloader/Default.php
+--- Horde_Autoloader-2.1.0/lib/Horde/Autoloader/Default.php.fedora	2014-03-04 07:18:14.580352294 +0100
++++ Horde_Autoloader-2.1.0/lib/Horde/Autoloader/Default.php	2014-03-04 07:20:42.591840198 +0100
+@@ -14,6 +14,7 @@
  require_once 'Horde/Autoloader.php';
  require_once 'Horde/Autoloader/ClassPathMapper.php';
  require_once 'Horde/Autoloader/ClassPathMapper/Default.php';
 +require_once 'Horde/Autoloader/ClassPathMapper/Prefix.php';
  
- class Horde_Autoloader_Default extends Horde_Autoloader
- {
-@@ -25,6 +26,14 @@ class Horde_Autoloader_Default extends H
-                 $this->addClassPathMapper(new Horde_Autoloader_ClassPathMapper_Default($path));
-             }
+ /**
+  * Default autoloader definition that uses the include path with default
+@@ -45,6 +46,14 @@ class Horde_Autoloader_Default extends H
+                 new Horde_Autoloader_ClassPathMapper_Default($path)
+             );
          }
 +        /* Ensure Sabre is taken from /usr/share/php, as /usr/share/pear may contains old version */
 +        if (is_dir($sabre = '/usr/share/php/Sabre')) {
@@ -22,5 +22,5 @@ diff -up Horde_Autoloader-2.0.1/lib/Horde/Autoloader/Default.php.fedora Horde_Au
 +            $this->addClassPathMapper(new Horde_Autoloader_ClassPathMapper_Prefix('/^Sabre\\\\VObject\\\\/', $vobject));
 +        }
      }
- }
  
+ }
