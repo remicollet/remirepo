@@ -1,11 +1,20 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Vfs
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Vfs
 %global pear_channel pear.horde.org
 
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Vfs
-Version:        2.1.2
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Virtual File System API
 
@@ -23,7 +32,7 @@ BuildRequires:  gettext
 %if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.1.0
 %endif
 
 Requires(post): %{__pear}
@@ -116,15 +125,16 @@ done | tee ../%{pear_name}.lang
 
 %check
 %if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 # Failed asserting that file "/tmp/vfsfiletest/.horde/foo/高&执&行&力&的&打&造.txt" exists.
 sed -e 's/testDeleteUnusalFileNames/SKIP_testDeleteUnusalFileNames/' \
     -i FileTest.php
 
 phpunit \
-   -d date.timezone=UTC \
-   -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
-   .
+    -d include_path=$src/lib:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
 %else
 : Test disabled
 %endif
@@ -155,6 +165,10 @@ fi
 
 
 %changelog
+* Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+- raise dependency on Horde_Db >= 2.1.0
+
 * Mon Oct 28 2013 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - Update to 2.1.2
 - skip 1 failed test instead of ignoring test result
