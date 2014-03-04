@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Translation
+# spec file for php-horde-Horde-Browser
 #
 # Copyright (c) 2012-2014 Nick Bebout, Remi Collet
 #
