@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Form
+# spec file for php-horde-Horde-Alarm
 #
 # Copyright (c) 2012-2014 Nick Bebout, Remi Collet
 #
