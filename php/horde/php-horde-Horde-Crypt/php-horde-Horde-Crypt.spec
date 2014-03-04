@@ -1,9 +1,18 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Date
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Crypt
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt
-Version:        2.4.0
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        Horde Cryptography API
 
@@ -21,10 +30,7 @@ BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.5.0
-%if 0%{?rhel} < 6
-# Don't work with GnuPG 2
-BuildRequires:  gnupg < 2
-%endif
+BuildRequires:  gnupg2
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -102,6 +108,10 @@ done | tee ../%{pear_name}.lang
 %check
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+
+sed -e 's:/usr/bin/gpg:%{_bindir}/gpg2:' \
+    -i PgpTest.php
+
 phpunit \
     -d include_path=$src/lib:.:%{pear_phpdir} \
     -d date.timezone=UTC \
@@ -131,6 +141,10 @@ fi
 
 
 %changelog
+* Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- Update to 2.4.1
+- use gnupg2 for tests
+
 * Wed Nov 20 2013 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - Update to 2.4.0
 - add dependencies: Horde_Http, Horde_Url
