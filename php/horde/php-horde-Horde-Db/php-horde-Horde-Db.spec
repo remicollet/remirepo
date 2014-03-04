@@ -1,9 +1,18 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Db
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Db
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Db
-Version:        2.0.4
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Database Libraries
 
@@ -36,6 +45,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
@@ -110,6 +121,9 @@ fi
 
 
 %changelog
+* Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
