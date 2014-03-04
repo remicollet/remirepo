@@ -1,9 +1,18 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Form
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Alarm
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Alarm
-Version:        2.0.5
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Alarm Libraries
 
@@ -129,6 +138,9 @@ fi
 
 
 %changelog
+* Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Tue Oct 22 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 
