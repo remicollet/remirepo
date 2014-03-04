@@ -65,7 +65,7 @@ Build order
 	* Horde_Mime                2.2.9      BR: Horde_Test, Horde_Support  R: Horde_Exception, Horde_Mail, Horde_Stream, Horde_Stream_Filter, Horde_Support, Horde_Text_Flowed, Horde_Translation, Horde_Util, Horde_Nls, Horde_Text_Filter
 	* Horde_Perms               2.1.2      BR: Horde_Test, Horde_Group  R: Horde_Db, Horde_Exception, Horde_Group, Horde_Util, Horde_Translation, Horde_Tree
 	* Horde_Rdo                 2.0.2      BR: Horde_Test, Horde_Db  R: Horde_Db, Horde_Exception
-	* Horde_SessionHandler      2.2.3      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Support, Horde_Db
+	* Horde_SessionHandler      2.2.4      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Support, Horde_Db
 	* Horde_Token               2.0.4      BR: Horde_Test, Horde_Db, Horde_Url  R: Horde_Exception, Horde_Translation, Horde_Url, Horde_Util, Horde_Db
 	* Horde_View                2.0.3      BR: Horde_Test, Horde_Controller  R: Horde_Exception, Horde_Support, Horde_Util, Horde_Controller, Horde_Routes
 	* Horde_Crypt               2.4.1      BR: Horde_Test, Horde_Stream  R: Horde_Exception, Horde_Http, Horde_Mime, Horde_Stream, Horde_Stream_Filter, Horde_Translation, Horde_Url, Horde_Util
