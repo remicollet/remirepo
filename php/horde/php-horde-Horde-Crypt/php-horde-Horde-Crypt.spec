@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Date
+# spec file for php-horde-Horde-Crypt
 #
 # Copyright (c) 2012-2014 Nick Bebout, Remi Collet
 #
