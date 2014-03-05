@@ -77,11 +77,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.25
+Version: 5.4.26
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}.1
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -141,7 +141,6 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # WIP
-Patch100: php-bug66731.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -795,7 +794,6 @@ rm -f ext/json/utf8_to_utf16.*
 
 %patch91 -p1 -b .remi-oci8
 
-%patch100 -p1 -b .bug66731
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1641,6 +1639,10 @@ fi
 
 
 %changelog
+* Wed Mar  5 2014 Remi Collet <remi@fedoraproject.org> 5.4.26-1
+- Update to 5.4.26 (security)
+  http://www.php.net/ChangeLog-5.php#5.4.26
+
 * Wed Feb 26 2014 Remi Collet <rcollet@redhat.com> 5.4.25-2.1
 - php-fpm should own /var/lib/php/session
 
