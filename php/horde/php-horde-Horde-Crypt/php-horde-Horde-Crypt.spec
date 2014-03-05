@@ -13,7 +13,7 @@
 
 Name:           php-horde-Horde-Crypt
 Version:        2.4.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Cryptography API
 
 Group:          Development/Libraries
@@ -30,7 +30,8 @@ BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.5.0
-BuildRequires:  gnupg2
+# rhel >= 6 have gnupg2 which provides this
+BuildRequires:  %{_bindir}/gpg
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -109,8 +110,8 @@ done | tee ../%{pear_name}.lang
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-sed -e 's:/usr/bin/gpg:%{_bindir}/gpg2:' \
-    -i PgpTest.php
+# Reported version differs (only "Version: GnuPG v1")
+sed -e '/GnuPG v/s/%d.%d.%d (%s)/%s/' -i PgpTest.php
 
 phpunit \
     -d include_path=$src/lib:.:%{pear_phpdir} \
@@ -141,6 +142,9 @@ fi
 
 
 %changelog
+* Wed Mar 05 2014 Remi Collet <remi@fedoraproject.org> - 2.4.1-2
+- BR /usr/bin/gpg on all branches (gnupg or gnupg2 on RHEL >= 6)
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
 - Update to 2.4.1
 - use gnupg2 for tests
