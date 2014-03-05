@@ -108,7 +108,7 @@
 %endif
 
 #global snapdate      201308300430
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -177,7 +177,6 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch101: php-5.5.10-leak.patch
 Patch102: php-5.5.10-bug66762.patch
 
 # Security fixes (200+)
@@ -892,7 +891,6 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch101 -p1 -b .memleak
 %patch102 -p0 -b .66762
 
 # security patches
@@ -1881,6 +1879,10 @@ fi
 
 
 %changelog
+* Wed Mar  5 2014 Remi Collet <remi@fedoraproject.org> 5.5.10-1
+- Update to 5.5.10 (security)
+  http://www.php.net/ChangeLog-5.php#5.5.10
+
 * Wed Feb 26 2014 Remi Collet <rcollet@redhat.com> 5.5.10-0.4.RC1
 - php-fpm should own /var/lib/php/session and wsdlcache
 
