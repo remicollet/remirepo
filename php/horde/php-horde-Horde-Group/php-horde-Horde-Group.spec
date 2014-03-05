@@ -17,13 +17,14 @@ Release:        1%{?dist}
 Summary:        Horde User Groups System
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear
+BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
@@ -33,6 +34,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-pcre
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
