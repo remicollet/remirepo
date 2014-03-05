@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Db
+# spec file for php-horde-Horde-Editor
 #
 # Copyright (c) 2013-2014 Remi Collet
 #
