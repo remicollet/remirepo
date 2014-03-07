@@ -129,6 +129,11 @@ cd %{pecl_name}-%{version}
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if "%{php_version}" < "5.5"
+# syntax issue
+rm tests/pools.phpt
+%endif
+
 : Upstream test suite  for ZTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
