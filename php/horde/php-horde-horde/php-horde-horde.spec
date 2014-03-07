@@ -7,12 +7,12 @@
 # Please, preserve the changelog entries
 #
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear %{_bindir}/pear}
 %global pear_name    horde
 %global pear_channel pear.horde.org
 
 Name:           php-horde-horde
-Version:        5.1.5
+Version:        5.1.6
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -66,7 +66,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.10.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.11.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
@@ -243,6 +243,10 @@ fi
 
 
 %changelog
+* Fri Mar 07 2014 Remi Collet <remi@fedoraproject.org> - 5.1.6-1
+- Update to 5.1.6
+- raide dependency: Horde_Core >= 2.11.0
+
 * Tue Oct 29 2013 Remi Collet <remi@fedoraproject.org> - 5.1.5-1
 - Update to 5.1.5
 - raide dependency: Horde_Core >= 2.10.0
