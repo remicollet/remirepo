@@ -1,19 +1,29 @@
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+# spec file for php-pecl-memcache
+#
+# Copyright (c) 2007-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
-%global pecl_name memcache
+%global pecl_name  memcache
 # Not ready, some failed UDP tests. Neded investigation.
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
+%global with_zts   0%{?__ztsphp:1}
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcache
 Version:      3.0.8
-Release:      1%{?dist}.1
+Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-Source2:      xml2changelog
 # Missing in official archive
 # http://svn.php.net/viewvc/pecl/memcache/branches/NON_BLOCKING_IO/tests/connect.inc?view=co
 Source3:      connect.inc
@@ -45,10 +55,15 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 
-# Filter private shared
+%if 0%{?fedora} < 20
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -65,7 +80,8 @@ Memcache can be used as a PHP session handler.
 %prep 
 %setup -c -q
 
-pushd %{pecl_name}-%{version}
+mv %{pecl_name}-%{version} NTS
+pushd NTS
 
 # Chech version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_MEMCACHE_VERSION/{s/.* "//;s/".*$//;p}' php_memcache.h)
@@ -75,8 +91,6 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 popd
-
-%{__php} %{SOURCE2} package.xml | tee CHANGELOG | head -n 8
 
 cat >%{pecl_name}.ini << 'EOF'
 ; ----- Enable %{pecl_name} extension module
@@ -120,63 +134,75 @@ extension=%{pecl_name}.so
 ;session.save_path="tcp://localhost:11211?persistent=1&weight=1&timeout=1&retry_interval=15"
 EOF
 
-cp -r %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+%if %{with_zts}
+cp -r NTS ZTS
+%endif
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-
+%endif
 
 %install
 rm -rf %{buildroot}
 
-make -C %{pecl_name}-%{version} \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
-make -C %{pecl_name}-%{version}-zts \
-     install INSTALL_ROOT=%{buildroot}
-
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
-# simple module load test
+: Minimal load test for NTS extension
 %{__php} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}/modules \
-    --define extension=%{pecl_name}.so \
-    --modules | grep %{pecl_name}
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
+    -m | grep %{pecl_name}
 
+%if %{with_zts}
+: Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}-zts/modules \
-    --define extension=%{pecl_name}.so \
-    --modules | grep %{pecl_name}
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
+    -m | grep %{pecl_name}
+%endif
 
 %if %{with_tests}
-cd %{pecl_name}-%{version}
+: Configuration for tests
+cd NTS
 cp %{SOURCE3} tests
 sed -e "s:/var/run/memcached/memcached.sock:$PWD/memcached.sock:" \
     -i tests/connect.inc
 
-# Launch the daemons
+: Launch the daemons
 memcached -p 11211 -U 11211      -d -P $PWD/memcached1.pid
 memcached -p 11212 -U 11212      -d -P $PWD/memcached2.pid
 memcached -s $PWD/memcached.sock -d -P $PWD/memcached3.pid
 
-# Run the test Suite
+: Upstream test suite for NTS extension
 ret=0
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
@@ -184,7 +210,7 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php || ret=1
 
-# Cleanup
+: Cleanup
 if [ -f memcached2.pid ]; then
    kill $(cat memcached?.pid)
 fi
@@ -209,21 +235,27 @@ fi
 
 %files
 %defattr(-, root, root, -)
-%doc CHANGELOG %{pecl_name}-%{version}/{CREDITS,README,LICENSE}
-%doc %{pecl_name}-%{version}/example.php %{pecl_name}-%{version}/memcache.php
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Fri Mar  7 2014 Remi Collet <remi@fedoraproject.org> - 3.0.8-2
+- cleanups
+- install doc in pecl_docdir
+- install tests in pecl_testdir
+
 * Mon Apr 08 2013 Remi Collet <remi@fedoraproject.org> - 3.0.8-1
 - Update to 3.0.8
 
-* Fri Dec 29 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-5
+* Sat Dec 29 2012 Remi Collet <remi@fedoraproject.org> - 3.0.7-5
 - add patch for https://bugs.php.net/59602
   segfault in getExtendedStats
 
@@ -295,10 +327,10 @@ fi
 * Tue Jan 13 2009 Remi Collet <Fedora@FamilleCollet.com> 3.0.3-1
 - new version 3.0.3
 
-* Fri Sep 11 2008 Remi Collet <Fedora@FamilleCollet.com> 3.0.2-1
+* Thu Sep 11 2008 Remi Collet <Fedora@FamilleCollet.com> 3.0.2-1
 - new version 3.0.2
 
-* Fri Sep 11 2008 Remi Collet <Fedora@FamilleCollet.com> 2.2.4-1
+* Thu Sep 11 2008 Remi Collet <Fedora@FamilleCollet.com> 2.2.4-1
 - new version 2.2.4 (bug fixes)
 
 * Sat Feb  9 2008 Remi Collet <Fedora@FamilleCollet.com> 2.2.3-1
@@ -317,4 +349,3 @@ fi
 
 * Mon Aug 20 2007 Remi Collet <Fedora@FamilleCollet.com> 2.1.2-1
 - initial RPM
-
