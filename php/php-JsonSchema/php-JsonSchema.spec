@@ -1,9 +1,10 @@
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.3.5
-%global github_commit  01949f6d2130e9737ffae5d3952909a8de70d114
+%global github_version 1.3.6
+%global github_commit  d97cf3ce890fe80f247fc08594a1c8a1029fc7ed
 
-%global php_min_ver    5.3.0
+# See https://github.com/justinrainbow/json-schema/pull/96
+%global php_min_ver    5.3.2
 
 %global lib_name       JsonSchema
 
@@ -22,7 +23,7 @@ BuildArch: noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo (computed from v1.3.5)
+# For tests: phpcompatinfo (computed from v1.3.6)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -32,7 +33,7 @@ BuildRequires: php-pcre
 BuildRequires: php-spl
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.3.5)
+# phpcompatinfo (computed from v1.3.6)
 Requires:      php-curl
 Requires:      php-filter
 Requires:      php-json
@@ -47,7 +48,7 @@ See http://json-schema.org for more details.
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 # Clean up unnecessary files
 find . -type f -name '.git*' -delete
@@ -99,6 +100,12 @@ rm -rf tests/JsonSchema/Tests/Drafts
 
 
 %changelog
+* Sat Mar  8 2014 Remi Collet <remi@fedoraproject.org> - 1.3.6-1
+- backport 1.3.6 for remi repo.
+
+* Fri Mar 07 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.6-1
+- Updated to 1.3.6 (BZ #1073969)
+
 * Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> - 1.3.5-1
 - backport 1.3.5 for remi repo.
 
