@@ -6,33 +6,38 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear:       %global __pear       %{_bindir}/pear}
+%global gh_commit    b6e1f0cf6b9e1ec409a0d3e2f2a5fb0998e36b43
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   version
+%global php_home     %{_datadir}/php/SebastianBergmann/
 %global pear_name    Version
 %global pear_channel pear.phpunit.de
+%global with_tests   %{?_without_tests:0}%{!?_withou_tests:1}
 
 Name:           php-phpunit-Version
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Managing the version number of Git-hosted PHP projects
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://www.phpunit.de
-Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
+BuildRequires:  %{_bindir}/phpunit
+%endif
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.3
 Requires:       php-spl
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-channel(%{pear_channel})
+Requires:       git
 
+# For compatibility, to drop when no more required
+# Currently used by phpcpd and phploc
 Provides:       php-pear(%{pear_channel}/Version) = %{version}
 
 
@@ -42,28 +47,25 @@ of Git-hosted PHP projects.
 
 
 %prep
-%setup -q -c
-
-cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
 %install
 rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+mkdir -p %{buildroot}%{php_home}
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
+cp -pr src %{buildroot}%{php_home}/Version
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+%if %{with_tests}
+%check
+cd build
+phpunit
+%endif
 
 
 %clean
@@ -83,13 +85,19 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%dir %{pear_phpdir}/SebastianBergmann
-%{pear_phpdir}/SebastianBergmann/Version
+%doc LICENSE ChangeLog.md README.md composer.json
+%dir %{php_home}
+%{php_home}/Version
 
 
 %changelog
+* Sat Mar  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+- move from pear channel to github sources because of
+  https://github.com/sebastianbergmann/phpunit/wiki/Release-Announcement-for-PHPUnit-4.0.0
+- add %%check
+- add missing dependency on git
+
 * Thu Feb 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 
