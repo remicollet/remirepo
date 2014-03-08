@@ -13,11 +13,14 @@
 Summary:        Threading API
 Name:           php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://github.com/krakjoe/pthreads/pull/249
+Patch0:         %{pecl_name}.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-zts-devel > 5.3
@@ -63,6 +66,7 @@ This extension is only available for PHP in ZTS mode.
 %setup -q -c
 
 cd %{pecl_name}-%{version}
+%patch0 -p1 -b .github
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PTHREADS_VERSION/{s/.* "//;s/".*$//;p}' php_pthreads.h)
@@ -129,11 +133,6 @@ cd %{pecl_name}-%{version}
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-%if "%{php_version}" < "5.5"
-# syntax issue
-rm tests/pools.phpt
-%endif
-
 : Upstream test suite  for ZTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
@@ -156,6 +155,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 07 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- rebuild with new sources :(
+- open https://github.com/krakjoe/pthreads/pull/249
+  fix test suite for PHP 5.4, and clean build warnings
+
 * Fri Mar 07 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0 (stable)
 
