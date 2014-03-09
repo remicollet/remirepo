@@ -1,78 +1,60 @@
-From 3495c08966815c9935a84231548199a18c866ada Mon Sep 17 00:00:00 2001
+From e81dd7342121398de1c6a55380a36dad80a74875 Mon Sep 17 00:00:00 2001
 From: Remi Collet <fedora@famillecollet.com>
-Date: Sat, 8 Mar 2014 18:00:07 +0100
-Subject: [PATCH 1/2] Fix test compatibility for PHP 5.4
+Date: Sun, 9 Mar 2014 07:43:59 +0100
+Subject: [PATCH 1/2] fix build: synchro.c:133:2: error: 'else' without a
+ previous 'if'
 
 ---
- tests/pools.phpt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/synchro.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tests/pools.phpt b/tests/pools.phpt
-index 9fb40d9..7455e36 100644
---- a/tests/pools.phpt
-+++ b/tests/pools.phpt
-@@ -47,7 +47,7 @@ class SafeLog extends Stackable {
- 	public function run(){}
- }
+diff --git a/src/synchro.c b/src/synchro.c
+index 07360be..54efd46 100644
+--- a/src/synchro.c
++++ b/src/synchro.c
+@@ -128,8 +128,9 @@ void pthreads_synchro_block(zval *this_ptr, zend_fcall_info *info, zend_fcall_in
+ 	zend_fcall_info_args_clear(info, 1);
+ 	
+ 	/* return the result */
+-	if (!failed && retval)
++	if (!failed && retval) {
+ 		ZVAL_ZVAL(return_value, retval, 1, 1);
++	}
+ 	else ZVAL_NULL(return_value);
+ } /* }}} */
  
--$pool = new Pool(8, \WebWorker::class, array(new SafeLog()));
-+$pool = new Pool(8, '\WebWorker', array(new SafeLog()));
- 
- $pool->submit(new WebWork());
- $pool->submit(new WebWork());
 -- 
 1.8.3.1
 
-From d705badced05cd51378ae18303a95c2d5495cd2f Mon Sep 17 00:00:00 2001
+From a45e52eafdbc6e3a394d8f72868f9104a7099f31 Mon Sep 17 00:00:00 2001
 From: Remi Collet <fedora@famillecollet.com>
-Date: Sat, 8 Mar 2014 18:04:44 +0100
-Subject: [PATCH 2/2] fix build warnings, unused variables
+Date: Sun, 9 Mar 2014 07:45:18 +0100
+Subject: [PATCH 2/2] unused variables
 
 ---
- classes/pool.h | 7 -------
- src/object.c   | 1 -
- 2 files changed, 8 deletions(-)
+ classes/pool.h | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/classes/pool.h b/classes/pool.h
-index 53113ce..395d4b9 100644
+index 144f717..d7e2f0d 100644
 --- a/classes/pool.h
 +++ b/classes/pool.h
-@@ -235,23 +235,16 @@ PHP_METHOD(Pool, submit) {
- 	Will submit the given task to the specified worker */
- PHP_METHOD(Pool, submitTo) {
- 	zval *task = NULL;
--	zval *last = NULL;
--	zval *size = NULL;
- 	zval *workers = NULL;
- 	long worker = 0;
--	zval *clazz = NULL;
--	zval *ctor = NULL;
- 	zval *work = NULL;
- 	zval **working = NULL;
- 	zval **selected = NULL;
+@@ -278,7 +278,6 @@ static inline int pool_collect_function(void *bucket, void *argument TSRMLS_DC)
+ 	zval **task = (zval**) bucket;
+ 	pool_call_t *call = (pool_call_t*) argument;
+ 	zval *remove = NULL;
+-	zend_ulong index = 0L;
+ 	int result = ZEND_HASH_APPLY_KEEP;
  	
--	zend_class_entry **ce = NULL;
--	
- 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lO", &worker, &task, pthreads_stackable_entry) != SUCCESS) {
- 		return;
- 	}
- 	
--	size = zend_read_property(Z_OBJCE_P(getThis()), getThis(), ZEND_STRL("size"), 1 TSRMLS_CC);
- 	workers = zend_read_property(Z_OBJCE_P(getThis()), getThis(), ZEND_STRL("workers"), 1 TSRMLS_CC);
+ 	call->fci.retval_ptr_ptr = &remove;
+@@ -320,7 +319,6 @@ PHP_METHOD(Pool, collect) {
  	work = zend_read_property(Z_OBJCE_P(getThis()), getThis(), ZEND_STRL("work"), 1 TSRMLS_CC);
- 
-diff --git a/src/object.c b/src/object.c
-index a4deb6a..5a0f50f 100644
---- a/src/object.c
-+++ b/src/object.c
-@@ -243,7 +243,6 @@ size_t pthreads_stack_next(PTHREAD thread, zval *this_ptr TSRMLS_DC) {
- 	zend_bool locked;
- 	size_t bubble = 0;
- 	zval *that_ptr;
--	zend_function *run;
- 	zend_class_entry *popped;
  	
- burst:
+ 	if (Z_TYPE_P(work) == IS_ARRAY && zend_hash_num_elements(Z_ARRVAL_P(work))) {
+-		zval **task = NULL;
+ 		pool_call_t call;
+ 		
+ 		call.fci = fci;
 -- 
 1.8.3.1
 

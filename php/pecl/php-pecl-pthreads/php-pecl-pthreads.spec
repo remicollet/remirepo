@@ -12,14 +12,14 @@
 
 Summary:        Threading API
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.0.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://github.com/krakjoe/pthreads/pull/249
+# https://github.com/krakjoe/pthreads/pull/251
 Patch0:         %{pecl_name}.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -155,6 +155,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 09 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (stable)
+- open https://github.com/krakjoe/pthreads/pull/251
+  fix build + fix warnings
+
 * Fri Mar 07 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - rebuild with new sources :(
 - open https://github.com/krakjoe/pthreads/pull/249
