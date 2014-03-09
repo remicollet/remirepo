@@ -15,12 +15,12 @@
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   amqp
-%global prever      beta1
+%global prever      beta2
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?scl_prefix}php-pecl-amqp
 Version:       1.4.0
-Release:       0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -55,6 +55,9 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -76,6 +79,8 @@ from any queue.
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
+sed -e '/PHP_AMQP_VERSION/s/1.4.0beta1/%{version}%{?prever}/' -i php_amqp.h
+
 # Upstream often forget to change this
 extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -164,15 +169,13 @@ done
 %check
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
-    --define extension_dir=NTS/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=NTS/modules/%{pecl_name}.so \
     -m | grep %{pecl_name}
 
 %if %{with_zts}
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=ZTS/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=ZTS/modules/%{pecl_name}.so \
     -m | grep %{pecl_name}
 %endif
 
@@ -207,7 +210,7 @@ popd
 %endif
 
 : Cleanup
-if [ -f $RABBITMQ_PID_FILE ]; then
+if [ -s $RABBITMQ_PID_FILE ]; then
    kill $(cat $RABBITMQ_PID_FILE)
 fi
 rm -rf log run base
@@ -245,6 +248,9 @@ fi
 
 
 %changelog
+* Sun Mar  9 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.2.beta2
+- update to 1.4.0beta2
+
 * Thu Jan 16 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.1.beta1
 - update to 1.4.0beta1
 - adapt for SCL
