@@ -1,3 +1,12 @@
+# spec file for php-pecl-solr2
+#
+# Copyright (c) 2011-2014 Remi Collet
+# Copyright (c) 2010 Johan Cwiklinski
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
@@ -8,7 +17,7 @@
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
-Name:           php-pecl-solr
+Name:           php-pecl-solr2
 Version:        2.0.0
 Release:        0.1.beta%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
@@ -42,6 +51,8 @@ Provides:       php-%{pecl_name} = %{version}
 Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+# Only one version of the extension
+Conflicts:      php-pecl-solr < 2
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -83,7 +94,8 @@ SSL-enabled containers.
 Please consult the documentation for more details on features.
   http://php.net/solr
 
-Warning: PECL Solr >= 2 is not compatible with Solr Server < 4.0
+Warning: PECL Solr 2 is not compatible with Solr Server < 4.0
+PECL Solr 1 is available in php-pecl-solr package.
 
 
 %prep
@@ -176,8 +188,11 @@ cd NTS
    -m | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
+# http://git.php.net/?p=pecl/search_engine/solr.git;a=commitdiff;h=a7ac6ee8f09b28e848436f7d972cc74b8eb1ae1c
 sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' \
     -i tests/test.config.inc
+
+# http://git.php.net/?p=pecl/search_engine/solr.git;a=commitdiff;h=224c40fd3118ae675b5bbc2194370198918b18d0
 sed -e '/^curl$/d' -i tests/*phpt
 
 TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
