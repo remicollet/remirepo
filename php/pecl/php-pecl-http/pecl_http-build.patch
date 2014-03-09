@@ -1,0 +1,25 @@
+From d6975fac1d5c88362e9ce625e9b5248e23b3cfb1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Thu, 2 Jan 2014 17:19:18 +0100
+Subject: [PATCH] Fix build with -Werror=format-security
+
+---
+ php_http_client_curl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/php_http_client_curl.c b/php_http_client_curl.c
+index cc5e810..4033b9f 100644
+--- a/php_http_client_curl.c
++++ b/php_http_client_curl.c
+@@ -1807,7 +1807,7 @@ static STATUS php_http_client_curl_exec(php_http_client_t *h)
+ 				/* see http://msdn.microsoft.com/library/en-us/winsock/winsock/windows_sockets_error_codes_2.asp */
+ 				php_error_docref(NULL TSRMLS_CC, E_WARNING, "WinSock error: %d", WSAGetLastError());
+ #else
+-				php_error_docref(NULL TSRMLS_CC, E_WARNING, strerror(errno));
++				php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", strerror(errno));
+ #endif
+ 				return FAILURE;
+ 			}
+-- 
+1.8.4.3
+

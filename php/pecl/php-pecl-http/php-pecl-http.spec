@@ -19,13 +19,15 @@
 
 Name:           %{?scl_prefix}php-pecl-http
 Version:        2.0.4
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/pecl_http
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
+
+Patch0:         %{proj_name}-build.patch
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
@@ -80,6 +82,9 @@ Obsoletes:     php54-pecl-http
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-http
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-http
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -125,6 +130,8 @@ These are the files needed to compile programs using HTTP extension.
 
 mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
+
+%patch0 -p1
 
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -243,6 +250,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 09 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
+- add upstream patch for -Werror=format-security
+
 * Thu Jan 02 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 - fix link to documentation
