@@ -55,16 +55,16 @@ Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 Conflicts:      php-pecl-solr < 2
 
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}2
+Obsoletes:     php53u-pecl-%{pecl_name}2
+Obsoletes:     php54-pecl-%{pecl_name}2
 %endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name}2
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name}2
 %endif
 
 %if 0%{?fedora} < 20
