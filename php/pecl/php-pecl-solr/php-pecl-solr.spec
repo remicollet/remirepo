@@ -1,30 +1,35 @@
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+# spec file for php-pecl-solr
+#
+# Copyright (c) 2011-2014 Remi Collet
+# Copyright (c) 2010 Johan Cwiklinski
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name solr
-#global svnver    320130
+%global with_zts  0%{?__ztsphp:1}
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           php-pecl-solr
 Version:        1.0.2
-Release:        4%{?dist}.4
+Release:        7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
 
-%if 0%{?svnver}
-# svn export -r 320130 https://svn.php.net/repository/pecl/solr/trunk solr
-# tar czf solr-svn320130.tgz solr
-Source0:        solr-svn320130.tgz
-%else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-%endif
-Source2:        xml2changelog
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
-BuildRequires:  php-simplexml
 BuildRequires:  php-pear
+BuildRequires:  php-curl
+BuildRequires:  php-json
 BuildRequires:  curl-devel
 BuildRequires:  libxml2-devel
 
@@ -32,7 +37,14 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-Requires:       php-xml >= 5.2.3
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so only requires real packages instead
+Requires:       %{?scl_prefix}php-common%{?_isa}
+%else
+Requires:       %{?scl_prefix}php-curl%{?_isa}
+Requires:       %{?scl_prefix}php-json%{?_isa}
+%endif
 
 Provides:       php-%{pecl_name} = %{version}
 Provides:       php-%{pecl_name}%{?_isa} = %{version}
@@ -48,10 +60,15 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 
-# Filter private shared
+%if 0%{?fedora} < 20
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -73,6 +90,9 @@ SSL-enabled containers.
 
 More info on PHP-Solr can be found at:
 http://www.php.net/manual/en/book.solr.php
+
+Warning: PECL Solr 1 is not compatible with Solr Server >= 4.0.
+PECL Solr 2 is available in php-pecl-solr2 package.
 
 
 %description -l fr
@@ -97,18 +117,16 @@ serveurs via SSL.
 Plus d'informations sur PHP-Solr sur:
 http://www.php.net/manual/fr/book.solr.php
 
+Attention: PECL Solr 1 n'est pas compatible avec un serveur Solr >= 4.0.
+PECL Solr 2 est disponible dans le paquet php-pecl-solr2.
+
 
 %prep
 %setup -c -q
 
-%if 0%{?svnver}
-mv %{pecl_name}/package.xml .
-mv %{pecl_name} %{pecl_name}-%{version}
-%endif
+mv %{pecl_name}-%{version}%{?prever} NTS
+cd NTS
 
-%{__php} %{SOURCE2} package.xml >CHANGELOG
-
-cd %{pecl_name}-%{version}
 # Fix version
 sed -i -e '/PHP_SOLR_DOTTED_VERSION/s/1.0.1/1.0.2/' php_solr_version.h
 
@@ -135,36 +153,49 @@ cat > %{pecl_name}.ini << 'EOF'
 extension=%{pecl_name}.so
 EOF
 
-cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+%if %{with_zts}
+cp -r NTS ZTS
+%endif
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 
-make -C %{pecl_name}-%{version} \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
-make -C %{pecl_name}-%{version}-zts \
-     install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %post
@@ -178,27 +209,23 @@ fi
 
 
 %check
-cd %{pecl_name}-%{version}
-ln -s %{php_extdir}/curl.so modules/
-ln -s %{php_extdir}/json.so modules/
-
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=curl.so -d extension=json.so -d extension=%{pecl_name}.so" \
+cd NTS
+TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
    REPORT_EXIT_STATUS=1 \
    NO_INTERACTION=1 \
    TEST_PHP_EXECUTABLE=%{__php} \
    %{__php} \
    run-tests.php
 
-cd ../%{pecl_name}-%{version}-zts
-ln -s %{php_ztsextdir}/curl.so modules/
-ln -s %{php_ztsextdir}/json.so modules/
-
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=curl.so -d extension=json.so -d extension=%{pecl_name}.so" \
+%if %{with_zts}
+cd ../ZTS
+TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
    REPORT_EXIT_STATUS=1 \
    NO_INTERACTION=1 \
    TEST_PHP_EXECUTABLE=%{__ztsphp} \
    %{__ztsphp} \
    run-tests.php
+%endif
 
 
 %clean
@@ -207,23 +234,23 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, -)
-%doc CHANGELOG
-%doc %{pecl_name}-%{version}/CREDITS
-%doc %{pecl_name}-%{version}/README.ABOUT_SOLR_EXTENSION
-%doc %{pecl_name}-%{version}/README.CONTRIBUTORS
-%doc %{pecl_name}-%{version}/README.MEMORY_ALLOCATION
-%doc %{pecl_name}-%{version}/README.SUBMITTING_CONTRIBUTIONS
-%doc %{pecl_name}-%{version}/TODO
-%doc %{pecl_name}-%{version}/LICENSE
-%doc %{pecl_name}-%{version}/docs/documentation.php
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Sun Mar  9 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7
+- cleanups
+- install doc in pecl_docdir
+- install tests in pecl_testdir
+
 * Sun Oct 21 2012 Remi Collet <remi@fedoraproject.org> - 1.0.2-4
 - rebuild
 
@@ -254,13 +281,13 @@ rm -rf %{buildroot}
 * Wed Jun 23 2010 Johan Cwiklinski <johan AT x-tnd DOT be> 0.9.11-1
 - update to latest release
 
-* Fri May 13 2010 Johan Cwiklinski <johan AT x-tnd DOT be> 0.9.10-2
+* Thu May 13 2010 Johan Cwiklinski <johan AT x-tnd DOT be> 0.9.10-2
 - consitent use of pecl_name macro
 - add %%check
 - fixes some typos
 - thanks Remi :)
 
-* Fri May 13 2010 Johan Cwiklinski <johan AT x-tnd DOT be> 0.9.10-1
+* Thu May 13 2010 Johan Cwiklinski <johan AT x-tnd DOT be> 0.9.10-1
 - update to latest release
 
 * Tue Apr 27 2010 Johan Cwiklinski <johan AT x-tnd DOT be> 0.9.9-2
