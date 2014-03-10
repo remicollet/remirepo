@@ -6,15 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl: %{expand: %%global __pecl %{_bindir}/pecl}}
+%{?scl:          %scl_package        php-pecl-igbinary}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global extname   igbinary
+%global with_zts  0%{?__ztsphp:1}
 %global commit    c35d48f3d14794373b2ef89a6d79020bb7418d7f
 %global short     %(c=%{commit}; echo ${c:0:7})
 %global prever    -dev
 
 Summary:        Replacement for the standard PHP serializer
-Name:           php-pecl-igbinary
+Name:           %{?scl_prefix}php-pecl-igbinary
 Version:        1.1.2
 %if 0%{?short:1}
 Release:        0.8.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
@@ -34,32 +38,36 @@ URL:            http://pecl.php.net/package/igbinary
 # https://github.com/igbinary/igbinary/pull/24
 Patch0:         igbinary-apcu.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
-BuildRequires:  php-pear
-BuildRequires:  php-devel >= 5.2.0
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-devel >= 5.2.0
 # php-pecl-apcu-devel provides php-pecl-apc-devel
-BuildRequires:  php-pecl-apc-devel >= 3.1.7
+BuildRequires:  %{?scl_prefix}php-pecl-apc-devel >= 3.1.7
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Obsoletes:      php-%{extname} <= 1.1.1
-Provides:       php-%{extname} = %{version}
-Provides:       php-%{extname}%{?_isa} = %{version}
-Provides:       php-pecl(%{extname}) = %{version}
-Provides:       php-pecl(%{extname})%{?_isa} = %{version}
+Obsoletes:      %{?scl_prefix}php-%{extname} <= 1.1.1
+Provides:       %{?scl_prefix}php-%{extname} = %{version}
+Provides:       %{?scl_prefix}php-%{extname}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{extname}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{extname})%{?_isa} = %{version}
 
+%if 0%{!?scl:1}
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{extname}
 Obsoletes:     php53u-pecl-%{extname}
 Obsoletes:     php54-pecl-%{extname}
+%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{extname}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{extname}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -117,7 +125,9 @@ if test "x${extver}" != "x%{version}%{?prever}"; then
 fi
 cd ..
 
+%if %{with_zts}
 cp -r %{extname}-%{version} %{extname}-%{version}-zts
+%endif
 
 cat <<EOF | tee %{extname}.ini
 ; Enable %{extname} extension module
@@ -141,10 +151,12 @@ cd %{extname}-%{version}
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../%{extname}-%{version}-zts
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -157,9 +169,12 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 install -D -m 644 %{extname}.ini %{buildroot}%{php_inidir}/%{extname}.ini
 
+# Install the ZTS stuff
+%if %{with_zts}
 make install -C %{extname}-%{version}-zts \
      INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
+%endif
 
 # Test & Documentation
 cd %{extname}-%{version}
@@ -193,6 +208,7 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
+%if %{with_zts}
 cd ../%{extname}-%{version}-zts
 
 : simple ZTS module load test, without APC, as optional
@@ -206,6 +222,7 @@ TEST_PHP_ARGS="-n $MOD -d extension=$PWD/modules/%{extname}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
+%endif
 
 
 %clean
@@ -229,8 +246,10 @@ fi
 %{php_extdir}/%{extname}.so
 %{pecl_xmldir}/%{name}.xml
 
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{extname}.ini
 %{php_ztsextdir}/%{extname}.so
+%endif
 
 
 %files devel
@@ -238,7 +257,9 @@ fi
 %doc %{pecl_testdir}/%{extname}
 %{php_incldir}/ext/%{extname}
 
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{extname}
+%endif
 
 
 %changelog
