@@ -1,7 +1,10 @@
-%{!?__pecl:  %{expand: %%global __pecl %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name   imagick
 %global prever      RC1
+%global with_zts    0%{?__ztsphp:1}
 
 # We don't really rely on upstream ABI
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
@@ -9,20 +12,26 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
 Version:       3.2.0
-Release:       0.2.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.3.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel >= 5.1.3, php-pear
+BuildRequires: php-devel
+BuildRequires: php-pear
+BuildRequires: pcre-devel
+%if "%{?vendor}" == "Remi Collet"
 %if 0%{?fedora} >= 20
 BuildRequires: ImageMagick-devel >= 6.7.5
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
 BuildRequires: ImageMagick-last-devel >= 6.7.5
 Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
+%endif
+%else
+BuildRequires: ImageMagick-devel >= 6.2.4
 %endif
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -44,6 +53,9 @@ Obsoletes:     php54-pecl-imagick
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-imagick
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-imagick
 %endif
 
 %if 0%{?fedora} < 20
@@ -70,7 +82,7 @@ These are the files needed to compile programs using %{pecl_name} extension.
 
 %prep
 echo TARGET is %{name}-%{version}-%{release}
-%setup -q -c 
+%setup -q -c
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 
@@ -109,36 +121,42 @@ extension = %{pecl_name}.so
 ;imagick.progress_monitor=0
 EOF
 
+%if %{with_zts}
 cp -r NTS ZTS
+%endif
 
 
 %build
-cd ZTS
+: Standard NTS build
+cd NTS
+%{_bindir}/phpize
+%configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/php-config
+make %{?_smp_mflags}
+
+%if %{with_zts}
+cd ../ZTS
 : ZTS build
 %{_bindir}/zts-phpize
 %configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-
-: Standard NTS build
-cd ../NTS
-%{_bindir}/phpize
-%configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/php-config
-make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 
 make install INSTALL_ROOT=%{buildroot} -C NTS
-make install INSTALL_ROOT=%{buildroot} -C ZTS
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
 # Install XML package description
-mkdir -p %{buildroot}%{pecl_xmldir}
-install -pm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -p -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+make install INSTALL_ROOT=%{buildroot} -C ZTS
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 # Test & Documentation
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
@@ -185,6 +203,7 @@ then
   exit 1
 fi
 
+%if %{with_zts}
 : simple module load test for ZTS extension
 cd ../ZTS
 %{__ztsphp} --no-php-ini \
@@ -198,6 +217,7 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
     -n -q \
     -d extension_dir=%{buildroot}%{php_ztsextdir} \
     -d extension=%{pecl_name}.so
+%endif
 
 
 %clean
@@ -205,22 +225,29 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 %files devel
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
+%endif
 
 
 %changelog
+* Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.3.RC1
+- cleanups for Copr
+
 * Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.2.RC1
 - Update to 3.2.0RC1 (beta)
 - add devel sub-package
