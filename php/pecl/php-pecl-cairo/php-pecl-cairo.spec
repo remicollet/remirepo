@@ -12,7 +12,7 @@
 
 Name:           php-pecl-cairo
 Version:        0.3.2
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
@@ -102,10 +102,12 @@ cd NTS
 %configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -139,10 +141,12 @@ done
     -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     -m | grep %{pecl_name}
 
+%if %{with_zts}
 : Minimal load test for ZTS extension
 %{__ztsphp} -n \
     -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     -m | grep %{pecl_name}
+%endif
 
 %if %{with_tests}
 # 32/445 test failing with old cairo 1.8
@@ -203,6 +207,9 @@ fi
 %endif
 
 %changelog
+* Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 0.3.2-6
+- fix build when ZTS not available
+
 * Sun Mar  2 2014 Remi Collet <remi@fedoraproject.org> - 0.3.2-5
 - cleanups
 - move doc in pecl_docdir
