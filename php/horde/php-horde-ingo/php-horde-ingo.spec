@@ -7,12 +7,12 @@
 # Please, preserve the changelog entries
 #
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    ingo
 %global pear_channel pear.horde.org
 
 Name:           php-horde-ingo
-Version:        3.1.3
+Version:        3.1.4
 Release:        1%{?dist}
 Summary:        An email filter rules manager
 
@@ -182,6 +182,9 @@ fi
 
 
 %changelog
+* Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 3.1.4-1
+- Update to 3.1.4
+
 * Tue Oct 29 2013 Remi Collet <remi@fedoraproject.org> - 3.1.3-1
 - Update to 3.1.3
 
