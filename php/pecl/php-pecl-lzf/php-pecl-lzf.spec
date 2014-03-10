@@ -1,10 +1,13 @@
-%{!?__pecl:            %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
-%define pecl_name LZF
+%define pecl_name   LZF
+%global with_zts    0%{?__ztsphp:1}
 
 Name:           php-pecl-lzf
 Version:        1.6.2
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -22,9 +25,7 @@ Patch0:         php-lzf-rm-bundled-libs.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
-%if 0%{?fedora} >= 14 || 0%{?rhel} >= 5
 BuildRequires:  liblzf-devel
-%endif
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
@@ -36,10 +37,11 @@ Provides:       php-lzf%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:      php53-pecl-lzf
 Obsoletes:      php53u-pecl-lzf
-%if "%{php_version}" > "5.4"
 Obsoletes:      php54-pecl-lzf
 %endif
 %if "%{php_version}" > "5.5"
@@ -47,6 +49,7 @@ Obsoletes:      php55u-pecl-lzf
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:      php56u-pecl-lzf
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -67,16 +70,23 @@ slight speed cost.
 %prep
 %setup -c -q
 
-%if 0%{?fedora} >= 14 || 0%{?rhel} >= 5
-cd %{pecl_name}-%{version}
+mv %{pecl_name}-%{version} NTS
+cd NTS
 %patch0 -p1 -b liblzf
 rm -f lzf_c.c lzf_d.c lzf.h
-cd ..
-%endif
 
-mv %{pecl_name}-%{version} NTS
-cp %{SOURCE1} NTS//LICENSE
+cp %{SOURCE1} LICENSE
+
+extver=$(sed -n '/#define PHP_LZF_VERSION/{s/.* "//;s/".*$//;p}' php_lzf.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
+   exit 1
+fi
+cd ..
+
+%if %{with_zts}
 cp -r NTS ZTS
+%endif
 
 cat >lzf.ini << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -91,24 +101,29 @@ cd NTS
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 make install -C NTS INSTALL_ROOT=%{buildroot}
-make install -C ZTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 lzf.ini %{buildroot}%{php_inidir}/lzf.ini
-install -D -m 644 lzf.ini %{buildroot}%{php_ztsinidir}/lzf.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+make install -C ZTS INSTALL_ROOT=%{buildroot}
+install -D -m 644 lzf.ini %{buildroot}%{php_ztsinidir}/lzf.ini
+%endif
 
 # Test & Documentation
 cd NTS
@@ -130,6 +145,7 @@ NO_INTERACTION=1 \
     -n -q \
     -d extension=%{buildroot}%{php_extdir}/lzf.so
 
+%if %{with_zts}
 cd ../ZTS
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
@@ -139,7 +155,7 @@ NO_INTERACTION=1 \
     -n -q \
     -d extension_dir=modules \
     -d extension=%{buildroot}%{php_ztsextdir}/lzf.so
-
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -160,13 +176,18 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/lzf.ini
-%config(noreplace) %{php_ztsinidir}/lzf.ini
 %{php_extdir}/lzf.so
-%{php_ztsextdir}/lzf.so
 %{pecl_xmldir}/%{name}.xml
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/lzf.ini
+%{php_ztsextdir}/lzf.so
+%endif
 
 
 %changelog
+* Mon Mar 10 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-7
+- cleanups for Copr
+
 * Fri Feb 28 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-6
 - cleanups
 - move doc in pecl_docdir

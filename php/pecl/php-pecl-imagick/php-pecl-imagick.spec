@@ -46,6 +46,7 @@ Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 Conflicts:     php-pecl-gmagick
 
 # Other third party repo stuff
+%if "%{?vendor}" == "Remi Collet"
 %if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-imagick
 Obsoletes:     php53u-pecl-imagick
@@ -56,6 +57,7 @@ Obsoletes:     php55u-pecl-imagick
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-imagick
+%endif
 %endif
 
 %if 0%{?fedora} < 20
