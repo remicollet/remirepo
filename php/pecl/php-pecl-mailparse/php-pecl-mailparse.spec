@@ -36,10 +36,11 @@ Provides: php-%{pecl_name}%{?_isa} = %{version}
 Provides: php-pecl(%{pecl_name}) = %{version}
 Provides: php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
+%if "%{php_version}" > "5.4"
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
@@ -47,6 +48,7 @@ Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -108,7 +110,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 # Drop in the bit of configuration
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/z-%{pecl_name}.ini
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
@@ -137,12 +139,12 @@ done
 
 : Upstream test suite for NTS extension
 cd NTS
-TEST_PHP_EXECUTABLE=$(which php) \
+TEST_PHP_EXECUTABLE=%{__php} \
 NO_INTERACTION=1 \
-php run-tests.php \
+%{__php} run-tests.php \
     -n -q \
     -d extension=mbstring.so \
-    -d extension=$PWD/modules/%{pecl_name}.so \
+    -d extension=$PWD/modules/%{pecl_name}.so
 
 %if %{with_zts}
 : Minimal load test for ZTS extension
@@ -158,7 +160,7 @@ NO_INTERACTION=1 \
 php run-tests.php \
     -n -q \
     -d extension=mbstring.so \
-    -d extension=$PWD/modules/%{pecl_name}.so \
+    -d extension=$PWD/modules/%{pecl_name}.so
 %endif
 
 
@@ -166,18 +168,14 @@ php run-tests.php \
 rm -rf %{buildroot}
 
 
-%if 0%{?pecl_install:1}
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-%endif
 
 
-%if 0%{?pecl_uninstall:1}
 %postun
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-%endif
 
 
 %files
@@ -185,11 +183,11 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 # We prefix the config file with "z-" so that it loads after mbstring.ini
-%config(noreplace) %{_sysconfdir}/php.d/z-%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
-%if 0%{?__ztsphp:1}
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
