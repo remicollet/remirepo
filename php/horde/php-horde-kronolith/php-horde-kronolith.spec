@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    kronolith
 %global pear_channel pear.horde.org
 
@@ -15,7 +15,7 @@
 # Fatal error: Call to a member function setShareCallback() on a non-object...
 
 Name:           php-horde-kronolith
-Version:        4.1.4
+Version:        4.1.5
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -240,6 +240,9 @@ fi
 
 
 %changelog
+* Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 4.1.5-1
+- Update to 4.1.5
+
 * Tue Oct 29 2013 Remi Collet <remi@fedoraproject.org> - 4.1.4-1
 - Update to 4.1.4
 
