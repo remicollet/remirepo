@@ -42,6 +42,12 @@
 %global with_libpcre  0
 %endif
 
+%if 0%{?fedora} < 17 && 0%{?rhel} < 7
+%global  with_vpx  0
+%else
+%global  with_vpx  1
+%endif
+
 # Build ZTS extension or only NTS
 %global with_zts      1
 
@@ -116,7 +122,7 @@ Version: 5.5.10
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -697,7 +703,9 @@ BuildRequires: libpng-devel
 BuildRequires: freetype-devel
 BuildRequires: libXpm-devel
 BuildRequires: libXpm-devel
+%if %{with_vpx}
 BuildRequires: libvpx-devel
+%endif
 %endif
 
 Obsoletes: php53-gd, php53u-gd, php54-gd, php55u-gd
@@ -1072,7 +1080,9 @@ ln -sf ../configure
     --with-freetype-dir=%{_prefix} \
     --with-png-dir=%{_prefix} \
     --with-xpm-dir=%{_prefix} \
+%if %{with_vpx}
     --with-vpx-dir=%{_prefix} \
+%endif
     --enable-gd-native-ttf \
     --with-t1lib=%{_prefix} \
     --without-gdbm \
@@ -1879,6 +1889,9 @@ fi
 
 
 %changelog
+* Tue Mar 11 2014 Remi Collet <remi@fedoraproject.org> 5.5.10-1.1
+- rebuild against gd-last, without libvpx
+
 * Wed Mar  5 2014 Remi Collet <remi@fedoraproject.org> 5.5.10-1
 - Update to 5.5.10 (security)
   http://www.php.net/ChangeLog-5.php#5.5.10
