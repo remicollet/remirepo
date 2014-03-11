@@ -1,4 +1,4 @@
-# spec file for php-pecl-yar
+# spec file for php-pecl-msgpack
 #
 # Copyright (c) 2012-2014 Remi Collet
 # License: CC-BY-SA
@@ -6,9 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name   msgpack
+%global with_zts    0%{?__ztsphp:1}
 
 Summary:       API for communicating with MessagePack serialization
 Name:          php-pecl-msgpack
@@ -28,7 +31,7 @@ BuildRequires: php-pear
 %if 0%{?fedora} > 15 || 0%{?rhel} > 6
 BuildRequires: msgpack-devel
 %endif
-# msgpack not available
+# https://github.com/msgpack/msgpack-php/issues/25
 ExcludeArch: ppc64
 
 Requires(post): %{__pecl}
@@ -41,10 +44,11 @@ Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
@@ -53,11 +57,13 @@ Obsoletes:     php55u-pecl-%{pecl_name}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
 %endif
+%endif
 
-
-# Filter private shared
+%if 0%{?fedora} < 20
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -89,7 +95,8 @@ These are the files needed to compile programs using MessagePack serializer.
 %prep
 %setup -q -c 
 
-cd %{pecl_name}-%{version}
+mv %{pecl_name}-%{version} NTS
+cd NTS
 %patch0 -p1 -b .build
 
 %if 0%{?fedora} > 15 || 0%{?rhel} > 6
@@ -108,8 +115,10 @@ if test "x${extver}" != "x%{version}"; then
 fi
 cd ..
 
+%if %{with_zts}
 # duplicate for ZTS build
-cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
+cp -pr NTS ZTS
+%endif
 
 # Drop in the bit of configuration
 cat > %{pecl_name}.ini << 'EOF'
@@ -125,32 +134,36 @@ EOF
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 # Install the NTS stuff
-make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
+%if %{with_zts}
 # Install the ZTS stuff
-make -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Test & Documentation
-cd %{pecl_name}-%{version}
+cd NTS
 for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
@@ -160,7 +173,7 @@ done
 
 
 %check
-cd %{pecl_name}-%{version}
+cd NTS
 
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
@@ -168,13 +181,15 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
-cd ../%{pecl_name}-zts
+%if %{with_zts}
+cd ../ZTS
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
+%endif
 
 
 %post
@@ -199,15 +214,20 @@ rm -rf %{buildroot}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %files devel
 %defattr(-, root, root, 0755)
 %doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
+
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
+%endif
 
 
 %changelog
