@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.18.6
+Version:        2.19.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -27,10 +27,11 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.2.7
 BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.4.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.3.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Pack) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -44,7 +45,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.3.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
@@ -156,6 +157,11 @@ fi
 
 
 %changelog
+* Tue Mar 11 2014 Remi Collet <remi@fedoraproject.org> - 2.19.0-1
+- Update to 2.19.0
+- raise dependencies: Horde_Test 2.2.7, Horde_Mime 2.3.0
+- add BR on Horde_Pack
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.18.6-1
 - Update to 2.18.6
 
