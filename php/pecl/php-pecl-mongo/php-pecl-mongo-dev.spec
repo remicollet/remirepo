@@ -4,23 +4,17 @@
 
 %global pecl_name   mongo
 %global with_zts    0%{?__ztsphp:1}
-%global prever      alpha1
-%global gh_commit   f758e60874df3cda3a08dced0f51351535f8c672
+%global prever      RC1
+%global gh_commit   1b587781187d0f5475e971651036a32b8c3b6f3f
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-%global with_sasl   1
-%else
-%global with_sasl   0
-%endif
-
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
 Version:      1.5.0
-Release:      0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -29,17 +23,11 @@ URL:          http://pecl.php.net/package/%{pecl_name}
 Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}.tar.gz
 Source1:      %{pecl_name}.ini
 
-# https://jira.mongodb.org/browse/PHP-995
-Patch0:       %{pecl_name}-json.patch
-
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.2.6
 BuildRequires: php-pear
 BuildRequires: php-json
-%if %{with_sasl}
-# https://jira.mongodb.org/browse/PHP-996
-BuildRequires: cyrus-sasl-devel >= 2.1.26
-%endif
+BuildRequires: cyrus-sasl-devel
 %if %{with_tests}
 BuildRequires: mongodb
 BuildRequires: mongodb-server
@@ -62,6 +50,7 @@ Provides:     php-%{pecl_name}%{?_isa} = %{version}
 Provides:     php-pecl(%{pecl_name}) = %{version}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 %if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -70,6 +59,7 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -92,7 +82,12 @@ cp %{SOURCE1} .
 mv NTS/package.xml .
 
 cd NTS
-%patch0 -p0
+# Sanity check, really often broken
+extver=$(sed -n '/#define PHP_MONGO_VERSION/{s/.* "//;s/".*$//;p}' php_mongo.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
+   exit 1
+fi
 cd ..
 
 %if %{with_zts}
@@ -104,9 +99,7 @@ cp -pr NTS ZTS
 cd NTS
 %{_bindir}/phpize
 %configure  \
-%if %{with_sasl}
   --with-mongo-sasl \
-%endif
   --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -114,9 +107,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure  \
-%if %{with_sasl}
   --with-mongo-sasl \
-%endif
   --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -218,6 +209,12 @@ rm -rf data
 
 
 %changelog
+* Tue Mar 11 2014 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.2-RC1
+- Update to 1.5.0RC1
+- open https://jira.mongodb.org/browse/PHP-1009
+  JSON is optional at buildtime but required at runtime
+- always enable SASL support
+
 * Wed Feb 26 2014 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.1.alpha1
 - Update to 1.5.0alpha1
 - use sources from github for tests
