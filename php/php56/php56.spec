@@ -4,7 +4,7 @@
 %global pdover      20080721
 # Extension version
 %global opcachever  7.0.4-dev
-%global oci8ver     2.0.7
+%global oci8ver     2.0.8
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
 %global php_bootstrap   0
@@ -40,6 +40,12 @@
 %global with_libpcre  1
 %else
 %global with_libpcre  0
+%endif
+
+%if 0%{?fedora} < 17 && 0%{?rhel} < 7
+%global  with_vpx     0
+%else
+%global  with_vpx     1
 %endif
 
 # Build ZTS extension or only NTS
@@ -107,14 +113,14 @@
 %global db_devel  libdb-devel
 %endif
 
-#global snapdate      201402280830
-%global rcver         alpha3
+%global snapdate      201403120830
+#global rcver         alpha3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -704,7 +710,9 @@ BuildRequires: libpng-devel
 BuildRequires: freetype-devel
 BuildRequires: libXpm-devel
 BuildRequires: libXpm-devel
+%if %{with_vpx}
 BuildRequires: libvpx-devel
+%endif
 %endif
 
 Obsoletes: php53-gd, php53u-gd, php54-gd, php55u-gd, php56u-gd
@@ -1075,7 +1083,9 @@ ln -sf ../configure
     --with-freetype-dir=%{_prefix} \
     --with-png-dir=%{_prefix} \
     --with-xpm-dir=%{_prefix} \
+%if %{with_vpx}
     --with-vpx-dir=%{_prefix} \
+%endif
     --enable-gd-native-ttf \
     --with-t1lib=%{_prefix} \
     --without-gdbm \
@@ -1888,7 +1898,12 @@ fi
 
 
 %changelog
-* Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-0.1.alpha3
+* Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-0.3.201403120830
+- new snapshot php5.6-201403120830
+- rebuild against gd-last without libvpx on EL < 7
+- oci8 version 2.0.8
+
+* Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-0.2.alpha3
 - php 5.6.0alpha3
 - add php-dbg subpackage
 - update php.ini from upstream production template
