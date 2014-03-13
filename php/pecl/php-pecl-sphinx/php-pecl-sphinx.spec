@@ -1,10 +1,13 @@
-%{!?__pecl:  %{expand: %%global __pecl  %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
-%define pecl_name sphinx
+%define pecl_name   sphinx
+%global with_zts    0%{?__ztsphp:1}
 
 Name:           php-pecl-sphinx
 Version:        1.3.0
-Release:        2%{?dist}.1
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
@@ -12,7 +15,8 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # https://bugs.php.net/65864 ask license file
-
+# URL from sphinx.c headers
+Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libsphinxclient-devel
@@ -29,19 +33,26 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
 
-# Filter private shared
+%if 0%{?fedora} < 20
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -52,11 +63,15 @@ client library for Sphinx the SQL full-text search engine.
 %prep
 %setup -q -c
 
+mv %{pecl_name}-%{version} NTS
+
+cp %{SOURCE1} NTS/LICENSE
+
 # https://bugs.php.net/bug.php?id=61793
-sed -i -e '/PHP_SPHINX_VERSION/s/1.1.0/%{version}/'  %{pecl_name}-%{version}/php_sphinx.h
+sed -i -e '/PHP_SPHINX_VERSION/s/1.1.0/%{version}/'  NTS/php_sphinx.h
 
 # Check reported version (phpinfo), as this is often broken
-extver=$(sed -n '/#define PHP_SPHINX_VERSION/{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/php_sphinx.h)
+extver=$(sed -n '/#define PHP_SPHINX_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_sphinx.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
@@ -67,49 +82,62 @@ cat > %{pecl_name}.ini << 'EOF'
 extension=%{pecl_name}.so
 EOF
 
-cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+%if %{with_zts}
+# duplicate for ZTS build
+cp -pr NTS ZTS
+%endif
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 phpize
 %configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}-zts
+%if %{with_zts}
+cd ../ZTS
 zts-phpize
 %configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %check
-# simple module load test
+: simple module load test for the NTS extension
 %{__php} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_zts}
+: simple module load test for the ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}-zts/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 
-make -C %{pecl_name}-%{version} \
-     install INSTALL_ROOT=%{buildroot}
-
-make -C %{pecl_name}-%{version}-zts \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
 install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+
+%if %{with_zts}
+# Install the ZTS stuff
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+cd NTS
+for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %clean
@@ -128,15 +156,24 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/CREDITS
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
-%{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%{php_extdir}/%{pecl_name}.so
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Thu Mar 13 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-3
+- cleanups
+- install doc in pecl_docdir
+- add missing License file
+
 * Sun May 12 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-2
 - Rebuild against latest libsphinx
 
@@ -169,7 +206,7 @@ fi
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
-* Tue Jul 26 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.0.4-1
+* Mon Jul 26 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.0.4-1
 - update to 1.0.4
 
 * Sat Sep 12 2009 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-2
@@ -179,5 +216,5 @@ fi
 - Add checks
 - Add php-devel version requirement
 
-* Mon Aug 05 2009 Andrew Colin Kissa <andrew@topdog.za.net> - 1.0.0-1
+* Wed Aug 05 2009 Andrew Colin Kissa <andrew@topdog.za.net> - 1.0.0-1
 - Initial package
