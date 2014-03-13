@@ -1,43 +1,55 @@
-# PECL(PHP Extension Community Library) related definitions
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
-%define pecl_name selinux
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
-Summary: SELinux binding for PHP scripting language
-Name: php-pecl-selinux
-Version: 0.3.1
-Release: 9%{?dist}.2
-License: PHP
-Group: Development/Languages
-URL: http://pecl.php.net/package/%{pecl_name}
-Source: http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%define pecl_name selinux
+%global with_zts    0%{?__ztsphp:1}
+
+Summary:    SELinux binding for PHP scripting language
+Name:       php-pecl-selinux
+Version:    0.3.1
+Release:    12%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+License:    PHP
+Group:      Development/Languages
+URL:        http://pecl.php.net/package/%{pecl_name}
+Source:     http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-BuildRequires: php-devel >= 5.2.0, php-pear, libselinux-devel >= 2.0.80
-Requires: php >= 5.2.0, libselinux >= 2.0.80
+BuildRequires: php-devel >= 5.2.0
+BuildRequires: php-pear
+BuildRequires: libselinux-devel >= 2.0.80
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires: php(zend-abi) = %{php_zend_api}
 Requires: php(api) = %{php_core_api}
+Requires: libselinux >= 2.0.80
 
 Provides: php-pecl(%{pecl_name}) = %{version}
 Provides: php-pecl(%{pecl_name})%{?_isa} = %{version}
 Provides: php-%{pecl_name} = %{version}
 Provides: php-%{pecl_name}%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
 
-# Filter private shared
+%if 0%{?fedora} < 20
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -50,52 +62,73 @@ translate between raw and readable format and so on.
 
 %prep
 %setup -c -q
+mv %{pecl_name}-%{version} NTS
 
-cp -pr %{pecl_name}-%{version} %{pecl_name}-zts 
-(echo "; Enable SELinux extension module"
- echo "extension=%{pecl_name}.so") > %{pecl_name}.ini
- 
+# Drop in the bit of configuration
+cat > %{pecl_name}.ini << 'EOF'
+; Enable SELinux extension module"
+extension=%{pecl_name}.so")
+EOF
+
+%if %{with_zts}
+# duplicate for ZTS build
+cp -pr NTS ZTS
+%endif
+
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
-install -D -p -m 0755 %{pecl_name}-%{version}/modules/%{pecl_name}.so \
-        %{buildroot}%{php_extdir}/%{pecl_name}.so
-install -D -p -m 0755 %{pecl_name}-zts/modules/%{pecl_name}.so \
-        %{buildroot}%{php_ztsextdir}/%{pecl_name}.so
+
+# Install the NTS stuff
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+%if %{with_zts}
+# Install the ZTS stuff
+make -C ZTS install INSTALL_ROOT=%{buildroot}
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
-# simple module load test
+: simple module load test for the NTS extension
 %{__php} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_zts}
+: simple module load test for the ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{pecl_name}-zts/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
 
 %clean
@@ -112,15 +145,23 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/{LICENSE,README}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
-%{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%{php_extdir}/%{pecl_name}.so
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Thu Mar 13 2014 Remi Collet <RPMS@FamilleCollet.com> - 0.3.1-12
+- cleanups
+- install doc in pecl_docdir
+
 * Thu Jan 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 0.3.1-9.1
 - also provides php-selinux
 
