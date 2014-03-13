@@ -6,10 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  redis
+%global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:       Extension for communicating with the Redis key-value store
@@ -41,15 +43,19 @@ Provides:      php-redis%{?_isa} = %{version}-%{release}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
+%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
+%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -83,8 +89,10 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
+%if %{with_zts}
 # duplicate for ZTS build
 cp -pr nts zts
+%endif
 
 # Drop in the bit of configuration
 cat > %{pecl_name}.ini << 'EOF'
@@ -108,6 +116,7 @@ cd nts
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../zts
 %{_bindir}/zts-phpize
 %configure \
@@ -116,20 +125,21 @@ cd ../zts
     --enable-redis-igbinary \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
-# for short circuit
-rm -f ?ts/modules/igbinary.so
 
 # Install the NTS stuff
 make -C nts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
+%if %{with_zts}
 # Install the ZTS stuff
 make -C zts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -148,10 +158,12 @@ php --no-php-ini \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_zts}
 %{__ztsphp} --no-php-ini \
     --define extension=igbinary.so \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
 %if %{with_tests}
 cd nts/tests
@@ -222,8 +234,10 @@ rm -rf %{buildroot}
 %{php_extdir}/%{pecl_name}.so
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 
+%if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 
 %changelog
