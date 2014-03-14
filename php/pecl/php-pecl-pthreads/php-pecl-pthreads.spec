@@ -123,6 +123,11 @@ fi
 %check
 cd %{pecl_name}-%{version}
 
+%if "%{php_version}" < "5.5"
+# https://github.com/krakjoe/pthreads/issues/258
+rm -f tests/pools.phpt
+%endif
+
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
@@ -152,6 +157,8 @@ rm -rf %{buildroot}
 %changelog
 * Fri Mar 14 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0
+- open https://github.com/krakjoe/pthreads/issues/258
+  tests/pools.phpt use PHP 5.5 syntax
 
 * Sun Mar 09 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 (stable)
