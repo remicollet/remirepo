@@ -12,15 +12,12 @@
 
 Summary:        Threading API
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.1
+Version:        2.0.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/krakjoe/pthreads/pull/251
-Patch0:         %{pecl_name}.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-zts-devel > 5.3
@@ -66,8 +63,6 @@ This extension is only available for PHP in ZTS mode.
 %setup -q -c
 
 cd %{pecl_name}-%{version}
-%patch0 -p1 -b .github
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PTHREADS_VERSION/{s/.* "//;s/".*$//;p}' php_pthreads.h)
 if test "x${extver}" != "x%{version}"; then
@@ -155,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 14 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
+
 * Sun Mar 09 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 (stable)
 - open https://github.com/krakjoe/pthreads/pull/251
