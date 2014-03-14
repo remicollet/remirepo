@@ -8,7 +8,7 @@
 Summary:    SELinux binding for PHP scripting language
 Name:       php-pecl-selinux
 Version:    0.3.1
-Release:    12%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:    13%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:    PHP
 Group:      Development/Languages
 URL:        http://pecl.php.net/package/%{pecl_name}
@@ -66,8 +66,8 @@ mv %{pecl_name}-%{version} NTS
 
 # Drop in the bit of configuration
 cat > %{pecl_name}.ini << 'EOF'
-; Enable SELinux extension module"
-extension=%{pecl_name}.so")
+; Enable SELinux extension module
+extension=%{pecl_name}.so
 EOF
 
 %if %{with_zts}
@@ -158,6 +158,9 @@ fi
 
 
 %changelog
+* Fri Mar 14 2014 Remi Collet <remi@fedoraproject.org> - 0.3.1-13
+- fix syntax in provided configuration
+
 * Thu Mar 13 2014 Remi Collet <RPMS@FamilleCollet.com> - 0.3.1-12
 - cleanups
 - install doc in pecl_docdir
