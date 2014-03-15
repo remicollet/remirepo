@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-judy}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -16,35 +17,52 @@
 %global  ext_name judy
 
 Summary:        PHP Judy implements sparse dynamic arrays
-Name:           php-pecl-judy
+Name:           %{?scl_prefix}php-pecl-judy
 Version:        1.0.2
-Release:        1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRequires:  php-devel > 5.3
-BuildRequires:  php-pear
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  %{?scl_prefix}php-devel > 5.3
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  Judy-devel
 BuildRequires:  pcre-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
 # php 5.3.3 in EL-6 don't use arched virtual provides
 # so only requires real packages instead
-Requires:       php-common%{?_isa}
+Requires:       %{?scl_prefix}php-common%{?_isa}
 %else
-Requires:       php-spl%{?_isa}
+Requires:       %{?scl_prefix}php-spl%{?_isa}
 %endif
 
-Provides:       php-%{ext_name} = %{version}
-Provides:       php-%{ext_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{ext_name} = %{version}
+Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# Package have been renamed
+Obsoletes:      %{?scl_prefix}php-pecl-Judy < 1.0.1
+Provides:       %{?scl_prefix}php-pecl-Judy = %{version}-%{release}
+
+%if 0%{!?scl:1}
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:      php53-pecl-%{pecl_name}
+Obsoletes:      php53u-pecl-%{pecl_name}
+Obsoletes:      php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:      php55u-pecl-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20
 # Filter shared private
@@ -65,7 +83,10 @@ benefits are scalability, high performance, and memory efficiency.
 Summary:       %{name} developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
+# Package have been renamed
+Obsoletes:     %{?scl_prefix}php-pecl-Judy-devel < 1.0.1
+Provides:      %{?scl_prefix}php-pecl-Judy-devel = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using %{name}.
@@ -192,7 +213,6 @@ rm -rf %{buildroot}
 %doc %{pecl_docdir}/%{pecl_name}
 %exclude %{pecl_docdir}/%{pecl_name}/examples
 %{pecl_xmldir}/%{name}.xml
-
 %config(noreplace) %{php_inidir}/%{ext_name}.ini
 %{php_extdir}/%{ext_name}.so
 
@@ -214,6 +234,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 1.0.2-1
+- adapt for SCL
+
 * Sun Nov 03 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2 (stable)
 
