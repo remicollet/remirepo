@@ -164,11 +164,13 @@ fi
 
 %check
 # Need investigation (output order)
-rm -f ?TS/tests/eio_custom_basic.phpt
+rm  ?TS/tests/eio_custom_basic.phpt
+%if 0%{?rhel} <= 7
+rm  ?TS/tests/eio_fallocate_basic.phpt
+%endif
 %if 0%{?rhel} <= 6
-rm -f ?TS/tests/eio_fallocate_basic.phpt \
-      ?TS/tests/eio_write_variation.phpt \
-      ?TS/tests/fork.phpt
+rm  ?TS/tests/eio_write_variation.phpt
+rm  ?TS/tests/fork.phpt
 %endif
 
 DEPMOD=
