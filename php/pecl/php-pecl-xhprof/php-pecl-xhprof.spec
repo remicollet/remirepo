@@ -6,13 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:         %{expand: %%global __pecl %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name xhprof
+%global with_zts  0%{?__ztsphp:1}
 
 Name:           php-pecl-xhprof
 Version:        0.9.4
-Release:        1%{?gitver:.git%{gitver}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?gitver:.git%{gitver}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
@@ -45,9 +48,24 @@ Obsoletes:     php54-pecl-%{pecl_name}
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 
-# Filter private provides
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -84,18 +102,16 @@ for each function.
 Additionally, it supports ability to compare two runs (hierarchical DIFF
 reports), or aggregate results from multiple runs.
 
-%if "%{?_pkgdocdir}" == "%{_docdir}/%{name}"
-Documentation : %{_docdir}/xhprof/index.html
-%else
-Documentation : %{_docdir}/xhprof-%{version}/index.html
-%endif
+Documentation: %{pecl_docdir}/%{pecl_name}/xhprof_html/docs/index.html
 
 
 %prep
 %setup -c -q
 
-# All files as src to avoid registration in pear file list
-sed -e 's/role="[a-z]*"/role="src"/' -i package.xml
+# Mark "php" files as "src" to avoid registration in pear file list
+# xhprof_html should be web, but www_dir is /var/www/html
+# xhprof_lib  should be php, really a lib
+sed -e 's/role="php"/role="src"/' -i package.xml
 
 # Extension configuration file
 cat >%{pecl_name}.ini <<EOF
@@ -130,11 +146,10 @@ EOF
 
 cd %{pecl_name}-%{version}
 
+%if %{with_zts}
 # duplicate for ZTS build
 cp -r extension ext-zts
-
-# not to be installed
-mv xhprof_html/docs ../docs
+%endif
 
 
 %build
@@ -144,11 +159,13 @@ cd %{pecl_name}-%{version}/extension
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../ext-zts
 %{_bindir}/zts-phpize
 %configure \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -156,32 +173,45 @@ rm -rf %{buildroot}
 make install -C %{pecl_name}-%{version}/extension  INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
 
+%if %{with_zts}
 make install -C %{pecl_name}-%{version}/ext-zts    INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-# Install the web interface
+# Install the Apache configuration
 install -D -m 644 httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/xhprof.conf
 
+# Install the web interface
 mkdir -p %{buildroot}%{_datadir}/xhprof
 cp -pr %{pecl_name}-%{version}/xhprof_html %{buildroot}%{_datadir}/xhprof/xhprof_html
 cp -pr %{pecl_name}-%{version}/xhprof_lib  %{buildroot}%{_datadir}/xhprof/xhprof_lib
+rm -r %{buildroot}%{_datadir}/xhprof/xhprof_html/docs
+
+# Test & Documentation
+cd %{pecl_name}-%{version}
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %check
 : simple module load TEST for NTS extension
 php --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}/extension/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_zts}
 : simple module load TEST for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}/ext-zts/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
 
 %clean
@@ -200,23 +230,34 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/{CHANGELOG,CREDITS,README,LICENSE,examples}
+%doc %{pecl_docdir}/%{pecl_name}
+%exclude %{pecl_docdir}/%{pecl_name}/examples
+%exclude %{pecl_docdir}/%{pecl_name}/xhprof_html
 %config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %files -n xhprof
 %defattr(-,root,root,-)
-%doc docs/*
+%doc %{pecl_docdir}/%{pecl_name}/examples
+%doc %{pecl_docdir}/%{pecl_name}/xhprof_html
+%doc %{pecl_testdir}/%{pecl_name}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/xhprof.conf
 %{_datadir}/xhprof
 
 
 %changelog
+* Sat Mar 15 2014 Remi Collet <remi@fedoraproject.org> - 0.9.4-2
+- install doc in pecl_docdir
+- install test in pecl_testdir
+
 * Tue Oct  1 2013 Remi Collet <remi@fedoraproject.org> - 0.9.4-1
 - update to 0.9.4
 
