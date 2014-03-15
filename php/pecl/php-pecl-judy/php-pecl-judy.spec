@@ -117,8 +117,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -183,10 +181,6 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
@@ -203,7 +197,6 @@ rm -rf %{buildroot}
 
 
 %files devel
-%defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 %doc %{pecl_docdir}/%{pecl_name}/examples
 %{php_incldir}/ext/%{ext_name}
