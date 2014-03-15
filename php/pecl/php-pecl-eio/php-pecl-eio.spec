@@ -6,8 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 #
 # NOTE: bundled libeio (which is retired from Fedora)
@@ -18,15 +19,12 @@
 
 Summary:        Provides interface to the libeio library
 Name:           php-pecl-%{pecl_name}
-Version:        1.2.3
+Version:        1.2.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# http://svn.php.net/viewvc?view=revision&revision=331727
-Patch0:         %{pecl_name}-svn.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel > 5.3
@@ -46,9 +44,26 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# Filter shared private
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+%if "%{php_version}" > "5.4"
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -66,15 +81,9 @@ available on specific(UNIX-like) platform.
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
-cd NTS
-%patch0 -p3
+sed -e '/LICENSE/s/role="src"/role="doc"/' -i package.xml
 
-# Need investigation (output order)
-rm -f tests/eio_custom_basic.phpt \
-      tests/fork.phpt
-%if 0%{?rhel} == 5
-rm -f tests/eio_fallocate_basic.phpt
-%endif
+cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/define PHP_EIO_VERSION/{s/.* "//;s/".*$//;p}' php_eio.h)
@@ -133,6 +142,15 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
 %endif
 
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -145,6 +163,14 @@ fi
 
 
 %check
+# Need investigation (output order)
+rm -f ?TS/tests/eio_custom_basic.phpt
+%if 0%{?rhel} <= 6
+rm -f ?TS/tests/eio_fallocate_basic.phpt \
+      ?TS/tests/eio_write_variation.phpt \
+      ?TS/tests/fork.phpt
+%endif
+
 DEPMOD=
 [ -f %{php_extdir}/sockets.so ] && DEPMOD="$DEPMOD -d extension=sockets.so"
 [ -f %{php_extdir}/posix.so ]   && DEPMOD="$DEPMOD -d extension=posix.so"
@@ -187,8 +213,10 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{LICENSE,CREDITS,README}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
@@ -199,5 +227,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 15 2014 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
+- Update to 1.2.4 (stable)
+- install doc in pecl_docdir
+- install tests in pecl_testdir
+
 * Tue Oct  8 2013 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - initial package
