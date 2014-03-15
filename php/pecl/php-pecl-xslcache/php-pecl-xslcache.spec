@@ -16,7 +16,7 @@
 Summary:        XSL extension that caches the parsed XSL style sheet
 Name:           php-pecl-%{pecl_name}
 Version:        0.7.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -50,8 +50,21 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
+
 %if 0%{?fedora} < 20
-# Filter shared private
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 %endif
@@ -134,6 +147,12 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
+# Test & Documentation
+cd NTS
+for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -153,14 +172,6 @@ cd NTS
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-: Upstream test suite for NTS extension
-TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d extension=dom.so -d extension=$PWD/modules/%{pecl_name}.so" \
-NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php
-
-
 %if %{with_zts}
 : Minimal load test for ZTS extension
 cd ../ZTS
@@ -168,13 +179,6 @@ cd ../ZTS
     --define extension=dom.so \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
-
-: Upstream test suite for ZTS extension
-TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension=dom.so -d extension=$PWD/modules/%{pecl_name}.so" \
-NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
 %endif
 
 
@@ -184,7 +188,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{LICENSE,CREDITS}
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -196,5 +200,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 15 2014 Remi Collet <remi@fedoraproject.org> - 0.7.2-2
+- install doc in pecl_docdir
+
 * Mon Oct  7 2013 Remi Collet <remi@fedoraproject.org> - 0.7.2-1
 - initial package, version 0.7.2 (beta)
