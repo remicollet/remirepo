@@ -6,8 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name hidef
@@ -15,7 +16,7 @@
 Summary:        Constants for real
 Name:           php-pecl-%{pecl_name}
 Version:        0.1.13
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -28,6 +29,7 @@ Source1:        http://www.php.net/license/3_01.txt
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
+BuildRequires:  pcre-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -40,9 +42,24 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# Filter shared private
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -57,11 +74,6 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 cp %{SOURCE1} LICENSE
-
-# Not ready for PHP 5.5
-rm -f tests/hidef_006.phpt \
-      tests/hidef_007.phpt \
-      tests/hidef_010.phpt
 
 sed -e '/PHP_HIDEF_VERSION/s/0.1.12/%{version}/' -i php_hidef.h
 
@@ -134,6 +146,15 @@ sed -e 's:@INIDIR@:%{php_ztsinidir}:' %{pecl_name}.ini \
     >%{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %post
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -146,6 +167,11 @@ fi
 
 
 %check
+# Not ready for PHP 5.5
+rm -f ?TS/tests/hidef_006.phpt \
+      ?TS/tests/hidef_007.phpt \
+      ?TS/tests/hidef_010.phpt
+
 : Minimal load test for NTS extension
 cd NTS
 %{_bindir}/php --no-php-ini \
@@ -182,9 +208,10 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-# INSTALL is about Configuration
-%doc NTS/{LICENSE,CREDITS,README,INSTALL}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %dir %{php_inidir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
@@ -197,5 +224,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 15 2014 Remi Collet <remi@fedoraproject.org> - 0.1.13-2
+- install doc in pecl_docdir
+- install tests in pecl_testdir
+
 * Tue Oct  8 2013 Remi Collet <remi@fedoraproject.org> - 0.1.13-1
 - initial package, version 0.1.13 (stable)
