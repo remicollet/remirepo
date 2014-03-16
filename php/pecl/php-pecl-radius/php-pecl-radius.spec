@@ -1,10 +1,24 @@
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+# spec file for php-pecl-radius
+#
+# Copyright (c) 2009-2014 Remi Collet
+# Copyright (c) 2006-2009 Christopher Stone
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
 
-%global pecl_name radius
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
+
+%global pecl_name  radius
+%global with_zts   0%{?__ztsphp:1}
 
 Name:           php-pecl-radius
 Version:        1.2.7
-Release:        1%{?dist}.1
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Radius client library
 
 License:        BSD
@@ -13,10 +27,14 @@ URL:            http://pecl.php.net/package/radius
 Source0:        http://pecl.php.net/get/radius-%{version}.tgz
 
 # https://bugs.php.net/65156 ask license file
+# file created from the radius.c headers
+Source1:        LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
+BuildRequires:  php-posix
+BuildRequires:  php-sockets
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -28,6 +46,7 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
@@ -35,10 +54,16 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
 
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -52,7 +77,13 @@ OS (for example against Windows Active-Directory via IAS).
 %prep
 %setup -qc
 
-cd %{pecl_name}-%{version}
+sed -e '/CREDITS/s/role="src"/role="doc"/' -i package.xml
+
+mv %{pecl_name}-%{version} NTS
+cd NTS
+
+cp %{SOURCE1} LICENSE
+
 extver=$(sed -n '/#define PHP_RADIUS_VERSION/{s/.* "//;s/".*$//;p}' php_radius.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
@@ -64,49 +95,90 @@ cat > %{pecl_name}.ini << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
-cp -pr %{pecl_name}-%{version} %{pecl_name}-%{version}-zts
+
+%if %{with_zts}
+# Duplicate source tree for NTS / ZTS build
+cp -pr NTS ZTS
+%endif
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-%{version}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 
-make -C %{pecl_name}-%{version} \
-     install INSTALL_ROOT=%{buildroot}
-
-make -C %{pecl_name}-%{version}-zts \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
 install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in LICENSE  $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %check
+DEP=
+[ -f %{php_extdir}/posix.so ]   && DEP="$DEP -d extension=posix.so"
+[ -f %{php_extdir}/sockets.so ] && DEP="$DEP -d extension=sockets.so"
+
+%if "%{php_version}" > "5.5"
+# used fake_server is not compatible with php 5.5
+# Deprecated: Non-static method xxx should not be called statically
+rm -f $(grep -l fake_server ?TS/tests/*phpt)
+%endif
+
 # simple module load test
 %{__php} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+: Upstream test suite for NTS extension
+cd NTS
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n $DEP -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php
+
+%if %{with_zts}
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{pecl_name}-%{version}-zts/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+: Upstream test suite for ZTS extension
+cd ../ZTS
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n $DEP -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php
+%endif
 
 
 %post
@@ -125,15 +197,26 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_name}-%{version}/{CREDITS,examples}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
-%{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%{php_extdir}/%{pecl_name}.so
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Sun Mar 16 2014 Remi Collet <remi@fedoraproject.org> - 1.2.7-2
+- run upstream test suite
+- install doc in pecl_docdir
+- install tests in pecl_testdir
+- add missing License file (extracted from headers)
+
 * Fri Jun 28 2013 Remi Collet <remi@fedoraproject.org> - 1.2.7-1
 - Update to 1.2.7
 
