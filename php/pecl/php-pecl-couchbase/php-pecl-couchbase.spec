@@ -7,9 +7,9 @@
 # Please, preserve the changelog entries
 #
 
-%{!?php_inidir: %{expand: %%global php_inidir %{_sysconfdir}/php.d}}
-%{!?__php:      %{expand: %%global __php      %{_bindir}/php}}
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name couchbase
 %global with_zts  0%{?__ztsphp:1}
@@ -17,7 +17,7 @@
 Summary:       Couchbase Server PHP extension
 Name:          php-pecl-couchbase
 Version:       1.2.1
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -45,9 +45,24 @@ Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -113,6 +128,12 @@ install -D -m 644 ZTS/example/%{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
 : minimal NTS load test
@@ -147,7 +168,7 @@ fi
 
 
 %files
-%doc NTS/{CREDITS,LICENSE,*md}
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
@@ -161,6 +182,9 @@ fi
 
 
 %changelog
+* Sun Mar 16 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
+- install doc in pecl_docdir
+
 * Sat Oct 05 2013 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1
 - add patch to fix ZTS build
