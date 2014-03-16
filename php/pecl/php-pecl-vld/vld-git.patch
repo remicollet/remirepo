@@ -1,0 +1,26 @@
+From 28c5d156fe21dd9e3ddcd318b0bf7dd3b387a28a Mon Sep 17 00:00:00 2001
+From: Derick Rethans <github@derickrethans.nl>
+Date: Sat, 8 Mar 2014 20:43:18 +0000
+Subject: [PATCH] Adding missing PHP 5.6 opcodes.
+
+---
+ srm_oparray.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/srm_oparray.c b/srm_oparray.c
+index 81a872c..28b868b 100644
+--- a/srm_oparray.c
++++ b/srm_oparray.c
+@@ -232,6 +232,9 @@
+ 	/*  161 */	{ "GENERATOR_RETURN", NONE_USED },
+ 	/*  162 */	{ "FAST_CALL", OP1_USED },
+ 	/*  163 */	{ "FAST_RET", NONE_USED },
++	/*  164 */	{ "ZEND_RECV_VARIADIC", ALL_USED },
++	/*  165 */	{ "POW", ALL_USED },
++	/*  166 */	{ "POW_ASSIGN", ALL_USED | EXT_VAL },
+ #endif
+ };
+ 
+-- 
+1.8.5.5
+
