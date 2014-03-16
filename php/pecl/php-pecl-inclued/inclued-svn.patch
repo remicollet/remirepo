@@ -1,0 +1,232 @@
+--- pecl/inclued/trunk/inclued.c	2013/09/23 14:27:53	331472
++++ pecl/inclued/trunk/inclued.c	2013/09/23 18:23:34	331473
+@@ -108,26 +108,26 @@
+ 		MAKE_STD_ZVAL(class_entry);
+ 		array_init(class_entry);
+ 
+-		add_assoc_stringl_ex(class_entry, "name", sizeof("name"), ce->name, ce->name_length, 1);
++		add_assoc_stringl_ex(class_entry, "name", sizeof("name"), (char*) ce->name, ce->name_length, 1);
+ 		if(ce->name[0] != key[0])
+ 		{
+ 			add_assoc_stringl_ex(class_entry, "mangled_name", sizeof("mangled_name"), key, keylen-1, 1);
+ 		}
+-		add_assoc_string_ex(class_entry, "filename", sizeof("filename"), CE_INFO(ce, filename), 1);
++		add_assoc_string_ex(class_entry, "filename", sizeof("filename"), (char*) CE_INFO(ce, filename), 1);
+ 		add_assoc_long_ex(class_entry, "line", sizeof("line"), CE_INFO(ce, line_start));
+ 
+ 		if(ce->parent)
+ 		{
+ 			MAKE_STD_ZVAL(parent_entry);
+ 			array_init(parent_entry);
+-			add_assoc_stringl_ex(parent_entry, "name", sizeof("name"), ce->parent->name, ce->parent->name_length, 1);
++			add_assoc_stringl_ex(parent_entry, "name", sizeof("name"), (char*) ce->parent->name, ce->parent->name_length, 1);
+ 			if(ce->parent->type == ZEND_INTERNAL_CLASS) 
+ 			{ 
+ 				add_assoc_bool_ex(parent_entry, "internal", sizeof("internal"), 1);
+ 			} 
+ 			else
+ 			{
+-				add_assoc_string_ex(parent_entry, "filename", sizeof("filename"), CE_INFO(ce, filename), 1);
++				add_assoc_string_ex(parent_entry, "filename", sizeof("filename"), (char*) CE_INFO(ce, filename), 1);
+ 				add_assoc_long_ex(parent_entry, "line", sizeof("line"), CE_INFO(ce, line_start));
+ 			}
+ 
+--- pecl/inclued/trunk/inclued_zend.c	2013/09/23 14:27:53	331472
++++ pecl/inclued/trunk/inclued_zend.c	2013/09/23 18:23:34	331473
+@@ -21,43 +21,40 @@
+ #include "php_inclued.h"
+ #include "inclued_zend.h"
+ 
+-#define INCLUED_EX_T(offset)					(*(temp_variable *)((char*)execute_data->Ts + offset))
++
++#if PHP_VERSION_ID >= 50500
++#  define INCLUED_EX_T(offset)					(*EX_TMP_VAR(execute_data, offset))
++#else
++#  define INCLUED_EX_T(offset)					(*(temp_variable *)((char *) execute_data->Ts + offset))
++#endif
+ 
+ static zval *inclued_get_zval_ptr(INCLUED_ZNODE *node, int op_type, zval **freeval, zend_execute_data *execute_data TSRMLS_DC) /* {{{ */
+ {
++	zend_free_op free_op1;
++	zval *value = NULL;
+ 	*freeval = NULL;
+-
+-	switch (op_type) {
+-		case IS_CONST:
+-#if PHP_VERSION_ID >= 50400
+-			return INCLUED_ZNODE_ELEM(node, zv);
++#if PHP_VERSION_ID >= 50600
++	value = zend_get_zval_ptr(op_type, node, execute_data, &free_op1, BP_VAR_R TSRMLS_CC);
+ #else
+-			return &(INCLUED_ZNODE_ELEM(node, constant));
+-#endif
+-		case IS_VAR:
+-			return INCLUED_EX_T(INCLUED_ZNODE_ELEM(node, var)).var.ptr;
+-		case IS_TMP_VAR:
+-			return (*freeval = &INCLUED_EX_T(INCLUED_ZNODE_ELEM(node, var)).tmp_var);
+-#ifdef ZEND_ENGINE_2_1
+-		case IS_CV:
+-		{
+-			zval ***ret = &execute_data->CVs[INCLUED_ZNODE_ELEM(node, var)];
+-
+-			if (!*ret) {
+-				zend_compiled_variable *cv = &EG(active_op_array)->vars[INCLUED_ZNODE_ELEM(node, var)];
+-
+-				if (zend_hash_quick_find(EG(active_symbol_table), cv->name, cv->name_len+1, cv->hash_value, (void**)ret)==FAILURE) {
+-					zend_error(E_NOTICE, "Undefined variable: %s", cv->name);
+-					return &EG(uninitialized_zval);
+-				}
+-			}
+-			return **ret;
+-		}
++	value = zend_get_zval_ptr(op_type, node, execute_data->Ts, &free_op1, BP_VAR_R TSRMLS_CC);
+ #endif
+-		case IS_UNUSED:
+-		default:
+-			return NULL;
++	*freeval = free_op1.var;
++	return value;
++} 
++/* }}} */
++
++static int is_autoload(const char *function_name) /* {{{ */
++{
++	/* TODO: config option? */
++	if(strcmp("__autoload", function_name) == 0) 
++	{
++		return 1; 
++	}
++	if(strcmp("spl_autoload", function_name) == 0) 
++	{
++		return 1; 
+ 	}
++	return 0;
+ }
+ /* }}} */
+ 
+@@ -121,12 +118,12 @@
+ 		array_init(include_entry);
+ 		add_assoc_string_ex(include_entry, "operation", sizeof("operation"), operation, 1);
+ 		add_assoc_long_ex(include_entry, "op_type", sizeof("op_type"), op_type);
+-		add_assoc_string_ex(include_entry, "fromfile", sizeof("fromfile"), execute_data->op_array->filename, 1);
++		add_assoc_string_ex(include_entry, "fromfile", sizeof("fromfile"), (char*)execute_data->op_array->filename, 1);
+ 		add_assoc_long_ex(include_entry, "fromline", sizeof("fromline"), opline->lineno);
+ 
+ 		if(execute_data->op_array->function_name) 
+ 		{
+-			add_assoc_string_ex(include_entry, "function", sizeof("function"), (char*)execute_data->op_array->function_name, 1);
++			add_assoc_string_ex(include_entry, (char*) "function", sizeof("function"), (char*)execute_data->op_array->function_name, 1);
+ 		}
+ 
+ 		add_next_index_zval(includes_hash, include_entry);
+@@ -149,7 +146,7 @@
+ 		inc_filename = &tmp_inc_filename;
+ 	}
+ 
+-	wrapper = php_stream_locate_url_wrapper(Z_STRVAL_P(inc_filename), &path_for_open, 0 TSRMLS_CC);
++	wrapper = php_stream_locate_url_wrapper(Z_STRVAL_P(inc_filename), (const char**)&path_for_open, 0 TSRMLS_CC);
+ 
+ 
+ 	if(SUCCESS == zend_stream_open(inc_filename->value.str.val, &file_handle TSRMLS_CC))
+@@ -183,15 +180,15 @@
+ 			add_assoc_bool_ex(include_entry, "duplicate", sizeof("duplicate"), 1);
+ 		}
+ 		
+-		add_assoc_string_ex(include_entry, "fromfile", sizeof("fromfile"), execute_data->op_array->filename, 1);
++		add_assoc_string_ex(include_entry, "fromfile", sizeof("fromfile"), (char*) execute_data->op_array->filename, 1);
+ 		add_assoc_long_ex(include_entry, "fromline", sizeof("fromline"), opline->lineno);
+ 
+ 		if(execute_data->op_array->function_name) 
+ 		{
+-			add_assoc_string_ex(include_entry, "function", sizeof("function"), (char*)execute_data->op_array->function_name, 1);
++			add_assoc_string_ex(include_entry, "function", sizeof("function"), (char*) execute_data->op_array->function_name, 1);
+ 		}
+ 
+-		if(execute_data->op_array->function_name && (strcmp("__autoload", execute_data->op_array->function_name) == 0))
++		if(execute_data->op_array->function_name && is_autoload(execute_data->op_array->function_name))
+ 		{
+ 			real_execute_data = execute_data->prev_execute_data;
+ 			if(real_execute_data->opline == NULL &&
+@@ -203,7 +200,7 @@
+ 				
+ 				real_execute_data = real_execute_data->prev_execute_data;
+ 				
+-				add_assoc_string_ex(autoload_entry, "fromfile", sizeof("fromfile"), real_execute_data->op_array->filename, 1);
++				add_assoc_string_ex(autoload_entry, "fromfile", sizeof("fromfile"), (char*) real_execute_data->op_array->filename, 1);
+ 				add_assoc_long_ex(autoload_entry, "fromline", sizeof("fromline"), real_execute_data->opline->lineno);
+ 
+ 				add_assoc_zval(include_entry, "autoload", autoload_entry);
+@@ -221,7 +218,7 @@
+ 		
+ 		if(wrapper != &php_plain_files_wrapper)
+ 		{
+-			add_assoc_string_ex(include_entry, "streamwrapper", sizeof("streamwrapper"), (char*)wrapper->wops->label, 1);
++			add_assoc_string_ex(include_entry, "streamwrapper", sizeof("streamwrapper"), (char*) wrapper->wops->label, 1);
+ 		}
+ 
+ 		add_next_index_zval(includes_hash, include_entry);
+@@ -254,11 +251,11 @@
+ #define INCLUED_ZCE(entry, ce) do { \
+ 		MAKE_STD_ZVAL(entry);	\
+ 		array_init(entry);		\
+-		add_assoc_stringl(entry, "name", ce->name, ce->name_length, 1); \
++		add_assoc_stringl(entry, "name", (char*) ce->name, ce->name_length, 1); \
+ 		if(ce->type == ZEND_INTERNAL_CLASS) { \
+ 			add_assoc_bool(entry,  "internal", 1); \
+ 		} else { \
+-			add_assoc_string(entry,  "filename", CE_INFO(ce, filename), 1); \
++			add_assoc_string(entry,  "filename", (char*) CE_INFO(ce, filename), 1); \
+ 			add_assoc_long(entry,    "line", CE_INFO(ce, line_start)); \
+ 		} \
+ 	}while(0)
+@@ -281,7 +278,7 @@
+ 	/* TODO: class flags - public, private, abstract etc ... */
+ 
+ 	add_assoc_string(class_entry, "operation", (opcode == ZEND_DECLARE_CLASS) ? "declare_class" : "declare_inherited_class", 1);
+-	add_assoc_string(class_entry, "filename",	execute_data->op_array->filename, 1);
++	add_assoc_string(class_entry, "filename", (char*) execute_data->op_array->filename, 1);
+ 	add_assoc_long(class_entry,   "line", opline->lineno);
+ #if PHP_VERSION_ID >= 50400	
+ 	add_assoc_stringl(class_entry,"name", Z_STRVAL_P(opline->op2.zv), Z_STRLEN_P(opline->op2.zv), 1);
+@@ -302,7 +299,7 @@
+ 
+ 	if(execute_data->op_array->function_name) 
+ 	{
+-		add_assoc_string(class_entry, "function", (char*)execute_data->op_array->function_name, 1);
++		add_assoc_string(class_entry, "function", (char*) execute_data->op_array->function_name, 1);
+ 	}
+ 
+ 	add_next_index_zval(inh_hash, class_entry);
+@@ -336,9 +333,9 @@
+ 	array_init(iface_entry);
+ 
+ 	add_assoc_string(iface_entry, "operation", "add_interface", 1);
+-	add_assoc_string(iface_entry, "filename",	execute_data->op_array->filename, 1);
++	add_assoc_string(iface_entry, "filename", (char*) execute_data->op_array->filename, 1);
+ 	add_assoc_long(iface_entry,   "line", opline->lineno);
+-	add_assoc_stringl(iface_entry, "class_name", ce->name, ce->name_length, 1);
++	add_assoc_stringl(iface_entry, "class_name", (char*) ce->name, ce->name_length, 1); /* contains \0 */
+ 
+ 	if(execute_data->op_array->function_name) 
+ 	{
+--- pecl/inclued/trunk/gengraph.php	2013/09/23 18:23:34	331473
++++ pecl/inclued/trunk/gengraph.php	2013/09/23 18:27:55	331474
+@@ -233,7 +233,6 @@
+ 
+ $content = 	<<<EOF
+ digraph phpdeps {
+-	size="6.6";
+ 	node [shape = ellipse];
+ 	node [color="#add960", style=filled];
+ 	graph [bgcolor="#f7f7f7"];
+--- pecl/inclued/trunk/inclued_zend.c	2014/03/16 15:37:32	333015
++++ pecl/inclued/trunk/inclued_zend.c	2014/03/16 18:00:34	333016
+@@ -33,7 +33,7 @@
+ 	zend_free_op free_op1;
+ 	zval *value = NULL;
+ 	*freeval = NULL;
+-#if PHP_VERSION_ID >= 50600
++#if PHP_VERSION_ID >= 50500
+ 	value = zend_get_zval_ptr(op_type, node, execute_data, &free_op1, BP_VAR_R TSRMLS_CC);
+ #else
+ 	value = zend_get_zval_ptr(op_type, node, execute_data->Ts, &free_op1, BP_VAR_R TSRMLS_CC);

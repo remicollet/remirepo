@@ -23,6 +23,13 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # https://bugs.php.net/65841 Please Provides LICENSE file
+# http://svn.php.net/viewvc?view=revision&revision=331713
+Source1:        LICENSE
+
+# http://svn.php.net/viewvc?view=revision&revision=331473
+# http://svn.php.net/viewvc?view=revision&revision=331474
+# http://svn.php.net/viewvc?view=revision&revision=333016
+Patch0:         %{pecl_name}-svn.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
@@ -38,9 +45,25 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-# Filter shared private
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20
+# Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
+
 
 %description
 Allows you trace through and dump the hierarchy of file inclusions
@@ -51,9 +74,17 @@ and class inheritance at runtime.
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
+sed -e '/gengraph.php/s/role="php"/role="doc"/' -i package.xml
+
 cd NTS
 # no shebang, and will be provided as doc only
 chmod -x gengraph.php
+
+cp %{SOURCE1} LICENSE
+
+%if "%{php_version}" > "5.4"
+%patch0 -p3 -b .svn
+%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_INCLUED_VERSION/{s/.* "//;s/".*$//;p}' php_inclued.h)
@@ -104,8 +135,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make -C NTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
@@ -114,11 +144,16 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-make -C ZTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
+
+# Test & Documentation
+cd NTS
+for i in LICENSE  $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %post
@@ -134,15 +169,13 @@ fi
 %check
 # Minimal load test for NTS extension
 php --no-php-ini \
-    --define extension_dir=NTS/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_zts}
 # Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=ZTS/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 %endif
 
@@ -153,8 +186,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/gengraph.php
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
@@ -165,5 +199,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 16 2014 Remi Collet <remi@fedoraproject.org> - 0.1.3-2
+- install doc in pecl_docdir
+- upstream patch for php 5.5+
+
 * Sun Oct  6 2013 Remi Collet <remi@fedoraproject.org> - 0.1.3-1
 - initial package
