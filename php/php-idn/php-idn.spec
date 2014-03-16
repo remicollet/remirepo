@@ -3,7 +3,7 @@
 Summary:       PHP API for GNU LibIDN
 Name:          php-idn
 Version:       1.2c
-Release:       6%{?dist}.1
+Release:       9%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       GPLv2+
 Group:         Development/Languages
 Source0:       http://php-idn.bayour.com/idn_%{version}.tar.gz
@@ -22,9 +22,11 @@ Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 Requires:       php-intl%{?_isa}
 
-# Filter private shared
+%if 0%{?fedora} < 20
+# Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -95,6 +97,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 16 2014 Remi Collet <remi@fedoraproject.org> - 1.2c-9
+- cleanups
+
 * Tue Jan  8 2013 Remi Collet <remi@fedoraproject.org> - 1.2c-6
 - also build ZTS extension
 
