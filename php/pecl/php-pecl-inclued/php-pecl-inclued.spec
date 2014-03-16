@@ -6,9 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name inclued
@@ -83,6 +83,8 @@ chmod -x gengraph.php
 cp %{SOURCE1} LICENSE
 
 %if "%{php_version}" > "5.4"
+# this patch fix build with recent versions
+# but breaks compat with older versions
 %patch0 -p3 -b .svn
 %endif
 
