@@ -12,7 +12,7 @@
 
 Summary:        Threading API
 Name:           php-pecl-%{pecl_name}
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -33,17 +33,17 @@ Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20
@@ -123,11 +123,6 @@ fi
 %check
 cd %{pecl_name}-%{version}
 
-%if "%{php_version}" < "5.5"
-# https://github.com/krakjoe/pthreads/issues/258
-rm -f tests/pools.phpt
-%endif
-
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
@@ -155,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
+
 * Fri Mar 14 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0
 - open https://github.com/krakjoe/pthreads/issues/258
