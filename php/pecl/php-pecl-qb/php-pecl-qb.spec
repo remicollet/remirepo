@@ -152,7 +152,7 @@ fi
 
 
 %check
-# Need investigation
+# Need investigation - https://github.com/chung-leong/qb/issues/25
 %if 0%{?rhel} < 7 && 0%{?fedora} < 19
 %ifarch %{ix86}
 rm ?TS/tests/intrinsic-cos.phpt
@@ -168,11 +168,20 @@ cd NTS
     --modules | grep %{pecl_name}
 
 : Upstream test suite  for NTS extension
-TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
-NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php
+export TEST_PHP_EXECUTABLE=%{__php}
+export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
+export NO_INTERACTION=1
+export REPORT_EXIT_STATUS=1
+if ! %{__php} run-tests.php
+then
+  for i in tests/*diff
+  do
+    echo "---- FAILURE in $i"
+    cat $i
+    echo -n "\n----"
+  done
+  exit 1
+fi
 
 %if %{with_zts}
 cd ../ZTS
@@ -211,5 +220,6 @@ rm -rf %{buildroot}
 %changelog
 * Mon Mar 17 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - initial package, version 2.1.1 (stable)
-- https://github.com/chung-leong/qb/issues/24 - ZTS broken
 - https://github.com/chung-leong/qb/issues/23 - Bad archive
+- https://github.com/chung-leong/qb/issues/24 - ZTS broken
+- https://github.com/chung-leong/qb/issues/25 - Failed tests
