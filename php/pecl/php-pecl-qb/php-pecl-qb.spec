@@ -158,6 +158,7 @@ fi
 rm ?TS/tests/intrinsic-cos.phpt
 rm ?TS/tests/intrinsic-ccosh.phpt
 rm ?TS/tests/intrinsic-tan.phpt
+rm ?TS/tests/class-var-ref-count-array.phpt
 %endif
 %endif
 
