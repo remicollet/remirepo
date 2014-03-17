@@ -1,12 +1,20 @@
+# spec file for php-ffmpeg
+#
+# Copyright (c) 2007-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global ext_name   ffmpeg
 %global svn        678
 
 Name:           php-ffmpeg
 Version:        0.7.0
 %if 0%{?svn}
-Release:        0.2.svn%{svn}%{?dist}.2
+Release:        0.3.svn%{svn}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %else
-Release:        1%{?dist}
+Release:        1%{svn}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %endif
 Summary:        Extension to manipulate movie in PHP
 
@@ -40,9 +48,11 @@ Requires:       php-gd%{?_isa}
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -117,17 +127,14 @@ install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
 
 
 %check
-# simple module load test
+: Simple module load test
 %{__php} --no-php-ini \
-    --define extension_dir=%{ext_name}-nts/modules \
-    --define extension=%{ext_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{ext_name}.so \
     --modules | grep %{ext_name}
 
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=%{ext_name}-zts/modules \
-    --define extension=%{ext_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so \
     --modules | grep %{ext_name}
-
 
 
 %clean
@@ -146,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 17 2014 Remi Collet <rpms@famillecollet.com> 0.7.0-0.3.svn678
+- cleanups
+
 * Wed Jan  2 2013 Remi Collet <rpms@famillecollet.com> 0.7.0-0.2.svn678
 - rewrite patch for include using explicit path of each header
   because of conflicts with system headers (time.h)
@@ -172,4 +182,3 @@ rm -rf %{buildroot}
 
 * Sat Jul 07 2007 Remi Collet <rpms@famillecollet.com> 0.5.1-1
 - initial SPEC
-
