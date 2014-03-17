@@ -13,21 +13,17 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  gmagick
-%global prever     RC1
+%global prever     RC2
 %global with_zts   0%{?__ztsphp:1}
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.7
-Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# http://svn.php.net/viewvc?view=revision&revision=332912
-# fix for PHP 5.6
-Patch0:         %{pecl_name}-php56.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
@@ -76,7 +72,6 @@ of images using the GraphicsMagick API.
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
-%patch0 -p3 -b .php56
 
 extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_gmagick.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -204,9 +199,10 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
@@ -215,6 +211,9 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 
 
 %changelog
+* Mon Mar 17 2014 Remi Collet <remi@fedoraproject.org> - 1.1.7-0.3.RC2
+- Update to 1.1.7RC2 (beta)
+
 * Mon Mar  3 2014 Remi Collet <remi@fedoraproject.org> - 1.1.7-0.2.RC1
 - add upstream patch for PHP 5.6
 
