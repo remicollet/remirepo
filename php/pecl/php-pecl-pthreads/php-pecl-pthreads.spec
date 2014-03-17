@@ -152,6 +152,8 @@ rm -rf %{buildroot}
 %changelog
 * Mon Mar 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1
+- open https://github.com/krakjoe/pthreads/issues/262
+  segfault in test suite
 
 * Fri Mar 14 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0
