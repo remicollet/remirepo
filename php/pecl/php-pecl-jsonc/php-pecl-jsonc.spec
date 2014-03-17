@@ -62,7 +62,7 @@ Obsoletes:     php54-pecl-%{proj_name}
 Obsoletes:     php55u-pecl-%{proj_name}
 %endif
 
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}

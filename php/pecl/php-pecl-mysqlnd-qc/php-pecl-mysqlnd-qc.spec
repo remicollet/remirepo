@@ -50,9 +50,11 @@ Obsoletes:     php53u-pecl-mysqlnd-qc
 Obsoletes:     php54-pecl-mysqlnd-qc
 %endif
 
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description

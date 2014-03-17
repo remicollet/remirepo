@@ -46,7 +46,7 @@ Provides:       php-%{ext_name}%{?_isa} = %{version}
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}

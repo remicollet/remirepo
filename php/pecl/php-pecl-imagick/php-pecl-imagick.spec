@@ -60,7 +60,7 @@ Obsoletes:     php56u-pecl-imagick
 %endif
 %endif
 
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
