@@ -113,7 +113,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201403120830
+%global snapdate      201403170630
 #global rcver         alpha3
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1898,7 +1898,10 @@ fi
 
 
 %changelog
-* Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-0.3.201403120830
+* Mon Mar 17 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-0.4.201403170630
+- new snapshot php5.6-201403170630
+
+* Wed Mar 12 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-0.3.201403120830
 - new snapshot php5.6-201403120830
 - rebuild against gd-last without libvpx on EL < 7
 - oci8 version 2.0.8
