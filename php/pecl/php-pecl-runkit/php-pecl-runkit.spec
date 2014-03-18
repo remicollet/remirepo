@@ -1,16 +1,19 @@
-%{!?__pecl:  %{expand:    %%global __pecl    %{_bindir}/pecl}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global gh_owner    zenovich
 %global gh_commit   5e179e978af79444d3c877d5681ea91d15134a01
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global pecl_name   runkit
+%global with_zts    0%{?__ztsphp:1}
 
 Summary:          Mangle with user defined functions and classes
 Summary(ru):      Манипулирование пользовательскими функциями и классами
 Summary(pl):      Obróbka zdefiniowanych przez użytkownika funkcji i klas
 Name:             php-pecl-%{pecl_name}
 Version:          1.0.4
-Release:          0.4%{?gh_short:.git%{gh_short}}%{?dist}.1
+Release:          0.5%{?gh_short:.git%{gh_short}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:          PHP
 Group:            Development/Libraries
 # URL:            http://pecl.php.net/package/runkit/
@@ -37,12 +40,17 @@ Provides:         php-%{pecl_name}%{?_isa} = %{version}
 Provides:         php-pecl(%{pecl_name}) = %{version}
 Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 Obsoletes:        php53-pecl-%{pecl_name}
 Obsoletes:        php53u-pecl-%{pecl_name}
 Obsoletes:        php54-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
+%if "%{php_version}" > "5.5"
 Obsoletes:        php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:        php56u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -72,13 +80,17 @@ ogólnego użytku. Wykonywanie danego kodu w ograniczonym środowisku
 %prep
 %setup -q -c
 
-mv runkit-%{gh_commit} nts
+mv runkit-%{gh_commit} NTS
+mv NTS/package.xml .
 
 %if 0%{?rhel} == 5
 sed -e 's/-Werror//' -i nts/config.m4
 %endif
 
-cp -r nts zts
+%if %{with_zts}
+# duplicate for ZTS build
+cp -pr NTS ZTS
+%endif
 
 # Create the configuration file
 cat <<'EOF' > %{pecl_name}.ini
@@ -88,62 +100,75 @@ EOF
 
 
 %build
-cd nts
+cd NTS
 %{_bindir}/phpize
 %configure \
     --with-%{pecl_name}\
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --with-%{pecl_name}\
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 
-make install -C nts  install INSTALL_ROOT=%{buildroot}
-make install -C zts  install INSTALL_ROOT=%{buildroot}
+make install -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
-install -Dpm 0664 nts/package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 0664 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+make install -C ZTS install INSTALL_ROOT=%{buildroot}
+install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+cd NTS
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %check
 # Minimal load test
 %{__php} --no-php-ini \
-    --define extension_dir=%{buildroot}%{php_extdir} \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     -m | grep %{pecl_name}
-
-%{__ztsphp} --no-php-ini \
-    --define extension_dir=%{buildroot}%{php_ztsextdir} \
-    --define extension=%{pecl_name}.so \
-    -m | grep %{pecl_name}
-
 
 # Provided test suite
-cd nts
+cd NTS
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension_dir=%{buildroot}%{php_extdir} -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
-cd ../zts
+%if %{with_zts}
+%{__ztsphp} --no-php-ini \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
+    -m | grep %{pecl_name}
+
+cd ../ZTS
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=%{buildroot}%{php_ztsextdir} -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
+%endif
 
 
 %post
@@ -161,17 +186,26 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc nts/{README,LICENSE}
+%doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %{php_extdir}/%{pecl_name}.so
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 
+%if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%endif
 
 
 %changelog
+* Tue Mar 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.5.git5e179e9
+- cleanups
+- install doc in pecl_docdir
+- install tests in pecl_testdir
+- make ZTS build optional
+
 * Thu Jul 18 2013 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.4.git5e179e9
 - update to latest master snapshot
 - fix Source0 URL
