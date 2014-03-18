@@ -14,7 +14,7 @@ Build order
 	* Horde_Scribe              2.0.1        R: Horde_Thrift
 	* Horde_Socket_Client       1.1.1        R: Horde_Exception
 	* Horde_Support             2.1.1       I: Horde_Test R: Horde_Exception, Horde_Stream_Wrapper
-	* Horde_Browser             2.0.5        R: Horde_Exception, Horde_Util
+	* Horde_Browser             2.0.6        R: Horde_Exception, Horde_Util
 	* Horde_Cli                 2.0.4       I: Horde_Test R: Horde_Support, Horde_Translation
 	* Horde_Log                 2.1.0       I: Horde_Test R: Horde_Constraint, Horde_Exception, Horde_Cli, Horde_Scribe
 	* Horde_Test                2.3.0        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
