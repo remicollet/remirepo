@@ -1,8 +1,8 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name Swift
 
 Name:           php-swift-Swift
-Version:        5.0.3
+Version:        5.1.0
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -21,16 +21,22 @@ Requires(postun): %{__pear}
 Requires:       php(language) >= 5.2.4
 Requires:       php-pear(PEAR)
 Requires:       php-channel(pear.swiftmailer.org)
-# from phpcompatinfo report on version 5.0.2
+# from phpcompatinfo report on version 5.1.0
+Requires:       php-bcmath
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-hash
 Requires:       php-iconv
 Requires:       php-mbstring
+Requires:       php-mcrypt
+Requires:       php-mhash
 Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
+
+# optional but not yet available https://github.com/xdecock/php-opendkim
+
 Provides:       php-pear(pear.swiftmailer.org/%{pear_name}) = %{version}
 
 %description
@@ -92,6 +98,10 @@ fi
 %{pear_phpdir}/%{pear_name}
 
 %changelog
+* Tue Mar 18 2014 Remi Collet <remi@fedoraproject.org> - 5.1.0-1
+- Update to 5.1.0 (stable)
+- add dependencies on bcmath, mcrypt and mhash
+
 * Tue Dec 03 2013 Remi Collet <remi@fedoraproject.org> - 5.0.3-1
 - Update to 5.0.3 (stable)
 
