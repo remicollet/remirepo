@@ -7,6 +7,7 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package         php-pecl-krb5}
+%{!?scl:         %global _root_includedir %{_includedir}}
 %{!?scl:         %global _root_bindir %{_bindir}}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir  %{_includedir}/php}
@@ -88,8 +89,8 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 # Workaroud for old libcom_err
-if [ -f %{_includedir}/et/com_err.h ]
-then cp %{_includedir}/et/com_err.h .
+if [ -f %{_root_includedir}/et/com_err.h ]
+then cp %{_root_includedir}/et/com_err.h .
 fi
 
 # Sanity check, really often broken
