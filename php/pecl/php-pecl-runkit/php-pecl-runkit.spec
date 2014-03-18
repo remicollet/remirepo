@@ -84,7 +84,7 @@ mv runkit-%{gh_commit} NTS
 mv NTS/package.xml .
 
 %if 0%{?rhel} == 5
-sed -e 's/-Werror//' -i nts/config.m4
+sed -e 's/-Werror//' -i NTS/config.m4
 %endif
 
 %if %{with_zts}
