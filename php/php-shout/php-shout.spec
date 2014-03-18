@@ -1,6 +1,6 @@
 Name:           php-shout
 Version:        0.9.2
-Release:        12%{?dist}.1
+Release:        15%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP module for communicating with Icecast servers
 
 Group:          Development/Languages
@@ -22,9 +22,11 @@ BuildRequires:  libshout-devel >= 2.1
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 
-# Filter private provides
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
+# Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -66,10 +68,9 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-install -D -p -m 0755 phpShout-%{version}/modules/shout.so \
-                      %{buildroot}%{php_extdir}/shout.so
-install -D -p -m 0755 phpShout-zts/modules/shout.so \
-                      %{buildroot}%{php_ztsextdir}/shout.so
+
+make -C phpShout-%{version} install INSTALL_ROOT=%{buildroot}
+make -C phpShout-zts        install INSTALL_ROOT=%{buildroot}
 
 install -D -p -m 0644 phpShout-%{version}/shout.ini \
                       %{buildroot}%{php_inidir}/shout.ini
@@ -78,15 +79,14 @@ install -D -p -m 0644 phpShout-zts/shout.ini \
 
 
 %check
-# simple module load test
+: simple NTS module load test
 %{__php} --no-php-ini \
-    --define extension_dir=phpShout-%{version}/modules \
-    --define extension=shout.so \
+    --define extension=%{buildroot}%{php_extdir}/shout.so \
     --modules | grep shout
 
+: simple ZTS module load test
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=phpShout-zts/modules \
-    --define extension=shout.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/shout.so \
     --modules | grep shout
 
 
@@ -104,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 18 2014  Remi Collet <remi@fedoraproject.org> - 0.9.2-15
+- cleanups
+
 * Fri Jan  4 2013  Remi Collet <remi@fedoraproject.org> - 0.9.2-12
 - modernize: remove deprecated calls, add arginfo for reflection
 
