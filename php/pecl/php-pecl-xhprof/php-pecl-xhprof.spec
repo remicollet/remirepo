@@ -6,16 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%{?scl:          %scl_package             php-pecl-xhprof}
+%{!?scl:         %global _root_bindir     %{_bindir}}
+%{!?scl:         %global _root_sysconfdir %{_sysconfdir}}
+%{!?php_inidir:  %global php_inidir       %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl           %{_bindir}/pecl}
+%{!?__php:       %global __php            %{_bindir}/php}
 
 %global pecl_name xhprof
 %global with_zts  0%{?__ztsphp:1}
 
-Name:           php-pecl-xhprof
+Name:           %{?scl_prefix}php-pecl-xhprof
 Version:        0.9.4
-Release:        2%{?gitver:.git%{gitver}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?gitver:.git%{gitver}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
@@ -27,18 +30,18 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 ExclusiveArch:  %{ix86} x86_64
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel >= 5.2.0
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel >= 5.2.0
+BuildRequires:  %{?scl_prefix}php-pear
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
@@ -69,18 +72,18 @@ implemented in C (as a PHP extension).
 The HTML based navigational interface is provided in the "xhprof" package.
 
 
-%package -n xhprof
+%package -n %{?scl_prefix}xhprof
 Summary:       A Hierarchical Profiler for PHP - Web interface
 Group:         Development/Tools
 %if 0%{?fedora} > 11 || 0%{?rhel} > 5
 BuildArch:     noarch
 %endif
 
-Requires:      php-pecl-xhprof = %{version}-%{release}
-Requires:      php >= 5.2.0
-Requires:      %{_bindir}/dot
+Requires:      %{name} = %{version}-%{release}
+Requires:      %{?scl_prefix}php >= 5.2.0
+Requires:      %{_root_bindir}/dot
 
-%description -n xhprof
+%description -n %{?scl_prefix}xhprof
 XHProf is a function-level hierarchical profiler for PHP and has a simple HTML
 based navigational interface.
 
@@ -117,9 +120,9 @@ EOF
 
 # Apache configuration file
 cat >httpd.conf <<EOF
-Alias /xhprof /usr/share/xhprof/xhprof_html
+Alias /xhprof %{_datadir}/xhprof/xhprof_html
 
-<Directory /usr/share/xhprof/xhprof_html>
+<Directory %{_datadir}/xhprof/xhprof_html>
    # For security reason, the web interface
    # is only allowed from the server
    <IfModule mod_authz_core.c>
@@ -163,7 +166,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install -C %{pecl_name}-%{version}/extension  INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{_sysconfdir}/php.d/%{pecl_name}.ini
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
 
 %if %{with_zts}
 make install -C %{pecl_name}-%{version}/ext-zts    INSTALL_ROOT=%{buildroot}
@@ -174,7 +177,7 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Install the Apache configuration
-install -D -m 644 httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/xhprof.conf
+install -D -m 644 httpd.conf %{buildroot}%{_root_sysconfdir}/httpd/conf.d/xhprof.conf
 
 # Install the web interface
 mkdir -p %{buildroot}%{_datadir}/xhprof
@@ -194,7 +197,7 @@ done
 
 %check
 : simple module load TEST for NTS extension
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -225,7 +228,7 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %exclude %{pecl_docdir}/%{pecl_name}/examples
 %exclude %{pecl_docdir}/%{pecl_name}/xhprof_html
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{pecl_name}.ini
 
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
@@ -236,16 +239,19 @@ fi
 %endif
 
 
-%files -n xhprof
+%files -n %{?scl_prefix}xhprof
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}/examples
 %doc %{pecl_docdir}/%{pecl_name}/xhprof_html
 %doc %{pecl_testdir}/%{pecl_name}
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/xhprof.conf
+%config(noreplace) %{_root_sysconfdir}/httpd/conf.d/xhprof.conf
 %{_datadir}/xhprof
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 0.9.4-3
+- allow SCL build
+
 * Sat Mar 15 2014 Remi Collet <remi@fedoraproject.org> - 0.9.4-2
 - install doc in pecl_docdir
 - install test in pecl_testdir

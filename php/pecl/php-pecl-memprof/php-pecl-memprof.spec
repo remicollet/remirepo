@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:%scl_package php-pecl-memprof}
+%{?scl:          %scl_package        php-pecl-memprof}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 
