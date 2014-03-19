@@ -204,7 +204,7 @@ fi
 
 
 %changelog
-* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.1.6-5
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.1.6-6
 - allow SCL build
 
 * Sun Feb  2 2014 Remi Collet <remi@fedoraproject.org> - 2.1.6-5
