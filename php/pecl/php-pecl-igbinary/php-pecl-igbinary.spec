@@ -21,7 +21,7 @@ Summary:        Replacement for the standard PHP serializer
 Name:           %{?scl_prefix}php-pecl-igbinary
 Version:        1.1.2
 %if 0%{?short:1}
-Release:        0.8.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.9.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
 %else
 Release:        2%{?dist}
@@ -89,12 +89,12 @@ based storages for serialized data.
 %package devel
 Summary:       Igbinary developer files (header)
 Group:         Development/Libraries
-Requires:      php-pecl-%{extname}%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
 
-Obsoletes:     php-%{extname}-devel <= 1.1.1
-Provides:      php-%{extname}-devel = %{version}-%{release}
-Provides:      php-%{extname}-devel%{?_isa} = %{version}-%{release}
+Obsoletes:     %{?scl_prefix}php-%{extname}-devel <= 1.1.1
+Provides:      %{?scl_prefix}php-%{extname}-devel = %{version}-%{release}
+Provides:      %{?scl_prefix}php-%{extname}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using Igbinary
@@ -263,6 +263,9 @@ fi
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 1.1.2-0.9.git3b8ab7e
+- fix SCL dependencies
+
 * Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.8.git3b8ab7e
 - cleanups
 - move doc in pecl_docdir
