@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package         php-pecl-lzf}
+%{?scl:          %scl_package         php-pecl-msgpack}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
