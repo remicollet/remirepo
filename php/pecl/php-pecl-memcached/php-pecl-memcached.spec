@@ -7,6 +7,7 @@
 # Please, preserve the changelog entries
 #
 
+%{?scl:          %scl_package        php-pecl-memcached}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -20,7 +21,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         php-pecl-memcached
 Version:      2.2.0
-Release:      0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -30,11 +31,11 @@ Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
-BuildRequires: php-devel >= 5.2.10
-BuildRequires: php-pear
-BuildRequires: php-json
-BuildRequires: php-pecl-igbinary-devel
-BuildRequires: php-pecl-msgpack-devel
+BuildRequires: %{?scl_prefix}php-devel >= 5.2.10
+BuildRequires: %{?scl_prefix}php-pear
+BuildRequires: %{?scl_prefix}php-json
+BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
+BuildRequires: %{?scl_prefix}php-pecl-msgpack-devel
 BuildRequires: libmemcached-devel >= 1.0.0
 BuildRequires: libevent-devel > 2
 BuildRequires: zlib-devel
@@ -46,23 +47,21 @@ BuildRequires: memcached
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:     php-pecl-igbinary%{?_isa}
-Requires:     php-pecl-msgpack%{?_isa}
-Requires:     php(zend-abi) = %{php_zend_api}
-Requires:     php(api) = %{php_core_api}
+Requires:     %{?scl_prefix}php-pecl-igbinary%{?_isa}
+Requires:     %{?scl_prefix}php-pecl-msgpack%{?_isa}
+Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:     php-%{pecl_name} = %{version}
-Provides:     php-%{pecl_name}%{?_isa} = %{version}
-Provides:     php-pecl(%{pecl_name}) = %{version}
-Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
@@ -261,6 +260,9 @@ exit $ret
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.2.0-0.3.RC1
+- allow SCL build
+
 * Thu Mar 13 2014  Remi Collet <remi@fedoraproject.org> - 2.2.0-0.2.RC1
 - update to 2.2.0RC1 (beta)
 
