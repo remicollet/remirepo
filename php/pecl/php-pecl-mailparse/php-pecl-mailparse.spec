@@ -1,3 +1,14 @@
+# spec file for php-pecl-mailparse
+#
+# Copyright (c) 2008-2014 Remi Collet
+# Copyright (c) 2004-2007 Matthias Saou
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%{?scl:          %scl_package         php-pecl-mailparse}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
@@ -6,9 +17,9 @@
 %global with_zts  0%{?__ztsphp:1}
 
 Summary:   PHP PECL package for parsing and working with email messages
-Name:      php-pecl-mailparse
+Name:      %{?scl_prefix}php-pecl-mailparse
 Version:   2.1.6
-Release:   5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:   6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
@@ -19,30 +30,29 @@ Source0:   http://pecl.php.net/get/mailparse-%{version}.tgz
 Source1:   http://www.php.net/license/2_02.txt
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel, php-pear
+BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-pear
 # mbstring need for tests
-BuildRequires: php-mbstring
+BuildRequires: %{?scl_prefix}php-mbstring
 # Required by phpize
 BuildRequires: autoconf, automake, libtool
 
-Requires: php-mbstring%{?_isa}
-Requires: php(zend-abi) = %{php_zend_api}
-Requires: php(api) = %{php_core_api}
+Requires: %{?scl_prefix}php-mbstring%{?_isa}
+Requires: %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires: %{?scl_prefix}php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Provides: php-%{pecl_name} = %{version}
-Provides: php-%{pecl_name}%{?_isa} = %{version}
-Provides: php-pecl(%{pecl_name}) = %{version}
-Provides: php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides: %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides: %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides: %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides: %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
-%if "%{php_version}" > "5.4"
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
@@ -94,13 +104,13 @@ cp -pr NTS ZTS
 
 %build
 cd NTS
-phpize
+%{_bindir}/phpize
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../ZTS
-zts-phpize
+%{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -194,6 +204,9 @@ fi
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.1.6-5
+- allow SCL build
+
 * Sun Feb  2 2014 Remi Collet <remi@fedoraproject.org> - 2.1.6-5
 - cleanups
 - install documentation in pecl_docdir
