@@ -21,7 +21,7 @@
 Summary:        Resource and persistent handles factory
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.4
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -227,7 +227,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 1.0.4-1
+* Tue Mar 18 2014 Remi Collet <rcollet@redhat.com> - 1.0.4-2
 - adapt for SCL
 
 * Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
