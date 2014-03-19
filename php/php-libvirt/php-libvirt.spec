@@ -27,7 +27,7 @@ Requires:	libvirt >= %{req_libvirt_version}
 Requires:	%{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:	%{?scl_prefix}php(api) = %{php_core_api}
 
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
@@ -44,8 +44,10 @@ Summary:	Document of php-libvirt
 Group:		Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
+%else
+Requires:	%{name}%{_isa} = %{version}-%{release}
 %endif
-Requires:	php-libvirt = %{version}-%{release}
 
 %description doc
 PHP language bindings for Libvirt API. 
@@ -59,7 +61,7 @@ This package contain the document for php-libvirt.
 
 
 %build
-%{?scl:. /opt/rh/%scl/enable}
+%{?scl:. %{_scl_scripts}/enable}
 %configure \
   --with-html-dir=%{_docdir} \
   --with-html-subdir=$(echo %{_pkgdocdir} | sed -e 's|^%{_docdir}/||')/html \
@@ -68,7 +70,7 @@ make %{?_smp_mflags}
 
 
 %install
-%{?scl:. /opt/rh/%scl/enable}
+%{?scl:. %{_scl_scripts}/enable}
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 install -pm 644 COPYING %{buildroot}%{_pkgdocdir}
@@ -77,7 +79,7 @@ chmod +x %{buildroot}%{php_extdir}/%{extname}.so
 
 %check
 : simple module load test
-%{?scl:. /opt/rh/%scl/enable}
+%{?scl:. %{_scl_scripts}/enable}
 php --no-php-ini \
     --define extension=%{buildroot}%{php_extdir}/%{extname}.so \
     --modules | grep libvirt
