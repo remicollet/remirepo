@@ -1,3 +1,13 @@
+# spec file for php-pecl-cairo
+#
+# Copyright (c) 2012-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+
+%{?scl:          %scl_package        php-pecl-cairo}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir  %{_includedir}/php}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -10,9 +20,9 @@
 # Result vary too much with cairo version
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
-Name:           php-pecl-cairo
+Name:           %{?scl_prefix}php-pecl-cairo
 Version:        0.3.2
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
@@ -25,19 +35,20 @@ Patch0:         pecl-cairo-php_streams.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  cairo-devel
 BuildRequires:  freetype-devel
-BuildRequires:  php-devel
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
@@ -49,6 +60,7 @@ Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -66,8 +78,8 @@ Win32, image buffers, PostScript, PDF, and SVG file output.
 %package devel
 Summary:       Cairo Graphics Library Extension developer files
 Group:         Development/Libraries
-Requires:      php-pecl-cairo%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{?scl_prefix}php-pecl-cairo%{?_isa} = %{version}-%{release}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using cairo extension.
@@ -207,6 +219,9 @@ fi
 %endif
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <remi@fedoraproject.org> - 0.3.2-7
+- allow SCL build
+
 * Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 0.3.2-6
 - fix build when ZTS not available
 
