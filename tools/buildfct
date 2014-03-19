@@ -101,6 +101,8 @@ alias mockel6xt="              mock --configdir=$mocketc -r el6xt              r
 alias mockel6x55="             mock --configdir=$mocketc -r el6x55             rebuild "
 alias mockel6x56="             mock --configdir=$mocketc -r el6x56             rebuild "
 
+alias mockscl="                mock --configdir=$mocketc -r el6xscl54          rebuild "
+
 alias mockdevi="setarch i686 mock -r fedora-devel-i386   rebuild "
 alias mockdevx="             mock -r fedora-devel-x86_64 rebuild "
 
