@@ -8,6 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package         php-pecl-gearman}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
@@ -29,9 +30,9 @@
 %endif
 
 
-Name:           php-pecl-gearman
+Name:           %{?scl_prefix}php-pecl-gearman
 Version:        %{extver}
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP wrapper to libgearman
 
 Group:          Development/Tools
@@ -42,32 +43,32 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libgearman-devel > %{libver}
-BuildRequires:  php-devel
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
 # Required by phpize
 BuildRequires:  autoconf, automake, libtool
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 Obsoletes:      php53-pecl-%{pecl_name}
 Obsoletes:      php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:      php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:      php55u-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:      php56u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -187,6 +188,9 @@ fi
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 1.1.2-3
+- allow SCL build
+
 * Mon Mar  3 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
 - cleanups
 - install documentation in pecl_docdir
