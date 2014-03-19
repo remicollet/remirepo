@@ -1,3 +1,13 @@
+# spec file for php-pecl-imagick
+#
+# Copyright (c) 2008-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+
+%{?scl:          %scl_package        php-pecl-imagick}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -10,17 +20,17 @@
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
 
 Summary:       Extension to create and modify images using ImageMagick
-Name:          php-pecl-imagick
+Name:          %{?scl_prefix}php-pecl-imagick
 Version:       3.2.0
-Release:       0.3.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.4.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel
-BuildRequires: php-pear
+BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: pcre-devel
 %if "%{?vendor}" == "Remi Collet"
 %if 0%{?fedora} >= 20
@@ -36,22 +46,20 @@ BuildRequires: ImageMagick-devel >= 6.2.4
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:      php-%{pecl_name} = %{version}%{?prever}
-Provides:      php-%{pecl_name}%{?_isa} = %{version}%{?prever}
-Provides:      php-pecl(%{pecl_name}) = %{version}%{?prever}
-Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
-Conflicts:     php-pecl-gmagick
+Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
+Conflicts:     %{?scl_prefix}php-pecl-gmagick
 
 # Other third party repo stuff
 %if "%{?vendor}" == "Remi Collet"
-%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-imagick
 Obsoletes:     php53u-pecl-imagick
 Obsoletes:     php54-pecl-imagick
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-imagick
 %endif
@@ -76,7 +84,7 @@ using the ImageMagick API.
 Summary:       %{pecl_name} extension developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using %{pecl_name} extension.
@@ -247,6 +255,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.4.RC1
+- allow SCL build
+
 * Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.3.RC1
 - cleanups for Copr
 
