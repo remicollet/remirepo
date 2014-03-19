@@ -17,8 +17,8 @@
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?scl_prefix}php-pecl-redis
-Version:       2.2.4
-Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       2.2.5
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -240,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- Update to 2.2.5
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.2.4-3
 - allow SCL build
 
@@ -274,4 +277,3 @@ rm -rf %{buildroot}
 
 * Tue Aug 28 2012 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - initial package
-
