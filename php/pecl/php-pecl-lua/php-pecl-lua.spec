@@ -18,7 +18,7 @@
 Summary:        Embedded lua interpreter
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -210,7 +210,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 1.1.0-2
+* Tue Mar 18 2014 Remi Collet <rcollet@redhat.com> - 1.1.0-3
 - adapt for SCL
 
 * Wed Nov  6 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
