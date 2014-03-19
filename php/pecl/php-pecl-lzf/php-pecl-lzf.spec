@@ -1,3 +1,4 @@
+%{?scl:          %scl_package        php-pecl-lzf}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -5,9 +6,9 @@
 %define pecl_name   LZF
 %global with_zts    0%{?__ztsphp:1}
 
-Name:           php-pecl-lzf
+Name:           %{?scl_prefix}php-pecl-lzf
 Version:        1.6.2
-Release:        7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -23,27 +24,25 @@ Source1:        http://www.php.net/license/2_02.txt
 Patch0:         php-lzf-rm-bundled-libs.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  liblzf-devel
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Provides:       php-lzf = %{version}
-Provides:       php-lzf%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-lzf = %{version}
+Provides:       %{?scl_prefix}php-lzf%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes:      php53-pecl-lzf
 Obsoletes:      php53u-pecl-lzf
 Obsoletes:      php54-pecl-lzf
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:      php55u-pecl-lzf
 %endif
@@ -185,6 +184,9 @@ fi
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <remi@fedoraproject.org> - 1.6.2-8
+- allow SCL build
+
 * Mon Mar 10 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.6.2-7
 - cleanups for Copr
 
