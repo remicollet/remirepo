@@ -31,7 +31,6 @@ BuildRequires: %{?scl_prefix}php-devel > 5.2.0
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: librabbitmq-devel >= 0.4.1
 %if %{with_tests}
-BuildRequires: %{?scl_prefix}php-json
 BuildRequires: rabbitmq-server
 %endif
 
@@ -192,7 +191,7 @@ ret=0
 pushd NTS
 : Run the upstream test Suite for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php || ret=1
@@ -202,7 +201,7 @@ popd
 pushd ZTS
 : Run the upstream test Suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php || ret=1
