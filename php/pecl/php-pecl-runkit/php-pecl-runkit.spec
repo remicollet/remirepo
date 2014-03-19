@@ -1,3 +1,14 @@
+# spec file for php-pecl-runkit
+#
+# Copyright (c) 2012-2014 Remi Collet
+# Copyright (c) 2008-2012 Pavel Alexeev
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%{?scl:          %scl_package         php-pecl-runkit}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
@@ -11,9 +22,9 @@
 Summary:          Mangle with user defined functions and classes
 Summary(ru):      Манипулирование пользовательскими функциями и классами
 Summary(pl):      Obróbka zdefiniowanych przez użytkownika funkcji i klas
-Name:             php-pecl-%{pecl_name}
+Name:             %{?scl_prefix}php-pecl-%{pecl_name}
 Version:          1.0.4
-Release:          0.5%{?gh_short:.git%{gh_short}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:          0.6%{?gh_short:.git%{gh_short}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:          PHP
 Group:            Development/Libraries
 # URL:            http://pecl.php.net/package/runkit/
@@ -27,18 +38,18 @@ Source0:          http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-root-%(id -u -n)
-BuildRequires:    php-pear
-BuildRequires:    php-devel
+BuildRequires:    %{?scl_prefix}php-pear
+BuildRequires:    %{?scl_prefix}php-devel
 
 Requires(post):   %{__pecl}
 Requires(postun): %{__pecl}
-Requires:         php(zend-abi) = %{php_zend_api}
-Requires:         php(api) = %{php_core_api}
+Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:         %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:         php-%{pecl_name} = %{version}
-Provides:         php-%{pecl_name}%{?_isa} = %{version}
-Provides:         php-pecl(%{pecl_name}) = %{version}
-Provides:         php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
@@ -200,6 +211,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 1.0.4-0.6.git5e179e9
+- allow SCL build
+
 * Tue Mar 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.5.git5e179e9
 - cleanups
 - install doc in pecl_docdir
