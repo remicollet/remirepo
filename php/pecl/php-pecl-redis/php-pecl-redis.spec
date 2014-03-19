@@ -6,18 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-redis}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global pecl_name  redis
+%global pecl_name   redis
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:       Extension for communicating with the Redis key-value store
-Name:          php-pecl-redis
+Name:          %{?scl_prefix}php-pecl-redis
 Version:       2.2.4
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -26,30 +27,28 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel
-BuildRequires: php-pecl-igbinary-devel
+BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
 # to run Test suite
 %if %{with_tests}
 BuildRequires: redis >= 2.6
 %endif
 
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 # php-pecl-igbinary missing php-pecl(igbinary)%{?_isa}
-Requires:      php-pecl-igbinary%{?_isa}
-Obsoletes:     php-redis < %{version}
-Provides:      php-redis = %{version}-%{release}
-Provides:      php-redis%{?_isa} = %{version}-%{release}
-Provides:      php-pecl(%{pecl_name}) = %{version}
-Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+Requires:      %{?scl_prefix}php-pecl-igbinary%{?_isa}
+Obsoletes:     %{?scl_prefix}php-redis < %{version}
+Provides:      %{?scl_prefix}php-redis = %{version}-%{release}
+Provides:      %{?scl_prefix}php-redis%{?_isa} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
@@ -153,7 +152,7 @@ done
 
 %check
 # simple module load test
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=igbinary.so \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
@@ -195,7 +194,7 @@ sed -e "s/6379/$port/" -i TestRedis.php
 
 # Run the test Suite
 ret=0
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=igbinary.so \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     TestRedis.php || ret=1
@@ -241,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.2.4-3
+- allow SCL build
+
 * Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> - 2.2.4-2
 - cleaups
 - move doc in pecl_docdir
