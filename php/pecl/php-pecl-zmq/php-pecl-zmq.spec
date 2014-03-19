@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-zmq}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -15,17 +16,17 @@
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
 Summary:        ZeroMQ messaging
-Name:           php-pecl-%{pecl_name}
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel > 5.2
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-pear
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
 BuildRequires:  zeromq3-devel
 %else
@@ -36,16 +37,29 @@ BuildRequires: pkgconfig
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
 # Version 1.0.7 is the first pecl release
 # Fedora/EPEL still provides php-zmq, not php-pecl-zmq
-Obsoletes:      php-%{pecl_name} < %{version}
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Obsoletes:      %{?scl_prefix}php-%{pecl_name} < %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -137,7 +151,7 @@ fi
 %check
 cd NTS
 : Minimal load test for NTS extension
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=%{buildroot}/%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
@@ -175,6 +189,7 @@ rm -rf %{buildroot}
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
@@ -185,6 +200,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 1.1.2-2
+- allow SCL build
+
 * Mon Nov 25 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2 (beta)
 
