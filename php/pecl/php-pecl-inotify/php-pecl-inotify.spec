@@ -17,7 +17,7 @@
 Summary:        Inotify
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.1.6
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -200,7 +200,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 0.1.6-2
+* Thu Mar 20 2014 Remi Collet <rcollet@redhat.com> - 0.1.6-3
 - adapt for SCL
 
 * Sun Nov 24 2013 Remi Collet <remi@fedoraproject.org> - 0.1.6-2
