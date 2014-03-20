@@ -174,7 +174,8 @@ sed -e s/testClient/SKIP_testClient/ \
 
 # Launch redis server
 mkdir -p {run,log,lib}/redis
-sed -e "s:/var:$PWD:" \
+sed -e "s:/^pidfile.*$:/pidfile $PWD/run/redis.pid:" \
+    -e "s:/var:$PWD:" \
     -e "/daemonize/s/no/yes/" \
     /etc/redis.conf >redis.conf
 # port number to allow 32/64 build at same time
@@ -200,8 +201,8 @@ ret=0
     TestRedis.php || ret=1
 
 # Cleanup
-if [ -f run/redis/redis.pid ]; then
-   kill $(cat run/redis/redis.pid)
+if [ -f run/redis.pid ]; then
+   kill $(cat run/redis.pid)
 fi
 
 exit $ret
