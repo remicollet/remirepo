@@ -1,4 +1,4 @@
-%global svnrel 2920
+%global svnrel 2943
 %global rdate  20140128
 %global upver  0.4
 
@@ -226,6 +226,9 @@ fi
 
 
 %changelog
+* Thu Mar 20 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.1.svn2943
+- Update to 0.4 snapshot revision 2943
+
 * Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.1.svn2920
 - Update to 0.4 snapshot revision 2920
 
