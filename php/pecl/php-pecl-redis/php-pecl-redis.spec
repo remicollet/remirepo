@@ -18,13 +18,16 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?scl_prefix}php-pecl-redis
 Version:       2.2.5
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # https://github.com/nicolasff/phpredis/issues/332 - missing tests
 Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
+
+# https://github.com/nicolasff/phpredis/pull/447
+Patch0:        %{pecl_name}-php56.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -81,12 +84,16 @@ mv %{pecl_name}-%{version} nts
 # tests folder from github archive
 mv phpredis-%{version}/tests nts/tests
 
+cd nts
+%patch0 -p1 -b .php56
+
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' nts/php_redis.h)
+extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}.
    exit 1
 fi
+cd ..
 
 %if %{with_zts}
 # duplicate for ZTS build
@@ -241,6 +248,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 20 2014 Remi Collet <rcollet@redhat.com> - 2.2.5-2
+- fix memory corruption with PHP 5.6
+  https://github.com/nicolasff/phpredis/pull/447
+
 * Wed Mar 19 2014 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Update to 2.2.5
 
