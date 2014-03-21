@@ -1,9 +1,9 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name %(echo %{name} | sed -e 's/^php-aws-//' -e 's/-/_/g')
+%{!?__pear: %global __pear %{_bindir}/pear}
+%global pear_name   sdk
 %global channelname pear.amazonwebservices.com
 
 Name:		php-aws-sdk
-Version:	2.5.3
+Version:	2.5.4
 Release:	1%{?dist}
 Summary:	Amazon Web Services framework for PHP
 Group:		Development/Libraries
@@ -95,6 +95,9 @@ fi
 
 
 %changelog
+* Fri Mar 21 2014 Remi Collet <remi@fedoraproject.org> - 2.5.4-1
+- Update to 2.5.4
+
 * Fri Feb 28 2014 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - Update to 2.5.3
 
