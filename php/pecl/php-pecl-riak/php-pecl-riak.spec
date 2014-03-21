@@ -17,13 +17,13 @@
 ##   how to run test       ##
 #############################
 
-%global with_zts   0%{?__ztsphp:1}
 %global pecl_name  riak
+%global with_zts   0%{?__ztsphp:1}
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:        Riak database PHP extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        ASL 2.0 and BSD
 Group:          Development/Languages
@@ -52,15 +52,16 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -175,18 +176,18 @@ fi
 %check
 : Minimal load test for NTS extension
 cd NTS
-%{_bindir}/php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension=json.so \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_tests}
 # Need a running riak server + some configuration
-TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{__php} -n run-tests.php
 %endif
 
 %if %{with_zts}
@@ -208,6 +209,7 @@ rm -rf %{buildroot}
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
@@ -218,6 +220,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 21 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- Update to 1.1.4
+
 * Fri Dec 20 2013 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3 (stable)
 - adapt for SCL
