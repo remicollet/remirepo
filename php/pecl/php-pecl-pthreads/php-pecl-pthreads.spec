@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 
 %global pecl_name pthreads
 
 Summary:        Threading API
 Name:           php-pecl-%{pecl_name}
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -63,6 +63,8 @@ This extension is only available for PHP in ZTS mode.
 %setup -q -c
 
 cd %{pecl_name}-%{version}
+sed -e '/PHP_PTHREADS_VERSION/s/2.0.1/%{version}/' -i php_pthreads.h
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PTHREADS_VERSION/{s/.* "//;s/".*$//;p}' php_pthreads.h)
 if test "x${extver}" != "x%{version}"; then
@@ -145,11 +147,15 @@ rm -rf %{buildroot}
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
 
 
 %changelog
+* Fri Mar 21 2014 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
 * Mon Mar 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1
 - open https://github.com/krakjoe/pthreads/issues/262
