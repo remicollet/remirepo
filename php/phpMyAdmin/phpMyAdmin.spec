@@ -2,7 +2,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 
 Name: phpMyAdmin
-Version: 4.1.9
+Version: 4.1.10
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -152,32 +152,35 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sat Mar 22 2014 Remi Collet <rpms@famillecollet.com> 4.1.10-1
+- update to 4.1.10 (Sat, 22 Mar 2014, bugfix)
+
 * Fri Mar  7 2014 Remi Collet <rpms@famillecollet.com> 4.1.9-1
-- update to 4.1.9 (bugfix)
+- update to 4.1.9 (Thu, 06 Mar 2014, bugfix)
 
 * Sat Feb 22 2014 Remi Collet <rpms@famillecollet.com> 4.1.8-1
-- update to 4.1.8 (bugfix)
+- update to 4.1.8 (Sat, 22 Feb 2014, bugfix)
 
 * Tue Feb 11 2014 Remi Collet <rpms@famillecollet.com> 4.1.7-1
-- update to 4.1.7 (bugfix)
+- update to 4.1.7 (Sun, 09 Feb 2014, bugfix)
 
 * Sun Jan 26 2014 Remi Collet <rpms@famillecollet.com> 4.1.6-1
-- update to 4.1.6 (bugfix)
+- update to 4.1.6 (Sun, 26 Jan 2014, bugfix)
 
 * Fri Jan 17 2014 Remi Collet <rpms@famillecollet.com> 4.1.5-1
-- update to 4.1.5 (bugfix)
+- update to 4.1.5 (Fri, 17 Jan 2014, bugfix)
 
 * Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 4.1.4-2
 - fix for f20 and unversioned docdir
 
 * Tue Jan  7 2014 Remi Collet <rpms@famillecollet.com> 4.1.4-1
-- update to 4.1.4 (bugfix)
+- update to 4.1.4 (Tue, 07 Jan 2014, bugfix)
 
 * Tue Dec 31 2013 Remi Collet <rpms@famillecollet.com> 4.1.3-1
-- update to 4.1.3 (bugfix)
+- update to 4.1.3 (Tue, 31 Dec 2013, bugfix)
 
 * Mon Dec 23 2013 Remi Collet <rpms@famillecollet.com> 4.1.2-1
-- update to 4.1.2 (bugfix)
+- update to 4.1.2 (Mon, 23 Dec 2013, bugfix)
 
 * Tue Dec 17 2013 Remi Collet <rpms@famillecollet.com> 4.1.1-1
 - update to 4.1.1 (bugfix)
