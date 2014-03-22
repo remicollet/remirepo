@@ -6,15 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %{expand: %%global php_inidir  %{_sysconfdir}/php.d}}
-%{!?php_incldir: %{expand: %%global php_incldir %{_includedir}/php}}
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{?scl:          %scl_package        php-pecl-jsond}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir %{_includedir}/php}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
+
 %global pecl_name mysqlnd_ms
+%global with_zts  0%{?__ztsphp:1}
 
 Summary:      A replication and load balancing plugin for mysqlnd
-Name:         php-pecl-mysqlnd-ms
+Name:         %{?scl_prefix}php-pecl-mysqlnd-ms
 Version:      1.5.2
-Release:      1%{?dist}.1
+Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      PHP
 Group:        Development/Languages
@@ -26,30 +30,35 @@ Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:      %{pecl_name}.ini
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel >= 5.3.6
-BuildRequires: php-mysqlnd
-BuildRequires: php-json
-BuildRequires: php-pear
+BuildRequires: %{?scl_prefix}php-devel >= 5.3.6
+BuildRequires: %{?scl_prefix}php-mysqlnd
+BuildRequires: %{?scl_prefix}php-json
+BuildRequires: %{?scl_prefix}php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:     php-mysqlnd%{?_isa}
-Requires:     php-json%{?_isa}
-Requires:     php(zend-abi) = %{php_zend_api}
-Requires:     php(api) = %{php_core_api}
+Requires:     %{?scl_prefix}php-mysqlnd%{?_isa}
+Requires:     %{?scl_prefix}php-json%{?_isa}
+Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:     php-%{pecl_name} = %{version}
-Provides:     php-%{pecl_name}%{?_isa} = %{version}
-Provides:     php-pecl(%{pecl_name}) = %{version}
-Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 Obsoletes:     php53-pecl-mysqlnd-ms
 Obsoletes:     php53u-pecl-mysqlnd-ms
 Obsoletes:     php54-pecl-mysqlnd-ms
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-mysqlnd-ms
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-mysqlnd-ms
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -74,8 +83,8 @@ Documentation : http://www.php.net/mysqlnd_ms
 %package devel
 Summary:       Mysqlnd_ms developer files (header)
 Group:         Development/Libraries
-Requires:      php-pecl-mysqlnd-ms%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using mysqlnd_ms extension.
@@ -86,16 +95,27 @@ These are the files needed to compile programs using mysqlnd_ms extension.
 
 cp %{SOURCE1} %{pecl_name}.ini
 
+# Fix some roles (fixed upstream)
+sed -e '/"tests/s/role="doc"/role="test"/'  \
+    -e '/"CHANGES/s/role="src"/role="doc"/' \
+    -e '/"CREDITS/s/role="src"/role="doc"/' \
+    -e '/"LICENSE/s/role="src"/role="doc"/' \
+    -i package.xml
+
+mv %{pecl_name}-%{version} NTS
+
 # check version, so often broken
-grep MYSQLND_MS_VERSION %{pecl_name}-%{version}/mysqlnd_ms.h
-extver=$(sed -n '/#define MYSQLND_MS_VERSION /{s/.* "//;s/".*$//;p}' %{pecl_name}-%{version}/mysqlnd_ms.h)
+grep MYSQLND_MS_VERSION NTS/mysqlnd_ms.h
+extver=$(sed -n '/#define MYSQLND_MS_VERSION /{s/.* "//;s/".*$//;p}' NTS/mysqlnd_ms.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
 fi
 
+%if %{with_zts}
 # Build ZTS extension if ZTS devel available (fedora >= 17)
-cp -r %{pecl_name}-%{version} %{pecl_name}-zts
+cp -r NTS ZTS
+%endif
 
 
 %build
@@ -105,7 +125,7 @@ cp -r %{pecl_name}-%{version} %{pecl_name}-zts
 # --enable-mysqlnd-ms-cache-support
 #         Enable query caching through mysqlnd_qc
 
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure \
     --with-libdir=%{_lib} \
@@ -113,31 +133,40 @@ cd %{pecl_name}-%{version}
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
-cd ../%{pecl_name}-zts
+%if %{with_zts}
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --with-libdir=%{_lib} \
     --enable-mysqlnd-ms \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
+
 
 %install
 rm -rf %{buildroot}
-# for short-circuit
-rm -f %{pecl_name}-*/modules/{json,mysqlnd}.so
 
-make install -C %{pecl_name}-%{version} \
-     INSTALL_ROOT=%{buildroot}
-
-make install -C %{pecl_name}-zts \
-     INSTALL_ROOT=%{buildroot}
+make install -C NTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+make install -C ZTS INSTALL_ROOT=%{buildroot}
+install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+%endif
+
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
 
 
 %clean
@@ -155,50 +184,57 @@ fi
 
 
 %check
-cd %{pecl_name}-%{version}
-ln -sf %{php_extdir}/mysqlnd.so modules/
-ln -sf %{php_extdir}/json.so modules/
-
+cd NTS
 # only check if build extension can be loaded
-php -n -q \
-    -d extension_dir=modules \
+%{__php} -n -q \
     -d extension=json.so \
     -d extension=mysqlnd.so \
-    -d extension=%{pecl_name}.so \
+    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
-cd ../%{pecl_name}-zts
-ln -sf %{php_ztsextdir}/mysqlnd.so modules/
-ln -sf %{php_ztsextdir}/json.so modules/
-
+%if %{with_zts}
+cd ../ZTS
 # only check if build extension can be loaded
 %{__ztsphp} -n -q \
-    -d extension_dir=modules \
     -d extension=json.so \
     -d extension=mysqlnd.so \
-    -d extension=%{pecl_name}.so \
+    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_name}-%{version}/{CHANGES,CREDITS,LICENSE,README}
+%doc %{pecl_docdir}/%{pecl_name}
+%exclude %{pecl_docdir}/%{pecl_name}/examples
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
 
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %files devel
 %defattr(-,root,root,-)
+%doc %{pecl_docdir}/%{pecl_name}/examples
+%doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
+
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
+%endif
 
 
 %changelog
+* Sat Mar 22 2014 Remi Collet <remi@fedoraproject.org> - 1.5.2-2
+- allow SCL build
+- install doc in pecl_docdir
+- install tests in pecl_testdir (devel)
+
 * Fri Jun 21 2013 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
 - Update to 1.5.2
 
@@ -236,7 +272,7 @@ ln -sf %{php_ztsextdir}/json.so modules/
 * Wed Jan 25 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-5
 - zts binary in /usr/bin with zts prefix
 
-* Sun Jan 21 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-4
+* Sat Jan 21 2012 Remi Collet <remi@fedoraproject.org> - 1.1.2-4
 - merge ZTS change for fedora 17
 - filter_setup is enough
 
