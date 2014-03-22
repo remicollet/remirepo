@@ -14,7 +14,7 @@
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name Judy
-%global  ext_name judy
+%global ext_name  judy
 
 Summary:        PHP Judy implements sparse dynamic arrays
 Name:           %{?scl_prefix}php-pecl-judy
@@ -52,7 +52,7 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 Obsoletes:      %{?scl_prefix}php-pecl-Judy < 1.0.1
 Provides:       %{?scl_prefix}php-pecl-Judy = %{version}-%{release}
 
-%if 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 %if "%{php_version}" > "5.4"
 Obsoletes:      php53-pecl-%{pecl_name}
@@ -61,6 +61,9 @@ Obsoletes:      php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:      php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:      php56u-pecl-%{pecl_name}
 %endif
 %endif
 
