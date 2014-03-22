@@ -14,17 +14,27 @@
 
 %global pecl_name mysqlnd_ms
 %global with_zts  0%{?__ztsphp:1}
+%global versufix  -alpha
+%global svnrev    333055
 
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         %{?scl_prefix}php-pecl-mysqlnd-ms
-Version:      1.5.2
-Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      1.6.0
+Release:      1.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/mysqlnd_ms
 
+%if 0%{?svnrev}
+# svn export -r 333055 https://svn.php.net/repository/pecl/mysqlnd_ms/trunk
+# cd trunk
+# pecl package
+# mv mysqlnd_ms-1.6.0.tgz mysqlnd_ms-1.6.0-333055.tgz
+Source0:      %{pecl_name}-%{version}-%{svnrev}.tgz
+%else
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 
 # From http://www.php.net/manual/en/mysqlnd-ms.configuration.php
 Source1:      %{pecl_name}.ini
@@ -34,6 +44,7 @@ BuildRequires: %{?scl_prefix}php-devel >= 5.3.6
 BuildRequires: %{?scl_prefix}php-mysqlnd
 BuildRequires: %{?scl_prefix}php-json
 BuildRequires: %{?scl_prefix}php-pear
+BuildRequires: libxml2-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -90,25 +101,18 @@ Requires:      %{?scl_prefix}php-devel%{?_isa}
 These are the files needed to compile programs using mysqlnd_ms extension.
 
 
-%prep 
+%prep
 %setup -c -q
 
 cp %{SOURCE1} %{pecl_name}.ini
-
-# Fix some roles (fixed upstream)
-sed -e '/"tests/s/role="doc"/role="test"/'  \
-    -e '/"CHANGES/s/role="src"/role="doc"/' \
-    -e '/"CREDITS/s/role="src"/role="doc"/' \
-    -e '/"LICENSE/s/role="src"/role="doc"/' \
-    -i package.xml
 
 mv %{pecl_name}-%{version} NTS
 
 # check version, so often broken
 grep MYSQLND_MS_VERSION NTS/mysqlnd_ms.h
-extver=$(sed -n '/#define MYSQLND_MS_VERSION /{s/.* "//;s/".*$//;p}' NTS/mysqlnd_ms.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream version is ${extver}, expecting %{version}.
+extver=$(sed -n '/PHP_MYSQLND_MS_VERSION /{s/.* "//;s/".*$//;p}' NTS/mysqlnd_ms.h)
+if test "x${extver}" != "x%{version}%{?versufix}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}%{?versufix}.
    exit 1
 fi
 
@@ -206,7 +210,7 @@ cd ../ZTS
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
-%exclude %{pecl_docdir}/%{pecl_name}/examples
+#exclude %{pecl_docdir}/%{pecl_name}/examples
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
@@ -220,7 +224,7 @@ cd ../ZTS
 
 %files devel
 %defattr(-,root,root,-)
-%doc %{pecl_docdir}/%{pecl_name}/examples
+#doc %{pecl_docdir}/%{pecl_name}/examples
 %doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 
@@ -230,6 +234,9 @@ cd ../ZTS
 
 
 %changelog
+* Sat Mar 22 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-1.svn333055
+- Update to 1.6.0 (alpha) svn snapshot for php 5.6
+
 * Sat Mar 22 2014 Remi Collet <remi@fedoraproject.org> - 1.5.2-2
 - allow SCL build
 - install doc in pecl_docdir
