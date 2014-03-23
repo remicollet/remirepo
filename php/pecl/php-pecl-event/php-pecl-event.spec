@@ -16,7 +16,7 @@
 
 Summary:       Provides interface to libevent library
 Name:          php-pecl-%{pecl_name}
-Version:       1.9.0
+Version:       1.9.1
 Release:       1%{?dist}
 License:       PHP
 Group:         Development/Languages
@@ -61,6 +61,15 @@ Version 1.0.0 introduces:
 %setup -q -c 
 
 mv %{pecl_name}-%{version} NTS
+
+cd NTS
+# Sanity check, really often broken
+extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}.
+   exit 1
+fi
+cd ..
 
 # duplicate for ZTS build
 %if %{with_zts}
@@ -190,6 +199,13 @@ fi
 
 
 %changelog
+* Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
+- Update to 1.9.1 (stable)
+
+* Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.9.0-2
+- add patch for php 5.6
+  https://bitbucket.org/osmanov/pecl-event/pull-request/7
+
 * Fri Jan 17 2014 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
 - Update to 1.9.0 (stable)
 - add option to disable tests during build

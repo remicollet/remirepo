@@ -17,15 +17,12 @@
 
 Summary:       Provides interface to libevent library
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
-Version:       1.9.0
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       1.9.1
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bitbucket.org/osmanov/pecl-event/pull-request/7
-Patch0:        %{pecl_name}-php56.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel > 5.4
@@ -50,15 +47,16 @@ Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if 0%{!?scl:1}
-%if "%{php_version}" > "5.4"
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -83,9 +81,8 @@ Version 1.0.0 introduces:
 %setup -q -c 
 
 mv %{pecl_name}-%{version} NTS
-cd NTS
-%patch0 -p1 -b .php56
 
+cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
 if test "x${extver}" != "x%{version}"; then
@@ -229,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
+- Update to 1.9.1 (stable)
+
 * Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.9.0-2
 - add patch for php 5.6
   https://bitbucket.org/osmanov/pecl-event/pull-request/7
