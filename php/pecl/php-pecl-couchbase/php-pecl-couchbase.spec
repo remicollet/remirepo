@@ -7,6 +7,7 @@
 # Please, preserve the changelog entries
 #
 
+%{?scl:          %scl_package         php-pecl-couchbase}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
@@ -15,9 +16,9 @@
 %global with_zts  0%{?__ztsphp:1}
 
 Summary:       Couchbase Server PHP extension
-Name:          php-pecl-couchbase
+Name:          %{?scl_prefix}php-pecl-couchbase
 Version:       1.2.1
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -26,24 +27,24 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tg
 # https://github.com/couchbase/php-ext-couchbase/pull/9
 Patch0:        %{pecl_name}-zts.patch
 
-BuildRequires: php-devel >= 5.3.0
-BuildRequires: php-pecl-igbinary-devel
-BuildRequires: php-pear
+BuildRequires: %{?scl_prefix}php-devel >= 5.3.0
+BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
+BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: zlib-devel
 BuildRequires: libcouchbase-devel
 # for tests
-BuildRequires: php-json
+BuildRequires: %{?scl_prefix}php-json
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
-Requires:      php-pecl-igbinary%{?_isa}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php-pecl-igbinary%{?_isa}
 
-Provides:      php-%{pecl_name} = %{version}
-Provides:      php-%{pecl_name}%{?_isa} = %{version}
-Provides:      php-pecl(%{pecl_name}) = %{version}
-Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
