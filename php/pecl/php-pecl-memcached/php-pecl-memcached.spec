@@ -7,10 +7,11 @@
 # Please, preserve the changelog entries
 #
 
-%{?scl:          %scl_package        php-pecl-memcached}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%{?scl:          %scl_package         php-pecl-memcached}
+%{!?scl:         %global _root_prefix %{_prefix}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
@@ -37,11 +38,23 @@ BuildRequires: %{?scl_prefix}php-json
 BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
 BuildRequires: %{?scl_prefix}php-pecl-msgpack-devel
 BuildRequires: libmemcached-devel >= 1.0.0
-BuildRequires: libevent-devel > 2
 BuildRequires: zlib-devel
 BuildRequires: cyrus-sasl-devel
-%if %{with_zts}
+%if %{with_test}
 BuildRequires: memcached
+%endif
+
+%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7
+# Filter in the SCL collection
+%{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
+# libvent from SCL as not available in system
+BuildRequires: %{?scl_prefix}libevent-devel  >= 2
+Requires:      %{?scl_prefix}libevent%{_isa} >= 2
+Requires:      libmemcached%{_isa >= 1.0.0
+%global        _event_prefix %{_prefix}
+%else
+BuildRequires: libevent-devel >= 2.0.2
+%global        _event_prefix %{_root_prefix}
 %endif
 
 Requires(post): %{__pecl}
@@ -123,6 +136,8 @@ cp -r NTS ZTS
 
 
 %build
+export PKG_CONFIG_PATH=%{_libdir}/pkgconfig
+
 peclconf() {
 %configure --enable-memcached-igbinary \
            --enable-memcached-json \
