@@ -1,11 +1,14 @@
-%global libname libevent
+%{?scl:             %scl_package         %{libname}}
+
+%global libname     libevent
 
 # Regression tests take a long time, you can skip 'em with this
-%{!?runselftest: %{expand: %%global runselftest 1}}
+%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 
-Name:           libevent-last
+%{?scl:Name:    %{?scl_prefix}%{libname}}
+%{!?scl:Name:   %{libname}-last}
 Version:        2.0.21
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 Group:          System Environment/Libraries
@@ -19,6 +22,14 @@ BuildRequires:  openssl-devel
 Patch00: libevent-2.0.10-stable-configure.patch
 # Disable network tests
 Patch01: libevent-nonettests.patch
+
+%if 0%{?scl:1}
+# Filter in the SCL collection
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so}
+%{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
+%{?filter_setup}
+Requires:  openssl%{?_isa}
+%endif
 
 
 %description
@@ -34,8 +45,8 @@ without having to change the event loop.
 Summary: Header files, libraries and development documentation for %{name}
 Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Conflicts: %{libname}-devel < %{version}
-Provides:  %{libname}-devel = %{version}
+%{!?scl:Conflicts: %{libname}-devel < %{version}}
+%{!?scl:Provides:  %{libname}-devel = %{version}}
 
 %description devel
 This package contains the header files, static libraries and development
@@ -44,7 +55,7 @@ you will need to install %{name}-devel.
 
 
 %prep
-%setup -q -n libevent-%{version}-stable
+%setup -q -n  %{libname}-%{version}-stable
 
 # 477685 -  libevent-devel multilib conflict
 %patch00 -p1
@@ -53,7 +64,8 @@ you will need to install %{name}-devel.
 
 %build
 %configure \
-    --disable-dependency-tracking --disable-static
+    --disable-dependency-tracking \
+    --disable-static
 make %{?_smp_mflags} all
 
 
@@ -68,7 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %check
-%if %runselftest
+%if %{with_tests}
 make check
 %endif
 
@@ -107,6 +119,9 @@ make check
 
 
 %changelog
+* Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 2.0.21-2
+- allow SCL build
+
 * Tue Nov 12 2013 Remi Collet <remi@fedoraproject.org> - 2.0.21-1
 - backport 2.0.21 for remi repo
 
