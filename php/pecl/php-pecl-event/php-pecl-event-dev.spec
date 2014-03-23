@@ -6,10 +6,11 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-event}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%{?scl:          %scl_package         php-pecl-event}
+%{!?scl:         %global _root_prefix %{_prefix}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
 %global pecl_name   event
@@ -18,7 +19,7 @@
 Summary:       Provides interface to libevent library
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       1.9.1
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
@@ -27,12 +28,19 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel > 5.4
 BuildRequires: %{?scl_prefix}php-pear
-%if 0%{?fedora} < 15 && 0%{?rhel} < 7
+
+%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7
+# Filter in the SCL collection
+%{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
 # libvent from SCL as not available in system
-BuildRequires: %{?scl_prefix}libevent-devel >= 2.0.2
+BuildRequires: %{?scl_prefix}libevent-devel  >= 2.0.2
+Requires:      %{?scl_prefix}libevent%{_isa} >= 2.0.2
+%global        _event_prefix %{_prefix}
 %else
 BuildRequires: libevent-devel >= 2.0.2
+%global        _event_prefix %{_root_prefix}
 %endif
+
 BuildRequires: openssl-devel
 BuildRequires: pkgconfig
 
@@ -63,8 +71,8 @@ Obsoletes:     php56u-pecl-%{pecl_name}
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
-%{?filter_setup}
 %endif
+%{?filter_setup}
 
 
 %description
@@ -107,7 +115,7 @@ EOF
 cd NTS
 %{_bindir}/phpize
 %configure \
-    --with-event-libevent-dir=%{_prefix} \
+    --with-event-libevent-dir=%{_event_prefix} \
     --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
@@ -119,7 +127,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
-    --with-event-libevent-dir=%{_prefix} \
+    --with-event-libevent-dir=%{_event_prefix} \
     --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
@@ -226,6 +234,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.9.1-2
+- allow SCL build, with libevent from SCL when needed
+
 * Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
 - Update to 1.9.1 (stable)
 
