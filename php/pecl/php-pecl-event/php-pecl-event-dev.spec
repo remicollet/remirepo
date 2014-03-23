@@ -18,11 +18,14 @@
 Summary:       Provides interface to libevent library
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       1.9.0
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://bitbucket.org/osmanov/pecl-event/pull-request/7
+Patch0:        %{pecl_name}-php56.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel > 5.4
@@ -80,6 +83,16 @@ Version 1.0.0 introduces:
 %setup -q -c 
 
 mv %{pecl_name}-%{version} NTS
+cd NTS
+%patch0 -p1 -b .php56
+
+# Sanity check, really often broken
+extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}.
+   exit 1
+fi
+cd ..
 
 # duplicate for ZTS build
 %if %{with_zts}
@@ -216,6 +229,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.9.0-2
+- add patch for php 5.6
+  https://bitbucket.org/osmanov/pecl-event/pull-request/7
+
 * Fri Jan 17 2014 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
 - Update to 1.9.0 (stable)
 - add option to disable tests during build
