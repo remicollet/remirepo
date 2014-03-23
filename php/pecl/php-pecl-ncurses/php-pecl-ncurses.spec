@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package         php-pecl-ncurses}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
@@ -14,9 +15,9 @@
 %global with_zts  0%{?__ztsphp:1}
 
 Summary:      Terminal screen handling and optimization package
-Name:         php-pecl-ncurses
+Name:         %{?scl_prefix}php-pecl-ncurses
 Version:      1.0.2
-Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/ncurses
@@ -27,34 +28,34 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # URL from ncurses.c
 Source1:      http://www.php.net/license/3_01.txt
 
-BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel
-BuildRequires: php-simplexml
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-simplexml
+BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: ncurses-devel
-BuildRequires: php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:     php(zend-abi) = %{php_zend_api}
-Requires:     php(api) = %{php_core_api}
+Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 
-Obsoletes:    php-ncurses < 5.3.0
-Provides:     php-ncurses = 5.3.0
-Provides:     php-ncurses%{?_isa} = 5.3.0
-Provides:     php-pecl(%{pecl_name}) = %{version}
-Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
+Obsoletes:    %{?scl_prefix}php-ncurses < 5.3.0
+Provides:     %{?scl_prefix}php-ncurses = 5.3.0
+Provides:     %{?scl_prefix}php-ncurses%{?_isa} = 5.3.0
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -185,7 +186,10 @@ fi
 
 
 %changelog
-* Sat Mar  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+* Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-6
+- allow SCL build
+
+* Sat Mar  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-5
 - cleanups
 - install doc in pecl_docdir
 - install tests in pecl_testdir
