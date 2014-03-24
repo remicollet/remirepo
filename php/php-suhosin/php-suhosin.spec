@@ -1,72 +1,174 @@
-%global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-%global php_extdir  %(php-config --extension-dir 2>/dev/null || echo "undefined")
-%global php_version %(php-config --version 2>/dev/null || echo 0)
+# spec file for php-suhosin
+#
+# Copyright (c) 2008-2014 Remi Collet
+# Copyright (c) 2007-2009 Bart Vanbrabant
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%{?scl:          %scl_package         php-suhosin}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
-Name:           php-suhosin
-Version:        0.9.32.1
-Release:        1%{?dist}
+%global ext_name  suhosin
+%global with_zts  0%{?__ztsphp:1}
+
+Name:           %{?scl_prefix}php-suhosin
+Version:        0.9.35
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
 License:        PHP
 URL:            http://www.hardened-php.net/suhosin/
-Source0:        http://download.suhosin.org/suhosin-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://download.suhosin.org/suhosin-%{version}.tgz
 
-BuildRequires:  php-devel
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_apiver}
+# https://github.com/stefanesser/suhosin/issues/38
+# URL from sources headers
+Source1:        http://www.php.net/license/3_01.txt
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  %{?scl_prefix}php-devel
+
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-%{ext_name}
+Obsoletes:     php53u-%{ext_name}
+Obsoletes:     php54-%{ext_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-%{ext_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-%{ext_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
+# Filter private shared
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+%{?filter_setup}
+%endif
+
 
 %description
-Suhosin is an advanced protection system for PHP installations. It was designed 
-to protect servers and users from known and unknown flaws in PHP applications 
-and the PHP core.  
+Suhosin is an advanced protection system for PHP installations. It was designed
+to protect servers and users from known and unknown flaws in PHP applications
+and the PHP core.
 
 
 %prep
-%setup -q -n suhosin-%{version}
+%setup -q -c
+mv %{ext_name}-%{version} NTS
+
+cp %{SOURCE1} LICENSE
+
+# Check extension version
+ver=$(sed -n '/SUHOSIN_EXT_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_suhosin.h)
+if test "$ver" != "%{version}%{?prever}"; then
+   : Error: Upstream SUHOSIN_EXT_VERSION version is ${ver}, expecting %{version}%{?prever}.
+   exit 1
+fi
+
+%if %{with_zts}
+# Duplicate source tree for NTS / ZTS build
+cp -pr NTS ZTS
+%endif
 
 
 %build
+cd NTS
 %{_bindir}/phpize
-%configure
+%configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
+
+%if %{with_zts}
+cd ../ZTS
+%{_bindir}/zts-phpize
+%configure --with-php-config=%{_bindir}/zts-php-config
+make %{?_smp_mflags}
+%endif
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install INSTALL_ROOT=$RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install configuration
-%{__mkdir} -p $RPM_BUILD_ROOT%{_sysconfdir}/php.d
-%{__cp} suhosin.ini $RPM_BUILD_ROOT%{_sysconfdir}/php.d/suhosin.ini
+install -Dpm 644 NTS/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
+
+%if %{with_zts}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
+install -Dpm 644 ZTS/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
+%endif
 
 
 %check
-# For log only (failure don't break build)
-NO_INTERACTION=1 make test
-
-# Minimal load test (break build if fails)
-php --no-php-ini \
-    --define extension_dir=modules \
-    --define extension=suhosin.so \
+: Minimal load test for NTS extension
+%{__php} --no-php-ini \
+    --define extension=%{buildroot}%{php_extdir}/%{ext_name}.so \
     --modules | grep -i suhosin
+
+%if %{with_zts}
+: Minimal load test for NTS extension
+%{__ztsphp} --no-php-ini \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so \
+    --modules | grep -i suhosin
+%endif
+
+: Upstream test suite for NTS extension
+cd NTS
+
+# drop known to fail tests
+%if "%{php_version}" < "5.4"
+rm tests/misc/disable_display_errors_fail.phpt
+%endif
+%if "%{php_version}" < "5.5"
+rm tests/executor/function_blacklist_printf.phpt
+rm tests/executor/function_whilelist_call_user_func.phpt
+%endif
+rm tests/filter/suhosin_upload_disallow_binary_on.phpt
+
+TEST_PHP_EXECUTABLE=%{__php} \
+REPORT_EXIT_STATUS=1 \
+NO_INTERACTION=1 \
+%{__php} run-tests.php \
+    -n -q \
+    -d extension_dir=modules \
+    -d extension=%{ext_name}.so \
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
-%doc Changelog 
-%doc CREDITS
-%config(noreplace) %{_sysconfdir}/php.d/suhosin.ini
-%{php_extdir}/suhosin.so
+%doc LICENSE NTS/{Changelog,CREDITS}
+
+%config(noreplace) %{php_inidir}/%{ext_name}.ini
+%{php_extdir}/%{ext_name}.so
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
+%{php_ztsextdir}/%{ext_name}.so
+%endif
 
 
 %changelog
+* Mon Mar 24 2014 Remi Collet <remi@fedoraproject.org> 0.9.35-1
+- update to 0.9.35 for php >= 5.4
+- add ZTS build
+- add missing LICENSE file
+- allow SCL build
+- don't ignore test results, just drop a few tests
+
 * Tue Jul 27 2010 Remi Collet <rpms@famillecollet.com> 0.9.32.1-1
 - update to 0.9.32.1
 
