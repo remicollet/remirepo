@@ -1,3 +1,14 @@
+# spec file for php-pecl-sphinx
+#
+# Copyright (c) 2011-2014 Remi Collet
+# Copyright (c) 2009-2011 Andrew Colin Kissa
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%{?scl:          %scl_package        php-pecl-selinux}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -5,9 +16,9 @@
 %define pecl_name   sphinx
 %global with_zts    0%{?__ztsphp:1}
 
-Name:           php-pecl-sphinx
+Name:           %{?scl_prefix}php-pecl-sphinx
 Version:        1.3.0
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
@@ -20,18 +31,18 @@ Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libsphinxclient-devel
-BuildRequires:  php-pear
-BuildRequires:  php-devel
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-devel
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
@@ -90,13 +101,13 @@ cp -pr NTS ZTS
 
 %build
 cd NTS
-phpize
+%{_bindir}/phpize
 %configure  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../ZTS
-zts-phpize
+%{_bindir}/zts-phpize
 %configure  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -169,6 +180,9 @@ fi
 
 
 %changelog
+* Mon Mar 24 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-4
+- allow SCL build
+
 * Thu Mar 13 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-3
 - cleanups
 - install doc in pecl_docdir
