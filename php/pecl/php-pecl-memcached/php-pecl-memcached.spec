@@ -20,7 +20,7 @@
 %global intver      rc1
 
 Summary:      Extension to work with the Memcached caching daemon
-Name:         php-pecl-memcached
+Name:         %{?scl_prefix}php-pecl-memcached
 Version:      2.2.0
 Release:      0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # memcached is PHP, FastLZ is MIT
@@ -37,10 +37,9 @@ BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: %{?scl_prefix}php-json
 BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
 BuildRequires: %{?scl_prefix}php-pecl-msgpack-devel
-BuildRequires: libmemcached-devel >= 1.0.0
 BuildRequires: zlib-devel
 BuildRequires: cyrus-sasl-devel
-%if %{with_test}
+%if %{with_tests}
 BuildRequires: memcached
 %endif
 
@@ -48,13 +47,12 @@ BuildRequires: memcached
 # Filter in the SCL collection
 %{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
 # libvent from SCL as not available in system
-BuildRequires: %{?scl_prefix}libevent-devel  >= 2
-Requires:      %{?scl_prefix}libevent%{_isa} >= 2
-Requires:      libmemcached%{_isa >= 1.0.0
-%global        _event_prefix %{_prefix}
+BuildRequires: %{?scl_prefix}libevent-devel  > 2
+Requires:      %{?scl_prefix}libevent%{_isa} > 2
+BuildRequires: %{?scl_prefix}libmemcached-devel  > 1
+Requires:      %{?scl_prefix}libmemcached-libs%{_isa} > 1
 %else
 BuildRequires: libevent-devel >= 2.0.2
-%global        _event_prefix %{_root_prefix}
 %endif
 
 Requires(post): %{__pecl}
@@ -136,6 +134,7 @@ cp -r NTS ZTS
 
 
 %build
+# only needed for SCL
 export PKG_CONFIG_PATH=%{_libdir}/pkgconfig
 
 peclconf() {
