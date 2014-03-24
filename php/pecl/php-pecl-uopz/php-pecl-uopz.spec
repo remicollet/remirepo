@@ -18,7 +18,7 @@
 
 Summary:        User Operations for Zend
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -81,7 +81,7 @@ It supports the following activities:
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-sed -e /PHP_UOPZ_VERSION/s/1.0.0/%{version}/ -i uopz.h
+#sed -e /PHP_UOPZ_VERSION/s/1.0.0/%{version}/ -i uopz.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_UOPZ_VERSION/{s/.* "//;s/".*$//;p}' uopz.h)
@@ -168,6 +168,10 @@ fi
 
 
 %check
+%if "%{php_version}" < "5.5"
+rm ?TS/tests/016.phpt
+%endif
+
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -217,8 +221,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2 (10:34, beta)
+
 * Mon Mar 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
-- Update to 1.0.1 (beta)
+- Update to 1.0.1 (19:03, beta)
 
 * Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (12:55, beta)
