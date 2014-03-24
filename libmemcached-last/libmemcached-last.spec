@@ -10,16 +10,20 @@
 %global with_tests       %{?_witht_tests:1}%{!?_with_tests:0}
 %global with_sasl        1
 %global libname          libmemcached
+%{?scl: %scl_package     %{libname}}
 
 # libmemcached >= 1.0.16 have soname 11
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-Name:      libmemcached
+# Standard build
+Name:         %{libname}
 %else
-Name:      %{libname}-last
+# Build for parallel install
+%{?scl:Name:  %{?scl_prefix}%{libname}}
+%{!?scl:Name: %{libname}-last}
 %endif
 Summary:   Client library and command line tools for memcached server
 Version:   1.0.18
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   BSD
 Group:     Applications/System
 URL:       http://libmemcached.org/
@@ -42,13 +46,19 @@ BuildRequires: memcached
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildRequires: systemtap-sdt-devel
 %endif
-BuildRequires: libevent-devel
 
+%if 0%{?scl:1}
+BuildRequires: %{?scl_prefix}runtime
+BuildRequires: %{?scl_prefix}libevent-devel  > 2
+%else
+BuildRequires: libevent-devel > 2
 %if "%{libname}" != "%{name}"
 Conflicts:     %{libname}         < %{version}
 Provides:      %{libname}         = %{version}-%{release}
 Provides:      %{libname}%{?_isa} = %{version}-%{release}
 %endif
+%endif
+
 Provides:      bundled(bobjenkins-hash)
 Requires:      %{name}-libs%{?_isa} = %{version}-%{release}
 
@@ -85,10 +95,12 @@ Requires:   pkgconfig
 %if %{with_sasl}
 Requires:   cyrus-sasl-devel%{?_isa}
 %endif
+%if ! 0%{?scl:1}
 %if "%{libname}" != "%{name}"
 Conflicts:  %{libname}-devel         < %{version}
 Provides:   %{libname}-devel         = %{version}-%{release}
 Provides:   %{libname}-devel%{?_isa} = %{version}-%{release}
+%endif
 %endif
 
 %description devel
@@ -101,10 +113,28 @@ you will need to install %{name}-devel.
 Summary:    %{libname} libraries
 Group:      System Environment/Libraries
 
+%if 0%{?scl:1}
+Requires:      %{?scl_prefix}libevent%{_isa} > 2
+Requires:      openssl%{?_isa}
+Requires:      libstdc++%{?_isa}
+%if %{with_sasl}
+Requires:      cyrus-sasl-lib%{?_isa}
+%endif
+%endif
+
 %description libs
 This package contains the %{libname} libraries version %{version}.
 %if "%{libname}" != "%{name}"
 This package is designed to be installed beside %{libname}.
+%endif
+
+
+%if 0%{?scl:1}
+# Filter in the SCL collection
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so}
+%{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
+%{?filter_requires_in: %filter_requires_in %{_bindir}/.*}
+%{?filter_setup}
 %endif
 
 
@@ -117,6 +147,8 @@ cp -p tests/*.{cc,h} examples/
 
 
 %build
+%{?scl: . %{_scl_scripts}/enable}
+
 # option --with-memcached=false to disable server binary check (as we don't run test)
 %configure \
 %if %{with_tests}
@@ -144,6 +176,9 @@ make %{_smp_mflags} V=1
 
 %install
 rm -rf %{buildroot}
+
+%{?scl: . %{_scl_scripts}/enable}
+
 make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
 
 # Hack: when sphinx-build too old (fedora < 14 and rhel < 7)
@@ -210,6 +245,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.0.18-3
+- allow SCL build
+
 * Wed Feb 19 2014 Remi Collet <remi@fedoraproject.org> - 1.0.18-2
 - cleanups
 
