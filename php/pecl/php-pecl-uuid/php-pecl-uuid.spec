@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-uuid}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -14,9 +15,9 @@
 %global with_zts    0%{?__ztsphp:1}
 
 Summary:       Universally Unique Identifier extension for PHP
-Name:          php-pecl-uuid
+Name:          %{?scl_prefix}php-pecl-uuid
 Version:       1.0.3
-Release:       7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
@@ -36,21 +37,21 @@ Patch1:        %{pecl_name}-build.patch
 Patch2:        %{pecl_name}-info.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel
-BuildRequires: php-pear
+BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: libuuid-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 # both provides same extension, with different API
-Conflicts:     uuid-php
+Conflicts:     %{?scl_prefix}uuid-php
 
-Provides:      php-%{pecl_name} = %{version}
-Provides:      php-%{pecl_name}%{?_isa} = %{version}
-Provides:      php-pecl(%{pecl_name}) = %{version}
-Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
@@ -200,6 +201,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-8
+- allow SCL build
+
 * Fri Mar 14 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-7
 - cleanups
 - install doc in pecl_docdir
