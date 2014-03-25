@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-ssdeep}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -18,10 +19,10 @@
 %global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
 
 
-Name:           php-pecl-sqlite
-Version:        2.0.0
-Release:        0.4.svn%{svnver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension for the SQLite V2 Embeddable SQL Database Engine
+Name:           %{?scl_prefix}php-pecl-sqlite
+Version:        2.0.0
+Release:        0.5.svn%{svnver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -34,30 +35,31 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
-BuildRequires:  php-pear
-BuildRequires:  php-pdo
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-pdo
 BuildRequires:  sqlite2-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
-Requires:       php-pdo%{?_isa}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php-pdo%{?_isa}
 
-Provides:       php-pecl(%{pecl_name}) = %{extver}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{extver}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{extver}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{extver}
 
 # Was provided by php until 5.4.0
 %if "%{php_version}" > "5.4"
-Obsoletes:      php-sqlite < 5.4.0
-Provides:       php-sqlite = 5.4.0
-Provides:       php-sqlite%{?_isa} = 5.4.0
-Obsoletes:      php-sqlite2 < 5.4.0
-Provides:       php-sqlite2 = 5.4.0
-Provides:       php-sqlite2%{?_isa} = 5.4.0
+Obsoletes:      %{?scl_prefix}php-sqlite < 5.4.0
+Provides:       %{?scl_prefix}php-sqlite = 5.4.0
+Provides:       %{?scl_prefix}php-sqlite%{?_isa} = 5.4.0
+Obsoletes:      %{?scl_prefix}php-sqlite2 < 5.4.0
+Provides:       %{?scl_prefix}php-sqlite2 = 5.4.0
+Provides:       %{?scl_prefix}php-sqlite2%{?_isa} = 5.4.0
 %endif
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 %if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -66,6 +68,10 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -246,6 +252,9 @@ fi
 
 
 %changelog
+* Tue Mar 25 2014 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-0.5.svn332053
+- allow SCL build
+
 * Sun Nov  3 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-0.4.svn332053
 - cleanup for Copr
 - lastest SVN snapshot
