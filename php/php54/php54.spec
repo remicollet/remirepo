@@ -73,11 +73,11 @@
 %endif
 
 #global snapdate      201201041830
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.26
+Version: 5.4.27
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -132,6 +132,7 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Upstream fixes
+Patch50: php-5.4.27-bug66946.patch
 
 # Security fixes
 
@@ -792,6 +793,8 @@ rm -f ext/json/utf8_to_utf16.*
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
 
+%patch50 -p1 -b .66946
+
 %patch91 -p1 -b .remi-oci8
 
 
@@ -1213,6 +1216,7 @@ if ! make test; then
 fi
 unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 %endif
+
 
 %install
 # Install the extensions for the ZTS version
@@ -1639,6 +1643,10 @@ fi
 
 
 %changelog
+* Tue Mar 25 2014 Remi Collet <rcollet@redhat.com> 5.4.27-0.1.RC1
+- test build of 5.4.24RC1
+- patch for bug 66946
+
 * Wed Mar  5 2014 Remi Collet <remi@fedoraproject.org> 5.4.26-1
 - Update to 5.4.26 (security)
   http://www.php.net/ChangeLog-5.php#5.4.26
