@@ -8,7 +8,7 @@
 #
 %global pluginname    fusioninventory
 %global glpi_version  0.84.0
-%global plug_version  2.0
+%global plug_version  2.2
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -22,7 +22,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/1198/fusioninventory-for-glpi_0.84+2.0.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/1315/fusioninventory-for-glpi_0.84+2.2.tar.gz
 Source1:        %{name}-httpd.conf
 
 
@@ -132,6 +132,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 1:0.84.0.2.2-1
+- update to 0.84+2.2 for GLPI 0.84
+  0.84+2.1: http://forge.fusioninventory.org/versions/172
+  0.84+2.2: http://forge.fusioninventory.org/versions/178
+
 * Wed Jan 15 2014 Remi Collet <remi@fedoraproject.org> - 1:0.84.0.2.0-1
 - update to 0.84+2.0 for GLPI 0.84
 - set allow_url_fopen=On in config
