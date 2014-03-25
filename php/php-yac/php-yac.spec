@@ -1,3 +1,12 @@
+# spec file for php-yac
+#
+# Copyright (c) 2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{?scl:          %scl_package        php-yac}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -7,10 +16,10 @@
 %global gitver    %(c=%{commit}; echo ${c:0:7})
 %global with_zts  0%{?__ztsphp:1}
 
-Name:           php-yac
 Summary:        Shared memory user data cache for PHP
+Name:           %{?scl_prefix}php-yac
 Version:        0.1.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/laruence/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 
 License:        PHP
@@ -18,10 +27,23 @@ Group:          Development/Languages
 URL:            https://github.com/laruence/yac
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel >= 5.2
+BuildRequires:  %{?scl_prefix}php-devel >= 5.2
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-%{pecl_name}
+Obsoletes:     php53u-%{pecl_name}
+Obsoletes:     php54-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20
 # Filter private shared object
@@ -93,11 +115,11 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %check
 cd NTS
 
-TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{__php} -n run-tests.php
 
 %if %{with_zts}
 cd ../ZTS
@@ -128,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 0.1.1-2
+- allow SCL build
+
 * Sun Mar 16 2014 Remi Collet <remi@fedoraproject.org> - 0.1.1-1
 - version 0.1.1
 
