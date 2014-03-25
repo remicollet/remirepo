@@ -3,7 +3,7 @@
 %global zendver     20121212
 %global pdover      20080721
 # Extension version
-%global opcachever  7.0.3
+%global opcachever  7.0.4-dev
 %global oci8ver     1.4.10
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
@@ -114,15 +114,15 @@
 %endif
 
 #global snapdate      201308300430
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.10
+Version: 5.5.11
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}.1
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -183,7 +183,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch102: php-5.5.10-bug66762.patch
+Patch101: php-5.5.11-bug66946.patch
 
 # Security fixes (200+)
 
@@ -899,7 +899,7 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch102 -p0 -b .66762
+%patch101 -p1 -b .66946
 
 # security patches
 
@@ -980,7 +980,7 @@ if test "$ver" != "%{oci8ver}"; then
    exit 1
 fi
 
-ver=$(sed -n '/#define ACCELERATOR_VERSION /{s/.* "//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
+ver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION /{s/.* "//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
 if test "$ver" != "%{opcachever}"; then
    : Error: Upstream PHAR version is now ${ver}, expecting %{opcachever}.
    : Update the opcachever macro and rebuild.
@@ -1395,6 +1395,7 @@ if ! make test; then
 fi
 unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 %endif
+
 
 %install
 %if %{with_zts}
@@ -1889,6 +1890,10 @@ fi
 
 
 %changelog
+* Tue Mar 25 2014 Remi Collet <rcollet@redhat.com> 5.5.11-0.1.RC1
+- test build of 5.5.11RC1
+- patch for bug 66946
+
 * Tue Mar 11 2014 Remi Collet <remi@fedoraproject.org> 5.5.10-1.1
 - rebuild against gd-last, without libvpx
 
