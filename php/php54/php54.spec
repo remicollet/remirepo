@@ -132,7 +132,7 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Upstream fixes
-Patch50: php-5.4.27-bug66946.patch
+Patch50: php-5.4.27-bug66946.patch.xz
 
 # Security fixes
 

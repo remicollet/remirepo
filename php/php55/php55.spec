@@ -183,7 +183,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch101: php-5.5.11-bug66946.patch
+Patch101: php-5.5.11-bug66946.patch.xz
 
 # Security fixes (200+)
 
