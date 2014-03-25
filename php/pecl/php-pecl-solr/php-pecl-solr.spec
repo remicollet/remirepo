@@ -7,6 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package         php-pecl-solr}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
@@ -16,9 +17,9 @@
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
-Name:           php-pecl-solr
+Name:           %{?scl_prefix}php-pecl-solr
 Version:        1.0.2
-Release:        7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -26,17 +27,17 @@ URL:            http://pecl.php.net/package/solr
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
-BuildRequires:  php-pear
-BuildRequires:  php-curl
-BuildRequires:  php-json
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-curl
+BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  curl-devel
 BuildRequires:  libxml2-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
 # php 5.3.3 in EL-6 don't use arched virtual provides
 # so only requires real packages instead
@@ -46,10 +47,10 @@ Requires:       %{?scl_prefix}php-curl%{?_isa}
 Requires:       %{?scl_prefix}php-json%{?_isa}
 %endif
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
@@ -236,9 +237,11 @@ rm -rf %{buildroot}
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
@@ -246,7 +249,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun Mar  9 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7
+* Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-8
+- allow SCL build
+
+* Sun Mar  9 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-7
 - cleanups
 - install doc in pecl_docdir
 - install tests in pecl_testdir
