@@ -18,12 +18,12 @@
 Name:         %{libname}
 %else
 # Build for parallel install
-%{?scl:Name:  %{?scl_prefix}%{libname}}
+%{?scl:Name:  %{scl_prefix}%{libname}}
 %{!?scl:Name: %{libname}-last}
 %endif
 Summary:   Client library and command line tools for memcached server
 Version:   1.0.18
-Release:   3%{?dist}
+Release:   4%{?dist}
 License:   BSD
 Group:     Applications/System
 URL:       http://libmemcached.org/
@@ -39,6 +39,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if %{with_sasl}
 BuildRequires: cyrus-sasl-devel
 %endif
+BuildRequires: libuuid-devel
 BuildRequires: flex
 BuildRequires: bison
 BuildRequires: python-sphinx
@@ -48,8 +49,7 @@ BuildRequires: systemtap-sdt-devel
 %endif
 
 %if 0%{?scl:1}
-BuildRequires: %{?scl_prefix}runtime
-BuildRequires: %{?scl_prefix}libevent-devel  > 2
+BuildRequires: %{scl_prefix}libevent-devel  > 2
 %else
 BuildRequires: libevent-devel > 2
 %if "%{libname}" != "%{name}"
@@ -114,7 +114,8 @@ Summary:    %{libname} libraries
 Group:      System Environment/Libraries
 
 %if 0%{?scl:1}
-Requires:      %{?scl_prefix}libevent%{_isa} > 2
+Requires:      %{scl}-runtime
+Requires:      %{scl_prefix}libevent%{_isa} > 2
 Requires:      openssl%{?_isa}
 Requires:      libstdc++%{?_isa}
 %if %{with_sasl}
@@ -147,7 +148,14 @@ cp -p tests/*.{cc,h} examples/
 
 
 %build
-%{?scl: . %{_scl_scripts}/enable}
+%if 0%{?scl:1}
+. %{_scl_scripts}/enable
+export PKG_CONFIG_PATH=%{_libdir}/pkgconfig
+export LD_LIBRARY_PATH=%{_libdir}
+export CFLAGS="  %{optflags} $(pkg-config --cflags libevent)"
+export CXXFLAGS="%{optflags} $(pkg-config --cflags libevent)"
+export LDFLAGS="$(pkg-config --libs-only-L libevent)"
+%endif
 
 # option --with-memcached=false to disable server binary check (as we don't run test)
 %configure \
@@ -245,6 +253,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.18-4
+- improve SCL build
+
 * Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.0.18-3
 - allow SCL build
 
