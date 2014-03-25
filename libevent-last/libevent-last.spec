@@ -5,10 +5,17 @@
 # Regression tests take a long time, you can skip 'em with this
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 
-%{?scl:Name:    %{?scl_prefix}%{libname}}
+# libevent >= 2.0.9 have soname .5
+%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+# Standard build
+Name:         %{libname}
+%else
+# Build for parallel install
+%{?scl:Name:    %{scl_prefix}%{libname}}
 %{!?scl:Name:   %{libname}-last}
+%endif
 Version:        2.0.21
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 Group:          System Environment/Libraries
@@ -28,6 +35,7 @@ Patch01: libevent-nonettests.patch
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so}
 %{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
 %{?filter_setup}
+Requires:  %{scl}-runtime
 Requires:  openssl%{?_isa}
 %endif
 
@@ -119,6 +127,9 @@ make check
 
 
 %changelog
+* Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.21-3
+- improve SCL build
+
 * Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 2.0.21-2
 - allow SCL build
 
