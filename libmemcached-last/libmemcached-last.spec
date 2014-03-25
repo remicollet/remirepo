@@ -39,7 +39,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if %{with_sasl}
 BuildRequires: cyrus-sasl-devel
 %endif
-BuildRequires: libuuid-devel
 BuildRequires: flex
 BuildRequires: bison
 BuildRequires: python-sphinx
