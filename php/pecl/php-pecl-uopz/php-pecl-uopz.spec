@@ -18,7 +18,7 @@
 
 Summary:        User Operations for Zend
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -169,7 +169,8 @@ fi
 
 %check
 %if "%{php_version}" < "5.5"
-rm ?TS/tests/016.phpt
+# https://github.com/krakjoe/uopz/issues/1
+sed -e 's/A::class/"A"/' -i ?TS/tests/016.phpt
 %endif
 
 cd NTS
@@ -220,12 +221,17 @@ rm -rf %{buildroot}
 %endif
 
 
+# add date time as upstream used to release various
+# archives using the same version :(
 %changelog
+* Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 (2014-03-24 19:37:04, beta)
+
 * Mon Mar 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
-- Update to 1.0.2 (10:34, beta)
+- Update to 1.0.2 (2014-03-24 10:34:02, beta)
 
 * Mon Mar 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
-- Update to 1.0.1 (19:03, beta)
+- Update to 1.0.1 (2014-03-23 19:03:27, beta)
 
 * Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (12:55, beta)
