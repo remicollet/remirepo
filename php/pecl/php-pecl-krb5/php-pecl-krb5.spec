@@ -17,11 +17,14 @@
 Summary:        Kerberos authentification extension
 Name:           php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# http://svn.php.net/viewvc?view=revision&revision=333127
+Patch0:         krb5-build.patch
 
 BuildRequires:  krb5-devel >= 1.8
 BuildRequires:  pkgconfig(com_err)
@@ -69,6 +72,8 @@ These are the files needed to compile programs using the Kerberos extension.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+%patch0 -p0 -b .build
+
 # http://svn.php.net/viewvc?view=revision&revision=333126
 chmod -x php_krb5_gssapi.h
 
@@ -99,9 +104,7 @@ peclbuild() {
 %configure \
     --with-krb5 \
     --with-krb5config=%{_bindir}/krb5-config \
-%if "%{php_version}" > "5.5"
     --with-krb5kadm \
-%endif
     --with-php-config=$1
 make %{?_smp_mflags}
 }
@@ -191,5 +194,9 @@ cd ../ZTS
 
 
 %changelog
+* Wed Mar 26 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- upstream patch to fix SUCCESS definition
+- enable --with-krb5kadm with all PHP versions
+
 * Sat Mar  1 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (stable)

@@ -20,11 +20,14 @@
 Summary:        Kerberos authentification extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# http://svn.php.net/viewvc?view=revision&revision=333127
+Patch0:         krb5-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  krb5-devel >= 1.8
@@ -86,6 +89,11 @@ These are the files needed to compile programs using the Kerberos extension.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+%patch0 -p0 -b .build
+
+# http://svn.php.net/viewvc?view=revision&revision=333126
+chmod -x php_krb5_gssapi.h
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_KRB5_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_krb5.h)
 if test "x${extver}" != "x%{version}"; then
@@ -113,9 +121,7 @@ peclbuild() {
 %configure \
     --with-krb5 \
     --with-krb5config=%{_root_bindir}/krb5-config \
-%if "%{php_version}" > "5.5"
     --with-krb5kadm \
-%endif
     --with-php-config=$1
 make %{?_smp_mflags}
 }
@@ -213,6 +219,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 26 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
+- upstream patch to fix SUCCESS definition
+- enable --with-krb5kadm with all PHP versions
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 1.0.0-2
 - fix SCL dependencies
 
