@@ -6,45 +6,73 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%{?scl:          %scl_package         php-pecl-event}
+%{!?scl:         %global _root_prefix %{_prefix}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
 %global pecl_name   event
 %global with_zts    0%{?__ztsphp:1}
 
 Summary:       Provides interface to libevent library
-Name:          php-pecl-%{pecl_name}
+Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       1.9.1
-Release:       1%{?dist}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRequires: php-devel > 5.4
-BuildRequires: php-pear
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{?scl_prefix}php-devel > 5.4
+BuildRequires: %{?scl_prefix}php-pear
+
+%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7
+# Filter in the SCL collection
+%{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
+# libvent from SCL as not available in system
+BuildRequires: %{?scl_prefix}libevent-devel  >= 2.0.2
+Requires:      %{?scl_prefix}libevent%{_isa} >= 2.0.2
+%global        _event_prefix %{_prefix}
+%else
 BuildRequires: libevent-devel >= 2.0.2
+%global        _event_prefix %{_root_prefix}
+%endif
+
 BuildRequires: openssl-devel
 BuildRequires: pkgconfig
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
-Requires:      php-sockets%{?_isa}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php-sockets%{?_isa}
 
-Provides:      php-%{pecl_name} = %{version}
-Provides:      php-%{pecl_name}%{?_isa} = %{version}
-Provides:      php-pecl(%{pecl_name}) = %{version}
-Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
-%{?filter_setup}
 %endif
+%{?filter_setup}
 
 
 %description
@@ -87,7 +115,7 @@ EOF
 cd NTS
 %{_bindir}/phpize
 %configure \
-    --with-event-libevent-dir=%{_prefix} \
+    --with-event-libevent-dir=%{_event_prefix} \
     --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
@@ -99,7 +127,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
-    --with-event-libevent-dir=%{_prefix} \
+    --with-event-libevent-dir=%{_event_prefix} \
     --with-libdir=%{_lib} \
     --with-event-core \
     --with-event-extra \
@@ -111,6 +139,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
+
 # use z-event.ini to ensure event.so load "after" sockets.so
 : Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
@@ -184,7 +214,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-, root, root, 0755)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -199,6 +234,9 @@ fi
 
 
 %changelog
+* Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.9.1-2
+- allow SCL build, with libevent from SCL when needed
+
 * Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
 - Update to 1.9.1 (stable)
 
@@ -209,6 +247,7 @@ fi
 * Fri Jan 17 2014 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
 - Update to 1.9.0 (stable)
 - add option to disable tests during build
+- adapt for SCL
 
 * Sat Jan 11 2014 Remi Collet <remi@fedoraproject.org> - 1.8.1-2
 - install doc in pecl doc_dir
@@ -235,9 +274,6 @@ fi
 
 * Sun Jul 28 2013 Remi Collet <remi@fedoraproject.org> - 1.7.2-1
 - Update to 1.7.2
-
-* Fri Jul 26 2013 Remi Collet <remi@fedoraproject.org> - 1.7.1-2
-- cleanups before review
 
 * Wed Jul 24 2013 Remi Collet <remi@fedoraproject.org> - 1.7.1-1
 - Update to 1.7.1
