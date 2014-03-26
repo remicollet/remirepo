@@ -11,23 +11,25 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit    18d3e65c11f3c55db00fd768ecf3629afbb86094
+%global gh_commit    725ee090f0387ce3bcd3655b5180136783f79ee1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     chung-leong
 %global gh_project   qb
 %global pecl_name    qb
-# https://github.com/chung-leong/qb/issues/24
-%global with_zts     0
+%global with_zts     0%{?__ztsphp:1}
 
 Summary:        Accelerator designed mainly for graphic work
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.1.1
+Version:        2.1.2
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-# Use github archive to have full archive, included test suite
-# and https://github.com/chung-leong/qb/issues/23
+
+#Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+# Use github archive to have full archive, included test suite, and doc
+# https://github.com/chung-leong/qb/issues/23
+# https://github.com/chung-leong/qb/issues/31
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,8 +86,12 @@ PHP offers without the risk involved in adopting a brand new platform.
 
 %prep
 %setup -q -c
+%if 0%{?gh_commit:1}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+%else
+mv %{pecl_name}-%{version}    NTS
+%endif
 
 cd NTS
 # Sanity check, really often broken
@@ -137,7 +143,10 @@ install -D -m 644 ZTS/%{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}
 %endif
 
 # Test & Documentation
-for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
+for i in LICENSE CHANGELOG README CREDITS $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -162,6 +171,7 @@ rm ?TS/tests/intrinsic-tan.phpt
 rm ?TS/tests/class-var-ref-count-array.phpt
 %endif
 %endif
+rm ?TS/tests/timeout.phpt
 
 cd NTS
 : Minimal load test for NTS extension
@@ -208,6 +218,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
+%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
@@ -220,6 +231,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 26 2014 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2 (stable)
+- enable ZTS build
+- https://github.com/chung-leong/qb/issues/31 - missing files
+
 * Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-2
 - allow SCL build
 
