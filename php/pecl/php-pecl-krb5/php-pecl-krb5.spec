@@ -28,7 +28,7 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  krb5-devel >= 1.8
-BuildRequires:  libcom_err-devel
+BuildRequires:  pkgconfig(com_err)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
 BuildRequires:  %{?scl_prefix}php-pear
 
@@ -86,11 +86,6 @@ These are the files needed to compile programs using the Kerberos extension.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-# Workaroud for old libcom_err
-if [ -f %{_root_includedir}/et/com_err.h ]
-then cp %{_root_includedir}/et/com_err.h .
-fi
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_KRB5_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_krb5.h)
 if test "x${extver}" != "x%{version}"; then
@@ -112,6 +107,8 @@ EOF
 
 
 %build
+export CFLAGS="%{optflags} $(pkg-config --cflags com_err)"
+
 peclbuild() {
 %configure \
     --with-krb5 \
@@ -196,8 +193,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
+
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
 %{php_ztsextdir}/%{pecl_name}.so
@@ -207,7 +206,9 @@ rm -rf %{buildroot}
 %files devel
 %defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
+
 %{php_incldir}/ext/%{pecl_name}
+
 %if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
 %endif
