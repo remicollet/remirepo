@@ -1,3 +1,18 @@
+# spec file for php-magickwand
+#
+# Copyright (c) 2010-2014 Remi Collet
+# Copyright (c) 2006-2010 Robert Scheck
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+
+%{?scl:          %scl_package         php-magickwand}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__php:       %global __php        %{_bindir}/php}
+
 %global pecl_name     magickwand
 %global mainversion   1.0.9
 %global patchlevel    2
@@ -8,7 +23,7 @@
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -18,8 +33,14 @@ Source1:       magickwand.ini
 
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-devel
+BuildRequires: %{?scl_prefix}php-devel
 BuildRequires: autoconf, automake, libtool
+
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+
+%if "%{?vendor}" == "Remi Collet"
+# Ensure we use the more recent version from remi repo
 %if 0%{?fedora} >= 20
 BuildRequires: ImageMagick-devel >= 6.8.2
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
@@ -28,15 +49,21 @@ BuildRequires: ImageMagick-last-devel >= 6.8.2
 Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
 %endif
 
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
-
 # Other third party repo stuff
 Obsoletes:      php53-magickwand
 Obsoletes:      php53u-magickwand
 Obsoletes:      php54-magickwand
 %if "%{php_version}" > "5.5"
-Obsoletes:      php55-magickwand
+Obsoletes:      php55u-magickwand
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:      php56u-magickwand
+%endif
+
+%else
+# From upstream documentation
+BuildRequires: ImageMagick-devel >= 6.8.2
+Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %endif
 
 %if 0%{?fedora} < 20
@@ -124,6 +151,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 26 2014 Remi Collet <rpms@famillecollet.com> - 1.0.9.2-6
+- allow SCL build
+
 * Sat Nov  2 2013 Remi Collet <rpms@famillecollet.com> - 1.0.9.2-5
 - rebuild against new ImageMagick-last version 6.8.7-4
 
