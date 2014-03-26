@@ -4,7 +4,7 @@
 %global pdover      20080721
 # Extension version
 %global opcachever  7.0.4-dev
-%global oci8ver     2.0.8
+%global oci8ver     2.0.9
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
 %global php_bootstrap   0
@@ -113,14 +113,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201403170630
+%global snapdate      201403261230
 #global rcver         alpha3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -185,8 +185,8 @@ Patch91: php-5.3.7-oci8conf.patch
 # Security fixes (200+)
 
 # Fixes for tests (300+)
-# Revert change for pcre 8.34
-Patch301: php-5.5.10-pcre834.patch
+# Revert changes for pcre < 8.34
+Patch301: php-5.6.0-oldpcre.patch
 
 # WIP
 
@@ -910,7 +910,7 @@ rm -rf ext/json
 %if %{with_libpcre}
 %if 0%{?fedora} < 21
 # Only apply when system libpcre < 8.34
-#patch301 -p1 -R -b .pcre84
+%patch301 -p1 -b .pcre834
 %endif
 %endif
 
@@ -1898,6 +1898,11 @@ fi
 
 
 %changelog
+* Wed Mar 26 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-0.4.201403261230
+- new snapshot php5.6-201403261230
+- oci8 version 2.0.9
+- opcache version 7.0.4-dev
+
 * Mon Mar 17 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-0.4.201403170630
 - new snapshot php5.6-201403170630
 
