@@ -1,8 +1,19 @@
+# spec file for phpMyAdmin
+#
+# Copyright (c) 2008-2014 Remi Collet
+# Copyright (c) 2007-2009 Robert Scheck
+# Copyright (c) 2006-2007 Mike McGrath
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
 #global prever rc3
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 
 Name: phpMyAdmin
-Version: 4.1.11
+Version: 4.1.12
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -152,6 +163,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Thu Mar 27 2014 Remi Collet <rpms@famillecollet.com> 4.1.12-1
+- update to 4.1.12 (Thu, 27 Mar 2014, bugfix)
+
 * Sun Mar 23 2014 Remi Collet <rpms@famillecollet.com> 4.1.11-1
 - update to 4.1.11 (Sat, 22 Mar 2014, bugfix)
 
