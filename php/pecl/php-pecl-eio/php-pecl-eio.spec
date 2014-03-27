@@ -15,13 +15,13 @@
 # NOTE: bundled libeio (which is retired from Fedora)
 #
 
-%global with_zts  0%{?__ztsphp:1}
 %global pecl_name eio
+%global with_zts  0%{?__ztsphp:1}
 
 Summary:        Provides interface to the libeio library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.2.4
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.2.5
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -38,7 +38,13 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so only requires real packages instead
+Requires:       %{?scl_prefix}php-common%{?_isa}
+%else
 Requires:       %{?scl_prefix}php-sockets%{?_isa}
+%endif
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -81,8 +87,6 @@ available on specific(UNIX-like) platform.
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
-
-sed -e '/LICENSE/s/role="src"/role="doc"/' -i package.xml
 
 cd NTS
 
@@ -230,6 +234,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 27 2014 Remi Collet <remi@fedoraproject.org> - 1.2.5-1
+- Update to 1.2.5 (stable)
+
 * Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.2.4-2
 - allow SCL build
 
