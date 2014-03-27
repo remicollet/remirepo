@@ -19,7 +19,7 @@
 Summary:        User Operations for Zend
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.4
-Release:        0%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -219,6 +219,9 @@ rm -rf %{buildroot}
 # add date time as upstream used to release various
 # archives using the same version :(
 %changelog
+* Thu Mar 27 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4 (2014-03-27 18:34:03, beta)
+
 * Thu Mar 27 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-0
 - pre-release test build
 
