@@ -6,13 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-pthreads}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name pthreads
 
 Summary:        Threading API
-Name:           php-pecl-%{pecl_name}
-Version:        2.0.2
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Version:        2.0.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -20,18 +23,18 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-zts-devel > 5.3
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-zts-devel > 5.3
+BuildRequires:  %{?scl_prefix}php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
@@ -153,16 +156,20 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 27 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3 (stable)
+- allow SCL build, even if php54 and php55 don't have ZTS
+
 * Fri Mar 21 2014 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
-- Update to 2.0.2
+- Update to 2.0.2 (stable)
 
 * Mon Mar 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
-- Update to 2.0.1
+- Update to 2.0.1 (stable)
 - open https://github.com/krakjoe/pthreads/issues/262
   segfault in test suite
 
 * Fri Mar 14 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
-- Update to 2.0.0
+- Update to 2.0.0 (stable)
 - open https://github.com/krakjoe/pthreads/issues/258
   tests/pools.phpt use PHP 5.5 syntax
 
