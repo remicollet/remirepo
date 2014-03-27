@@ -18,8 +18,8 @@
 
 Summary:        User Operations for Zend
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.0.4
+Release:        0%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -168,11 +168,6 @@ fi
 
 
 %check
-%if "%{php_version}" < "5.5"
-# https://github.com/krakjoe/uopz/issues/1
-sed -e 's/A::class/"A"/' -i ?TS/tests/016.phpt
-%endif
-
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -224,6 +219,9 @@ rm -rf %{buildroot}
 # add date time as upstream used to release various
 # archives using the same version :(
 %changelog
+* Thu Mar 27 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-0
+- pre-release test build
+
 * Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3 (2014-03-24 19:37:04, beta)
 
