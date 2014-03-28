@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.3
+Version:         1.12.5
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -401,7 +401,6 @@ This package contains web service client APIs for the following services:
 - eBay
 - Flickr
 - LiveDocx
-- Nirvanix
 - Rackspace
 - ReCaptcha
 - Various URL Shortener services
@@ -456,8 +455,11 @@ cat executables valid_executables|sort|uniq -u > invalid_executables
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/php
+
+# remove cruft that somehow slipped into the tarball
+rm -f library/Zend/.Version.php.un~
+
 cp -pr library/Zend $RPM_BUILD_ROOT%{_datadir}/php
 cp -pr demos/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend/demos
 
@@ -479,7 +481,8 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE.txt INSTALL.txt README.txt README.fedora
+%doc LICENSE.txt DEVELOPMENT_README.md INSTALL.md README.md README-GIT.md
+%doc README.fedora
 %{_bindir}/zf
 # we list all files explicitly to find out what's new in future releases more
 # easily
@@ -543,8 +546,6 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Gdata
 %{_datadir}/php/Zend/Gdata.php
 %{_datadir}/php/Zend/Http
-%{_datadir}/php/Zend/InfoCard
-%{_datadir}/php/Zend/InfoCard.php
 %{_datadir}/php/Zend/Json
 %{_datadir}/php/Zend/Json.php
 %{_datadir}/php/Zend/Layout
@@ -594,8 +595,6 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %exclude %{_datadir}/php/Zend/Service/Flickr
 %exclude %{_datadir}/php/Zend/Service/LiveDocx.php
 %exclude %{_datadir}/php/Zend/Service/LiveDocx
-%exclude %{_datadir}/php/Zend/Service/Nirvanix.php
-%exclude %{_datadir}/php/Zend/Service/Nirvanix
 %exclude %{_datadir}/php/Zend/Service/Rackspace
 %exclude %{_datadir}/php/Zend/Service/ReCaptcha.php
 %exclude %{_datadir}/php/Zend/Service/ReCaptcha
@@ -634,6 +633,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/View
 %{_datadir}/php/Zend/View.php
 %{_datadir}/php/Zend/Wildfire
+%{_datadir}/php/Zend/Xml
 %{_datadir}/php/Zend/XmlRpc
 
 %files demos
@@ -797,8 +797,6 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Service/Flickr
 %{_datadir}/php/Zend/Service/LiveDocx.php
 %{_datadir}/php/Zend/Service/LiveDocx
-%{_datadir}/php/Zend/Service/Nirvanix.php
-%{_datadir}/php/Zend/Service/Nirvanix
 %{_datadir}/php/Zend/Service/Rackspace
 %{_datadir}/php/Zend/Service/ReCaptcha.php
 %{_datadir}/php/Zend/Service/ReCaptcha
@@ -824,6 +822,15 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Fri Mar 28 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.12.5-1
+- backport 1.12.5
+
+* Thu Mar 27 2014 Felix Kaechele <felix@fetzig.org> - 1.12.5-1
+- update to 1.12.5
+- fixes http://framework.zend.com/security/advisory/ZF2014-01
+- fixes http://framework.zend.com/security/advisory/ZF2014-02
+- removed: InfoCards, Services/Nirvanix
+
 * Mon Mar 18 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.12.3-1
 - backport 1.12.3
 
