@@ -33,7 +33,7 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 %else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-Source1:        qb.ini
+Source1:        https://raw.githubusercontent.com/chung-leong/qb/%{version}/qb.ini
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
