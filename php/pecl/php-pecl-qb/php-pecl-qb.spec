@@ -11,26 +11,30 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit    725ee090f0387ce3bcd3655b5180136783f79ee1
-%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_owner     chung-leong
-%global gh_project   qb
+#global gh_commit    725ee090f0387ce3bcd3655b5180136783f79ee1
+#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_owner     chung-leong
+#global gh_project   qb
 %global pecl_name    qb
 %global with_zts     0%{?__ztsphp:1}
 
 Summary:        Accelerator designed mainly for graphic work
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.1.2
+Version:        2.2.0
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 
-#Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# Use github archive to have full archive, included test suite, and doc
+%if 0%{?gh_commit:1}
+# Use github archive to have full archive, included test suite, and doc, and qb.ini
 # https://github.com/chung-leong/qb/issues/23
 # https://github.com/chung-leong/qb/issues/31
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+%else
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source1:        qb.ini
+%endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -91,6 +95,7 @@ mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
 %else
 mv %{pecl_name}-%{version}    NTS
+cp %{SOURCE1} NTS/qb.ini
 %endif
 
 cd NTS
@@ -144,7 +149,7 @@ install -D -m 644 ZTS/%{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}
 
 # Test & Documentation
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
 for i in LICENSE CHANGELOG README CREDITS $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -231,6 +236,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 30 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0 (stable)
+- use sources from pecl
+
 * Wed Mar 26 2014 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - Update to 2.1.2 (stable)
 - enable ZTS build
