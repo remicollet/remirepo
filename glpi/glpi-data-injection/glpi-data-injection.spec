@@ -10,7 +10,7 @@
 #global svnrelease   703
 
 Name:           glpi-data-injection
-Version:        2.2.1
+Version:        2.3.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -29,14 +29,14 @@ URL:            https://forge.indepnet.net/projects/datainjection
 Source0:        glpi-datainjection-2.2.0-%{svnrelease}.tar.gz
 %else
 # This change for each new version
-Source0:        https://forge.indepnet.net/attachments/download/1189/glpi-datainjection-2.2.1.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1719/glpi-datainjection-2.3.1.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.83
-Requires:       glpi <  0.84
+Requires:       glpi >= 0.84
+Requires:       glpi <  0.85
 Requires:       glpi-pdf
 
 # This plugin have been renamed
@@ -76,7 +76,8 @@ for fic in docs/*; do
 done
 
 # don't need this
-rm -f testwebservice.php
+rm -f  %{pluginname}/testwebservice.php
+rm -rf %{pluginname}/tools
 
 
 %build
@@ -85,6 +86,8 @@ rm -f testwebservice.php
 
 %install
 rm -rf %{buildroot} 
+
+mkdir -p %{buildroot}%{_localstatedir}/lib/glpi/files/_plugins/%{pluginname}
 
 mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
 cp -ar %{pluginname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}
@@ -113,9 +116,19 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/pics
 # Need here, required from the Interface
 %{_datadir}/glpi/plugins/%{pluginname}/LICENSE
+# Data
+%attr(750,apache,root) %{_localstatedir}/lib/glpi/files/_plugins/%{pluginname}
 
 
 %changelog
+* Mon Mar 31 2014 Remi Collet <Fedora@FamilleCollet.com> - 2.3.1-1
+- version 2.3.1 for GLPI 0.84
+  https://forge.indepnet.net/projects/datainjection/versions/1004
+
+* Tue Nov 12 2013 Remi Collet <Fedora@FamilleCollet.com> - 2.3.0-1
+- version 2.3.0 for GLPI 0.84
+  https://forge.indepnet.net/projects/datainjection/versions/934
+
 * Wed Jun 13 2012 Remi Collet <Fedora@FamilleCollet.com> - 2.2.1-1
 - version 2.2.1
   https://forge.indepnet.net/projects/datainjection/versions/748
