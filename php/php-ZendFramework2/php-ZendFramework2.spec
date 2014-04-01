@@ -1,5 +1,7 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:      php-ZendFramework2
-Version:   2.2.5
+Version:   2.2.6
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
@@ -741,6 +743,7 @@ URL:      http://framework.zend.com/manual/2.2/en/modules/zend.json.introduction
 
 Requires: %{name}-common = %{version}-%{release}
 Requires: %{name}-Stdlib = %{version}-%{release}
+Requires: %{name}-ZendXml = %{version}-%{release}
 # Optional
 Requires: %{name}-Server = %{version}-%{release}
 # phpcompatinfo
@@ -1490,6 +1493,7 @@ Requires: %{name}-Http   = %{version}-%{release}
 Requires: %{name}-Math   = %{version}-%{release}
 Requires: %{name}-Server = %{version}-%{release}
 Requires: %{name}-Stdlib = %{version}-%{release}
+Requires: %{name}-ZendXml = %{version}-%{release}
 # phpcompatinfo
 Requires: php-date
 Requires: php-dom
@@ -1512,6 +1516,31 @@ and building new XML-RPC servers.
 
 [1] http://www.xmlrpc.com/
 
+# ------------------------------------------------------------------------------
+
+%package  ZendXml
+
+Summary:  Zend Framework 2: XML usage, best practices, and security in PHP
+Group:    Development/Libraries
+URL:      https://github.com/zendframework/ZendXml
+
+Requires: %{name}-common = %{version}-%{release}
+# phpcompatinfo
+Requires: php-dom
+Requires: php-libxml
+Requires: php-simplexml
+Requires: php-spl
+
+%description ZendXml
+This is a security component to prevent XML eXternal Entity (XXE) and
+XML Entity Expansion (XEE) attacks on XML documents.
+
+The XXE attack is prevented disabling the load of external entities in
+the libxml library used by PHP, using the function libxml_disable_entity_loader.
+
+The XEE attack is prevented looking inside the XML document for ENTITY usage.
+If the XML document uses ENTITY the library throw an Exception.
+
 # ##############################################################################
 
 
@@ -1531,7 +1560,11 @@ cp -rp library/* %{buildroot}%{_datadir}/php
 
 # Symlink package docs to common sub-package docs
 mkdir -p %{buildroot}%{_docdir}
-ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
+%if "%{_pkgdocdir}" == "%{_docdir}/%{name}"
+ln -s %{name}-common            %{buildroot}%{_pkgdocdir}
+%else
+ln -s %{name}-common-%{version} %{buildroot}%{_pkgdocdir}
+%endif
 
 
 %check
@@ -1548,7 +1581,7 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 %defattr(-,root,root,-)
 
 %doc *.md composer.json
-%doc %{_docdir}/%{name}-%{version}
+%doc %{_pkgdocdir}
 
 %dir %{_datadir}/php/Zend
 
@@ -2170,9 +2203,22 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 %exclude %{_datadir}/php/Zend/XmlRpc/*.md
 %exclude %{_datadir}/php/Zend/XmlRpc/composer.json
 
+# ------------------------------------------------------------------------------
+
+%files ZendXml
+%defattr(-,root,root,-)
+
+%{_datadir}/php/ZendXml
+
 # ##############################################################################
 
 %changelog
+* Tue Apr  1 2014 Remi Collet <remi@fedoraproject.org> 2.2.6-1
+- Updated to 2.2.6 for CVE-2014-2681 CVE-2014-2682
+  CVE-2014-2683 CVE-2014-2684 CVE-2014-2685
+- new package ZendXml
+- fix for unversioned doc directory
+
 * Mon Nov 11 2013 Remi Collet <remi@fedoraproject.org> 2.2.5-1
 - backport 2.2.5 for remi repo
 
