@@ -1,5 +1,12 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-pear-Net-IMAP
+#
+# Copyright (c) 2013-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 
 %global pear_channel pear.php.net
 %global pear_name    Net_IMAP
@@ -7,19 +14,14 @@
 # Cannot run test suite which requires a valid IMAP account
 
 Name:           php-pear-Net-IMAP
-Version:        1.1.2
-Release:        2%{?dist}
+Version:        1.1.3
+Release:        1%{?dist}
 Summary:        Provides an implementation of the IMAP protocol
 
 Group:          Development/Libraries
-# https://pear.php.net/bugs/19875
-# tests/* are GPL
-# docs/* are PHP version 2
-# NET/* are PHP
 License:        GPLv2+ and PHP
 URL:            http://%{pear_channel}/package/%{pear_name}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -44,18 +46,10 @@ Net_Socket and the optional Auth_SASL class.
 
 
 %prep
-# http://pear.php.net/bugs/19730
-%setup -q -c -T
-tar xif %{SOURCE0}
-
-cp %{SOURCE1} LICENSE
+%setup -q -c
 
 cd %{pear_name}-%{version}
-# https://pear.php.net/bugs/19876
-sed -e '/README/s/role="data"/role="doc"/' \
-    -e '/docs/s/role="test"/role="doc"/' \
-    -e '/phpunit.xml/s/role="data"/role="test"/' \
-    ../package.xml >%{name}.xml
+cp ../package.xml %{name}.xml
 
 
 %build
@@ -93,14 +87,17 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Net/IMAP*
 %{pear_testdir}/%{pear_name}
+%{pear_datadir}/%{pear_name}
 
 
 %changelog
+* Tue Apr 01 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3
+
 * Wed Apr  3 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
 - fix license, from review comment #929214
 
