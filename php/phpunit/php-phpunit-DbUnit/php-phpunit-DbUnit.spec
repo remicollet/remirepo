@@ -6,12 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name DbUnit
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-DbUnit
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        DbUnit port for PHP/PHPUnit
 
@@ -97,6 +97,9 @@ fi
 
 
 %changelog
+* Tue Apr 01 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- Update to 1.3.1
+
 * Fri Nov 01 2013 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - Update to 1.3.0
 - add requires: symfony2/Yaml
