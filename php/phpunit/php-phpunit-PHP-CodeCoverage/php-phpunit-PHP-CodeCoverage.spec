@@ -6,12 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        1.2.16
+Version:        1.2.17
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -99,6 +99,9 @@ fi
 
 
 %changelog
+* Tue Apr 01 2014 Remi Collet <remi@fedoraproject.org> - 1.2.17-1
+- Update to 1.2.17
+
 * Tue Feb 25 2014 Remi Collet <remi@fedoraproject.org> - 1.2.16-1
 - Update to 1.2.16
 
