@@ -18,7 +18,7 @@
 
 Summary:        User Operations for Zend
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -81,7 +81,7 @@ It supports the following activities:
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-#sed -e /PHP_UOPZ_VERSION/s/1.0.0/%{version}/ -i uopz.h
+sed -e /PHP_UOPZ_VERSION/s/2.0.0/%{version}/ -i uopz.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_UOPZ_VERSION/{s/.* "//;s/".*$//;p}' uopz.h)
@@ -219,6 +219,9 @@ rm -rf %{buildroot}
 # add date time as upstream used to release various
 # archives using the same version :(
 %changelog
+* Tue Apr 01 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1 (stable)
+
 * Mon Mar 31 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0 (2014-03-31 06:00:49, stable)
 
