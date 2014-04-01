@@ -4,8 +4,8 @@
 
 %global pecl_name   mongo
 %global with_zts    0%{?__ztsphp:1}
-%global prever      RC1
-%global gh_commit   1b587781187d0f5475e971651036a32b8c3b6f3f
+%global prever      RC2
+%global gh_commit   b0c4f81a41322a31e3e8cae79807e3049472f47f
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
@@ -14,7 +14,7 @@
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
 Version:      1.5.0
-Release:      0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -59,6 +59,9 @@ Obsoletes:     php54-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -209,6 +212,9 @@ rm -rf data
 
 
 %changelog
+* Tue Apr  1 2014 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.3-RC2
+- Update to 1.5.0RC2
+
 * Tue Mar 11 2014 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.2-RC1
 - Update to 1.5.0RC1
 - open https://jira.mongodb.org/browse/PHP-1009
