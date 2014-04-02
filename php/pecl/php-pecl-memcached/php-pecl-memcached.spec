@@ -22,7 +22,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -141,27 +141,10 @@ extension=%{pecl_name}.so
 ; ----- Configuration options
 ; http://php.net/manual/en/memcached.configuration.php
 
-;memcached.sess_locking = 1
-;memcached.sess_consistent_hash = 0
-;memcached.sess_binary = 0
-;memcached.sess_lock_wait = 150000
-;memcached.sess_lock_max_wait = 0
-;memcached.sess_lock_expire = 0
-;memcached.sess_prefix = "memc.sess.key."
-;memcached.sess_number_of_replicas = 0
-;memcached.sess_randomize_replica_read = 0
-;memcached.sess_remove_failed = 0
-;memcached.sess_connect_timeout = 1000
-;memcached.sess_sasl_username = ""
-;memcached.sess_sasl_password = ""
-;memcached.compression_type = "fastlz"
-;memcached.compression_factor = "1.3"
-;memcached.compression_threshold = 2000
-;memcached.serializer = "igbinary"
-;memcached.use_sasl = 0
-;memcached.store_retry_count = 2
 EOF
 
+# default options with description from upstream
+cat NTS/memcached.ini >>%{pecl_name}.ini
 
 %if %{with_zts}
 cp -r NTS ZTS
@@ -299,9 +282,10 @@ exit $ret
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
@@ -310,9 +294,11 @@ exit $ret
 
 
 %changelog
+* Wed Apr  2 2014  Remi Collet <remi@fedoraproject.org> - 2.2.0-2
+- add all ini options in configuration file (comments)
+
 * Wed Apr  2 2014  Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0 (stable)
-- add all ini options
 - msgpack not available for ppc64
 
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.2.0-0.3.RC1
