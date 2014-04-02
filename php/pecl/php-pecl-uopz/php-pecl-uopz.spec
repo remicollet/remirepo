@@ -18,7 +18,7 @@
 
 Summary:        User Operations for Zend
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -219,6 +219,9 @@ rm -rf %{buildroot}
 # add date time as upstream used to release various
 # archives using the same version :(
 %changelog
+* Wed Apr 02 2014 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2 (stable)
+
 * Tue Apr 01 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 (stable)
 
