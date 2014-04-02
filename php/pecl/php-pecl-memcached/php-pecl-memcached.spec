@@ -59,13 +59,14 @@ BuildRequires: libevent-devel >= 2.0.2
 BuildRequires: libmemcached-devel  > 1
 %else
 # To ensure use of libmemcached-last for --enable-memcached-protocol
-BuildRequires: libmemcached-devel  > 1.0.16
+BuildRequires: libmemcached-devel  >= 1.0.16
 %endif
 %endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
+Requires:     %{?scl_prefix}php-json%{?_isa}
 Requires:     %{?scl_prefix}php-pecl-igbinary%{?_isa}
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
