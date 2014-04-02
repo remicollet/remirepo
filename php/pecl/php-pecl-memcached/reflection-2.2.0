@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #148 memcached version 2.2.0b1 ] {
+Extension [ <persistent> extension #156 memcached version 2.2.0 ] {
 
   - INI {
     Entry [ memcached.sess_locking <ALL> ]
@@ -63,8 +63,8 @@ Extension [ <persistent> extension #148 memcached version 2.2.0b1 ] {
   - Classes [3] {
     Class [ <internal:memcached> class Memcached ] {
 
-      - Constants [129] {
-        Constant [ integer LIBMEMCACHED_VERSION_HEX ] { 16777238 }
+      - Constants [130] {
+        Constant [ integer LIBMEMCACHED_VERSION_HEX ] { 16777240 }
         Constant [ integer OPT_COMPRESSION ] { -1001 }
         Constant [ integer OPT_COMPRESSION_TYPE ] { -1004 }
         Constant [ integer OPT_PREFIX_KEY ] { -1002 }
@@ -115,6 +115,7 @@ Extension [ <persistent> extension #148 memcached version 2.2.0b1 ] {
         Constant [ integer OPT_NUMBER_OF_REPLICAS ] { 29 }
         Constant [ integer OPT_RANDOMIZE_REPLICA_READ ] { 30 }
         Constant [ integer OPT_REMOVE_FAILED_SERVERS ] { 35 }
+        Constant [ integer OPT_SERVER_TIMEOUT_LIMIT ] { 37 }
         Constant [ integer RES_SUCCESS ] { 0 }
         Constant [ integer RES_FAILURE ] { 1 }
         Constant [ integer RES_HOST_LOOKUP_FAILURE ] { 2 }

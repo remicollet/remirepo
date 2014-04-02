@@ -16,13 +16,13 @@
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
-%global prever      RC1
-%global intver      rc1
+#global prever      RC1
+#global intver      rc1
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -36,7 +36,9 @@ BuildRequires: %{?scl_prefix}php-devel >= 5.2.10
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: %{?scl_prefix}php-json
 BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
+%ifnarch ppc64
 BuildRequires: %{?scl_prefix}php-pecl-msgpack-devel
+%endif
 BuildRequires: zlib-devel
 BuildRequires: cyrus-sasl-devel
 %if %{with_tests}
@@ -53,15 +55,23 @@ BuildRequires: %{?scl_prefix}libmemcached-devel  > 1
 Requires:      %{?scl_prefix}libmemcached-libs%{_isa} > 1
 %else
 BuildRequires: libevent-devel >= 2.0.2
+%if 0%{?rhel} == 5
+BuildRequires: libmemcached-devel  > 1
+%else
+# To ensure use of libmemcached-last for --enable-memcached-protocol
+BuildRequires: libmemcached-devel  > 1.0.16
+%endif
 %endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
 Requires:     %{?scl_prefix}php-pecl-igbinary%{?_isa}
-Requires:     %{?scl_prefix}php-pecl-msgpack%{?_isa}
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
+%ifnarch ppc64
+Requires:     %{?scl_prefix}php-pecl-msgpack%{?_isa}
+%endif
 
 Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -120,13 +130,37 @@ extension=%{pecl_name}.so
 
 ; RPM note : save_handler and save_path are defined
 ; for mod_php, in /etc/httpd/conf.d/php.conf
-; for php-fpm, in /etc/php-fpm.d/*conf
+; for php-fpm, in %{_sysconfdir}/php-fpm.d/*conf
 
 ;  Use memcache as a session handler
 ;session.save_handler=memcached
 ;  Defines a comma separated list of server urls to use for session storage
 ;session.save_path="localhost:11211"
+
+; ----- Configuration options
+; http://php.net/manual/en/memcached.configuration.php
+
+;memcached.sess_locking = 1
+;memcached.sess_consistent_hash = 0
+;memcached.sess_binary = 0
+;memcached.sess_lock_wait = 150000
+;memcached.sess_lock_max_wait = 0
+;memcached.sess_lock_expire = 0
+;memcached.sess_prefix = "memc.sess.key."
+;memcached.sess_number_of_replicas = 0
+;memcached.sess_randomize_replica_read = 0
+;memcached.sess_remove_failed = 0
+;memcached.sess_connect_timeout = 1000
+;memcached.sess_sasl_username = ""
+;memcached.sess_sasl_password = ""
+;memcached.compression_type = "fastlz"
+;memcached.compression_factor = "1.3"
+;memcached.compression_threshold = 2000
+;memcached.serializer = "igbinary"
+;memcached.use_sasl = 0
+;memcached.store_retry_count = 2
 EOF
+
 
 %if %{with_zts}
 cp -r NTS ZTS
@@ -141,7 +175,9 @@ peclconf() {
 %configure --enable-memcached-igbinary \
            --enable-memcached-json \
            --enable-memcached-sasl \
+%ifnarch ppc64
            --enable-memcached-msgpack \
+%endif
 %if 0%{?rhel} == 5
            --disable-memcached-protocol \
 %else
@@ -204,21 +240,20 @@ fi
 
 
 %check
+OPT="-n"
+[ -f %{php_extdir}/igbinary.so ] && OPT="$OPT -d extension=igbinary.so"
+[ -f %{php_extdir}/json.so ]     && OPT="$OPT -d extension=json.so"
+[ -f %{php_extdir}/msgpack.so ]  && OPT="$OPT -d extension=msgpack.so"
+
 : Minimal load test for NTS extension
-%{__php} -n -q \
-    -d extension=igbinary.so \
-    -d extension=json.so \
-    -d extension=msgpack.so \
-    -d extension=NTS/modules/%{pecl_name}.so \
+%{__php} $OPT \
+    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_zts}
 : Minimal load test for ZTS extension
-%{__ztsphp} -n -q \
-    -d extension=igbinary.so \
-    -d extension=json.so \
-    -d extension=msgpack.so \
-    -d extension=ZTS/modules/%{pecl_name}.so \
+%{__ztsphp} $OPT \
+    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 %endif
 
@@ -232,7 +267,7 @@ memcached -p 11211 -U 11211      -d -P $PWD/memcached.pid
 pushd NTS
 rm tests/flush_buffers.phpt tests/touch_binary.phpt
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d extension=igbinary.so -d extension=json.so -d extension=msgpack.so -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php || ret=1
@@ -243,7 +278,7 @@ popd
 pushd ZTS
 rm tests/flush_buffers.phpt tests/touch_binary.phpt
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension=igbinary.so -d extension=json.so -d extension=msgpack.so -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php || ret=1
@@ -274,6 +309,11 @@ exit $ret
 
 
 %changelog
+* Wed Apr  2 2014  Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0 (stable)
+- add all ini options
+- msgpack not available for ppc64
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.2.0-0.3.RC1
 - allow SCL build
 
