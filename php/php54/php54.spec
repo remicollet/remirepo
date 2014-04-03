@@ -73,7 +73,7 @@
 %endif
 
 #global snapdate      201201041830
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -132,7 +132,6 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Upstream fixes
-Patch50: php-5.4.27-bug66946.patch.xz
 
 # Security fixes
 
@@ -792,8 +791,6 @@ rm -f ext/json/utf8_to_utf16.*
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
-
-%patch50 -p1 -b .66946
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1643,6 +1640,10 @@ fi
 
 
 %changelog
+* Thu Apr  3 2014 Remi Collet <remi@fedoraproject.org> 5.4.27-1
+- Update to 5.4.27
+  http://www.php.net/ChangeLog-5.php#5.4.27
+
 * Tue Mar 25 2014 Remi Collet <rcollet@redhat.com> 5.4.27-0.1.RC1
 - test build of 5.4.24RC1
 - patch for bug 66946
