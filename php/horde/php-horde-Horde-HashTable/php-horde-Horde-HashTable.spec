@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-HashTable
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        Horde Hash Table Interface
 
@@ -39,6 +39,8 @@ Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 # Optional
+Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Log) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Memcache) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Memcache) <  3.0.0
 Requires:       php-pear(pear.nrk.io/Predis) >= 0.8.3
@@ -78,7 +80,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -107,6 +109,10 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- Update to 1.1.2
+- add optional dependency on Horde_Log
+
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1
 
