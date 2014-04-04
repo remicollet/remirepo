@@ -18,7 +18,7 @@
 
 Summary:        User Operations for Zend
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -75,6 +75,8 @@ It supports the following activities:
 - Deletion of constants
 - Runtime composition and modification of classes
 
+Documentation: http://php.net/uopz
+
 
 %prep
 %setup -q -c
@@ -99,6 +101,12 @@ zend_extension=%{pecl_name}.so
 %else
 zend_extension=%{php_extdir}/%{pecl_name}.so
 %endif
+
+; Configuration
+; http://php.net/manual/en/uopz.configuration.php
+;uopz.overloads=0
+;uopz.backup=1
+;uopz.fixup=0
 EOF
 
 %if %{with_zts}
@@ -112,6 +120,12 @@ zend_extension=%{pecl_name}.so
 %else
 zend_extension=%{php_ztsextdir}/%{pecl_name}.so
 %endif
+
+; Configuration
+; http://php.net/manual/en/uopz.configuration.php
+;uopz.overloads=0
+;uopz.backup=1
+;uopz.fixup=0
 EOF
 %endif
 
@@ -219,6 +233,10 @@ rm -rf %{buildroot}
 # add date time as upstream used to release various
 # archives using the same version :(
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4 (stable)
+- improve uopz.ini (comments)
+
 * Thu Apr 03 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3 (stable)
 
