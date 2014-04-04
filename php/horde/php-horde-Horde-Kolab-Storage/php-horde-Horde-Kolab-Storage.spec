@@ -124,7 +124,7 @@ src=$(pwd)/%{pear_name}-%{version}
 
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-# Fix test executed from soruces
+# Fix test executed from sources
 VER=$(sed -n "/const VERSION/{s/.* '//;s/'.*\$//;p}" %{pear_phpdir}/Horde/Kolab/Format.php)
 
 sed -e "s/Horde_Kolab_Format_Xml-@version@/Horde_Kolab_Format_Xml-${VER}/" \

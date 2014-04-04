@@ -6,13 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_ListHeaders
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-ListHeaders
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Horde List Headers Parsing Library
 
@@ -78,9 +77,10 @@ rm -rf %{buildroot}
 
 
 %check
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+phpunit \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -107,6 +107,9 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+
 * Mon Oct 28 2013 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0
 
