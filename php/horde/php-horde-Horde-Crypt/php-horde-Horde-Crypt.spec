@@ -12,8 +12,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt
-Version:        2.4.1
-Release:        2%{?dist}
+Version:        2.4.2
+Release:        1%{?dist}
 Summary:        Horde Cryptography API
 
 Group:          Development/Libraries
@@ -114,7 +114,7 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 sed -e '/GnuPG v/s/%d.%d.%d (%s)/%s/' -i PgpTest.php
 
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -142,6 +142,9 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- Update to 2.4.2
+
 * Wed Mar 05 2014 Remi Collet <remi@fedoraproject.org> - 2.4.1-2
 - BR /usr/bin/gpg on all branches (gnupg or gnupg2 on RHEL >= 6)
 
