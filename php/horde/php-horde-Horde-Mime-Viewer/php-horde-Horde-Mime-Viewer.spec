@@ -6,14 +6,13 @@
 #
 # Please, preserve the %changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Mime_Viewer
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mime-Viewer
-Version:        2.0.5
-Release:        2%{?dist}
+Version:        2.0.6
+Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
 
 Group:          Development/Libraries
@@ -75,7 +74,6 @@ cd %{pear_name}-%{version}
 # Don't install syntaxhighlighter, use system one
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
-    -e '/LICENSE/s/role="horde"/role="doc"/' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     -e '/syntaxhighlighter/d' \
     ../package.xml >%{name}.xml
@@ -138,6 +136,9 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+
 * Fri Jan 10 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
 - cleanups from review #895622
 
