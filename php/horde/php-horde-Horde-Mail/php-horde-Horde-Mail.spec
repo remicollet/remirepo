@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mail
-Version:        2.1.5
+Version:        2.1.6
 Release:        1%{?dist}
 Summary:        Horde Mail Library
 
@@ -49,14 +49,12 @@ Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
 # From package.xml, optional
 Requires:       php-pear(Net_SMTP) >= 1.6.0
 Requires:       php-pear(Net_DNS2)
-Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 2.1.0
-Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) <  3.0.0
 # From phpcompatinfo report for version 2.1.3
 Requires:       php-intl
 Requires:       php-pcre
 Requires:       php-posix
 Requires:       php-spl
-# Horde_Support optional and implicitly required
+# optional and implicitly required: Horde_Support, Horde_Stream_Wrapper
 # Horde_Smtp optional and ignored to avoid circular dep.
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -100,9 +98,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+phpunit \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 %else
@@ -130,6 +129,9 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
+- Update to 2.1.6
+
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - Update to 2.1.5
 - Raise dependency on Horde_Stream_Wrapper >= 2.1.0
