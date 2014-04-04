@@ -6,13 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear:       %global __pear %{_bindir}/pear}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Pack
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Pack
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Horde Pack Utility
 
@@ -119,5 +118,8 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Sat Jan 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
