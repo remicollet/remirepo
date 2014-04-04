@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Mail
+# spec file for php-horde-Horde-Http
 #
 # Copyright (c) 2012-2014 Nick Bebout, Remi Collet
 #
