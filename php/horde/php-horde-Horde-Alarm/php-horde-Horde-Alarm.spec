@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Alarm
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Alarm Libraries
 
@@ -138,6 +138,9 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
