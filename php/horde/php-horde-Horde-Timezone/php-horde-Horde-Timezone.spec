@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Timezone
-Version:        1.0.5
+Version:        1.0.6
 Release:        1%{?dist}
 Summary:        Timezone library
 
@@ -79,7 +79,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -105,6 +105,9 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- Update to 1.0.6
+
 * Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - Update to 1.0.5
 
