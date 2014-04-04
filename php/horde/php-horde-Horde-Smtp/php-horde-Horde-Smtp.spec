@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Smtp
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Horde SMTP Client
 
@@ -22,6 +22,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  gettext
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
@@ -66,15 +67,20 @@ e-mail messages..
 
 cd %{pear_name}-%{version}
 # Don't install .po and .pot files
-sed -e '/%{pear_name}.pot/d' \
+# Remove checksum for .mo, as we regenerate them
+sed -e '/%{pear_name}.po/d' \
+    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
-
-# No .mo file for now, so no gettext required
 
 
 %build
 cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+
+# Regenerate the locales
+for po in $(find locale -name \*.po)
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
@@ -89,13 +95,20 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+for loc in locale/{??,??_??}
+do
+    lang=$(basename $loc)
+    test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc \
+         && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
+
 
 %check
 # All tests skipped for now (need a SMTP server configured)
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -115,16 +128,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Smtp
 %{pear_phpdir}/Horde/Smtp.php
 %{pear_testdir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}/locale
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Update to 1.4.1
+- add gettext for provided locales
+
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Update to 1.4.0
 - Add dependency on Horde_Translation
