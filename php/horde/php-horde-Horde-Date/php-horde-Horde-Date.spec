@@ -8,6 +8,7 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
+
 %global pear_name    Horde_Date
 %global pear_channel pear.horde.org
 
@@ -15,7 +16,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Date
-Version:        2.0.8
+Version:        2.0.9
 Release:        1%{?dist}
 Summary:        Horde Date package
 
@@ -106,7 +107,7 @@ done | tee ../%{pear_name}.lang
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 %else
@@ -136,6 +137,9 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
+- Update to 2.0.9
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
 - Update to 2.0.8
 
