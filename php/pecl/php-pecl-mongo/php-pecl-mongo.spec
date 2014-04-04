@@ -79,7 +79,7 @@ MongoDB database in PHP.
 Documentation: http://php.net/mongo
 
 
-%prep 
+%prep
 %setup -c -q
 
 mv %{gh_project}-%{gh_commit} NTS
@@ -116,6 +116,7 @@ cd ../ZTS
   --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
+
 
 %install
 rm -rf %{buildroot}
@@ -203,9 +204,10 @@ rm -rf data
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
