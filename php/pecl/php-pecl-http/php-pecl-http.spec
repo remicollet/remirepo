@@ -6,11 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-http}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%{?scl:          %scl_package         php-pecl-http}
+%{!?scl:         %global _root_prefix %{_prefix}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir  %{_includedir}/php}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
@@ -18,16 +19,14 @@
 %global with_zts  0%{?__ztsphp:1}
 
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.0.4
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.0.5
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/pecl_http
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
-
-Patch0:         %{proj_name}-build.patch
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
@@ -41,10 +40,29 @@ BuildRequires:  %{?scl_prefix}php-spl
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
-BuildRequires:  libevent-devel >= 1.4
 BuildRequires:  curl-devel >= 7.18.2
 BuildRequires:  %{?scl_prefix}php-pecl-propro-devel
 BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel
+
+%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7
+# Filter in the SCL collection
+%{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
+# libvent from SCL as not available in system
+BuildRequires: %{scl_prefix}libevent-devel  > 2
+Requires:      %{scl_prefix}libevent%{_isa} > 2
+Requires:      libcurl%{_isa}
+Requires:      zlib%{_isa}
+%global        _event_prefix %{_prefix}
+
+%else
+%global        _event_prefix %{_root_prefix}
+%if "%{?vendor}" == "Remi Collet"
+BuildRequires: libevent-devel > 2
+%else
+# Copr build
+BuildRequires: libevent-devel > 1.4
+%endif
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -62,7 +80,7 @@ Requires:       %{?scl_prefix}php-spl%{?_isa}
 %endif
 Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa}
 Requires:       %{?scl_prefix}php-pecl(raphf)%{?_isa}
-# Can't install both version of the same extension
+# Can't install both versions of the same extension
 Conflicts:      %{?scl_prefix}php-pecl-http1
 
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}%{?prever}
@@ -72,13 +90,11 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prev
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}%{?prever}
 
-%if 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-http
 Obsoletes:     php53u-pecl-http
 Obsoletes:     php54-pecl-http
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-http
 %endif
@@ -90,8 +106,8 @@ Obsoletes:     php56u-pecl-http
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
-%{?filter_setup}
 %endif
+%{?filter_setup}
 
 
 %description
@@ -130,9 +146,6 @@ These are the files needed to compile programs using HTTP extension.
 
 mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
-
-%patch0 -p1
-
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
@@ -150,15 +163,24 @@ cp -pr NTS ZTS
 
 
 %build
+peclconf() {
+%configure \
+  --with-http \
+  --with-http-zlib-dir=%{_root_prefix} \
+  --with-http-libcurl-dir=%{_root_prefix} \
+  --with-http-libevent-dir=%{_event_prefix} \
+  --with-libdir=%{_lib} \
+  --with-php-config=$1
+}
 cd NTS
 %{_bindir}/phpize
-%configure  --with-php-config=%{_bindir}/php-config
+peclconf %{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
-%configure  --with-php-config=%{_bindir}/zts-php-config
+peclconf %{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
 
@@ -250,6 +272,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- use libevent v2 in SCL
+
 * Sun Mar 09 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
 - add upstream patch for -Werror=format-security
 
