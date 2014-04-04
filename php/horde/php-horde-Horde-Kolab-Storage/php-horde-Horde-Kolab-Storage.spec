@@ -6,13 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Kolab_Storage
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Kolab-Storage
-Version:        2.0.5
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
@@ -123,20 +122,18 @@ src=$(pwd)/%{pear_name}-%{version}
 # Retrieve version of Horde_Kolab_Format
 #format=$(sed -n "/VERSION = /{s/.* '//;s/'.*$//;p}"  %{pear_phpdir}//Horde/Kolab/Format.php)
 
-# fix for unit consistency in sources tree
-# waiting for upstream explanation on this issue
-sed -e '/VERSION =/s/%{version}/@version@/' \
-    -i $src/lib/Horde/Kolab/Storage.php
-
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-# Disable some tests which rely on Horde_Kolab_Format and Horde_Kolab_Storage
-# as switching from @version@ to 2.0.3 alter test result (line wrap)
-rm ComponentTest/Data/Object/Message/ModifiedTest.php
-rm ComponentTest/Data/Object/Message/NewTest.php
+# Fix test executed from soruces
+VER=$(sed -n "/const VERSION/{s/.* '//;s/'.*\$//;p}" %{pear_phpdir}/Horde/Kolab/Format.php)
+
+sed -e "s/Horde_Kolab_Format_Xml-@version@/Horde_Kolab_Format_Xml-${VER}/" \
+    -e "s/Horde_Kolab_Storage @version@/Horde_Kolab_Storage %{version}/" \
+    -i ComponentTest/Data/Object/Message/ModifiedTest.php \
+       ComponentTest/Data/Object/Message/NewTest.php
 
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -168,6 +165,9 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Tue Aug 27 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - raise dependency on Horde_Imap_Client >= 2.14.0
