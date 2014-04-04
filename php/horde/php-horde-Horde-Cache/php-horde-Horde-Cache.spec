@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cache
-Version:        2.4.1
+Version:        2.4.2
 Release:        1%{?dist}
 Summary:        Horde Caching API
 
@@ -43,15 +43,13 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # From package.xml, optional
 Requires:       php-pear(%{pear_channel}/Horde_HashTable) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_HashTable) <  2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Log) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mongo) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mongo) <  2.0.0
 # From phpcompatinfo report for version 2.4.0
 Requires:       php-date
 Requires:       php-spl
 # Optional and omitted to avoid circular dep : Horde_Db
-# Optional and implicitly requires Horde_Memcache
+# Optional and implicitly requires Horde_Memcache, Horde_Log
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -108,6 +106,10 @@ fi
 
 
 %changelog
+* Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- Update to 2.4.2
+- drop optional dependency on Horde_Log (implicit)
+
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
 - Update to 2.4.1
 
