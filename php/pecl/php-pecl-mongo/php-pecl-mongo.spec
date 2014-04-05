@@ -5,7 +5,7 @@
 %global pecl_name   mongo
 %global with_zts    0%{?__ztsphp:1}
 #global prever      RC2
-%global gh_commit   b249aec0ea0aa40ff71b9de1121d0ac4eaf77ded
+%global gh_commit   d5b3e2ebafbd95bc3de2e7fa0837487af540f130
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
@@ -13,7 +13,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.5.0
+Version:      1.5.1
 Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -216,6 +216,10 @@ rm -rf data
 
 
 %changelog
+* Sat Apr 05 2014 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
+- Update to 1.5.1 (stable)
+- mongo.native_long not allowed on 32bits
+
 * Fri Apr  4 2014 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - Update to 1.5.0 (no change since RC2)
 
