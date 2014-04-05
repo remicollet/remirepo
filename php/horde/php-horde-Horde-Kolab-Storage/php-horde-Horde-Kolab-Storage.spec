@@ -118,15 +118,12 @@ done | tee ../%{pear_name}.lang
 
 %check
 src=$(pwd)/%{pear_name}-%{version}
-
-# Retrieve version of Horde_Kolab_Format
-#format=$(sed -n "/VERSION = /{s/.* '//;s/'.*$//;p}"  %{pear_phpdir}//Horde/Kolab/Format.php)
-
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-# Fix test executed from sources
+# Retrieve version of Horde_Kolab_Format
 VER=$(sed -n "/const VERSION/{s/.* '//;s/'.*\$//;p}" %{pear_phpdir}/Horde/Kolab/Format.php)
 
+# Fix test executed from sources
 sed -e "s/Horde_Kolab_Format_Xml-@version@/Horde_Kolab_Format_Xml-${VER}/" \
     -e "s/Horde_Kolab_Storage @version@/Horde_Kolab_Storage %{version}/" \
     -i ComponentTest/Data/Object/Message/ModifiedTest.php \
