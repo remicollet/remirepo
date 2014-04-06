@@ -11,7 +11,7 @@
 
 Name:          php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
-Version:       4.5.3
+Version:       4.6.0
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
@@ -112,6 +112,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Apr  6 2014 Remi Collet <RPMS@famillecollet.com> - 4.6.0-1
+- update to 4.6.0 (Apr 4, 2014)
+
 * Tue Feb 18 2014 Remi Collet <RPMS@famillecollet.com> - 4.5.3-1
 - update to 4.5.3 (Feb 11, 2014)
 
