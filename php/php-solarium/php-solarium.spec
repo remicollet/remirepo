@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0766401cce7831548e0c213b71bafcb717d1c9ec
+%global gh_commit    f602c2020d1b57e7a3aa0c75088222ce31438aba
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     basdenooijer
 %global gh_project   solarium
@@ -14,8 +14,8 @@
 
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
-Version:        3.1.2
-Release:        2%{?dist}
+Version:        3.2.0
+Release:        1%{?dist}
 
 URL:            http://www.solarium-project.org/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -36,7 +36,7 @@ BuildRequires:  php-symfony-eventdispatcher < 3
 Requires:       php(language) >= 5.3.2
 Requires:       php-symfony-eventdispatcher > 2.1
 Requires:       php-symfony-eventdispatcher < 3
-# From phpcompatinfo report for version 3.1.2
+# From phpcompatinfo report for version 3.2.0
 Requires:       php-curl
 Requires:       php-date
 Requires:       php-json
@@ -108,6 +108,9 @@ phpunit \
 
 
 %changelog
+* Sun Apr  6 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- update to 3.2.0
+
 * Sat Dec 28 2013 Remi Collet <remi@fedoraproject.org> - 3.1.2-2
 - cleanups from review #1023879
 
