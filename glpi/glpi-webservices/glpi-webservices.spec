@@ -2,7 +2,7 @@
 #global svnrelease   322
 
 Name:           glpi-webservices
-Version:        1.3.1
+Version:        1.4.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,16 +20,17 @@ URL:            https://forge.indepnet.net/projects/webservices
 # tar czf glpi-webservices-1.3.0-322.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1205/glpi-webservices-1.3.1.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1664/glpi_webservices-1.4.1.tar.gz
 %endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.83.3
-Requires:       glpi <  0.84
-Requires:       php-xmlrpc php-soap
+Requires:       glpi >= 0.84
+Requires:       glpi <  0.85
+Requires:       php-xmlrpc
+Requires:       php-soap
 
 %description
 This plugin provides a server for Web Services which allow
@@ -42,6 +43,13 @@ Cette extension fournit un serveur de services web permettant
 
 %prep
 %setup -q -c 
+
+rm -rf %{pluginname}/.htaccess \
+       %{pluginname}/scripts/.htaccess
+mv %{pluginname}/AUTHORS.txt .
+
+# Create link to LICENSE for standard doc folder
+ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
 
 cat >httpd <<EOF
 <Directory /usr/share/glpi/plugins/%{pluginname}/scripts>
@@ -73,8 +81,6 @@ mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
 cp -ar %{pluginname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}
 
 # ===== apache =====
-rm -f %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/.htaccess
-rm -f %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/scripts/.htaccess
 mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
 install --mode 644 httpd %{buildroot}/%{_sysconfdir}/httpd/conf.d/%{name}.conf
 
@@ -84,12 +90,20 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc %{pluginname}/LICENSE
+%doc LICENSE AUTHORS.txt
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/glpi/plugins/%{pluginname}
 
 
 %changelog
+* Wed Feb 12 2014 Remi Collet <Fedora@FamilleCollet.com> - 1.4.1-1
+- version 1.4.1
+  https://forge.indepnet.net/projects/webservices/versions/996
+
+* Wed Nov 13 2013 Remi Collet <Fedora@FamilleCollet.com> - 1.4.0-1
+- version 1.4.0 for GLPI 0.84
+  https://forge.indepnet.net/projects/webservices/versions/921
+  
 * Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.1-1
 - version 1.3.1 for GLPI 0.83.3
   https://forge.indepnet.net/projects/webservices/versions/703
