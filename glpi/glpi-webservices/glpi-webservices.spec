@@ -1,8 +1,16 @@
+# spec file for glpi-webservices
+#
+# Copyright (c) 2010-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %global pluginname   webservices
 #global svnrelease   322
 
 Name:           glpi-webservices
-Version:        1.4.1
+Version:        1.4.2
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,7 +28,7 @@ URL:            https://forge.indepnet.net/projects/webservices
 # tar czf glpi-webservices-1.3.0-322.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1664/glpi_webservices-1.4.1.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1725/glpi_webservices-1.4.2.tar.gz
 %endif
 
 
@@ -96,6 +104,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr  7 2014 Remi Collet <Fedora@FamilleCollet.com> - 1.4.2-1
+- version 1.4.2
+  https://forge.indepnet.net/projects/webservices/versions/1031
+
 * Wed Feb 12 2014 Remi Collet <Fedora@FamilleCollet.com> - 1.4.1-1
 - version 1.4.1
   https://forge.indepnet.net/projects/webservices/versions/996
@@ -103,7 +115,7 @@ rm -rf %{buildroot}
 * Wed Nov 13 2013 Remi Collet <Fedora@FamilleCollet.com> - 1.4.0-1
 - version 1.4.0 for GLPI 0.84
   https://forge.indepnet.net/projects/webservices/versions/921
-  
+
 * Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.1-1
 - version 1.3.1 for GLPI 0.83.3
   https://forge.indepnet.net/projects/webservices/versions/703
@@ -149,4 +161,3 @@ rm -rf %{buildroot}
 * Fri Jun 18 2010 Remi Collet <Fedora@FamilleCollet.com> - 1.0.0-0.1.svn168
 - version 1.0.0 for glpi 0.78 RC (svn snapshot)
 - initial RPM
-
