@@ -120,7 +120,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1009,7 +1009,7 @@ chmod 644 README.*
 echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 
 # Some extensions have their own configuration file
-cp %{SOURCE50} .
+cp %{SOURCE50} 10-opcache.ini
 
 # Regenerated bison files
 # to force, rm Zend/zend_{language,ini}_parser.[ch]
@@ -1561,10 +1561,17 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
     mysql mysqli pdo_mysql \
 %endif
     ; do
-if [ "$mod" = "wddx" ]
-then   ini=xml_${mod}.ini
-else   ini=${mod}.ini
-fi
+    case $mod in
+      opcache)
+        # Zend extensions
+        ini=10-${mod}.ini;;
+      pdo_*|mysqlnd_*|wddx|xmlreader|xmlrpc)
+        # Extensions with dependencies on 20-*
+        ini=30-${mod}.ini;;
+      *)
+        # Extensions with no dependency
+        ini=20-${mod}.ini;;
+    esac
     if [ -f ${ini} ]; then
       cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini}
       cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini}
@@ -1898,6 +1905,11 @@ fi
 
 
 %changelog
+* Tue Apr  8 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.5.201403261230
+- add numerical prefix to extension configuration files
+- prevent .user.ini files from being viewed by Web clients
+- load php directives only when mod_php is active
+
 * Wed Mar 26 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-0.4.201403261230
 - new snapshot php5.6-201403261230
 - oci8 version 2.0.9
