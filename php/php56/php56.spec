@@ -1645,7 +1645,7 @@ cat files.zip >> files.common
 install -m 644 %{SOURCE51} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/opcache-default.blacklist
 install -m 644 %{SOURCE51} $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/opcache-default.blacklist
 sed -e '/blacklist_filename/s/php.d/php-zts.d/' \
-    -i $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/opcache.ini
+    -i $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/10-opcache.ini
 
 # Install the macros file:
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
