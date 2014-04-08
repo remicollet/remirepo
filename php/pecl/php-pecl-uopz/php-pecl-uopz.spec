@@ -13,13 +13,18 @@
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name uopz
+
+%if "%{php_version}" < "5.6"
 # uopz should be loaded before opcache (k as krakjoe)
 %global ini_name  k-%{pecl_name}.ini
+%else
+%global ini_name  05-%{pecl_name}.ini
+%endif
 
 Summary:        User Operations for Zend
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.4
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -233,6 +238,9 @@ rm -rf %{buildroot}
 # add date time as upstream used to release various
 # archives using the same version :(
 %changelog
+* Tue Apr  8 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
+- add numerical prefix to extension configuration files
+
 * Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4 (stable)
 - improve uopz.ini (comments)
