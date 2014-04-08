@@ -7,18 +7,21 @@
 %global with_systemd 0
 %endif
 
-%global with_sasl    0
+%global with_sasl    1
+
+# Regression tests take a long time, you can skip 'em with this
+%{!?runselftest: %global runselftest 1}
 
 Name:           memcached
-Version:        1.4.15
-Release:        2%{?dist}.1
+Version:        1.4.17
+Release:        1%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
 
 Group:          System Environment/Daemons
 License:        BSD
 URL:            http://www.memcached.org/
-Source0:        http://memcached.googlecode.com/files/%{name}-%{version}.tar.gz
+Source0:        http://www.memcached.org/files/%{name}-%{version}.tar.gz
 
 # custom unit file
 Source1:        memcached.service
@@ -26,12 +29,17 @@ Source1:        memcached.service
 Source2:        memcached.sysv
 
 # Patches
+Patch001:       memcached-manpages.patch
 
 # Fixes
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+%if "%{?vendor}" == "Remi Collet"
+BuildRequires:  libevent-devel > 2
+%else
 BuildRequires:  libevent-devel
+%endif
 BuildRequires:  perl(Test::More), perl(Test::Harness)
 %if %{with_sasl}
 BuildRequires:  cyrus-sasl-devel
@@ -45,16 +53,15 @@ Requires(postun): systemd
 Requires(post): systemd-sysv
 %else
 Requires: initscripts
-Requires: libevent
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): /sbin/service
 %endif
 Requires(pre):  shadow-utils
 
-
 # as of 3.5.5-4 selinux has memcache included
 Obsoletes: memcached-selinux
+
 
 %description
 memcached is a high-performance, distributed memory object caching
@@ -68,15 +75,20 @@ Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
-Install memcached-devel if you are developing C/C++ applications that require access to the
-memcached binary include files.
+Install memcached-devel if you are developing C/C++ applications that require
+access to the memcached binary include files.
 
 
 %prep
 %setup -q
+%patch001 -p1 -b .manpages
 
 
 %build
+# compile with full RELRO
+export CFLAGS="%{optflags} -pie -fpie"
+export LDFLAGS="-Wl,-z,relro,-z,now"
+
 %configure \
 %if %{with_sasl}
    --enable-sasl
@@ -86,6 +98,7 @@ sed -i 's/-Werror/ /' Makefile
 make %{?_smp_mflags}
 
 %check
+%if %runselftest
 # whitespace tests fail locally on fedpkg systems now that they use git
 rm -f t/whitespace.t
 
@@ -96,6 +109,7 @@ if [ `id -u` -ne 0 ]; then
   rm -f t/daemonize.t
 fi
 make test
+%endif
 
 
 %install
@@ -106,6 +120,8 @@ rm -f %{buildroot}/%{_bindir}/memcached-debug
 
 # Perl script for monitoring memcached
 install -Dp -m0755 scripts/memcached-tool %{buildroot}%{_bindir}/memcached-tool
+install -Dp -m0644 scripts/memcached-tool.1 \
+        %{buildroot}%{_mandir}/man1/memcached-tool.1
 
 %if %{with_systemd}
 # Unit file
@@ -221,6 +237,7 @@ fi
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_bindir}/memcached-tool
 %{_bindir}/memcached
+%{_mandir}/man1/memcached-tool.1*
 %{_mandir}/man1/memcached.1*
 %if %{with_systemd}
 %{_unitdir}/memcached.service
@@ -235,6 +252,11 @@ fi
 %{_includedir}/memcached/*
 
 %changelog
+* Mon Apr  7 2014 Remi Collet <rpms@famillecollet.com> - 0:1.4.17-1
+- Update to 1.4.17
+- Sync with rawhide
+- Build against libevent 2
+
 * Sun Dec  2 2012 Remi Collet <rpms@famillecollet.com> - 0:1.4.15-2.1
 - build test without SASL
 

@@ -1,0 +1,152 @@
+From 5ef6d397a0cc40047e8ac50c0ea7fc49f16435aa Mon Sep 17 00:00:00 2001
+From: Miroslav Lichvar <mlichvar@redhat.com>
+Date: Tue, 2 Jul 2013 13:54:04 +0200
+Subject: [PATCH 1/3] describe -b and -S options in man page
+
+---
+ doc/memcached.1 | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/doc/memcached.1 b/doc/memcached.1
+index 287e87f..8ee749a 100644
+--- a/doc/memcached.1
++++ b/doc/memcached.1
+@@ -119,6 +119,9 @@ could reduce the number of TLB misses and improve the performance. In order to
+ get large pages from the OS, memcached will allocate the total item-cache in
+ one large chunk. Only available if supported on your OS.
+ .TP
++.B \-b <num>
++Set the backlog queue limit to <num> connections. The default is 1024.
++.TP
+ .B \-B <proto>
+ Specify the binding protocol to use.  By default, the server will
+ autonegotiate client connections.  By using this option, you can
+@@ -131,6 +134,10 @@ minimum is 1k, max is 128m. Adjusting this value changes the item size limit.
+ Beware that this also increases the number of slabs (use -v to view), and the
+ overal memory usage of memcached.
+ .TP
++.B \-S
++Turn on SASL authentication. This option is only meaningful if memcached was
++compiled with SASL support enabled.
++.TP
+ .B \-F
+ Disables the "flush_all" command. The cmd_flush counter will increment, but
+ clients will receive an error message and the flush will not occur.
+-- 
+1.8.4.2
+
+From a7fe32807cb49cb7329dfc70ad28f581aa9a49ca Mon Sep 17 00:00:00 2001
+From: Miroslav Lichvar <mlichvar@redhat.com>
+Date: Wed, 15 Jan 2014 11:00:16 +0100
+Subject: [PATCH 2/3] fix usage text for -b option
+
+---
+ memcached.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/memcached.c b/memcached.c
+index ffe2204..b7c49d0 100644
+--- a/memcached.c
++++ b/memcached.c
+@@ -4616,7 +4616,7 @@ static void usage(void) {
+            "              requests process for a given connection to prevent \n"
+            "              starvation (default: 20)\n");
+     printf("-C            Disable use of CAS\n");
+-    printf("-b            Set the backlog queue limit (default: 1024)\n");
++    printf("-b <num>      Set the backlog queue limit (default: 1024)\n");
+     printf("-B            Binding protocol - one of ascii, binary, or auto (default)\n");
+     printf("-I            Override the size of each slab page. Adjusts max item size\n"
+            "              (default: 1mb, min: 1k, max: 128m)\n");
+-- 
+1.8.4.2
+
+From 330bf108df14e39e11f9be7fdcb25e295cdb949b Mon Sep 17 00:00:00 2001
+From: Miroslav Lichvar <mlichvar@redhat.com>
+Date: Tue, 2 Jul 2013 17:15:03 +0200
+Subject: [PATCH 3/3] add man page for memcached-tool
+
+---
+ scripts/memcached-tool.1 | 71 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 scripts/memcached-tool.1
+
+diff --git a/scripts/memcached-tool.1 b/scripts/memcached-tool.1
+new file mode 100644
+index 0000000..6bb021b
+--- /dev/null
++++ b/scripts/memcached-tool.1
+@@ -0,0 +1,71 @@
++.TH MEMCACHED-TOOL 1 "Jul 2, 2013"
++.SH NAME
++memcached-tool \- stats and management tool for memcached
++
++.SH SYNOPSIS
++.B memcached-tool
++.RI < host [: port "] | " /path/to/socket "> ["  mode ]
++
++.SH DESCRIPTION
++.B memcached-tool
++is a Perl script used to print statistics from a running memcached instance.
++The first parameter specifies the address of the daemon either by a hostname,
++optionally followed by the port number (the default is 11211), or a path to
++UNIX domain socket. The second parameter specifies the mode in which the tool
++should run.
++
++.SH MODES
++.TP
++.B display
++Print slab class statistics. This is the default mode if no mode is specified.
++The printed columns are:
++.RS
++.TP
++.B #
++Number of the slab class.
++.TP
++.B Item_Size
++The amount of space each chunk uses. One item uses one chunk of the
++appropriate size.
++.TP
++.B Max_age
++Age of the oldest item in the LRU.
++.TP
++.B Pages
++Total number of pages allocated to the slab class.
++.TP
++.B Count
++Number of items presently stored in this class. Expired items are not
++automatically excluded.
++.TP
++.B Full?
++Yes if there are no free chunks at the end of the last allocated page.
++.TP
++.B Evicted
++Number of times an item had to be evicted from the LRU before it expired.
++.TP
++.B Evict_Time
++Seconds since the last access for the most recent item evicted from this
++class.
++.TP
++.B OOM
++Number of times the underlying slab class was unable to store a new item.
++.RE
++
++.TP
++.B stats
++Print general-purpose statistics of the daemon. Each line contains the name of
++the statistic and its value.
++.TP
++.B dump
++Make a partial dump of the cache written in the add statements of the
++memcached protocol.
++
++.SH SEE ALSO
++.BR memcached (1),
++.br
++.B http://www.memcached.org
++
++.SH AUTHOR
++The memcached-tool script was written by Brad Fitzpatrick
++.B <brad@danga.com>
+-- 
+1.8.4.2
+
