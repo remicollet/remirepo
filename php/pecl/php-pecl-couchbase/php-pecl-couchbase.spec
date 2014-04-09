@@ -15,10 +15,18 @@
 %global pecl_name couchbase
 %global with_zts  0%{?__ztsphp:1}
 
+%if "%{php_version}" < "5.6"
+# After igbinary
+%global ini_name  z-%{pecl_name}.ini
+%else
+# After 40-igbinary
+%global ini_name  50-%{pecl_name}.ini
+%endif
+
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase
 Version:       1.2.1
-Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -118,12 +126,12 @@ rm -f */modules/{json,igbinary}.so
 
 # Install the NTS stuff
 make install -C NTS INSTALL_ROOT=%{buildroot}
-install -D -m 644 NTS/example/%{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
+install -D -m 644 NTS/example/%{pecl_name}.ini %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install the ZTS stuff
 %if %{with_zts}
 make install -C ZTS INSTALL_ROOT=%{buildroot}
-install -D -m 644 ZTS/example/%{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+install -D -m 644 ZTS/example/%{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the package XML file
@@ -172,17 +180,20 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-4
+- add numerical prefix to extension configuration file
+
 * Sun Mar 16 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
 - install doc in pecl_docdir
 
