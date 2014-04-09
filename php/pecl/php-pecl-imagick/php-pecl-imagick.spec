@@ -15,6 +15,11 @@
 %global pecl_name   imagick
 %global prever      RC1
 %global with_zts    0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name  %{pecl_name}.ini
+%else
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 # We don't really rely on upstream ABI
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
@@ -22,7 +27,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?scl_prefix}php-pecl-imagick
 Version:       3.2.0
-Release:       0.4.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.5.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -118,7 +123,7 @@ if test "x${extver}" != "x%{version}%{?prever}"; then
 fi
 cd ..
 
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
 
@@ -158,14 +163,14 @@ rm -rf %{buildroot}
 make install INSTALL_ROOT=%{buildroot} -C NTS
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -p -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 make install INSTALL_ROOT=%{buildroot} -C ZTS
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -237,11 +242,11 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
@@ -255,6 +260,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.5.RC1
+- add numerical prefix to extension configuration file
+
 * Wed Mar 19 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.4.RC1
 - allow SCL build
 

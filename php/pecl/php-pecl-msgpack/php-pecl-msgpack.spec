@@ -13,11 +13,16 @@
 
 %global pecl_name   msgpack
 %global with_zts    0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name  %{pecl_name}.ini
+%else
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 Summary:       API for communicating with MessagePack serialization
 Name:          %{?scl_prefix}php-pecl-msgpack
 Version:       0.5.5
-Release:       6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
@@ -120,7 +125,7 @@ cp -pr NTS ZTS
 %endif
 
 # Drop in the bit of configuration
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable MessagePack extension module
 extension = %{pecl_name}.so
 
@@ -150,12 +155,12 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 # Install the ZTS stuff
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the package XML file
@@ -210,11 +215,11 @@ rm -rf %{buildroot}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
@@ -230,6 +235,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 0.5.5-7
+- add numerical prefix to extension configuration file
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 0.5.5-6
 - allow SCL build
 

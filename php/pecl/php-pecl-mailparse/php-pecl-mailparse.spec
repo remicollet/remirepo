@@ -15,11 +15,18 @@
 
 %global pecl_name mailparse
 %global with_zts  0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+# After mbstring
+%global ini_name  z-%{pecl_name}.ini
+%else
+# After 20-mbstring
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      %{?scl_prefix}php-pecl-mailparse
 Version:   2.1.6
-Release:   6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:   7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
@@ -87,7 +94,7 @@ if test "x${extver}" != "x%{version}"; then
 fi
 cd ..
 
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable mailparse extension module
 extension = mailparse.so
 
@@ -120,12 +127,12 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 # Drop in the bit of configuration
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
+install -Dpm 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 # Drop in the bit of configuration
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install XML package description
@@ -193,17 +200,20 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 # We prefix the config file with "z-" so that it loads after mbstring.ini
-%config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 2.1.6-7
+- add numerical prefix to extension configuration file
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.1.6-6
 - allow SCL build
 

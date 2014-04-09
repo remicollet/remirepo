@@ -15,6 +15,11 @@
 
 %global pecl_name gearman
 %global with_zts  0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name  %{pecl_name}.ini
+%else
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 %if 0%{?fedora} >= 12 && 0%{?fedora} <= 15
 %global extver 0.8.3
@@ -32,7 +37,7 @@
 
 Name:           %{?scl_prefix}php-pecl-gearman
 Version:        %{extver}
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP wrapper to libgearman
 
 Group:          Development/Tools
@@ -95,7 +100,7 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
-cat >%{pecl_name}.ini <<EOF
+cat >%{ini_name} <<EOF
 ; enable %{pecl_name} extension
 extension=%{pecl_name}.so
 EOF
@@ -130,11 +135,11 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -178,16 +183,19 @@ fi
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %endif
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-4
+- add numerical prefix to extension configuration file
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 1.1.2-3
 - allow SCL build
 

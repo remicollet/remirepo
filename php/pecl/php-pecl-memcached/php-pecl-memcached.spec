@@ -18,11 +18,18 @@
 %global pecl_name   memcached
 #global prever      RC1
 #global intver      rc1
+%if "%{php_version}" < "5.6"
+# After igbinary, json, msgpack
+%global ini_name  z-%{pecl_name}.ini
+%else
+# After 40-igbinary, 40-json, 40-msgpack
+%global ini_name  50-%{pecl_name}.ini
+%endif
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -123,7 +130,7 @@ if test "x${extver}" != "x%{version}%{?intver}"; then
    exit 1
 fi
 
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 
@@ -144,7 +151,7 @@ extension=%{pecl_name}.so
 EOF
 
 # default options with description from upstream
-cat NTS/memcached.ini >>%{pecl_name}.ini
+cat NTS/memcached.ini >>%{ini_name}
 
 %if %{with_zts}
 cp -r NTS ZTS
@@ -188,7 +195,7 @@ make install -C NTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 # rename to z-memcached to be load after msgpack
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -196,7 +203,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 # Install the ZTS extension
 %if %{with_zts}
 make install -C ZTS INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -284,16 +291,19 @@ exit $ret
 %doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-3
+- add numerical prefix to extension configuration file
+
 * Wed Apr  2 2014  Remi Collet <remi@fedoraproject.org> - 2.2.0-2
 - add all ini options in configuration file (comments)
 
