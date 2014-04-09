@@ -16,12 +16,17 @@
 %global commit    c35d48f3d14794373b2ef89a6d79020bb7418d7f
 %global short     %(c=%{commit}; echo ${c:0:7})
 %global prever    -dev
+%if "%{php_version}" < "5.6"
+%global ini_name  %{extname}.ini
+%else
+%global ini_name  40-%{extname}.ini
+%endif
 
 Summary:        Replacement for the standard PHP serializer
 Name:           %{?scl_prefix}php-pecl-igbinary
 Version:        1.1.2
 %if 0%{?short:1}
-Release:        0.9.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.10.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
 %else
 Release:        2%{?dist}
@@ -127,7 +132,7 @@ cd ..
 cp -r %{extname}-%{version} %{extname}-%{version}-zts
 %endif
 
-cat <<EOF | tee %{extname}.ini
+cat <<EOF | tee %{ini_name}
 ; Enable %{extname} extension module
 extension=%{extname}.so
 
@@ -165,13 +170,13 @@ make install -C %{extname}-%{version} \
 
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-install -D -m 644 %{extname}.ini %{buildroot}%{php_inidir}/%{extname}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install the ZTS stuff
 %if %{with_zts}
 make install -C %{extname}-%{version}-zts \
      INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -240,12 +245,12 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{extname}
-%config(noreplace) %{php_inidir}/%{extname}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{extname}.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{extname}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{extname}.so
 %endif
 
@@ -261,6 +266,9 @@ fi
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.10.git3b8ab7e
+- add numerical prefix to extension configuration file
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 1.1.2-0.9.git3b8ab7e
 - fix SCL dependencies
 

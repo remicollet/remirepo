@@ -17,6 +17,12 @@
 %global ext_name     jsonc
 %endif
 
+%if "%{php_version}" < "5.6"
+%global ini_name  %{ext_name}.ini
+%else
+%global ini_name  40-%{ext_name}.ini
+%endif
+
 %if 0%{?fedora} < 19
 %global with_libjson 0
 %else
@@ -27,7 +33,7 @@
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
 Version:       1.3.4
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
@@ -110,7 +116,7 @@ if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
 fi
 cd ..
 
-cat << 'EOF' | tee %{ext_name}.ini
+cat << 'EOF' | tee %{ini_name}
 ; Enable %{ext_name} extension module
 %if "%{ext_name}" == "json"
 extension = %{pecl_name}.so
@@ -155,12 +161,12 @@ rm -rf %{buildroot}
 # Install the NTS stuff
 make -C %{proj_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install the ZTS stuff
 make -C %{proj_name}-zts \
      install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -209,8 +215,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{ext_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
 %{php_ztsextdir}/%{ext_name}.so
 %{pecl_xmldir}/%{name}.xml
@@ -231,6 +237,9 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-test first
 #
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-2
+- add numerical prefix to extension configuration file
+
 * Sat Feb 22 2014 Remi Collet <rcollet@redhat.com> - 1.3.4-1
 - release 1.3.4 (stable)
 - move documentation in pecl_docdir

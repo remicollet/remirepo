@@ -20,10 +20,17 @@
 #global gitver    %(c=%{commit}; echo ${c:0:7})
 #global prever    dev
 
+# XDebug should be loaded after opcache
+%if "%{php_version}" < "5.6"
+%global ini_name  %{pecl_name}.ini
+%else
+%global ini_name  15-%{pecl_name}.ini
+%endif
+
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.4
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
@@ -129,7 +136,9 @@ make %{?_smp_mflags}
 # Build debugclient
 pushd debugclient
 # buildconf required for aarch64 support
+%if 0%{?rhel} != 5
 ./buildconf
+%endif
 %configure --with-libedit
 make %{?_smp_mflags}
 popd
@@ -159,7 +168,7 @@ install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
 install -d %{buildroot}%{php_inidir}
-cat << 'EOF' | tee %{buildroot}%{php_inidir}/%{pecl_name}.ini
+cat << 'EOF' | tee %{buildroot}%{php_inidir}/%{ini_name}
 ; Enable xdebug extension module
 zend_extension=%{php_extdir}/%{pecl_name}.so
 
@@ -171,9 +180,13 @@ EOF
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -d %{buildroot}%{php_ztsinidir}
-cat << 'EOF' | tee %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+cat << 'EOF' | tee %{buildroot}%{php_ztsinidir}/%{ini_name}
 ; Enable xdebug extension module
+%if "%{php_version}" > "5.5"
+zend_extension=%{pecl_name}.so
+%else
 zend_extension=%{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 ; see http://xdebug.org/docs/all_settings
 EOF
@@ -217,18 +230,21 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{_bindir}/debugclient
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 2.2.4-3
+- add numerical prefix to extension configuration file
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.2.4-2
 - allow SCL build
 
