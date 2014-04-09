@@ -17,10 +17,17 @@
 %global proj_name pecl_http
 %global pecl_name http
 %global with_zts  0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+# after json hash iconv propro raphf
+%global ini_name  z-%{pecl_name}.ini
+%else
+# after 40-json 20-iconv 40-propro 40-raphf
+%global ini_name  50-%{pecl_name}.ini
+%endif
 
 Name:           %{?scl_prefix}php-pecl-http
 Version:        2.0.5
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -154,7 +161,7 @@ if test "x${extver}" != "x%{version}%{?prever}"; then
 fi
 cd ..
 
-cp %{SOURCE1} %{pecl_name}.ini
+cp %{SOURCE1} %{ini_name}
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -194,11 +201,11 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file (z-http.ini to be loaded after json)
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/z-%{pecl_name}.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/z-%{pecl_name}.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -252,12 +259,12 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{proj_name}
-%config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/z-%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
@@ -272,6 +279,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
+- add numerical prefix to extension configuration file
+
 * Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - use libevent v2 in SCL
