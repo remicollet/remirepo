@@ -113,7 +113,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201403261230
+%global snapdate      201404090430
 #global rcver         alpha3
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1905,7 +1905,8 @@ fi
 
 
 %changelog
-* Tue Apr  8 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.5.201403261230
+* Wed Apr  9 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.5.201404090430
+- new snapshot php5.6-201404090430
 - add numerical prefix to extension configuration files
 - prevent .user.ini files from being viewed by Web clients
 - load php directives only when mod_php is active
