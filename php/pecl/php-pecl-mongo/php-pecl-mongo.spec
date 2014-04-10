@@ -10,11 +10,18 @@
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%if "%{php_version}" < "5.6"
+# After json
+%global ini_name    %{pecl_name}.ini
+%else
+# After 40-json
+%global ini_name    50-%{pecl_name}.ini
+%endif
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
 Version:      1.5.1
-Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -52,11 +59,9 @@ Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 %endif
@@ -83,7 +88,7 @@ Documentation: http://php.net/mongo
 %setup -c -q
 
 mv %{gh_project}-%{gh_commit} NTS
-cp %{SOURCE1} .
+cp %{SOURCE1} %{ini_name}
 mv NTS/package.xml .
 
 cd NTS
@@ -124,14 +129,14 @@ rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
@@ -206,16 +211,19 @@ rm -rf data
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Thu Apr 10 2014 Remi Collet <remi@fedoraproject.org> - 1.5.1-2
+- add numerical prefix to extension configuration file
+
 * Sat Apr 05 2014 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
 - Update to 1.5.1 (stable)
 - mongo.native_long not allowed on 32bits
