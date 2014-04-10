@@ -32,8 +32,8 @@
 
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
-Version:       1.3.4
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       1.3.5
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
@@ -234,9 +234,12 @@ rm -rf %{buildroot}
 %endif
 
 #
-# Note to remi : remember to always build in remi-test first
+# Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Thu Apr 10 2014 Remi Collet <remi@fedoraproject.org> - 1.3.5-1
+- release 1.3.4 (stable) - security
+
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-2
 - add numerical prefix to extension configuration file
 
