@@ -113,14 +113,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201404090430
-#global rcver         alpha3
+#global snapdate      201404090430
+%global rcver         beta1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.5.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.6.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1905,6 +1905,9 @@ fi
 
 
 %changelog
+* Thu Apr 10 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.6.beta1
+- php 5.6.0beta1
+
 * Wed Apr  9 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.5.201404090430
 - new snapshot php5.6-201404090430
 - add numerical prefix to extension configuration files
