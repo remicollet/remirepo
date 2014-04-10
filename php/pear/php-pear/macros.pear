@@ -1,8 +1,8 @@
 #
 # Define full path to pear/pecl commands to be used in scriptlets:
 #
-%__pear %{_bindir}/pear
-%__pecl %{_bindir}/pecl
+%__pear @BINDIR@/pear
+%__pecl @BINDIR@/pecl
 
 #
 # Define PEAR directories used in php-pear-* spec files
@@ -26,8 +26,8 @@
 #
 # Define XML directories to store package registration information:
 #
-%pear_xmldir %{_localstatedir}/lib/pear/pkgxml
-%pecl_xmldir %{_localstatedir}/lib/pear/pkgxml
+%pear_xmldir @LIBDIR@/pear/pkgxml
+%pecl_xmldir @LIBDIR@/pear/pkgxml
 
 #
 # Define macros to be used in scriplets for php-pecl-* spec files:

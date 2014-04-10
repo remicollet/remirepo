@@ -12,10 +12,12 @@
 # Can't be run in mock / koji because PEAR is the first package
 %global with_tests       %{?_with_tests:1}%{!?_with_tests:0}
 
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 16%{?dist}.1
+Release: 25%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -35,6 +37,15 @@ Source21: http://pear.php.net/get/Archive_Tar-%{arctarver}.tgz
 Source22: http://pear.php.net/get/Console_Getopt-%{getoptver}.tgz
 Source23: http://pear.php.net/get/Structures_Graph-%{structver}.tgz
 Source24: http://pear.php.net/get/XML_Util-%{xmlutil}.tgz
+# Man pages
+# https://github.com/pear/pear-core/pull/14
+Source30: pear.1
+Source31: pecl.1
+Source32: peardev.1
+# https://github.com/pear/pear-core/pull/16
+Source33: pear.conf.5
+
+
 # From RHEL: ignore REST cache creation failures as non-root user (#747361)
 # TODO See https://github.com/pear/pear-core/commit/dfef86e05211d2abc7870209d69064d448ef53b3#PEAR/REST.php
 Patch0: php-pear-1.9.4-restcache.patch
@@ -55,14 +66,18 @@ Provides: php-pear(Structures_Graph) = %{structver}
 Provides: php-pear(XML_Util) = %{xmlutil}
 Obsoletes: php-pear-XML-Util < %{xmlutil}
 Provides:  php-pear-XML-Util = %{xmlutil}
+
+%if "%{?vendor}" == "Remi Collet"
 # From other third party
 Obsoletes: php53-pear
 Obsoletes: php53u-pear
-%if "%{php_version}" > "5.4"
-Obsoletes:     php54-pear
+Obsoletes: php54-pear
+%if "%{php_version}" > "5.5"
+Obsoletes: php55u-pear
 %endif
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pear
+Obsoletes: php56u-pear
+%endif
 %endif
 
 Requires:  php-cli
@@ -101,10 +116,14 @@ do
     [ -f package2.xml ] && mv package2.xml ${file%%-*}.xml \
                         || mv package.xml  ${file%%-*}.xml
 done
-cp %{SOURCE1} .
+cp %{SOURCE1} %{SOURCE30} %{SOURCE31} %{SOURCE32} %{SOURCE33} .
 
 # apply patches on used PEAR during install
 %patch1 -p0 -b .metadata
+
+sed -e 's:@BINDIR@:%{_bindir}:' \
+    -e 's:@LIBDIR@:%{_localstatedir}/lib:' \
+    %{SOURCE13} > macros.pear
 
 
 %build
@@ -129,7 +148,8 @@ install -d $RPM_BUILD_ROOT%{peardir} \
            $RPM_BUILD_ROOT%{_localstatedir}/cache/php-pear \
            $RPM_BUILD_ROOT%{_localstatedir}/www/html \
            $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml \
-           $RPM_BUILD_ROOT%{_sysconfdir}/rpm \
+           $RPM_BUILD_ROOT%{_docdir}/pecl \
+           $RPM_BUILD_ROOT%{_datadir}/tests/pecl \
            $RPM_BUILD_ROOT%{_sysconfdir}/pear
 
 export INSTALL_ROOT=$RPM_BUILD_ROOT
@@ -160,8 +180,8 @@ install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
 %{_bindir}/php -r "print_r(unserialize(substr(file_get_contents('$RPM_BUILD_ROOT%{_sysconfdir}/pear.conf'),17)));"
 
 
-install -m 644 -c %{SOURCE13} \
-           $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.pear     
+install -m 644 -D macros.pear \
+           $RPM_BUILD_ROOT%{macrosdir}/macros.pear
 
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
@@ -176,6 +196,12 @@ rm -rf $RPM_BUILD_ROOT/.depdb* $RPM_BUILD_ROOT/.lock $RPM_BUILD_ROOT/.channels $
 
 # Need for re-registrying XML_Util
 install -m 644 *.xml $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml
+
+# The man pages
+install -d $RPM_BUILD_ROOT%{_mandir}/man1
+install -p -m 644 pear.1 pecl.1 peardev.1 $RPM_BUILD_ROOT%{_mandir}/man1/
+install -d $RPM_BUILD_ROOT%{_mandir}/man5
+install -p -m 644 pear.conf.5 $RPM_BUILD_ROOT%{_mandir}/man5/
 
 
 %check
@@ -220,17 +246,42 @@ fi
 
 %post
 # force new value as pear.conf is (noreplace)
+current=$(%{_bindir}/pear config-get test_dir system)
+if [ "$current" != "%{_datadir}/tests/pear" ]; then
 %{_bindir}/pear config-set \
     test_dir %{_datadir}/tests/pear \
     system >/dev/null || :
+fi
 
+current=$(%{_bindir}/pear config-get data_dir system)
+if [ "$current" != "%{_datadir}/pear-data" ]; then
 %{_bindir}/pear config-set \
     data_dir %{_datadir}/pear-data \
     system >/dev/null || :
+fi
 
+current=$(%{_bindir}/pear config-get metadata_dir system)
+if [ "$current" != "%{metadir}" ]; then
 %{_bindir}/pear config-set \
     metadata_dir %{metadir} \
     system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get -c pecl doc_dir system)
+if [ "$current" != "%{_docdir}/pecl" ]; then
+%{_bindir}/pear config-set \
+    -c pecl \
+    doc_dir %{_docdir}/pecl \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get -c pecl test_dir system)
+if [ "$current" != "%{_datadir}/tests/pecl" ]; then
+%{_bindir}/pear config-set \
+    -c pecl \
+    test_dir %{_datadir}/tests/pecl \
+    system >/dev/null || :
+fi
 
 
 %triggerpostun -- php-pear-XML-Util
@@ -242,22 +293,65 @@ fi
 %files
 %defattr(-,root,root,-)
 %{peardir}
-%{metadir}
+%dir %{metadir}
+%{metadir}/.channels
+%verify(not mtime size md5) %{metadir}/.depdb
+%verify(not mtime)%{metadir}/.depdblock
+%verify(not mtime size md5)%{metadir}/.filemap
+%verify(not mtime)%{metadir}/.lock
+%{metadir}/.registry
+%{metadir}/pkgxml
 %{_bindir}/*
 %config(noreplace) %{_sysconfdir}/pear.conf
-%{_sysconfdir}/rpm/macros.pear
+%{macrosdir}/macros.pear
 %dir %{_localstatedir}/cache/php-pear
 %dir %{_localstatedir}/www/html
 %dir %{_sysconfdir}/pear
 %doc README* LICENSE*
 %dir %{_docdir}/pear
 %doc %{_docdir}/pear/*
+%dir %{_docdir}/pecl
 %dir %{_datadir}/tests
+%dir %{_datadir}/tests/pecl
 %{_datadir}/tests/pear
 %{_datadir}/pear-data
+%{_mandir}/man1/pear.1*
+%{_mandir}/man1/pecl.1*
+%{_mandir}/man1/peardev.1*
+%{_mandir}/man5/pear.conf.5*
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <rcollet@redhat.com> 1:1.9.4-25
+- only enable needed extensions for pear/pecl commands
+- fix typo in pear man page
+
+* Tue Feb 11 2014 Remi Collet <rcollet@redhat.com> 1:1.9.4-24
+- Expand path in macros.pear
+- Install macros to /usr/lib/rpm/macros.d where available
+
+* Tue Oct 15 2013 Remi Collet <rcollet@redhat.com> 1:1.9.4-23
+- set pecl test_dir to /usr/share/tests/pecl
+
+* Mon Oct 14 2013 Remi Collet <rcollet@redhat.com> 1:1.9.4-22
+- set pecl doc_dir to /usr/share/doc/pecl
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.9.4-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 10 2013 Remi Collet <rcollet@redhat.com> 1:1.9.4-20
+- add man page for pear.conf file
+
+* Tue Jun 18 2013 Remi Collet <rcollet@redhat.com> 1:1.9.4-19
+- add man pages for pear, peardev and pecl commands
+
+* Fri May  3 2013 Remi Collet <rcollet@redhat.com> 1:1.9.4-18
+- don't verify metadata file content
+
+* Thu Apr 25 2013 Remi Collet <rcollet@redhat.com> 1:1.9.4-17
+- improve post scriptlet to avoid updating pear.conf
+  when not needed
+
 * Wed Mar 20 2013 Remi Collet <remi@fedoraproject.org> 1:1.9.4-16
 - sync with rawhide
 
