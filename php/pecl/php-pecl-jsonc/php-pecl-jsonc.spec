@@ -33,11 +33,13 @@
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
 Version:       1.3.5
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
 Source0:       http://pecl.php.net/get/%{proj_name}-%{version}.tgz
+
+Patch0:        %{proj_name}-el5-32.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.4
@@ -107,6 +109,12 @@ Only used to be the best provider for php-json.
 %prep
 %setup -q -c 
 cd %{proj_name}-%{version}
+
+%ifarch i386
+%if 0%{?rhel} == 5
+%patch0 -p1 -b .el5
+%endif
+%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_JSON_VERSION/{s/.* "//;s/".*$//;p}' php_json.h )
@@ -183,6 +191,16 @@ done
 %check
 cd %{proj_name}-%{version}
 
+: Minimal load test for NTS extension
+%{__php} --no-php-ini \
+    --define extension=%{buildroot}%{php_extdir}/%{ext_name}.so \
+    -m | grep %{pecl_name}
+
+: Minimal load test for ZTS extension
+%{__ztsphp} --no-php-ini \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so \
+    -m | grep %{pecl_name}
+
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
 NO_INTERACTION=1 \
@@ -237,8 +255,11 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Thu Apr 10 2014 Remi Collet <remi@fedoraproject.org> - 1.3.5-1.1
+- missing __sync_val_compare_and_swap_4 in el5 i386
+
 * Thu Apr 10 2014 Remi Collet <remi@fedoraproject.org> - 1.3.5-1
-- release 1.3.4 (stable) - security
+- release 1.3.5 (stable) - security
 
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-2
 - add numerical prefix to extension configuration file
