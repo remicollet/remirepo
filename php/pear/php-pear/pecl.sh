@@ -1,8 +1,11 @@
 #!/bin/sh
+EXT="-d extension=posix.so"
+DIR=$(/usr/bin/php -r 'echo ini_get("extension_dir");')
+if [ -f $DIR/xml.so ] ; then
+   EXT="$EXT -d extension=xml.so"
+fi
 exec /usr/bin/php -C \
-    -n \
-    -d extension=posix.so \
-    -d extension=xml.so \
+    -n $EXT \
     -d include_path=/usr/share/pear \
     -d date.timezone=UTC \
     -d output_buffering=1 \

@@ -17,7 +17,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 25%{?dist}
+Release: 26%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -322,6 +322,9 @@ fi
 
 
 %changelog
+* Thu Apr 10 2014 Remi Collet <rcollet@redhat.com> 1:1.9.4-26
+- fix xml.so is shared only with php 5.5+
+
 * Wed Apr  9 2014 Remi Collet <rcollet@redhat.com> 1:1.9.4-25
 - only enable needed extensions for pear/pecl commands
 - fix typo in pear man page
@@ -381,7 +384,7 @@ fi
 - move data to /usr/share/pear-data
 - provides all package.xml
 
-* Tue Aug 15 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-10
+* Wed Aug 15 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-10
 - enforce test_dir on update
 
 * Mon Aug 13 2012 Remi Collet <remi@fedoraproject.org> 1:1.9.4-9

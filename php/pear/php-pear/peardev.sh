@@ -1,5 +1,5 @@
 #!/bin/sh
-exec /usr/bin/php -C -q \
+exec /usr/bin/php -C \
     -d memory_limit="-1" \
     -d include_path=/usr/share/pear \
     -d date.timezone=UTC \
