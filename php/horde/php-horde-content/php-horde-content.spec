@@ -146,7 +146,7 @@ fi
 
 
 %changelog
-* Sun Apr 13 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
+* Sun Apr 13 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
 - cleanups
 
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
