@@ -1,5 +1,13 @@
+# spec file for php-horde-content
+#
+# Copyright (c) 2012-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    content
 %global pear_channel pear.horde.org
 
@@ -10,7 +18,7 @@
 
 Name:           php-horde-content
 Version:        2.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Tagging application
 
 Group:          Development/Libraries
@@ -27,12 +35,10 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml, required
 Requires:       php(language) >= 5.3.0
-Requires:       php-date
 Requires:       php-gettext
 Requires:       php-json
-Requires:       php-pcre
-Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
@@ -50,10 +56,14 @@ Requires:       php-pear(%{pear_channel}/Horde_Rdo) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Rdo) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
-# Optional
+# From package.xml, pptional
 Requires:       php-pear(%{pear_channel}/Horde_Argv) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Argv) <  3.0.0
 # optional and implicitly required Horde_Controller, Horde_ElasticSearch
+# From phpcompatinfo report for version 2.0.3
+Requires:       php-date
+Requires:       php-pcre
+Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -136,6 +146,9 @@ fi
 
 
 %changelog
+* Sun Apr 13 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
+- cleanups
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 
