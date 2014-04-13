@@ -12,7 +12,7 @@
 
 Name:           php-pear-console-color2
 Version:        0.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Easily use ANSI console colors in your application
 
 Group:          Development/Libraries
@@ -32,12 +32,12 @@ Provides:       php-pear(%{pear_name}) = %{version}
 
 
 %description
-You can use Console_Color::convert to transform colorcodes like %r into
+You can use Console_Color::convert to transform colorcodes like %%r into
 ANSI control codes.
   <?php
-  include "Console/Color2.php"
+  include "Console/Color2.php";
   $console = new Console_Color2();
-  print $console->convert("%rHello World!%n");
+  print $console->convert("%%rHello World!%%n");
   ?>
 would print "Hello World" in red, for example.
 
@@ -89,10 +89,16 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Console
+# Console is own by required php-pear
+%{pear_phpdir}/Console/Color2.php
 
 
 
 %changelog
+* Sun Apr 13 2014 Remi Collet <remi@fedoraproject.org> - 0.1.2-2
+- fix from review #1066255
+- /usr/share/pear/Console is own by pear
+- fix description
+
 * Tue Feb 18 2014 Remi Collet <remi@fedoraproject.org> - 0.1.2-1
 - initial package, version 0.1.2 (alpha)
