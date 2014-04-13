@@ -13,7 +13,7 @@
 
 Name:           php-horde-horde
 Version:        5.1.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -39,20 +39,11 @@ Requires:       prototype-httpd
 Requires:       scriptaculous-httpd
 Requires:       syntaxhighlighter-httpd
 Requires:       ckeditor
-# PHP stuff
+# PHP stuff, from package.xml
 Requires:       php(language) >= 5.3.0
-Requires:       php-calendar
-Requires:       php-date
-Requires:       php-fileinfo
+Requires:       php-filter
 Requires:       php-gettext
 Requires:       php-hash
-Requires:       php-iconv
-Requires:       php-libxml
-Requires:       php-pcre
-Requires:       php-posix
-Requires:       php-session
-Requires:       php-soap
-Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
@@ -72,8 +63,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Feed) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Feed) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Form) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
@@ -123,13 +112,27 @@ Requires:       php-pear(Console_Getopt)
 Requires:       php-pear(Console_Table)
 Requires:       php-pear(Net_DNS2)
 Requires:       php-pear(Services_Weather)
+Requires:       php-pear(%{pear_channel}/Horde_Feed) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Feed) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) <  3.0.0
 # Optional but implicitly required
-#               Horde_Db, Horde_Feed, Horde_Oauth, Horde_SyncMl
+#               Horde_Db, Horde_Oauth, Horde_SyncMl
 # Optional but TODO
 #               Horde_Service_Facebook
 #               Horde_Service_Twitter
+# From phpcompatinfo report for version 5.1.6
+Requires:       php-calendar
+Requires:       php-date
+Requires:       php-fileinfo
+Requires:       php-iconv
+Requires:       php-json
+Requires:       php-libxml
+Requires:       php-pcre
+Requires:       php-posix
+Requires:       php-session
+Requires:       php-soap
+Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Obsoletes:      horde < 5
@@ -243,6 +246,10 @@ fi
 
 
 %changelog
+* Sun Apr 13 2014 Remi Collet <remi@fedoraproject.org> - 5.1.6-2
+- comments from review #949038
+- missing dep on php-filter and php-json
+
 * Fri Mar 07 2014 Remi Collet <remi@fedoraproject.org> - 5.1.6-1
 - Update to 5.1.6
 - raide dependency: Horde_Core >= 2.11.0
