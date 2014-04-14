@@ -24,7 +24,7 @@
 
 Name:           ImageMagick-last
 Version:        %{VER}.%{Patchlevel}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -153,7 +153,7 @@ Group: Documentation
 ImageMagick documentation, this package contains usage (for the
 commandline tools) and API (for the libraries) documentation in html format.
 
-    %{_datadir}/doc/ImageMagick%{?incsuffixe}/www/
+    %{_datadir}/%{name}/doc/ImageMagick%{?incsuffixe}/www/
 
 Note this documentation can also be found on the ImageMagick website:
 http://www.imagemagick.org/
@@ -240,6 +240,7 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --without-dps \
            --without-included-ltdl --with-ltdl-include=%{_includedir} \
            --with-ltdl-lib=%{_libdir} \
+           --datadir=%{_datadir}/%{name} \
            --sysconfdir=%{_sysconfdir}/%{name}
 
 # Disable rpath
@@ -307,7 +308,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libMagickCore%{?libsuffixe}.so.2*
 %{_libdir}/libMagickWand%{?libsuffixe}.so.2*
 %{_libdir}/ImageMagick-%{VER}
-%{_datadir}/ImageMagick%{?incsuffixe}
+%{_datadir}/%{name}
 %if %{withdjvu}
 %exclude %{_libdir}/ImageMagick-%{VER}/modules-Q16/coders/djvu.*
 %endif
@@ -346,7 +347,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(-,root,root,-)
-%doc %{_datadir}/doc/ImageMagick%{?incsuffixe}
+%doc %{_datadir}/%{name}/doc/ImageMagick%{?incsuffixe}
 
 %files c++
 %defattr(-,root,root,-)
@@ -374,6 +375,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 14 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.0-2
+- use /usr/share/ImageMagick-last to avoid conflict (f20)
+
 * Mon Apr 14 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.0-1
 - update to 6.8.9-0
 
