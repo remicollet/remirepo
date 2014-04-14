@@ -9,7 +9,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php-pecl-imagick
 Version:       3.1.2
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -17,12 +17,16 @@ Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.3, php-pear
-%if 0%{?fedora} >= 20
-BuildRequires: ImageMagick-devel >= 6.7.5
+%if "%{?vendor}" == "Remi Collet"
+%if 0%{?fedora} > 20
+BuildRequires: ImageMagick-devel >= 6.8.9
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
-BuildRequires: ImageMagick-last-devel >= 6.7.5
+BuildRequires: ImageMagick-last-devel >= 6.8.9
 Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
+%endif
+%else
+BuildRequires: ImageMagick-devel >= 6.2.4
 %endif
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -36,18 +40,21 @@ Provides:      php-pecl(%{pecl_name}) = %{version}%{?prever}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 Conflicts:     php-pecl-gmagick
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 Obsoletes:     php53-pecl-imagick
 Obsoletes:     php53u-pecl-imagick
 Obsoletes:     php54-pecl-imagick
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-imagick
+Obsoletes:     php55u-pecl-imagick
+%endif
 %endif
 
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-
+%endif
 
 %description
 Imagick is a native php extension to create and modify images
@@ -208,6 +215,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 14 2014 Remi Collet <remi@fedoraproject.org> - 3.1.2-3
+- rebuild for ImageMagick
+
 * Sat Nov  2 2013 Remi Collet <rpms@famillecollet.com> - 3.1.2-2
 - rebuild against new ImageMagick-last version 6.8.7-4
 - install doc in pecl doc_dir

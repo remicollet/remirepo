@@ -27,7 +27,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?scl_prefix}php-pecl-imagick
 Version:       3.2.0
-Release:       0.5.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.6.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -38,11 +38,11 @@ BuildRequires: %{?scl_prefix}php-devel
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: pcre-devel
 %if "%{?vendor}" == "Remi Collet"
-%if 0%{?fedora} >= 20
-BuildRequires: ImageMagick-devel >= 6.7.5
+%if 0%{?fedora} > 20
+BuildRequires: ImageMagick-devel >= 6.8.9
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
-BuildRequires: ImageMagick-last-devel >= 6.7.5
+BuildRequires: ImageMagick-last-devel >= 6.8.9
 Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
 %endif
 %else
@@ -260,6 +260,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 14 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.6.RC1
+- rebuild for ImageMagick
+
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.5.RC1
 - add numerical prefix to extension configuration file
 
