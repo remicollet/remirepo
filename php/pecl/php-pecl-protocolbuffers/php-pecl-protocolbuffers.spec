@@ -21,15 +21,12 @@
 
 Summary:        Protocol buffers in PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.2.4
+Version:        0.2.5
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/chobie/php-protocolbuffers/pull/40
-Patch0:         %{pecl_name}-pr40.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
@@ -79,8 +76,6 @@ are compiled against the "old" format.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1 -b .pr40
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PROTOCOLBUFFERS_VERSION/{s/.* "//;s/".*$//;p}' php_protocolbuffers.h)
 if test "x${extver}" != "x%{version}"; then
@@ -206,6 +201,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 14 2014 Remi Collet <remi@fedoraproject.org> - 0.2.5-1
+- Update to 0.2.5
+
 * Mon Apr 14 2014 Remi Collet <remi@fedoraproject.org> - 0.2.3-1
 - Update to 0.2.4
 - add numerical prefix to extension configuration file
