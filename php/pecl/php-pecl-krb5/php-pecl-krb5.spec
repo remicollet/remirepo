@@ -6,6 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package         php-pecl-krb5}
+%{!?scl:         %global _root_includedir %{_includedir}}
+%{!?scl:         %global _root_bindir %{_bindir}}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir  %{_includedir}/php}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -15,9 +18,9 @@
 %global with_zts  0%{?__ztsphp:1}
 
 Summary:        Kerberos authentification extension
-Name:           php-pecl-%{pecl_name}
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -26,20 +29,34 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # http://svn.php.net/viewvc?view=revision&revision=333127
 Patch0:         krb5-build.patch
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  krb5-devel >= 1.8
 BuildRequires:  pkgconfig(com_err)
-BuildRequires:  php-devel > 5.2
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -61,7 +78,7 @@ Features:
 Summary:       Kerberos extension developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using the Kerberos extension.
@@ -103,7 +120,7 @@ export CFLAGS="%{optflags} $(pkg-config --cflags com_err)"
 peclbuild() {
 %configure \
     --with-krb5 \
-    --with-krb5config=%{_bindir}/krb5-config \
+    --with-krb5config=%{_root_bindir}/krb5-config \
     --with-krb5kadm \
     --with-php-config=$1
 make %{?_smp_mflags}
@@ -121,6 +138,8 @@ peclbuild %{_bindir}/zts-php-config
 
 
 %install
+rm -rf %{buildroot}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -170,7 +189,12 @@ cd ../ZTS
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -184,6 +208,7 @@ cd ../ZTS
 
 
 %files devel
+%defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 
 %{php_incldir}/ext/%{pecl_name}
@@ -194,9 +219,12 @@ cd ../ZTS
 
 
 %changelog
-* Wed Mar 26 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+* Wed Mar 26 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
 - upstream patch to fix SUCCESS definition
 - enable --with-krb5kadm with all PHP versions
+
+* Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 1.0.0-2
+- fix SCL dependencies
 
 * Sat Mar  1 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (stable)
