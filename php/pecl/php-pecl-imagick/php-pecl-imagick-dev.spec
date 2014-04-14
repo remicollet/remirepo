@@ -1,22 +1,43 @@
-%{!?__pecl:  %{expand: %%global __pecl %{_bindir}/pecl}}
+# spec file for php-pecl-imagick
+#
+# Copyright (c) 2008-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+
+%{?scl:          %scl_package        php-pecl-imagick}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name   imagick
-#global prever      b2
+%global prever      RC1
+%global with_zts    0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name  %{pecl_name}.ini
+%else
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 # We don't really rely on upstream ABI
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
 
 Summary:       Extension to create and modify images using ImageMagick
-Name:          php-pecl-imagick
-Version:       3.1.2
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Name:          %{?scl_prefix}php-pecl-imagick
+Version:       3.2.0
+Release:       0.5.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel >= 5.1.3, php-pear
+BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-pear
+BuildRequires: pcre-devel
+%if "%{?vendor}" == "Remi Collet"
 %if 0%{?fedora} >= 20
 BuildRequires: ImageMagick-devel >= 6.7.5
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
@@ -24,29 +45,39 @@ Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 BuildRequires: ImageMagick-last-devel >= 6.7.5
 Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
 %endif
+%else
+BuildRequires: ImageMagick-devel >= 6.2.4
+%endif
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:      php-%{pecl_name} = %{version}%{?prever}
-Provides:      php-%{pecl_name}%{?_isa} = %{version}%{?prever}
-Provides:      php-pecl(%{pecl_name}) = %{version}%{?prever}
-Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
-Conflicts:     php-pecl-gmagick
+Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
+Conflicts:     %{?scl_prefix}php-pecl-gmagick
 
 # Other third party repo stuff
+%if "%{?vendor}" == "Remi Collet"
 Obsoletes:     php53-pecl-imagick
 Obsoletes:     php53u-pecl-imagick
 Obsoletes:     php54-pecl-imagick
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55-pecl-imagick
+Obsoletes:     php55u-pecl-imagick
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-imagick
+%endif
 %endif
 
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -54,9 +85,19 @@ Imagick is a native php extension to create and modify images
 using the ImageMagick API.
 
 
+%package devel
+Summary:       %{pecl_name} extension developer files (header)
+Group:         Development/Libraries
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
+
+%description devel
+These are the files needed to compile programs using %{pecl_name} extension.
+
+
 %prep
 echo TARGET is %{name}-%{version}-%{release}
-%setup -q -c 
+%setup -q -c
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 
@@ -67,9 +108,6 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 sed -e '/anonymous_pro_minus.ttf/d' \
     -e '/015-imagickdrawsetresolution.phpt/d' \
     -e '/OFL.txt/d' \
-    -e '/INSTALL/d' \
-    -e '/d41d8cd98f00b204e9800998ecf8427e/d' \
-    -e '/name="tests/s/role="doc"/role="test"/' \
     -i package.xml
 
 if grep '\.ttf' package.xml
@@ -85,7 +123,7 @@ if test "x${extver}" != "x%{version}%{?prever}"; then
 fi
 cd ..
 
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
 
@@ -98,41 +136,47 @@ extension = %{pecl_name}.so
 ;imagick.progress_monitor=0
 EOF
 
+%if %{with_zts}
 cp -r NTS ZTS
+%endif
 
 
 %build
-cd ZTS
+: Standard NTS build
+cd NTS
+%{_bindir}/phpize
+%configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/php-config
+make %{?_smp_mflags}
+
+%if %{with_zts}
+cd ../ZTS
 : ZTS build
 %{_bindir}/zts-phpize
 %configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-
-: Standard NTS build
-cd ../NTS
-%{_bindir}/phpize
-%configure --with-imagick=%{prefix} --with-php-config=%{_bindir}/php-config
-make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 
 make install INSTALL_ROOT=%{buildroot} -C NTS
-make install INSTALL_ROOT=%{buildroot} -C ZTS
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
-mkdir -p %{buildroot}%{pecl_xmldir}
-install -pm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -p -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
+%if %{with_zts}
+make install INSTALL_ROOT=%{buildroot} -C ZTS
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
+%endif
 
 # Test & Documentation
-#for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-#do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-#done
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -174,6 +218,7 @@ then
   exit 1
 fi
 
+%if %{with_zts}
 : simple module load test for ZTS extension
 cd ../ZTS
 %{__ztsphp} --no-php-ini \
@@ -187,6 +232,7 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
     -n -q \
     -d extension_dir=%{buildroot}%{php_ztsextdir} \
     -d extension=%{pecl_name}.so
+%endif
 
 
 %clean
@@ -194,20 +240,39 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-#doc %{pecl_testdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{php_ztsextdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
-# should be in devel
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
+%{php_ztsextdir}/%{pecl_name}.so
+%endif
+
+%files devel
+%defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
+%endif
 
 
 %changelog
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.5.RC1
+- add numerical prefix to extension configuration file
+
+* Wed Mar 19 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.4.RC1
+- allow SCL build
+
+* Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.3.RC1
+- cleanups for Copr
+
+* Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.2.RC1
+- Update to 3.2.0RC1 (beta)
+- add devel sub-package
+
 * Sat Nov  2 2013 Remi Collet <rpms@famillecollet.com> - 3.1.2-2
 - rebuild against new ImageMagick-last version 6.8.7-4
 - install doc in pecl doc_dir

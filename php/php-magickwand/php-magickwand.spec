@@ -20,10 +20,16 @@
 # We don't really rely on upstream ABI
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
 
+%if "%{php_version}" < "5.6"
+%global ini_name    %{pecl_name}.ini
+%else
+%global ini_name    40-%{pecl_name}.ini
+%endif
+
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -41,7 +47,7 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
 %if "%{?vendor}" == "Remi Collet"
 # Ensure we use the more recent version from remi repo
-%if 0%{?fedora} >= 20
+%if 0%{?fedora} > 20
 BuildRequires: ImageMagick-devel >= 6.8.2
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
@@ -66,7 +72,7 @@ BuildRequires: ImageMagick-devel >= 6.8.2
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %endif
 
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
@@ -120,8 +126,8 @@ rm -rf %{buildroot}
 make -C MagickWandForPHP-%{mainversion}     install-modules INSTALL_ROOT=%{buildroot}
 make -C MagickWandForPHP-%{mainversion}-zts install-modules INSTALL_ROOT=%{buildroot}
 
-install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{ini_name}
+install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %check
@@ -144,13 +150,17 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc MagickWandForPHP-%{mainversion}/{AUTHOR,ChangeLog,CREDITS,LICENSE,README,TODO}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{php_ztsextdir}/%{pecl_name}.so
 
 
 %changelog
+* Mon Apr 14 2014 Remi Collet <rpms@famillecollet.com> - 1.0.9.2-7
+- add numerical prefix to extension configuration file
+- rebuild for ImageMagick
+
 * Wed Mar 26 2014 Remi Collet <rpms@famillecollet.com> - 1.0.9.2-6
 - allow SCL build
 
