@@ -1,5 +1,5 @@
-%global VER        6.8.7
-%global Patchlevel 4
+%global VER        6.8.9
+%global Patchlevel 0
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -304,8 +304,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc ChangeLog
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
-%{_libdir}/libMagickCore%{?libsuffixe}.so.1*
-%{_libdir}/libMagickWand%{?libsuffixe}.so.1*
+%{_libdir}/libMagickCore%{?libsuffixe}.so.2*
+%{_libdir}/libMagickWand%{?libsuffixe}.so.2*
 %{_libdir}/ImageMagick-%{VER}
 %{_datadir}/ImageMagick%{?incsuffixe}
 %if %{withdjvu}
@@ -374,6 +374,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 14 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.0-1
+- update to 6.8.9-0
+
 * Sat Nov 02 2013 Remi Collet <RPMS@FamilleCollet.com> - 6.8.7.4-2
 - update to 6.8.7-4
 - enable webp support in EL
