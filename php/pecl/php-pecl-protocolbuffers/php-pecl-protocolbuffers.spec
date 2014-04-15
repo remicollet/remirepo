@@ -14,14 +14,14 @@
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name protocolbuffers
 %if "%{php_version}" < "5.6"
-%global ini_name    %{pecl_name}.ini
+%global ini_name  %{pecl_name}.ini
 %else
-%global ini_name    40-%{pecl_name}.ini
+%global ini_name  40-%{pecl_name}.ini
 %endif
 
 Summary:        Protocol buffers in PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.2.5
+Version:        0.2.6
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -76,6 +76,8 @@ are compiled against the "old" format.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+sed -e '/PHP_PROTOCOLBUFFERS_VERSION/s/0.2.5/0.2.6/' -i php_protocolbuffers.h
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PROTOCOLBUFFERS_VERSION/{s/.* "//;s/".*$//;p}' php_protocolbuffers.h)
 if test "x${extver}" != "x%{version}"; then
@@ -201,11 +203,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 15 2014 Remi Collet <remi@fedoraproject.org> - 0.2.6-1
+- Update to 0.2.6 (alpha)
+
 * Mon Apr 14 2014 Remi Collet <remi@fedoraproject.org> - 0.2.5-1
-- Update to 0.2.5
+- Update to 0.2.5 (alpha)
 
 * Mon Apr 14 2014 Remi Collet <remi@fedoraproject.org> - 0.2.3-1
-- Update to 0.2.4
+- Update to 0.2.4 (alpha)
 - add numerical prefix to extension configuration file
 - open https://github.com/chobie/php-protocolbuffers/pull/40
 
