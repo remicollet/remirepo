@@ -36,14 +36,14 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(PEAR) >= 1.7.0
+
+# Web stuff
+Requires:       mod_php
+Requires:       httpd
+# From package.xml required
 Requires:       php(language) >= 5.3.0
-Requires:       php-date
 Requires:       php-gettext
-Requires:       php-json
-Requires:       php-pcre
-Requires:       php-session
-Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/content) >= 2.0.3
@@ -95,6 +95,12 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # Optional and implicitly required: Horde_Db
+# From pĥpcompatinfo report for version 4.1.4
+Requires:       php-date
+Requires:       php-json
+Requires:       php-pcre
+Requires:       php-session
+Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
