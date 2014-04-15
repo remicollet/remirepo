@@ -1,9 +1,20 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-wicked
+#
+# Copyright (c) 2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    wicked
 %global pear_channel pear.horde.org
+# disable as not ready
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-wicked
-Version:        1.0.2
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Wiki application
 
@@ -14,94 +25,166 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  gettext
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+%if %{with_tests}
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-pear(PEAR) >= 1.7.0
+
+# From package.xml, required
 Requires:       php(language) >= 5.3.0
-Requires:       php-date
 Requires:       php-gettext
+Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
+Requires:       php-pear(%{pear_channel}/horde) <  6.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Form) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Lock) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Lock) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Notification) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Prefs) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Rpc) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Rpc) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Diff) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Diff) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
+Requires:       php-pear(Text_Wiki) >= 1.2.0
+Requires:       php-pear(Text_Wiki) <  2.0.0
+# From package.xml, optional
+Requires:       php-pear(Text_Figlet)
+# From phpcompatinfo report for version 2.0.1
+Requires:       php-date
 Requires:       php-pcre
 Requires:       php-spl
-Requires:       php-pear(%{pear_channel}/horde) >= 4.0.0
-Requires:       php-pear(%{pear_channel}/horde) < 5.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Auth) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Autoloader) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Db) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Db) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Exception) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Form) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Form) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Http) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Http) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Lock) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Lock) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mail) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Notification) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Perms) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Prefs) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Rpc) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Rpc) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Text_Diff) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Text_Diff) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Url) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Url) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Util) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Util) < 2.0.0alpha1
-Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Vfs) < 2.0.0alpha1
-Requires:       php-pear(Text_Wiki) >= 1.2.0
-Requires:       php-pear(Text_Wiki) < 2.0.0alpha1
+
 Provides:       php-pear(%{pear_channel}/wicked) = %{version}
-Requires:       php-channel(%{pear_channel})
+Obsoletes:      wicked < 2
+Provides:       wicked = %{version}
+
 
 %description
 Wicked is a wiki application for Horde.
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
+
+cat <<EOF | tee httpd.conf
+<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale)>
+     Deny from all
+</DirectoryMatch>
+
+<Directory %{pear_hordedir}/%{pear_name}>
+  <IfModule mod_rewrite.c>
+    RewriteEngine On
+	RewriteCond   %%{REQUEST_FILENAME}  !-d
+	RewriteCond   %%{REQUEST_FILENAME}  !-f
+	RewriteRule   ^([A-Za-z0-9].*)$ display.php?page=$1 [QSA]
+  </IfModule>
+</Directory>
+EOF
 
 cd %{pear_name}-%{version}
+# Don't install .po and .pot files
+# Remove checksum for .mo, as we regenerate them
+sed -e '/%{pear_name}.po/d' \
+    -e '/htaccess/d' \
+    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    ../package.xml >%{name}.xml
 
 
 %build
 cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
+# Regenerate the locales
+for po in $(find locale -name \*.po)
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
+
 
 %install
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+rm -rf %{buildroot}
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+# Install Apache configuration
+install -Dpm 0644 ../httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+
+# Move configuration to /etc
+mkdir -p %{buildroot}%{_sysconfdir}/horde
+mv %{buildroot}%{pear_hordedir}/%{pear_name}/config \
+   %{buildroot}%{_sysconfdir}/horde/%{pear_name}
+ln -s %{_sysconfdir}/horde/%{pear_name} %{buildroot}%{pear_hordedir}/%{pear_name}/config
+
+# Locales
+for loc in locale/?? locale/??_??
+do
+    lang=$(basename $loc)
+    echo "%%lang(${lang%_*}) %{pear_hordedir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
+
+# fix shebang and include
+sed -e 's:#!/usr/bin/env php:#!%{_bindir}/php:' \
+    -e "s:__DIR__ . '/../:'%{pear_hordedir}/%{pear_name}/:" \
+    -i  %{buildroot}%{_bindir}/wicke*
+
+
+%check
+%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/Wicked
+phpunit\
+    -d include_path=$src/lib:.:%{pear_phpdir} \
+    -d date.timezone=UTC \
+    .
+%endif
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -115,19 +198,30 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
-
-
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%attr(0770,apache,apache) %dir %{_sysconfdir}/horde/%{pear_name}
+%attr(0640,apache,apache) %config %{_sysconfdir}/horde/%{pear_name}/*.dist
+%attr(0660,apache,apache) %config %{_sysconfdir}/horde/%{pear_name}/*.xml
 %{pear_xmldir}/%{name}.xml
-# Expand this as needed to avoid owning dirs owned by our dependencies
-# and to avoid unowned dirs
-
-
 %{pear_testdir}/wicked
 %{_bindir}/wicked
 %{_bindir}/wicked-convert-to-utf8
 %{_bindir}/wicked-mail-filter
+%dir %{pear_hordedir}/%{pear_name}
+%dir %{pear_hordedir}/%{pear_name}/locale
+%{pear_hordedir}/%{pear_name}/*.php
+%{pear_hordedir}/%{pear_name}/config
+%{pear_hordedir}/%{pear_name}/lib
+%{pear_hordedir}/%{pear_name}/data
+%{pear_hordedir}/%{pear_name}/js
+%{pear_hordedir}/%{pear_name}/migration
+%{pear_hordedir}/%{pear_name}/templates
+%{pear_hordedir}/%{pear_name}/themes
+
 
 %changelog
+* Tue Apr 15 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Initial package, version 2.0.1
