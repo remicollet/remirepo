@@ -24,7 +24,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
@@ -36,20 +36,15 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Itip) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
-Requires:       php-common >= 5.3.0
-# extensions required from package.xml
+# Web stuff
+Requires:       mod_php
+Requires:       httpd
+# From package.xml required
+Requires:       php(language) >= 5.3.0
 Requires:       php-dom
 Requires:       php-gettext
 Requires:       php-hash
 Requires:       php-json
-# extensions required from phpci analysis
-Requires:       php-date
-Requires:       php-ereg
-Requires:       php-filter
-Requires:       php-openssl
-Requires:       php-pcre
-Requires:       php-posix
-Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
@@ -125,10 +120,18 @@ Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
-# Optional
+# From package.xml, optional
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) >= 2.0.0
 # Optional and implicitly required:
 #     Horde_Vfs, Horde_History, Horde_Http, Horde_Stream_Filter
+# From phpcompatinfo report for version 6.1.7
+Requires:       php-date
+Requires:       php-ereg
+Requires:       php-filter
+Requires:       php-openssl
+Requires:       php-pcre
+Requires:       php-posix
+Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Obsoletes:      imp < 5
