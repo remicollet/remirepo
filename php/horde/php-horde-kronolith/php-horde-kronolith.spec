@@ -1,4 +1,4 @@
-# spec file for php-horde-ingo
+# spec file for php-horde-kronolith
 #
 # Copyright (c) 2012-2014 Remi Collet
 # License: CC-BY-SA
@@ -272,17 +272,17 @@ fi
 * Tue Feb 12 2013 Remi Collet <remi@fedoraproject.org> - 4.0.4-1
 - Update to 4.0.4
 
-* Sat Jan 12 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.3-2
+* Sat Jan 12 2013 Remi Collet <remi@fedoraproject.org> - 4.0.3-2
 - obsoletes/provides kronolith
 
-* Thu Jan 10 2013 Remi Collet <RPMS@FamilleCollet.com> - 4.0.3-1
-- Update to 4.0.3 for remi repo
+* Thu Jan 10 2013 Remi Collet <remi@fedoraproject.org> - 4.0.3-1
+- Update to 4.0.3
 
-* Tue Nov 27 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.2-1
-- Update to 4.0.2 for remi repo
+* Tue Nov 27 2012 Remi Collet <remi@fedoraproject.org> - 4.0.2-1
+- Update to 4.0.2
 
-* Fri Nov 23 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.1-2
+* Fri Nov 23 2012 Remi Collet <remi@fedoraproject.org> - 4.0.1-2
 - fix httpd configuration
 
-* Thu Nov 22 2012 Remi Collet <RPMS@FamilleCollet.com> - 4.0.1-1
+* Thu Nov 22 2012 Remi Collet <remi@fedoraproject.org> - 4.0.1-1
 - Initial package
