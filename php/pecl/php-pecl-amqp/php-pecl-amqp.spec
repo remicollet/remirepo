@@ -15,7 +15,6 @@
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   amqp
-
 %if "%{php_version}" < "5.6"
 %global ini_name    %{pecl_name}.ini
 %else
@@ -81,8 +80,6 @@ from any queue.
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
-sed -e '/PHP_AMQP_VERSION/s/1.4.0beta1/%{version}%{?prever}/' -i php_amqp.h
-
 # Upstream often forget to change this
 extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -122,6 +119,12 @@ extension = %{pecl_name}.so
 
 ; The virtual host on the broker to which to connect.
 ;amqp.vhost = /
+
+; Timeout
+;amqp.timeout=
+;amqp.read_timeout=0
+;amqp.write_timeout=0
+;amqp.connect_timeout=0
 EOF
 
 %if %{with_zts}
