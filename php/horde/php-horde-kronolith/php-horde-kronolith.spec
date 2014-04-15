@@ -27,7 +27,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
@@ -35,17 +35,15 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.3.0
-Requires:       php-date
+
+# Web stuff
+Requires:       mod_php
+Requires:       httpd
+# From package.xml required
+Requires:       php(language) >= 5.3.0
 Requires:       php-gettext
-Requires:       php-intl
 Requires:       php-json
-Requires:       php-libxml
-Requires:       php-pcre
-Requires:       php-session
 Requires:       php-simplexml
-Requires:       php-spl
-Requires:       php-xmlwriter
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pear(Date)
 Requires:       php-pear(Date_Holidays) >= 0.21.0
@@ -113,10 +111,18 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
-# Optional
+# Fro mpackage.xml, optional
 Requires:       php-pear(%{pear_channel}/nag) >= 4.0.0
 # Optional and implicitly required: Horde_Db
 # TODO pear.horde.org/timeobjects >= 2.0.0
+# From phpcompatinfo report for version 4.1.5
+Requires:       php-date
+Requires:       php-intl
+Requires:       php-libxml
+Requires:       php-pcre
+Requires:       php-session
+Requires:       php-spl
+Requires:       php-xmlwriter
 
 Provides:       php-pear(%{pear_channel}/kronolith) = %{version}
 Obsoletes:      kronolith < 4
