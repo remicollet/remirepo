@@ -19,10 +19,15 @@
 %global with_zts   0%{?__ztsphp:1}
 # Result vary too much with cairo version
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
+%if "%{php_version}" < "5.6"
+%global ini_name   %{pecl_name}.ini
+%else
+%global ini_name   40-%{pecl_name}.ini
+%endif
 
 Name:           %{?scl_prefix}php-pecl-cairo
 Version:        0.3.2
-Release:        7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
@@ -96,7 +101,7 @@ if test "x${extver}" != "x%{version}%{?versuffix}"; then
    exit 1
 fi
 
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
@@ -127,14 +132,14 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Test & Documentation
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
@@ -200,12 +205,12 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{proj_name}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %endif
 
 %files devel
@@ -217,6 +222,9 @@ fi
 %endif
 
 %changelog
+* Tue Apr 15 2014 Remi Collet <remi@fedoraproject.org> - 0.3.2-8
+- add numerical prefix to extension configuration file
+
 * Wed Mar 19 2014 Remi Collet <remi@fedoraproject.org> - 0.3.2-7
 - allow SCL build
 
