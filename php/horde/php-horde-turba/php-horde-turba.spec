@@ -29,21 +29,23 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.3.0
-Requires:       php-pear(PEAR) >= 1.7.0
+
+# Web stuff
+Requires:       mod_php
+Requires:       httpd
+# From package.xml required
+Requires:       php(language) >= 5.3.0
 Requires:       php-gettext
-Requires:       php-date
 Requires:       php-hash
 Requires:       php-json
-Requires:       php-pcre
-Requires:       php-spl
+Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
@@ -94,6 +96,10 @@ Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 #    Horde_Db, Horde_Imsp, Horde_Ldap
 #    Horde_Kolab_Format, Horde_Kolab_Storage
 # Not yet available Horde_Service_Facebook
+# From phpcompatinfo report for version 4.1.4
+Requires:       php-date
+Requires:       php-pcre
+Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/turba) = %{version}
 Obsoletes:      turba < 4
