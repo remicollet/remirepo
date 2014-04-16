@@ -11,14 +11,15 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts  0%{?__ztsphp:1}
-%global pecl_name Judy
-%global  ext_name judy
+%global with_zts   0%{?__ztsphp:1}
+%global pecl_name  Judy
+%global  ext_name  judy
+%global ini_name   %{ext_name}.ini
 
 Summary:        PHP Judy implements sparse dynamic arrays
 Name:           php-pecl-judy
 Version:        1.0.2
-Release:        1
+Release:        2%{?dist}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -90,7 +91,7 @@ cp -pr NTS ZTS
 %endif
 
 # Create configuration file
-cat > %{pecl_name}.ini << 'EOF'
+cat << 'EOF' | tee %{ini_name}
 ; Enable %{pecl_name} extension module
 extension=%{ext_name}.so
 EOF
@@ -120,7 +121,7 @@ make %{?_smp_mflags}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -128,7 +129,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -187,11 +188,11 @@ REPORT_EXIT_STATUS=1 \
 %exclude %{pecl_docdir}/%{pecl_name}/examples
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{php_inidir}/%{ext_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{ext_name}.so
 %endif
 
@@ -207,6 +208,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- use %%{ini_name} macro
+
 * Sun Nov 03 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2 (stable)
 
