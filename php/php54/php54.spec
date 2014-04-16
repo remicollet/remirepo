@@ -164,7 +164,9 @@ BuildRequires: libtool-ltdl-devel
 BuildRequires: libzip-devel >= 0.10
 %endif
 
-Obsoletes: php53, php53u, php54
+Obsoletes: php53, php53u
+# Avoid obsoleting php54 from RHSCL
+Obsoletes: php54 > 5.4
 Provides: php-zts = %{version}-%{release}
 Provides: php-zts%{?_isa} = %{version}-%{release}
 
