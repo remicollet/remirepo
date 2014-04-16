@@ -11,13 +11,18 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global pecl_name ncurses
-%global with_zts  0%{?__ztsphp:1}
+%global pecl_name  ncurses
+%global with_zts   0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name   %{pecl_name}.ini
+%else
+%global ini_name   40-%{pecl_name}.ini
+%endif
 
 Summary:      Terminal screen handling and optimization package
 Name:         %{?scl_prefix}php-pecl-ncurses
 Version:      1.0.2
-Release:      6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/ncurses
@@ -79,7 +84,7 @@ line.
 %prep 
 %setup -c -q
 
-cat >%{pecl_name}.ini << 'EOF'
+cat >%{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
@@ -118,11 +123,11 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -136,6 +141,10 @@ done
 
 %check
 cd NTS
+: Minimal load test for NTS extension
+%{__php} --no-php-ini \
+    --define extension=%{buildroot}/%{php_extdir}/%{pecl_name}.so \
+    --modules | grep -i %{pecl_name}
 
 TEST_PHP_EXECUTABLE=%{__php} \
 REPORT_EXIT_STATUS=1 \
@@ -147,6 +156,10 @@ NO_INTERACTION=1 \
 
 %if %{with_zts}
 cd ../ZTS
+: Minimal load test for ZTS extension
+%{__ztsphp} --no-php-ini \
+    --define extension=%{buildroot}/%{php_ztsextdir}/%{pecl_name}.so \
+    --modules | grep -i %{pecl_name}
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 REPORT_EXIT_STATUS=1 \
@@ -176,16 +189,19 @@ fi
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-7
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Sun Mar 23 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-6
 - allow SCL build
 

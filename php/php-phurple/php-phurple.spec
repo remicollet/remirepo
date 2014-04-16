@@ -18,11 +18,16 @@
 %global pecl_name  %{gh_project}
 #global gh_date    20131007
 %global with_zts   0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name   %{pecl_name}.ini
+%else
+%global ini_name   40-%{pecl_name}.ini
+%endif
 
 Name:           %{?scl_prefix}php-%{gh_project}
 Summary:        PHP bindings for libpurple
 Version:        0.6.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -38,7 +43,7 @@ BuildRequires:  %{?scl_prefix}php-devel
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
@@ -68,7 +73,7 @@ if test "x${extver}" != "x%{version}"; then
 fi
 cd ..
 
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable %{summary}
 extension = %{pecl_name}.so
 
@@ -104,12 +109,12 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 : Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 : Install the ZTS stuff
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 
@@ -136,16 +141,19 @@ rm -rf %{buildroot}
 %defattr(-, root, root, 0755)
 %doc NTS/{CREDITS,LICENSE,README.md,TODO}
 
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %endif
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 0.6.0-2
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Thu Jan  2 2014 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
 - update to 0.6.0 (alpha)
 - adapt for SCL

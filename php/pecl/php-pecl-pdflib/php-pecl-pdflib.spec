@@ -13,12 +13,17 @@
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name pdflib
 %global extname   pdf
+%if "%{php_version}" < "5.6"
+%global ini_name  %{extname}.ini
+%else
+%global ini_name  40-%{extname}.ini
+%endif
 
 Summary:        Package for generating PDF files
 Summary(fr):    Extension pour générer des fichiers PDF
 Name:           php-pecl-pdflib
 Version:        3.0.4
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
 Group:          Development/Languages
@@ -87,7 +92,7 @@ cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
 %endif
 
 # Create the config file
-cat > %{extname}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable PDFlib extension module
 extension=%{extname}.so
 EOF
@@ -113,14 +118,14 @@ rm -rf %{buildroot}
 make -C %{pecl_name}-%{version} install-modules INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -D -m 644 %{extname}.ini %{buildroot}%{php_inidir}/%{extname}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 make -C %{pecl_name}-zts        install-modules INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{extname}.ini %{buildroot}%{php_ztsinidir}/%{extname}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -161,17 +166,20 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{extname}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{extname}.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{extname}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{extname}.so
 %endif
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 3.0.4-2
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Thu Jan 16 2014 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
 - Update to 3.0.4 (stable)
 
