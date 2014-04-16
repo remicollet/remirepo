@@ -17,13 +17,13 @@
 # After sockets
 %global ini_name    %{pecl_name}.ini
 %else
-# After 20-ockets
+# After 20-sockets
 %global ini_name    40-%{pecl_name}.ini
 %endif
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.6.12
+Version:        1.7.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -211,6 +211,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
+- Update to 1.7.0
+
 * Sun Apr 13 2014 Remi Collet <remi@fedoraproject.org> - 1.6.12-1
 - Update to 1.6.12
 
