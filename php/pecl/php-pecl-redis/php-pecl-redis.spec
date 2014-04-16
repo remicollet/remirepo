@@ -14,11 +14,18 @@
 %global pecl_name   redis
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%if "%{php_version}" < "5.6"
+# after igbinary
+%global ini_name    %{pecl_name}.ini
+%else
+# after 40-igbinary
+%global ini_name    50-%{pecl_name}.ini
+%endif
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?scl_prefix}php-pecl-redis
 Version:       2.2.5
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -101,12 +108,17 @@ cp -pr nts zts
 %endif
 
 # Drop in the bit of configuration
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
 
 ; phpredis can be used to store PHP sessions. 
 ; To do this, uncomment and configure below
+
+; RPM note : save_handler and save_path are defined
+; for mod_php, in /etc/httpd/conf.d/php.conf
+; for php-fpm, in %{_sysconfdir}/php-fpm.d/*conf
+
 ;session.save_handler = %{pecl_name}
 ;session.save_path = "tcp://host1:6379?weight=1, tcp://host2:6379?weight=2&timeout=2.5, tcp://host3:6379?weight=2"
 EOF
@@ -139,12 +151,12 @@ rm -rf %{buildroot}
 
 # Install the NTS stuff
 make -C nts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 # Install the ZTS stuff
 make -C zts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the package XML file
@@ -239,15 +251,19 @@ rm -rf %{buildroot}
 %{pecl_xmldir}/%{name}.xml
 
 %{php_extdir}/%{pecl_name}.so
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %endif
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 2.2.5-3
+- add numerical prefix to extension configuration file (php 5.6)
+- add comment about session configuration
+
 * Thu Mar 20 2014 Remi Collet <rcollet@redhat.com> - 2.2.5-2
 - fix memory corruption with PHP 5.6
   https://github.com/nicolasff/phpredis/pull/447

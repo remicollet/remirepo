@@ -13,12 +13,17 @@
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name rrd
+%if "%{php_version}" < "5.6"
+%global ini_name  %{pecl_name}.ini
+%else
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 
 Summary:      PHP Bindings for rrdtool
 Name:         %{?scl_prefix}php-pecl-rrd
 Version:      1.1.3
-Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
@@ -72,7 +77,7 @@ system for time series data.
 
 mv %{pecl_name}-%{version} NTS
 
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
@@ -101,14 +106,14 @@ rm -rf %{buildroot}
 make install -C NTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 make install -C ZTS INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -171,17 +176,20 @@ fi
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-2
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Wed Jan 15 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3 (stable)
 

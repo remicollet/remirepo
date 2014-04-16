@@ -15,10 +15,15 @@
 
 %define pecl_name   sphinx
 %global with_zts    0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name    %{pecl_name}.ini
+%else
+%global ini_name    40-%{pecl_name}.ini
+%endif
 
 Name:           %{?scl_prefix}php-pecl-sphinx
 Version:        1.3.0
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
@@ -88,7 +93,7 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
@@ -136,12 +141,12 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 # Install the ZTS stuff
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -Dpm644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -170,16 +175,19 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-5
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Mon Mar 24 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-4
 - allow SCL build
 

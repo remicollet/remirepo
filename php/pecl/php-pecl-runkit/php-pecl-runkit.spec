@@ -18,13 +18,18 @@
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global pecl_name   runkit
 %global with_zts    0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name    %{pecl_name}.ini
+%else
+%global ini_name    40-%{pecl_name}.ini
+%endif
 
 Summary:          Mangle with user defined functions and classes
 Summary(ru):      Манипулирование пользовательскими функциями и классами
 Summary(pl):      Obróbka zdefiniowanych przez użytkownika funkcji i klas
 Name:             %{?scl_prefix}php-pecl-%{pecl_name}
 Version:          1.0.4
-Release:          0.6%{?gh_short:.git%{gh_short}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:          0.7%{?gh_short:.git%{gh_short}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:          PHP
 Group:            Development/Libraries
 # URL:            http://pecl.php.net/package/runkit/
@@ -104,7 +109,7 @@ cp -pr NTS ZTS
 %endif
 
 # Create the configuration file
-cat <<'EOF' > %{pecl_name}.ini
+cat <<'EOF' > %{ini_name}
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
@@ -134,14 +139,14 @@ rm -rf %{buildroot}
 make install -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -Dpm 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -Dpm 0664 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 make install -C ZTS install INSTALL_ROOT=%{buildroot}
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -202,15 +207,18 @@ rm -rf %{buildroot}
 %{pecl_xmldir}/%{name}.xml
 
 %{php_extdir}/%{pecl_name}.so
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %endif
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.7.git5e179e9
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 1.0.4-0.6.git5e179e9
 - allow SCL build
 

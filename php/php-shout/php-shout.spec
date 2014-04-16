@@ -1,6 +1,6 @@
 Name:           php-shout
 Version:        0.9.2
-Release:        15%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        16%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP module for communicating with Icecast servers
 
 Group:          Development/Languages
@@ -21,6 +21,12 @@ BuildRequires:  libshout-devel >= 2.1
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+
+%if "%{php_version}" < "5.6"
+%global ini_name    shout.ini
+%else
+%global ini_name    40-shout.ini
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -73,9 +79,9 @@ make -C phpShout-%{version} install INSTALL_ROOT=%{buildroot}
 make -C phpShout-zts        install INSTALL_ROOT=%{buildroot}
 
 install -D -p -m 0644 phpShout-%{version}/shout.ini \
-                      %{buildroot}%{php_inidir}/shout.ini
+                      %{buildroot}%{php_inidir}/%{ini_name}
 install -D -p -m 0644 phpShout-zts/shout.ini \
-                      %{buildroot}%{php_ztsinidir}/shout.ini
+                      %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %check
@@ -97,13 +103,16 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc phpShout-%{version}/{LICENSE,README,TODO}
-%config(noreplace) %{php_inidir}/shout.ini
-%config(noreplace) %{php_ztsinidir}/shout.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_extdir}/shout.so
 %{php_ztsextdir}/shout.so
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 0.9.2-16
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Tue Mar 18 2014  Remi Collet <remi@fedoraproject.org> - 0.9.2-15
 - cleanups
 
