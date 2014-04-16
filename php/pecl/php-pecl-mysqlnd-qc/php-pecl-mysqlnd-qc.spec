@@ -17,6 +17,13 @@
 %global pecl_name mysqlnd_qc
 %global prever    alpha
 %global with_zts  0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+# After sqlite3 mysqlnd
+%global ini_name  %{pecl_name}.ini
+%else
+# After 20-sqlite3, 20-mysqlnd
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 %if 0%{?fedora} < 9 && 0%{?rhel} < 6
 %global with_sqlite 0
@@ -38,7 +45,7 @@
 Summary:      A query cache plugin for mysqlnd
 Name:         %{?scl_prefix}php-pecl-mysqlnd-qc
 Version:      1.2.0
-Release:      4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/mysqlnd_qc
@@ -147,7 +154,7 @@ if test "x${extver}" != "x%{version}%{?prever:-}%{?prever}"; then
 fi
 cd ..
 
-cp %{SOURCE1} %{pecl_name}.ini
+cp %{SOURCE1} %{ini_name}
 sed -e 's:@DATADIR@:%{_datadir}:' \
     %{SOURCE2} >httpd.conf
 
@@ -198,14 +205,14 @@ rm -rf %{buildroot}
 make install -C NTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 make install -C ZTS INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the Apache configuration
@@ -267,11 +274,11 @@ cd ../ZTS
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
@@ -293,6 +300,9 @@ cd ../ZTS
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-5
+- add numerical prefix to extension configuration file
+
 * Sat Mar 22 2014  Remi Collet <remi@fedoraproject.org> - 1.2.0-4
 - add PHP 5.6 patch
 - allow SCL build
