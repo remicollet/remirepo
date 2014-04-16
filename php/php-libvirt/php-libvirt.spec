@@ -5,10 +5,15 @@
 
 %global  req_libvirt_version 0.6.2
 %global  extname             libvirt-php
+%if "%{php_version}" < "5.6"
+%global ini_name             %{extname}.ini
+%else
+%global ini_name             40-%{extname}.ini
+%endif
 
 Name:		%{?scl_prefix}php-libvirt
 Version:	0.4.8
-Release:	1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:	2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:	PHP language binding for Libvirt
 
 Group:		Development/Libraries
@@ -76,6 +81,11 @@ make install DESTDIR=%{buildroot}
 install -pm 644 COPYING %{buildroot}%{_pkgdocdir}
 chmod +x %{buildroot}%{php_extdir}/%{extname}.so
 
+if [ "%{extname}.ini" != "%{ini_name}" ]; then
+  mv %{buildroot}%{php_inidir}/%{extname}.ini \
+     %{buildroot}%{php_inidir}/%{ini_name}
+fi
+
 
 %check
 : simple module load test
@@ -94,7 +104,7 @@ rm -rf %{buildroot}
 %dir %{_pkgdocdir}
 %{_pkgdocdir}/COPYING
 %{php_extdir}/%{extname}.so
-%config(noreplace) %{php_inidir}/%{extname}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 
 
 %files doc
@@ -103,6 +113,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 0.4.8-2
+- add numerical prefix to extension configuration file
+
 * Mon Jan  6 2014 Remi Collet <remi@fedoraproject.org> - 0.4.8-1
 - update to 0.4.8
 - spec cleanups

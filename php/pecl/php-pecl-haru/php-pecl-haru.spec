@@ -13,11 +13,16 @@
 
 %global pecl_name  haru
 %global with_zts   0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name   %{pecl_name}.ini
+%else
+%global ini_name   40-%{pecl_name}.ini
+%endif
 
 Summary:      Haru PDF functions
 Name:         %{?scl_prefix}php-pecl-haru
 Version:      1.0.4
-Release:      3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      PHP
 Group:        Development/Languages
@@ -77,7 +82,7 @@ Documentation : http://www.php.net/haru
 mv %{pecl_name}-%{version} NTS
 
 # Create configuration file
-cat >%{pecl_name}.ini << 'EOF'
+cat >%{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
@@ -120,12 +125,12 @@ rm -rf %{buildroot}
 make install -C NTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make install -C ZTS INSTALL_ROOT=%{buildroot}
 
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install XML package description
@@ -170,16 +175,19 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{_sysconfdir}/php.d/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-4
+- add numerical prefix to extension configuration file
+
 * Wed Mar 26 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-3
 - allow SCL build
 
