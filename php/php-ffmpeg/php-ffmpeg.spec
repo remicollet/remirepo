@@ -8,11 +8,16 @@
 #
 %global ext_name   ffmpeg
 %global svn        678
+%if "%{php_version}" < "5.6"
+%global ini_name   %{ext_name}.ini
+%else
+%global ini_name   40-%{ext_name}.ini
+%endif
 
 Name:           php-ffmpeg
 Version:        0.7.0
 %if 0%{?svn}
-Release:        0.3.svn%{svn}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.4.svn%{svn}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %else
 Release:        1%{svn}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %endif
@@ -33,7 +38,8 @@ Source0:        http://downloads.sourceforge.net/%{name}/ffmpeg-php-%{version}.t
 Patch0:         php-ffmpeg-incl.patch
 # Fix PHP 5.4 build
 Patch1:         php-ffmpeg-php54.patch
-
+# Recent ffmpeg
+Patch2:         php-ffmpeg-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  ffmpeg-devel >= 0.10
@@ -72,6 +78,7 @@ mv ffmpeg* %{ext_name}-nts
 cd %{ext_name}-nts
 %patch0 -p1 -b .incl
 %patch1 -p1 -b .php54
+%patch2 -p1 -b .build
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define FFMPEG_PHP_VERSION/{s/.* "//;s/".*$//;p}' ffmpeg-php.c)
@@ -84,7 +91,7 @@ fi
 rm gd.h gd_io.h
 
 cd ..
-cat > %{ext_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; --- Enable %{name} extension module
 extension=%{ext_name}.so
 
@@ -119,11 +126,11 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 # Install the NTS stuff
 make -C %{ext_name}-nts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install the ZTS stuff
 make -C %{ext_name}-zts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %check
@@ -145,14 +152,17 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc %{ext_name}-nts/{ChangeLog,CREDITS,EXPERIMENTAL,LICENSE,TODO,test_ffmpeg.php}
 
-%config(noreplace) %{php_inidir}/%{ext_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
 
-%config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{ext_name}.so
 
 
 %changelog
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 0.7.0-0.4.svn678
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Mon Mar 17 2014 Remi Collet <rpms@famillecollet.com> 0.7.0-0.3.svn678
 - cleanups
 
