@@ -17,7 +17,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 26%{?dist}.1
+Release: 27%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -322,6 +322,9 @@ fi
 
 
 %changelog
+* Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.4-27
+- revert previous, was a bad solution
+
 * Thu Apr 10 2014 Remi Collet <rcollet@redhat.com> 1:1.9.4-26.1
 - better fix to detect xml.so
 
