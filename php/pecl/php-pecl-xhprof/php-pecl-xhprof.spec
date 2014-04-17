@@ -15,10 +15,15 @@
 
 %global pecl_name xhprof
 %global with_zts  0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name  %{pecl_name}.ini
+%else
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 Name:           %{?scl_prefix}php-pecl-xhprof
 Version:        0.9.4
-Release:        3%{?gitver:.git%{gitver}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        4%{?gitver:.git%{gitver}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
@@ -109,7 +114,7 @@ Documentation: %{pecl_docdir}/%{pecl_name}/xhprof_html/docs/index.html
 sed -e 's/role="php"/role="src"/' -i package.xml
 
 # Extension configuration file
-cat >%{pecl_name}.ini <<EOF
+cat >%{ini_name} <<EOF
 ; Enable %{pecl_name} extension module
 extension = xhprof.so
 
@@ -166,11 +171,11 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install -C %{pecl_name}-%{version}/extension  INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make install -C %{pecl_name}-%{version}/ext-zts    INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install XML package description
@@ -228,13 +233,13 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %exclude %{pecl_docdir}/%{pecl_name}/examples
 %exclude %{pecl_docdir}/%{pecl_name}/xhprof_html
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
@@ -249,6 +254,9 @@ fi
 
 
 %changelog
+* Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 0.9.4-4
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 0.9.4-3
 - allow SCL build
 
