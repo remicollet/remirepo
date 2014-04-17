@@ -2,7 +2,7 @@
 #global svnrelease   315
 
 Name:           glpi-pdf
-Version:        0.84
+Version:        0.84.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -20,11 +20,8 @@ URL:            https://forge.indepnet.net/projects/pdf
 # tar czf glpi-pdf-0.83-315.tar.gz pdf
 Source0:        glpi-pdf-0.83-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1666/glpi_pdf-0.84.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1730/glpi-pdf-0.84.1.tar.gz
 %endif
-
-# https://forge.indepnet.net/issues/4783
-Patch0:         changeset_r361.diff
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -47,14 +44,14 @@ informations sur un équipement ou un logiciel de l'inventaire.
 %prep
 %setup -q -c
 
+# Fix version
+sed -e "/'version'/s/'0.84'/'0.84.1'/" -i %{pluginname}/setup.php
+
 # dos2unix to avoid rpmlint warnings
 mv %{pluginname}/docs docs
 for doc in docs/* ; do
     sed -i -e 's/\r//' $doc
 done
-
-cd %{pluginname}
-%patch0 -p1
 
 
 %build
@@ -97,6 +94,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 0.84.1-1
+- version 0.84.1
+  https://forge.indepnet.net/projects/pdf/versions/1019
+
 * Wed Feb 12 2014 Remi Collet <remi@fedoraproject.org> - 0.84-1
 - version 0.84 for GLPI 0.84
   https://forge.indepnet.net/projects/pdf/versions/941
