@@ -14,12 +14,19 @@
 
 %global pecl_name solr
 %global with_zts  0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+# After curl, json
+%global ini_name  %{pecl_name}.ini
+%else
+# After 20-curl, 40-json
+%global ini_name  50-%{pecl_name}.ini
+%endif
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?scl_prefix}php-pecl-solr
 Version:        1.0.2
-Release:        8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        9%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -149,7 +156,7 @@ chmod -x README.* \
 cd ..
 
 # Create configuration file
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable Solr extension module
 extension=%{pecl_name}.so
 EOF
@@ -183,11 +190,11 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -210,8 +217,15 @@ fi
 
 
 %check
+DEP="-d extension=curl.so -d extension=json.so"
 cd NTS
-TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
+: Minimal load test for NTS extension
+%{__php} --no-php-ini \
+    $DEP \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
+TEST_PHP_ARGS="-n $DEP -d extension=$PWD/modules/%{pecl_name}.so" \
    REPORT_EXIT_STATUS=1 \
    NO_INTERACTION=1 \
    TEST_PHP_EXECUTABLE=%{__php} \
@@ -220,7 +234,13 @@ TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/mo
 
 %if %{with_zts}
 cd ../ZTS
-TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
+: Minimal load test for ZTS extension
+%{__ztsphp} --no-php-ini \
+    $DEP \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+
+TEST_PHP_ARGS="-n $DEP -d extension=$PWD/modules/%{pecl_name}.so" \
    REPORT_EXIT_STATUS=1 \
    NO_INTERACTION=1 \
    TEST_PHP_EXECUTABLE=%{__ztsphp} \
@@ -239,16 +259,19 @@ rm -rf %{buildroot}
 %doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-9
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-8
 - allow SCL build
 

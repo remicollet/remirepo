@@ -17,12 +17,19 @@
 %global extver      2.0-dev
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%if "%{php_version}" < "5.6"
+# After pdo
+%global ini_name  %{pecl_name}.ini
+%else
+# After 20-pdo
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 
 Summary:        Extension for the SQLite V2 Embeddable SQL Database Engine
 Name:           %{?scl_prefix}php-pecl-sqlite
 Version:        2.0.0
-Release:        0.5.svn%{svnver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.6.svn%{svnver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -123,7 +130,7 @@ if test "x${extver}" != "x%{extver}"; then
 fi
 cd ..
 
-cat >%{pecl_name}.ini << 'EOF'
+cat >%{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
@@ -156,14 +163,14 @@ rm -rf %{buildroot}
 make install -C NTS INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 make install -C ZTS INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
@@ -241,17 +248,20 @@ fi
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.6.svn332053
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Tue Mar 25 2014 Remi Collet <RPMS@FamilleCollet.com> - 2.0.0-0.5.svn332053
 - allow SCL build
 

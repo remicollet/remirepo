@@ -15,10 +15,15 @@
 
 %global ext_name  suhosin
 %global with_zts  0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ini_name  %{ext_name}.ini
+%else
+%global ini_name  40-%{ext_name}.ini
+%endif
 
 Name:           %{?scl_prefix}php-suhosin
 Version:        0.9.35
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
@@ -101,11 +106,11 @@ rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install configuration
-install -Dpm 644 NTS/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
+install -Dpm 644 NTS/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -Dpm 644 ZTS/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
+install -Dpm 644 ZTS/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 
@@ -152,16 +157,19 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc LICENSE NTS/{Changelog,CREDITS}
 
-%config(noreplace) %{php_inidir}/%{ext_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{ext_name}.so
 %endif
 
 
 %changelog
+* Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 0.9.35-2
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Mon Mar 24 2014 Remi Collet <remi@fedoraproject.org> 0.9.35-1
 - update to 0.9.35 for php >= 5.4
 - add ZTS build

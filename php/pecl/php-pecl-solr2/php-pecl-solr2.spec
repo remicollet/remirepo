@@ -15,12 +15,19 @@
 %global pecl_name solr
 %global prever    b
 %global with_zts  0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+# After curl, json
+%global ini_name  %{pecl_name}.ini
+%else
+# After 20-curl, 40-json
+%global ini_name  50-%{pecl_name}.ini
+%endif
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?scl_prefix}php-pecl-solr2
 Version:        2.0.0
-Release:        0.2.beta%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.3.beta%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -117,7 +124,7 @@ find . -type f -exec chmod -x {} \;
 cd ..
 
 # Create configuration file
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable Solr extension module
 extension=%{pecl_name}.so
 EOF
@@ -150,11 +157,11 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 
@@ -234,16 +241,19 @@ rm -rf %{buildroot}
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %changelog
+* Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.beta
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.beta
 - allow SCL build
 

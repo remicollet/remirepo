@@ -13,10 +13,15 @@
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name ssh2
+%if "%{php_version}" < "5.6"
+%global ini_name  %{pecl_name}.ini
+%else
+%global ini_name  40-%{pecl_name}.ini
+%endif
 
 Name:           %{?scl_prefix}php-pecl-ssh2
 Version:        0.12
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Bindings for the libssh2 library
 
 License:        PHP
@@ -85,7 +90,7 @@ fi
 
 cp %{SOURCE2} README
 
-cat > ssh2.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable ssh2 extension module
 extension=ssh2.so
 EOF
@@ -119,11 +124,11 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -Dpm644 ssh2.ini %{buildroot}%{php_inidir}/ssh2.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-install -Dpm644 ssh2.ini %{buildroot}%{php_ztsinidir}/ssh2.ini
+install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
@@ -168,17 +173,20 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/ssh2.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/ssh2.so
 %{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/ssh2.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/ssh2.so
 %endif
 
 
 %changelog
+* Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 0.12-3
+- add numerical prefix to extension configuration file (php 5.6)
+
 * Sat Nov 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 0.12-2
 - cleanups for Copr
 - adap for SCL
