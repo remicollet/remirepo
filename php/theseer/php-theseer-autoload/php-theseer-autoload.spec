@@ -117,7 +117,6 @@ fi
 %doc %{pear_testdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 
-%dir %{pear_phpdir}/TheSeer
 %{pear_phpdir}/TheSeer/%{pear_name}
 %{_bindir}/phpab
 
