@@ -118,9 +118,11 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 # No tests in upstream package
 
+%if %{with_cacert}
 # Ensure unbundled CA cert is referenced
 grep '%{_sysconfdir}/pki/tls/cert.pem' --quiet \
     %{buildroot}%{_datadir}/pear/Guzzle/Http/Client.php
+%endif
 
 
 %post
