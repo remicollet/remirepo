@@ -14,13 +14,16 @@
 
 Name:           php-phpunit-PHPUnit
 Version:        3.7.35
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://www.phpunit.de
 Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+
+# Don't display message about deprecated PEAR
+Patch0:         %{pear_name}-msg.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -74,9 +77,13 @@ for the creation, execution and analysis of Unit Tests.
 
 %prep
 %setup -qc
+
 cd %{pear_name}-%{version}
+%patch0 -p1 -b .msg
+
 # package.xml is V2
-mv ../package.xml %{name}.xml
+sed -e '/TestRunner.php/s/md5sum="[^"]*"//' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -129,6 +136,9 @@ fi
 
 
 %changelog
+* Tue Apr 22 2014 Remi Collet <remi@fedoraproject.org> - 3.7.35-2
+- remove message about deprecated PEAR channel
+
 * Tue Apr 22 2014 Remi Collet <remi@fedoraproject.org> - 3.7.35-1
 - Update to 3.7.35
 
