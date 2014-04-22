@@ -1,7 +1,7 @@
 %global github_owner    leafo
 %global github_name     scssphp
-%global github_version  0.0.9
-%global github_commit   a06d702ebf9fabb22542bbb27cc12a905813bb6d
+%global github_version  0.0.10
+%global github_commit   558357feceb9b932a192966945904414dc372e4d
 
 # "php": ">=5.3.0"
 %global php_min_ver     5.3.0
@@ -26,13 +26,13 @@ BuildRequires: help2man
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit) >= %{phpunit_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit) <  %{phpunit_max_ver}
-# For tests: phpcompatinfo (computed from v0.0.9)
+# For tests: phpcompatinfo (computed from v0.0.10)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-pcre
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v0.0.9)
+# phpcompatinfo (computed from v0.0.10)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-pcre
@@ -79,6 +79,11 @@ install -pm 644 pscss.1 %{buildroot}%{_mandir}/man1/
 
 
 %check
+# Create PHPUnit config w/ colors turned off
+cat phpunit.xml.dist \
+    | sed 's/colors\s*=\s*"true"/colors="false"/' \
+    > phpunit.xml
+
 %{_bindir}/phpunit tests
 
 
@@ -91,6 +96,12 @@ install -pm 644 pscss.1 %{buildroot}%{_mandir}/man1/
 
 
 %changelog
+* Tue Apr 22 2014 Remi Collet <remi@fedoraproject.org> 0.0.10-1
+- backport 0.0.9 for remi repo.
+
+* Mon Apr 21 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.0.10-1
+- Updated to 0.0.10 (BZ #1087738)
+
 * Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> 0.0.9-1
 - backport 0.0.9 for remi repo.
 
