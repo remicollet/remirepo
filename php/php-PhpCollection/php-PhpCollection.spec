@@ -1,7 +1,7 @@
 %global github_owner      schmittjoh
 %global github_name       php-collection
-%global github_version    0.3.1
-%global github_commit     dbec93115a5ff149b476ee2d4ede3880239a3d77
+%global github_version    0.4.0
+%global github_commit     b8bf55a0a929ca43b01232b36719f176f86c7e83
 
 %global lib_name          PhpCollection
 
@@ -31,13 +31,13 @@ BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires: php-PhpOption >= %{phpoption_min_ver}
 BuildRequires: php-PhpOption <  %{phpoption_max_ver}
-# For tests: phpcompatinfo (computed from v0.3.1)
+# For tests: phpcompatinfo (computed from version 0.4.0)
 BuildRequires: php-spl
 
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-PhpOption >= %{phpoption_min_ver}
 Requires:      php-PhpOption <  %{phpoption_max_ver}
-# phpcompatinfo (computed from v0.3.1)
+# phpcompatinfo (computed from version 0.4.0)
 Requires:      php-spl
 
 %description
@@ -113,6 +113,12 @@ sed 's/function testMap/function SKIP_testMap/' \
 
 
 %changelog
+* Tue Apr 22 2014 Remi Collet <remi@fedoraproject.org> 0.4.0-1
+- backport 0.4.0 for remi repo.
+
+* Mon Apr 21 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.4.0-1
+- Updated to 0.4.0 (BZ #1078754)
+
 * Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> 0.3.1-1
 - backport 0.3.1 for remi repo.
 
