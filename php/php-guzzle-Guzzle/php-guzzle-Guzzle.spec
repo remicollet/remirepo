@@ -6,13 +6,12 @@
 %if 0%{?rhel} == 5
 %global with_cacert 0
 %else
-# temporarily disabled (issue with md5 check)
-%global with_cacert 0
+%global with_cacert 1
 %endif
 
 Name:             php-guzzle-%{pear_name}
-Version:          3.7.4
-Release:          1%{?dist}.1
+Version:          3.8.1
+Release:          1%{?dist}
 Summary:          PHP HTTP client library and framework for building RESTful web service clients
 
 Group:            Development/Libraries
@@ -34,15 +33,15 @@ Requires:         ca-certificates
 %endif
 Requires(post):   %{__pear}
 Requires(postun): %{__pear}
-# phpcompatinfo
+# phpcompatinfo (computed from version 3.8.1)
 Requires:         php-ctype
 Requires:         php-curl
 Requires:         php-date
 Requires:         php-filter
 Requires:         php-hash
 Requires:         php-intl
-Requires:         php-libxml
 Requires:         php-json
+Requires:         php-libxml
 Requires:         php-pcre
 Requires:         php-reflection
 Requires:         php-simplexml
@@ -84,7 +83,8 @@ sed '/\.md"/s/role="data"/role="doc"/' -i package.xml
 
 %if %{with_cacert}
 # Remove bundled cert
-sed "s:__DIR__\s*.\s*'/Resources/cacert.pem':'%{_sysconfdir}/pki/tls/cert.pem':" \
+sed -e "s#__DIR__\s*.\s*'/Resources/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
+    -e 's#$expectedMd5\s*=\s*.*#$expectedMd5 = $actualMd5;  // RPM NOTE: cacert.pem is managed by the ca-certificates package#' \
     -i %{pear_name}-%{version}/Guzzle/Http/Client.php
 sed -e '/cacert.pem/d' \
     -e '/name="Guzzle\/Http\/Client.php"/s:\s*md5sum="[^"]*"::' \
@@ -118,6 +118,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 # No tests in upstream package
 
+# Ensure unbundled CA cert is referenced
+grep '%{_sysconfdir}/pki/tls/cert.pem' --quiet \
+    %{buildroot}%{_datadir}/pear/Guzzle/Http/Client.php
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
@@ -139,8 +143,22 @@ fi
 
 
 %changelog
+* Tue Apr 22 2014 Remi Collet <remi@fedoraproject.org> - 3.8.1-1
+- backport 3.8.1 for remi repo
+
+* Mon Apr 21 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.8.1-1
+- Updated to 3.8.1 (BZ #1039260)
+
+* Sun Feb 23 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.7.4-3
+- Fixed unbundled cacert issue (Guzzle/Http/Client::preparePharCacert())
+- Added test to ensure unbundled cacert is referenced
+
 * Fri Feb 21 2014 Remi Collet <remi@fedoraproject.org> - 3.7.4-1.1
 - EL-5 don't have ca-certificates
+
+* Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.7.4-2
+- Updated PHP min version from 5.3.2 to 5.3.3
+- php-common => php(language)
 
 * Fri Nov 15 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 3.7.4-1
 - Updated to 3.7.4
