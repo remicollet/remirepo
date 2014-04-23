@@ -1,87 +1,97 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-
-%global channel   pear.phpunit.de
-%global pear_name PHP_Invoker
+# spec file for php-phpunit-PHP-Invoker
+#
+# Copyright (c) 2011-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%global gh_commit    8696484458cb43eed025ab46260846de5b74655c
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   php-invoker
+%global php_home     %{_datadir}/php
+%global pear_name    PHP_Invoker
+%global pear_channel pear.phpunit.de
+# Circular dependency with phpunit
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHP-Invoker
 Version:        1.1.3
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Utility class for invoking callables with a timeout
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://github.com/sebastianbergmann/php-invoker
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.2.7
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
+%if %{with_tests}
+BuildRequires:  %{_bindir}/phpunit
+%endif
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
+# From composer.json
 Requires:       php(language) >= 5.2.7
+Requires:       php-phpunit-PHP-Timer >= 1.0.4
 Requires:       php-pcntl
+# From phpcompatinfo report for version 1.0.5
 Requires:       php-spl
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-pear(%{channel}/PHP_Timer) >= 1.0.1
-Requires:       php-pear(%{channel}/PHP_Timer) <= 1.0.99
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+# For compatibility with PEAR mode
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 Utility class for invoking callables with a timeout.
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-# package.xml is V2
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+rm PHP/Invoker/Autoload.php.in
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
+
+# If upstream drop Autoload.php, command to generate it
+# phpab \
+#   --output PHP/Invoker/Autoload.php \
+#   --template PHP/Invoker/Autoload.php.in \
+#   PHP
 
 
 %install
-cd %{pear_name}-%{version}
-rm -rf %{buildroot}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}
+cp -pr PHP %{buildroot}%{php_home}
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
 
-# Install XML package description
-install -Dpm 644 %{name}.xml %{buildroot}%{pear_xmldir}/%{name}.xml
+%if %{with_tests}
+%check
+phpunit \
+  -d date.timezone=UTC
+%endif
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
-fi
-
-
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHP
+%doc LICENSE README.markdown ChangeLog.markdown composer.json
+%{php_home}/*
 
 
 %changelog
+* Wed Apr 23 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-3
+- get sources from github
+- run test suite when build --with tests
+
 * Tue Jul 16 2013 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3 (stable) - API 1.1.0
 
@@ -115,4 +125,3 @@ fi
 
 * Tue Nov 01 2011 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial generated RPM by pear make-rpm-spec + cleanups
-
