@@ -11,11 +11,12 @@
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
 %global php_home     %{_datadir}/php/SebastianBergmann
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+# Circular dependency with phpunit
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-environment
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Handle HHVM/PHP environments
 
 Group:          Development/Libraries
@@ -26,6 +27,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
@@ -41,24 +43,10 @@ has runtime-specific (PHP / HHVM) execution paths.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-: Create trivial PSR0 autoloader
-cat <<EOF | tee psr0.php
-<?php
-spl_autoload_register(function (\$class) {
-    \$crt = 'SebastianBergmann\\\\Environment\\\\';
-    if (strpos(\$class, \$crt) === 0) {
-        \$file = 'src/'.substr(\$class, strlen(\$crt)).'.php';
-    } else {
-        \$file = \$class.'.php';
-    }
-    \$file = str_replace('\\\\', '/', \$file);
-    include \$file;
-});
-EOF
-
 
 %build
-# Empty build section, most likely nothing required.
+# Generate the Autoloader
+phpab --output src/autoload.php src
 
 
 %install
@@ -69,7 +57,9 @@ cp -pr src %{buildroot}%{php_home}/Environment
 
 %if %{with_tests}
 %check
-phpunit --bootstrap psr0.php
+phpunit \
+  --bootstrap src/autoload.php \
+  -d date.timezone=UTC
 %endif
 
 
@@ -85,5 +75,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 23 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- add generated autoload.php
+
 * Tue Apr  1 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
