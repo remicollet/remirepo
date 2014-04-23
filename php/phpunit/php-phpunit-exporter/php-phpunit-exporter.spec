@@ -47,7 +47,7 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 # Package have be renamed
 Obsoletes:      php-phpunit-Exporter < 1.0.0-2
-Provides:       php-phpunit-Exporter = %{name}-%{version}
+Provides:       php-phpunit-Exporter = %{version}
 
 
 %description
