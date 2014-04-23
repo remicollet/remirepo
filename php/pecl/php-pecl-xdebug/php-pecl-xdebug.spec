@@ -170,7 +170,11 @@ install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 install -d %{buildroot}%{php_inidir}
 cat << 'EOF' | tee %{buildroot}%{php_inidir}/%{ini_name}
 ; Enable xdebug extension module
+%if "%{php_version}" > "5.5"
+zend_extension=%{pecl_name}.so
+%else
 zend_extension=%{php_extdir}/%{pecl_name}.so
+%endif
 
 ; see http://xdebug.org/docs/all_settings
 EOF
@@ -244,6 +248,7 @@ rm -rf %{buildroot}
 %changelog
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 2.2.4-3
 - add numerical prefix to extension configuration file
+- drop uneeded full extension path
 
 * Wed Mar 19 2014 Remi Collet <rcollet@redhat.com> - 2.2.4-2
 - allow SCL build
