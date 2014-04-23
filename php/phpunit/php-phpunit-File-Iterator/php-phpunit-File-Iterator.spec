@@ -1,87 +1,78 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name File_Iterator
-%global channel pear.phpunit.de
+%global gh_commit    acd690379117b042d1c8af1fafd61bde001bf6bb
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   php-file-iterator
+%global php_home     %{_datadir}/php
+%global pear_name    File_Iterator
+%global pear_channel pear.phpunit.de
+# Circular dependency with phpunit
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-File-Iterator
 Version:        1.3.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://github.com/sebastianbergmann/php-file-iterator/
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
+# From composer.json
 Requires:       php(language) >= 5.3.3
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-channel(%{channel})
 # From phpcompatinfo report for 1.3.4
 Requires:       php-pcre
 Requires:       php-spl
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+# For compatibility with PEAR mode
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
 FilterIterator implementation that filters files based on a list of suffixes.
 
+
 %prep
-%setup -q -c
-mv package.xml %{pear_name}-%{version}/%{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+rm File/Iterator/Autoload.php.in
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
+
+# If upstream drop Autoload.php, command to generate it
+#phpab \
+#  --output   File/Iterator/Autoload.php \
+#  --template File/Iterator/Autoload.php.in \
+#  File
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
-
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+rm -rf      %{buildroot}
+mkdir -p    %{buildroot}%{php_home}
+cp -pr File %{buildroot}%{php_home}
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-  %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-  %{__pear} uninstall --nodeps --ignore-errors --register-only \
-    %{channel}/%{pear_name} >/dev/null || :
-fi
-
 
 %files
 %defattr(-,root,root,-)
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/File
-
-%doc %{pear_docdir}/%{pear_name}
+%doc ChangeLog.markdown README.markdown LICENSE composer.json
+%{php_home}/*
 
 
 %changelog
+* Wed Apr 23 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-2
+- get sources from github
+
 * Fri Oct 11 2013 Remi Collet <remi@fedoraproject.org> - 1.3.4-1
 - Update to 1.3.4
 - raise dependencies: php 5.3.3, pear 1.9.4
