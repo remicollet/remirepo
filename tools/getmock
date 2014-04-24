@@ -138,7 +138,7 @@ if [ $1 = devs -o $1 = dev ]; then
 fi
 
 if [ $1 = all ]; then
-	for i in $(seq 14 20)
+	for i in $(seq 15 20)
 	do
 		getOneMock fc${i}i $opt
 	done
@@ -179,11 +179,11 @@ elif [ $1 = all54 ]; then
 		getOneMock el${n}x remi
 
 elif [ $1 = allx ]; then
-	for i in $(seq 14 20)
+	for i in $(seq 15 20)
 	do
 		getOneMock fc${i}x $opt
 	done
-	for i in $(seq 5 6 7)
+	for i in $(seq 5 7)
 	do
 		getOneMock el${i}x $opt
 	done
