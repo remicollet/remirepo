@@ -1,8 +1,13 @@
 Name:           remi-release
-%if %{rhel} >= 6
+%if %{rhel} == 7
+Version:        7.0
+Release:        1%{?dist}
+%endif
+%if %{rhel} == 6
 Version:        6.5
 Release:        1%{?dist}
-%else
+%endif
+%if %{rhel} == 5
 Version:        5.10
 Release:        1%{?dist}
 %endif
@@ -64,6 +69,9 @@ rm -rf %{buildroot}
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
 
 %changelog
+* Thu Apr 24 2014 Remi Collet <RPMS@FamilleCollet.com> - 7.0-1
+- EL-7 build
+
 * Fri Feb 28 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.10-1 and 6.5-1
 - add php56 repository
 
