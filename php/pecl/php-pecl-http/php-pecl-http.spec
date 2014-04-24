@@ -26,8 +26,8 @@
 %endif
 
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.0.5
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.0.6
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -279,6 +279,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 24 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
 - add numerical prefix to extension configuration file
 
