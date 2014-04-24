@@ -25,7 +25,7 @@
 
 # Regression tests take a long time, you can skip 'em with this
 %if %{php_bootstrap}
-%{!?runselftest: %global runselftest 0}
+%global runselftest 0
 %else
 %{!?runselftest: %global runselftest 1}
 %endif
