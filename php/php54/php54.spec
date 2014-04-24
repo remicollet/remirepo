@@ -32,7 +32,11 @@
 %global with_fpm 1
 
 %if 0%{?__isa:1}
+%if 0%{?rhel} == 7
+%global isasuffix -%{__isa_bits}
+%else
 %global isasuffix -%{__isa}
+%endif
 %else
 %global isasuffix %nil
 %endif
