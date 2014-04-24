@@ -24,7 +24,11 @@
 %endif
 
 # Regression tests take a long time, you can skip 'em with this
-%{!?runselftest: %{expand: %%global runselftest 1}}
+%if %{php_bootstrap}
+%{!?runselftest: %global runselftest 0}
+%else
+%{!?runselftest: %global runselftest 1}
+%endif
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
