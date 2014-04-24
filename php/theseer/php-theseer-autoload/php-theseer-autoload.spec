@@ -1,18 +1,17 @@
 # spec file for php-theseer-autoload
 #
-# Copyright (c) 2013-2014 Remi Collet
+# Copyright (c) 2014 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name     Autoload
 %global pear_channel  pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.14.1
+Version:        1.14.2
 Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
@@ -58,9 +57,7 @@ the option of creating static require lists as well as phar archives.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-# https://github.com/theseer/Autoload/issues/46
-sed -e '/phpunit.xml.dist/s/role="doc"/role="test"/' \
-    ../package.xml >%{name}.xml
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -122,5 +119,8 @@ fi
 
 
 %changelog
+* Thu Apr 24 2014 Remi Collet <remi@fedoraproject.org> - 1.14.2-1
+- Update to 1.14.2
+
 * Sun Apr  6 2014 Remi Collet <remi@fedoraproject.org> - 1.14.1-1
 - initial package, version 1.14.1
