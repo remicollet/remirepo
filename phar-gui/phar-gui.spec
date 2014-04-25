@@ -16,7 +16,7 @@ Name:           %{gh_project}
 Summary:        A graphical user interface for phar files
 Version:        1.0
 %if 0%{?gh_date}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 %else
 Release:        1%{?dist}
 %endif
@@ -74,6 +74,10 @@ exec %{_bindir}/php \
   %{_datadir}/%{name}/main.php "$@"
 EOF
 
+# Keep LICENSE.txt as this is used by the GUI
+# Create a link in the %%doc
+ln -s %{_datadir}/%{name}/LICENSE.txt LICENSE
+
 
 %build
 # nothing to build
@@ -83,18 +87,23 @@ EOF
 rm -rf   %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/%{name}
 
-cp -pr main.php resources.php lib images %{buildroot}%{_datadir}/%{name}
+cp -pr main.php resources.php lib images LICENSE.txt \
+   %{buildroot}%{_datadir}/%{name}
 
 install -D -m 755 %{name} %{buildroot}%{_bindir}/%{name}
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE.txt README.md
+%doc LICENSE README.md
 %{_datadir}/%{name}
 %{_bindir}/%{name}
 
 
 %changelog
+* Fri Apr 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20140417gitedbd631
+- keep LICENSE.txt in /usr/share/phar-gui (used in the GUI)
+- open https://github.com/jgmdev/phar-gui/pull/1
+
 * Fri Apr 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.20140417gitedbd631
 - Initial packaging
