@@ -6,23 +6,20 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit  7f03a04694af2ceddf46f6694f09cc8dc8f16a8b
+%global gh_commit  4c4ab985e372113dbfd0a8192fbd8629bface9bb
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   sabberworm
 %global gh_project PHP-CSS-Parser
 
 Name:           php-%{gh_project}
 Summary:        A Parser for CSS Files
-Version:        5.1.1
-Release:        2%{?dist}
+Version:        5.1.2
+Release:        1%{?dist}
 License:        MIT
 Group:          Development/Libraries
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
-
-# Upstream patches
-Patch0:         %{name}-git.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -43,8 +40,6 @@ of said structure and output as (optimized) CSS.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch0 -p1
 
 
 %build
@@ -69,6 +64,9 @@ phpunit --bootstrap bootstrap.php .
 
 
 %changelog
+* Mon Apr 28 2014 Remi Collet <remi@fedoraproject.org> - 5.1.2-1
+- update to 5.1.2
+
 * Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 5.1.1-2
 - add upstream patch (required by Horde_Css_Parser)
 
