@@ -13,11 +13,12 @@
 
 Name:           php-horde-imp
 Version:        6.1.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based webmail system
 
 Group:          Development/Libraries
-License:        GPLv2
+# imp is GPLv2, murmurhash3.js is MIT
+License:        GPLv2 and MIT
 URL:            http://www.horde.org/apps/imp
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -84,7 +85,7 @@ Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) <  3.0.0
@@ -112,7 +113,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Token) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Token) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Tree) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
@@ -122,15 +123,14 @@ Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # From package.xml, optional
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) <  3.0.0
 # Optional and implicitly required:
-#     Horde_Vfs, Horde_History, Horde_Http, Horde_Stream_Filter
+#     Horde_History, Horde_Http
 # From phpcompatinfo report for version 6.1.7
 Requires:       php-date
-Requires:       php-ereg
 Requires:       php-filter
 Requires:       php-openssl
 Requires:       php-pcre
-Requires:       php-posix
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -150,7 +150,7 @@ normally found only in desktop email clients.
 %setup -q -c
 
 cat <<EOF | tee httpd.conf
-<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale)>
+<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale|templates)>
      Deny from all
 </DirectoryMatch>
 EOF
@@ -254,6 +254,9 @@ fi
 
 
 %changelog
+* Mon Apr 28 2014 Remi Collet <remi@fedoraproject.org> - 6.1.7-2
+- fix from review #1087734
+
 * Fri Mar 07 2014 Remi Collet <remi@fedoraproject.org> - 6.1.7-1
 - Update to 6.1.7
 
