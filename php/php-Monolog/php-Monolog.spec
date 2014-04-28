@@ -1,7 +1,7 @@
 %global github_owner    Seldaek
 %global github_name     monolog
-%global github_version  1.7.0
-%global github_commit   6225b22de9dcf36546be3a0b2fa8e3d986153f57
+%global github_version  1.9.1
+%global github_commit   65026b610f8c19e61d7242f600530677b0466aac
 
 %global lib_name        Monolog
 
@@ -13,9 +13,12 @@
 # "psr/log": "~1.0"
 %global psrlog_min_ver  1.0
 %global psrlog_max_ver  2.0
-# "raven/raven": "0.5.*"
-%global raven_min_ver   0.5.0
-#%%global raven_max_ver   0.6.0
+# "raven/raven": "~0.5"
+%global raven_min_ver   0.5
+%global raven_max_ver   1.0
+# "aws/aws-sdk-php": "~2.4, >2.4.8"
+%global aws_min_ver     2.4.9
+%global aws_max_ver     3.0
 
 Name:      php-%{lib_name}
 Version:   %{github_version}
@@ -35,12 +38,14 @@ BuildRequires: php-PsrLog    >= %{psrlog_min_ver}
 BuildRequires: php-PsrLog    <  %{psrlog_max_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit) >= %{phpunit_min_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit) <  %{phpunit_max_ver}
-# For tests: phpcompatinfo (computed from 1.7.0)
+# For tests: phpcompatinfo (computed from 1.9.1)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
 BuildRequires: php-hash
 BuildRequires: php-json
+BuildRequires: php-mbstring
+BuildRequires: php-openssl
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-sockets
@@ -48,19 +53,37 @@ BuildRequires: php-spl
 BuildRequires: php-xml
 
 Requires:      php(language) >= %{php_min_ver}
-Requires:      php-PsrLog >= %{psrlog_min_ver}
-Requires:      php-PsrLog <  %{psrlog_max_ver}
+Requires:      php-PsrLog    >= %{psrlog_min_ver}
+Requires:      php-PsrLog    <  %{psrlog_max_ver}
 Requires:      php-pear(pear.swiftmailer.org/Swift)
-# phpcompatinfo (computed from 1.7.0)
+# phpcompatinfo (computed from 1.9.1)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
 Requires:      php-hash
 Requires:      php-json
+Requires:      php-mbstring
+Requires:      php-openssl
 Requires:      php-pcre
 Requires:      php-sockets
 Requires:      php-spl
 Requires:      php-xml
+
+# Removed sub-packages
+Obsoletes:     %{name}-amqp   < %{version}-%{release}
+Provides:      %{name}-amqp   = %{version}-%{release}
+Obsoletes:     %{name}-dynamo < %{version}-%{release}
+Provides:      %{name}-dynamo = %{version}-%{release}
+Obsoletes:     %{name}-mongo  < %{version}-%{release}
+Provides:      %{name}-mongo  = %{version}-%{release}
+Obsoletes:     %{name}-raven  < %{version}-%{release}
+Provides:      %{name}-raven  = %{version}-%{release}
+
+# Optional dependencies, but need this to enforce versions
+Conflicts:     php-aws-sdk <  %{aws_min_ver}
+Conflicts:     php-aws-sdk >= %{aws_max_ver}
+Conflicts:     php-Raven   <  %{raven_min_ver}
+Conflicts:     php-Raven   >= %{raven_max_ver}
 
 %description
 Monolog sends your logs to files, sockets, inboxes, databases and various web
@@ -71,86 +94,27 @@ in your own libraries to keep a maximum of interoperability. You can also use it
 in your applications to make sure you can always use another compatible logger
 at a later time.
 
-Optional handlers:
-* %{name}-amqp
-      Allow sending log messages to an AMQP server (1.0+ required)
-* %{name}-dynamo
+Optional:
+* php-aws-sdk (>= %{aws_min_ver}, < %{aws_max_ver})
       Allow sending log messages to AWS DynamoDB
-* %{name}-mongo
+* php-pecl-amqp
+      Allow sending log messages to an AMQP server (1.0+ required)
+* php-pecl-mongo
       Allow sending log messages to a MongoDB server
-* %{name}-raven
+* php-Raven (>= %{raven_min_ver}, < %{raven_max_ver})
       Allow sending log messages to a Sentry server
 * https://github.com/doctrine/couchdb-client
       Allow sending log messages to a CouchDB server
-* https://github.com/mlehner/gelf-php
+* https://github.com/Graylog2/gelf-php
       Allow sending log messages to a GrayLog2 server
-* https://github.com/ruflin/Elastica
-      Allow sending log messages to an Elastic Search server
 * https://docs.newrelic.com/docs/php/new-relic-for-php
       Allow sending log messages to a New Relic application
+* https://github.com/rollbar/rollbar-php
+      Allow sending log messages to Rollbar
+* https://github.com/ruflin/Elastica
+      Allow sending log messages to an Elastic Search server
 
 [1] https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
-
-# ------------------------------------------------------------------------------
-
-%package amqp
-
-Summary:  Monolog AMQP handler
-Group:    Development/Libraries
-
-Requires: php-%{lib_name} = %{version}-%{release}
-Requires: php-pecl(amqp)
-
-%description amqp
-Allow sending log messages to an AMQP server (1.0+ required).
-
-# ------------------------------------------------------------------------------
-
-%package dynamo
-
-Summary:  Monolog DynamoDB handler
-Group:    Development/Libraries
-
-Requires: php-%{lib_name} = %{version}-%{release}
-Requires: php-aws-sdk
-
-Provides: %{name}-dynamodb = %{version}-%{release}
-
-%description dynamo
-Allow sending log messages to AWS services' DynamoDB.
-
-# ------------------------------------------------------------------------------
-
-%package mongo
-
-Summary:  Monolog MongoDB handler
-Group:    Development/Libraries
-
-Requires: php-%{lib_name} = %{version}-%{release}
-Requires: php-pecl(mongo)
-
-Provides: %{name}-mongodb = %{version}-%{release}
-
-%description mongo
-Allow sending log messages to a MongoDB server.
-
-
-# ------------------------------------------------------------------------------
-
-%package raven
-
-Summary:  Monolog Sentry handler
-Group:    Development/Libraries
-
-Requires: php-%{lib_name} = %{version}-%{release}
-Requires: php-Raven >= %{raven_min_ver}
-%{?raven_max_ver:Requires: php-Raven < %{raven_max_ver}}
-
-%description raven
-Allow sending log messages to a Sentry server.
-
-
-# ##############################################################################
 
 
 %prep
@@ -177,53 +141,38 @@ spl_autoload_register(function ($class) {
 BOOTSTRAP
 ) > ./tests/bootstrap.php
 
+# Create PHPUnit config w/ colors turned off
+sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
+
 # Remove MongoDBHandlerTest because it requires a running MongoDB server
 rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
 
+# Remove GitProcessorTest because it requires a git repo
+rm -f tests/Monolog/Processor/GitProcessorTest.php
+
 %{_bindir}/phpunit --include-path="./src:./tests" -d date.timezone="UTC"
-
-
-# ##############################################################################
 
 
 %files
 %defattr(-,root,root,-)
 %doc LICENSE *.mdown doc composer.json
 %{_datadir}/php/%{lib_name}
-%exclude %{_datadir}/php/%{lib_name}/Handler/AmqpHandler.php
-%exclude %{_datadir}/php/%{lib_name}/Handler/DynamoDbHandler.php
-%exclude %{_datadir}/php/%{lib_name}/Handler/MongoDBHandler.php
-%exclude %{_datadir}/php/%{lib_name}/Handler/RavenHandler.php
-
-# ------------------------------------------------------------------------------
-
-%files amqp
-%defattr(-,root,root,-)
-%{_datadir}/php/%{lib_name}/Handler/AmqpHandler.php
-
-# ------------------------------------------------------------------------------
-
-%files dynamo
-%defattr(-,root,root,-)
-%{_datadir}/php/%{lib_name}/Handler/DynamoDbHandler.php
-
-# ------------------------------------------------------------------------------
-
-%files mongo
-%defattr(-,root,root,-)
-%{_datadir}/php/%{lib_name}/Handler/MongoDBHandler.php
-
-# ------------------------------------------------------------------------------
-
-%files raven
-%defattr(-,root,root,-)
-%{_datadir}/php/%{lib_name}/Handler/RavenHandler.php
-
-
-# ##############################################################################
 
 
 %changelog
+* Mon Apr 28 2014 Remi Collet <RPMS@famillecollet.com> 1.9.1-1
+- backport 1.9.1 for remi repo
+
+* Fri Apr 25 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.9.1-1
+- Updated to 1.9.1 (BZ #1080872)
+- Added option to build without tests ("--without tests")
+
+* Thu Jan 16 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.7.0-3
+- Properly obsolete sub-packages
+
+* Wed Jan 15 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 1.7.0-2
+- Removed sub-packages (optional dependencies note in description instead)
+
 * Mon Dec 30 2013 Remi Collet <RPMS@famillecollet.com> 1.7.0-1
 - backport 1.7.0 for remi repo
 
