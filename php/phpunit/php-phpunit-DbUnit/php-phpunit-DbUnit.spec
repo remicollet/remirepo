@@ -6,97 +6,105 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %global __pear %{_bindir}/pear}
-%global pear_name DbUnit
-%global channel pear.phpunit.de
+%global gh_commit    a5891b7a9c4f21587a51f9bc4e8f7042b741b480
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   dbunit
+%global php_home     %{_datadir}/php
+%global pear_name    DbUnit
+%global pear_channel pear.phpunit.de
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-DbUnit
 Version:        1.3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        DbUnit port for PHP/PHPUnit
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://github.com/sebastianbergmann/dbunit
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
+%if %{with_tests}
+BuildRequires:  php-pear-PHPUnit >= 3.7.0
+%endif
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-# From package.xml
+# From composer.json
 Requires:       php(language) >= 5.3.3
 Requires:       php-pdo
 Requires:       php-simplexml
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-channel(%{channel})
-Requires:       php-pear(%{channel}/PHPUnit) >= 3.7.0
-Requires:       php-pear(pear.symfony.com/Yaml) >= 2.1.0
+Requires:       php-pear-PHPUnit >= 3.7.0
+Requires:       php-symfony-yaml >= 2.1.0
 # From phpcompatinfo report for version 1.3.0
 Requires:       php-libxml
 Requires:       php-reflection
 Requires:       php-spl
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+# For compatibility with PEAR mode
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
-DbUnit port for PHP/PHPUnit
+DbUnit port for PHP/PHPUnit.
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-# package.xml is V2
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+rm PHPUnit/Extensions/Database/Autoload.php.in
+
+# Fix loader
+sed -e 's:/usr/bin/env php:%{_bindir}/php:' \
+    -e 's:@php_bin@:%{php_home}:' \
+    -i dbunit.php
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
+
+# If upstream drop Autoload.php, command to generate it.
+# Also remember to fix the command to use it.
+
+#phpab \
+#  --output   PHPUnit/Extensions/Database/Autoload.php \
+#  --template PHPUnit/Extensions/Database/Autoload.php.in \
+#  PHPUnit
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf         %{buildroot}
+mkdir -p       %{buildroot}%{php_home}
+cp -pr PHPUnit %{buildroot}%{php_home}/PHPUnit
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
+install -D -p -m 755 dbunit.php %{buildroot}%{_bindir}/dbunit
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+%if %{with_tests}
+%check
+phpunit -d date.timezone=UTC
+%endif
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
-fi
-
-
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHPUnit/Extensions/Database
+%doc ChangeLog.markdown LICENSE
+%doc Samples
 %{_bindir}/dbunit
+%{php_home}/PHPUnit/Extensions/Database
 
 
 %changelog
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-2
+- sources from github
+- run tests during build
+
 * Tue Apr 01 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - Update to 1.3.1
 

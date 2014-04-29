@@ -54,7 +54,7 @@ and vice versa.
 rm src/autoload.php.in
 
 # Fix loader
-sed -e 's:/usr/bin/env php:/%{_bindir}/php:' \
+sed -e 's:/usr/bin/env php:%{_bindir}/php:' \
     -e 's:@php_bin@:%{php_home}:' \
     -i phpunit-skelgen.php
 
