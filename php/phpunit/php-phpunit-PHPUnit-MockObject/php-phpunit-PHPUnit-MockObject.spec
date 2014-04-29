@@ -1,33 +1,54 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name     PHPUnit_MockObject
-%global pear_channel  pear.phpunit.de
+# spec file for php-phpunit-PHP-CodeCoverage
+#
+# Copyright (c) 2013-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%global gh_commit    3697daa12ab57b2bfc27b734ab963142f27b9159
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   phpunit-mock-objects
+%global php_home     %{_datadir}/php
+%global pear_name    PHPUnit_MockObject
+%global pear_channel pear.phpunit.de
+# disable because of circular dep with phpunit
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        1.2.3
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://github.com/sebastianbergmann/phpunit-mock-objects
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+
+# Autoload template
+Source1:        Autoload.php.in
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  %{_bindir}/phpab
+%if %{with_tests}
+BuildRequires:  php-pear-PHPUnit >= 4.0.0
+%endif
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-Requires:       php-pear(PEAR) >= 1.9.4
+# From composer.json
 Requires:       php(language) >= 5.3.3
+Requires:       php-phpunit-Text-Template >= 1.2
+Requires:       php-phpunit-Text-Template <  2
+Requires:       php-pear-PHPUnit >= 4.0.0
+Requires:       php-pear-PHPUnit <  4.1
+# From phpcompatinfo report for version 2.0.5
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-soap
 Requires:       php-spl
-Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.1.1
-Requires:       php-pear(%{pear_channel}/PHPUnit) >= 3.7.0
 
+# For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
@@ -36,53 +57,45 @@ Mock Object library for PHPUnit
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-# package.xml is V2
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
 
 
 %build
-cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+phpab \
+  --output   src/Framework/MockObject/Autoload.php \
+  --template %{SOURCE1} \
+  src
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}
+cp -pr src %{buildroot}%{php_home}/PHPUnit
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+%if %{with_tests}
+%check
+phpunit \
+  -d date.timezone=UTC \
+  --bootstrap src/Framework/MockObject/Autoload.php
+%endif
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{pear_channel}/%{pear_name} >/dev/null || :
-fi
-
-
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHPUnit/Framework/MockObject
+%doc CONTRIBUTING.md README.md LICENSE composer.json
+%{php_home}/PHPUnit/Framework/MockObject
 
 
 %changelog
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- update to 2.0.5
+- sources from gthub
+
 * Sun Jan 13 2013 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - Version 1.2.3 (stable) - API 1.2.0 (stable)
 
