@@ -1,33 +1,39 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name     PHP_TokenStream
-%global channel       pear.phpunit.de
+%global gh_commit    ad4e1e23ae01b483c16f600ff1bebec184588e32
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   php-token-stream
+%global php_home     %{_datadir}/php
+%global pear_name    PHP_TokenStream
+%global pear_channel pear.phpunit.de
+# Circular dependency with phpunit
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHP-TokenStream
 Version:        1.2.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://github.com/sebastianbergmann/php-token-stream
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear
-BuildRequires:  php-channel(%{channel})
+%if %{with_tests}
+BuildRequires:  php-pear-PHPUnit >= 3.7.0
+%endif
 
+# From composer.json
 Requires:       php(language) >= 5.3.3
+Requires:       php-tokenizer
+# From phpcompatinfo report for version 1.2.2
 Requires:       php-pcre
 Requires:       php-spl
-Requires:       php-tokenizer
-Requires:       php-pear
-Requires:       php-channel(%{channel})
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+# For compatibility with PEAR mode
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -35,52 +41,47 @@ Wrapper around PHP tokenizer extension.
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+rm PHP/Token/Stream/Autoload.php.in
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
+
+# If upstream drop Autoload.php, command to generate it.
+#phpab \
+#  --output   PHP/Token/Stream/Autoload.php \
+#  --template PHP/Token/Stream/Autoload.php.in \
+#  PHP
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}
+cp -pr PHP %{buildroot}%{php_home}/PHP
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+%if %{with_tests}
+%check
+phpunit -d date.timezone=UTC
+%endif
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-  %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-  %{__pear} uninstall --nodeps --ignore-errors --register-only \
-    %{channel}/%{pear_name} >/dev/null || :
-fi
-
-
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHP
+%doc LICENSE README.md
+%{php_home}/PHP
+
 
 %changelog
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.2.2-2
+- sources from github
+
 * Mon Mar 03 2014 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - Update to 1.2.2
 

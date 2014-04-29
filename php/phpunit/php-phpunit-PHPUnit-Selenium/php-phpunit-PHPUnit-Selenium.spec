@@ -60,6 +60,7 @@ Optional dependency: XDebug (php-pecl-xdebug)
 
 rm PHPUnit/Extensions/SeleniumCommon/Autoload.php.in
 
+
 %build
 # Empty build section, most likely nothing required.
 
@@ -67,7 +68,7 @@ rm PHPUnit/Extensions/SeleniumCommon/Autoload.php.in
 # Also remember to fix the command to use it.
 
 #phpab \
-#  --output   PHPUnit/Extensions/SeleniumCommon/Autoload.php2 \
+#  --output   PHPUnit/Extensions/SeleniumCommon/Autoload.php \
 #  --template PHPUnit/Extensions/SeleniumCommon/Autoload.php.in \
 #  PHPUnit
 
