@@ -8,61 +8,81 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%global gh_commit    95d18c9b84f5f9b200f53363b717910446686768
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   phpunit
+%global php_home     %{_datadir}/php
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        3.7.35
-Release:        2%{?dist}
+Version:        4.0.18
+Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://www.phpunit.de
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
-# Don't display message about deprecated PEAR
-Patch0:         %{pear_name}-msg.patch
+# Autoload template, from verison 3.7
+Source1:        Autoload.php.in
+
+# Fix command for autoload
+Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-phpunit-File-Iterator >= 1.3.1
+BuildRequires:  php-phpunit-Text-Template >= 1.2
+BuildRequires:  php-phpunit-PHP-CodeCoverage >= 2.0
+BuildRequires:  php-phpunit-PHP-Timer >= 1.0.2
+BuildRequires:  php-phpunit-PHPUnit-MockObject >= 2.0
+BuildRequires:  php-phpunit-diff >= 1.1
+BuildRequires:  php-phpunit-environment >= 1.0
+BuildRequires:  php-phpunit-exporter >= 1.0.1
+BuildRequires:  php-phpunit-Version >= 1.0.3
+BuildRequires:  php-symfony-yaml >= 2.0.0
 
+# From package.xml
+Requires:       php-phpunit-File-Iterator >= 1.3.1
+Requires:       php-phpunit-Text-Template >= 1.2
+Requires:       php-phpunit-PHP-CodeCoverage >= 2.0
+Requires:       php-phpunit-PHP-CodeCoverage <  2.1
+Requires:       php-phpunit-PHP-Timer >= 1.0.2
+Requires:       php-phpunit-PHPUnit-MockObject >= 2.0
+Requires:       php-phpunit-PHPUnit-MockObject < 2.1
+Requires:       php-phpunit-diff >= 1.1
+Requires:       php-phpunit-environment >= 1.0
+Requires:       php-phpunit-exporter >= 1.0.1
+Requires:       php-phpunit-Version >= 1.0.3
+Requires:       php-symfony-yaml >= 2.0.0
+Requires:       php-symfony-yaml <  3
 Requires:       php(language) >= 5.3.3
-Requires:       php-ctype
 Requires:       php-dom
-Requires:       php-libxml
-Requires:       php-pcntl
+Requires:       php-json
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
-Requires:       php-tidy
-Requires:       php-channel(%{pear_channel})
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-Requires:       php-pear(%{pear_channel}/File_Iterator) >= 1.3.0
-Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.1.1
-Requires:       php-pear(%{pear_channel}/PHP_CodeCoverage) >= 1.2.1
-Requires:       php-pear(%{pear_channel}/PHP_CodeCoverage) <  1.3
-Requires:       php-pear(%{pear_channel}/PHP_Timer) >= 1.0.4
-Requires:       php-pear(pear.symfony.com/Yaml) >= 2.0.0
-Requires:       php-pear(pear.symfony.com/Yaml) <  3
-# PHPUnit Extensions (yes, with circular dependency on PHPUnit)
-Requires:       php-pear(%{pear_channel}/PHPUnit_MockObject) >= 1.2.0
-Requires:       php-pear(%{pear_channel}/PHPUnit_MockObject) <  1.3
-
-# Optionnal dependencies
-Requires:       php-json
-Requires:       php-pdo
+# Optional
+Requires:       php-phpunit-PHP-Invoker >= 1.1.0
+# From phpcompatinfo report for version 4.0.18
+Requires:       php-date
+Requires:       php-libxml
 Requires:       php-mbstring
-Requires:       php-pecl(Xdebug) >= 2.0.5
-Requires:       php-pear(%{pear_channel}/PHP_Invoker) >= 1.1.0
-Requires:       php-pear(%{pear_channel}/PHP_Invoker) <  1.2
+Requires:       php-openssl
+Requires:       php-pcntl
+Requires:       php-phar
+Requires:       php-tidy
+Requires:       php-xml
 
+
+# For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+# Package have been rename
 Obsoletes:      php-pear-PHPUnit < %{version}
 Provides:       php-pear-PHPUnit = %{version}-%{release}
 
@@ -76,66 +96,55 @@ for the creation, execution and analysis of Unit Tests.
 
 
 %prep
-%setup -qc
+%setup -q -n %{gh_project}-%{gh_commit}
 
-cd %{pear_name}-%{version}
-%patch0 -p1 -b .msg
-
-# package.xml is V2
-sed -e '/TestRunner.php/s/md5sum="[^"]*"//' \
-    ../package.xml >%{name}.xml
+%patch0 -p0 -b .rpm
 
 
 %build
-cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+phpab \
+  --output   src/Autoload.php \
+  --template %{SOURCE1} \
+  src
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}
+cp -pr src %{buildroot}%{php_home}/PHPUnit
 
-# Install Package
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+install -D -p -m 755 phpunit %{buildroot}%{_bindir}/phpunit
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
 
-# Install XML package description
-install -d %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+%check
+sed -e 's:vendor/autoload:src/Autoload:' \
+    -i tests/bootstrap.php
+
+sed -e '/logging/d' \
+    -e '/<log/d' \
+    phpunit.xml.dist > phpunit.xml
+
+./phpunit  \
+  --include-path=%{buildroot}%{php_home} \
+  --testsuite=small \
+  -d date.timezone=UTC
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{pear_channel}/%{pear_name} >/dev/null || :
-fi
-
-%triggerpostun -- php-pear-PHPUnit
-# re-register extension unregistered during postun of obsoleted php-pear-PHPUnit
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/%{pear_name}
 %{_bindir}/phpunit
+%{php_home}/PHPUnit
 
 
 %changelog
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 4.0.14-1
+- update to 4.0.18
+- sources from github
+
 * Tue Apr 22 2014 Remi Collet <remi@fedoraproject.org> - 3.7.35-2
 - remove message about deprecated PEAR channel
 
