@@ -1,26 +1,24 @@
 %global github_owner          symfony
 %global github_name           Icu
-%global github_version        1.2.0
-%global github_commit         7299cd3d8d6602103d1ebff5d0a9917b7bc6de72
+%global github_version        1.2.1
+%global github_commit         98e197da54df1f966dd5e8a4992135703569c987
 
+# "php": ">=5.3.3"
 %global php_min_ver           5.3.3
 # "symfony/intl": "~2.3" (composer.json)
 %global symfony_intl_min_ver  2.3
 %global symfony_intl_max_ver  3.0
-# "lib-ICU": ">=3.8" (composer.json)
+# "lib-ICU": ">=4.4" (composer.json)
 %global libicu_min_ver        4.4
 
 %global symfony_dir           %{_datadir}/php/Symfony
 
-# Tests are only run with rpmbuild --with tests
-#
-# Will be run by default when the required php-symfony-intl pkg
-# version is available
-%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+# Tests are only run with rpmbuild --with tests to avoid circular dependency
+%global with_tests            %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-symfony-icu
 Version:        %{github_version}
-Release:        2%{dist}
+Release:        1%{dist}
 Summary:        Symfony Icu Component
 
 Group:          Development/Libraries
@@ -36,20 +34,23 @@ BuildArch:      noarch
 BuildRequires:  php(language)    >= %{php_min_ver}
 BuildRequires:  php-symfony-intl >= %{symfony_intl_min_ver}
 BuildRequires:  php-symfony-intl <  %{symfony_intl_max_ver}
-# For tests: phpcompatinfo
+# For tests: phpcompatinfo (computed from version 1.2.1)
 Requires:       php-ctype
 Requires:       php-intl
 %endif
 
 # always ok Requires:       libicu  >= %{libicu_min_ver}
 Requires:       php(language)    >= %{php_min_ver}
-# Disabled until the required php-symfony-intl pkg version is available
-#Requires:       php-symfony-intl >= %%{symfony_intl_min_ver}
-#Requires:       php-symfony-intl <  %%{symfony_intl_max_ver}
-# phpcompatinfo
+# phpcompatinfo (computed from version 1.2.1)
 Requires:       php-ctype
 Requires:       php-intl
 
+# Disabled to prevent circular dependency
+#Requires:       php-symfony-intl >= %%{symfony_intl_min_ver}
+#Requires:       php-symfony-intl <  %%{symfony_intl_max_ver}
+# Ensure conflicting versions are not installed
+Conflicts:      php-symfony-intl <  %{symfony_intl_min_ver}
+Conflicts:      php-symfony-intl >= %{symfony_intl_max_ver}
 # Rename
 Obsoletes:      php-symfony2-Icu < %{version}-%{release}
 Provides:       php-symfony2-Icu = %{version}-%{release}
@@ -58,8 +59,11 @@ Provides:       php-symfony2-Icu = %{version}-%{release}
 %description
 Contains data of the ICU library.
 
-You should not directly use this component. Use it through the API of the Intl
-component instead.
+You should not directly use this component. Use it through the API of the
+Symfony Intl component instead.
+
+NOTE: This package requires the Symfony Intl package (>= %{symfony_intl_min_ver}, < %{symfony_intl_max_ver})
+      but does not explicitly require it to prevent a circular dependency.
 
 
 %prep
@@ -104,9 +108,7 @@ AUTOLOADER
 ) > vendor/autoload.php
 
 # Create PHPUnit config w/ colors turned off
-cat phpunit.xml.dist \
-    | sed 's/colors="true"/colors="false"/' \
-    > phpunit.xml
+sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %{_bindir}/phpunit \
     --include-path %{buildroot}%{_datadir}/php \
@@ -137,6 +139,15 @@ cat phpunit.xml.dist \
 
 
 %changelog
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> 1.2.1-1
+- update to 1.2.0 (backport)
+
+* Mon Apr 28 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.1-1
+- Updated to 1.2.1 (BZ #1078756)
+
+* Wed Nov 27 2013 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
+- Updated to 1.2.0
+
 * Sat Nov 23 2013 Remi Collet <remi@fedoraproject.org> 1.2.0-2
 - update to 1.2.0 and backport stuff
 
