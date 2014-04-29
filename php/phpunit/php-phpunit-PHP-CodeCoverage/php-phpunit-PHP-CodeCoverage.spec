@@ -6,45 +6,57 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %global __pear %{_bindir}/pear}
+%global gh_commit    3dcca2120451b98a98fe60221ca279a184ee64db
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   php-code-coverage
+%global php_home     %{_datadir}/php
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
+# disable because of circular dep with phpunit
+%global with_tests   %{?_witht_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        1.2.17
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://github.com/sebastianbergmann/php-code-coverage
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+
+# Autoload template from version 1.2
+Source1:        Autoload.php.in
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  %{_bindir}/phpab
+%if %{with_tests}
+BuildRequires:  php-pear-PHPUnit >= 4.0.14
+%endif
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
+# From composer.json
 Requires:       php(language) >= 5.3.3
-Requires:       php-date
 Requires:       php-dom
+Requires:       php-phpunit-File-Iterator >= 1.3.1
+Requires:       php-phpunit-PHP-TokenStream >= 1.2.2
+Requires:       php-phpunit-Text-Template >= 1.2.0
+Requires:       php-phpunit-environment >= 1.0.0
+Requires:       php-phpunit-Version >= 1.0.3
+Requires:       php-pecl(Xdebug) >= 2.1.4
+# From phpcompatinfo report for version 2.0.7
+Requires:       php-date
 Requires:       php-json
-Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-pecl(Xdebug) >= 2.0.5
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/File_Iterator) >= 1.3.0
-Requires:       php-pear(%{pear_channel}/PHP_TokenStream) >= 1.1.3
-Requires:       php-pear(%{pear_channel}/Text_Template) >= 1.2.0
-Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
+Requires:       php-xmlwriter
 
+# For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 Library that provides collection, processing, and rendering functionality
@@ -52,53 +64,45 @@ for PHP code coverage information.
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-# package.xml is V2
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
 
 
 %build
-cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
-
+phpab \
+  --output   src/CodeCoverage/Autoload.php \
+  --template %{SOURCE1} \
+  src
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}
+cp -pr src %{buildroot}%{php_home}/PHP
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+%if %{with_tests}
+%check
+phpunit \
+  -d date.timezone=UTC \
+  --bootstrap src/Autoload.php
+%endif
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{pear_channel}/%{pear_name} >/dev/null || :
-fi
-
-
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHP
+%doc CONTRIBUTING.md README.md LICENSE composer.json
+%{php_home}/PHP/CodeCoverage
+%{php_home}/PHP/CodeCoverage.php
 
 
 %changelog
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-2
+- update to 2.0.7
+- sources from github
+
 * Tue Apr 01 2014 Remi Collet <remi@fedoraproject.org> - 1.2.17-1
 - Update to 1.2.17
 

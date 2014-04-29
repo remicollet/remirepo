@@ -1,0 +1,30 @@
+<?php
+/* inspired from Autoload.php from version 1.2 */
+
+require_once 'File/Iterator/Autoload.php';
+require_once 'PHP/Token/Stream/Autoload.php';
+require_once 'Text/Template/Autoload.php';
+require_once 'SebastianBergmann/Environment/autoload.php';
+require_once 'SebastianBergmann/Version/autoload.php';
+
+spl_autoload_register(
+  function ($class)
+  {
+      static $classes = NULL;
+      static $path = NULL;
+
+      if ($classes === NULL) {
+          $classes = array(
+            ___CLASSLIST___
+          );
+
+          $path = dirname(dirname(__FILE__));
+      }
+
+      $cn = strtolower($class);
+
+      if (isset($classes[$cn])) {
+          require $path . $classes[$cn];
+      }
+  }
+);
