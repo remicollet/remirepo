@@ -6,32 +6,32 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %global __pear %{_bindir}/pear}
+%global gh_commit    e89bfa1080dce9617c9b3e7760d50752974bfbd2
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   phpunit-selenium
+%global php_home     %{_datadir}/php
 %global pear_name    PHPUnit_Selenium
 %global pear_channel pear.phpunit.de
+# No test, as test suite requires a Selenium server
 
 Name:           php-phpunit-PHPUnit-Selenium
 Version:        1.3.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://github.com/sebastianbergmann/phpunit-selenium
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  php(language) >= 5.3.3
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-# From package.xml
+# From composer.json
 Requires:       php(language) >= 5.3.3
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/PHPUnit) >= 3.7.0
+Requires:       php-pear-PHPUnit >= 3.7.0
 Requires:       php-curl
 Requires:       php-dom
 # From phpcompatinfo report for version 1.3.3
@@ -42,6 +42,7 @@ Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-zip
 
+# For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
@@ -55,59 +56,42 @@ Optional dependency: XDebug (php-pecl-xdebug)
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-# package.xml is V2
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
 
+rm PHPUnit/Extensions/SeleniumCommon/Autoload.php.in
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
+
+# If upstream drop Autoload.php, command to generate it.
+# Also remember to fix the command to use it.
+
+#phpab \
+#  --output   PHPUnit/Extensions/SeleniumCommon/Autoload.php2 \
+#  --template PHPUnit/Extensions/SeleniumCommon/Autoload.php.in \
+#  PHPUnit
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
-
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+rm -rf         %{buildroot}
+mkdir -p       %{buildroot}%{php_home}
+cp -pr PHPUnit %{buildroot}%{php_home}/PHPUnit
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{pear_channel}/%{pear_name} >/dev/null || :
-fi
-
-
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHPUnit/Extensions/SeleniumCommon
-%{pear_phpdir}/PHPUnit/Extensions/SeleniumTestCase
-%{pear_phpdir}/PHPUnit/Extensions/SeleniumTestCase.php
-%{pear_phpdir}/PHPUnit/Extensions/Selenium2TestCase
-%{pear_phpdir}/PHPUnit/Extensions/Selenium2TestCase.php
-%{pear_phpdir}/PHPUnit/Extensions/SeleniumTestSuite.php
-%{pear_phpdir}/PHPUnit/Extensions/SeleniumBrowserSuite.php
+%doc ChangeLog.markdown LICENSE README.md
+%{php_home}/PHPUnit/Extensions/Selenium*
 
 
 %changelog
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.3.3-2
+- sources from github
+
 * Fri Nov 22 2013 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - Update to 1.3.3 (stable)
 - improve description
