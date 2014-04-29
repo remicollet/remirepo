@@ -35,6 +35,7 @@ Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for version 1.2.0
 Requires:       php-spl
 
+# For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
