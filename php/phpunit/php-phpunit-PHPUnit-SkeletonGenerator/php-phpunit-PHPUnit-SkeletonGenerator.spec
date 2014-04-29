@@ -1,37 +1,47 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name PHPUnit_SkeletonGenerator
-%global channel   pear.phpunit.de
+# spec file for php-phpunit-PHPUnit-SkeletonGenerator
+#
+# Copyright (c) 2012-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%global gh_commit    8a524d3a65ebebc89ce63c937b9e5a4b305e90e1
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   phpunit-skeleton-generator
+%global php_home     %{_datadir}/php
+%global pear_name    PHPUnit_SkeletonGenerator
+%global pear_channel pear.phpunit.de
+# Circular dependency with phpunit
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
 Version:        1.2.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://pear.phpunit.de/
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.3
 Requires:       php-date
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-channel(%{channel})
-Requires:       php-pear(%{channel}/Text_Template) >= 1.1.1
+Requires:       php-phpunit-Text-Template >= 1.1.1
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+# For compatibility with PEAR mode
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
 
 %description
 Tool that can generate skeleton test classes from production code classes
@@ -39,54 +49,62 @@ and vice versa.
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-# Package.xml is V2
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+rm src/autoload.php.in
+
+# Fix loader
+sed -e 's:/usr/bin/env php:/%{_bindir}/php:' \
+    -e 's:@php_bin@:%{php_home}:' \
+    -i phpunit-skelgen.php
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
+
+# If upstream drop Autoload.php, command to generate it.
+# Also remember to fix the command to use it.
+
+#phpab \
+#  --output   src/autoload.php \
+#  --template src/autoload.php.in \
+#  src
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}/SebastianBergmann/PHPUnit
+cp -pr src %{buildroot}%{php_home}/SebastianBergmann/PHPUnit/SkeletonGenerator
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+install -D -p -m 755 phpunit-skelgen.php %{buildroot}%{_bindir}/phpunit-skelgen
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
-fi
+%if %{with_tests}
+%check
+phpunit \
+  --test-suffix .phpt \
+  -d date.timezone=UTC \
+  tests
+%endif
 
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
+%doc README.markdown ChangeLog.markdown LICENSE
 %{_bindir}/phpunit-skelgen
-%{pear_phpdir}/SebastianBergmann/PHPUnit/SkeletonGenerator
+%dir %{php_home}/SebastianBergmann
+%dir %{php_home}/SebastianBergmann/PHPUnit
+     %{php_home}/SebastianBergmann/PHPUnit/SkeletonGenerator
 
 
 %changelog
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-3
+- sources from github
+
 * Sat Jun 01 2013 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1
 - add explicit requires
@@ -100,4 +118,3 @@ fi
 
 * Sat Jan 21 2012 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
-
