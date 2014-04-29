@@ -6,88 +6,78 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear:       %global __pear       %{_bindir}/pear}
-%global pear_name Text_Template
-%global channel pear.phpunit.de
+%global gh_commit    206dfefc0ffe9cebf65c413e3d0e809c82fbf00a
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   php-text-template
+%global php_home     %{_datadir}/php
+%global pear_name    Text_Template
+%global pear_channel pear.phpunit.de
+# Circular dependency with phpunit
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-Text-Template
 Version:        1.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple template engine
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://github.com/sebastianbergmann/php-text-template
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-# From package.xml
+# From composer.json
 Requires:       php(language) >= 5.3.3
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-channel(%{channel})
 # From phpcompatinfo report for version 1.2.0
 Requires:       php-spl
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
 Simple template engine.
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-# package.xml is V2
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+rm Text/Template/Autoload.php.in
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
+
+# If upstream drop Autoload.php, command to generate it
+#phpab \
+#  --output   Text/Template/Autoload.php \
+#  --template Text/Template/Autoload.php.in \
+#  Text
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
-
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-install -Dpm 644 %{name}.xml %{buildroot}%{pear_xmldir}/%{name}.xml
+rm -rf      %{buildroot}
+mkdir -p    %{buildroot}%{php_home}
+cp -pr Text %{buildroot}%{php_home}
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
-fi
-
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Text
+%doc ChangeLog.md README.md LICENSE composer.json
+%{php_home}/*
 
 
 %changelog
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- sources from github
+
 * Thu Jan 30 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Update to 1.2.0
 
