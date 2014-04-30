@@ -95,7 +95,7 @@ rm -rf %{buildroot}
 %post
 if [ -x %{_bindir}/pear ]; then
    %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
-      %{pear_channel}/%{pear_name} >/dev/null
+      %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
