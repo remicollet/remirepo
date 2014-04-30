@@ -1,4 +1,4 @@
-# spec file for php-phpunit-PHP-CodeCoverage
+# spec file for php-phpunit-PHPUnit-MockObject
 #
 # Copyright (c) 2013-2014 Remi Collet
 # License: CC-BY-SA
@@ -40,8 +40,6 @@ BuildRequires:  php-pear-PHPUnit >= 4.0.0
 Requires:       php(language) >= 5.3.3
 Requires:       php-phpunit-Text-Template >= 1.2
 Requires:       php-phpunit-Text-Template <  2
-Requires:       php-pear-PHPUnit >= 4.0.0
-Requires:       php-pear-PHPUnit <  4.1
 # From phpcompatinfo report for version 2.0.5
 Requires:       php-pcre
 Requires:       php-reflection
