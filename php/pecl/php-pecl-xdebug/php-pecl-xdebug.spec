@@ -29,8 +29,8 @@
 
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
-Version:        2.2.4
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.2.5
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
@@ -246,6 +246,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- Update to 2.2.5 (stable)
+
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 2.2.4-3
 - add numerical prefix to extension configuration file
 - drop uneeded full extension path
