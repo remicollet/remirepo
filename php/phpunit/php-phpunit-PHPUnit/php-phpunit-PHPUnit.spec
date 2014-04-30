@@ -46,6 +46,7 @@ BuildRequires:  php-phpunit-environment >= 1.0
 BuildRequires:  php-phpunit-exporter >= 1.0.1
 BuildRequires:  php-phpunit-Version >= 1.0.3
 BuildRequires:  php-symfony-yaml >= 2.0.0
+BuildRequires:  php-phpunit-PHP-Invoker >= 1.1.0
 
 # From package.xml
 Requires:       php-phpunit-File-Iterator >= 1.3.1
@@ -123,6 +124,9 @@ sed -e 's:vendor/autoload:src/Autoload:' \
 sed -e '/logging/d' \
     -e '/<log/d' \
     phpunit.xml.dist > phpunit.xml
+
+sed -e 's:PHPUnit/Autoload:src/Autoload:' \
+    -i phpunit
 
 ./phpunit  \
   --include-path=%{buildroot}%{php_home} \
