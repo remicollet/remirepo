@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
 Version:        1.2.1
-Release:        4%{?dist}
+Release:        4%{?dist}.1
 Summary:        Tool that can generate skeleton test classes
 
 Group:          Development/Libraries

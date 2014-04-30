@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit-Story
 Version:        1.0.2
-Release:        4%{?dist}
+Release:        4%{?dist}.1
 Summary:        Story extension for PHPUnit to facilitate Behaviour-Driven Development
 
 Group:          Development/Libraries

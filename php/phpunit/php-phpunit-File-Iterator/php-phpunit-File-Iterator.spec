@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-File-Iterator
 Version:        1.3.4
-Release:        3%{?dist}
+Release:        3%{?dist}.1
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
 Group:          Development/Libraries

@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit
 Version:        4.0.18
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries

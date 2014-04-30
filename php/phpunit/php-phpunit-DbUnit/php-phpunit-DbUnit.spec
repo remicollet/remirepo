@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-DbUnit
 Version:        1.3.1
-Release:        3%{?dist}
+Release:        3%{?dist}.1
 Summary:        DbUnit port for PHP/PHPUnit
 
 Group:          Development/Libraries

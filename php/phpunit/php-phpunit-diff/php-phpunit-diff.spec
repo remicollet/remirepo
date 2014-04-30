@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-diff
 Version:        1.1.0
-Release:        4%{?dist}
+Release:        4%{?dist}.1
 Summary:        Diff implementation
 
 Group:          Development/Libraries

@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-PHP-Timer
 Version:        1.0.5
-Release:        3%{?dist}
+Release:        3%{?dist}.1
 Summary:        PHP Utility class for timing
 
 Group:          Development/Libraries

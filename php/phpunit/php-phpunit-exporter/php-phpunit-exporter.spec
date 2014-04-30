@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-exporter
 Version:        1.0.1
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Summary:        Export PHP variables for visualization
 
 Group:          Development/Libraries

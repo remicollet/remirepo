@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-Text-Template
 Version:        1.2.0
-Release:        3%{?dist}
+Release:        3%{?dist}.1
 Summary:        Simple template engine
 
 Group:          Development/Libraries

@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-PHP-TokenStream
 Version:        1.2.2
-Release:        3%{?dist}
+Release:        3%{?dist}.1
 Summary:        Wrapper around PHP tokenizer extension
 
 Group:          Development/Libraries

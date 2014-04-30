@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHP-Invoker
 Version:        1.1.3
-Release:        4%{?dist}
+Release:        4%{?dist}.1
 Summary:        Utility class for invoking callables with a timeout
 
 Group:          Development/Libraries

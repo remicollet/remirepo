@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit-MockObject
 Version:        2.0.5
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -93,7 +93,9 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc CONTRIBUTING.md README.md LICENSE composer.json
-%{php_home}/PHPUnit/Framework/MockObject
+%dir %{php_home}/PHPUnit
+%dir %{php_home}/PHPUnit/Framework
+     %{php_home}/PHPUnit/Framework/MockObject
 
 
 %changelog

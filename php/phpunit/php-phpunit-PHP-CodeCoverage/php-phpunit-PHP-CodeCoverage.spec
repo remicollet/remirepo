@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHP-CodeCoverage
 Version:        2.0.6
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries

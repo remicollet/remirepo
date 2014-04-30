@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-FinderFacade
 Version:        1.1.0
-Release:        4%{?dist}
+Release:        4%{?dist}.1
 Summary:        Wrapper for Symfony Finder component
 
 Group:          Development/Libraries

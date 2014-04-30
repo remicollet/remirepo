@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-PHPUnit-Selenium
 Version:        1.3.3
-Release:        3%{?dist}
+Release:        3%{?dist}.1
 Summary:        Selenium RC integration for PHPUnit
 
 Group:          Development/Libraries
