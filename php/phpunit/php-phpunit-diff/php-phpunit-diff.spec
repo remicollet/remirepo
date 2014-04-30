@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-diff
 Version:        1.1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Diff implementation
 
 Group:          Development/Libraries
@@ -73,6 +73,11 @@ phpunit \
 %clean
 rm -rf %{buildroot}
 
+%post
+if [ -x %{_bindir}/pear ]; then
+  %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
 
 %files
 %defattr(-,root,root,-)
@@ -84,6 +89,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
+- cleanup pear registry
+
 * Wed Apr 23 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
 - get sources from github
 - run test suite when build --with tests
