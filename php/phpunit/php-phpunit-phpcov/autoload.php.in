@@ -1,0 +1,28 @@
+<?php
+/* Inspired from autoload from version 1.2.0 */
+
+require 'PHPUnit/Autoload.php';
+require 'Symfony/Component/Console/autoloader.php';
+require 'SebastianBergmann/FinderFacade/autoload.php';
+/*
+already required in PHPUnit 
+require 'PHP/CodeCoverage/Autoload.php';
+require 'SebastianBergmann/Diff/autoload.php';
+require 'SebastianBergmann/Version/autoload.php';
+*/
+
+spl_autoload_register(
+    function($class) {
+        static $classes = null;
+        if ($classes === null) {
+            $classes = array(
+              ___CLASSLIST___
+            );
+        }
+        $cn = strtolower($class);
+        if (isset($classes[$cn])) {
+            require ___BASEDIR___$classes[$cn];
+        }
+    }
+);
+
