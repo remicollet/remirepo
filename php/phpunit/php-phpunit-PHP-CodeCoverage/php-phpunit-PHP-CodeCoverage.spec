@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3dcca2120451b98a98fe60221ca279a184ee64db
+%global gh_commit    bccecf50645068b44f49a84009e2a0499a500b99
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -17,8 +17,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.0.7
-Release:        2%{?dist}
+Version:        2.0.6
+Release:        1%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -106,11 +106,14 @@ fi
 
 
 %changelog
-* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-2
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- update to 2.0.6
+
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
 - cleanup pear registry
 
-* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
-- update to 2.0.7
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- update to 2.0.5
 - sources from github
 
 * Tue Apr 01 2014 Remi Collet <remi@fedoraproject.org> - 1.2.17-1
