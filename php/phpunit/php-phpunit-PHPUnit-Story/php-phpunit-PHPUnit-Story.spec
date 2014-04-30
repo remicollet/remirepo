@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit-Story
 Version:        1.0.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Story extension for PHPUnit to facilitate Behaviour-Driven Development
 
 Group:          Development/Libraries
@@ -75,6 +75,13 @@ phpunit \
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %doc ChangeLog.markdown LICENSE composer.json
@@ -82,6 +89,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-4
+- cleanup pear registry
+
 * Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-3
 - sources from github
 - run test suite when build --with tests

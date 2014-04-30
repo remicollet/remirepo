@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit-MockObject
 Version:        2.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -85,6 +85,13 @@ phpunit \
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %doc CONTRIBUTING.md README.md LICENSE composer.json
@@ -92,6 +99,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
+- cleanup pear registry
+
 * Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - update to 2.0.5
 - sources from gthub

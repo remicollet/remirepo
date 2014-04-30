@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-exporter
 Version:        1.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Export PHP variables for visualization
 
 Group:          Development/Libraries
@@ -81,6 +81,13 @@ phpunit \
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
@@ -90,6 +97,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- cleanup pear registry
+
 * Sun Apr  6 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
 - get sources from github

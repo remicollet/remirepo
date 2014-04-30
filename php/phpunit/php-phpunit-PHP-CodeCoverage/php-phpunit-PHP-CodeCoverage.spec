@@ -14,11 +14,11 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 # disable because of circular dep with phpunit
-%global with_tests   %{?_witht_tests:1}%{!?_with_tests:0}
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHP-CodeCoverage
 Version:        2.0.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -83,12 +83,19 @@ cp -pr src %{buildroot}%{php_home}/PHP
 %check
 phpunit \
   -d date.timezone=UTC \
-  --bootstrap src/Autoload.php
+  --bootstrap src/CodeCoverage/Autoload.php
 %endif
 
 
 %clean
 rm -rf %{buildroot}
+
+
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
 
 
 %files
@@ -99,7 +106,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-2
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-2
+- cleanup pear registry
+
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
 - update to 2.0.7
 - sources from github
 

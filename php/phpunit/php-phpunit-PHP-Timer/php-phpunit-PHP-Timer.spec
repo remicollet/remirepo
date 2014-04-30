@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-PHP-Timer
 Version:        1.0.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        PHP Utility class for timing
 
 Group:          Development/Libraries
@@ -72,6 +72,13 @@ phpunit \
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %doc LICENSE README.md composer.json
@@ -79,6 +86,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-3
+- cleanup pear registry
+
 * Wed Apr 23 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-2
 - get sources from github
 - run test suite when build --with tests

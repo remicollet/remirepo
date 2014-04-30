@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit
 Version:        4.0.18
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -134,6 +134,13 @@ sed -e '/logging/d' \
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %{_bindir}/phpunit
@@ -141,7 +148,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 4.0.14-1
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 4.0.18-2
+- cleanup pear registry
+
+* Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 4.0.18-1
 - update to 4.0.18
 - sources from github
 

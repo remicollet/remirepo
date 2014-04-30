@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-File-Iterator
 Version:        1.3.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
 Group:          Development/Libraries
@@ -62,6 +62,12 @@ cp -pr File %{buildroot}%{php_home}
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
 
 %files
 %defattr(-,root,root,-)
@@ -70,6 +76,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-3
+- cleanup pear registry
+
 * Wed Apr 23 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-2
 - get sources from github
 

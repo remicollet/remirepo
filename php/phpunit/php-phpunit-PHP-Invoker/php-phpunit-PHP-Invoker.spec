@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHP-Invoker
 Version:        1.1.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Utility class for invoking callables with a timeout
 
 Group:          Development/Libraries
@@ -81,6 +81,12 @@ phpunit \
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
 %files
 %defattr(-,root,root,-)
 %doc LICENSE README.markdown ChangeLog.markdown composer.json
@@ -88,6 +94,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-4
+- cleanup pear registry
+
 * Wed Apr 23 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-3
 - get sources from github
 - run test suite when build --with tests

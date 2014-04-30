@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-PHPUnit-Selenium
 Version:        1.3.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
 Group:          Development/Libraries
@@ -83,6 +83,13 @@ cp -pr PHPUnit %{buildroot}%{php_home}/PHPUnit
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %doc ChangeLog.markdown LICENSE README.md
@@ -90,6 +97,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.3.3-3
+- cleanup pear registry
+
 * Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.3.3-2
 - sources from github
 

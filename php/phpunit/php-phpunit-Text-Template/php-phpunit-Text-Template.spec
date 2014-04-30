@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-Text-Template
 Version:        1.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Simple template engine
 
 Group:          Development/Libraries
@@ -68,6 +68,12 @@ cp -pr Text %{buildroot}%{php_home}
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
 
 %files
 %defattr(-,root,root,-)
@@ -76,6 +82,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-3
+- cleanup pear registry
+
 * Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
 - sources from github
 

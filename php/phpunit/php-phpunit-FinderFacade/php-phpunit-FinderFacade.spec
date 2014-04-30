@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-FinderFacade
 Version:        1.1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Wrapper for Symfony Finder component
 
 Group:          Development/Libraries
@@ -85,6 +85,13 @@ phpunit \
 rm -rf %{buildroot}
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %doc ChangeLog.md README.md LICENSE composer.json
@@ -93,6 +100,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
+- cleanup pear registry
+
 * Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
 - sources from github
 - run tests during build

@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
 Version:        1.2.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
 Group:          Development/Libraries
@@ -92,6 +92,13 @@ phpunit \
 %endif
 
 
+%post
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %doc README.markdown ChangeLog.markdown LICENSE
@@ -102,6 +109,9 @@ phpunit \
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-4
+- cleanup pear registry
+
 * Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-3
 - sources from github
 
