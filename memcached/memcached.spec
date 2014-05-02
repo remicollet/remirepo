@@ -13,7 +13,7 @@
 %{!?runselftest: %global runselftest 1}
 
 Name:           memcached
-Version:        1.4.17
+Version:        1.4.19
 Release:        1%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
@@ -252,6 +252,9 @@ fi
 %{_includedir}/memcached/*
 
 %changelog
+* Fri May  2 2014 Remi Collet <rpms@famillecollet.com> - 0:1.4.19-1
+- Update to 1.4.19
+
 * Mon Apr  7 2014 Remi Collet <rpms@famillecollet.com> - 0:1.4.17-1
 - Update to 1.4.17
 - Sync with rawhide
