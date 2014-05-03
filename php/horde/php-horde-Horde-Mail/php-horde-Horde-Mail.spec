@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mail
-Version:        2.1.6
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Mail Library
 
@@ -129,6 +129,9 @@ fi
 
 
 %changelog
+* Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
 - Update to 2.1.6
 
