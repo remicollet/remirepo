@@ -1,9 +1,18 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Prefs
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Prefs
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Prefs
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Horde Preferences API
 
@@ -44,6 +53,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.3
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
@@ -141,6 +152,10 @@ fi
 
 
 %changelog
+* Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- Update to 2.6.0
+- add optional dep on Horde_Cache
+
 * Mon Nov 11 2013 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - Update to 2.5.2
 
