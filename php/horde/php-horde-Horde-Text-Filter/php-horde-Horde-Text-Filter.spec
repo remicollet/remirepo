@@ -1,9 +1,18 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Text-Filter
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Text_Filter
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Filter
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
@@ -138,6 +147,9 @@ fi
 
 
 %changelog
+* Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1
+
 * Wed Nov 20 2013 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 - upstream have move JSMin non-free code to a separate package
