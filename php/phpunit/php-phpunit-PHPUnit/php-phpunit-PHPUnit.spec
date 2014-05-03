@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    95d18c9b84f5f9b200f53363b717910446686768
+%global gh_commit    efb1b1334605594417a3bd466477772d06d460a8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,8 +17,8 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.0.18
-Release:        2%{?dist}.1
+Version:        4.1.0
+Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -40,26 +40,26 @@ BuildRequires:  php-phpunit-File-Iterator >= 1.3.1
 BuildRequires:  php-phpunit-Text-Template >= 1.2
 BuildRequires:  php-phpunit-PHP-CodeCoverage >= 2.0
 BuildRequires:  php-phpunit-PHP-Timer >= 1.0.2
-BuildRequires:  php-phpunit-PHPUnit-MockObject >= 2.0
+BuildRequires:  php-phpunit-PHPUnit-MockObject >= 2.1
+BuildRequires:  php-phpunit-comparator >= 1.0
 BuildRequires:  php-phpunit-diff >= 1.1
 BuildRequires:  php-phpunit-environment >= 1.0
-BuildRequires:  php-phpunit-exporter >= 1.0.1
-BuildRequires:  php-phpunit-Version >= 1.0.3
+BuildRequires:  php-phpunit-exporter >= 1.0
+BuildRequires:  php-phpunit-Version >= 1.0
 BuildRequires:  php-symfony-yaml >= 2.0.0
 BuildRequires:  php-phpunit-PHP-Invoker >= 1.1.0
 
-# From package.xml
+# From composer.json
 Requires:       php-phpunit-File-Iterator >= 1.3.1
 Requires:       php-phpunit-Text-Template >= 1.2
 Requires:       php-phpunit-PHP-CodeCoverage >= 2.0
-Requires:       php-phpunit-PHP-CodeCoverage <  2.1
 Requires:       php-phpunit-PHP-Timer >= 1.0.2
-Requires:       php-phpunit-PHPUnit-MockObject >= 2.0
-Requires:       php-phpunit-PHPUnit-MockObject < 2.1
+Requires:       php-phpunit-PHPUnit-MockObject >= 2.1
+Requires:       php-phpunit-comparator >= 1.0
 Requires:       php-phpunit-diff >= 1.1
 Requires:       php-phpunit-environment >= 1.0
-Requires:       php-phpunit-exporter >= 1.0.1
-Requires:       php-phpunit-Version >= 1.0.3
+Requires:       php-phpunit-exporter >= 1.0
+Requires:       php-phpunit-Version >= 1.0
 Requires:       php-symfony-yaml >= 2.0.0
 Requires:       php-symfony-yaml <  3
 Requires:       php(language) >= 5.3.3
@@ -152,6 +152,9 @@ fi
 
 
 %changelog
+* Sat May  3 2014 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
+- Update to 4.1.0
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 4.0.18-2
 - cleanup pear registry
 
