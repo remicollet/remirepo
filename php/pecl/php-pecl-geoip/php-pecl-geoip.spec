@@ -13,20 +13,13 @@
 
 
 Name:           %{?scl_prefix}php-pecl-geoip
-Version:        1.0.8
-Release:        8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.1.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to map IP addresses to geographic places
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bugs.php.net/59804
-Patch1:         geoip-tests.patch
-
-# https://bugs.php.net/65859 - Please Provides LICENSE file
-# URL from geopip.c header
-Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  GeoIP-devel
@@ -78,8 +71,6 @@ database
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-cp %{SOURCE1} LICENSE
-%patch1 -p0 -b .tests
 
 extver=$(sed -n '/#define PHP_GEOIP_VERSION/{s/.* "//;s/".*$//;p}' php_geoip.h)
 if test "x${extver}" != "x%{version}"; then
@@ -132,7 +123,7 @@ install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
-for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -187,6 +178,9 @@ fi
 
 
 %changelog
+* Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0 (beta)
+
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.0.8-8
 - add numerical prefix to extension configuration file
 
