@@ -21,6 +21,9 @@ License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# http://svn.php.net/viewvc?view=revision&revision=333464
+Patch0:         geoip-build.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  GeoIP-devel
 BuildRequires:  %{?scl_prefix}php-devel
@@ -71,6 +74,7 @@ database
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+%patch0 -p0 -b .svn
 
 extver=$(sed -n '/#define PHP_GEOIP_VERSION/{s/.* "//;s/".*$//;p}' php_geoip.h)
 if test "x${extver}" != "x%{version}"; then
@@ -180,6 +184,7 @@ fi
 %changelog
 * Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0 (beta)
+- upstream patch for old auto* version (rhel <= 6)
 
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.0.8-8
 - add numerical prefix to extension configuration file
