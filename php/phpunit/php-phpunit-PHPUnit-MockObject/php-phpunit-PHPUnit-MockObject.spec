@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3697daa12ab57b2bfc27b734ab963142f27b9159
+%global gh_commit    da0eb04d8ee95ec2898187e407e519c118d3d27c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -17,8 +17,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.0.5
-Release:        2%{?dist}.1
+Version:        2.1.0
+Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -73,9 +73,11 @@ cp -pr src %{buildroot}%{php_home}/PHPUnit
 
 %if %{with_tests}
 %check
+mkdir vendor
+ln -s ../src/Framework/MockObject/Autoload.php vendor/autoload.php
+
 phpunit \
-  -d date.timezone=UTC \
-  --bootstrap src/Framework/MockObject/Autoload.php
+  -d date.timezone=UTC
 %endif
 
 
@@ -99,6 +101,9 @@ fi
 
 
 %changelog
+* Sat May  3 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0 for PHPUnit 4.1.0
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
 - cleanup pear registry
 
