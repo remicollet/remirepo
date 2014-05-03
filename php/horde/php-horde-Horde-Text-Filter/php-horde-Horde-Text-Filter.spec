@@ -106,6 +106,7 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
 %if 0%{?rhel} == 5
 sed -e 's/testHtml2textVarious/SKIP_testHtml2textVarious/' \
+    -e 's/testHtml2text/SKIP_testHtml2text/' \
     -i Html2textTest.php
 sed -e 's/testBug9567/SKIP_testBug9567/' \
     -i XssTest.php
