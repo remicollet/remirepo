@@ -3,12 +3,13 @@
 %global gh_owner     sebastianbergmann
 %global gh_project   phploc
 %global php_home     %{_datadir}/php/SebastianBergmann
+%global pear_name    phploc
 %global pear_channel pear.phpunit.de
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phploc
 Version:        2.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
 Group:          Development/Libraries
@@ -107,6 +108,9 @@ fi
 
 
 %changelog
+* Sat May  3 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
+- fix scriptlet
+
 * Sat May  3 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - update to 2.0.5
 - sources from github
