@@ -1,10 +1,10 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name    phing
 %global pear_channel pear.phing.info
 
 Summary:	A project build system based on Apache Ant
 Name:		php-pear-phing
-Version:	2.6.1
+Version:	2.7.0
 Release:	1%{?dist}
 
 License:	LGPLv2
@@ -37,8 +37,8 @@ Requires:	php-pear(pear.phpunit.de/PHP_CodeCoverage) >= 1.1.0
 Requires:	php-pear(pear.phpunit.de/phpcpd) >= 1.3.3
 Requires:	php-pear(pear.phpunit.de/phploc) >= 1.6.4
 Requires:	php-pear(Archive_Tar) >= 1.3.0
-Requires:	php-pear(HTTP_Request2) >= 0.5.2
-Requires:	php-pear(PHP_CodeSniffer) >= 1.3.0
+Requires:	php-pear(HTTP_Request2) >= 2.1.1
+Requires:	php-pear(PHP_CodeSniffer) >= 1.5.0
 Requires:	php-pear(pear.pdepend.org/PHP_Depend) >= 0.10.0
 Requires:	php-pear(pear.phpmd.org/PHP_PMD) >= 1.1.0
 # TODO
