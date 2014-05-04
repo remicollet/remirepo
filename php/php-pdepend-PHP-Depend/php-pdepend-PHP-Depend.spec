@@ -1,9 +1,9 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name PHP_Depend
-%global channel pear.pdepend.org
+%global channel   pear.pdepend.org
 
 Name:           php-pdepend-PHP-Depend
-Version:        1.1.1
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -14,7 +14,7 @@ Source0:        http://pear.pdepend.org/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.6.0
+BuildRequires:  php-pear
 BuildRequires:  php-channel(%{channel})
 
 Requires(post): %{__pear}
@@ -42,9 +42,9 @@ Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
 PHP_Depend is an adaption of the Java design quality metrics software JDepend 
 and the NDepend metric tool.
 
+
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
 
@@ -55,8 +55,8 @@ cd %{pear_name}-%{version}
 
 
 %install
-cd %{pear_name}-%{version}
 rm -rf %{buildroot}
+cd %{pear_name}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
@@ -92,6 +92,9 @@ fi
 
 
 %changelog
+* Sun May 04 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- Update to 1.1.4
+
 * Fri Jul 26 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1
 - explicit dependencies
