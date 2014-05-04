@@ -1,41 +1,57 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name phpcpd
-%global channel pear.phpunit.de
+%global gh_commit    a9462153f2dd90466a010179901d31fbff598365
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   phpcpd
+%global php_home     %{_datadir}/php/SebastianBergmann
+%global pear_name    phpcpd
+%global pear_channel pear.phpunit.de
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phpcpd
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://github.com/sebastianbergmann/phpcpd
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
+# Autoload template
+Source1:        autoload.php.in
+
+# Fix for RPM, use autoload
+Patch0:         %{gh_project}-rpm.patch
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language)  >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
+BuildRequires:  %{_bindir}/phpab
+%if %{with_tests}
+BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-phpunit-FinderFacade >= 1.1.0
+BuildRequires:  php-phpunit-Version >= 1.0.3
+BuildRequires:  php-symfony-console >= 2.2.0
+BuildRequires:  php-phpunit-PHP-Timer >= 1.0.4
+BuildRequires:  php-theseer-fDOMDocument >= 1.4
+%endif
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-# From package.xml
+# From composer.json
 Requires:       php(language) >= 5.3.3
-Requires:       php-tokenizer
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-channel(%{channel})
-Requires:       php-pear(pear.phpunit.de/FinderFacade) >= 1.1.0
-Requires:       php-pear(pear.phpunit.de/PHP_Timer)    >= 1.0.4
-Requires:       php-pear(pear.phpunit.de/Version)      >= 1.0.0
-Requires:       php-pear(pear.symfony.com/Console)     >= 2.2.0
-# From phpcompatinfo report for version 2.0.0
+Requires:       php-phpunit-FinderFacade >= 1.1.0
+Requires:       php-phpunit-Version >= 1.0.3
+Requires:       php-symfony-console >= 2.2.0
+Requires:       php-phpunit-PHP-Timer >= 1.0.4
+Requires:       php-theseer-fDOMDocument >= 1.4
+# From phpcompatinfo report for version 2.0.1
 Requires:       php-dom
 Requires:       php-mbstring
 Requires:       php-spl
+Requires:       php-tokenizer
 Requires:       php-xml
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+# For compatibility with pear
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -47,27 +63,33 @@ need to get a quick overview of duplicated code in a project.
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1 -b .rpm
 
 
 %build
-cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+phpab \
+  --output   src/autoload.php \
+  --template %{SOURCE1} \
+  src
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}
+cp -pr src %{buildroot}%{php_home}/PHPCPD
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
+install -D -p -m 755 phpcpd %{buildroot}%{_bindir}/phpcpd
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+%if %{with_tests}
+%check
+phpunit \
+   --bootstrap src/autoload.php \
+   -d date.timezone=UTC \
+   tests
+%endif
 
 
 %clean
@@ -75,26 +97,25 @@ rm -rf %{buildroot}
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/SebastianBergmann/PHPCPD
+%doc LICENSE README.md composer.json
+%{php_home}/PHPCPD
 %{_bindir}/phpcpd
 
 
 %changelog
+* Sun May  4 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
+- sources from github
+- run test suite during build
+
 * Fri Nov 08 2013 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0
 - drop dependency on components.ez.no/ConsoleTools
