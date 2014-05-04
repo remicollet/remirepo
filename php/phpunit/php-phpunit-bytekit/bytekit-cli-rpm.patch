@@ -1,0 +1,9 @@
+diff -up ./bytekit.php.rpm ./bytekit.php
+--- ./bytekit.php.rpm	2014-05-04 16:59:19.000000000 +0200
++++ ./bytekit.php	2014-05-04 16:59:32.000000000 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env php
++#!/usr/bin/php
+ <?php
+ /**
+  * bytekit-cli

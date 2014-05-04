@@ -1,33 +1,41 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name bytekit
+%global gh_commit    ef4020bf0b2b233ffb4e85898d9ab563dda024b2
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   bytekit-cli
+%global php_home     %{_datadir}/php
+%global pear_name    bytekit
+%global pear_channel pear.phpunit.de
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %global channel pear.phpunit.de
 
 Name:           php-phpunit-bytekit
 Version:        1.1.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A command-line tool built on the PHP Bytekit extension
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://github.com/sebastianbergmann/bytekit-cli
-Source0:        http://pear.phpunit.de/get/%{pear_name}-%{version}.tgz
-Patch0:         symfony_2.2.patch
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+
+Patch0:         %{gh_project}-rpm.patch
+Patch1:         symfony_2.2.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.4
-BuildRequires:  php-channel(%{channel})
 
+# From package.xml
 Requires:       php(language) >= 5.3.3
-Requires:       php-pear(PEAR) >= 1.9.4
-Requires:       php-channel(%{channel})
-Requires:       php-pear(pear.symfony.com/Finder) >= 2.1.0
+Requires:       php-symfony-finder >= 2.1.0
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
+# From phpcomaptinfo report for version 1.1.3
+Requires:       php-dom
+Requires:       php-pcre
+Requires:       php-spl
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+# For compatibility with pear mode
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
@@ -39,29 +47,27 @@ analysis tasks.
 
 
 %prep
-%setup -q -c
-%patch0 -p1 -b .orig
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{name}.xml
-cd %{pear_name}-%{version}
+%setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1 -b .rpm
+%patch1 -p1 -b .orig
+
+rm Bytekit/Autoload.php.*
 
 
 %build
-cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+#phpab \
+#  --output   Bytekit/Autoload.php \
+#  --template Bytekit/Autoload.php.in \
+#  Bytekit
 
 
 %install
-cd %{pear_name}-%{version}
-rm -rf %{buildroot} docdir
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+rm -rf         %{buildroot}
+mkdir -p       %{buildroot}%{php_home}
+cp -pr Bytekit %{buildroot}%{php_home}/Bytekit
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+install -D -p -m 755 bytekit.php %{buildroot}%{_bindir}/bytekit
 
 
 %clean
@@ -69,25 +75,23 @@ rm -rf %{buildroot}
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        pear.phpunit.de/%{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Bytekit
+%doc README.markdown LICENSE
+%{php_home}/Bytekit
 %{_bindir}/bytekit
 
 
 %changelog
+* Sun May  4 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-3
+- sources from github
+
 * Tue Apr  9 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.3-2
 - pull symfony 2.2 patch from rawhide
 
