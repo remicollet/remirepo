@@ -15,6 +15,7 @@
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  Weakref
 %global  ext_name  weakref
+%global versuf     -beta
 %if "%{php_version}" < "5.6"
 %global ini_name   %{ext_name}.ini
 %else
@@ -23,16 +24,12 @@
 
 Summary:        Implementation of weak references
 Name:           %{?scl_prefix}php-pecl-weakref
-Version:        0.2.3
+Version:        0.2.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# URL from sources header
-# https://github.com/colder/php-weakref/issues/11
-Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -82,16 +79,11 @@ that object from being collected by the garbage collector (GC).
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-cp %{SOURCE1} LICENSE
-
-# https://github.com/colder/php-weakref/issues/12
-sed -e '/PHP_WEAKREF_VERSION/s/0.0.1-alpha/%{version}/' \
-    -i php_weakref.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_WEAKREF_VERSION/{s/.* "//;s/".*$//;p}' php_weakref.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
+if test "x${extver}" != "x%{version}%{?versuf}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?versuf}.
    exit 1
 fi
 cd ..
@@ -146,7 +138,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
-for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -194,6 +186,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 05 2014 Remi Collet <remi@fedoraproject.org> - 0.2.4-1
+- Update to 0.2.4 (beta)
+
 * Sun May  4 2014 Remi Collet <remi@fedoraproject.org> - 0.2.3-1
 - initial package, version 0.2.3 (beta)
 - open https://github.com/colder/php-weakref/issues/11 License
