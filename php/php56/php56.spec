@@ -117,8 +117,8 @@
 %global db_devel  libdb-devel
 %endif
 
-#global snapdate      201404090430
-%global rcver         beta2
+%global snapdate      201405061030
+#global rcver         beta2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -164,7 +164,6 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
-Patch9: php-5.6.0-readline.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -891,7 +890,6 @@ rm -rf ext/json
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
-%patch9 -p1 -b .readline
 
 %patch21 -p1 -b .odbctimer
 
@@ -1911,6 +1909,9 @@ fi
 
 
 %changelog
+* Tue May  6 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.8.201405061030
+- new snapshot php5.6-201405061030
+
 * Sat May  3 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.7.beta2
 - php 5.6.0beta2
 
