@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit-MockObject
 Version:        2.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -28,6 +28,9 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Autoload template
 Source1:        Autoload.php.in
+
+# Temporary workaround, under investigation
+Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -56,6 +59,8 @@ Mock Object library for PHPUnit
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1
 
 
 %build
@@ -101,8 +106,11 @@ fi
 
 
 %changelog
+* Tue May  6 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
+- workaround to autoload issue during check
+
 * Sat May  3 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
-- update to 2.1.0 for PHPUnit 4.1.0
+- update to 2.1.0 for PHPUnit 4.1
 
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
 - cleanup pear registry
@@ -110,6 +118,7 @@ fi
 * Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - update to 2.0.5
 - sources from gthub
+- run tests when build --with tests option
 
 * Sun Jan 13 2013 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - Version 1.2.3 (stable) - API 1.2.0 (stable)
