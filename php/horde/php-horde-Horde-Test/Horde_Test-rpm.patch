@@ -1,6 +1,6 @@
-diff -up Horde_Test-2.4.0/lib/Horde/Test/AllTests.php.rpm Horde_Test-2.4.0/lib/Horde/Test/AllTests.php
---- Horde_Test-2.4.0/lib/Horde/Test/AllTests.php.rpm	2014-05-06 07:24:13.000000000 +0200
-+++ Horde_Test-2.4.0/lib/Horde/Test/AllTests.php	2014-05-06 07:24:37.000000000 +0200
+diff -up Horde_Test-2.4.1/lib/Horde/Test/AllTests.php.rpm Horde_Test-2.4.1/lib/Horde/Test/AllTests.php
+--- Horde_Test-2.4.1/lib/Horde/Test/AllTests.php.rpm	2014-05-06 08:42:59.000000000 +0200
++++ Horde_Test-2.4.1/lib/Horde/Test/AllTests.php	2014-05-06 14:15:13.780403549 +0200
 @@ -12,15 +12,7 @@
   * @link     http://www.horde.org/components/Horde_Test
   */
@@ -18,14 +18,18 @@ diff -up Horde_Test-2.4.0/lib/Horde/Test/AllTests.php.rpm Horde_Test-2.4.0/lib/H
  
  /**
   * Horde base test suite
-diff -up Horde_Test-2.4.0/lib/Horde/Test/Autoload.php.rpm Horde_Test-2.4.0/lib/Horde/Test/Autoload.php
---- Horde_Test-2.4.0/lib/Horde/Test/Autoload.php.rpm	2014-05-06 07:23:59.000000000 +0200
-+++ Horde_Test-2.4.0/lib/Horde/Test/Autoload.php	2014-05-06 07:24:50.000000000 +0200
-@@ -41,7 +41,7 @@ class Horde_Test_Autoload
+diff -up Horde_Test-2.4.1/lib/Horde/Test/Autoload.php.rpm Horde_Test-2.4.1/lib/Horde/Test/Autoload.php
+--- Horde_Test-2.4.1/lib/Horde/Test/Autoload.php.rpm	2014-05-06 14:15:13.781403553 +0200
++++ Horde_Test-2.4.1/lib/Horde/Test/Autoload.php	2014-05-06 14:16:25.522649055 +0200
+@@ -41,11 +41,7 @@ class Horde_Test_Autoload
              return;
          }
  
--        require __DIR__ . '/../../../bundle/vendor/autoload.php';
+-        if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+-            require __DIR__ . '/vendor/autoload.php';
+-        } else {
+-            require __DIR__ . '/../../../bundle/vendor/autoload.php';
+-        }
 +        require_once 'PHPUnit/Autoload.php';
  
          spl_autoload_register(

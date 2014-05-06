@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Test
-Version:        2.4.0
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        Horde testing base classes
 
@@ -111,6 +111,9 @@ fi
 
 
 %changelog
+* Tue May 06 2014 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- Update to 2.4.1
+
 * Tue May 06 2014 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - Update to 2.4.0
 - drop bundled PHPUnit and use system one
