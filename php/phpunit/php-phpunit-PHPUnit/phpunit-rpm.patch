@@ -1,13 +1,13 @@
 diff -up ./phpunit.rpm ./phpunit
---- ./phpunit.rpm	2014-04-29 16:21:26.000000000 +0200
-+++ ./phpunit	2014-04-29 16:22:50.000000000 +0200
+--- ./phpunit.rpm	2014-05-02 09:13:40.000000000 +0200
++++ ./phpunit	2014-05-06 15:37:05.557950817 +0200
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  /* PHPUnit
   *
-@@ -35,21 +35,6 @@
+@@ -35,21 +35,7 @@
   * POSSIBILITY OF SUCH DAMAGE.
   */
  
@@ -26,7 +26,7 @@ diff -up ./phpunit.rpm ./phpunit
 -    );
 -}
 -
--require PHPUNIT_COMPOSER_INSTALL;
-+require 'PHPUnit/Autoload.php';
++define ('PHPUNIT_COMPOSER_INSTALL', stream_resolve_include_path('PHPUnit/Autoload.php'));
+ require PHPUNIT_COMPOSER_INSTALL;
  
  PHPUnit_TextUI_Command::main();

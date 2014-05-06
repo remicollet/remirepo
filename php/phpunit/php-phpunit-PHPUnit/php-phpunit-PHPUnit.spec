@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit
 Version:        4.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -86,6 +86,8 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 # Package have been rename
 Obsoletes:      php-pear-PHPUnit < %{version}
 Provides:       php-pear-PHPUnit = %{version}-%{release}
+# Project
+Provides:       phpunit = %{version}-%{release}
 
 
 %description
@@ -152,6 +154,9 @@ fi
 
 
 %changelog
+* Tue May  6 2014 Remi Collet <remi@fedoraproject.org> - 4.1.0-2
+- fix some autoload issues
+
 * Sat May  3 2014 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
 - Update to 4.1.0
 
