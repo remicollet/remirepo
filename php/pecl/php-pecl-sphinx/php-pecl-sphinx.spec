@@ -22,13 +22,17 @@
 %endif
 
 Name:           %{?scl_prefix}php-pecl-sphinx
-Version:        1.3.0
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.3.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# http://git.php.net/?p=pecl/search_engine/sphinx.git;a=commitdiff;h=c9df387423cc10e5e2db98ee55d98361ab7e404a
+# http://git.php.net/?p=pecl/search_engine/sphinx.git;a=commitdiff;h=8e491962b19a253d813f8056c07d15b643e668c3
+Patch0:         %{pecl_name}-el5.patch
 
 # https://bugs.php.net/65864 ask license file
 # URL from sphinx.c headers
@@ -80,18 +84,18 @@ client library for Sphinx the SQL full-text search engine.
 %setup -q -c
 
 mv %{pecl_name}-%{version} NTS
+cd NTS
 
-cp %{SOURCE1} NTS/LICENSE
-
-# https://bugs.php.net/bug.php?id=61793
-sed -i -e '/PHP_SPHINX_VERSION/s/1.1.0/%{version}/'  NTS/php_sphinx.h
+%patch0 -p1
+cp %{SOURCE1} LICENSE
 
 # Check reported version (phpinfo), as this is often broken
-extver=$(sed -n '/#define PHP_SPHINX_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_sphinx.h)
+extver=$(sed -n '/#define PHP_SPHINX_VERSION/{s/.* "//;s/".*$//;p}' php_sphinx.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
 fi
+cd ..
 
 cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -185,6 +189,9 @@ fi
 
 
 %changelog
+* Tue May 06 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- Update to 1.3.1 (stable)
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-5
 - add numerical prefix to extension configuration file (php 5.6)
 
