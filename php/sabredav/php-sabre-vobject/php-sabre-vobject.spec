@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    dd1dd19b6601cdc99408b70ec260052825f70b8f
+%global gh_commit    48db24f6a8ef3943b7283c6a8aaf9ec6b797283d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-vobject
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Library to parse and manipulate iCalendar and vCard objects
-Version:        3.2.0
+Version:        3.2.1
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -85,8 +85,11 @@ install -Dpm 0755 bin/vobject \
 
 %check
 %if %{with_tests}
-sed -e s/testGetDateTime/SKIP_testGetDateTime/ \
-    -i tests/Sabre/VObject/Property/VCard/DateAndOrTimeTest.php
+%if "%{php_version}" < "5.5"
+# Broken by change in json_encode in 5.4.28
+sed -e 's/function testConvertJCardPretty/function SKIP_testConvertJCardPretty/' \
+    -i tests/Sabre/VObject/CliTest.php
+%endif
 
 : Run upstream test suite against installed library
 cd tests
@@ -107,6 +110,9 @@ phpunit \
 
 
 %changelog
+* Tue May  6 2014 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
+- update to 3.2.1
+
 * Sun Apr  6 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
 - update to 3.2.0
 
