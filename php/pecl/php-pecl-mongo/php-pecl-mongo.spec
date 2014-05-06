@@ -5,7 +5,7 @@
 %global pecl_name   mongo
 %global with_zts    0%{?__ztsphp:1}
 #global prever      RC2
-%global gh_commit   d5b3e2ebafbd95bc3de2e7fa0837487af540f130
+%global gh_commit   9ed256e3a3097e39291a68aadeaacdbbcc32dae2
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
@@ -20,8 +20,8 @@
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.5.1
-Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      1.5.2
+Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -221,6 +221,9 @@ rm -rf data
 
 
 %changelog
+* Tue May 06 2014 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
+- Update to 1.5.2 (stable)
+
 * Thu Apr 10 2014 Remi Collet <remi@fedoraproject.org> - 1.5.1-2
 - add numerical prefix to extension configuration file
 
