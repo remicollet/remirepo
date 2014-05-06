@@ -22,21 +22,13 @@
 %endif
 
 Name:           %{?scl_prefix}php-pecl-sphinx
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# http://git.php.net/?p=pecl/search_engine/sphinx.git;a=commitdiff;h=c9df387423cc10e5e2db98ee55d98361ab7e404a
-# http://git.php.net/?p=pecl/search_engine/sphinx.git;a=commitdiff;h=8e491962b19a253d813f8056c07d15b643e668c3
-Patch0:         %{pecl_name}-el5.patch
-
-# https://bugs.php.net/65864 ask license file
-# URL from sphinx.c headers
-Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libsphinxclient-devel
@@ -85,9 +77,6 @@ client library for Sphinx the SQL full-text search engine.
 
 mv %{pecl_name}-%{version} NTS
 cd NTS
-
-%patch0 -p1
-cp %{SOURCE1} LICENSE
 
 # Check reported version (phpinfo), as this is often broken
 extver=$(sed -n '/#define PHP_SPHINX_VERSION/{s/.* "//;s/".*$//;p}' php_sphinx.h)
@@ -155,7 +144,7 @@ install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 # Test & Documentation
 cd NTS
-for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -189,6 +178,9 @@ fi
 
 
 %changelog
+* Tue May 06 2014 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
+- Update to 1.3.2 (stable)
+
 * Tue May 06 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - Update to 1.3.1 (stable)
 
