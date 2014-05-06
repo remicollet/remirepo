@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1ba1938d992be6c0eb4129a2fc81550ff4ee2226
+%global gh_commit    19ae509d699a388154547448b502cef5f19602ec
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-http
@@ -15,7 +15,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Library for dealing with http requests and responses
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -115,6 +115,9 @@ phpunit \
 
 
 %changelog
+* Tue May  6 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3
+
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to 2.0.2
 
