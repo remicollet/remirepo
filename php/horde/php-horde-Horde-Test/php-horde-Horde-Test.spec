@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Test
-Version:        2.3.1
+Version:        2.4.0
 Release:        1%{?dist}
 Summary:        Horde testing base classes
 
@@ -20,6 +20,9 @@ Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+# Use unbundled PHPUnit
+Patch0:         %{pear_name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -29,34 +32,47 @@ BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml, required
 Requires:       php(language) >= 5.3.0
 Requires:       php-dom
 Requires:       php-json
-Requires:       php-pcre
-Requires:       php-pdo
-Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
+# From package.xml, optional
 Requires:       php-pear(%{pear_channel}/Horde_Cli) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cli) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) <  3.0.0
-Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
+# From phpcompatinfo report for version 2.4.0
+Requires:       php-pcre
+Requires:       php-pdo
+Requires:       php-spl
+# Required as we drop bundled copy
+Requires:       php-phpunit-PHPUnit >= 3.5.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
+
 %description
 Horde-specific PHPUnit base classes.
+
 
 %prep
 %setup -q -c
 
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%patch0 -p1 -b .rpm
+
+# Don't install bundled PHPUnit
+# Don't check md5sum for patched files
+sed -e '/bundle\/vendor/d' \
+    -e '/Autoload.php/s/md5sum="[^"]*"//' \
+    -e '/AllTests.php/s/md5sum="[^"]*"//' \
+   ../package.xml >%{name}.xml
 
 
 %build
@@ -95,6 +111,10 @@ fi
 
 
 %changelog
+* Tue May 06 2014 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- Update to 2.4.0
+- drop bundled PHPUnit and use system one
+
 * Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - Update to 2.3.1
 
