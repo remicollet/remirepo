@@ -116,7 +116,7 @@ sed -e 's/testXss/SKIP_testXss/' \
     -i XssTest.php
 
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
