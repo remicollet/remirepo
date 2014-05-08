@@ -1,11 +1,11 @@
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  0.9.5
+Version:  1.0.0
 Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
-Group: Applications/System         
+Group: Applications/System
 # Since 0.8 beta, the main code has been GPLv3+ with exceptions and
 # skins CC-BY-SA.
 # Plugins are a mix of GPLv3+ and GPLv2. The Enigma plugin contains a
@@ -22,13 +22,13 @@ URL: http://www.roundcube.net
 Source0: http://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}-dep.tar.gz
 Source1: roundcubemail.conf
 Source2: roundcubemail.logrotate
-Source4: roundcubemail-README.fedora
+Source4: roundcubemail-README.rpm
 # Elegantly handle removal of moxieplayer Flash binary in tinymce
 # media plugin (see "Drop precompiled flash" in %pre)
 Patch0: roundcubemail-0.9.3-no_swf.patch
 
 # Non-upstreamable: Adjusts config path to Fedora policy
-Patch6: roundcubemail-0.9.0-confpath.patch
+Patch1: roundcubemail-1.0.0-confpath.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root%(%{__id_u} -n)
@@ -56,12 +56,14 @@ Requires: php-simplexml
 Requires: php-sockets
 Requires: php-spl
 Requires: php-xml
-Requires: php-pear(Auth_SASL)
-Requires: php-pear(Mail_Mime)
+Requires: php-pear(Auth_SASL)       >= 1.0.6
+Requires: php-pear(Mail_Mime)       >= 1.8.1
 Requires: php-pear(Net_SMTP)
-Requires: php-pear(Net_Socket)
-Requires: php-pear(Mail_mimeDecode)
-Requires: php-pear(Net_IDNA2)
+Requires: php-pear(Net_Sieve)       >= 1.3.2
+Requires: php-pear(Mail_mimeDecode) >= 1.5.5
+Requires: php-pear(Net_IDNA2)       >= 0.1.1
+# not available php-pear(Crypt_GPG) >1.2.0
+
 
 %description
 RoundCube Webmail is a browser-based multilingual IMAP client
@@ -73,44 +75,36 @@ requires a database: MySQL, PostgreSQL and SQLite are known to
 work. The user interface is fully skinnable using XHTML and
 CSS 2.
 
+
 %prep
 %setup -q -n roundcubemail-%{version}-dep
 %patch0 -p1
-%patch6 -p1
+%patch1 -p1
 
 # fix permissions and remove any .htaccess files
 find . -type f -print | xargs chmod a-x
 find . -name \.htaccess -print | xargs rm -f
 
-# fixup paths to use the right paths
-sed -i 's|temp/|${_tmppath}|' config/main.inc.php.dist
-sed -i 's|config/|%{_sysconfdir}/roundcubemail/|' config/main.inc.php.dist
-sed -i 's|logs/|%{_logdir}/roundcubemail/|' config/main.inc.php.dist
+# Fix shebang
+chmod +x bin/*sh
+sed -e '/^#!/s:/usr/bin/env php:/usr/bin/php:' \
+    -i bin/*sh
 
 # ??? - Jon, this could do with a comment; fixing carriage returns? (adamw)
 sed -i 's/\r//' SQL/mssql.initial.sql
 
-#Drop precompiled flash
+# Drop precompiled flash
 find . -type f -name '*.swf' | xargs rm -f
 
+
 %build
+# Nothing
+
 
 %install
-
 rm -rf %{buildroot}
 install -d %{buildroot}%{roundcubedir}
 cp -pr * %{buildroot}%{roundcubedir}
-
-#ln -s ../../../pear/PEAR.php %{buildroot}%{roundcubedir}/program/lib/PEAR.php
-#ln -s ../../../pear/Auth %{buildroot}%{roundcubedir}/program/lib/Auth
-#ln -s ../../../pear/DB %{buildroot}%{roundcubedir}/program/lib/DB
-#ln -s ../../../pear/DB.php %{buildroot}%{roundcubedir}/program/lib/DB.php
-#ln -s ../../../pear/Mail %{buildroot}%{roundcubedir}/program/lib/Mail
-#ln -s ../../../pear/Net %{buildroot}%{roundcubedir}/program/lib/Net
-
-# drop the installer and the update.sh script which depends on it
-rm -rf %{buildroot}%{roundcubedir}/installer
-rm -f %{buildroot}%{roundcubedir}/bin/update.sh
 
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
 cp -pr %SOURCE1 %{buildroot}%{_sysconfdir}/httpd/conf.d
@@ -119,56 +113,56 @@ mkdir -p %{buildroot}%{_sysconfdir}/roundcubemail
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
 cp -pr %SOURCE2 %{buildroot}%{_sysconfdir}/logrotate.d/roundcubemail
 
+# Log files
 mkdir -p %{buildroot}/var/log/roundcubemail
+# Temp files
+mkdir -p %{buildroot}/var/lib/roundcubemail
 
-cp -pr %SOURCE4 .
+cp -pr %SOURCE4 README.rpm
 
-# use dist files as config files
-mv %{buildroot}%{roundcubedir}/config/db.inc.php.dist %{buildroot}%{_sysconfdir}/roundcubemail/db.inc.php
-mv %{buildroot}%{roundcubedir}/config/main.inc.php.dist %{buildroot}%{_sysconfdir}/roundcubemail/main.inc.php
+# create empty files for ghost to not remove OLD config (0.9.x)
+touch %{buildroot}%{_sysconfdir}/roundcubemail/db.inc.php
+touch %{buildroot}%{_sysconfdir}/roundcubemail/main.inc.php
+# create empty files for ghost for the NEW config
+touch %{buildroot}%{_sysconfdir}/roundcubemail/config.inc.php
+
 # keep any other config files too
 mv %{buildroot}%{roundcubedir}/config/* %{buildroot}%{_sysconfdir}/roundcubemail/
 
 # clean up the buildroot
 rm -rf %{buildroot}%{roundcubedir}/{config,logs,temp}
-rm -rf %{buildroot}%{roundcubedir}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING,SQL}
+rm -rf %{buildroot}%{roundcubedir}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING}
+
 
 %clean
 rm -rf %{buildroot}
 
-%post
-# replace default des string in config file for better security
-function makedesstr
-(
-chars=(0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s t u v w x y z A
-B C D E F G H I J K L M N O P Q R S T U V W X Y Z)
-
-max=${#chars[*]}
-
-for i in `seq 1 24`; do
-    let rand=${RANDOM}%%${max}
-    str="${str}${chars[$rand]}"
-done
-echo $str
-)
-
-sed -i "s/rcmail-\!24ByteDESkey\*Str/`makedesstr`/" /etc/roundcubemail/main.inc.php || : &> /dev/null
-exit 0
-
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGELOG INSTALL LICENSE README.md UPGRADING SQL roundcubemail-README.fedora
+%doc CHANGELOG INSTALL LICENSE README.md UPGRADING README.rpm
 %{roundcubedir}
 %dir %{_sysconfdir}/%{name}
-%attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/%{name}/db.inc.php
-%attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/%{name}/main.inc.php
+# OLD config files from previous version
+%ghost %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/%{name}/db.inc.php
+%ghost %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/%{name}/main.inc.php
+# NEW config file
+%ghost %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
+# Default value, overwritten on update
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/mimetypes.php
+%attr(0640,root,apache) %{_sysconfdir}/%{name}/defaults.inc.php
+%attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php.sample
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/roundcubemail.conf
 %attr(0775,root,apache) %dir /var/log/roundcubemail
+%attr(0775,root,apache) %dir /var/lib/roundcubemail
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
+
 %changelog
+* Thu May  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0
+- provide the installer
+
 * Tue Oct 22 2013 Remi Collet <remi@fedoraproject.org> - 0.9.5-1
 - backport 0.9.5 for remi repo
 

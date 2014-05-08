@@ -1,0 +1,32 @@
+Additional installation and update information:
+
+Upstream documentation: http://trac.roundcube.net/wiki
+
+Notice
+- temporary files are stored in /var/lib/roundcubemail
+- logs files are stored in /var/log/roundcubemail
+- configuration files are stored in /etc/roundcubemail
+
+As those directories are not served by the web server,
+there is no need to protect them.
+
+
+
+The installer is available at http://localhost/roundcubemail/installer
+
+Access is only authorized from the server, locally.
+You can enlarge access for installation, but remember to secure it
+again once configured (upstream recommend to drop the directory).
+
+The Wemail is available at http://localhost/roundcubemail
+
+You can enlarde permission once configured.
+
+Set /etc/httpd/conf.d/roundcubemail.conf
+
+
+WARNING: when upgrading from < 1.0 the old configuration files named main.inc.php
+and db.inc.php are now deprecated and should be replaced with one single config.inc.php file.
+Run the ./bin/update.sh script to get this conversion done or manually merge the files.
+
+NOTE: the new config.inc.php should only contain options that differ from the ones listed in defaults.inc.php.

@@ -1,0 +1,61 @@
+diff -up roundcubemail-1.0.0-dep/config/defaults.inc.php.rpm roundcubemail-1.0.0-dep/config/defaults.inc.php
+--- roundcubemail-1.0.0-dep/config/defaults.inc.php.rpm	2014-05-08 08:36:47.000000000 +0200
++++ roundcubemail-1.0.0-dep/config/defaults.inc.php	2014-05-08 08:38:00.000000000 +0200
+@@ -293,10 +293,10 @@ $config['user_aliases'] = false;
+ 
+ // use this folder to store log files (must be writeable for apache user)
+ // This is used by the 'file' log driver.
+-$config['log_dir'] = RCUBE_INSTALL_PATH . 'logs/';
++$config['log_dir'] = '/var/log/roundcubemail/';
+ 
+ // use this folder to store temp files (must be writeable for apache user)
+-$config['temp_dir'] = RCUBE_INSTALL_PATH . 'temp/';
++$config['temp_dir'] = '/var/lib/roundcubemail/';
+ 
+ // expire files in temp_dir after 48 hours
+ // possible units: s, m, h, d, w
+diff -up roundcubemail-1.0.0-dep/installer/index.php.rpm roundcubemail-1.0.0-dep/installer/index.php
+--- roundcubemail-1.0.0-dep/installer/index.php.rpm	2014-05-08 08:30:02.000000000 +0200
++++ roundcubemail-1.0.0-dep/installer/index.php	2014-05-08 08:30:46.000000000 +0200
+@@ -41,7 +41,7 @@ ini_set('display_errors', 1);
+ 
+ define('INSTALL_PATH', realpath(dirname(__FILE__) . '/../').'/');
+ define('RCUBE_INSTALL_PATH', INSTALL_PATH);
+-define('RCUBE_CONFIG_DIR', INSTALL_PATH . 'config/');
++define('RCUBE_CONFIG_DIR', '/etc/roundcubemail/');
+ 
+ $include_path  = INSTALL_PATH . 'program/lib' . PATH_SEPARATOR;
+ $include_path .= INSTALL_PATH . 'program/include' . PATH_SEPARATOR;
+diff -up roundcubemail-1.0.0-dep/program/include/iniset.php.rpm roundcubemail-1.0.0-dep/program/include/iniset.php
+--- roundcubemail-1.0.0-dep/program/include/iniset.php.rpm	2014-05-08 08:32:16.000000000 +0200
++++ roundcubemail-1.0.0-dep/program/include/iniset.php	2014-05-08 08:34:39.000000000 +0200
+@@ -29,7 +29,7 @@ if (!defined('INSTALL_PATH')) {
+ }
+ 
+ if (!defined('RCMAIL_CONFIG_DIR')) {
+-    define('RCMAIL_CONFIG_DIR', INSTALL_PATH . 'config');
++    define('RCMAIL_CONFIG_DIR', '/etc/roundcubemail');
+ }
+ 
+ if (!defined('RCUBE_LOCALIZATION_DIR')) {
+@@ -37,7 +37,7 @@ if (!defined('RCUBE_LOCALIZATION_DIR'))
+ }
+ 
+ define('RCUBE_INSTALL_PATH', INSTALL_PATH);
+-define('RCUBE_CONFIG_DIR',  RCMAIL_CONFIG_DIR.'/');
++define('RCUBE_CONFIG_DIR', '/etc/roundcubemail/');
+ 
+ 
+ // RC include folders MUST be included FIRST to avoid other
+diff -up roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php.rpm roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php
+--- roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php.rpm	2014-05-08 08:31:15.000000000 +0200
++++ roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php	2014-05-08 08:31:58.000000000 +0200
+@@ -66,7 +66,7 @@ if (!defined('RCUBE_INSTALL_PATH')) {
+ }
+ 
+ if (!defined('RCUBE_CONFIG_DIR')) {
+-    define('RCUBE_CONFIG_DIR', RCUBE_INSTALL_PATH . 'config/');
++    define('RCUBE_CONFIG_DIR', '/etc/roundcubemail/');
+ }
+ 
+ if (!defined('RCUBE_PLUGINS_DIR')) {
