@@ -15,12 +15,12 @@ there is no need to protect them.
 The installer is available at http://localhost/roundcubemail/installer
 
 Access is only authorized from the server, locally.
-You can enlarge access for installation, but remember to secure it
+You can allow access for installation, but remember to secure it
 again once configured (upstream recommend to drop the directory).
 
-The Wemail is available at http://localhost/roundcubemail
+The Webmail is available at http://localhost/roundcubemail
 
-You can enlarde permission once configured.
+You can grant permission once configured.
 
 Set /etc/httpd/conf.d/roundcubemail.conf
 
