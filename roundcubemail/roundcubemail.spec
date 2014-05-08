@@ -62,7 +62,7 @@ Requires: php-pear(Net_SMTP)
 Requires: php-pear(Net_Sieve)       >= 1.3.2
 Requires: php-pear(Mail_mimeDecode) >= 1.5.5
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
-# not available php-pear(Crypt_GPG) >1.2.0
+# not available php-pear(Crypt_GPG) >= 1.2.0
 # mailcap for /etc/mime.types
 Requires: mailcap
 
@@ -160,7 +160,7 @@ rm -rf %{buildroot}
 %ghost %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/%{name}/main.inc.php
 # NEW config file
 %ghost %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
-# Default value, overwritten on update
+# Default upstream values, overwritten on update
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/mimetypes.php
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/defaults.inc.php
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php.sample
