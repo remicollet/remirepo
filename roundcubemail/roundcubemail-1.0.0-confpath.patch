@@ -1,6 +1,6 @@
 diff -up roundcubemail-1.0.0-dep/config/defaults.inc.php.rpm roundcubemail-1.0.0-dep/config/defaults.inc.php
---- roundcubemail-1.0.0-dep/config/defaults.inc.php.rpm	2014-05-08 08:36:47.000000000 +0200
-+++ roundcubemail-1.0.0-dep/config/defaults.inc.php	2014-05-08 08:38:00.000000000 +0200
+--- roundcubemail-1.0.0-dep/config/defaults.inc.php.rpm	2014-04-06 16:13:17.000000000 +0200
++++ roundcubemail-1.0.0-dep/config/defaults.inc.php	2014-05-08 16:30:40.712838264 +0200
 @@ -293,10 +293,10 @@ $config['user_aliases'] = false;
  
  // use this folder to store log files (must be writeable for apache user)
@@ -14,9 +14,18 @@ diff -up roundcubemail-1.0.0-dep/config/defaults.inc.php.rpm roundcubemail-1.0.0
  
  // expire files in temp_dir after 48 hours
  // possible units: s, m, h, d, w
+@@ -474,7 +474,7 @@ $config['mime_magic'] = null;
+ // This is used to derive mime-types from the filename extension or vice versa.
+ // Such a file is usually part of the apache webserver. If you don't find a file named mime.types on your system,
+ // download it from http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
+-$config['mime_types'] = null;
++$config['mime_types'] = '/etc/mime.types';
+ 
+ // path to imagemagick identify binary
+ $config['im_identify_path'] = null;
 diff -up roundcubemail-1.0.0-dep/installer/index.php.rpm roundcubemail-1.0.0-dep/installer/index.php
---- roundcubemail-1.0.0-dep/installer/index.php.rpm	2014-05-08 08:30:02.000000000 +0200
-+++ roundcubemail-1.0.0-dep/installer/index.php	2014-05-08 08:30:46.000000000 +0200
+--- roundcubemail-1.0.0-dep/installer/index.php.rpm	2014-04-06 16:13:17.000000000 +0200
++++ roundcubemail-1.0.0-dep/installer/index.php	2014-05-08 16:30:40.712838264 +0200
 @@ -41,7 +41,7 @@ ini_set('display_errors', 1);
  
  define('INSTALL_PATH', realpath(dirname(__FILE__) . '/../').'/');
@@ -26,9 +35,20 @@ diff -up roundcubemail-1.0.0-dep/installer/index.php.rpm roundcubemail-1.0.0-dep
  
  $include_path  = INSTALL_PATH . 'program/lib' . PATH_SEPARATOR;
  $include_path .= INSTALL_PATH . 'program/include' . PATH_SEPARATOR;
+diff -up roundcubemail-1.0.0-dep/installer/rcube_install.php.rpm roundcubemail-1.0.0-dep/installer/rcube_install.php
+--- roundcubemail-1.0.0-dep/installer/rcube_install.php.rpm	2014-05-08 16:30:44.987857419 +0200
++++ roundcubemail-1.0.0-dep/installer/rcube_install.php	2014-05-08 16:30:54.986902235 +0200
+@@ -490,7 +490,6 @@ class rcube_install
+     $types = array(
+       'application/zip'   => 'zip',
+       'application/x-tar' => 'tar',
+-      'application/java-archive' => 'jar',
+       'image/gif'     => 'gif',
+       'image/svg+xml' => 'svg',
+     );
 diff -up roundcubemail-1.0.0-dep/program/include/iniset.php.rpm roundcubemail-1.0.0-dep/program/include/iniset.php
---- roundcubemail-1.0.0-dep/program/include/iniset.php.rpm	2014-05-08 08:32:16.000000000 +0200
-+++ roundcubemail-1.0.0-dep/program/include/iniset.php	2014-05-08 08:34:39.000000000 +0200
+--- roundcubemail-1.0.0-dep/program/include/iniset.php.rpm	2014-04-06 16:13:17.000000000 +0200
++++ roundcubemail-1.0.0-dep/program/include/iniset.php	2014-05-08 16:30:40.712838264 +0200
 @@ -29,7 +29,7 @@ if (!defined('INSTALL_PATH')) {
  }
  
@@ -48,8 +68,8 @@ diff -up roundcubemail-1.0.0-dep/program/include/iniset.php.rpm roundcubemail-1.
  
  // RC include folders MUST be included FIRST to avoid other
 diff -up roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php.rpm roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php
---- roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php.rpm	2014-05-08 08:31:15.000000000 +0200
-+++ roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php	2014-05-08 08:31:58.000000000 +0200
+--- roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php.rpm	2014-04-06 16:13:18.000000000 +0200
++++ roundcubemail-1.0.0-dep/program/lib/Roundcube/bootstrap.php	2014-05-08 16:30:40.712838264 +0200
 @@ -66,7 +66,7 @@ if (!defined('RCUBE_INSTALL_PATH')) {
  }
  

@@ -2,7 +2,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.0.0
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -24,7 +24,7 @@ Source1: roundcubemail.conf
 Source2: roundcubemail.logrotate
 Source4: roundcubemail-README.rpm
 # Elegantly handle removal of moxieplayer Flash binary in tinymce
-# media plugin (see "Drop precompiled flash" in %pre)
+# media plugin (see "Drop precompiled flash" in %%prep)
 Patch0: roundcubemail-0.9.3-no_swf.patch
 
 # Non-upstreamable: Adjusts config path to Fedora policy
@@ -63,6 +63,8 @@ Requires: php-pear(Net_Sieve)       >= 1.3.2
 Requires: php-pear(Mail_mimeDecode) >= 1.5.5
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
 # not available php-pear(Crypt_GPG) >1.2.0
+# mailcap for /etc/mime.types
+Requires: mailcap
 
 
 %description
@@ -134,6 +136,16 @@ rm -rf %{buildroot}%{roundcubedir}/{config,logs,temp}
 rm -rf %{buildroot}%{roundcubedir}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING}
 
 
+%pre
+# Drop some old config options to ensure new defaults are used
+if [ -f %{_sysconfdir}/%{name}/main.inc.php ]; then
+  sed -e "/'temp_dir'/d" \
+      -e "/'mime_types'/d" \
+      -e "/'log_dir'/d" \
+      -i %{_sysconfdir}/%{name}/main.inc.php
+fi
+
+
 %clean
 rm -rf %{buildroot}
 
@@ -159,6 +171,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- cleanup some config option from previous version
+- requires mailcap for /etc/mime.types
+
 * Thu May  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0
 - provide the installer
