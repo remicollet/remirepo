@@ -15,7 +15,7 @@
 %global pecl_name mysqlnd_ms
 %global with_zts  0%{?__ztsphp:1}
 %global versufix  -alpha
-%global svnrev    333055
+%global svnrev    333506
 %if "%{php_version}" < "5.6"
 # After json, mysqlnd
 %global ini_name  %{pecl_name}.ini
@@ -27,17 +27,17 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         %{?scl_prefix}php-pecl-mysqlnd-ms
 Version:      1.6.0
-Release:      2.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      3.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/mysqlnd_ms
 
 %if 0%{?svnrev}
-# svn export -r 333055 https://svn.php.net/repository/pecl/mysqlnd_ms/trunk
+# svn export -r 333506 https://svn.php.net/repository/pecl/mysqlnd_ms/trunk
 # cd trunk
 # pecl package
-# mv mysqlnd_ms-1.6.0.tgz mysqlnd_ms-1.6.0-333055.tgz
+# mv mysqlnd_ms-1.6.0.tgz ../mysqlnd_ms-1.6.0-333506.tgz
 Source0:      %{pecl_name}-%{version}-%{svnrev}.tgz
 %else
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
@@ -241,6 +241,9 @@ cd ../ZTS
 
 
 %changelog
+* Fri May  9 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-3.svn333506
+- new snapshot
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-2.svn333055
 - add numerical prefix to extension configuration file
 
