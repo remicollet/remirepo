@@ -1,4 +1,4 @@
-%global svnrel 3024
+%global svnrel 3060
 %global rdate  20140128
 %global upver  0.4
 
@@ -226,6 +226,9 @@ fi
 
 
 %changelog
+* Fri May 09 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.1.svn3060
+- Update to 0.4 snapshot revision 3060
+
 * Thu Apr 24 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.1.svn3024
 - Update to 0.4 snapshot revision 3024
 
