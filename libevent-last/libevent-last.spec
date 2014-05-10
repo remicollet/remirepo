@@ -1,21 +1,37 @@
 %{?scl:             %scl_package         %{libname}}
 
+%if 0%{?fedora} && 0%{?fedora} >= 20
+%global develdocdir %{_docdir}/%{name}-devel
+%else
+%global develdocdir %{_docdir}/%{name}-devel-%{version}
+%endif
+
 %global libname     libevent
 
 # Regression tests take a long time, you can skip 'em with this
+%if %{?runselftest}%{!?runselftest:1}
+%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%else
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%endif
+
+%global with_doc    1
 
 # libevent >= 2.0.9 have soname .5
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 # Standard build
-Name:         %{libname}
+Name:           %{libname}
+%global with_conflicts 0
+
 %else
 # Build for parallel install
 %{?scl:Name:    %{scl_prefix}%{libname}}
 %{!?scl:Name:   %{libname}-last}
+%global with_conflicts 0%{!?scl:1}
 %endif
+
 Version:        2.0.21
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 Group:          System Environment/Libraries
@@ -25,6 +41,9 @@ Source0:        http://downloads.sourceforge.net/levent/%{libname}-%{version}-st
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  openssl-devel
+%if %{with_doc}
+BuildRequires:  doxygen
+%endif
 
 Patch00: libevent-2.0.10-stable-configure.patch
 # Disable network tests
@@ -50,16 +69,34 @@ without having to change the event loop.
 
 
 %package devel
-Summary: Header files, libraries and development documentation for %{name}
+Summary: Development files for %{name}
 Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
+%if %{with_conflicts}
 %{!?scl:Conflicts: %{libname}-devel < %{version}}
 %{!?scl:Provides:  %{libname}-devel = %{version}}
+%endif
 
 %description devel
-This package contains the header files, static libraries and development
-documentation for %{name}. If you like to develop programs using %{name},
-you will need to install %{name}-devel.
+This package contains the header files and libraries for developing
+with %{name}.
+
+
+%if %{with_doc}
+%package doc
+Summary: Development documentation for %{name}
+Group: Documentation
+%if 0%{?rhel} != 5
+BuildArch: noarch
+%endif
+%if %{with_conflicts}
+%{!?scl:Conflicts: %{libname}-doc < %{version}}
+%{!?scl:Provides:  %{libname}-doc = %{version}}
+%endif
+
+%description doc
+This package contains the development documentation for %{name}.
+%endif
 
 
 %prep
@@ -76,11 +113,26 @@ you will need to install %{name}-devel.
     --disable-static
 make %{?_smp_mflags} all
 
+%if %{with_doc}
+# Create the docs
+make doxygen
+%endif
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+
+%if %{with_doc}
+mkdir -p $RPM_BUILD_ROOT/%{develdocdir}/html
+(cd doxygen/html; \
+	install -p -m 644 *.* $RPM_BUILD_ROOT/%{develdocdir}/html)
+
+mkdir -p $RPM_BUILD_ROOT/%{develdocdir}/sample
+(cd sample; \
+	install -p -m 644 *.c Makefile* $RPM_BUILD_ROOT/%{develdocdir}/sample)
+%endif
 
 
 %clean
@@ -114,6 +166,7 @@ make check
 %{_includedir}/evhttp.h
 %{_includedir}/evrpc.h
 %{_includedir}/evutil.h
+%dir %{_includedir}/event2
 %{_includedir}/event2/*.h
 %{_libdir}/libevent.so
 %{_libdir}/libevent_core.so
@@ -125,8 +178,20 @@ make check
 %{_libdir}/pkgconfig/libevent_pthreads.pc
 %{_bindir}/event_rpcgen.*
 
+%if %{with_doc}
+%files doc
+%defattr(-,root,root,-)
+%{develdocdir}/
+%endif
+
 
 %changelog
+* Sat May 10 2014 Remi Collet <remi@fedoraproject.org> - 2.0.21-4
+- merge changes from rawhide:
+  - Add missing directory /usr/include/event2
+  - Correct summary and description of -devel and -doc packages
+- re-add doc sub-package
+
 * Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.21-3
 - improve SCL build
 
