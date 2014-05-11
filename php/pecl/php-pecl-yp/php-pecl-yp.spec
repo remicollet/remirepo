@@ -13,7 +13,6 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  yp
-%global prever     RC1
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
@@ -23,7 +22,7 @@
 Summary:        YP/NIS functions
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -43,15 +42,16 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -72,6 +72,9 @@ of important administrative files (e.g. the password file).
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
+# Fix version
+sed -e '/PHP_YP_VERSION/s/1.0.0RC1/%{version}/' -i php_yp.h
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YP_VERSION/{s/.* "//;s/".*$//;p}' php_yp.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -181,6 +184,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun May 11 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0 (stable)
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.RC1
 - add numerical prefix to extension configuration file (php 5.6)
 
