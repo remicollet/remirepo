@@ -20,7 +20,7 @@
 
 Summary:        Threading API
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.5
+Version:        2.0.7
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -71,7 +71,7 @@ This extension is only available for PHP in ZTS mode.
 %setup -q -c
 
 cd %{pecl_name}-%{version}
-sed -e '/PHP_PTHREADS_VERSION/s/2.0.1/%{version}/' -i php_pthreads.h
+sed -e '/PHP_PTHREADS_VERSION/s/2.0.8/%{version}/' -i php_pthreads.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PTHREADS_VERSION/{s/.* "//;s/".*$//;p}' php_pthreads.h)
@@ -161,6 +161,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun May 11 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7 (stable)
+
 * Sat May 10 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5 (stable)
 - add numerical prefix to extension configuration file
