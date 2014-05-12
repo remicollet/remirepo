@@ -13,7 +13,7 @@
 %{!?runselftest: %global runselftest 1}
 
 Name:           memcached
-Version:        1.4.19
+Version:        1.4.20
 Release:        1%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
@@ -252,6 +252,9 @@ fi
 %{_includedir}/memcached/*
 
 %changelog
+* Mon May 12 2014 Remi Collet <rpms@famillecollet.com> - 0:1.4.20-1
+- Update to 1.4.20
+
 * Fri May  2 2014 Remi Collet <rpms@famillecollet.com> - 0:1.4.19-1
 - Update to 1.4.19
 
