@@ -22,7 +22,7 @@ URL:            http://php5.laurent-laville.org/reflect/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 # Autoloader for RPM - die composer !
-Patch0:         php-bartlett-PHP-Reflect-rpm.patch
+Patch0:         %{name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -83,6 +83,7 @@ cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 install -D -p -m 755 bin/reflect      %{buildroot}%{_bindir}/phpreflect
 install -D -p -m 644 bin/reflect.json %{buildroot}%{_sysconfdir}/phpreflect.json
 
+
 %check
 # Version 2.0.0 : OK (128 tests, 128 assertions)
 %{_bindir}/phpunit \
@@ -102,7 +103,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
+%doc LICENSE composer.json README.*
 %config(noreplace) %{_sysconfdir}/phpreflect.json
 %{_bindir}/phpreflect
 %{_datadir}/php/Bartlett
