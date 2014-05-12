@@ -25,15 +25,12 @@
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase
-Version:       1.2.1
-Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       1.2.2
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tgz
-
-# https://github.com/couchbase/php-ext-couchbase/pull/9
-Patch0:        %{pecl_name}-zts.patch
 
 BuildRequires: %{?scl_prefix}php-devel >= 5.3.0
 BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
@@ -85,8 +82,6 @@ in a Couchbase Server.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1 -b .ztsfix
-
 # Fix version
 sed -e '/PHP_COUCHBASE_VERSION/s/1.2.0/%{version}/' -i php_couchbase.h
 
@@ -121,9 +116,6 @@ make %{?_smp_mflags}
 
 
 %install
-# for short-circuit
-rm -f */modules/{json,igbinary}.so
-
 # Install the NTS stuff
 make install -C NTS INSTALL_ROOT=%{buildroot}
 install -D -m 644 NTS/example/%{pecl_name}.ini %{buildroot}%{php_inidir}/%{ini_name}
@@ -146,22 +138,19 @@ done
 
 %check
 : minimal NTS load test
-ln -sf %{php_extdir}/{json,igbinary}.so NTS/modules/
 %{__php} -n \
-   -d extension_dir=NTS/modules \
    -d extension=igbinary.so \
    -d extension=json.so \
-   -d extension=%{pecl_name}.so \
+   -d extension=NTS/modules/%{pecl_name}.so \
    -m | grep %{pecl_name}
 
 %if %{with_zts}
 : minimal ZTS load test
 ln -sf %{php_ztsextdir}/{json,igbinary}.so ZTS/modules/
 %{__ztsphp}    -n \
-   -d extension_dir=ZTS/modules \
    -d extension=igbinary.so \
    -d extension=json.so \
-   -d extension=%{pecl_name}.so \
+   -d extension=ZTS/modules/%{pecl_name}.so \
    -m | grep %{pecl_name}
 %endif
 
@@ -191,6 +180,9 @@ fi
 
 
 %changelog
+* Mon May 12 2014 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Update to 1.2.2
+
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-4
 - add numerical prefix to extension configuration file
 
