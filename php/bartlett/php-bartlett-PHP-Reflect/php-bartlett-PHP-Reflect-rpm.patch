@@ -1,0 +1,78 @@
+diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect
+--- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm	2014-05-12 18:01:23.000000000 +0200
++++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect	2014-05-12 18:20:35.000000000 +0200
+@@ -1,31 +1,26 @@
+-#!/usr/bin/env php
++#!/usr/bin/php
+ <?php
+ // CLI version
+ //putenv("REFLECT=/path/to/reflect.json");
+ 
+-$baseDir   = dirname(__DIR__);
+-$vendorDir = $baseDir . '/vendor';
++$vendorDir = '/usr/share/php';
+ 
+-if (\Phar::running()) {
+-    require_once 'phar://phpreflect.phar/vendor/nikic/php-parser/lib/bootstrap.php';
+-    require_once 'phar://phpreflect.phar/vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+-    require_once 'phar://phpreflect.phar/vendor/phpunit/php-timer/PHP/Timer.php';
+-} else {
+-    require_once $vendorDir . '/nikic/php-parser/lib/bootstrap.php';
+-    require_once $vendorDir . '/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+-    require_once $vendorDir . '/phpunit/php-timer/PHP/Timer.php';
+-}
++require_once $vendorDir . '/PhpParser/Autoloader.php';
++PhpParser\Autoloader::register();
++
++require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++
++require_once $vendorDir . '/PHP/Timer.php';
+ 
+ use Symfony\Component\ClassLoader\UniversalClassLoader;
+ 
+ $loader = new UniversalClassLoader();
+ $loader->registerNamespaces(array(
+-    'Symfony\\Component\\Finder'          => $vendorDir . '/symfony/finder',
+-    'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher',
+-    'Symfony\\Component\\Console'         => $vendorDir . '/symfony/console',
+-    'Symfony\\Component\\ClassLoader'     => $vendorDir . '/symfony/class-loader',
+-    'Bartlett\\Tests\\Reflect'            => $baseDir . '/tests',
+-    'Bartlett'                            => $baseDir . '/src',
++    'Symfony\\Component\\Finder'          => $vendorDir,
++    'Symfony\\Component\\EventDispatcher' => $vendorDir,
++    'Symfony\\Component\\Console'         => $vendorDir,
++    'Symfony\\Component\\ClassLoader'     => $vendorDir,
++    'Bartlett'                            => $vendorDir,
+ ));
+ $loader->register();
+ 
+diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php
+--- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php.rpm	2014-05-12 17:53:12.000000000 +0200
++++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php	2014-05-12 17:56:53.000000000 +0200
+@@ -1,20 +1,19 @@
+ <?php
+ 
+ $baseDir   = dirname(__DIR__);
+-$vendorDir = $baseDir . '/vendor';
++$vendorDir = '/usr/share/php';
+ 
+-require_once $vendorDir . '/nikic/php-parser/lib/bootstrap.php';
+-require_once $vendorDir . '/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++require_once $vendorDir . '/PhpParser/Autoloader.php';
++PhpParser\Autoloader::register();
++
++require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+ 
+ use Symfony\Component\ClassLoader\UniversalClassLoader;
+ 
+ $loader = new UniversalClassLoader();
+ $loader->registerNamespaces(array(
+-    'Symfony\\Component\\Finder'          => $vendorDir . '/symfony/finder',
+-    'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher',
+-    'Symfony\\Component\\Console'         => $vendorDir . '/symfony/console',
+-    'Symfony\\Component\\ClassLoader'     => $vendorDir . '/symfony/class-loader',
+     'Bartlett\\Tests\\Reflect'            => $baseDir . '/tests',
+     'Bartlett'                            => $baseDir . '/src',
+ ));
++$loader->useIncludePath(true);
+ $loader->register();

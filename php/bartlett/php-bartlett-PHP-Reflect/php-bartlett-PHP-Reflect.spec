@@ -6,83 +6,87 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global channel   bartlett.laurent-laville.org
-%global pear_name PHP_Reflect
-
+%global gh_commit    b45be1d0d1b5a46253f9cda894dd7717f0a64abd
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     llaville
+%global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        1.9.0
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://bartlett.laurent-laville.org/
-Source0:        http://%{channel}/get/%{pear_name}-%{version}%{?prever}.tgz
+URL:            http://php5.laurent-laville.org/reflect/
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+
+# Autoloader for RPM - die composer !
+Patch0:         php-bartlett-PHP-Reflect-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.0
-BuildRequires:  php-pear(PEAR) >= 1.9.0
-BuildRequires:  php-channel(%{channel})
+BuildRequires:  php(language)               >= 5.3
 # to run test suite
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
+BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-phpunit-PHP-Timer       >= 1.0.0
+BuildRequires:  php-PHPParser               >= 1.0.0
+BuildRequires:  php-symfony-classloader     >= 2.4
+BuildRequires:  php-symfony-eventdispatcher >= 2.4
+BuildRequires:  php-symfony-finder          >= 2.4
+BuildRequires:  php-symfony-console         >= 2.4
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-# From package.xml
-Requires:       php(language) >= 5.3.0
-Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-channel(%{channel})
+# From composer.json
+Requires:       php(language)               >= 5.3
+Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-tokenizer
-
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
+Requires:       php-phpunit-PHP-Timer       >= 1.0.0
+Requires:       php-PHPParser               >= 1.0.0
+Requires:       php-symfony-classloader     >= 2.4
+Requires:       php-symfony-eventdispatcher >= 2.4
+Requires:       php-symfony-finder          >= 2.4
+Requires:       php-symfony-console         >= 2.4
+# From package.xml
+Requires:       php-date
+Requires:       php-reflection
 
 
 %description
 PHP_Reflect adds the ability to reverse-engineer classes, interfaces,
 functions, constants and more, by connecting php callbacks to other tokens.
 
-HTML Documentation:  %{pear_docdir}/%{pear_name}/html/index.html
+Documentation: http://php5.laurent-laville.org/reflect/manual/2.0/en/
 
 
 %prep
-%setup -q -c
+%setup -q -n %{gh_project}-%{gh_commit}
 
-# Package is V2
-cd %{pear_name}-%{version}%{?prever}
-mv -f ../package.xml %{name}.xml
+%patch0 -p1 -b .rpm
+
+find . -type f -name \*.rpm -print | xargs rm
+
+sed -e 's/@package_version@/%{version}/' \
+    -i $(find src -name \*.php)
 
 
 %build
-cd %{pear_name}-%{version}%{?prever}
+# Nothing
 
 
 %install
 rm -rf %{buildroot}
-cd %{pear_name}-%{version}%{?prever}
+mkdir -p %{buildroot}%{_datadir}/php
+cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
-
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+install -D -p -m 755 bin/reflect %{buildroot}%{_bindir}/phpreflect
 
 
 %check
-cd %{pear_name}-%{version}%{?prever}
-
-# Version 1.9.0 : OK (Tests: 51, Assertions: 113, Skipped: 1)
+# Version 2.0.0 : OK (128 tests, 128 assertions)
 %{_bindir}/phpunit \
-  -d date.timezone=UTC \
-  --bootstrap %{buildroot}%{pear_phpdir}/Bartlett/PHP/Reflect/Autoload.php \
-  tests
+  -d date.timezone=UTC
 
 
 %clean
@@ -90,25 +94,26 @@ rm -rf %{buildroot}
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+     bartlett.laurent-laville.org/PHP_Reflect >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Bartlett
-%{pear_testdir}/PHP_Reflect
+%doc LICENSE
+%{_bindir}/phpreflect
+%{_datadir}/php/Bartlett
 
 
 %changelog
+* Mon May 12 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
+- sources from github
+- patch autoloader to not rely on composer
+- drop documentation (link to online doc in description)
+
 * Sat Oct 12 2013 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
 - Update to 1.9.0
 - raise dependency on PHP >= 5.3
