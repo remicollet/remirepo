@@ -1,5 +1,5 @@
 %global gh_owner    couchbase
-%global gh_commit   55e4a2d9cb810eac5d58bfbf5c1b1d7397bfce76
+%global gh_commit   c7dd97ab67b1c66c6c44b8576b4a35ba825a3e8e
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 
 # Tests require some need which are downloaded during make
@@ -12,7 +12,7 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.1.3
+Version:       2.3.1
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
@@ -22,14 +22,20 @@ URL:           http://www.couchbase.com/communities/c/getting-started
 Source0:       https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
 %if %{with_tests}
+# grep DOWNLOAD Makefile.am
 Source10:      http://googletest.googlecode.com/files/gtest-1.7.0-rc1.zip
-Source11:      http://files.couchbase.com/maven2/org/couchbase/mock/CouchbaseMock/0.6-SNAPSHOT/CouchbaseMock-0.6-20130903.160518-3.jar
+Source11:      http://files.couchbase.com/maven2/org/couchbase/mock/CouchbaseMock/0.7-SNAPSHOT/CouchbaseMock-0.7-20140129.023144-1.jar
 %endif
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
 BuildRequires: cyrus-sasl-devel
+%if "%{?vendor}" == "Remi Collet"
+# ensure we use latest version (libevent-last)
+BuildRequires: libevent-devel >= 2.0.20
+%else
 BuildRequires: libevent-devel >= 1.4
+%endif
 BuildRequires: libev-devel
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel >= 1.8
@@ -136,6 +142,10 @@ make check
 
 
 %changelog
+* Mon May 12 2014 Remi Collet <remi@feoraproject.org> - 2.3.1-1
+- update to 2.3.1
+- always use libevent 2
+
 * Sat Oct  5 2013 Remi Collet <remi@feoraproject.org> - 2.1.3-1
 - update to 2.1.3
 
