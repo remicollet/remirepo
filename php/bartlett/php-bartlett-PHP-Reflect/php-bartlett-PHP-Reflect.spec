@@ -80,8 +80,8 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
-install -D -p -m 755 bin/reflect %{buildroot}%{_bindir}/phpreflect
-
+install -D -p -m 755 bin/reflect      %{buildroot}%{_bindir}/phpreflect
+install -D -p -m 644 bin/reflect.json %{buildroot}%{_sysconfdir}/phpreflect.json
 
 %check
 # Version 2.0.0 : OK (128 tests, 128 assertions)
@@ -103,6 +103,7 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc LICENSE
+%config(noreplace) %{_sysconfdir}/phpreflect.json
 %{_bindir}/phpreflect
 %{_datadir}/php/Bartlett
 

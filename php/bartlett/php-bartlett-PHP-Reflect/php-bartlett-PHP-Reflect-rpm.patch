@@ -1,12 +1,15 @@
 diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect
---- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm	2014-05-12 18:01:23.000000000 +0200
-+++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect	2014-05-12 18:20:35.000000000 +0200
-@@ -1,31 +1,26 @@
+--- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm	2014-04-04 23:06:38.000000000 +0200
++++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect	2014-05-12 19:13:22.826673156 +0200
+@@ -1,31 +1,28 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  // CLI version
- //putenv("REFLECT=/path/to/reflect.json");
+-//putenv("REFLECT=/path/to/reflect.json");
++if (!getenv("REFLECT")) {
++     putenv("REFLECT=/etc/phpreflect.json");
++}
  
 -$baseDir   = dirname(__DIR__);
 -$vendorDir = $baseDir . '/vendor';
@@ -47,8 +50,8 @@ diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm ph
  $loader->register();
  
 diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php
---- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php.rpm	2014-05-12 17:53:12.000000000 +0200
-+++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php	2014-05-12 17:56:53.000000000 +0200
+--- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php.rpm	2014-04-04 23:06:38.000000000 +0200
++++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php	2014-05-12 19:06:46.462068049 +0200
 @@ -1,20 +1,19 @@
  <?php
  
@@ -76,3 +79,38 @@ diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.ph
  ));
 +$loader->useIncludePath(true);
  $loader->register();
+diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json
+--- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json.rpm	2014-05-12 19:21:03.396558078 +0200
++++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json	2014-05-12 19:21:06.336569232 +0200
+@@ -1,31 +1,5 @@
+ {
+     "source-providers": [
+-        {
+-            "in": "phar:///var/compatinfo/branches/v3/examples/archives/PHP_CompatInfo-2.0.0.zip as CompatInfo",
+-            "name": "*.php",
+-            "path": "PHP/"
+-        },
+-        {
+-            "in": "phar:///var/compatinfo/branches/v3/examples/archives/PHP_Reflect-1.0.0.tar as Reflect",
+-            "path": "PHP/",
+-            "name": "*.php"
+-        },
+-        {
+-            "in": "phar:///var/compatinfo/branches/v3/examples/archives/PHP_Reflect-1.0.0.tar as ReflectAL",
+-            "path": "PHP/",
+-            "name": "Autoload.php"
+-        },
+-        {
+-            "in": "phar:///var/compatinfo/branches/v3/examples/archives/phing-2.6.1.tgz as phing",
+-            "name": "*.php",
+-            "path": "tasks/system",
+-            "notPath": "contrib/",
+-            "size": "< 4K"
+-        },
+-        {
+-            "in": "phar:///var/compatinfo/branches/v3/examples/archives/Zend-1.12.3.tgz as ZF1",
+-            "name": "*.php"
+-        }
+     ],
+     "plugins": [
+         {
