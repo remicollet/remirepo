@@ -1,15 +1,16 @@
 %global github_owner    nikic
 %global github_name     PHP-Parser
-%global github_version  0.9.4
-%global github_commit   1e5e280ae88a27effa2ae4aa2bd088494ed8594f
+%global github_version  1.0.0beta1
+%global github_commit   a6d46c17b10d89f35a92fa4b8fb5071615bfb36c
 
-%global lib_name        PHPParser
+%global oldlib_name     PHPParser
+%global newlib_name     PhpParser
 
-%global php_min_ver     5.2.0
+%global php_min_ver     5.3
 
-Name:          php-%{lib_name}
-Version:       %{github_version}
-Release:       1%{?dist}
+Name:          php-%{oldlib_name}
+Version:       1.0.0
+Release:       0.1.beta1%{?dist}
 Summary:       A PHP parser written in PHP
 
 Group:         Development/Libraries
@@ -21,25 +22,22 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires: %{_bindir}/phpunit
 # For tests: phpcompatinfo
 BuildRequires: php-ctype
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
-BuildRequires: php-xmlreader
-BuildRequires: php-xmlwriter
 
+# From composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo requires
+Requires:      php-tokenizer
+# phpcompatinfo requires (for 1.0.0 beta1)
 Requires:      php-ctype
 Requires:      php-filter
 Requires:      php-pcre
 Requires:      php-spl
-Requires:      php-tokenizer
-Requires:      php-xmlreader
-Requires:      php-xmlwriter
 
 Obsoletes:     %{name}-test
 
@@ -56,8 +54,12 @@ A PHP parser written in PHP to simplify static analysis and code manipulation.
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
-cp -rp lib/%{lib_name} %{buildroot}%{_datadir}/php/
+mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{oldlib_name}
+cp -rp lib/%{newlib_name} %{buildroot}%{_datadir}/php/
+
+# For compat with old version (wihtout namespace
+ln -s ../%{newlib_name}/Autoloader.php \
+   %{buildroot}%{_datadir}/php/%{oldlib_name}/Autoloader.php
 
 
 %check
@@ -67,10 +69,17 @@ cp -rp lib/%{lib_name} %{buildroot}%{_datadir}/php/
 %files
 %defattr(-,root,root,-)
 %doc LICENSE *.md doc grammar composer.json
-%{_datadir}/php/%{lib_name}
+%{_datadir}/php/%{oldlib_name}
+%{_datadir}/php/%{newlib_name}
 
 
 %changelog
+* Mon May 12 2014 Remi Collet <remi@fedoraproject.org> 1.0.0-0.1.beta1
+- Update to 1.0.0beta1
+- library in /usr/share/php/PhpParser
+- provide /usr/share/php/PHPParser/Autoloader.php for compatibility
+- drop dependencies on xmlreader and xmlwriter
+
 * Sat Nov 16 2013 Remi Collet <remi@fedoraproject.org> 0.9.4-1
 - backport 0.9.4 for remi repo.
 
