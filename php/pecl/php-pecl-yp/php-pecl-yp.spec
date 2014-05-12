@@ -21,7 +21,7 @@
 
 Summary:        YP/NIS functions
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -73,7 +73,7 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
 # Fix version
-sed -e '/PHP_YP_VERSION/s/1.0.0RC1/%{version}/' -i php_yp.h
+#sed -e '/PHP_YP_VERSION/s/1.0.0RC1/%{version}/' -i php_yp.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YP_VERSION/{s/.* "//;s/".*$//;p}' php_yp.h)
@@ -184,6 +184,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 12 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (stable, no change)
+
 * Sun May 11 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0 (stable)
 

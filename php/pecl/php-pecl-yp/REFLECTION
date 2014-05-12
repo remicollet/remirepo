@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #150 yp version 1.0.0 ] {
+Extension [ <persistent> extension #150 yp version 1.0.1 ] {
 
   - Constants [16] {
     Constant [ integer YPERR_ACCESS ] { 15 }
