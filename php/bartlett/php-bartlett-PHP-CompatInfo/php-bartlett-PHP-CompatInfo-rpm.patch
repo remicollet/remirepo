@@ -1,0 +1,130 @@
+diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json.rpm php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json
+--- php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json.rpm	2014-05-02 11:02:24.000000000 +0200
++++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json	2014-05-12 20:24:33.177134072 +0200
+@@ -1,35 +1,8 @@
+ {
+     "source-providers": [
+         {
+-            "in": "phar:///var/dist/PHP_CompatInfo-2.0.0.zip as CompatInfo2",
+-            "name": "*.php",
+-            "path": "PHP/"
+-        },
+-        {
+-            "in": "phar:///var/dist/PHP_Reflect-1.0.0.tar as Reflect1",
+-            "path": "PHP/",
+-            "name": "*.php"
+-        },
+-        {
+-            "in": "phar:///var/dist/PHP_Reflect-1.0.0.tar as ReflectAL",
+-            "path": "PHP/",
+-            "name": "Autoload.php"
+-        },
+-        {
+-            "in": "phar:///var/dist/phing-2.7.0.tgz as phing27",
+-            "name": "*.php",
+-            "path": "tasks/system",
+-            "notPath": "contrib/",
+-            "size": "< 4K"
+-        },
+-        {
+-            "in": "phar:///var/dist/Zend-1.12.3.tgz as ZF1123",
+-            "name": "*.php"
+-        },
+-        {
+-            "in": "phar:///var/dist/Zend-1.12.3.tgz as ZFDate",
+-            "name": "Date.php",
+-            "depth": "== 1"
++                "in": ". as current",
++                "name": "/\\.(php|inc|phtml|module|install)$/"
+         }
+     ],
+     "plugins": [
+diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.rpm php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo
+--- php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.rpm	2014-05-02 11:02:24.000000000 +0200
++++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo	2014-05-12 20:24:04.316031717 +0200
+@@ -1,32 +1,29 @@
+-#!/usr/bin/env php
++#!/usr/bin/php
+ <?php
+ // bin/console
+-//putenv("COMPATINFO=/path/to/dir/compatinfo.json");
++if (!getenv("COMPATINFO")) {
++     putenv("COMPATINFO=/etc/phpcompatinfo.json");
++}
+ ini_set('memory_limit', -1);
+ 
+-$baseDir   = dirname(__DIR__);
+-$vendorDir = $baseDir . '/vendor';
++$vendorDir = '/usr/share/php';
+ 
+-if (\Phar::running()) {
+-    require_once 'phar://phpcompatinfo.phar/vendor/nikic/php-parser/lib/bootstrap.php';
+-    require_once 'phar://phpcompatinfo.phar/vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+-    require_once 'phar://phpcompatinfo.phar/vendor/phpunit/php-timer/PHP/Timer.php';
+-} else {
+-    require_once $vendorDir . '/nikic/php-parser/lib/bootstrap.php';
+-    require_once $vendorDir . '/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+-    require_once $vendorDir . '/phpunit/php-timer/PHP/Timer.php';
+-}
++require_once $vendorDir . '/PhpParser/Autoloader.php';
++PhpParser\Autoloader::register();
++
++require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++
++require_once $vendorDir . '/PHP/Timer.php';
+ 
+ use Symfony\Component\ClassLoader\UniversalClassLoader;
+ 
+ $loader = new UniversalClassLoader();
+ $loader->registerNamespaces(array(
+-    'Symfony\\Component\\Finder'          => $vendorDir . '/symfony/finder',
+-    'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher',
+-    'Symfony\\Component\\Console'         => $vendorDir . '/symfony/console',
+-    'Symfony\\Component\\ClassLoader'     => $vendorDir . '/symfony/class-loader',
+-    'Bartlett\\Tests\\CompatInfo'         => $baseDir . '/tests',
+-    'Bartlett'                            => array($baseDir . '/src', $vendorDir . '/bartlett/php-reflect/src'),
++    'Symfony\\Component\\Finder'          => $vendorDir,
++    'Symfony\\Component\\EventDispatcher' => $vendorDir,
++    'Symfony\\Component\\Console'         => $vendorDir,
++    'Symfony\\Component\\ClassLoader'     => $vendorDir,
++    'Bartlett'                            => $vendorDir,
+ ));
+ $loader->register();
+ 
+diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php.rpm php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php
+--- php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php.rpm	2014-05-02 11:02:24.000000000 +0200
++++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php	2014-05-12 20:24:04.316031717 +0200
+@@ -1,21 +1,24 @@
+ <?php
+ 
+ $baseDir   = dirname(__DIR__);
+-$vendorDir = $baseDir . '/vendor';
++$vendorDir = '/usr/share/php';
+ 
+-require_once $vendorDir . '/nikic/php-parser/lib/bootstrap.php';
+-require_once $vendorDir . '/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+-require_once $vendorDir . '/phpunit/php-timer/PHP/Timer.php';
++require_once $vendorDir . '/PhpParser/Autoloader.php';
++PhpParser\Autoloader::register();
++
++require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++
++require_once $vendorDir . '/PHP/Timer.php';
+ 
+ use Symfony\Component\ClassLoader\UniversalClassLoader;
+ 
+ $loader = new UniversalClassLoader();
+ $loader->registerNamespaces(array(
+-    'Symfony\\Component\\Finder'          => $vendorDir . '/symfony/finder',
+-    'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher',
+-    'Symfony\\Component\\Console'         => $vendorDir . '/symfony/console',
+-    'Symfony\\Component\\ClassLoader'     => $vendorDir . '/symfony/class-loader',
+-    'Bartlett\\Reflect'                   => $vendorDir . '/bartlett/php-reflect/src',
++    'Symfony\\Component\\Finder'          => $vendorDir,
++    'Symfony\\Component\\EventDispatcher' => $vendorDir,
++    'Symfony\\Component\\Console'         => $vendorDir,
++    'Symfony\\Component\\ClassLoader'     => $vendorDir,
++    'Bartlett\\Reflect'                   => $vendorDir,
+     'Bartlett\\Tests\\CompatInfo'         => $baseDir . '/tests',
+     'Bartlett'                            => $baseDir . '/src',
+ ));

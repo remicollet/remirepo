@@ -6,61 +6,48 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name   PHP_CompatInfo
-%global channel     bartlett.laurent-laville.org
-
-# TODO : link /usr/share/pear/data/PHP_CompatInfo/misc/jquery-min.js
-#        to system jquery when available, then fix License (BSD only)
-
+%global gh_commit    b9b813a906d0f2e18608c1c6d153418d99582622
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     llaville
+%global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        2.26.0
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
-# PHP-CompatInfo is BSD, bundled jquery is MIT (or GPL)
-License:        BSD and MIT
+License:        BSD
 URL:            http://php5.laurent-laville.org/compatinfo/
-Source0:        http://bartlett.laurent-laville.org/get/%{pear_name}-%{version}%{?prever}.tgz
-Source1:        https://raw.github.com/llaville/php-compat-info/master/misc/phpcompatinfo.1
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
-# Update configuration for best experience
-# Reference = ALL known extension (instead of installed ones)
-# Make cache / save_path user specific
-# Add .install .module to fileExtensions (for drupal)
-Patch0:         %{pear_name}-conf.patch
+# Autoloader for RPM - die composer !
+Patch0:         %{name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
-BuildRequires:  php-pear(PEAR) >= 1.9.0
-BuildRequires:  php-channel(%{channel})
 # to run test suite
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-BuildRequires:  php-pear(%{channel}/PHP_Reflect) >= 1.9.0
+BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-bartlett-PHP-Reflect >= 2.0.0
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
+# From composer.json
 Requires:       php(language) >= 5.3.0
-Requires:       php-date
-Requires:       php-dom
-Requires:       php-libxml
+Requires:       php-json
 Requires:       php-pcre
-Requires:       php-reflection
 Requires:       php-spl
-Requires:       php-pear(PEAR) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) >= 1.9.0
-Requires:       php-pear(%{channel}/PHP_Reflect) <  2
-Requires:       php-pear(Console_CommandLine) >= 1.2.0
-# Optional
-Requires:       php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
-# Optional and not yet availalble php-pear(Net_Growl) >= 2.2.2
+Requires:       php-tokenizer
+Requires:       php-phpunit-PHP-Timer       >= 1.0.0
+Requires:       php-PHPParser               >= 1.0.0
+Requires:       php-symfony-classloader     >= 2.4
+Requires:       php-symfony-eventdispatcher >= 2.4
+Requires:       php-symfony-finder          >= 2.4
+Requires:       php-symfony-console         >= 2.4
+# From phpcompatinfo report for version 3.1.0
+Requires:       php-curl
+Requires:       php-mbstring
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}%{?prever}
-Provides:       phpcompatinfo = %{version}%{?prever}
+Provides:       phpcompatinfo = %{version}
 
 
 %description
@@ -69,48 +56,34 @@ version and extensions required for it to run. CLI version has many reports
 (extension, interface, class, function, constant) to display and ability to
 show content of dictionary references.
 
-HTML Documentation:  %{pear_docdir}/%{pear_name}/html/index.html
+Documentation: http://php5.laurent-laville.org/compatinfo/manual/3.1/en/
 
 
 %prep
-%setup -q -c
+%setup -q -n %{gh_project}-%{gh_commit}
 
-cd %{pear_name}-%{version}%{?prever}
+%patch0 -p1 -b .rpm
 
-# Copy upstream default configuration
-cp phpcompatinfo.xml.dist phpcompatinfo.xml
-# Apply our changes
-%patch0  -p1 -b .rpm
+find . -type f -name \*.rpm -print | xargs rm
 
-cp ../package.xml %{name}.xml
+sed -e 's/@package_version@/%{version}/' \
+    -i $(find src -name \*.php)
 
 
 %build
-cd %{pear_name}-%{version}%{?prever}
+# Nothing
 
 
 %install
 rm -rf %{buildroot}
-cd %{pear_name}-%{version}%{?prever}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+mkdir -p %{buildroot}%{_datadir}/php
+cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
-
-# Create default package configuration
-install -pm 644 phpcompatinfo.xml %{buildroot}%{pear_cfgdir}/%{pear_name}/
-
-# Install the man page
-mkdir -p %{buildroot}%{_mandir}/man1
-install -pm 644 %{SOURCE1} %{buildroot}%{_mandir}/man1/phpcompatinfo.1
+install -D -p -m 755 bin/compatinfo      %{buildroot}%{_bindir}/phpcompatinfo
+install -D -p -m 644 bin/compatinfo.json %{buildroot}%{_sysconfdir}/phpcompatinfo.json
 
 
 %check
-cd %{pear_name}-%{version}%{?prever}
 
 %if 0%{?rhel} == 6
 # php-5.3.3-CVE-2012-0057.patch add new constants from php 5.3.9
@@ -126,11 +99,8 @@ rm -f tests/Reference/XslTest.php
 %{_bindir}/phpunit \
     -d date.timezone=UTC \
     -d memory_limit=-1 \
-    --bootstrap %{buildroot}%{pear_phpdir}/Bartlett/PHP/CompatInfo/Autoload.php \
 %if 0%{?rhel} < 6 && 0%{?fedora} < 8
-    tests || exit 0
-%else
-    tests
+    || exit 0
 %endif
 
 
@@ -147,21 +117,20 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%dir %{pear_cfgdir}/%{pear_name}
-# Editable configuration
-%config(noreplace) %{pear_cfgdir}/%{pear_name}/phpcompatinfo.xml
-# Default configuration
-%{pear_cfgdir}/%{pear_name}/phpcompatinfo.xml.dist
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Bartlett/PHP/Compat*
-%{pear_testdir}/%{pear_name}
-%{pear_datadir}/%{pear_name}
+%doc LICENSE composer.json README.*
+%config(noreplace) %{_sysconfdir}/phpcompatinfo.json
 %{_bindir}/phpcompatinfo
-%{_mandir}/man1/phpcompatinfo.*
+%{_datadir}/php/Bartlett/CompatInfo
+%{_datadir}/php/Bartlett/CompatInfo.php
 
 
 %changelog
+* Mon May 12 2014 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- update to 3.1.0
+- sources from github
+- patch autoloader to not rely on composer
+- drop documentation (link to online doc in description)
+
 * Fri Dec 13 2013 Remi Collet <remi@fedoraproject.org> - 2.26.0-1
 - Update to 2.26.0 (stable)
 
