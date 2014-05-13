@@ -1,0 +1,31 @@
+<?php
+/* inspired from autoload from version 1.2.1 */
+
+$phpdir = '/usr/share/php';
+
+require_once $phpdir.'/Text/Template/Autoload.php';
+
+require_once $phpdir.'/SebastianBergmann/Version/autoload.php';
+
+require_once $phpdir.'/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+$loader = new Symfony\Component\ClassLoader\UniversalClassLoader();
+$loader->registerNamespaces(array(
+    'Symfony\\Component\\Console'         => $phpdir,
+    'Symfony\\Component\\ClassLoader'     => $phpdir,
+));
+$loader->register();
+
+spl_autoload_register(
+    function($class) {
+        static $classes = null;
+        if ($classes === null) {
+            $classes = array(
+              ___CLASSLIST___
+            );
+        }
+        $cn = strtolower($class);
+        if (isset($classes[$cn])) {
+            require ___BASEDIR___$classes[$cn];
+        }
+    }
+);
