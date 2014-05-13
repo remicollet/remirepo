@@ -1,6 +1,6 @@
 diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json
 --- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json.rpm	2014-04-04 23:06:38.000000000 +0200
-+++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json	2014-05-12 20:19:30.876065361 +0200
++++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json	2014-05-13 08:23:54.982741367 +0200
 @@ -1,30 +1,8 @@
  {
      "source-providers": [
@@ -36,15 +36,26 @@ diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json.r
      "plugins": [
 diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect
 --- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm	2014-04-04 23:06:38.000000000 +0200
-+++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect	2014-05-12 20:12:01.040407402 +0200
-@@ -1,31 +1,28 @@
++++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect	2014-05-13 08:40:44.969643786 +0200
+@@ -1,31 +1,39 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  // CLI version
 -//putenv("REFLECT=/path/to/reflect.json");
 +if (!getenv("REFLECT")) {
-+     putenv("REFLECT=/etc/phpreflect.json");
++    $files = array(
++        realpath('./reflect.json'),
++        getenv('HOME').'/.config/phpreflect.json',
++        '/etc/phpreflect.json',
++    );
++    foreach ($files as $file) {
++        if (file_exists($file)) {
++            putenv("REFLECT=$file");
++            echo "Configuration read from $file\n";
++            break;
++        }
++    }
 +}
  
 -$baseDir   = dirname(__DIR__);
@@ -87,7 +98,7 @@ diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm ph
  
 diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php
 --- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php.rpm	2014-04-04 23:06:38.000000000 +0200
-+++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php	2014-05-12 20:12:01.040407402 +0200
++++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php	2014-05-13 08:23:54.982741367 +0200
 @@ -1,20 +1,19 @@
  <?php
  
