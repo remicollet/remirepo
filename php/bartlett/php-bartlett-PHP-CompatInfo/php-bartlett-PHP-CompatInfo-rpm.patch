@@ -1,6 +1,6 @@
 diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json.rpm php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json
 --- php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json.rpm	2014-05-02 11:02:24.000000000 +0200
-+++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json	2014-05-12 20:24:33.177134072 +0200
++++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json	2014-05-13 08:57:47.713593892 +0200
 @@ -1,35 +1,8 @@
  {
      "source-providers": [
@@ -41,15 +41,25 @@ diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo
      "plugins": [
 diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.rpm php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo
 --- php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.rpm	2014-05-02 11:02:24.000000000 +0200
-+++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo	2014-05-12 20:24:04.316031717 +0200
-@@ -1,32 +1,29 @@
++++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo	2014-05-13 08:59:10.469913479 +0200
+@@ -1,32 +1,39 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  // bin/console
 -//putenv("COMPATINFO=/path/to/dir/compatinfo.json");
 +if (!getenv("COMPATINFO")) {
-+     putenv("COMPATINFO=/etc/phpcompatinfo.json");
++    $files = array(
++        realpath('./compatinfo.json'),
++        getenv('HOME').'/.config/phpcompatinfo.json',
++        '/etc/phpcompatinfo.json',
++    );
++    foreach ($files as $file) {
++        if (file_exists($file)) {
++            putenv("COMPATINFO=$file");
++            break;
++        }
++    }
 +}
  ini_set('memory_limit', -1);
  
@@ -93,7 +103,7 @@ diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo
  
 diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php.rpm php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php
 --- php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php.rpm	2014-05-02 11:02:24.000000000 +0200
-+++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php	2014-05-12 20:24:04.316031717 +0200
++++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php	2014-05-13 08:57:47.713593892 +0200
 @@ -1,21 +1,24 @@
  <?php
  
