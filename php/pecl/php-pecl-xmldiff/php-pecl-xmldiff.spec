@@ -57,15 +57,16 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -74,6 +75,7 @@ Obsoletes:     php55u-pecl-%{pecl_name}
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 %endif
+
 
 %description
 The extension is able to produce diffs of two XML documents and then to apply
@@ -95,6 +97,11 @@ These are the files needed to compile programs using %{name}.
 
 %prep
 %setup -q -c
+
+sed -e '/name="diffmark/d' \
+    -e '/testdata/s/role="data"/role="test"/' \
+    -i package.xml
+
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
@@ -126,6 +133,7 @@ cd NTS
 %{_bindir}/phpize
 %configure \
     --with-libdiffmark \
+    --with-libdir=%{_lib} \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -134,6 +142,7 @@ cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --with-libdiffmark \
+    --with-libdir=%{_lib} \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -157,7 +166,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
-for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//' | grep -v ^diffmark)
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
