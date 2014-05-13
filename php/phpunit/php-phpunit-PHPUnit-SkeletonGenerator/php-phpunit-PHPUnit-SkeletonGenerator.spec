@@ -13,12 +13,11 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit_SkeletonGenerator
 %global pear_channel pear.phpunit.de
-# Missing dep to run test
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
 Group:          Development/Libraries
@@ -42,7 +41,7 @@ BuildRequires:  php-phpunit-Text-Template >= 1.2
 BuildRequires:  php-phpunit-Version       >= 1.0
 BuildRequires:  php-symfony-console       >= 2.4
 BuildRequires:  php-symfony-classloader   >= 2.4
-# BuildRequires: "mikey179/vfsStream": "~1.2"
+BuildRequires:  php-mikey179-vfsstream    >= 1.2
 %endif
 
 # From composer.json
@@ -93,10 +92,10 @@ rm -rf %{buildroot}
 
 %if %{with_tests}
 %check
+cd build
 phpunit \
   -d date.timezone=UTC \
-  --bootstrap src/autoload.php \
-  tests
+  --bootstrap ../src/autoload.php
 %endif
 
 
@@ -117,6 +116,10 @@ fi
 
 
 %changelog
+* Tue May 13 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- add BR on php-mikey179-vfsstream
+- enable test during build
+
 * Tue May 13 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
 - add generated autoloader

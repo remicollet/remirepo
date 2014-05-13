@@ -12,6 +12,7 @@ $loader = new Symfony\Component\ClassLoader\UniversalClassLoader();
 $loader->registerNamespaces(array(
     'Symfony\\Component\\Console'         => $phpdir,
     'Symfony\\Component\\ClassLoader'     => $phpdir,
+    'org\\bovigo\\vfs'                    => $phpdir,
 ));
 $loader->register();
 
