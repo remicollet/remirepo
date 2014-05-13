@@ -76,9 +76,6 @@ subscribing, and an event loop.
 mv %{proj_name}-%{version} NTS
 
 cd NTS
-# https://github.com/mgdm/Mosquitto-PHP/commit/8543020365356c817c48a13aa90079692b4a14a9
-sed -e '/PHP_ADD_LIBRARY_WITH_PATH/s/lib/$PHP_LIBDIR/' -i config.m4
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_MOSQUITTO_VERSION/{s/.* "//;s/".*$//;p}' php_mosquitto.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
