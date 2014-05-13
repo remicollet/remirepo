@@ -13,7 +13,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 
 Name: phpMyAdmin
-Version: 4.2.0
+Version: 4.2.1
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -102,11 +102,12 @@ find . -name \*.php -exec chmod -x {} \;
 #done
 
 # Remove bundled libraries
-rm -rf libraries/php-gettext
-rm -rf libraries/tcpdf
+rm -r libraries/php-gettext
+rm -r libraries/tcpdf
 
 # Remove sources of JavaScript librairies
-rm -rf js/jquery/src
+rm -r js/jquery/src
+rm -r js/openlayers/src
 
 
 %build
@@ -163,6 +164,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue May 13 2014 Remi Collet <rpms@famillecollet.com> 4.2.1-1
+- update to 4.2.1 (Tue, 13 May 2014, bugfix)
+
 * Thu May  8 2014 Remi Collet <rpms@famillecollet.com> 4.2.0-1
 - update to 4.2.0 (Thu, 08 May 2014)
 
