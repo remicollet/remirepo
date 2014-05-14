@@ -148,6 +148,13 @@ Summary:       Extended HTTP support developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa} >= 5.3.0
+%if "%{php_version}" > "5.6"
+# V1 don't support PHP 5.6 https://bugs.php.net/66879
+Obsoletes:     %{?scl_prefix}php-pecl-http1-devel < 2
+%else
+# Can't install both versions of the same extension
+Conflicts:     %{?scl_prefix}php-pecl-http1-devel
+%endif
 
 %description devel
 These are the files needed to compile programs using HTTP extension.
