@@ -27,7 +27,7 @@
 
 Name:           %{?scl_prefix}php-pecl-http
 Version:        2.0.6
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -87,8 +87,13 @@ Requires:       %{?scl_prefix}php-spl%{?_isa}
 %endif
 Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa}
 Requires:       %{?scl_prefix}php-pecl(raphf)%{?_isa}
+%if "%{php_version}" > "5.6"
+# V1 don't support PHP 5.6 https://bugs.php.net/66879
+Obsoletes:      %{?scl_prefix}php-pecl-http1 < 2
+%else
 # Can't install both versions of the same extension
 Conflicts:      %{?scl_prefix}php-pecl-http1
+%endif
 
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
@@ -279,6 +284,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 14 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-2
+- php56: obsoletes php-pecl-http1
+
 * Thu Apr 24 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 
