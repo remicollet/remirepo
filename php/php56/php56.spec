@@ -117,14 +117,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global snapdate      201405061030
-#global rcver         beta2
+#global snapdate      201405061030
+%global rcver         beta3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.7.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.8.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1909,6 +1909,9 @@ fi
 
 
 %changelog
+* Wed May 14 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.8.beta3
+- php 5.6.0beta3
+
 * Tue May  6 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.8.201405061030
 - new snapshot php5.6-201405061030
 
