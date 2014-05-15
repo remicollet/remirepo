@@ -30,7 +30,7 @@
 
 Summary:        Riak database PHP extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.5
+Version:        1.1.6
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        ASL 2.0 and BSD
 Group:          Development/Languages
@@ -227,14 +227,17 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 15 2014 Remi Collet <remi@fedoraproject.org> - 1.1.6-1
+- Update to 1.1.6 (stable)
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
-- Update to 1.1.5
+- Update to 1.1.5 (stable)
 
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-2
 - add numerical prefix to extension configuration file (php 5.6)
 
 * Fri Mar 21 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
-- Update to 1.1.4
+- Update to 1.1.4 (stable)
 
 * Fri Dec 20 2013 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3 (stable)
