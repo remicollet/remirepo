@@ -1,11 +1,19 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Icalendar
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_View
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-View
-Version:        2.0.3
-Release:        2%{?dist}
+Version:        2.0.4
+Release:        1%{?dist}
 Summary:        Horde View API
 
 Group:          Development/Libraries
@@ -84,7 +92,7 @@ rm -rf %{buildroot}
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -110,6 +118,9 @@ fi
 
 
 %changelog
+* Thu May 15 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Fri Jan 10 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
 - cleanups from review #909662
 
