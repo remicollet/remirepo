@@ -1,9 +1,18 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Icalendar
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Icalendar
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Icalendar
-Version:        2.0.7
+Version:        2.0.8
 Release:        1%{?dist}
 Summary:        iCalendar API
 
@@ -94,7 +103,7 @@ done | tee ../%{pear_name}.lang
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    --include-path=%{buildroot}%{pear_phpdir} \
     -d date.timezone=UTC \
     .
 
@@ -122,6 +131,9 @@ fi
 
 
 %changelog
+* Thu May 15 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
+- Update to 2.0.8
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
 - Update to 2.0.7
 
