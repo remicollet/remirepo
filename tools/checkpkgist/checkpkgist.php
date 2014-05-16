@@ -60,7 +60,7 @@ if (!$pkgs) {
 	die("Bad configuration file\n");
 }
 
-printf(" %-40s %15s %15s\n", "Name", "Version", "Upstream");
+printf(" %-40s %15s %15s %15s\n", "Name", "Version", "Upstream", "Date");
 
 foreach ($pkgs as $name => $rpm) {
 	$rpmver = exec("rpm -q --qf '%{VERSION}' $rpm", $out, $ret);
@@ -77,13 +77,22 @@ foreach ($pkgs as $name => $rpm) {
 				continue;
 			}
 			if (version_compare($pkver, $rpmver, 'gt')) {
-				if ($pkg['source']['type']=='git') {
-					printf(" %-40s %15s %15s\n", $rpm, $rpmver, $pkver);
-					if ($verb) {
-						printf("\tURL:  %s\n\tHash: %s\n",
-							($pkg['source']['url']?:'unkown'),
-							($pkg['source']['reference']?:'unkown'));
-					}
+				$date = new DateTime($pkg['time']);
+				$diff = $date->diff(new DateTime("now"));
+				if ($diff->days <2) {
+					$note = "(Just released)";
+				} else if ($diff->days <20) {
+					$note = $diff->format("(%a days)");
+				} else {
+					$note = "";
+				}
+
+				//print_r($pkg);
+				printf(" %-40s %15s %15s %15s %s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"), $note);
+				if ($pkg['source']['type']=='git' && $verb) {
+					printf("\tURL:  %s\n\tHash: %s\n",
+						($pkg['source']['url']?:'unkown'),
+						($pkg['source']['reference']?:'unkown'));
 				}
 				break;
 			}
