@@ -105,11 +105,18 @@ foreach ($pkgs as $name => $rpm) {
 	}
 	$pkgs = $client->getPackage($name);
 	if ($pkgs) {
+		$maxver = "";
+		$maxdat = false;
+		$display = false;
 		foreach ($pkgs['package']['versions'] as $pkver => $pkg) {
 			if (strpos($pkver, 'dev') !== false) {
 				continue;
 			}
 			$date = new DateTime($pkg['time']);
+			if (version_compare($pkver, $maxver, 'gt')) {
+				$maxver = $pkver;
+				$maxdat = $date;
+			}
 			if (version_compare($pkver, $rpmver, 'gt')) {
 				$diff = $date->diff(new DateTime("now"));
 				if ($diff->days <2) {
@@ -127,12 +134,17 @@ foreach ($pkgs as $name => $rpm) {
 						($pkg['source']['url']?:'unkown'),
 						($pkg['source']['reference']?:'unkown'));
 				}
+				$display = true;
 				break;
 			}
 			else if (version_compare($pkver, $rpmver, 'eq') && $verb) {
 				printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"));
+				$display = true;
 				break;
 			}
+		}
+		if ($verb && !$display) {
+			printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, ($maxver ?: 'unkown'), ($maxdat ? $date->format("Y-m-d") : ''));
 		}
 	} else {
 		printf(" %-40s %15s %15s\n", $rpm, $rpmver, 'Not found !');
