@@ -1,13 +1,22 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-pear-Text-Wiki
+#
+# Copyright (c) 2012-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name Text_Wiki
 
 Name:           php-pear-Text-Wiki
 Version:        1.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Transforms Wiki and BBCode markup into XHTML, LaTeX or plain text
 
 Group:          Development/Libraries
-License:        LGPLv2+
+License:        LGPLv2
 URL:            http://pear.php.net/package/Text_Wiki
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
@@ -49,10 +58,9 @@ It is highly configurable and can be easily extended.
 %setup -q -c
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
- 
+
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
@@ -87,5 +95,8 @@ fi
 
 
 %changelog
+* Fri May 14 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
+- cleanup
+
 * Wed Nov 14 2012 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Initial package
