@@ -76,8 +76,8 @@ foreach ($pkgs as $name => $rpm) {
 			if (strpos($pkver, 'dev') !== false) {
 				continue;
 			}
+			$date = new DateTime($pkg['time']);
 			if (version_compare($pkver, $rpmver, 'gt')) {
-				$date = new DateTime($pkg['time']);
 				$diff = $date->diff(new DateTime("now"));
 				if ($diff->days <2) {
 					$note = "(Just released)";
@@ -97,7 +97,7 @@ foreach ($pkgs as $name => $rpm) {
 				break;
 			}
 			else if (version_compare($pkver, $rpmver, 'eq') && $verb) {
-				printf(" %-40s %15s %15s\n", $rpm, $rpmver, $pkver);
+				printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"));
 				break;
 			}
 		}
