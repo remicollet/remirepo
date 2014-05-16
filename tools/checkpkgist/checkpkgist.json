@@ -7,9 +7,17 @@
   Last update: 2014-05-16
 */
 {
+    "fabpot/goutte":                        "php-goutte",
+    "fzaninotto/faker":                     "php-Faker",
+    "jms/parser-lib":                       "php-JMSParser",
+    "justinrainbow/json-schema":            "php-JsonSchema",
+    "kriswallsmith/assetic":                "php-Assetic",
+    "klaussilveira/gitter":                 "php-gitter",
     "michelf/php-markdown":                 "php-markdown",
     "mikey179/vfsStream":                   "php-mikey179-vfsstream",
     "sabberworm/php-css-parser":            "php-PHP-CSS-Parser",
+    "sdboyer/gliph":                        "php-gliph",
+    "seld/jsonlint":                        "php-jsonlint",
     "solarium/solarium":                    "php-solarium",
     "twig/twig":                            "php-twig-Twig",
     "zendframework/zendframework1":         "php-ZendFramework",
