@@ -102,7 +102,7 @@ fi
 
 
 %changelog
-* Fri May 14 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
+* Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
 - cleanup
 - open https://pear.php.net/bugs/20274 missing License file
 
