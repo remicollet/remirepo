@@ -68,7 +68,7 @@ if (in_array('-h', $_SERVER['argv']) || in_array('--help', $_SERVER['argv'])) {
 usage checkpkg [ options ]
 
     -h
-    --help    Display help (this page)
+    --help     Display help (this page)
 
     -v
     --verbose  Display all packages, with upsteam information
@@ -76,10 +76,14 @@ usage checkpkg [ options ]
     -q
     --quiet    Don't display not installed packages
                or packages with latest version installed
+
+    -s
+    --sort     Sort output by package name
 END;
 	die("\n\n");
 }
 
+$sort   = (in_array('-s', $_SERVER['argv']) || in_array('--sort', $_SERVER['argv']));
 $verb   = (in_array('-v', $_SERVER['argv']) || in_array('--verbose', $_SERVER['argv']));
 $quiet  = (in_array('-q', $_SERVER['argv']) || in_array('--quiet', $_SERVER['argv']));
 $client = new PkgClient();
@@ -93,6 +97,9 @@ if (!$pkgs) {
 	die("Bad configuration file\n");
 }
 
+if ($sort) {
+	natcasesort($pkgs);
+}
 printf(" %-40s %15s %15s %15s\n", "Name", "Version", "Upstream", "Date");
 
 foreach ($pkgs as $name => $rpm) {
