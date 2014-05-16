@@ -1,6 +1,38 @@
 #!/usr/bin/php
 <?php
+/**
+ * CheckPkgist is a tool to check RPM update needed
+ * using information from https://packagist.org/
+ *
+ * PHP version 5
+ *
+ * Copyright (C) 2014  Remi Collet
+ * https://github.com/remicollet/remirepo/tree/master/tools/checkpkgist
+ *
+ * CheckPkgist is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FedoraClient is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * See <http://www.gnu.org/licenses/>
+ *
+ * @category  CheckPkgist
+ * @package   FedoraClient
+ *
+ * @author    Remi Collet <remi@fedoraproject.org>
+ * @copyright 2014 Remi Collet
+ * @license   http://www.gnu.org/licenses/lgpl-2.1.txt LGPL License 2.1 or (at your option) any later version
+ * @link      https://github.com/remicollet/remirepo/tree/master/tools/checkpkgist
+ */
+
 require_once 'Cache/Lite.php';
+
+define ('VERSION', '1.0.0-dev');
 
 class PkgClient {
 	const URL = 'https://packagist.org/';
@@ -29,9 +61,10 @@ class PkgClient {
 	}
 }
 
+printf("\nCheckPkgist version %s by Remi Collet.\n\n", VERSION);
+
 if (in_array('-h', $_SERVER['argv']) || in_array('--help', $_SERVER['argv'])) {
 	echo <<<END
-
 usage checkpkg [ options ]
 
     -h
