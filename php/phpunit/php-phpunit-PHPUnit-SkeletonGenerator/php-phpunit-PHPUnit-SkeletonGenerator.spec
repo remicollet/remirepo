@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e933d394bdfacec34b7ff4e8fc53c625e09e9721
+%global gh_commit    c0eeb18f31893c2f0c387bce84f8a3816a0eacd1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-skeleton-generator
@@ -16,8 +16,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
-Version:        2.0.0
-Release:        2%{?dist}
+Version:        2.0.1
+Release:        1%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
 Group:          Development/Libraries
@@ -116,6 +116,9 @@ fi
 
 
 %changelog
+* Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1 (no change)
+
 * Tue May 13 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - add BR on php-mikey179-vfsstream
 - enable test during build
