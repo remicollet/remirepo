@@ -1,0 +1,50 @@
+/*
+  CheckPkgist configuration file
+
+  Key:   packagist name
+  Value: RPM name
+
+  Last update: 2014-05-16
+*/
+{
+    "michelf/php-markdown":                 "php-markdown",
+    "mikey179/vfsStream":                   "php-mikey179-vfsstream",
+    "sabberworm/php-css-parser":            "php-PHP-CSS-Parser",
+    "solarium/solarium":                    "php-solarium",
+    "twig/twig":                            "php-twig-Twig",
+    "zendframework/zendframework1":         "php-ZendFramework",
+
+    "bartlett/php-compatinfo":              "php-bartlett-PHP-CompatInfo",
+    "bartlett/php-reflect":                 "php-bartlett-PHP-Reflect",
+
+    "sabre/dav":                            "php-sabre-dav",
+    "sabre/event":                          "php-sabre-event",
+    "sabre/http":                           "php-sabre-http",
+    "sabre/vobject":                        "php-sabre-vobject",
+
+    "phploc/phploc":                        "php-phpunit-phploc",
+
+    "phpunit/dbunit":                       "php-phpunit-DbUnit",
+    "phpunit/phpcov":                       "php-phpunit-phpcov",
+    "phpunit/php-code-coverage":            "php-phpunit-PHP-CodeCoverage",
+    "phpunit/php-file-iterator":            "php-phpunit-File-Iterator",
+    "phpunit/php-invoker":                  "php-phpunit-PHP-Invoker",
+    "phpunit/php-text-template":            "php-phpunit-Text-Template",
+    "phpunit/php-timer":                    "php-phpunit-PHP-Timer",
+    "phpunit/php-token-stream":             "php-phpunit-PHP-TokenStream",
+    "phpunit/phpunit":                      "php-phpunit-PHPUnit",
+    "phpunit/phpunit-mock-objects":         "php-phpunit-PHPUnit-MockObject",
+    "phpunit/phpunit-selenium":             "php-phpunit-PHPUnit-Selenium",
+    "phpunit/phpunit-skeleton-generator":   "php-phpunit-PHPUnit-SkeletonGenerator",
+    "phpunit/phpunit-story":                "php-phpunit-PHPUnit-Story",
+
+    "sebastian/comparator":                 "php-phpunit-comparator",
+    "sebastian/diff":                       "php-phpunit-diff",
+    "sebastian/environment":                "php-phpunit-environment",
+    "sebastian/exporter":                   "php-phpunit-exporter",
+    "sebastian/finder-facade":              "php-phpunit-FinderFacade",
+    "sebastian/git":                        "php-phpunit-git",
+    "sebastian/phpcpd":                     "php-phpunit-phpcpd",
+    "sebastian/phpdcd":                     "php-phpunit-phpdcd",
+    "sebastian/version":                    "php-phpunit-Version",
+}
