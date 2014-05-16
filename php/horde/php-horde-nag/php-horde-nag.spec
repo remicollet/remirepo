@@ -12,13 +12,13 @@
 %global pear_channel pear.horde.org
 
 # TODO
-# Tests are not ready
+# Tests are not ready (need Framework 5.2)
 # config: provides one ?
 # "horde-nag" sub package with apache stuff
 
 Name:           php-horde-nag
 Version:        4.1.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A web based task list manager
 
 Group:          Development/Libraries
@@ -130,6 +130,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/htaccess/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -210,6 +211,9 @@ fi
 
 
 %changelog
+* Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-3
+- preserve package.xml timestamp
+
 * Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-2
 - cleanup from review #1087740
 - license is GPLv2
