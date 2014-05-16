@@ -18,11 +18,11 @@
 
 Name:           php-horde-nag
 Version:        4.1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based task list manager
 
 Group:          Development/Libraries
-License:        GPLv2+
+License:        GPLv2
 URL:            http://www.horde.org/apps/nag
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -114,8 +114,7 @@ light-weight project management.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cat <<EOF >httpd.conf
 <DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale)>
@@ -211,6 +210,10 @@ fi
 
 
 %changelog
+* Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-2
+- cleanup from review #1087740
+- license is GPLv2
+
 * Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-1
 - Update to 4.1.4
 - add dependency on Horde_Dav
