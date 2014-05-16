@@ -12,17 +12,15 @@
 %global pear_channel pear.horde.org
 
 # TODO
-# Tests are not ready
-# config: provides one ?
-# "horde-turba" sub package with apache stuff
+# Test suite is not ready (requires Framework 5.2)
 
 Name:           php-horde-turba
 Version:        4.1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based address book
 
 Group:          Development/Libraries
-License:        ASL
+License:        ASL 1.0
 URL:            http://www.horde.org/apps/turba
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
@@ -113,8 +111,7 @@ applications, it supports storing contacts in SQL, LDAP, Kolab, and IMSP
 address books.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cat <<EOF >httpd.conf
 <DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale|scripts|templates)>
@@ -130,6 +127,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/htaccess/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -225,6 +223,10 @@ fi
 
 
 %changelog
+* Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-2
+- preserve package.xml timestamp
+- fix license (ASL 1.0) from review #1087742
+
 * Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-1
 - Update to 4.1.4
 - add dependency on Horde_Dav
