@@ -11,9 +11,12 @@
 %global pear_name    ingo
 %global pear_channel pear.horde.org
 
+# TODO
+# Tests are not ready (need Framework 5.2)
+
 Name:           php-horde-ingo
 Version:        3.1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An email filter rules manager
 
 Group:          Development/Libraries
@@ -105,6 +108,7 @@ sed -e '/%{pear_name}\.po/d' \
     -e '/htaccess/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -186,6 +190,9 @@ fi
 
 
 %changelog
+* Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 3.1.4-2
+- preserve package.xml timestamp
+
 * Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 3.1.4-1
 - Update to 3.1.4
 
