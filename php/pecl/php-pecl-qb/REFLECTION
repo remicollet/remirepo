@@ -1,0 +1,76 @@
+Extension [ <persistent> extension #117 qb version 2.3.0 ] {
+
+  - INI {
+    Entry [ qb.allow_native_compilation <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ qb.allow_memory_map <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ qb.compiler_path <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ qb.compiler_env_path <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ qb.native_code_cache_path <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ qb.execution_log_path <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ qb.thread_count <ALL> ]
+      Current = '0'
+    }
+    Entry [ qb.allow_bytecode_interpretation <ALL> ]
+      Current = '1'
+    }
+    Entry [ qb.allow_debugger_inspection <ALL> ]
+      Current = '1'
+    }
+    Entry [ qb.allow_debug_backtrace <ALL> ]
+      Current = ''
+    }
+    Entry [ qb.debug_with_exact_type <ALL> ]
+      Current = ''
+    }
+    Entry [ qb.column_major_matrix <ALL> ]
+      Current = ''
+    }
+    Entry [ qb.compile_to_native <ALL> ]
+      Current = ''
+    }
+    Entry [ qb.show_opcodes <ALL> ]
+      Current = '0'
+    }
+    Entry [ qb.show_native_source <ALL> ]
+      Current = '0'
+    }
+    Entry [ qb.show_compiler_errors <ALL> ]
+      Current = '0'
+    }
+    Entry [ qb.show_source_opcodes <ALL> ]
+      Current = '0'
+    }
+    Entry [ qb.tab_width <ALL> ]
+      Current = '4'
+    }
+  }
+
+  - Constants [6] {
+    Constant [ integer QB_SCAN_FILE ] { 0 }
+    Constant [ integer QB_SCAN_ALL ] { 1 }
+    Constant [ integer QB_START_DEFERRAL ] { 2 }
+    Constant [ integer QB_END_DEFERRAL ] { 3 }
+    Constant [ integer QB_PBJ_DETAILS ] { 1 }
+    Constant [ integer QB_PBJ_DECLARATION ] { 2 }
+  }
+
+  - Functions {
+    Function [ <internal:qb> function qb_compile ] {
+    }
+    Function [ <internal:qb> function qb_extract ] {
+    }
+  }
+}
+

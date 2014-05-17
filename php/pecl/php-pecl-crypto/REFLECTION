@@ -1,0 +1,639 @@
+Extension [ <persistent> extension #78 crypto version 0.1.1 ] {
+
+  - Classes [9] {
+    Class [ <internal:crypto> class Crypto\Algorithm ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [1] {
+        Property [ <default> protected $algorithm ]
+      }
+
+      - Methods [2] {
+        Method [ <internal:crypto, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $algorithm ]
+          }
+        }
+
+        Method [ <internal:crypto> public method getAlgorithmName ] {
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\AlgorithmException extends Exception ] {
+
+      - Constants [31] {
+        Constant [ integer CIPHER_NOT_FOUND ] { 1 }
+        Constant [ integer CIPHER_MODE_NOT_FOUND ] { 2 }
+        Constant [ integer CIPHER_MODE_NOT_AVAILABLE ] { 3 }
+        Constant [ integer CIPHER_AUTHENTICATION_NOT_SUPPORTED ] { 4 }
+        Constant [ integer CIPHER_AUTHENTICATION_FAILED ] { 5 }
+        Constant [ integer CIPHER_KEY_LENGTH ] { 6 }
+        Constant [ integer CIPHER_IV_LENGTH ] { 7 }
+        Constant [ integer CIPHER_AAD_SETTER_FLOW ] { 8 }
+        Constant [ integer CIPHER_AAD_SETTER_FAILED ] { 9 }
+        Constant [ integer CIPHER_TAG_GETTER_FLOW ] { 10 }
+        Constant [ integer CIPHER_TAG_SETTER_FLOW ] { 11 }
+        Constant [ integer CIPHER_TAG_GETTER_FAILED ] { 12 }
+        Constant [ integer CIPHER_TAG_SETTER_FAILED ] { 13 }
+        Constant [ integer CIPHER_TAG_LENGTH_UNDER ] { 14 }
+        Constant [ integer CIPHER_TAG_LENGTH_OVER ] { 15 }
+        Constant [ integer CIPHER_TAG_VARIFY_FAILED ] { 16 }
+        Constant [ integer CIPHER_INIT_ALG_FAILED ] { 17 }
+        Constant [ integer CIPHER_INIT_CTX_FAILED ] { 18 }
+        Constant [ integer CIPHER_UPDATE_FAILED ] { 19 }
+        Constant [ integer CIPHER_FINISH_FAILED ] { 20 }
+        Constant [ integer ENCRYPT_INIT_STATUS ] { 21 }
+        Constant [ integer ENCRYPT_UPDATE_STATUS ] { 22 }
+        Constant [ integer ENCRYPT_FINISH_STATUS ] { 23 }
+        Constant [ integer DECRYPT_INIT_STATUS ] { 24 }
+        Constant [ integer DECRYPT_UPDATE_STATUS ] { 25 }
+        Constant [ integer DECRYPT_FINISH_STATUS ] { 26 }
+        Constant [ integer HASH_ALGORITHM_NOT_FOUND ] { 27 }
+        Constant [ integer HASH_STATIC_NOT_FOUND ] { 28 }
+        Constant [ integer HASH_INIT_FAILED ] { 29 }
+        Constant [ integer HASH_UPDATE_FAILED ] { 30 }
+        Constant [ integer HASH_DIGEST_FAILED ] { 31 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\Cipher extends Crypto\Algorithm ] {
+
+      - Constants [8] {
+        Constant [ integer MODE_ECB ] { 1 }
+        Constant [ integer MODE_CBC ] { 2 }
+        Constant [ integer MODE_CFB ] { 3 }
+        Constant [ integer MODE_OFB ] { 4 }
+        Constant [ integer MODE_CTR ] { 5 }
+        Constant [ integer MODE_GCM ] { 6 }
+        Constant [ integer MODE_CCM ] { 7 }
+        Constant [ integer MODE_XTS ] { 65537 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [4] {
+        Method [ <internal:crypto> static public method getAlgorithms ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $aliases ]
+            Parameter #1 [ <optional> $prefix ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method hasAlgorithm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $algorithm ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method hasMode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $mode ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method __callStatic ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $arguments ]
+          }
+        }
+      }
+
+      - Properties [1] {
+        Property [ <default> protected $algorithm ]
+      }
+
+      - Methods [17] {
+        Method [ <internal:crypto, overwrites Crypto\Algorithm, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $algorithm ]
+            Parameter #1 [ <optional> $mode ]
+            Parameter #2 [ <optional> $key_size ]
+          }
+        }
+
+        Method [ <internal:crypto> public method encryptInit ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <optional> $iv ]
+          }
+        }
+
+        Method [ <internal:crypto> public method encryptUpdate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:crypto> public method encryptFinish ] {
+        }
+
+        Method [ <internal:crypto> public method encrypt ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <optional> $iv ]
+          }
+        }
+
+        Method [ <internal:crypto> public method decryptInit ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <optional> $iv ]
+          }
+        }
+
+        Method [ <internal:crypto> public method decryptUpdate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:crypto> public method decryptFinish ] {
+        }
+
+        Method [ <internal:crypto> public method decrypt ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <optional> $iv ]
+          }
+        }
+
+        Method [ <internal:crypto> public method getBlockSize ] {
+        }
+
+        Method [ <internal:crypto> public method getKeyLength ] {
+        }
+
+        Method [ <internal:crypto> public method getIVLength ] {
+        }
+
+        Method [ <internal:crypto> public method getMode ] {
+        }
+
+        Method [ <internal:crypto> public method getTag ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $tag_size ]
+          }
+        }
+
+        Method [ <internal:crypto> public method setTag ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $tag ]
+          }
+        }
+
+        Method [ <internal:crypto> public method setAAD ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $aad ]
+          }
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Algorithm> public method getAlgorithmName ] {
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\Hash extends Crypto\Algorithm ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [3] {
+        Method [ <internal:crypto> static public method getAlgorithms ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $aliases ]
+            Parameter #1 [ <optional> $prefix ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method hasAlgorithm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $algorithm ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method __callStatic ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $arguments ]
+          }
+        }
+      }
+
+      - Properties [1] {
+        Property [ <default> protected $algorithm ]
+      }
+
+      - Methods [7] {
+        Method [ <internal:crypto, overwrites Crypto\Algorithm, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $algorithm ]
+          }
+        }
+
+        Method [ <internal:crypto> public method update ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:crypto> public method digest ] {
+        }
+
+        Method [ <internal:crypto> public method hexdigest ] {
+        }
+
+        Method [ <internal:crypto> public method getSize ] {
+        }
+
+        Method [ <internal:crypto> public method getBlockSize ] {
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Algorithm> public method getAlgorithmName ] {
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\HMAC extends Crypto\Hash ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [3] {
+        Method [ <internal:crypto, inherits Crypto\Hash> static public method getAlgorithms ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $aliases ]
+            Parameter #1 [ <optional> $prefix ]
+          }
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Hash> static public method hasAlgorithm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $algorithm ]
+          }
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Hash> static public method __callStatic ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $arguments ]
+          }
+        }
+      }
+
+      - Properties [1] {
+        Property [ <default> protected $algorithm ]
+      }
+
+      - Methods [7] {
+        Method [ <internal:crypto, inherits Crypto\Hash, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $algorithm ]
+          }
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Hash> public method update ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Hash> public method digest ] {
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Hash> public method hexdigest ] {
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Hash> public method getSize ] {
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Hash> public method getBlockSize ] {
+        }
+
+        Method [ <internal:crypto, inherits Crypto\Algorithm> public method getAlgorithmName ] {
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\Base64 ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:crypto> static public method encode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method decode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:crypto, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:crypto> public method encodeUpdate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:crypto> public method encodeFinish ] {
+        }
+
+        Method [ <internal:crypto> public method decodeUpdate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:crypto> public method decodeFinish ] {
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\Base64Exception extends Exception ] {
+
+      - Constants [5] {
+        Constant [ integer ENCODE_UPDATE_STATUS ] { 1 }
+        Constant [ integer ENCODE_FINISH_STATUS ] { 2 }
+        Constant [ integer DECODE_UPDATE_STATUS ] { 3 }
+        Constant [ integer DECODE_FINISH_STATUS ] { 4 }
+        Constant [ integer DECODE_FAILED ] { 5 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\Rand ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [6] {
+        Method [ <internal:crypto> static public method generate ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $num ]
+            Parameter #1 [ <optional> $must_be_strong ]
+            Parameter #2 [ <optional> &$returned_strong_result ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method seed ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $buf ]
+            Parameter #1 [ <optional> $entropy ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method cleanup ] {
+        }
+
+        Method [ <internal:crypto> static public method loadFile ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $max_bytes ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method writeFile ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $filename ]
+          }
+        }
+
+        Method [ <internal:crypto> static public method egd ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <optional> $bytes ]
+            Parameter #2 [ <optional> $seed ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\RandException extends Exception ] {
+
+      - Constants [2] {
+        Constant [ integer GENERATE_PREDICTABLE ] { 1 }
+        Constant [ integer FILE_WRITE_PREDICTABLE ] { 2 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,138 @@
+Extension [ <persistent> extension #80 dio version 0.0.7 ] {
+
+  - Constants [36] {
+    Constant [ integer O_RDONLY ] { 0 }
+    Constant [ integer O_WRONLY ] { 1 }
+    Constant [ integer O_RDWR ] { 2 }
+    Constant [ integer O_CREAT ] { 64 }
+    Constant [ integer O_EXCL ] { 128 }
+    Constant [ integer O_TRUNC ] { 512 }
+    Constant [ integer O_APPEND ] { 1024 }
+    Constant [ integer O_NONBLOCK ] { 2048 }
+    Constant [ integer O_NDELAY ] { 2048 }
+    Constant [ integer O_SYNC ] { 1052672 }
+    Constant [ integer O_ASYNC ] { 8192 }
+    Constant [ integer O_NOCTTY ] { 256 }
+    Constant [ integer S_IRWXU ] { 448 }
+    Constant [ integer S_IRUSR ] { 256 }
+    Constant [ integer S_IWUSR ] { 128 }
+    Constant [ integer S_IXUSR ] { 64 }
+    Constant [ integer S_IRWXG ] { 56 }
+    Constant [ integer S_IRGRP ] { 32 }
+    Constant [ integer S_IWGRP ] { 16 }
+    Constant [ integer S_IXGRP ] { 8 }
+    Constant [ integer S_IRWXO ] { 7 }
+    Constant [ integer S_IROTH ] { 4 }
+    Constant [ integer S_IWOTH ] { 2 }
+    Constant [ integer S_IXOTH ] { 1 }
+    Constant [ integer F_DUPFD ] { 0 }
+    Constant [ integer F_GETFD ] { 1 }
+    Constant [ integer F_GETFL ] { 3 }
+    Constant [ integer F_SETFL ] { 4 }
+    Constant [ integer F_GETLK ] { 5 }
+    Constant [ integer F_SETLK ] { 6 }
+    Constant [ integer F_SETLKW ] { 7 }
+    Constant [ integer F_SETOWN ] { 8 }
+    Constant [ integer F_GETOWN ] { 9 }
+    Constant [ integer F_UNLCK ] { 2 }
+    Constant [ integer F_RDLCK ] { 0 }
+    Constant [ integer F_WRLCK ] { 1 }
+  }
+
+  - Functions {
+    Function [ <internal:dio> function dio_open ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $flags ]
+        Parameter #2 [ <optional> $mode ]
+      }
+    }
+    Function [ <internal:dio> function dio_fdopen ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fd ]
+      }
+    }
+    Function [ <internal:dio> function dio_dup ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fd ]
+      }
+    }
+    Function [ <internal:dio> function dio_truncate ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fd ]
+        Parameter #1 [ <required> $offset ]
+      }
+    }
+    Function [ <internal:dio> function dio_stat ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fd ]
+      }
+    }
+    Function [ <internal:dio> function dio_seek ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fd ]
+        Parameter #1 [ <required> $pos ]
+        Parameter #2 [ <required> $whence ]
+      }
+    }
+    Function [ <internal:dio> function dio_fcntl ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fd ]
+        Parameter #1 [ <required> $cmd ]
+        Parameter #2 [ <optional> $arg ]
+      }
+    }
+    Function [ <internal:dio> function dio_read ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fd ]
+        Parameter #1 [ <optional> $n ]
+      }
+    }
+    Function [ <internal:dio> function dio_write ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $fd ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <optional> $len ]
+      }
+    }
+    Function [ <internal:dio> function dio_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fd ]
+      }
+    }
+    Function [ <internal:dio> function dio_tcsetattr ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fd ]
+        Parameter #1 [ <required> $args ]
+      }
+    }
+    Function [ <internal:dio> function dio_raw ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $mode ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+    Function [ <internal:dio> function dio_serial ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $mode ]
+        Parameter #2 [ <optional> $options ]
+      }
+    }
+  }
+}
+

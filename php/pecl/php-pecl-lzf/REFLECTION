@@ -1,0 +1,12 @@
+Extension [ <persistent> extension #102 lzf version 1.6.2 ] {
+
+  - Functions {
+    Function [ <internal:lzf> function lzf_compress ] {
+    }
+    Function [ <internal:lzf> function lzf_decompress ] {
+    }
+    Function [ <internal:lzf> function lzf_optimized_for ] {
+    }
+  }
+}
+

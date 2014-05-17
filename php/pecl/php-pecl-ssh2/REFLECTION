@@ -1,0 +1,98 @@
+Extension [ <persistent> extension #132 ssh2 version 0.12 ] {
+
+  - Constants [21] {
+    Constant [ integer SSH2_FINGERPRINT_MD5 ] { 0 }
+    Constant [ integer SSH2_FINGERPRINT_SHA1 ] { 1 }
+    Constant [ integer SSH2_FINGERPRINT_HEX ] { 0 }
+    Constant [ integer SSH2_FINGERPRINT_RAW ] { 2 }
+    Constant [ integer SSH2_TERM_UNIT_CHARS ] { 0 }
+    Constant [ integer SSH2_TERM_UNIT_PIXELS ] { 1 }
+    Constant [ string SSH2_DEFAULT_TERMINAL ] { vanilla }
+    Constant [ integer SSH2_DEFAULT_TERM_WIDTH ] { 80 }
+    Constant [ integer SSH2_DEFAULT_TERM_HEIGHT ] { 25 }
+    Constant [ integer SSH2_DEFAULT_TERM_UNIT ] { 0 }
+    Constant [ integer SSH2_STREAM_STDIO ] { 0 }
+    Constant [ integer SSH2_STREAM_STDERR ] { 1 }
+    Constant [ integer SSH2_POLLIN ] { 1 }
+    Constant [ integer SSH2_POLLEXT ] { 2 }
+    Constant [ integer SSH2_POLLOUT ] { 4 }
+    Constant [ integer SSH2_POLLERR ] { 8 }
+    Constant [ integer SSH2_POLLHUP ] { 16 }
+    Constant [ integer SSH2_POLLNVAL ] { 32 }
+    Constant [ integer SSH2_POLL_SESSION_CLOSED ] { 16 }
+    Constant [ integer SSH2_POLL_CHANNEL_CLOSED ] { 128 }
+    Constant [ integer SSH2_POLL_LISTENER_CLOSED ] { 128 }
+  }
+
+  - Functions {
+    Function [ <internal:ssh2> function ssh2_connect ] {
+    }
+    Function [ <internal:ssh2> function ssh2_methods_negotiated ] {
+    }
+    Function [ <internal:ssh2> function ssh2_fingerprint ] {
+    }
+    Function [ <internal:ssh2> function ssh2_auth_none ] {
+    }
+    Function [ <internal:ssh2> function ssh2_auth_password ] {
+    }
+    Function [ <internal:ssh2> function ssh2_auth_pubkey_file ] {
+    }
+    Function [ <internal:ssh2> function ssh2_auth_hostbased_file ] {
+    }
+    Function [ <internal:ssh2> function ssh2_forward_listen ] {
+    }
+    Function [ <internal:ssh2> function ssh2_forward_accept ] {
+    }
+    Function [ <internal:ssh2> function ssh2_shell ] {
+    }
+    Function [ <internal:ssh2> function ssh2_exec ] {
+    }
+    Function [ <internal:ssh2> function ssh2_tunnel ] {
+    }
+    Function [ <internal:ssh2> function ssh2_scp_recv ] {
+    }
+    Function [ <internal:ssh2> function ssh2_scp_send ] {
+    }
+    Function [ <internal:ssh2> function ssh2_fetch_stream ] {
+    }
+    Function [ <internal:ssh2> function ssh2_poll ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> &$param0 ]
+      }
+    }
+    Function [ <internal:ssh2> function ssh2_sftp ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_rename ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_unlink ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_mkdir ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_rmdir ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_chmod ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_stat ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_lstat ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_symlink ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_readlink ] {
+    }
+    Function [ <internal:ssh2> function ssh2_sftp_realpath ] {
+    }
+    Function [ <internal:ssh2> function ssh2_publickey_init ] {
+    }
+    Function [ <internal:ssh2> function ssh2_publickey_add ] {
+    }
+    Function [ <internal:ssh2> function ssh2_publickey_remove ] {
+    }
+    Function [ <internal:ssh2> function ssh2_publickey_list ] {
+    }
+    Function [ <internal:ssh2> function ssh2_auth_agent ] {
+    }
+  }
+}
+

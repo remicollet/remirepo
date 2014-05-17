@@ -1,0 +1,30 @@
+Extension [ <persistent> extension #91 igbinary version 1.1.2-dev ] {
+
+  - Dependencies {
+    Dependency [ standard (Required) ]
+    Dependency [ session (Required) ]
+    Dependency [ apcu (Optional) ]
+  }
+
+  - INI {
+    Entry [ igbinary.compact_strings <ALL> ]
+      Current = '1'
+    }
+  }
+
+  - Functions {
+    Function [ <internal:igbinary> function igbinary_serialize ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:igbinary> function igbinary_unserialize ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $str ]
+      }
+    }
+  }
+}
+

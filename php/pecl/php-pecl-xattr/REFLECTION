@@ -1,0 +1,23 @@
+Extension [ <persistent> extension #142 xattr version 1.2.0 ] {
+
+  - Constants [4] {
+    Constant [ integer XATTR_ROOT ] { 2 }
+    Constant [ integer XATTR_DONTFOLLOW ] { 1 }
+    Constant [ integer XATTR_CREATE ] { 16 }
+    Constant [ integer XATTR_REPLACE ] { 32 }
+  }
+
+  - Functions {
+    Function [ <internal:xattr> function xattr_set ] {
+    }
+    Function [ <internal:xattr> function xattr_get ] {
+    }
+    Function [ <internal:xattr> function xattr_remove ] {
+    }
+    Function [ <internal:xattr> function xattr_list ] {
+    }
+    Function [ <internal:xattr> function xattr_supported ] {
+    }
+  }
+}
+

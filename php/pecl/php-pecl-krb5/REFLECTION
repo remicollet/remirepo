@@ -1,0 +1,390 @@
+Extension [ <persistent> extension #99 krb5 version 1.0.0 ] {
+
+  - Constants [12] {
+    Constant [ integer GSS_C_DELEG_FLAG ] { 1 }
+    Constant [ integer GSS_C_MUTUAL_FLAG ] { 2 }
+    Constant [ integer GSS_C_REPLAY_FLAG ] { 4 }
+    Constant [ integer GSS_C_SEQUENCE_FLAG ] { 8 }
+    Constant [ integer GSS_C_CONF_FLAG ] { 16 }
+    Constant [ integer GSS_C_INTEG_FLAG ] { 32 }
+    Constant [ integer GSS_C_ANON_FLAG ] { 64 }
+    Constant [ integer GSS_C_PROT_READY_FLAG ] { 128 }
+    Constant [ integer GSS_C_TRANS_FLAG ] { 256 }
+    Constant [ integer GSS_C_BOTH ] { 0 }
+    Constant [ integer GSS_C_INITIATE ] { 1 }
+    Constant [ integer GSS_C_ACCEPT ] { 2 }
+  }
+
+  - Classes [6] {
+    Class [ <internal:krb5> class KRB5CCache ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [12] {
+        Method [ <internal:krb5> public method initPassword ] {
+        }
+
+        Method [ <internal:krb5> public method initKeytab ] {
+        }
+
+        Method [ <internal:krb5> public method getName ] {
+        }
+
+        Method [ <internal:krb5> public method getPrincipal ] {
+        }
+
+        Method [ <internal:krb5> public method getRealm ] {
+        }
+
+        Method [ <internal:krb5> public method getLifetime ] {
+        }
+
+        Method [ <internal:krb5> public method getEntries ] {
+        }
+
+        Method [ <internal:krb5> public method open ] {
+        }
+
+        Method [ <internal:krb5> public method save ] {
+        }
+
+        Method [ <internal:krb5> public method isValid ] {
+        }
+
+        Method [ <internal:krb5> public method getTktAttrs ] {
+        }
+
+        Method [ <internal:krb5> public method renew ] {
+        }
+      }
+    }
+
+    Class [ <internal:krb5> class KADM5 ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:krb5, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:krb5> public method getPrincipal ] {
+        }
+
+        Method [ <internal:krb5> public method getPrincipals ] {
+        }
+
+        Method [ <internal:krb5> public method createPrincipal ] {
+        }
+
+        Method [ <internal:krb5> public method getPolicy ] {
+        }
+
+        Method [ <internal:krb5> public method createPolicy ] {
+        }
+
+        Method [ <internal:krb5> public method getPolicies ] {
+        }
+      }
+    }
+
+    Class [ <internal:krb5> class KADM5Principal ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [29] {
+        Method [ <internal:krb5, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:krb5> public method load ] {
+        }
+
+        Method [ <internal:krb5> public method save ] {
+        }
+
+        Method [ <internal:krb5> public method delete ] {
+        }
+
+        Method [ <internal:krb5> public method rename ] {
+        }
+
+        Method [ <internal:krb5> public method changePassword ] {
+        }
+
+        Method [ <internal:krb5> public method getPropertyArray ] {
+        }
+
+        Method [ <internal:krb5> public method getName ] {
+        }
+
+        Method [ <internal:krb5> public method getExpiryTime ] {
+        }
+
+        Method [ <internal:krb5> public method setExpiryTime ] {
+        }
+
+        Method [ <internal:krb5> public method getLastPasswordChange ] {
+        }
+
+        Method [ <internal:krb5> public method getPasswordExpiryTime ] {
+        }
+
+        Method [ <internal:krb5> public method setPasswordExpiryTime ] {
+        }
+
+        Method [ <internal:krb5> public method getMaxTicketLifetime ] {
+        }
+
+        Method [ <internal:krb5> public method setMaxTicketLifetime ] {
+        }
+
+        Method [ <internal:krb5> public method getLastModifier ] {
+        }
+
+        Method [ <internal:krb5> public method getLastModificationDate ] {
+        }
+
+        Method [ <internal:krb5> public method getKeyVNO ] {
+        }
+
+        Method [ <internal:krb5> public method setKeyVNO ] {
+        }
+
+        Method [ <internal:krb5> public method getMasterKeyVNO ] {
+        }
+
+        Method [ <internal:krb5> public method getAttributes ] {
+        }
+
+        Method [ <internal:krb5> public method getAuxAttributes ] {
+        }
+
+        Method [ <internal:krb5> public method getPolicy ] {
+        }
+
+        Method [ <internal:krb5> public method setPolicy ] {
+        }
+
+        Method [ <internal:krb5> public method clearPolicy ] {
+        }
+
+        Method [ <internal:krb5> public method getLastSuccess ] {
+        }
+
+        Method [ <internal:krb5> public method getLastFailed ] {
+        }
+
+        Method [ <internal:krb5> public method getFailedAuthCount ] {
+        }
+
+        Method [ <internal:krb5> public method resetFailedAuthCount ] {
+        }
+      }
+    }
+
+    Class [ <internal:krb5> class KADM5Policy ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [17] {
+        Method [ <internal:krb5, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:krb5> public method load ] {
+        }
+
+        Method [ <internal:krb5> public method save ] {
+        }
+
+        Method [ <internal:krb5> public method delete ] {
+        }
+
+        Method [ <internal:krb5> public method getPropertyArray ] {
+        }
+
+        Method [ <internal:krb5> public method getName ] {
+        }
+
+        Method [ <internal:krb5> public method getMinPasswordLife ] {
+        }
+
+        Method [ <internal:krb5> public method setMinPasswordLife ] {
+        }
+
+        Method [ <internal:krb5> public method getMaxPasswordLife ] {
+        }
+
+        Method [ <internal:krb5> public method setMaxPasswordLife ] {
+        }
+
+        Method [ <internal:krb5> public method getMinPasswordLength ] {
+        }
+
+        Method [ <internal:krb5> public method setMinPasswordLength ] {
+        }
+
+        Method [ <internal:krb5> public method getMinPasswordClasses ] {
+        }
+
+        Method [ <internal:krb5> public method setMinPasswordClasses ] {
+        }
+
+        Method [ <internal:krb5> public method getHistoryNum ] {
+        }
+
+        Method [ <internal:krb5> public method setHistoryNum ] {
+        }
+
+        Method [ <internal:krb5> public method getReferenceCount ] {
+        }
+      }
+    }
+
+    Class [ <internal:krb5> class GSSAPIContext ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [9] {
+        Method [ <internal:krb5> public method registerAcceptorIdentity ] {
+        }
+
+        Method [ <internal:krb5> public method acquireCredentials ] {
+        }
+
+        Method [ <internal:krb5> public method inquireCredentials ] {
+        }
+
+        Method [ <internal:krb5> public method initSecContext ] {
+
+          - Parameters [7] {
+            Parameter #0 [ <required> $target ]
+            Parameter #1 [ <required> $input_token ]
+            Parameter #2 [ <required> $reqflags ]
+            Parameter #3 [ <required> $timereq ]
+            Parameter #4 [ <required> &$output_token ]
+            Parameter #5 [ <required> &$ret_flags ]
+            Parameter #6 [ <required> &$time_rec ]
+          }
+        }
+
+        Method [ <internal:krb5> public method acceptSecContext ] {
+
+          - Parameters [6] {
+            Parameter #0 [ <required> $input_token ]
+            Parameter #1 [ <required> &$output_token ]
+            Parameter #2 [ <required> &$src_name ]
+            Parameter #3 [ <required> &$ret_flags ]
+            Parameter #4 [ <required> &$time_rec ]
+            Parameter #5 [ <required> &$deleg ]
+          }
+        }
+
+        Method [ <internal:krb5> public method getMic ] {
+        }
+
+        Method [ <internal:krb5> public method verifyMic ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $message ]
+            Parameter #1 [ <required> $mic ]
+          }
+        }
+
+        Method [ <internal:krb5> public method wrap ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $input ]
+            Parameter #1 [ <required> &$output ]
+          }
+        }
+
+        Method [ <internal:krb5> public method unwrap ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $input ]
+            Parameter #1 [ <required> &$output ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:krb5> class KRB5NegotiateAuth ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:krb5, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:krb5> public method doAuthentication ] {
+        }
+
+        Method [ <internal:krb5> public method getDelegatedCredentials ] {
+        }
+
+        Method [ <internal:krb5> public method getAuthenticatedUser ] {
+        }
+      }
+    }
+  }
+}
+
