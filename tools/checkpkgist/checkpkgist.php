@@ -116,6 +116,9 @@ foreach ($pkgs as $name => $rpm) {
 		$maxdat = false;
 		$display = false;
 		foreach ($pkgs['package']['versions'] as $pkver => $pkg) {
+			if (preg_match('/^v[\.0-9]*$/', $pkver)) {
+				$pkver = substr($pkver, 1);
+			}
 			if (strpos($pkver, 'dev') !== false) {
 				continue;
 			}
