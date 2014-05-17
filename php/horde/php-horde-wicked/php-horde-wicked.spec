@@ -10,12 +10,13 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    wicked
 %global pear_channel pear.horde.org
-# disable as not ready
+# disable as not ready - Need Framework 5.2
+# Unit/RstTest.php is broken, all others ignored
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-wicked
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Wiki application
 
 Group:          Development/Libraries
@@ -37,6 +38,9 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
+# Web stuff (as we provide httpd configuration)
+Requires:       mod_php
+Requires:       httpd
 # From package.xml, required
 Requires:       php(language) >= 5.3.0
 Requires:       php-gettext
@@ -83,9 +87,10 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 Requires:       php-pear(Text_Wiki) >= 1.2.0
-Requires:       php-pear(Text_Wiki) <  2.0.0
 # From package.xml, optional
 Requires:       php-pear(Text_Figlet)
+# Optional and not yet available:
+#   Text_Wiki_Creole, Text_Wiki_Mediawiki, Text_Wiki_Tiki
 # From phpcompatinfo report for version 2.0.1
 Requires:       php-date
 Requires:       php-pcre
@@ -111,9 +116,9 @@ cat <<EOF | tee httpd.conf
 <Directory %{pear_hordedir}/%{pear_name}>
   <IfModule mod_rewrite.c>
     RewriteEngine On
-	RewriteCond   %%{REQUEST_FILENAME}  !-d
-	RewriteCond   %%{REQUEST_FILENAME}  !-f
-	RewriteRule   ^([A-Za-z0-9].*)$ display.php?page=$1 [QSA]
+      RewriteCond   %%{REQUEST_FILENAME}  !-d
+      RewriteCond   %%{REQUEST_FILENAME}  !-f
+      RewriteRule   ^([A-Za-z0-9].*)$ display.php?page=$1 [QSA]
   </IfModule>
 </Directory>
 EOF
@@ -125,6 +130,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/htaccess/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -177,7 +183,7 @@ sed -e 's:#!/usr/bin/env php:#!%{_bindir}/php:' \
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/Wicked
 phpunit\
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 %endif
@@ -223,5 +229,10 @@ fi
 
 
 %changelog
+* Sat May 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- fix from review #1087769
+- explicitly requires httpd + mod_php
+- preserve timestamp of package.xml
+
 * Tue Apr 15 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Initial package, version 2.0.1
