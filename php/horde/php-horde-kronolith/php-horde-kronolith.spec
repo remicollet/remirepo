@@ -16,7 +16,7 @@
 
 Name:           php-horde-kronolith
 Version:        4.1.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based calendar
 
 Group:          Development/Libraries
@@ -111,9 +111,11 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
-# Fro mpackage.xml, optional
+# From package.xml, optional
 Requires:       php-pear(%{pear_channel}/nag) >= 4.0.0
+Requires:       php-pear(%{pear_channel}/nag) <  5
 # Optional and implicitly required: Horde_Db
+# Optional and skiped as non-free: Horde_ActiveSync
 # TODO pear.horde.org/timeobjects >= 2.0.0
 # From phpcompatinfo report for version 4.1.5
 Requires:       php-date
@@ -163,7 +165,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/htaccess/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
-
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -246,6 +248,10 @@ fi
 
 
 %changelog
+* Sat May 17 2014 Remi Collet <remi@fedoraproject.org> - 4.1.5-2
+- fix from review #1087772
+- preserve timestamp of package.xml
+
 * Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 4.1.5-1
 - Update to 4.1.5
 
