@@ -1,7 +1,7 @@
 %global github_owner    fabpot
 %global github_name     Goutte
-%global github_version  1.0.5
-%global github_commit   a30e84e28fbaf14909d2d007249c24cd0ecd425e
+%global github_version  1.0.6
+%global github_commit   06a5451288ffddd204b10fa6c6f9ab2b86dd515d
 
 # "php": ">=5.3.0"
 %global php_min_ver     5.3.0
@@ -39,7 +39,7 @@ BuildRequires: php-symfony-process     <  %{symfony_max_ver}
 BuildRequires: php-pear(guzzlephp.org/pear/Guzzle) >= %{guzzle_min_ver}
 BuildRequires: php-pear(guzzlephp.org/pear/Guzzle) <  %{guzzle_max_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo (computed from v1.0.5)
+# For tests: phpcompatinfo (computed from v1.0.6)
 BuildRequires: php-curl
 
 Requires:      php(language)           >= %{php_min_ver}
@@ -55,7 +55,7 @@ Requires:      php-symfony-process     >= %{symfony_min_ver}
 Requires:      php-symfony-process     <  %{symfony_max_ver}
 Requires:      php-pear(guzzlephp.org/pear/Guzzle) >= %{guzzle_min_ver}
 Requires:      php-pear(guzzlephp.org/pear/Guzzle) <  %{guzzle_max_ver}
-# phpcompatinfo (computed from v1.0.5)
+# phpcompatinfo (computed from v1.0.6)
 Requires:      php-curl
 
 %description
@@ -107,6 +107,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 17 2014 Remi Collet <remi@fedoraproject.org> 1.0.6-1
+- backport 1.0.6 for remi repo
+
+* Fri May 16 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.6-1
+- Updated to 1.0.6
+
 * Fri Feb 21 2014 Remi Collet <remi@fedoraproject.org> 1.0.5-1
 - backport for remi repo
 
