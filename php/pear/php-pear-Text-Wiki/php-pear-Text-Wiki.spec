@@ -1,4 +1,4 @@
-# spec file for php-pear-Text-Wiki
+# spec file for php-pear-text-wiki
 #
 # Copyright (c) 2012-2014 Remi Collet
 # License: CC-BY-SA
@@ -10,9 +10,9 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name Text_Wiki
 
-Name:           php-pear-Text-Wiki
+Name:           php-pear-text-wiki
 Version:        1.2.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Transforms Wiki and BBCode markup into XHTML, LaTeX or plain text
 
 Group:          Development/Libraries
@@ -32,6 +32,9 @@ Requires:       php-pcre
 Requires:       php-pear(PEAR)
 
 Provides:       php-pear(%{pear_name}) = %{version}
+# package have be renamed
+Obsoletes:      php-pear-Text-Wiki < %{version}-%{release}
+Provides:       php-pear-Text-Wiki = %{version}-%{release}
 
 
 %description
@@ -102,6 +105,9 @@ fi
 
 
 %changelog
+* Sun May 18 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-3
+- rename to php-pear-text-wiki per Guidelines
+
 * Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
 - cleanup
 - open https://pear.php.net/bugs/20274 missing License file
