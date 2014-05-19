@@ -103,6 +103,10 @@ if ($sort) {
 printf(" %-40s %15s %15s %15s\n", "Name", "Version", "Upstream", "Date");
 
 foreach ($pkgs as $name => $rpm) {
+	if (!$quiet) {
+		printf(" %-40s\r", $rpm);
+	}
+
 	$rpmver = exec("rpm -q --qf '%{VERSION}' $rpm", $out, $ret);
 	if ($ret) {
 		if ($quiet) {
@@ -160,3 +164,4 @@ foreach ($pkgs as $name => $rpm) {
 		printf(" %-40s %15s %15s\n", $rpm, $rpmver, 'Not found !');
 	}
 }
+echo str_repeat(' ', 50)."\n";
