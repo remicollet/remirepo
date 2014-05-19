@@ -1,7 +1,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:      php-ZendFramework2
-Version:   2.2.6
+Version:   2.2.7
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
@@ -2213,6 +2213,12 @@ ln -s %{name}-common-%{version} %{buildroot}%{_pkgdocdir}
 # ##############################################################################
 
 %changelog
+* Mon May 19 2014 Remi Collet <remi@fedoraproject.org> 2.2.7-1
+- backport 2.2.7 for remi repo (security update for ZF2014-03)
+
+* Sun May 18 2014 Shawn Iwinski <shawn.iwinski@gmail.com> 2.2.7-1
+- Updated to 2.2.7 (security update for ZF2014-03)
+
 * Tue Apr  1 2014 Remi Collet <remi@fedoraproject.org> 2.2.6-1
 - Updated to 2.2.6 for CVE-2014-2681 CVE-2014-2682
   CVE-2014-2683 CVE-2014-2684 CVE-2014-2685
