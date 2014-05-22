@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Db
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Horde Database Libraries
 
@@ -87,14 +87,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-
-# skip tests. Failed in fedora 19 (seems linked to sqlite version)
-sed -e 's/testCreateTableCompositePk/SKIP_testCreateTableCompositePk/'\
-    -e 's/testPrimaryKey/SKIP_testPrimaryKey/' \
-    -i Adapter/Pdo/SqliteTest.php
-
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -121,6 +115,9 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+
 * Tue Apr 01 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
