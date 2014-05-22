@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    25e095469e44d195cd255bdce55ce473224558bc
+%global gh_commit    0d064536ed3c7974e486b6ebb5b17ad7a974fe18
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        1.8.9
+Version:        1.8.10
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -29,9 +29,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.3.1
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) > 3.7
+BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-sabre-vobject > 2.1
-Requires:       php-pdo
+BuildRequires:  php-pdo
 %endif
 
 # From composer.json
@@ -127,11 +127,14 @@ phpunit \
 %files
 %defattr(-,root,root,-)
 %doc ChangeLog composer.json LICENSE README.md
-%doc docs examples bin
+%doc examples bin
 %{_datadir}/php/Sabre
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 1.8.10-1
+- update to 1.8.10
+
 * Sun Mar  2 2014 Remi Collet <remi@fedoraproject.org> - 1.8.9-1
 - update to 1.8.9
 
