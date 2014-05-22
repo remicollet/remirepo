@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.3.4
+Version:        2.3.5
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -157,6 +157,9 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
+- Update to 2.3.5
+
 * Sat May 10 2014 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
 - Update to 2.3.4
 
