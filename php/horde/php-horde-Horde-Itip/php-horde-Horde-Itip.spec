@@ -4,7 +4,7 @@
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #
-# Please, preserve the %changelog entries
+# Please, preserve the changelog entries
 #
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Itip
-Version:        2.0.5
+Version:        2.0.6
 Release:        1%{?dist}
 Summary:        iTip invitation response handling
 
@@ -98,7 +98,7 @@ done | tee ../%{pear_name}.lang
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -126,6 +126,9 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - switch from Conflicts to Requires
