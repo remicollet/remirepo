@@ -1,7 +1,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:      php-ZendFramework2
-Version:   2.2.7
+Version:   2.3.1
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
@@ -99,7 +99,7 @@ Cache-memcached packages.
 Summary:   Zend Framework 2: Common files
 Group:     Development/Libraries
 
-Requires:  php(language) >= 5.3.3
+Requires:  php(language) >= 5.3.23
 
 # v1 and v2 cannot be installed at the same time
 Conflicts: php-ZendFramework < 2
@@ -113,16 +113,20 @@ Conflicts: php-ZendFramework < 2
 
 Summary:  Zend Framework 2: Authentication Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.authentication.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.authentication.intro.html
 
-Requires: %{name}-common  = %{version}-%{release}
-Requires: %{name}-Stdlib  = %{version}-%{release}
-# Optional
-Requires: %{name}-Crypt   = %{version}-%{release}
-Requires: %{name}-Db      = %{version}-%{release}
-Requires: %{name}-Session = %{version}-%{release}
-Requires: %{name}-Uri     = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common    = %{version}-%{release}
+# composer.json
+Requires: %{name}-Stdlib    = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Crypt     = %{version}-%{release}
+Requires: %{name}-Db        = %{version}-%{release}
+Requires: %{name}-Http      = %{version}-%{release}
+Requires: %{name}-Ldap      = %{version}-%{release}
+Requires: %{name}-Session   = %{version}-%{release}
+Requires: %{name}-Uri       = %{version}-%{release}
+Requires: %{name}-Validator = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
 Requires: php-hash
@@ -148,14 +152,16 @@ Zend\Permissions\Acl or Zend\Permissions\Rbac component.
 
 Summary:  Zend Framework 2: Barcode Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.barcode.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.barcode.intro.html
 
-Requires: %{name}-common    = %{version}-%{release}
-Requires: %{name}-Stdlib    = %{version}-%{release}
-# Optional
-Requires: %{name}-Validator = %{version}-%{release}
-# zendframework/zendpdf
-# phpcompatinfo
+Requires: %{name}-common         = %{version}-%{release}
+# composer.json
+Requires: %{name}-Stdlib         = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: %{name}-Validator      = %{version}-%{release}
+#     zendframework/zendpdf
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-dom
 Requires: php-gd
 Requires: php-iconv
@@ -174,56 +180,38 @@ renderer. Renderer allow you to draw barcodes based on the support required.
 
 Summary:  Zend Framework 2: Cache Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-cache
+URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-cache
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-EventManager   = %{version}-%{release}
 Requires: %{name}-ServiceManager = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
+# composer.json (optional)
 Requires: %{name}-Serializer     = %{version}-%{release}
 Requires: %{name}-Session        = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-pcre
-Requires: php-pecl(redis)
 Requires: php-reflection
 Requires: php-spl
+
+# Removed sub-packages
+Obsoletes: %{name}-Cache-apc       < %{version}-%{release}
+Provides:  %{name}-Cache-apc       = %{version}-%{release}
+Obsoletes: %{name}-Cache-memcached < %{version}-%{release}
+Provides:  %{name}-Cache-memcached = %{version}-%{release}
 
 %description Cache
 %{summary}
 
 Optional:
-* %{name}-Cache-apc
-* %{name}-Cache-memcached
-
-# ------------------------------------------------------------------------------
-
-%package  Cache-apc
-
-Summary:  Zend Framework 2: Cache Component: APC
-Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-cache
-
-Requires: %{name}-Cache = %{version}-%{release}
-Requires: php-pecl(APC)
-
-%description Cache-apc
-%{summary}
-
-# ------------------------------------------------------------------------------
-
-%package  Cache-memcached
-
-Summary:  Zend Framework 2: Cache Component: Memcached
-Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-cache
-
-Requires: %{name}-Cache = %{version}-%{release}
-Requires: php-pecl(memcached)
-
-%description Cache-memcached
-%{summary}
+* APC (php-pecl-apc)
+* DBA (php-dba)
+* Memcache (php-pecl-memcache)
+* Memcached (php-pecl-memcached)
+* Redis (php-pecl-redis)
+* XCache (php-xcache)
 
 # ------------------------------------------------------------------------------
 
@@ -231,14 +219,19 @@ Requires: php-pecl(memcached)
 
 Summary:  Zend Framework 2: CAPTCHA Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.captcha.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.captcha.intro.html
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Math   = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# Optional
-# zendframework/zendservice-recaptcha
-# phpcompatinfo
+Requires: %{name}-common    = %{version}-%{release}
+# composer.json
+Requires: %{name}-Math      = %{version}-%{release}
+Requires: %{name}-Stdlib    = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Session   = %{version}-%{release}
+Requires: %{name}-Text      = %{version}-%{release}
+Requires: %{name}-Validator = %{version}-%{release}
+#     zendframework/zend-resources
+#     zendframework/zendservice-recaptcha
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-gd
 Requires: php-spl
@@ -262,13 +255,15 @@ component.
 
 Summary:  Zend Framework 2: Code Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html
+URL:      http://framework.zend.com/manual/2.3/en/index.html
 
 Requires: %{name}-common       = %{version}-%{release}
-Requires: %{name}-EventManager = %{version}-%{release}
-# Optional
-Requires: php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.1
-# phpcompatinfo
+# composer.json
+Requires: %{name}-EventManager =  %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Stdlib       =  %{version}-%{release}
+Requires: php-doctrine-common  >= 2.1
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
@@ -284,15 +279,19 @@ interface.
 
 Summary:  Zend Framework 2: Config Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.config.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.config.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
+# composer.json (optional)
+Requires: %{name}-Filter         = %{version}-%{release}
+Requires: %{name}-I18n           = %{version}-%{release}
 Requires: %{name}-Json           = %{version}-%{release}
 Requires: %{name}-ServiceManager = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-libxml
+Requires: php-pcre
 Requires: php-spl
 Requires: php-xmlreader
 Requires: php-xmlwriter
@@ -311,11 +310,12 @@ configuration data stored in .ini, JSON, YAML and XML files.
 
 Summary:  Zend Framework 2: Console Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.console.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.console.introduction.html
 
 Requires: %{name}-common = %{version}-%{release}
+# composer.json
 Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
@@ -348,15 +348,18 @@ least one console route and one action controller to handle the request.
 
 Summary:  Zend Framework 2: Crypt Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.crypt.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.crypt.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-Math           = %{version}-%{release}
 Requires: %{name}-ServiceManager = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# phpcompatinfo
-Requires: php-hash
+# composer.json (optional)
 Requires: php-mcrypt
+# phpcompatinfo (computed from version 2.3.1)
+#     scrypt -- not packaged
+Requires: php-hash
 Requires: php-openssl
 Requires: php-pcre
 Requires: php-spl
@@ -386,20 +389,28 @@ background on this topic.
 
 Summary:  Zend Framework 2: DB Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-db
+URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-db
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common         = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-EventManager   = %{version}-%{release}
+Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: %{name}-Stdlib         = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
-Requires: php-mysql
 Requires: php-pcre
 Requires: php-pdo
-Requires: php-pgsql
 Requires: php-spl
 
 %description Db
 %{summary}
+
+Optional:
+* ibm_db2 (http://pecl.php.net/package/ibm_db2)
+* mysqli (php-mysql)
+* oci8 (http://pecl.php.net/package/oci8)
+* pgsql (php-pgsql)
+* sqlsrv (http://pecl.php.net/package/sqlsrv)
 
 # ------------------------------------------------------------------------------
 
@@ -407,11 +418,12 @@ Requires: php-spl
 
 Summary:  Zend Framework 2: Debug Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html
+URL:      http://framework.zend.com/manual/2.3/en/index.html
 
 Requires: %{name}-common  = %{version}-%{release}
+# composer.json (optional)
 Requires: %{name}-Escaper = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 
 %description Debug
@@ -425,12 +437,15 @@ Optional: XDebug (php-pecl-xdebug)
 
 Summary:  Zend Framework 2: DI Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.di.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.di.introduction.html
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Code   = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common         = %{version}-%{release}
+# composer.json
+Requires: %{name}-Code           = %{version}-%{release}
+Requires: %{name}-Stdlib         = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-ServiceManager = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
@@ -451,11 +466,10 @@ injected into MovieLister.
 
 Summary:  Zend Framework 2: DOM Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.dom.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.dom.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-dom
 Requires: php-libxml
 Requires: php-pcre
@@ -472,10 +486,10 @@ interface for querying DOM documents utilizing both XPath and CSS selectors.
 
 Summary:  Zend Framework 2: Escaper Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.escaper.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.escaper.introduction.html
 
 Requires: %{name}-common = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-iconv
 Requires: php-mbstring
@@ -496,11 +510,12 @@ peer-reviewed rules.
 
 Summary:  Zend Framework 2: EventManager Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.event-manager.event-manager.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.event-manager.event-manager.html
 
 Requires: %{name}-common = %{version}-%{release}
+# composer.json
 Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
 
 %description EventManager
@@ -520,16 +535,19 @@ trigger events; and interrupt execution of listeners.
 
 Summary:  Zend Framework 2: Feed Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.feed.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.feed.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-Escaper        = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
+# composer.json (optional)
+Requires: %{name}-Cache          = %{version}-%{release}
+Requires: %{name}-Db             = %{version}-%{release}
 Requires: %{name}-Http           = %{version}-%{release}
 Requires: %{name}-ServiceManager = %{version}-%{release}
 Requires: %{name}-Validator      = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
 Requires: php-dom
@@ -560,11 +578,16 @@ and Atom feeds.
 
 Summary:  Zend Framework 2: File Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-file
+URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-file
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common    = %{version}-%{release}
+# composer.json
+Requires: %{name}-Stdlib    = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Filter    = %{version}-%{release}
+Requires: %{name}-I18n      = %{version}-%{release}
+Requires: %{name}-Validator = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-fileinfo
 Requires: php-hash
 Requires: php-pcre
@@ -580,16 +603,18 @@ Requires: php-tokenizer
 
 Summary:  Zend Framework 2: Filter Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.filter.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.filter.html
 
-Requires: %{name}-common    = %{version}-%{release}
-Requires: %{name}-Stdlib    = %{version}-%{release}
-# Optional
-Requires: %{name}-Crypt     = %{version}-%{release}
-Requires: %{name}-I18n      = %{version}-%{release}
-Requires: %{name}-Uri       = %{version}-%{release}
-Requires: %{name}-Validator = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common         = %{version}-%{release}
+# composer.json
+Requires: %{name}-Stdlib         = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Crypt          = %{version}-%{release}
+Requires: %{name}-I18n           = %{version}-%{release}
+Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: %{name}-Uri            = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
+#     rar -- not packaged
 Requires: php-bz2
 Requires: php-date
 Requires: php-iconv
@@ -612,14 +637,23 @@ may be applied to a single datum in a user-defined order.
 
 Summary:  Zend Framework 2: Form Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.form.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.form.intro.html
 
-Requires: %{name}-common      = %{version}-%{release}
-Requires: %{name}-InputFilter = %{version}-%{release}
-Requires: %{name}-Stdlib      = %{version}-%{release}
-# Optional
-# zendframework/zendservice-recaptcha
-# phpcompatinfo
+Requires: %{name}-common         = %{version}-%{release}
+# composer.json
+Requires: %{name}-InputFilter    = %{version}-%{release}
+Requires: %{name}-Stdlib         = %{version}-%{release}
+# composer.json (optional)
+#     zendframework/zendservice-recaptcha
+Requires: %{name}-Captcha        = %{version}-%{release}
+Requires: %{name}-Code           = %{version}-%{release}
+Requires: %{name}-EventManager   = %{version}-%{release}
+Requires: %{name}-Filter         = %{version}-%{release}
+Requires: %{name}-I18n           = %{version}-%{release}
+Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: %{name}-Validator      = %{version}-%{release}
+Requires: %{name}-View           = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-intl
 Requires: php-pcre
@@ -647,14 +681,15 @@ The Zend\Form component consists of the following objects:
 
 Summary:  Zend Framework 2: HTTP Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.http.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.http.html
 
 Requires: %{name}-common    = %{version}-%{release}
+# composer.json
 Requires: %{name}-Loader    = %{version}-%{release}
 Requires: %{name}-Stdlib    = %{version}-%{release}
 Requires: %{name}-Uri       = %{version}-%{release}
 Requires: %{name}-Validator = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-curl
 Requires: php-date
@@ -685,19 +720,24 @@ In nutshell, there are several parts of Zend\Http:
 
 Summary:  Zend Framework 2: i18n Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.i18n.translating.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.i18n.translating.html
 
-Requires: %{name}-common       = %{version}-%{release}
-Requires: %{name}-Stdlib       = %{version}-%{release}
-# Optional
-Requires: %{name}-EventManager = %{version}-%{release}
-Requires: %{name}-Filter       = %{version}-%{release}
-Requires: %{name}-Validator    = %{version}-%{release}
-Requires: %{name}-View         = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common         = %{version}-%{release}
+# composer.json
+Requires: %{name}-Stdlib         = %{version}-%{release}
+# composer.json (optional)
+#     zendframework/zend-resources
+Requires: %{name}-Cache          = %{version}-%{release}
+Requires: %{name}-Config         = %{version}-%{release}
+Requires: %{name}-EventManager   = %{version}-%{release}
+Requires: %{name}-Filter         = %{version}-%{release}
+Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: %{name}-Validator      = %{version}-%{release}
+Requires: %{name}-View           = %{version}-%{release}
+Requires: php-intl
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
-Requires: php-intl
 Requires: php-pcre
 Requires: php-spl
 
@@ -717,15 +757,16 @@ will actually do nothing but just return the given message IDs.
 
 Summary:  Zend Framework 2: InputFilter Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.input-filter.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.input-filter.intro.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-Filter         = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
 Requires: %{name}-Validator      = %{version}-%{release}
-# Optional
+# composer.json (optional)
 Requires: %{name}-ServiceManager = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
 
 %description InputFilter
@@ -739,19 +780,20 @@ CLI arguments, etc.
 
 Summary:  Zend Framework 2: JSON Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.json.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.json.introduction.html
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
+Requires: %{name}-common  = %{version}-%{release}
 Requires: %{name}-ZendXml = %{version}-%{release}
-# Optional
-Requires: %{name}-Server = %{version}-%{release}
-# phpcompatinfo
+# composer.json
+Requires: %{name}-Stdlib  = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Http    = %{version}-%{release}
+Requires: %{name}-Server  = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-json
 Requires: php-mbstring
 Requires: php-pcre
 Requires: php-reflection
-Requires: php-simplexml
 Requires: php-spl
 
 %description Json
@@ -778,11 +820,14 @@ data processing techniques.
 
 Summary:  Zend Framework 2: LDAP Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.ldap.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.ldap.introduction.html
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common       = %{version}-%{release}
+# composer.json
+Requires: %{name}-Stdlib       = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-EventManager = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-iconv
 Requires: php-json
@@ -801,11 +846,11 @@ limited to binding, searching and modifying entries in an LDAP directory.
 
 Summary:  Zend Framework 2: Loader Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-loader
+URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-loader
 
 Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
+Requires: php-bz2
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
@@ -819,22 +864,23 @@ Requires: php-spl
 
 Summary:  Zend Framework 2: Log Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.log.overview.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.log.overview.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-ServiceManager = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
+# composer.json (optional)
+Requires: %{name}-Console        = %{version}-%{release}
 Requires: %{name}-Db             = %{version}-%{release}
 Requires: %{name}-Escaper        = %{version}-%{release}
 Requires: %{name}-Mail           = %{version}-%{release}
 Requires: %{name}-Validator      = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-dom
 Requires: php-json
 Requires: php-pcre
-Requires: php-pecl(mongo)
 Requires: php-spl
 
 %description Log
@@ -855,22 +901,26 @@ being logged. These functions are divided into the following objects:
   log data before it is written by a Writer. Each Writer has exactly one
   Formatter.
 
+Optional: MongoDB (php-pecl-mongo)
+
 # ------------------------------------------------------------------------------
 
 %package  Mail
 
 Summary:  Zend Framework 2: Mail Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.mail.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.mail.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
+Requires: %{name}-Crypt          = %{version}-%{release}
 Requires: %{name}-Loader         = %{version}-%{release}
 Requires: %{name}-Mime           = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
-Requires: %{name}-ServiceManager = %{version}-%{release}
 Requires: %{name}-Validator      = %{version}-%{release}
-# phpcompatinfo
+# composer.json (optional)
+Requires: %{name}-ServiceManager = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
 Requires: php-iconv
@@ -890,12 +940,15 @@ the Mail\Transport\TransportInterface.
 
 Summary:  Zend Framework 2: Math Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.math.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.math.introduction.html
 
-Requires: %{name}-common = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common         = %{version}-%{release}
+# composer.json (optional)
+#     ircmaxell/random-lib
+Requires: %{name}-ServiceManager = %{version}-%{release}
 Requires: php-bcmath
 Requires: php-gmp
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-mcrypt
 Requires: php-openssl
 Requires: php-pcre
@@ -914,10 +967,12 @@ supported functionalities are:
 
 Summary:  Zend Framework 2: Memory Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html
+URL:      http://framework.zend.com/manual/2.3/en/index.html
 
 Requires: %{name}-common = %{version}-%{release}
-# phpcompatinfo
+# composer.json (optional)
+Requires: %{name}-Cache  = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
 
 %description Memory
@@ -929,11 +984,14 @@ Requires: php-spl
 
 Summary:  Zend Framework 2: MIME Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.mime.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.mime.html
 
 Requires: %{name}-common = %{version}-%{release}
+# composer.json
 Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+# composer.json (optional)
+Requires: %{name}-Mail   = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-iconv
 Requires: php-pcre
 Requires: php-spl
@@ -949,16 +1007,19 @@ requiring MIME support.
 
 Summary:  Zend Framework 2: ModuleManager Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.module-manager.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.module-manager.intro.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-EventManager   = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
+# composer.json (optional)
 Requires: %{name}-Config         = %{version}-%{release}
+Requires: %{name}-Console        = %{version}-%{release}
 Requires: %{name}-Loader         = %{version}-%{release}
+Requires: %{name}-Mvc            = %{version}-%{release}
 Requires: %{name}-ServiceManager = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
 
 %description ModuleManager
@@ -974,28 +1035,35 @@ CSS, and JavaScript.
 
 Summary:  Zend Framework 2: MVC Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.mvc.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.mvc.intro.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-EventManager   = %{version}-%{release}
 Requires: %{name}-ServiceManager = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
+# composer.json (optional)
+Requires: %{name}-Authentication = %{version}-%{release}
 Requires: %{name}-Config         = %{version}-%{release}
 Requires: %{name}-Console        = %{version}-%{release}
 Requires: %{name}-Di             = %{version}-%{release}
 Requires: %{name}-Filter         = %{version}-%{release}
-Requires: %{name}-Http           = %{version}-%{release}
 Requires: %{name}-Form           = %{version}-%{release}
+Requires: %{name}-Http           = %{version}-%{release}
 Requires: %{name}-I18n           = %{version}-%{release}
 Requires: %{name}-InputFilter    = %{version}-%{release}
+Requires: %{name}-Json           = %{version}-%{release}
+Requires: %{name}-Log            = %{version}-%{release}
 Requires: %{name}-ModuleManager  = %{version}-%{release}
 Requires: %{name}-Serializer     = %{version}-%{release}
+Requires: %{name}-Session        = %{version}-%{release}
 Requires: %{name}-Text           = %{version}-%{release}
 Requires: %{name}-Uri            = %{version}-%{release}
 Requires: %{name}-Validator      = %{version}-%{release}
+Requires: %{name}-Version        = %{version}-%{release}
 Requires: %{name}-View           = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
+Requires: php-intl
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
@@ -1023,15 +1091,18 @@ The MVC layer is built on top of the following components:
 
 Summary:  Zend Framework 2: Navigation Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.navigation.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.navigation.intro.html
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# Optional
-Requires: %{name}-Config = %{version}-%{release}
-Requires: %{name}-Mvc    = %{version}-%{release}
-Requires: %{name}-View   = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common          = %{version}-%{release}
+# composer.json
+Requires: %{name}-Stdlib          = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Config          = %{version}-%{release}
+Requires: %{name}-Mvc             = %{version}-%{release}
+Requires: %{name}-Permissions-Acl = %{version}-%{release}
+Requires: %{name}-ServiceManager  = %{version}-%{release}
+Requires: %{name}-View            = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-spl
 
@@ -1046,11 +1117,19 @@ or serve as a model for other navigation related purposes.
 
 Summary:  Zend Framework 2: Paginator Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.paginator.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.paginator.introduction.html
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common         = %{version}-%{release}
+# composer.json
+Requires: %{name}-Stdlib         = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Cache          = %{version}-%{release}
+Requires: %{name}-Db             = %{version}-%{release}
+Requires: %{name}-Filter         = %{version}-%{release}
+Requires: %{name}-Json           = %{version}-%{release}
+Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: %{name}-View           = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-reflection
 Requires: php-spl
 
@@ -1073,10 +1152,10 @@ The primary design goals of Zend\Paginator are as follows:
 
 Summary:  Zend Framework 2: Permissions ACL Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.permissions.acl.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.permissions.acl.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
 
 %description Permissions-Acl
@@ -1104,10 +1183,10 @@ roles are granted access to resources.
 
 Summary:  Zend Framework 2: Permissions RBAC Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.permissions.rbac.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.permissions.rbac.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
 
 %description Permissions-Rbac
@@ -1123,16 +1202,20 @@ putting the emphasis on roles and their permissions rather than objects
 
 Summary:  Zend Framework 2: ProgressBar Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.progress-bar.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.progress-bar.html
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common  = %{version}-%{release}
+# composer.json
+Requires: %{name}-Stdlib  = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Json    = %{version}-%{release}
+Requires: %{name}-Session = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
+#     uploadprogress
 Requires: php-date
 Requires: php-pcre
 Requires: php-pecl(APC)
 Requires: php-spl
-# uploadprogress
 
 %description ProgressBar
 Zend\ProgressBar is a component to create and update progress bars in different
@@ -1147,15 +1230,17 @@ precalculated values like percentage and estimated time left.
 
 Summary:  Zend Framework 2: Serializer Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.serializer.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.serializer.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-Json           = %{version}-%{release}
 Requires: %{name}-Math           = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
+# composer.json (optional)
 Requires: %{name}-ServiceManager = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
+#     wddx
 Requires: php-dom
 Requires: php-libxml
 Requires: php-pcre
@@ -1175,12 +1260,13 @@ recover.
 
 Summary:  Zend Framework 2: Server Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.server.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.server.html
 
 Requires: %{name}-common = %{version}-%{release}
+# composer.json
 Requires: %{name}-Code   = %{version}-%{release}
 Requires: %{name}-Stdlib = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
@@ -1202,12 +1288,12 @@ and loadFunctions() methods.
 
 Summary:  Zend Framework 2: ServiceManager Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.service-manager.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.service-manager.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
-# Optional
+# composer.json (optional)
 Requires: %{name}-Di     = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-reflection
 Requires: php-spl
 
@@ -1222,19 +1308,22 @@ retrieving other objects.
 
 Summary:  Zend Framework 2: Session Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-session
+URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-session
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
+# composer.json (optional)
+Requires: %{name}-Cache          = %{version}-%{release}
+Requires: %{name}-Db             = %{version}-%{release}
 Requires: %{name}-EventManager   = %{version}-%{release}
+Requires: %{name}-Http           = %{version}-%{release}
 Requires: %{name}-ServiceManager = %{version}-%{release}
 Requires: %{name}-Validator      = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-hash
 Requires: php-pcre
-Requires: php-pecl(mongo)
 Requires: php-session
 Requires: php-spl
 
@@ -1242,26 +1331,32 @@ Requires: php-spl
 Manage and preserve session data, a logical complement of cookie data, across
 multiple page requests by the same client.
 
+Optional: MongoDB (php-pecl-mongo)
+
 # ------------------------------------------------------------------------------
 
 %package  Soap
 
 Summary:  Zend Framework 2: SOAP Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-soap
+URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-soap
 
 Requires: %{name}-common = %{version}-%{release}
+# composer.json
 Requires: %{name}-Server = %{version}-%{release}
 Requires: %{name}-Stdlib = %{version}-%{release}
 Requires: %{name}-Uri    = %{version}-%{release}
-# phpcompatinfo
+# composer.json (optional)
+Requires: %{name}-Http   = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-curl
 Requires: php-dom
 Requires: php-libxml
 Requires: php-pcre
 Requires: php-reflection
-Requires: php-spl
+Requires: php-simplexml
 Requires: php-soap
+Requires: php-spl
 
 %description Soap
 %{summary}
@@ -1272,16 +1367,18 @@ Requires: php-soap
 
 Summary:  Zend Framework 2: Stdlib Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-stdlib
+URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-stdlib
 
 Requires: %{name}-common         = %{version}-%{release}
-# Optional
+# composer.json (optional)
 Requires: %{name}-EventManager   = %{version}-%{release}
+Requires: %{name}-Serializer     = %{version}-%{release}
 Requires: %{name}-ServiceManager = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-iconv
 Requires: php-intl
+Requires: php-json
 Requires: php-mbstring
 Requires: php-pcre
 Requires: php-reflection
@@ -1296,12 +1393,15 @@ Requires: php-spl
 
 Summary:  Zend Framework 2: Tag Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.tag.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.tag.introduction.html
 
-Requires: %{name}-common  = %{version}-%{release}
-Requires: %{name}-Escaper = %{version}-%{release}
-Requires: %{name}-Stdlib  = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common         = %{version}-%{release}
+# composer.json
+Requires: %{name}-Escaper        = %{version}-%{release}
+Requires: %{name}-Stdlib         = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-ServiceManager = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-spl
 
@@ -1328,20 +1428,21 @@ on the given relative weights of each item in it.
 
 Summary:  Zend Framework 2: Test Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.test.introduction.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.test.introduction.html
 
 Requires: %{name}-common         = %{version}-%{release}
-Requires: %{name}-Dom            = %{version}-%{release}
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-Http           = %{version}-%{release}
-Requires: %{name}-Mvc            = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
-Requires: %{name}-Uri            = %{version}-%{release}
-Requires: %{name}-View           = %{version}-%{release}
+# composer.json
+Requires: %{name}-Console        =  %{version}-%{release}
+Requires: %{name}-Dom            =  %{version}-%{release}
+Requires: %{name}-EventManager   =  %{version}-%{release}
+Requires: %{name}-Http           =  %{version}-%{release}
+Requires: %{name}-Mvc            =  %{version}-%{release}
+Requires: %{name}-ServiceManager =  %{version}-%{release}
+Requires: %{name}-Stdlib         =  %{version}-%{release}
+Requires: %{name}-Uri            =  %{version}-%{release}
+Requires: %{name}-View           =  %{version}-%{release}
 Requires: php-pear(pear.phpunit.de/PHPUnit) >= 3.7.0
-Requires: php-pear(pear.phpunit.de/PHPUnit) <  3.8.0
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-spl
 
@@ -1360,12 +1461,13 @@ PHPUnit is the only library supported currently.
 
 Summary:  Zend Framework 2: Text Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/index.html#zend-text
+URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-text
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-ServiceManager = %{version}-%{release}
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-pcre
 Requires: php-spl
@@ -1379,12 +1481,13 @@ Requires: php-spl
 
 Summary:  Zend Framework 2: URI Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.uri.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.uri.html
 
 Requires: %{name}-common    = %{version}-%{release}
+# composer.json
 Requires: %{name}-Escaper   = %{version}-%{release}
 Requires: %{name}-Validator = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-spl
 
@@ -1407,16 +1510,21 @@ registered with the Factory.
 
 Summary:  Zend Framework 2: Validator Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.validator.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.validator.html
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
 Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
+# composer.json (optional)
+#     zendframework/zend-resources
 Requires: %{name}-Db             = %{version}-%{release}
+Requires: %{name}-Filter         = %{version}-%{release}
 Requires: %{name}-I18n           = %{version}-%{release}
 Requires: %{name}-Math           = %{version}-%{release}
 Requires: %{name}-ServiceManager = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-Session        = %{version}-%{release}
+Requires: %{name}-Uri            = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
 Requires: php-fileinfo
@@ -1435,11 +1543,16 @@ validators may be applied to a single datum in a user-defined order.
 
 Summary:  Zend Framework 2: Version Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.version.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.version.html
 
 Requires: %{name}-common = %{version}-%{release}
-# phpcompatinfo
+# composer.json
+Requires: %{name}-Json   = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Http   = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
+Requires: php-spl
 
 %description Version
 Zend\Version provides a class constant Zend\Version\Version::VERSION that
@@ -1459,16 +1572,28 @@ Framework installation.
 
 Summary:  Zend Framework 2: View Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.view.quick-start.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.view.quick-start.html
 
-Requires: %{name}-common         = %{version}-%{release}
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-Loader         = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
-# Optional
-Requires: %{name}-Filter         = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-# phpcompatinfo
+Requires: %{name}-common          = %{version}-%{release}
+# composer.json
+Requires: %{name}-EventManager    = %{version}-%{release}
+Requires: %{name}-Loader          = %{version}-%{release}
+Requires: %{name}-Stdlib          = %{version}-%{release}
+# composer.json (optional)
+Requires: %{name}-Authentication  = %{version}-%{release}
+Requires: %{name}-Escaper         = %{version}-%{release}
+Requires: %{name}-Feed            = %{version}-%{release}
+Requires: %{name}-Filter          = %{version}-%{release}
+Requires: %{name}-Http            = %{version}-%{release}
+Requires: %{name}-I18n            = %{version}-%{release}
+Requires: %{name}-Json            = %{version}-%{release}
+Requires: %{name}-Mvc             = %{version}-%{release}
+Requires: %{name}-Navigation      = %{version}-%{release}
+Requires: %{name}-Paginator       = %{version}-%{release}
+Requires: %{name}-Permissions-Acl = %{version}-%{release}
+Requires: %{name}-ServiceManager  = %{version}-%{release}
+Requires: %{name}-Uri             = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-dom
 Requires: php-filter
@@ -1486,15 +1611,16 @@ substitution, and more.
 
 Summary:  Zend Framework 2: XML-RPC Component
 Group:    Development/Libraries
-URL:      http://framework.zend.com/manual/2.2/en/modules/zend.xmlrpc.intro.html
+URL:      http://framework.zend.com/manual/2.3/en/modules/zend.xmlrpc.intro.html
 
-Requires: %{name}-common = %{version}-%{release}
-Requires: %{name}-Http   = %{version}-%{release}
-Requires: %{name}-Math   = %{version}-%{release}
-Requires: %{name}-Server = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
+Requires: %{name}-common  = %{version}-%{release}
 Requires: %{name}-ZendXml = %{version}-%{release}
-# phpcompatinfo
+# composer.json
+Requires: %{name}-Http    = %{version}-%{release}
+Requires: %{name}-Math    = %{version}-%{release}
+Requires: %{name}-Server  = %{version}-%{release}
+Requires: %{name}-Stdlib  = %{version}-%{release}
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-dom
 Requires: php-iconv
@@ -1525,7 +1651,7 @@ Group:    Development/Libraries
 URL:      https://github.com/zendframework/ZendXml
 
 Requires: %{name}-common = %{version}-%{release}
-# phpcompatinfo
+# phpcompatinfo (computed from version 2.3.1)
 Requires: php-dom
 Requires: php-libxml
 Requires: php-simplexml
@@ -1620,22 +1746,6 @@ ln -s %{name}-common-%{version} %{buildroot}%{_pkgdocdir}
 %{_datadir}/php/Zend/Cache
 %exclude %{_datadir}/php/Zend/Cache/*.md
 %exclude %{_datadir}/php/Zend/Cache/composer.json
-%exclude %{_datadir}/php/Zend/Cache/Storage/Adapter/Apc*
-%exclude %{_datadir}/php/Zend/Cache/Storage/Adapter/Memcached*
-
-# ------------------------------------------------------------------------------
-
-%files Cache-apc
-%defattr(-,root,root,-)
-
-%{_datadir}/php/Zend/Cache/Storage/Adapter/Apc*
-
-# ------------------------------------------------------------------------------
-
-%files Cache-memcached
-%defattr(-,root,root,-)
-
-%{_datadir}/php/Zend/Cache/Storage/Adapter/Memcached*
 
 # ------------------------------------------------------------------------------
 
@@ -2213,6 +2323,12 @@ ln -s %{name}-common-%{version} %{buildroot}%{_pkgdocdir}
 # ##############################################################################
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> 2.3.1-1
+- backport 2.3.1 for remi repo
+
+* Tue May 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.3.1-1
+- Updated to 2.3.1
+
 * Mon May 19 2014 Remi Collet <remi@fedoraproject.org> 2.2.7-1
 - backport 2.2.7 for remi repo (security update for ZF2014-03)
 
