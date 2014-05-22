@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Smtp
-Version:        1.4.1
+Version:        1.5.0
 Release:        1%{?dist}
 Summary:        Horde SMTP Client
 
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- Update to 1.5.0
+
 * Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1
 - add gettext for provided locales
