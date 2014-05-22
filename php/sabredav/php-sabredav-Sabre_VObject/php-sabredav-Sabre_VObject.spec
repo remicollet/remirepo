@@ -1,20 +1,23 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%global gh_commit   199b6ec87104b05e3013dfd5b90eafbbe4cf97dc
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    fruux
+%global gh_project  sabre-vobject
 %global pear_name   Sabre_VObject
 %global channelname pear.sabredav.org
-%global mainver     1.7.10
-%global reldate     2014-02-09
+%global reldate     2014-05-16
 
 Name:           php-sabredav-Sabre_VObject
-Version:        2.1.3
-Release:        2%{?dist}
+Version:        2.1.4
+Release:        1%{?dist}
 Summary:        An intuitive reader for iCalendar and vCard objects
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://code.google.com/p/sabredav
+URL:            http://sabre.io/
 # https://github.com/fruux/sabre-dav/issues/336
 # Please update PEAR channel
-Source0:        http://sabredav.googlecode.com/files/SabreDAV-%{mainver}.zip
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 Source1:        %{name}.xml
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -37,14 +40,12 @@ Provides:       php-pear(%{channelname}/%{pear_name}) = %{version}
 SabreDAV VObject plugin.
 
 %prep
-%setup -q -n SabreDAV
+%setup -q -n %{gh_project}-%{gh_commit}
 
 sed -e 's/@VERSION@/%{version}/' \
     -e 's/@RELDATE@/%{reldate}/' \
     %{SOURCE1} >%{name}.xml
-mv vendor/sabre/vobject/lib/Sabre Sabre
-mv vendor/sabre/vobject/LICENSE .
-mv vendor/sabre/vobject/ChangeLog .
+mv lib/Sabre Sabre
 
 # Check version
 extver=$(sed -n "/VERSION/{s/.* '//;s/'.*$//;p}" Sabre/VObject/Version.php)
@@ -106,6 +107,10 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <RPMS@FamilleCollet.com> 2.1.4-1
+- update to 2.1.4
+- sources from github
+
 * Thu Feb 20 2014 Remi Collet <RPMS@FamilleCollet.com> 2.1.3-2
 - rebuild from SabreDAV-1.7.10 sources
 
