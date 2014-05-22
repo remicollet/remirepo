@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Auth
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        Horde Authentication API
 
@@ -116,7 +116,7 @@ done | tee ../%{pear_name}.lang
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
 phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+    --include-path=%{buildroot}%{pear_phpdir} \
     -d date.timezone=UTC \
     .
 
@@ -145,6 +145,9 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- Update to 2.1.4
+
 * Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 
