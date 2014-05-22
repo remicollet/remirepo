@@ -114,7 +114,7 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
     --include-path=$src/lib \
     -d date.timezone=UTC \
-    . || exit 0
+    .
 
 
 %clean
