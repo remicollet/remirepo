@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Dav
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        Horde library for WebDAV, CalDAV, CardDAV
 
@@ -25,6 +25,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  gettext
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -39,9 +40,9 @@ Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 # php-sabredav-Sabre_DAV is 1.7, php-sabre-dav is 1.8
-Requires:       php-sabre-dav  >= 1.8.9
+Requires:       php-sabre-dav  >= 1.8.10
 # php-sabredav-Sabre_VObject is 2.1, php-sabre-vobject is  3.1
-Requires:       php-pear(Sabre_VObject) >= 2.1.3
+Requires:       php-pear(Sabre_VObject) >= 2.1.4
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -55,13 +56,24 @@ library.
 cd %{pear_name}-%{version}
 
 # Don't use bunled Sabre library
+# Don't install .po and .pot files
+# Remove checksum for .mo, as we regenerate them
+
 sed -e '/sabre/d' \
+    -e '/%{pear_name}.po/d' \
+    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch ../package.xml %{name}.xml
 
 
 %build
 cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+
+# Regenerate the locales
+for po in $(find locale -name \*.po)
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
@@ -75,6 +87,13 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+for loc in locale/{??,??_??}
+do
+    lang=$(basename $loc)
+    test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc \
+         && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
 
 
 %clean
@@ -92,16 +111,24 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Dav
-%{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}/locale
+%{pear_datadir}/%{pear_name}/migration
 
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- Update to 1.0.5
+- raise dependencies on SabreDAV 1.8.10, VObject 2.1.4
+- generate local during build
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4
 - raise dependency on sabre-dav 1.8.9
