@@ -1,4 +1,13 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Date
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Lock
 %global pear_channel pear.horde.org
 
@@ -6,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Lock
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Horde Resource Locking System
 
@@ -32,12 +41,12 @@ Requires:       php-date
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Support) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 # Optionals
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Db) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 # Optional and implicitly required: Horde_Log, Horde_Mongo
 
 
@@ -76,7 +85,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 %else
@@ -106,6 +115,9 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+
 * Tue May 07 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
