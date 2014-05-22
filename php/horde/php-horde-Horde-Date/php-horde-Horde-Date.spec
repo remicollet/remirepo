@@ -16,7 +16,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Date
-Version:        2.0.9
+Version:        2.0.10
 Release:        1%{?dist}
 Summary:        Horde Date package
 
@@ -137,6 +137,9 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
+- Update to 2.0.10
+
 * Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
 - Update to 2.0.9
 
