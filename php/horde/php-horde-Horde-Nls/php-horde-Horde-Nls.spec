@@ -1,9 +1,18 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Date
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Nls
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Nls
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Native Language Support (NLS)
 
@@ -104,6 +113,9 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Fri May 31 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - switch from Conflicts >= max to Requires < max
