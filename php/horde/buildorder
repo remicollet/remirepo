@@ -10,7 +10,7 @@ Build order
 	* Horde_Exception           2.0.4       I: Horde_Test R: Horde_Translation
 	* Horde_Imsp                2.0.5        R: Horde_Translation
 	* Horde_Memcache            2.0.5        R: Horde_Exception
-	* Horde_Nls                 2.0.3        R: Horde_Util, Horde_Translation
+	* Horde_Nls                 2.0.4        R: Horde_Util, Horde_Translation
 	* Horde_Scribe              2.0.1        R: Horde_Thrift
 	* Horde_Socket_Client       1.1.1        R: Horde_Exception
 	* Horde_Support             2.1.1       I: Horde_Test R: Horde_Exception, Horde_Stream_Wrapper
@@ -23,7 +23,7 @@ Build order
 	* Horde_Url                 2.2.2      BR: Horde_Test  R: Horde_Exception
 	* Horde_Xml_Element         2.0.1      BR: Horde_Test  R: Horde_Exception
 	* Horde_Xml_Wbxml           2.0.1      BR: Horde_Test  R: Horde_Util
-	* Horde_Argv                2.0.8      BR: Horde_Test  R: Horde_Exception, Horde_Translation
+	* Horde_Argv                2.0.9      BR: Horde_Test  R: Horde_Exception, Horde_Translation
 	* Horde_Autoloader          2.1.0      BR: Horde_Test  
 	* Horde_Compress_Fast       1.0.2      BR: Horde_Test  R: Horde_Exception
 	* Horde_Crypt_Blowfish      1.0.2      BR: Horde_Test  R: Horde_Exception, Horde_Support
@@ -98,4 +98,4 @@ Build order
 	* nag                       4.1.4      BR: Horde_Role, Horde_Test  R: Horde_Role, content, horde, Horde_Auth, Horde_Core, Horde_Data, Horde_Date, Horde_Dav, Horde_Date_Parser, Horde_Exception, Horde_Form, Horde_Group, Horde_History, Horde_Icalendar, Horde_Mail, Horde_Mime, Horde_Perms, Horde_Prefs, Horde_Routes, Horde_Share, Horde_Support, Horde_Text_Filter, Horde_Url, Horde_Util, Horde_View
 	* turba                     4.1.4      BR: Horde_Role  R: Horde_Role, horde, Horde_Auth, Horde_Core, Horde_Data, Horde_Date, Horde_Dav, Horde_Exception, Horde_Form, Horde_Group, Horde_History, Horde_Icalendar, Horde_Mail, Horde_Mime, Horde_Nls, Horde_Perms, Horde_Prefs, Horde_Serialize, Horde_Share, Horde_Support, Horde_Url, Horde_Util, Horde_View
 	  wicked                    2.0.1      BR: Horde_Role, Horde_Test  R: horde, Horde_Auth, Horde_Autoloader, Horde_Core, Horde_Db, Horde_Exception, Horde_Form, Horde_Http, Horde_Lock, Horde_Mail, Horde_Mime, Horde_Mime_Viewer, Horde_Notification, Horde_Perms, Horde_Prefs, Horde_Rpc, Horde_Text_Diff, Horde_Url, Horde_Util, Horde_Vfs
-	  kronolith                 4.1.5      BR: Horde_Role, Horde_Test  R: Horde_Role, content, horde, Horde_Auth, Horde_Autoloader, Horde_Core, Horde_Data, Horde_Date, Horde_Dav, Horde_Date_Parser, Horde_Exception, Horde_Form, Horde_Group, Horde_Http, Horde_History, Horde_Icalendar, Horde_Image, Horde_Lock, Horde_LoginTasks, Horde_Mail, Horde_Mime, Horde_Nls, Horde_Notification, Horde_Perms, Horde_Serialize, Horde_Share, Horde_Support, Horde_Text_Filter, Horde_Timezone, Horde_Url, Horde_Util, Horde_View, nag
+	* kronolith                 4.1.5      BR: Horde_Role, Horde_Test  R: Horde_Role, content, horde, Horde_Auth, Horde_Autoloader, Horde_Core, Horde_Data, Horde_Date, Horde_Dav, Horde_Date_Parser, Horde_Exception, Horde_Form, Horde_Group, Horde_Http, Horde_History, Horde_Icalendar, Horde_Image, Horde_Lock, Horde_LoginTasks, Horde_Mail, Horde_Mime, Horde_Nls, Horde_Notification, Horde_Perms, Horde_Serialize, Horde_Share, Horde_Support, Horde_Text_Filter, Horde_Timezone, Horde_Url, Horde_Util, Horde_View, nag
