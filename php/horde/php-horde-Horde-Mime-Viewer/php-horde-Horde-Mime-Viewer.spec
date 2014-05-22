@@ -4,14 +4,14 @@
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #
-# Please, preserve the %changelog entries
+# Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Mime_Viewer
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mime-Viewer
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
 
@@ -136,6 +136,9 @@ fi
 
 
 %changelog
+* Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+
 * Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 
