@@ -13,7 +13,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -29,7 +29,8 @@ BuildArch:      noarch
 BuildRequires:  php(language)               >= 5.3
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-phpunit-PHP-Timer       >= 1.0.0
+# 1.0.5-3 is first version in /usr/share/php
+BuildRequires:  php-phpunit-PHP-Timer       >= 1.0.5-3
 BuildRequires:  php-PHPParser               >= 1.0.0
 BuildRequires:  php-symfony-classloader     >= 2.4
 BuildRequires:  php-symfony-eventdispatcher >= 2.4
@@ -42,7 +43,7 @@ Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-phpunit-PHP-Timer       >= 1.0.0
+Requires:       php-phpunit-PHP-Timer       >= 1.0.5-3
 Requires:       php-PHPParser               >= 1.0.0
 Requires:       php-symfony-classloader     >= 2.4
 Requires:       php-symfony-eventdispatcher >= 2.4
@@ -110,6 +111,9 @@ fi
 
 
 %changelog
+* Mon May 26 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- fix dependencies
+
 * Mon May 12 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0
 - sources from github
