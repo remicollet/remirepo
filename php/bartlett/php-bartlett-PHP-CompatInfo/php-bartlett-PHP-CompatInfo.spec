@@ -13,7 +13,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        3.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -37,7 +37,10 @@ Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-phpunit-PHP-Timer       >= 1.0.0
+Requires:       php-bartlett-PHP-Reflect >= 2.0.0
+# Required by autoloader
+# php-timer 1.0.5-3 is first version in /usr/share/php
+Requires:       php-phpunit-PHP-Timer       >= 1.0.5-3
 Requires:       php-PHPParser               >= 1.0.0
 Requires:       php-symfony-classloader     >= 2.4
 Requires:       php-symfony-eventdispatcher >= 2.4
@@ -125,6 +128,9 @@ fi
 
 
 %changelog
+* Mon May 26 2014 Remi Collet <remi@fedoraproject.org> - 3.1.0-2
+- fix dependencies
+
 * Mon May 12 2014 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
 - update to 3.1.0
 - sources from github
