@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    efb1b1334605594417a3bd466477772d06d460a8
+%global gh_commit    1d6b554732382879045e11c56decd4be76130720
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,8 +17,8 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.1.0
-Release:        2%{?dist}
+Version:        4.1.1
+Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -154,6 +154,9 @@ fi
 
 
 %changelog
+* Mon May 26 2014 Remi Collet <remi@fedoraproject.org> - 4.1.1-1
+- Update to 4.1.1
+
 * Tue May  6 2014 Remi Collet <remi@fedoraproject.org> - 4.1.0-2
 - fix some autoload issues
 
