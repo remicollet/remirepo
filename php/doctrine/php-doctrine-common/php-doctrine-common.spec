@@ -1,7 +1,7 @@
 %global github_owner     doctrine
 %global github_name      common
-%global github_version   2.4.1
-%global github_commit    ceb18cf9b0230f3ea208b6238130fd415abda0a7
+%global github_version   2.4.2
+%global github_commit    5db6ab40e4c531f14dad4ca96a394dfce5d4255b
 
 # "php": ">=5.3.2"
 %global php_min_ver      5.3.2
@@ -11,7 +11,7 @@
 
 Name:          php-%{github_owner}-%{github_name}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       Common library for Doctrine projects
 
 Group:         Development/Libraries
@@ -34,7 +34,7 @@ BuildRequires: php-doctrine-inflector   <  %{doctrine_max_ver}
 BuildRequires: php-doctrine-lexer       >= %{doctrine_min_ver}
 BuildRequires: php-doctrine-lexer       <  %{doctrine_max_ver}
 BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo (computed from v2.4.1)
+# For tests: phpcompatinfo (computed from version 2.4.2)
 BuildRequires: php-date
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -52,7 +52,7 @@ Requires:      php-doctrine-inflector   >= %{doctrine_min_ver}
 Requires:      php-doctrine-inflector   <  %{doctrine_max_ver}
 Requires:      php-doctrine-lexer       >= %{doctrine_min_ver}
 Requires:      php-doctrine-lexer       <  %{doctrine_max_ver}
-# phpcompatinfo (computed from v2.4.1)
+# phpcompatinfo (computed from version 2.4.2)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
@@ -120,6 +120,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 26 2014 Remi Collet <rpms@famillecollet.com> 2.4.2-1
+- backport 2.4.2 for remi repo
+
+* Fri May 23 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.2-1
+- Updated to 2.4.2 (BZ #1100718)
+
 * Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 2.4.1-2
 - backport for remi repo
 
