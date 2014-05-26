@@ -16,11 +16,14 @@ Release:        3%{?dist}
 Summary:        Transforms Wiki and BBCode markup into XHTML, LaTeX or plain text
 
 Group:          Development/Libraries
-# https://pear.php.net/bugs/20274
+# https://pear.php.net/bugs/20274 - License missing
 # File not mandatory for LGPLv2
 License:        LGPLv2
 URL:            http://pear.php.net/package/Text_Wiki
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
+
+# https://github.com/pear/Text_Wiki/commit/0fe98830c3fd497401302bed7cbe53929d9423b7
+Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -62,7 +65,11 @@ It is highly configurable and can be easily extended.
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+
+%patch0 -p1 -b .orig
+sed -e '/Prefilter.php/s/md5sum="[^"]*"//' \
+    ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -107,6 +114,7 @@ fi
 %changelog
 * Sun May 18 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-3
 - rename to php-pear-text-wiki per Guidelines
+- upstream patch to cleanup old license headers
 
 * Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
 - cleanup
