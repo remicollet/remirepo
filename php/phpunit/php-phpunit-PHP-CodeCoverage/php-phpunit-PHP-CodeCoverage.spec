@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    bccecf50645068b44f49a84009e2a0499a500b99
+%global gh_commit    58401826c8cfc8fd689b60026e91c337df374bca
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -17,8 +17,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.0.6
-Release:        1%{?dist}.1
+Version:        2.0.8
+Release:        1%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -81,6 +81,9 @@ cp -pr src %{buildroot}%{php_home}/PHP
 
 %if %{with_tests}
 %check
+# to ensure current version will be used (instead of installed one)
+ln -s src PHP
+
 phpunit \
   -d date.timezone=UTC \
   --bootstrap src/CodeCoverage/Autoload.php
@@ -106,6 +109,9 @@ fi
 
 
 %changelog
+* Tue May 27 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
+- update to 2.0.8
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - update to 2.0.6
 
