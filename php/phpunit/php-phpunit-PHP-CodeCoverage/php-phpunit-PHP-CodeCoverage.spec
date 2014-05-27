@@ -73,6 +73,7 @@ phpab \
   --template %{SOURCE1} \
   src
 
+
 %install
 rm -rf     %{buildroot}
 mkdir -p   %{buildroot}%{php_home}
@@ -81,7 +82,7 @@ cp -pr src %{buildroot}%{php_home}/PHP
 
 %if %{with_tests}
 %check
-# to ensure current version will be used (instead of installed one)
+# to ensure current version is used (instead of installed one)
 ln -s src PHP
 
 phpunit \
