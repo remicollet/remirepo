@@ -11,13 +11,14 @@
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents
-Version:        6.0.077
+Version:        6.0.082
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
 License:        LGPLv3+
 Group:          Development/Libraries
 
+# Keep full version, min version lack lot of files.
 Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -253,6 +254,8 @@ for ttf in \
    list=$ttf${list:+,${list}}
 done
 php tools/tcpdf_addfont.php \
+    --addcbbox \
+    --flags 32 \
     --fonts $list \
     --link \
     --outpath %{buildroot}%{_datadir}/php/%{real_name}/fonts/
@@ -314,6 +317,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 27 2014 Remi Collet <remi@fedoraproject.org> - 6.0.082-1
+- update to 6.0.082
+- include cbbox metrics in fonts metadata
+
 * Sat May 10 2014 Remi Collet <remi@fedoraproject.org> - 6.0.077-1
 - update to 6.0.077
 
