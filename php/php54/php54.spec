@@ -81,7 +81,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.28
+Version: 5.4.29
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -1646,6 +1646,11 @@ fi
 
 
 %changelog
+* Wed May 28 2014 Remi Collet <remi@fedoraproject.org> 5.4.29-1
+- Update to 5.4.29
+  http://www.php.net/releases/5_4_29.php
+- sync php.ini with upstream php.ini-production
+
 * Fri May  2 2014 Remi Collet <remi@fedoraproject.org> 5.4.28-1
 - Update to 5.4.28
   http://www.php.net/releases/5_4_28.php
