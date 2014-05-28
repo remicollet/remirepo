@@ -11,25 +11,27 @@ if [ ${1:-check} != nocheck ]; then
 	fi
 fi
 
-echo "+ Nettoyage des anciens"
-
-repomanage --old --keep=2 . | tee $TMP
-LST=$(cat $TMP)
-
-if [ -z "$LST" ]
-then	echo OK.
-else	mv $LST /data/rpms/old/
-fi
-
 nom=${PWD#/home/rpmbuild/site/rpms/}
 if [ "$nom" = "SRPMS" ]
 then
   dis=fedora
   ver=17
+  old=3
 else
   dis=${nom%%/*}
   ver=${nom#$dis/}
   ver=${ver%%/*}
+  old=2
+fi
+
+echo "+ Nettoyage des anciens ($old)"
+
+repomanage --old --keep=$old . | tee $TMP
+LST=$(cat $TMP)
+
+if [ -z "$LST" ]
+then	echo OK.
+else	mv $LST /data/rpms/old/
 fi
 
 cache=/home/rpmbuild/site/rpms/.createrepocache/$nom
