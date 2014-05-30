@@ -30,6 +30,9 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# https://github.com/matyhtf/swoole/pull/67
+Patch0:         %{pecl_name}-el5.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
@@ -91,6 +94,8 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/examples/s/role="src"/role="doc"/' -i package.xml
 
 cd NTS
+%patch0 -p1 -b .el5
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -219,6 +224,7 @@ rm -rf %{buildroot}
 %changelog
 * Fri May 30 2014 Remi Collet <remi@fedoraproject.org> - 1.7.2-1
 - Update to 1.7.2 (stable)
+- open https://github.com/matyhtf/swoole/pull/67 (fix EL5 build)
 
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.7.1-1
 - Update to 1.7.1 (stable)
