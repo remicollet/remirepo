@@ -25,7 +25,7 @@
 Summary:        XML diff and merge
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.9.2
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -243,6 +243,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 30 2014 Remi Collet <remi@fedoraproject.org> - 0.9.2-4
+- rebuild to have NEVR > Fedora or EPEL one
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 0.9.2-3
 - add numerical prefix to extension configuration file (php 5.6)
 
