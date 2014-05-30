@@ -23,7 +23,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.1
+Version:        1.7.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -108,6 +108,12 @@ cp -pr NTS ZTS
 cat << 'EOF' | tee %{ini_name}
 ; Enable %{summary} extension module
 extension=%{pecl_name}.so
+
+; Configuration
+;swoole.task_worker_num = 0
+;swoole.task_ipc_mode = 0
+;swoole.task_auto_start = 0
+;swoole.message_queue_key =0
 EOF
 
 
@@ -211,6 +217,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 30 2014 Remi Collet <remi@fedoraproject.org> - 1.7.2-1
+- Update to 1.7.2 (stable)
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.7.1-1
 - Update to 1.7.1 (stable)
 

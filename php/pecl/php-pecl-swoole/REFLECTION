@@ -1,9 +1,27 @@
-Extension [ <persistent> extension #135 swoole version 1.7.1 ] {
+Extension [ <persistent> extension #135 swoole version 1.7.2 ] {
 
-  - Constants [32] {
+  - INI {
+    Entry [ swoole.task_worker_num <ALL> ]
+      Current = '0'
+    }
+    Entry [ swoole.task_ipc_mode <ALL> ]
+      Current = '0'
+    }
+    Entry [ swoole.task_auto_start <ALL> ]
+      Current = '0'
+    }
+    Entry [ swoole.message_queue_key <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Constants [35] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
+    Constant [ integer SWOOLE_IPC_UNSOCK ] { 1 }
+    Constant [ integer SWOOLE_IPC_MSGQUEUE ] { 2 }
+    Constant [ integer SWOOLE_IPC_CHANNEL ] { 3 }
     Constant [ integer SWOOLE_SOCK_TCP ] { 1 }
     Constant [ integer SWOOLE_SOCK_TCP6 ] { 3 }
     Constant [ integer SWOOLE_SOCK_UDP ] { 2 }
@@ -32,7 +50,7 @@ Extension [ <persistent> extension #135 swoole version 1.7.1 ] {
     Constant [ integer SWOOLE_HOST ] { 16 }
     Constant [ integer SWOOLE_SHORT ] { 2 }
     Constant [ integer SWOOLE_INT ] { 4 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.1 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.2 }
   }
 
   - Functions {
@@ -244,7 +262,7 @@ Extension [ <persistent> extension #135 swoole version 1.7.1 ] {
     }
   }
 
-  - Classes [3] {
+  - Classes [4] {
     Class [ <internal:swoole> class swoole_client ] {
 
       - Constants [0] {
@@ -475,6 +493,43 @@ Extension [ <persistent> extension #135 swoole version 1.7.1 ] {
         }
 
         Method [ <internal:swoole> public method unlock ] {
+        }
+      }
+    }
+
+    Class [ <internal:swoole> class swoole_process ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:swoole> static public method wait ] {
+        }
+
+        Method [ <internal:swoole> static public method kill ] {
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:swoole, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:swoole> public method start ] {
+        }
+
+        Method [ <internal:swoole> public method write ] {
+        }
+
+        Method [ <internal:swoole> public method read ] {
+        }
+
+        Method [ <internal:swoole> public method exit ] {
         }
       }
     }
