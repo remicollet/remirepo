@@ -1,0 +1,67 @@
+From 1c68f1338f1940deb8265428bb2a7cbc5bc074b5 Mon Sep 17 00:00:00 2001
+From: Maksim Kochkin <maxxarts@gmail.com>
+Date: Fri, 11 Apr 2014 21:12:26 +0400
+Subject: [PATCH] Use newInstanceWithoutConstructor when possible
+
+Comment says
+
+// We have to use this dirty trick instead of ReflectionClass::newInstanceWithoutConstructor()
+// because of https://github.com/sebastianbergmann/phpunit-mock-objects/issues/154
+
+As I see the only reason to use unserialize here is internal classes (or not?). So how about using unserialize for internal classes and newInstanceWithoutConstructor for other?
+---
+ src/Framework/MockObject/Generator.php | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/src/Framework/MockObject/Generator.php b/src/Framework/MockObject/Generator.php
+index 59f10ad..1d8467b 100644
+--- a/src/Framework/MockObject/Generator.php
++++ b/src/Framework/MockObject/Generator.php
+@@ -267,11 +267,14 @@ protected function getObject($code, $className, $type = '', $callOriginalConstru
+                 $object = $class->newInstanceArgs($arguments);
+             }
+         } else {
+-            // We have to use this dirty trick instead of ReflectionClass::newInstanceWithoutConstructor()
+-            // because of https://github.com/sebastianbergmann/phpunit-mock-objects/issues/154
+-            $object = unserialize(
+-                sprintf('O:%d:"%s":0:{}', strlen($className), $className)
+-            );
++            $class = new ReflectionClass($className);
++            if ($class->isInternal()) {
++                $object = unserialize(
++                    sprintf('O:%d:"%s":0:{}', strlen($className), $className)
++                );
++            } else {
++                $object = $class->newInstanceWithoutConstructor();
++            }
+         }
+ 
+         if ($callOriginalMethods) {
+-- 
+1.9.3
+
+From ba8784d88ff4cc52cf9424d7f7c631ccd867019c Mon Sep 17 00:00:00 2001
+From: Maksim Kochkin <maxxarts@gmail.com>
+Date: Mon, 14 Apr 2014 00:09:22 +0400
+Subject: [PATCH] newInstanceWithoutConstructor only for 5.4+
+
+---
+ src/Framework/MockObject/Generator.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Framework/MockObject/Generator.php b/src/Framework/MockObject/Generator.php
+index 1d8467b..a4c7037 100644
+--- a/src/Framework/MockObject/Generator.php
++++ b/src/Framework/MockObject/Generator.php
+@@ -268,7 +268,7 @@ protected function getObject($code, $className, $type = '', $callOriginalConstru
+             }
+         } else {
+             $class = new ReflectionClass($className);
+-            if ($class->isInternal()) {
++            if ($class->isInternal() || version_compare(PHP_VERSION, '5.4.0', '<')) {
+                 $object = unserialize(
+                     sprintf('O:%d:"%s":0:{}', strlen($className), $className)
+                 );
+-- 
+1.9.3
+

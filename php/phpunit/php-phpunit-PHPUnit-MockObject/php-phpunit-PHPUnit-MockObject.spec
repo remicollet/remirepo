@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit-MockObject
 Version:        2.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -31,6 +31,9 @@ Source1:        Autoload.php.in
 
 # Temporary workaround, under investigation
 Patch0:         %{gh_project}-rpm.patch
+
+# Upstream fix for PHP 5.4.29 and 5.5.13
+Patch1:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -61,6 +64,9 @@ Mock Object library for PHPUnit
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
+%patch1 -p1
+
+find . -name \*.orig -exec rm {} \; -print
 
 
 %build
@@ -106,6 +112,9 @@ fi
 
 
 %changelog
+* Fri May 30 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
+- upstream fix for php 5.4.29 and 5.5.13
+
 * Tue May  6 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - workaround to autoload issue during check
 
