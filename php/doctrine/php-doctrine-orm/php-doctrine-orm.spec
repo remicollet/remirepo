@@ -18,7 +18,7 @@
 
 Name:      php-%{github_owner}-orm
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Doctrine Object-Relational-Mapper (ORM)
 
 Group:     Development/Libraries
@@ -29,6 +29,9 @@ Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_co
 # 1) Add she-bang
 # 2) Auto-load using Doctrine\Common\ClassLoader
 Patch0:    %{name}-bin.patch
+
+# Upstream fix for latest PHP
+Patch1:    %{name}-upstream.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -79,8 +82,14 @@ Optional caches (see Doctrine\ORM\Tools\Setup::createConfiguration()):
 # Patch bin script
 %patch0 -p1
 
+# For PHP 5.5.13+
+%patch1 -p1
+
 # Remove empty file
 rm -f lib/Doctrine/ORM/README.markdown
+
+# Clenup backup files
+find . -name \*.orig -exec rm {} \;
 
 # Remove unnecessary executable bit
 chmod a-x lib/Doctrine/ORM/Tools/Pagination/Paginator.php
@@ -116,6 +125,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 30 2014 Remi Collet <remi@fedoraproject.org> 2.4.2-2
+- upstream fix for latest PHP (#1103219)
+
 * Mon Feb 17 2014 Remi Collet <rpms@famillecollet.com> 2.4.2-1
 - backport 2.4.2 for remi repo
 

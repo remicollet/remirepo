@@ -1,0 +1,31 @@
+From 93c276d059b40b0783ba9a24549a8b135e257693 Mon Sep 17 00:00:00 2001
+From: Renaud LITTOLFF <renaud@atipik.fr>
+Date: Fri, 30 May 2014 10:43:11 +0200
+Subject: [PATCH] Fix the "Erroneous data format for unserializing" error
+ message
+
+---
+ lib/Doctrine/ORM/Mapping/ClassMetadataInfo.php | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/lib/Doctrine/ORM/Mapping/ClassMetadataInfo.php b/lib/Doctrine/ORM/Mapping/ClassMetadataInfo.php
+index ba7a2d2..5fe8587 100644
+--- a/lib/Doctrine/ORM/Mapping/ClassMetadataInfo.php
++++ b/lib/Doctrine/ORM/Mapping/ClassMetadataInfo.php
+@@ -908,7 +908,12 @@ public function __sleep()
+     public function newInstance()
+     {
+         if ($this->_prototype === null) {
+-            $this->_prototype = unserialize(sprintf('O:%d:"%s":0:{}', strlen($this->name), $this->name));
++            if (version_compare(PHP_VERSION, '5.4') >= 0) {
++                $rc = new \ReflectionClass($this->name);
++                $this->_prototype = $rc->newInstanceWithoutConstructor();
++            } else {
++                $this->_prototype = unserialize(sprintf('O:%d:"%s":0:{}', strlen($this->name), $this->name));
++            }
+         }
+ 
+         return clone $this->_prototype;
+-- 
+1.9.3
+
