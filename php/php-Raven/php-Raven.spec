@@ -1,21 +1,21 @@
 %global github_owner    getsentry
 %global github_name     raven-php
 %global github_version  0.8.0
-%global github_commit   dac93338d1fe17d665dfdea5f529c89b3a0df7df
+%global github_commit   2351d97c862f02343e5465d550df68bd9632cad9
 # Additional commits after 0.8.0 tag
-%global github_release  20131209git%(c=%{github_commit}; echo ${c:0:7})
+%global github_release  .20140519git%(c=%{github_commit}; echo ${c:0:7})
 
 %global lib_name        Raven
 
 # "php": ">=5.2.4"
 %global php_min_ver     5.2.4
 # "phpunit/phpunit": "3.7.*"
+#     Note: Max version ignored on purpose
 %global phpunit_min_ver 3.7.0
-%global phpunit_max_ver 3.8.0
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       2.%{github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       A PHP client for Sentry
 
 Group:         Development/Libraries
@@ -25,11 +25,10 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commi
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# For tests
-BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit) >= %{phpunit_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit) <  %{phpunit_max_ver}
-# For tests: phpcompatinfo (computed from 0.8.0)
+# For tests: composer.json
+BuildRequires: php(language)       >= %{php_min_ver}
+BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
+# For tests: phpcompatinfo (computed from 0.8.0 commit 2351d97c862f02343e5465d550df68bd9632cad9)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-mbstring
@@ -40,8 +39,9 @@ BuildRequires: php-sockets
 BuildRequires: php-spl
 BuildRequires: php-zlib
 
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from 0.8.0)
+# phpcompatinfo (computed from 0.8.0 commit 2351d97c862f02343e5465d550df68bd9632cad9)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-mbstring
@@ -57,7 +57,7 @@ Requires:      php-zlib
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 # Update autoloader require in bin and test bootstrap
 sed "/require.*Autoloader/s:.*:require_once 'Raven/Autoloader.php';:" \
@@ -79,9 +79,7 @@ install -pm 755 bin/raven %{buildroot}%{_bindir}/
 
 %check
 # Create PHPUnit config w/ colors turned off
-cat phpunit.xml.dist \
-    | sed 's/colors="true"/colors="false"/' \
-    > phpunit.xml
+sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %{_bindir}/phpunit --include-path ./lib:./test
 
@@ -94,6 +92,13 @@ cat phpunit.xml.dist \
 
 
 %changelog
+* Mon Jun  2 2014 Remi Collet <remi@fedoraproject.org> 0.8.0-2.20131209gitdac9333
+- merge rawhide changes
+
+* Fri May 30 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.8.0-3.20140519git2351d97
+- Updated to latest snapshot
+- Removed max PHPUnit dependency
+
 * Mon Dec 30 2013 Remi Collet <remi@fedoraproject.org> 0.8.0-2.20131209gitdac9333
 - backport 0.8.0 for remi repo.
 
