@@ -4,11 +4,16 @@
 %global github_commit   88ffa28bc987e4c26229fc84a2e541b6ed4e1459
 
 %global lib_name        Metadata
+
+# "php": ">=5.3.0"
 %global php_min_ver     5.3.0
+# "doctrine/cache" : "~1.0"
+%global doctrine_cache_min_ver 1.0
+%global doctrine_cache_max_ver 2.0
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       A library for class/method/property metadata management in PHP
 
 Group:         Development/Libraries
@@ -19,18 +24,22 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
-BuildRequires: php-common >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires: php-pear(pear.doctrine-project.org/DoctrineCommon) >= 2.0
-BuildRequires: php-pear(pear.doctrine-project.org/DoctrineCommon) <  2.4
-# For tests: phpcompatinfo
+BuildRequires: php-phpunit-PHPUnit
+# For tests: composer.json
+BuildRequires: php(language)      >= %{php_min_ver}
+BuildRequires: php-doctrine-cache >= %{doctrine_cache_min_ver}
+BuildRequires: php-doctrine-cache <  %{doctrine_cache_max_ver}
+# For tests: phpcompatinfo (computed from version 1.5.0)
 BuildRequires: php-date
 BuildRequires: php-reflection
 BuildRequires: php-spl
 
-Requires:      php-common >= %{php_min_ver}
-Requires:      php-pear(pear.symfony.com/DependencyInjection)
-# phpcompatinfo requires
+Requires:      php-doctrine-cache >= %{doctrine_cache_min_ver}
+Requires:      php-doctrine-cache <  %{doctrine_cache_max_ver}
+Requires:      php-symfony-dependencyinjection
+# composer.json
+Requires:      php(language)      >= %{php_min_ver}
+# phpcompatinfo (computed from version 1.5.0)
 Requires:      php-date
 Requires:      php-reflection
 Requires:      php-spl
@@ -45,18 +54,7 @@ interface for all of them.
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
-
-# Rewrite tests' bootstrap (which uses Composer autoloader) with simple
-# autoloader that uses include path
-( cat <<'AUTOLOAD'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
-    @include_once $src;
-});
-AUTOLOAD
-) > tests/bootstrap.php
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -64,12 +62,24 @@ AUTOLOAD
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
+mkdir -pm 0755 %{buildroot}%{_datadir}/php
 cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %check
-%{_bindir}/phpunit -d include_path="./src:./tests:.:%{pear_phpdir}"
+# Rewrite tests' bootstrap
+cat > tests/bootstrap.php <<'BOOTSTRAP'
+<?php
+spl_autoload_register(function ($class) {
+    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
+    @include_once $src;
+});
+BOOTSTRAP
+
+# Create PHPUnit config w/ colors turned off
+sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
+
+%{_bindir}/phpunit -d --include-path="./src:./tests"
 
 
 %files
@@ -79,6 +89,16 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Mon Jun  2 2014 Remi Collet <RPMS@famillecollet.com> 1.5.0-2
+- merge rawhide change
+
+* Fri May 30 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.0-2
+- Updated dependencies to match newly available pkgs
+  -- php-pear(pear.doctrine-project.org/DoctrineCommon) => php-doctrine-cache
+     (cache separated out from common)
+  -- php-pear(pear.symfony.com/DependencyInjection) => php-symfony-dependencyinjection
+- Doctrine cache required instead of just build requirement
+
 * Sat Nov 16 2013 Remi Collet <RPMS@famillecollet.com> 1.5.0-1
 - backport 1.5.0 for remi repo
 
