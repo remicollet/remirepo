@@ -79,7 +79,7 @@ BOOTSTRAP
 # Create PHPUnit config w/ colors turned off
 sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
-%{_bindir}/phpunit -d --include-path="./src:./tests"
+%{_bindir}/phpunit --include-path="./src:./tests"
 
 
 %files
