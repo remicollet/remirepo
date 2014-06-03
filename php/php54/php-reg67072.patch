@@ -1,0 +1,26 @@
+diff --git a/ext/standard/var_unserializer.c b/ext/standard/var_unserializer.c
+index 003bac9..ed6a69c 100644
+--- a/ext/standard/var_unserializer.c
++++ b/ext/standard/var_unserializer.c
+@@ -396,7 +396,7 @@ static inline long object_common1(UNSERIALIZE_PARAMETER, zend_class_entry *ce)
+ 
+ 	(*p) += 2;
+ 	
+-	if (ce->serialize == NULL) {
++	if (ce->serialize == NULL || ZEND_INTERNAL_CLASS != ce->type) {
+ 		object_init_ex(*rval, ce);
+ 	} else {
+ 		/* If this class implements Serializable, it should not land here but in object_custom(). The passed string
+diff --git a/ext/standard/var_unserializer.re b/ext/standard/var_unserializer.re
+index b3f5d29..b5f092b 100644
+--- a/ext/standard/var_unserializer.re
++++ b/ext/standard/var_unserializer.re
+@@ -400,7 +400,7 @@ static inline long object_common1(UNSERIALIZE_PARAMETER, zend_class_entry *ce)
+ 
+ 	(*p) += 2;
+ 	
+-	if (ce->serialize == NULL) {
++	if (ce->serialize == NULL || ZEND_INTERNAL_CLASS != ce->type) {
+ 		object_init_ex(*rval, ce);
+ 	} else {
+ 		/* If this class implements Serializable, it should not land here but in object_custom(). The passed string

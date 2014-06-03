@@ -85,7 +85,7 @@ Version: 5.4.29
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -136,6 +136,8 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Upstream fixes
+Patch100: php-reg67072.patch
+Patch101: php-bug67326.patch
 
 # Security fixes
 
@@ -800,6 +802,11 @@ rm -f ext/json/utf8_to_utf16.*
 
 %patch91 -p1 -b .remi-oci8
 
+# upstream patches
+%patch100 -p1 -b .reg67072
+%patch101 -p1 -b .bug67326
+
+# security patches
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1646,6 +1653,11 @@ fi
 
 
 %changelog
+* Tue Jun  3 2014 Remi Collet <remi@fedoraproject.org> 5.4.29-2
+- fileinfo: fix insufficient boundary check
+- workaround regression introduce in fix for 67072 in
+  serialize/unzerialize functions
+
 * Wed May 28 2014 Remi Collet <remi@fedoraproject.org> 5.4.29-1
 - Update to 5.4.29
   http://www.php.net/releases/5_4_29.php
