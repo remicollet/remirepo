@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    content
 %global pear_channel pear.horde.org
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 # TODO
 # Tests are not ready
@@ -17,8 +17,8 @@
 # "horde-content" sub package with apache stuff
 
 Name:           php-horde-content
-Version:        2.0.3
-Release:        2%{?dist}
+Version:        2.0.4
+Release:        1%{?dist}
 Summary:        Tagging application
 
 Group:          Development/Libraries
@@ -32,6 +32,10 @@ BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+%if %{with_tests}
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -113,6 +117,19 @@ mv %{buildroot}%{pear_hordedir}/%{pear_name}/config \
 ln -s %{_sysconfdir}/horde/%{pear_name} %{buildroot}%{pear_hordedir}/%{pear_name}/config
 
 
+%check
+%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/Content
+phpunit \
+    --include-path=$src/lib \
+    -d date.timezone=Europe/Paris \
+    .
+%else
+: Test disabled
+%endif
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -146,6 +163,10 @@ fi
 
 
 %changelog
+* Tue Jun 03 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+- run test suite during build
+
 * Sun Apr 13 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
 - cleanups
 
