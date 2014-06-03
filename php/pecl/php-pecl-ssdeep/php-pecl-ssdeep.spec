@@ -6,59 +6,40 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package         php-pecl-ssdeep}
-%{!?scl:         %global _root_prefix %{_prefix}}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name ssdeep
-%if "%{php_version}" < "5.6"
+%if 0%{?fedora} < 21
 %global ini_name  %{pecl_name}.ini
 %else
 %global ini_name  40-%{pecl_name}.ini
 %endif
 
 Summary:        Wrapper for libfuzzy library
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           php-pecl-%{pecl_name}
 Version:        1.0.4
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel > 5.2
-BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  php-devel > 5.2
+BuildRequires:  php-pear
 BuildRequires:  ssdeep-devel > 2.5
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-
-%if "%{?vendor}" == "Remi Collet"
-# Other third party repo stuff
-%if "%{php_version}" > "5.4"
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-%endif
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-%endif
-%if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-%endif
-%endif
-
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -103,7 +84,7 @@ EOF
 cd NTS
 %{_bindir}/phpize
 %configure \
-    --with-ssdeep=%{_root_prefix} \
+    --with-ssdeep=%{_prefix} \
     --with-php-config=%{_bindir}/php-config \
     --with-libdir=%{_lib}
 make %{?_smp_mflags}
@@ -112,7 +93,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
-    --with-ssdeep=%{_root_prefix} \
+    --with-ssdeep=%{_prefix} \
     --with-php-config=%{_bindir}/zts-php-config \
     --with-libdir=%{_lib}
 make %{?_smp_mflags}
@@ -120,8 +101,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -185,12 +164,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -204,12 +178,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
-- add numerical prefix to extension configuration file (php 5.6)
-
-* Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+* Tue Jun  3 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4 (stable)
 - drop upstream patch
+- add numerical prefix to extension configuration file
+- cleanup for review
 
 * Wed Jan 22 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package, version 1.0.3 (stable)
