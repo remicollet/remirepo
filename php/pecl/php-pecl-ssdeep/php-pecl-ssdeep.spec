@@ -80,6 +80,8 @@ see http://dfrws.org/2006/proceedings/12-Kornblum.pdf
 
 This extensions wraps the ssdeep fuzzy hashing API created by Jesse Kornblum.
 
+Documentation: http://php.net/ssdeep
+
 
 %prep
 %setup -q -c
