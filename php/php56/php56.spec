@@ -118,13 +118,13 @@
 %endif
 
 #global snapdate      201405061030
-%global rcver         beta3
+%global rcver         beta4
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.8.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.9.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -1909,6 +1909,9 @@ fi
 
 
 %changelog
+* Wed Jun  4 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.9.beta4
+- php 5.6.0beta4
+
 * Wed May 14 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.8.beta3
 - php 5.6.0beta3
 
