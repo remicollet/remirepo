@@ -20,7 +20,7 @@ Build order
 	* Horde_Test                2.4.1        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
 	* Horde_Text_Diff           2.0.2      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_Text_Flowed         2.0.1      BR: Horde_Test  R: Horde_Util
-	* Horde_Url                 2.2.2      BR: Horde_Test  R: Horde_Exception
+	* Horde_Url                 2.2.3      BR: Horde_Test  R: Horde_Exception
 	* Horde_Xml_Element         2.0.1      BR: Horde_Test  R: Horde_Exception
 	* Horde_Xml_Wbxml           2.0.1      BR: Horde_Test  R: Horde_Util
 	* Horde_Argv                2.0.9      BR: Horde_Test  R: Horde_Exception, Horde_Translation
