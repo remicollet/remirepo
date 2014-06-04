@@ -1,9 +1,17 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Memcache
+#
+# Copyright (c) 2012-2014 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Memcache
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Memcache
-Version:        2.0.5
+Version:        2.0.6
 Release:        1%{?dist}
 Summary:        Horde Memcache API
 
@@ -79,6 +87,9 @@ fi
 
 
 %changelog
+* Wed Jun 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+
 * Wed Aug 07 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 
