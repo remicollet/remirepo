@@ -85,7 +85,7 @@ Version: 5.4.29
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -138,6 +138,7 @@ Patch47: php-5.4.9-phpinfo.patch
 # Upstream fixes
 Patch100: php-reg67072.patch
 Patch101: php-bug67326.patch
+Patch102: php-reg67118.patch
 
 # Security fixes
 
@@ -805,6 +806,7 @@ rm -f ext/json/utf8_to_utf16.*
 # upstream patches
 %patch100 -p1 -b .reg67072
 %patch101 -p1 -b .bug67326
+%patch102 -p1 -b .reg67118
 
 # security patches
 
@@ -1653,6 +1655,9 @@ fi
 
 
 %changelog
+* Thu Jun  5 2014 Remi Collet <rcollet@redhat.com> 5.4.29-3
+- fix regression introduce in fix for #67118
+
 * Tue Jun  3 2014 Remi Collet <remi@fedoraproject.org> 5.4.29-2
 - fileinfo: fix insufficient boundary check
 - workaround regression introduce in fix for 67072 in
