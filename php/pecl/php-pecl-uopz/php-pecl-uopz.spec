@@ -23,8 +23,8 @@
 
 Summary:        User Operations for Zend
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.4
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.0.5
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -238,6 +238,9 @@ rm -rf %{buildroot}
 # add date time as upstream used to release various
 # archives using the same version :(
 %changelog
+* Thu Jun 05 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5 (stable)
+
 * Tue Apr  8 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
 - add numerical prefix to extension configuration files
 
