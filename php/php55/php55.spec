@@ -126,7 +126,7 @@ Version: 5.5.13
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -189,6 +189,7 @@ Patch91: php-5.3.7-oci8conf.patch
 # Upstream fixes (100+)
 Patch100: php-reg67072.patch
 Patch101: php-bug67326.patch
+Patch102: php-reg67118.patch
 
 # Security fixes (200+)
 
@@ -908,6 +909,7 @@ rm -rf ext/json
 # upstream patches
 %patch100 -p1 -b .reg67072
 %patch101 -p1 -b .bug67326
+%patch102 -p1 -b .reg67118
 
 # security patches
 
@@ -1898,6 +1900,9 @@ fi
 
 
 %changelog
+* Thu Jun  5 2014 Remi Collet <rcollet@redhat.com> 5.5.13-3
+- fix regression introduce in fix for #67118
+
 * Tue Jun  3 2014 Remi Collet <remi@fedoraproject.org> 5.5.13-2
 - fileinfo: fix insufficient boundary check
 - workaround regression introduce in fix for 67072 in
