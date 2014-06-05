@@ -127,9 +127,6 @@ done | tee ../%{pear_name}.lang
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-# Ignore failed test - under investigation
-rm DateTimeTest.php
-
 phpunit \
     --include-path=$src/lib \
     -d date.timezone=UTC \

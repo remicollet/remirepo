@@ -124,7 +124,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.9.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.10.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -185,6 +185,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-reg67118.patch
 
 # Security fixes (200+)
 
@@ -907,6 +908,7 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .reg67118
 
 # security patches
 
@@ -1909,6 +1911,9 @@ fi
 
 
 %changelog
+* Thu Jun  5 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.10.beta4
+- fix regression introduce in fix for #67118
+
 * Wed Jun  4 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.9.beta4
 - php 5.6.0beta4
 
