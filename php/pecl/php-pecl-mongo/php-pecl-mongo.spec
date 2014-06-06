@@ -5,7 +5,7 @@
 %global pecl_name   mongo
 %global with_zts    0%{?__ztsphp:1}
 #global prever      RC2
-%global gh_commit   9ed256e3a3097e39291a68aadeaacdbbcc32dae2
+%global gh_commit   9d31e46a1eaf58e56c550217aecc5a092cfce439
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
@@ -20,7 +20,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.5.2
+Version:      1.5.3
 Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -33,9 +33,9 @@ Source1:      %{pecl_name}.ini
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-devel >= 5.2.6
 BuildRequires: php-pear
-BuildRequires: php-json
 BuildRequires: cyrus-sasl-devel
 %if %{with_tests}
+BuildRequires: php-json
 BuildRequires: mongodb
 BuildRequires: mongodb-server
 %endif
@@ -44,13 +44,6 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
-%if "%{php_version}" < "5.4"
-# php 5.3.3 in EL-6 don't use arched virtual provides
-# so only requires real packages instead
-Requires:     php-common%{?_isa}
-%else
-Requires:     php-json%{?_isa}
-%endif
 
 Provides:     php-%{pecl_name} = %{version}
 Provides:     php-%{pecl_name}%{?_isa} = %{version}
@@ -162,7 +155,6 @@ fi
 %check
 : Minimal load test for NTS extension
 %{__php} -n \
-    -d extension=json.so \
     -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     -i | grep "MongoDB Support => enabled"
 
@@ -200,7 +192,6 @@ rm -rf data
 %if %{with_zts}
 : Minimal load test for ZTS extension
 %{__ztsphp} -n \
-    -d extension=json.so \
     -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     -i | grep "MongoDB Support => enabled"
 %endif
@@ -221,6 +212,10 @@ rm -rf data
 
 
 %changelog
+* Fri Jun 06 2014 Remi Collet <remi@fedoraproject.org> - 1.5.3-1
+- Update to 1.5.3 (stable)
+- drop dependency on php-json
+
 * Tue May 06 2014 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
 - Update to 1.5.2 (stable)
 
