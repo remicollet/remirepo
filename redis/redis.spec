@@ -24,7 +24,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.9
+Version:          2.8.10
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -39,7 +39,7 @@ Source4:          %{name}.tmpfiles
 Source5:          sentinel.init
 Source6:          sentinel.service
 # Update configuration for Fedora
-Patch0:           %{name}-2.8.4-conf.patch
+Patch0:           %{name}-2.8.10-conf.patch
 Patch1:           %{name}-deps-PIC.patch
 Patch2:           %{name}-deps-unbundle-jemalloc.patch
 
@@ -236,6 +236,10 @@ fi
 
 
 %changelog
+* Fri Jun  6 2014 Remi Collet <remi@fedoraproject.org> - 2.8.10-1
+- Redis 2.8.10 - Release date: 5 Jun 2014
+  upgrade urgency: HIGH if you use min-slaves-to-write option.
+
 * Tue Apr 22 2014 Remi Collet <remi@fedoraproject.org> - 2.8.9-1
 - Redis 2.8.9 - Release date: 22 Apr 2014
   upgrade urgency: LOW, only new features introduced, no bugs fixed.
