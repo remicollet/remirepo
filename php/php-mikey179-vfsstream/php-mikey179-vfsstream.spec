@@ -14,7 +14,7 @@
 
 Name:           php-mikey179-vfsstream
 Version:        1.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP stream wrapper for a virtual file system
 
 Group:          Development/Libraries
@@ -36,6 +36,8 @@ Requires:       php(language) >= 5.3
 Requires:       php-date
 Requires:       php-posix
 Requires:       php-spl
+
+Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
@@ -86,5 +88,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun  6 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- provides php-composer(mikey179/vfsstream)
+
 * Tue May 13 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - initial package
