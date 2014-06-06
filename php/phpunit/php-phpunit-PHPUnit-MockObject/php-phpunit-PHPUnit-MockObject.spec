@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    da0eb04d8ee95ec2898187e407e519c118d3d27c
+%global gh_commit    d87a195502b5e139a665c7b2f962381282878aac
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -17,8 +17,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.1.0
-Release:        3%{?dist}
+Version:        2.1.1
+Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -52,8 +52,7 @@ Requires:       php-reflection
 Requires:       php-soap
 Requires:       php-spl
 
-# For compatibility with PEAR mode
-Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(phpunit/%{gh_project})
 
 
 %description
@@ -112,6 +111,9 @@ fi
 
 
 %changelog
+* Fri Jun  6 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- update to 2.1.1
+
 * Fri May 30 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
 - upstream fix for php 5.4.29 and 5.5.13
 
