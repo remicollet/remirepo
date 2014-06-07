@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4a6423af97d4b4a0010a1ac5addfad4843c3e97b
+%global gh_commit    92f4b49d2cd4f2537db7ef969231f3d43c8da957
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -17,7 +17,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.1.2
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -36,20 +36,20 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  php-pear-PHPUnit >= 4.0.0
+BuildRequires:  php-pear-PHPUnit >= 4.1.0
 %endif
 
 # From composer.json
 Requires:       php(language) >= 5.3.3
-Requires:       php-phpunit-Text-Template >= 1.2
-Requires:       php-phpunit-Text-Template <  2
+Requires:       php-composer(phpunit/php-text-template) >= 1.2
+Requires:       php-composer(phpunit/php-text-template) <  2
 # From phpcompatinfo report for version 2.0.5
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-soap
 Requires:       php-spl
 
-Provides:       php-composer(phpunit/%{gh_project})
+Provides:       php-composer(phpunit/phpunit-mock-objects) = %{version}
 
 
 %description
@@ -107,6 +107,9 @@ fi
 
 
 %changelog
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- update to 2.1.3
+
 * Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - update to 2.1.2
 
