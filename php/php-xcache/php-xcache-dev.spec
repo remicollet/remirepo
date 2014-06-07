@@ -16,24 +16,27 @@
 %{!?__php:       %global __php            %{_bindir}/php}
 
 %global ext_name     xcache
-#global svnrev       1264
+%global svnrev       1496
 %global with_zts     0%{?__ztsphp:1}
 
-# TODO : consider splitting pages in another subpackage
-#        to avoid httpd dependency
+%if "%{php_version}" < "5.6"
+%global ini_name  %{ext_name}.ini
+%else
+%global ini_name  40-%{ext_name}.ini
+%endif
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          %{?scl_prefix}php-xcache
-Version:       3.1.0
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       4.0.0
+Release:       0.1.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
 
 %if 0%{?svnrev}
-# svn co -r 1264 svn://svn.lighttpd.net/xcache/trunk xcache-3.1.0
-# tar czf xcache-svn1264.tgz xcache-3.1.0
-Source0:       xcache-svn1264.tgz
+# svn co -r 1496 svn://svn.lighttpd.net/xcache/trunk xcache-4.0.0
+# tar czf xcache-svn1496.tgz xcache-4.0.0
+Source0:       xcache-svn%{svnrev}.tgz
 %else
 Source0:       http://xcache.lighttpd.net/pub/Releases/%{version}/%{ext_name}-%{version}.tar.gz
 %endif
@@ -58,7 +61,10 @@ Obsoletes: php53u-xcache
 Obsoletes: php54-xcache
 %endif
 %if "%{php_version}" > "5.5"
-Obsoletes: php55-xcache
+Obsoletes: php55u-xcache
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes: php56u-xcache
 %endif
 %endif
 
@@ -168,12 +174,12 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 # Install the NTS stuff
 make -C nts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
+install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 # Install the ZTS stuff
 make -C zts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 zts/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
+install -D -m 644 zts/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the admin stuff
@@ -228,11 +234,11 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc nts/{AUTHORS,ChangeLog,COPYING,README,THANKS}
-%config(noreplace) %{php_inidir}/%{ext_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{ext_name}.so
 %endif
 
@@ -245,6 +251,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.1.svn1496
+- Update to 4.0.0-dev for PHP 5.6
+- add numerical prefix to configuration file
+
 * Thu Jan  9 2014 Remi Collet <remi@fedoraproject.org> - 3.1.0-2
 - adapt for SCL
 - drop conflicts with other opcode cache
