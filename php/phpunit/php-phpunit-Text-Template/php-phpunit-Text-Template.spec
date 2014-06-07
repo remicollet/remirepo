@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-Text-Template
 Version:        1.2.0
-Release:        3%{?dist}.1
+Release:        4%{?dist}
 Summary:        Simple template engine
 
 Group:          Development/Libraries
@@ -35,8 +35,8 @@ Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for version 1.2.0
 Requires:       php-spl
 
-# For compatibility with PEAR mode
-Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(phpunit/php-text-template) = %{version}
+
 
 %description
 Simple template engine.
@@ -82,6 +82,9 @@ fi
 
 
 %changelog
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-4
+- composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-3
 - cleanup pear registry
 
