@@ -125,7 +125,7 @@ fi
 
 
 %changelog
-* Sat Jun  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-2
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-2
 - requires Horde_Http
 
 * Wed Jun 04 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
