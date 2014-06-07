@@ -15,6 +15,7 @@ URL:       http://www.phpconcept.net/%{libname}
 # http://www.phpconcept.net/download.php?file=pclzip-VERSION_WTIH_DASHES_INSTEAD_OF_DOTS.tgz
 Source0:   %{libname}-%(echo "%{version}" | sed 's/\./-/g').tgz
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  php(language)
@@ -57,11 +58,15 @@ cp -p *.php %{buildroot}/%{_datadir}/php/%{libname}/
 
 
 %files
+%defattr(-,root,root,-)
 %doc *.txt
 %{_datadir}/php/%{libname}
 
 
 %changelog
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> 2.8.2-2
+- backport for remi repo
+
 * Fri Jun 06 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.2-2
 - Conditional %%{?dist}
 
