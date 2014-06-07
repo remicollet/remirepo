@@ -6,7 +6,7 @@
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.0.4
-%global xmlutil   1.2.1
+%global xmlutil   1.2.3
 
 # Tests are only run with rpmbuild --with tests
 # Can't be run in mock / koji because PEAR is the first package
@@ -17,7 +17,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 27%{?dist}
+Release: 28%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -56,7 +56,7 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-cli >= 5.1.0-1, php-xml, gnupg
 %if %{with_tests}
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:  %{_bindir}/phpunit
 %endif
 
 Provides: php-pear(Console_Getopt) = %{getoptver}
@@ -215,17 +215,23 @@ grep -rl $RPM_BUILD_ROOT $RPM_BUILD_ROOT && exit 1
 
 
 %if %{with_tests}
-cd $RPM_BUILD_ROOT%{pear_phpdir}/test/Structures_Graph/tests
-phpunit \
-   -d date.timezone=UTC \
-   -d include_path=.:$RPM_BUILD_ROOT%{pear_phpdir}:%{pear_phpdir}: \
-   AllTests || exit 1
+LOG=$PWD/rpmlog
+ret=0
 
-cd $RPM_BUILD_ROOT%{pear_phpdir}/test/XML_Util/tests
+cd $RPM_BUILD_ROOT%{_datadir}/tests/pear/Structures_Graph/tests
 phpunit \
    -d date.timezone=UTC \
-   -d include_path=.:$RPM_BUILD_ROOT%{pear_phpdir}:%{pear_phpdir}: \
-   AllTests || exit 1
+   --include-path=$RPM_BUILD_ROOT%{pear_phpdir} \
+   AllTests || ret=1
+
+cd $RPM_BUILD_ROOT%{_datadir}/tests/pear/XML_Util/tests
+php -d include_path=.:$RPM_BUILD_ROOT%{pear_phpdir} \
+   $RPM_BUILD_ROOT/usr/share/pear/pearcmd.php \
+   run-tests \
+   | tee $LOG
+grep "FAILED TESTS" $LOG && ret=1
+
+exit $ret
 %else
 echo 'Test suite disabled (missing "--with tests" option)'
 %endif
@@ -322,6 +328,9 @@ fi
 
 
 %changelog
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.4-28
+- update XML_Util to 1.2.3
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.4-27
 - revert previous, was a bad solution
 
