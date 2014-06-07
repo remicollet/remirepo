@@ -12,7 +12,7 @@
 
 Name:           php-horde-Horde-Dav
 Version:        1.0.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde library for WebDAV, CalDAV, CardDAV
 
 Group:          Development/Libraries
@@ -37,6 +37,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Http) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 # php-sabredav-Sabre_DAV is 1.7, php-sabre-dav is 1.8
@@ -123,6 +125,9 @@ fi
 
 
 %changelog
+* Sat Jun  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-2
+- requires Horde_Http
+
 * Wed Jun 04 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - Update to 1.0.7
 
