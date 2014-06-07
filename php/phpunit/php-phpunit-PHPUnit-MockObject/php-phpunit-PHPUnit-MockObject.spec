@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d87a195502b5e139a665c7b2f962381282878aac
+%global gh_commit    4a6423af97d4b4a0010a1ac5addfad4843c3e97b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -17,7 +17,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -31,9 +31,6 @@ Source1:        Autoload.php.in
 
 # Temporary workaround, under investigation
 Patch0:         %{gh_project}-rpm.patch
-
-# Upstream fix for PHP 5.4.29 and 5.5.13
-Patch1:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -63,7 +60,6 @@ Mock Object library for PHPUnit
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
-%patch1 -p1
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -111,6 +107,9 @@ fi
 
 
 %changelog
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- update to 2.1.2
+
 * Fri Jun  6 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - update to 2.1.1
 
