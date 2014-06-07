@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1d6b554732382879045e11c56decd4be76130720
+%global gh_commit    be5f237df860da88a7cfe247594232cae61845df
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.1.1
+Version:        4.1.2
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -40,7 +40,7 @@ BuildRequires:  php-phpunit-File-Iterator >= 1.3.1
 BuildRequires:  php-phpunit-Text-Template >= 1.2
 BuildRequires:  php-phpunit-PHP-CodeCoverage >= 2.0
 BuildRequires:  php-phpunit-PHP-Timer >= 1.0.2
-BuildRequires:  php-phpunit-PHPUnit-MockObject >= 2.1
+BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.1
 BuildRequires:  php-phpunit-comparator >= 1.0
 BuildRequires:  php-phpunit-diff >= 1.1
 BuildRequires:  php-phpunit-environment >= 1.0
@@ -54,7 +54,7 @@ Requires:       php-phpunit-File-Iterator >= 1.3.1
 Requires:       php-phpunit-Text-Template >= 1.2
 Requires:       php-phpunit-PHP-CodeCoverage >= 2.0
 Requires:       php-phpunit-PHP-Timer >= 1.0.2
-Requires:       php-phpunit-PHPUnit-MockObject >= 2.1
+Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.1
 Requires:       php-phpunit-comparator >= 1.0
 Requires:       php-phpunit-diff >= 1.1
 Requires:       php-phpunit-environment >= 1.0
@@ -81,6 +81,7 @@ Requires:       php-tidy
 Requires:       php-xml
 
 
+Provides:       php-composer(phpunit/phpunit) = %{version}
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 # Package have been rename
@@ -110,6 +111,10 @@ phpab \
   --template %{SOURCE1} \
   src
 
+phpab \
+  --output   tests/autoload.php \
+  tests
+
 
 %install
 rm -rf     %{buildroot}
@@ -120,9 +125,6 @@ install -D -p -m 755 phpunit %{buildroot}%{_bindir}/phpunit
 
 
 %check
-sed -e 's:vendor/autoload:src/Autoload:' \
-    -i tests/bootstrap.php
-
 sed -e '/logging/d' \
     -e '/<log/d' \
     phpunit.xml.dist > phpunit.xml
@@ -154,6 +156,11 @@ fi
 
 
 %changelog
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 4.1.2-1
+- Update to 4.1.2 (no change)
+- improve test suite bootstraping
+- add composer provide
+
 * Mon May 26 2014 Remi Collet <remi@fedoraproject.org> - 4.1.1-1
 - Update to 4.1.1
 

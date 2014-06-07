@@ -30,3 +30,16 @@ diff -up ./phpunit.rpm ./phpunit
  require PHPUNIT_COMPOSER_INSTALL;
  
  PHPUnit_TextUI_Command::main();
+diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
+--- ./tests/bootstrap.php.rpm	2014-06-07 11:26:13.357779078 +0200
++++ ./tests/bootstrap.php	2014-06-07 11:25:17.659035072 +0200
+@@ -1,5 +1,8 @@
+ <?php
+-require __DIR__ . '/../vendor/autoload.php';
++require __DIR__ . '/../src/Framework/Assert/Functions.php';
++require __DIR__ . '/_files/CoveredFunction.php';
++require __DIR__ . '/../src/Autoload.php';
++require __DIR__ . '/autoload.php';
+ 
+ if (!ini_get('date.timezone') && !defined('HHVM_VERSION')) {
+   echo PHP_EOL . 'Error: PHPUnit\'s test suite requires the "date.timezone" runtime configuration to be set. Please check your php.ini.' . PHP_EOL;
