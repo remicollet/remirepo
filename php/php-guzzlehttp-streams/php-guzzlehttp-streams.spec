@@ -19,6 +19,7 @@ License:       MIT
 URL:           http://docs.guzzlephp.org/en/latest/streams.html
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
@@ -82,12 +83,16 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE README.rst composer.json
 %dir %{_datadir}/php/GuzzleHttp
      %{_datadir}/php/GuzzleHttp/Stream
 
 
 %changelog
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> 1.1.0-2
+- backport for remi repo
+
 * Fri Jun 06 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-2
 - Updated URL
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
