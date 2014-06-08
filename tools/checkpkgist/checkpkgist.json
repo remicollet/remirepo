@@ -15,6 +15,7 @@
     "klaussilveira/gitter":                 "php-gitter",
     "michelf/php-markdown":                 "php-markdown",
     "mikey179/vfsStream":                   "php-mikey179-vfsstream",
+    "raven/raven":                          "php-Raven",
     "sabberworm/php-css-parser":            "php-PHP-CSS-Parser",
     "sdboyer/gliph":                        "php-gliph",
     "seld/jsonlint":                        "php-jsonlint",
