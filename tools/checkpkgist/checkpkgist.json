@@ -22,7 +22,7 @@
     "solarium/solarium":                    "php-solarium",
     "twig/twig":                            "php-twig-Twig",
     "zendframework/zendframework1":         "php-ZendFramework",
-
+    "psr/log":                              "php-PsrLog",
     "bartlett/php-compatinfo":              "php-bartlett-PHP-CompatInfo",
     "bartlett/php-reflect":                 "php-bartlett-PHP-Reflect",
 

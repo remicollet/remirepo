@@ -1,14 +1,22 @@
-%global github_owner     php-fig
-%global github_name      log
-%global github_version   1.0.0
-%global github_commit    fe0936ee26643249e916849d48e3a51d5f5e278b
+#
+# RPM spec file for php-PsrLog
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve the changelog entries
+#
 
-%global composer_vendor  psr
-%global composer_project log
+%global github_owner   php-fig
+%global github_name    log
+%global github_version 1.0.0
+%global github_commit  fe0936ee26643249e916849d48e3a51d5f5e278b
 
 Name:      php-PsrLog
 Version:   %{github_version}
-Release:   5%{?dist}
+Release:   6%{?dist}
 Summary:   Common interface for logging libraries
 
 Group:     Development/Libraries
@@ -24,7 +32,7 @@ Requires:  php(language) >= 5.3.0
 Requires:  php-date
 Requires:  php-spl
 
-Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+Provides:  php-composer(psr/log) = %{version}
 
 %description
 This package holds all interfaces/classes/traits related to PSR-3
@@ -55,6 +63,12 @@ cp -rp Psr %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Sun Jun  8 2014 Remi Collet <remi@fedoraproject.org> 1.0.0-6
+- backport rawhide changes.
+
+* Sat Jun 07 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-6
+- Replaced single-use %%composer_vendor and %%composer_project
+
 * Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> 1.0.0-5
 - backport rawhide changes.
 
