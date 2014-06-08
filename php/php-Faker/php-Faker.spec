@@ -1,10 +1,24 @@
+#
+# RPM spec file for php-Faker
+#
+# Copyright (c) 2012-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner   fzaninotto
 %global github_name    Faker
-%global github_version 1.3.0
-%global github_commit  1d143fd8caf4d264602450bc01d7484af788706b
+%global github_version 1.4.0
+%global github_commit  010c7efedd88bf31141a02719f51fb44c732d5a0
 
 # "php": ">=5.3.3"
 %global php_min_ver    5.3.3
+
+# Build using "--without tests" to disable tests
+%global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:          php-%{github_name}
 Version:       %{github_version}
@@ -18,10 +32,11 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# For tests
+%if %{with_tests}
+# For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo (computed from v1.3.0)
+BuildRequires: php-phpunit-PHPUnit
+# For tests: phpcompatinfo (computed from version 1.4.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-hash
@@ -29,10 +44,11 @@ BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+%endif
 
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
-Requires:      php-pear(pear.doctrine-project.org/DoctrineCommon)
-# phpcompatinfo (computed from v1.3.0)
+# phpcompatinfo (computed from version 1.4.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-hash
@@ -40,6 +56,8 @@ Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
+
+Provides:      php-composer(fzaninotto/faker) = %{version}
 
 %description
 Faker is a PHP library that generates fake data for you. Whether you need
@@ -51,9 +69,12 @@ Faker is heavily inspired by Perl's Data::Faker
 (http://search.cpan.org/~jasonk/Data-Faker/), and by Ruby's Faker
 (http://faker.rubyforge.org/).
 
+Optional:
+* Doctrine ORM (php-doctrine-orm)
+
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -66,22 +87,25 @@ cp -rp src/%{github_name} %{buildroot}%{_datadir}/php/
 
 
 %check
-# Create tests' autoload
+%if %{with_tests}
+# Create autoloader
 mkdir vendor
-( cat <<'AUTOLOAD'
+cat > vendor/autoload.php <<'AUTOLOAD'
 <?php
 spl_autoload_register(function ($class) {
     $src = str_replace('\\', '/', $class).'.php';
     @include_once $src;
 });
 AUTOLOAD
-) > vendor/autoload.php
 
 # Skip tests that require downloading content
 sed 's/function testDownloadWithDefaults/function SKIP_testDownloadWithDefaults/' \
     -i test/Faker/Provider/ImageTest.php
 
 %{_bindir}/phpunit --include-path="./src:./test" -d date.timezone="UTC"
+%else
+: Tests skipped
+%endif
 
 
 %files
@@ -91,6 +115,15 @@ sed 's/function testDownloadWithDefaults/function SKIP_testDownloadWithDefaults/
 
 
 %changelog
+* Sun Jun  8 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.4.0-1
+- backport 1.3.0 for remi repo.
+
+* Sun Jun 08 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-1
+- Updated to 1.4.0 (BZ #1105815)
+- Added php-composer(fzaninotto/faker) virtual provide
+- Made Doctrine pkg optional instead of required
+- Added option to build without tests
+
 * Mon Dec 30 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.3.0-1
 - backport 1.3.0 for remi repo.
 
