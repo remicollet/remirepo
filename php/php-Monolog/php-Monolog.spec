@@ -1,15 +1,26 @@
+#
+# RPM spec file for php-Monolog
+#
+# Copyright (c) 2012-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner    Seldaek
 %global github_name     monolog
-%global github_version  1.9.1
-%global github_commit   65026b610f8c19e61d7242f600530677b0466aac
+%global github_version  1.10.0
+%global github_commit   25b16e801979098cb2f120e697bfce454b18bf23
 
 %global lib_name        Monolog
 
 # "php": ">=5.3.0"
 %global php_min_ver     5.3.0
 # "phpunit/phpunit": "~3.7.0"
+#     Note: Max version ignored on purpose
 %global phpunit_min_ver 3.7.0
-%global phpunit_max_ver 3.8.0
 # "psr/log": "~1.0"
 %global psrlog_min_ver  1.0
 %global psrlog_max_ver  2.0
@@ -19,6 +30,9 @@
 # "aws/aws-sdk-php": "~2.4, >2.4.8"
 %global aws_min_ver     2.4.9
 %global aws_max_ver     3.0
+
+# Build using "--without tests" to disable tests
+%global with_tests      %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:      php-%{lib_name}
 Version:   %{github_version}
@@ -32,13 +46,13 @@ Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_co
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# For tests
-BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-PsrLog    >= %{psrlog_min_ver}
-BuildRequires: php-PsrLog    <  %{psrlog_max_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit) >= %{phpunit_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit) <  %{phpunit_max_ver}
-# For tests: phpcompatinfo (computed from 1.9.1)
+%if %{with_tests}
+# For tests: composer.json
+BuildRequires: php(language)         >= %{php_min_ver}
+BuildRequires: php-composer(psr/log) >= %{psrlog_min_ver}
+BuildRequires: php-composer(psr/log) <  %{psrlog_max_ver}
+BuildRequires: php-phpunit-PHPUnit   >= %{phpunit_min_ver}
+# For tests: phpcompatinfo (computed from version 1.10.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -51,12 +65,14 @@ BuildRequires: php-reflection
 BuildRequires: php-sockets
 BuildRequires: php-spl
 BuildRequires: php-xml
+%endif
 
-Requires:      php(language) >= %{php_min_ver}
-Requires:      php-PsrLog    >= %{psrlog_min_ver}
-Requires:      php-PsrLog    <  %{psrlog_max_ver}
-Requires:      php-pear(pear.swiftmailer.org/Swift)
-# phpcompatinfo (computed from 1.9.1)
+Requires:      php-swift-Swift
+# composer.json
+Requires:      php(language)         >= %{php_min_ver}
+Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
+Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
+# phpcompatinfo (computed from version 1.10.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -68,6 +84,8 @@ Requires:      php-pcre
 Requires:      php-sockets
 Requires:      php-spl
 Requires:      php-xml
+
+Provides:      php-composer(monolog/monolog) = %{version}
 
 # Removed sub-packages
 Obsoletes:     %{name}-amqp   < %{version}-%{release}
@@ -118,7 +136,7 @@ Optional:
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -126,23 +144,20 @@ Optional:
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
+mkdir -pm 0755 %{buildroot}%{_datadir}/php
 cp -pr ./src/* %{buildroot}%{_datadir}/php/
 
 
 %check
+%if %{with_tests}
 # Rewrite tests' bootstrap
-( cat <<'BOOTSTRAP'
+cat > tests/bootstrap.php <<'BOOTSTRAP'
 <?php
 spl_autoload_register(function ($class) {
     $src = str_replace(array('\\', '_'), '/', $class).'.php';
     @include_once $src;
 });
 BOOTSTRAP
-) > ./tests/bootstrap.php
-
-# Create PHPUnit config w/ colors turned off
-sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 # Remove MongoDBHandlerTest because it requires a running MongoDB server
 rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
@@ -150,7 +165,11 @@ rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
 # Remove GitProcessorTest because it requires a git repo
 rm -f tests/Monolog/Processor/GitProcessorTest.php
 
+# Create PHPUnit config w/ colors turned off
+sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
+
 %{_bindir}/phpunit --include-path="./src:./tests" -d date.timezone="UTC"
+%endif
 
 
 %files
@@ -160,6 +179,14 @@ rm -f tests/Monolog/Processor/GitProcessorTest.php
 
 
 %changelog
+* Sun Jun  8 2014 Remi Collet <RPMS@famillecollet.com> 1.10.0-1
+- backport 1.10.0 for remi repo
+
+* Sat Jun 07 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.10.0-1
+- Updated to 1.10.0 (BZ #1105816)
+- Removed max PHPUnit dependency
+- Added php-composer(monolog/monolog) virtual provide
+
 * Mon Apr 28 2014 Remi Collet <RPMS@famillecollet.com> 1.9.1-1
 - backport 1.9.1 for remi repo
 
