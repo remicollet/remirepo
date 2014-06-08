@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-DbUnit
 Version:        1.3.1
-Release:        3%{?dist}.1
+Release:        4%{?dist}
 Summary:        DbUnit port for PHP/PHPUnit
 
 Group:          Development/Libraries
@@ -29,6 +29,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 %if %{with_tests}
+BuildRequires:  php-pdo
 BuildRequires:  php-pear-PHPUnit >= 3.7.0
 %endif
 
@@ -43,8 +44,7 @@ Requires:       php-libxml
 Requires:       php-reflection
 Requires:       php-spl
 
-# For compatibility with PEAR mode
-Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(phpunit/dbunit) = %{version}
 
 
 %description
@@ -101,13 +101,18 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog.markdown LICENSE
+%doc ChangeLog.markdown LICENSE composer.json
 %doc Samples
 %{_bindir}/dbunit
 %{php_home}/PHPUnit/Extensions/Database
 
 
 %changelog
+* Sun Jun 08 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-4
+- fix FTBFS, add BR php-pdo
+- add composer provides
+- add composer.json as doc
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-3
 - cleanup pear registry
 
