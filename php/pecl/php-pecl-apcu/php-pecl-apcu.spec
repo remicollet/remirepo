@@ -23,11 +23,13 @@
 Name:           %{?scl_prefix}php-pecl-apcu
 Summary:        APC User Cache
 Version:        4.0.4
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
+
+Patch0:         %{pecl_name}-php56.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -150,6 +152,9 @@ configuration, available on http://localhost/apcu-panel/
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+
+%patch0 -p1 -b .php56
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
 if test "x${extver}" != "x%{version}"; then
@@ -306,6 +311,9 @@ fi
 
 
 %changelog
+* Sun Jun  8 2014 Remi Collet <remi@fedoraproject.org> - 4.0.4-3
+- add build patch for php 5.6.0beta4
+
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 4.0.4-2
 - add numerical prefix to extension configuration file
 
