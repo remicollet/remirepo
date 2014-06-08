@@ -9,7 +9,7 @@
 %global pluginname   appliances
 
 Name:           glpi-appliances
-Version:        1.9.0
+Version:        1.9.1
 Release:        1%{?dist}
 Summary:        GLPI Plugin to manage appliances
 Summary(fr):    Extension GLPI de gestion des applicatifs
@@ -18,7 +18,7 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/appliances
 
-Source0:        https://forge.indepnet.net/attachments/download/1567/appliances-1.9.0.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1773/glpi-appliances-1.9.1.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -108,6 +108,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun  8 2014 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
+- version 1.9.1
+  https://forge.indepnet.net/versions/1002
+
 * Mon Sep 30 2013 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
 - version 1.9.0 for GLPI 0.84.2
 
