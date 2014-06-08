@@ -79,9 +79,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 

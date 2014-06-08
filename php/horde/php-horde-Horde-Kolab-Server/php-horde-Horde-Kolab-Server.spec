@@ -6,8 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Kolab_Server
 %global pear_channel pear.horde.org
 
@@ -35,14 +34,10 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pcre
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Auth) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Auth) < 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
-# optional
-Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Date) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Ldap) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Ldap) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+# optional and implicitly required: Horde_Date, Horde_Ldap
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -79,7 +74,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 

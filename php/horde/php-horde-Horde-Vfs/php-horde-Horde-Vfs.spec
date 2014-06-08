@@ -132,7 +132,7 @@ sed -e 's/testDeleteUnusalFileNames/SKIP_testDeleteUnusalFileNames/' \
     -i FileTest.php
 
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 %else

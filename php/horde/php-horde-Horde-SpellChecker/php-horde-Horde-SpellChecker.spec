@@ -6,8 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_SpellChecker
 %global pear_channel pear.horde.org
 
@@ -76,10 +75,11 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
+src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
+    --include-path=$src/lib \
    -d date.timezone=UTC \
-   -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
    .
 
 

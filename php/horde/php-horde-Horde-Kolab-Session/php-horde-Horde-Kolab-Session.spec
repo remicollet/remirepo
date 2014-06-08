@@ -6,7 +6,6 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Kolab_Session
 %global pear_channel pear.horde.org
@@ -38,14 +37,13 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) < 3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Imap_Client) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Server) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Kolab_Server) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Log) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Kolab_Server) <  3.0.0
+# Optional and implicitly required: Horde_Log
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -81,7 +79,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 

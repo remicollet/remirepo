@@ -163,6 +163,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/htaccess/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -208,7 +209,7 @@ done | tee ../%{pear_name}.lang
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/Imp
 phpunit\
-    -d include_path=$src/lib:.:%{pear_phpdir} \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 

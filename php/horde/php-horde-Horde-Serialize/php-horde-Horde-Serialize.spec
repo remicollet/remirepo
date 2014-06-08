@@ -1,4 +1,13 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Serialize
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Serialize
 %global pear_channel pear.horde.org
 
@@ -30,9 +39,10 @@ Requires:       php-zlib
 Requires:       php-pecl(LZF)
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Exception) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
-Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
+# Optional and skipped for build order: Horde_Imap_Client, Horde_Mime
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -67,9 +77,15 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
-phpunit\
-    -d include_path=%{buildroot}%{pear_phpdir}:.:%{pear_phpdir} \
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+
+# Because of jsonc
+sed -e 's/function testJsonInvalidUTF8Input/function SKIP_testJsonInvalidUTF8Input/' \
+    -i JsonTest.php
+
+phpunit \
+    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 

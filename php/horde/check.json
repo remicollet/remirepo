@@ -18,8 +18,9 @@
 		"Horde_Notification":["Horde_Alarm"],
 		"Horde_Form":["Horde_Core"],
 		"Horde_Vfs":["Horde_Core"],
-		"Horde_Core":["Horde_Dav"],
+		"Horde_Core":["Horde_Dav", "Horde_Form"],
 		"Horde_Auth":["Horde_Kolab_Session"],
-		"Horde_Stream_Wrapper":["Horde_Test"]
+		"Horde_Stream_Wrapper":["Horde_Test"],
+		"Horde_Serialize": ["Horde_Imap_Client", "Horde_Mime"]
 	}
 }
