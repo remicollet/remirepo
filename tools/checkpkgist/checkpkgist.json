@@ -13,6 +13,7 @@
     "justinrainbow/json-schema":            "php-JsonSchema",
     "kriswallsmith/assetic":                "php-Assetic",
     "klaussilveira/gitter":                 "php-gitter",
+    "leafo/scssphp":                        "php-scssphp",
     "michelf/php-markdown":                 "php-markdown",
     "mikey179/vfsStream":                   "php-mikey179-vfsstream",
     "monolog/monolog":                      "php-Monolog",
