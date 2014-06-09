@@ -7,7 +7,7 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
@@ -15,17 +15,23 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+# Upstream
+Patch0:        %{github_name}-phpunit.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires: php-phpunit-PHPUnit
 # For tests: phpcompatinfo
 BuildRequires: php-pcre
 
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo
 Requires:      php-pcre
+
+Provides:      php-composer(seld/jsonlint) = %{version}
+
 
 %description
 %{summary}.
@@ -36,6 +42,8 @@ This library is a port of the JavaScript jsonlint
 
 %prep
 %setup -q -n %{github_name}-%{github_commit}
+
+%patch0 -p1
 
 # Create PSR-0 autoloader for tests
 ( cat <<'AUTOLOAD'
@@ -59,7 +67,7 @@ cp -rp src/Seld/JsonLint %{buildroot}%{_datadir}/php/Seld/
 
 %check
 %{_bindir}/phpunit --bootstrap=./autoload.php \
-    -d include_path="./src:./tests:.:%{pear_phpdir}" .
+    --include-path=./src:./tests .
 
 
 %files
@@ -70,6 +78,11 @@ cp -rp src/Seld/JsonLint %{buildroot}%{_datadir}/php/Seld/
 
 
 %changelog
+* Mon Jun  9 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
+- fix FTBFS, include path during test
+- upstream patch for latest PHPUnit
+- provides php-composer(seld/jsonlint)
+
 * Sat Nov 16 2013 Remi Collet <RPMS@FamilleCollet.com> - 1.1.2-1
 - backport 1.1.2 for remi repo
 
