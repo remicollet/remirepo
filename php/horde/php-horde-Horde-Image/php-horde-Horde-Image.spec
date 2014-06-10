@@ -8,14 +8,12 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
-
 %global pear_name    Horde_Image
 %global pear_channel pear.horde.org
-# No test: all are skipped.
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Image
-Version:        2.0.8
+Version:        2.0.9
 Release:        1%{?dist}
 Summary:        Horde Image API
 
@@ -150,6 +148,9 @@ fi
 
 
 %changelog
+* Tue Jun 10 2014 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
+- Update to 2.0.9
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
 - Update to 2.0.8
 
