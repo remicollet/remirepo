@@ -124,7 +124,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.10.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.11.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -186,6 +186,11 @@ Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
 Patch100: php-reg67118.patch
+Patch101: php-bug67392.patch
+Patch102: php-bug67410.patch
+Patch103: php-bug67411.patch
+Patch104: php-bug67412.patch
+Patch105: php-bug67413.patch
 
 # Security fixes (200+)
 
@@ -909,6 +914,11 @@ rm -rf ext/json
 
 # upstream patches
 %patch100 -p1 -b .reg67118
+%patch101 -p1 -b .bug67392
+%patch102 -p1 -b .bug67410
+%patch103 -p1 -b .bug67411
+%patch104 -p1 -b .bug67412
+%patch105 -p1 -b .bug67413
 
 # security patches
 
@@ -1911,6 +1921,10 @@ fi
 
 
 %changelog
+* Tue Jun 10 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.11.beta4
+- test build for bug 67410, 67411, 67412, 67413
+- fix 67392, dtrace breaks argument unpack
+
 * Thu Jun  5 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.10.beta4
 - fix regression introduce in fix for #67118
 

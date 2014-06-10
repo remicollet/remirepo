@@ -1,0 +1,40 @@
+From 40ef6e07e0b2cdced57c506e08cf18f47122292d Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Tue, 10 Jun 2014 14:22:04 +0200
+Subject: [PATCH] Bug #67412 	fileinfo: cdf_count_chain insufficient
+ boundary check
+
+Upstream:
+https://github.com/file/file/commit/40bade80cbe2af1d0b2cd0420cebd5d5905a2382
+---
+ ext/fileinfo/libmagic/cdf.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ext/fileinfo/libmagic/cdf.c b/ext/fileinfo/libmagic/cdf.c
+index c9a5d50..ee467a6 100644
+--- a/ext/fileinfo/libmagic/cdf.c
++++ b/ext/fileinfo/libmagic/cdf.c
+@@ -470,7 +470,8 @@ size_t
+ cdf_count_chain(const cdf_sat_t *sat, cdf_secid_t sid, size_t size)
+ {
+ 	size_t i, j;
+-	cdf_secid_t maxsector = (cdf_secid_t)(sat->sat_len * size);
++	cdf_secid_t maxsector = (cdf_secid_t)((sat->sat_len * size)
++	    / sizeof(maxsector));
+ 
+ 	DPRINTF(("Chain:"));
+ 	for (j = i = 0; sid >= 0; i++, j++) {
+@@ -480,8 +481,8 @@ cdf_count_chain(const cdf_sat_t *sat, cdf_secid_t sid, size_t size)
+ 			errno = EFTYPE;
+ 			return (size_t)-1;
+ 		}
+-		if (sid > maxsector) {
+-			DPRINTF(("Sector %d > %d\n", sid, maxsector));
++		if (sid >= maxsector) {
++			DPRINTF(("Sector %d >= %d\n", sid, maxsector));
+ 			errno = EFTYPE;
+ 			return (size_t)-1;
+ 		}
+-- 
+1.9.2
+

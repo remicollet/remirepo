@@ -1,0 +1,34 @@
+From 25b1dc917a53787dbb2532721ca22f3f36eb13c0 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Tue, 10 Jun 2014 14:33:37 +0200
+Subject: [PATCH] Fixed Bug #67413 	fileinfo: cdf_read_property_info
+ insufficient boundary chec
+
+Upstream:
+https://github.com/file/file/commit/93e063ee374b6a75729df9e7201fb511e47e259d
+
+Adapted for C standard.
+---
+ ext/fileinfo/libmagic/cdf.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/ext/fileinfo/libmagic/cdf.c b/ext/fileinfo/libmagic/cdf.c
+index ee467a6..429f3b9 100644
+--- a/ext/fileinfo/libmagic/cdf.c
++++ b/ext/fileinfo/libmagic/cdf.c
+@@ -812,7 +812,11 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
+ 	if (cdf_check_stream_offset(sst, h, e, 0, __LINE__) == -1)
+ 		goto out;
+ 	for (i = 0; i < sh.sh_properties; i++) {
+-		size_t ofs = CDF_GETUINT32(p, (i << 1) + 1);
++		size_t ofs, tail = (i << 1) + 1;
++		if (cdf_check_stream_offset(sst, h, p, tail * sizeof(uint32_t),
++		    __LINE__) == -1)
++			goto out;
++		ofs = CDF_GETUINT32(p, tail);
+ 		q = (const uint8_t *)(const void *)
+ 		    ((const char *)(const void *)p + ofs
+ 		    - 2 * sizeof(uint32_t));
+-- 
+1.9.2
+
