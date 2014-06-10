@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-ListHeaders
-Version:        1.1.2
+Version:        1.1.3
 Release:        1%{?dist}
 Summary:        Horde List Headers Parsing Library
 
@@ -22,6 +22,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  gettext
 BuildRequires:  php-common >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
@@ -51,12 +52,21 @@ in RFC 2369 & RFC 2919.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-cp ../package.xml %{name}.xml
+# Don't install .po and .pot files
+# Remove checksum for .mo, as we regenerate them
+sed -e '/%{pear_name}.po/d' \
+    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    ../package.xml >%{name}.xml
+touch ../package.xml %{name}.xml
 
 
 %build
 cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+# Regenerate the locales
+for po in $(find locale -name \*.po)
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
@@ -70,6 +80,13 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+for loc in locale/{??,??_??}
+do
+    lang=$(basename $loc)
+    test -d %{buildroot}%{pear_datadir}/%{pear_name}/$loc \
+         && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
 
 
 %clean
@@ -96,17 +113,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/ListHeaders
 %{pear_phpdir}/Horde/ListHeaders.php
 %{pear_testdir}/%{pear_name}
-%{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}/locale
 
 
 %changelog
+* Tue Jun 10 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3
+- regenerate locales during build
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2
 
