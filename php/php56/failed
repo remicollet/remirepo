@@ -1,0 +1,68 @@
+=====================================================================
+	FC20 i386 - June 10
+=====================================================================
+3 FAILED TEST SUMMARY
+---------------------------------------------------------------------
+Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
+Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+Test setlocale() function : usage variations - Setting all available locales in the platform [ext/standard/tests/strings/setlocale_variation2.phpt]
+=====================================================================
+	FC20 x86_64 - June 10
+=====================================================================
+3 FAILED TEST SUMMARY
+---------------------------------------------------------------------
+Test setlocale() function : usage variations - Setting all available locales in the platform [ext/standard/tests/strings/setlocale_variation2.phpt]
+=====================================================================
+	FC19 i386
+=====================================================================
+8 FAILED TEST SUMMARY
+---------------------------------------------------------------------
+Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
+Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+Test setlocale() function : usage variations - Setting all available locales in the platform [ext/standard/tests/strings/setlocale_variation2.phpt]
+=====================================================================
+	1 FC19 x86_64  - June 10
+=====================================================================
+FAILED TEST SUMMARY
+---------------------------------------------------------------------
+Test setlocale() function : usage variations - Setting all available locales in the platform [ext/standard/tests/strings/setlocale_variation2.phpt]
+=====================================================================
+	EL7 x86_64 - June 10
+=====================================================================
+3 FAILED TEST SUMMARY
+---------------------------------------------------------------------
+Testing openssl_spki_verify()
+Creates SPKAC for all available key sizes & signature algorithms and tests for valid signature [ext/openssl/tests/openssl_spki_verify.phpt]
+Test setlocale() function : usage variations - Setting all available locales in the platform [ext/standard/tests/strings/setlocale_variation2.phpt]
+=====================================================================
+	EL6 i386 - June 10
+=====================================================================
+3 FAILED TEST SUMMARY
+---------------------------------------------------------------------
+Bug #54268 (Double free when destroy_zend_class fails) [Zend/tests/bug54268.phpt]
+Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
+Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+=====================================================================
+	EL6 x86_64 - June 10
+=====================================================================
+0 FAILED TEST SUMMARY
+---------------------------------------------------------------------
+=====================================================================
+	EL5 i386 - June 10
+=====================================================================
+3 FAILED TEST SUMMARY
+---------------------------------------------------------------------
+Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
+Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+sni_server [ext/openssl/tests/sni_server.phpt]
+Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]
+Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+=====================================================================
+	EL5 x86_64 - June 10
+=====================================================================
+3 FAILED TEST SUMMARY
+---------------------------------------------------------------------
+Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+sni_server [ext/openssl/tests/sni_server.phpt]
+Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]
+=====================================================================
