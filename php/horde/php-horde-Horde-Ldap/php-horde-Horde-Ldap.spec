@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Ldap
-Version:        2.0.6
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde LDAP libraries
 
@@ -49,8 +49,7 @@ A set of classes for connecting to LDAP servers and working with directory
 objects.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 cp ../package.xml %{name}.xml
@@ -103,6 +102,9 @@ fi
 
 
 %changelog
+* Tue Jun 10 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Tue Jun 03 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6 (security)
 
