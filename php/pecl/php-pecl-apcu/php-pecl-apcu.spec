@@ -29,6 +29,8 @@ Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
 
+Patch0:         %{pecl_name}-pr74.patch
+
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/APCu
@@ -150,6 +152,7 @@ configuration, available on http://localhost/apcu-panel/
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+%patch0 -p1 -b .pr74
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
@@ -301,6 +304,7 @@ fi
 %changelog
 * Wed Jun 11 2014 Remi Collet <remi@fedoraproject.org> - 4.0.5-1
 - Update to 4.0.5 (beta)
+- open https://github.com/krakjoe/apcu/pull/74 (PHP 5.4)
 
 * Sun Jun  8 2014 Remi Collet <remi@fedoraproject.org> - 4.0.4-3
 - add build patch for php 5.6.0beta4
