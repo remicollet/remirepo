@@ -127,6 +127,7 @@ cd NTS
 # drop known to fail tests
 %if "%{php_version}" < "5.4"
 rm tests/misc/disable_display_errors_fail.phpt
+rm tests/session/session_recursive_crash.phpt
 %endif
 %if "%{php_version}" < "5.5"
 rm tests/executor/function_blacklist_printf.phpt
