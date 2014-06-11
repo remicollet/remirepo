@@ -22,18 +22,14 @@
 %endif
 
 Name:           %{?scl_prefix}php-suhosin
-Version:        0.9.35
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.9.36
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
 License:        PHP
 URL:            http://www.hardened-php.net/suhosin/
 Source0:        http://download.suhosin.org/suhosin-%{version}.tgz
-
-# https://github.com/stefanesser/suhosin/issues/38
-# URL from sources headers
-Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -70,8 +66,6 @@ and the PHP core.
 %prep
 %setup -q -c
 mv %{ext_name}-%{version} NTS
-
-cp %{SOURCE1} LICENSE
 
 # Check extension version
 ver=$(sed -n '/SUHOSIN_EXT_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_suhosin.h)
@@ -155,7 +149,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE NTS/{Changelog,CREDITS}
+%doc NTS/{Changelog,CREDITS,LICENSE}
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
@@ -167,6 +161,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 11 2014 Remi Collet <remi@fedoraproject.org> - 0.9.36-1
+- update to 0.9.35
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 0.9.35-2
 - add numerical prefix to extension configuration file (php 5.6)
 

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #16 suhosin version 0.9.35 ] {
+Extension [ <persistent> extension #16 suhosin version 0.9.36 ] {
 
   - INI {
     Entry [ suhosin.log.syslog <PERDIR,SYSTEM> ]
@@ -291,6 +291,12 @@ Extension [ <persistent> extension #16 suhosin version 0.9.35 ] {
     }
     Entry [ suhosin.server.strip <SYSTEM> ]
       Current = '1'
+    }
+    Entry [ suhosin.rand.seedingkey <PERDIR,SYSTEM> ]
+      Current = ''
+    }
+    Entry [ suhosin.rand.reseed_every_request <PERDIR,SYSTEM> ]
+      Current = '0'
     }
     Entry [ suhosin.srand.ignore <PERDIR,SYSTEM> ]
       Current = '1'
