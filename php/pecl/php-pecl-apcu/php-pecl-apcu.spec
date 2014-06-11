@@ -22,14 +22,12 @@
 
 Name:           %{?scl_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        4.0.4
+Version:        4.0.5
 Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
-
-Patch0:         %{pecl_name}-php56.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -153,8 +151,6 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 
-%patch0 -p1 -b .php56
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
 if test "x${extver}" != "x%{version}"; then
@@ -162,14 +158,6 @@ if test "x${extver}" != "x%{version}"; then
    exit 1
 fi
 cd ..
-
-# Fix file roles https://github.com/krakjoe/apcu/pull/69
-sed -e '/LICENSE/s/role="src"/role="doc"/' \
-    -e '/NOTICE/s/role="src"/role="doc"/' \
-    -e '/README.md/s/role="src"/role="doc"/' \
-    -e '/TECHNOTES.txt/s/role="src"/role="doc"/' \
-    -e '/TODO/s/role="src"/role="doc"/' \
-    -i package.xml
 
 %if %{with_zts}
 # duplicate for ZTS build
@@ -311,6 +299,9 @@ fi
 
 
 %changelog
+* Wed Jun 11 2014 Remi Collet <remi@fedoraproject.org> - 4.0.5-1
+- Update to 4.0.5 (beta)
+
 * Sun Jun  8 2014 Remi Collet <remi@fedoraproject.org> - 4.0.4-3
 - add build patch for php 5.6.0beta4
 

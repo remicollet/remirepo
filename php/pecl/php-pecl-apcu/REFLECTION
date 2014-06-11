@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #74 apcu version 4.0.4 ] {
+Extension [ <persistent> extension #74 apcu version 4.0.5 ] {
 
   - INI {
     Entry [ apc.enabled <SYSTEM> ]
