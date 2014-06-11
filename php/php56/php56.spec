@@ -197,6 +197,10 @@ Patch105: php-bug67413.patch
 # Fixes for tests (300+)
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
+# see https://bugzilla.redhat.com/971416
+Patch302: php-5.6.0-noNO.patch
+# modern distro refuse to verify md4/md5 digests
+Patch303: php-5.6.0-openssl.patch
 
 # WIP
 
@@ -929,6 +933,8 @@ rm -rf ext/json
 %patch301 -p1 -b .pcre834
 %endif
 %endif
+%patch302 -p0 -b .971416
+%patch303 -p0 -b .md4md5
 
 # WIP patch
 
@@ -957,9 +963,11 @@ mkdir build-cgi build-apache build-embedded \
 
 # ----- Manage known as failed test -------
 # affected by systzdata patch
-rm -f ext/date/tests/timezone_location_get.phpt
+rm ext/date/tests/timezone_location_get.phpt
 # fails sometime
-rm -f ext/sockets/tests/mcast_ipv?_recv.phpt
+rm ext/sockets/tests/mcast_ipv?_recv.phpt
+# cause stack exhausion
+rm Zend/tests/bug54268.phpt
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
@@ -1392,9 +1400,6 @@ popd
 %check
 %if %runselftest
 cd build-apache
-
-# Increase stack size (required by bug54268.phpt)
-ulimit -s 32712
 
 # Run tests, using the CLI SAPI
 export NO_INTERACTION=1 REPORT_EXIT_STATUS=1 MALLOC_CHECK_=2
