@@ -1,24 +1,38 @@
-%global github_owner          symfony
-%global github_name           Icu
-%global github_version        1.2.1
-%global github_commit         98e197da54df1f966dd5e8a4992135703569c987
+#
+# RPM spec file for php-symfony-icu
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
+%global github_owner     symfony
+%global github_name      Icu
+%global github_version   1.2.1
+%global github_commit    98e197da54df1f966dd5e8a4992135703569c987
+
+%global composer_vendor  symfony
+%global composer_project icu
 
 # "php": ">=5.3.3"
-%global php_min_ver           5.3.3
+%global php_min_ver          5.3.3
 # "symfony/intl": "~2.3" (composer.json)
-%global symfony_intl_min_ver  2.3
-%global symfony_intl_max_ver  3.0
+%global symfony_intl_min_ver 2.3
+%global symfony_intl_max_ver 3.0
 # "lib-ICU": ">=4.4" (composer.json)
-%global libicu_min_ver        4.4
+%global libicu_min_ver       4.4
 
-%global symfony_dir           %{_datadir}/php/Symfony
+%global symfony_dir          %{_datadir}/php/Symfony
 
 # Tests are only run with rpmbuild --with tests to avoid circular dependency
-%global with_tests            %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests           %{?_with_tests:1}%{!?_with_tests:0}
 
-Name:           php-symfony-icu
+Name:           php-%{composer_vendor}-%{composer_project}
 Version:        %{github_version}
-Release:        1%{dist}
+Release:        3%{dist}
 Summary:        Symfony Icu Component
 
 Group:          Development/Libraries
@@ -45,6 +59,9 @@ Requires:       php(language)    >= %{php_min_ver}
 Requires:       php-ctype
 Requires:       php-intl
 
+# Composer
+Provides:       php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+
 # Disabled to prevent circular dependency
 #Requires:       php-symfony-intl >= %%{symfony_intl_min_ver}
 #Requires:       php-symfony-intl <  %%{symfony_intl_max_ver}
@@ -67,7 +84,7 @@ NOTE: This package requires the Symfony Intl package (>= %{symfony_intl_min_ver}
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -139,6 +156,12 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Thu Jun 12 2014 Remi Collet <remi@fedoraproject.org> 1.2.1-3
+- backport rawhide changes (composer)
+
+* Wed Jun 11 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.1-3
+- Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
+
 * Tue Apr 29 2014 Remi Collet <remi@fedoraproject.org> 1.2.1-1
 - update to 1.2.0 (backport)
 
