@@ -17,8 +17,6 @@ if ! grep -q "^Version:.*$2"  *spec; then
 sed -e "/^Version:/s/$1/$2/" \
     -e "s/%changelog/%changelog\n* $rpmdate $vendor - $2-1\n- Update to $2\n/" \
     -e 's/\$RPM_BUILD_ROOT/%{buildroot}/' \
-    -e '/Conflicts:/s/>=/< /' \
-    -e 's/Conflicts:/Requires: /' \
     -i *spec
 else echo "Version déjà modifiée"
 fi

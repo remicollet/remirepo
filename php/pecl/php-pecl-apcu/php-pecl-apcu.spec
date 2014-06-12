@@ -22,14 +22,12 @@
 
 Name:           %{?scl_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        4.0.5
+Version:        4.0.6
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
-
-Patch0:         %{pecl_name}-pr74.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -152,7 +150,6 @@ configuration, available on http://localhost/apcu-panel/
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1 -b .pr74
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
@@ -302,6 +299,9 @@ fi
 
 
 %changelog
+* Thu Jun 12 2014 Remi Collet <remi@fedoraproject.org> - 4.0.6-1
+- Update to 4.0.6 (beta)
+
 * Wed Jun 11 2014 Remi Collet <remi@fedoraproject.org> - 4.0.5-1
 - Update to 4.0.5 (beta)
 - open https://github.com/krakjoe/apcu/pull/74 (PHP 5.4)
