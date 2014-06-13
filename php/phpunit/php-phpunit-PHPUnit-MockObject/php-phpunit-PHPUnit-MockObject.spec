@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    92f4b49d2cd4f2537db7ef969231f3d43c8da957
+%global gh_commit    1a894a16b6c15fcdc5ef2b110f0e6233952c9b0f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -17,7 +17,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -31,6 +31,9 @@ Source1:        Autoload.php.in
 
 # Temporary workaround, under investigation
 Patch0:         %{gh_project}-rpm.patch
+
+# https://github.com/sebastianbergmann/phpunit-mock-objects/pull/176
+Patch1:         %{gh_project}-pr176.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -60,6 +63,7 @@ Mock Object library for PHPUnit
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
+%patch1 -p1
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -82,6 +86,7 @@ cp -pr src %{buildroot}%{php_home}/PHPUnit
 mkdir vendor
 ln -s ../src/Framework/MockObject/Autoload.php vendor/autoload.php
 
+grep -v 'log' phpunit.xml.dist > phpunit.xml
 phpunit \
   -d date.timezone=UTC
 %endif
@@ -107,6 +112,11 @@ fi
 
 
 %changelog
+* Thu Jun 12 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- update to 2.1.4
+- add upstream patch to fix unserialize issue
+  https://github.com/sebastianbergmann/phpunit-mock-objects/pull/176
+
 * Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - update to 2.1.3
 

@@ -1,0 +1,82 @@
+From b49bdba40387a897d91ce24735437a8f2feab86e Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 12 Jun 2014 09:03:05 +0200
+Subject: [PATCH 1/2] php 5.6 is not yet released, so use 5.6.0-dev here
+
+---
+ src/Framework/MockObject/Generator.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Framework/MockObject/Generator.php b/src/Framework/MockObject/Generator.php
+index a24171a..b2d99b5 100644
+--- a/src/Framework/MockObject/Generator.php
++++ b/src/Framework/MockObject/Generator.php
+@@ -1105,7 +1105,7 @@ private function isInternalClass(ReflectionClass $class)
+     private function unserializeHackIsSupported()
+     {
+         if (PHP_VERSION == '5.4.29' || PHP_VERSION == '5.5.13' ||
+-            version_compare(PHP_VERSION, '5.6.0', '>=')) {
++            version_compare(PHP_VERSION, '5.6.0-dev', '>=')) {
+             return FALSE;
+         }
+ 
+-- 
+1.9.3
+
+
+From a7dfbd7aa63570a789e0bfaec15046071b33483a Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 12 Jun 2014 09:08:22 +0200
+Subject: [PATCH 2/2] fix unzerialize regression in most of the case
+
+---
+ src/Framework/MockObject/Generator.php | 26 +++++---------------------
+ 1 file changed, 5 insertions(+), 21 deletions(-)
+
+diff --git a/src/Framework/MockObject/Generator.php b/src/Framework/MockObject/Generator.php
+index b2d99b5..7e2983c 100644
+--- a/src/Framework/MockObject/Generator.php
++++ b/src/Framework/MockObject/Generator.php
+@@ -274,15 +274,13 @@ protected function getObject($code, $className, $type = '', $callOriginalConstru
+             $class      = new ReflectionClass($className);
+             $isInternal = $this->isInternalClass($class);
+ 
+-            if ($isInternal && !$this->unserializeHackIsSupported()) {
+-                throw new PHPUnit_Framework_MockObject_RuntimeException(
+-                    'Internal classes cannot be mocked without invoking their constructor in PHP ' . PHP_VERSION
+-                );
+-            }
+-
+             if ($isInternal || !$hasNewInstanceWithoutConstructor) {
+                 $object = unserialize(
+-                    sprintf('O:%d:"%s":0:{}', strlen($className), $className)
++                    sprintf('%s:%d:"%s":0:{}',
++                        (version_compare(PHP_VERSION, '5.4', '>') && $class->implementsInterface("Serializable") ? "C" : "O"),
++                        strlen($className),
++                        $className
++                    )
+                 );
+             } else {
+                 $object = $class->newInstanceWithoutConstructor();
+@@ -1097,18 +1095,4 @@ private function isInternalClass(ReflectionClass $class)
+ 
+         return false;
+     }
+-
+-    /**
+-     * @return boolean
+-     * @since  Method available since Release 2.0.9
+-     */
+-    private function unserializeHackIsSupported()
+-    {
+-        if (PHP_VERSION == '5.4.29' || PHP_VERSION == '5.5.13' ||
+-            version_compare(PHP_VERSION, '5.6.0-dev', '>=')) {
+-            return FALSE;
+-        }
+-
+-        return TRUE;
+-    }
+ }
+-- 
+1.9.3
+
