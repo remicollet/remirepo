@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    14f284eede050859e72ac41064df0eac25327190
+%global gh_commit    5ee3adf5441c2fe53b8ceacff6db81e621ee884c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-event
@@ -14,10 +14,10 @@
 
 Name:           php-%{gh_project}
 Summary:        Lightweight library for event-based programming
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 
-URL:            https://github.com/%{gh_owner}/%{gh_project}
+URL:            http://sabre.io/event
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 License:        BSD
 Group:          Development/Libraries
@@ -26,12 +26,14 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.4.1
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:  php-phpunit-PHPUnit
 %endif
 
 # From composer.json
 Requires:       php(language) >= 5.4.1
 # From phpcompatinfo report: nothing else
+
+Provides:       php-composer(sabre/event) = %{version}
 
 
 %description
@@ -82,5 +84,10 @@ phpunit \
 
 
 %changelog
+* Fri Jun 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1
+- add provides php-composer(sabre/event)
+- change url to http://sabre.io/event
+
 * Tue Dec 31 2013 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Initial packaging
