@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    be5f237df860da88a7cfe247594232cae61845df
+%global gh_commit    939cb801b3b2aa253aedd0b279f40bb8f35cec91
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.1.2
+Version:        4.1.3
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -37,7 +37,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 BuildRequires:  php-phpunit-File-Iterator >= 1.3.1
-BuildRequires:  php-phpunit-Text-Template >= 1.2
+BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-phpunit-PHP-CodeCoverage >= 2.0
 BuildRequires:  php-phpunit-PHP-Timer >= 1.0.2
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.1
@@ -51,7 +51,7 @@ BuildRequires:  php-phpunit-PHP-Invoker >= 1.1.0
 
 # From composer.json
 Requires:       php-phpunit-File-Iterator >= 1.3.1
-Requires:       php-phpunit-Text-Template >= 1.2
+Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-phpunit-PHP-CodeCoverage >= 2.0
 Requires:       php-phpunit-PHP-Timer >= 1.0.2
 Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.1
@@ -156,6 +156,9 @@ fi
 
 
 %changelog
+* Fri Jun 13 2014 Remi Collet <remi@fedoraproject.org> - 4.1.3-1
+- Update to 4.1.3
+
 * Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 4.1.2-1
 - Update to 4.1.2 (no change)
 - improve test suite bootstraping
