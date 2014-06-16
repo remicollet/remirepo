@@ -24,7 +24,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.10
+Version:          2.8.11
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -236,6 +236,10 @@ fi
 
 
 %changelog
+* Mon Jun 16 2014 Remi Collet <remi@fedoraproject.org> - 2.8.11-1
+- Redis 2.8.11 - Release date: 11 Jun 2014
+  upgrade urgency: HIGH if you use Lua scripting, LOW otherwise.
+
 * Fri Jun  6 2014 Remi Collet <remi@fedoraproject.org> - 2.8.10-1
 - Redis 2.8.10 - Release date: 5 Jun 2014
   upgrade urgency: HIGH if you use min-slaves-to-write option.
