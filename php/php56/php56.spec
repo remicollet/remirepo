@@ -124,7 +124,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.11.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.12.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -203,6 +203,7 @@ Patch302: php-5.6.0-noNO.patch
 Patch303: php-5.6.0-openssl.patch
 
 # WIP
+Patch400: php-serialize.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -937,6 +938,7 @@ rm -rf ext/json
 %patch303 -p0 -b .md4md5
 
 # WIP patch
+%patch400 -p0 -b .serialize
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1926,6 +1928,9 @@ fi
 
 
 %changelog
+* Mon Jun 16 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.12.beta4
+- test build for serialize
+
 * Tue Jun 10 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.11.beta4
 - test build for bug 67410, 67411, 67412, 67413
 - fix 67392, dtrace breaks argument unpack
