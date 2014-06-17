@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Diff
-Version:        2.0.2
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Engine for performing and rendering text diffs
 
@@ -108,6 +108,9 @@ fi
 
 
 %changelog
+* Tue Jun 17 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 
