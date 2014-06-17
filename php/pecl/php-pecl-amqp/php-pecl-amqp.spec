@@ -40,6 +40,7 @@ BuildRequires: rabbitmq-server
 
 Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:         %{?scl_prefix}php(api) = %{php_core_api}
+Requires:         librabbitmq
 Requires(post):   %{__pecl}
 Requires(postun): %{__pecl}
 
