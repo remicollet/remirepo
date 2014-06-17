@@ -83,7 +83,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.30
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 3%{?dist}
 %endif
@@ -140,6 +140,8 @@ Patch47: php-5.4.9-phpinfo.patch
 # Security fixes
 
 # Fixes for tests
+# see https://bugzilla.redhat.com/971416
+Patch302: php-5.4.30-noNO.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
@@ -803,6 +805,9 @@ rm -f ext/json/utf8_to_utf16.*
 # upstream patches
 
 # security patches
+
+# Fixes for tests
+%patch302 -p0 -b .971416
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1649,6 +1654,9 @@ fi
 
 
 %changelog
+* Tue Jun 17 2014 Remi Collet <rcollet@redhat.com> 5.4.30-0.2.RC1
+- fix test for rhbz #971416
+
 * Tue Jun 17 2014 Remi Collet <rcollet@redhat.com> 5.4.30-0.1.RC1
 - Test build of 5.4.30RC1
 

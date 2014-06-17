@@ -124,7 +124,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.14
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 3%{?dist}
 %endif
@@ -193,6 +193,8 @@ Patch91: php-5.3.7-oci8conf.patch
 # Fixes for tests (300+)
 # Revert change for pcre 8.34
 Patch301: php-5.5.10-pcre834.patch
+# see https://bugzilla.redhat.com/971416
+Patch302: php-5.5.14-noNO.patch
 
 # WIP
 
@@ -914,6 +916,7 @@ rm -rf ext/json
 %patch301 -p1 -R -b .pcre84
 %endif
 %endif
+%patch302 -p0 -b .971416
 
 # WIP patch
 
@@ -1894,6 +1897,9 @@ fi
 
 
 %changelog
+* Tue Jun 17 2014 Remi Collet <rcollet@redhat.com> 5.5.14-0.2.RC1
+- fix test for rhbz #971416
+
 * Tue Jun 17 2014 Remi Collet <rcollet@redhat.com> 5.5.14-0.1.RC1
 - Test build of 5.5.14RC1
 
