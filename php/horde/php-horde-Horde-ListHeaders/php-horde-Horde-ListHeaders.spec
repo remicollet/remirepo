@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-ListHeaders
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        Horde List Headers Parsing Library
 
@@ -57,7 +57,7 @@ cd %{pear_name}-%{version}
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
-touch ../package.xml %{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -125,6 +125,9 @@ fi
 
 
 %changelog
+* Tue Jun 17 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- Update to 1.1.4
+
 * Tue Jun 10 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3
 - regenerate locales during build
