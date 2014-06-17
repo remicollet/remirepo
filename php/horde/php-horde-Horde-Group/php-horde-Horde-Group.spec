@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Group
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde User Groups System
 
@@ -58,7 +58,7 @@ Package for managing and accessing the Horde groups system.
 tar xif %{SOURCE0}
 
 cd %{pear_name}-%{version}
-cp ../package.xml %{name}.xml
+cp -p ../package.xml %{name}.xml
 
 
 %build
@@ -108,6 +108,9 @@ fi
 
 
 %changelog
+* Tue Jun 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 
