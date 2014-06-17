@@ -77,11 +77,11 @@
 %endif
 
 #global snapdate      201201041830
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.29
+Version: 5.4.30
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -136,9 +136,6 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Upstream fixes
-Patch100: php-reg67072.patch
-Patch101: php-bug67326.patch
-Patch102: php-reg67118.patch
 
 # Security fixes
 
@@ -804,9 +801,6 @@ rm -f ext/json/utf8_to_utf16.*
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .reg67072
-%patch101 -p1 -b .bug67326
-%patch102 -p1 -b .reg67118
 
 # security patches
 
@@ -1655,6 +1649,9 @@ fi
 
 
 %changelog
+* Tue Jun 17 2014 Remi Collet <rcollet@redhat.com> 5.4.30-0.1.RC1
+- Test build of 5.4.30RC1
+
 * Thu Jun  5 2014 Remi Collet <rcollet@redhat.com> 5.4.29-3
 - fix regression introduce in fix for #67118
 
