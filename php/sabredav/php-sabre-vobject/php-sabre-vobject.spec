@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a829266cebcaccf602bde3af2c7e85a952034a16
+%global gh_commit    5dc71fbb70200398d2e280437665260d40820a62
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-vobject
@@ -14,10 +14,10 @@
 
 Name:           php-%{gh_project}
 Summary:        Library to parse and manipulate iCalendar and vCard objects
-Version:        3.2.2
+Version:        3.2.3
 Release:        1%{?dist}
 
-URL:            https://github.com/%{gh_owner}/%{gh_project}
+URL:            http://sabre.io/vobject/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 License:        BSD
 Group:          Development/Libraries
@@ -41,6 +41,8 @@ Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-xml
+
+Provides:       php-composer(sabre/vobject) = %{version}
 
 
 %description
@@ -104,6 +106,11 @@ phpunit \
 
 
 %changelog
+* Wed Jun 18 2014 Remi Collet <remi@fedoraproject.org> - 3.2.3-1
+- update to 3.2.3
+- add provides php-composer(sabre/vobject)
+- url is now http://sabre.io/vobject/
+
 * Fri May  9 2014 Remi Collet <remi@fedoraproject.org> - 3.2.2-1
 - update to 3.2.2
 
