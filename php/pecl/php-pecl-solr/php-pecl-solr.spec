@@ -25,7 +25,7 @@
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?scl_prefix}php-pecl-solr
-Version:        1.0.2
+Version:        1.1.0
 Release:        9%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -269,6 +269,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 19 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-9
 - add numerical prefix to extension configuration file (php 5.6)
 
