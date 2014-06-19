@@ -118,13 +118,13 @@
 %endif
 
 #global snapdate      201405061030
-%global rcver         beta4
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.12.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.13.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -185,12 +185,6 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-reg67118.patch
-Patch101: php-bug67392.patch
-Patch102: php-bug67410.patch
-Patch103: php-bug67411.patch
-Patch104: php-bug67412.patch
-Patch105: php-bug67413.patch
 
 # Security fixes (200+)
 
@@ -199,11 +193,8 @@ Patch105: php-bug67413.patch
 Patch301: php-5.6.0-oldpcre.patch
 # see https://bugzilla.redhat.com/971416
 Patch302: php-5.6.0-noNO.patch
-# modern distro refuse to verify md4/md5 digests
-Patch303: php-5.6.0-openssl.patch
 
 # WIP
-Patch400: php-serialize.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -918,12 +909,6 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .reg67118
-%patch101 -p1 -b .bug67392
-%patch102 -p1 -b .bug67410
-%patch103 -p1 -b .bug67411
-%patch104 -p1 -b .bug67412
-%patch105 -p1 -b .bug67413
 
 # security patches
 
@@ -935,10 +920,8 @@ rm -rf ext/json
 %endif
 %endif
 %patch302 -p0 -b .971416
-%patch303 -p0 -b .md4md5
 
 # WIP patch
-%patch400 -p0 -b .serialize
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1928,6 +1911,9 @@ fi
 
 
 %changelog
+* Thu Jun 19 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.13.RC1
+- php 5.6.0RC1
+
 * Mon Jun 16 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.12.beta4
 - test build for serialize
 
