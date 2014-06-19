@@ -214,7 +214,7 @@ BuildRequires: pcre-devel >= 8.20
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
 %if %{with_libzip}
-BuildRequires: libzip-devel >= 0.10
+BuildRequires: libzip-devel >= 0.11
 %endif
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel
@@ -586,16 +586,16 @@ The php-soap package contains a dynamic shared object that will add
 support to PHP for using the SOAP web services protocol.
 
 %package interbase
-Summary: 	A module for PHP applications that use Interbase/Firebird databases
-Group: 		Development/Languages
+Summary: A module for PHP applications that use Interbase/Firebird databases
+Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 BuildRequires:  firebird-devel
-Requires: 	php-pdo%{?_isa} = %{version}-%{release}
-Provides: 	php_database
-Provides: 	php-firebird, php-firebird%{?_isa}
-Provides: 	php-pdo_firebird, php-pdo_firebird%{?_isa}
-Obsoletes:  php53-interbase, php53u-interbase, php54-interbase, php55u-interbase, php56u-interbase
+Requires: php-pdo%{?_isa} = %{version}-%{release}
+Provides: php_database
+Provides: php-firebird, php-firebird%{?_isa}
+Provides: php-pdo_firebird, php-pdo_firebird%{?_isa}
+Obsoletes: php53-interbase, php53u-interbase, php54-interbase, php55u-interbase, php56u-interbase
 
 %description interbase
 The php-interbase package contains a dynamic shared object that will add
@@ -714,7 +714,6 @@ BuildRequires: gd-devel >= 2.1.0
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: freetype-devel
-BuildRequires: libXpm-devel
 BuildRequires: libXpm-devel
 %if %{with_vpx}
 BuildRequires: libvpx-devel
@@ -1078,6 +1077,7 @@ fi
 # pcntl, readline: only used by CLI sapi
 # openssl: for PHAR_SIG_OPENSSL
 # zlib: used by image
+
 ln -sf ../configure
 %configure \
     --cache-file=../config.cache \
@@ -1556,7 +1556,8 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
 %if %{with_zip}
     zip \
 %endif
-    %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
+    %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} \
+    interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
     sqlite3 \
 %endif
@@ -1578,6 +1579,7 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
         # Extensions with no dependency
         ini=20-${mod}.ini;;
     esac
+    # some extensions have their own config file
     if [ -f ${ini} ]; then
       cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini}
       cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini}
@@ -1601,7 +1603,6 @@ EOF
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${ini}
 %endif
 EOF
-
 done
 
 # The dom, xsl and xml* modules are all packaged in php-xml
@@ -1613,6 +1614,7 @@ cat files.dom files.xsl files.xml{reader,writer} files.wddx \
 cat files.mysqli >> files.mysql
 cat files.pdo_mysql >> files.mysql
 %endif
+
 # mysqlnd
 cat files.mysqlnd_mysql \
     files.mysqlnd_mysqli \
@@ -1855,7 +1857,6 @@ fi
 %{_bindir}/zts-php-config
 %{_includedir}/php-zts
 %{_bindir}/zts-phpize
-# usefull only to test other module during build
 %{_libdir}/php-zts/build
 %endif
 %{_mandir}/man1/php-config.1*
