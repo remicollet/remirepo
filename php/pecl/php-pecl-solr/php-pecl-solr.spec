@@ -26,12 +26,21 @@ Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?scl_prefix}php-pecl-solr
 Version:        1.1.0
-Release:        9%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
 
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# http://git.php.net/?p=pecl/search_engine/solr.git;a=blob_plain;f=tests/bootstrap.inc;hb=333d932e89f7032260be8069dbf3c26a2fd34a9c
+Source1:        bootstrap.inc
+# http://git.php.net/?p=pecl/search_engine/solr.git;a=blob_plain;f=tests/test.config.inc;hb=333d932e89f7032260be8069dbf3c26a2fd34a9c
+Source2:        test.config.inc
+# http://git.php.net/?p=pecl/search_engine/solr.git;a=blob_plain;f=tests/skip.if.server_not_configured.inc;hb=333d932e89f7032260be8069dbf3c26a2fd34a9c
+Source3:        skip.if.server_not_configured.inc
+# http://git.php.net/?p=pecl/search_engine/solr.git;a=blob_plain;f=tests/files/response_xml.1.xml;hb=333d932e89f7032260be8069dbf3c26a2fd34a9c
+Source4:        response_xml.1.xml
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -135,11 +144,13 @@ PECL Solr 2 est disponible dans le paquet php-pecl-solr2.
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
 
-# Fix version
-sed -i -e '/PHP_SOLR_DOTTED_VERSION/s/1.0.1/1.0.2/' php_solr_version.h
+# Restore missing file in archive
+cp %{SOURCE1} %{SOURCE2} %{SOURCE3} tests/
+mkdir tests/files
+cp %{SOURCE4} tests/files/
 
 # Check version
-extver=$(sed -n '/#define PHP_SOLR_DOTTED_VERSION/{s/.* "//;s/".*$//;p}' php_solr_version.h)
+extver=$(sed -n '/#define PHP_SOLR_VERSION /{s/.* "//;s/".*$//;p}' php_solr_version.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
    exit 1
@@ -270,7 +281,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Thu Jun 19 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
-- Update to 1.1.0
+- Update to 1.1.0 (stable)
 
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-9
 - add numerical prefix to extension configuration file (php 5.6)

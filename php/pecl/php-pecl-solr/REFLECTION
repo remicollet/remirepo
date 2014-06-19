@@ -1,15 +1,15 @@
-Extension [ <persistent> extension #162 solr version 1.0.2 ] {
+Extension [ <persistent> extension #162 solr version 1.1.0 ] {
 
   - Dependencies {
-    Dependency [ curl (Required) ]
     Dependency [ libxml (Required) ]
+    Dependency [ json (Required) ]
   }
 
   - Constants [4] {
     Constant [ integer SOLR_MAJOR_VERSION ] { 1 }
-    Constant [ integer SOLR_MINOR_VERSION ] { 0 }
-    Constant [ integer SOLR_PATCH_VERSION ] { 1 }
-    Constant [ string SOLR_EXTENSION_VERSION ] { 1.0.2 }
+    Constant [ integer SOLR_MINOR_VERSION ] { 1 }
+    Constant [ integer SOLR_PATCH_VERSION ] { 0 }
+    Constant [ string SOLR_EXTENSION_VERSION ] { 1.1.0 }
   }
 
   - Functions {
@@ -20,7 +20,7 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
     }
   }
 
-  - Classes [18] {
+  - Classes [19] {
     Class [ <internal:solr> final class SolrObject implements ArrayAccess ] {
 
       - Constants [0] {
@@ -85,7 +85,7 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
       }
     }
 
-    Class [ <internal:solr> <iterateable> class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializable ] {
+    Class [ <internal:solr> <iterateable> final class SolrDocument implements ArrayAccess, Iterator, Traversable, Serializable ] {
 
       - Constants [6] {
         Constant [ integer SORT_DEFAULT ] { 1 }
@@ -335,7 +335,7 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
       }
     }
 
-    Class [ <internal:solr> class SolrInputDocument ] {
+    Class [ <internal:solr> final class SolrInputDocument ] {
 
       - Constants [6] {
         Constant [ integer SORT_DEFAULT ] { 1 }
@@ -489,17 +489,19 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
 
     Class [ <internal:solr> class SolrClient ] {
 
-      - Constants [10] {
+      - Constants [12] {
         Constant [ integer SEARCH_SERVLET_TYPE ] { 1 }
         Constant [ integer UPDATE_SERVLET_TYPE ] { 2 }
         Constant [ integer THREADS_SERVLET_TYPE ] { 4 }
         Constant [ integer PING_SERVLET_TYPE ] { 8 }
         Constant [ integer TERMS_SERVLET_TYPE ] { 16 }
+        Constant [ integer SYSTEM_SERVLET_TYPE ] { 32 }
         Constant [ string DEFAULT_SEARCH_SERVLET ] { select }
         Constant [ string DEFAULT_UPDATE_SERVLET ] { update }
         Constant [ string DEFAULT_THREADS_SERVLET ] { admin/threads }
         Constant [ string DEFAULT_PING_SERVLET ] { admin/ping }
         Constant [ string DEFAULT_TERMS_SERVLET ] { terms }
+        Constant [ string DEFAULT_SYSTEM_SERVLET ] { admin/system }
       }
 
       - Static properties [0] {
@@ -512,7 +514,7 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
         Property [ <default> private $_hashtable_index ]
       }
 
-      - Methods [22] {
+      - Methods [23] {
         Method [ <internal:solr, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -627,10 +629,11 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
 
         Method [ <internal:solr> public method &commit ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <optional> $maxSegments ]
             Parameter #1 [ <optional> $waitFlush ]
             Parameter #2 [ <optional> $waitSearcher ]
+            Parameter #3 [ <optional> $expungeDeletes ]
           }
         }
 
@@ -650,6 +653,12 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
         }
 
         Method [ <internal:solr> public method &ping ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &system ] {
 
           - Parameters [0] {
           }
@@ -2140,7 +2149,7 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
       }
     }
 
-    Class [ <internal:solr> class SolrQueryResponse extends SolrResponse ] {
+    Class [ <internal:solr> final class SolrQueryResponse extends SolrResponse ] {
 
       - Constants [2] {
         Constant [ integer PARSE_SOLR_OBJ ] { 0 }
@@ -2249,7 +2258,7 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
       }
     }
 
-    Class [ <internal:solr> class SolrUpdateResponse extends SolrResponse ] {
+    Class [ <internal:solr> final class SolrUpdateResponse extends SolrResponse ] {
 
       - Constants [2] {
         Constant [ integer PARSE_SOLR_OBJ ] { 0 }
@@ -2358,7 +2367,7 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
       }
     }
 
-    Class [ <internal:solr> class SolrPingResponse extends SolrResponse ] {
+    Class [ <internal:solr> final class SolrPingResponse extends SolrResponse ] {
 
       - Constants [2] {
         Constant [ integer PARSE_SOLR_OBJ ] { 0 }
@@ -2467,7 +2476,7 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
       }
     }
 
-    Class [ <internal:solr> class SolrGenericResponse extends SolrResponse ] {
+    Class [ <internal:solr> final class SolrGenericResponse extends SolrResponse ] {
 
       - Constants [2] {
         Constant [ integer PARSE_SOLR_OBJ ] { 0 }
@@ -2584,7 +2593,7 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
       - Static properties [0] {
       }
 
-      - Static methods [4] {
+      - Static methods [5] {
         Method [ <internal:solr> static public method escapeQueryChars ] {
 
           - Parameters [1] {
@@ -2604,6 +2613,13 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $xmlresponse ]
             Parameter #1 [ <optional> $parse_mode ]
+          }
+        }
+
+        Method [ <internal:solr> static public method digestJsonResponse ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $jsonResponse ]
           }
         }
 
@@ -2811,6 +2827,69 @@ Extension [ <persistent> extension #162 solr version 1.0.2 ] {
     }
 
     Class [ <internal:solr> class SolrClientException extends SolrException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [7] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+        Property [ <default> protected $sourceline ]
+        Property [ <default> protected $sourcefile ]
+        Property [ <default> protected $zif_name ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:solr, overwrites SolrException, prototype SolrException> public method getInternalInfo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:solr> class SolrServerException extends SolrException ] {
 
       - Constants [0] {
       }
