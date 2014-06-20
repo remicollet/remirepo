@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #135 swoole version 1.7.2 ] {
+Extension [ <persistent> extension #141 swoole version 1.7.3 ] {
 
   - INI {
     Entry [ swoole.task_worker_num <ALL> ]
@@ -12,6 +12,9 @@ Extension [ <persistent> extension #135 swoole version 1.7.2 ] {
     }
     Entry [ swoole.message_queue_key <ALL> ]
       Current = '0'
+    }
+    Entry [ swoole.unixsock_buffer_size <ALL> ]
+      Current = '8388608'
     }
   }
 
@@ -50,7 +53,7 @@ Extension [ <persistent> extension #135 swoole version 1.7.2 ] {
     Constant [ integer SWOOLE_HOST ] { 16 }
     Constant [ integer SWOOLE_SHORT ] { 2 }
     Constant [ integer SWOOLE_INT ] { 4 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.2 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.3 }
   }
 
   - Functions {
@@ -314,7 +317,7 @@ Extension [ <persistent> extension #135 swoole version 1.7.2 ] {
       - Properties [0] {
       }
 
-      - Methods [19] {
+      - Methods [20] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -428,6 +431,13 @@ Extension [ <persistent> extension #135 swoole version 1.7.2 ] {
           }
         }
 
+        Method [ <internal:swoole> public method heartbeat ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $from_id ]
+          }
+        }
+
         Method [ <internal:swoole> public method handler ] {
 
           - Parameters [2] {
@@ -516,7 +526,7 @@ Extension [ <persistent> extension #135 swoole version 1.7.2 ] {
       - Properties [0] {
       }
 
-      - Methods [5] {
+      - Methods [6] {
         Method [ <internal:swoole, ctor> public method __construct ] {
         }
 
@@ -530,6 +540,9 @@ Extension [ <persistent> extension #135 swoole version 1.7.2 ] {
         }
 
         Method [ <internal:swoole> public method exit ] {
+        }
+
+        Method [ <internal:swoole> public method exec ] {
         }
       }
     }
