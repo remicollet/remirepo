@@ -99,9 +99,12 @@ ogólnego użytku. Wykonywanie danego kodu w ograniczonym środowisku
 mv runkit-%{gh_commit} NTS
 mv NTS/package.xml .
 
-%if 0%{?rhel} == 5
 sed -e 's/-Werror//' -i NTS/config.m4
-%endif
+
+# Quick fix for PHP 5.6
+# https://github.com/zenovich/runkit/issues/69
+sed -e 's/IS_CONSTANT_ARRAY/IS_CONSTANT_AST/' \
+    -i NTS/runkit_import.c NTS/runkit_props.c
 
 %if %{with_zts}
 # duplicate for ZTS build
