@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #162 solr version 1.1.0 ] {
+Extension [ <persistent> extension #169 solr version 1.1.1 ] {
 
   - Dependencies {
     Dependency [ libxml (Required) ]
@@ -8,8 +8,8 @@ Extension [ <persistent> extension #162 solr version 1.1.0 ] {
   - Constants [4] {
     Constant [ integer SOLR_MAJOR_VERSION ] { 1 }
     Constant [ integer SOLR_MINOR_VERSION ] { 1 }
-    Constant [ integer SOLR_PATCH_VERSION ] { 0 }
-    Constant [ string SOLR_EXTENSION_VERSION ] { 1.1.0 }
+    Constant [ integer SOLR_PATCH_VERSION ] { 1 }
+    Constant [ string SOLR_EXTENSION_VERSION ] { 1.1.1 }
   }
 
   - Functions {
