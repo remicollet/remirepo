@@ -1,7 +1,21 @@
+#
+# RPM spec file for php-doctrine-datafixtures
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner     doctrine
 %global github_name      data-fixtures
 %global github_version   1.0.0
 %global github_commit    b4a135c7db56ecc4602b54a2184368f440cac33e
+
+%global composer_vendor  doctrine
+%global composer_project data-fixtures
 
 # "php": ">=5.3.2"
 %global php_min_ver      5.3.2
@@ -9,9 +23,12 @@
 %global doctrine_min_ver 2.2
 %global doctrine_max_ver 2.5
 
-Name:          php-doctrine-datafixtures
+# Build using "--without tests" to disable tests
+%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+
+Name:          php-%{composer_vendor}-datafixtures
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       4%{?dist}
 Summary:       Data Fixtures for all Doctrine Object Managers
 
 Group:         Development/Libraries
@@ -21,28 +38,33 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+%if %{with_tests}
 # For tests
-BuildRequires: php(language)       >= %{php_min_ver}
-BuildRequires: php-doctrine-common >= %{doctrine_min_ver}
-BuildRequires: php-doctrine-common <  %{doctrine_max_ver}
-BuildRequires: php-doctrine-orm    >= %{doctrine_min_ver}
-BuildRequires: php-doctrine-orm    <  %{doctrine_max_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires: php(language)                 >= %{php_min_ver}
+BuildRequires: php-composer(doctrine/common) >= %{doctrine_min_ver}
+BuildRequires: php-composer(doctrine/common) <  %{doctrine_max_ver}
+BuildRequires: php-composer(doctrine/orm)    >= %{doctrine_min_ver}
+BuildRequires: php-composer(doctrine/orm)    <  %{doctrine_max_ver}
+BuildRequires: php-phpunit-PHPUnit
 # For tests: phpcompatinfo (computed from v1.0.0)
 BuildRequires: php-json
 BuildRequires: php-reflection
 BuildRequires: php-spl
+%endif
 
-Requires:      php(language)       >= %{php_min_ver}
-Requires:      php-doctrine-common >= %{doctrine_min_ver}
-Requires:      php-doctrine-common <  %{doctrine_max_ver}
+Requires:      php(language)                 >= %{php_min_ver}
+Requires:      php-composer(doctrine/common) >= %{doctrine_min_ver}
+Requires:      php-composer(doctrine/common) <  %{doctrine_max_ver}
 # Optional
-Requires:      php-doctrine-orm    >= %{doctrine_min_ver}
-Requires:      php-doctrine-orm    <  %{doctrine_max_ver}
+Requires:      php-composer(doctrine/orm)    >= %{doctrine_min_ver}
+Requires:      php-composer(doctrine/orm)    <  %{doctrine_max_ver}
 # phpcompatinfo (computed from v1.0.0)
 Requires:      php-json
 Requires:      php-reflection
 Requires:      php-spl
+
+# Composer
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 This extension aims to provide a simple way to manage and execute the loading
@@ -50,7 +72,7 @@ of data fixtures for the Doctrine ORM or ODM.
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -65,6 +87,7 @@ cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
 
 %check
+%if %{with_tests}
 # Rewrite tests' bootstrap
 cat > tests/bootstrap.php <<'BOOTSTRAP'
 <?php
@@ -86,6 +109,9 @@ sed 's#function testReferenceReconstruction#function SKIP_testReferenceReconstru
 sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
+%else
+: Tests skipped
+%endif
 
 
 %clean
@@ -99,6 +125,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 21 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-4
+- Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
+- Added option to build without tests ("--without tests")
+- Updated Doctrine dependencies to use php-composer virtual provides
+
 * Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 1.0.0-2
 - backport for remi repo
 
