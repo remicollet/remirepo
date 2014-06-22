@@ -1,16 +1,30 @@
-%global github_owner   doctrine
-%global github_name    lexer
-%global github_version 1.0
-%global github_commit  f12a5f74e5f4a9e3f558f3288504e121edfad891
+#
+# RPM spec file for php-doctrine-lexer
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
+%global github_owner     doctrine
+%global github_name      lexer
+%global github_version   1.0
+%global github_commit    f12a5f74e5f4a9e3f558f3288504e121edfad891
 # Additional commits after v1.0 tag
-%global github_release .20131220git%(c=%{github_commit}; echo ${c:0:7})
+%global github_release   .20131220git%(c=%{github_commit}; echo ${c:0:7})
+
+%global composer_vendor  doctrine
+%global composer_project lexer
 
 # "php": ">=5.3.2"
-%global php_min_ver    5.3.2
+%global php_min_ver      5.3.2
 
-Name:          php-%{github_owner}-%{github_name}
+Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       4%{?github_release}%{?dist}
 Summary:       Base library for a lexer that can be used in top-down, recursive descent parsers
 
 Group:         Development/Libraries
@@ -26,6 +40,9 @@ Requires:      php(language) >= %{php_min_ver}
 Requires:      php-pcre
 Requires:      php-reflection
 
+# Composer
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+
 %description
 Base library for a lexer that can be used in top-down, recursive descent
 parsers.
@@ -34,7 +51,7 @@ This lexer is used in Doctrine Annotations and in Doctrine ORM (DQL).
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -64,6 +81,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0-4.20131220gitf12a5f7
+- Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
+
 * Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 1.0-2.20131220gitf12a5f7
 - backport for remi repo
 
