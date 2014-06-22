@@ -1,7 +1,21 @@
+#
+# RPM spec file for php-doctrine-common
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner     doctrine
 %global github_name      common
 %global github_version   2.4.2
 %global github_commit    5db6ab40e4c531f14dad4ca96a394dfce5d4255b
+
+%global composer_vendor  doctrine
+%global composer_project common
 
 # "php": ">=5.3.2"
 %global php_min_ver      5.3.2
@@ -9,9 +23,12 @@
 %global doctrine_min_ver 1.0
 %global doctrine_max_ver 2.0
 
-Name:          php-%{github_owner}-%{github_name}
+# Build using "--without tests" to disable tests
+%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+
+Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       Common library for Doctrine projects
 
 Group:         Development/Libraries
@@ -21,43 +38,47 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+%if %{with_tests}
 # For tests
-BuildRequires: php(language)            >= %{php_min_ver}
-BuildRequires: php-doctrine-annotations >= %{doctrine_min_ver}
-BuildRequires: php-doctrine-annotations <  %{doctrine_max_ver}
-BuildRequires: php-doctrine-cache       >= %{doctrine_min_ver}
-BuildRequires: php-doctrine-cache       <  %{doctrine_max_ver}
-BuildRequires: php-doctrine-collections >= %{doctrine_min_ver}
-BuildRequires: php-doctrine-collections <  %{doctrine_max_ver}
-BuildRequires: php-doctrine-inflector   >= %{doctrine_min_ver}
-BuildRequires: php-doctrine-inflector   <  %{doctrine_max_ver}
-BuildRequires: php-doctrine-lexer       >= %{doctrine_min_ver}
-BuildRequires: php-doctrine-lexer       <  %{doctrine_max_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires: php(language)                      >= %{php_min_ver}
+BuildRequires: php-composer(doctrine/annotations) >= %{doctrine_min_ver}
+BuildRequires: php-composer(doctrine/annotations) <  %{doctrine_max_ver}
+BuildRequires: php-composer(doctrine/cache)       >= %{doctrine_min_ver}
+BuildRequires: php-composer(doctrine/cache)       <  %{doctrine_max_ver}
+BuildRequires: php-composer(doctrine/collections) >= %{doctrine_min_ver}
+BuildRequires: php-composer(doctrine/collections) <  %{doctrine_max_ver}
+BuildRequires: php-composer(doctrine/inflector)   >= %{doctrine_min_ver}
+BuildRequires: php-composer(doctrine/inflector)   <  %{doctrine_max_ver}
+BuildRequires: php-composer(doctrine/lexer)       >= %{doctrine_min_ver}
+BuildRequires: php-composer(doctrine/lexer)       <  %{doctrine_max_ver}
+BuildRequires: php-phpunit-PHPUnit
 # For tests: phpcompatinfo (computed from version 2.4.2)
 BuildRequires: php-date
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
+%endif
 
-Requires:      php(language)            >= %{php_min_ver}
-Requires:      php-doctrine-annotations >= %{doctrine_min_ver}
-Requires:      php-doctrine-annotations <  %{doctrine_max_ver}
-Requires:      php-doctrine-cache       >= %{doctrine_min_ver}
-Requires:      php-doctrine-cache       <  %{doctrine_max_ver}
-Requires:      php-doctrine-collections >= %{doctrine_min_ver}
-Requires:      php-doctrine-collections <  %{doctrine_max_ver}
-Requires:      php-doctrine-inflector   >= %{doctrine_min_ver}
-Requires:      php-doctrine-inflector   <  %{doctrine_max_ver}
-Requires:      php-doctrine-lexer       >= %{doctrine_min_ver}
-Requires:      php-doctrine-lexer       <  %{doctrine_max_ver}
+Requires:      php(language)                      >= %{php_min_ver}
+Requires:      php-composer(doctrine/annotations) >= %{doctrine_min_ver}
+Requires:      php-composer(doctrine/annotations) <  %{doctrine_max_ver}
+Requires:      php-composer(doctrine/cache)       >= %{doctrine_min_ver}
+Requires:      php-composer(doctrine/cache)       <  %{doctrine_max_ver}
+Requires:      php-composer(doctrine/collections) >= %{doctrine_min_ver}
+Requires:      php-composer(doctrine/collections) <  %{doctrine_max_ver}
+Requires:      php-composer(doctrine/inflector)   >= %{doctrine_min_ver}
+Requires:      php-composer(doctrine/inflector)   <  %{doctrine_max_ver}
+Requires:      php-composer(doctrine/lexer)       >= %{doctrine_min_ver}
+Requires:      php-composer(doctrine/lexer)       <  %{doctrine_max_ver}
 # phpcompatinfo (computed from version 2.4.2)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
 Requires:      php-tokenizer
 
+# Composer
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 # PEAR
 Provides:      php-pear(pear.doctrine-project.org/DoctrineCommon) = %{version}
 # Rename
@@ -70,7 +91,7 @@ functionality.
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -84,6 +105,7 @@ cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
 
 %check
+%if %{with_tests}
 # Create tests' init
 cat > tests/Doctrine/Tests/TestInit.php <<'TESTINIT'
 <?php
@@ -103,6 +125,9 @@ TESTINIT
 sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
+%else
+: Tests skipped
+%endif
 
 
 %clean
@@ -120,6 +145,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.2-3
+- Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
+- Added option to build without tests ("--without tests")
+- Updated dependencies to use php-composer virtual provides
+
 * Mon May 26 2014 Remi Collet <rpms@famillecollet.com> 2.4.2-1
 - backport 2.4.2 for remi repo
 
