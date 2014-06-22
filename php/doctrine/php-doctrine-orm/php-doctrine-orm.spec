@@ -1,7 +1,22 @@
-%global github_owner   doctrine
-%global github_name    doctrine2
-%global github_version 2.4.2
-%global github_commit  0363a5548d9263f979f9ca149decb9cfc66419ab
+#
+# RPM spec file for php-doctrine-orm
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#                         Remi Collet <remi@fedoraproject.org>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
+%global github_owner     doctrine
+%global github_name      doctrine2
+%global github_version   2.4.2
+%global github_commit    0363a5548d9263f979f9ca149decb9cfc66419ab
+
+%global composer_vendor  doctrine
+%global composer_project orm
 
 # "php": ">=5.3.2"
 %global php_min_ver         5.3.2
@@ -16,9 +31,9 @@
 %global symfony_min_ver     2.1
 %global symfony_max_ver     3.0
 
-Name:      php-%{github_owner}-orm
+Name:      php-%{composer_vendor}-%{composer_project}
 Version:   %{github_version}
-Release:   2%{?dist}
+Release:   4%{?dist}
 Summary:   Doctrine Object-Relational-Mapper (ORM)
 
 Group:     Development/Libraries
@@ -36,15 +51,15 @@ Patch1:    %{name}-upstream.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
-Requires:  php(language)            >= %{php_min_ver}
-Requires:  php-doctrine-collections >= %{collections_min_ver}
-Requires:  php-doctrine-collections <  %{collections_max_ver}
-Requires:  php-doctrine-dbal        >= %{dbal_min_ver}
-Requires:  php-doctrine-dbal        <  %{dbal_max_ver}
-Requires:  php-symfony-console      >= %{symfony_min_ver}
-Requires:  php-symfony-console      <  %{symfony_max_ver}
-Requires:  php-symfony-yaml         >= %{symfony_min_ver}
-Requires:  php-symfony-yaml         <  %{symfony_max_ver}
+Requires:  php(language)                      >= %{php_min_ver}
+Requires:  php-composer(doctrine/collections) >= %{collections_min_ver}
+Requires:  php-composer(doctrine/collections) <  %{collections_max_ver}
+Requires:  php-composer(doctrine/dbal)        >= %{dbal_min_ver}
+Requires:  php-composer(doctrine/dbal)        <  %{dbal_max_ver}
+Requires:  php-symfony-console                >= %{symfony_min_ver}
+Requires:  php-symfony-console                <  %{symfony_max_ver}
+Requires:  php-symfony-yaml                   >= %{symfony_min_ver}
+Requires:  php-symfony-yaml                   <  %{symfony_max_ver}
 # phpcompatinfo (computed from v2.4.2)
 Requires:  php-ctype
 Requires:  php-dom
@@ -55,6 +70,8 @@ Requires:  php-simplexml
 Requires:  php-spl
 Requires:  php-tokenizer
 
+# Composer
+Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 # PEAR
 Provides:  php-pear(pear.doctrine-project.org/DoctrineORM) = %{version}
 # Rename
@@ -77,7 +94,7 @@ Optional caches (see Doctrine\ORM\Tools\Setup::createConfiguration()):
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 # Patch bin script
 %patch0 -p1
@@ -125,6 +142,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 21 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.2-4
+- Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
+- Updated Doctrine dependencies to use php-composer virtual provides
+
 * Fri May 30 2014 Remi Collet <remi@fedoraproject.org> 2.4.2-2
 - upstream fix for latest PHP (#1103219)
 
