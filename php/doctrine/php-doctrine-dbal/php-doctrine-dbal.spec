@@ -1,7 +1,22 @@
-%global github_owner   doctrine
-%global github_name    dbal
-%global github_version 2.4.2
-%global github_commit  fec965d330c958e175c39e61c3f6751955af32d0
+#
+# RPM spec file for php-doctrine-dbal
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#                         Adam Williamson <awilliam@redhat.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
+%global github_owner     doctrine
+%global github_name      dbal
+%global github_version   2.4.2
+%global github_commit    fec965d330c958e175c39e61c3f6751955af32d0
+
+%global composer_vendor  doctrine
+%global composer_project dbal
 
 # "php": ">=5.3.2"
 %global php_min_ver             5.3.2
@@ -12,9 +27,9 @@
 %global symfony_console_min_ver 2.0
 %global symfony_console_max_ver 3.0
 
-Name:      php-%{github_owner}-%{github_name}
+Name:      php-%{composer_vendor}-%{composer_project}
 Version:   %{github_version}
-Release:   2%{?github_release}%{?dist}
+Release:   4%{?github_release}%{?dist}
 Summary:   Doctrine Database Abstraction Layer (DBAL)
 
 Group:     Development/Libraries
@@ -25,16 +40,16 @@ Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_co
 # https://github.com/doctrine/dbal/commit/075c68b7518e27d46d7f700a1d42ebf43f6ebdfd
 # but immediately reverted in
 # https://github.com/doctrine/dbal/commit/894493b285c71a33e6ed29994ba415bad5e0a457
-Patch0:    php-doctrine-dbal-2.4.2-primary_index.patch
+Patch0:    %{name}-2.4.2-primary_index.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
-Requires:  php(language)       >= %{php_min_ver}
-Requires:  php-doctrine-common >= %{doctrine_common_min_ver}
-Requires:  php-doctrine-common <  %{doctrine_common_max_ver}
-Requires:  php-symfony-console >= %{symfony_console_min_ver}
-Requires:  php-symfony-console <  %{symfony_console_max_ver}
+Requires:  php(language)                 >= %{php_min_ver}
+Requires:  php-composer(doctrine/common) >= %{doctrine_common_min_ver}
+Requires:  php-composer(doctrine/common) <  %{doctrine_common_max_ver}
+Requires:  php-symfony-console           >= %{symfony_console_min_ver}
+Requires:  php-symfony-console           <  %{symfony_console_max_ver}
 # phpcompatinfo (computed from v2.4.2)
 Requires:  php-date
 Requires:  php-json
@@ -42,6 +57,8 @@ Requires:  php-pcre
 Requires:  php-pdo
 Requires:  php-spl
 
+# Composer
+Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 # PEAR
 Provides:  php-pear(pear.doctrine-project.org/DoctrineDBAL) = %{version}
 # Rename
@@ -61,7 +78,7 @@ extension under the hood.
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 %patch0 -p3 -b .primary_index
 
 # Make a single executable
@@ -107,6 +124,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.2-4
+- Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
+- Updated Doctrine dependencies to use php-composer virtual provides
+
 * Sat Jan 11 2014 Remi Collet <rpms@famillecollet.com> 2.4.2-2
 - backport for remi repo
 
