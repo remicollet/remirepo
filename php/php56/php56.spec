@@ -104,11 +104,8 @@
 %else
 %global with_libgd   1
 %endif
-%if 0%{?fedora} < 17 && 0%{?rhel} < 7
+
 %global with_libzip  0
-%else
-%global with_libzip  1
-%endif
 %global with_zip     0
 
 %if 0%{?fedora} < 18 && 0%{?rhel} < 7
@@ -124,7 +121,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.13.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.14.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -185,6 +182,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-phpdbg.patch
 
 # Security fixes (200+)
 
@@ -908,6 +906,7 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p0 -b .libedit
 
 # security patches
 
@@ -1912,6 +1911,9 @@ fi
 
 
 %changelog
+* Mon Jun 23 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.14.RC1
+- fix phpdbg with libedit https://bugs.php.net/67499
+
 * Thu Jun 19 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.13.RC1
 - php 5.6.0RC1
 

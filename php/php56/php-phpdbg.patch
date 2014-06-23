@@ -1,0 +1,120 @@
+diff -up sapi/phpdbg/config.m4.old sapi/phpdbg/config.m4
+--- sapi/phpdbg/config.m4.old	2014-06-23 09:42:29.381980030 +0200
++++ sapi/phpdbg/config.m4	2014-06-23 09:20:13.948592684 +0200
+@@ -21,7 +21,7 @@ if test "$PHP_PHPDBG" != "no"; then
+   PHP_PHPDBG_CFLAGS="-D_GNU_SOURCE"
+   PHP_PHPDBG_FILES="phpdbg.c phpdbg_parser.c phpdbg_lexer.c phpdbg_prompt.c phpdbg_help.c phpdbg_break.c phpdbg_print.c phpdbg_bp.c phpdbg_opcode.c phpdbg_list.c phpdbg_utils.c phpdbg_info.c phpdbg_cmd.c phpdbg_set.c phpdbg_frame.c phpdbg_watch.c phpdbg_btree.c"
+ 
+-  if test "$PHP_READLINE" != "no"; then
++  if test "$PHP_READLINE" != "no" -o  "$PHP_LIBEDIT" != "no"; then
+   	PHPDBG_EXTRA_LIBS="$PHP_READLINE_LIBS"
+   fi
+   
+diff -up sapi/phpdbg/phpdbg_cmd.c.old sapi/phpdbg/phpdbg_cmd.c
+--- sapi/phpdbg/phpdbg_cmd.c.old	2014-06-23 09:43:13.910158686 +0200
++++ sapi/phpdbg/phpdbg_cmd.c	2014-06-23 09:35:30.571299456 +0200
+@@ -792,7 +792,7 @@ PHPDBG_API int phpdbg_stack_execute(phpd
+ PHPDBG_API char* phpdbg_read_input(char *buffered TSRMLS_DC) /* {{{ */
+ {
+ 	char *cmd = NULL;
+-#ifndef HAVE_LIBREADLINE
++#if !defined(HAVE_LIBREADLINE) && !defined(HAVE_LIBEDIT)
+ 	char buf[PHPDBG_MAX_CMD];
+ #endif
+ 	char *buffer = NULL;
+@@ -811,7 +811,7 @@ disconnect:
+ 				return NULL;
+ 			}
+ 
+-#ifndef HAVE_LIBREADLINE
++#if !defined(HAVE_LIBREADLINE) && !defined(HAVE_LIBEDIT)
+ 			if (!(PHPDBG_G(flags) & PHPDBG_IS_REMOTE)) {
+ 				if (!phpdbg_write("%s", phpdbg_get_prompt(TSRMLS_C))) {
+ 					goto disconnect;
+@@ -850,7 +850,7 @@ readline:
+ 		
+ 		buffer = estrdup(cmd);
+ 
+-#ifdef HAVE_LIBREADLINE
++#if defined(HAVE_LIBREADLINE) || defined(HAVE_LIBEDIT)
+ 		if (!buffered && cmd &&
+ 			!(PHPDBG_G(flags) & PHPDBG_IS_REMOTE)) {
+ 			free(cmd);
+diff -up sapi/phpdbg/phpdbg.h.old sapi/phpdbg/phpdbg.h
+--- sapi/phpdbg/phpdbg.h.old	2014-06-23 09:42:47.364052178 +0200
++++ sapi/phpdbg/phpdbg.h	2014-06-23 09:22:20.941107800 +0200
+@@ -64,7 +64,7 @@
+ # include "TSRM.h"
+ #endif
+ 
+-#ifdef HAVE_LIBREADLINE
++#if defined(HAVE_LIBREADLINE) || defined(HAVE_LIBEDIT)
+ #   include <readline/readline.h>
+ #   include <readline/history.h>
+ #endif
+diff -up sapi/phpdbg/phpdbg_prompt.c.old sapi/phpdbg/phpdbg_prompt.c
+--- sapi/phpdbg/phpdbg_prompt.c.old	2014-06-23 09:43:04.216119792 +0200
++++ sapi/phpdbg/phpdbg_prompt.c	2014-06-23 09:32:02.850463053 +0200
+@@ -732,6 +732,11 @@ PHPDBG_COMMAND(print) /* {{{ */
+ #else
+ 	phpdbg_writeln("Readline\tno");
+ #endif
++#ifdef HAVE_LIBEDIT
++	phpdbg_writeln("Libedit\t\tyes");
++#else
++	phpdbg_writeln("Libedit\t\tno");
++#endif
+ 
+ 	phpdbg_writeln("Exec\t\t%s", PHPDBG_G(exec) ? PHPDBG_G(exec) : "none");
+ 	phpdbg_writeln("Compiled\t%s", PHPDBG_G(ops) ? "yes" : "no");
+diff -up sapi/phpdbg/phpdbg_utils.c.old sapi/phpdbg/phpdbg_utils.c
+--- sapi/phpdbg/phpdbg_utils.c.old	2014-06-23 09:43:20.690185888 +0200
++++ sapi/phpdbg/phpdbg_utils.c	2014-06-23 09:58:37.075896488 +0200
+@@ -400,12 +400,16 @@ PHPDBG_API const char *phpdbg_get_prompt
+ 	}
+ 
+ 	/* create cached prompt */
++#ifdef HAVE_LIBREADLINE
++	/* TODO: libedit doesn't seems to support coloured prompt */
+ 	if ((PHPDBG_G(flags) & PHPDBG_IS_COLOURED)) {
+ 		asprintf(
+ 			&PHPDBG_G(prompt)[1], "\033[%sm%s\033[0m ",
+ 			PHPDBG_G(colors)[PHPDBG_COLOR_PROMPT]->code,
+ 			PHPDBG_G(prompt)[0]);
+-	} else {
++	} else
++#endif
++	{
+ 		asprintf(
+ 			&PHPDBG_G(prompt)[1], "%s ",
+ 			PHPDBG_G(prompt)[0]);
+diff -up sapi/phpdbg/phpdbg.h.orig sapi/phpdbg/phpdbg.h
+--- sapi/phpdbg/phpdbg.h.orig	2014-06-23 10:10:19.674754095 +0200
++++ sapi/phpdbg/phpdbg.h	2014-06-23 10:13:14.041460315 +0200
+@@ -64,10 +64,13 @@
+ # include "TSRM.h"
+ #endif
+ 
+-#if defined(HAVE_LIBREADLINE) || defined(HAVE_LIBEDIT)
++#ifdef LIBREADLINE
+ #   include <readline/readline.h>
+ #   include <readline/history.h>
+ #endif
++#ifdef HAVE_LIBEDIT
++#   include <editline/readline.h>
++#endif
+ 
+ #include "phpdbg_lexer.h"
+ #include "phpdbg_cmd.h"
+diff -up sapi/phpdbg/phpdbg_utils.c.orig sapi/phpdbg/phpdbg_utils.c
+--- sapi/phpdbg/phpdbg_utils.c.orig	2014-06-23 10:10:13.224727967 +0200
++++ sapi/phpdbg/phpdbg_utils.c	2014-06-23 10:12:41.309327759 +0200
+@@ -400,7 +400,7 @@ PHPDBG_API const char *phpdbg_get_prompt
+ 	}
+ 
+ 	/* create cached prompt */
+-#ifdef HAVE_LIBREADLINE
++#ifndef HAVE_LIBEDIT
+ 	/* TODO: libedit doesn't seems to support coloured prompt */
+ 	if ((PHPDBG_G(flags) & PHPDBG_IS_COLOURED)) {
+ 		asprintf(
