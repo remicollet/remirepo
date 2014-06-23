@@ -121,7 +121,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.14.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.15.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -177,6 +177,8 @@ Patch45: php-5.4.8-ldap_r.patch
 Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
+# temporary fix (from 5.4/5.5) for unserialize/mock
+Patch48: php-5.6.0-mock.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
@@ -902,6 +904,7 @@ rm -rf ext/json
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+%patch48 -p1 -b .mock
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1911,6 +1914,9 @@ fi
 
 
 %changelog
+* Mon Jun 23 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.15.RC1
+- add workaround for unserialize/mock issue from 5.4/5.5
+
 * Mon Jun 23 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.14.RC1
 - fix phpdbg with libedit https://bugs.php.net/67499
 
