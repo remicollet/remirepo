@@ -13,7 +13,7 @@
 %{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name solr
-%global prever    b
+#global prever    b
 %global with_zts  0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
 # After curl, json
@@ -27,12 +27,12 @@ Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?scl_prefix}php-pecl-solr2
 Version:        2.0.0
-Release:        0.3.beta%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
 
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{prever}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -62,17 +62,19 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Only one version of the extension
 Conflicts:      %{?scl_prefix}php-pecl-solr < 2
 
-# Other third party repo stuff
-%if "%{php_version}" > "5.4"
-Obsoletes:     php53-pecl-%{pecl_name}2
-Obsoletes:     php53u-pecl-%{pecl_name}2
-Obsoletes:     php54-pecl-%{pecl_name}2
-%endif
+%if "%{?vendor}" == "Remi Collet"
+Obsoletes:     php53-pecl-%{pecl_name}2  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}2  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name}2 <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}2
+Obsoletes:     php55u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name}2 <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}2
+Obsoletes:     php56u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name}2 <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -207,7 +209,7 @@ TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/mo
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 TEST_PHP_EXECUTABLE=%{__php} \
-%{__php} run-tests.php
+%{__php} -n run-tests.php
 
 %if %{with_zts}
 cd ../ZTS
@@ -229,7 +231,7 @@ TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/mo
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-%{__ztsphp} run-tests.php
+%{__ztsphp} -n run-tests.php
 %endif
 
 
@@ -251,6 +253,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 23 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4
+- test build before 2.0.0 finale
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.beta
 - add numerical prefix to extension configuration file (php 5.6)
 
