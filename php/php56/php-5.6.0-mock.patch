@@ -14,7 +14,37 @@ diff -up php-5.6.0RC1/ext/standard/var_unserializer.c.mock php-5.6.0RC1/ext/stan
  	(*p) += 2;
  	
 -	if (ce->serialize == NULL) {
-+	if (ce->serialize == NULL || ce->unserialize == zend_user_unserialize || ZEND_INTERNAL_CLASS != ce->type) {
++	if (ce->serialize == NULL || ce->unserialize == zend_user_unserialize || (ZEND_INTERNAL_CLASS != ce->type && ce->create_object == NULL)) {
  		object_init_ex(*rval, ce);
  	} else {
  		/* If this class implements Serializable, it should not land here but in object_custom(). The passed string
+--- ext/reflection/php_reflection.c.orig	2014-06-24 13:23:11.265725787 +0200
++++ ext/reflection/php_reflection.c	2014-06-24 13:49:40.659428346 +0200
+@@ -4295,11 +4295,16 @@
+ {
+ 	reflection_object *intern;
+ 	zend_class_entry *ce;
++	zend_bool force = 0;
+ 
+ 	METHOD_NOTSTATIC(reflection_class_ptr);
+ 	GET_REFLECTION_OBJECT_PTR(ce);
+ 
+-	if (ce->create_object != NULL) {
++	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|b", &force) == FAILURE) {
++		return;
++	}
++
++	if (ce->create_object != NULL && !force) {
+ 		zend_throw_exception_ex(reflection_exception_ptr, 0 TSRMLS_CC, "Class %s is an internal class that cannot be instantiated without invoking its constructor", ce->name);
+ 	}
+ 
+@@ -5874,7 +5879,8 @@
+ 	ZEND_ARG_INFO(0, args)
+ ZEND_END_ARG_INFO()
+ 
+-ZEND_BEGIN_ARG_INFO(arginfo_reflection_class_newInstanceWithoutConstructor, 0)
++ZEND_BEGIN_ARG_INFO_EX(arginfo_reflection_class_newInstanceWithoutConstructor, 0, 0, 0)
++	ZEND_ARG_INFO(0, force)
+ ZEND_END_ARG_INFO()
+ 
+ ZEND_BEGIN_ARG_INFO_EX(arginfo_reflection_class_newInstanceArgs, 0, 0, 0)
