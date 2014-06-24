@@ -1,15 +1,15 @@
-Extension [ <persistent> extension #161 solr version 2.0.0b ] {
+Extension [ <persistent> extension #169 solr version 2.0.0 ] {
 
   - Dependencies {
-    Dependency [ curl (Required) ]
     Dependency [ libxml (Required) ]
+    Dependency [ json (Required) ]
   }
 
   - Constants [4] {
     Constant [ integer SOLR_MAJOR_VERSION ] { 2 }
     Constant [ integer SOLR_MINOR_VERSION ] { 0 }
     Constant [ integer SOLR_PATCH_VERSION ] { 0 }
-    Constant [ string SOLR_EXTENSION_VERSION ] { 2.0.0b }
+    Constant [ string SOLR_EXTENSION_VERSION ] { 2.0.0 }
   }
 
   - Functions {
@@ -20,7 +20,7 @@ Extension [ <persistent> extension #161 solr version 2.0.0b ] {
     }
   }
 
-  - Classes [18] {
+  - Classes [19] {
     Class [ <internal:solr> final class SolrObject implements ArrayAccess ] {
 
       - Constants [0] {
@@ -2592,7 +2592,7 @@ Extension [ <persistent> extension #161 solr version 2.0.0b ] {
       - Static properties [0] {
       }
 
-      - Static methods [4] {
+      - Static methods [5] {
         Method [ <internal:solr> static public method escapeQueryChars ] {
 
           - Parameters [1] {
@@ -2612,6 +2612,13 @@ Extension [ <persistent> extension #161 solr version 2.0.0b ] {
           - Parameters [2] {
             Parameter #0 [ <required> $xmlresponse ]
             Parameter #1 [ <optional> $parse_mode ]
+          }
+        }
+
+        Method [ <internal:solr> static public method digestJsonResponse ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $jsonResponse ]
           }
         }
 
@@ -2819,6 +2826,69 @@ Extension [ <persistent> extension #161 solr version 2.0.0b ] {
     }
 
     Class [ <internal:solr> class SolrClientException extends SolrException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [7] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+        Property [ <default> protected $sourceline ]
+        Property [ <default> protected $sourcefile ]
+        Property [ <default> protected $zif_name ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:solr, overwrites SolrException, prototype SolrException> public method getInternalInfo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:solr> class SolrServerException extends SolrException ] {
 
       - Constants [0] {
       }

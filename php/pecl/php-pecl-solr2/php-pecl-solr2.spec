@@ -27,7 +27,7 @@ Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?scl_prefix}php-pecl-solr2
 Version:        2.0.0
-Release:        0.4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -112,6 +112,7 @@ PECL Solr 1 is available in php-pecl-solr package.
 %setup -c -q
 
 mv %{pecl_name}-%{version}%{?prever} NTS
+
 cd NTS
 
 # Check version
@@ -121,8 +122,6 @@ if test "x${extver}" != "x%{version}%{?prever}"; then
    exit 1
 fi
 
-# Fix rights (fixed upstream)
-find . -type f -exec chmod -x {} \;
 cd ..
 
 # Create configuration file
@@ -171,7 +170,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
-for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -189,22 +188,15 @@ fi
 %check
 cd NTS
 
-: Minimal load test for NTS extension
+: Minimal load test for NTS installed extension
 %{__php} \
    -n \
    -d extension=curl.so \
    -d extension=json.so \
-   -d extension=$PWD/modules/%{pecl_name}.so \
+   -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
-# http://git.php.net/?p=pecl/search_engine/solr.git;a=commitdiff;h=a7ac6ee8f09b28e848436f7d972cc74b8eb1ae1c
-sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' \
-    -i tests/test.config.inc
-
-# http://git.php.net/?p=pecl/search_engine/solr.git;a=commitdiff;h=224c40fd3118ae675b5bbc2194370198918b18d0
-sed -e '/^curl$/d' -i tests/*phpt
-
 TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
@@ -214,19 +206,15 @@ TEST_PHP_EXECUTABLE=%{__php} \
 %if %{with_zts}
 cd ../ZTS
 
-: Minimal load test for ZTS extension
+: Minimal load test for ZTS installed extension
 %{__ztsphp} \
    -n \
    -d extension=curl.so \
    -d extension=json.so \
-   -d extension=$PWD/modules/%{pecl_name}.so \
+   -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
 
 : Upstream test suite for ZTS extension
-sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' \
-    -i tests/test.config.inc
-sed -e '/^curl$/d' -i tests/*phpt
-
 TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
@@ -243,9 +231,11 @@ rm -rf %{buildroot}
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
@@ -253,6 +243,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 24 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+
 * Mon Jun 23 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4
 - test build before 2.0.0 finale
 
