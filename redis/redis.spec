@@ -1,18 +1,4 @@
-# Check for status of man pages
-# http://code.google.com/p/redis/issues/detail?id=202
-
 %global _hardened_build 1
-
-%if 0%{?rhel} == 5
-%ifarch i386
-%global with_perftools 1
-%endif
-%else
-%ifarch %{ix86} x86_64 ppc %{arm}
-# available only on selected architectures
-%global with_perftools 1
-%endif
-%endif
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %global with_systemd 1
@@ -24,7 +10,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.11
+Version:          2.8.12
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -46,13 +32,6 @@ Patch2:           %{name}-deps-unbundle-jemalloc.patch
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if !0%{?el5}
 BuildRequires:    tcl >= 8.5
-%endif
-%if 0%{?with_perftools}
-%if 0%{?fedora} >= 15 || 0%{?rhel} >=6
-BuildRequires:    gperftools-devel
-%else
-BuildRequires:    google-perftools-devel
-%endif
 %endif
 BuildRequires:    jemalloc-devel
 
@@ -101,16 +80,13 @@ make %{?_smp_mflags} V=1 \
   LDFLAGS="%{?__global_ldflags}" \
   CFLAGS="$RPM_OPT_FLAGS -fPIC" \
   LUA_CFLAGS="-fPIC" \
-%if 0%{?with_perftools}
-  MALLOC=tcmalloc \
-%else
   MALLOC=jemalloc \
-%endif
   all
 
 %check
 %if %{with_tests}
 make test
+make test-sentinel
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -236,6 +212,11 @@ fi
 
 
 %changelog
+* Tue Jun 24 2014 Remi Collet <remi@fedoraproject.org> - 2.8.12-1
+- Redis 2.8.12 - Release date: 23 Jun 2014
+  upgrade urgency: HIGH for Redis, CRITICAL for Sentinel.
+- always use jemalloc (instead of tcmalloc)
+
 * Mon Jun 16 2014 Remi Collet <remi@fedoraproject.org> - 2.8.11-1
 - Redis 2.8.11 - Release date: 11 Jun 2014
   upgrade urgency: HIGH if you use Lua scripting, LOW otherwise.
