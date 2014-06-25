@@ -77,7 +77,7 @@
 %endif
 
 #global snapdate      201201041830
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -85,7 +85,7 @@ Version: 5.4.30
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 3%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1654,6 +1654,10 @@ fi
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> 5.4.30-1
+- Update to 5.4.30
+  http://www.php.net/releases/5_4_30.php
+
 * Tue Jun 17 2014 Remi Collet <rcollet@redhat.com> 5.4.30-0.2.RC1
 - fix test for rhbz #971416
 
