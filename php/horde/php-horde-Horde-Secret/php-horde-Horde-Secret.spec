@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Secret
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Secret Encryption API
 
@@ -81,7 +81,7 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 # Issue with old openssl version
 rm -f Unit/SecretTest.php
 %endif
-phpunit\
+phpunit \
     --include-path=$src/lib \
     -d date.timezone=UTC \
     .
@@ -108,6 +108,9 @@ fi
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Mon Nov 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 for remi repo
 - switch from Crypt_Blowfish to Horde_Crypt_Blowfish
