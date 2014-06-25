@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-PHP-TokenStream
 Version:        1.2.2
-Release:        3%{?dist}.1
+Release:        5%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
 Group:          Development/Libraries
@@ -26,11 +26,15 @@ BuildRequires:  php-pear-PHPUnit >= 3.7.0
 %endif
 
 # From composer.json
+#        "php": ">=5.3.3",
+#        "ext-tokenizer": "*"
 Requires:       php(language) >= 5.3.3
 Requires:       php-tokenizer
 # From phpcompatinfo report for version 1.2.2
 Requires:       php-pcre
 Requires:       php-spl
+
+Provides:       php-composer(phpunit/php-token-stream) = %{version}
 
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -86,6 +90,9 @@ fi
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.2.2-5
+- composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.2.2-3
 - cleanup pear registry
 
