@@ -1,4 +1,4 @@
-%global gh_commit    d177c22e2a08e448f7bdfa762045f7bd086834d7
+%global gh_commit    322ad07c112d5c6832abed4269d648cacff5959b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phploc
@@ -8,8 +8,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phploc
-Version:        2.0.5
-Release:        2%{?dist}
+Version:        2.0.6
+Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
 Group:          Development/Libraries
@@ -29,22 +29,37 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-phpunit-FinderFacade >= 1.1.0
-BuildRequires:  php-phpunit-git >= 1.0.0
-BuildRequires:  php-phpunit-Version >= 1.0.3
-BuildRequires:  php-symfony-console >= 2.2.0
+BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
+BuildRequires:  php-composer(sebastian/finder-facade) <  2
+BuildRequires:  php-composer(sebastian/git) >= 1.0
+BuildRequires:  php-composer(sebastian/git) <  2
+BuildRequires:  php-composer(sebastian/version) >= 1.0
+BuildRequires:  php-composer(sebastian/version) <  2
+BuildRequires:  php-symfony-console >= 2.2
+BuildRequires:  php-symfony-console <  3
 %endif
 
 # From composer.json
+#      "php": ">=5.3.3",
+#      "sebastian/finder-facade": "~1.1",
+#      "sebastian/git": "~1.0",
+#      "sebastian/version": "~1.0",
+#      "symfony/console": "~2.2"
 Requires:       php(language) >= 5.3.3
-Requires:       php-phpunit-FinderFacade >= 1.1.0
-Requires:       php-phpunit-git >= 1.0.0
-Requires:       php-phpunit-Version >= 1.0.3
-Requires:       php-symfony-console >= 2.2.0
+Requires:       php-composer(sebastian/finder-facade) >= 1.1
+Requires:       php-composer(sebastian/finder-facade) <  2
+Requires:       php-composer(sebastian/git) >= 1.0
+Requires:       php-composer(sebastian/git) <  2
+Requires:       php-composer(sebastian/version) >= 1.0
+Requires:       php-composer(sebastian/version) <  2
+Requires:       php-symfony-console >= 2.2
+Requires:       php-symfony-console <  3
 # From phpcompatinfo report for version 2.0.5
 Requires:       php-dom
 Requires:       php-spl
 Requires:       php-tokenizer
+
+Provides:       php-composer(phploc/phploc) = %{version}
 
 # For compat
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -108,6 +123,10 @@ fi
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- update to 2.0.6
+- composer dependencies
+
 * Sat May  3 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
 - fix scriptlet
 
