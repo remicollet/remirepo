@@ -16,7 +16,7 @@
 
 Name:           php-phpunit-environment
 Version:        1.0.0
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Handle HHVM/PHP environments
 
 Group:          Development/Libraries
@@ -32,7 +32,11 @@ BuildRequires:  %{_bindir}/phpab
 BuildRequires:  %{_bindir}/phpunit
 %endif
 
+# from composer.json
+#        "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
+
+Provides:       php-composer(sebastian/environment) = %{version}
 
 
 %description
@@ -75,6 +79,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-4
+- composer dependencies
+
 * Wed Apr 23 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - add generated autoload.php
 
