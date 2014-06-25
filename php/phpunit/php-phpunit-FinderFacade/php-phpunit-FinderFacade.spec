@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-FinderFacade
 Version:        1.1.0
-Release:        4%{?dist}.1
+Release:        6%{?dist}
 Summary:        Wrapper for Symfony Finder component
 
 Group:          Development/Libraries
@@ -35,12 +35,16 @@ BuildRequires:  php-symfony-finder >= 2.2.0
 %endif
 
 # From composer.json
+#      "theseer/fdomdocument": ">=1.3.1",
+#      "symfony/finder": ">=2.2.0"
 Requires:       php(language) >= 5.3.3
 Requires:       php-theseer-fDOMDocument >= 1.3.1
 Requires:       php-symfony-finder >= 2.2.0
 # From phpcompatinfo report
 Requires:       php-ctype
 Requires:       php-spl
+
+Provides:       php-composer(sebastian/finder-facade) = %{version}
 
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -100,6 +104,9 @@ fi
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
+- composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
 - cleanup pear registry
 
