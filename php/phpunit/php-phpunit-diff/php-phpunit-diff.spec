@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-diff
 Version:        1.1.0
-Release:        4%{?dist}.1
+Release:        6%{?dist}
 Summary:        Diff implementation
 
 Group:          Development/Libraries
@@ -34,10 +34,13 @@ BuildRequires:  %{_bindir}/phpunit
 %endif
 
 # from composer.json
+#      "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
 # from phpcompatinfo report for version 1.1.0
 Requires:       php-pcre
 Requires:       php-spl
+
+Provides:       php-composer(sebastian/diff) = %{version}
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 # Package have be renamed
@@ -89,6 +92,9 @@ fi
 
 
 %changelog
+* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
+- composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
 - cleanup pear registry
 
