@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-git
 Version:        1.2.0
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        Simple wrapper for Git
 
 Group:          Development/Libraries
@@ -31,9 +31,12 @@ BuildRequires:  php(language) >= 5.3.3
 
 Requires:       git
 # From composer.json
+#      "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for 1.2.0
 Requires:       php-spl
+
+Provides:       php-composer(sebastian/git) = %{version}
 
 # For compatibility with pear mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -83,6 +86,9 @@ fi
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-7
+- composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-5
 - sources from github
 - cleanup pear registry
