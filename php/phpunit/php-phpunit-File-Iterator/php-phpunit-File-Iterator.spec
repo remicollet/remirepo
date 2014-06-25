@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-File-Iterator
 Version:        1.3.4
-Release:        3%{?dist}.1
+Release:        5%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
 Group:          Development/Libraries
@@ -23,10 +23,13 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 
 # From composer.json
+#        "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for 1.3.4
 Requires:       php-pcre
 Requires:       php-spl
+
+Provides:       php-composer(phpunit/php-file-iterator) = %{version}
 
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -76,6 +79,9 @@ fi
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-5
+- composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-3
 - cleanup pear registry
 
