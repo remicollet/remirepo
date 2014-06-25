@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHP-CodeCoverage
 Version:        2.0.8
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -40,11 +40,11 @@ BuildRequires:  php-pear-PHPUnit >= 4.0.14
 # From composer.json
 Requires:       php(language) >= 5.3.3
 Requires:       php-dom
-Requires:       php-phpunit-File-Iterator >= 1.3.1
-Requires:       php-phpunit-PHP-TokenStream >= 1.2.2
-Requires:       php-phpunit-Text-Template >= 1.2.0
-Requires:       php-phpunit-environment >= 1.0.0
-Requires:       php-phpunit-Version >= 1.0.3
+Requires:       php-composer(phpunit/php-file-iterator) >= 1.3.1
+Requires:       php-composer(phpunit/php-token-stream) >= 1.2.2
+Requires:       php-composer(phpunit/php-text-template) >= 1.2.0
+Requires:       php-composer(sebastian/environment) >= 1.0.0
+Requires:       php-composer(sebastian/version) >= 1.0.3
 Requires:       php-pecl(Xdebug) >= 2.1.4
 # From phpcompatinfo report for version 2.0.7
 Requires:       php-date
@@ -53,6 +53,8 @@ Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-xmlwriter
+
+Provides:       php-composer(phpunit/php-code-coverage) = %{version}
 
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -110,6 +112,9 @@ fi
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-3
+- composer dependencies
+
 * Tue May 27 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
 - update to 2.0.8
 
