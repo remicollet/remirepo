@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-Version
 Version:        1.0.3
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Managing the version number of Git-hosted PHP projects
 
 Group:          Development/Libraries
@@ -35,6 +35,8 @@ BuildRequires:  %{_bindir}/phpunit
 Requires:       php(language) >= 5.3.3
 Requires:       php-spl
 Requires:       git
+
+Provides:       php-composer(sebastian/version) = %{version}
 
 # For compatibility, to drop when no more required
 # Currently used by phpcpd and phploc
@@ -91,6 +93,9 @@ fi
 
 
 %changelog
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
+- composer dependencies
+
 * Sat Mar  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3
 - move from pear channel to github sources because of
