@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Pack
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Horde Pack Utility
 
@@ -87,6 +87,12 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+
+%if "%{php_version}" < "5.5"
+sed -e 's/function testNonUtf8Pack/function SKIP_testNonUtf8Pack/' \
+    -i PackTest.php
+%endif
+
 phpunit \
     --include-path=$src/lib \
     -d date.timezone=UTC \
@@ -118,6 +124,9 @@ fi
 
 
 %changelog
+* Thu Jun 26 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+
 * Fri Apr 04 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 
