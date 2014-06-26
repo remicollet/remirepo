@@ -47,6 +47,7 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Obsoletes:      php-phpunit-Diff < 1.1.0-2
 Provides:       php-phpunit-Diff = %{version}-%{release}
 
+
 %description
 Diff implementation.
 
@@ -92,7 +93,7 @@ fi
 
 
 %changelog
-* Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
+* Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
 - composer dependencies
 
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
