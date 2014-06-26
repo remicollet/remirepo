@@ -22,12 +22,14 @@
 Summary:       Yet Another Framework
 Name:          %{?scl_prefix}php-pecl-yaf
 Version:       2.3.2
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:       %{pecl_name}.ini
+
+Patch0:        %{pecl_name}-git.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
@@ -73,12 +75,16 @@ to develop web applications.
 %setup -q -c 
 mv %{pecl_name}-%{version} NTS
 
+cd NTS
+%patch0 -p1 -b .upstream
+
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_YAF_VERSION/{s/.*\t"//;s/".*$//;p}' NTS/php_yaf.h )
+extver=$(sed -n '/#define PHP_YAF_VERSION/{s/.*\t"//;s/".*$//;p}' php_yaf.h )
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}.
    exit 1
 fi
+cd ..
 
 %if %{with_zts}
 # duplicate for ZTS build
@@ -184,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 26 2014 Remi Collet <remi@fedoraproject.org> - 2.3.2-3
+- upstream patch for PHP 5.6
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 2.3.2-2
 - add numerical prefix to extension configuration file (php 5.6)
 
