@@ -22,17 +22,13 @@
 Summary:        Dump the internal representation of PHP scripts
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.12.0
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://bugs.php.net/57944 ask license file
-Source1:        https://raw.github.com/derickr/vld/master/LICENSE
-
-# https://github.com/derickr/vld/commit/28c5d156fe21dd9e3ddcd318b0bf7dd3b387a28a
-# Adding missing PHP 5.6 opcodes.
+# https://github.com/derickr/vld/commits/master
 Patch0:         %{pecl_name}-git.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -80,7 +76,7 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 %patch0 -p1 -b .fromgit
-cp %{SOURCE1} LICENSE
+chmod +r LICENS*
 cd ..
 
 %if %{with_zts}
@@ -188,6 +184,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 26 2014 Remi Collet <remi@fedoraproject.org> - 0.12.0-5
+- more upstream patches for PHP 5.6
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 0.12.0-4
 - add numerical prefix to extension configuration file (php 5.6)
 
