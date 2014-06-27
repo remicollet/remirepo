@@ -3,7 +3,7 @@
 %global channelname pear.amazonwebservices.com
 
 Name:		php-aws-sdk
-Version:	2.6.8
+Version:	2.6.9
 Release:	1%{?dist}
 Summary:	Amazon Web Services framework for PHP
 Group:		Development/Libraries
@@ -95,6 +95,9 @@ fi
 
 
 %changelog
+* Fri Jun 27 2014 Remi Collet <remi@fedoraproject.org> - 2.6.9-1
+- Update to 2.6.9
+
 * Mon Jun 23 2014 Remi Collet <remi@fedoraproject.org> - 2.6.8-1
 - Update to 2.6.8
 
