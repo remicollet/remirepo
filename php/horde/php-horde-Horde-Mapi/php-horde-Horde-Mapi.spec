@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mapi
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        MAPI utility library
 
@@ -33,15 +33,16 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-# From package.xml
+# From package.xml, required
 Requires:       php(language) >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
-Requires:       php-bcmath
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+# From package.xml, optional
+Requires:       php-bcmath
 # From phpcompatinfo report for version 1.0.0
 Requires:       php-date
 
@@ -112,6 +113,9 @@ fi
 
 
 %changelog
+* Fri Jun 27 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+
 * Sun Jan 19 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 - License is LGPLv2, upstream clarification
