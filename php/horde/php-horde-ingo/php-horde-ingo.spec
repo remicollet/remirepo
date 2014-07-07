@@ -6,7 +6,6 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    ingo
 %global pear_channel pear.horde.org
@@ -15,8 +14,8 @@
 # Tests are not ready (need Framework 5.2)
 
 Name:           php-horde-ingo
-Version:        3.1.4
-Release:        2%{?dist}
+Version:        3.1.5
+Release:        1%{?dist}
 Summary:        An email filter rules manager
 
 Group:          Development/Libraries
@@ -190,6 +189,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 3.1.5-1
+- Update to 3.1.5
+
 * Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 3.1.4-2
 - preserve package.xml timestamp
 
