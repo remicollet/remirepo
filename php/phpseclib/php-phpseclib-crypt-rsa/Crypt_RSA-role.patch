@@ -1,7 +1,7 @@
-diff -up ./Crypt_RSA-0.3.6/RSA.php.orig ./Crypt_RSA-0.3.6/RSA.php
---- ./Crypt_RSA-0.3.6/RSA.php.orig	2014-02-26 17:57:48.055385477 +0100
-+++ ./Crypt_RSA-0.3.6/RSA.php	2014-02-26 17:59:38.974772761 +0100
-@@ -170,7 +170,7 @@ define('CRYPT_RSA_MODE_OPENSSL', 2);
+diff -up Crypt_RSA-0.3.7/RSA.php.role Crypt_RSA-0.3.7/RSA.php
+--- Crypt_RSA-0.3.7/RSA.php.role	2014-07-07 17:19:19.711010692 +0200
++++ Crypt_RSA-0.3.7/RSA.php	2014-07-07 17:19:19.712010697 +0200
+@@ -178,7 +178,7 @@ define('CRYPT_RSA_MODE_OPENSSL', 2);
  /**
   * Default openSSL configuration file.
   */
@@ -10,7 +10,7 @@ diff -up ./Crypt_RSA-0.3.6/RSA.php.orig ./Crypt_RSA-0.3.6/RSA.php
  
  /**#@+
   * @access public
-@@ -464,7 +464,14 @@ class Crypt_RSA
+@@ -490,7 +490,14 @@ class Crypt_RSA
              include_once 'Math/BigInteger.php';
          }
  
@@ -26,19 +26,3 @@ diff -up ./Crypt_RSA-0.3.6/RSA.php.orig ./Crypt_RSA-0.3.6/RSA.php
  
          if ( !defined('CRYPT_RSA_MODE') ) {
              // Math/BigInteger's openssl requirements are a little less stringent than Crypt/RSA's. in particular,
-diff -up ./package.xml.orig ./package.xml
---- ./package.xml.orig	2014-02-26 17:59:38.974772761 +0100
-+++ ./package.xml	2014-02-26 18:00:08.020874166 +0100
-@@ -23,8 +23,10 @@
-  <notes>0.3.6 release</notes>
-  <contents>
-   <dir name="/">
--    <file baseinstalldir="Crypt" name="RSA.php" role="php" md5sum="158051c445d140e7b4486487307a8f11"/>
--    <file baseinstalldir="" name="openssl.cnf" role="php" md5sum="0f1015cb8894127a94a05afa7cc23760"/>
-+    <file baseinstalldir="Crypt" name="RSA.php" role="php">
-+       <tasks:replace from="@cfg_dir@" to="cfg_dir" type="pear-config" />
-+    </file>
-+    <file name="openssl.cnf" role="cfg" md5sum="0f1015cb8894127a94a05afa7cc23760"/>
-   </dir>
-  </contents>
-  <dependencies>

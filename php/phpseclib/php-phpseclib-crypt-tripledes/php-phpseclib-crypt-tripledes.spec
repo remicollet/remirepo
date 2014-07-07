@@ -2,7 +2,7 @@
 %global pear_name Crypt_TripleDES
 
 Name:           php-phpseclib-crypt-tripledes
-Version:        0.3.6
+Version:        0.3.7
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of Triple DES
 
@@ -14,16 +14,17 @@ Source0:        http://phpseclib.sourceforge.net/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
+BuildRequires:  php-channel(phpseclib.sourceforge.net)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
+Requires:       php-channel(phpseclib.sourceforge.net)
 Requires:       php-pear(phpseclib.sourceforge.net/Crypt_DES) >= 0.3.0
 Requires:       php-pear(phpseclib.sourceforge.net/Crypt_Hash)
-Requires:       php-pear(PEAR) >= 1.4.0
+
 Provides:       php-pear(phpseclib.sourceforge.net/Crypt_TripleDES) = %{version}
-BuildRequires:  php-channel(phpseclib.sourceforge.net)
-Requires:       php-channel(phpseclib.sourceforge.net)
+
 
 %description
 Uses mcrypt, if available, and an internal implementation, otherwise. 
@@ -76,6 +77,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 0.3.7-1
+- Update to 0.3.7
+
 * Wed Feb 26 2014 Remi Collet <remi@fedoraproject.org> - 0.3.6-1
 - Update to 0.3.6
 

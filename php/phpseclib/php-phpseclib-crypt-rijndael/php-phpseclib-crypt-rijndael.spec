@@ -2,7 +2,7 @@
 %global pear_name Crypt_Rijndael
 
 Name:           php-phpseclib-crypt-rijndael
-Version:        0.3.6
+Version:        0.3.7
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of Rijndael
 
@@ -14,13 +14,16 @@ Source0:        http://phpseclib.sourceforge.net/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
+BuildRequires:  php-channel(phpseclib.sourceforge.net)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
-Provides:       php-pear(phpseclib.sourceforge.net/Crypt_Rijndael) = %{version}
-BuildRequires:  php-channel(phpseclib.sourceforge.net)
 Requires:       php-channel(phpseclib.sourceforge.net)
+Requires:       php-pear(phpseclib.sourceforge.net/Crypt_Base)
+
+Provides:       php-pear(phpseclib.sourceforge.net/Crypt_Rijndael) = %{version}
+
 
 %description
 Does not use mcrypt, even when available, for reasons discussed in
@@ -69,10 +72,13 @@ fi
 %files
 %defattr(-, root, root, -)
 %{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Crypt
+%{pear_phpdir}/Crypt/Rijndael.php
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 0.3.7-1
+- Update to 0.3.7
+
 * Wed Feb 26 2014 Remi Collet <remi@fedoraproject.org> - 0.3.6-1
 - Update to 0.3.6
 

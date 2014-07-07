@@ -2,7 +2,7 @@
 %global pear_name Crypt_RSA
 
 Name:           php-phpseclib-crypt-rsa
-Version:        0.3.6
+Version:        0.3.7
 Release:        1%{?dist}
 Summary:        Pure-PHP PKCS#1 (v2.1) compliant implementation of RSA
 
@@ -17,21 +17,22 @@ Patch0:         %{pear_name}-role.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
+BuildRequires:  php-channel(phpseclib.sourceforge.net)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
+Requires:       php-channel(phpseclib.sourceforge.net)
 Requires:       php-pear(phpseclib.sourceforge.net/Math_BigInteger) >= 0.3.0
 Requires:       php-pear(phpseclib.sourceforge.net/Crypt_Random) >= 0.3.0
 Requires:       php-pear(phpseclib.sourceforge.net/Crypt_Hash) >= 0.3.0
-Requires:       php-pear(PEAR) >= 1.4.0
-Provides:       php-pear(phpseclib.sourceforge.net/Crypt_RSA) = %{version}
-BuildRequires:  php-channel(phpseclib.sourceforge.net)
-Requires:       php-channel(phpseclib.sourceforge.net)
 # phpcompatinfo, generated from 0.3.5
 Requires:       php-date
 Requires:       php-pcre
 Requires:       php-xml
+
+Provides:       php-pear(phpseclib.sourceforge.net/Crypt_RSA) = %{version}
+
 
 %description
 Pure-PHP PKCS#1 (v2.1) compliant implementation of RSA. Optionally uses
@@ -39,11 +40,14 @@ openssl.
 
 %prep
 %setup -q -c
-sed -e 's/\r//' -i %{pear_name}-%{version}/*php
-%patch0 -p0
-mv package.xml %{pear_name}-%{version}/%{name}.xml
 
 cd %{pear_name}-%{version}
+sed -e 's/\r//' -i RSA.php
+%patch0 -p1 -b .role
+sed -e '/RSA.php/s/md5sum="[^"]*"//' \
+    ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
+
 
 %build
 cd %{pear_name}-%{version}
@@ -87,6 +91,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 0.3.7-1
+- Update to 0.3.7
+
 * Wed Feb 26 2014 Remi Collet <remi@fedoraproject.org> - 0.3.6-1
 - Update to 0.3.6
 

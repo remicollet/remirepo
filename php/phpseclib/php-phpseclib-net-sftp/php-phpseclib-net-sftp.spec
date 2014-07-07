@@ -2,7 +2,7 @@
 %global pear_name Net_SFTP
 
 Name:           php-phpseclib-net-sftp
-Version:        0.3.6
+Version:        0.3.7
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of SFTP
 
@@ -14,18 +14,19 @@ Source0:        http://phpseclib.sourceforge.net/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
+BuildRequires:  php-channel(phpseclib.sourceforge.net)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
-Requires:       php-pear(phpseclib.sourceforge.net/Net_SSH2) >= 0.3.0
-Requires:       php-pear(PEAR) >= 1.4.0
-Provides:       php-pear(phpseclib.sourceforge.net/Net_SFTP) = %{version}
-BuildRequires:  php-channel(phpseclib.sourceforge.net)
 Requires:       php-channel(phpseclib.sourceforge.net)
+Requires:       php-pear(phpseclib.sourceforge.net/Net_SSH2) >= 0.3.0
 # phpcompatinfo, generated from 0.3.5
 Requires:       php-date
 Requires:       php-pcre
+
+Provides:       php-pear(phpseclib.sourceforge.net/Net_SFTP) = %{version}
+
 
 %description
 Pure-PHP implementation of SFTP.
@@ -78,6 +79,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 0.3.7-1
+- Update to 0.3.7
+
 * Wed Feb 26 2014 Remi Collet <remi@fedoraproject.org> - 0.3.6-1
 - Update to 0.3.6
 

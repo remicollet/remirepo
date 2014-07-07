@@ -2,7 +2,7 @@
 %global pear_name Net_SSH2
 
 Name:           php-phpseclib-net-ssh2
-Version:        0.3.6
+Version:        0.3.7
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of SSHv2
 
@@ -17,10 +17,12 @@ Patch0:         php-phpseclib-Net-SSH2-Crypt_Blowfish_conflict.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
+BuildRequires:  php-channel(phpseclib.sourceforge.net)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
+Requires:       php-channel(phpseclib.sourceforge.net)
 Requires:       php-pear(phpseclib.sourceforge.net/Math_BigInteger) >= 0.3.0
 Requires:       php-pear(phpseclib.sourceforge.net/Crypt_Random) >= 0.3.0
 Requires:       php-pear(phpseclib.sourceforge.net/Crypt_Hash) >= 0.3.0
@@ -29,25 +31,26 @@ Requires:       php-pear(phpseclib.sourceforge.net/Crypt_RC4) >= 0.3.0
 Requires:       php-pear(phpseclib.sourceforge.net/Crypt_AES) >= 0.3.0
 Requires:       php-pear(phpseclib.sourceforge.net/Crypt_Twofish) >= 0.3.0
 Requires:       php-pear(phpseclib.sourceforge.net/Crypt_Blowfish) >= 0.3.0
-Provides:       php-pear(phpseclib.sourceforge.net/Net_SSH2) = %{version}
-BuildRequires:  php-channel(phpseclib.sourceforge.net)
-Requires:       php-channel(phpseclib.sourceforge.net)
 # phpcompatinfo, generated from 0.3.5
 Requires:       php-pcre
 Requires:       php-xml
+
+Provides:       php-pear(phpseclib.sourceforge.net/Net_SSH2) = %{version}
+
 
 %description
 Pure-PHP implementation of SSHv2.
 
 %prep
 %setup -q -c
-pushd %{pear_name}-%{version}
+cd %{pear_name}-%{version}
 # Fix line endings of file we're about to patch
 sed -e 's/\r//' -i SSH2.php
 %patch0 -p1
 # Drop md5sum of patched file from the PEAR manifest (or else it'll complain)
 sed -e '/SSH2.php/s/md5sum="[^"]*"//' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -90,6 +93,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 0.3.7-1
+- Update to 0.3.7
+
 * Wed Feb 26 2014 Remi Collet <remi@fedoraproject.org> - 0.3.6-1
 - Update to 0.3.6
 

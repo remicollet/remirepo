@@ -2,7 +2,7 @@
 %global pear_name Math_BigInteger
 
 Name:           php-phpseclib-math-biginteger
-Version:        0.3.6
+Version:        0.3.7
 Release:        1%{?dist}
 Summary:        Pure-PHP arbitrary precision integer arithmetic library
 
@@ -14,16 +14,18 @@ Source0:        http://phpseclib.sourceforge.net/get/%{pear_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
+BuildRequires:  php-channel(phpseclib.sourceforge.net)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
-Provides:       php-pear(phpseclib.sourceforge.net/Math_BigInteger) = %{version}
-BuildRequires:  php-channel(phpseclib.sourceforge.net)
 Requires:       php-channel(phpseclib.sourceforge.net)
 # phpcompatinfo, generated from 0.3.5
 Requires:       php-date
 Requires:       php-pcre
+
+Provides:       php-pear(phpseclib.sourceforge.net/Math_BigInteger) = %{version}
+
 
 %description
 Supports base-2, base-10, base-16, and base-256 numbers.  Uses the GMP or
@@ -80,6 +82,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 0.3.7-1
+- Update to 0.3.7
+
 * Wed Feb 26 2014 Remi Collet <remi@fedoraproject.org> - 0.3.6-1
 - Update to 0.3.6
 
