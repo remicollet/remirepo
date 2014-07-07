@@ -1,10 +1,10 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 
 %global pear_channel pear.twig-project.org
 %global pear_name    Twig
 
 Name:             php-twig-%{pear_name}
-Version:          1.15.1
+Version:          1.16.0
 Release:          1%{?dist}
 Summary:          The flexible, fast, and secure template engine for PHP
 
@@ -100,6 +100,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 1.16.0-1
+- Update to 1.16.0
+
 * Fri Feb 14 2014 Remi Collet <remi@fedoraproject.org> - 1.15.1-1
 - Update to 1.15.1
 
