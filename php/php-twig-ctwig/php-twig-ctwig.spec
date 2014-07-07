@@ -23,8 +23,8 @@
 
 Summary:        Extension to improve performance of Twig
 Name:           %{?scl_prefix}php-twig-ctwig
-Version:        1.15.1
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.16.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://twig.sensiolabs.org
@@ -169,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 1.16.0-1
+- Update to 1.16.0
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 1.15.1-2
 - add numerical prefix to extension configuration file (php 5.6)
 
