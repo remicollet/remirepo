@@ -115,13 +115,13 @@
 %endif
 
 #global snapdate      201405061030
-%global rcver         RC1
+%global rcver         RC2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.15.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.16.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -184,7 +184,8 @@ Patch48: php-5.6.0-mock.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-phpdbg.patch
+Patch100: php-man.patch
+Patch101: php-syslog.patch
 
 # Security fixes (200+)
 
@@ -909,7 +910,8 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p0 -b .libedit
+%patch100 -p1 -b .manpath
+%patch101 -p1 -b .syslog
 
 # security patches
 
@@ -1819,6 +1821,7 @@ fi
 %files dbg
 %defattr(-,root,root)
 %{_bindir}/phpdbg
+%{_mandir}/man1/phpdbg.1*
 %doc sapi/phpdbg/{README.md,CREDITS}
 
 %files fpm
@@ -1914,6 +1917,9 @@ fi
 
 
 %changelog
+* Mon Jul  7 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.13.RC2
+- php 5.6.0RC2
+
 * Mon Jun 23 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.15.RC1
 - add workaround for unserialize/mock issue from 5.4/5.5
 
