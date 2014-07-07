@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Compress
+# spec file for php-horde-Horde-Data
 #
 # Copyright (c) 2012-2014 Nick Bebout, Remi Collet
 #
