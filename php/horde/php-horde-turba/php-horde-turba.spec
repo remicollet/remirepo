@@ -6,17 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    turba
 %global pear_channel pear.horde.org
 
-# TODO
-# Test suite is not ready (requires Framework 5.2)
-
 Name:           php-horde-turba
-Version:        4.1.4
-Release:        2%{?dist}
+Version:        4.1.5
+Release:        1%{?dist}
 Summary:        A web based address book
 
 Group:          Development/Libraries
@@ -31,6 +27,8 @@ BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.3.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -175,11 +173,15 @@ rm -rf %{buildroot}
 %check
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/Turba
+# disable as this test use Horde_ActiveSync (non-free)
+sed -e 's/function testDuplicateDetectionFromAsWithNoEmail/function SKIP_testDuplicateDetectionFromAsWithNoEmail/' \
+    -i Unit/Driver/Base.php
+
 : tests not ready
-#phpunit\
-#    -d include_path=$src/lib:.:%{pear_phpdir} \
-#    -d date.timezone=UTC \
-#    .
+phpunit\
+    --include-path=$src/lib \
+    -d date.timezone=UTC \
+    .
 
 
 %post
@@ -223,6 +225,10 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 4.1.5-1
+- Update to 4.1.5
+- run test suite during build
+
 * Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-2
 - preserve package.xml timestamp
 - fix license (ASL 1.0) from review #1087742
