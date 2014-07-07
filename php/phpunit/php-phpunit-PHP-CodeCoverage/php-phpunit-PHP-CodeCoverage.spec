@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    58401826c8cfc8fd689b60026e91c337df374bca
+%global gh_commit    ed8ac99ce38c3fd134128c898f7ca74665abef7f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -17,8 +17,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.0.8
-Release:        3%{?dist}
+Version:        2.0.9
+Release:        1%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -112,6 +112,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
+- update to 2.0.9
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-3
 - composer dependencies
 
