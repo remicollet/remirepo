@@ -11,8 +11,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.11.1
-Release:        2%{?dist}
+Version:        2.11.2
+Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
@@ -182,6 +182,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/LICENSE/s/role="horde"/role="doc"/' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -268,6 +269,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 2.11.2-1
+- Update to 2.11.2
+
 * Fri Jan 10 2014 Remi Collet <remi@fedoraproject.org> - 2.11.1-2
 - cleanups from reviews #908329
 
