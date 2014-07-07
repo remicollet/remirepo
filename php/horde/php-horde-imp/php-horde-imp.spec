@@ -6,14 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    imp
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.1.7
-Release:        2%{?dist}
+Version:        6.1.8
+Release:        1%{?dist}
 Summary:        A web based webmail system
 
 Group:          Development/Libraries
@@ -255,6 +254,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 6.1.8-1
+- Update to 6.1.8
+
 * Mon Apr 28 2014 Remi Collet <remi@fedoraproject.org> - 6.1.7-2
 - fix from review #1087734
 
