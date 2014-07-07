@@ -6,19 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    nag
 %global pear_channel pear.horde.org
 
-# TODO
-# Tests are not ready (need Framework 5.2)
-# config: provides one ?
-# "horde-nag" sub package with apache stuff
-
 Name:           php-horde-nag
-Version:        4.1.4
-Release:        3%{?dist}
+Version:        4.1.5
+Release:        1%{?dist}
 Summary:        A web based task list manager
 
 Group:          Development/Libraries
@@ -33,6 +27,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.6.1
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -171,6 +166,16 @@ do
 done | tee ../%{pear_name}.lang
 
 
+%check
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/Nag
+
+phpunit \
+    --include-path=$src/lib \
+    -d date.timezone=UTC \
+    .
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -211,6 +216,10 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 4.1.5-1
+- Update to 4.1.5
+- run test suite during build (all ignored for now)
+
 * Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-3
 - preserve package.xml timestamp
 
