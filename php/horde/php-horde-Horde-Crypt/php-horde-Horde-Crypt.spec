@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt
-Version:        2.4.3
+Version:        2.5.0
 Release:        1%{?dist}
 Summary:        Horde Cryptography API
 
@@ -76,6 +76,7 @@ cd %{pear_name}-%{version}
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -142,6 +143,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- Update to 2.5.0
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
 - Update to 2.4.3
 
