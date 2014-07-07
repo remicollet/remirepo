@@ -1,23 +1,3 @@
-diff -up Horde_Test-2.4.1/lib/Horde/Test/AllTests.php.rpm Horde_Test-2.4.1/lib/Horde/Test/AllTests.php
---- Horde_Test-2.4.1/lib/Horde/Test/AllTests.php.rpm	2014-05-06 08:42:59.000000000 +0200
-+++ Horde_Test-2.4.1/lib/Horde/Test/AllTests.php	2014-05-06 14:15:13.780403549 +0200
-@@ -12,15 +12,7 @@
-  * @link     http://www.horde.org/components/Horde_Test
-  */
- 
--if (!@include_once 'PHPUnit/Autoload.php') {
--    /* Try to load PHAR-based phpunit. */
--    set_include_path(get_include_path() . PATH_SEPARATOR . getenv('PATH'));
--    $GLOBALS['_SERVER']['SCRIPT_NAME'] = '-';
--    ob_start();
--    @include_once 'phpunit';
--    ob_end_clean();
--    restore_include_path();
--}
-+require_once 'PHPUnit/Autoload.php';
- 
- /**
-  * Horde base test suite
 diff -up Horde_Test-2.4.1/lib/Horde/Test/Autoload.php.rpm Horde_Test-2.4.1/lib/Horde/Test/Autoload.php
 --- Horde_Test-2.4.1/lib/Horde/Test/Autoload.php.rpm	2014-05-06 14:15:13.781403553 +0200
 +++ Horde_Test-2.4.1/lib/Horde/Test/Autoload.php	2014-05-06 14:16:25.522649055 +0200

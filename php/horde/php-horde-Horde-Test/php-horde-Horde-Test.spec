@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Autoloader
+# spec file for php-horde-Horde-Test
 #
 # Copyright (c) 2012-2014 Nick Bebout, Remi Collet
 #
@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Test
-Version:        2.4.1
+Version:        2.4.2
 Release:        1%{?dist}
 Summary:        Horde testing base classes
 
@@ -73,6 +73,7 @@ sed -e '/bundle\/vendor/d' \
     -e '/Autoload.php/s/md5sum="[^"]*"//' \
     -e '/AllTests.php/s/md5sum="[^"]*"//' \
    ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -111,6 +112,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- Update to 2.4.2 (no change)
+
 * Tue May 06 2014 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
 - Update to 2.4.1
 
