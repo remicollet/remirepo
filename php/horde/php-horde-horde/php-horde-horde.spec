@@ -6,14 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    horde
 %global pear_channel pear.horde.org
 
 Name:           php-horde-horde
-Version:        5.1.6
-Release:        2%{?dist}
+Version:        5.1.7
+Release:        1%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -246,6 +245,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 5.1.7-1
+- Update to 5.1.7
+
 * Sun Apr 13 2014 Remi Collet <remi@fedoraproject.org> - 5.1.6-2
 - comments from review #949038
 - missing dep on php-filter and php-json
