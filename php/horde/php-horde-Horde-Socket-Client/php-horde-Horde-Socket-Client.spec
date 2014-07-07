@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Socket-Client
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        Horde Socket Client
 
@@ -90,6 +90,9 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- Update to 1.1.2
+
 * Thu Jan 23 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1
 
