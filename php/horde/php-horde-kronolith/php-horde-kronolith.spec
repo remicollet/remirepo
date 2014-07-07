@@ -6,17 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    kronolith
 %global pear_channel pear.horde.org
 
-# TODO: test not ready
-# Fatal error: Call to a member function setShareCallback() on a non-object...
-
 Name:           php-horde-kronolith
-Version:        4.1.5
-Release:        2%{?dist}
+Version:        4.1.6
+Release:        1%{?dist}
 Summary:        A web based calendar
 
 Group:          Development/Libraries
@@ -32,6 +28,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -59,7 +56,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.8
 Requires:       php-pear(%{pear_channel}/Horde_Data) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
@@ -206,6 +203,20 @@ do
 done | tee ../%{pear_name}.lang
 
 
+%check
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/Kronolith
+
+# Timezone issue (need investigation)
+rm Integration/ToIcalendarTest.php
+rm Integration/FromIcalendarTest.php
+
+phpunit \
+    --include-path=$src/lib \
+    -d date.timezone=UTC \
+    .
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -248,6 +259,11 @@ fi
 
 
 %changelog
+* Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 4.1.6-1
+- Update to 4.1.6
+- raise dependency on Horde_Data >= 2.0.8
+- run test suite during build
+
 * Sat May 17 2014 Remi Collet <remi@fedoraproject.org> - 4.1.5-2
 - fix from review #1087772
 - preserve timestamp of package.xml

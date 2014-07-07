@@ -177,7 +177,6 @@ cd %{pear_name}-%{version}/test/Turba
 sed -e 's/function testDuplicateDetectionFromAsWithNoEmail/function SKIP_testDuplicateDetectionFromAsWithNoEmail/' \
     -i Unit/Driver/Base.php
 
-: tests not ready
 phpunit\
     --include-path=$src/lib \
     -d date.timezone=UTC \
