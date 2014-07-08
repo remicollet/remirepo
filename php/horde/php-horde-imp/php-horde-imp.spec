@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.1.8
+Version:        6.2.0
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -58,15 +58,15 @@ Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Compress) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Compress) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.7.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.12.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Css_Parser) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Css_Parser) <  2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Crypt) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Editor) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Editor) >= 2.0.4
 Requires:       php-pear(%{pear_channel}/Horde_Editor) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
@@ -74,17 +74,19 @@ Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Image) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Image) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.14.0
+Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.23.0
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Itip) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Itip) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_ListHeaders) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_ListHeaders) >= 1.1.0
 Requires:       php-pear(%{pear_channel}/Horde_ListHeaders) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail_Autoconfig) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail_Autoconfig) <  2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.3.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) <  3.0.0
@@ -94,35 +96,32 @@ Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Serialize) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.4.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.5
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Token) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Token) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Tree) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.2.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.4.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # From package.xml, optional
-Requires:       php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Text_Filter_Csstidy) <  3.0.0
+#     TODO Horde_Service_Gravatar
 # Optional and implicitly required:
 #     Horde_History, Horde_Http
 # From phpcompatinfo report for version 6.1.7
@@ -254,6 +253,13 @@ fi
 
 
 %changelog
+* Tue Jul 08 2014 Remi Collet <remi@fedoraproject.org> - 6.2.0-1
+- Update to 6.2.0
+- raise dep on Horde_Core, Horde_Crypt, Horde_Editor, Horde_Imap_Client,
+  Horde_ListHeaders, Horde_Mail, Horde_Mime, Horde_Stream, Horde_Util
+- drop dep on Horde_Serialize, Horde_Token, Horde_Text_Filter_Csstidy
+- add dep on Horde_Mail_Autoconfig, Horde_Stream_Wrapper
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 6.1.8-1
 - Update to 6.1.8
 
