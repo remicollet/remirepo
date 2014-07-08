@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.11.2
+Version:        2.12.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -53,15 +53,15 @@ Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Alarm) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.3.0
+Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cli) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cli) <  3.0.0
@@ -71,6 +71,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Compress_Fast) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Compress_Fast) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Controller) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Controller) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_CssMinify) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_CssMinify) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
@@ -83,13 +85,15 @@ Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_History) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Injector) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_JavascriptMinify) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_JavascriptMinify) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Lock) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Lock) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.4.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) <  3.0.0
@@ -97,7 +101,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.6.0
 Requires:       php-pear(%{pear_channel}/Horde_Prefs) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
@@ -107,8 +111,6 @@ Requires:       php-pear(%{pear_channel}/Horde_SessionHandler) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SessionHandler) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Share) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Share) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Smtp) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Smtp) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Template) >= 2.0.0
@@ -117,8 +119,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Token) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Token) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Css_Parser) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Css_Parser) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.1.0
@@ -128,7 +128,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # Optional
-Requires:       php-pear(Net_DNS2)
+Requires:       php-pear(Net_DNS2) >= 1.3.0
 Requires:       php-pear(Text_CAPTCHA)
 Requires:       php-pear(Text_Figlet)
 Requires:       php-pear(%{pear_channel}/Horde_Crypt) >= 2.0.0
@@ -157,7 +157,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 # Optional and explicitly required:
 #    Horde_HashTable, Horde_Http, Horde_Icalendar, Horde_Image, Horde_Imap_Client
 #    Horde_Ldap, Horde_Mail, Horde_Mongo, Horde_Nls, Horde_Routes, Horde_Tree
-# Horde_ActiveSync (non free)
+# Horde_ActiveSync, Horde_JavascriptMinify_Jsmin (non free)
 # Horde_Service_Twitter
 # PEAR: Text_LanguageDetect
 
@@ -269,6 +269,13 @@ fi
 
 
 %changelog
+* Tue Jul 08 2014 Remi Collet <remi@fedoraproject.org> - 2.12.0-1
+- Update to 2.12.0
+- add dep on Horde_CssMinify and Horde_JavascriptMinify
+- del dep on Horde_Smtp and Horde_Css_Parser
+- raise dep for Horde_Alarm, Horde_Autoloader, Horde_Cache,
+  Horde_Mime, Horde_Prefs and Net_DNS2
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 2.11.2-1
 - Update to 2.11.2
 
