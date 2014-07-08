@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-horde
-Version:        5.1.7
+Version:        5.2.0
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -46,17 +46,17 @@ Requires:       php-hash
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Alarm) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Alarm) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Argv) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Argv) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Browser) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.11.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.12.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
@@ -113,13 +113,14 @@ Requires:       php-pear(Net_DNS2)
 Requires:       php-pear(Services_Weather)
 Requires:       php-pear(%{pear_channel}/Horde_Feed) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Feed) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) <  3.0.0
 # Optional but implicitly required
 #               Horde_Db, Horde_Oauth, Horde_SyncMl
 # Optional but TODO
 #               Horde_Service_Facebook
 #               Horde_Service_Twitter
+#               Horde_OpenXchange
 # From phpcompatinfo report for version 5.1.6
 Requires:       php-calendar
 Requires:       php-date
@@ -246,6 +247,11 @@ fi
 
 
 %changelog
+* Tue Jul 08 2014 Remi Collet <remi@fedoraproject.org> - 5.2.0-1
+- Update to 5.2.0
+- raise dep on Horde_Alarm, Horde_Autoloader, Horde_Core
+  and Horde_Service_Weather
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 5.1.7-1
 - Update to 5.1.7
 
