@@ -41,7 +41,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 Requires:       php-channel(%{pear_channel})
 
-Provides:       php-pear(%{pear_channel}/Horde_CssMinify) = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
