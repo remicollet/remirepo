@@ -14,7 +14,7 @@
 
 Name: phpMyAdmin
 Version: 4.2.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -22,6 +22,8 @@ License: GPLv2+
 URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.bz2
 Source2: phpMyAdmin.htaccess
+
+Patch0:    %{name}-phpseclib.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -42,7 +44,6 @@ Requires:  php-iconv
 Requires:  php-json
 Requires:  php-libxml
 Requires:  php-mbstring
-Requires:  php-mcrypt
 Requires:  php-mysqli
 Requires:  php-openssl
 Requires:  php-pcre
@@ -58,6 +59,7 @@ Requires:  php-zlib
 Requires:  php-php-gettext
 Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
+Requires:  php-phpseclib-crypt-aes
 
 Provides:  phpmyadmin = %{version}-%{release}
 Obsoletes: phpMyAdmin3
@@ -74,6 +76,8 @@ is available in 50 languages
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
 
+%patch0 -p1
+
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
     -e "/'blowfish_secret'/s@''@'MUSTBECHANGEDONINSTALL'@"  \
@@ -88,6 +92,7 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
     -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
     -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
+    -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/pear@" \
     -i libraries/vendor_config.php
 
 # For debug
@@ -104,6 +109,7 @@ find . -name \*.php -exec chmod -x {} \;
 # Remove bundled libraries
 rm -r libraries/php-gettext
 rm -r libraries/tcpdf
+rm -r libraries/phpseclib
 
 # Remove sources of JavaScript librairies
 rm -r js/jquery/src
@@ -164,6 +170,11 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Jul  8 2014 Remi Collet <rpms@famillecollet.com> 4.2.5-2
+- apply upstream patch to use system phpseclib
+- add dependency on php-phpseclib-crypt-aes
+- drop dependency on php-mcrypt
+
 * Thu Jun 26 2014 Remi Collet <rpms@famillecollet.com> 4.2.5-1
 - update to 4.2.5 (Thu, 26 Jun 2014, bugfix)
 
