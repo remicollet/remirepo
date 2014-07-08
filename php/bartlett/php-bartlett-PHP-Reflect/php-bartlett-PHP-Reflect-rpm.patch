@@ -1,6 +1,6 @@
-diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json
---- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json.rpm	2014-04-04 23:06:38.000000000 +0200
-+++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json	2014-05-13 09:00:40.429251143 +0200
+diff -up ./bin/phpreflect.json.rpm ./bin/phpreflect.json
+--- ./bin/phpreflect.json.rpm	2014-07-04 20:47:50.000000000 +0200
++++ ./bin/phpreflect.json	2014-07-08 10:41:15.517221093 +0200
 @@ -1,30 +1,8 @@
  {
      "source-providers": [
@@ -34,94 +34,66 @@ diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.json.r
          }
      ],
      "plugins": [
-diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect
---- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect.rpm	2014-04-04 23:06:38.000000000 +0200
-+++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/bin/reflect	2014-05-13 09:00:49.864286548 +0200
-@@ -1,31 +1,38 @@
--#!/usr/bin/env php
-+#!/usr/bin/php
- <?php
- // CLI version
--//putenv("REFLECT=/path/to/reflect.json");
-+if (!getenv("REFLECT")) {
-+    $files = array(
-+        realpath('./reflect.json'),
-+        getenv('HOME').'/.config/phpreflect.json',
-+        '/etc/phpreflect.json',
-+    );
-+    foreach ($files as $file) {
-+        if (file_exists($file)) {
-+            putenv("REFLECT=$file");
-+            break;
-+        }
-+    }
-+}
+diff -up ./bin/phpreflect.rpm ./bin/phpreflect
+--- ./bin/phpreflect.rpm	2014-07-08 10:41:15.517221093 +0200
++++ ./bin/phpreflect	2014-07-08 10:49:23.585395326 +0200
+@@ -5,7 +5,7 @@ if (\Phar::running()) {
+     $vendorDir = 'phar://phpreflect.phar/vendor';
+ } else {
+     $baseDir   = dirname(__DIR__);
+-    $vendorDir = $baseDir . '/vendor';
++    $vendorDir = '/usr/share/php';
  
--$baseDir   = dirname(__DIR__);
--$vendorDir = $baseDir . '/vendor';
-+$vendorDir = '/usr/share/php';
- 
--if (\Phar::running()) {
--    require_once 'phar://phpreflect.phar/vendor/nikic/php-parser/lib/bootstrap.php';
--    require_once 'phar://phpreflect.phar/vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
--    require_once 'phar://phpreflect.phar/vendor/phpunit/php-timer/PHP/Timer.php';
--} else {
--    require_once $vendorDir . '/nikic/php-parser/lib/bootstrap.php';
--    require_once $vendorDir . '/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
--    require_once $vendorDir . '/phpunit/php-timer/PHP/Timer.php';
--}
+     if (!getenv("REFLECT")) {
+         $files = array(
+@@ -21,7 +21,24 @@ if (\Phar::running()) {
+         }
+     }
+ }
+-require_once $vendorDir . '/autoload.php';
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
 +
 +require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 +
 +require_once $vendorDir . '/PHP/Timer.php';
- 
- use Symfony\Component\ClassLoader\UniversalClassLoader;
- 
- $loader = new UniversalClassLoader();
- $loader->registerNamespaces(array(
--    'Symfony\\Component\\Finder'          => $vendorDir . '/symfony/finder',
--    'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher',
--    'Symfony\\Component\\Console'         => $vendorDir . '/symfony/console',
--    'Symfony\\Component\\ClassLoader'     => $vendorDir . '/symfony/class-loader',
--    'Bartlett\\Tests\\Reflect'            => $baseDir . '/tests',
--    'Bartlett'                            => $baseDir . '/src',
++
++use Symfony\Component\ClassLoader\UniversalClassLoader;
++
++$loader = new UniversalClassLoader();
++$loader->registerNamespaces(array(
 +    'Symfony\\Component\\Finder'          => $vendorDir,
 +    'Symfony\\Component\\EventDispatcher' => $vendorDir,
 +    'Symfony\\Component\\Console'         => $vendorDir,
 +    'Symfony\\Component\\ClassLoader'     => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
- ));
- $loader->register();
++));
++$loader->register();
  
-diff -up php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php.rpm php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php
---- php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php.rpm	2014-04-04 23:06:38.000000000 +0200
-+++ php-reflect-b45be1d0d1b5a46253f9cda894dd7717f0a64abd/tests/bootstrap.php	2014-05-13 09:00:40.429251143 +0200
-@@ -1,20 +1,19 @@
+ if (PHP_SAPI !== 'cli') {
+     return;
+diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
+--- ./tests/bootstrap.php.rpm	2014-07-08 10:41:15.517221093 +0200
++++ ./tests/bootstrap.php	2014-07-08 10:45:43.280413655 +0200
+@@ -1,6 +1,19 @@
  <?php
  
  $baseDir   = dirname(__DIR__);
 -$vendorDir = $baseDir . '/vendor';
 +$vendorDir = '/usr/share/php';
  
--require_once $vendorDir . '/nikic/php-parser/lib/bootstrap.php';
--require_once $vendorDir . '/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+-require_once $vendorDir . '/autoload.php';
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
 +
 +require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
- 
- use Symfony\Component\ClassLoader\UniversalClassLoader;
- 
- $loader = new UniversalClassLoader();
- $loader->registerNamespaces(array(
--    'Symfony\\Component\\Finder'          => $vendorDir . '/symfony/finder',
--    'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher',
--    'Symfony\\Component\\Console'         => $vendorDir . '/symfony/console',
--    'Symfony\\Component\\ClassLoader'     => $vendorDir . '/symfony/class-loader',
-     'Bartlett\\Tests\\Reflect'            => $baseDir . '/tests',
-     'Bartlett'                            => $baseDir . '/src',
- ));
++
++use Symfony\Component\ClassLoader\UniversalClassLoader;
++
++$loader = new UniversalClassLoader();
++$loader->registerNamespaces(array(
++    'Bartlett\\Tests\\Reflect'            => $baseDir . '/tests',
++    'Bartlett'                            => $baseDir . '/src',
++));
 +$loader->useIncludePath(true);
- $loader->register();
++$loader->register();

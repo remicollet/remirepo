@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b45be1d0d1b5a46253f9cda894dd7717f0a64abd
+%global gh_commit    f8ae7703ca47b2063adb00fe8510e4817ff9aa61
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        2.0.0
-Release:        2%{?dist}
+Version:        2.1.0
+Release:        1%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -38,6 +38,16 @@ BuildRequires:  php-symfony-finder          >= 2.4
 BuildRequires:  php-symfony-console         >= 2.4
 
 # From composer.json
+#        "php": ">=5.3.0",
+#        "ext-tokenizer": "*",
+#        "ext-pcre": "*",
+#        "ext-spl": "*",
+#        "ext-json": "*",
+#        "phpunit/php-timer": ">=1.0.0",
+#        "nikic/php-parser": "1.0.0beta1",
+#        "symfony/event-dispatcher": "~2.4",
+#        "symfony/finder": "~2.4",
+#        "symfony/console": "~2.4"
 Requires:       php(language)               >= 5.3
 Requires:       php-json
 Requires:       php-pcre
@@ -45,10 +55,11 @@ Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-phpunit-PHP-Timer       >= 1.0.5-3
 Requires:       php-PHPParser               >= 1.0.0
-Requires:       php-symfony-classloader     >= 2.4
 Requires:       php-symfony-eventdispatcher >= 2.4
 Requires:       php-symfony-finder          >= 2.4
 Requires:       php-symfony-console         >= 2.4
+# For our patch
+Requires:       php-symfony-classloader     >= 2.4
 # From package.xml
 Requires:       php-date
 Requires:       php-reflection
@@ -81,8 +92,8 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
-install -D -p -m 755 bin/reflect      %{buildroot}%{_bindir}/phpreflect
-install -D -p -m 644 bin/reflect.json %{buildroot}%{_sysconfdir}/phpreflect.json
+install -D -p -m 755 bin/phpreflect      %{buildroot}%{_bindir}/phpreflect
+install -D -p -m 644 bin/phpreflect.json %{buildroot}%{_sysconfdir}/phpreflect.json
 
 
 %check
@@ -111,6 +122,9 @@ fi
 
 
 %changelog
+* Tue Jul  8 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Mon May 26 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - fix dependencies
 
