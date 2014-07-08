@@ -1,13 +1,28 @@
+#
+# RPM spec file for php-scssphp
+#
+# Copyright (c) 2012-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#                         Remi Collet <remi@fedoraproject.org>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner    leafo
 %global github_name     scssphp
-%global github_version  0.0.10
-%global github_commit   558357feceb9b932a192966945904414dc372e4d
+%global github_version  0.0.12
+%global github_commit   ff76df3e45af45e808f3fcd516a2cb5cbc77f45e
 
 # "php": ">=5.3.0"
 %global php_min_ver     5.3.0
 # "phpunit/phpunit": "3.7.*"
-#    max version ignored
+#     NOTE: Max version ignored
 %global phpunit_min_ver 3.7.0
+
+# Build using "--without tests" to disable tests
+%global with_tests      %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:          php-%{github_name}
 Version:       %{github_version}
@@ -22,21 +37,24 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 BuildRequires: help2man
-# For tests
+%if %{with_tests}
+# For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from v0.0.10)
+# For tests: phpcompatinfo (computed from version 0.0.12)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-pcre
+%endif
 
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v0.0.10)
+# phpcompatinfo (computed from version 0.0.12)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-pcre
 
-Provides:      php-composer(leafo/scssphp) = %{github_version}
+Provides:      php-composer(leafo/scssphp) = %{version}
 
 
 %description
@@ -48,12 +66,15 @@ The entire compiler comes in a single class file ready for including in any kind
 of project in addition to a command line tool for running the compiler from the
 terminal.
 
-scssphp implements SCSS (3.2.10). It does not implement the SASS syntax, only
+scssphp implements SCSS (3.2.12). It does not implement the SASS syntax, only
 the SCSS syntax.
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
+
+# Fix version (see https://github.com/leafo/scssphp/pull/174)
+sed -i 's/0.0.11/0.0.12/' scss.inc.php
 
 # Create man page for bin
 # Required here b/c path to include file is changed in next command
@@ -71,22 +92,24 @@ sed -e 's#/usr/bin/env php#%{_bindir}/php#' \
 
 %install
 mkdir -p %{buildroot}%{_datadir}/php/%{github_name}
-install -pm 644 scss.inc.php %{buildroot}%{_datadir}/php/%{github_name}/
+install -pm 0644 scss.inc.php %{buildroot}%{_datadir}/php/%{github_name}/
 
 mkdir -p %{buildroot}%{_bindir}
-install -pm 755 pscss %{buildroot}%{_bindir}/
+install -pm 0755 pscss %{buildroot}%{_bindir}/
 
 mkdir -p %{buildroot}%{_mandir}/man1
-install -pm 644 pscss.1 %{buildroot}%{_mandir}/man1/
+install -pm 0644 pscss.1 %{buildroot}%{_mandir}/man1/
 
 
 %check
+%if %{with_tests}
 # Create PHPUnit config w/ colors turned off
-cat phpunit.xml.dist \
-    | sed 's/colors\s*=\s*"true"/colors="false"/' \
-    > phpunit.xml
+sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %{_bindir}/phpunit tests
+%else
+: Tests skipped
+%endif
 
 
 %files
@@ -98,7 +121,11 @@ cat phpunit.xml.dist \
 
 
 %changelog
-* Mon Jun  8 2014 Remi Collet <remi@fedoraproject.org> - 0.0.10-2
+* Mon Jul 07 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.0.12-1
+- Updated to 0.0.12 (BZ #1116615)
+- Added option to build without tests ("--without tests")
+
+* Sun Jun  8 2014 Remi Collet <remi@fedoraproject.org> - 0.0.10-2
 - fix FTBFS, ignore max version of PHPUnit
 - provides php-composer(leafo/scssphp)
 
