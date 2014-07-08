@@ -14,10 +14,12 @@
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
+%global pearprever dev1
+
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
-Version: 1.9.4
-Release: 29%{?dist}
+Version: 1.9.5
+Release: 0.1%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -25,7 +27,7 @@ Epoch: 1
 License: BSD and PHP and LGPLv2+
 Group: Development/Languages
 URL: http://pear.php.net/package/PEAR
-Source0: http://download.pear.php.net/package/PEAR-%{version}.tgz
+Source0: http://download.pear.php.net/package/PEAR-%{version}%{?pearprever}.tgz
 # wget https://raw.github.com/pear/pear-core/master/install-pear.php
 Source1: install-pear.php
 Source3: strip.php
@@ -328,6 +330,9 @@ fi
 
 
 %changelog
+* Tue Jul  8 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.5-0.1
+- update to 1.9.5dev1
+
 * Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.4-28
 - update XML_Util to 1.2.3
 
