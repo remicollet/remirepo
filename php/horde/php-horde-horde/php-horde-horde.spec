@@ -9,6 +9,7 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    horde
 %global pear_channel pear.horde.org
+%global sysckeditor  0
 
 Name:           php-horde-horde
 Version:        5.2.0
@@ -37,7 +38,11 @@ Requires:       httpd
 Requires:       prototype-httpd
 Requires:       scriptaculous-httpd
 Requires:       syntaxhighlighter-httpd
+%if %{sysckeditor}
 Requires:       ckeditor
+%else
+Requires:       horde-ckeditor
+%endif
 # PHP stuff, from package.xml
 Requires:       php(language) >= 5.3.0
 Requires:       php-filter
@@ -191,7 +196,10 @@ ln -s %{_sysconfdir}/horde %{buildroot}%{pear_hordedir}/config
 cp %{buildroot}%{_sysconfdir}/horde/conf.php.dist \
    %{buildroot}%{_sysconfdir}/horde/conf.php
 
-install -D -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+install -Dpm 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+%if ! %{sysckeditor}
+sed -e '/ckeditor/d'      -i %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+%endif
 
 # Locales
 for loc in locale/{??,??_??}
@@ -251,6 +259,7 @@ fi
 - Update to 5.2.0
 - raise dep on Horde_Alarm, Horde_Autoloader, Horde_Core
   and Horde_Service_Weather
+- use bundled ckeditor
 
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 5.1.7-1
 - Update to 5.1.7

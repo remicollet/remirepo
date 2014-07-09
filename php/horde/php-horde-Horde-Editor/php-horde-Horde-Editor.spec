@@ -10,10 +10,11 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Editor
 %global pear_channel pear.horde.org
+%global sysckeditor  0
 
 Name:           php-horde-Horde-Editor
 Version:        2.0.4
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Editor API
 
 Group:          Development/Libraries
@@ -30,7 +31,11 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+%if %{sysckeditor}
 Requires:       ckeditor
+%else
+Provides:       horde-ckeditor
+%endif
 Requires:       php(language) >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
@@ -54,6 +59,7 @@ embedding javascript RTE editors in a web page.
 %setup -q -c
 
 cd %{pear_name}-%{version}
+%if %{sysckeditor}
 sed -e '/name="js/d' \
     ../package.xml >%{name}.xml
 
@@ -61,6 +67,10 @@ if [ ! -d  js/ckeditor ]; then
    : Check js/ckeditor path
    exit 1
 fi
+%else
+mv ../package.xml %{name}.xml
+%endif
+
 
 %build
 cd %{pear_name}-%{version}
@@ -101,9 +111,15 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Editor
 %{pear_phpdir}/Horde/Editor.php
-
+%if ! %{sysckeditor}
+%dir %{pear_hordedir}/js
+%{pear_hordedir}/js/ckeditor
+%endif
 
 %changelog
+* Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-3
+- use bundled ckeditor
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
