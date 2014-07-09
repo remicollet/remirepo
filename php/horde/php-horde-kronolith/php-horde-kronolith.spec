@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.1.6
+Version:        4.2.0
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -56,9 +56,9 @@ Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.8
+Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.8
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Dav) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Dav) <  2.0.0
@@ -109,11 +109,11 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # From package.xml, optional
-Requires:       php-pear(%{pear_channel}/nag) >= 4.0.0
+Requires:       php-pear(%{pear_channel}/nag) >= 4.2.0
 Requires:       php-pear(%{pear_channel}/nag) <  5
 # Optional and implicitly required: Horde_Db
 # Optional and skiped as non-free: Horde_ActiveSync
-# TODO pear.horde.org/timeobjects >= 2.0.0
+# TODO pear.horde.org/timeobjects >= 2.0.0, Horde_OpenXchange
 # From phpcompatinfo report for version 4.1.5
 Requires:       php-date
 Requires:       php-intl
@@ -243,6 +243,7 @@ fi
 %{_bindir}/kronolith-convert-sql-shares-to-sqlng
 %{_bindir}/kronolith-convert-to-utc
 %{_bindir}/kronolith-import-icals
+%{_bindir}/kronolith-import-openxchange
 %{_bindir}/kronolith-import-squirrelmail-calendar
 %dir %{pear_hordedir}/%{pear_name}
 %dir %{pear_hordedir}/%{pear_name}/locale
@@ -259,6 +260,9 @@ fi
 
 
 %changelog
+* Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 4.2.0-1
+- Update to 4.2.0
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 4.1.6-1
 - Update to 4.1.6
 - raise dependency on Horde_Data >= 2.0.8
