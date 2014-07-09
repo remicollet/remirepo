@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-nag
-Version:        4.1.5
+Version:        4.2.0
 Release:        1%{?dist}
 Summary:        A web based task list manager
 
@@ -90,6 +90,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # Optional and implicitly required: Horde_Db
+# TODO Horde_OpenXchange
 # From pĥpcompatinfo report for version 4.1.4
 Requires:       php-date
 Requires:       php-json
@@ -200,6 +201,7 @@ fi
 %{_bindir}/nag-convert-datatree-shares-to-sql
 %{_bindir}/nag-convert-sql-shares-to-sqlng
 %{_bindir}/nag-create-missing-add-histories-sql
+%{_bindir}/nag-import-openxchange
 %{_bindir}/nag-import-vtodos
 %dir %{pear_hordedir}/%{pear_name}
 %dir %{pear_hordedir}/%{pear_name}/locale
@@ -210,12 +212,16 @@ fi
 %{pear_hordedir}/%{pear_name}/lib
 %{pear_hordedir}/%{pear_name}/migration
 %{pear_hordedir}/%{pear_name}/tasklists
+%{pear_hordedir}/%{pear_name}/task
 %{pear_hordedir}/%{pear_name}/tasks
 %{pear_hordedir}/%{pear_name}/templates
 %{pear_hordedir}/%{pear_name}/themes
 
 
 %changelog
+* Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 4.2.0-1
+- Update to 4.2.0
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 4.1.5-1
 - Update to 4.1.5
 - run test suite during build (all ignored for now)

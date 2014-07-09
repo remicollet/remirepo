@@ -262,6 +262,7 @@ fi
 %changelog
 * Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 4.2.0-1
 - Update to 4.2.0
+- raise dep on nag, Horde_Date
 
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 4.1.6-1
 - Update to 4.1.6
