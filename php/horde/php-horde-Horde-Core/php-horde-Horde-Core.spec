@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.12.2
+Version:        2.12.4
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -99,6 +99,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Pack) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Pack) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.6.0
@@ -269,6 +271,10 @@ fi
 
 
 %changelog
+* Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 2.12.4-1
+- Update to 2.12.4
+- add dep on Horde_Pack
+
 * Tue Jul 08 2014 Remi Collet <remi@fedoraproject.org> - 2.12.2-1
 - Update to 2.12.2
 
