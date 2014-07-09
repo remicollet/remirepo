@@ -1,0 +1,55 @@
+diff --git a/sync.c b/sync.c
+index 016c636..f8344bd 100644
+--- a/sync.c
++++ b/sync.c
+@@ -22,5 +22,10 @@
+ #include "php_sync.h"
+ 
++/* PHP_FE_END not define in php < 5.3.7 */
++#ifndef PHP_FE_END
++#define PHP_FE_END {NULL, NULL, NULL}
++#endif
++
+ /* {{{ sync_module_entry
+  */
+ zend_module_entry sync_module_entry = {
+diff --git a/config.m4 b/config.m4
+index a386835..877bb61 100644
+--- a/config.m4
++++ b/config.m4
+@@ -23,6 +23,9 @@ if test "$PHP_SYNC" != "no"; then
+     AC_MSG_ERROR([sem_open() is not available on this platform])
+   ])
+ 
++  PHP_ADD_LIBRARY(rt,,SYNC_SHARED_LIBADD)
++  PHP_SUBST(SYNC_SHARED_LIBADD)
++
+   dnl # Finish defining the basic extension support.
+   AC_DEFINE(HAVE_SYNC, 1, [Whether you have synchronization object support])
+   PHP_NEW_EXTENSION(sync, sync.c, $ext_shared)
+diff --git a/sync.c b/sync.c
+index 529133a..40fe075 100644
+--- a/sync.c
++++ b/sync.c
+@@ -1120,11 +1120,17 @@ int sync_ReaderWriter_readunlock_internal(sync_ReaderWriter_object *obj)
+ 	if (!sync_WaitForSemaphore(obj->MxSemRSemMutex, INFINITE))  return 0;
+ 
+ 	/* Release the semaphore. */
+-	Result = sem_post(obj->MxSemRSemaphore);
+-
+-	/* Update the event state. */
+ 	sem_getvalue(obj->MxSemRSemaphore, &Val);
+-	if (Val == SEM_VALUE_MAX)  sem_post(obj->MxSemRWaitEvent);
++	if (Val == SEM_VALUE_MAX)  {
++		Result = 1;
++		sem_post(obj->MxSemRWaitEvent);
++	} else {
++		Result = sem_post(obj->MxSemRSemaphore);
++
++		/* Update the event state. */
++		sem_getvalue(obj->MxSemRSemaphore, &Val);
++		if (Val == SEM_VALUE_MAX)  sem_post(obj->MxSemRWaitEvent);
++	}
+ 
+ 	if (obj->MxReadLocks)  obj->MxReadLocks--;
+ 
