@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-turba
-Version:        4.1.5
+Version:        4.2.0
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -44,11 +44,13 @@ Requires:       php-json
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/content) >= 2.0.3
+Requires:       php-pear(%{pear_channel}/content) <  3.0.0
 Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
 Requires:       php-pear(%{pear_channel}/horde) <  6.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.12.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) <  3.0.0
@@ -86,12 +88,14 @@ Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.1.3
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # Optional an implicitly required
 #    Horde_Db, Horde_Imsp, Horde_Ldap
 #    Horde_Kolab_Format, Horde_Kolab_Storage
-# Not yet available Horde_Service_Facebook
+# Not yet available Horde_Service_Facebook, Horde_OpenXchange
 # From phpcompatinfo report for version 4.1.4
 Requires:       php-date
 Requires:       php-pcre
@@ -207,6 +211,7 @@ fi
 %{pear_testdir}/turba
 %{_bindir}/turba-convert-datatree-shares-to-sql
 %{_bindir}/turba-convert-sql-shares-to-sqlng
+%{_bindir}/turba-import-openxchange
 %{_bindir}/turba-import-squirrelmail-file-abook
 %{_bindir}/turba-import-squirrelmail-sql-abook
 %{_bindir}/turba-import-vcards
@@ -224,6 +229,11 @@ fi
 
 
 %changelog
+* Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 4.2.0-1
+- Update to 4.2.0
+- add dep on content, Horde_Vfs
+- raise dep on Horde_Core
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 4.1.5-1
 - Update to 4.1.5
 - run test suite during build
