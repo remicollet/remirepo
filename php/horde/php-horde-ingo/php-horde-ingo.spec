@@ -30,6 +30,8 @@ BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.3.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -185,6 +187,7 @@ fi
 %{_bindir}/ingo-convert-prefs-to-sql
 %{_bindir}/ingo-convert-sql-shares-to-sqlng
 %{_bindir}/ingo-postfix-policyd
+%{_bindir}/ingo-admin-upgrade
 %dir %{pear_hordedir}/%{pear_name}
 %dir %{pear_hordedir}/%{pear_name}/locale
 %{pear_hordedir}/%{pear_name}/*.php
@@ -194,6 +197,7 @@ fi
 %{pear_hordedir}/%{pear_name}/migration
 %{pear_hordedir}/%{pear_name}/templates
 %{pear_hordedir}/%{pear_name}/themes
+%{pear_testdir}/ingo
 
 
 %changelog
