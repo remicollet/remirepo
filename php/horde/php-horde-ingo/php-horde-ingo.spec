@@ -14,7 +14,7 @@
 # Tests are not ready (need Framework 5.2)
 
 Name:           php-horde-ingo
-Version:        3.1.5
+Version:        3.2.0
 Release:        1%{?dist}
 Summary:        An email filter rules manager
 
@@ -49,7 +49,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.12.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
@@ -149,6 +149,15 @@ do
 done | tee ../%{pear_name}.lang
 
 
+%check
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/Ingo
+phpunit\
+    --include-path=$src/lib \
+    -d date.timezone=UTC \
+    .
+
+
 %clean
 rm -rf %{buildroot}
 
@@ -185,10 +194,14 @@ fi
 %{pear_hordedir}/%{pear_name}/migration
 %{pear_hordedir}/%{pear_name}/templates
 %{pear_hordedir}/%{pear_name}/themes
-%{pear_datadir}/%{pear_name}
 
 
 %changelog
+* Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- Update to 3.2.0
+- raise dep on Hode_Core
+- run test suite during build
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 3.1.5-1
 - Update to 3.1.5
 

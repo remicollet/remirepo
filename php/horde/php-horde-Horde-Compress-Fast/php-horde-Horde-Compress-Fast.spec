@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Compress-Fast
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Fast Compression Library
 
@@ -105,6 +105,9 @@ fi
 
 
 %changelog
+* Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+
 * Wed Jul 17 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 
