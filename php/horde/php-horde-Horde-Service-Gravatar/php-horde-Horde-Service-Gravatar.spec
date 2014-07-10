@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-OpenXchange
+# spec file for php-horde-Horde-Service-Gravatar
 #
 # Copyright (c) 2014 Remi Collet
 # License: CC-BY-SA
