@@ -23,6 +23,9 @@
 %global oraclever 12.1
 %endif
 
+# Build for LiteSpeed Web Server (LSAPI)
+%global with_lsws     1
+
 # Regression tests take a long time, you can skip 'em with this
 %if %{php_bootstrap}
 %global runselftest 0
@@ -118,13 +121,13 @@
 %endif
 
 #global snapdate      201308300430
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.14
+Version: 5.5.15
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -309,6 +312,20 @@ Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php55u-fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
 implementation with some additional features useful for sites of
 any size, especially busier sites.
+
+
+%if %{with_lsws}
+%package litespeed
+Summary: LiteSpeed Web Server PHP support
+Group: Development/Languages
+Requires: php-common%{?_isa} = %{version}-%{release}
+Obsoletes: php53-litespeed, php53u-litespeed, php54-litespeed, php55u-litespeed
+
+%description litespeed
+The php-litespeed package provides the %{_bindir}/lsphp command
+used by the LiteSpeed Web Server (LSAPI enabled PHP).
+%endif
+
 
 %package common
 Group: Development/Languages
@@ -1225,6 +1242,9 @@ without_shared="--without-gd \
 pushd build-apache
 build --with-apxs2=%{_httpd_apxs} \
       --libdir=%{_libdir}/php \
+%if %{with_lsws}
+      --with-litespeed \
+%endif
 %if %{with_libmysql}
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
@@ -1498,6 +1518,10 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
+
+%if %{with_lsws}
+install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
+%endif
 
 # PHP-FPM stuff
 # Log
@@ -1831,6 +1855,12 @@ fi
 %dir %{_datadir}/fpm
 %{_datadir}/fpm/status.html
 
+%if %{with_lsws}
+%files litespeed
+%defattr(-,root,root)
+%{_bindir}/lsphp
+%endif
+
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
@@ -1897,6 +1927,10 @@ fi
 
 
 %changelog
+* Thu Jul 10 2014 Remi Collet <remi@fedoraproject.org> 5.5.15-0.1.RC1
+- Test build of 5.5.15RC1
+- add php-litespeed subpackage (/usr/bin/lsphp)
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> 5.5.14-1
 - Update to 5.5.14
   http://www.php.net/releases/5_5_14.php
