@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.12.4
+Version:        2.12.5
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -271,6 +271,9 @@ fi
 
 
 %changelog
+* Fri Jul 11 2014 Remi Collet <remi@fedoraproject.org> - 2.12.5-1
+- Update to 2.12.5
+
 * Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 2.12.4-1
 - Update to 2.12.4
 - add dep on Horde_Pack
