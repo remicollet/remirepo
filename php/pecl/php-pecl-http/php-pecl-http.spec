@@ -26,8 +26,8 @@
 %endif
 
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.0.6
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.0.7
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -291,6 +291,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 11 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+
 * Wed May 14 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-2
 - php56: obsoletes php-pecl-http1
 
