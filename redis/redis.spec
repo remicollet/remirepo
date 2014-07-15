@@ -10,7 +10,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.12
+Version:          2.8.13
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -212,6 +212,10 @@ fi
 
 
 %changelog
+* Tue Jul 15 2014 Remi Collet <remi@fedoraproject.org> - 2.8.13-1
+- Redis 2.8.12 - Release date: 14 Jul 2014
+  upgrade urgency: LOW for Redis and Sentinel
+
 * Tue Jun 24 2014 Remi Collet <remi@fedoraproject.org> - 2.8.12-1
 - Redis 2.8.12 - Release date: 23 Jun 2014
   upgrade urgency: HIGH for Redis, CRITICAL for Sentinel.
