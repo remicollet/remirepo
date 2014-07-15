@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #141 swoole version 1.7.3 ] {
+Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
 
   - INI {
     Entry [ swoole.task_worker_num <ALL> ]
@@ -18,7 +18,7 @@ Extension [ <persistent> extension #141 swoole version 1.7.3 ] {
     }
   }
 
-  - Constants [35] {
+  - Constants [36] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -45,6 +45,7 @@ Extension [ <persistent> extension #141 swoole version 1.7.3 ] {
     Constant [ integer SWOOLE_SYNC ] { 2048 }
     Constant [ integer SWOOLE_ASYNC ] { 1024 }
     Constant [ integer SWOOLE_KEEP ] { 512 }
+    Constant [ integer SWOOLE_SSL ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
     Constant [ integer SWOOLE_SIGN ] { 64 }
@@ -53,7 +54,7 @@ Extension [ <persistent> extension #141 swoole version 1.7.3 ] {
     Constant [ integer SWOOLE_HOST ] { 16 }
     Constant [ integer SWOOLE_SHORT ] { 2 }
     Constant [ integer SWOOLE_INT ] { 4 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.3 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.4 }
   }
 
   - Functions {
