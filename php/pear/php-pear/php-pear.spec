@@ -14,12 +14,12 @@
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
-%global pearprever dev1
+#global pearprever dev1
 
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.5
-Release: 0.1%{?dist}
+Release: 1%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -330,6 +330,9 @@ fi
 
 
 %changelog
+* Tue Jul 15 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.5-1
+- update to 1.9.5
+
 * Tue Jul  8 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.5-0.1
 - update to 1.9.5dev1
 
