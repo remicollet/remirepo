@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-CssMinify
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        CSS Minification
 
@@ -97,5 +97,8 @@ fi
 
 
 %changelog
+* Tue Jul 15 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Tue Jul  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Initial package, verison 1.0.0
