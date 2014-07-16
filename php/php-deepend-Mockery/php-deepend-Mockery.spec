@@ -1,34 +1,27 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global pear_name Mockery
-%global channel pear.survivethedeepend.com
-
 Name:           php-deepend-Mockery
-Version:        0.9.0
-Release:        1%{?dist}
+Version:        0.9.1
+Release:        2%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://github.com/padraic/mockery
-Source0:        http://pear.survivethedeepend.com/get/%{pear_name}-%{version}.tgz
-Source1:        http://github.com/padraic/mockery/blob/master/LICENSE
-Source2:        http://github.com/padraic/mockery/blob/master/README.markdown
+Source0:        https://github.com/padraic/mockery/archive/%{version}/mockery-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.4.9-1.2
-BuildRequires:  php-channel(%{channel})
-
-Requires:       php-channel(%{channel})
+# TODO: enable tests
+# TODO: make hamcrest as dependency for additional features
 Requires:       php(language) >= 5.3.2
-# From phpcompatinfo report for version 0.9.0
+#Requires:       pcre >= 7.0
 Requires:       php-pcre
-Requires:       php-reflection
 Requires:       php-spl
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
+Requires:       php-reflection
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:       php-composer(mockery/mockery) = %{version}
+Provides:       php-pear(pear.survivethedeepend.com/Mockery) = %{version}
+Obsoletes:      php-channel-deepend <= 1.3
 
 
 %description
@@ -37,56 +30,53 @@ testing. It is inspired by Ruby's flexmock and Java's Mockito, borrowing
 elements from both of their APIs.
 
 %prep
-%setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-%{__mv} package2.xml %{pear_name}-%{version}/%{name}.xml
-cd %{pear_name}-%{version}
+%setup -q -n mockery-%{version}
+
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
 %install
-cd %{pear_name}-%{version}
-%{__rm} -rf %{buildroot} docdir
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
-
-# Clean up unnecessary files
-%{__rm} -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-%{__mkdir} -p %{buildroot}%{pear_xmldir}
-%{__install} -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
-
-mkdir docdir
-%{__cp} %{SOURCE1} %{SOURCE2} docdir
+rm -rf %{buildroot}
+mkdir -p %{buildroot}/%{_datadir}/php
+cp -rp library/* %{buildroot}/%{_datadir}/php/
 
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
+
+
+%check
+# We need this packages to pass tests
+# hamcrest/hamcrest-php: ~1.1
+# satooshi/php-coveralls: ~0.7@dev
+# phpunit --include-path ./library:./tests -d date.timezone="UTC"
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-  %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-  %{__pear} uninstall --nodeps --ignore-errors --register-only \
-    %{channel}/%{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+  %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+    pear.survivethedeepend.com/Mockery >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/Mockery.php
-%{pear_phpdir}/Mockery
-%doc %{pear_name}-%{version}/docdir/*
+%doc LICENSE README.md docs/*
+%{_datadir}/php/Mockery/
+%{_datadir}/php/Mockery.php
+
 
 %changelog
+* Wed Jul 16 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.9.1-2
+- fixed requires (Remi)
+- add script which will delete older pear package if installed (Remi)
+- fix provides/obsoletes (Remi)
+
+* Tue Jul 15 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.9.1-1
+- update to 0.9.1 (RHBZ #1119451)
+
 * Tue Feb 11 2014 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
 - Update to 0.9.0
 
@@ -102,7 +92,7 @@ fi
 * Sun Mar  4 2012 Christof Damian <christof@damian.net> - 0.7.2-1
 - upstream 0.7.2
 
-* Wed Jul 27 2010 Remi Collet <RPMS@FamilleCollet.com> - 0.6.3-2
+* Tue Jul 27 2010 Remi Collet <RPMS@FamilleCollet.com> - 0.6.3-2
 - rebuild for remi repository
 
 * Tue Jul 27 2010 Christof Damian <christof@damian.net> - 0.6.3-2

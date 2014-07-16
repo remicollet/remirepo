@@ -25,6 +25,7 @@
     "leafo/scssphp":                        "php-scssphp",
     "michelf/php-markdown":                 "php-markdown",
     "mikey179/vfsStream":                   "php-mikey179-vfsstream",
+    "mockery/mockery":                      "php-deepend-Mockery",
     "monolog/monolog":                      "php-Monolog",
     "raven/raven":                          "php-Raven",
     "sabberworm/php-css-parser":            "php-PHP-CSS-Parser",
