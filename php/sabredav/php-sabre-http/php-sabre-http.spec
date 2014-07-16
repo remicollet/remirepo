@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    19ae509d699a388154547448b502cef5f19602ec
+%global gh_commit    c4c24f547a5509c6c661b11ecf4ff524d2bf6a44
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-http
@@ -15,7 +15,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Library for dealing with http requests and responses
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -27,18 +27,21 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) > 5.4
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:  php-sabre-event >= 1.0.0
-BuildRequires:  php-sabre-event <  1.1
+BuildRequires:  php-phpunit-PHPUnit
+BuildRequires:  php-composer(sabre/event) >= 1.0.0
+BuildRequires:  php-composer(sabre/event) <  3
 %endif
 
 # From composer.json
+#        "php"          : ">=5.4",
+#        "ext-mbstring" : "*",
+#        "sabre/event"  : ">=1.0.0,<3.0.0"
 Requires:       php(language) > 5.4
 Requires:       php-curl
 Requires:       php-mbstring
-Requires:       php-sabre-event >= 1.0.0
-Requires:       php-sabre-event <  1.1
-# From phpcompatinfo report for version 1.0.0alpha5
+Requires:       php-composer(sabre/event) >= 1.0.0
+Requires:       php-composer(sabre/event) <  3
+# From phpcompatinfo report for version 2.0.4
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-pcre
@@ -46,6 +49,8 @@ Requires:       php-spl
 Requires:       php-xml
 # Was split from php-sabre-dav in version 1.9
 Conflicts:      php-sabre-dav < 1.9
+
+Provides:       php-composer(sabre/http) = %{version}
 
 
 %description
@@ -115,6 +120,10 @@ phpunit \
 
 
 %changelog
+* Wed Jul 16 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- update to 2.0.4
+- composer dependencies
+
 * Tue May  6 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - update to 2.0.3
 
