@@ -11,10 +11,8 @@
 
 %global github_owner     doctrine
 %global github_name      annotations
-%global github_version   1.1.2
-%global github_commit    a11349d39d85bef75a71bd69bd604ac4fb993f03
-# Additional commits after v1.1.2 tag
-%global github_release   .20131220git%(c=%{github_commit}; echo ${c:0:7})
+%global github_version   1.2.0
+%global github_commit    d9b1a37e9351ddde1f19f09a02e3d6ee92e82efd
 
 %global composer_vendor  doctrine
 %global composer_project annotations
@@ -33,7 +31,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       5%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       PHP docblock annotations parser library
 
 Group:         Development/Libraries
@@ -51,7 +49,7 @@ BuildRequires: php-composer(doctrine/cache) <  %{cache_max_ver}
 BuildRequires: php-composer(doctrine/lexer) >= %{lexer_min_ver}
 BuildRequires: php-composer(doctrine/lexer) <  %{lexer_max_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from v1.1.2 git commit a11349d39d85bef75a71bd69bd604ac4fb993f03)
+# For tests: phpcompatinfo (computed from version 1.2.0)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-json
@@ -64,7 +62,7 @@ BuildRequires: php-tokenizer
 Requires:      php(language)                >= %{php_min_ver}
 Requires:      php-composer(doctrine/lexer) >= %{lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{lexer_max_ver}
-# phpcompatinfo (computed from v1.1.2 git commit a11349d39d85bef75a71bd69bd604ac4fb993f03)
+# phpcompatinfo (computed from version 1.2.0)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-json
@@ -99,25 +97,21 @@ cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
 %check
 %if %{with_tests}
-# Create tests' init
-cat > tests/Doctrine/Tests/TestInit.php <<'TESTINIT'
+# Create autoloader
+mkdir vendor
+cat > vendor/autoload.php <<'AUTOLOAD'
 <?php
-namespace Doctrine\Tests;
 
 spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
+    $src = str_replace('\\', '/', $class).'.php';
     @include_once $src;
 });
-
-\Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-    'Doctrine\Tests\Common\Annotations\Fixtures', __DIR__ . '/../../'
-);
-TESTINIT
+AUTOLOAD
 
 # Create PHPUnit config w/ colors turned off
 sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
-%{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
+%{_bindir}/phpunit --include-path ./lib -d date.timezone="UTC"
 %else
 : Tests skipped
 %endif
@@ -134,6 +128,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 15 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
+- Updated to 1.2.0 (BZ #1116887)
+
 * Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.2-5.20131220gita11349d
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
 - Added option to build without tests ("--without tests")
