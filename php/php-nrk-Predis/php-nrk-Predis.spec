@@ -10,14 +10,14 @@
 %global pear_name    Predis
 %global pear_channel pear.nrk.io
 
-%if 0%{?fedora} >= 18
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %else
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %endif
 
 Name:           php-nrk-Predis
-Version:        0.8.5
+Version:        0.8.6
 Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
@@ -49,6 +49,7 @@ Requires:       php-pear(PEAR)
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(predis/predis) = %{version}
 
 
 %description
@@ -106,11 +107,7 @@ fi
 
 exit $ret
 %else
-%if 0%{?_without_tests:1}
-: Test disabled, by '--without tests' option.
-%else
-: Test disabled, missing '--with tests' option.
-%endif
+: Test disabled
 %endif
 
 
@@ -138,6 +135,11 @@ fi
 
 
 %changelog
+* Wed Jul 16 2014 Remi Collet <remi@fedoraproject.org> - 0.8.6-1
+- Update to 0.8.6
+- provides php-composer(predis/predis)
+- enable test suite in EL-7
+
 * Thu Jan 16 2014 Remi Collet <remi@fedoraproject.org> - 0.8.5-1
 - Update to 0.8.5 (stable)
 
