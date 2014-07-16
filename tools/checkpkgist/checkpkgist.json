@@ -7,6 +7,15 @@
   Last update: 2014-05-16
 */
 {
+    "doctrine/annotations":                 "php-doctrine-annotations",
+    "doctrine/cache":                       "php-doctrine-cache",
+    "doctrine/collections":                 "php-doctrine-collections",
+    "doctrine/common":                      "php-doctrine-common",
+    "doctrine/data-fixtures":               "php-doctrine-datafixtures",
+    "doctrine/dbal":                        "php-doctrine-dbal",
+    "doctrine/inflector":                   "php-doctrine-inflector",
+    "doctrine/lexer":                       "php-doctrine-lexer",
+    "doctrine/orm":                         "php-doctrine-orm",
     "fabpot/goutte":                        "php-goutte",
     "fzaninotto/faker":                     "php-Faker",
     "jms/parser-lib":                       "php-JMSParser",
