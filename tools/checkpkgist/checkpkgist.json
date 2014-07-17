@@ -27,6 +27,7 @@
     "mikey179/vfsStream":                   "php-mikey179-vfsstream",
     "mockery/mockery":                      "php-deepend-Mockery",
     "monolog/monolog":                      "php-Monolog",
+    "ocramius/instantiator":                "php-ocramius-instantiator",
     "ocramius/lazy-map":                    "php-ocramius-lazy-map",
     "raven/raven":                          "php-Raven",
     "sabberworm/php-css-parser":            "php-PHP-CSS-Parser",
