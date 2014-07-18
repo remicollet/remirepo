@@ -14,7 +14,7 @@
 
 Name: phpMyAdmin
 Version: 4.2.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -75,6 +75,11 @@ is available in 50 languages
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
 
+# Fix links on home page to match allowed domains
+# see https://github.com/phpmyadmin/phpmyadmin/pull/1291
+sed -e 's/www.phpmyadmin.net/www.phpMyAdmin.net/' \
+    -i index.php
+
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
     -e "/'blowfish_secret'/s@''@'MUSTBECHANGEDONINSTALL'@"  \
@@ -96,12 +101,7 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
 grep '^define' libraries/vendor_config.php
 
 # to avoid rpmlint warnings
-find . -name \*.php -exec chmod -x {} \;
-
-#for archive in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14} %{SOURCE15} %{SOURCE16}
-#do
-#    %{__unzip} -q $archive -d themes
-#done
+rm doc/html/.buildinfo
 
 # Remove bundled libraries
 rm -r libraries/php-gettext
@@ -167,6 +167,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Fri Jul 18 2014 Remi Collet <rpms@famillecollet.com> 4.2.6-2
+- fix links on home page
+
 * Fri Jul 18 2014 Remi Collet <rpms@famillecollet.com> 4.2.6-1
 - update to 4.2.6 (Thu, 17 Jul 2014, security)
 - fix for PMASA-2014-4 to PMASA-2014-7
