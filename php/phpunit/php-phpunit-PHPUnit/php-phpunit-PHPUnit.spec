@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    939cb801b3b2aa253aedd0b279f40bb8f35cec91
+%global gh_commit    a71c4842c5fb836d8b200624583b859ec34e8a26
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.1.3
+Version:        4.1.4
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -36,40 +36,69 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
-BuildRequires:  php-phpunit-File-Iterator >= 1.3.1
+BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.1
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
-BuildRequires:  php-phpunit-PHP-CodeCoverage >= 2.0
-BuildRequires:  php-phpunit-PHP-Timer >= 1.0.2
+BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.0
+BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.2
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.1
-BuildRequires:  php-phpunit-comparator >= 1.0
-BuildRequires:  php-phpunit-diff >= 1.1
-BuildRequires:  php-phpunit-environment >= 1.0
-BuildRequires:  php-phpunit-exporter >= 1.0
-BuildRequires:  php-phpunit-Version >= 1.0
+BuildRequires:  php-composer(sebastian/comparator) >= 1.0
+BuildRequires:  php-composer(sebastian/diff) >= 1.1
+BuildRequires:  php-composer(sebastian/environment) >= 1.0
+BuildRequires:  php-composer(sebastian/exporter) >= 1.0
+BuildRequires:  php-composer(sebastian/version) >= 1.0
 BuildRequires:  php-symfony-yaml >= 2.0.0
-BuildRequires:  php-phpunit-PHP-Invoker >= 1.1.0
+BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
 # From composer.json
-Requires:       php-phpunit-File-Iterator >= 1.3.1
+#        "php": ">=5.3.3",
+#        "phpunit/php-file-iterator": "~1.3.1",
+#        "phpunit/php-text-template": "~1.2",
+#        "phpunit/php-code-coverage": "~2.0",
+#        "phpunit/php-timer": "~1.0.2",
+#        "phpunit/phpunit-mock-objects": "~2.1",
+#        "symfony/yaml": "~2.0",
+#        "sebastian/comparator": "~1.0",
+#        "sebastian/diff": "~1.1",
+#        "sebastian/environment": "~1.0",
+#        "sebastian/exporter": "~1.0",
+#        "sebastian/version": "~1.0",
+#        "ext-dom": "*",
+#        "ext-json": "*",
+#        "ext-pcre": "*",
+#        "ext-reflection": "*",
+#        "ext-spl": "*"
+Requires:       php(language) >= 5.3.3
+Requires:       php-composer(phpunit/php-file-iterator) >= 1.3.1
+Requires:       php-composer(phpunit/php-file-iterator) <  1.4
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
-Requires:       php-phpunit-PHP-CodeCoverage >= 2.0
-Requires:       php-phpunit-PHP-Timer >= 1.0.2
+Requires:       php-composer(phpunit/php-text-template) <  2
+Requires:       php-composer(phpunit/php-code-coverage) >= 2.0
+Requires:       php-composer(phpunit/php-code-coverage) <  3
+Requires:       php-composer(phpunit/php-timer) >= 1.0.2
+Requires:       php-composer(phpunit/php-timer) <  1.1
 Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.1
-Requires:       php-phpunit-comparator >= 1.0
-Requires:       php-phpunit-diff >= 1.1
-Requires:       php-phpunit-environment >= 1.0
-Requires:       php-phpunit-exporter >= 1.0
-Requires:       php-phpunit-Version >= 1.0
+Requires:       php-composer(phpunit/phpunit-mock-objects) <  3
+Requires:       php-composer(sebastian/comparator) >= 1.0
+Requires:       php-composer(sebastian/comparator) <  2
+Requires:       php-composer(sebastian/diff) >= 1.1
+Requires:       php-composer(sebastian/diff) <  2
+Requires:       php-composer(sebastian/environment) >= 1.0
+Requires:       php-composer(sebastian/environment) <  2
+Requires:       php-composer(sebastian/exporter) >= 1.0
+Requires:       php-composer(sebastian/exporter) <  2
+Requires:       php-composer(sebastian/version) >= 1.0
+Requires:       php-composer(sebastian/version) <  2
 Requires:       php-symfony-yaml >= 2.0.0
 Requires:       php-symfony-yaml <  3
-Requires:       php(language) >= 5.3.3
 Requires:       php-dom
 Requires:       php-json
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 # Optional
-Requires:       php-phpunit-PHP-Invoker >= 1.1.0
+#        "phpunit/php-invoker": "~1.1"
+Requires:       php-composer(phpunit/php-invoker) >= 1.1
+Requires:       php-composer(phpunit/php-invoker) <  2
 # From phpcompatinfo report for version 4.0.18
 Requires:       php-date
 Requires:       php-libxml
@@ -151,11 +180,20 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%doc CONTRIBUTING.md README.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+
 %{_bindir}/phpunit
 %{php_home}/PHPUnit
 
 
 %changelog
+* Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-1
+- Update to 4.1.4
+- composer dependencies
+- add missing documentation and license
+
 * Fri Jun 13 2014 Remi Collet <remi@fedoraproject.org> - 4.1.3-1
 - Update to 4.1.3
 
