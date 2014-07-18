@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-exporter
 Version:        1.0.1
-Release:        2%{?dist}.1
+Release:        4%{?dist}
 Summary:        Export PHP variables for visualization
 
 Group:          Development/Libraries
@@ -34,12 +34,15 @@ BuildRequires:  %{_bindir}/phpab
 BuildRequires:  %{_bindir}/phpunit
 %endif
 
-# from package.xml
+# from composer.json
+#    "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
 # from phpcompatinfo report for version 1.0.0
 Requires:       php-hash
 Requires:       php-pcre
 Requires:       php-spl
+
+Provides:       php-composer(sebastian/exporter) = %{version}
 
 # For compatibility, to drop when no more required
 # Currently used by phpcpd and phploc
@@ -90,13 +93,18 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
+%doc README.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 
 %dir %{php_home}
 %{php_home}/%{pear_name}
 
 
 %changelog
+* Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-4
+- add composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
 - cleanup pear registry
 
