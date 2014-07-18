@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-PHP-Timer
 Version:        1.0.5
-Release:        3%{?dist}.1
+Release:        5%{?dist}
 Summary:        PHP Utility class for timing
 
 Group:          Development/Libraries
@@ -26,10 +26,12 @@ BuildRequires:  %{_bindir}/phpunit
 %endif
 
 # From composer.json
+#        "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for version 1.0.5
 Requires:       php-spl
 
+Provides:       php-composer(phpunit/php-timer) = %{version}
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -81,11 +83,16 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
+%doc README.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %{php_home}
 
 
 %changelog
+* Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-5
+- add composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-3
 - cleanup pear registry
 
