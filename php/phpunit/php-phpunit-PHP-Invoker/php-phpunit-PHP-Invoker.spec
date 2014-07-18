@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHP-Invoker
 Version:        1.1.3
-Release:        4%{?dist}.1
+Release:        6%{?dist}
 Summary:        Utility class for invoking callables with a timeout
 
 Group:          Development/Libraries
@@ -34,11 +34,16 @@ BuildRequires:  %{_bindir}/phpunit
 %endif
 
 # From composer.json
+#        "php": ">=5.2.7",
+#        "phpunit/php-timer": ">=1.0.4",
+#        "ext-pcntl": "*"
 Requires:       php(language) >= 5.2.7
-Requires:       php-phpunit-PHP-Timer >= 1.0.4
+Requires:       php-composer(phpunit/php-timer) >= 1.0.4
 Requires:       php-pcntl
 # From phpcompatinfo report for version 1.0.5
 Requires:       php-spl
+
+Provides:       php-composer(phpunit/php-invoker) = %{version}
 
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -89,11 +94,17 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.markdown ChangeLog.markdown composer.json
+%doc README.markdown ChangeLog.markdown composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+
 %{php_home}/*
 
 
 %changelog
+* Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-6
+- add composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-4
 - cleanup pear registry
 
