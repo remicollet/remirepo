@@ -16,7 +16,7 @@
 
 Name:           php-phpunit-comparator
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Compare PHP values for equality
 
 Group:          Development/Libraries
@@ -33,13 +33,20 @@ BuildRequires:  %{_bindir}/phpunit
 %endif
 
 # from composer.json
+#        "php": ">=5.3.3",
+#        "sebastian/diff": "~1.1",
+#        "sebastian/exporter": "~1.0"
 Requires:       php(language) >= 5.3.3
-Requires:       php-phpunit-diff >= 1.1
-Requires:       php-phpunit-exporter >= 1.0
+Requires:       php-composer(sebastian/diff)  >= 1.1
+Requires:       php-composer(sebastian/diff)  <  2
+Requires:       php-composer(sebastian/exporter) >= 1.0
+Requires:       php-composer(sebastian/exporter) <  2
 # from phpcompatinfo report for version 1.0.0
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-spl
+
+Provides:       php-composer(sebastian/comparator) = %{version}
 
 
 %description
@@ -53,7 +60,6 @@ This component provides the functionality to compare PHP values for equality.
 %build
 # Generate the Autoloader
 phpab --output src/autoload.php src
-cat src/autoload.php
 
 
 %install
@@ -77,11 +83,16 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
+%doc README.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 
 %{php_home}/Comparator
 
 
 %changelog
+* Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- add composer dependencies
+
 * Sat May  3 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
