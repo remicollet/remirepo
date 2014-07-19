@@ -121,7 +121,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.16.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.17.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -196,6 +196,7 @@ Patch301: php-5.6.0-oldpcre.patch
 Patch302: php-5.6.0-noNO.patch
 
 # WIP
+Patch400: php-systemd.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -925,6 +926,7 @@ rm -rf ext/json
 %patch302 -p0 -b .971416
 
 # WIP patch
+%patch400 -p1 -b .systemd
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1917,7 +1919,10 @@ fi
 
 
 %changelog
-* Mon Jul  7 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.13.RC2
+* Sat Jul 19 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.17.RC2
+- test build for #67635
+
+* Mon Jul  7 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.16.RC2
 - php 5.6.0RC2
 
 * Mon Jun 23 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.15.RC1
