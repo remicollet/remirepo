@@ -60,7 +60,9 @@
 
 %global symfony_dir  %{_datadir}/php/Symfony
 %global pear_channel pear.symfony.com
+
 %if %{?runselftest}%{!?runselftest:1}
+# Build using "--without tests" to disable tests
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %else
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -68,7 +70,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1602,6 +1604,7 @@ exit $RET
 : Tests skipped
 %endif
 
+%{!?_licensedir:%global license %%doc}
 
 %files
 %defattr(-,root,root,-)
@@ -1616,7 +1619,8 @@ exit $RET
 
 %files common
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
+%doc *.md composer.json
+%license LICENSE
 
 %dir %{symfony_dir}
 %dir %{symfony_dir}/Bridge
@@ -1627,7 +1631,7 @@ exit $RET
 
 %files doctrine-bridge
 %defattr(-,root,root,-)
-%doc src/Symfony/Bridge/Doctrine/LICENSE
+%license src/Symfony/Bridge/Doctrine/LICENSE
 %doc src/Symfony/Bridge/Doctrine/*.md
 %doc src/Symfony/Bridge/Doctrine/composer.json
 
@@ -1642,7 +1646,7 @@ exit $RET
 
 %files monolog-bridge
 %defattr(-,root,root,-)
-%doc src/Symfony/Bridge/Monolog/LICENSE
+%license src/Symfony/Bridge/Monolog/LICENSE
 %doc src/Symfony/Bridge/Monolog/*.md
 %doc src/Symfony/Bridge/Monolog/composer.json
 
@@ -1657,7 +1661,7 @@ exit $RET
 
 #%%files propel1-bridge
 #%defattr(-,root,root,-)
-#%%doc src/Symfony/Bridge/Propel1/LICENSE
+#%%license src/Symfony/Bridge/Propel1/LICENSE
 #%%doc src/Symfony/Bridge/Propel1/*.md
 #%%doc src/Symfony/Bridge/Propel1/composer.json
 
@@ -1672,7 +1676,7 @@ exit $RET
 
 #%%files proxy-manager-bridge
 
-#%%doc src/Symfony/Bridge/ProxyManager/LICENSE
+#%%license src/Symfony/Bridge/ProxyManager/LICENSE
 #%%doc src/Symfony/Bridge/ProxyManager/*.md
 #%%doc src/Symfony/Bridge/ProxyManager/composer.json
 
@@ -1687,7 +1691,7 @@ exit $RET
 
 %files swiftmailer-bridge
 %defattr(-,root,root,-)
-%doc src/Symfony/Bridge/Swiftmailer/LICENSE
+%license src/Symfony/Bridge/Swiftmailer/LICENSE
 %doc src/Symfony/Bridge/Swiftmailer/*.md
 %doc src/Symfony/Bridge/Swiftmailer/composer.json
 
@@ -1702,7 +1706,7 @@ exit $RET
 
 %files twig-bridge
 %defattr(-,root,root,-)
-%doc src/Symfony/Bridge/Twig/LICENSE
+%license src/Symfony/Bridge/Twig/LICENSE
 %doc src/Symfony/Bridge/Twig/*.md
 %doc src/Symfony/Bridge/Twig/composer.json
 
@@ -1719,7 +1723,7 @@ exit $RET
 %defattr(-,root,root,-)
 %doc src/Symfony/Bundle/FrameworkBundle/*.md
 %doc src/Symfony/Bundle/FrameworkBundle/composer.json
-%doc src/Symfony/Bundle/FrameworkBundle/Resources/meta/LICENSE
+%license src/Symfony/Bundle/FrameworkBundle/Resources/meta/LICENSE
 
 %{symfony_dir}/Bundle/FrameworkBundle
 %exclude %{symfony_dir}/Bundle/FrameworkBundle/*.md
@@ -1734,7 +1738,7 @@ exit $RET
 %defattr(-,root,root,-)
 %doc src/Symfony/Bundle/SecurityBundle/*.md
 %doc src/Symfony/Bundle/SecurityBundle/composer.json
-%doc src/Symfony/Bundle/SecurityBundle/Resources/meta/LICENSE
+%license src/Symfony/Bundle/SecurityBundle/Resources/meta/LICENSE
 
 %{symfony_dir}/Bundle/SecurityBundle
 %exclude %{symfony_dir}/Bundle/SecurityBundle/*.md
@@ -1749,7 +1753,7 @@ exit $RET
 %defattr(-,root,root,-)
 %doc src/Symfony/Bundle/TwigBundle/*.md
 %doc src/Symfony/Bundle/TwigBundle/composer.json
-%doc src/Symfony/Bundle/TwigBundle/Resources/meta/LICENSE
+%license src/Symfony/Bundle/TwigBundle/Resources/meta/LICENSE
 
 %{symfony_dir}/Bundle/TwigBundle
 %exclude %{symfony_dir}/Bundle/TwigBundle/*.md
@@ -1764,8 +1768,8 @@ exit $RET
 %defattr(-,root,root,-)
 %doc src/Symfony/Bundle/WebProfilerBundle/*.md
 %doc src/Symfony/Bundle/WebProfilerBundle/composer.json
-%doc src/Symfony/Bundle/WebProfilerBundle/Resources/ICONS_LICENSE.txt
-%doc src/Symfony/Bundle/WebProfilerBundle/Resources/meta/LICENSE
+%license src/Symfony/Bundle/WebProfilerBundle/Resources/ICONS_LICENSE.txt
+%license src/Symfony/Bundle/WebProfilerBundle/Resources/meta/LICENSE
 
 %{symfony_dir}/Bundle/WebProfilerBundle
 %exclude %{symfony_dir}/Bundle/WebProfilerBundle/*.md
@@ -1779,7 +1783,7 @@ exit $RET
 
 %files browser-kit
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/BrowserKit/LICENSE
+%license src/Symfony/Component/BrowserKit/LICENSE
 %doc src/Symfony/Component/BrowserKit/*.md
 %doc src/Symfony/Component/BrowserKit/composer.json
 
@@ -1794,7 +1798,7 @@ exit $RET
 
 %files class-loader
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/ClassLoader/LICENSE
+%license src/Symfony/Component/ClassLoader/LICENSE
 %doc src/Symfony/Component/ClassLoader/*.md
 %doc src/Symfony/Component/ClassLoader/composer.json
 
@@ -1809,7 +1813,7 @@ exit $RET
 
 %files config
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Config/LICENSE
+%license src/Symfony/Component/Config/LICENSE
 %doc src/Symfony/Component/Config/*.md
 %doc src/Symfony/Component/Config/composer.json
 
@@ -1824,7 +1828,7 @@ exit $RET
 
 %files console
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Console/LICENSE
+%license src/Symfony/Component/Console/LICENSE
 %doc src/Symfony/Component/Console/*.md
 %doc src/Symfony/Component/Console/composer.json
 
@@ -1839,7 +1843,7 @@ exit $RET
 
 %files css-selector
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/CssSelector/LICENSE
+%license src/Symfony/Component/CssSelector/LICENSE
 %doc src/Symfony/Component/CssSelector/*.md
 %doc src/Symfony/Component/CssSelector/composer.json
 
@@ -1854,7 +1858,7 @@ exit $RET
 
 %files debug
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Debug/LICENSE
+%license src/Symfony/Component/Debug/LICENSE
 %doc src/Symfony/Component/Debug/*.md
 %doc src/Symfony/Component/Debug/composer.json
 
@@ -1869,7 +1873,7 @@ exit $RET
 
 %files dependency-injection
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/DependencyInjection/LICENSE
+%license src/Symfony/Component/DependencyInjection/LICENSE
 %doc src/Symfony/Component/DependencyInjection/*.md
 %doc src/Symfony/Component/DependencyInjection/composer.json
 
@@ -1884,7 +1888,7 @@ exit $RET
 
 %files dom-crawler
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/DomCrawler/LICENSE
+%license src/Symfony/Component/DomCrawler/LICENSE
 %doc src/Symfony/Component/DomCrawler/*.md
 %doc src/Symfony/Component/DomCrawler/composer.json
 
@@ -1899,7 +1903,7 @@ exit $RET
 
 %files event-dispatcher
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/EventDispatcher/LICENSE
+%license src/Symfony/Component/EventDispatcher/LICENSE
 %doc src/Symfony/Component/EventDispatcher/*.md
 %doc src/Symfony/Component/EventDispatcher/composer.json
 
@@ -1914,7 +1918,7 @@ exit $RET
 
 %files expression-language
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/ExpressionLanguage/LICENSE
+%license src/Symfony/Component/ExpressionLanguage/LICENSE
 %doc src/Symfony/Component/ExpressionLanguage/*.md
 %doc src/Symfony/Component/ExpressionLanguage/composer.json
 
@@ -1929,7 +1933,7 @@ exit $RET
 
 %files filesystem
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Filesystem/LICENSE
+%license src/Symfony/Component/Filesystem/LICENSE
 %doc src/Symfony/Component/Filesystem/*.md
 %doc src/Symfony/Component/Filesystem/composer.json
 
@@ -1944,7 +1948,7 @@ exit $RET
 
 %files finder
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Finder/LICENSE
+%license src/Symfony/Component/Finder/LICENSE
 %doc src/Symfony/Component/Finder/*.md
 %doc src/Symfony/Component/Finder/composer.json
 
@@ -1959,7 +1963,7 @@ exit $RET
 
 %files form
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Form/LICENSE
+%license src/Symfony/Component/Form/LICENSE
 %doc src/Symfony/Component/Form/*.md
 %doc src/Symfony/Component/Form/composer.json
 
@@ -1974,7 +1978,7 @@ exit $RET
 
 %files http-foundation
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/HttpFoundation/LICENSE
+%license src/Symfony/Component/HttpFoundation/LICENSE
 %doc src/Symfony/Component/HttpFoundation/*.md
 %doc src/Symfony/Component/HttpFoundation/composer.json
 
@@ -1989,7 +1993,7 @@ exit $RET
 
 %files http-kernel
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/HttpKernel/LICENSE
+%license src/Symfony/Component/HttpKernel/LICENSE
 %doc src/Symfony/Component/HttpKernel/*.md
 %doc src/Symfony/Component/HttpKernel/composer.json
 
@@ -2004,7 +2008,7 @@ exit $RET
 
 %files intl
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Intl/LICENSE
+%license src/Symfony/Component/Intl/LICENSE
 %doc src/Symfony/Component/Intl/*.md
 %doc src/Symfony/Component/Intl/composer.json
 
@@ -2019,7 +2023,7 @@ exit $RET
 
 %files locale
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Locale/LICENSE
+%license src/Symfony/Component/Locale/LICENSE
 %doc src/Symfony/Component/Locale/*.md
 %doc src/Symfony/Component/Locale/composer.json
 
@@ -2034,7 +2038,7 @@ exit $RET
 
 %files options-resolver
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/OptionsResolver/LICENSE
+%license src/Symfony/Component/OptionsResolver/LICENSE
 %doc src/Symfony/Component/OptionsResolver/*.md
 %doc src/Symfony/Component/OptionsResolver/composer.json
 
@@ -2049,7 +2053,7 @@ exit $RET
 
 %files process
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Process/LICENSE
+%license src/Symfony/Component/Process/LICENSE
 %doc src/Symfony/Component/Process/*.md
 %doc src/Symfony/Component/Process/composer.json
 
@@ -2064,7 +2068,7 @@ exit $RET
 
 %files property-access
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/PropertyAccess/LICENSE
+%license src/Symfony/Component/PropertyAccess/LICENSE
 %doc src/Symfony/Component/PropertyAccess/*.md
 %doc src/Symfony/Component/PropertyAccess/composer.json
 
@@ -2079,7 +2083,7 @@ exit $RET
 
 %files routing
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Routing/LICENSE
+%license src/Symfony/Component/Routing/LICENSE
 %doc src/Symfony/Component/Routing/*.md
 %doc src/Symfony/Component/Routing/composer.json
 
@@ -2094,7 +2098,7 @@ exit $RET
 
 %files security
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Security/LICENSE
+%license src/Symfony/Component/Security/LICENSE
 %doc src/Symfony/Component/Security/*.md
 %doc src/Symfony/Component/Security/composer.json
 
@@ -2109,7 +2113,7 @@ exit $RET
 
 %files serializer
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Serializer/LICENSE
+%license src/Symfony/Component/Serializer/LICENSE
 %doc src/Symfony/Component/Serializer/*.md
 %doc src/Symfony/Component/Serializer/composer.json
 
@@ -2124,7 +2128,7 @@ exit $RET
 
 %files stopwatch
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Stopwatch/LICENSE
+%license src/Symfony/Component/Stopwatch/LICENSE
 %doc src/Symfony/Component/Stopwatch/*.md
 %doc src/Symfony/Component/Stopwatch/composer.json
 
@@ -2139,7 +2143,7 @@ exit $RET
 
 %files templating
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Templating/LICENSE
+%license src/Symfony/Component/Templating/LICENSE
 %doc src/Symfony/Component/Templating/*.md
 %doc src/Symfony/Component/Templating/composer.json
 
@@ -2154,7 +2158,7 @@ exit $RET
 
 %files translation
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Translation/LICENSE
+%license src/Symfony/Component/Translation/LICENSE
 %doc src/Symfony/Component/Translation/*.md
 %doc src/Symfony/Component/Translation/composer.json
 
@@ -2169,7 +2173,7 @@ exit $RET
 
 %files validator
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Validator/LICENSE
+%license src/Symfony/Component/Validator/LICENSE
 %doc src/Symfony/Component/Validator/*.md
 %doc src/Symfony/Component/Validator/composer.json
 
@@ -2184,7 +2188,7 @@ exit $RET
 
 %files yaml
 %defattr(-,root,root,-)
-%doc src/Symfony/Component/Yaml/LICENSE
+%license src/Symfony/Component/Yaml/LICENSE
 %doc src/Symfony/Component/Yaml/*.md
 %doc src/Symfony/Component/Yaml/composer.json
 
@@ -2198,6 +2202,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Sat Jul 19 2014 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
+- fix license handling
+
 * Fri Jul 18 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.2-1
 - Updated to 2.5.2 (BZ #1100720)
 - Added php-composer() virtual provides
