@@ -1,4 +1,4 @@
-%global svnrel 3144
+%global svnrel 3221
 %global rdate  20140128
 %global upver  0.4
 
@@ -226,6 +226,9 @@ fi
 
 
 %changelog
+* Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 0,40-0.1.svn3221
+- Update to 0.4 snapshot revision 3221
+
 * Tue Jun 17 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.1.svn3144
 - Update to 0.4 snapshot revision 3144
 
