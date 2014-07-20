@@ -1,8 +1,22 @@
+From 7b6031567251ad47132de23f47eb57951fd9b563 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Sat, 19 Jul 2014 18:40:20 +0200
+Subject: [PATCH] Fixed bug #67635 php links to systemd libraries without using
+ pkg-config
+
+Patch from pacho at gentoo dot org
+
+Rely on pkg-config for systemd >= 209
+Failback on old check
+---
+ sapi/fpm/config.m4 | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
 diff --git a/sapi/fpm/config.m4 b/sapi/fpm/config.m4
-index bd6d649..85eff65 100644
+index bd6d649..e1c740d 100644
 --- a/sapi/fpm/config.m4
 +++ b/sapi/fpm/config.m4
-@@ -567,14 +567,26 @@ if test "$PHP_FPM" != "no"; then
+@@ -584,14 +584,26 @@ if test "$PHP_FPM" != "no"; then
    [  --with-fpm-systemd      Activate systemd integration], no, no)
  
    if test "$PHP_FPM_SYSTEMD" != "no" ; then
@@ -32,9 +46,23 @@ index bd6d649..85eff65 100644
        php_fpm_systemd=notify
      fi
    else
+-- 
+1.9.2
+
+From 144a08395408506fa700c71e74c360160da3bd99 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Sat, 19 Jul 2014 18:42:40 +0200
+Subject: [PATCH] improve previous, add message during configure
+
+---
+ sapi/fpm/config.m4 | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/sapi/fpm/config.m4 b/sapi/fpm/config.m4
+index e1c740d..96b0edf 100644
 --- a/sapi/fpm/config.m4
 +++ b/sapi/fpm/config.m4
-@@ -590,9 +590,12 @@
+@@ -590,9 +590,12 @@ if test "$PHP_FPM" != "no"; then
      unset SYSTEMD_LIBS
      unset SYSTEMD_INCS
      if test -x "$PKG_CONFIG" && $PKG_CONFIG --exists libsystemd; then
@@ -47,3 +75,58 @@ index bd6d649..85eff65 100644
      else
        AC_CHECK_LIB(systemd-daemon, sd_notify, SYSTEMD_LIBS="-lsystemd-daemon")
        AC_CHECK_HEADERS(systemd/sd-daemon.h, [HAVE_SD_DAEMON_H="yes"], [HAVE_SD_DAEMON_H="no"])
+-- 
+1.9.2
+
+From 658f7d77f9eb447ecc2f9812d46b4c07bb99b16d Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Sun, 20 Jul 2014 11:14:43 +0200
+Subject: [PATCH] See bug #67635
+
+Improve previous fix:
+- also rely on pkg-config for systemd < 209
+- always check for header
+- comments
+---
+ sapi/fpm/config.m4 | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/sapi/fpm/config.m4 b/sapi/fpm/config.m4
+index 96b0edf..6db5e3b 100644
+--- a/sapi/fpm/config.m4
++++ b/sapi/fpm/config.m4
+@@ -589,17 +589,29 @@ if test "$PHP_FPM" != "no"; then
+     fi
+     unset SYSTEMD_LIBS
+     unset SYSTEMD_INCS
++
+     if test -x "$PKG_CONFIG" && $PKG_CONFIG --exists libsystemd; then
++      dnl systemd version >= 209 provides libsystemd
+       AC_MSG_CHECKING([for libsystemd])
+       SYSTEMD_LIBS=`$PKG_CONFIG --libs libsystemd`
+       SYSTEMD_INCS=`$PKG_CONFIG --cflags-only-I libsystemd`
+       SYSTEMD_VERS=`$PKG_CONFIG --modversion libsystemd`
+-      HAVE_SD_DAEMON_H="yes"
+       AC_MSG_RESULT([version $SYSTEMD_VERS])
++
++    elif test -x "$PKG_CONFIG" && $PKG_CONFIG --exists libsystemd-daemon; then
++      dnl systemd version < 209 provides libsystemd-daemon
++      AC_MSG_CHECKING([for libsystemd-daemon])
++      SYSTEMD_LIBS=`$PKG_CONFIG --libs libsystemd-daemon`
++      SYSTEMD_INCS=`$PKG_CONFIG --cflags-only-I libsystemd-daemon`
++      SYSTEMD_VERS=`$PKG_CONFIG --modversion libsystemd-daemon`
++      AC_MSG_RESULT([version $SYSTEMD_VERS])
++
+     else
++      dnl failback when no pkg-config
+       AC_CHECK_LIB(systemd-daemon, sd_notify, SYSTEMD_LIBS="-lsystemd-daemon")
+-      AC_CHECK_HEADERS(systemd/sd-daemon.h, [HAVE_SD_DAEMON_H="yes"], [HAVE_SD_DAEMON_H="no"])
+     fi
++
++    AC_CHECK_HEADERS(systemd/sd-daemon.h, [HAVE_SD_DAEMON_H="yes"], [HAVE_SD_DAEMON_H="no"])
+     if test $HAVE_SD_DAEMON_H = "no" || test -z "${SYSTEMD_LIBS}"; then
+       AC_MSG_ERROR([Your system does not support systemd.])
+     else
+-- 
+1.9.2
+
