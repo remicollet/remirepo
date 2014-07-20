@@ -1,8 +1,9 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+%global composer_vendor  zendframework
 
 Name:      php-ZendFramework2
 Version:   2.3.1
-Release:   1%{?dist}
+Release:   3%{?dist}
 Summary:   Zend Framework 2
 
 Group:     Development/Libraries
@@ -23,56 +24,60 @@ Patch0:    %{name}-glpi.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
-Requires:  %{name}-Authentication   = %{version}-%{release}
-Requires:  %{name}-Barcode          = %{version}-%{release}
-Requires:  %{name}-Cache            = %{version}-%{release}
-Requires:  %{name}-Captcha          = %{version}-%{release}
-Requires:  %{name}-Code             = %{version}-%{release}
-Requires:  %{name}-Config           = %{version}-%{release}
-Requires:  %{name}-Console          = %{version}-%{release}
-Requires:  %{name}-Crypt            = %{version}-%{release}
-Requires:  %{name}-Db               = %{version}-%{release}
-Requires:  %{name}-Debug            = %{version}-%{release}
-Requires:  %{name}-Di               = %{version}-%{release}
-Requires:  %{name}-Dom              = %{version}-%{release}
-Requires:  %{name}-Escaper          = %{version}-%{release}
-Requires:  %{name}-EventManager     = %{version}-%{release}
-Requires:  %{name}-Feed             = %{version}-%{release}
-Requires:  %{name}-File             = %{version}-%{release}
-Requires:  %{name}-Filter           = %{version}-%{release}
-Requires:  %{name}-Form             = %{version}-%{release}
-Requires:  %{name}-Http             = %{version}-%{release}
-Requires:  %{name}-I18n             = %{version}-%{release}
-Requires:  %{name}-InputFilter      = %{version}-%{release}
-Requires:  %{name}-Json             = %{version}-%{release}
-Requires:  %{name}-Ldap             = %{version}-%{release}
-Requires:  %{name}-Loader           = %{version}-%{release}
-Requires:  %{name}-Log              = %{version}-%{release}
-Requires:  %{name}-Mail             = %{version}-%{release}
-Requires:  %{name}-Math             = %{version}-%{release}
-Requires:  %{name}-Memory           = %{version}-%{release}
-Requires:  %{name}-Mime             = %{version}-%{release}
-Requires:  %{name}-ModuleManager    = %{version}-%{release}
-Requires:  %{name}-Mvc              = %{version}-%{release}
-Requires:  %{name}-Navigation       = %{version}-%{release}
-Requires:  %{name}-Paginator        = %{version}-%{release}
-Requires:  %{name}-Permissions-Acl  = %{version}-%{release}
-Requires:  %{name}-Permissions-Rbac = %{version}-%{release}
-Requires:  %{name}-ProgressBar      = %{version}-%{release}
-Requires:  %{name}-Serializer       = %{version}-%{release}
-Requires:  %{name}-Server           = %{version}-%{release}
-Requires:  %{name}-ServiceManager   = %{version}-%{release}
-Requires:  %{name}-Session          = %{version}-%{release}
-Requires:  %{name}-Soap             = %{version}-%{release}
-Requires:  %{name}-Stdlib           = %{version}-%{release}
-Requires:  %{name}-Tag              = %{version}-%{release}
-Requires:  %{name}-Test             = %{version}-%{release}
-Requires:  %{name}-Text             = %{version}-%{release}
-Requires:  %{name}-Uri              = %{version}-%{release}
-Requires:  %{name}-Validator        = %{version}-%{release}
-Requires:  %{name}-Version          = %{version}-%{release}
-Requires:  %{name}-View             = %{version}-%{release}
-Requires:  %{name}-XmlRpc           = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-authentication)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-barcode)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-cache)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-captcha)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-code)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-config)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-console)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-crypt)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-db)               = %{version}
+Requires: php-composer(%{composer_vendor}/zend-debug)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-di)               = %{version}
+Requires: php-composer(%{composer_vendor}/zend-dom)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-escaper)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-feed)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-file)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-form)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-i18n)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-inputfilter)      = %{version}
+Requires: php-composer(%{composer_vendor}/zend-json)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-ldap)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-loader)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-log)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-mail)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-math)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-memory)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-mime)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-modulemanager)    = %{version}
+Requires: php-composer(%{composer_vendor}/zend-mvc)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-navigation)       = %{version}
+Requires: php-composer(%{composer_vendor}/zend-paginator)        = %{version}
+Requires: php-composer(%{composer_vendor}/zend-permissions-acl)  = %{version}
+Requires: php-composer(%{composer_vendor}/zend-permissions-rbac) = %{version}
+Requires: php-composer(%{composer_vendor}/zend-progressbar)      = %{version}
+Requires: php-composer(%{composer_vendor}/zend-serializer)       = %{version}
+Requires: php-composer(%{composer_vendor}/zend-server)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-session)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-soap)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-tag)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-test)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-text)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-uri)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
+Requires: php-composer(%{composer_vendor}/zend-version)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-view)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-xmlrpc)           = %{version}
+Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
+
+Provides: php-composer(%{composer_vendor}/zendframework) = %{version}
+
 
 %description
 Zend Framework 2 is an open source framework for developing web applications
@@ -117,21 +122,23 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.authentication.in
 
 Requires: %{name}-common    = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib    = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Crypt     = %{version}-%{release}
-Requires: %{name}-Db        = %{version}-%{release}
-Requires: %{name}-Http      = %{version}-%{release}
-Requires: %{name}-Ldap      = %{version}-%{release}
-Requires: %{name}-Session   = %{version}-%{release}
-Requires: %{name}-Uri       = %{version}-%{release}
-Requires: %{name}-Validator = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-crypt)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-db)               = %{version}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-ldap)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-session)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-uri)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
 Requires: php-hash
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-authentication) = %{version}
 
 %description Authentication
 The Zend\Authentication component provides an API for authentication and
@@ -156,10 +163,10 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.barcode.intro.htm
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Validator      = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 #     zendframework/zendpdf
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-dom
@@ -167,6 +174,8 @@ Requires: php-gd
 Requires: php-iconv
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-barcode) = %{version}
 
 %description Barcode
 Zend\Barcode\Barcode provides a generic way to generate barcodes. The
@@ -184,12 +193,12 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-cache
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Serializer     = %{version}-%{release}
-Requires: %{name}-Session        = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-serializer)       = %{version}
+Requires: php-composer(%{composer_vendor}/zend-session)          = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-pcre
@@ -201,6 +210,8 @@ Obsoletes: %{name}-Cache-apc       < %{version}-%{release}
 Provides:  %{name}-Cache-apc       = %{version}-%{release}
 Obsoletes: %{name}-Cache-memcached < %{version}-%{release}
 Provides:  %{name}-Cache-memcached = %{version}-%{release}
+
+Provides: php-composer(%{composer_vendor}/zend-cache) = %{version}
 
 %description Cache
 %{summary}
@@ -223,18 +234,20 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.captcha.intro.htm
 
 Requires: %{name}-common    = %{version}-%{release}
 # composer.json
-Requires: %{name}-Math      = %{version}-%{release}
-Requires: %{name}-Stdlib    = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-math)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Session   = %{version}-%{release}
-Requires: %{name}-Text      = %{version}-%{release}
-Requires: %{name}-Validator = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-session)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-text)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 #     zendframework/zend-resources
 #     zendframework/zendservice-recaptcha
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-gd
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-captcha) = %{version}
 
 %description Captcha
 CAPTCHA stands for “Completely Automated Public Turing test to tell Computers
@@ -259,15 +272,17 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html
 
 Requires: %{name}-common       = %{version}-%{release}
 # composer.json
-Requires: %{name}-EventManager =  %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
 # composer.json (optional)
-Requires: %{name}-Stdlib       =  %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 Requires: php-doctrine-common  >= 2.1
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
 Requires: php-tokenizer
+
+Provides: php-composer(%{composer_vendor}/zend-code) = %{version}
 
 %description Code
 Provides facilities to generate arbitrary code using an object oriented
@@ -283,18 +298,20 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.config.introducti
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Filter         = %{version}-%{release}
-Requires: %{name}-I18n           = %{version}-%{release}
-Requires: %{name}-Json           = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-i18n)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-json)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-libxml
 Requires: php-pcre
 Requires: php-spl
 Requires: php-xmlreader
 Requires: php-xmlwriter
+
+Provides: php-composer(%{composer_vendor}/zend-config) = %{version}
 
 %description Config
 Zend\Config is designed to simplify access to configuration data within
@@ -314,12 +331,14 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.console.introduct
 
 Requires: %{name}-common = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
 Requires: php-xml
+
+Provides: php-composer(%{composer_vendor}/zend-console) = %{version}
 
 %description Console
 Zend Framework 2 features built-in console support.
@@ -352,9 +371,9 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.crypt.introductio
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Math           = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-math)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
 Requires: php-mcrypt
 # phpcompatinfo (computed from version 2.3.1)
@@ -363,6 +382,8 @@ Requires: php-hash
 Requires: php-openssl
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-crypt) = %{version}
 
 %description Crypt
 Zend\Crypt provides support of some cryptographic tools. The available
@@ -393,14 +414,16 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-db
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json (optional)
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-pcre
 Requires: php-pdo
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-db) = %{version}
 
 %description Db
 %{summary}
@@ -422,9 +445,11 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html
 
 Requires: %{name}-common  = %{version}-%{release}
 # composer.json (optional)
-Requires: %{name}-Escaper = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-escaper)          = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
+
+Provides: php-composer(%{composer_vendor}/zend-debug) = %{version}
 
 %description Debug
 %{summary}
@@ -441,14 +466,16 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.di.introduction.h
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Code           = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-code)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-di) = %{version}
 
 %description Di
 Dependency Injection (here-in called DI) is a concept that has been talked
@@ -475,6 +502,8 @@ Requires: php-libxml
 Requires: php-pcre
 Requires: php-spl
 
+Provides: php-composer(%{composer_vendor}/zend-dom) = %{version}
+
 %description Dom
 The Zend\Dom component provides tools for working with DOM documents and
 structures. Currently, we offer Zend\Dom\Query, which provides a unified
@@ -496,6 +525,8 @@ Requires: php-mbstring
 Requires: php-pcre
 Requires: php-spl
 
+Provides: php-composer(%{composer_vendor}/zend-escaper) = %{version}
+
 %description Escaper
 The OWASP Top 10 web security risks study lists Cross-Site Scripting (XSS)
 in second place. PHP’s sole functionality against XSS is limited to two
@@ -514,9 +545,11 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.event-manager.eve
 
 Requires: %{name}-common = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-eventmanager) = %{version}
 
 %description EventManager
 The EventManager is a component designed for the following use cases:
@@ -539,14 +572,14 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.feed.introduction
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Escaper        = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-escaper)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Cache          = %{version}-%{release}
-Requires: %{name}-Db             = %{version}-%{release}
-Requires: %{name}-Http           = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Validator      = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-cache)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-db)               = %{version}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
@@ -556,6 +589,8 @@ Requires: php-libxml
 Requires: php-pcre
 Requires: php-spl
 Requires: php-tidy
+
+Provides: php-composer(%{composer_vendor}/zend-feed) = %{version}
 
 %description Feed
 Zend\Feed provides functionality for consuming RSS and Atom feeds. It provides
@@ -582,17 +617,19 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-file
 
 Requires: %{name}-common    = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib    = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Filter    = %{version}-%{release}
-Requires: %{name}-I18n      = %{version}-%{release}
-Requires: %{name}-Validator = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-i18n)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-fileinfo
 Requires: php-hash
 Requires: php-pcre
 Requires: php-spl
 Requires: php-tokenizer
+
+Provides: php-composer(%{composer_vendor}/zend-file) = %{version}
 
 %description File
 %{summary}
@@ -607,12 +644,12 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.filter.html
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Crypt          = %{version}-%{release}
-Requires: %{name}-I18n           = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Uri            = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-crypt)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-i18n)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-uri)              = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 #     rar -- not packaged
 Requires: php-bz2
@@ -625,6 +662,8 @@ Requires: php-pecl(LZF)
 Requires: php-spl
 Requires: php-zip
 Requires: php-zlib
+
+Provides: php-composer(%{composer_vendor}/zend-filter) = %{version}
 
 %description Filter
 The Zend\Filter component provides a set of commonly needed data filters.
@@ -641,24 +680,26 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.form.intro.html
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-InputFilter    = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-inputfilter)      = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
 #     zendframework/zendservice-recaptcha
-Requires: %{name}-Captcha        = %{version}-%{release}
-Requires: %{name}-Code           = %{version}-%{release}
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-Filter         = %{version}-%{release}
-Requires: %{name}-I18n           = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Validator      = %{version}-%{release}
-Requires: %{name}-View           = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-captcha)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-code)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-i18n)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
+Requires: php-composer(%{composer_vendor}/zend-view)             = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-intl
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-form) = %{version}
 
 %description Form
 Zend\Form is intended primarily as a bridge between your domain models and the
@@ -685,10 +726,10 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.http.html
 
 Requires: %{name}-common    = %{version}-%{release}
 # composer.json
-Requires: %{name}-Loader    = %{version}-%{release}
-Requires: %{name}-Stdlib    = %{version}-%{release}
-Requires: %{name}-Uri       = %{version}-%{release}
-Requires: %{name}-Validator = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-loader)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-uri)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-curl
@@ -698,6 +739,8 @@ Requires: php-openssl
 Requires: php-pcre
 Requires: php-spl
 Requires: php-zlib
+
+Provides: php-composer(%{composer_vendor}/zend-http) = %{version}
 
 %description Http
 Zend\Http is a primary foundational component of Zend Framework. Since much
@@ -724,22 +767,24 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.i18n.translating.
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
 #     zendframework/zend-resources
-Requires: %{name}-Cache          = %{version}-%{release}
-Requires: %{name}-Config         = %{version}-%{release}
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-Filter         = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Validator      = %{version}-%{release}
-Requires: %{name}-View           = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-cache)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-config)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
+Requires: php-composer(%{composer_vendor}/zend-view)             = %{version}
 Requires: php-intl
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-i18n) = %{version}
 
 %description I18n
 ZendI18n comes with a complete translation suite which supports all major
@@ -761,13 +806,15 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.input-filter.intr
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Filter         = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
-Requires: %{name}-Validator      = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # composer.json (optional)
-Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-inputfilter) = %{version}
 
 %description InputFilter
 The Zend\InputFilter component can be used to filter and validate generic sets
@@ -783,18 +830,20 @@ Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.3/en/modules/zend.json.introduction.html
 
 Requires: %{name}-common  = %{version}-%{release}
-Requires: %{name}-ZendXml = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
 # composer.json
-Requires: %{name}-Stdlib  = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Http    = %{version}-%{release}
-Requires: %{name}-Server  = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-server)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-json
 Requires: php-mbstring
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-json) = %{version}
 
 %description Json
 Zend\Json provides convenience methods for serializing native PHP to JSON
@@ -824,9 +873,9 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.ldap.introduction
 
 Requires: %{name}-common       = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib       = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-EventManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-iconv
@@ -835,6 +884,8 @@ Requires: php-ldap
 Requires: php-mbstring
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-ldap) = %{version}
 
 %description Ldap
 Zend\Ldap\Ldap is a class for performing LDAP operations including but not
@@ -855,6 +906,8 @@ Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
 
+Provides: php-composer(%{composer_vendor}/zend-loader) = %{version}
+
 %description Loader
 %{summary}
 
@@ -868,20 +921,22 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.log.overview.html
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Console        = %{version}-%{release}
-Requires: %{name}-Db             = %{version}-%{release}
-Requires: %{name}-Escaper        = %{version}-%{release}
-Requires: %{name}-Mail           = %{version}-%{release}
-Requires: %{name}-Validator      = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-console)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-db)               = %{version}
+Requires: php-composer(%{composer_vendor}/zend-escaper)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-mail)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-dom
 Requires: php-json
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-log) = %{version}
 
 %description Log
 Zend\Log\Logger is a component for general purpose logging. It supports multiple
@@ -913,19 +968,21 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.mail.introduction
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Crypt          = %{version}-%{release}
-Requires: %{name}-Loader         = %{version}-%{release}
-Requires: %{name}-Mime           = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
-Requires: %{name}-Validator      = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-crypt)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-loader)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-mime)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # composer.json (optional)
-Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
 Requires: php-iconv
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-mail) = %{version}
 
 %description Mail
 Zend\Mail provides generalized functionality to compose and send both text
@@ -945,7 +1002,7 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.math.introduction
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json (optional)
 #     ircmaxell/random-lib
-Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 Requires: php-bcmath
 Requires: php-gmp
 # phpcompatinfo (computed from version 2.3.1)
@@ -953,6 +1010,8 @@ Requires: php-mcrypt
 Requires: php-openssl
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-math) = %{version}
 
 %description Math
 Zend\Math namespace provides general mathematical functions. So far the
@@ -971,9 +1030,11 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html
 
 Requires: %{name}-common = %{version}-%{release}
 # composer.json (optional)
-Requires: %{name}-Cache  = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-cache)            = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-memory) = %{version}
 
 %description Memory
 %{summary}
@@ -988,18 +1049,22 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.mime.html
 
 Requires: %{name}-common = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Mail   = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-mail)             = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-iconv
 Requires: php-pcre
 Requires: php-spl
 
+Provides: php-composer(%{composer_vendor}/zend-mime) = %{version}
+
 %description Mime
 Zend\Mime\Mime is a support class for handling multipart MIME messages. It
 is used by Zend\Mail and Zend\Mime\Message and may be used by applications
 requiring MIME support.
+
+Optional: %{name}-Mail
 
 # ------------------------------------------------------------------------------
 
@@ -1011,16 +1076,18 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.module-manager.in
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Config         = %{version}-%{release}
-Requires: %{name}-Console        = %{version}-%{release}
-Requires: %{name}-Loader         = %{version}-%{release}
-Requires: %{name}-Mvc            = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-config)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-console)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-loader)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-mvc)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-modulemanager) = %{version}
 
 %description ModuleManager
 Zend Framework 2.0 introduces a new and powerful approach to modules. This new
@@ -1039,34 +1106,36 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.mvc.intro.html
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Authentication = %{version}-%{release}
-Requires: %{name}-Config         = %{version}-%{release}
-Requires: %{name}-Console        = %{version}-%{release}
-Requires: %{name}-Di             = %{version}-%{release}
-Requires: %{name}-Filter         = %{version}-%{release}
-Requires: %{name}-Form           = %{version}-%{release}
-Requires: %{name}-Http           = %{version}-%{release}
-Requires: %{name}-I18n           = %{version}-%{release}
-Requires: %{name}-InputFilter    = %{version}-%{release}
-Requires: %{name}-Json           = %{version}-%{release}
-Requires: %{name}-Log            = %{version}-%{release}
-Requires: %{name}-ModuleManager  = %{version}-%{release}
-Requires: %{name}-Serializer     = %{version}-%{release}
-Requires: %{name}-Session        = %{version}-%{release}
-Requires: %{name}-Text           = %{version}-%{release}
-Requires: %{name}-Uri            = %{version}-%{release}
-Requires: %{name}-Validator      = %{version}-%{release}
-Requires: %{name}-Version        = %{version}-%{release}
-Requires: %{name}-View           = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-authentication)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-config)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-console)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-di)               = %{version}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-form)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-i18n)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-inputfilter)      = %{version}
+Requires: php-composer(%{composer_vendor}/zend-json)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-log)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-modulemanager)    = %{version}
+Requires: php-composer(%{composer_vendor}/zend-serializer)       = %{version}
+Requires: php-composer(%{composer_vendor}/zend-session)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-text)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-uri)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
+Requires: php-composer(%{composer_vendor}/zend-version)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-view)             = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-intl
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-mvc) = %{version}
 
 %description Mvc
 Zend\Mvc is a brand new MVC implementation designed from the ground up for
@@ -1095,16 +1164,18 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.navigation.intro.
 
 Requires: %{name}-common          = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib          = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Config          = %{version}-%{release}
-Requires: %{name}-Mvc             = %{version}-%{release}
-Requires: %{name}-Permissions-Acl = %{version}-%{release}
-Requires: %{name}-ServiceManager  = %{version}-%{release}
-Requires: %{name}-View            = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-config)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-mvc)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-permissions-acl)  = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-view)             = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-navigation) = %{version}
 
 %description Navigation
 Zend\Navigation is a component for managing trees of pointers to web pages.
@@ -1121,17 +1192,19 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.paginator.introdu
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Cache          = %{version}-%{release}
-Requires: %{name}-Db             = %{version}-%{release}
-Requires: %{name}-Filter         = %{version}-%{release}
-Requires: %{name}-Json           = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-View           = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-cache)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-db)               = %{version}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-json)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-view)             = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-reflection
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-paginator) = %{version}
 
 %description Paginator
 Zend\Paginator is a flexible component for paginating collections of data and
@@ -1157,6 +1230,8 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.permissions.acl.i
 Requires: %{name}-common = %{version}-%{release}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-permissions-acl) = %{version}
 
 %description Permissions-Acl
 The Zend\Permissions\Acl component provides a lightweight and flexible access
@@ -1189,6 +1264,8 @@ Requires: %{name}-common = %{version}-%{release}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
 
+Provides: php-composer(%{composer_vendor}/zend-permissions-rbac) = %{version}
+
 %description Permissions-Rbac
 The Zend\Permissions\Rbac component provides a lightweight role-based access
 control implementation based around PHP 5.3’s SPL RecursiveIterator and
@@ -1206,16 +1283,18 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.progress-bar.html
 
 Requires: %{name}-common  = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib  = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Json    = %{version}-%{release}
-Requires: %{name}-Session = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-json)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-session)          = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 #     uploadprogress
 Requires: php-date
 Requires: php-pcre
 Requires: php-pecl(APC)
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-progressbar) = %{version}
 
 %description ProgressBar
 Zend\ProgressBar is a component to create and update progress bars in different
@@ -1234,11 +1313,11 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.serializer.html
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Json           = %{version}-%{release}
-Requires: %{name}-Math           = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-json)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-math)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 #     wddx
 Requires: php-dom
@@ -1248,6 +1327,8 @@ Requires: php-pecl(igbinary)
 Requires: php-pecl(msgpack)
 Requires: php-simplexml
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-serializer) = %{version}
 
 %description Serializer
 The Zend\Serializer component provides an adapter based interface to simply
@@ -1264,12 +1345,14 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.server.html
 
 Requires: %{name}-common = %{version}-%{release}
 # composer.json
-Requires: %{name}-Code   = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-code)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-server) = %{version}
 
 %description Server
 The Zend\Server family of classes provides functionality for the various server
@@ -1292,10 +1375,12 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.service-manager.i
 
 Requires: %{name}-common = %{version}-%{release}
 # composer.json (optional)
-Requires: %{name}-Di     = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-di)               = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-reflection
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-servicemanager) = %{version}
 
 %description ServiceManager
 The Service Locator design pattern is implemented by the Zend\ServiceManager
@@ -1312,20 +1397,22 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-session
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Cache          = %{version}-%{release}
-Requires: %{name}-Db             = %{version}-%{release}
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-Http           = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Validator      = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-cache)            = %{version}
+Requires: php-composer(%{composer_vendor}/zend-db)               = %{version}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-hash
 Requires: php-pcre
 Requires: php-session
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-session) = %{version}
 
 %description Session
 Manage and preserve session data, a logical complement of cookie data, across
@@ -1343,11 +1430,11 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-soap
 
 Requires: %{name}-common = %{version}-%{release}
 # composer.json
-Requires: %{name}-Server = %{version}-%{release}
-Requires: %{name}-Stdlib = %{version}-%{release}
-Requires: %{name}-Uri    = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-server)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-uri)              = %{version}
 # composer.json (optional)
-Requires: %{name}-Http   = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-curl
 Requires: php-dom
@@ -1357,6 +1444,8 @@ Requires: php-reflection
 Requires: php-simplexml
 Requires: php-soap
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-soap) = %{version}
 
 %description Soap
 %{summary}
@@ -1371,9 +1460,9 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-stdlib
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json (optional)
-Requires: %{name}-EventManager   = %{version}-%{release}
-Requires: %{name}-Serializer     = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-serializer)       = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-iconv
@@ -1383,6 +1472,8 @@ Requires: php-mbstring
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-stdlib) = %{version}
 
 %description Stdlib
 %{summary}
@@ -1397,13 +1488,15 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.tag.introduction.
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Escaper        = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-escaper)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-ServiceManager = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-tag) = %{version}
 
 %description Tag
 Zend\Tag is a component suite which provides a facility to work with taggable
@@ -1432,19 +1525,21 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.test.introduction
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Console        =  %{version}-%{release}
-Requires: %{name}-Dom            =  %{version}-%{release}
-Requires: %{name}-EventManager   =  %{version}-%{release}
-Requires: %{name}-Http           =  %{version}-%{release}
-Requires: %{name}-Mvc            =  %{version}-%{release}
-Requires: %{name}-ServiceManager =  %{version}-%{release}
-Requires: %{name}-Stdlib         =  %{version}-%{release}
-Requires: %{name}-Uri            =  %{version}-%{release}
-Requires: %{name}-View           =  %{version}-%{release}
-Requires: php-pear(pear.phpunit.de/PHPUnit) >= 3.7.0
+Requires: php-composer(%{composer_vendor}/zend-console)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-dom)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-mvc)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-uri)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-view)             = %{version}
+Requires: php-phpunit-PHPUnit >= 3.7.0
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-test) = %{version}
 
 %description Test
 The Zend\Test component provides tools to facilitate unit testing of your Zend
@@ -1465,12 +1560,14 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-text
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-text) = %{version}
 
 %description Text
 %{summary}
@@ -1485,11 +1582,13 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.uri.html
 
 Requires: %{name}-common    = %{version}-%{release}
 # composer.json
-Requires: %{name}-Escaper   = %{version}-%{release}
-Requires: %{name}-Validator = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-escaper)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-uri) = %{version}
 
 %description Uri
 Zend\Uri is a component that aids in manipulating and validating Uniform
@@ -1514,16 +1613,16 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.validator.html
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
-Requires: %{name}-Stdlib         = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
 #     zendframework/zend-resources
-Requires: %{name}-Db             = %{version}-%{release}
-Requires: %{name}-Filter         = %{version}-%{release}
-Requires: %{name}-I18n           = %{version}-%{release}
-Requires: %{name}-Math           = %{version}-%{release}
-Requires: %{name}-ServiceManager = %{version}-%{release}
-Requires: %{name}-Session        = %{version}-%{release}
-Requires: %{name}-Uri            = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-db)               = %{version}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-i18n)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-math)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-session)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-uri)              = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-ctype
 Requires: php-date
@@ -1531,6 +1630,8 @@ Requires: php-fileinfo
 Requires: php-hash
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-validator) = %{version}
 
 %description Validator
 The Zend\Validator component provides a set of commonly needed validators.
@@ -1547,12 +1648,14 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.version.html
 
 Requires: %{name}-common = %{version}-%{release}
 # composer.json
-Requires: %{name}-Json   = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-json)             = %{version}
 # composer.json (optional)
-Requires: %{name}-Http   = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-version) = %{version}
 
 %description Version
 Zend\Version provides a class constant Zend\Version\Version::VERSION that
@@ -1576,29 +1679,31 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.view.quick-start.
 
 Requires: %{name}-common          = %{version}-%{release}
 # composer.json
-Requires: %{name}-EventManager    = %{version}-%{release}
-Requires: %{name}-Loader          = %{version}-%{release}
-Requires: %{name}-Stdlib          = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-loader)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
-Requires: %{name}-Authentication  = %{version}-%{release}
-Requires: %{name}-Escaper         = %{version}-%{release}
-Requires: %{name}-Feed            = %{version}-%{release}
-Requires: %{name}-Filter          = %{version}-%{release}
-Requires: %{name}-Http            = %{version}-%{release}
-Requires: %{name}-I18n            = %{version}-%{release}
-Requires: %{name}-Json            = %{version}-%{release}
-Requires: %{name}-Mvc             = %{version}-%{release}
-Requires: %{name}-Navigation      = %{version}-%{release}
-Requires: %{name}-Paginator       = %{version}-%{release}
-Requires: %{name}-Permissions-Acl = %{version}-%{release}
-Requires: %{name}-ServiceManager  = %{version}-%{release}
-Requires: %{name}-Uri             = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-authentication)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-escaper)          = %{version}
+Requires: php-composer(%{composer_vendor}/zend-feed)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-i18n)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-json)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-mvc)              = %{version}
+Requires: php-composer(%{composer_vendor}/zend-navigation)       = %{version}
+Requires: php-composer(%{composer_vendor}/zend-paginator)        = %{version}
+Requires: php-composer(%{composer_vendor}/zend-permissions-acl)  = %{version}
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-uri)              = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-dom
 Requires: php-filter
 Requires: php-pcre
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zend-view) = %{version}
 
 %description View
 Zend\View provides the “View” layer of Zend Framework 2’s MVC system. It
@@ -1614,12 +1719,12 @@ Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.3/en/modules/zend.xmlrpc.intro.html
 
 Requires: %{name}-common  = %{version}-%{release}
-Requires: %{name}-ZendXml = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
 # composer.json
-Requires: %{name}-Http    = %{version}-%{release}
-Requires: %{name}-Math    = %{version}-%{release}
-Requires: %{name}-Server  = %{version}-%{release}
-Requires: %{name}-Stdlib  = %{version}-%{release}
+Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-math)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-server)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-dom
@@ -1630,6 +1735,8 @@ Requires: php-reflection
 Requires: php-simplexml
 Requires: php-spl
 Requires: php-xmlwriter
+
+Provides: php-composer(%{composer_vendor}/zend-xmlrpc) = %{version}
 
 %description XmlRpc
 From its home page, XML-RPC is described as a ”...remote procedure calling
@@ -1656,6 +1763,8 @@ Requires: php-dom
 Requires: php-libxml
 Requires: php-simplexml
 Requires: php-spl
+
+Provides: php-composer(%{composer_vendor}/zendxml) = %{version}
 
 %description ZendXml
 This is a security component to prevent XML eXternal Entity (XXE) and
@@ -1706,6 +1815,8 @@ ln -s %{name}-common-%{version} %{buildroot}%{_pkgdocdir}
 %files common
 %defattr(-,root,root,-)
 
+%{!?_licensedir:%global license %%doc}
+%license LICENSE.txt
 %doc *.md composer.json
 %doc %{_pkgdocdir}
 
@@ -2323,6 +2434,10 @@ ln -s %{name}-common-%{version} %{buildroot}%{_pkgdocdir}
 # ##############################################################################
 
 %changelog
+* Sun Jul 20 2014 Remi Collet <remi@fedoraproject.org> - 2.3.1-3
+- composer dependencies
+- add missing license
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> 2.3.1-1
 - backport 2.3.1 for remi repo
 
