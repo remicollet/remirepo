@@ -18,6 +18,7 @@
     "doctrine/orm":                         "php-doctrine-orm",
     "fabpot/goutte":                        "php-goutte",
     "fzaninotto/faker":                     "php-Faker",
+    "jms/metadata":                         "php-Metadata",
     "jms/parser-lib":                       "php-JMSParser",
     "justinrainbow/json-schema":            "php-JsonSchema",
     "kriswallsmith/assetic":                "php-Assetic",
