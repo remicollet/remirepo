@@ -1,27 +1,47 @@
-%global github_owner   sdboyer
-%global github_name    gliph
-%global github_version 0.1.5
-%global github_commit  f57d0416c63697336bcfea54f96d2c1f3c8cc6a5
+#
+# RPM spec file for php-gliph
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 
-%global lib_name       Gliph
-%global php_min_ver    5.3.0
+%global github_owner     sdboyer
+%global github_name      gliph
+%global github_version   0.1.6
+%global github_commit    9e2d52e22747c1410aa434a40b5f763c2755c4c8
 
-Name:          php-%{github_name}
-Version:       %{github_version}
-Release:       1%{?dist}
-Summary:       A graph library for PHP
+%global composer_vendor  sdboyer
+%global composer_project gliph
 
-Group:         Development/Libraries
-License:       MIT
-URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commit}.tar.gz
+%global lib_name         Gliph
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch:     noarch
+# "php": ">=5.3"
+%global php_min_ver      5.3.0
 
-Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo
-Requires:      php-spl
+Name:      php-%{composer_project}
+Version:   %{github_version}
+Release:   1%{?github_release}%{?dist}
+Summary:   A graph library for PHP
+
+Group:     Development/Libraries
+License:   MIT
+URL:       https://github.com/%{github_owner}/%{github_name}
+Source0:   %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commit}.tar.gz
+
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+
+# composer.json
+Requires:  php(language) >= %{php_min_ver}
+# phpcompatinfo (computed from version 0.1.6)
+Requires:  php-spl
+
+# Composer
+Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 Gliph is a graph library for PHP. It provides graph building blocks and
@@ -31,7 +51,7 @@ Neo4J (http://neo4j.org/).
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
@@ -40,7 +60,7 @@ Neo4J (http://neo4j.org/).
 
 %install
 rm -rf %{buildroot}
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
+mkdir -pm 0755 %{buildroot}%{_datadir}/php
 cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 
 
@@ -54,13 +74,20 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 rm -rf %{buildroot}
 
 
+%{!?_licensedir:%global license %%doc}
+
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
+%license LICENSE
+%doc README.md composer.json
 %{_datadir}/php/%{lib_name}
 
 
 %changelog
+* Sat Jul 19 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.6-1
+- Updated to 0.1.6 (BZ #1119424)
+- Added "php-composer(sdboyer/gliph)" virtual provide
+
 * Thu Nov  7 2013 Remi Collet <rpms@famillecollet.com> 0.1.5-1
 - backport 0.1.5 for remi repo
 
