@@ -9,23 +9,27 @@
 
 %define def()	%%{!?_without_default:%%{!?_without_%1: %%global _with_%1 --with-%1}}
 
-%{expand:%def imap}
 %{expand:%def interbase}
 %{expand:%def mcrypt}
 %{expand:%def mssql}
+%if 0%{?rhel} != 6
+%{expand:%def tidy}
+%endif
 %if 0%{?rhel} < 6
 %{expand:%def recode}
-%{expand:%def tidy}
 %{expand:%def enchant}
+%endif
+%if 0%{?rhel} > 6 || 0%{?fedora} > 0
+%{expand:%def imap}
 %endif
 
 %define list	%{?_with_recode:recode} %{?_with_mcrypt:mcrypt} %{?_with_tidy:tidy} %{?_with_mssql:mssql pdo_dblib} %{?_with_interbase:interbase pdo_firebird} %{?_with_enchant:enchant} %{?_with_imap:imap} %{?_with_imap:imap}
-%define opts	%{?_with_interbase:--with-interbase=%{_libdir}/firebird --with-pdo-firebird=%{_libdir}/firebird}  %{?_with_imap:--with-imap-ssl --with-kerberos}
+%define opts	%{?_with_interbase:--with-interbase=%{_libdir}/firebird --with-pdo-firebird=%{_libdir}/firebird} %{?_with_imap:--with-imap-ssl --with-kerberos}
 
 Name:       %{?scl_prefix}php-extras
 Summary:    Additional PHP modules from the standard PHP distribution
 Version:    5.4.16
-Release:    4%{?dist}
+Release:    5%{?dist}
 Group:      Development/Languages
 License:    The PHP License
 URL:        http://www.php.net/
@@ -238,6 +242,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 21 2014 Remi Collet <rcollet@redhat.com> - 5.4.16-5
+- add tidy for rhel-7
+
 * Mon Jul 21 2014 Remi Collet <rcollet@redhat.com> - 5.4.16-4
 - add imap for rhel-7
 
