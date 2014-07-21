@@ -77,7 +77,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %doc *.md
 %{_datadir}/php/LazyMap/
 
