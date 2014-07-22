@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
 Version:        2.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
 Group:          Development/Libraries
@@ -37,25 +37,35 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-phpunit-Text-Template >= 1.2
-BuildRequires:  php-phpunit-Version       >= 1.0
-BuildRequires:  php-symfony-console       >= 2.4
-BuildRequires:  php-symfony-classloader   >= 2.4
-BuildRequires:  php-mikey179-vfsstream    >= 1.2
+BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
+BuildRequires:  php-composer(sebastian/version)         >= 1.0
+BuildRequires:  php-composer(symfony/console)           >= 2.4
+BuildRequires:  php-composer(symfony/class-loader)      >= 2.4
+BuildRequires:  php-composer(mikey179/vfsStream)        >= 1.2
 %endif
 
 # From composer.json
+#        "php": ">=5.3.3",
+#        "phpunit/php-text-template": "~1.2",
+#        "sebastian/version": "~1.0",
+#        "symfony/console": "~2.4"
 Requires:       php(language) >= 5.3.3
-Requires:       php-phpunit-Text-Template >= 1.2
-Requires:       php-phpunit-Version       >= 1.0
-Requires:       php-symfony-console       >= 2.4
+Requires:       php-composer(phpunit/php-text-template) >= 1.2
+Requires:       php-composer(phpunit/php-text-template) <  2
+Requires:       php-composer(sebastian/version)         >= 1.0
+Requires:       php-composer(sebastian/version)         <  2
+Requires:       php-composer(symfony/console)           >= 2.4
+Requires:       php-composer(symfony/console)           <  3
 # Need for our autoloader patch
-Requires:       php-symfony-classloader   >= 2.4
+Requires:       php-composer(symfony/class-loader)      >= 2.4
+Requires:       php-composer(symfony/class-loader)      <  3
 # From phpcompatinfo report from 2.0.0
 Requires:       php-date
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-tokenizer
+
+Provides:       php-composer(phpunit/phpunit-skeleton-generator) = %{version}
 
 
 %description
@@ -116,6 +126,9 @@ fi
 
 
 %changelog
+* Tue Jul 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- composer dependencies
+
 * Fri May 16 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1 (no change)
 
