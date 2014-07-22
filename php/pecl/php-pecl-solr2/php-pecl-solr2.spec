@@ -7,11 +7,13 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package         php-pecl-solr2}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name solr
+#global prever    b
 %global with_zts  0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
 # After curl, json
@@ -23,41 +25,57 @@
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
-Name:           php-pecl-solr2
+Name:           %{?scl_prefix}php-pecl-solr2
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
 
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-BuildRequires:  php-devel
-BuildRequires:  php-pear
-BuildRequires:  php-curl
-BuildRequires:  php-json
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-curl
+BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  curl-devel
 BuildRequires:  libxml2-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
 # php 5.3.3 in EL-6 don't use arched virtual provides
 # so only requires real packages instead
-Requires:       php-common%{?_isa}
+Requires:       %{?scl_prefix}php-common%{?_isa}
 %else
-Requires:       php-curl%{?_isa}
-Requires:       php-json%{?_isa}
+Requires:       %{?scl_prefix}php-curl%{?_isa}
+Requires:       %{?scl_prefix}php-json%{?_isa}
 %endif
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Only one version of the extension
-Conflicts:      php-pecl-solr < 2
+Conflicts:      %{?scl_prefix}php-pecl-solr < 2
+
+%if "%{?vendor}" == "Remi Collet"
+Obsoletes:     php53-pecl-%{pecl_name}2  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}2  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name}2 <= %{version}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name}2 <= %{version}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name}2 <= %{version}
+%endif
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -132,6 +150,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
@@ -144,6 +164,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
+
 
 # Test & Documentation
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
@@ -202,7 +223,12 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
 %doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -219,7 +245,6 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 %changelog
 * Tue Jun 24 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
-- cleanup for review
 
 * Mon Jun 23 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4
 - test build before 2.0.0 finale
