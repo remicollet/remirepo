@@ -7,7 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %global pear_name    Horde_OpenXchange
 %global pear_channel pear.horde.org
 
