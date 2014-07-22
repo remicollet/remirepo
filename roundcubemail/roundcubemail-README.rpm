@@ -13,20 +13,29 @@ there is no need to protect them.
 
 
 The installer is available at http://localhost/roundcubemail/installer
+The webmail is available at http://localhost/roundcubemail
 
-Access is only authorized from the server, locally.
-You can allow access for installation, but remember to secure it
-again once configured (upstream recommend to drop the directory).
+By default, access to Roundcube and the installer is only allowed from the
+server, locally, in /etc/httpd/conf.d/roundcubemail.conf . Best practice is
+to create a new file - e.g. /etc/httpd/conf.d/z-roundcubemail-allow.conf -
+to adjust the access permissions. You can also edit roundcubemail.conf directly,
+but then any changes to it in future package updates will cause the creation
+of a .rpmnew file, and you will have to merge the changes manually: creating
+a new config file to configure access permissions avoids that.
 
-The Webmail is available at http://localhost/roundcubemail
+First use the installer to configure Roundcube, ideally from the server so you
+do not need to allow any wider access to the installer, but you can use a new
+config file to grant wider access to /usr/share/roundcubemail and
+/usr/share/roundcubemail/installer if necessary. Once you have completed
+deployment, you should restrict access to the /installer subdirectory again, as
+an attacker could use it to do anything they liked to your Roundcube
+installation.
 
-You can grant permission once configured.
+UPGRADING: when upgrading from < 1.0 the old configuration files named
+main.inc.php and db.inc.php are now deprecated and should be replaced with one
+single config.inc.php file. Run the /usr/share/roundcube/bin/update.sh script
+as root to get this conversion done or manually merge the files. The update
+script will also update the database configuration.
 
-Set /etc/httpd/conf.d/roundcubemail.conf
-
-
-WARNING: when upgrading from < 1.0 the old configuration files named main.inc.php
-and db.inc.php are now deprecated and should be replaced with one single config.inc.php file.
-Run the ./bin/update.sh script to get this conversion done or manually merge the files.
-
-NOTE: the new config.inc.php should only contain options that differ from the ones listed in defaults.inc.php.
+NOTE: the new config.inc.php should only contain options that differ from the
+ones listed in defaults.inc.php.
