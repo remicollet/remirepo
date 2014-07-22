@@ -1,20 +1,20 @@
 # spec file for php-mikey179-vfsstream
 #
-# Copyright (c) 2012-2014 Remi Collet
+# Copyright (c) 2014 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    063fb10633f10c5ccbcac26227e94f46d9336f90
+%global gh_commit    8571f349567e02af1b7efc0fc4e3a4a1c98e664e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mikey179
 %global gh_project   vfsStream
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-mikey179-vfsstream
-Version:        1.2.0
-Release:        2%{?dist}
+Version:        1.3.0
+Release:        1%{?dist}
 Summary:        PHP stream wrapper for a virtual file system
 
 Group:          Development/Libraries
@@ -31,11 +31,14 @@ BuildRequires:  %{_bindir}/phpunit
 %endif
 
 # From composer.json
+#        "php": ">=5.3.0"
 Requires:       php(language) >= 5.3
-# From phpcompatifo report for 1.2.0
+# From phpcompatifo report for 1.3.0
 Requires:       php-date
 Requires:       php-posix
 Requires:       php-spl
+Requires:       php-xml
+Requires:       php-zip
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
@@ -79,8 +82,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
-%doc CHANGES composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc CHANGELOG.md readme.md composer.json
 
 %dir %{_datadir}/php/org
 %dir %{_datadir}/php/org/bovigo
@@ -88,6 +92,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 22 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+- fix license handling
+
 * Fri Jun  6 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
 - provides php-composer(mikey179/vfsstream)
 
