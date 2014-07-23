@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0a60a3a4dafd1f867752d68f02c482b879f73612
+%global gh_commit    fe9d18d2d253cb1dd2ab8014429f8277d5355e91
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
 Version:        2.2.0
-Release:        %{?gh_short:0.1.%{gh_short}}%{!?gh_short:1}%{?dist}
+Release:        %{?gh_short:0.1.git%{gh_short}}%{!?gh_short:1}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -101,8 +101,9 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
-install -D -p -m 755 bin/phpreflect      %{buildroot}%{_bindir}/phpreflect
-install -D -p -m 644 bin/phpreflect.json %{buildroot}%{_sysconfdir}/phpreflect.json
+install -D -p -m 755 bin/phpreflect           %{buildroot}%{_bindir}/phpreflect
+install -D -p -m 644 bin/phpreflect.json.dist %{buildroot}%{_sysconfdir}/phpreflect.json
+install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpreflect.1
 
 
 %check
@@ -130,11 +131,13 @@ fi
 %config(noreplace) %{_sysconfdir}/phpreflect.json
 %{_bindir}/phpreflect
 %{_datadir}/php/Bartlett
+%{_mandir}/man1/phpreflect.1*
 
 
 %changelog
-* Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
+* Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.fe9d18d
 - Test build of upcoming 2.2.0
+- add manpage
 
 * Tue Jul  8 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
