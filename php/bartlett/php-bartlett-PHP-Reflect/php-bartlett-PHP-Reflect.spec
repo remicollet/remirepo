@@ -6,20 +6,20 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f8ae7703ca47b2063adb00fe8510e4817ff9aa61
+%global gh_commit    0a60a3a4dafd1f867752d68f02c482b879f73612
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        2.1.0
-Release:        1%{?dist}
+Version:        2.2.0
+Release:        %{?gh_short:0.1.%{gh_short}}%{!?gh_short:1}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/reflect/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
 
 # Autoloader for RPM - die composer !
 Patch0:         %{name}-rpm.patch
@@ -29,39 +29,48 @@ BuildArch:      noarch
 BuildRequires:  php(language)               >= 5.3
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-# 1.0.5-3 is first version in /usr/share/php
-BuildRequires:  php-phpunit-PHP-Timer       >= 1.0.5-3
-BuildRequires:  php-PHPParser               >= 1.0.0
-BuildRequires:  php-symfony-classloader     >= 2.4
-BuildRequires:  php-symfony-eventdispatcher >= 2.4
-BuildRequires:  php-symfony-finder          >= 2.4
-BuildRequires:  php-symfony-console         >= 2.4
+BuildRequires:  php-composer(phpunit/php-timer)        >= 1.0
+BuildRequires:  php-composer(nikic/php-parser)         >= 1.0.0
+BuildRequires:  php-composer(symfony/class-loader)     >= 2.5
+BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.5
+BuildRequires:  php-composer(symfony/finder)           >= 2.5
+BuildRequires:  php-composer(symfony/console)          >= 2.5
 
-# From composer.json
+# From composer.json, "require"
 #        "php": ">=5.3.0",
 #        "ext-tokenizer": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
 #        "ext-json": "*",
+#        "ext-date": "*",
 #        "phpunit/php-timer": ">=1.0.0",
 #        "nikic/php-parser": "1.0.0beta1",
-#        "symfony/event-dispatcher": "~2.4",
-#        "symfony/finder": "~2.4",
-#        "symfony/console": "~2.4"
+#        "symfony/event-dispatcher": "~2.5",
+#        "symfony/finder": "~2.5",
+#        "symfony/console": "~2.5"
 Requires:       php(language)               >= 5.3
+Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-phpunit-PHP-Timer       >= 1.0.5-3
-Requires:       php-PHPParser               >= 1.0.0
-Requires:       php-symfony-eventdispatcher >= 2.4
-Requires:       php-symfony-finder          >= 2.4
-Requires:       php-symfony-console         >= 2.4
+Requires:       php-composer(phpunit/php-timer)        >= 1.0.0
+Requires:       php-composer(nikic/php-parser)         >= 1.0.0
+Requires:       php-composer(symfony/event-dispatcher) >= 2.5
+Requires:       php-composer(symfony/event-dispatcher) <  3
+Requires:       php-composer(symfony/finder)           >= 2.5
+Requires:       php-composer(symfony/finder)           <  3
+Requires:       php-composer(symfony/console)          >= 2.5
+Requires:       php-composer(symfony/console)          <  3
+# From coposer.json, "suggest"
+#        "doctrine/cache": "~1.3"
+Requires:       php-composer(doctrine/cache)           >= 1.3
+Requires:       php-composer(doctrine/cache)           <  2
 # For our patch
-Requires:       php-symfony-classloader     >= 2.4
+Requires:       php-composer(symfony/class-loader)     >= 2.5
+Requires:       php-composer(symfony/class-loader)     <  3
+
 # From package.xml
-Requires:       php-date
 Requires:       php-reflection
 
 
@@ -115,13 +124,18 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE composer.json README.*
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc composer.json README.*
 %config(noreplace) %{_sysconfdir}/phpreflect.json
 %{_bindir}/phpreflect
 %{_datadir}/php/Bartlett
 
 
 %changelog
+* Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
+- Test build of upcoming 2.2.0
+
 * Tue Jul  8 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
