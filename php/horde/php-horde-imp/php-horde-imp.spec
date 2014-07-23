@@ -12,7 +12,7 @@
 
 Name:           php-horde-imp
 Version:        6.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based webmail system
 
 Group:          Development/Libraries
@@ -121,7 +121,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # From package.xml, optional
-#     TODO Horde_Service_Gravatar
+Requires:       php-pear(%{pear_channel}/Horde_Service_Gravatar) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Service_Gravatar) <  2.0.0
 # Optional and implicitly required:
 #     Horde_History, Horde_Http
 # From phpcompatinfo report for version 6.1.7
@@ -253,6 +254,9 @@ fi
 
 
 %changelog
+* Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 6.2.0-2
+- add optional dep on Horde_Service_Gravatar
+
 * Tue Jul 08 2014 Remi Collet <remi@fedoraproject.org> - 6.2.0-1
 - Update to 6.2.0
 - raise dep on Horde_Core, Horde_Crypt, Horde_Editor, Horde_Imap_Client,
