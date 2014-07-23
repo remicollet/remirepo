@@ -13,7 +13,7 @@
 
 Name:           php-horde-horde
 Version:        5.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -118,6 +118,8 @@ Requires:       php-pear(Net_DNS2)
 Requires:       php-pear(Services_Weather)
 Requires:       php-pear(%{pear_channel}/Horde_Feed) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Feed) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_OpenXchange) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_OpenXchange) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) <  3.0.0
 # Optional but implicitly required
@@ -125,7 +127,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) <  3.0.0
 # Optional but TODO
 #               Horde_Service_Facebook
 #               Horde_Service_Twitter
-#               Horde_OpenXchange
 # From phpcompatinfo report for version 5.1.6
 Requires:       php-calendar
 Requires:       php-date
@@ -255,6 +256,9 @@ fi
 
 
 %changelog
+* Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 5.2.0-2
+- add optional dep on Horde_OpenXchange
+
 * Tue Jul 08 2014 Remi Collet <remi@fedoraproject.org> - 5.2.0-1
 - Update to 5.2.0
 - raise dep on Horde_Alarm, Horde_Autoloader, Horde_Core
