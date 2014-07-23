@@ -10,7 +10,7 @@
 
 Name:          php-%{oldlib_name}
 Version:       1.0.0
-Release:       0.1.beta1%{?dist}
+Release:       0.2.beta1%{?dist}
 Summary:       A PHP parser written in PHP
 
 Group:         Development/Libraries
@@ -41,6 +41,9 @@ Requires:      php-spl
 
 Obsoletes:     %{name}-test
 
+Provides:      php-composer(nikic/php-parser) = %{version}
+
+
 %description
 A PHP parser written in PHP to simplify static analysis and code manipulation.
 
@@ -68,12 +71,18 @@ ln -s ../%{newlib_name}/Autoloader.php \
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md doc grammar composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md doc grammar composer.json
 %{_datadir}/php/%{oldlib_name}
 %{_datadir}/php/%{newlib_name}
 
 
 %changelog
+* Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> 1.0.0-0.2.beta1
+- composer dependencies
+- fix license handling
+
 * Mon May 12 2014 Remi Collet <remi@fedoraproject.org> 1.0.0-0.1.beta1
 - Update to 1.0.0beta1
 - library in /usr/share/php/PhpParser
