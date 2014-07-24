@@ -15,7 +15,7 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  
      if (!getenv("REFLECT")) {
          $files = array(
-@@ -21,7 +21,24 @@ if (\Phar::running()) {
+@@ -21,7 +21,25 @@ if (\Phar::running()) {
          }
      }
  }
@@ -35,6 +35,7 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +    'Symfony\\Component\\EventDispatcher' => $vendorDir,
 +    'Symfony\\Component\\Console'         => $vendorDir,
 +    'Symfony\\Component\\ClassLoader'     => $vendorDir,
++    'Doctrine\\Common\\Cache'             => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
 +));
 +$loader->register();

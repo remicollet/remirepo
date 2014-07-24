@@ -6,8 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    fe9d18d2d253cb1dd2ab8014429f8277d5355e91
-%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_commit    971d6bfaf85b89df0f40245775fb94ba806c6f84
+#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.fe9d18d
 - Test build of upcoming 2.2.0
 - add manpage
