@@ -6,20 +6,20 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b9b813a906d0f2e18608c1c6d153418d99582622
+%global gh_commit    970d967fee265cd32379402ae0002c0e7987449d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        3.1.0
-Release:        2%{?dist}
+Version:        3.2.0
+Release:        %{?gh_short:0.1.git%{gh_short}}%{!?gh_short:1}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/compatinfo/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
 
 # Autoloader for RPM - die composer !
 Patch0:         %{name}-rpm.patch
@@ -29,28 +29,38 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-bartlett-PHP-Reflect >= 2.0.0
+BuildRequires:  php-composer(bartlett/php-reflect) >= 2
 
 # From composer.json
+#        "php": ">=5.3.0",
+#        "ext-tokenizer": "*",
+#        "ext-pcre": "*",
+#        "ext-spl": "*",
+#        "ext-json": "*",
+#        "symfony/console": "~2.5",
+#        "bartlett/php-reflect": "2.*"
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-bartlett-PHP-Reflect >= 2.0.0
+Requires:       php-composer(bartlett/php-reflect) >= 2
+Requires:       php-composer(bartlett/php-reflect) <  3
+Requires:       php-composer(symfony/console)      >= 2.5
+Requires:       php-composer(symfony/console)      <  3
 # Required by autoloader
 # php-timer 1.0.5-3 is first version in /usr/share/php
-Requires:       php-phpunit-PHP-Timer       >= 1.0.5-3
-Requires:       php-PHPParser               >= 1.0.0
-Requires:       php-symfony-classloader     >= 2.4
-Requires:       php-symfony-eventdispatcher >= 2.4
-Requires:       php-symfony-finder          >= 2.4
-Requires:       php-symfony-console         >= 2.4
+Requires:       php-composer(phpunit/php-timer)
+Requires:       php-composer(nikic/php-parser)
+Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(symfony/event-dispatcher)
+Requires:       php-composer(symfony/finder)
 # From phpcompatinfo report for version 3.1.0
 Requires:       php-curl
 Requires:       php-mbstring
 
 Provides:       phpcompatinfo = %{version}
+Provides:       php-composer(bartlett/php-compatinfo) = %{version}
 
 
 %description
@@ -67,8 +77,6 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/3.1/en/
 
 %patch0 -p1 -b .rpm
 
-find . -type f -name \*.rpm -print | xargs rm
-
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
 
@@ -82,19 +90,12 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
-install -D -p -m 755 bin/compatinfo      %{buildroot}%{_bindir}/phpcompatinfo
-install -D -p -m 644 bin/compatinfo.json %{buildroot}%{_sysconfdir}/phpcompatinfo.json
+install -D -p -m 755 bin/phpcompatinfo           %{buildroot}%{_bindir}/phpcompatinfo
+install -D -p -m 644 bin/phpcompatinfo.json.dist %{buildroot}%{_sysconfdir}/phpcompatinfo.json
+install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/phpcompatinfo.1
 
 
 %check
-
-%if 0%{?rhel} == 6
-# php-5.3.3-CVE-2012-0057.patch add new constants from php 5.3.9
-# so drop this test which fails with
-# Constant 'XSL_SECPREF_CREATE_DIRECTORY', found in Reference (5.3.9,), exists.
-rm -f tests/Reference/XslTest.php
-%endif
-
 # OK, but incomplete or skipped tests!
 # Tests: 810, Assertions: 10996, Skipped: 80, when most extensions installed
 # Tests: 551, Assertions: 6833, Skipped: 378, in mock
@@ -120,14 +121,21 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE composer.json README.*
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc composer.json README.*
 %config(noreplace) %{_sysconfdir}/phpcompatinfo.json
 %{_bindir}/phpcompatinfo
 %{_datadir}/php/Bartlett/CompatInfo
 %{_datadir}/php/Bartlett/CompatInfo.php
+%{_mandir}/man1/phpcompatinfo.1*
 
 
 %changelog
+* Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.1.970d967
+- Test build of upcoming 3.2.0
+- add manpage
+
 * Mon May 26 2014 Remi Collet <remi@fedoraproject.org> - 3.1.0-2
 - fix dependencies
 

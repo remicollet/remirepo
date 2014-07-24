@@ -1,140 +1,70 @@
-diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json.rpm php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json
---- php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json.rpm	2014-05-02 11:02:24.000000000 +0200
-+++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.json	2014-05-13 08:57:47.713593892 +0200
-@@ -1,35 +1,8 @@
- {
-     "source-providers": [
-         {
--            "in": "phar:///var/dist/PHP_CompatInfo-2.0.0.zip as CompatInfo2",
--            "name": "*.php",
--            "path": "PHP/"
--        },
--        {
--            "in": "phar:///var/dist/PHP_Reflect-1.0.0.tar as Reflect1",
--            "path": "PHP/",
--            "name": "*.php"
--        },
--        {
--            "in": "phar:///var/dist/PHP_Reflect-1.0.0.tar as ReflectAL",
--            "path": "PHP/",
--            "name": "Autoload.php"
--        },
--        {
--            "in": "phar:///var/dist/phing-2.7.0.tgz as phing27",
--            "name": "*.php",
--            "path": "tasks/system",
--            "notPath": "contrib/",
--            "size": "< 4K"
--        },
--        {
--            "in": "phar:///var/dist/Zend-1.12.3.tgz as ZF1123",
--            "name": "*.php"
--        },
--        {
--            "in": "phar:///var/dist/Zend-1.12.3.tgz as ZFDate",
--            "name": "Date.php",
--            "depth": "== 1"
-+                "in": ". as current",
-+                "name": "/\\.(php|inc|phtml|module|install)$/"
-         }
-     ],
-     "plugins": [
-diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.rpm php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo
---- php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo.rpm	2014-05-02 11:02:24.000000000 +0200
-+++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/bin/compatinfo	2014-05-13 08:59:10.469913479 +0200
-@@ -1,32 +1,39 @@
+diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
+--- ./bin/phpcompatinfo.rpm	2014-07-22 20:58:01.000000000 +0200
++++ ./bin/phpcompatinfo	2014-07-24 07:35:44.357468394 +0200
+@@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
- // bin/console
--//putenv("COMPATINFO=/path/to/dir/compatinfo.json");
-+if (!getenv("COMPATINFO")) {
-+    $files = array(
-+        realpath('./compatinfo.json'),
-+        getenv('HOME').'/.config/phpcompatinfo.json',
-+        '/etc/phpcompatinfo.json',
-+    );
-+    foreach ($files as $file) {
-+        if (file_exists($file)) {
-+            putenv("COMPATINFO=$file");
-+            break;
-+        }
-+    }
-+}
  ini_set('memory_limit', -1);
  
--$baseDir   = dirname(__DIR__);
--$vendorDir = $baseDir . '/vendor';
+@@ -22,7 +22,24 @@ if (\Phar::running()) {
+         }
+     }
+ }
+-require_once $vendorDir . '/autoload.php';
 +$vendorDir = '/usr/share/php';
- 
--if (\Phar::running()) {
--    require_once 'phar://phpcompatinfo.phar/vendor/nikic/php-parser/lib/bootstrap.php';
--    require_once 'phar://phpcompatinfo.phar/vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
--    require_once 'phar://phpcompatinfo.phar/vendor/phpunit/php-timer/PHP/Timer.php';
--} else {
--    require_once $vendorDir . '/nikic/php-parser/lib/bootstrap.php';
--    require_once $vendorDir . '/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
--    require_once $vendorDir . '/phpunit/php-timer/PHP/Timer.php';
--}
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
 +
-+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-+
 +require_once $vendorDir . '/PHP/Timer.php';
- 
- use Symfony\Component\ClassLoader\UniversalClassLoader;
- 
- $loader = new UniversalClassLoader();
- $loader->registerNamespaces(array(
--    'Symfony\\Component\\Finder'          => $vendorDir . '/symfony/finder',
--    'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher',
--    'Symfony\\Component\\Console'         => $vendorDir . '/symfony/console',
--    'Symfony\\Component\\ClassLoader'     => $vendorDir . '/symfony/class-loader',
--    'Bartlett\\Tests\\CompatInfo'         => $baseDir . '/tests',
--    'Bartlett'                            => array($baseDir . '/src', $vendorDir . '/bartlett/php-reflect/src'),
++
++require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++use Symfony\Component\ClassLoader\UniversalClassLoader;
++
++$loader = new UniversalClassLoader();
++$loader->registerNamespaces(array(
 +    'Symfony\\Component\\Finder'          => $vendorDir,
 +    'Symfony\\Component\\EventDispatcher' => $vendorDir,
 +    'Symfony\\Component\\Console'         => $vendorDir,
 +    'Symfony\\Component\\ClassLoader'     => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
- ));
- $loader->register();
++));
++$loader->register();
  
-diff -up php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php.rpm php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php
---- php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php.rpm	2014-05-02 11:02:24.000000000 +0200
-+++ php-compat-info-b9b813a906d0f2e18608c1c6d153418d99582622/tests/bootstrap.php	2014-05-13 08:57:47.713593892 +0200
-@@ -1,21 +1,24 @@
+ if (PHP_SAPI !== 'cli') {
+     return;
+diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
+--- ./tests/bootstrap.php.rpm	2014-07-22 20:58:01.000000000 +0200
++++ ./tests/bootstrap.php	2014-07-24 07:35:28.060391649 +0200
+@@ -1,8 +1,29 @@
  <?php
  
  $baseDir   = dirname(__DIR__);
 -$vendorDir = $baseDir . '/vendor';
 +$vendorDir = '/usr/share/php';
  
--require_once $vendorDir . '/nikic/php-parser/lib/bootstrap.php';
--require_once $vendorDir . '/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
--require_once $vendorDir . '/phpunit/php-timer/PHP/Timer.php';
+-require_once $vendorDir . '/autoload.php';
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
+ 
++require_once $vendorDir . '/PHP/Timer.php';
 +
 +require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++use Symfony\Component\ClassLoader\UniversalClassLoader;
 +
-+require_once $vendorDir . '/PHP/Timer.php';
- 
- use Symfony\Component\ClassLoader\UniversalClassLoader;
- 
- $loader = new UniversalClassLoader();
- $loader->registerNamespaces(array(
--    'Symfony\\Component\\Finder'          => $vendorDir . '/symfony/finder',
--    'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher',
--    'Symfony\\Component\\Console'         => $vendorDir . '/symfony/console',
--    'Symfony\\Component\\ClassLoader'     => $vendorDir . '/symfony/class-loader',
--    'Bartlett\\Reflect'                   => $vendorDir . '/bartlett/php-reflect/src',
++$loader = new UniversalClassLoader();
++$loader->registerNamespaces(array(
 +    'Symfony\\Component\\Finder'          => $vendorDir,
 +    'Symfony\\Component\\EventDispatcher' => $vendorDir,
 +    'Symfony\\Component\\Console'         => $vendorDir,
 +    'Symfony\\Component\\ClassLoader'     => $vendorDir,
 +    'Bartlett\\Reflect'                   => $vendorDir,
-     'Bartlett\\Tests\\CompatInfo'         => $baseDir . '/tests',
-     'Bartlett'                            => $baseDir . '/src',
- ));
++    'Bartlett\\Tests\\CompatInfo'         => $baseDir . '/tests',
++    'Bartlett'                            => $baseDir . '/src',
++ ));
++
++$loader->register();
++
++# Class not catched by autoloader
++require $vendorDir . '/Bartlett/Reflect.php';
+ require __DIR__ . '/Reference/GenericTest.php';
