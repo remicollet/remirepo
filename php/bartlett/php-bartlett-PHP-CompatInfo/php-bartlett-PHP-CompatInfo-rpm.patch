@@ -7,7 +7,7 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
  <?php
  ini_set('memory_limit', -1);
  
-@@ -22,7 +22,24 @@ if (\Phar::running()) {
+@@ -22,7 +22,25 @@ if (\Phar::running()) {
          }
      }
  }
@@ -23,6 +23,7 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 +
 +$loader = new UniversalClassLoader();
 +$loader->registerNamespaces(array(
++    'Doctrine\\Common\\Cache'             => $vendorDir,
 +    'Symfony\\Component\\Finder'          => $vendorDir,
 +    'Symfony\\Component\\EventDispatcher' => $vendorDir,
 +    'Symfony\\Component\\Console'         => $vendorDir,

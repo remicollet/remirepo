@@ -6,8 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    970d967fee265cd32379402ae0002c0e7987449d
-%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_commit    23d66048d3aac6093e215143274eb95e8556da70
+#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
@@ -31,33 +31,34 @@ BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(bartlett/php-reflect) >= 2
 
-# From composer.json
+# From composer.json, "require"
 #        "php": ">=5.3.0",
-#        "ext-tokenizer": "*",
+#        "ext-libxml": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "symfony/console": "~2.5",
-#        "bartlett/php-reflect": "2.*"
+#        "bartlett/php-reflect": "~2.2"
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
+Requires:       php-libxml
 Requires:       php-pcre
 Requires:       php-spl
-Requires:       php-tokenizer
-Requires:       php-composer(bartlett/php-reflect) >= 2
+Requires:       php-composer(bartlett/php-reflect) >= 2.2
 Requires:       php-composer(bartlett/php-reflect) <  3
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
+# From composer.json, "suggest"
+#        "doctrine/cache": "Allow caching results, since bartlett/php-reflect 2.2"
+Requires:       php-composer(doctrine/cache)
 # Required by autoloader
-# php-timer 1.0.5-3 is first version in /usr/share/php
 Requires:       php-composer(phpunit/php-timer)
 Requires:       php-composer(nikic/php-parser)
 Requires:       php-composer(symfony/class-loader)
 Requires:       php-composer(symfony/event-dispatcher)
 Requires:       php-composer(symfony/finder)
-# From phpcompatinfo report for version 3.1.0
+# From phpcompatinfo report for version 3.2.0
 Requires:       php-curl
-Requires:       php-mbstring
 
 Provides:       phpcompatinfo = %{version}
 Provides:       php-composer(bartlett/php-compatinfo) = %{version}
@@ -69,7 +70,7 @@ version and extensions required for it to run. CLI version has many reports
 (extension, interface, class, function, constant) to display and ability to
 show content of dictionary references.
 
-Documentation: http://php5.laurent-laville.org/compatinfo/manual/3.1/en/
+Documentation: http://php5.laurent-laville.org/compatinfo/manual/3.2/en/
 
 
 %prep
@@ -132,6 +133,9 @@ fi
 
 
 %changelog
+* Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- Update to 3.2.0
+
 * Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.1.970d967
 - Test build of upcoming 3.2.0
 - add manpage
