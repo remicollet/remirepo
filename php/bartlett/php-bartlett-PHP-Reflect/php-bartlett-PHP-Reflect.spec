@@ -69,9 +69,10 @@ Requires:       php-composer(doctrine/cache)           <  2
 # For our patch
 Requires:       php-composer(symfony/class-loader)     >= 2.5
 Requires:       php-composer(symfony/class-loader)     <  3
-
 # From package.xml
 Requires:       php-reflection
+
+Provides:       php-composer(bartlett/php-reflect) = %{version}
 
 
 %description
@@ -85,8 +86,6 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/2.0/en/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-
-find . -type f -name \*.rpm -print | xargs rm
 
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
