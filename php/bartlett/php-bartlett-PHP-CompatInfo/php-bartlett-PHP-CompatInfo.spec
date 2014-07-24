@@ -13,7 +13,8 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        3.2.0
-Release:        %{?gh_short:0.1.git%{gh_short}}%{!?gh_short:1}%{?dist}
+%global specrel 2
+Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -23,6 +24,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Autoloader for RPM - die composer !
 Patch0:         %{name}-rpm.patch
+Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -77,6 +79,7 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/3.2/en/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1 -b .git
 
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
@@ -133,6 +136,9 @@ fi
 
 
 %changelog
+* Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-2
+- add upstream patch for SNMP extension
+
 * Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
 - Update to 3.2.0
 

@@ -1,0 +1,84 @@
+From c45d362462779cf67a06f2e991e88f4c6ca4908d Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 24 Jul 2014 16:58:37 +0200
+Subject: [PATCH] fix ref version for haru, ssh2 and stomp extension
+
+Signed-off-by: Laurent Laville <laurent.laville@gmail.com>
+---
+ src/Bartlett/CompatInfo/Reference/Extension/HaruExtension.php  | 2 +-
+ src/Bartlett/CompatInfo/Reference/Extension/Ssh2Extension.php  | 2 +-
+ src/Bartlett/CompatInfo/Reference/Extension/StompExtension.php | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/Bartlett/CompatInfo/Reference/Extension/HaruExtension.php b/src/Bartlett/CompatInfo/Reference/Extension/HaruExtension.php
+index 0445211..d6783f6 100644
+--- a/src/Bartlett/CompatInfo/Reference/Extension/HaruExtension.php
++++ b/src/Bartlett/CompatInfo/Reference/Extension/HaruExtension.php
+@@ -7,7 +7,7 @@
+ class HaruExtension extends AbstractReference
+ {
+     const REF_NAME    = 'haru';
+-    const REF_VERSION = '';
++    const REF_VERSION = '1.0.4'; // 2012-12-23
+ 
+     public function __construct()
+     {
+diff --git a/src/Bartlett/CompatInfo/Reference/Extension/Ssh2Extension.php b/src/Bartlett/CompatInfo/Reference/Extension/Ssh2Extension.php
+index 102ac4c..e958f4a 100644
+--- a/src/Bartlett/CompatInfo/Reference/Extension/Ssh2Extension.php
++++ b/src/Bartlett/CompatInfo/Reference/Extension/Ssh2Extension.php
+@@ -7,7 +7,7 @@
+ class Ssh2Extension extends AbstractReference
+ {
+     const REF_NAME    = 'ssh2';
+-    const REF_VERSION = '';
++    const REF_VERSION = '0.12'; // 2012-10-15
+ 
+     public function __construct()
+     {
+diff --git a/src/Bartlett/CompatInfo/Reference/Extension/StompExtension.php b/src/Bartlett/CompatInfo/Reference/Extension/StompExtension.php
+index b2c5ce7..20f77a5 100644
+--- a/src/Bartlett/CompatInfo/Reference/Extension/StompExtension.php
++++ b/src/Bartlett/CompatInfo/Reference/Extension/StompExtension.php
+@@ -7,7 +7,7 @@
+ class StompExtension extends AbstractReference
+ {
+     const REF_NAME    = 'stomp';
+-    const REF_VERSION = '';
++    const REF_VERSION = '1.0.5'; // 2012-11-18
+ 
+     public function __construct()
+     {
+-- 
+1.9.3
+
+From b3bcf488623080ad0de6965d478692dbc6c3e921 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 24 Jul 2014 16:59:05 +0200
+Subject: [PATCH] don't use extension version if not registered in reference,
+ fix snmp issue
+
+Signed-off-by: Laurent Laville <laurent.laville@gmail.com>
+---
+ src/Bartlett/CompatInfo/Reference/AbstractReference.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/Bartlett/CompatInfo/Reference/AbstractReference.php b/src/Bartlett/CompatInfo/Reference/AbstractReference.php
+index 3bef201..2926813 100644
+--- a/src/Bartlett/CompatInfo/Reference/AbstractReference.php
++++ b/src/Bartlett/CompatInfo/Reference/AbstractReference.php
+@@ -186,9 +186,10 @@ public function getCurrentVersion()
+     {
+         $version = phpversion($this->name);
+         $pattern = '/^[0-9]+\.[0-9]+/';
+-        if (!preg_match($pattern, $version)) {
++        if (empty($this->version) || !preg_match($pattern, $version)) {
+             /**
+              * When version is not provided by the extension, or not standard format
++             * or we don't have it in our reference (ex snmp) because have no sense
+              * be sure at least to return latest PHP version supported.
+              */
+             $version = $this->getLatestPhpVersion();
+-- 
+1.9.3
+
