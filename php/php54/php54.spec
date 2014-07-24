@@ -1685,6 +1685,7 @@ fi
 * Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> 5.4.31-1
 - Update to 5.4.31
   http://www.php.net/releases/5_4_31.php
+- add php-litespeed subpackage (/usr/bin/lsphp)
 
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> 5.4.30-1
 - Update to 5.4.30
