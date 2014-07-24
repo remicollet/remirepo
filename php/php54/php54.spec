@@ -20,6 +20,9 @@
 %global oraclever 12.1
 %endif
 
+# Build for LiteSpeed Web Server (LSAPI)
+%global with_lsws 1
+
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
@@ -251,6 +254,18 @@ Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php54w-fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
 implementation with some additional features useful for sites of
 any size, especially busier sites.
+%endif
+
+%if %{with_lsws}
+%package litespeed
+Summary: LiteSpeed Web Server PHP support
+Group: Development/Languages
+Requires: php-common%{?_isa} = %{version}-%{release}
+Obsoletes: php53-litespeed, php53u-litespeed, php54-litespeed, php54w-litespeed
+
+%description litespeed
+The php-litespeed package provides the %{_bindir}/lsphp command
+used by the LiteSpeed Web Server (LSAPI enabled PHP).
 %endif
 
 %package common
@@ -1086,6 +1101,9 @@ without_shared="--without-gd \
 pushd build-apache
 build --with-apxs2=%{_httpd_apxs} \
       --libdir=%{_libdir}/php \
+%if %{with_lsws}
+      --with-litespeed \
+%endif
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{mysql_config} \
@@ -1254,6 +1272,10 @@ mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/zts-php-config
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
      INSTALL_ROOT=$RPM_BUILD_ROOT
+
+%if %{with_lsws}
+install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
+%endif
 
 %if %{with_fpm}
 # Install the php-fpm binary
@@ -1595,6 +1617,12 @@ fi
 %{_mandir}/man8/php-fpm.8*
 %dir %{_datadir}/fpm
 %{_datadir}/fpm/status.html
+%endif
+
+%if %{with_lsws}
+%files litespeed
+%defattr(-,root,root)
+%{_bindir}/lsphp
 %endif
 
 %files devel
