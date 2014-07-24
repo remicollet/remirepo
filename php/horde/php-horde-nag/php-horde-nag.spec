@@ -90,7 +90,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # Optional and implicitly required: Horde_Db
-# TODO Horde_OpenXchange
 # From pĥpcompatinfo report for version 4.1.4
 Requires:       php-date
 Requires:       php-json

@@ -30,7 +30,7 @@ BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.3.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.12.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Itip) >= 2.0.0
 
 Requires(post): %{__pear}

@@ -113,7 +113,7 @@ Requires:       php-pear(%{pear_channel}/nag) >= 4.2.0
 Requires:       php-pear(%{pear_channel}/nag) <  5
 # Optional and implicitly required: Horde_Db
 # Optional and skiped as non-free: Horde_ActiveSync
-# TODO pear.horde.org/timeobjects >= 2.0.0, Horde_OpenXchange
+# TODO pear.horde.org/timeobjects >= 2.0.0
 # From phpcompatinfo report for version 4.1.5
 Requires:       php-date
 Requires:       php-intl

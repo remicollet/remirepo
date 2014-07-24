@@ -28,7 +28,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.3.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.12.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -95,7 +95,7 @@ Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
 # Optional an implicitly required
 #    Horde_Db, Horde_Imsp, Horde_Ldap
 #    Horde_Kolab_Format, Horde_Kolab_Storage
-# Not yet available Horde_Service_Facebook, Horde_OpenXchange
+# Not yet available Horde_Service_Facebook
 # From phpcompatinfo report for version 4.1.4
 Requires:       php-date
 Requires:       php-pcre

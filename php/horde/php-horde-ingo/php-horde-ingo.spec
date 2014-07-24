@@ -10,9 +10,6 @@
 %global pear_name    ingo
 %global pear_channel pear.horde.org
 
-# TODO
-# Tests are not ready (need Framework 5.2)
-
 Name:           php-horde-ingo
 Version:        3.2.0
 Release:        1%{?dist}
@@ -31,7 +28,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.3.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.12.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
