@@ -31,7 +31,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-composer(bartlett/php-reflect) >= 2
+BuildRequires:  php-composer(bartlett/php-reflect) >= 2.2
 
 # From composer.json, "require"
 #        "php": ">=5.3.0",
