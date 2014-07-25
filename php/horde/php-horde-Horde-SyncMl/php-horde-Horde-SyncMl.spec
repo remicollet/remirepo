@@ -1,13 +1,21 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Date
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_SyncMl
 %global pear_channel pear.horde.org
-
 # No run of unit tests - because tests are not ready (oudated)
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-SyncMl
-Version:        2.0.3
-Release:        2%{?dist}
+Version:        2.0.4
+Release:        1%{?dist}
 Summary:        Horde_SyncMl provides an API for processing SyncML requests
 
 Group:          Development/Libraries
@@ -47,13 +55,14 @@ Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Auth) >= 3.0.0
-# Keep optional : Horde_Core, MDB2
+# Keep optional : Horde_Core
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
 %description
 Classes for implementing a SyncML server.
+
 
 %prep
 %setup -q -c
@@ -64,6 +73,7 @@ cd %{pear_name}-%{version}
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -102,6 +112,20 @@ do
 done
 
 
+%check
+%if %{with_tests}
+src=$(pwd)/%{pear_name}-%{version}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+
+phpunit \
+    --include-path=$src/lib \
+    -d date.timezone=UTC \
+    .
+%else
+: Test disabled, missing '--with tests' option.
+%endif
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -126,6 +150,9 @@ fi
 
 
 %changelog
+* Fri Jul 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Tue Mar 26 2013 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
 - cleanups before review
 

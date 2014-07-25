@@ -21,6 +21,7 @@
 		"Horde_Core":["Horde_Dav", "Horde_Form"],
 		"Horde_Auth":["Horde_Kolab_Session"],
 		"Horde_Stream_Wrapper":["Horde_Test"],
-		"Horde_Serialize": ["Horde_Imap_Client", "Horde_Mime"]
+		"Horde_Serialize": ["Horde_Imap_Client", "Horde_Mime"],
+		"Horde_SyncMl": ["Horde_Core"]
 	}
 }
