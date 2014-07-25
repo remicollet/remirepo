@@ -13,7 +13,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        3.2.0
-%global specrel 2
+%global specrel 3
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -113,13 +113,9 @@ install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/php
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{channel}/%{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      bartlett.laurent-laville.org/PHP_CompatInfo >/dev/null || :
 fi
 
 
@@ -136,6 +132,9 @@ fi
 
 
 %changelog
+* Fri Jul 25 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-3
+- cleanup pear registration
+
 * Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-2
 - add upstream patch for SNMP extension
 
