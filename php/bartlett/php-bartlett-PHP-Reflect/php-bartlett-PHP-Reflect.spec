@@ -13,7 +13,8 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        2.2.0
-Release:        %{?gh_short:0.1.git%{gh_short}}%{!?gh_short:1}%{?dist}
+%global specrel 2
+Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -72,6 +73,7 @@ Requires:       php-composer(symfony/class-loader)     <  3
 # From package.xml
 Requires:       php-reflection
 
+Obsoletes:      php-channel-bartlett <= 1.3
 Provides:       php-composer(bartlett/php-reflect) = %{version}
 
 
@@ -118,7 +120,7 @@ rm -rf %{buildroot}
 %post
 if [ -x %{_bindir}/pear ]; then
    %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
-     bartlett.laurent-laville.org/PHP_Reflect >/dev/null || :
+      bartlett.laurent-laville.org/PHP_Reflect >/dev/null || :
 fi
 
 
@@ -134,6 +136,9 @@ fi
 
 
 %changelog
+* Fri Jul 25 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-2
+- obsoletes php-channel-bartlett
+
 * Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
