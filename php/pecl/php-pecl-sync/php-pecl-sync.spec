@@ -21,14 +21,12 @@
 
 Summary:        Named and unnamed synchronization objects
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -79,9 +77,6 @@ and Windows platforms.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-
-%patch0 -p1
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SYNC_VERSION/{s/.* "//;s/".*$//;p}' php_sync.h)
 if test "x${extver}" != "x%{version}"; then
@@ -168,14 +163,7 @@ export TEST_PHP_EXECUTABLE=%{__php}
 export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
 export NO_INTERACTION=1
 export REPORT_EXIT_STATUS=1
-if ! %{__php} -n run-tests.php
-then
-  for i in tests/*diff
-  do
-    cat $i
-  done
-  exit 1
-fi
+%{__php} -n run-tests.php --show-diff
 
 %if %{with_zts}
 cd ../ZTS
@@ -187,7 +175,7 @@ cd ../ZTS
 : Upstream test suite  for ZTS extension
 export TEST_PHP_EXECUTABLE=%{_bindir}/zts-php
 export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
-%{_bindir}/zts-php -n run-tests.php
+%{_bindir}/zts-php -n run-tests.php --show-diff
 %endif
 
 
@@ -211,5 +199,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (stable)
+
 * Tue Jul  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (stable)

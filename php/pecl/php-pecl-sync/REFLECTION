@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #143 sync version 1.0.0 ] {
+Extension [ <persistent> extension #143 sync version 1.0.1 ] {
 
   - Classes [4] {
     Class [ <internal:sync> class SyncMutex ] {
