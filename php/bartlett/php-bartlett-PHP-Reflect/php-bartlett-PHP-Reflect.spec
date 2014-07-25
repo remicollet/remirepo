@@ -81,7 +81,7 @@ Provides:       php-composer(bartlett/php-reflect) = %{version}
 PHP_Reflect adds the ability to reverse-engineer classes, interfaces,
 functions, constants and more, by connecting php callbacks to other tokens.
 
-Documentation: http://php5.laurent-laville.org/reflect/manual/2.0/en/
+Documentation: http://php5.laurent-laville.org/reflect/manual/2.2/en/
 
 
 %prep
