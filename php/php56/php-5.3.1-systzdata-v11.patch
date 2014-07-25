@@ -2,7 +2,8 @@ Add support for use of the system timezone database, rather
 than embedding a copy.  Discussed upstream but was not desired.
 
 History:
-r10 : make timezone case insensitive
+r11: dont display version in phpinfo
+r10: make timezone case insensitive
 r9: fix another compile error without --with-system-tzdata configured (Michael Heimpold)
 r8: fix compile error without --with-system-tzdata configured
 r7: improve check for valid timezone id to exclude directories
@@ -633,3 +634,18 @@ r1: initial revision
 +   fi
 +fi
 +
+--- a/ext/date/php_date.c.old	2014-07-25 16:21:32.562376600 +0200
++++ b/ext/date/php_date.c	2014-07-25 16:21:42.731424669 +0200
+@@ -887,8 +887,12 @@
+ 	
+ 	php_info_print_table_start();
+ 	php_info_print_table_row(2, "date/time support", "enabled");
++#ifdef HAVE_SYSTEM_TZDATA
++	php_info_print_table_row(2, "Timezone Database", "system");
++#else
+ 	php_info_print_table_row(2, "\"Olson\" Timezone Database Version", tzdb->version);
+ 	php_info_print_table_row(2, "Timezone Database", php_date_global_timezone_db_enabled ? "external" : "internal");
++#endif
+ 	php_info_print_table_row(2, "Default timezone", guess_timezone(tzdb TSRMLS_CC));
+ 	php_info_print_table_end();
+ 
