@@ -22,7 +22,7 @@
 
 Summary:        Lockless user data cache
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.9.0
+Version:        0.9.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:        PHP
@@ -89,7 +89,8 @@ cat > %{ini_name} << 'EOF'
 ; Enable Yet Another Cache extension module
 extension = %{pecl_name}.so
 
-yac.enable=1
+;yac.enable=1
+;yac.enable_cli=0
 ;yac.debug=0
 ;yac.keys_memory_size=4M
 ;yac.values_memory_size=64M
@@ -211,6 +212,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 25 2014 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
+- Update to 0.9.1 (beta)
+
 * Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
 - upstream move to pecl
 - rename from php-yac to php-pecl-yac
