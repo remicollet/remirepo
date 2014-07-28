@@ -88,13 +88,36 @@ $verb   = (in_array('-v', $_SERVER['argv']) || in_array('--verbose', $_SERVER['a
 $quiet  = (in_array('-q', $_SERVER['argv']) || in_array('--quiet', $_SERVER['argv']));
 $client = new PkgClient();
 
-$pkgs = file_get_contents(__DIR__."/checkpkgist.json");
+$pkgs = file_get_contents(__DIR__."/rpmphp.json");
 if (!$pkgs) {
-	die("Missing configuration file\n");
+	die("Missing configuration file rpmphp\n");
 }
 $pkgs = json_decode($pkgs, true, 5, JSON_PARSER_NOTSTRICT);
 if (!$pkgs) {
-	die("Bad configuration file\n");
+	die("Bad configuration file rpmphp\n");
+}
+$pkg2 = file_get_contents(__DIR__."/checkpkgist.json");
+if (!$pkg2) {
+	die("Missing configuration file checkpkgist\n");
+}
+$pkg2 = json_decode($pkg2, true, 5, JSON_PARSER_NOTSTRICT);
+if (!$pkg2) {
+	die("Bad configuration file checkpkgist\n");
+}
+
+$change = false;
+foreach ($pkg2 as $pkg => $rpm) {
+	if (isset($pkgs[$pkg])) {
+		unset($pkg2[$pkg]);
+		$change = true;
+	} else {
+		$pkgs[$pkg] = $pkg2[$pkg];
+	}
+}
+if ($change) {
+	if (file_put_contents(__DIR__."/checkpkgist.json", json_encode($pkg2, JSON_PRETTY_PRINT))) {
+		printf("Configuration file changes saved\n");
+	}
 }
 
 if ($sort) {

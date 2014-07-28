@@ -1,0 +1,2 @@
+#!/bin/sh
+wget 'http://rpms.famillecollet.com/rpmphp/get.php?table=packagist' -O rpmphp.json
