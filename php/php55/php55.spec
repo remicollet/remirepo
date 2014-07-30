@@ -129,7 +129,7 @@ Version: 5.5.15
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1286,6 +1286,8 @@ EXTENSION_DIR=%{_libdir}/php-zts/modules
 build --includedir=%{_includedir}/php-zts \
       --libdir=%{_libdir}/php-zts \
       --enable-maintainer-zts \
+      --program-prefix=zts- \
+      --disable-cgi \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
       --enable-pcntl \
       --enable-opcache \
@@ -1443,11 +1445,6 @@ mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/pdo_mysql.so \
 make -C build-zts install-modules \
      INSTALL_ROOT=$RPM_BUILD_ROOT
 %endif
-
-# rename ZTS binary
-mv $RPM_BUILD_ROOT%{_bindir}/php        $RPM_BUILD_ROOT%{_bindir}/zts-php
-mv $RPM_BUILD_ROOT%{_bindir}/phpize     $RPM_BUILD_ROOT%{_bindir}/zts-phpize
-mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/zts-php-config
 %endif
 
 # Install the version for embedded script language in applications + php_embed.h
@@ -1814,12 +1811,14 @@ fi
 %files cli
 %defattr(-,root,root)
 %{_bindir}/php
+%{_bindir}/zts-php
 %{_bindir}/php-cgi
 %{_bindir}/phar.phar
 %{_bindir}/phar
 # provides phpize here (not in -devel) for pecl command
 %{_bindir}/phpize
 %{_mandir}/man1/php.1*
+%{_mandir}/man1/zts-php.1*
 %{_mandir}/man1/php-cgi.1*
 %{_mandir}/man1/phar.1*
 %{_mandir}/man1/phar.phar.1*
@@ -1868,13 +1867,13 @@ fi
 %{_libdir}/php/build
 %if %{with_zts}
 %{_bindir}/zts-php-config
-%{_includedir}/php-zts
 %{_bindir}/zts-phpize
-# usefull only to test other module during build
-%{_bindir}/zts-php
+%{_includedir}/php-zts
 %{_libdir}/php-zts/build
 %endif
 %{_mandir}/man1/php-config.1*
+%{_mandir}/man1/zts-php-config.1*
+%{_mandir}/man1/zts-phpize.1*
 %{macrosdir}/macros.php
 
 %files embedded
@@ -1927,6 +1926,9 @@ fi
 
 
 %changelog
+* Wed Jul 30 2014 Remi Collet <rcollet@redhat.com> 5.5.15-2
+- fix zts-php-config --php-binary output #1124605
+
 * Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> 5.5.15-1
 - Update to 5.5.15
   http://www.php.net/releases/5_5_15.php
