@@ -112,13 +112,13 @@
 %endif
 
 #global snapdate      201405061030
-%global rcver         RC2
+%global rcver         RC3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.19.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.20.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -181,8 +181,6 @@ Patch48: php-5.6.0-mock.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-man.patch
-Patch101: php-syslog.patch
 
 # Security fixes (200+)
 
@@ -193,7 +191,6 @@ Patch301: php-5.6.0-oldpcre.patch
 Patch302: php-5.6.0-noNO.patch
 
 # WIP
-Patch400: php-systemd.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -883,8 +880,6 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .manpath
-%patch101 -p1 -b .syslog
 
 # security patches
 
@@ -898,7 +893,6 @@ rm -rf ext/json
 %patch302 -p0 -b .971416
 
 # WIP patch
-%patch400 -p1 -b .systemd
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1838,7 +1832,8 @@ fi
 
 
 %changelog
-* Wed Jul 30 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.19.RC2
+* Wed Jul 30 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.20.RC3
+- php 5.6.0RC3
 - fix license handling
 - fix zts-php-config --php-binary output #1124605
 - cleanup with_libmysql
