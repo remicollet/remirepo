@@ -23,6 +23,9 @@
 %global oraclever 12.1
 %endif
 
+# Build for LiteSpeed Web Server (LSAPI)
+%global with_lsws     1
+
 # Regression tests take a long time, you can skip 'em with this
 %if %{php_bootstrap}
 %global runselftest 0
@@ -311,6 +314,18 @@ Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php55u-fpm, php56u-fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
 implementation with some additional features useful for sites of
 any size, especially busier sites.
+
+%if %{with_lsws}
+%package litespeed
+Summary: LiteSpeed Web Server PHP support
+Group: Development/Languages
+Requires: php-common%{?_isa} = %{version}-%{release}
+Obsoletes: php53-litespeed, php53u-litespeed, php54-litespeed, php54w-litespeed, php55u-litespeed, php55w-litespeed, php56u-litespeed, php56w-litespeed
+
+%description litespeed
+The php-litespeed package provides the %{_bindir}/lsphp command
+used by the LiteSpeed Web Server (LSAPI enabled PHP).
+%endif
 
 %package common
 Group: Development/Languages
@@ -1203,6 +1218,9 @@ without_shared="--without-gd \
 pushd build-apache
 build --with-apxs2=%{_httpd_apxs} \
       --libdir=%{_libdir}/php \
+%if %{with_lsws}
+      --with-litespeed \
+%endif
       --without-mysql \
       --disable-pdo \
       ${without_shared}
@@ -1425,6 +1443,10 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
+
+%if %{with_lsws}
+install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
+%endif
 
 # PHP-FPM stuff
 # Log
@@ -1770,6 +1792,12 @@ fi
 %dir %{_datadir}/fpm
 %{_datadir}/fpm/status.html
 
+%if %{with_lsws}
+%files litespeed
+%defattr(-,root,root)
+%{_bindir}/lsphp
+%endif
+
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
@@ -1837,6 +1865,7 @@ fi
 - fix license handling
 - fix zts-php-config --php-binary output #1124605
 - cleanup with_libmysql
+- add php-litespeed subpackage (/usr/bin/lsphp)
 
 * Fri Jul 25 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.18.RC2
 - dont display timezone version in phpinfo (tzdata patch v11)
