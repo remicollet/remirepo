@@ -5,7 +5,7 @@
 %global pecl_name   mongo
 %global with_zts    0%{?__ztsphp:1}
 #global prever      RC2
-%global gh_commit   6fa1d10fd7a64beb34be29bc1c38d0ce727ad05d
+%global gh_commit   ca4f270d5e6110b1b45e39ffb72dce16530e3da9
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
@@ -20,7 +20,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         php-pecl-mongo
-Version:      1.5.4
+Version:      1.5.5
 Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -180,7 +180,7 @@ TEST_PHP_EXECUTABLE=/usr/bin/php \
 TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/mongo.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-/usr/bin/php -n run-tests.php || ret=1
+%{__php} -n run-tests.php --show-diff || ret=1
 
 : Clanups
 make stop-servers
@@ -212,6 +212,9 @@ rm -rf data
 
 
 %changelog
+* Wed Jul 30 2014 Remi Collet <remi@fedoraproject.org> - 1.5.5-1
+- Update to 1.5.5 (stable)
+
 * Tue Jun 17 2014 Remi Collet <remi@fedoraproject.org> - 1.5.4-1
 - Update to 1.5.4 (stable)
 
