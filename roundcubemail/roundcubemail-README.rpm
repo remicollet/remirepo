@@ -35,7 +35,10 @@ UPGRADING: when upgrading from < 1.0 the old configuration files named
 main.inc.php and db.inc.php are now deprecated and should be replaced with one
 single config.inc.php file. Run the /usr/share/roundcube/bin/update.sh script
 as root to get this conversion done or manually merge the files. The update
-script will also update the database configuration.
+script will also update the database configuration. Check the permissions of
+the config.inc.php file and all backups the script creates! Make sure they
+are not world-readable, as they may contain sensitive information (e.g.
+database passwords).
 
 NOTE: the new config.inc.php should only contain options that differ from the
 ones listed in defaults.inc.php.
