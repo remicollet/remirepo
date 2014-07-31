@@ -4,7 +4,7 @@
 
 Name:           php-opencloud
 Version:        1.6.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        PHP SDK for OpenStack/Rackspace APIs
 Group:          Development/Libraries
 
@@ -20,7 +20,7 @@ Requires:       php-pcre
 
 BuildArch:      noarch
 
-Obsoletes:      php-cloudfiles
+# Obsoletes:      php-cloudfiles
 
 
 %description
@@ -75,6 +75,9 @@ phpunit -d date.timezone=UTC .
 
 
 %changelog
+* Thu Jul 31 2014 Remi Collet <rpms@famillecollet.com> - 1.6.0-5
+- don't obsolete php-cloudfiles
+
 * Thu Jan 30 2014 Remi Collet <rpms@famillecollet.com> - 1.6.0-4
 - backport 1.6.0 for remi repo
 
