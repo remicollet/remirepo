@@ -13,8 +13,8 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 
 Name: phpMyAdmin
-Version: 4.2.6
-Release: 3%{?dist}
+Version: 4.2.7
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -185,6 +185,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Thu Jul 31 2014 Remi Collet <rpms@famillecollet.com> 4.2.7-1
+- update to 4.2.7 (Thu, 31 Jul 2014, bugfix)
+
 * Thu Jul 31 2014 Remi Collet <rpms@famillecollet.com> 4.2.6-3
 - move documentation in /usr/share/doc
 - move License in /usr/share/licenses
