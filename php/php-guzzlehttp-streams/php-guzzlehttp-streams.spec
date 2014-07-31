@@ -1,7 +1,18 @@
+#
+# RPM spec file for php-guzzlehttp-streams
+#
+# Copyright (c) 2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner     guzzle
 %global github_name      streams
-%global github_version   1.1.0
-%global github_commit    cf0c8c33ca95cc147efba4c714f630ee44767180
+%global github_version   1.4.0
+%global github_commit    3b761a328e5ed6ed519e960aded95d7acbe77894
 
 %global composer_vendor  guzzlehttp
 %global composer_project streams
@@ -9,9 +20,12 @@
 # "php": ">=5.4.0"
 %global php_min_ver      5.4.0
 
+# Build using "--without tests" to disable tests
+%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Provides a simple abstraction over streams of data
 
 Group:         Development/Libraries
@@ -21,16 +35,18 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+%if %{with_tests}
 # For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 1.1.0)
+# For tests: phpcompatinfo (computed from version 1.4.0)
 BuildRequires: php-hash
 BuildRequires: php-spl
+%endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.1.0)
+# phpcompatinfo (computed from version 1.4.0)
 Requires:      php-hash
 Requires:      php-spl
 
@@ -59,6 +75,7 @@ cp -pr src/* %{buildroot}%{_datadir}/php/GuzzleHttp/Stream/
 
 
 %check
+%if %{with_tests}
 # Create autoloader
 mkdir vendor
 cat > vendor/autoload.php <<'AUTOLOAD'
@@ -80,18 +97,25 @@ AUTOLOAD
 sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %{_bindir}/phpunit --include-path="./src:./tests" -d date.timezone="UTC"
+%else
+: Tests skipped
+%endif
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.rst composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.rst composer.json
 %dir %{_datadir}/php/GuzzleHttp
      %{_datadir}/php/GuzzleHttp/Stream
 
 
 %changelog
-* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> 1.1.0-2
-- backport for remi repo
+* Fri Jun 06 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-1
+- Updated to 1.4.0 (BZ #1124227)
+- Added option to build without tests ("--without tests")
+- Added %%license usage
 
 * Fri Jun 06 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-2
 - Updated URL
