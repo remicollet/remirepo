@@ -14,7 +14,7 @@
 
 Name: phpMyAdmin
 Version: 4.2.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -95,6 +95,9 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
     -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
     -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/pear@" \
+%if 0%{?_licensedir:1}
+    -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
+%endif
     -i libraries/vendor_config.php
 
 # For debug
@@ -126,16 +129,22 @@ cp -ad ./* %{buildroot}/%{_datadir}/%{name}
 cp %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/conf.d/phpMyAdmin.conf
 cp CONFIG %{buildroot}/%{_sysconfdir}/%{name}/config.inc.php
 
+rm -f %{buildroot}/%{_datadir}/%{name}/config.sample.inc.php
 rm -f %{buildroot}/%{_datadir}/%{name}/*txt
 rm -f %{buildroot}/%{_datadir}/%{name}/[CIRLT]*
 rm -f %{buildroot}/%{_datadir}/%{name}/libraries/.htaccess
 rm -f %{buildroot}/%{_datadir}/%{name}/setup/lib/.htaccess
 rm -f %{buildroot}/%{_datadir}/%{name}/setup/frames/.htaccess
 rm -rf %{buildroot}/%{_datadir}/%{name}/contrib
+# documentation
+rm -rf    %{buildroot}%{_datadir}/%{name}/{doc,examples}/
+mkdir -p  %{buildroot}%{_datadir}/%{name}/doc/
+ln -s %{_pkgdocdir}/html  %{buildroot}%{_datadir}/%{name}/doc/html
+mv -f config.sample.inc.php examples/
 
 mkdir -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
-rm -rf %{buildroot}%{_datadir}/%{pkgname}/libraries/php-gettext
-rm -rf %{buildroot}%{_datadir}/%{pkgname}/libraries/tcpdf
+rm -rf %{buildroot}%{_datadir}/%{name}/libraries/php-gettext
+rm -rf %{buildroot}%{_datadir}/%{name}/libraries/tcpdf
 
 
 %clean
@@ -148,6 +157,12 @@ echo -e "\nWARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
+%pretrans
+# allow dir to link upgrade
+if  [ -d %{_datadir}/%{name}/doc/html ]; then
+  rm -rf %{_datadir}/%{name}/doc/html
+fi
+
 %post
 # generate a secret key for this install
 sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM/" \
@@ -156,7 +171,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README LICENSE CONTRIBUTING.md
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc ChangeLog README CONTRIBUTING.md
+%doc doc/html/ examples/
 %{_datadir}/%{name}
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
@@ -167,6 +185,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Thu Jul 31 2014 Remi Collet <rpms@famillecollet.com> 4.2.6-3
+- move documentation in /usr/share/doc
+- move License in /usr/share/licenses
+
 * Fri Jul 18 2014 Remi Collet <rpms@famillecollet.com> 4.2.6-2
 - fix links on home page
 
