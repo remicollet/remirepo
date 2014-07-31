@@ -53,11 +53,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING.lib demo README change_log.txt SMARTY*.txt
+%{!?_licensedir:%global license %%doc}
+%license COPYING.lib
+%doc demo README change_log.txt SMARTY*.txt
 %{_datadir}/php/Smarty
 
 
 %changelog
+* Thu Jul 31 2014 Remi Collet <remi@fedoraproject.org> - 3.1.19-1
+- backport 3.1.14 for remi repo
+- fix license handling
+
 * Wed Jul 30 2014 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.1.19-1
 - Last upstream release
 
