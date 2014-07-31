@@ -29,7 +29,7 @@
 
 Name:      php-%{composer_vendor}-%{composer_project}
 Version:   %{github_version}
-Release:   4%{?github_release}%{?dist}
+Release:   6%{?github_release}%{?dist}
 Summary:   Doctrine Database Abstraction Layer (DBAL)
 
 Group:     Development/Libraries
@@ -41,6 +41,10 @@ Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_co
 # but immediately reverted in
 # https://github.com/doctrine/dbal/commit/894493b285c71a33e6ed29994ba415bad5e0a457
 Patch0:    %{name}-2.4.2-primary_index.patch
+# From upstream master (2.5), not yet backported to 2.4 upstream. Required for
+# OwnCloud (pgsql-backed OC 6.x upgrades to 7.x fail without it.) Rediffed
+# https://github.com/doctrine/dbal/commit/f8c1d77efa988974026189bf8214ef0fecaf1522
+Patch1:    f8c1d77efa988974026189bf8214ef0fecaf1522.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -80,6 +84,7 @@ extension under the hood.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 %patch0 -p3 -b .primary_index
+%patch1 -p1 -b .escape_column
 
 # Make a single executable
 echo '#!%{_bindir}/php' > bin/doctrine-dbal
@@ -118,12 +123,24 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md UPGRADE composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md UPGRADE composer.json
 %{_datadir}/php/Doctrine/DBAL
 %{_bindir}/doctrine-dbal
 
 
 %changelog
+* Thu Jul 31 2014 Remi Collet <rpms@famillecollet.com> 2.4.2-6
+- backport for remi repo
+- fix license handling
+
+* Tue Jul 29 2014 Adam Williamson <awilliam@redhat.com> - 2.4.2-6
+- really apply the patch
+
+* Tue Jul 29 2014 Adam Williamson <awilliam@redhat.com> - 2.4.2-5
+- backport another OwnCloud-related pgsql fix from upstream master
+
 * Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.2-4
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
 - Updated Doctrine dependencies to use php-composer virtual provides

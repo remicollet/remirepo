@@ -1,0 +1,27 @@
+From f8c1d77efa988974026189bf8214ef0fecaf1522 Mon Sep 17 00:00:00 2001
+From: Vincent Petry <PVince81@yahoo.fr>
+Date: Tue, 1 Jul 2014 13:14:38 +0200
+Subject: [PATCH] Fix escaping of column name for specific alter table case
+
+When changing the length of a field, the column name needs to be escaped
+properly.
+---
+ lib/Doctrine/DBAL/Platforms/PostgreSqlPlatform.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/Doctrine/DBAL/Platforms/PostgreSqlPlatform.php b/lib/Doctrine/DBAL/Platforms/PostgreSqlPlatform.php
+index 916e857..c3015b5 100644
+--- a/lib/Doctrine/DBAL/Platforms/PostgreSqlPlatform.php
++++ b/lib/Doctrine/DBAL/Platforms/PostgreSqlPlatform.php
+@@ -467,7 +467,7 @@
+             }
+ 
+             if ($columnDiff->hasChanged('length')) {
+-                $query = 'ALTER ' . $column->getName() . ' TYPE ' . $column->getType()->getSqlDeclaration($column->toArray(), $this);
++                $query = 'ALTER ' . $oldColumnName . ' TYPE ' . $column->getType()->getSqlDeclaration($column->toArray(), $this);
+                 $sql[] = 'ALTER TABLE ' . $diff->name . ' ' . $query;
+             }
+         }
+-- 
+2.0.3
+
